@@ -1,14 +1,14 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: radbear_rails_development
+  database: rad_common_development
 
 test:
   adapter: postgresql
   encoding: unicode
-  database: radbear_rails_test
+  database: rad_common_test
 
 production:
   adapter: postgresql
   encoding: unicode
-  database: radbear_rails_production
+  database: rad_common_production

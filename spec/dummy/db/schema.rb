@@ -67,8 +67,8 @@ ActiveRecord::Schema.define(version: 20171128190949) do
     t.boolean  "optional_emails",        :default=>true, :null=>false
     t.string   "global_search_default",  :limit=>255
     t.boolean  "super_admin",            :default=>false, :null=>false
-    t.integer  "security_group_id",      :null=>false, :index=>{:name=>"fk__users_security_group_id", :using=>:btree}, :foreign_key=>{:references=>"security_groups", :name=>"fk_users_security_group_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer  "user_status_id",         :null=>false, :index=>{:name=>"fk__users_user_status_id", :using=>:btree}, :foreign_key=>{:references=>"user_statuses", :name=>"fk_users_user_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "security_group_id",      :null=>false, :foreign_key=>{:references=>"security_groups", :name=>"fk_users_security_group_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__users_security_group_id", :using=>:btree}
+    t.integer  "user_status_id",         :null=>false, :foreign_key=>{:references=>"user_statuses", :name=>"fk_users_user_status_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__users_user_status_id", :using=>:btree}
   end
 
   create_table "audits", force: :cascade do |t|
@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 20171128190949) do
     t.string   "auditable_type"
     t.integer  "associated_id",   :index=>{:name=>"associated_index", :with=>["associated_type"], :using=>:btree}
     t.string   "associated_type"
-    t.integer  "user_id",         :index=>{:name=>"fk__audits_user_id", :using=>:btree}, :foreign_key=>{:references=>"users", :name=>"fk_audits_user_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "user_id",         :foreign_key=>{:references=>"users", :name=>"fk_audits_user_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__audits_user_id", :using=>:btree}
     t.string   "user_type"
     t.string   "username"
     t.string   "action"
@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 20171128190949) do
   create_table "divisions", force: :cascade do |t|
     t.string   "name",       :null=>false
     t.string   "code",       :null=>false
-    t.integer  "owner_id",   :null=>false, :index=>{:name=>"fk__divisions_owner_id", :using=>:btree}, :foreign_key=>{:references=>"users", :name=>"fk_divisions_owner_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "owner_id",   :null=>false, :foreign_key=>{:references=>"users", :name=>"fk_divisions_owner_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__divisions_owner_id", :using=>:btree}
     t.datetime "created_at", :null=>false
     t.datetime "updated_at", :null=>false
   end
