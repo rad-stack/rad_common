@@ -1,0 +1,11 @@
+.panel.panel-default
+  = render "layouts/panel_header", action_name: "custom", title: "Resend Unlock Instructions", icon: "fa-unlock"
+  .panel-body
+    = simple_form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f|
+      = f.error_notification
+      = f.full_error :unlock_token
+      .form-inputs
+        = f.input :email, required: true, autofocus: true
+      .form-actions
+        = f.button :submit, "Resend Unlock Instructions", class: "btn btn-primary"
+    = render "devise/shared/links"

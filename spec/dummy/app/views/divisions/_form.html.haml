@@ -1,0 +1,9 @@
+= simple_form_for(@division) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :name
+    = f.input :code
+
+  .form-actions
+    = f.button :submit, 'Save', class: 'btn btn-primary'

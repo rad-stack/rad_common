@@ -1,0 +1,28 @@
+-show_actions = current_user.can_update?(Division) || current_user.can_delete?(Division)
+
+.panel.panel-default
+  = render 'layouts/panel_header'
+  .panel-body
+    = paginate @divisions
+
+    %table.table.table-striped.table-bordered
+      %tr
+        %th Name
+        %th Name
+        %th Code
+        -if show_actions
+          %th Actions
+
+      - @divisions.each do |division|
+        %tr
+          %td= secured_link division
+          %td= division.name
+          %td= division.code
+          -if show_actions
+            %td
+              -if current_user.can_update?(division)
+                = link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + 'Edit', edit_division_path(division), class: 'btn btn-xs btn-default btn-block'
+              -if current_user.can_delete?(division)
+                = link_to content_tag(:i, '', class: 'fa fa-times right-5x') + 'Delete', division, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs btn-block'
+
+    = paginate @divisions

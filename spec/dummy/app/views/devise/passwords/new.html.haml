@@ -1,0 +1,10 @@
+.panel.panel-default
+  = render "layouts/panel_header", action_name: "custom", title: "Forgot Your Password?", icon: "fa-unlock"
+  .panel-body
+    = simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
+      = f.error_notification
+      .form-inputs
+        = f.input :email, required: true, autofocus: true
+      .form-actions
+        = f.button :submit, "Send Me Reset Password Instructions", class: "btn btn-primary"
+    = render "devise/shared/links"
