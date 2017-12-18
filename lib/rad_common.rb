@@ -1,0 +1,3 @@
+module RadCommon
+  # Your code goes here...
+end
