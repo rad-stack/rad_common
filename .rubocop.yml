@@ -1,0 +1,49 @@
+AllCops:
+  TargetRubyVersion: 2.3.5
+  TargetRailsVersion: 5.0
+  Exclude:
+    - 'db/schema.rb'
+    - 'db/migrate/*'
+    - 'lib/templates/**/*'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Rails:
+  Enabled: true
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: 'comma'
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: 'indented'
+
+Layout/MultilineMethodCallBraceLayout:
+  EnforcedStyle: 'new_line'
+
+Layout/IndentationConsistency:
+  Enabled: false
+
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: 'comma'
+
+Layout/AlignParameters:
+  EnforcedStyle: 'with_fixed_indentation'
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: false

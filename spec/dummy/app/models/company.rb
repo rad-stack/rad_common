@@ -1,5 +1,6 @@
 class Company < ApplicationRecord
   include Authority::Abilities
+  include RadCompany
 
   scope :by_id, -> { order(:id) }
   alias_attribute :to_s, :name

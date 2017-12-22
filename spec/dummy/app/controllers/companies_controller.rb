@@ -1,5 +1,5 @@
 class CompaniesController < ApplicationController
-  include RadbearCompaniesController
+  include RadCommonCompaniesController
 
   before_action :authenticate_user!
   before_action :set_company, only: [:show, :global_validity_check]
