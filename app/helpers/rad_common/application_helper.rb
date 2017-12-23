@@ -69,5 +69,10 @@ module RadCommon
         [translated, enum_value]
       end.reject {|translated, enum_value| translated.blank?}
     end
+
+    def audit_models_to_search
+      #todo dunno if we can get the list from the audited gem, if so, would be faster
+      Audited::Audit.select(:auditable_type).distinct.pluck(:auditable_type)
+    end
   end
 end
