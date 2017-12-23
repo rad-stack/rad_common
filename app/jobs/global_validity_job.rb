@@ -7,7 +7,7 @@ class GlobalValidityJob < ApplicationJob
     if problems.any?
       RadMailer.global_validity(company, current_member, problems).deliver_later
     else
-      message = "No invalid data found in company #{company.name} (#{company.id})"
+      message = "No invalid data found in company #{company.name}"
       RadMailer.simple_message(company, current_member, message, message).deliver_later
     end
   end

@@ -12,3 +12,16 @@ Rails.configuration.global_validity_supress = []
 Devise.setup do |config|
   config.mailer = 'RadbearDeviseMailer'
 end
+
+Rails.configuration.global_search_scopes =
+  [
+    { name: 'user_name', model: User,
+      description: 'Search for user by name',
+      columns: ['email'],
+      query_where: "last_name || ', ' || first_name ilike :search",
+      query_order: 'last_name ASC, first_name ASC, created_at DESC' },
+    { name: 'user_name_with_no_where', model: User,
+      description: 'Search for user by name',
+      columns: [],
+      query_order: 'last_name ASC, first_name ASC, created_at DESC' },
+  ]

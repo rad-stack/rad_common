@@ -14,6 +14,7 @@ class User < ApplicationRecord
   scope :by_name, -> { order(:first_name, :last_name) }
   scope :super_admins, -> { active.where(admin: true) }
   scope :recent_first, -> { order('users.created_at DESC') }
+  scope :authorized, -> (member) {}
 
   has_attached_file :avatar, styles: { small: '25x25#', medium: '50x50#', normal: '100x100#', large: '200x200#' }
 
