@@ -3,6 +3,7 @@ RadCommon::Engine.routes.draw do
   get "global_search_result", to: "search#global_search_result"
 
   resources :companies, only: [] do
+    get :usage, on: :member
     post :global_validity_check, on: :member
   end
 
