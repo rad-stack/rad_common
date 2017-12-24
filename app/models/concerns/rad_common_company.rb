@@ -1,6 +1,20 @@
 module RadCommonCompany
   extend ActiveSupport::Concern
 
+  def send_system_message(from, message)
+    self.members.active.each do |member|
+      RadMailer.simple_message(self, member, "Important Message From #{I18n::t(:app_name)}", message, from: from).deliver_later
+    end
+  end
+
+  module ClassMethods
+    def send_system_message_global(from, message)
+      Member.active.by_id.each do |member|
+        RadMailer.simple_message(member.company, member, "Important Message From #{I18n::t(:app_name)}", message, from: from).deliver_later
+      end
+    end
+  end
+
   private
 
     def check_model(model)

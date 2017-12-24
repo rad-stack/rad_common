@@ -1,0 +1,12 @@
+.panel.panel-default
+  = render 'layouts/panel_header', action_name: 'custom', title: "Send System Message to All Active #{current_member.class.name}s", icon: 'fa-envelope'
+  .panel-body
+    = simple_form_for(:message, url: "/rad_common/system_messages?super=#{@super ? 'true' : 'false'}", method: :post) do |f|
+      = f.error_notification
+
+      .form-inputs
+        = f.input :message, placeholder: "Enter a message to be emailed to all active #{current_member.class.name.downcase}s in the system."
+        = f.input :from, collection: [Devise.mailer_sender, "#{current_member} <#{current_member.email}>"], include_blank: false
+
+      .form-actions
+        = f.button :submit, 'Send', class: 'btn btn-primary'
