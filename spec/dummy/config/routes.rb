@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  mount RadbearRails::Engine => "/radbear_rails"
   mount RadCommon::Engine => "/rad_common"
 
   devise_for :users, controllers: { confirmations: 'users/confirmations' }

@@ -2,5 +2,5 @@
  *= require_self
  *= require twitter-bootstrap-static/bootstrap
  *= require font-awesome
- *= require radbear_rails/radbear_rails
+ *= require rad_common/rad_common
 */
