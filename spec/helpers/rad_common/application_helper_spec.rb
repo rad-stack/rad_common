@@ -1,7 +1,115 @@
 require 'rails_helper'
 
-describe RadbearRails::ApplicationHelper do
+describe RadCommon::ApplicationHelper do
   let(:date) { DateTime.current }
+
+  before do
+    @user = create :user
+
+    def helper.current_member
+      @user
+    end
+  end
+
+  describe '#gravatar_for' do
+    context 'string size' do
+      let(:size) { '60' }
+      let(:resource) { build(:user) }
+      it 'returns a url with the correct size' do
+        expect(avatar_image(resource, size)).to include('gravatar')
+        expect(avatar_image(resource, size)).to include('60')
+      end
+    end
+
+    context 'integer size' do
+      let(:size) { 100 }
+      let(:resource) { build(:user) }
+      it 'returns a url with the correct size' do
+        expect(avatar_image(resource, size)).to include('gravatar')
+        expect(avatar_image(resource, size)).to include('100')
+      end
+    end
+
+    context 'symbol size' do
+      let(:resource) { build(:user) }
+      it 'returns a url with a non string size' do
+        expect(avatar_image(resource, :small)).to include('25')
+        expect(avatar_image(resource, :medium)).to include('50')
+        expect(avatar_image(resource, :large)).to include('200')
+      end
+    end
+  end
+
+  describe '#avatar_image' do
+    let(:size) { 80 }
+    let(:filename) { 'avatar.png' }
+    before { Rails.application.config.use_avatar = true }
+    after  { Rails.application.config.use_avatar = false }
+
+    context "user has avatar" do
+      let(:resource) do
+        build(:user, avatar: fixture_file_upload(Rails.root.join('spec', 'fixtures', filename)))
+      end
+      xit "should return the Amazon stored image" do
+        # TODO doesn't work locally
+        response = avatar_image(resource, size)
+        expect(response).to include("<img")
+        expect(response).to include(".png")
+        expect(response).to_not include('gravatar')
+      end
+
+      xit "returns a 50px image" do
+        #todo this just stopped working, need to debug
+        response = avatar_image(resource, size)
+        expect(avatar_image(resource, size)).to include("50")
+      end
+    end
+
+    context "user does not have avatar" do
+      let(:resource) { build(:user, avatar: nil) }
+      it "should return an image tag with the user gravatar" do
+        expect(avatar_image(resource, size)).to include('gravatar')
+      end
+    end
+  end
+
+  describe '#secured_link' do
+    context 'resource' do
+      let(:resource) { build(:user) }
+
+      context 'member is authorized' do
+        before { allow(@user).to receive(:can_read?).and_return(true) }
+
+        it 'renders a link' do
+          expect(helper.secured_link(resource)).to include('href')
+          expect(helper.secured_link(resource)).to include("#{resource.id}")
+        end
+
+        it 'defaults to no specified format' do
+          expect(helper.secured_link(resource)).to_not include("format")
+        end
+
+        it 'can specify a pdf format' do
+          expect(helper.secured_link(resource, format: 'pdf')).to include("format=\"pdf\"")
+        end
+      end
+
+      context 'member is unauthorized' do
+        before { expect(@user).to receive(:can_read?).and_return(false) }
+
+        it 'returns the resource name' do
+          expect(helper.secured_link(resource)).to eq(resource.to_s)
+        end
+      end
+    end
+
+    context 'no resource' do
+      let(:resource) { nil }
+      it 'returns nil' do
+        expect(helper.secured_link(resource)).to be_nil
+      end
+    end
+  end
 
   describe '#format_datetime' do
     context 'with nil' do

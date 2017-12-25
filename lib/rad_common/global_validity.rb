@@ -5,7 +5,7 @@ module RadCommon
         error_messages = company.check_global_validity
 
         if error_messages.any?
-          User.super_admins.each { |super_admin| RadMailer.global_validity(company, super_admin, error_messages).deliver_later }
+          User.super_admins.each { |super_admin| RadbearMailer.global_validity(company, super_admin, error_messages).deliver_later }
         end
 
         company.update_column(:validity_checked_at, DateTime.now)

@@ -1,6 +1,7 @@
 RadCommon::Engine.routes.draw do
   get "global_search", to: "search#global_search"
   get "global_search_result", to: "search#global_search_result"
+  post :email_error, to: "radbear_rails/sendgrid#email_error"
 
   resources :companies, only: [] do
     get :usage, on: :member

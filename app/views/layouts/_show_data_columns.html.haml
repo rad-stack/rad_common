@@ -1,0 +1,60 @@
+-no_timestamps = false if local_assigns[:no_timestamps].nil?
+
+-stats = []
+-if !local_assigns[:resource].nil? && !no_timestamps
+  -if resource.respond_to?(:created_at)
+    -stats.push({label: "Created", value: format_datetime(resource.created_at)})
+  -if resource.respond_to?(:updated_at) && resource.updated_at != resource.created_at
+    -stats.push({label: "Updated", value: format_datetime(resource.updated_at)})
+
+-all_data = []
+-if data
+  -data.each do |item|
+    -if item.is_a?(Hash)
+      -if item[:value]
+        -all_data.push(item)
+    -elsif item.is_a?(Symbol)
+      -value = resource.send(item)
+      -if !value.blank? || value.class.to_s == "FalseClass"
+        -all_data.push(item)
+    -else
+      - raise "invalid data type: #{item.class.to_s}"
+
+-if all_data.count == 0
+  -columns = [stats]
+-elsif all_data.count <= 5
+  -columns = [all_data, stats]
+-else
+  -all_data = all_data + stats
+  -columns = all_data.each_slice((all_data.count / 2.to_f).ceil).to_a
+
+.row
+  -columns.each do |column|
+    .col-md-6
+      %dl.dl-horizontal
+        -column.each do |item|
+          -if item.is_a?(Hash)
+            -if item[:label]
+              %dt= item[:label]
+              %dd= item[:value]
+            -else
+              %dt= item[:value]
+              %dd
+          -elsif item.is_a?(Symbol)
+            -value = resource.send(item)
+            %dt= item.to_s.titlecase
+            %dd
+              -if value.class.to_s == "ActiveSupport::TimeWithZone"
+                = format_datetime(value)
+              -elsif value.class.to_s == "Date"
+                = format_date(value)
+              -elsif value.class.to_s == "Time"
+                = format_time(value)
+              -elsif value.class.to_s == "TrueClass"
+                = format_boolean(value)
+              -elsif value.class.to_s == "FalseClass"
+                = format_boolean(value)
+              -elsif value.class.to_s == "Array"
+                = value.join(", ")
+              -else
+                = value

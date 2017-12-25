@@ -12,7 +12,7 @@ class User < ApplicationRecord
   scope :admins, -> { active.where(admin: true) }
   scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
   scope :by_name, -> { order(:first_name, :last_name) }
-  scope :super_admins, -> { active.where(admin: true) }
+  scope :super_admins, -> { active.where(super_admin: true) }
   scope :recent_first, -> { order('users.created_at DESC') }
   scope :authorized, -> (member) {}
 

@@ -19,7 +19,8 @@ class ApplicationController < ActionController::Base
   protected
 
     def auditing_security?
-      Rails.env != :production
+      controller_name = self.class
+      [RadCommon::SendgridController].exclude?(controller_name)
     end
 
     def configure_devise_permitted_parameters

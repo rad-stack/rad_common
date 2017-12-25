@@ -25,11 +25,11 @@ module RadCommon
     private
 
     def member_authorized?(member, record)
-      member.is_a?(Member) && member.can_read?(record)
+      member.class.name == 'Member' && member.can_read?(record)
     end
 
     def user_authorized?(user)
-      user.is_a?(User) && user.super_admin?
+      user.class.name == 'User' && user.super_admin?
     end
   end
 end
