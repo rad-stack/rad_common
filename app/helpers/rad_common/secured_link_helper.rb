@@ -4,15 +4,11 @@ module RadCommon
       member_authorized?(member_or_user, record) || user_authorized?(member_or_user)
     end
 
-    def record_url(record)
-      if record.respond_to?(:company)
-        company = record.company
-      end
-
+    def record_url(record, member)
       url = url_for(record)
 
-      if record.respond_to?(:company)
-        url.sub('app', company.company_code)
+      if member.class.name == 'Member' && record.respond_to?(:company)
+        url.sub('app', record.company.company_code)
       else
         url
       end
@@ -25,11 +21,11 @@ module RadCommon
     private
 
     def member_authorized?(member, record)
-      member.is_a?(Member) && member.can_read?(record)
+      member.class.name == 'Member' && member.can_read?(record)
     end
 
     def user_authorized?(user)
-      user.is_a?(User) && user.super_admin?
+      user.class.name == 'User' && user.super_admin?
     end
   end
 end

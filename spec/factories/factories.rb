@@ -14,6 +14,7 @@ FactoryBot.define do
     end
 
     factory :super_admin do
+      super_admin true
       admin true
     end
   end

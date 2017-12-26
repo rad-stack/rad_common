@@ -3,7 +3,7 @@ require 'rails_helper'
 describe RadCommon::GlobalValidity do
   let(:admin_security_group) { SecurityGroup.find_by_name('Admin') }
   let(:company) { Company.main }
-  let!(:super_admin) { create :user, super_admin: true, admin: true }
+  let!(:super_admin) { create :super_admin }
   let(:url) { "http://example.com/security_groups/#{admin_security_group.id}" }
 
   describe '.check_all_companies' do

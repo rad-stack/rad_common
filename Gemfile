@@ -27,5 +27,5 @@ group :development, :test do
   gem 'pry'
   gem 'jquery-rails'
   gem 'jquery-ui-rails'
-  gem 'radbear_rails', git: 'https://github.com/radicalbear/radbear_rails.git', branch: 'master'
+  gem 'radbear_rails', git: 'https://github.com/radicalbear/radbear_rails.git', branch: 'rad_factor'
 end

@@ -1,0 +1,8 @@
+Description:
+    The install generator will create the initializer required for rad_common, found in config/initializers of your rails project.
+
+Example:
+    Rails will generate the needed environment files for rad_common.
+
+    This will create:
+        config/initializers/rad_common.rb

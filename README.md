@@ -1,33 +1,39 @@
 # RadCommon
-Short description and motivation.
+This is a common set of features and tools tailored for a standard business web app.
+
+## Main Features
+1. common email template
+1. views and helpers
+1. other utilities
 
 ## Usage
-How to use my plugin.
 
-## Installation
-Add this line to your application's Gemfile:
+### Server
+To install rad_common, you must run the generator: 
 
-```ruby
-gem 'rad_common'
-```
+`rails g rad_common:install`
 
-And then execute:
-```bash
-$ bundle
-```
+This will then create the initializer in the /config/initializers directory with the default values set within the generator template as well as copy all the files to the project.
 
-Or install it yourself as:
-```bash
-$ gem install rad_common
-```
+Emails are sent in the background so make sure you have a mailers queue running in sidekiq.
 
-## Contributing
-Contribution directions go here.
-
-## License
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+### Email Template
+To use the common email template in your Rails project, just have your mailer subclass RadbearMailer.
 
 ## Development
+
+### Test Suite
+
+To generate items related to the dummy app, first cd into the /spec/dummy directory, then you can run `rails generate` commands.
+
+This project contains a "dummy" app to run test against, see /spec/dummy. To prepare the test database, run the following command:
+
+`rake app:db:migrate`
+`rake app:db:test:prepare`
+
+To run the test suite, run the following command:
+
+`rspec --exclude-pattern 'spec/dummy/lib/**/*_spec.rb'`
 
 ### Point Projects to Local Source Instead of Github
 

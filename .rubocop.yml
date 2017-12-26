@@ -47,3 +47,9 @@ Metrics/MethodLength:
 
 Metrics/LineLength:
   Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false

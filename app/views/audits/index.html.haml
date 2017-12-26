@@ -1,0 +1,43 @@
+-by_user = params[:action] == "audit_by"
+
+.panel.panel-default
+  -if by_user
+    -title = "Updates by "
+  -else
+    -title = "Updates for "
+  -title = (title + audit_model_link(nil, @model_object)).html_safe if @model_object
+  -title = (title + @deleted) if @deleted
+
+  = render "layouts/panel_header", action_name: "custom", title: title, icon: "fa-list"
+
+  .panel-body
+    -if @audits.any?
+      = paginate @audits
+      %table.table.table-striped.table-bordered
+        %tr
+          %th Date
+          -if by_user
+            %th Record
+          -else
+            %th Member
+          %th Address
+          %th Action
+          %th Changes
+
+        -@audits.each do |audit|
+          %tr
+            %td
+              %p= format_datetime(audit.created_at)
+              %p= "#{distance_of_time_in_words_to_now(audit.created_at)} ago"
+            -if by_user
+              -if audit.action == "destroy"
+                %td= "#{audit.auditable_type} (#{audit.auditable_id})"
+              -else
+                %td= audit_model_link(audit, audit.auditable)
+            -else
+              %td= secured_link(audit.user)
+            %td= audit.remote_address
+            %td= audit.action
+            %td= simple_format(display_audited_changes(audit))
+    -else
+      %p No activity exists for this item

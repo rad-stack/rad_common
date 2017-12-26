@@ -5,6 +5,7 @@ class SecurityGroup < ApplicationRecord
   scope :by_name, -> { order(:name) }
 
   alias_attribute :to_s, :name
+  alias_attribute :members, :users
   validate :validate_standard_permissions
 
   audited
