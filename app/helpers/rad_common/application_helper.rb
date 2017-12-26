@@ -160,21 +160,6 @@ module RadCommon
       Audited::Audit.select(:auditable_type).distinct.pluck(:auditable_type)
     end
 
-    def asset_avatar(asset)
-      url = asset_url(asset)
-      { small: url, normal: url, large: url }
-    end
-
-    def asset_url(asset)
-      if asset
-        if File.exist?(Rails.root.join("app", "assets", "images", asset))
-          "#{request.protocol}#{request.host_with_port}#{asset_path(asset)}"
-        else
-          "#{request.protocol}#{request.host_with_port}/assets/radbear_rails/#{asset}"
-        end
-      end
-    end
-
     def mailer_image_url(image)
       protocol = Rails.env.production? ? "https" : "http"
       "#{protocol}://#{ActionMailer::Base.default_url_options[:host]}/#{image}"
