@@ -50,3 +50,6 @@ Metrics/LineLength:
 
 Metrics/PerceivedComplexity:
   Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false

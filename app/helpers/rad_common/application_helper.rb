@@ -35,8 +35,6 @@ module RadCommon
         label = "#{audit.auditable_type} (#{audit.auditable_id})"
       elsif model_object.respond_to?(:to_s)
         label = model_object.class.to_s + " - " + model_object.to_s
-      elsif model_object.respond_to?(:name)
-        label = model_object.class.to_s + " - " + model_object.name
       else
         if audit.nil?
           label = model_object.class.to_s
@@ -49,7 +47,7 @@ module RadCommon
         #todo ignore this some other way rather than by hardcoding name
         return label
       else
-        if model_object.class.to_s != "User" && current_member.can_read?(model_object)  #todo same as above
+        if model_object.class.to_s != "User" && model_object.class.to_s != "Member" && current_member.can_read?(model_object)  #todo same as above
           link_to label, model_object
         else
           return label
