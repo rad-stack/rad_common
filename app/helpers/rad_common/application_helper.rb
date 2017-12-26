@@ -7,26 +7,53 @@ module RadCommon
         changes = audit.audited_changes
         audit_text = ""
 
-        changes.each do |change|
-          if change[1].class.name == "Array"
-            from_value = change[1][0]
-            to_value = change[1][1]
-          else
-            from_value = nil
-            to_value = change[1]
-          end
-
-          if !((from_value.blank? && to_value.blank?) || (from_value.to_s == to_value.to_s))
-            audit_text = audit_text + "Changed <strong>#{change[0].titlecase}</strong> "
-            if from_value
-              audit_text = audit_text + "from <strong>#{from_value}</strong> "
+        if changes
+          changes.each do |change|
+            if change[1].class.name == "Array"
+              from_value = change[1][0]
+              to_value = change[1][1]
+            else
+              from_value = nil
+              to_value = change[1]
             end
 
-            audit_text = audit_text + "to <strong>#{to_value}</strong>" + "\n"
+            if !((from_value.blank? && to_value.blank?) || (from_value.to_s == to_value.to_s))
+              audit_text = audit_text + "Changed <strong>#{change[0].titlecase}</strong> "
+              klass = classify_foreign_key(change[0], audit.auditable_type.safe_constantize)
+              if klass.is_a?(Class)
+                if klass.respond_to?("find_by_id")
+                  to_instance = klass.find_by_id(to_value)
+                  from_instance = klass.find_by_id(from_value) if from_value
+
+                  from_value = from_instance.to_s if from_instance
+                  to_value = to_instance.to_s if to_instance
+                else
+                  to_instance = klass.find(to_value)
+                  from_instance = klass.find(from_value) if from_value
+
+                  from_value = from_instance.to_s if from_instance
+                  to_value = to_instance.to_s if to_instance
+                end
+              end
+
+              if from_value
+                audit_text = audit_text + "from <strong>#{from_value}</strong> "
+              end
+
+              audit_text = audit_text + "to <strong>#{to_value}</strong>" + "\n"
+            end
           end
         end
 
-        return audit_text
+        if !audit_text.blank? && !audit.comment.blank?
+          return audit_text + "\n" + audit.comment
+        elsif !audit_text.blank?
+          return audit_text
+        elsif !audit.comment.blank?
+          return audit.comment
+        else
+          return ""
+        end
       end
     end
 

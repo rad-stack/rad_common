@@ -1,0 +1,26 @@
+.panel.panel-default
+  .panel-heading
+    .title-header
+      .title-text
+        .fa.fa-search
+        Audit Search
+  .panel-body
+    = form_tag(audit_search_users_path, method: "get") do
+      .form-inputs
+        .row
+          .col-md-4
+            .form-group
+              %label.control-label Model
+              %select.form-control{ name: "model_name" }
+                %option{ value: "", selected: true}=""
+                -audit_models_to_search.each do |model|
+                  %option{ value: model }= model
+          .col-md-4
+            .form-group
+              %label.control-label Record ID
+              %input.form-control{name: "record_id"}
+        .row
+          .col-md-12
+            %button.btn.btn-success{ type: "submit" }
+              %i.fa.fa-search
+              Search
