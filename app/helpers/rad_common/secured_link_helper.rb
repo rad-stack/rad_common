@@ -7,7 +7,7 @@ module RadCommon
     def record_url(record, member)
       url = url_for(record)
 
-      if member.class.name == 'Member'
+      if member.class.name == 'Member' && record.respond_to?(:company)
         url.sub('app', record.company.company_code)
       else
         url
