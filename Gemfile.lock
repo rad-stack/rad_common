@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/radicalbear/radbear_rails.git
-  revision: 83567625ecd1af76f4563cdb40c12a6ee8d601d1
+  revision: a5a94033b3ab87d7d56221792ab704d163146bd7
   branch: rad_factor
   specs:
     radbear_rails (1.0.0)
