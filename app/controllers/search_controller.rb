@@ -38,54 +38,58 @@ class SearchController < ApplicationController
       search_scopes = view_context.global_search_scopes
       return [] if search_scopes.empty?
 
-      scope_name = params[:global_search_scope].blank? ? search_scopes.first[:name] : params[:global_search_scope]
-      scope = search_scopes.select {|item| item[:name] == scope_name }.first
-      columns = scope[:columns]
-      klass = scope[:model]
+      results = []
 
-      if scope[:query_where]
-        where = scope[:query_where]
-      else
-        where_items = []
+      search_scopes.each do |scope|
+        #scope_name = params[:global_search_scope].blank? ? search_scopes.first[:name] : params[:global_search_scope]
+        #scope = search_scopes.select {|item| item[:name] == scope_name }.first
+        columns = scope[:columns]
+        klass = scope[:model]
 
-        columns.each do |column|
+        if scope[:query_where]
+          where = scope[:query_where]
+        else
+          where_items = []
 
-          has_column = klass.new.has_attribute?(column)
-          if has_column
-            column_def = klass.new.column_for_attribute(column)
-            data_type = column_def.type
-            is_array = column_def.array
-          else
-            data_type = :string
-            is_array = false
+          columns.each do |column|
+
+            has_column = klass.new.has_attribute?(column)
+            if has_column
+              column_def = klass.new.column_for_attribute(column)
+              data_type = column_def.type
+              is_array = column_def.array
+            else
+              data_type = :string
+              is_array = false
+            end
+
+            if data_type == :text && is_array
+              where_items.push("ARRAY_TO_STRING(#{column}, '') LIKE :search")
+            elsif data_type == :string || data_type == :text
+              where_items.push("#{column} ILIKE :search")
+            elsif data_type == :date
+              where_items.push("to_char(#{column}, 'FMMM/FMDD/YYYY') LIKE :search")
+            else
+              where_items.push("CAST(#{column} AS TEXT) LIKE :search")
+            end
           end
 
-          if data_type == :text && is_array
-            where_items.push("ARRAY_TO_STRING(#{column}, '') LIKE :search")
-          elsif data_type == :string || data_type == :text
-            where_items.push("#{column} ILIKE :search")
-          elsif data_type == :date
-            where_items.push("to_char(#{column}, 'FMMM/FMDD/YYYY') LIKE :search")
-          else
-            where_items.push("CAST(#{column} AS TEXT) LIKE :search")
-          end
+          where = where_items.join(' OR ')
         end
 
-        where = where_items.join(' OR ')
+        order = scope[:query_order] || 'created_at DESC'
+        query = klass.where(where, {search: "%#{params[:term]}%"}).order(order)
+        query = query.authorized(current_member)
+
+        query = query.limit(50)
+
+        if current_member.can_read?(klass)
+          search_label = scope[:search_label] || :to_s
+          results += query.map {|record| { columns: get_columns_values(columns, record), model_name: klass.name, id: record.id, label: record.send(search_label), value: record.to_s} }
+        end
       end
 
-      order = scope[:query_order] || 'created_at DESC'
-      query = klass.where(where, {search: "%#{params[:term]}%"}).order(order)
-      query = query.authorized(current_member)
-
-      query = query.limit(50)
-
-      if current_member.can_read?(klass)
-        search_label = scope[:search_label] || :to_s
-        query.map {|record| { columns: get_columns_values(columns, record), model_name: klass.name, id: record.id, label: record.send(search_label), value: record.to_s} }
-      else
-        []
-      end
+      results
     end
 
     def get_columns_values( columns, record )
