@@ -1,20 +1,8 @@
 class ApplicationController < ActionController::Base
+  include RadbearController
   include RadbearAuditsController
 
-  protect_from_forgery prepend: true, with: :null_session
-  before_action :configure_devise_permitted_parameters, if: :devise_controller?
   ensure_authorization_performed except: %i[home global_search global_search_result], if: :auditing_security?, unless: :devise_controller?
-  helper_method :current_member
-
-  def current_auth_user
-    current_user
-  end
-
-  def current_member
-    current_user
-  end
-
-  def check_tenant; end
 
   protected
 
