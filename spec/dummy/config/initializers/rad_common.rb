@@ -1,4 +1,4 @@
-Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css]
+Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css rad_common/radbear_mailer_reset.css]
 
 Rails.configuration.enable_facebook = true
 Rails.configuration.use_avatar = false
