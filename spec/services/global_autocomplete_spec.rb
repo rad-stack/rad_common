@@ -131,18 +131,18 @@ RSpec.describe GlobalAutocomplete, type: :service do
     end
   end
 
-  describe '#scope' do
+  describe '#selected_scope' do
     context 'search scopes not empty' do
       it 'returns scopes matching scope name' do
         name = auto_complete.scope_name
-        expect(auto_complete.scope[:name]).to eq(name)
+        expect(auto_complete.selected_scope[:name]).to eq(name)
       end
     end
 
     context 'search scopes empty' do
       let(:auto_complete) { described_class.new(params, [], user) }
       it 'returns nil' do
-        expect(auto_complete.scope).to be_nil
+        expect(auto_complete.selected_scope).to be_nil
       end
     end
   end

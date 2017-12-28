@@ -9,13 +9,13 @@ class GlobalAutocomplete
   end
 
   def global_autocomplete_result
-    return [] if search_scopes.empty? || !member.can_read?(scope[:model])
-    order = scope[:query_order] || 'created_at DESC'
+    return [] if search_scopes.empty? || !member.can_read?(klass)
+    order = selected_scope[:query_order] || 'created_at DESC'
     query = klass.where(where_query, {search: "%#{params[:term]}%"}).order(order)
     query = query.authorized(member)
 
     query = query.limit(50)
-    search_label = scope[:search_label] || :to_s
+    search_label = selected_scope[:search_label] || :to_s
     query.map {|record| { columns: get_columns_values(columns, record), model_name: klass.name, id: record.id, label: record.send(search_label), value: record.to_s} }
   end
 
@@ -44,12 +44,12 @@ class GlobalAutocomplete
     params[:global_search_scope].blank? ? search_scopes.first[:name] : params[:global_search_scope]
   end
 
-  def scope
+  def selected_scope
     search_scopes.detect { |item| item[:name] == scope_name } if search_scopes.any?
   end
 
   def where_query
-    return scope[:query_where] if scope[:query_where]
+    return selected_scope[:query_where] if selected_scope[:query_where]
     where_items = []
 
     columns.each do |column|
@@ -69,11 +69,11 @@ class GlobalAutocomplete
   private
 
     def klass
-      scope[:model]
+      selected_scope[:model]
     end
 
     def columns
-      scope[:columns]
+      selected_scope[:columns]
     end
 
     def data_type(column)
