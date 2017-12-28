@@ -32,10 +32,6 @@
     margin-right: 40px;
 }
 
-.text-right {
-  text-align: right;
-}
-
 .email-header img
 {
   max-height: 100px;
@@ -244,8 +240,7 @@ tr.header-row th
   text-align: left;
 }
 
-tr.header-row th.text-right
-{
+tr.header-row th.text-right {
   text-align: right;
 }
 
