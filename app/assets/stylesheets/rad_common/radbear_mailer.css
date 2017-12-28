@@ -1,3 +1,16 @@
+/* RESET EMAIL CLIENT STYLES */
+  img{
+    border:0 none;
+    height:auto;
+    line-height:100%;
+    outline:none;
+    text-decoration:none;
+  }
+
+  a img { border:0 none; }
+  table, td { border-collapse:collapse; }
+/* END RESET */
+
 .email-container
 {
   width: 100%;
@@ -69,7 +82,7 @@ h1, h2
   font-weight: bold;
 }
 
-.picture 
+.picture
 {
   width: 92%;
   height: 120px;
@@ -105,9 +118,9 @@ img
   margin-bottom: 12px;
 }
 
-.email-col-1, .email-col-2, .email-col-3, .email-col-4, .email-col-5, 
+.email-col-1, .email-col-2, .email-col-3, .email-col-4, .email-col-5,
 .email-col-6, .email-col-7, .email-col-8, .email-col-9,
-.email-col-10, .email-col-11, .email-col-12 
+.email-col-10, .email-col-11, .email-col-12
 {
   display: inline-block;
   vertical-align: middle;
@@ -141,7 +154,7 @@ img
 
 .email-col-1
 {
-  width: 7.75%;  
+  width: 7.75%;
 }
 
 .email-col-2
@@ -164,7 +177,7 @@ img
   width: 38.75%;
 }
 
-.email-col-6 
+.email-col-6
 {
   width: 46.5%;
 }
@@ -344,9 +357,9 @@ div
 
 @media (max-width: 765px)
 {
-  .email-col-1, .email-col-2, .email-col-3, .email-col-4, .email-col-5, 
+  .email-col-1, .email-col-2, .email-col-3, .email-col-4, .email-col-5,
   .email-col-6, .email-col-7, .email-col-8, .email-col-9,
-  .email-col-10, .email-col-11, .email-col-12 
+  .email-col-10, .email-col-11, .email-col-12
   {
     display: block;
     width: auto;
@@ -361,5 +374,5 @@ div
   {
     max-width: inherit;
     height: 40px;
-  } 
+  }
 }
