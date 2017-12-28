@@ -2,15 +2,16 @@ require 'rails_helper'
 include RadCommon::ApplicationHelper
 
 RSpec.describe GlobalAutocomplete, type: :service do
+  let!(:user) { create(:user) }
+  let(:search_scopes) { Rails.application.config.global_search_scopes }
+  let(:params) { ActionController::Parameters.new(Hash.new) }
+  let(:auto_complete) { described_class.new(params, search_scopes, user) }
 
   describe '#global_autocomplete_result' do
-    let!(:user) { create(:user) }
     let!(:search_user) { create(:user, first_name: 'Alex', last_name: 'Smith') }
     let!(:another_search_user) { create(:user, first_name: 'John', last_name: 'Smith') }
-    let(:search_scopes) { Rails.application.config.global_search_scopes }
     let(:term) { search_user.last_name }
     let(:params) { ActionController::Parameters.new({ term: term, global_search_scope: 'user_name' }) }
-    let(:auto_complete) { described_class.new(params, search_scopes, user) }
 
     before(:each) { allow_any_instance_of(User).to receive(:can_read?).and_return(true) }
 
@@ -21,7 +22,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       end
     end
 
-    context 'model has query where' do
+    context 'scope has query where' do
       it 'performs search based on specified query' do
         result = auto_complete.global_autocomplete_result
         expect(result.count).to eq(2)
@@ -34,30 +35,32 @@ RSpec.describe GlobalAutocomplete, type: :service do
       end
     end
 
-    context 'model does not have query where' do
+    context 'scope has no query where' do
       let(:params) { ActionController::Parameters.new({ term: term, global_search_scope: 'user_name_with_no_where' }) }
-      let(:term) { search_user.email }
-      let(:column) { 'email' }
 
-      it 'builds query based on provided columns' do
-        scopes = search_scopes.dup
-        scopes[1][:columns] = [column]
-        auto_complete = GlobalAutocomplete.new(params, scopes, user)
-
-        result = auto_complete.global_autocomplete_result
-        expect(result.count).to eq(1)
-        expect(result.first[:columns]).to eq([search_user.email])
-        expect(result.first[:model_name]).to eq('User')
-        expect(result.first[:id]).to eq(search_user.id)
-        expect(result.first[:label]).to eq(search_user.to_s)
-        expect(result.first[:value]).to eq(search_user.to_s)
+      context 'without columns' do
+        xit 'returns all records' do # intermittent
+          expect(auto_complete.global_autocomplete_result.count).to eq(User.count)
+        end
       end
-    end
 
-    context 'member can read class' do
-      it 'returns results' do
-        allow_any_instance_of(User).to receive(:can_read?).and_return(true)
-        expect(auto_complete.global_autocomplete_result).not_to eq([])
+      context 'with columns' do
+        let(:term) { search_user.email }
+        let(:column) { 'email' }
+
+        it 'builds query based on provided columns' do
+          scopes = search_scopes.dup
+          scopes[1][:columns] = [column]
+          auto_complete = GlobalAutocomplete.new(params, scopes, user)
+
+          result = auto_complete.global_autocomplete_result
+          expect(result.count).to eq(1)
+          expect(result.first[:columns]).to eq([search_user.email])
+          expect(result.first[:model_name]).to eq('User')
+          expect(result.first[:id]).to eq(search_user.id)
+          expect(result.first[:label]).to eq(search_user.to_s)
+          expect(result.first[:value]).to eq(search_user.to_s)
+        end
       end
     end
 
@@ -70,10 +73,6 @@ RSpec.describe GlobalAutocomplete, type: :service do
   end
 
   describe '#get_columns_values' do
-    let(:user) { create(:user) }
-    let(:search_scopes) { Rails.application.config.global_search_scopes }
-    let(:auto_complete) { described_class.new(params, search_scopes, user) }
-
     context 'columns present' do
       let(:params) { ActionController::Parameters.new({ global_search_scope: 'user_name' }) }
       let(:columns) { ['email', 'last_name'] }
@@ -91,10 +90,6 @@ RSpec.describe GlobalAutocomplete, type: :service do
   end
 
   describe '#format_column_value' do
-    let(:user) { create(:user) }
-    let(:search_scopes) { Rails.application.config.global_search_scopes }
-    let(:params) { ActionController::Parameters.new(Hash.new) }
-    let(:auto_complete) { described_class.new(params, search_scopes, user) }
     let(:blank) { '' }
     let(:date) { Date.current }
     let(:string) { 'foobar' }
@@ -115,6 +110,74 @@ RSpec.describe GlobalAutocomplete, type: :service do
     context 'value not a date' do
       it 'returns value as is' do
         expect(auto_complete.format_column_value(string)).to eq(string)
+      end
+    end
+  end
+
+  describe '#scope_name' do
+    context 'global search scope present' do
+      global_search_scope = 'user_name_with_no_where'
+      let(:params) { ActionController::Parameters.new({ global_search_scope: global_search_scope }) }
+      it 'returns global search scope' do
+        expect(auto_complete.scope_name).to eq(global_search_scope)
+      end
+    end
+
+    context 'global search scope not present' do
+      let(:params) { ActionController::Parameters.new({ global_search_scope: '' }) }
+      it 'returns first search scope name' do
+        expect(auto_complete.scope_name).to eq(search_scopes.first[:name])
+      end
+    end
+  end
+
+  describe '#scope' do
+    context 'search scopes not empty' do
+      it 'returns scopes matching scope name' do
+        name = auto_complete.scope_name
+        expect(auto_complete.scope[:name]).to eq(name)
+      end
+    end
+
+    context 'search scopes empty' do
+      let(:auto_complete) { described_class.new(params, [], user) }
+      it 'returns nil' do
+        expect(auto_complete.scope).to be_nil
+      end
+    end
+  end
+
+  describe '#where_query' do
+    context 'no query where' do
+      let(:params) { ActionController::Parameters.new({ global_search_scope: 'user_name_with_no_where' }) }
+      context 'string column' do
+        let(:column) { 'email' }
+
+        it 'returns string query' do
+          scopes = search_scopes.dup
+          scopes[1][:columns] = [column]
+          auto_complete = GlobalAutocomplete.new(params, scopes, user)
+          expect(auto_complete.where_query).to eq("#{column} ILIKE :search")
+        end
+      end
+
+      context 'other column' do
+        let(:column) { 'created_at' }
+        it 'returns date query' do
+          scopes = search_scopes.dup
+          scopes[1][:columns] = [column]
+          auto_complete = GlobalAutocomplete.new(params, scopes, user)
+          expect(auto_complete.where_query).to eq("CAST(#{column} AS TEXT) LIKE :search")
+        end
+      end
+    end
+
+    context 'query where' do
+      let(:params) { ActionController::Parameters.new({ global_search_scope: 'user_name' }) }
+
+      it 'returns query where from scope' do
+        query_where = search_scopes.first[:query_where]
+        expect(auto_complete.where_query).to eq(query_where)
       end
     end
   end

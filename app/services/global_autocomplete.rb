@@ -9,56 +9,14 @@ class GlobalAutocomplete
   end
 
   def global_autocomplete_result
-    return [] if search_scopes.empty?
-
-    scope_name = params[:global_search_scope].blank? ? search_scopes.first[:name] : params[:global_search_scope]
-    scope = search_scopes.select {|item| item[:name] == scope_name }.first
-    columns = scope[:columns]
-    klass = scope[:model]
-
-    if scope[:query_where]
-      where = scope[:query_where]
-    else
-      where_items = []
-
-      columns.each do |column|
-
-        has_column = klass.new.has_attribute?(column)
-        if has_column
-          column_def = klass.new.column_for_attribute(column)
-          data_type = column_def.type
-          is_array = column_def.array
-        else
-          data_type = :string
-          is_array = false
-        end
-
-        if data_type == :text && is_array
-          where_items.push("ARRAY_TO_STRING(#{column}, '') LIKE :search")
-        elsif data_type == :string || data_type == :text
-          where_items.push("#{column} ILIKE :search")
-        elsif data_type == :date
-          where_items.push("to_char(#{column}, 'FMMM/FMDD/YYYY') LIKE :search")
-        else
-          where_items.push("CAST(#{column} AS TEXT) LIKE :search")
-        end
-      end
-
-      where = where_items.join(' OR ')
-    end
-
+    return [] if search_scopes.empty? || !member.can_read?(scope[:model])
     order = scope[:query_order] || 'created_at DESC'
-    query = klass.where(where, {search: "%#{params[:term]}%"}).order(order)
+    query = klass.where(where_query, {search: "%#{params[:term]}%"}).order(order)
     query = query.authorized(member)
 
     query = query.limit(50)
-
-    if member.can_read?(klass)
-      search_label = scope[:search_label] || :to_s
-      query.map {|record| { columns: get_columns_values(columns, record), model_name: klass.name, id: record.id, label: record.send(search_label), value: record.to_s} }
-    else
-      []
-    end
+    search_label = scope[:search_label] || :to_s
+    query.map {|record| { columns: get_columns_values(columns, record), model_name: klass.name, id: record.id, label: record.send(search_label), value: record.to_s} }
   end
 
   def get_columns_values( columns, record )
@@ -81,4 +39,52 @@ class GlobalAutocomplete
       value
     end
   end
+
+  def scope_name
+    params[:global_search_scope].blank? ? search_scopes.first[:name] : params[:global_search_scope]
+  end
+
+  def scope
+    search_scopes.detect { |item| item[:name] == scope_name } if search_scopes.any?
+  end
+
+  def where_query
+    return scope[:query_where] if scope[:query_where]
+    where_items = []
+
+    columns.each do |column|
+      if data_type(column) == :text && is_array(column)
+        where_items.push("ARRAY_TO_STRING(#{column}, '') LIKE :search")
+      elsif data_type(column) == :string || data_type(column) == :text
+        where_items.push("#{column} ILIKE :search")
+      elsif data_type(column) == :date
+        where_items.push("to_char(#{column}, 'FMMM/FMDD/YYYY') LIKE :search")
+      else
+        where_items.push("CAST(#{column} AS TEXT) LIKE :search")
+      end
+    end
+    where_items.join(' OR ')
+  end
+
+  private
+
+    def klass
+      scope[:model]
+    end
+
+    def columns
+      scope[:columns]
+    end
+
+    def data_type(column)
+      klass.new.has_attribute?(column) ? column_def(column).type : :string
+    end
+
+    def is_array(column)
+      klass.new.has_attribute?(column) ? column_def(column).array : false
+    end
+
+    def column_def(column)
+      klass.new.column_for_attribute(column)
+    end
 end
