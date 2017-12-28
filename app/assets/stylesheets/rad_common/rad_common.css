@@ -101,11 +101,11 @@
 .top--5px {
   margin-top: -5px !important;
 }
-.top-5px {
-  margin-top: 5px !important;
-}
 .top-3px {
   margin-top: 3px !important;
+}
+.top-5px {
+  margin-top: 5px !important;
 }
 .top-10px {
   margin-top: 10px !important;
@@ -197,9 +197,10 @@
 .bottom-80px {
   margin-bottom: 80px !important;
 }
+
 i.fa.tooltip-pad { padding-left: 5px; }
 
-/* Mobile Styles*/
+/* Mobile styles*/
 @media (max-width: 768px) {
   .content .global-search-group {
     display: table;
