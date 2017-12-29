@@ -33,8 +33,8 @@ RSpec.describe GlobalAutocomplete, type: :service do
     before(:each) { allow_any_instance_of(User).to receive(:can_read?).and_return(true) }
 
     context 'scope has query where' do
+      let(:result) { auto_complete.autocomplete_result(scope) }
       it 'performs search based on specified query' do
-        result = auto_complete.autocomplete_result(scope)
         expect(result.count).to eq(2)
         expect(result.first[:columns]).to eq([search_user.email])
         expect(result.first[:model_name]).to eq('User')
@@ -42,6 +42,10 @@ RSpec.describe GlobalAutocomplete, type: :service do
         expect(result.first[:label]).to eq(search_user.to_s)
         expect(result.first[:value]).to eq(search_user.to_s)
         expect(result[1][:label]).to eq(another_search_user.to_s)
+      end
+
+      it 'should have scope description' do
+        expect(result.first[:scope_description]).to eq(scope[:description])
       end
     end
 

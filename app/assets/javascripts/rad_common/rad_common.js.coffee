@@ -11,6 +11,30 @@ $ ->
       e.preventDefault()
       false
 
+  $('.global-search-autocomplete').each( (index, object) ->
+    instance = $(object).autocomplete().autocomplete("instance")
+    instance._renderItem = (ul, item) ->
+      table = $("<table>")
+      tr = $( "<tr>" )
+      td = $( "<td class='search-label'>" + item.label + "</td>" )
+      tr.append( td )
+      if( item.hasOwnProperty("columns") && item.columns.length > 0 )
+        columns = item.columns
+        for i in [0..columns.length]
+          column = columns[i]
+          if column != undefined
+            tr.append("<td class='search-column-value'>" + column + "</td>"  )
+      tr.appendTo(table)
+
+      if item.scope_description != undefined && $('.super_search').val() == '1'
+        tr = $("<tr>")
+        tr.append("<td class='search-scope-description'>" + item.scope_description + "</td>")
+      tr.appendTo(table)
+      table.appendTo(ul)
+      table
+  )
+
+
   defaultGlobalSearchPlaceholder = $('.global-search-autocomplete').attr('placeholder')
   $('.super_search').change ->
     if $('.super_search').is(':checked')

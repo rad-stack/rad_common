@@ -30,7 +30,7 @@ class GlobalAutocomplete
     query = query.limit(50)
     search_label = scope[:search_label] || :to_s
 
-    query.map {|record| { columns: get_columns_values(columns, record), model_name: klass.name, id: record.id, label: record.send(search_label), value: record.to_s} }
+    query.map {|record| { columns: get_columns_values(columns, record), model_name: klass.name, id: record.id, label: record.send(search_label), value: record.to_s, scope_description: scope[:description]} }
   end
 
   def get_columns_values( columns, record )
