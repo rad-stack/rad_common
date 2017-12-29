@@ -29,6 +29,12 @@ class SearchController < ApplicationController
         current_member.update_column(:global_search_default, params[:global_search_scope])
       end
 
+      if params[:super_search].to_i == 1
+        current_member.update_column(:super_search_default, true)
+      else
+        current_member.update_column(:super_search_default, false)
+      end
+
       if the_object
         redirect_to the_object
       else

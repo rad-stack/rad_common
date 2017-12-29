@@ -21,4 +21,8 @@ module GlobalSearchHelper
     return scopes
   end
 
+  def super_search_default
+    current_member.super_search_default ? '1' : '0'
+  end
+
 end

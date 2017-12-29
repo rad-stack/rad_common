@@ -36,8 +36,13 @@ $ ->
 
 
   defaultGlobalSearchPlaceholder = $('.global-search-autocomplete').attr('placeholder')
-  $('.super_search').change ->
-    if $('.super_search').is(':checked')
+  if $('.super_search').val() == '1'
+    $('.super_search').prop('checked', true)
+    $('.global-search-autocomplete').attr('placeholder', 'Super Search')
+    $('.global-search-dropdown').toggle()
+
+  $('.super_search').change (event) ->
+    if $(this).is(':checked')
       defaultGlobalSearchPlaceholder = $('.global-search-autocomplete').attr('placeholder')
       $('.super_search').val('1')
       $('.global-search-autocomplete').attr('placeholder', 'Super Search')
