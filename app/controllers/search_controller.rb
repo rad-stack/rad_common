@@ -5,7 +5,12 @@ class SearchController < ApplicationController
   def global_search
     # authorization is checked within the global_autocomplete_result
     global_autocomplete = GlobalAutocomplete.new(params, view_context.global_search_scopes, current_member)
-    render json: global_autocomplete.global_autocomplete_result
+
+    if params['super_search'].to_i == 1
+      render json: global_autocomplete.global_super_search_result
+    else
+      render json: global_autocomplete.global_autocomplete_result
+    end
   end
 
   def global_search_result
