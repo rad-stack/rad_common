@@ -11,6 +11,16 @@ $ ->
       e.preventDefault()
       false
 
+  defaultGlobalSearchPlaceholder = $('.global-search-autocomplete').attr('placeholder')
+  $('.super_search').change ->
+    if $('.super_search').is(':checked')
+      $('.super_search').val('1')
+      $('.global-search-autocomplete').attr('placeholder', 'Super Search')
+    else
+      $('.super_search').val('0')
+      $('.global-search-autocomplete').attr('placeholder', defaultGlobalSearchPlaceholder)
+    $('.global-search-dropdown').toggle()
+
   select_global_search_item = (item, event, ui) ->
     $("input[name=global_search_id]").val(ui.item.id)
     $("input[name=global_search_model_name]").val(ui.item.model_name)
