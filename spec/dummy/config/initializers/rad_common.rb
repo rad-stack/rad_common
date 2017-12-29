@@ -24,4 +24,10 @@ Rails.configuration.global_search_scopes =
       description: 'Search for user by name',
       columns: [],
       query_order: 'last_name ASC, first_name ASC, created_at DESC' },
+    { name: 'division_name', model: Division,
+      description: 'Search for division by name',
+      columns: ['name'],
+      query_where: 'name ilike :search',
+      query_order: 'name'
+    }
   ]

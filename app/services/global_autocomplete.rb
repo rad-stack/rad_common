@@ -2,20 +2,34 @@ class GlobalAutocomplete
   include RadCommon::ApplicationHelper
 
   attr_reader :params, :search_scopes, :member
+  attr_accessor :current_scope
   def initialize(params, search_scopes, member)
     @params = params
     @search_scopes = search_scopes
+    @current_scope = selected_scope
     @member = member
   end
 
   def global_autocomplete_result
-    return [] if search_scopes.empty? || !member.can_read?(klass)
-    order = selected_scope[:query_order] || 'created_at DESC'
+    return [] if search_scopes.empty?
+    autocomplete_result(selected_scope)
+  end
+
+  def global_super_search_result
+    scopes = search_scopes.select{ |scope| scope_with_where?(scope) }
+    scopes.map { |scope| autocomplete_result(scope) }.flatten
+  end
+
+  def autocomplete_result(scope)
+    return [] unless member.can_read?(klass)
+    self.current_scope = scope
+    order = scope[:query_order] || 'created_at DESC'
     query = klass.where(where_query, {search: "%#{params[:term]}%"}).order(order)
     query = query.authorized(member)
 
     query = query.limit(50)
-    search_label = selected_scope[:search_label] || :to_s
+    search_label = scope[:search_label] || :to_s
+
     query.map {|record| { columns: get_columns_values(columns, record), model_name: klass.name, id: record.id, label: record.send(search_label), value: record.to_s} }
   end
 
@@ -49,7 +63,7 @@ class GlobalAutocomplete
   end
 
   def where_query
-    return selected_scope[:query_where] if selected_scope[:query_where]
+    return current_scope[:query_where] if current_scope[:query_where]
     where_items = []
 
     columns.each do |column|
@@ -69,11 +83,11 @@ class GlobalAutocomplete
   private
 
     def klass
-      selected_scope[:model]
+      current_scope[:model]
     end
 
     def columns
-      selected_scope[:columns]
+      current_scope[:columns]
     end
 
     def data_type(column)
@@ -86,5 +100,9 @@ class GlobalAutocomplete
 
     def column_def(column)
       klass.new.column_for_attribute(column)
+    end
+
+    def scope_with_where?(scope)
+      scope[:columns].any? && scope[:query_where].present?
     end
 end
