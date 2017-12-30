@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171128190949) do
+ActiveRecord::Schema.define(version: 20171230132438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 20171128190949) do
     t.boolean  "super_admin",            :default=>false, :null=>false
     t.integer  "security_group_id",      :null=>false, :foreign_key=>{:references=>"security_groups", :name=>"fk_users_security_group_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__users_security_group_id", :using=>:btree}
     t.integer  "user_status_id",         :null=>false, :foreign_key=>{:references=>"user_statuses", :name=>"fk_users_user_status_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__users_user_status_id", :using=>:btree}
+    t.boolean  "super_search_default",   :default=>false, :null=>false
   end
 
   create_table "audits", force: :cascade do |t|
