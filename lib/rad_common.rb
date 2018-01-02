@@ -13,7 +13,7 @@ module RadCommon
     end
 
     if raw_info['timezone'].present? && !raw_info['timezone'].blank?
-      timezone = RadbearRails.convert_timezone(raw_info['timezone'])
+      timezone = RadCommon.convert_timezone(raw_info['timezone'])
     end
 
     provider_id = response_data['uid']
@@ -22,7 +22,7 @@ module RadCommon
     first_name = data_info["name"].split(" ").first
     last_name = data_info["name"].split(" ").last
 
-    return RadbearRails.find_for_provider_oauth("facebook", provider_id, nil, email, access_token, nil, expires_at, timezone, first_name, last_name, avatar, current_user)
+    return RadCommon.find_for_provider_oauth("facebook", provider_id, nil, email, access_token, nil, expires_at, timezone, first_name, last_name, avatar, current_user)
   end
 
   def self.find_for_provider_oauth(provider, provider_id, device_id, email, access_token, access_secret, expires_at, timezone, first_name, last_name, avatar, current_user)
@@ -34,7 +34,7 @@ module RadCommon
     else
       user = User.find_by_email(email)
       if user
-        message = RadbearRails.update_provider_data(user, provider, provider_id, email, first_name, last_name, access_token, access_secret, timezone, expires_at, avatar)
+        message = RadCommon.update_provider_data(user, provider, provider_id, email, first_name, last_name, access_token, access_secret, timezone, expires_at, avatar)
       else
         users = User.where("#{provider}_id = ?", provider_id)
         user = users.first if users.count != 0

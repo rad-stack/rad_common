@@ -5,7 +5,7 @@ module RadCommon
     def create
       provider = params[:provider]
 
-      @user, message = RadbearRails.send(provider.to_sym, request.env["omniauth.auth"], current_user)
+      @user, message = RadCommon.send(provider.to_sym, request.env["omniauth.auth"], current_user)
       handle_user(provider.titlecase, message)
     end
 
