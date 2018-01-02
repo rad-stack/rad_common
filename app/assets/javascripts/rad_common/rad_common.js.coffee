@@ -11,6 +11,46 @@ $ ->
       e.preventDefault()
       false
 
+  $('.global-search-autocomplete').each( (index, object) ->
+    instance = $(object).autocomplete().autocomplete("instance")
+    instance._renderItem = (ul, item) ->
+      table = $("<table>")
+      tr = $( "<tr>" )
+      td = $( "<td class='search-label'>" + item.label + "</td>" )
+      tr.append( td )
+      if( item.hasOwnProperty("columns") && item.columns.length > 0 )
+        columns = item.columns
+        for i in [0..columns.length]
+          column = columns[i]
+          if column != undefined
+            tr.append("<td class='search-column-value'>" + column + "</td>"  )
+      tr.appendTo(table)
+
+      if item.scope_description != undefined && $('.super_search').val() == '1'
+        tr = $("<tr>")
+        tr.append("<td class='search-scope-description'>" + item.scope_description + "</td>")
+      tr.appendTo(table)
+      table.appendTo(ul)
+      table
+  )
+
+
+  defaultGlobalSearchPlaceholder = $('.global-search-autocomplete').attr('placeholder')
+  if $('.super_search').val() == '1'
+    $('.super_search').prop('checked', true)
+    $('.global-search-autocomplete').attr('placeholder', 'Super Search')
+    $('.global-search-dropdown').toggle()
+
+  $('.super_search').change (event) ->
+    if $(this).is(':checked')
+      defaultGlobalSearchPlaceholder = $('.global-search-autocomplete').attr('placeholder')
+      $('.super_search').val('1')
+      $('.global-search-autocomplete').attr('placeholder', 'Super Search')
+    else
+      $('.super_search').val('0')
+      $('.global-search-autocomplete').attr('placeholder', defaultGlobalSearchPlaceholder)
+    $('.global-search-dropdown').toggle()
+
   select_global_search_item = (item, event, ui) ->
     $("input[name=global_search_id]").val(ui.item.id)
     $("input[name=global_search_model_name]").val(ui.item.model_name)

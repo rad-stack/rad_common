@@ -5,7 +5,7 @@
   -if search_scopes.any?
     = form_tag("/rad_common/global_search_result", method: :get) do
       .input-group.global-search-group
-        %span.input-group-addon
+        %span.input-group-addon.global-search-dropdown
           .dropdown
             %span.fa.fa-search.dropdown-toggle#search-options{"aria-expanded" => "true", "data-toggle" => "dropdown", :type => "button"}
               %span.caret
@@ -14,8 +14,11 @@
                 %li{role: "presentation", class: index == 0 ? "selected-search" : ""}
                   %a.search-option{href: "#", role: "menuitem", tabindex: "-1", :"data-search-scope" => scope[:name]} #{scope[:description]}
 
-        %input#global_search_name.form-control.input-medium.global-search-autocomplete.ui-autocomplete-input{ :"data-autocomplete" => "/rad_common/global_search", :"data-autocomplete-fields" => "{ \"global_search_scope\" : \"#global_search_scope\"}", name: "global_search_name", placeholder: search_scopes.first[:description], size: "50", type: "text",  autocomplete:"off"}
-        %input{type: "hidden", name: "global_search_id", id: "global_search_id"}
-        %input{type: "hidden", name: "global_search_model_name", id: "global_search_model_name"}
-        %input{type: "hidden", name: "global_search_scope", id: "global_search_scope"}
+        %input#global_search_name.form-control.input-medium.global-search-autocomplete.ui-autocomplete-input{ :"data-autocomplete" => "/rad_common/global_search", :"data-autocomplete-fields" => "{ \"global_search_scope\" : \"#global_search_scope\", \"super_search\" : \"#super_search\"}", name: "global_search_name", placeholder: search_scopes.first[:description], size: "50", type: "text",  autocomplete:"off"}
+        %span.input-group-addon
+          %span.fa.fa-globe{ data: { toggle: 'tooltip', placement: 'top'}, title: 'Super search takes longer than scoped search.' }
+          %input{type: 'checkbox', name: 'super_search', id: 'super_search', class: 'super_search', value: super_search_default}
+          %input{type: "hidden", name: "global_search_id", id: "global_search_id"}
+          %input{type: "hidden", name: "global_search_model_name", id: "global_search_model_name"}
+          %input{type: "hidden", name: "global_search_scope", id: "global_search_scope"}
     %br/

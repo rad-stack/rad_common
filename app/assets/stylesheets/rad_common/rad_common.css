@@ -80,12 +80,19 @@
   text-transform: capitalize;
   color: #7A7A7A;
 }
+.search-scope-description {
+  color: #7A7A7A;
+  font-size: 10px;
+}
 .ui-widget table.ui-state-focus {
   margin: 0;
   border: none;
 }
 .ui-widget table.ui-menu-item {
   width: 100%;
+}
+.ui-widget table.ui-menu-item td.search-label {
+  padding-right: 25px;
 }
 .ui-widget table.ui-menu-item td.search-column-value {
   padding-right: 3px;
