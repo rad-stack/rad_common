@@ -17,7 +17,8 @@ class GlobalAutocomplete
 
   def global_super_search_result
     scopes = search_scopes.select{ |scope| scope_with_where?(scope) }
-    scopes.map { |scope| autocomplete_result(scope) }.flatten
+    results = scopes.map { |scope| autocomplete_result(scope) }.flatten
+    results.uniq{ |result| [result[:model_name], result[:id]] }
   end
 
   def autocomplete_result(scope)

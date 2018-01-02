@@ -64,7 +64,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
         it 'builds query based on provided columns' do
           scopes = search_scopes.dup
-          scopes[1][:columns] = [column]
+          scopes[2][:columns] = [column]
           auto_complete = GlobalAutocomplete.new(params, scopes, user)
 
           result = auto_complete.autocomplete_result(scope)
@@ -89,7 +89,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
   describe '#global_super_search_result' do
     let(:term) { 'Peters' }
     let(:params) { ActionController::Parameters.new({ term: term }) }
-    let!(:another_user) { create(:user, last_name: term) }
+    let!(:another_user) { create(:user, last_name: term, email: "#{term}@example.com") }
     let!(:division) { create(:division, name: term) }
 
     before(:each) { allow_any_instance_of(User).to receive(:can_read?).and_return(true) }
@@ -101,6 +101,12 @@ RSpec.describe GlobalAutocomplete, type: :service do
       expect(result.first[:value]).to include(term)
       expect(result[1][:model_name]).to eq('Division')
       expect(result[1][:value]).to eq(term)
+    end
+
+    it 'excludes duplicates' do
+      result = auto_complete.global_super_search_result
+      records = result.map { |item| { id: item[:id], model_name: item[:model_name] } }
+      expect(records.uniq.length).to eq(records.length)
     end
   end
 
@@ -187,7 +193,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
         it 'returns string query' do
           scopes = search_scopes.dup
-          scopes[1][:columns] = [column]
+          scopes[2][:columns] = [column]
           auto_complete = GlobalAutocomplete.new(params, scopes, user)
           expect(auto_complete.where_query).to eq("#{column} ILIKE :search")
         end
@@ -197,7 +203,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
         let(:column) { 'created_at' }
         it 'returns date query' do
           scopes = search_scopes.dup
-          scopes[1][:columns] = [column]
+          scopes[2][:columns] = [column]
           auto_complete = GlobalAutocomplete.new(params, scopes, user)
           expect(auto_complete.where_query).to eq("CAST(#{column} AS TEXT) LIKE :search")
         end
