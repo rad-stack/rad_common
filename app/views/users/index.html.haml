@@ -1,0 +1,20 @@
+-if @pending.any?
+  .panel.panel-default
+    = render 'layouts/panel_header', action_name: 'custom', title: "Pending Users (#{@pending.count})", icon: 'fa-list'
+    .panel-body
+      = render 'users/index', users: @pending
+
+.panel.panel-default
+  = render 'layouts/panel_header', no_new_button: true
+  .panel-body
+    .row.button-row
+      .col-md-12
+        .btn-group
+          %a{class: "btn dropdown-toggle #{@status.nil? ? 'btn-warning' : @status.button_style}", 'data-toggle' => 'dropdown', href: '#'}
+            = @status.nil? ? 'All Users' : @status.name + ' Users'
+            %span.caret
+          %ul.dropdown-menu
+            -@user_statuses.each do |status|
+              %li= link_to status.name, users_path(status: status.id)
+            %li= link_to 'All Users', users_path(status: 'All')
+    = render 'users/index', users: @users
