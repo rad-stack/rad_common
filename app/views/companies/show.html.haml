@@ -1,0 +1,6 @@
+.panel.panel-default
+  -if current_member.can_global_validate?(@company)
+    -actions = [link_to('Global Validity Check', "/rad_common/companies/#{Company.main.id}/global_validity_check", class: 'btn btn-default btn-sm', method: :post, data: { confirm: 'This is an exhaustive effort that could cause performance problems on the database. Are you sure?' })]
+  = render 'layouts/panel_header', no_new_button: true, no_delete_button: true, no_index_button: true, additional_actions: actions
+  .panel-body
+    = render 'layouts/show_data_columns', resource: @company, data: [{ label: 'Address', value: @company.full_address }, :phone_number, :website, :email]

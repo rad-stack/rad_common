@@ -1,0 +1,23 @@
+.panel.panel-default
+  = render "layouts/panel_header", no_new_button: true
+  .panel-body
+    = simple_form_for(@user) do |f|
+      = f.error_notification
+      .form-inputs
+        .row
+          .col-md-6= f.input :first_name
+          .col-md-6= f.input :last_name
+        .row
+          .col-md-6= f.input :mobile_phone
+          .col-md-6= f.input :email, disabled: true
+        .row
+          .col-md-3
+            -if @user.has_attribute?(:admin)
+              = f.input :admin
+            -else
+              = f.association :security_group
+          .col-md-3= f.association :user_status, collection: UserStatus.by_id
+          .col-md-3= f.input :password, autocomplete: "off", input_html: {autocomplete: "off"}
+          .col-md-3= f.input :password_confirmation
+      .form-actions
+        = f.button :submit, "Save", class: "btn btn-primary"

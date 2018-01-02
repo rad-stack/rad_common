@@ -1,0 +1,25 @@
+.panel.panel-default
+  = render "layouts/panel_header", no_new_button: true, no_delete_button: true, no_index_button: true
+  .panel-body
+    = simple_form_for(@company) do |f|
+      = f.error_notification
+
+      .form-inputs
+        .row
+          .col-md-6= f.input :name
+          .col-md-6= f.input :website
+        .row
+          .col-md-5= f.input :address_1
+          .col-md-7= f.input :address_2
+        .row
+          .col-md-5= f.input :city
+          .col-md-1= f.input :state
+          .col-md-2= f.input :zipcode
+          .col-md-2= f.input :email
+          .col-md-2= f.input :phone_number
+        .row
+          .col-md-6= f.input :company_logo_includes_name
+          .col-md-6= f.input :app_logo_includes_name
+
+      .form-actions
+        = f.button :submit, "Save", class: "btn btn-primary"
