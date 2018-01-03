@@ -21,7 +21,7 @@ class GlobalAutocomplete
       start_time = Time.current
       result = autocomplete_result(scope)
       end_time = Time.current
-      puts (end_time - start_time) * 1000000
+      puts "#{end_time - start_time} seconds for #{scope[:name]}."
       result
     end
     results = results.flatten
