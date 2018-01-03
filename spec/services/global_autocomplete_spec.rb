@@ -108,6 +108,16 @@ RSpec.describe GlobalAutocomplete, type: :service do
       records = result.map { |item| { id: item[:id], model_name: item[:model_name] } }
       expect(records.uniq.length).to eq(records.length)
     end
+
+    context 'super_search_exclude' do
+      it 'excludes scopes with super_search_exclude marked true' do
+        scopes = search_scopes.dup
+        scopes[3][:super_search_exclude] = true
+        auto_complete = GlobalAutocomplete.new(params, scopes, user)
+        result = auto_complete.global_super_search_result
+        expect(result.count).to eq(1)
+      end
+    end
   end
 
   describe '#get_columns_values' do
