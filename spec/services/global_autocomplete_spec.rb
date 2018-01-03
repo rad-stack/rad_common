@@ -154,6 +154,12 @@ RSpec.describe GlobalAutocomplete, type: :service do
         expect(auto_complete.format_column_value(date)).to eq(format_date(date))
       end
     end
+    context 'value datetime' do
+      it 'returns formatted datetime' do
+        datetime = DateTime.current
+        expect(auto_complete.format_column_value(datetime)).to eq(format_datetime(datetime))
+      end
+    end
 
     context 'value not a date' do
       it 'returns value as is' do

@@ -51,6 +51,8 @@ class GlobalAutocomplete
   def format_column_value(value)
     if value.blank?
       ''
+    elsif value.is_a? DateTime
+      format_datetime(value)
     elsif value.is_a? Date
       format_date(value)
     else
