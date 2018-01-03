@@ -30,7 +30,10 @@ class UsersController < ApplicationController
   def edit; end
 
   def update
-    if @user.update_attributes(permitted_params)
+    @user.assign_attributes(permitted_params)
+    @user.approved_by = current_member
+
+    if @user.save
       flash[:success] = 'User updated.'
       redirect_to @user
     else

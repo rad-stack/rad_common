@@ -2,6 +2,7 @@ module RadbearUser
   extend ActiveSupport::Concern
 
   included do
+    attr_accessor :approved_by
     after_save :notify_user_approved
   end
 
@@ -38,7 +39,7 @@ module RadbearUser
 
       User.admins.each do |admin|
         if admin.id != id
-          RadbearMailer.user_was_approved(admin, self).deliver_later
+          RadbearMailer.user_was_approved(admin, self, approved_by).deliver_later
         end
       end
     end

@@ -47,7 +47,7 @@ class RadbearMailer < ActionMailer::Base
     mail(to: "\"#{admin}\" <#{admin.email}>", subject: "Member Was Approved on #{I18n::t(:app_name)}")
   end
 
-  def user_was_approved(admin, user)
+  def user_was_approved(admin, user, approver)
     action_url = user.class.name == 'Member' ? member_url(user) : user_url(user)
 
     @email_action = { message: 'You can review this approval if desired.',
@@ -55,7 +55,7 @@ class RadbearMailer < ActionMailer::Base
                       button_url: action_url }
 
     @recipient = admin
-    @message = "#{user} was approved by an admin on #{I18n.t(:app_name)}."
+    @message = "#{user} was approved by #{approver} on #{I18n.t(:app_name)}."
     mail(to: "\"#{admin}\" <#{admin.email}>", subject: "User Was Approved on #{I18n.t(:app_name)}")
   end
 
