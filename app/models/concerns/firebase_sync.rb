@@ -7,15 +7,19 @@ module FirebaseSync
   end
 
   def firebase_reference
-    return "#{self.class.table_name.camelize(:lower)}/id#{self.id}"
+    "#{self.class.table_name.camelize(:lower)}/id#{self.id}"
   end
 
   def firebase_client
-    return Firebase::Client.new(ENV["FIREBASE_DATA_URL"], ENV["FIREBASE_SECRET_KEY"])
+    Firebase::Client.new(ENV["FIREBASE_DATA_URL"], ENV["FIREBASE_SECRET_KEY"])
   end
 
   def firebase_datetime(datetime)
-    return datetime.strftime("%Y-%m-%d %H:%M:%S")
+    datetime.strftime("%Y-%m-%d %H:%M:%S")
+  end
+
+  def firebase_date(date)
+    date.strftime("%Y-%m-%d")
   end
 
   def get_firebase_data(path)
@@ -25,7 +29,7 @@ module FirebaseSync
       raise "#{response.body}"
     end
 
-    return response.body
+    response.body
   end
 
   private
