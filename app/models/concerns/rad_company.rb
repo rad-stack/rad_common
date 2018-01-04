@@ -24,7 +24,11 @@ module RadCompany
     all_models = ActiveRecord::Base.descendants
     models = all_models - exclude_models
 
-    models.each { |model| error_messages = error_messages.concat(check_model(model)) }
+    models.each do |model|
+      unless exclude_models.include?(model.to_s)
+        error_messages = error_messages.concat(check_model(model))
+      end
+    end
 
     specific_queries = Rails.application.config.global_validity_include
 
