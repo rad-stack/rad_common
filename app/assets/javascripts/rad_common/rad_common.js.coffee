@@ -28,7 +28,7 @@ $ ->
 
       if item.scope_description != undefined && $('.super_search').val() == '1'
         tr = $("<tr>")
-        tr.append("<td class='search-scope-description'>" + item.scope_description + "</td>")
+        tr.append("<td class='search-scope-model-name'>" + humanize(item.model_name) + "</td>")
       tr.appendTo(table)
       table.appendTo(ul)
       table
@@ -68,3 +68,6 @@ $ ->
 
   if $('.read-more').length
     $('.read-more').readmore( { speed: 75, moreLink: "<a class='btn btn-primary btn-xs read-more-btn more-btn' href='#'><div>Read more</div></a>", lessLink: "<a class='btn btn-primary btn-xs read-more-btn close-btn' href='#'><div>Close</div></a>" } )
+
+  humanize = (string) ->
+    string[0].toUpperCase() + string.substring(1).replace(/([a-z])(?=[A-Z])/g, "$1 ")
