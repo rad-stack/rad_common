@@ -18,7 +18,11 @@ class GlobalAutocomplete
   def global_super_search_result
     scopes = search_scopes.select{ |scope| scope_with_where?(scope) }
     results = scopes.map do |scope|
-      autocomplete_result(scope) unless scope[:super_search_exclude]
+      start_time = Time.current
+      result = autocomplete_result(scope) unless scope[:super_search_exclude]
+      end_time = Time.current
+      puts "#{end_time - start_time} seconds for #{scope[:name]}"
+      result
     end
     results = results.compact.flatten
     results.uniq{ |result| [result[:model_name], result[:id]] }
