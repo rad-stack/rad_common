@@ -3,9 +3,7 @@ module FirebaseAction
 
   module ClassMethods
 
-    def firebase_cleanup(user, error, path, data)
-      firebase_client = Firebase::Client.new(ENV["FIREBASE_DATA_URL"], ENV["FIREBASE_SECRET_KEY"])
-
+    def firebase_cleanup(app, user, error, path, data)
       if error
         data["error"] = error
         RadbearMailer.simple_message(Company.main, user, "Problem", error).deliver_later if user
@@ -27,13 +25,13 @@ module FirebaseAction
 
       data["timestamp"] = DateTime.now.to_s
 
-      response = firebase_client.update("logs#{path}", data)
+      response = app.client.update("logs#{path}", data)
 
       unless response.success?
         raise "#{response.body}"
       end
 
-      response = firebase_client.delete("transactions#{path}")
+      response = app.client.delete("transactions#{path}")
 
       unless response.success?
         raise "#{response.body}"
