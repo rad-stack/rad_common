@@ -2,7 +2,7 @@ module FirebaseSync
   extend ActiveSupport::Concern
 
   included do
-    after_commit :firebase_sync_job, on: [:create, :update]
+    after_commit :firebase_sync_job, on: %i[create update]
     after_commit :firebase_destroy_job, on: [:destroy]
   end
 
@@ -11,11 +11,11 @@ module FirebaseSync
   end
 
   def firebase_datetime(datetime)
-    datetime.strftime("%Y-%m-%d %H:%M:%S")
+    datetime&.strftime("%Y-%m-%d %H:%M:%S")
   end
 
   def firebase_date(date)
-    date.strftime("%Y-%m-%d")
+    date&.strftime("%Y-%m-%d") if date
   end
 
   def get_firebase_data(app, path)
