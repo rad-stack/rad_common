@@ -2,7 +2,6 @@ class Company < ApplicationRecord
   include Authority::Abilities
   include RadCompany
 
-  scope :by_id, -> { order(:id) }
   alias_attribute :to_s, :name
 
   validate :validate_only_one, on: :create
