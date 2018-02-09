@@ -11,11 +11,11 @@ module FirebaseSync
   end
 
   def firebase_datetime(datetime)
-    datetime&.strftime("%Y-%m-%d %H:%M:%S")
+    datetime&.strftime('%Y-%m-%d %H:%M:%S')
   end
 
   def firebase_date(date)
-    date&.strftime("%Y-%m-%d") if date
+    date&.strftime('%Y-%m-%d') if date
   end
 
   def get_firebase_data(app, path)
@@ -30,16 +30,20 @@ module FirebaseSync
 
   private
 
-  def firebase_sync_job
-    firebase_sync_apps.each do |app_id|
-      FirebaseSyncJob.perform_later(app_id, self.class.name, id) unless Rails.env.test? || firebase_reference.nil?
-    end
-  end
+    def firebase_sync_job
+      return unless FirebaseApp.enabled?
 
-  def firebase_destroy_job
-    firebase_sync_apps.each do |app_id|
-      FirebaseDestroyJob.perform_later(app_id, firebase_reference) unless Rails.env.test? || firebase_reference.nil?
+      firebase_sync_apps.each do |app_id|
+        FirebaseSyncJob.perform_later(app_id, self.class.name, id) unless firebase_reference.nil?
+      end
     end
-  end
+
+    def firebase_destroy_job
+      return unless FirebaseApp.enabled?
+
+      firebase_sync_apps.each do |app_id|
+        FirebaseDestroyJob.perform_later(app_id, firebase_reference) unless firebase_reference.nil?
+      end
+    end
 
 end
