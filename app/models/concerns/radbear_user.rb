@@ -29,6 +29,14 @@ module RadbearUser
     Audited::Audit.unscoped.where('user_id = ?', id).order('created_at DESC')
   end
 
+  def update_firebase_info(app)
+    firebase_user = get_firebase_data(app, firebase_reference)
+
+    if firebase_user
+      update!(mobile_client_platform: firebase_user['platform'], mobile_client_version: firebase_user['version'], current_device_type: firebase_user['deviceType'])
+    end
+  end
+
   private
 
     def notify_user_approved

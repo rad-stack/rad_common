@@ -28,6 +28,12 @@ module FirebaseSync
     response.body
   end
 
+  def firebase_sync_apps
+    # override this as needed
+
+    FirebaseApp.all.map { |item| item.id }
+  end
+
   private
 
     def firebase_sync_job
@@ -45,5 +51,4 @@ module FirebaseSync
         FirebaseDestroyJob.perform_later(app_id, firebase_reference) unless firebase_reference.nil?
       end
     end
-
 end

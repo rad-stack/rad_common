@@ -1,0 +1,53 @@
+.panel.panel-default
+  = render 'layouts/panel_header', action_name: 'custom', title: "Firebase Logs for App: #{@app.name}", icon: 'fa-list'
+  .panel-body
+    .row.button-row
+      .col-md-12
+        .btn-group
+          %a{class: 'btn dropdown-toggle btn-success', 'data-toggle' => 'dropdown', href: '#'}
+            = @app.name
+            %span.caret
+          %ul.dropdown-menu
+            - FirebaseApp.all.each do |app|
+              %li= link_to app.name, firebase_logs_path(app_id: app.id)
+
+-if @firebase_logs
+
+  -can_clear = current_user.can_update?(Company)
+
+  -@firebase_logs.each do |log|
+    .panel.panel-default
+      -if can_clear
+        -actions = []
+        -actions.push(link_to("Delete All", firebase_log_path(log.first, type: 'all', app_id: @app.id), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))
+        -actions.push(link_to("Delete Non Errors", firebase_log_path(log.first, type: 'non_errors', app_id: @app.id), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))
+      = render "layouts/panel_header", action_name: "custom", title: log.first.titleize, icon: "fa-list", additional_actions: actions
+      .panel-body
+        - if @limited_log_categories.include?(log.first)
+          .alert.alert-warning
+            This is a limited log result. More logs exist on Firebase
+        %table.table.table-striped.table-bordered
+          %tr
+            %th Timestamp
+            %th Key
+            %th Error
+            %th Log
+
+          -rows = log.last.to_a.map {|item| {key: item.first, timestamp: item.last["timestamp"], error: item.last["error"], log: item.last}}
+
+          -rows.sort_by {|item| item[:timestamp]}.reverse.each do |row|
+            -row[:log].delete("error")
+            -row[:log].delete("timestamp")
+
+            %tr
+              %td
+                -if row[:timestamp]
+                  = format_datetime(DateTime.parse(row[:timestamp]))
+              %td= row[:key]
+              %td
+                -error = row[:error]
+                -if error
+                  .alert.alert-danger= error
+              %td= row[:log]
+-else
+  %p There are no Firebase logs yet
