@@ -31,11 +31,24 @@ module RadbearUser
 
   def update_firebase_info(app)
     firebase_user = get_firebase_data(app, firebase_reference)
+    return unless firebase_user
 
-    if firebase_user
-      Audited.audit_class.as_user(self) do
-        update!(mobile_client_platform: firebase_user['platform'], mobile_client_version: firebase_user['version'], current_device_type: firebase_user['deviceType'])
-      end
+    Audited.audit_class.as_user(self) do
+      update!(mobile_client_platform: firebase_user['platform'], mobile_client_version: firebase_user['version'], current_device_type: firebase_user['deviceType'])
+    end
+  end
+
+  def firebase_device_tokens(app)
+    response = app.client.get firebase_reference + '/messagingTokens'
+
+    unless response.success?
+      raise response.body
+    end
+
+    if response.body && response.body.count != 0
+      response.body || []
+    else
+      []
     end
   end
 
