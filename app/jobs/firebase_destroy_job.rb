@@ -6,8 +6,7 @@ class FirebaseDestroyJob < ApplicationJob
     response = app.client.delete(firebase_reference)
 
     unless response.success?
-      raise "#{response.body}"
+      raise response.body
     end
   end
-
 end

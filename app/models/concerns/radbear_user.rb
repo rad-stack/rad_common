@@ -33,7 +33,9 @@ module RadbearUser
     firebase_user = get_firebase_data(app, firebase_reference)
 
     if firebase_user
-      update!(mobile_client_platform: firebase_user['platform'], mobile_client_version: firebase_user['version'], current_device_type: firebase_user['deviceType'])
+      Audited.audit_class.as_user(self) do
+        update!(mobile_client_platform: firebase_user['platform'], mobile_client_version: firebase_user['version'], current_device_type: firebase_user['deviceType'])
+      end
     end
   end
 
