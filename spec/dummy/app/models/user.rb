@@ -30,6 +30,22 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def active_for_authentication?
+    super && user_status && user_status.active
+  end
+
+  def active
+    active_for_authentication?
+  end
+
+  def inactive_message
+    if !user_status.active
+      :not_approved
+    else
+      super
+    end
+  end
+
   private
 
     def check_defaults
@@ -37,5 +53,4 @@ class User < ApplicationRecord
       status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
       self.user_status = status if new_record? && !user_status
     end
-
 end

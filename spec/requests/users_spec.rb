@@ -62,6 +62,18 @@ describe 'Users', type: :request do
   end
 
   describe 'sign in' do
+    it 'can not sign in without active user status' do
+      user.update!(user_status: UserStatus.default_pending_status)
+
+      visit new_user_session_path
+
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: 'password'
+
+      click_button 'Sign In'
+      expect(page.html).to include('Your account has not been approved by your administrator yet.')
+    end
+
     it 'should sign in' do
       visit new_user_session_path
 
