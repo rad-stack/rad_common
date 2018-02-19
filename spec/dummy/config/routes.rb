@@ -1,9 +1,7 @@
 Rails.application.routes.draw do
-  mount RadCommon::Engine => "/rad_common"
+  mount RadCommon::Engine => '/rad_common'
 
   devise_for :users, controllers: { confirmations: 'users/confirmations' }
-
-  root to: "pages#home"
 
   resources :users, only: [:index, :show, :edit, :update, :destroy] do
     get :audit, on: :member
@@ -15,9 +13,13 @@ Rails.application.routes.draw do
     get :audit, on: :member
   end
 
-  resources :companies, only: :show
+  resources :companies, only: %i[show edit update] do
+    get :audit, on: :member
+  end
 
   resources :divisions do
     get :audit, on: :member
   end
+
+  root to: 'pages#home'
 end

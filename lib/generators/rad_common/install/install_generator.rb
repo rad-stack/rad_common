@@ -11,11 +11,15 @@ module RadCommon
 
         # controllers
         template '../../../../../spec/dummy/app/controllers/application_controller.rb', 'app/controllers/application_controller.rb'
+        template '../../../../../spec/dummy/app/controllers/users/confirmations_controller.rb', 'app/controllers/users/confirmations_controller.rb'
 
         # models
         template '../../../../../spec/dummy/app/models/user.rb', 'app/models/user.rb'
         template '../../../../../spec/dummy/app/models/company.rb', 'app/models/company.rb'
         template '../../../../../spec/dummy/app/models/security_group.rb', 'app/models/security_group.rb'
+
+        # authorizers
+        template '../../../../../spec/dummy/app/authorizers/application_authorizer.rb', 'app/authorizers/application_authorizer.rb'
 
         # views
         template '../../../../../spec/dummy/app/views/devise/confirmations/new.html.haml', 'app/views/devise/confirmations/new.html.haml'
@@ -26,6 +30,16 @@ module RadCommon
         template '../../../../../spec/dummy/app/views/devise/sessions/new.html.haml', 'app/views/devise/sessions/new.html.haml'
         template '../../../../../spec/dummy/app/views/devise/shared/_links.html.haml', 'app/views/devise/shared/_links.html.haml'
         template '../../../../../spec/dummy/app/views/devise/unlocks/new.html.haml', 'app/views/devise/unlocks/new.html.haml'
+
+        # specs
+        template '../../../../../spec/controllers/users/confirmations_controller_spec.rb', 'spec/controllers/users/confirmations_controller_spec.rb'
+        template '../../../../../spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
+        template '../../../../../spec/controllers/companies_controller_spec.rb', 'spec/controllers/companies_controller_spec.rb'
+        template '../../../../../spec/requests/audit_history_spec.rb', 'spec/requests/audit_history_spec.rb'
+        template '../../../../../spec/requests/audit_search_spec.rb', 'spec/requests/audit_search_spec.rb'
+        template '../../../../../spec/requests/searches_spec.rb', 'spec/requests/searches_spec.rb'
+        template '../../../../../spec/requests/users_spec.rb', 'spec/requests/users_spec.rb'
+        template '../../../../../spec/requests/companies_spec.rb', 'spec/requests/companies_spec.rb'
 
         # templates
 
@@ -66,7 +80,29 @@ module RadCommon
         inject_into_file 'config/routes.rb', after: 'Application.routes.draw do' do <<-'RUBY'
 
   mount RadCommon::Engine => '/rad_common'
-  get '/auth/:provider/callback' => 'rad_common/authentications#create'
+  
+  devise_for :users, controllers: { confirmations: 'users/confirmations' }
+
+  get '/auth/:provider/callback' => 'rad_common/authentications#create' # remove unless using social media auth
+
+  resources :users, only: %i[index show edit update destroy] do
+    member do
+      get :audit
+      get :audit_by
+    end
+
+    get :audit_search, on: :collection
+  end
+
+  resources :security_groups, only: %i[index show] do
+    get :audit, on: :member
+  end
+
+  resources :companies, only: %i[show edit update] do
+    get :audit, on: :member
+  end
+
+  root to: 'pages#home'
 
         RUBY
         end
@@ -83,6 +119,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20170702133404_company_validity_check.rb', 'company_validity_check'
         apply_migration '../../../../../spec/dummy/db/migrate/20170811123959_security_groups.rb', 'security_groups'
         apply_migration '../../../../../spec/dummy/db/migrate/20171122123931_user_statuses.rb', 'user_statuses'
+        apply_migration '../../../../../spec/dummy/db/migrate/20171230132438_super_search_default.rb', 'super_search_default'
       end
 
       def self.next_migration_number(path)

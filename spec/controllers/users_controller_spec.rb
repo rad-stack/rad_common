@@ -47,7 +47,7 @@ RSpec.describe UsersController, type: :controller do
 
   describe 'DELETE destroy' do
     before do
-      @request.env['HTTP_REFERER'] =user_path(user)
+      @request.env['HTTP_REFERER'] = user_path(user)
     end
 
     it 'destroys the requested user' do

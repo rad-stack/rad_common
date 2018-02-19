@@ -6,9 +6,10 @@ require_dependency "<%= namespaced_file_path %>/application_controller"
 class <%= controller_class_name %>Controller < ApplicationController
   before_action :authenticate_user!
   before_action :check_tenant
-  before_action :set_<%= singular_table_name %>, only: %i[show edit update destroy]
+  before_action :set_<%= singular_table_name %>, only: %i[show edit update destroy audit]
 
   authorize_actions_for <%= class_name %>
+  authority_actions audit: 'audit'
 
   def index
     @<%= plural_table_name %> = <%= orm_class.all(class_name) %>.page(params[:page])
