@@ -11,14 +11,14 @@ RSpec.describe '<%= class_name.pluralize %>', type: :request do
   describe 'new' do
     it 'renders the new template' do
       visit new_<%= file_name %>_path
-      expect(page).to have_content('New <%= file_name.humanize %>')
+      expect(page).to have_content('New <%= file_name.titleize %>')
     end
   end
 
   describe 'edit' do
     it 'renders the edit template' do
       visit edit_<%= file_name %>_path(<%= file_name %>)
-      expect(page).to have_content('Editing <%= file_name.humanize %>')
+      expect(page).to have_content('Editing <%= file_name.titleize %>')
     end
   end
 
