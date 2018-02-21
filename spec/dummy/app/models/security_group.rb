@@ -1,7 +1,7 @@
 class SecurityGroup < ApplicationRecord
   include Authority::Abilities
 
-  has_many :users
+  has_many :users, dependent: :restrict_with_error
   scope :by_name, -> { order(:name) }
 
   alias_attribute :to_s, :name
@@ -21,14 +21,13 @@ class SecurityGroup < ApplicationRecord
   private
 
     def validate_standard_permissions
-      if admin?
-        SecurityGroup.permission_fields.each do |field|
-          if public_send(field) != true
-            errors.add(:admin, 'requires all permissions to be true')
-            break
-          end
+      return unless admin?
+
+      SecurityGroup.permission_fields.each do |field|
+        unless public_send(field)
+          errors.add(:admin, 'requires all permissions to be true')
+          break
         end
       end
     end
-
 end
