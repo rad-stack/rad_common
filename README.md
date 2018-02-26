@@ -22,6 +22,11 @@ To use the common email template in your Rails project, just have your mailer su
 
 ## Development
 
+### Running
+`bundle exec rails s`
+
+`bundle exec rails c`
+
 ### Test Suite
 
 To generate items related to the dummy app, first cd into the /spec/dummy directory, then you can run `rails generate` commands.

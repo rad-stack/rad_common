@@ -39,5 +39,6 @@
             %td= audit.remote_address
             %td= audit.action
             %td= simple_format(display_audited_changes(audit))
+      = paginate @audits
     -else
       %p No activity exists for this item
