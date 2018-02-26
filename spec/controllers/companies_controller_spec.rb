@@ -29,7 +29,7 @@ RSpec.describe CompaniesController, type: :controller do
       end
 
       it 'redirects to the company' do
-        put :update, params: { id: company.to_param, company: valid_attributes }
+        put :update, params: { id: company.to_param, company: new_attributes }
         expect(response).to redirect_to(company)
       end
     end
