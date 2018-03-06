@@ -26,7 +26,7 @@ class GlobalAutocomplete
   end
 
   def autocomplete_result(scope)
-    return [] unless member.can_read?(klass)
+    return [] unless scope && member.can_read?(klass)
     self.current_scope = scope
     order = scope[:query_order] || 'created_at DESC'
     query = klass.where(where_query, {search: "%#{params[:term]}%"}).order(order)
