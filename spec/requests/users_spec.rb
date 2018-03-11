@@ -18,9 +18,15 @@ describe 'Users', type: :request do
       end
 
       describe 'profile' do
-        it 'should show edit page' do
+        it 'should update profile' do
           visit edit_user_registration_path
           expect(find_field('First name').value).to eq user.first_name
+          new_name = Faker::Name.first_name
+          fill_in 'First name', with: new_name
+          fill_in 'Current password', with: 'password'
+          click_button 'Save'
+          user.reload
+          expect(user.first_name).to eq new_name
         end
       end
     end
