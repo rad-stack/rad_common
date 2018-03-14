@@ -24,6 +24,7 @@ group :test do
 end
 
 group :development, :test do
+  gem 'dotenv-rails'
   gem 'pry'
   gem 'jquery-rails'
   gem 'jquery-ui-rails'
