@@ -72,7 +72,7 @@ ActiveRecord::Schema.define(version: 20180314163722) do
     t.boolean  "super_search_default",    :default=>false, :null=>false
     t.string   "authy_id",                :index=>{:name=>"index_users_on_authy_id", :using=>:btree}
     t.datetime "last_sign_in_with_authy"
-    t.boolean  "authy_enabled",           :default=>true, :null=>false
+    t.boolean  "authy_enabled",           :default=>false, :null=>false
   end
 
   create_table "audits", force: :cascade do |t|

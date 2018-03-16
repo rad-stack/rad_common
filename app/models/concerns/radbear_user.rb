@@ -3,6 +3,10 @@ module RadbearUser
 
   included do
     attr_accessor :approved_by
+
+    validate :validate_authy
+
+    before_validation :maybe_update_authy
     after_save :notify_user_approved
   end
 
@@ -53,6 +57,51 @@ module RadbearUser
   end
 
   private
+
+    def validate_authy
+      if authy_enabled
+        if authy_id.present? && mobile_phone.present?
+          # ok
+        elsif authy_id.blank? && mobile_phone.blank?
+          # ok
+        else
+          errors.add(:mobile_phone, 'is not valid for two factor authentication')
+        end
+      else
+        errors.add(:mobile_phone, 'is not valid for two factor authentication') if authy_id.present?
+      end
+    end
+
+    def maybe_update_authy
+      return unless ENV['AUTHY_API_KEY'].present? && (authy_enabled_changed? || mobile_phone_changed?)
+
+      # delete the authy user if it exists
+      if authy_id.present?
+        response = Authy::API.user_status(id: authy_id)
+
+        if response.ok?
+          response = Authy::API.delete_user(id: authy_id)
+          if response.ok?
+            self.authy_id = nil
+          else
+            throw :abort
+          end
+        else
+          self.authy_id = nil
+        end
+      end
+
+      return unless authy_enabled? && mobile_phone.present? && email.present?
+
+      # create the authy user if applicable
+      response = Authy::API.register_user(email: email, country_code: '1', cellphone: mobile_phone)
+
+      if response.ok?
+        self.authy_id = response.id
+      else
+        throw :abort
+      end
+    end
 
     def notify_user_approved
       return if auto_approve?

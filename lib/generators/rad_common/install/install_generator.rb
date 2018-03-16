@@ -120,6 +120,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20170811123959_security_groups.rb', 'security_groups'
         apply_migration '../../../../../spec/dummy/db/migrate/20171122123931_user_statuses.rb', 'user_statuses'
         apply_migration '../../../../../spec/dummy/db/migrate/20171230132438_super_search_default.rb', 'super_search_default'
+        apply_migration '../../../../../spec/dummy/db/migrate/20180314163722_devise_authy_add_to_users.rb', 'devise_authy_add_to_users'
       end
 
       def self.next_migration_number(path)
