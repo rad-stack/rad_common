@@ -19,8 +19,10 @@
         .row
           .col-md-6
             = f.input :mobile_phone
-          .col-md-6
+          .col-md-3
             = f.input :optional_emails
+          .col-md-3
+            = f.input :authy_enabled, label: 'Enable Two-Factor Authentication?'
         .row
           .col-md-6
             = f.input :password, autocomplete: "off", hint: "leave it blank if you don't want to change it", required: false, input_html: {autocomplete: "off"}

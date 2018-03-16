@@ -60,15 +60,20 @@ module RadbearUser
 
     def validate_authy
       if authy_enabled
+        if Rails.application.config.authy_user_opt_in && mobile_phone.blank?
+          errors.add(:mobile_phone, 'is required two factor authentication')
+          return
+        end
+
         if authy_id.present? && mobile_phone.present?
           # ok
         elsif authy_id.blank? && mobile_phone.blank?
           # ok
         else
-          errors.add(:mobile_phone, 'is not valid for two factor authentication')
+          errors.add(:base, 'user is not two factor authentication')
         end
       else
-        errors.add(:mobile_phone, 'is not valid for two factor authentication') if authy_id.present?
+        errors.add(:base, 'user is not two factor authentication') if authy_id.present?
       end
     end
 
@@ -84,6 +89,7 @@ module RadbearUser
           if response.ok?
             self.authy_id = nil
           else
+            errors.add(:base, "Could not remove authy user: #{response.message}")
             throw :abort
           end
         else
@@ -99,6 +105,7 @@ module RadbearUser
       if response.ok?
         self.authy_id = response.id
       else
+        errors.add(:base, "Could not register authy user: #{response.message}")
         throw :abort
       end
     end
