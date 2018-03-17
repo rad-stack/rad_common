@@ -2,6 +2,7 @@ class User < ApplicationRecord
   include Authority::UserAbilities
   include Authority::Abilities
   include RadbearUser
+  include RadAuthy
 
   belongs_to :security_group
   belongs_to :user_status
