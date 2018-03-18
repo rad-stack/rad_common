@@ -23,7 +23,7 @@ To use the common email template in your Rails project, just have your mailer su
 ## Development
 
 ### Configuring
-Add a .env file in `spec/dummy` containing the `AUTHY_API_KEY` that can be obtained from another developer (we use the same one for all projects in dev/test)
+Add a .env file in `spec/dummy` containing the `AUTHY_API_KEY` that can be obtained by creating an authy app or from another developer
 
 ### Running
 `bundle exec rails s`

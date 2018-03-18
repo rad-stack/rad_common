@@ -72,7 +72,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
-  config.include Devise::TestHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :controller
   include Warden::Test::Helpers
   config.include Capybara::DSL
 end

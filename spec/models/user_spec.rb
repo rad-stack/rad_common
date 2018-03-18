@@ -5,18 +5,19 @@ describe User, type: :model do
     let(:user) { create :user, mobile_phone: phone_number }
     let(:phone_number) { '(123) 456-7111' }
     let(:new_phone_number) { '(456) 789-0123'}
+    let(:authy_id) { '1234567' }
 
     it 'creates and updates the user on authy' do
+      expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+
       expect(user.authy_id).to be_nil
       user.update!(authy_enabled: true)
-      expect(user.authy_id).to eq '55025407'
-
-      user.update!(mobile_phone: new_phone_number)
-      expect(user.authy_id).to eq '15943902'
+      expect(user.authy_id).to eq authy_id
     end
 
     it 'returns a failure message if authy doesnt update' do
       expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: false, message: 'mocked message'))
+
       user.authy_enabled = true
       user.mobile_phone = new_phone_number
       user.save

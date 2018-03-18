@@ -7,17 +7,13 @@ module RadCommon
         emails << param[:email]
       end
 
-      emails.each do |email|
-        puts "#{email} is an invalid email!\n"
-      end
-
       email = emails.first
       super_admins = User.super_admins
 
-      subject = "Invalid Email"
+      subject = 'Invalid Email'
       message = "Someone tried to send an email to #{email} and the email was not properly sent."
       company = Company.super_company
-      from = "no-reply@groundswell.online"
+      from = 'no-reply@groundswell.online'
       recipients = super_admins.map(&:email)
 
       recipients.each do |recipient|
