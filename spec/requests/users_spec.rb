@@ -36,18 +36,6 @@ describe 'Users', type: :request do
       expect(page).to have_content('The entered token is invalid')
     end
 
-    xit 'should send message to user who does not have mobile to send auth token to' do
-      # TODO: this fails since it requires override on the sessions controller like in SP
-      allow(Rails.application.config).to receive(:authy_user_opt_in).and_return(false)
-
-      user.update!(mobile_phone: nil)
-      visit new_user_session_path
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      expect(page).to have_content('You do not have a mobile phone number listed on your account. Please contact administrator to login')
-    end
-
     it 'updates authy when updating an accounts mobile phone' do
       expect(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
       expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))

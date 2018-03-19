@@ -35,6 +35,8 @@ module RadCommon
         template '../../../../../spec/dummy/app/views/devise/unlocks/new.html.haml', 'app/views/devise/unlocks/new.html.haml'
 
         # specs
+        template '../../../../../spec/models/company_spec.rb', 'spec/models/company_spec.rb'
+        template '../../../../../spec/models/user_spec.rb', 'spec/models/user_spec.rb'
         template '../../../../../spec/controllers/users/confirmations_controller_spec.rb', 'spec/controllers/users/confirmations_controller_spec.rb'
         template '../../../../../spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
         template '../../../../../spec/controllers/companies_controller_spec.rb', 'spec/controllers/companies_controller_spec.rb'

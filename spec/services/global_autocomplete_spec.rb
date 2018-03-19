@@ -53,7 +53,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       let(:params) { ActionController::Parameters.new({ term: term, global_search_scope: 'user_name_with_no_where' }) }
 
       context 'without columns' do
-        xit 'returns all records' do # intermittent
+        it 'returns all records' do
           expect(auto_complete.autocomplete_result(scope).count).to eq(User.count)
         end
       end

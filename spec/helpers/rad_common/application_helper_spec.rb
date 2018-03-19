@@ -50,7 +50,7 @@ describe RadCommon::ApplicationHelper do
       let(:resource) do
         build(:user, avatar: fixture_file_upload(Rails.root.join('spec', 'fixtures', filename)))
       end
-      xit "should return the Amazon stored image" do
+      xit 'should return the Amazon stored image' do
         # TODO doesn't work locally
         response = avatar_image(resource, size)
         expect(response).to include("<img")
@@ -58,7 +58,7 @@ describe RadCommon::ApplicationHelper do
         expect(response).to_not include('gravatar')
       end
 
-      xit "returns a 50px image" do
+      xit 'returns a 50px image' do
         #todo this just stopped working, need to debug
         response = avatar_image(resource, size)
         expect(avatar_image(resource, size)).to include("50")

@@ -25,6 +25,7 @@ describe User, type: :model do
     end
 
     it 'deletes authy user if mobile phone wiped out' do
+      # this test is not applicable for projects that require mobile phone presence
       user.update!(authy_enabled: false, mobile_phone: nil)
       expect(user.reload.authy_id).to be_blank
     end
