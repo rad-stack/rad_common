@@ -2,7 +2,7 @@ module RadbearController
   extend ActiveSupport::Concern
 
   included do
-    protect_from_forgery prepend: true, with: :exception
+    protect_from_forgery prepend: true, with: :null_session # see https://radbear.groundswell.online/tasks/25641
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     helper_method :current_member
   end
