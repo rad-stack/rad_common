@@ -20,9 +20,10 @@ describe 'Users', type: :request do
       fill_in 'user_email', with: user.email
       fill_in 'user_password', with: password
       click_button 'Sign In'
+      expect(page).to have_content 'Remember this device for 5 days'
       fill_in 'authy-token', with: '7721070'
       click_button 'Verify and Sign in'
-      expect(page).to have_content('Signed in successfully')
+      expect(page).to have_content 'Signed in successfully'
     end
 
     it 'should not allow user to login with invalid authy token' do

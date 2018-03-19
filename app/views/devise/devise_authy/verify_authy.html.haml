@@ -8,4 +8,4 @@
       = authy_request_sms_link
   %label
     = check_box_tag :remember_device
-    %span= I18n.t('remember_device', {:scope => 'devise'})
+    %span= "Remember this device for #{distance_of_time_in_words(Devise.authy_remember_device)}"
