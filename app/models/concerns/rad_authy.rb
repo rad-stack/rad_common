@@ -41,7 +41,7 @@ module RadAuthy
             self.authy_id = nil
           else
             errors.add(:base, "Could not remove authy user: #{response.message}")
-            throw :abort
+            return
           end
         else
           self.authy_id = nil
@@ -56,8 +56,11 @@ module RadAuthy
       if response.ok?
         self.authy_id = response.id
       else
-        errors.add(:base, "Could not register authy user: #{response.message}")
-        throw :abort
+        if response.respond_to?(:message)
+          errors.add(:base, "Could not register authy user: #{response.message}")
+        else
+          errors.add(:base, "Could not register authy user: #{response.errors}")
+        end
       end
     end
 end

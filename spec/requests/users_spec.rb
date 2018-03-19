@@ -20,7 +20,7 @@ describe 'Users', type: :request do
       fill_in 'user_email', with: user.email
       fill_in 'user_password', with: password
       click_button 'Sign In'
-      expect(page).to have_content 'Remember this device for 5 days'
+      expect(page).to have_content 'Remember this device for 7 days'
       fill_in 'authy-token', with: '7721070'
       click_button 'Verify and Sign in'
       expect(page).to have_content 'Signed in successfully'
@@ -110,6 +110,20 @@ describe 'Users', type: :request do
 
       click_button 'Sign Up'
       expect(page.html).to include('message with a confirmation link has been sent')
+    end
+
+    it "can't sign up with invalid email address" do
+      visit new_user_registration_path
+
+      fill_in 'First name', with: Faker::Name.first_name
+      fill_in 'Last name', with: Faker::Name.last_name
+      fill_in 'Email', with: 'test_user@'
+      fill_in 'user_password', with: password
+      fill_in 'user_password_confirmation', with: password
+
+      click_button 'Sign Up'
+
+      expect(page.html).to include("is invalid")
     end
   end
 
