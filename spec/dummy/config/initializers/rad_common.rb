@@ -2,6 +2,7 @@ Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css r
 
 Rails.configuration.enable_facebook = true
 Rails.configuration.use_avatar = false
+Rails.configuration.authy_user_opt_in = true
 
 Rails.configuration.global_validity_days = 3
 Rails.configuration.global_validity_timeout = 1.hour

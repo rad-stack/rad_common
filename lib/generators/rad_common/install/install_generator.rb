@@ -9,6 +9,9 @@ module RadCommon
         # initializers
         template '../../../../../spec/dummy/config/initializers/rad_common.rb', 'config/initializers/rad_common.rb'
 
+        # locales
+        template '../../../../../spec/dummy/config/locales/devise.authy.en.yml', 'config/locales/devise.authy.en.yml'
+
         # controllers
         template '../../../../../spec/dummy/app/controllers/application_controller.rb', 'app/controllers/application_controller.rb'
         template '../../../../../spec/dummy/app/controllers/users/confirmations_controller.rb', 'app/controllers/users/confirmations_controller.rb'
@@ -32,6 +35,8 @@ module RadCommon
         template '../../../../../spec/dummy/app/views/devise/unlocks/new.html.haml', 'app/views/devise/unlocks/new.html.haml'
 
         # specs
+        template '../../../../../spec/models/company_spec.rb', 'spec/models/company_spec.rb'
+        template '../../../../../spec/models/user_spec.rb', 'spec/models/user_spec.rb'
         template '../../../../../spec/controllers/users/confirmations_controller_spec.rb', 'spec/controllers/users/confirmations_controller_spec.rb'
         template '../../../../../spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
         template '../../../../../spec/controllers/companies_controller_spec.rb', 'spec/controllers/companies_controller_spec.rb'
@@ -120,6 +125,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20170811123959_security_groups.rb', 'security_groups'
         apply_migration '../../../../../spec/dummy/db/migrate/20171122123931_user_statuses.rb', 'user_statuses'
         apply_migration '../../../../../spec/dummy/db/migrate/20171230132438_super_search_default.rb', 'super_search_default'
+        apply_migration '../../../../../spec/dummy/db/migrate/20180314163722_devise_authy_add_to_users.rb', 'devise_authy_add_to_users'
       end
 
       def self.next_migration_number(path)

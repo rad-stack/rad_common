@@ -2,11 +2,12 @@ class User < ApplicationRecord
   include Authority::UserAbilities
   include Authority::Abilities
   include RadbearUser
+  include RadAuthy
 
   belongs_to :security_group
   belongs_to :user_status
 
-  devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable, :trackable, :validatable
+  devise :authy_authenticatable, :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable, :trackable, :validatable
 
   scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
   scope :admins, -> { active.where(admin: true) }

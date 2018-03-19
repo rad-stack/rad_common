@@ -1,10 +1,12 @@
 .panel.panel-default
-  = render "layouts/panel_header", no_new_button: true
+  = render 'layouts/panel_header', no_new_button: true
   .panel-body
     -data = [:email, :mobile_phone, :user_status, :sign_in_count]
     -if @user.has_attribute?(:admin)
       -data.push(:admin)
     -else
-      -data.push({label: "Security Group", value: secured_link(@user.security_group)})
+      -data.push({label: 'Security Group', value: secured_link(@user.security_group)})
+    -if ENV['AUTHY_API_KEY'].present?
+      -data.push(:authy_id)
     -data = data + [:current_sign_in_ip, :current_sign_in_at, :confirmed_at]
-    = render "layouts/show_data_columns", data: data, resource: @user
+    = render 'layouts/show_data_columns', data: data, resource: @user
