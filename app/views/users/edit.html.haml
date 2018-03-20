@@ -3,6 +3,7 @@
   .panel-body
     = simple_form_for(@user) do |f|
       = f.error_notification
+      = f.error :base
       .form-inputs
         .row
           .col-md-6= f.input :first_name
