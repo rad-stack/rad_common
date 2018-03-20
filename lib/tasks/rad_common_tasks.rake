@@ -4,4 +4,13 @@ namespace :rad_common do
       RadCommon::GlobalValidity.check_all_companies
     end
   end
+
+  task redo_authy: :environment do
+    Timeout.timeout(1.hour) do
+      User.where(authy_enabled: true).find_each do |user|
+        user.update!(authy_enabled: false)
+        user.update!(authy_enabled: true)
+      end
+    end
+  end
 end
