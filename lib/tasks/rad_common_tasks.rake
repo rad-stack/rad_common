@@ -10,6 +10,7 @@ namespace :rad_common do
       User.where(authy_enabled: true).find_each do |user|
         user.update!(authy_enabled: false)
         user.update!(authy_enabled: true)
+        sleep 2 # avoid DDOS throttling
       end
     end
   end
