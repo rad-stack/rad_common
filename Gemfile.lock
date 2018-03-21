@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/rails/rails-observers.git
+  remote: https://github.com/rails/rails-observers.git
   revision: fb6b95509c3f1a50c973280ddc2b56648e33623f
   specs:
     rails-observers (0.2.0)
@@ -20,7 +20,7 @@ PATH
       kaminari-bootstrap (= 3.0.1)
       koala (= 3.0.0)
       omniauth-facebook (= 4.0.0)
-      paperclip (~> 5.2.1)
+      paperclip (>= 5.1.0, < 5.3.0)
       pg (= 0.21.0)
       premailer-rails (= 1.9.7)
       rails (= 5.0.6)
@@ -217,7 +217,7 @@ GEM
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
-    nio4r (2.2.0)
+    nio4r (2.3.0)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
     oauth2 (1.4.0)

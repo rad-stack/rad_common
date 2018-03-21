@@ -14,7 +14,7 @@ gemspec
 # gem 'byebug', group: [:development, :test]
 
 #todo move this to gemspec when the update is available in rubygems
-gem 'rails-observers', github: 'rails/rails-observers'
+gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
 
 group :test do
   gem 'capybara-webkit'
