@@ -17,14 +17,17 @@
 (function(jQuery)
 {
   var self = null;
-  jQuery.fn.railsAutocomplete = function() {
+  jQuery.fn.railsAutocomplete = function(selector) {
     var handler = function() {
       if (!this.railsAutoCompleter) {
         this.railsAutoCompleter = new jQuery.railsAutocomplete(this);
       }
     };
     if (jQuery.fn.on !== undefined) {
-      return jQuery(document).on('focus',this.selector,handler);
+      if (!selector) {
+        return;
+      }
+      return jQuery(document).on('focus',selector,handler);
     }
     else {
       return this.live('focus',handler);
@@ -32,38 +35,12 @@
   };
 
   jQuery.railsAutocomplete = function (e) {
-    _e = e;
+    var _e = e;
     this.init(_e);
   };
-
-  jQuery(document).ready( function()
-                          {
-                            display_autocomplete_errors();
-                          } );
-
-  function display_autocomplete_errors()
-  {
-      jQuery(".ui-autocomplete-input").each( function()
-                                             {
-                                              display_autocomplete_error(this);
-                                             });
-  }
-
-  function display_autocomplete_error(e)
-  {
-      formGroup = jQuery(e).parent(".form-group");
-
-      if( jQuery(e).data("id-element") )
-      {
-        idElement = jQuery( jQuery(e).data("id-element") );
-        idFormGroup = idElement.parent(".form-group");
-
-        idFormGroup.find("span.help-block").each( function()
-                                                {
-                                                  formGroup.addClass("has-error")
-                                                  formGroup.append( $(this).clone() );
-                                                } );
-      }
+  jQuery.railsAutocomplete.options = {
+    showNoMatches: true,
+    noMatchesLabel: 'no existing match'
   }
 
   jQuery.railsAutocomplete.fn = jQuery.railsAutocomplete.prototype = {
@@ -74,10 +51,9 @@
   jQuery.railsAutocomplete.fn.extend({
     init: function(e) {
       e.delimiter = jQuery(e).attr('data-delimiter') || null;
-      e.min_length = jQuery(e).attr('min-length') || 2;
+      e.min_length = jQuery(e).attr('data-min-length') || jQuery(e).attr('min-length') || 2;
       e.append_to = jQuery(e).attr('data-append-to') || null;
       e.autoFocus = jQuery(e).attr('data-auto-focus') || false;
-
       function split( val ) {
         return val.split( e.delimiter );
       }
@@ -88,43 +64,27 @@
       jQuery(e).autocomplete({
         appendTo: e.append_to,
         autoFocus: e.autoFocus,
-        create: function() {
-          $(this).data('ui-autocomplete')._resizeMenu = function(){
-            var ul = this.menu.element;
-            ul.width(Math.max( this.element.outerWidth(), getMaxAutoCompleteTableWidth(ul) + 50 ) );
-          };
-          $(this).data('ui-autocomplete')._renderItem = function( ul, item )
-          {
-            var table = $("<table>");
-            var tr = $( "<tr>" );
-
-            var td = $( "<td class='search-label'>" + item.label + "</td>" );
-            tr.append( td );
-            if( item.hasOwnProperty("columns") && item.columns.length > 0 )
-            {
-              var columns = item.columns;
-              for( var i = 0; i < columns.length; i++)
-              {
-                var column = columns[i];
-                tr.append("<td class='search-column-value'>" + column + "</td>"  );
-              }
-            }
-            tr.appendTo(table);
-            table.appendTo(ul);
-            return table;
-          };
-        },
+        delay: jQuery(e).attr('delay') || 0,
         source: function( request, response ) {
-          params = {term: extractLast( request.term )}
+          var firedFrom = this.element[0];
+          var params = {term: extractLast( request.term )};
           if (jQuery(e).attr('data-autocomplete-fields')) {
               jQuery.each(jQuery.parseJSON(jQuery(e).attr('data-autocomplete-fields')), function(field, selector) {
               params[field] = jQuery(selector).val();
             });
           }
           jQuery.getJSON( jQuery(e).attr('data-autocomplete'), params, function() {
-            if(arguments[0].length == 0) {
-              arguments[0] = []
-              arguments[0][0] = { id: "", label: "no existing match" }
+            var options = {};
+            jQuery.extend(options, jQuery.railsAutocomplete.options);
+            jQuery.each(options, function(key, value) {
+              if(options.hasOwnProperty(key)) {
+                var attrVal = jQuery(e).attr('data-' + key);
+                options[key] = attrVal ? attrVal : value;
+              }
+            });
+            if(arguments[0].length == 0 && jQuery.inArray(options.showNoMatches, [true, 'true']) >= 0) {
+              arguments[0] = [];
+              arguments[0][0] = { id: "", label: options.noMatchesLabel };
             }
             jQuery(arguments[0]).each(function(i, el) {
               var obj = {};
@@ -132,30 +92,30 @@
               jQuery(e).data(obj);
             });
             response.apply(null, arguments);
+            jQuery(firedFrom).trigger('railsAutocomplete.source', arguments);
           });
         },
         change: function( event, ui ) {
             if(!jQuery(this).is('[data-id-element]') ||
-                    jQuery(jQuery(this).attr('data-id-element')).val() == "") {
-              return;
+                    jQuery(jQuery(this).attr('data-id-element')).val() === "") {
+                    return;
             }
-
             jQuery(jQuery(this).attr('data-id-element')).val(ui.item ? ui.item.id : "").trigger('change');
 
             if (jQuery(this).attr('data-update-elements')) {
                 var update_elements = jQuery.parseJSON(jQuery(this).attr("data-update-elements"));
                 var data = ui.item ? jQuery(this).data(ui.item.id.toString()) : {};
-                if(update_elements && jQuery(update_elements['id']).val() == "") {
+                if(update_elements && jQuery(update_elements['id']).val() === "") {
                   return;
                 }
                 for (var key in update_elements) {
-                    element = jQuery(update_elements[key]);
+                    var element = jQuery(update_elements[key]);
                     if (element.is(':checkbox')) {
                         if (data[key] != null) {
                             element.prop('checked', data[key]);
                         }
                     } else {
-                        element.val(ui.item ? data[key] : "");
+                        element.val(ui.item ? data[key] : "").trigger('change');
                     }
                 }
             }
@@ -172,6 +132,12 @@
           return false;
         },
         select: function( event, ui ) {
+          // first ensure value is a string
+          ui.item.value = ui.item.value.toString();
+          if(ui.item.value.toLowerCase().indexOf('no match') != -1 || ui.item.value.toLowerCase().indexOf('too many results') != -1){
+            jQuery(this).trigger('railsAutocomplete.noMatch', ui);
+            return false;
+          }
           var terms = split( this.value );
           // remove the current input
           terms.pop();
@@ -182,104 +148,50 @@
             terms.push( "" );
             this.value = terms.join( e.delimiter );
           } else {
-            this.value = terms.join("").replace(/<(?:.|\n)*?>/gm, '');
+            this.value = terms.join("");
             if (jQuery(this).attr('data-id-element')) {
-              jQuery(jQuery(this).attr('data-id-element')).val(ui.item.id);
-              idElement = $(this).attr('data-id-element')
-              $(idElement).trigger('change')
+              jQuery(jQuery(this).attr('data-id-element')).val(ui.item.id).trigger('change');
             }
             if (jQuery(this).attr('data-update-elements')) {
-              var data = jQuery(this).data(ui.item.id.toString());
+              var data = ui.item;
+              var new_record = ui.item.value.indexOf('Create New') != -1 ? true : false;
               var update_elements = jQuery.parseJSON(jQuery(this).attr("data-update-elements"));
               for (var key in update_elements) {
-                  element = jQuery(update_elements[key]);
-                  if (element.is(':checkbox')) {
-                      if (data[key] != null) {
-                          element.prop('checked', data[key]);
-                      }
-                  } else {
-                      element.val(data[key]);
+                if(jQuery(update_elements[key]).attr("type") === "checkbox"){
+                   if(data[key] === true || data[key] === 1) {
+                       jQuery(update_elements[key]).attr("checked","checked");
+                   }
+                   else {
+                       jQuery(update_elements[key]).removeAttr("checked");
+                   }
+                }
+                else{
+                  if((new_record && data[key] && data[key].indexOf('Create New') == -1) || !new_record){
+                    jQuery(update_elements[key]).val(data[key]).trigger('change');
+                  }else{
+                    jQuery(update_elements[key]).val('').trigger('change');
                   }
-              }
+                }
+               }
             }
           }
           var remember_string = this.value;
           jQuery(this).bind('keyup.clearId', function(){
             if(jQuery.trim(jQuery(this).val()) != jQuery.trim(remember_string)){
-              jQuery(jQuery(this).attr('data-id-element')).val("");
+              jQuery(jQuery(this).attr('data-id-element')).val("").trigger('change');
               jQuery(this).unbind('keyup.clearId');
             }
           });
           jQuery(e).trigger('railsAutocomplete.select', ui);
+
           return false;
         }
       });
+      jQuery(e).trigger('railsAutocomplete.init');
     }
   });
 
-  function getMaxAutoCompleteTableWidth(ul)
-  {
-    var maxWidth = 0;
-    var maxWidths = null;
-    ul.show();
-    ul.css({width: "100%"});
-    $(ul).children("table").each( function()
-                                  {
-                                    $(this).css({width: "auto"});
-                                    var currentWidth = $(this).width();
-                                    if( currentWidth > maxWidth )
-                                    {
-                                      maxWidth = currentWidth;
-                                    }
-                                    maxWidths = getMaxDataWidths( $(this), maxWidths );
-                                    $(this).css({width: "100%"});
-                                  });
-    $(ul).children("table").each( function()
-                                  {
-                                    updateMaxWidths( $(this), maxWidths );
-                                  });
-    ul.css({width: "auto"});
-
-    return maxWidth;
-  }
-
-  function updateMaxWidths( table, maxWidths )
-  {
-    var i = 0;
-    $(table).find("tr td").each( function()
-                                 {
-                                  $(this).width( maxWidths[i] );
-                                  i++;
-                                 });
-  }
-
-  function getMaxDataWidths( table, maxWidths )
-  {
-    var currentWidths = [];
-    $(table).find("tr td").each( function()
-                                 {
-                                  currentWidths.push( $(this).width());
-                                 });
-
-    if( maxWidths )
-    {
-      for( var i = 0; i < maxWidths.length; i++ )
-      {
-        if( currentWidths[i] > maxWidths[i] )
-        {
-          maxWidths[i] = currentWidths[i];
-        }
-      }
-    }
-    else
-    {
-      maxWidths = currentWidths;
-    }
-
-    return maxWidths;
-  }
-
   jQuery(document).ready(function(){
-    jQuery('input[data-autocomplete]').railsAutocomplete();
+    jQuery('input[data-autocomplete]').railsAutocomplete('input[data-autocomplete]');
   });
 })(jQuery);
