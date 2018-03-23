@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   include RadbearController
   include RadbearAuditsController
 
+  protect_from_forgery prepend: true, with: :exception
+
   ensure_authorization_performed except: %i[home global_search global_search_result], if: :auditing_security?, unless: :devise_controller?
 
   protected
