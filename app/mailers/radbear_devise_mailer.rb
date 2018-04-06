@@ -74,7 +74,7 @@ class RadbearDeviseMailer < Devise::Mailer
     end
 
     def company_exists?
-      return ActiveRecord::Base.connection.table_exists?("companies") && Company.respond_to?(:main) && Company.main
+      ActiveRecord::Base.connection.data_source_exists?('companies') && Company.respond_to?(:main) && Company.main
     end
 
     def set_defaults
