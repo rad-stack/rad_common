@@ -95,10 +95,14 @@ describe 'Users', type: :request do
           expect(page).to have_content user.to_s
         end
 
+        it 'shows field names in title case' do
+          expect(page).to have_content('User Status')
+        end
+
         context 'attribute translation defined in locales' do
           it 'shows translated version of field name' do
             expect(page).to have_content 'Phone number'
-            expect(page).not_to have_content 'Mobile phone'
+            expect(page).not_to have_content 'Mobile Phone'
           end
         end
       end
