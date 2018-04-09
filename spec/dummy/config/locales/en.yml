@@ -1,2 +1,7 @@
 en:
   app_name: Demo Foo
+  activerecord:
+    attributes:
+      user:
+        mobile_phone: 'Phone number'
+
