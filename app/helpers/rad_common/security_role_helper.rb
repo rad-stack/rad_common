@@ -31,5 +31,9 @@ module RadCommon
         label
       end
     end
+
+    def collection
+      SecurityRole.all.map { |role| [role.name, role.id] }
+    end
   end
 end
