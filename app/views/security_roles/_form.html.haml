@@ -1,0 +1,15 @@
+= simple_form_for(@security_role) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :name
+    = f.input :admin
+    = f.input :read_user
+    = f.input :read_audit
+    = f.input :create_division
+    = f.input :read_division
+    = f.input :update_division
+    = f.input :delete_division
+
+  .form-actions
+    = f.button :submit, 'Save', class: 'btn btn-primary'

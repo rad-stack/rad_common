@@ -2,27 +2,27 @@
 class ApplicationAuthorizer < Authority::Authorizer
 
   def self.creatable_by?(user)
-    user.admin
+    user.permission?(:admin)
   end
 
   def self.readable_by?(user)
-    user.admin
+    user.permission?(:admin)
   end
 
   def self.updatable_by?(user)
-    user.admin
+    user.permission?(:admin)
   end
 
   def self.deletable_by?(user)
-    user.admin
+    user.permission?(:admin)
   end
 
   def self.global_validatable_by?(user)
-    user.admin
+    user.permission?(:admin)
   end
 
   def self.auditable_by?(user)
-    user.admin
+    user.permission?(:admin)
   end
 
   # Any class method from Authority::Authorizer that isn't overridden

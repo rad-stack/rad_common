@@ -16,6 +16,10 @@ module RadbearUser
     end
   end
 
+  def permission?(permission)
+    security_roles.where("#{permission} = TRUE").count.positive?
+  end
+
   def auto_approve?
     # override this as needed in model
     false

@@ -1,0 +1,18 @@
+- permission_human_name = normalize_name(humanized_permission_field(@permission_name))
+
+.panel.panel-default
+  = render 'layouts/panel_header', action_name: 'custom', title: "Permission: #{permission_human_name}", icon: 'fa-file'
+  .panel-body
+    .row
+      .col-md-6
+        %h3 Groups with Permission
+        %table.table.table-striped.table-bordered
+          - @security_roles.each do |security_role|
+            %tr
+              %td= link_to security_role.name, security_role
+      .col-md-6
+        %h3 Members with Permission
+        %table.table.table-striped.table-bordered
+          - @users.each do |user|
+            %tr
+              %td= secured_link(user)

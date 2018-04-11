@@ -69,7 +69,7 @@ RSpec.configure do |config|
 
     allow(Company).to receive_message_chain(:main).and_return(create(:company))
     allow(UserStatus).to receive_message_chain(:default_pending_status).and_return(create :user_status, :pending, name: 'Pending')
-    SecurityGroup.create!(name: 'Admin', admin: true, create_parent: true, read_user: true, read_audit: true)
+    SecurityRole.seed_items
   end
   config.after(:each) do
     DatabaseCleaner.clean

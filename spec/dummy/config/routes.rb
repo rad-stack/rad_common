@@ -9,8 +9,9 @@ Rails.application.routes.draw do
     get :audit_search, on: :collection
   end
 
-  resources :security_groups, only: [:show, :index] do
+  resources :security_roles do
     get :audit, on: :member
+    get :permission, on: :collection
   end
 
   resources :companies, only: %i[show edit update] do

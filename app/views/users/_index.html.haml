@@ -7,7 +7,6 @@
       %tr
         %th Name
         %th Email
-        %th Access
         %th Created
         %th Status
         -if current_member.can_update?(User) || current_member.can_delete?(User)
@@ -17,7 +16,6 @@
         %tr
           %td= secured_link(user)
           %td= link_to user.email, "mailto:#{user.email}"
-          %td= secured_link(user.security_group)
           %td= format_date(user.created_at)
           %td= user.user_status
           -if current_member.can_update?(User) || current_member.can_delete?(User)
