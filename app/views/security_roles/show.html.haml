@@ -1,0 +1,25 @@
+.panel.panel-default
+  = render 'layouts/panel_header'
+  .panel-body
+    .row
+      .col-md-6
+        %h3 Permissions
+        %table.table.table-striped.table-bordered
+          %tr
+            %th Name
+            %th Allowed
+
+          - normalize_names(humanized_permission_fields).each do |name, permission|
+            %tr
+              %td= link_to name, permission_security_roles_path(permission_name: permission)
+              %td{class: @security_role.send(permission) ? 'fa fa-check green-check' : 'fa fa-times red-x'}
+      .col-md-6
+        -users = @security_role.users.active.by_name
+        %h3 Members In Group (#{users.count})
+        %table.table.table-striped.table-bordered
+          %tr
+            %th Name
+
+          -users.each do |member|
+            %tr
+              %td= secured_link(member)

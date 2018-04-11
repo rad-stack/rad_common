@@ -7,16 +7,15 @@ FactoryBot.define do
     password 'password'
     password_confirmation 'password'
     confirmed_at Time.zone.now
-    association :security_group
     association :user_status, factory: %i[user_status active]
 
-    factory :admin do
-      admin true
+    factory :admin do |f|
+      f.after(:create) { |user| user.security_roles << SecurityRole.find_by(name: 'Admin') }
     end
 
-    factory :super_admin do
+    factory :super_admin do |f|
       super_admin true
-      admin true
+      f.after(:create) { |user| user.security_roles << SecurityRole.find_by(name: 'Admin') }
     end
   end
 
@@ -31,8 +30,8 @@ FactoryBot.define do
     email Faker::Internet.email
   end
 
-  factory :security_group do
-    sequence(:name) { |n| "Group #{n}" }
+  factory :security_role do
+    sequence(:name) { |n| "Role #{n}" }
   end
 
   factory :user_status do

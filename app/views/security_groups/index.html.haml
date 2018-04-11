@@ -1,9 +1,0 @@
-.panel.panel-default
-  = render "layouts/panel_header", no_new_button: true
-  .panel-body
-    %table.table.table-striped.table-bordered
-      %tr
-        %th Name
-      - @security_groups.each do |security_group|
-        %tr
-          %td= secured_link(security_group)

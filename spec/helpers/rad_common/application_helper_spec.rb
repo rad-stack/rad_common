@@ -139,29 +139,29 @@ describe RadCommon::ApplicationHelper do
 
   describe "#classify_foreign_key" do
     it "returns class name" do
-      p = "security_group_id"
-      expect(helper.classify_foreign_key(p, SecurityGroup)).to eq SecurityGroup
+      p = "security_role_id"
+      expect(helper.classify_foreign_key(p, SecurityRole)).to eq SecurityRole
     end
 
     it "returns original value if no class is found" do
-      p = "security_grouppp"
-      p2 = "security_groupppp_id"
-      expect(helper.classify_foreign_key(p, SecurityGroup)).to eq p
-      expect(helper.classify_foreign_key(p2, SecurityGroup)).to eq p2
+      p = "security_roleee"
+      p2 = "security_roleee_id"
+      expect(helper.classify_foreign_key(p, SecurityRole)).to eq p
+      expect(helper.classify_foreign_key(p2, SecurityRole)).to eq p2
     end
 
     it "returns original value of there is no _id at end of string" do
-      p = "security_group"
-      expect(helper.classify_foreign_key(p, SecurityGroup)).to eq p
+      p = "security_role"
+      expect(helper.classify_foreign_key(p, SecurityRole)).to eq p
     end
 
     it "works for other classes" do
       u = "user_id"
-      o = "security_group_id"
+      o = "security_role_id"
       division = "division_id"
 
       expect(helper.classify_foreign_key(u, User)).to eq User
-      expect(helper.classify_foreign_key(o, SecurityGroup)).to eq SecurityGroup
+      expect(helper.classify_foreign_key(o, SecurityRole)).to eq SecurityRole
       expect(helper.classify_foreign_key(division, Division)).to eq Division
     end
 

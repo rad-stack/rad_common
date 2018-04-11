@@ -19,7 +19,7 @@ module RadCommon
         # models
         template '../../../../../spec/dummy/app/models/user.rb', 'app/models/user.rb'
         template '../../../../../spec/dummy/app/models/company.rb', 'app/models/company.rb'
-        template '../../../../../spec/dummy/app/models/security_group.rb', 'app/models/security_group.rb'
+        template '../../../../../spec/dummy/app/models/security_role.rb', 'app/models/security_role.rb'
 
         # authorizers
         template '../../../../../spec/dummy/app/authorizers/application_authorizer.rb', 'app/authorizers/application_authorizer.rb'
@@ -99,7 +99,7 @@ module RadCommon
     get :audit_search, on: :collection
   end
 
-  resources :security_groups, only: %i[index show] do
+  resources :security_roles, only: %i[index show] do
     get :audit, on: :member
   end
 
