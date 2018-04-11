@@ -99,8 +99,9 @@ module RadCommon
     get :audit_search, on: :collection
   end
 
-  resources :security_roles, only: %i[index show] do
+  resources :security_roles do
     get :audit, on: :member
+    get :permission, on: :collection
   end
 
   resources :companies, only: %i[show edit update] do
@@ -126,6 +127,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20171122123931_user_statuses.rb', 'user_statuses'
         apply_migration '../../../../../spec/dummy/db/migrate/20171230132438_super_search_default.rb', 'super_search_default'
         apply_migration '../../../../../spec/dummy/db/migrate/20180314163722_devise_authy_add_to_users.rb', 'devise_authy_add_to_users'
+        apply_migration '../../../../../spec/dummy/db/migrate/20180411144821_convert_to_roles.rb', 'convert_to_roles'
       end
 
       def self.next_migration_number(path)
