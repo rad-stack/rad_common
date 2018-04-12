@@ -3,13 +3,8 @@
 
   .form-inputs
     = f.input :name
-    = f.input :admin
-    = f.input :read_user
-    = f.input :read_audit
-    = f.input :create_division
-    = f.input :read_division
-    = f.input :update_division
-    = f.input :delete_division
+    - normalize_names(humanized_permission_fields).each do |name, permission|
+      = f.input permission.to_sym, label: name
 
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'
