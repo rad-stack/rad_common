@@ -2,10 +2,6 @@ class SecurityRole < ApplicationRecord
   include Authority::Abilities
   include RadSecurityRole
 
-  def self.default_user
-    SecurityRole.find_by(name: 'User')
-  end
-
   def self.seed_items
     seed_admin
     seed_manager

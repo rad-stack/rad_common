@@ -6,7 +6,8 @@
       -data.push(:authy_id)
     -data = data + [:current_sign_in_ip, :current_sign_in_at, :confirmed_at]
     = render 'layouts/show_data_columns', data: data, resource: @user
-.panel.panel-default
-  = render 'layouts/panel_header', action_name: 'custom', title: 'Security Roles', icon: 'fa-list'
-  .panel-body
-    = render 'security_roles/index', security_roles: @user.security_roles, show_actions: false
+-if current_user.can_read?(SecurityRole)
+  .panel.panel-default
+    = render 'layouts/panel_header', action_name: 'custom', title: 'Security Roles', icon: 'fa-list'
+    .panel-body
+      = render 'security_roles/index', security_roles: @user.security_roles, show_actions: false
