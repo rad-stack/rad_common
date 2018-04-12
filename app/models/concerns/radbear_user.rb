@@ -50,7 +50,7 @@ module RadbearUser
     end
 
     if response.body && response.body.count != 0
-      response.body || []
+      response.body
     else
       []
     end
