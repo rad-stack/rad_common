@@ -55,7 +55,7 @@ class SecurityRolesController < ApplicationController
   def permission
     @permission_name = params[:permission_name]
     @security_roles = SecurityRole.where("#{@permission_name} = TRUE").by_name
-    @users = User.joins(:security_roles).where("#{@permission_name} = TRUE").active.by_name
+    @users = User.by_permission(@permission_name).by_name
   end
 
   private

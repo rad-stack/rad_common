@@ -40,11 +40,13 @@ module RadCommon
         template '../../../../../spec/controllers/users/confirmations_controller_spec.rb', 'spec/controllers/users/confirmations_controller_spec.rb'
         template '../../../../../spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
         template '../../../../../spec/controllers/companies_controller_spec.rb', 'spec/controllers/companies_controller_spec.rb'
+        template '../../../../../spec/controllers/security_roles_controller_spec.rb', 'spec/controllers/security_roles_controller_spec.rb'
         template '../../../../../spec/requests/audit_history_spec.rb', 'spec/requests/audit_history_spec.rb'
         template '../../../../../spec/requests/audit_search_spec.rb', 'spec/requests/audit_search_spec.rb'
         template '../../../../../spec/requests/searches_spec.rb', 'spec/requests/searches_spec.rb'
         template '../../../../../spec/requests/users_spec.rb', 'spec/requests/users_spec.rb'
         template '../../../../../spec/requests/companies_spec.rb', 'spec/requests/companies_spec.rb'
+        template '../../../../../spec/requests/security_roles_spec.rb', 'spec/requests/security_roles_spec.rb'
 
         # templates
 
