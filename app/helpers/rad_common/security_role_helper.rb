@@ -32,7 +32,7 @@ module RadCommon
       end
     end
 
-    def collection
+    def security_role_collection
       SecurityRole.all.map { |role| [role.name, role.id] }
     end
   end
