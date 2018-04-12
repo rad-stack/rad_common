@@ -50,7 +50,6 @@ class User < ApplicationRecord
   private
 
     def check_defaults
-      security_roles << SecurityRole.default_user if security_roles.blank?
       status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
       self.user_status = status if new_record? && !user_status
     end
