@@ -2,7 +2,9 @@ module RadSecurityRole
   extend ActiveSupport::Concern
 
   included do
-    has_and_belongs_to_many :users
+    has_many :security_roles_users
+    has_many :users, through: :security_roles_users, dependent: :destroy
+
     scope :by_name, -> { order(:name) }
     alias_attribute :to_s, :name
 
