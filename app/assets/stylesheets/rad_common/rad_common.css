@@ -59,6 +59,10 @@
   padding-top: 21px;
   margin-left: 5px;
 }
+.security-role-checkboxes{
+  margin-top: 0 !important;
+  vertical-align: text-top;
+}
 #search-options {
   cursor: pointer;
 }
