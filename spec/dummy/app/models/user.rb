@@ -5,7 +5,8 @@ class User < ApplicationRecord
   include RadAuthy
 
   belongs_to :user_status
-  has_and_belongs_to_many :security_roles
+  has_many :security_roles_users, dependent: :destroy
+  has_many :security_roles, through: :security_roles_users
 
   devise :authy_authenticatable, :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable, :trackable, :validatable
 
