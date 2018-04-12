@@ -6,7 +6,7 @@ class User < ApplicationRecord
 
   belongs_to :user_status
   has_many :security_roles_users, dependent: :destroy
-  has_many :security_roles, through: :security_roles_users
+  has_many :security_roles, through: :security_roles_users, dependent: :destroy
 
   devise :authy_authenticatable, :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable, :trackable, :validatable
 
