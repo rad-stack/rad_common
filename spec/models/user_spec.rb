@@ -35,5 +35,19 @@ describe User, type: :model do
       user.save
       expect(user.errors.full_messages.to_s).to include('Could not register authy user')
     end
+
+    it 'updates updated_at datetime when security roles are added' do
+      security_role = create(:security_role)
+      updated_at = user.updated_at
+      user.update!(security_roles: [security_role])
+      expect(user.updated_at).not_to eq(updated_at)
+    end
+
+    it 'updates updated_at datetime when security roles are removed' do
+      user = create(:user, security_roles: [create(:security_role)])
+      updated_at = user.updated_at
+      user.update!(security_roles: [])
+      expect(user.updated_at).not_to eq(updated_at)
+    end
   end
 end
