@@ -22,7 +22,7 @@ module FirebaseSync
     response = app.client.get(path)
 
     unless response.success?
-      raise response.body
+      raise RadicallyIntermittentException, "#{response.body}"
     end
 
     response.body
