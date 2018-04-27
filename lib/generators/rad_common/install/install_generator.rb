@@ -8,6 +8,8 @@ module RadCommon
       def create_initializer_file
         # initializers
         template '../../../../../spec/dummy/config/initializers/rad_common.rb', 'config/initializers/rad_common.rb'
+        template '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb', 'config/initializers/simple_form_bootstrap.rb'
+        template '../../../../../spec/dummy/config/initializers/simple_form_components.rb', 'config/initializers/simple_form_components.rb'
 
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml', 'config/locales/devise.authy.en.yml'
@@ -87,7 +89,7 @@ module RadCommon
         inject_into_file 'config/routes.rb', after: 'Application.routes.draw do' do <<-'RUBY'
 
   mount RadCommon::Engine => '/rad_common'
-  
+
   devise_for :users, controllers: { confirmations: 'users/confirmations' }
 
   get '/auth/:provider/callback' => 'rad_common/authentications#create' # remove unless using social media auth
