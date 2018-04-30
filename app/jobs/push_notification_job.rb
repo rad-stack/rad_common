@@ -30,7 +30,9 @@ class PushNotificationJob < ActiveJob::Base
       http.use_ssl = true
       res = http.request(req)
 
-      raise res.body.to_s unless res.code == '200'
+      unless res.code == '200'
+        raise RadicallyIntermittentException, "#{res.body}"
+      end
     end
   end
 end
