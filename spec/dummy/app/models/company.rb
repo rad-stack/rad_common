@@ -7,6 +7,8 @@ class Company < ApplicationRecord
   validate :validate_only_one, on: :create
   validates_with PhoneNumberValidator
 
+  audited
+
   def self.main
     Company.first
   end

@@ -11,7 +11,7 @@
 -if data
   -data.each do |item|
     -if item.is_a?(Hash)
-      -if item[:value]
+      -if item[:value].present?
         -all_data.push(item)
     -elsif item.is_a?(Symbol)
       -value = resource.send(item)
