@@ -4,7 +4,7 @@ module RadbearUser
   included do
     attr_accessor :approved_by
     after_save :notify_user_approved
-    scope :by_permission, -> (permission_attr) { joins(:security_roles).where("#{permission_attr} = TRUE").active }
+    scope :by_permission, ->(permission_attr) { joins(:security_roles).where("#{permission_attr} = TRUE").active }
   end
 
   def company
