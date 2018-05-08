@@ -21,6 +21,16 @@ module RadbearUser
     security_roles.where("#{permission} = TRUE").count.positive?
   end
 
+  def all_permissions
+    permissions = []
+
+    security_roles.each do |role|
+      permissions += role.permission_attributes.to_a.reject { |item| !item[1] }.to_h.keys
+    end
+
+    permissions
+  end
+
   def auto_approve?
     # override this as needed in model
     false
