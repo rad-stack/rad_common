@@ -19,7 +19,7 @@ module RadCommon
         # models
         template '../../../../../spec/dummy/app/models/user.rb', 'app/models/user.rb'
         template '../../../../../spec/dummy/app/models/company.rb', 'app/models/company.rb'
-        template '../../../../../spec/dummy/app/models/security_group.rb', 'app/models/security_group.rb'
+        template '../../../../../spec/dummy/app/models/security_role.rb', 'app/models/security_role.rb'
 
         # authorizers
         template '../../../../../spec/dummy/app/authorizers/application_authorizer.rb', 'app/authorizers/application_authorizer.rb'
@@ -40,11 +40,13 @@ module RadCommon
         template '../../../../../spec/controllers/users/confirmations_controller_spec.rb', 'spec/controllers/users/confirmations_controller_spec.rb'
         template '../../../../../spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
         template '../../../../../spec/controllers/companies_controller_spec.rb', 'spec/controllers/companies_controller_spec.rb'
+        template '../../../../../spec/controllers/security_roles_controller_spec.rb', 'spec/controllers/security_roles_controller_spec.rb'
         template '../../../../../spec/requests/audit_history_spec.rb', 'spec/requests/audit_history_spec.rb'
         template '../../../../../spec/requests/audit_search_spec.rb', 'spec/requests/audit_search_spec.rb'
         template '../../../../../spec/requests/searches_spec.rb', 'spec/requests/searches_spec.rb'
         template '../../../../../spec/requests/users_spec.rb', 'spec/requests/users_spec.rb'
         template '../../../../../spec/requests/companies_spec.rb', 'spec/requests/companies_spec.rb'
+        template '../../../../../spec/requests/security_roles_spec.rb', 'spec/requests/security_roles_spec.rb'
 
         # templates
 
@@ -99,8 +101,9 @@ module RadCommon
     get :audit_search, on: :collection
   end
 
-  resources :security_groups, only: %i[index show] do
+  resources :security_roles do
     get :audit, on: :member
+    get :permission, on: :collection
   end
 
   resources :companies, only: %i[show edit update] do
@@ -126,6 +129,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20171122123931_user_statuses.rb', 'user_statuses'
         apply_migration '../../../../../spec/dummy/db/migrate/20171230132438_super_search_default.rb', 'super_search_default'
         apply_migration '../../../../../spec/dummy/db/migrate/20180314163722_devise_authy_add_to_users.rb', 'devise_authy_add_to_users'
+        apply_migration '../../../../../spec/dummy/db/migrate/20180411144821_convert_to_roles.rb', 'convert_to_roles'
       end
 
       def self.next_migration_number(path)

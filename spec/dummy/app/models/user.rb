@@ -4,13 +4,14 @@ class User < ApplicationRecord
   include RadbearUser
   include RadAuthy
 
-  belongs_to :security_group
   belongs_to :user_status
+  has_many :security_roles_users, dependent: :destroy
+  has_many :security_roles, through: :security_roles_users, dependent: :destroy
 
   devise :authy_authenticatable, :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable, :trackable, :validatable
 
   scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
-  scope :admins, -> { active.where(admin: true) }
+  scope :admins, -> { active.where('users.id IN (SELECT user_id FROM security_roles_users INNER JOIN security_roles ON security_roles_users.security_role_id = security_roles.id WHERE security_roles.admin = TRUE)') }
   scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
   scope :by_name, -> { order(:first_name, :last_name) }
   scope :super_admins, -> { active.where(super_admin: true) }
@@ -50,7 +51,6 @@ class User < ApplicationRecord
   private
 
     def check_defaults
-      self.security_group = SecurityGroup.default_user unless security_group
       status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
       self.user_status = status if new_record? && !user_status
     end

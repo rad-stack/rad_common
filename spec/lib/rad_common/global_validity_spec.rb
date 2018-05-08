@@ -1,16 +1,16 @@
 require 'rails_helper'
 
 describe RadCommon::GlobalValidity do
-  let(:admin_security_group) { SecurityGroup.find_by_name('Admin') }
+  let(:admin_security_role) { SecurityRole.find_by_name('Admin') }
   let(:company) { Company.main }
   let!(:super_admin) { create :super_admin }
-  let(:url) { "http://example.com/security_groups/#{admin_security_group.id}" }
+  let(:url) { "http://example.com/security_roles/#{admin_security_role.id}" }
 
   describe '.check_all_companies' do
     context 'there is invalid data' do
       before do
         Rails.configuration.global_validity_supress = [{class: 'SomeSuppression', messages: ['Anything']}]
-        admin_security_group.update_column(:create_parent, false)
+        admin_security_role.update_column(:create_division, false)
       end
 
       it 'sends an email to super admins when data is invalid' do
@@ -47,14 +47,14 @@ describe RadCommon::GlobalValidity do
 
   describe 'with specific queries' do
     context 'table was ignored, but specific query hits it' do
-      let(:specific_query) { lambda { SecurityGroup.where(name: 'Admin') } }
+      let(:specific_query) { lambda { SecurityRole.where(name: 'Admin') } }
       before do
-        Rails.configuration.global_validity_exclude = [SecurityGroup]
+        Rails.configuration.global_validity_exclude = [SecurityRole]
         Rails.configuration.global_validity_include = [specific_query]
       end
 
       context 'invalid data' do
-        before { admin_security_group.update_column(:create_parent, false) }
+        before { admin_security_role.update_column(:create_division, false) }
 
         it 'sends an email to current user when data is invalid' do
           described_class.check_all_companies
@@ -73,9 +73,9 @@ describe RadCommon::GlobalValidity do
   end
 
   describe 'with destroyed data', regression: true do
-    before { admin_security_group.update_column(:create_parent, false) }
+    before { admin_security_role.update_column(:create_division, false) }
     it 'does not include destroyed record data' do
-      expect_any_instance_of(SecurityGroup).to receive(:persisted?).and_return(false)
+      expect_any_instance_of(SecurityRole).to receive(:persisted?).and_return(false)
       described_class.check_all_companies
       last_email = ActionMailer::Base.deliveries.last
       expect(last_email.to).to eq([super_admin.email])

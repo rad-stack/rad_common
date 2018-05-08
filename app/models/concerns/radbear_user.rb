@@ -4,6 +4,7 @@ module RadbearUser
   included do
     attr_accessor :approved_by
     after_save :notify_user_approved
+    scope :by_permission, ->(permission_attr) { joins(:security_roles).where("#{permission_attr} = TRUE").active }
   end
 
   def company
@@ -14,6 +15,10 @@ module RadbearUser
     User.admins.each do |admin|
       RadbearMailer.new_user_signed_up(admin, self).deliver_later
     end
+  end
+
+  def permission?(permission)
+    security_roles.where("#{permission} = TRUE").count.positive?
   end
 
   def auto_approve?
@@ -46,7 +51,7 @@ module RadbearUser
     end
 
     if response.body && response.body.count != 0
-      response.body || []
+      response.body
     else
       []
     end

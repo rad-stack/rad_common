@@ -32,6 +32,7 @@ class UsersController < ApplicationController
   def update
     @user.assign_attributes(permitted_params)
     @user.approved_by = current_member
+    @user.security_roles = resolve_roles(params[:user][:security_roles])
 
     if @user.save
       flash[:success] = 'User updated.'
@@ -67,8 +68,16 @@ class UsersController < ApplicationController
       @member = @user
     end
 
-    def permitted_params
-      params.require(:user).permit(:user_status_id, :security_group_id, :first_name, :last_name, :mobile_phone)
+    def resolve_roles(role_ids)
+      if role_ids
+        ids = role_ids.select{ |id| id != '' }.map{ |id| id.to_i }
+        SecurityRole.where(id: ids)
+      else
+        []
+      end
     end
 
+    def permitted_params
+      params.require(:user).permit(:user_status_id, :first_name, :last_name, :mobile_phone)
+    end
 end

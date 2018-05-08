@@ -10,20 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180314163722) do
+ActiveRecord::Schema.define(version: 20180411144821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "security_groups", force: :cascade do |t|
-    t.string   "name",          :null=>false, :index=>{:name=>"index_security_groups_on_name", :unique=>true, :using=>:btree}
-    t.boolean  "admin",         :default=>false, :null=>false
-    t.boolean  "read_user",     :default=>false, :null=>false
-    t.boolean  "read_audit",    :default=>false, :null=>false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "create_parent", :default=>false, :null=>false
-  end
 
   create_table "user_statuses", force: :cascade do |t|
     t.string   "name",           :null=>false, :index=>{:name=>"index_user_statuses_on_name", :unique=>true, :using=>:btree}
@@ -63,11 +53,9 @@ ActiveRecord::Schema.define(version: 20180314163722) do
     t.string   "avatar_content_type",     :limit=>255
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
-    t.boolean  "admin",                   :default=>false, :null=>false
     t.boolean  "optional_emails",         :default=>true, :null=>false
     t.string   "global_search_default",   :limit=>255
     t.boolean  "super_admin",             :default=>false, :null=>false
-    t.integer  "security_group_id",       :null=>false, :foreign_key=>{:references=>"security_groups", :name=>"fk_users_security_group_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__users_security_group_id", :using=>:btree}
     t.integer  "user_status_id",          :null=>false, :foreign_key=>{:references=>"user_statuses", :name=>"fk_users_user_status_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__users_user_status_id", :using=>:btree}
     t.boolean  "super_search_default",    :default=>false, :null=>false
     t.string   "authy_id",                :index=>{:name=>"index_users_on_authy_id", :using=>:btree}
@@ -117,6 +105,28 @@ ActiveRecord::Schema.define(version: 20180314163722) do
     t.integer  "owner_id",   :null=>false, :foreign_key=>{:references=>"users", :name=>"fk_divisions_owner_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__divisions_owner_id", :using=>:btree}
     t.datetime "created_at", :null=>false
     t.datetime "updated_at", :null=>false
+  end
+
+  create_table "security_roles", force: :cascade do |t|
+    t.string   "name",            :null=>false, :index=>{:name=>"index_security_roles_on_name", :unique=>true, :using=>:btree}
+    t.boolean  "admin",           :default=>false, :null=>false
+    t.boolean  "read_user",       :default=>false, :null=>false
+    t.boolean  "read_audit",      :default=>false, :null=>false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "create_division", :default=>false, :null=>false
+    t.boolean  "read_division",   :default=>false, :null=>false
+    t.boolean  "update_division", :default=>false, :null=>false
+    t.boolean  "delete_division", :default=>false, :null=>false
+  end
+
+  create_table "security_roles_users", force: :cascade do |t|
+    t.integer  "security_role_id", :null=>false, :foreign_key=>{:references=>"security_roles", :name=>"fk_security_roles_users_security_role_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__security_roles_users_security_role_id", :using=>:btree}
+    t.integer  "user_id",          :null=>false, :foreign_key=>{:references=>"users", :name=>"fk_security_roles_users_user_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__security_roles_users_user_id", :using=>:btree}
+    t.datetime "created_at",       :null=>false
+    t.datetime "updated_at",       :null=>false
+
+    t.index ["security_role_id", "user_id"], :name=>"index_security_roles_users_on_security_role_id_and_user_id", :unique=>true, :using=>:btree
   end
 
 end

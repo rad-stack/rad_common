@@ -1,0 +1,15 @@
+%table.table.table-striped.table-bordered
+  %tr
+    %th Name
+    -if show_actions
+      %th Actions
+
+  - security_roles.each do |security_role|
+    %tr
+      %td= secured_link security_role
+      -if show_actions
+        %td
+          -if current_member.can_update?(security_role)
+            = link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', edit_security_role_path(security_role), class: 'btn btn-xs btn-default btn-block'
+          -if current_member.can_delete?(security_role)
+            = link_to content_tag(:i, '', class: 'fa fa-times right-5x') + ' Delete', security_role, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs btn-block'

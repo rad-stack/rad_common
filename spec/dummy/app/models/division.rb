@@ -3,7 +3,7 @@ class Division < ApplicationRecord
 
   belongs_to :owner, class_name: 'User'
   alias_attribute :to_s, :name
-  scope :authorized, -> (member) {}
+  scope :authorized, ->(_){}
 
   audited
 end

@@ -1,0 +1,11 @@
+= simple_form_for(@security_role) do |f|
+  = f.error_notification
+  = f.error :base
+
+  .form-inputs
+    = f.input :name
+    - normalize_names(humanized_permission_fields).each do |name, permission|
+      = f.input permission.to_sym, label: name
+
+  .form-actions
+    = f.button :submit, 'Save', class: 'btn btn-primary'

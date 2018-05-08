@@ -4,6 +4,7 @@ require 'rails_helper'
 describe DatabaseSanitizer do
   before do
     DatabaseCleaner.clean_with(:truncation)
+    SecurityRole.seed_items
   end
 
   describe '.generate_report' do
