@@ -23,7 +23,7 @@ module RadCommon
     end
 
     def normalize_name(label)
-      if label.include? 'Manage'
+      if label.include? 'Manage '
         label.sub 'Manage', 'Manage (View, Edit, Create, Delete)'
       elsif label.include? 'Update'
         label.sub 'Update', 'Edit'
