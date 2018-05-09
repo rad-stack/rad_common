@@ -16,13 +16,13 @@ describe "Audit search", type: :request do
 
       context 'resource deleted' do
         it 'loads audit page' do
-          deleted_user = create(:user)
-          deleted_user.destroy
+          deleted_role = create(:security_role, read_audit: true)
+          deleted_role.destroy
           visit audit_search_users_path
-          select deleted_user.class.to_s, from: "model_name"
-          fill_in "record_id", with: deleted_user.id
+          select deleted_role.class.to_s, from: "model_name"
+          fill_in "record_id", with: deleted_role.id
           within(:css, '.form-inputs') { click_button "Search" }
-          expect(page).to have_content("Updates for #{deleted_user.class.to_s} - #{deleted_user.id}")
+          expect(page).to have_content("Updates for #{deleted_role.class.to_s} - #{deleted_role.id}")
         end
       end
     end

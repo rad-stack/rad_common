@@ -27,7 +27,7 @@ module RadbearAuditsController
 
     return unless resource_type.present? && resource_id.present?
 
-    audits = Audited::Audit.where(auditable_type: resource_type.parameterize(separator: '_').camelize, auditable_id: resource_id)
+    audits = Audited::Audit.where(auditable_type: resource_type, auditable_id: resource_id)
     audits = audits.where(associated_id: current_member.company_id) if current_member.respond_to?(:company_id)
     audit = audits.first
     audit ? show_audits_for_type(resource_type, resource_id) : flash[:error] = "Audit for #{resource_type} with ID of #{resource_id} not found"
@@ -36,12 +36,12 @@ module RadbearAuditsController
   private
 
     def show_audits_for_type(resource_type, resource_id)
-      resource = resource_type.parameterize(separator: '_').camelize.constantize.find_by(id: resource_id)
+      resource = resource_type.constantize.find_by(id: resource_id)
       resource ? show_audits(resource) : show_audits_for_deleted(resource_type, resource_id)
     end
 
     def show_audits_for_deleted(resource_type, resource_id)
-      audits = Audited::Audit.where(auditable_type: resource_type.parameterize(separator: '_').camelize, auditable_id: resource_id)
+      audits = Audited::Audit.where(auditable_type: resource_type, auditable_id: resource_id)
       audits = audits.where(associated_id: current_member.company_id) if current_member.respond_to?(:company_id)
 
       @deleted = "#{resource_type} - #{resource_id}"
