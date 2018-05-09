@@ -86,7 +86,7 @@ RSpec.describe UsersController, type: :controller do
 
     context 'resource with no audit' do
       it 'does not render audit page' do
-        get :audit_search, params: { model_name: search_role.class.to_s, record_id: search_role.id }
+        get :audit_search, params: { model_name: search_role.class.to_s, record_id: -1 }
         expect(response).not_to render_template('audits/index')
       end
     end
