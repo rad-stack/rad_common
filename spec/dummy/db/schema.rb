@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180411144821) do
+ActiveRecord::Schema.define(version: 20180509112357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,7 +53,6 @@ ActiveRecord::Schema.define(version: 20180411144821) do
     t.string   "avatar_content_type",     :limit=>255
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
-    t.boolean  "optional_emails",         :default=>true, :null=>false
     t.string   "global_search_default",   :limit=>255
     t.boolean  "super_admin",             :default=>false, :null=>false
     t.integer  "user_status_id",          :null=>false, :foreign_key=>{:references=>"user_statuses", :name=>"fk_users_user_status_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__users_user_status_id", :using=>:btree}

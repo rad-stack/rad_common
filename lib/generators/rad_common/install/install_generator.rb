@@ -130,6 +130,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20171230132438_super_search_default.rb', 'super_search_default'
         apply_migration '../../../../../spec/dummy/db/migrate/20180314163722_devise_authy_add_to_users.rb', 'devise_authy_add_to_users'
         apply_migration '../../../../../spec/dummy/db/migrate/20180411144821_convert_to_roles.rb', 'convert_to_roles'
+        apply_migration '../../../../../spec/dummy/db/migrate/20180509112357_remove_optional_emails.rb', 'remove_optional_emails'
       end
 
       def self.next_migration_number(path)
