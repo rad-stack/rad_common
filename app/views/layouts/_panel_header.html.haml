@@ -55,9 +55,6 @@
         -elsif panel.action_name == "index"
           -if !panel.no_new_button && current_member && current_member.can_create?(panel.klass)
             = link_to content_tag(:it, "", class: "fa fa-plus-square right-5px") + "New #{panel.object_label}", panel.new_url, class: "btn btn-success btn-sm", id: "new_#{panel.downcased_object_class}_link"
-        -if panel.action_name == "edit" || panel.action_name == "update" || panel.action_name == "show"
-          -if !panel.no_new_button && current_member && current_member.can_create?(panel.klass)
-            = link_to content_tag(:it, "", class: "fa fa-plus-square right-5px") + "Add Another #{panel.object_label}", panel.new_url, class: "btn btn-success btn-sm", id: "new_#{panel.downcased_object_class}_link"
         -panel.additional_actions.each do |additional_action|
           = additional_action
         -if !panel.no_delete_button && panel.instance && panel.instance.id && current_member && current_member.can_delete?(panel.klass) && current_member.can_delete?(panel.instance)
@@ -65,6 +62,12 @@
             = panel.delete_button_content
           -else
             = link_to content_tag(:i, "", class: "fa fa-times right-5px") + 'Delete', panel.instance, method: :delete, data: { confirm: panel.delete_confirmation }, class: "btn btn-danger btn-sm"
+      .pull-right
+        -panel.external_actions.each do |external_action|
+          = external_action
+        -if panel.action_name == "edit" || panel.action_name == "update" || panel.action_name == "show"
+          -if !panel.no_new_button && current_member && current_member.can_create?(panel.klass)
+            = link_to content_tag(:it, "", class: "fa fa-plus-square right-5px") + "Add Another #{panel.object_label}", panel.new_url, class: "btn btn-success btn-sm", id: "new_#{panel.downcased_object_class}_link"
         -if !panel.no_index_button && ["show", "edit", "update", "new", "create"].include?(panel.action_name)
           -if current_member && current_member.can_read?(panel.klass)
             = link_to content_tag(:it, "", class: "fa fa-list right-5px") + "View " + panel.titleized_controller_name, "/#{panel.controller_name}", class: "btn btn-default btn-sm"
