@@ -98,6 +98,10 @@ class PanelPresenter
     local_assigns[:additional_actions] || []
   end
 
+  def external_actions
+    local_assigns[:external_actions] || []
+  end
+
   def action_name
     local_assigns[:action_name] || params[:action]
   end

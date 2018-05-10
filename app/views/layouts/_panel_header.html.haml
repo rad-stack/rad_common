@@ -68,6 +68,9 @@
         -if !panel.no_index_button && ["show", "edit", "update", "new", "create"].include?(panel.action_name)
           -if current_member && current_member.can_read?(panel.klass)
             = link_to content_tag(:it, "", class: "fa fa-list right-5px") + "View " + panel.titleized_controller_name, "/#{panel.controller_name}", class: "btn btn-default btn-sm"
+      .pull-right
+        -panel.external_actions.each do |external_action|
+          = external_action
       -if panel.action_name == "new" || panel.action_name == "create"
         .pull-right.top-3px
           = link_to content_tag(:it, "", class: "fa fa-times"), :back, class: "btn btn-warning btn-sm"
