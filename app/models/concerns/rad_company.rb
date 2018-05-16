@@ -18,7 +18,7 @@ module RadCompany
   def check_global_validity
     error_messages = []
 
-    exclude_models  = [ActiveRecord::SchemaMigration, ApplicationRecord] + Rails.application.config.global_validity_exclude
+    exclude_models = [ActiveRecord::SchemaMigration, ApplicationRecord] + Rails.application.config.global_validity_exclude
 
     Rails.application.eager_load!
     all_models = ActiveRecord::Base.descendants

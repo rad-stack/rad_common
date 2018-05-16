@@ -8,7 +8,7 @@ module RadCommon
           User.super_admins.each { |super_admin| RadbearMailer.global_validity(company, super_admin, error_messages).deliver_later }
         end
 
-        company.update_column(:validity_checked_at, DateTime.now)
+        company.global_validity_ran!
       end
     end
   end

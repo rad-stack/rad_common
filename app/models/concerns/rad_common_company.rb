@@ -7,9 +7,13 @@ module RadCommonCompany
   end
 
   def send_system_message(from, message)
-    self.members.active.each do |member|
+    members.active.each do |member|
       RadbearMailer.simple_message(self, member, "Important Message From #{I18n.t(:app_name)}", message, from: from).deliver_later
     end
+  end
+
+  def global_validity_ran!
+    update_column(:validity_checked_at, Time.zone.now)
   end
 
   module ClassMethods
@@ -38,19 +42,18 @@ module RadCommonCompany
     def validate_record(record, error_messages_array)
       record.bypass_geocoding = true if record.respond_to?(:bypass_geocoding)
 
-      unless record.valid?
-        messages = record.errors.full_messages
+      return if record.valid?
 
-        supressions = Rails.application.config.global_validity_supress || []
-        supression = supressions.select {|item| item[:class] == record.class.to_s }.first
+      messages = record.errors.full_messages
 
-        if supression
-          messages = messages - supression[:messages]
-        end
+      supressions = Rails.application.config.global_validity_supress || []
+      supression = supressions.select { |item| item[:class] == record.class.to_s }.first
 
-        if messages.any?
-          error_messages_array.push([record, "#{messages.join(', ')}"])
-        end
+      if supression
+        messages -= supression[:messages]
       end
+
+      return unless messages.any?
+      error_messages_array.push([record, messages.join(', ')])
     end
 end
