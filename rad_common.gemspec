@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'audited', '4.5.0'
   s.add_dependency 'authority', '3.3.0'
   s.add_dependency 'aws-sdk', '2.10.26'
-  s.add_dependency 'devise', '4.3.0'
+  s.add_dependency 'devise', '4.4.3'
   s.add_dependency 'devise-authy'
   s.add_dependency 'faker', '1.8.4'
   s.add_dependency 'font-awesome-rails', '4.7.0.2'
