@@ -3,7 +3,7 @@ class FirebaseDestroyJob < ApplicationJob
 
   def perform(app_id, firebase_reference)
     app = FirebaseApp.find(app_id)
-    response = app.client.delete(firebase_reference)
+    response = RadicalRetry.perform { app.client.delete(firebase_reference) }
 
     unless response.success?
       raise response.body
