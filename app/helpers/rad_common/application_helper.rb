@@ -167,7 +167,8 @@ module RadCommon
     end
 
     def enum_to_translated_option(klass, enum, enum_value, default = enum_value.to_s.titleize)
-      key = "activerecord.attributes.#{klass.to_s.underscore.gsub('/', '_')}.#{enum}.#{enum_value}"
+      enums = enum.to_s.pluralize
+      key = "activerecord.attributes.#{klass.to_s.underscore.gsub('/', '_')}.#{enums}.#{enum_value}"
       I18n.t(key, default: default)
     end
 

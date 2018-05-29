@@ -1,13 +1,20 @@
 require 'rails_helper'
 
 describe RadCommon::ApplicationHelper do
-  let(:date) { DateTime.current }
+  let(:date) { Time.current }
+  let(:division) { create :division }
 
   before do
     @user = create :user
 
     def helper.current_member
       @user
+    end
+  end
+
+  describe 'enum_to_translated_option' do
+    it 'should translate the value' do
+      expect(enum_to_translated_option(Division, :division_status, division.division_status)).to eq 'Active'
     end
   end
 
@@ -46,28 +53,28 @@ describe RadCommon::ApplicationHelper do
     before { Rails.application.config.use_avatar = true }
     after  { Rails.application.config.use_avatar = false }
 
-    context "user has avatar" do
+    context 'user has avatar' do
       let(:resource) do
         build(:user, avatar: fixture_file_upload(Rails.root.join('spec', 'fixtures', filename)))
       end
       xit 'should return the Amazon stored image' do
-        # TODO doesn't work locally
+        # TODO: doesn't work locally
         response = avatar_image(resource, size)
-        expect(response).to include("<img")
-        expect(response).to include(".png")
+        expect(response).to include('<img')
+        expect(response).to include('.png')
         expect(response).to_not include('gravatar')
       end
 
       xit 'returns a 50px image' do
-        #todo this just stopped working, need to debug
-        response = avatar_image(resource, size)
-        expect(avatar_image(resource, size)).to include("50")
+        # TODO: this just stopped working, need to debug
+        avatar_image(resource, size)
+        expect(avatar_image(resource, size)).to include('50')
       end
     end
 
-    context "user does not have avatar" do
+    context 'user does not have avatar' do
       let(:resource) { build(:user, avatar: nil) }
-      it "should return an image tag with the user gravatar" do
+      it 'should return an image tag with the user gravatar' do
         expect(avatar_image(resource, size)).to include('gravatar')
       end
     end
@@ -82,11 +89,11 @@ describe RadCommon::ApplicationHelper do
 
         it 'renders a link' do
           expect(helper.secured_link(resource)).to include('href')
-          expect(helper.secured_link(resource)).to include("#{resource.id}")
+          expect(helper.secured_link(resource)).to include(resource.id.to_s)
         end
 
         it 'defaults to no specified format' do
-          expect(helper.secured_link(resource)).to_not include("format")
+          expect(helper.secured_link(resource)).to_not include('format')
         end
 
         it 'can specify a pdf format' do
@@ -126,47 +133,47 @@ describe RadCommon::ApplicationHelper do
 
     context 'with seconds option' do
       it 'formats the date' do
-        expect(helper.format_datetime(date, { include_seconds: true })).to eq(date.strftime('%-m/%-d/%Y %l:%M:%S %p'))
+        expect(helper.format_datetime(date, include_seconds: true)).to eq(date.strftime('%-m/%-d/%Y %l:%M:%S %p'))
       end
     end
 
     context 'with zone option' do
       it 'formats the date' do
-        expect(helper.format_datetime(date, { include_zone: true })).to eq(date.in_time_zone.strftime('%-m/%-d/%Y %l:%M %p %Z'))
+        expect(helper.format_datetime(date, include_zone: true)).to eq(date.in_time_zone.strftime('%-m/%-d/%Y %l:%M %p %Z'))
       end
     end
   end
 
-  describe "#classify_foreign_key" do
-    it "returns class name" do
-      p = "security_role_id"
+  describe '#classify_foreign_key' do
+    it 'returns class name' do
+      p = 'security_role_id'
       expect(helper.classify_foreign_key(p, SecurityRole)).to eq SecurityRole
     end
 
-    it "returns original value if no class is found" do
-      p = "security_roleee"
-      p2 = "security_roleee_id"
+    it 'returns original value if no class is found' do
+      p = 'security_roleee'
+      p2 = 'security_roleee_id'
       expect(helper.classify_foreign_key(p, SecurityRole)).to eq p
       expect(helper.classify_foreign_key(p2, SecurityRole)).to eq p2
     end
 
-    it "returns original value of there is no _id at end of string" do
-      p = "security_role"
+    it 'returns original value of there is no _id at end of string' do
+      p = 'security_role'
       expect(helper.classify_foreign_key(p, SecurityRole)).to eq p
     end
 
-    it "works for other classes" do
-      u = "user_id"
-      o = "security_role_id"
-      division = "division_id"
+    it 'works for other classes' do
+      u = 'user_id'
+      o = 'security_role_id'
+      division = 'division_id'
 
       expect(helper.classify_foreign_key(u, User)).to eq User
       expect(helper.classify_foreign_key(o, SecurityRole)).to eq SecurityRole
       expect(helper.classify_foreign_key(division, Division)).to eq Division
     end
 
-    it "works for special relationships" do
-      o = "owner_id"
+    it 'works for special relationships' do
+      o = 'owner_id'
 
       expect(helper.classify_foreign_key(o, Division)).to eq User
     end

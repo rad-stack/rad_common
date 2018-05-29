@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180509112357) do
+ActiveRecord::Schema.define(version: 20180529114012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,8 +40,8 @@ ActiveRecord::Schema.define(version: 20180509112357) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email",       :limit=>255
-    t.string   "first_name",              :limit=>255, :index=>{:name=>"index_users_on_first_name", :using=>:btree}
-    t.string   "last_name",               :limit=>255, :index=>{:name=>"index_users_on_last_name", :using=>:btree}
+    t.string   "first_name",              :limit=>255, :null=>false, :index=>{:name=>"index_users_on_first_name", :using=>:btree}
+    t.string   "last_name",               :limit=>255, :null=>false, :index=>{:name=>"index_users_on_last_name", :using=>:btree}
     t.string   "username",                :limit=>255, :index=>{:name=>"index_users_on_username", :unique=>true, :using=>:btree}
     t.string   "mobile_phone",            :limit=>255
     t.string   "facebook_id",             :limit=>255
@@ -99,11 +99,12 @@ ActiveRecord::Schema.define(version: 20180509112357) do
   end
 
   create_table "divisions", force: :cascade do |t|
-    t.string   "name",       :null=>false
-    t.string   "code",       :null=>false
-    t.integer  "owner_id",   :null=>false, :foreign_key=>{:references=>"users", :name=>"fk_divisions_owner_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__divisions_owner_id", :using=>:btree}
-    t.datetime "created_at", :null=>false
-    t.datetime "updated_at", :null=>false
+    t.string   "name",            :null=>false
+    t.string   "code",            :null=>false
+    t.integer  "owner_id",        :null=>false, :foreign_key=>{:references=>"users", :name=>"fk_divisions_owner_id", :on_update=>:no_action, :on_delete=>:no_action}, :index=>{:name=>"fk__divisions_owner_id", :using=>:btree}
+    t.datetime "created_at",      :null=>false
+    t.datetime "updated_at",      :null=>false
+    t.integer  "division_status"
   end
 
   create_table "security_roles", force: :cascade do |t|

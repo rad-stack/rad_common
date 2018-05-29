@@ -20,7 +20,6 @@ class User < ApplicationRecord
 
   has_attached_file :avatar, styles: { small: '25x25#', medium: '50x50#', normal: '100x100#', large: '200x200#' }
 
-  validates :first_name, :last_name, presence: true
   validates_attachment_content_type :avatar, content_type: %w[image/jpg image/jpeg image/png]
   validates_with PhoneNumberValidator, fields: [:mobile_phone]
 

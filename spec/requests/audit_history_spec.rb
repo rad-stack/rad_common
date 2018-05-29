@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "AuditHistory", type: :request do
+describe 'AuditHistory', type: :request do
   let(:admin) { create :admin }
   let(:user) { create :user }
   let(:division) { create :division }
@@ -9,14 +9,14 @@ describe "AuditHistory", type: :request do
     login_as(admin, scope: :user)
   end
 
-  it "should show the change in user history" do
+  it 'should show the change in user history' do
     old_name = user.last_name
-    new_name = "foo"
+    new_name = 'foo'
     visit edit_user_path(user)
-    fill_in "First name", with: new_name
-    click_button "Save"
+    fill_in 'First name', with: new_name
+    click_button 'Save'
 
-    click_link "Show History"
+    click_link 'Show History'
     expect(page).to have_content new_name
     expect(page).to have_content old_name
   end

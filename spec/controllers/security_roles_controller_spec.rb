@@ -2,7 +2,7 @@ require 'rails_helper'
 
   RSpec.describe SecurityRolesController, type: :controller do
     let(:user) { create :admin }
-    let(:security_role) { create :security_role }
+    let(:security_role) { SecurityRole.first }
 
     before do
       sign_in user
@@ -66,7 +66,7 @@ require 'rails_helper'
 
     describe 'DELETE destroy' do
       before do
-        @request.env['HTTP_REFERER'] =security_role_path(security_role)
+        @request.env['HTTP_REFERER'] = security_role_path(security_role)
       end
 
       it 'destroys the requested security_role' do
