@@ -22,7 +22,7 @@ class FirebaseLogDestroyJob < ActiveJob::Base
     end
 
     def delete_logs_individually(app, log_id, current_user_id)
-      response = RadicalRetry.perform { app.client.get("logs/#{log_id}") } }
+      response = RadicalRetry.perform { app.client.get("logs/#{log_id}") }
 
       if response.success?
         delete_each_log(app, response, log_id, current_user_id)
