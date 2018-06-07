@@ -1,4 +1,4 @@
-class AddStringLimits < ActiveRecord::Migration
+class AddStringLimits < ActiveRecord::Migration[5.0]
   def change
     change_table :companies do |t|
       t.change   "name", :string, limit: 255, null: false
