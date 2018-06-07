@@ -19,7 +19,6 @@ module RadCommon
     require 'pg'
     require 'premailer/rails'
     require 'rad_common/global_validity'
-    require 'schema_auto_foreign_keys'
     require 'schema_validations'
     require 'sidekiq'
     require 'simple_form'
