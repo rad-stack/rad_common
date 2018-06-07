@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'premailer-rails', '1.9.7'
   s.add_dependency 'rails', '5.1.6'
   s.add_dependency 'schema_validations'
+  s.add_dependency 'schema_auto_foreign_keys'
   s.add_dependency 'sidekiq', '5.0.4'
   s.add_dependency 'simple_form', '3.5.0'
   s.add_dependency 'twitter-bootstrap-rails', '4.0.0'

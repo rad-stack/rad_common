@@ -1,4 +1,16 @@
 GIT
+  remote: https://github.com/SchemaPlus/schema_plus_foreign_keys.git
+  revision: 5945ef760b37997b94bbdaa803deb176d2efb68f
+  branch: AR51-support
+  specs:
+    schema_plus_foreign_keys (0.1.7)
+      activerecord (>= 5.0, < 5.2)
+      its-it (~> 1.2)
+      schema_plus_compatibility (~> 0.2)
+      schema_plus_core
+      valuable
+
+GIT
   remote: https://github.com/rails/rails-observers.git
   revision: fb6b95509c3f1a50c973280ddc2b56648e33623f
   specs:
@@ -24,6 +36,7 @@ PATH
       pg
       premailer-rails (= 1.9.7)
       rails (= 5.1.6)
+      schema_auto_foreign_keys
       schema_validations
       sidekiq (= 5.0.4)
       simple_form (= 3.5.0)
@@ -324,6 +337,10 @@ GEM
     ruby-progressbar (1.9.0)
     ruby_parser (3.11.0)
       sexp_processor (~> 4.9)
+    schema_auto_foreign_keys (0.1.3)
+      its-it (~> 1.2)
+      schema_plus_foreign_keys (~> 0.1)
+      schema_plus_indexes (~> 0.2)
     schema_monkey (2.1.5)
       activerecord (>= 4.2)
       modware (~> 0.1)
@@ -332,6 +349,9 @@ GEM
       its-it (~> 1.2)
       schema_plus_core
       schema_plus_indexes (~> 0.2)
+    schema_plus_compatibility (0.3.0)
+      activerecord (>= 4.2, < 5.2)
+      schema_monkey (~> 2.1)
     schema_plus_core (2.1.1)
       activerecord (~> 5.0)
       its-it (~> 1.2)
@@ -404,6 +424,7 @@ DEPENDENCIES
   rails-observers!
   rspec-rails
   rubocop
+  schema_plus_foreign_keys!
   simplecov
 
 BUNDLED WITH

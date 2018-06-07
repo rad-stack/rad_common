@@ -20,6 +20,7 @@ module RadCommon
     require 'premailer/rails'
     require 'rad_common/global_validity'
     require 'schema_validations'
+    require 'schema_auto_foreign_keys'
     require 'sidekiq'
     require 'simple_form'
     require 'twitter-bootstrap-rails'

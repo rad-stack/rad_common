@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 20180529114012) do
     t.datetime "avatar_updated_at"
     t.string   "global_search_default",   :limit=>255
     t.boolean  "super_admin",             :default=>false, :null=>false
-    t.integer  "user_status_id",          :null=>false, :index=>{:name=>"index_users_on_user_status_id"}
+    t.integer  "user_status_id",          :null=>false, :index=>{:name=>"fk__users_user_status_id"}, :foreign_key=>{:references=>"user_statuses", :name=>"fk_users_user_status_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.boolean  "super_search_default",    :default=>false, :null=>false
     t.string   "authy_id",                :index=>{:name=>"index_users_on_authy_id"}
     t.datetime "last_sign_in_with_authy"
@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 20180529114012) do
     t.string   "auditable_type"
     t.integer  "associated_id",   :index=>{:name=>"associated_index", :with=>["associated_type"]}
     t.string   "associated_type"
-    t.integer  "user_id",         :index=>{:name=>"index_audits_on_user_id"}
+    t.integer  "user_id",         :index=>{:name=>"fk__audits_user_id"}, :foreign_key=>{:references=>"users", :name=>"fk_audits_user_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.string   "user_type"
     t.string   "username"
     t.string   "action"
@@ -101,9 +101,9 @@ ActiveRecord::Schema.define(version: 20180529114012) do
   create_table "divisions", force: :cascade do |t|
     t.string   "name",            :null=>false
     t.string   "code",            :null=>false
+    t.integer  "owner_id",        :null=>false, :index=>{:name=>"fk__divisions_owner_id"}, :foreign_key=>{:references=>"users", :name=>"fk_divisions_owner_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.datetime "created_at",      :null=>false
     t.datetime "updated_at",      :null=>false
-    t.integer  "owner_id",        :null=>false, :index=>{:name=>"index_divisions_on_owner_id"}
     t.integer  "division_status"
   end
 
@@ -121,17 +121,12 @@ ActiveRecord::Schema.define(version: 20180529114012) do
   end
 
   create_table "security_roles_users", force: :cascade do |t|
-    t.integer  "security_role_id", :null=>false, :index=>{:name=>"index_security_roles_users_on_security_role_id"}
-    t.integer  "user_id",          :null=>false, :index=>{:name=>"index_security_roles_users_on_user_id"}
+    t.integer  "security_role_id", :null=>false, :index=>{:name=>"fk__security_roles_users_security_role_id"}, :foreign_key=>{:references=>"security_roles", :name=>"fk_security_roles_users_security_role_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "user_id",          :null=>false, :index=>{:name=>"fk__security_roles_users_user_id"}, :foreign_key=>{:references=>"users", :name=>"fk_security_roles_users_user_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.datetime "created_at",       :null=>false
     t.datetime "updated_at",       :null=>false
 
     t.index ["security_role_id", "user_id"], :name=>"index_security_roles_users_on_security_role_id_and_user_id", :unique=>true
   end
 
-  add_foreign_key "audits", "users"
-  add_foreign_key "divisions", "users", column: "owner_id"
-  add_foreign_key "security_roles_users", "security_roles"
-  add_foreign_key "security_roles_users", "users"
-  add_foreign_key "users", "user_statuses"
 end
