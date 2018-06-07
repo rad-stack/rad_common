@@ -1,11 +1,11 @@
 class InstallAudited < ActiveRecord::Migration[5.0]
   def self.up
     create_table :audits, force: true do |t|
-      t.column :auditable_id, :integer, references: nil
+      t.column :auditable_id, :integer
       t.column :auditable_type, :string
-      t.column :associated_id, :integer, references: nil
+      t.column :associated_id, :integer
       t.column :associated_type, :string
-      t.column :user_id, :integer
+      t.references :user, foreign_key: true
       t.column :user_type, :string
       t.column :username, :string
       t.column :action, :string

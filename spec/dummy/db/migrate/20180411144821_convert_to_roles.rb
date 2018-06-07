@@ -3,8 +3,8 @@ class ConvertToRoles < ActiveRecord::Migration[5.0]
     rename_table :security_groups, :security_roles
 
     create_table :security_roles_users do |t|
-      t.integer :security_role_id, null: false
-      t.integer :user_id, null: false
+      t.references :security_role, null: false, foreign_key: true
+      t.references :user, null: false, foreign_key: true
 
       t.timestamps
     end
