@@ -56,7 +56,7 @@ module RadbearUser
 
     def notify_user_approved
       return if auto_approve?
-      return unless user_status_id_changed? && user_status && user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
+      return unless saved_change_to_user_status_id? && user_status && user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
       RadbearMailer.your_account_approved(self).deliver_later
 

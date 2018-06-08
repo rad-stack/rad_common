@@ -1,4 +1,4 @@
-class AddCompanyTable < ActiveRecord::Migration
+class AddCompanyTable < ActiveRecord::Migration[5.1]
   def change
     create_table :companies do |t|
       t.string :name, null: false
@@ -10,19 +10,13 @@ class AddCompanyTable < ActiveRecord::Migration
       t.string :city, null: false
       t.string :state, null: false
       t.string :zipcode, null: false
-      
+
       t.timestamps
     end
-    
-    company = Company.new
-    company.name = "ABC Company"
-    company.phone_number = "(800) 123-2000"
-    company.website = "http://www.example.com"
-    company.email = "info@example.com"
-    company.address_1 = "100 1st Street"
-    company.city = "Neptune Beach"
-    company.state = "FL"
-    company.zipcode = "32246"
-    company.save!
+
+    query = "INSERT INTO companies (name, phone_number, website, email, address_1, city, state, zipcode, created_at, updated_at)
+            VALUES ('ABC Company', '(800) 123-2000', 'http://www.example.com', 'info@example.com', '100 1st Street', 'Neptune Beach', 'FL', '32246', '2018-01-01 00:00', '2018-01-01 00:00' )"
+
+    ActiveRecord::Base.connection.execute query
   end
 end

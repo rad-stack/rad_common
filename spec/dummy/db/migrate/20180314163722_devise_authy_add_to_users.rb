@@ -1,4 +1,4 @@
-class DeviseAuthyAddToUsers < ActiveRecord::Migration[5.0]
+class DeviseAuthyAddToUsers < ActiveRecord::Migration[5.1]
   def change
     add_column :users, :authy_id, :string, references: nil
     add_column :users, :last_sign_in_with_authy, :datetime

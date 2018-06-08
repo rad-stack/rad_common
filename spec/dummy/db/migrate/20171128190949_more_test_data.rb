@@ -1,4 +1,4 @@
-class MoreTestData < ActiveRecord::Migration[5.0]
+class MoreTestData < ActiveRecord::Migration[5.1]
   def change
     create_table :divisions do |t|
       t.string :name, null: false

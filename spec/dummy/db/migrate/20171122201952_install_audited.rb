@@ -1,4 +1,4 @@
-class InstallAudited < ActiveRecord::Migration[5.0]
+class InstallAudited < ActiveRecord::Migration[5.1]
   def self.up
     create_table :audits, force: true do |t|
       t.column :auditable_id, :integer, references: nil
