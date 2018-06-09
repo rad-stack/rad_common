@@ -53,7 +53,6 @@ module RadCommon
 
         # factories
         template '../../../../../spec/factories/companies.rb', 'spec/factories/companies.rb'
-        template '../../../../../spec/factories/divisions.rb', 'spec/factories/divisions.rb'
         template '../../../../../spec/factories/security_roles.rb', 'spec/factories/security_roles.rb'
         template '../../../../../spec/factories/user_statuses.rb', 'spec/factories/user_statuses.rb'
         template '../../../../../spec/factories/users.rb', 'spec/factories/users.rb'
@@ -142,6 +141,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20180411144821_convert_to_roles.rb', 'convert_to_roles'
         apply_migration '../../../../../spec/dummy/db/migrate/20180509112357_remove_optional_emails.rb', 'remove_optional_emails'
         apply_migration '../../../../../spec/dummy/db/migrate/20180526160907_require_user_names.rb', 'require_user_names'
+        apply_migration '../../../../../spec/dummy/db/migrate/20180609150231_company_valid_domains.rb', 'company_valid_domains'
       end
 
       def self.next_migration_number(path)

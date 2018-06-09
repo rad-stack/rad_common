@@ -8,5 +8,6 @@ FactoryBot.define do
     phone_number '(444) 444-4444'
     website Faker::Internet.url
     email Faker::Internet.email
+    valid_user_domains ['example.com']
   end
 end

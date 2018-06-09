@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180529114012) do
+ActiveRecord::Schema.define(version: 20180609150231) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 20180529114012) do
     t.boolean  "company_logo_includes_name", :default=>false, :null=>false
     t.boolean  "app_logo_includes_name",     :default=>false, :null=>false
     t.datetime "validity_checked_at"
+    t.text     "valid_user_domains",         :default=>[], :array=>true
   end
 
   create_table "divisions", force: :cascade do |t|
