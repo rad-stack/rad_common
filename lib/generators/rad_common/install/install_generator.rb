@@ -8,6 +8,8 @@ module RadCommon
       def create_initializer_file
         # initializers
         template '../../../../../spec/dummy/config/initializers/rad_common.rb', 'config/initializers/rad_common.rb'
+
+        # TODO: https://radbear.groundswell.online/tasks/26453
         template '../../../../../spec/dummy/config/initializers/schema_plus.rb', 'config/initializers/schema_plus.rb'
 
         # locales
