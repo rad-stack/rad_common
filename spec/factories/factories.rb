@@ -17,6 +17,10 @@ FactoryBot.define do
       super_admin true
       f.after(:create) { |user| user.security_roles << SecurityRole.find_by(name: 'Admin') }
     end
+
+    factory :pending do |f|
+      association :user_status, factory: %i[user_status pending]
+    end
   end
 
   factory :company do
