@@ -51,6 +51,13 @@ module RadCommon
         template '../../../../../spec/requests/companies_spec.rb', 'spec/requests/companies_spec.rb'
         template '../../../../../spec/requests/security_roles_spec.rb', 'spec/requests/security_roles_spec.rb'
 
+        # factories
+        template '../../../../../spec/factories/companies.rb', 'spec/factories/companies.rb'
+        template '../../../../../spec/factories/divisions.rb', 'spec/factories/divisions.rb'
+        template '../../../../../spec/factories/security_roles.rb', 'spec/factories/security_roles.rb'
+        template '../../../../../spec/factories/user_statuses.rb', 'spec/factories/user_statuses.rb'
+        template '../../../../../spec/factories/users.rb', 'spec/factories/users.rb'
+
         # templates
 
         # active_record templates
