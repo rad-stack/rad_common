@@ -16,13 +16,13 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
-  s.add_dependency 'audited', '4.5.0'
+  s.add_dependency 'audited', '4.7.1'
   s.add_dependency 'authority', '3.3.0'
   s.add_dependency 'aws-sdk', '2.10.26'
   s.add_dependency 'devise', '4.4.3'
   s.add_dependency 'devise-authy'
   s.add_dependency 'faker', '1.8.4'
-  s.add_dependency 'font-awesome-rails', '4.7.0.2'
+  s.add_dependency 'font-awesome-rails', '4.7.0.4'
   s.add_dependency 'haml-rails', '1.0.0'
   s.add_dependency 'kaminari-bootstrap', '3.0.1'
   s.add_dependency 'koala', '3.0.0'
@@ -30,10 +30,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'paperclip', '>= 5.1.0', '< 5.3.0'
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '1.9.7'
-  s.add_dependency 'rails', '5.1.6'
+  s.add_dependency 'rails', '5.2.0'
   s.add_dependency 'schema_validations'
   s.add_dependency 'sidekiq', '5.0.4'
-  s.add_dependency 'simple_form', '3.5.0'
+  s.add_dependency 'simple_form', '4.0.1'
   s.add_dependency 'twitter-bootstrap-rails', '4.0.0'
 
   s.add_development_dependency 'capybara', '2.15.1'
