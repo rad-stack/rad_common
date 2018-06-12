@@ -15,7 +15,6 @@ gemspec
 
 #todo move this to gemspec when the update is available in rubygems
 gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
-gem 'schema_plus_foreign_keys', git: 'https://github.com/SchemaPlus/schema_plus_foreign_keys.git', branch: 'AR51-support'
 
 group :test do
   gem 'capybara-webkit'
