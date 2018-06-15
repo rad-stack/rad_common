@@ -139,21 +139,6 @@ module RadCommon
       end
     end
 
-    def bootstrap_class_for flash_type
-      case flash_type.to_s
-        when 'success'
-          'alert-success'
-        when 'error'
-          'alert-danger'
-        when 'alert'
-          'alert-warning'
-        when 'notice'
-          'alert-info'
-        else
-          flash_type.to_s
-      end
-    end
-
     def icon_tag(icon, text)
       content_tag(:i, '', class: "right-5px #{icon}") + text
     end
