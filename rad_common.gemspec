@@ -25,8 +25,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'font-awesome-rails', '4.7.0.2'
   s.add_dependency 'haml-rails', '1.0.0'
   s.add_dependency 'kaminari-bootstrap', '3.0.1'
-  s.add_dependency 'koala', '3.0.0'
-  s.add_dependency 'omniauth-facebook', '4.0.0'
   s.add_dependency 'paperclip', '>= 5.1.0', '< 5.3.0'
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '1.9.7'

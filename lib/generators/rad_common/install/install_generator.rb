@@ -99,8 +99,6 @@ module RadCommon
 
   devise_for :users, controllers: { confirmations: 'users/confirmations' }
 
-  get '/auth/:provider/callback' => 'rad_common/authentications#create' # remove unless using social media auth
-
   resources :users, only: %i[index show edit update destroy] do
     member do
       get :audit

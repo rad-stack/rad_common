@@ -53,25 +53,6 @@ describe RadCommon::ApplicationHelper do
     before { Rails.application.config.use_avatar = true }
     after  { Rails.application.config.use_avatar = false }
 
-    context 'user has avatar' do
-      let(:resource) do
-        build(:user, avatar: fixture_file_upload(Rails.root.join('spec', 'fixtures', filename)))
-      end
-      xit 'should return the Amazon stored image' do
-        # TODO: doesn't work locally
-        response = avatar_image(resource, size)
-        expect(response).to include('<img')
-        expect(response).to include('.png')
-        expect(response).to_not include('gravatar')
-      end
-
-      xit 'returns a 50px image' do
-        # TODO: this just stopped working, need to debug
-        avatar_image(resource, size)
-        expect(avatar_image(resource, size)).to include('50')
-      end
-    end
-
     context 'user does not have avatar' do
       let(:resource) { build(:user, avatar: nil) }
       it 'should return an image tag with the user gravatar' do

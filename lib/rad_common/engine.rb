@@ -14,7 +14,6 @@ module RadCommon
     require 'haml-rails'
     require 'kaminari-bootstrap'
     require 'nokogiri'
-    require 'omniauth-facebook'
     require 'paperclip'
     require 'pg'
     require 'premailer/rails'

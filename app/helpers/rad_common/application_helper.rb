@@ -212,10 +212,6 @@ module RadCommon
       attr.nil? ? audit_column : attr
     end
 
-    def omniauth_providers
-      (OmniAuth::Strategies.constants - [:Developer, :OAuth2, :OAuth]).map {|item| item.to_s.downcase}
-    end
-
     private
 
       def size_symbol_to_int(size_as_symbol)
