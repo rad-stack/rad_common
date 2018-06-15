@@ -118,6 +118,12 @@ describe RadCommon::ApplicationHelper do
     end
   end
 
+  describe '#format_time' do
+    it 'formats the time' do
+      expect(helper.format_time(DateTime.parse('2018-06-15 06:43 AM'))).to eq('6:43am')
+    end
+  end
+
   describe '#format_datetime' do
     context 'with nil' do
       it 'returns nil' do

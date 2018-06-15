@@ -128,7 +128,7 @@ module RadCommon
     end
 
     def format_time(value)
-      value.strftime('%l:%M%P') if value.present?
+      value.strftime('%l:%M%P').strip if value.present?
     end
 
     def format_boolean(value)
