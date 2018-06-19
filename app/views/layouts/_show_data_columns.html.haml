@@ -60,11 +60,5 @@
                 = format_boolean(value)
               -elsif value.class.to_s == "Array"
                 = value.join(", ")
-              -elsif item.to_s == 'phone_number'
-                = link_to value, "tel:#{value}"
-              -elsif item.to_s == 'website'
-                = link_to value, "http://#{value}", target: :_blank
-              -elsif item.to_s == 'email'
-                = mail_to value
               -else
                 = value
