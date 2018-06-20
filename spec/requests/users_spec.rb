@@ -115,7 +115,7 @@ describe 'Users', type: :request do
 
       fill_in 'First name', with: Faker::Name.first_name
       fill_in 'Last name', with: Faker::Name.last_name
-      fill_in 'Email', with: Faker::Internet.user_name + '@mayo.edu'
+      fill_in 'Email', with: Faker::Internet.user_name + '@example.com'
       fill_in 'user_password', with: password
       fill_in 'user_password_confirmation', with: password
 

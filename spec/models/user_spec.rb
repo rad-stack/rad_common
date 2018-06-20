@@ -1,6 +1,32 @@
 require 'rails_helper'
 
 describe User, type: :model do
+  let(:attributes) do
+    { first_name: 'Example',
+      last_name: 'User',
+      email: 'user@example.com',
+      password: 'password',
+      password_confirmation: 'password' }
+  end
+
+  describe 'validate' do
+    it 'should reject invalid email addresses' do
+      addresses = %w[user@foo,com user_at_foo.org example.user@foo. user@foo.com user@foo.com]
+      addresses.each do |address|
+        invalid_email_user = User.new(attributes.merge(email: address))
+        expect(invalid_email_user).not_to be_valid
+      end
+    end
+
+    it 'should allow valid email addresses' do
+      addresses = ['joe@example.com', 'bob@example.com', 'sally@example.com']
+      addresses.each do |address|
+        user = User.new(attributes.merge(email: address))
+        expect(user).to be_valid
+      end
+    end
+  end
+
   describe 'authy' do
     let(:user) { create :user, mobile_phone: phone_number }
     let(:phone_number) { '(123) 456-7111' }

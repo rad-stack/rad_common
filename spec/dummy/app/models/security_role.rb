@@ -22,7 +22,7 @@ class SecurityRole < ApplicationRecord
     end
 
     private def seed_manager
-      group = get_group('User')
+      group = get_group('Manager')
       group.create_division = true
       group.read_division = true
       group.update_division = true
