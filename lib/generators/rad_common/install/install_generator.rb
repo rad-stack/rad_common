@@ -9,6 +9,9 @@ module RadCommon
         # initializers
         template '../../../../../spec/dummy/config/initializers/rad_common.rb', 'config/initializers/rad_common.rb'
 
+        # TODO: https://radbear.groundswell.online/tasks/26453
+        template '../../../../../spec/dummy/config/initializers/schema_plus.rb', 'config/initializers/schema_plus.rb'
+
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml', 'config/locales/devise.authy.en.yml'
 
@@ -47,6 +50,12 @@ module RadCommon
         template '../../../../../spec/requests/users_spec.rb', 'spec/requests/users_spec.rb'
         template '../../../../../spec/requests/companies_spec.rb', 'spec/requests/companies_spec.rb'
         template '../../../../../spec/requests/security_roles_spec.rb', 'spec/requests/security_roles_spec.rb'
+
+        # factories
+        template '../../../../../spec/factories/companies.rb', 'spec/factories/companies.rb'
+        template '../../../../../spec/factories/security_roles.rb', 'spec/factories/security_roles.rb'
+        template '../../../../../spec/factories/user_statuses.rb', 'spec/factories/user_statuses.rb'
+        template '../../../../../spec/factories/users.rb', 'spec/factories/users.rb'
 
         # templates
 
@@ -87,10 +96,8 @@ module RadCommon
         inject_into_file 'config/routes.rb', after: 'Application.routes.draw do' do <<-'RUBY'
 
   mount RadCommon::Engine => '/rad_common'
-  
-  devise_for :users, controllers: { confirmations: 'users/confirmations' }
 
-  get '/auth/:provider/callback' => 'rad_common/authentications#create' # remove unless using social media auth
+  devise_for :users, controllers: { confirmations: 'users/confirmations' }
 
   resources :users, only: %i[index show edit update destroy] do
     member do
@@ -132,6 +139,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20180411144821_convert_to_roles.rb', 'convert_to_roles'
         apply_migration '../../../../../spec/dummy/db/migrate/20180509112357_remove_optional_emails.rb', 'remove_optional_emails'
         apply_migration '../../../../../spec/dummy/db/migrate/20180526160907_require_user_names.rb', 'require_user_names'
+        apply_migration '../../../../../spec/dummy/db/migrate/20180609150231_company_valid_domains.rb', 'company_valid_domains'
       end
 
       def self.next_migration_number(path)

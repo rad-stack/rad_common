@@ -13,8 +13,10 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-#todo move this to gemspec when the update is available in rubygems
+# TODO: move these to gemspec when the updates are available in rubygems
 gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
+# TODO: https://radbear.groundswell.online/tasks/26454
+gem 'schema_plus_foreign_keys', git: 'https://github.com/SchemaPlus/schema_plus_foreign_keys.git', branch: 'AR51-support'
 
 group :test do
   gem 'capybara-webkit'

@@ -1,4 +1,4 @@
-class AddRadbearUserFields < ActiveRecord::Migration
+class AddRadbearUserFields < ActiveRecord::Migration[5.0]
   def change
     add_column :users, :first_name, :string
     add_column :users, :last_name, :string
@@ -12,9 +12,9 @@ class AddRadbearUserFields < ActiveRecord::Migration
     add_column :users, :twitter_access_secret, :string
     add_column :users, :timezone, :string
     add_column :users, :provider_avatar, :string
-    
+
     add_attachment :users, :avatar
-    
+
     add_index :users, :username, unique: true
   end
 end
