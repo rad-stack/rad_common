@@ -70,7 +70,7 @@
             -unless company_full_address.blank?
               .footer-item= company_full_address
             -unless company_phone_number.blank?
-              .footer-item= company_phone_number
+              .footer-item= link_to company_phone_number, "tel:#{company_phone_number}"
             .footer-item= link_to website, website
             .footer-item= link_to admin_email, "mailto:#{admin_email}"
       -if @optional && @recipient && @recipient.is_a?(User)

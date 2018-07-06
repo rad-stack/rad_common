@@ -3,7 +3,7 @@ class FirebaseLogDestroyJob < ActiveJob::Base
 
   def perform(app_id, type, log_id, current_user_id)
     app = FirebaseApp.find(app_id)
-    type == "all" ? delete_all_logs(app, log_id, current_user_id) : delete_logs_individually(app, log_id, current_user_id)
+    type == 'all' ? delete_all_logs(app, log_id, current_user_id) : delete_logs_individually(app, log_id, current_user_id)
   end
 
   private
@@ -14,15 +14,14 @@ class FirebaseLogDestroyJob < ActiveJob::Base
     end
 
     def delete_all_logs(app, log_id, current_user_id)
-      response = RadicalRetry.perform { app.client.delete("logs/#{log_id}") }
+      response = RadicalRetry.perform_request { app.client.delete("logs/#{log_id}") }
 
-      unless response.success?
-        send_failure_email(current_user_id, log_id, response)
-      end
+      return if response.success?
+      send_failure_email(current_user_id, log_id, response)
     end
 
     def delete_logs_individually(app, log_id, current_user_id)
-      response = RadicalRetry.perform { app.client.get("logs/#{log_id}") }
+      response = RadicalRetry.perform_request { app.client.get("logs/#{log_id}") }
 
       if response.success?
         delete_each_log(app, response, log_id, current_user_id)
@@ -36,15 +35,14 @@ class FirebaseLogDestroyJob < ActiveJob::Base
       return if logs.nil?
 
       logs.each do |log|
-        unless log.last["error"]
-          response = RadicalRetry.perform { app.client.delete("logs/#{log_id}/#{log.first}") }
+        next if log.last['error']
 
-          unless response.success?
-            send_failure_email(current_user_id, log_id, response)
-            break
-          end
+        response = RadicalRetry.perform_request { app.client.delete("logs/#{log_id}/#{log.first}") }
+
+        unless response.success?
+          send_failure_email(current_user_id, log_id, response)
+          break
         end
       end
     end
 end
-

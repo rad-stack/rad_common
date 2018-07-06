@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'aws-sdk', '2.10.26'
   s.add_dependency 'devise', '4.4.3'
   s.add_dependency 'devise-authy'
-  s.add_dependency 'faker', '1.8.4'
+  s.add_dependency 'faker'
   s.add_dependency 'font-awesome-rails', '4.7.0.2'
   s.add_dependency 'haml-rails', '1.0.0'
   s.add_dependency 'kaminari-bootstrap', '3.0.1'
