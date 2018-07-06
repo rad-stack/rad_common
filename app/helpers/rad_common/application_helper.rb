@@ -128,7 +128,7 @@ module RadCommon
     end
 
     def format_time(value)
-      value.strftime('%l:%M%P') if value.present?
+      value.strftime('%l:%M%P').strip if value.present?
     end
 
     def format_boolean(value)
@@ -136,21 +136,6 @@ module RadCommon
         content_tag(:div, nil, class: 'fa fa-check')
       else
         content_tag(:div, nil, class: 'fa fa-circle-o')
-      end
-    end
-
-    def bootstrap_class_for flash_type
-      case flash_type.to_s
-        when 'success'
-          'alert-success'
-        when 'error'
-          'alert-danger'
-        when 'alert'
-          'alert-warning'
-        when 'notice'
-          'alert-info'
-        else
-          flash_type.to_s
       end
     end
 
@@ -210,10 +195,6 @@ module RadCommon
       end
 
       attr.nil? ? audit_column : attr
-    end
-
-    def omniauth_providers
-      (OmniAuth::Strategies.constants - [:Developer, :OAuth2, :OAuth]).map {|item| item.to_s.downcase}
     end
 
     private

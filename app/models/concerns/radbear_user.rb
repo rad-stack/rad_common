@@ -3,8 +3,9 @@ module RadbearUser
 
   included do
     attr_accessor :approved_by
-    after_save :notify_user_approved
     scope :by_permission, ->(permission_attr) { joins(:security_roles).where("#{permission_attr} = TRUE").active }
+    validate :validate_email_address
+    after_save :notify_user_approved
   end
 
   def company
@@ -69,16 +70,29 @@ module RadbearUser
 
   private
 
-    def notify_user_approved
-      return if auto_approve?
-      return unless user_status_id_changed? && user_status && user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
+  def validate_email_address
+    return if email.blank? || user_status_id.nil? || !user_status.validate_email || company.valid_user_domains.count.zero?
 
-      RadbearMailer.your_account_approved(self).deliver_later
+    domains = company.valid_user_domains
 
-      User.admins.each do |admin|
-        if admin.id != id
-          RadbearMailer.user_was_approved(admin, self, approved_by).deliver_later
-        end
+    components = email.split('@')
+    if components.count == 2 && domains.include?(components[1])
+      return
+    end
+
+    errors.add(:email, 'is invalid for this application, please contact the system administrator')
+  end
+
+  def notify_user_approved
+    return if auto_approve?
+    return unless saved_change_to_user_status_id? && user_status && user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
+
+    RadbearMailer.your_account_approved(self).deliver_later
+
+    User.admins.each do |admin|
+      if admin.id != id
+        RadbearMailer.user_was_approved(admin, self, approved_by).deliver_later
       end
     end
+  end
 end
