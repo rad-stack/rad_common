@@ -249,6 +249,8 @@ GEM
       rack
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
+    rad-style (0.1.0)
+      rubocop-rspec (~> 1.27)
     rails (5.1.6)
       actioncable (= 5.1.6)
       actionmailer (= 5.1.6)
@@ -307,6 +309,8 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
+    rubocop-rspec (1.27.0)
+      rubocop (>= 0.56.0)
     ruby-progressbar (1.9.0)
     ruby_parser (3.11.0)
       sexp_processor (~> 4.9)
@@ -392,6 +396,7 @@ DEPENDENCIES
   jquery-ui-rails
   launchy
   pry
+  rad-style
   rad_common!
   rails-controller-testing (= 1.0.2)
   rails-observers!

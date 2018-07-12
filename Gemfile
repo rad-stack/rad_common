@@ -30,4 +30,5 @@ group :development, :test do
   gem 'pry'
   gem 'jquery-rails'
   gem 'jquery-ui-rails'
+  gem 'rad-style'
 end
