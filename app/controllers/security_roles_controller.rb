@@ -1,6 +1,5 @@
 class SecurityRolesController < ApplicationController
   before_action :authenticate_user!
-  before_action :check_tenant
   before_action :set_security_role, only: %i[show edit update destroy audit]
 
   authorize_actions_for SecurityRole

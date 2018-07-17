@@ -1,7 +1,6 @@
 <% module_namespacing do -%>
 class <%= class_name %> < <%= parent_class_name.classify %>
   include Authority::Abilities
-  acts_as_tenant(:company)
   # alias_attribute :to_s, :name
   audited
 
