@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'capybara', '2.18.0'
   s.add_development_dependency 'database_cleaner', '1.6.1'
   s.add_development_dependency 'factory_bot_rails'
+  s.add_development_dependency 'rad-style'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'rubocop'
 end

@@ -249,6 +249,8 @@ GEM
       rack
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
+    rad-style (0.3.1)
+      rubocop (~> 0.57)
     rails (5.1.6)
       actioncable (= 5.1.6)
       actionmailer (= 5.1.6)
@@ -392,6 +394,7 @@ DEPENDENCIES
   jquery-ui-rails
   launchy
   pry
+  rad-style
   rad_common!
   rails-controller-testing (= 1.0.2)
   rails-observers!
@@ -401,4 +404,4 @@ DEPENDENCIES
   simplecov
 
 BUNDLED WITH
-   1.16.2
+   1.16.3
