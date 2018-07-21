@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :check_tenant
   before_action :set_user, only: %i[show edit update destroy audit audit_by]
 
   authorize_actions_for User

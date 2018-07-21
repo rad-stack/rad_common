@@ -9,11 +9,6 @@ module RadbearAuditsController
   def audit_by
     @model_object = @member
     @audits = @model_object.audits_created(current_member)
-
-    if current_member.respond_to?(:company_id)
-      @audits = @audits.where(associated_id: current_member.company_id)
-    end
-
     @audits = @audits.page(params[:page])
 
     render 'audits/index'
@@ -28,7 +23,6 @@ module RadbearAuditsController
     return unless resource_type.present? && resource_id.present?
 
     audits = Audited::Audit.where(auditable_type: resource_type, auditable_id: resource_id)
-    audits = audits.where(associated_id: current_member.company_id) if current_member.respond_to?(:company_id)
     audit = audits.first
     audit ? show_audits_for_type(resource_type, resource_id) : flash[:error] = "Audit for #{resource_type} with ID of #{resource_id} not found"
   end
@@ -42,7 +36,6 @@ module RadbearAuditsController
 
     def show_audits_for_deleted(resource_type, resource_id)
       audits = Audited::Audit.where(auditable_type: resource_type, auditable_id: resource_id)
-      audits = audits.where(associated_id: current_member.company_id) if current_member.respond_to?(:company_id)
 
       @deleted = "#{resource_type} - #{resource_id}"
       @audits = audits.reorder('created_at DESC').page(params[:page])
@@ -54,11 +47,6 @@ module RadbearAuditsController
 
       @model_object = resource
       @audits = @model_object.audits
-
-      if current_member.respond_to?(:company_id)
-        @audits = @audits.where(associated_id: current_member.company_id)
-      end
-
       @audits = @audits.reorder('created_at DESC').page(params[:page])
       render 'audits/index'
     end

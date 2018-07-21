@@ -1,6 +1,5 @@
 class SearchController < ApplicationController
   before_action :authenticate_user!
-  before_action :check_tenant
 
   def global_search
     # authorization is checked within the global_autocomplete_result

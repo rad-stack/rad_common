@@ -1,6 +1,5 @@
 class SystemMessagesController < ApplicationController
   before_action :authenticate_user!
-  before_action :check_tenant
 
   authorize_actions_for Company
   authority_actions new: 'update', create: 'update'

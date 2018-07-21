@@ -9,6 +9,4 @@ module RadbearController
   def current_member
     current_user
   end
-
-  def check_tenant; end
 end
