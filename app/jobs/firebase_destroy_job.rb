@@ -6,6 +6,6 @@ class FirebaseDestroyJob < ApplicationJob
     response = RadicalRetry.perform_request { app.client.delete(firebase_reference) }
 
     return if response.success?
-    raise response.body
+    raise response.raw_body
   end
 end

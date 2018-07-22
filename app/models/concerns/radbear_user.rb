@@ -58,7 +58,7 @@ module RadbearUser
     response = app.client.get firebase_reference + '/messagingTokens'
 
     unless response.success?
-      raise response.body
+      raise response.raw_body
     end
 
     if response.body && response.body.count != 0

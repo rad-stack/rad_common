@@ -28,10 +28,10 @@ module FirebaseAction
       data['timestamp'] = Time.zone.now.to_s
 
       response = RadicalRetry.perform_request { app.client.update("logs#{path}", data) }
-      raise response.body unless response.success?
+      raise response.raw_body unless response.success?
 
       response = RadicalRetry.perform_request { app.client.delete("transactions#{path}") }
-      raise response.body unless response.success?
+      raise response.raw_body unless response.success?
 
       user&.update_firebase_info(app)
     end
