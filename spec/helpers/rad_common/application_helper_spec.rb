@@ -16,6 +16,14 @@ describe RadCommon::ApplicationHelper do
     it 'should translate the value' do
       expect(enum_to_translated_option(Division, :division_status, division.division_status)).to eq 'Active'
     end
+
+    it 'should handle nil' do
+      expect(enum_to_translated_option(Division, :division_status, nil)).to be_nil
+    end
+
+    it 'should handle blank' do
+      expect(enum_to_translated_option(Division, :division_status, '')).to be_nil
+    end
   end
 
   describe '#gravatar_for' do
