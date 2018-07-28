@@ -10,9 +10,9 @@ class UserStatuses < ActiveRecord::Migration[5.0]
 
     add_index :user_statuses, :name, unique: true
 
-    UserStatus.create!(name: 'Pending', active: false, validate_email: true)
-    active = UserStatus.create!(name: 'Active', active: true, validate_email: true)
-    inactive = UserStatus.create!(name: 'Inactive', active: false, validate_email: false)
+    UserStatus.seed_items
+    active = UserStatus.find_by(name: 'Active')
+    inactive = UserStatus.find_by(name: 'Inactive')
 
     add_column :users, :user_status_id, :integer
 
