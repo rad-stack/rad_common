@@ -48,6 +48,8 @@
                 = "#{@recipient.greeting},"
               -elsif @recipient.class == String
                 = "Hello #{@recipient},"
+              -elsif @recipient.class == Array
+                = 'Hello all,'
               -else
                 - raise "please set up greeting method in #{@recipient.class} before using this mailer"
       .email-row

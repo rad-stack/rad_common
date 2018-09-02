@@ -41,4 +41,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rad-style'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'puma', '~> 3.7'
 end

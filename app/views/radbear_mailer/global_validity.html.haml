@@ -2,5 +2,5 @@
 - @problems.each do |record, error_messages|
   - if record.persisted?
     %p
-      = link_to record_name(record), record_url(record, @recipient)
+      = link_to record_name(record), url_for(record)
       = error_messages

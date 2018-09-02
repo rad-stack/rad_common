@@ -25,26 +25,12 @@ class RadbearMailer < ActionMailer::Base
 
   def your_account_approved(member)
     @company = member.company
-    button_url = @company.respond_to?(:company_code) ? root_url(subdomain: @company.company_code) : root_url
     @email_action = { button_text: 'Get Started',
-                      button_url: button_url }
+                      button_url: root_url }
 
     @recipient = member
     @message = "Your account was approved and you can begin using #{I18n::t(:app_name)}."
     mail(to: "\"#{member}\" <#{member.email}>", subject: 'Your Account Was Approved')
-  end
-
-  def member_was_approved(admin, member, approver)
-    @company = member.company
-    @email_action = { message: 'You can review this approval if desired.',
-                      button_text: 'Review Member',
-                      button_url: member_url(member, subdomain: member.company.company_code) }
-
-    approved_by_name = (approver ? approver.to_s : 'an admin')
-
-    @recipient = admin
-    @message = "#{member} was approved by #{approved_by_name} on #{I18n::t(:app_name)}."
-    mail(to: "\"#{admin}\" <#{admin.email}>", subject: "Member Was Approved on #{I18n::t(:app_name)}")
   end
 
   def user_was_approved(admin, user, approver)
@@ -87,10 +73,10 @@ class RadbearMailer < ActionMailer::Base
 
   def global_validity(company, recipient, problems)
     @company = company
-    @recipient = recipient
+    @recipient = recipient.count == 1 ? recipient.first : recipient
     @problems = problems
 
-    mail(to: @recipient.email, subject: "Invalid data in #{I18n::t(:app_name)}")
+    mail(to: recipient.map { |item| item.email }, subject: "Invalid data in #{I18n::t(:app_name)}")
   end
 
   def email_report(user, csv, report_name, options = {})

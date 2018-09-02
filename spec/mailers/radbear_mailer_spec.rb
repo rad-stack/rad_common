@@ -2,26 +2,44 @@ require 'rails_helper'
 require 'csv'
 
 describe RadbearMailer, type: :mailer do
-  describe "simple message" do
-    it "message should match expected" do
-      email = Faker::Internet.email
-      mail = RadbearMailer.simple_message(Company.main, email, "foo", "bar")
-      expect(mail.subject).to include "foo"
-      expect(mail.to).to include email
+  let(:user) { create :user }
+  let(:another_user) { create :user }
+  let(:email) { user.email }
+  let(:another_email) { another_user.email }
+  let(:last_email) { ActionMailer::Base.deliveries.last }
+
+  before { ActionMailer::Base.deliveries = [] }
+
+  describe '#global_validity' do
+    before { RadbearMailer.global_validity(Company.main, [user, another_user], []).deliver_now }
+
+    it 'should match as expected' do
+      expect(last_email.subject).to include 'Invalid data in'
+      expect(last_email.to).to include email
+      expect(last_email.to).to include another_email
+    end
+
+  end
+
+  describe '#simple_message' do
+    before { RadbearMailer.simple_message(Company.main, email, 'foo', 'bar').deliver_now }
+
+    it 'should match' do
+      expect(last_email.subject).to include 'foo'
+      expect(last_email.to).to include email
     end
   end
 
-  describe 'csv report' do
-    let(:user) { create :user }
-    it 'emails a csv report' do
-      csv         = CSV.generate { '' }
-      report_name = 'Sample Report'
-      start_date  = DateTime.current
-      end_date    = DateTime.current
-      options     = { start_date: start_date, end_date: end_date }
+  describe '#email_report' do
+    let(:csv) { CSV.generate { '' } }
+    let(:report_name) { 'Sample Report' }
+    let(:start_date) { Time.zone.now }
+    let(:end_date) { Time.zone.now }
+    let(:options) { { start_date: start_date, end_date: end_date } }
 
-      RadbearMailer.email_report(user, csv, report_name, options).deliver_now
-      last_email = ActionMailer::Base.deliveries.last
+    before { RadbearMailer.email_report(user, csv, report_name, options).deliver_now }
+
+    it 'emails a csv report' do
       expect(last_email.subject).to include('Sample Report')
       expect(last_email.to_s).to include('Attached is the')
       expect(last_email.attachments.first.content_type).to eq('text/csv')
