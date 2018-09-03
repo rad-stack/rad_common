@@ -76,7 +76,7 @@ class RadbearMailer < ActionMailer::Base
     @recipient = recipient.count == 1 ? recipient.first : recipient
     @problems = problems
 
-    mail(to: recipient.map { |item| item.email }, subject: "Invalid data in #{I18n::t(:app_name)}")
+    mail(to: recipient.pluck(:email), subject: "Invalid data in #{I18n::t(:app_name)}")
   end
 
   def email_report(user, csv, report_name, options = {})
