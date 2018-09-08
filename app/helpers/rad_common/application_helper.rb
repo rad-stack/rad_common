@@ -79,7 +79,9 @@ module RadCommon
         # TODO: ignore this some other way rather than by hardcoding name
         label
       else
-        if model_object.class.to_s != 'PackageCategory' && model_object.class.to_s != 'PackageTest' && model_object.class.to_s != 'SecurityRolesUser' && current_user.can_read?(model_object)  # TODO: same as above
+        if model_object.nil?
+          label
+        elsif model_object.class.to_s != 'PackageCategory' && model_object.class.to_s != 'PackageTest' && model_object.class.to_s != 'SecurityRolesUser' && current_user.can_read?(model_object)  # TODO: same as above
           link_to label, model_object
         else
           label
