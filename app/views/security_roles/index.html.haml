@@ -2,5 +2,5 @@
   = render 'layouts/panel_header'
   .panel-body
     = paginate @security_roles
-    = render 'security_roles/index', security_roles: @security_roles, show_actions: current_member.can_update?(SecurityRole) || current_member.can_delete?(SecurityRole)
+    = render 'security_roles/index', security_roles: @security_roles, show_actions: current_user.can_update?(SecurityRole) || current_user.can_delete?(SecurityRole)
     = paginate @security_roles

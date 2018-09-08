@@ -3,7 +3,7 @@ class SearchController < ApplicationController
 
   def global_search
     # authorization is checked within the global_autocomplete_result
-    global_autocomplete = GlobalAutocomplete.new(params, view_context.global_search_scopes, current_member)
+    global_autocomplete = GlobalAutocomplete.new(params, view_context.global_search_scopes, current_user)
 
     if params['super_search'].to_i == 1
       render json: global_autocomplete.global_super_search_result
@@ -25,13 +25,13 @@ class SearchController < ApplicationController
       the_object = klass.find_by(id: the_id)
 
       if params[:global_search_scope].present?
-        current_member.update_column(:global_search_default, params[:global_search_scope])
+        current_user.update_column(:global_search_default, params[:global_search_scope])
       end
 
       if params[:super_search].to_i == 1
-        current_member.update_column(:super_search_default, true)
+        current_user.update_column(:super_search_default, true)
       else
-        current_member.update_column(:super_search_default, false)
+        current_user.update_column(:super_search_default, false)
       end
 
       if the_object
