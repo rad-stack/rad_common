@@ -1,67 +1,72 @@
 module RadCommon
   module ApplicationHelper
     def display_audited_changes(audit)
-      if audit.action == "destroy"
-        return "deleted record"
-      else
-        changes = audit.audited_changes
-        audit_text = ""
+      return 'deleted record' if audit.action == 'destroy'
 
-        if changes
-          changes.each do |change|
-            if change[1].class.name == "Array"
-              from_value = change[1][0]
-              to_value = change[1][1]
-            else
-              from_value = nil
-              to_value = change[1]
+      changes = audit.audited_changes
+      audit_text = ''
+
+      if changes
+        changes.each do |change|
+          if change[1].class.name == 'Array'
+            from_value = change[1][0]
+            to_value = change[1][1]
+          else
+            from_value = nil
+            to_value = change[1]
+          end
+
+          if !((from_value.blank? && to_value.blank?) || (from_value.to_s == to_value.to_s))
+            audit_text = audit_text + "Changed <strong>#{change[0].titlecase}</strong> "
+            klass = classify_foreign_key(change[0], audit.auditable_type.safe_constantize)
+            if klass.is_a?(Class)
+              if klass.respond_to?('find_by_id')
+                to_instance = klass.find_by_id(to_value)
+                from_instance = klass.find_by_id(from_value) if from_value
+
+                from_value = from_instance.to_s if from_instance
+                to_value = to_instance.to_s if to_instance
+              else
+                to_instance = klass.find(to_value)
+                from_instance = klass.find(from_value) if from_value
+
+                from_value = from_instance.to_s if from_instance
+                to_value = to_instance.to_s if to_instance
+              end
             end
 
-            if !((from_value.blank? && to_value.blank?) || (from_value.to_s == to_value.to_s))
-              audit_text = audit_text + "Changed <strong>#{change[0].titlecase}</strong> "
-              klass = classify_foreign_key(change[0], audit.auditable_type.safe_constantize)
-              if klass.is_a?(Class)
-                if klass.respond_to?("find_by_id")
-                  to_instance = klass.find_by_id(to_value)
-                  from_instance = klass.find_by_id(from_value) if from_value
-
-                  from_value = from_instance.to_s if from_instance
-                  to_value = to_instance.to_s if to_instance
-                else
-                  to_instance = klass.find(to_value)
-                  from_instance = klass.find(from_value) if from_value
-
-                  from_value = from_instance.to_s if from_instance
-                  to_value = to_instance.to_s if to_instance
-                end
-              end
-
-              if from_value
-                audit_text = audit_text + "from <strong>#{from_value}</strong> "
-              end
-
-              audit_text = audit_text + "to <strong>#{to_value}</strong>" + "\n"
+            if from_value
+              audit_text = audit_text + "from <strong>#{from_value}</strong> "
             end
+
+            audit_text = audit_text + "to <strong>#{to_value}</strong>" + "\n"
           end
         end
-
-        if !audit_text.blank? && !audit.comment.blank?
-          return audit_text + "\n" + audit.comment
-        elsif !audit_text.blank?
-          return audit_text
-        elsif !audit.comment.blank?
-          return audit.comment
-        else
-          return ""
-        end
       end
+
+      if !audit_text.blank? && !audit.comment.blank?
+        audit_text + "\n" + audit.comment
+      elsif !audit_text.blank?
+        audit_text
+      elsif !audit.comment.blank?
+        audit.comment
+      else
+        ''
+      end
+    end
+
+    def audit_title(by_user)
+      title = by_user ? 'Updates by ' : 'Updates for '
+      title = (title + audit_model_link(nil, @model_object)).html_safe if @model_object
+      title = (title + @deleted) if @deleted
+      title + " (#{@audits.total_count})"
     end
 
     def audit_model_link(audit, model_object)
       if model_object.nil?
         label = "#{audit.auditable_type} (#{audit.auditable_id})"
       elsif model_object.respond_to?(:to_s)
-        label = model_object.class.to_s + " - " + model_object.to_s
+        label = model_object.class.to_s + ' - ' + model_object.to_s
       else
         if audit.nil?
           label = model_object.class.to_s
@@ -70,14 +75,14 @@ module RadCommon
         end
       end
 
-      if audit.nil? || model_object.nil? || model_object.class.name == "Rate" || model_object.class.name == "DraftInvoice"
-        #todo ignore this some other way rather than by hardcoding name
-        return label
+      if (audit.nil? && model_object.nil?) || model_object.class.name == 'Rate' || model_object.class.name == 'DraftInvoice'
+        # TODO: ignore this some other way rather than by hardcoding name
+        label
       else
-        if model_object.class.to_s != "User" && model_object.class.to_s != "Member" && current_member.can_read?(model_object)  #todo same as above
+        if model_object.class.to_s != 'PackageCategory' && model_object.class.to_s != 'PackageTest' && model_object.class.to_s != 'SecurityRolesUser' && current_user.can_read?(model_object)  # TODO: same as above
           link_to label, model_object
         else
-          return label
+          label
         end
       end
     end
@@ -85,7 +90,7 @@ module RadCommon
     def secured_link(resource, format: nil)
       return unless resource
 
-      if current_member.can_read?(resource)
+      if current_user.can_read?(resource)
         link_to(resource_name(resource), resource, format: format)
       else
         resource_name(resource)
@@ -103,11 +108,11 @@ module RadCommon
     def gravatar_for(user, size)
       size = size_symbol_to_int(size) if size.is_a?(Symbol)
       gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
-      gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}&d=mm"
+      "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}&d=mm"
     end
 
     def show_actions?(klass)
-      current_member.can_update?(klass) || current_member.can_delete?(klass)
+      current_user.can_update?(klass) || current_user.can_delete?(klass)
     end
 
     def format_date(value)
@@ -169,12 +174,12 @@ module RadCommon
     end
 
     def audit_models_to_search
-      #todo dunno if we can get the list from the audited gem, if so, would be faster
+      # TODO: dunno if we can get the list from the audited gem, if so, would be faster
       Audited::Audit.select(:auditable_type).distinct.pluck(:auditable_type)
     end
 
     def mailer_image_url(image)
-      protocol = Rails.env.production? ? "https" : "http"
+      protocol = Rails.env.production? ? 'https' : 'http'
       "#{protocol}://#{ActionMailer::Base.default_url_options[:host]}/#{image}"
     end
 

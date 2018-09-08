@@ -23,22 +23,20 @@ class RadbearMailer < ActionMailer::Base
     mail(to: "\"#{admin}\" <#{admin.email}>", subject: "New User on #{I18n.t(:app_name)}")
   end
 
-  def your_account_approved(member)
-    @company = member.company
+  def your_account_approved(user)
+    @company = user.company
     @email_action = { button_text: 'Get Started',
                       button_url: root_url }
 
-    @recipient = member
+    @recipient = user
     @message = "Your account was approved and you can begin using #{I18n::t(:app_name)}."
-    mail(to: "\"#{member}\" <#{member.email}>", subject: 'Your Account Was Approved')
+    mail(to: "\"#{user}\" <#{user.email}>", subject: 'Your Account Was Approved')
   end
 
   def user_was_approved(admin, user, approver)
-    action_url = user.class.name == 'Member' ? member_url(user) : user_url(user)
-
     @email_action = { message: 'You can review this approval if desired.',
                       button_text: 'Review User',
-                      button_url: action_url }
+                      button_url: user_url(user) }
 
     approved_by_name = (approver ? approver.to_s : 'an admin')
 
