@@ -7,6 +7,10 @@ class SecurityRolesUser < ApplicationRecord
 
   audited associated_with: :user
 
+  def to_s
+    "#{security_role} - #{user}"
+  end
+
   def touch_user
     user.touch
   end

@@ -10,7 +10,7 @@
         %th Signed In
         %th Created
         %th Status
-        -if current_member.can_update?(User) || current_member.can_delete?(User)
+        -if current_user.can_update?(User) || current_user.can_delete?(User)
           %th.text-center Actions
 
       - users.each do |user|
@@ -20,11 +20,11 @@
           %td= format_datetime(user.current_sign_in_at)
           %td= format_date(user.created_at)
           %td= user.user_status
-          -if current_member.can_update?(User) || current_member.can_delete?(User)
+          -if current_user.can_update?(User) || current_user.can_delete?(User)
             %td
-              -if current_member.can_update?(user)
+              -if current_user.can_update?(user)
                 = link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', edit_user_path(user), class: 'btn btn-default btn-xs btn-block btn-block'
-              -if current_member.can_delete?(user)
+              -if current_user.can_delete?(user)
                 = link_to content_tag(:i, '', class: 'fa fa-times right-5x') + ' Delete', user, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger btn-xs btn-block btn-block"
 
     -if users.respond_to?(:current_page)

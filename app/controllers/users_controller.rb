@@ -30,7 +30,7 @@ class UsersController < ApplicationController
 
   def update
     @user.assign_attributes(permitted_params)
-    @user.approved_by = current_member
+    @user.approved_by = current_user
     @user.security_roles = resolve_roles(params[:user][:security_roles])
 
     if @user.save

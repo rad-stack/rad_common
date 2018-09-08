@@ -2,10 +2,9 @@
   -model_name = controller_name.classify
   -model_object = @auditable_object || instance_variable_get("@#{model_name.underscore}")
 
-  -if model_object && model_object.respond_to?(:audits) && model_object.persisted? && current_member.can_audit?(model_object) && params[:action] != "audit" && params[:action] != "audit_by"
+  -if model_object && model_object.respond_to?(:audits) && model_object.persisted? && current_user.can_audit?(model_object) && params[:action] != "audit" && params[:action] != "audit_by"
     .pull-right
       = link_to "Show History", "/#{controller_name}/#{model_object.id}/audit"
-      -if model_name == "User" || model_name == 'Member'
+      -if model_name == 'User'
         %br
-        -path = model_name == 'Member' ? audit_by_member_path(@member) : audit_by_user_path(@member)
-        = link_to "Show Changes Made by #{@member}", path
+        = link_to "Show Changes Made by #{@member}", audit_by_user_path(@member)

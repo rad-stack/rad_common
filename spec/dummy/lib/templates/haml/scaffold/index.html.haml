@@ -1,4 +1,4 @@
--show_actions = current_member.can_update?(<%= class_name %>) || current_member.can_delete?(<%= class_name %>)
+-show_actions = current_user.can_update?(<%= class_name %>) || current_user.can_delete?(<%= class_name %>)
 
 .panel.panel-default
   = render 'layouts/panel_header'
@@ -22,9 +22,9 @@
     <% end -%>
       -if show_actions
             %td
-              -if current_member.can_update?(<%= singular_table_name %>)
+              -if current_user.can_update?(<%= singular_table_name %>)
                 = link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', edit_<%= singular_table_name %>_path(<%= singular_table_name %>), class: 'btn btn-xs btn-default btn-block'
-              -if current_member.can_delete?(<%= singular_table_name %>)
+              -if current_user.can_delete?(<%= singular_table_name %>)
                 = link_to content_tag(:i, '', class: 'fa fa-times right-5x') + ' Delete', <%= singular_table_name %>, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs btn-block'
 
     = paginate @<%= plural_table_name %>

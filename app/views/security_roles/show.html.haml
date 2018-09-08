@@ -15,11 +15,11 @@
               %td{class: @security_role.send(permission) ? 'fa fa-check green-check' : 'fa fa-times red-x'}
       .col-md-6
         -users = @security_role.users.active.by_name
-        %h3 Members In Group (#{users.count})
+        %h3 Users In Group (#{users.count})
         %table.table.table-striped.table-bordered
           %tr
             %th Name
 
-          -users.each do |member|
+          -users.each do |user|
             %tr
-              %td= secured_link(member)
+              %td= secured_link(user)

@@ -7,7 +7,7 @@ describe RadCommon::ApplicationHelper do
   before do
     @user = create :user
 
-    def helper.current_member
+    def helper.current_user
       @user
     end
   end

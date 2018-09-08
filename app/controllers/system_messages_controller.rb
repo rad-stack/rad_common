@@ -12,9 +12,9 @@ class SystemMessagesController < ApplicationController
     if params[:message] && params[:super]
       if params[:message][:message].present?
         if params[:super] == 'false'
-          current_member.company.send_system_message(params[:message][:from], params[:message][:message])
+          current_user.company.send_system_message(params[:message][:from], params[:message][:message])
         else
-          raise 'Invalid parameters' unless current_member.user.super_admin
+          raise 'Invalid parameters' unless current_user.user.super_admin
           Company.send_system_message_global(params[:message][:from], params[:message][:message])
         end
 

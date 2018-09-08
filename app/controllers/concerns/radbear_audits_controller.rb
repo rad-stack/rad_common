@@ -8,7 +8,7 @@ module RadbearAuditsController
 
   def audit_by
     @model_object = @member
-    @audits = @model_object.audits_created(current_member)
+    @audits = @model_object.audits_created(current_user)
     @audits = @audits.page(params[:page])
 
     render 'audits/index'
@@ -43,7 +43,7 @@ module RadbearAuditsController
     end
 
     def show_audits(resource)
-      raise 'Unauthorized' unless current_member.can_audit?(resource) # controllers and UI should prevent coming here
+      raise 'Unauthorized' unless current_user.can_audit?(resource) # controllers and UI should prevent coming here
 
       @model_object = resource
       @audits = @model_object.audits
