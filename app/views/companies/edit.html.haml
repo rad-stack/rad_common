@@ -1,5 +1,5 @@
 .panel.panel-default
-  = render "layouts/panel_header", no_new_button: true, no_delete_button: true, no_index_button: true
+  = render 'layouts/panel_header', no_new_button: true, no_delete_button: true, no_index_button: true
   .panel-body
     = simple_form_for(@company) do |f|
       = f.error_notification
@@ -22,4 +22,4 @@
           .col-md-6= f.input :app_logo_includes_name
 
       .form-actions
-        = f.button :submit, "Save", class: "btn btn-primary"
+        = f.button :submit, 'Save', class: 'btn btn-primary'

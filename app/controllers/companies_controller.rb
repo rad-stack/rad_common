@@ -26,6 +26,7 @@ class CompaniesController < ApplicationController
   end
 
   def permitted_params
-    params.require(:company).permit(:name, :phone_number, :website, :email, :address_1, :address_2, :city, :state, :zipcode, :company_logo_includes_name, :app_logo_includes_name)
+    params.require(:company).permit(:name, :phone_number, :website, :email, :address_1, :address_2, :city, :state,
+                                    :zipcode, :company_logo_includes_name, :app_logo_includes_name)
   end
 end
