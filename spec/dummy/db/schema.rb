@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(version: 20180609150231) do
     t.string   "provider_avatar",         :limit=>255
     t.string   "avatar_file_name",        :limit=>255
     t.string   "avatar_content_type",     :limit=>255
-    t.integer  "avatar_file_size"
+    t.bigint   "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.string   "global_search_default",   :limit=>255
     t.boolean  "super_admin",             :default=>false, :null=>false
