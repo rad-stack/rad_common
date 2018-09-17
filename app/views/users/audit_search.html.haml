@@ -4,12 +4,12 @@
       = render 'layouts/panel_header', action_name: 'custom', title: 'Audit Search', icon: 'fa-search'
       .panel-body
         = form_tag(audit_search_users_path, method: 'get') do
-          .form-inputs
+          .form-inputs#record-search
             .row
               .col-md-4
                 .form-group
                   %label.control-label Model
-                  %select.form-control{ name: 'model_name' }
+                  %select.form-control{ name: 'model_name', id: 'record-search' }
                     %option{ value: '', selected: true}=''
                     -audit_models_to_search.each do |model|
                       %option{ value: model }= model
