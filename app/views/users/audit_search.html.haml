@@ -28,7 +28,7 @@
       .panel-body
         = form_tag(audit_search_users_path(system_audits: true), method: 'get') do
           .form-inputs
-            %input{ name: 'system_audits', value: 'true' }
+            %input{ name: 'system_audits', value: 'true', hidden: true }
             .row
               .col-md-9
                 .form-group
