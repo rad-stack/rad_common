@@ -1,26 +1,44 @@
-.panel.panel-default
-  .panel-heading
-    .title-header
-      .title-text
-        .fa.fa-search
-        Audit Search
-  .panel-body
-    = form_tag(audit_search_users_path, method: "get") do
-      .form-inputs
-        .row
-          .col-md-4
-            .form-group
-              %label.control-label Model
-              %select.form-control{ name: "model_name" }
-                %option{ value: "", selected: true}=""
-                -audit_models_to_search.each do |model|
-                  %option{ value: model }= model
-          .col-md-4
-            .form-group
-              %label.control-label Record ID
-              %input.form-control{name: "record_id"}
-        .row
-          .col-md-12
-            %button.btn.btn-success{ type: "submit" }
-              %i.fa.fa-search
-              Search
+.row
+  .col-md-6
+    .panel.panel-default
+      = render 'layouts/panel_header', action_name: 'custom', title: 'Audit Search', icon: 'fa-search'
+      .panel-body
+        = form_tag(audit_search_users_path, method: 'get') do
+          .form-inputs
+            .row
+              .col-md-4
+                .form-group
+                  %label.control-label Model
+                  %select.form-control{ name: 'model_name' }
+                    %option{ value: '', selected: true}=''
+                    -audit_models_to_search.each do |model|
+                      %option{ value: model }= model
+              .col-md-4
+                .form-group
+                  %label.control-label Record ID
+                  %input.form-control{name: 'record_id'}
+            .row
+              .col-md-12
+                %button.btn.btn-success{ type: 'submit' }
+                  %i.fa.fa-search
+                  Search
+  .col-md-6
+    .panel.panel-default
+      = render 'layouts/panel_header', action_name: 'custom', title: 'System Audits', icon: 'fa-search'
+      .panel-body
+        = form_tag(audit_search_users_path(system_audits: true), method: 'get') do
+          .form-inputs
+            %input{ name: 'system_audits', value: 'true' }
+            .row
+              .col-md-9
+                .form-group
+                  %label.control-label Model
+                  %select.form-control{ name: 'model_name' }
+                    %option{ value: '', selected: true}=''
+                    -audit_models_to_search.each do |model|
+                      %option{ value: model }= model
+            .row
+              .col-md-12
+                %button.btn.btn-success{ type: 'submit' }
+                  %i.fa.fa-search
+                  Search

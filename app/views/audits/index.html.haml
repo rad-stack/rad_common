@@ -1,4 +1,4 @@
--by_user = params[:action] == 'audit_by'
+-by_user = params[:action] == 'audit_by' || params[:system_audits].present?
 
 .panel.panel-default
   = render 'layouts/panel_header', action_name: 'custom', title: audit_title(by_user), icon: 'fa-list'

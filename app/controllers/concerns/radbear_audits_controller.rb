@@ -17,14 +17,19 @@ module RadbearAuditsController
   def audit_search
     resource_type = params['model_name']
     resource_id = params['record_id']
+    system_audits = params['system_audits']
 
     @models = ActiveRecord::Base.connection.tables.sort.map { |model| model.capitalize.singularize.humanize }
 
-    return unless resource_type.present? && resource_id.present?
+    return unless (resource_type.present? && resource_id.present?) || system_audits.present?
 
-    audits = Audited::Audit.where(auditable_type: resource_type, auditable_id: resource_id)
-    audit = audits.first
-    audit ? show_audits_for_type(resource_type, resource_id) : flash[:error] = "Audit for #{resource_type} with ID of #{resource_id} not found"
+    if resource_type.present? && resource_id.present?
+      audits = Audited::Audit.where(auditable_type: resource_type, auditable_id: resource_id)
+      audit = audits.first
+      audit ? show_audits_for_type(resource_type, resource_id) : flash[:error] = "Audit for #{resource_type} with ID of #{resource_id} not found"
+    else
+      show_system_audits resource_type
+    end
   end
 
   private
@@ -48,6 +53,15 @@ module RadbearAuditsController
       @model_object = resource
       @audits = @model_object.audits
       @audits = @audits.reorder('created_at DESC').page(params[:page])
+      render 'audits/index'
+    end
+
+    def show_system_audits(resource_type)
+      raise 'Unauthorized' unless current_user.can_audit?(Company) # controllers and UI should prevent coming here
+
+      @audits = Audited::Audit.where(user_id: nil)
+      @audits = @audits.where(auditable_type: resource_type) if resource_type.present?
+      @audits = @audits.order('created_at DESC').page(params[:page])
       render 'audits/index'
     end
 end
