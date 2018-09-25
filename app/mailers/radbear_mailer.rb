@@ -5,7 +5,7 @@ class RadbearMailer < ActionMailer::Base
 
   layout 'radbear_mailer'
   before_action :set_defaults
-  default from: (Rails.env.test? || !Company.respond_to?(:main)) ? Devise.mailer_sender : "\"#{Company.main.name}\" <#{Company.main.email}>"
+  default from: Rails.env.test? ? Devise.mailer_sender : "\"#{Company.main.name}\" <#{Company.main.email}>"
 
   def new_user_signed_up(admin, user)
     auto_approve = user.auto_approve?
@@ -29,7 +29,7 @@ class RadbearMailer < ActionMailer::Base
                       button_url: root_url }
 
     @recipient = user
-    @message = "Your account was approved and you can begin using #{I18n::t(:app_name)}."
+    @message = "Your account was approved and you can begin using #{I18n.t(:app_name)}."
     mail(to: "\"#{user}\" <#{user.email}>", subject: 'Your Account Was Approved')
   end
 
@@ -49,10 +49,7 @@ class RadbearMailer < ActionMailer::Base
     @company = company
     @recipient = recipient
     @message = simple_format(message)
-
-    if options[:email_action]
-      @email_action = options[:email_action]
-    end
+    @email_action = options[:email_action] if options[:email_action]
 
     if @recipient.respond_to?(:email)
       to_address = "\"#{@recipient}\" <#{@recipient.email}>"
@@ -74,7 +71,7 @@ class RadbearMailer < ActionMailer::Base
     @recipient = recipient.count == 1 ? recipient.first : recipient
     @problems = problems
 
-    mail(to: recipient.pluck(:email), subject: "Invalid data in #{I18n::t(:app_name)}")
+    mail(to: recipient.pluck(:email), subject: "Invalid data in #{I18n.t(:app_name)}")
   end
 
   def email_report(user, csv, report_name, options = {})
@@ -96,7 +93,9 @@ class RadbearMailer < ActionMailer::Base
     @recipient = user
     @message = "Attached is the #{report_name}" + message_date_string + '.'
     attachments["#{report_name}#{attachment_date_string}.csv"] = { mime_type: 'text/csv', content: csv }
-    mail(to: "\"#{@recipient.first_name} #{@recipient.last_name}\" <#{@recipient.email}>", subject: "#{report_name}#{subject_date_string}")
+
+    mail(to: "\"#{@recipient.first_name} #{@recipient.last_name}\" <#{@recipient.email}>",
+         subject: "#{report_name}#{subject_date_string}")
   end
 
   private
