@@ -140,6 +140,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20180509112357_remove_optional_emails.rb', 'remove_optional_emails'
         apply_migration '../../../../../spec/dummy/db/migrate/20180526160907_require_user_names.rb', 'require_user_names'
         apply_migration '../../../../../spec/dummy/db/migrate/20180609150231_company_valid_domains.rb', 'company_valid_domains'
+        apply_migration '../../../../../spec/dummy/db/migrate/220180925214758_remove_rad_common_unused_fields.rb', 'emove_rad_common_unused_fields'
       end
 
       def self.next_migration_number(path)

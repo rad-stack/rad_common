@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180609150231) do
+ActiveRecord::Schema.define(version: 20180925214758) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,13 +42,8 @@ ActiveRecord::Schema.define(version: 20180609150231) do
     t.string   "unconfirmed_email",       :limit=>255
     t.string   "first_name",              :limit=>255, :null=>false, :index=>{:name=>"index_users_on_first_name"}
     t.string   "last_name",               :limit=>255, :null=>false, :index=>{:name=>"index_users_on_last_name"}
-    t.string   "username",                :limit=>255, :index=>{:name=>"index_users_on_username", :unique=>true}
     t.string   "mobile_phone",            :limit=>255
-    t.string   "facebook_id",             :limit=>255
-    t.text     "facebook_access_token"
-    t.datetime "facebook_expires_at"
     t.string   "timezone",                :limit=>255
-    t.string   "provider_avatar",         :limit=>255
     t.string   "avatar_file_name",        :limit=>255
     t.string   "avatar_content_type",     :limit=>255
     t.bigint   "avatar_file_size"
