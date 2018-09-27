@@ -12,7 +12,7 @@ module RadCommon
 
       subject = 'Invalid Email'
       message = "Someone tried to send an email to #{email} and the email was not properly sent."
-      company = Company.super_company
+      company = Company.main
       from = 'no-reply@groundswell.online'
       recipients = super_admins.map(&:email)
 

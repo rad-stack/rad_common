@@ -1,13 +1,13 @@
 class GlobalAutocomplete
   include RadCommon::ApplicationHelper
 
-  attr_reader :params, :search_scopes, :member
+  attr_reader :params, :search_scopes, :user
   attr_accessor :current_scope
-  def initialize(params, search_scopes, member)
+  def initialize(params, search_scopes, user)
     @params = params
     @search_scopes = search_scopes
     @current_scope = selected_scope
-    @member = member
+    @user = user
   end
 
   def global_autocomplete_result
@@ -26,11 +26,11 @@ class GlobalAutocomplete
   end
 
   def autocomplete_result(scope)
-    return [] unless scope && member.can_read?(klass)
+    return [] unless scope && user.can_read?(klass)
     self.current_scope = scope
     order = scope[:query_order] || 'created_at DESC'
     query = klass.where(where_query, {search: "%#{params[:term]}%"}).order(order)
-    query = query.authorized(member)
+    query = query.authorized(user)
 
     query = query.limit(50)
     search_label = scope[:search_label] || :to_s

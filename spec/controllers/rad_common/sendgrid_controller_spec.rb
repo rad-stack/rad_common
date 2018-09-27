@@ -5,7 +5,7 @@ describe RadCommon::SendgridController, type: :controller do
     let!(:super_admin_user1) { create(:user, super_admin: true) }
     let!(:super_admin_user2) { create(:user, super_admin: true) }
     let!(:normal_user) { create(:user, super_admin: false) }
-    let!(:super_company) { Company.main }
+    let!(:company) { Company.main }
 
     it 'sends an email to app admins' do
       ActionMailer::Base.deliveries = []

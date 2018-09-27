@@ -7,7 +7,7 @@ module RadbearAuditsController
   end
 
   def audit_by
-    @model_object = @member
+    @model_object = @user
     @audits = @model_object.audits_created(current_user)
     @audits = @audits.page(params[:page])
 

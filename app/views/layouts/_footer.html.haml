@@ -7,4 +7,4 @@
       = link_to "Show History", "/#{controller_name}/#{model_object.id}/audit"
       -if model_name == 'User'
         %br
-        = link_to "Show Changes Made by #{@member}", audit_by_user_path(@member)
+        = link_to "Show Changes Made by #{@user}", audit_by_user_path(@user)

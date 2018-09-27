@@ -10,7 +10,7 @@ describe "Searches", type: :request do
     end
 
     context 'scope search' do
-      it "finds a member" do
+      it "finds a user" do
         visit "/rad_common/global_search?term=#{admin.first_name}"
         expect(page).to have_content admin.first_name
         expect(page).to have_content admin.last_name

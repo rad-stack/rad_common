@@ -41,7 +41,7 @@ module RadbearUser
     "Hello #{first_name}"
   end
 
-  def audits_created(_)
+  def audits_created(_user)
     Audited::Audit.unscoped.where('user_id = ?', id).order('created_at DESC')
   end
 
@@ -50,16 +50,15 @@ module RadbearUser
     return unless firebase_user
 
     Audited.audit_class.as_user(self) do
-      update!(mobile_client_platform: firebase_user['platform'], mobile_client_version: firebase_user['version'], current_device_type: firebase_user['deviceType'])
+      update!(mobile_client_platform: firebase_user['platform'],
+              mobile_client_version: firebase_user['version'],
+              current_device_type: firebase_user['deviceType'])
     end
   end
 
   def firebase_device_tokens(app)
     response = app.client.get firebase_reference + '/messagingTokens'
-
-    unless response.success?
-      raise response.raw_body
-    end
+    raise response.raw_body unless response.success?
 
     if response.body && response.body.count != 0
       response.body
@@ -70,29 +69,26 @@ module RadbearUser
 
   private
 
-  def validate_email_address
-    return if email.blank? || user_status_id.nil? || !user_status.validate_email || company.valid_user_domains.count.zero?
+    def validate_email_address
+      return if email.blank? || user_status_id.nil? || !user_status.validate_email
 
-    domains = company.valid_user_domains
+      domains = company.valid_user_domains
+      components = email.split('@')
+      return if components.count == 2 && domains.include?(components[1])
 
-    components = email.split('@')
-    if components.count == 2 && domains.include?(components[1])
-      return
+      errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
 
-    errors.add(:email, 'is invalid for this application, please contact the system administrator')
-  end
+    def notify_user_approved
+      return if auto_approve?
 
-  def notify_user_approved
-    return if auto_approve?
-    return unless saved_change_to_user_status_id? && user_status && user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
+      return unless saved_change_to_user_status_id? && user_status &&
+                    user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
-    RadbearMailer.your_account_approved(self).deliver_later
+      RadbearMailer.your_account_approved(self).deliver_later
 
-    User.admins.each do |admin|
-      if admin.id != id
-        RadbearMailer.user_was_approved(admin, self, approved_by).deliver_later
+      User.admins.each do |admin|
+        RadbearMailer.user_was_approved(admin, self, approved_by).deliver_later if admin.id != id
       end
     end
-  end
 end

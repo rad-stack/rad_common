@@ -64,7 +64,6 @@ class UsersController < ApplicationController
 
     def set_user
       @user = User.find(params[:id])
-      @member = @user
     end
 
     def resolve_roles(role_ids)

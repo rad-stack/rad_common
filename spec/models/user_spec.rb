@@ -10,16 +10,29 @@ describe User, type: :model do
   end
 
   describe 'validate' do
-    it 'should reject invalid email addresses' do
+    it 'should reject unauthorized email addresses' do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo. user@foo.com user@foo.com]
+
       addresses.each do |address|
-        invalid_email_user = User.new(attributes.merge(email: address))
-        expect(invalid_email_user).not_to be_valid
+        user = User.new(attributes.merge(email: address))
+        expect(user).not_to be_valid
+        expect(user.errors.full_messages.to_s).to include 'Email is not authorized for this application'
+      end
+    end
+
+    it 'should reject invalid email addresses' do
+      addresses = ['foo @example.com', '.b ar@example.com']
+
+      addresses.each do |address|
+        user = User.new(attributes.merge(email: address))
+        expect(user).not_to be_valid
+        expect(user.errors.full_messages.to_s).to include 'Email is invalid'
       end
     end
 
     it 'should allow valid email addresses' do
-      addresses = ['joe@example.com', 'bob@example.com', 'sally@example.com']
+      addresses = %w[joe@example.com bob@example.com sally@example.com]
+
       addresses.each do |address|
         user = User.new(attributes.merge(email: address))
         expect(user).to be_valid
@@ -30,7 +43,7 @@ describe User, type: :model do
   describe 'authy' do
     let(:user) { create :user, mobile_phone: phone_number }
     let(:phone_number) { '(123) 456-7111' }
-    let(:new_phone_number) { '(456) 789-0123'}
+    let(:new_phone_number) { '(456) 789-0123' }
     let(:authy_id) { '1234567' }
     let(:role1) { SecurityRole.find_by(name: 'User') }
     let(:role2) { SecurityRole.find_by(name: 'Admin') }

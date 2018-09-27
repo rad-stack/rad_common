@@ -85,7 +85,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       end
     end
 
-    context 'member cannot read class' do
+    context 'user cannot read class' do
       it 'returns empty array' do
         allow_any_instance_of(User).to receive(:can_read?).and_return(false)
         expect(auto_complete.autocomplete_result(scope)).to eq([])

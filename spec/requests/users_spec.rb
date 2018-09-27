@@ -134,7 +134,7 @@ describe 'Users', type: :request do
 
       click_button 'Sign Up'
 
-      expect(page.html).to include("is invalid")
+      expect(page.html).to include('is not authorized')
     end
   end
 

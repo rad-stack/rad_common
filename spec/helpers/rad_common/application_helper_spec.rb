@@ -73,7 +73,7 @@ describe RadCommon::ApplicationHelper do
     context 'resource' do
       let(:resource) { build(:user) }
 
-      context 'member is authorized' do
+      context 'user is authorized' do
         before { allow(@user).to receive(:can_read?).and_return(true) }
 
         it 'renders a link' do
@@ -90,7 +90,7 @@ describe RadCommon::ApplicationHelper do
         end
       end
 
-      context 'member is unauthorized' do
+      context 'user is unauthorized' do
         before { expect(@user).to receive(:can_read?).and_return(false) }
 
         it 'returns the resource name' do
