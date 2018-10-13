@@ -1,54 +1,13 @@
 module RadCommon
   module ApplicationHelper
     def display_audited_changes(audit)
-      return 'deleted record' if audit.action == 'destroy'
+      audit_text = formatted_audited_changes(audit)
 
-      changes = audit.audited_changes
-      audit_text = ''
-
-      if changes
-        changes.each do |change|
-          if change[1].class.name == 'Array'
-            from_value = change[1][0]
-            to_value = change[1][1]
-          else
-            from_value = nil
-            to_value = change[1]
-          end
-
-          if !((from_value.blank? && to_value.blank?) || (from_value.to_s == to_value.to_s))
-            audit_text = audit_text + "Changed <strong>#{change[0].titlecase}</strong> "
-            klass = classify_foreign_key(change[0], audit.auditable_type.safe_constantize)
-            if klass.is_a?(Class)
-              if klass.respond_to?('find_by_id')
-                to_instance = klass.find_by_id(to_value)
-                from_instance = klass.find_by_id(from_value) if from_value
-
-                from_value = from_instance.to_s if from_instance
-                to_value = to_instance.to_s if to_instance
-              else
-                to_instance = klass.find(to_value)
-                from_instance = klass.find(from_value) if from_value
-
-                from_value = from_instance.to_s if from_instance
-                to_value = to_instance.to_s if to_instance
-              end
-            end
-
-            if from_value
-              audit_text = audit_text + "from <strong>#{from_value}</strong> "
-            end
-
-            audit_text = audit_text + "to <strong>#{to_value}</strong>" + "\n"
-          end
-        end
-      end
-
-      if !audit_text.blank? && !audit.comment.blank?
+      if audit_text.present? && audit.comment.present?
         audit_text + "\n" + audit.comment
-      elsif !audit_text.blank?
+      elsif audit_text.present?
         audit_text
-      elsif !audit.comment.blank?
+      elsif audit.comment.present?
         audit.comment
       else
         ''
@@ -129,9 +88,9 @@ module RadCommon
     def format_datetime(value, options = {})
       return nil if value.blank?
       format_string = '%-m/%-d/%Y %l:%M'
-      format_string = format_string + ':%S' if options[:include_seconds]
-      format_string = format_string + ' %p'
-      format_string = format_string + ' %Z' if options[:include_zone]
+      format_string += ':%S' if options[:include_seconds]
+      format_string += ' %p'
+      format_string += ' %Z' if options[:include_zone]
       value.in_time_zone.strftime(format_string)
     end
 
@@ -173,7 +132,7 @@ module RadCommon
       enum_values.map do |enum_value, db_value|
         translated = enum_to_translated_option(klass, enums, enum_value)
         [translated, enum_value]
-      end.reject {|translated, enum_value| translated.blank?}
+      end.reject { |translated, enum_value| translated.blank? }
     end
 
     def audit_models_to_search
@@ -187,15 +146,11 @@ module RadCommon
     end
 
     def classify_foreign_key(audit_column, audit_type)
-      if audit_type.respond_to?(:reflect_on_all_associations)
-        reflections = audit_type.reflect_on_all_associations(:belongs_to).select { |r| r.foreign_key == audit_column }
-      else
-        reflections = nil
-      end
+      reflections = if audit_type.respond_to?(:reflect_on_all_associations)
+                      audit_type.reflect_on_all_associations(:belongs_to).select { |r| r.foreign_key == audit_column }
+                    end
 
-      if reflections && reflections.any?
-        return reflections.first.class_name.safe_constantize
-      end
+      return reflections.first.class_name.safe_constantize if reflections&.any?
 
       if audit_column =~ /_id$/
         attr = audit_column.sub(/_id$/, '')
@@ -209,11 +164,58 @@ module RadCommon
 
     private
 
+      def formatted_audited_changes(audit)
+        return 'deleted record' if audit.action == 'destroy' && audit.associated.blank?
+
+        changes = audit.audited_changes
+        return '' if changes.blank?
+
+        audit_text = ''
+
+        changes.each do |change|
+          if change[1].class.name == 'Array'
+            from_value = change[1][0]
+            to_value = change[1][1]
+          else
+            from_value = nil
+            to_value = change[1]
+          end
+
+          next if (from_value.blank? && to_value.blank?) || (from_value.to_s == to_value.to_s)
+
+          action_label = audit.action == 'destroy' ? 'Deleted' : 'Changed'
+
+          audit_text += "#{action_label} <strong>#{change[0].titlecase}</strong> "
+          klass = classify_foreign_key(change[0], audit.auditable_type.safe_constantize)
+
+          if klass.is_a?(Class)
+            if klass.respond_to?('find_by_id')
+              to_instance = klass.find_by(id: to_value)
+              from_instance = from_value.present? ? klass.find_by(id: from_value) : nil
+
+              from_value = from_instance.to_s if from_instance
+              to_value = to_instance.to_s if to_instance
+            else
+              to_instance = klass.find(to_value)
+              from_instance = from_value.present? ? klass.find(from_value) : nil
+
+              from_value = from_instance.to_s if from_instance
+              to_value = to_instance.to_s if to_instance
+            end
+          end
+
+          audit_text += "from <strong>#{from_value}</strong> " if from_value
+          audit_text += 'to ' unless audit.action == 'destroy' && audit.associated.present?
+          audit_text += "<strong>#{to_value}</strong>" + "\n"
+        end
+
+        audit_text
+      end
+
       def size_symbol_to_int(size_as_symbol)
         { small: 25,
           medium: 50,
-          large: 200
-        }[size_as_symbol]
+          large: 200 }[size_as_symbol]
       end
 
       def resource_name(resource)
