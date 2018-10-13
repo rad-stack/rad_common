@@ -3,7 +3,7 @@ require_relative '../../app/presenters/panel_presenter'
 
 describe PanelPresenter do
   let(:view_context) { double(:view_context) }
-  let(:local_assigns) { Hash.new }
+  let(:local_assigns) { {} }
   let(:panel_presenter) { described_class.new(view_context, local_assigns) }
 
   describe '#controller_name' do
@@ -24,7 +24,6 @@ describe PanelPresenter do
       it 'returns the special controller name' do
         expect(panel_presenter.controller_name).to eq(special_controller_name)
       end
-
     end
   end
 
@@ -42,7 +41,7 @@ describe PanelPresenter do
 
     context 'new_url param' do
       let(:new_url) { '/something_else/new' }
-      let(:local_assigns) { { new_url: new_url  } }
+      let(:local_assigns) { { new_url: new_url } }
       it 'uses the supplied url instead' do
         expect(panel_presenter.new_url).to eq(new_url)
       end
@@ -54,7 +53,7 @@ describe PanelPresenter do
     let(:controller_name) { 'a_controller' }
     before do
       allow(view_context).to receive(:controller_name).and_return(controller_name)
-      allow(view_context).to receive(:params).and_return({ id: id })
+      allow(view_context).to receive(:params).and_return(id: id)
     end
 
     context 'no edit_url param' do
@@ -143,7 +142,7 @@ describe PanelPresenter do
   end
 
   describe '#action_name' do
-    let(:local_assigns) { Hash.new }
+    let(:local_assigns) { {} }
     it 'returns params action' do
       expect(panel_presenter).to receive(:params).and_return({})
       panel_presenter.action_name
@@ -160,14 +159,14 @@ describe PanelPresenter do
     context 'specified' do
       let(:confirmation_text) { 'Test Value' }
       let(:local_assigns) { { delete_confirmation: confirmation_text } }
-      it "returns specified value" do
+      it 'returns specified value' do
         expect(panel_presenter.delete_confirmation).to eq(confirmation_text)
       end
     end
   end
 
   describe '#additional_actions' do
-    let(:local_assigns) { Hash.new }
+    let(:local_assigns) { {} }
     it 'returns an empty array' do
       expect(panel_presenter.additional_actions).to eq([])
     end
@@ -185,7 +184,7 @@ describe PanelPresenter do
 
   shared_examples 'empty local_assigns' do
     describe 'local assigns is empty' do
-      let(:local_assigns) { Hash.new }
+      let(:local_assigns) { {} }
       it 'returns nil' do
         expect(panel_presenter.send(method)).to be_falsy
       end

@@ -19,7 +19,7 @@ describe RadCommon::TooltipHelper do
     end
 
     it 'displays nothing if title is empty string' do
-      tooltip = icon_tooltip(html_tag, "")
+      tooltip = icon_tooltip(html_tag, '')
       expect(tooltip).to eq(nil)
     end
 
@@ -41,7 +41,7 @@ describe RadCommon::TooltipHelper do
     end
 
     it 'displays nothing if title is empty string' do
-      tooltip = tooltip(html_tag, "")
+      tooltip = tooltip(html_tag, '')
       expect(tooltip).to eq(nil)
     end
 

@@ -5,7 +5,7 @@
   .panel-body
     .row
       .col-md-6
-        %h3 Groups with Permission (#{@security_roles.count})
+        %h3 Roles with Permission (#{@security_roles.count})
         %table.table.table-striped.table-bordered
           - @security_roles.each do |security_role|
             %tr

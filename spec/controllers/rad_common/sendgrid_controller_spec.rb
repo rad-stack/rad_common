@@ -10,8 +10,8 @@ describe RadCommon::SendgridController, type: :controller do
     it 'sends an email to app admins' do
       ActionMailer::Base.deliveries = []
 
-      sendgrid_info = { "_json"=>[{"email"=>"example@test.com", "timestamp"=>1493994015}] }
-      post :email_error, params: sendgrid_info.merge({ use_route: :rad_common})
+      sendgrid_info = { '_json' => [{ 'email' => 'example@test.com', 'timestamp' => 1493994015 }] }
+      post :email_error, params: sendgrid_info.merge(use_route: :rad_common)
       emails = ActionMailer::Base.deliveries
       expect(emails.count).to eq(2)
 

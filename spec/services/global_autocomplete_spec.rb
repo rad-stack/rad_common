@@ -1,12 +1,13 @@
 require 'rails_helper'
-include RadCommon::ApplicationHelper
 
 RSpec.describe GlobalAutocomplete, type: :service do
+  include RadCommon::ApplicationHelper
+
   let!(:user) { create(:user) }
   let!(:search_user) { create(:user, first_name: 'Alex', last_name: 'Smith') }
   let!(:another_search_user) { create(:user, first_name: 'John', last_name: 'Smith') }
   let(:search_scopes) { Rails.application.config.global_search_scopes }
-  let(:params) { ActionController::Parameters.new(Hash.new) }
+  let(:params) { ActionController::Parameters.new }
   let(:auto_complete) { described_class.new(params, search_scopes, user) }
 
   describe '#global_autocomplete_result' do
@@ -27,7 +28,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
   describe '#autocomplete_result' do
     let(:term) { search_user.last_name }
-    let(:params) { ActionController::Parameters.new({ term: term, global_search_scope: 'user_name' }) }
+    let(:params) { ActionController::Parameters.new(term: term, global_search_scope: 'user_name') }
     let(:scope) { auto_complete.selected_scope }
 
     before(:each) { allow_any_instance_of(User).to receive(:can_read?).and_return(true) }
@@ -50,7 +51,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     end
 
     context 'scope has no query where' do
-      let(:params) { ActionController::Parameters.new({ term: term, global_search_scope: 'user_name_with_no_where' }) }
+      let(:params) { ActionController::Parameters.new(term: term, global_search_scope: 'user_name_with_no_where') }
 
       context 'without columns' do
         it 'returns all records' do
@@ -79,7 +80,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     end
 
     context 'invalid global_search_scope param' do
-      let(:params) { ActionController::Parameters.new({ term: term, global_search_scope: 'foobar' }) }
+      let(:params) { ActionController::Parameters.new(term: term, global_search_scope: 'foobar') }
       it 'returns empty array' do
         expect(auto_complete.autocomplete_result(scope)).to eq([])
       end
@@ -95,7 +96,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
   describe '#global_super_search_result' do
     let(:term) { 'Peters' }
-    let(:params) { ActionController::Parameters.new({ term: term }) }
+    let(:params) { ActionController::Parameters.new(term: term) }
     let!(:another_user) { create(:user, last_name: term, email: "#{term}@example.com") }
     let!(:division) { create(:division, name: term) }
 
@@ -129,15 +130,15 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
   describe '#get_columns_values' do
     context 'columns present' do
-      let(:params) { ActionController::Parameters.new({ global_search_scope: 'user_name' }) }
-      let(:columns) { ['email', 'last_name'] }
+      let(:params) { ActionController::Parameters.new(global_search_scope: 'user_name') }
+      let(:columns) { %w[email last_name] }
       it 'returns array of record fields' do
         expect(auto_complete.get_columns_values(columns, user)).to eq([user.email, user.last_name])
       end
     end
 
     context 'no columns' do
-      let(:params) { ActionController::Parameters.new({ global_search_scope: 'user_name_with_no_where' }) }
+      let(:params) { ActionController::Parameters.new(global_search_scope: 'user_name_with_no_where') }
       it 'returns empty array' do
         expect(auto_complete.get_columns_values([], user)).to eq([])
       end
@@ -179,14 +180,14 @@ RSpec.describe GlobalAutocomplete, type: :service do
   describe '#scope_name' do
     context 'global search scope present' do
       global_search_scope = 'user_name_with_no_where'
-      let(:params) { ActionController::Parameters.new({ global_search_scope: global_search_scope }) }
+      let(:params) { ActionController::Parameters.new(global_search_scope: global_search_scope) }
       it 'returns global search scope' do
         expect(auto_complete.scope_name).to eq(global_search_scope)
       end
     end
 
     context 'global search scope not present' do
-      let(:params) { ActionController::Parameters.new({ global_search_scope: '' }) }
+      let(:params) { ActionController::Parameters.new(global_search_scope: '') }
       it 'returns first search scope name' do
         expect(auto_complete.scope_name).to eq(search_scopes.first[:name])
       end
@@ -211,7 +212,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
   describe '#where_query' do
     context 'no query where' do
-      let(:params) { ActionController::Parameters.new({ global_search_scope: 'user_name_with_no_where' }) }
+      let(:params) { ActionController::Parameters.new(global_search_scope: 'user_name_with_no_where') }
       context 'string column' do
         let(:column) { 'email' }
 
@@ -235,7 +236,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     end
 
     context 'query where' do
-      let(:params) { ActionController::Parameters.new({ global_search_scope: 'user_name' }) }
+      let(:params) { ActionController::Parameters.new(global_search_scope: 'user_name') }
 
       it 'returns query where from scope' do
         query_where = search_scopes.first[:query_where]

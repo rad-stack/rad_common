@@ -15,7 +15,7 @@
               %td{class: @security_role.send(permission) ? 'fa fa-check green-check' : 'fa fa-times red-x'}
       .col-md-6
         -users = @security_role.users.active.by_name
-        %h3 Users In Group (#{users.count})
+        %h3 Users in Role (#{users.count})
         %table.table.table-striped.table-bordered
           %tr
             %th Name

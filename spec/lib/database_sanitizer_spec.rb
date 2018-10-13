@@ -88,7 +88,7 @@ describe DatabaseSanitizer do
     end
 
     context 'all values are not the same' do
-      let(:values) { ['foo', 'bar'] }
+      let(:values) { %w[foo bar] }
       it 'does not print anything to console' do
         expect { described_class.table_report(table_name) }.to_not output.to_stdout
       end

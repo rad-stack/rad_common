@@ -11,7 +11,7 @@ describe 'Audit search', type: :request do
         select user.class.to_s, from: 'record-search'
         fill_in 'record_id', with: user.id
         within(:css, '.form-inputs#record-search') { click_button 'Search' }
-        expect(page).to have_content("Updates for #{user.class.to_s} - #{user}")
+        expect(page).to have_content("Updates for #{user.class} - #{user}")
       end
 
       context 'resource deleted' do
@@ -22,7 +22,7 @@ describe 'Audit search', type: :request do
           select deleted_role.class.to_s, from: 'record-search'
           fill_in 'record_id', with: deleted_role.id
           within(:css, '.form-inputs#record-search') { click_button 'Search' }
-          expect(page).to have_content("Updates for #{deleted_role.class.to_s} - #{deleted_role.id}")
+          expect(page).to have_content("Updates for #{deleted_role.class} - #{deleted_role.id}")
         end
       end
     end
@@ -34,7 +34,7 @@ describe 'Audit search', type: :request do
         select user.class.to_s, from: 'record-search'
         fill_in 'record_id', with: invalid_user_id
         within(:css, '.form-inputs#record-search') { click_button 'Search' }
-        expect(page).to have_content("Audit for #{user.class.to_s} with ID of #{invalid_user_id} not found")
+        expect(page).to have_content("Audit for #{user.class} with ID of #{invalid_user_id} not found")
       end
     end
   end

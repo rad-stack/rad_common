@@ -19,8 +19,8 @@ describe RadCommon::SecurityRoleHelper do
           { label: 'View Audits', permission: 'read_audit' },
           { label: 'View Divisions', permission: 'read_division' },
           { label: 'View Users', permission: 'read_user' },
-          { label: 'Update Divisions', permission: 'update_division' },
-        ],
+          { label: 'Update Divisions', permission: 'update_division' }
+        ]
       )
     end
   end

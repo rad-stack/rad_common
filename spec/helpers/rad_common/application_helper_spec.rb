@@ -86,7 +86,7 @@ describe RadCommon::ApplicationHelper do
         end
 
         it 'can specify a pdf format' do
-          expect(helper.secured_link(resource, format: 'pdf')).to include("format=\"pdf\"")
+          expect(helper.secured_link(resource, format: 'pdf')).to include('format="pdf"')
         end
       end
 
@@ -109,7 +109,7 @@ describe RadCommon::ApplicationHelper do
 
   describe '#format_time' do
     it 'formats the time' do
-      expect(helper.format_time(DateTime.parse('2018-06-15 06:43 AM'))).to eq('6:43am')
+      expect(helper.format_time(Time.zone.parse('2018-06-15 06:43 AM'))).to eq('6:43am')
     end
   end
 

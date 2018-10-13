@@ -52,9 +52,9 @@ RSpec.describe UsersController, type: :controller do
 
     it 'destroys the requested user' do
       user
-      expect do
+      expect {
         delete :destroy, params: { id: user.to_param }
-      end.to change(User, :count).by(-1)
+      }.to change(User, :count).by(-1)
     end
 
     it 'redirects to the users list' do

@@ -27,7 +27,8 @@ describe RadCommon::GlobalValidity do
 
   context 'with invalid data' do
     before do
-      admin_security_role.update_column(:create_division, false)
+      admin_security_role.create_division = false
+      admin_security_role.save!(validate: false)
     end
 
     describe '.check_all_companies' do
@@ -49,7 +50,7 @@ describe RadCommon::GlobalValidity do
 
     describe 'with specific queries' do
       context 'table was ignored, but specific query hits it' do
-        let(:specific_query) { lambda { SecurityRole.where(name: 'Admin') } }
+        let(:specific_query) { -> { SecurityRole.where(name: 'Admin') } }
 
         before do
           Rails.configuration.global_validity_exclude = [SecurityRole]

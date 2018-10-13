@@ -8,7 +8,7 @@ describe RadCommon::InputGroupHelper do
     it 'correctly formats to an addon span' do
       append = addon(title)
       expect(append).to include('span')
-      expect(append).to include("Test")
+      expect(append).to include('Test')
     end
 
     it 'displays nothing if title is nil' do
@@ -17,14 +17,14 @@ describe RadCommon::InputGroupHelper do
     end
 
     it 'displays nothing if title is empty string' do
-      append = addon("")
+      append = addon('')
       expect(append).to eq(nil)
     end
 
     it 'html tag can be changed from default' do
       append = addon(title, 'div')
       expect(append).to include('div')
-      expect(append).to include("Test")
+      expect(append).to include('Test')
     end
   end
 end

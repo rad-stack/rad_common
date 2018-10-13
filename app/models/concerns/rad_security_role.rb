@@ -60,7 +60,7 @@ module RadSecurityRole
       groups = SecurityRole.where.not(id: id)
 
       groups.each do |group|
-        errors.add(:base, 'Group permissions cannot match another group') if permission_attributes == group.permission_attributes
+        errors.add(:base, 'Role permissions cannot match another role') if permission_attributes == group.permission_attributes
       end
     end
 end

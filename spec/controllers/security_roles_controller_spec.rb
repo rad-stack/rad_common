@@ -19,9 +19,9 @@ RSpec.describe SecurityRolesController, type: :controller do
   describe 'POST create' do
     describe 'with valid params' do
       it 'creates a new SecurityRole' do
-        expect do
+        expect {
           post :create, params: { security_role: valid_attributes }
-        end.to change(SecurityRole, :count).by(1)
+        }.to change(SecurityRole, :count).by(1)
       end
 
       it 'redirects to the created security_role' do
@@ -71,9 +71,9 @@ RSpec.describe SecurityRolesController, type: :controller do
 
     it 'destroys the requested security_role' do
       security_role
-      expect do
+      expect {
         delete :destroy, params: { id: security_role.to_param }
-      end.to change(SecurityRole, :count).by(-1)
+      }.to change(SecurityRole, :count).by(-1)
     end
 
     it 'redirects to the security_roles list' do
