@@ -26,7 +26,12 @@ module RadbearAuditsController
     if resource_type.present? && resource_id.present?
       audits = Audited::Audit.where(auditable_type: resource_type, auditable_id: resource_id)
       audit = audits.first
-      audit ? show_audits_for_type(resource_type, resource_id) : flash[:error] = "Audit for #{resource_type} with ID of #{resource_id} not found"
+
+      if audit
+        show_audits_for_type(resource_type, resource_id)
+      else
+        flash[:error] = "Audit for #{resource_type} with ID of #{resource_id} not found"
+      end
     else
       show_system_audits resource_type
     end
@@ -51,7 +56,7 @@ module RadbearAuditsController
       raise 'Unauthorized' unless current_user.can_audit?(resource) # controllers and UI should prevent coming here
 
       @model_object = resource
-      @audits = @model_object.audits
+      @audits = @model_object.own_and_associated_audits
       @audits = @audits.reorder('created_at DESC').page(params[:page])
       render 'audits/index'
     end

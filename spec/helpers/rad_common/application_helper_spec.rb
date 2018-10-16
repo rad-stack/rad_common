@@ -3,12 +3,69 @@ require 'rails_helper'
 describe RadCommon::ApplicationHelper do
   let(:date) { Time.current }
   let(:division) { create :division }
+  let(:user) { create :user }
+  let(:security_role) { create :security_role }
 
   before do
     @user = create :user
 
     def helper.current_user
       @user
+    end
+  end
+
+  describe 'display_audited_changes' do
+    context 'without associated changes' do
+      let(:audit) { division.audits.reorder('created_at DESC').first }
+
+      subject { strip_tags(helper.display_audited_changes(audit)) }
+
+      context 'create' do
+        it { is_expected.to include "Changed Name to #{division.name}" }
+      end
+
+      context 'update' do
+        let(:old_name) { Faker::Company.name }
+        let(:new_name) { Faker::Company.name }
+
+        before do
+          division.update! name: old_name
+          division.update! name: new_name
+        end
+
+        it { is_expected.to include "Changed Name from #{old_name} to #{new_name}" }
+      end
+
+      context 'destroy' do
+        before { division.destroy! }
+
+        it { is_expected.to include 'deleted record' }
+      end
+    end
+
+    context 'with associated changes' do
+      let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
+
+      subject { strip_tags(helper.display_audited_changes(audit)) }
+
+      context 'create' do
+        before do
+          user.update!(security_roles: [])
+          user.update!(security_roles: [security_role])
+        end
+
+        it { is_expected.to include "Changed Security Role to #{security_role}" }
+      end
+
+      context 'destroy' do
+        before do
+          user.update!(security_roles: [])
+          user.update!(security_roles: [security_role])
+          user.update!(security_roles: [])
+        end
+
+        it { is_expected.to include "Deleted Security Role #{security_role}" }
+      end
     end
   end
 
