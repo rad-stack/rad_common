@@ -10,6 +10,7 @@
         %th Signed In
         %th Created
         %th Status
+        %th Roles
         -if current_user.can_update?(User) || current_user.can_delete?(User)
           %th.text-center Actions
 
@@ -20,6 +21,10 @@
           %td= format_datetime(user.current_sign_in_at)
           %td= format_date(user.created_at)
           %td= user.user_status
+          %td
+            -user.security_roles.each do |security_role|
+              = secured_link(security_role)
+              %p
           -if current_user.can_update?(User) || current_user.can_delete?(User)
             %td
               -if current_user.can_update?(user)
