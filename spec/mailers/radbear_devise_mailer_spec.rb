@@ -11,11 +11,11 @@ describe RadbearDeviseMailer, type: :mailer do
 
     before { RadbearDeviseMailer.confirmation_instructions(user, token).deliver_now }
 
-    it 'should have the subject' do
+    it 'has the subject' do
       expect(email.subject).to include 'Confirmation instructions'
     end
 
-    it 'should have the instructions' do
+    it 'has the instructions' do
       expect(email.body.encoded).to include 'Here are your confirmation instructions.'
     end
   end

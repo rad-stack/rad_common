@@ -16,7 +16,7 @@ describe RadCommon::GlobalValidity do
 
     it 'company validity_checked_at should update' do
       global_validity_check
-      expect(company.reload.validity_checked_at).to_not be_nil
+      expect(company.reload.validity_checked_at).not_to be_nil
     end
 
     it 'does not send an email' do
@@ -76,7 +76,7 @@ describe RadCommon::GlobalValidity do
         described_class.check_all_companies
 
         expect(last_email.to).to eq([super_admin.email])
-        expect(email_body_html).to_not include('requires all permissions to be true')
+        expect(email_body_html).not_to include('requires all permissions to be true')
       end
     end
   end

@@ -8,6 +8,7 @@ describe PanelPresenter do
 
   describe '#controller_name' do
     let(:controller_name) { 'Foo' }
+
     before do
       allow(view_context).to receive(:controller_name).and_return(controller_name)
     end
@@ -21,6 +22,7 @@ describe PanelPresenter do
     context 'a supplied controller name' do
       let(:special_controller_name) { 'admin_users' }
       let(:local_assigns) { { controller_name: special_controller_name } }
+
       it 'returns the special controller name' do
         expect(panel_presenter.controller_name).to eq(special_controller_name)
       end
@@ -29,6 +31,7 @@ describe PanelPresenter do
 
   describe '#new_url' do
     let(:controller_name) { 'something' }
+
     before do
       allow(view_context).to receive(:controller_name).and_return(controller_name)
     end
@@ -42,6 +45,7 @@ describe PanelPresenter do
     context 'new_url param' do
       let(:new_url) { '/something_else/new' }
       let(:local_assigns) { { new_url: new_url } }
+
       it 'uses the supplied url instead' do
         expect(panel_presenter.new_url).to eq(new_url)
       end
@@ -51,6 +55,7 @@ describe PanelPresenter do
   describe '#edit_url' do
     let(:id) { rand(1..10) }
     let(:controller_name) { 'a_controller' }
+
     before do
       allow(view_context).to receive(:controller_name).and_return(controller_name)
       allow(view_context).to receive(:params).and_return(id: id)
@@ -65,6 +70,7 @@ describe PanelPresenter do
     context 'edit_url param' do
       let(:edit_url) { "/different_controller/#{id}/edit" }
       let(:local_assigns) { { edit_url: edit_url  } }
+
       it 'uses the supplied url instead' do
         expect(panel_presenter.edit_url).to eq(edit_url)
       end
@@ -78,7 +84,7 @@ describe PanelPresenter do
 
     it 'returns something if not custom' do
       allow(panel_presenter).to receive(:custom?).and_return(false)
-      expect(panel_presenter.klass).to_not be_nil
+      expect(panel_presenter.klass).not_to be_nil
     end
 
     it 'returns nil if custom' do
@@ -95,7 +101,7 @@ describe PanelPresenter do
 
     it 'returns something if not custom' do
       allow(panel_presenter).to receive(:custom?).and_return(false)
-      expect(panel_presenter.instance).to_not be_nil
+      expect(panel_presenter.instance).not_to be_nil
     end
 
     it 'returns nil if custom' do
@@ -132,17 +138,18 @@ describe PanelPresenter do
   describe '#custom?' do
     it 'true if custom' do
       allow(panel_presenter).to receive(:action_name).and_return('custom')
-      expect(panel_presenter.custom?).to be_truthy
+      expect(panel_presenter).to be_custom
     end
 
     it 'false if custom' do
       allow(panel_presenter).to receive(:action_name).and_return('not custom')
-      expect(panel_presenter.custom?).to be_falsy
+      expect(panel_presenter).not_to be_custom
     end
   end
 
   describe '#action_name' do
     let(:local_assigns) { {} }
+
     it 'returns params action' do
       expect(panel_presenter).to receive(:params).and_return({})
       panel_presenter.action_name
@@ -159,6 +166,7 @@ describe PanelPresenter do
     context 'specified' do
       let(:confirmation_text) { 'Test Value' }
       let(:local_assigns) { { delete_confirmation: confirmation_text } }
+
       it 'returns specified value' do
         expect(panel_presenter.delete_confirmation).to eq(confirmation_text)
       end
@@ -167,6 +175,7 @@ describe PanelPresenter do
 
   describe '#additional_actions' do
     let(:local_assigns) { {} }
+
     it 'returns an empty array' do
       expect(panel_presenter.additional_actions).to eq([])
     end
@@ -176,6 +185,7 @@ describe PanelPresenter do
     let(:value) { 'Foobar' }
     describe 'local assigns has method key' do
       let(:local_assigns) { { method => value } }
+
       it 'returns local assigns value' do
         expect(panel_presenter.send(method)).to eq(value)
       end
@@ -185,6 +195,7 @@ describe PanelPresenter do
   shared_examples 'empty local_assigns' do
     describe 'local assigns is empty' do
       let(:local_assigns) { {} }
+
       it 'returns nil' do
         expect(panel_presenter.send(method)).to be_falsy
       end

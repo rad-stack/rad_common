@@ -1,12 +1,12 @@
 FactoryBot.define do
   factory :user do
-    first_name 'Test'
-    last_name 'User'
-    mobile_phone '(999) 231-1111'
+    first_name { 'Test' }
+    last_name { 'User' }
+    mobile_phone { '(999) 231-1111' }
     sequence(:email) { |n| "example#{n}@example.com" }
-    password 'password'
-    password_confirmation 'password'
-    confirmed_at Time.zone.now
+    password { 'password' }
+    password_confirmation { 'password' }
+    confirmed_at { Time.zone.now }
     association :user_status, factory: %i[user_status active]
 
     factory :admin do |f|
@@ -14,7 +14,7 @@ FactoryBot.define do
     end
 
     factory :super_admin do |f|
-      super_admin true
+      super_admin { true }
       f.after(:create) { |user| user.security_roles << SecurityRole.find_by(name: 'Admin') }
     end
 

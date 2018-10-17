@@ -32,7 +32,7 @@ describe RadCommon::TooltipHelper do
   describe '#tooltip' do
     it 'does not include the font awesome icon class' do
       tooltip = tooltip(html_tag, title)
-      expect(tooltip).to_not include('fa-question-circle')
+      expect(tooltip).not_to include('fa-question-circle')
     end
 
     it 'displays nothing if title is nil' do

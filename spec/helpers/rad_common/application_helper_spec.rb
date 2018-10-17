@@ -16,9 +16,9 @@ describe RadCommon::ApplicationHelper do
 
   describe 'display_audited_changes' do
     context 'without associated changes' do
-      let(:audit) { division.audits.reorder('created_at DESC').first }
-
       subject { strip_tags(helper.display_audited_changes(audit)) }
+
+      let(:audit) { division.audits.reorder('created_at DESC').first }
 
       context 'create' do
         it { is_expected.to include "Changed Name to #{division.name}" }
@@ -44,9 +44,9 @@ describe RadCommon::ApplicationHelper do
     end
 
     context 'with associated changes' do
-      let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
-
       subject { strip_tags(helper.display_audited_changes(audit)) }
+
+      let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
 
       context 'create' do
         before do
@@ -70,15 +70,15 @@ describe RadCommon::ApplicationHelper do
   end
 
   describe 'enum_to_translated_option' do
-    it 'should translate the value' do
+    it 'translates the value' do
       expect(enum_to_translated_option(Division, :division_status, division.division_status)).to eq 'Active'
     end
 
-    it 'should handle nil' do
+    it 'handles nil' do
       expect(enum_to_translated_option(Division, :division_status, nil)).to be_nil
     end
 
-    it 'should handle blank' do
+    it 'handles blank' do
       expect(enum_to_translated_option(Division, :division_status, '')).to be_nil
     end
   end
@@ -87,6 +87,7 @@ describe RadCommon::ApplicationHelper do
     context 'string size' do
       let(:size) { '60' }
       let(:resource) { build(:user) }
+
       it 'returns a url with the correct size' do
         expect(avatar_image(resource, size)).to include('gravatar')
         expect(avatar_image(resource, size)).to include('60')
@@ -96,6 +97,7 @@ describe RadCommon::ApplicationHelper do
     context 'integer size' do
       let(:size) { 100 }
       let(:resource) { build(:user) }
+
       it 'returns a url with the correct size' do
         expect(avatar_image(resource, size)).to include('gravatar')
         expect(avatar_image(resource, size)).to include('100')
@@ -104,6 +106,7 @@ describe RadCommon::ApplicationHelper do
 
     context 'symbol size' do
       let(:resource) { build(:user) }
+
       it 'returns a url with a non string size' do
         expect(avatar_image(resource, :small)).to include('25')
         expect(avatar_image(resource, :medium)).to include('50')
@@ -115,12 +118,15 @@ describe RadCommon::ApplicationHelper do
   describe '#avatar_image' do
     let(:size) { 80 }
     let(:filename) { 'avatar.png' }
+
     before { Rails.application.config.use_avatar = true }
+
     after  { Rails.application.config.use_avatar = false }
 
     context 'user does not have avatar' do
       let(:resource) { build(:user, avatar: nil) }
-      it 'should return an image tag with the user gravatar' do
+
+      it 'returns an image tag with the user gravatar' do
         expect(avatar_image(resource, size)).to include('gravatar')
       end
     end
@@ -139,7 +145,7 @@ describe RadCommon::ApplicationHelper do
         end
 
         it 'defaults to no specified format' do
-          expect(helper.secured_link(resource)).to_not include('format')
+          expect(helper.secured_link(resource)).not_to include('format')
         end
 
         it 'can specify a pdf format' do
@@ -158,6 +164,7 @@ describe RadCommon::ApplicationHelper do
 
     context 'no resource' do
       let(:resource) { nil }
+
       it 'returns nil' do
         expect(helper.secured_link(resource)).to be_nil
       end

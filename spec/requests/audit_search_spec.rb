@@ -3,7 +3,8 @@ require 'rails_helper'
 describe 'Audit search', type: :request do
   describe 'search' do
     let(:user) { create(:admin) }
-    before(:each) { login_as(user, scope: :user) }
+
+    before { login_as(user, scope: :user) }
 
     context 'audit exists' do
       it 'loads audit page' do

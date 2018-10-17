@@ -5,11 +5,11 @@ describe 'AuditHistory', type: :request do
   let(:user) { create :user }
   let(:division) { create :division }
 
-  before(:each) do
+  before do
     login_as(admin, scope: :user)
   end
 
-  it 'should show the change in user history' do
+  it 'shows the change in user history' do
     old_name = user.last_name
     new_name = 'foo'
     visit edit_user_path(user)
@@ -21,7 +21,7 @@ describe 'AuditHistory', type: :request do
     expect(page).to have_content old_name
   end
 
-  it 'should show the change in division history' do
+  it 'shows the change in division history' do
     old_name = division.name
     new_name = Faker::Name.first_name
     visit edit_division_path(division)
@@ -33,7 +33,7 @@ describe 'AuditHistory', type: :request do
     expect(page).to have_content old_name
   end
 
-  it 'should show when the division was created in history' do
+  it 'shows when the division was created in history' do
     visit new_division_path
     fill_in 'Name', with: 'Foo'
     fill_in 'Code', with: 'Bar'

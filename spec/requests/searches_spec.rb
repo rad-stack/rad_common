@@ -4,7 +4,7 @@ describe 'Searches', type: :request do
   let(:admin) { create :admin }
 
   describe 'searches' do
-    before(:each) do
+    before do
       login_as(admin, scope: :user)
     end
 

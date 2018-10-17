@@ -13,7 +13,7 @@ describe 'Users', type: :request do
       user.update!(authy_enabled: true, mobile_phone: '(904) 226-4901')
     end
 
-    it 'should allow user to login with authentication token' do
+    it 'allows user to login with authentication token' do
       expect(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
 
       visit new_user_session_path
@@ -26,7 +26,7 @@ describe 'Users', type: :request do
       expect(page).to have_content 'Signed in successfully'
     end
 
-    it 'should not allow user to login with invalid authy token' do
+    it 'does not allow user to login with invalid authy token' do
       visit new_user_session_path
 
       fill_in 'user_email', with: user.email
@@ -52,19 +52,19 @@ describe 'Users', type: :request do
 
   describe 'authenticated' do
     describe 'user' do
-      before(:each) do
+      before do
         login_as(user, scope: :user)
       end
 
       describe 'index' do
-        it 'should show users' do
+        it 'shows users' do
           visit users_path
           expect(page).to have_content 'Access Denied'
         end
       end
 
       describe 'profile' do
-        it 'should update profile' do
+        it 'updates profile' do
           visit edit_user_registration_path
           expect(find_field('First name').value).to eq user.first_name
           new_name = Faker::Name.first_name
@@ -78,20 +78,21 @@ describe 'Users', type: :request do
     end
 
     describe 'admin' do
-      before(:each) do
+      before do
         login_as(admin, scope: :user)
       end
 
       describe 'index' do
-        it 'should show users' do
+        it 'shows users' do
           visit users_path(status: user.user_status_id)
           expect(page).to have_content user.to_s
         end
       end
 
       describe 'show' do
-        before(:each) { visit user_path(user) }
-        it 'should show the user' do
+        before { visit user_path(user) }
+
+        it 'shows the user' do
           expect(page).to have_content user.to_s
         end
 
@@ -110,7 +111,7 @@ describe 'Users', type: :request do
   end
 
   describe 'sign up' do
-    it 'should sign up' do
+    it 'signs up' do
       visit new_user_registration_path
 
       fill_in 'First name', with: Faker::Name.first_name
@@ -151,7 +152,7 @@ describe 'Users', type: :request do
       expect(page.html).to include('Your account has not been approved by your administrator yet.')
     end
 
-    it 'should sign in' do
+    it 'signs in' do
       visit new_user_session_path
 
       fill_in 'user_email', with: user.email

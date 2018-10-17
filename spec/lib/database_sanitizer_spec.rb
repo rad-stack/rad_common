@@ -9,13 +9,14 @@ describe DatabaseSanitizer do
 
   describe '.generate_report' do
     let(:tables) { ['users'] }
+
     before do
       expect(described_class).to receive(:tables).and_return(tables)
     end
 
     context 'table has more than 1 record' do
       before do
-        2.times { create(:user) }
+        create_list(:user, 2)
       end
 
       it 'generates a report for each table' do
@@ -30,14 +31,14 @@ describe DatabaseSanitizer do
       end
 
       it 'skips table report with one record' do
-        expect(described_class).to_not receive(:table_report)
+        expect(described_class).not_to receive(:table_report)
         described_class.generate_report
       end
     end
 
     context 'table has no records' do
       it 'skips table report and prints to console' do
-        expect(described_class).to_not receive(:table_report)
+        expect(described_class).not_to receive(:table_report)
         expect { described_class.generate_report }.to output("Table #{tables.first}\n  No Records\n").to_stdout
       end
     end
@@ -61,6 +62,7 @@ describe DatabaseSanitizer do
 
     context 'all values are blank' do
       let(:values) { ['', nil] }
+
       it 'prints to the console' do
         expect { described_class.table_report(table_name) }.to output("Table #{table_name}\n  Blank: #{table_name}##{column_name}\n").to_stdout
       end
@@ -68,8 +70,9 @@ describe DatabaseSanitizer do
 
     context 'all values are not blank' do
       let(:values) { ['foo', nil, '', 'bar'] }
+
       it 'does not print column info to the console' do
-        expect { described_class.table_report(table_name) }.to_not output.to_stdout
+        expect { described_class.table_report(table_name) }.not_to output.to_stdout
       end
     end
 
@@ -89,8 +92,9 @@ describe DatabaseSanitizer do
 
     context 'all values are not the same' do
       let(:values) { %w[foo bar] }
+
       it 'does not print anything to console' do
-        expect { described_class.table_report(table_name) }.to_not output.to_stdout
+        expect { described_class.table_report(table_name) }.not_to output.to_stdout
       end
     end
   end

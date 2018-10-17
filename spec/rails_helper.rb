@@ -1,5 +1,5 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
+ENV['RAILS_ENV'] ||= 'test'
 
 require 'simplecov'
 SimpleCov.start 'rails' do
@@ -8,7 +8,7 @@ SimpleCov.start 'rails' do
 end
 
 require 'spec_helper'
-require File.expand_path("../dummy/config/environment.rb", __FILE__)
+require File.expand_path('dummy/config/environment.rb', __dir__)
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -29,7 +29,7 @@ require 'database_cleaner'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -64,14 +64,14 @@ RSpec.configure do |config|
   # config.before(:suite) do
   #   DatabaseCleaner.strategy = :truncation
   # end
-  config.before(:each) do
+  config.before do
     DatabaseCleaner.start
 
-    allow(Company).to receive_message_chain(:main).and_return(create(:company))
-    allow(UserStatus).to receive_message_chain(:default_pending_status).and_return(create :user_status, :pending, name: 'Pending')
+    allow(Company).to receive(:main).and_return(create(:company))
+    allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))
     SecurityRole.seed_items
   end
-  config.after(:each) do
+  config.after do
     DatabaseCleaner.clean
   end
 

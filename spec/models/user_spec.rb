@@ -10,7 +10,7 @@ describe User, type: :model do
   end
 
   describe 'validate' do
-    it 'should reject unauthorized email addresses' do
+    it 'rejects unauthorized email addresses' do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo. user@foo.com user@foo.com]
 
       addresses.each do |address|
@@ -20,7 +20,7 @@ describe User, type: :model do
       end
     end
 
-    it 'should reject invalid email addresses' do
+    it 'rejects invalid email addresses' do
       addresses = ['foo @example.com', '.b ar@example.com']
 
       addresses.each do |address|
@@ -30,7 +30,7 @@ describe User, type: :model do
       end
     end
 
-    it 'should allow valid email addresses' do
+    it 'allows valid email addresses' do
       addresses = %w[joe@example.com bob@example.com sally@example.com]
 
       addresses.each do |address|
