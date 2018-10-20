@@ -18,6 +18,7 @@ Rails.configuration.global_search_scopes =
     { name: 'user_name', model: User,
       description: 'Search for user by name',
       columns: ['email'],
+      methods: [:user_status],
       query_where: "last_name || ', ' || first_name ilike :search",
       query_order: 'last_name ASC, first_name ASC, created_at DESC' },
     { name: 'user_email', model: User,

@@ -11,12 +11,17 @@
         %ul.nav.navbar-nav.navbar-left
           -if current_user.can_read?(Division)
             %li= link_to 'Divisions', divisions_path
-          -if current_user.can_read?(User)
-            %li= link_to 'User Accounts', users_path
-          -if current_user.can_read?(SecurityRole)
-            %li= link_to 'Security Roles', security_roles_path
-          -if current_user.can_audit?(Company)
-            %li= link_to "Audit Search", audit_search_users_path
+          %li.dropdown
+            %a.dropdown-toggle{'data-toggle' => 'dropdown', href: '#'}
+              Admin
+              %b.caret
+            %ul.dropdown-menu
+              -if current_user.can_audit?(Company)
+                %li= link_to "Audit Search", audit_search_users_path
+              -if current_user.can_read?(SecurityRole)
+                %li= link_to 'Security Roles', security_roles_path
+              -if current_user.can_read?(User)
+                %li= link_to 'User Accounts', users_path
       %ul.nav.navbar-nav.navbar-right
         - if user_signed_in?
           %li.dropdown
