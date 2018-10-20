@@ -39,7 +39,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
       it 'performs search based on specified query' do
         expect(result.count).to eq(2)
-        expect(result.first[:columns]).to eq([search_user.email])
+        expect(result.first[:columns]).to eq([search_user.email, search_user.user_status.to_s])
         expect(result.first[:model_name]).to eq('User')
         expect(result.first[:id]).to eq(search_user.id)
         expect(result.first[:label]).to eq(search_user.to_s)
@@ -135,9 +135,10 @@ RSpec.describe GlobalAutocomplete, type: :service do
     context 'columns present' do
       let(:params) { ActionController::Parameters.new(global_search_scope: 'user_name') }
       let(:columns) { %w[email last_name] }
+      let(:methods) { [:user_status] }
 
       it 'returns array of record fields' do
-        expect(auto_complete.get_columns_values(columns, user)).to eq([user.email, user.last_name])
+        expect(auto_complete.get_columns_values(columns, methods, user)).to eq([user.email, user.last_name, user.user_status.name])
       end
     end
 
@@ -145,7 +146,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       let(:params) { ActionController::Parameters.new(global_search_scope: 'user_name_with_no_where') }
 
       it 'returns empty array' do
-        expect(auto_complete.get_columns_values([], user)).to eq([])
+        expect(auto_complete.get_columns_values([], [], user)).to eq([])
       end
     end
   end
