@@ -24,8 +24,7 @@ Rails.configuration.global_search_scopes =
     { name: 'user_email', model: User,
       description: 'Search for user by email',
       columns: ['email'],
-      query_where: "email ilike :search",
-    },
+      query_where: 'email ilike :search' },
     { name: 'user_name_with_no_where', model: User,
       description: 'Search for user by name',
       columns: [],
@@ -34,6 +33,5 @@ Rails.configuration.global_search_scopes =
       description: 'Search for division by name',
       columns: ['name'],
       query_where: 'name ilike :search',
-      query_order: 'name'
-    }
+      query_order: 'name' }
   ]

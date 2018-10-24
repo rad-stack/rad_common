@@ -19,11 +19,8 @@ module FirebaseSync
   end
 
   def get_firebase_data(app, path)
-    response = app.client.get(path)
-
-    unless response.success?
-      raise RadicallyIntermittentException, response.raw_body
-    end
+    response = RadicalRetry.perform_request { app.client.get(path) }
+    raise RadicallyIntermittentException, response.raw_body unless response.success?
 
     response.body
   end
