@@ -14,7 +14,6 @@ require 'rspec/rails'
 
 require 'capybara/rails'
 require 'factory_bot_rails'
-require 'database_cleaner'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -44,7 +43,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = false
+  config.use_transactional_fixtures = true
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
@@ -61,18 +60,10 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 
-  # config.before(:suite) do
-  #   DatabaseCleaner.strategy = :truncation
-  # end
   config.before do
-    DatabaseCleaner.start
-
     allow(Company).to receive(:main).and_return(create(:company))
     allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))
     SecurityRole.seed_items
-  end
-  config.after do
-    DatabaseCleaner.clean
   end
 
   config.include Devise::Test::ControllerHelpers, type: :controller
