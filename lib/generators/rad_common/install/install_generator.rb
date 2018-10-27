@@ -9,9 +9,6 @@ module RadCommon
         # initializers
         template '../../../../../spec/dummy/config/initializers/rad_common.rb', 'config/initializers/rad_common.rb'
 
-        # TODO: https://radbear.groundswell.online/tasks/26453
-        template '../../../../../spec/dummy/config/initializers/schema_plus.rb', 'config/initializers/schema_plus.rb'
-
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml', 'config/locales/devise.authy.en.yml'
 

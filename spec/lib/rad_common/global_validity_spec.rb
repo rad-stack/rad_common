@@ -41,7 +41,7 @@ describe RadCommon::GlobalValidity do
 
         expect(last_email.subject).to eq("Invalid data in #{I18n.t(:app_name)}")
         expect(last_email.to).to eq([super_admin.email])
-        expect(email_body_text).to include("requires all permissions to be true\n\n")
+        expect(email_body_text).to include("requires all permissions to be true")
         expect(email_body_html).to include('requires all permissions to be true')
         expect(email_body_html).to include('There is 1 invalid record')
         expect(email_body_html).to include(url)
@@ -62,7 +62,7 @@ describe RadCommon::GlobalValidity do
 
           expect(last_email.subject).to eq("Invalid data in #{I18n.t(:app_name)}")
           expect(last_email.to).to eq([super_admin.email])
-          expect(email_body_text).to include("requires all permissions to be true\n\n")
+          expect(email_body_text).to include("requires all permissions to be true")
           expect(email_body_html).to include('requires all permissions to be true')
           expect(email_body_html).to include('There is 1 invalid record')
           expect(email_body_html).to include(url)

@@ -17,6 +17,8 @@ class InstallAudited < ActiveRecord::Migration[5.0]
       t.column :created_at, :datetime
     end
 
+    add_foreign_key :audits, :users
+
     add_index :audits, [:auditable_id, :auditable_type], name: 'auditable_index'
     add_index :audits, [:associated_id, :associated_type], name: 'associated_index'
     add_index :audits, [:user_id, :user_type], name: 'user_index'

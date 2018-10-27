@@ -13,10 +13,10 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-# TODO: move these to gemspec when the updates are available in rubygems
-gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
-# TODO: https://radbear.groundswell.online/tasks/26454
-gem 'schema_plus_foreign_keys', git: 'https://github.com/SchemaPlus/schema_plus_foreign_keys.git', branch: 'AR51-support'
+gem 'schema_validations',  github: 'SynergyDataSystems/schema_validations'
+gem 'schema_plus_columns', github: 'SynergyDataSystems/schema_plus_columns'
+gem 'schema_plus_core', github: 'SynergyDataSystems/schema_plus_core'
+gem 'schema_plus_indexes', github: 'SynergyDataSystems/schema_plus_indexes'
 
 group :test do
   gem 'capybara-webkit'
@@ -27,7 +27,7 @@ end
 
 group :development, :test do
   gem 'dotenv-rails'
-  gem 'pry'
   gem 'jquery-rails'
   gem 'jquery-ui-rails'
+  gem 'pry'
 end
