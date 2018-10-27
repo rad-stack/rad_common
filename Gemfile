@@ -13,10 +13,10 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-gem 'schema_validations',  github: 'SynergyDataSystems/schema_validations'
-gem 'schema_plus_columns', github: 'SynergyDataSystems/schema_plus_columns'
-gem 'schema_plus_core', github: 'SynergyDataSystems/schema_plus_core'
-gem 'schema_plus_indexes', github: 'SynergyDataSystems/schema_plus_indexes'
+gem 'schema_validations',  git: 'https://github.com/SynergyDataSystems/schema_validations'
+gem 'schema_plus_columns', git: 'https://github.com/SynergyDataSystems/schema_plus_columns'
+gem 'schema_plus_core', git: 'https://github.com/SynergyDataSystems/schema_plus_core'
+gem 'schema_plus_indexes', git: 'https://github.com/SynergyDataSystems/schema_plus_indexes'
 
 group :test do
   gem 'capybara-webkit'
