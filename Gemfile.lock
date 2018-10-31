@@ -175,6 +175,9 @@ GEM
       railties (>= 3.0.0)
     faker (1.9.1)
       i18n (>= 0.7)
+    firebase (0.2.6)
+      httpclient
+      json
     font-awesome-rails (4.7.0.4)
       railties (>= 3.2, < 6.0)
     globalid (0.4.1)
@@ -403,6 +406,7 @@ DEPENDENCIES
   capybara-webkit
   dotenv-rails
   factory_bot_rails
+  firebase (= 0.2.6)
   jquery-rails
   jquery-ui-rails
   launchy
