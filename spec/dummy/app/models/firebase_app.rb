@@ -6,12 +6,10 @@ class FirebaseApp
   end
 
   def self.all
-    # TODO hardcoding this for now but should loop through the env vars properly
+    # TODO: hardcoding this for now but should loop through the env vars properly
     # might be best to make it an actual model and not use env vars
 
-    unless ENV['FIREBASE_DATA_URL'].present?
-      return []
-    end
+    return [] if ENV['FIREBASE_DATA_URL'].blank?
 
     app_1 = FirebaseApp.new
     app_1.id = 1
@@ -31,9 +29,7 @@ class FirebaseApp
 
   def self.find(id)
     FirebaseApp.all.each do |app|
-      if app.id == id.to_i
-        return app
-      end
+      return app if app.id == id.to_i
     end
 
     raise "unknown firebase app: #{id}"
