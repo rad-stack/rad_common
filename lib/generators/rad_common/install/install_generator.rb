@@ -87,6 +87,8 @@ module RadCommon
       g.routing_specs false
     end
 
+    Rails.configuration.app_admin_email = 'Radical Bear Admin <admin@radicalbear.com>'
+
         RUBY
         end
 
