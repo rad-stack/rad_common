@@ -3,9 +3,11 @@ class MoreTestData < ActiveRecord::Migration[5.0]
     create_table :divisions do |t|
       t.string :name, null: false
       t.string :code, null: false
-      t.integer :owner_id, null: false, references: :users
+      t.references :owner, references: :users, null: false
 
       t.timestamps
     end
+
+    add_foreign_key :divisions, :users, column: :owner_id
   end
 end

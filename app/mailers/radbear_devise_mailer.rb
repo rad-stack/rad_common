@@ -5,7 +5,7 @@ class RadbearDeviseMailer < Devise::Mailer
   layout 'radbear_mailer'
 
   before_action :set_defaults
-  default reply_to: Rails.application.config.respond_to?(:app_admin_email) ? Rails.application.config.app_admin_email : ((ActiveRecord::Base.connection.data_source_exists?('companies') && Company.main) ? "#{Company.main.respond_to?(:app_name) ? Company.main.app_name : I18n::t(:app_name)} Admin <#{Company.main.email}>" : Devise.mailer_sender)
+  default reply_to: Rails.application.config.app_admin_email
 
   def confirmation_instructions(record, token, opts = {})
     @token = token

@@ -10,12 +10,78 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180925214758) do
+ActiveRecord::Schema.define(version: 2018_09_25_214758) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "user_statuses", force: :cascade do |t|
+  create_table "audits", id: :serial, force: :cascade do |t|
+    t.integer  "auditable_id",    :index=>{:name=>"auditable_index", :with=>["auditable_type"]}
+    t.string   "auditable_type"
+    t.integer  "associated_id",   :index=>{:name=>"associated_index", :with=>["associated_type"]}
+    t.string   "associated_type"
+    t.integer  "user_id",         :index=>{:name=>"user_index", :with=>["user_type"]}
+    t.string   "user_type"
+    t.string   "username"
+    t.string   "action"
+    t.text     "audited_changes"
+    t.integer  "version",         :default=>0
+    t.string   "comment"
+    t.string   "remote_address"
+    t.string   "request_uuid",    :index=>{:name=>"index_audits_on_request_uuid"}
+    t.datetime "created_at",      :index=>{:name=>"index_audits_on_created_at"}
+  end
+
+  create_table "companies", id: :serial, force: :cascade do |t|
+    t.string   "name",                       :limit=>255, :null=>false
+    t.string   "phone_number",               :limit=>255, :null=>false
+    t.string   "website",                    :limit=>255, :null=>false
+    t.string   "email",                      :limit=>255, :null=>false
+    t.string   "address_1",                  :limit=>255, :null=>false
+    t.string   "address_2",                  :limit=>255
+    t.string   "city",                       :limit=>255, :null=>false
+    t.string   "state",                      :limit=>255, :null=>false
+    t.string   "zipcode",                    :limit=>255, :null=>false
+    t.datetime "created_at",                 :null=>false
+    t.datetime "updated_at",                 :null=>false
+    t.boolean  "company_logo_includes_name", :default=>false, :null=>false
+    t.boolean  "app_logo_includes_name",     :default=>false, :null=>false
+    t.datetime "validity_checked_at"
+    t.text     "valid_user_domains",         :default=>[], :array=>true
+  end
+
+  create_table "divisions", id: :serial, force: :cascade do |t|
+    t.string   "name",            :null=>false
+    t.string   "code",            :null=>false
+    t.integer  "owner_id",        :null=>false, :index=>{:name=>"index_divisions_on_owner_id"}
+    t.datetime "created_at",      :null=>false
+    t.datetime "updated_at",      :null=>false
+    t.integer  "division_status"
+  end
+
+  create_table "security_roles", id: :serial, force: :cascade do |t|
+    t.string   "name",            :null=>false, :index=>{:name=>"index_security_roles_on_name", :unique=>true}
+    t.boolean  "admin",           :default=>false, :null=>false
+    t.boolean  "read_user",       :default=>false, :null=>false
+    t.boolean  "read_audit",      :default=>false, :null=>false
+    t.datetime "created_at",      :null=>false
+    t.datetime "updated_at",      :null=>false
+    t.boolean  "create_division", :default=>false, :null=>false
+    t.boolean  "read_division",   :default=>false, :null=>false
+    t.boolean  "update_division", :default=>false, :null=>false
+    t.boolean  "delete_division", :default=>false, :null=>false
+  end
+
+  create_table "security_roles_users", id: :serial, force: :cascade do |t|
+    t.integer  "security_role_id", :null=>false, :index=>{:name=>"index_security_roles_users_on_security_role_id"}
+    t.integer  "user_id",          :null=>false, :index=>{:name=>"index_security_roles_users_on_user_id"}
+    t.datetime "created_at",       :null=>false
+    t.datetime "updated_at",       :null=>false
+
+    t.index ["security_role_id", "user_id"], :name=>"index_security_roles_users_on_security_role_id_and_user_id", :unique=>true
+  end
+
+  create_table "user_statuses", id: :serial, force: :cascade do |t|
     t.string   "name",           :null=>false, :index=>{:name=>"index_user_statuses_on_name", :unique=>true}
     t.boolean  "active",         :default=>false, :null=>false
     t.boolean  "validate_email", :default=>true, :null=>false
@@ -23,7 +89,7 @@ ActiveRecord::Schema.define(version: 20180925214758) do
     t.datetime "updated_at",     :null=>false
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :serial, force: :cascade do |t|
     t.string   "email",                   :limit=>255, :default=>"", :null=>false, :index=>{:name=>"index_users_on_email", :unique=>true}
     t.string   "encrypted_password",      :limit=>255, :default=>"", :null=>false
     t.string   "reset_password_token",    :limit=>255, :index=>{:name=>"index_users_on_reset_password_token", :unique=>true}
@@ -50,79 +116,16 @@ ActiveRecord::Schema.define(version: 20180925214758) do
     t.datetime "avatar_updated_at"
     t.string   "global_search_default",   :limit=>255
     t.boolean  "super_admin",             :default=>false, :null=>false
-    t.integer  "user_status_id",          :null=>false, :index=>{:name=>"fk__users_user_status_id"}, :foreign_key=>{:references=>"user_statuses", :name=>"fk_users_user_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "user_status_id",          :null=>false, :index=>{:name=>"index_users_on_user_status_id"}
     t.boolean  "super_search_default",    :default=>false, :null=>false
     t.string   "authy_id",                :index=>{:name=>"index_users_on_authy_id"}
     t.datetime "last_sign_in_with_authy"
     t.boolean  "authy_enabled",           :default=>false, :null=>false
   end
 
-  create_table "audits", force: :cascade do |t|
-    t.integer  "auditable_id",    :index=>{:name=>"auditable_index", :with=>["auditable_type"]}
-    t.string   "auditable_type"
-    t.integer  "associated_id",   :index=>{:name=>"associated_index", :with=>["associated_type"]}
-    t.string   "associated_type"
-    t.integer  "user_id",         :index=>{:name=>"fk__audits_user_id"}, :foreign_key=>{:references=>"users", :name=>"fk_audits_user_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.string   "user_type"
-    t.string   "username"
-    t.string   "action"
-    t.text     "audited_changes"
-    t.integer  "version",         :default=>0
-    t.string   "comment"
-    t.string   "remote_address"
-    t.string   "request_uuid",    :index=>{:name=>"index_audits_on_request_uuid"}
-    t.datetime "created_at",      :index=>{:name=>"index_audits_on_created_at"}
-
-    t.index ["user_id", "user_type"], :name=>"user_index"
-  end
-
-  create_table "companies", force: :cascade do |t|
-    t.string   "name",                       :limit=>255, :null=>false
-    t.string   "phone_number",               :limit=>255, :null=>false
-    t.string   "website",                    :limit=>255, :null=>false
-    t.string   "email",                      :limit=>255, :null=>false
-    t.string   "address_1",                  :limit=>255, :null=>false
-    t.string   "address_2",                  :limit=>255
-    t.string   "city",                       :limit=>255, :null=>false
-    t.string   "state",                      :limit=>255, :null=>false
-    t.string   "zipcode",                    :limit=>255, :null=>false
-    t.datetime "created_at",                 :null=>false
-    t.datetime "updated_at",                 :null=>false
-    t.boolean  "company_logo_includes_name", :default=>false, :null=>false
-    t.boolean  "app_logo_includes_name",     :default=>false, :null=>false
-    t.datetime "validity_checked_at"
-    t.text     "valid_user_domains",         :default=>[], :array=>true
-  end
-
-  create_table "divisions", force: :cascade do |t|
-    t.string   "name",            :null=>false
-    t.string   "code",            :null=>false
-    t.integer  "owner_id",        :null=>false, :index=>{:name=>"fk__divisions_owner_id"}, :foreign_key=>{:references=>"users", :name=>"fk_divisions_owner_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.datetime "created_at",      :null=>false
-    t.datetime "updated_at",      :null=>false
-    t.integer  "division_status"
-  end
-
-  create_table "security_roles", force: :cascade do |t|
-    t.string   "name",            :null=>false, :index=>{:name=>"index_security_roles_on_name", :unique=>true}
-    t.boolean  "admin",           :default=>false, :null=>false
-    t.boolean  "read_user",       :default=>false, :null=>false
-    t.boolean  "read_audit",      :default=>false, :null=>false
-    t.datetime "created_at",      :null=>false
-    t.datetime "updated_at",      :null=>false
-    t.boolean  "create_division", :default=>false, :null=>false
-    t.boolean  "read_division",   :default=>false, :null=>false
-    t.boolean  "update_division", :default=>false, :null=>false
-    t.boolean  "delete_division", :default=>false, :null=>false
-  end
-
-  create_table "security_roles_users", force: :cascade do |t|
-    t.integer  "security_role_id", :null=>false, :index=>{:name=>"fk__security_roles_users_security_role_id"}, :foreign_key=>{:references=>"security_roles", :name=>"fk_security_roles_users_security_role_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer  "user_id",          :null=>false, :index=>{:name=>"fk__security_roles_users_user_id"}, :foreign_key=>{:references=>"users", :name=>"fk_security_roles_users_user_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.datetime "created_at",       :null=>false
-    t.datetime "updated_at",       :null=>false
-
-    t.index ["security_role_id", "user_id"], :name=>"index_security_roles_users_on_security_role_id_and_user_id", :unique=>true
-  end
-
+  add_foreign_key "audits", "users"
+  add_foreign_key "divisions", "users", column: "owner_id"
+  add_foreign_key "security_roles_users", "security_roles"
+  add_foreign_key "security_roles_users", "users"
+  add_foreign_key "users", "user_statuses"
 end

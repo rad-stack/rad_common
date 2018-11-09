@@ -14,9 +14,9 @@ class Company < ApplicationRecord
   end
 
   def full_address
-    address = "#{self.address_1}"
-    address = "#{address}, #{self.address_2}" if self.address_2.present?
-    address = "#{address}, #{self.city}, #{self.state} #{self.zipcode}"
+    address = address_1.to_s
+    address = "#{address}, #{address_2}" if address_2.present?
+    address = "#{address}, #{city}, #{state} #{zipcode}"
     address
   end
 
