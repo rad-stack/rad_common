@@ -44,6 +44,7 @@ describe RadCommon::GlobalValidity do
         expect(email_body_text).to include('requires all permissions to be true')
         expect(email_body_html).to include('requires all permissions to be true')
         expect(email_body_html).to include('There is 1 invalid record')
+        expect(email_body_html).to include("Security Role #{admin_security_role.id} (#{admin_security_role.to_s})")
         expect(email_body_html).to include(url)
       end
     end

@@ -5,7 +5,7 @@ module RadCommon
     end
 
     def record_name(record)
-      "#{record.class.to_s.titleize} #{record.id}:"
+      "#{record.class.to_s.titleize} #{record.id} (#{record}):"
     end
 
     private
