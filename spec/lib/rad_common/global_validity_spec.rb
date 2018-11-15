@@ -31,6 +31,17 @@ describe RadCommon::GlobalValidity do
       admin_security_role.save!(validate: false)
     end
 
+    context 'without super admin' do
+      subject { described_class.check_all_companies }
+      before { super_admin.update!(super_admin: false) }
+
+      it 'should raise an exception' do
+        expect {
+          subject
+        }.to raise_error(RuntimeError, 'no super admins are configured')
+      end
+    end
+
     describe '.check_all_companies' do
       before do
         Rails.configuration.global_validity_supress = [{ class: 'SomeSuppression', messages: ['Anything'] }]
@@ -44,7 +55,7 @@ describe RadCommon::GlobalValidity do
         expect(email_body_text).to include('requires all permissions to be true')
         expect(email_body_html).to include('requires all permissions to be true')
         expect(email_body_html).to include('There is 1 invalid record')
-        expect(email_body_html).to include("Security Role #{admin_security_role.id} (#{admin_security_role.to_s})")
+        expect(email_body_html).to include("Security Role #{admin_security_role.id} (#{admin_security_role})")
         expect(email_body_html).to include(url)
       end
     end
