@@ -18,9 +18,8 @@ class User < ApplicationRecord
   scope :recent_first, -> { order('users.created_at DESC') }
   scope :authorized, ->(_) {}
 
-  has_attached_file :avatar, styles: { small: '25x25#', medium: '50x50#', normal: '100x100#', large: '200x200#' }
+  has_one_attached :avatar
 
-  validates_attachment_content_type :avatar, content_type: %w[image/jpg image/jpeg image/png]
   validates_with PhoneNumberValidator, fields: [:mobile_phone]
 
   before_validation :check_defaults

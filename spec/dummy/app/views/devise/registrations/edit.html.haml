@@ -6,27 +6,22 @@
       = f.error :base
       .form-inputs
         .row
-          .col-md-6
-            = f.input :email, required: true, autofocus: true
+          .col-md-6= f.input :email, required: true, autofocus: true
           .col-md-6
             - if devise_mapping.confirmable? && resource.pending_reconfirmation?
               %p
                 Currently waiting confirmation for: #{resource.unconfirmed_email}
         .row
-          .col-md-6
-            = f.input :first_name, required: true
-          .col-md-6
-            = f.input :last_name, required: true
+          .col-md-6= f.input :first_name, required: true
+          .col-md-6= f.input :last_name, required: true
         .row
-          .col-md-6
-            = f.input :mobile_phone
-          .col-md-6
-            = f.input :authy_enabled, label: 'Enable Two-Factor Authentication?'
+          .col-md-6= f.input :mobile_phone
+          .col-md-3= f.input :authy_enabled, label: 'Enable Two-Factor Authentication?'
+          -if Rails.application.config.use_avatar
+            .col-md-3= f.input :avatar
         .row
-          .col-md-6
-            = f.input :password, autocomplete: "off", hint: "leave it blank if you don't want to change it", required: false, input_html: {autocomplete: "off"}
-          .col-md-6
-            = f.input :password_confirmation, required: false
+          .col-md-6= f.input :password, autocomplete: "off", hint: "leave it blank if you don't want to change it", required: false, input_html: {autocomplete: "off"}
+          .col-md-6= f.input :password_confirmation, required: false
         .row
           .col-md-3= f.input :current_password, hint: "we need your current password to confirm your changes", required: true
       .form-actions

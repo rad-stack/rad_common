@@ -60,8 +60,8 @@ module RadCommon
     end
 
     def avatar_image(user, size)
-      if Rails.application.config.use_avatar && user.respond_to?(:avatar) && user.avatar.present?
-        image_tag(user.avatar.url(:medium))
+      if Rails.application.config.use_avatar && user.avatar.attached?
+        image_tag(user.avatar.variant(resize: '50x50'))
       else
         image_tag(gravatar_for(user, size))
       end

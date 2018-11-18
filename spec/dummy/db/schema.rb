@@ -10,10 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_25_214758) do
+ActiveRecord::Schema.define(version: 2018_11_18_175319) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string   "name",        :null=>false
+    t.string   "record_type", :null=>false, :index=>{:name=>"index_active_storage_attachments_uniqueness", :with=>["record_id", "name", "blob_id"], :unique=>true}
+    t.bigint   "record_id",   :null=>false
+    t.bigint   "blob_id",     :null=>false, :index=>{:name=>"index_active_storage_attachments_on_blob_id"}
+    t.datetime "created_at",  :null=>false
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string   "key",          :null=>false, :index=>{:name=>"index_active_storage_blobs_on_key", :unique=>true}
+    t.string   "filename",     :null=>false
+    t.string   "content_type"
+    t.text     "metadata"
+    t.bigint   "byte_size",    :null=>false
+    t.string   "checksum",     :null=>false
+    t.datetime "created_at",   :null=>false
+  end
 
   create_table "audits", id: :serial, force: :cascade do |t|
     t.integer  "auditable_id",    :index=>{:name=>"auditable_index", :with=>["auditable_type"]}
@@ -110,10 +128,6 @@ ActiveRecord::Schema.define(version: 2018_09_25_214758) do
     t.string   "last_name",               :limit=>255, :null=>false, :index=>{:name=>"index_users_on_last_name"}
     t.string   "mobile_phone",            :limit=>255
     t.string   "timezone",                :limit=>255
-    t.string   "avatar_file_name",        :limit=>255
-    t.string   "avatar_content_type",     :limit=>255
-    t.bigint   "avatar_file_size"
-    t.datetime "avatar_updated_at"
     t.string   "global_search_default",   :limit=>255
     t.boolean  "super_admin",             :default=>false, :null=>false
     t.integer  "user_status_id",          :null=>false, :index=>{:name=>"index_users_on_user_status_id"}

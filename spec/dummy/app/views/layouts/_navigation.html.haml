@@ -27,6 +27,8 @@
           %li.dropdown
             %a.dropdown-toggle{'data-toggle' => 'dropdown', href: '#'}
               = current_user
+              -if current_user.avatar.attached?
+                = image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
               %b.caret
             %ul.dropdown-menu
               %li= link_to 'My Account', edit_user_registration_path

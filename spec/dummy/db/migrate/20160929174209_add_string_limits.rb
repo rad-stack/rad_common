@@ -27,8 +27,8 @@ class AddStringLimits < ActiveRecord::Migration[5.0]
       t.change   'facebook_id', :string, limit: 255, references: nil
       t.change   'timezone', :string, limit: 255
       t.change   'provider_avatar', :string, limit: 255
-      t.change   'avatar_file_name', :string, limit: 255
-      t.change   'avatar_content_type', :string, limit: 255
+      # t.change   'avatar_file_name', :string, limit: 255
+      # t.change   'avatar_content_type', :string, limit: 255
       t.change   'global_search_default', :string, limit: 255
     end
   end

@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 describe FirebaseLogsController do
-  before { allow_any_instance_of(Paperclip::Attachment).to receive(:save).and_return(true) }
-
   let(:admin) { create :admin }
   let(:app) { FirebaseApp.find(1) }
 

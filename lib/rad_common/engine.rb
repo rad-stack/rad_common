@@ -14,7 +14,6 @@ module RadCommon
     require 'haml-rails'
     require 'kaminari-bootstrap'
     require 'nokogiri'
-    require 'paperclip'
     require 'pg'
     require 'premailer/rails'
     require 'rad_common/global_validity'
