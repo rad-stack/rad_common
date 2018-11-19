@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise'
   s.add_dependency 'devise-authy'
   s.add_dependency 'faker'
+  s.add_dependency 'file_validators'
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'haml-rails', '1.0.0'
   s.add_dependency 'image_processing', '~> 1.2'

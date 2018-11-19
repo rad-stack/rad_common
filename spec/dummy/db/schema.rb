@@ -137,6 +137,7 @@ ActiveRecord::Schema.define(version: 2018_11_18_175319) do
     t.boolean  "authy_enabled",           :default=>false, :null=>false
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audits", "users"
   add_foreign_key "divisions", "users", column: "owner_id"
   add_foreign_key "security_roles_users", "security_roles"

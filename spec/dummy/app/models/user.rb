@@ -20,6 +20,7 @@ class User < ApplicationRecord
 
   has_one_attached :avatar
 
+  validates :avatar, file_content_type: { allow: %w[image/jpg image/jpeg image/png], if: -> { avatar.attached? } }
   validates_with PhoneNumberValidator, fields: [:mobile_phone]
 
   before_validation :check_defaults

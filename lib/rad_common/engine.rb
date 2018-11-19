@@ -10,6 +10,7 @@ module RadCommon
     require 'devise'
     require 'devise-authy'
     require 'faker'
+    require 'file_validators'
     require 'font-awesome-rails'
     require 'haml-rails'
     require 'kaminari-bootstrap'

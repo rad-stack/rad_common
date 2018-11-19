@@ -45,6 +45,7 @@ PATH
       devise
       devise-authy
       faker
+      file_validators
       font-awesome-rails
       haml-rails (= 1.0.0)
       image_processing (~> 1.2)
@@ -175,6 +176,9 @@ GEM
     faker (1.9.1)
       i18n (>= 0.7)
     ffi (1.9.25)
+    file_validators (2.3.0)
+      activemodel (>= 3.2)
+      mime-types (>= 1.0)
     firebase (0.2.6)
       httpclient
       json
@@ -249,6 +253,9 @@ GEM
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
     method_source (0.9.0)
+    mime-types (3.2.2)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2018.0812)
     mimemagic (0.3.2)
     mini_magick (4.9.2)
     mini_mime (1.0.1)
