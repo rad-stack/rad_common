@@ -12,7 +12,7 @@ describe RadbearMailer, type: :mailer do
 
   describe '#global_validity' do
     context 'with one user' do
-      before { RadbearMailer.global_validity(Company.main, [user], []).deliver_now }
+      before { RadbearMailer.global_validity([user], []).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -22,7 +22,7 @@ describe RadbearMailer, type: :mailer do
     end
 
     context 'with multiple users' do
-      before { RadbearMailer.global_validity(Company.main, User.where(id: [user.id, another_user.id]), []).deliver_now }
+      before { RadbearMailer.global_validity(User.where(id: [user.id, another_user.id]), []).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -34,7 +34,7 @@ describe RadbearMailer, type: :mailer do
   end
 
   describe '#simple_message' do
-    before { RadbearMailer.simple_message(Company.main, email, 'foo', 'bar').deliver_now }
+    before { RadbearMailer.simple_message(email, 'foo', 'bar').deliver_now }
 
     it 'matches' do
       expect(last_email.subject).to include 'foo'

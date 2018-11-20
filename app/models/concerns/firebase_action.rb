@@ -5,7 +5,7 @@ module FirebaseAction
     def firebase_cleanup(app, user, error, path, data)
       if error
         data['error'] = error
-        RadbearMailer.simple_message(Company.main, user, 'Problem', error).deliver_later if user
+        RadbearMailer.simple_message(user, 'Problem', error).deliver_later if user
 
         User.super_admins.each do |admin|
           user_description = if user.nil?
@@ -18,7 +18,7 @@ module FirebaseAction
                            button_text: 'View Logs',
                            button_url:  Rails.application.routes.url_helpers.firebase_logs_url }
 
-          RadbearMailer.simple_message(Company.main, admin,
+          RadbearMailer.simple_message(admin,
                                        "User Error on #{I18n.t(:app_name)}",
                                        "An operation attempted by #{user_description} failed: #{error}.",
                                        email_action: email_action).deliver_later

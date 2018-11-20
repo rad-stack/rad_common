@@ -24,7 +24,6 @@ class RadbearMailer < ActionMailer::Base
   end
 
   def your_account_approved(user)
-    @company = user.company
     @email_action = { button_text: 'Get Started',
                       button_url: root_url }
 
@@ -45,8 +44,7 @@ class RadbearMailer < ActionMailer::Base
     mail(to: "\"#{admin}\" <#{admin.email}>", subject: "User Was Approved on #{I18n.t(:app_name)}")
   end
 
-  def simple_message(company, recipient, subject, message, options = {})
-    @company = company
+  def simple_message(recipient, subject, message, options = {})
     @recipient = recipient
     @message = simple_format(message)
     @email_action = options[:email_action] if options[:email_action]
@@ -66,8 +64,7 @@ class RadbearMailer < ActionMailer::Base
     end
   end
 
-  def global_validity(company, recipient, problems)
-    @company = company
+  def global_validity(recipient, problems)
     @recipient = recipient.count == 1 ? recipient.first : recipient
     @problems = problems
 
@@ -105,10 +102,7 @@ class RadbearMailer < ActionMailer::Base
         raise 'This mailer requires app_logo.png to be in both places.'
       end
 
-      @company = Company.main if Company.respond_to?(:main)
-
       @include_yield = true
       @optional = false
-      @require_company = true
     end
 end

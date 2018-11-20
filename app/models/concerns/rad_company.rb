@@ -9,20 +9,12 @@ module RadCompany
 
   def send_system_message(from, message)
     User.active.each do |user|
-      RadbearMailer.simple_message(self, user, "Important Message From #{I18n.t(:app_name)}", message, from: from).deliver_later
+      RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", message, from: from).deliver_later
     end
   end
 
   def global_validity_ran!
     update_column(:validity_checked_at, Time.zone.now)
-  end
-
-  module ClassMethods
-    def send_system_message_global(from, message)
-      User.active.by_id.each do |user|
-        RadbearMailer.simple_message(Company.main, user, "Important Message From #{I18n.t(:app_name)}", message, from: from).deliver_later
-      end
-    end
   end
 
   def check_global_validity

@@ -12,12 +12,11 @@ module RadCommon
 
       subject = 'Invalid Email'
       message = "Someone tried to send an email to #{email} and the email was not properly sent."
-      company = Company.main
       from = 'no-reply@groundswell.online'
       recipients = super_admins.map(&:email)
 
       recipients.each do |recipient|
-        RadbearMailer.simple_message(company, recipient, subject, message, from: from).deliver_later
+        RadbearMailer.simple_message(recipient, subject, message, from: from).deliver_later
       end
     end
   end
