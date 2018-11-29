@@ -9,4 +9,6 @@ en:
           status_active: Active
           status_pending: Pending
           status_inactive: Inactive
+  permission_tooltips:
+    admin: 'Ability to do everything in the system.'
 

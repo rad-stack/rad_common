@@ -35,5 +35,9 @@ module RadCommon
     def security_role_collection
       SecurityRole.all.map { |role| [role.name, role.id] }
     end
+
+    def permission_tooltip(permission)
+      t "permission_tooltips.#{permission}", default: ''
+    end
   end
 end
