@@ -29,6 +29,11 @@ class UsersController < ApplicationController
   def edit; end
 
   def update
+    if params[:user][:password].blank? && params[:user][:password_confirmation].blank?
+      params[:user].delete(:password)
+      params[:user].delete(:password_confirmation)
+    end
+
     @user.assign_attributes(permitted_params)
     @user.approved_by = current_user
     @user.security_roles = resolve_roles(params[:user][:security_roles])
@@ -76,6 +81,7 @@ class UsersController < ApplicationController
     end
 
     def permitted_params
-      params.require(:user).permit(:user_status_id, :first_name, :last_name, :mobile_phone, :last_activity_at)
+      params.require(:user).permit(:user_status_id, :first_name, :last_name, :mobile_phone, :last_activity_at,
+                                   :password, :password_confirmation)
     end
 end
