@@ -20,7 +20,7 @@ describe Company, type: :model do
     it 'sends' do
       ActionMailer::Base.deliveries = []
 
-      company.send_system_message('foo@bar.com', 'foo bar yo')
+      company.send_system_message 'foo bar yo'
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.body.encoded).to include 'foo bar yo'

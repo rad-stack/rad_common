@@ -9,7 +9,7 @@ class SystemMessagesController < ApplicationController
   def create
     if params[:message]
       if params[:message][:message].present?
-        Company.main.send_system_message(params[:message][:from], params[:message][:message])
+        Company.main.send_system_message(params[:message][:message])
         flash[:success] = 'The message was successfully sent.'
       else
         flash[:error] = 'Please enter a message and try again.'

@@ -5,7 +5,9 @@ class RadbearMailer < ActionMailer::Base
 
   layout 'radbear_mailer'
   before_action :set_defaults
-  default from: Rails.env.test? ? Devise.mailer_sender : "\"#{Company.main.name}\" <#{Company.main.email}>"
+
+  default from: Devise.mailer_sender
+  default reply_to: Rails.application.config.app_admin_email
 
   def new_user_signed_up(admin, user)
     auto_approve = user.auto_approve?
@@ -57,11 +59,7 @@ class RadbearMailer < ActionMailer::Base
       raise "recipient of type #{@recipient.class} if not valid"
     end
 
-    if options[:from]
-      mail(to: to_address, subject: subject, from: options[:from])
-    else
-      mail(to: to_address, subject: subject)
-    end
+    mail(to: to_address, subject: subject)
   end
 
   def global_validity(recipient, problems)

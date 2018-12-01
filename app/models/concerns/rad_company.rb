@@ -7,9 +7,9 @@ module RadCompany
     validate :validate_domains
   end
 
-  def send_system_message(from, message)
+  def send_system_message(message)
     User.active.each do |user|
-      RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", message, from: from).deliver_later
+      RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", message).deliver_later
     end
   end
 

@@ -6,7 +6,6 @@
 
       .form-inputs
         = f.input :message, placeholder: "Enter a message to be emailed to all active #{current_user.class.name.downcase}s in the system."
-        = f.input :from, collection: [Devise.mailer_sender, "#{current_user} <#{current_user.email}>"], include_blank: false
 
       .form-actions
         = f.button :submit, 'Send', class: 'btn btn-primary'
