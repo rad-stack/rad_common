@@ -1,5 +1,6 @@
 class Division < ApplicationRecord
   include Authority::Abilities
+  include FirebaseSync
 
   belongs_to :owner, class_name: 'User'
 
@@ -9,4 +10,13 @@ class Division < ApplicationRecord
   scope :authorized, ->(_) {}
 
   audited
+
+  def firebase_sync(app)
+    data = { name: name }
+
+    response = RadicalRetry.perform_request { app.client.update(firebase_reference, data) }
+    return if response.success?
+
+    raise RadicallyIntermittentException, response.raw_body
+  end
 end
