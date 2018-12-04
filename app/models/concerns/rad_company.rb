@@ -20,7 +20,7 @@ module RadCompany
   def check_global_validity
     error_messages = []
 
-    exclude_models = [ActiveRecord::SchemaMigration, ApplicationRecord] + Rails.application.config.global_validity_exclude
+    exclude_models = [ActiveRecord::SchemaMigration, ApplicationRecord, Audited::Audit] + Rails.application.config.global_validity_exclude
 
     Rails.application.eager_load!
     all_models = ActiveRecord::Base.descendants
@@ -42,15 +42,25 @@ module RadCompany
   private
 
     def check_model(model)
+      puts "global validity check: starting #{model}: #{Time.zone.now}"
+
       problems = []
       model.find_each { |record| validate_record(record, problems) }
+
+      puts "global validity check: ending #{model}: #{Time.zone.now}"
+
       problems
     end
 
     def check_query_records(query)
+      puts "global validity check: starting #{query}: #{Time.zone.now}"
+
       problems = []
       records = query.call
       records.find_each { |record| validate_record(record, problems) }
+
+      puts "global validity check: ending #{query}: #{Time.zone.now}"
+
       problems
     end
 

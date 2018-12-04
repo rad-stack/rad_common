@@ -1,6 +1,6 @@
 -company = Company.main
 
--if company && company.respond_to?(:logo) && company.logo.present?
+-if company.respond_to?(:logo) && company.logo.present?
   -logo_includes_name = company.company_logo_includes_name
   -logo_url = company.logo.url(:normal)
 -else
@@ -8,15 +8,13 @@
   -protocol = Rails.env.production? ? "https" : "http"
   -logo_url = "#{protocol}://#{ActionMailer::Base.default_url_options[:host]}/app_logo.png"
 
--if company
-  -site_name = company.name
-  -website = company.website
-  -company_name = company.name
-  -company_full_address = company.full_address
-  -company_phone_number = company.phone_number
-  -admin_email = company.email
-
-- has_avatar = Rails.application.config.use_avatar && @sender && @sender.respond_to?(:avatar) && @sender.avatar.present?
+-site_name = company.name
+-website = company.website
+-company_name = company.name
+-company_full_address = company.full_address
+-company_phone_number = company.phone_number
+-admin_email = company.email
+-has_avatar = Rails.application.config.use_avatar && @sender && @sender.respond_to?(:avatar) && @sender.avatar.present?
 
 !!!
 %head
