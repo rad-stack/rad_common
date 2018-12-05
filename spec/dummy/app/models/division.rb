@@ -1,6 +1,7 @@
 class Division < ApplicationRecord
   include Authority::Abilities
   include FirebaseSync
+  include FirebaseAction
 
   belongs_to :owner, class_name: 'User'
 

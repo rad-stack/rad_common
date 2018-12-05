@@ -7,7 +7,7 @@ module FirebaseAction
         data['error'] = error
         RadbearMailer.simple_message(user, 'Problem', error).deliver_later if user
 
-        User.super_admins.each do |admin|
+        User.firebase_admins.each do |admin|
           user_description = if user.nil?
                                'a user'
                              else
