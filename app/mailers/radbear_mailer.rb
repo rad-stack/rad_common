@@ -52,9 +52,11 @@ class RadbearMailer < ActionMailer::Base
     @email_action = options[:email_action] if options[:email_action]
 
     if @recipient.respond_to?(:email)
-      to_address = "\"#{@recipient}\" <#{@recipient.email}>"
+      to_address = "#{@recipient} <#{@recipient.email}>"
     elsif @recipient.class == String
       to_address = @recipient
+    elsif @recipient.class.to_s.include?('ActiveRecord_Relation')
+      to_address = @recipient.pluck(:email)
     else
       raise "recipient of type #{@recipient.class} if not valid"
     end

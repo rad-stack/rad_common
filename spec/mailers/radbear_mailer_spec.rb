@@ -34,11 +34,33 @@ describe RadbearMailer, type: :mailer do
   end
 
   describe '#simple_message' do
-    before { RadbearMailer.simple_message(email, 'foo', 'bar').deliver_now }
+    let(:recipient) { email }
 
-    it 'matches' do
-      expect(last_email.subject).to include 'foo'
-      expect(last_email.to).to include email
+    before { RadbearMailer.simple_message(recipient, 'foo', 'bar').deliver_now }
+
+    describe 'subject' do
+      subject { last_email.subject }
+      it { is_expected.to eq 'foo' }
+    end
+
+    describe 'to' do
+      subject { last_email.to }
+
+      context 'to an email address' do
+        it { is_expected.to eq [email] }
+      end
+
+      context 'to a user' do
+        let(:recipient) { user }
+        it { is_expected.to eq [email] }
+      end
+
+      context 'to multiple users' do
+        let(:recipient) { User.where(id: [user.id, another_user.id]) }
+
+        it { is_expected.to include user.email }
+        it { is_expected.to include another_user.email }
+      end
     end
   end
 
