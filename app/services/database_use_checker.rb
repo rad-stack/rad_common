@@ -1,4 +1,4 @@
-class ColumnUseChecker
+class DatabaseUseChecker
   class << self
     def generate_report
       Rails.logger.silence do

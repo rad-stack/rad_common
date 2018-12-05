@@ -1,7 +1,6 @@
-require_relative '../../lib/column_use_checker'
 require 'rails_helper'
 
-describe ColumnUseChecker do
+describe DatabaseUseChecker do
   before do
     SecurityRole.seed_items
   end

@@ -14,4 +14,10 @@ namespace :rad_common do
       end
     end
   end
+
+  task check_database_use: :environment do
+    Timeout.timeout(30.minutes) do
+      DatabaseUseChecker.generate_report
+    end
+  end
 end
