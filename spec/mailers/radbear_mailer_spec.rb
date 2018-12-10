@@ -56,7 +56,7 @@ describe RadbearMailer, type: :mailer do
       end
 
       context 'to multiple users' do
-        let(:recipient) { User.where(id: [user.id, another_user.id]) }
+        let(:recipient) { [user.id, another_user.id] }
 
         it { is_expected.to include user.email }
         it { is_expected.to include another_user.email }

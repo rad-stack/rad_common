@@ -36,7 +36,7 @@
             .text
               -if @recipient.respond_to?(:greeting)
                 = "#{@recipient.greeting},"
-              -elsif @recipient.class == String
+              -elsif @recipient.is_a?(String)
                 = "Hello #{@recipient},"
               -elsif @recipient.respond_to?(:count)
                 = 'Hello all,'

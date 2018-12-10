@@ -47,19 +47,21 @@ class RadbearMailer < ActionMailer::Base
   end
 
   def simple_message(recipient, subject, message, options = {})
-    @recipient = recipient
-    @message = simple_format(message)
-    @email_action = options[:email_action] if options[:email_action]
-
-    if @recipient.respond_to?(:email)
-      to_address = "#{@recipient} <#{@recipient.email}>"
-    elsif @recipient.class == String
-      to_address = @recipient
-    elsif @recipient.class.to_s.include?('ActiveRecord_Relation')
+    if recipient.respond_to?(:email)
+      @recipient = recipient
+      to_address = "#{recipient} <#{recipient.email}>"
+    elsif recipient.is_a?(String)
+      @recipient = recipient
+      to_address = recipient
+    elsif recipient.is_a?(Array)
+      @recipient = User.where(id: recipient)
       to_address = @recipient.pluck(:email)
     else
-      raise "recipient of type #{@recipient.class} if not valid"
+      raise "recipient of type #{recipient.class} if not valid"
     end
+
+    @message = simple_format(message)
+    @email_action = options[:email_action] if options[:email_action]
 
     mail(to: to_address, subject: subject)
   end
