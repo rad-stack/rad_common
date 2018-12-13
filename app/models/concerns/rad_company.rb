@@ -2,9 +2,29 @@ module RadCompany
   extend ActiveSupport::Concern
 
   included do
+    alias_attribute :to_s, :name
+
     scope :by_id, -> { order(:id) }
+
     validates :email, format: { with: Devise.email_regexp, message: 'has an invalid email format' }
+    validate :validate_only_one, on: :create
     validate :validate_domains
+    validates_with PhoneNumberValidator
+
+    audited
+  end
+
+  module ClassMethods
+    def main
+      Company.first
+    end
+  end
+
+  def full_address
+    address = address_1.to_s
+    address = "#{address}, #{address_2}" if address_2.present?
+    address = "#{address}, #{city}, #{state} #{zipcode}"
+    address
   end
 
   def send_system_message(message)
@@ -62,6 +82,10 @@ module RadCompany
       puts "global validity check: ending #{query}: #{Time.zone.now}"
 
       problems
+    end
+
+    def validate_only_one
+      errors.add(:base, 'Only one company record is allowed.') if Company.count > 0
     end
 
     def validate_record(record, error_messages_array)
