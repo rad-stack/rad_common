@@ -21,10 +21,17 @@ module RadCompany
   end
 
   def full_address
-    address = address_1.to_s
-    address = "#{address}, #{address_2}" if address_2.present?
-    address = "#{address}, #{city}, #{state} #{zipcode}"
-    address
+    "#{address_line_1}, #{address_line_2}"
+  end
+
+  def address_line_1
+    line = address_1
+    line = "#{line}, #{address_2}" if address_2.present?
+    line
+  end
+
+  def address_line_2
+    "#{city}, #{state} #{zipcode}"
   end
 
   def send_system_message(message)
@@ -34,22 +41,23 @@ module RadCompany
   end
 
   def global_validity_ran!
-    update_column(:validity_checked_at, Time.zone.now)
+    update!(:validity_checked_at, Time.zone.now)
   end
 
   def check_global_validity
     error_messages = []
 
-    exclude_models = [ActiveRecord::SchemaMigration, ApplicationRecord, Audited::Audit, SecurityRolesUser] + Rails.application.config.global_validity_exclude
+    exclude_models = [ActiveRecord::SchemaMigration,
+                      ApplicationRecord,
+                      Audited::Audit,
+                      SecurityRolesUser] + Rails.application.config.global_validity_exclude
 
     Rails.application.eager_load!
     all_models = ActiveRecord::Base.descendants
     models = all_models - exclude_models
 
     models.each do |model|
-      unless exclude_models.include?(model.to_s)
-        error_messages = error_messages.concat(check_model(model))
-      end
+      error_messages = error_messages.concat(check_model(model)) unless exclude_models.include?(model.to_s)
     end
 
     specific_queries = Rails.application.config.global_validity_include
@@ -85,7 +93,7 @@ module RadCompany
     end
 
     def validate_only_one
-      errors.add(:base, 'Only one company record is allowed.') if Company.count > 0
+      errors.add(:base, 'Only one company record is allowed.') if Company.count.positive?
     end
 
     def validate_record(record, error_messages_array)
@@ -98,11 +106,9 @@ module RadCompany
       supressions = Rails.application.config.global_validity_supress || []
       supression = supressions.select { |item| item[:class] == record.class.to_s }.first
 
-      if supression
-        messages -= supression[:messages]
-      end
-
+      messages -= supression[:messages] if supression
       return unless messages.any?
+
       error_messages_array.push([record, messages.join(', ')])
     end
 
