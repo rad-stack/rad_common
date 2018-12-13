@@ -3,6 +3,27 @@ require 'rails_helper'
 describe Company, type: :model do
   let(:company) { Company.main }
 
+  describe '#full_address' do
+    subject { company.full_address }
+
+    before do
+      company.update! address_1: 'Address 1',
+                      address_2: 'Address 2',
+                      city: 'City',
+                      state: 'State',
+                      zipcode: 'Zipcode'
+    end
+
+    context 'with address 2' do
+      it {is_expected.to eq 'Address 1, Address 2, City, State Zipcode' }
+    end
+
+    context 'without address 2' do
+      before { company.update! address_2: nil }
+      it {is_expected.to eq 'Address 1, City, State Zipcode' }
+    end
+  end
+
   describe 'validate' do
     it 'requires at least one valid user domain' do
       company.valid_user_domains = []
@@ -20,7 +41,7 @@ describe Company, type: :model do
     it 'sends' do
       ActionMailer::Base.deliveries = []
 
-      company.send_system_message('foo@bar.com', 'foo bar yo')
+      company.send_system_message 'foo bar yo'
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.body.encoded).to include 'foo bar yo'

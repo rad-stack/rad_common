@@ -1,4 +1,4 @@
-class DatabaseSanitizer
+class DatabaseUseChecker
   class << self
     def generate_report
       Rails.logger.silence do
@@ -10,7 +10,7 @@ class DatabaseSanitizer
     end
 
     def tables
-      ActiveRecord::Base.connection.tables
+      ActiveRecord::Base.connection.tables - ['schema_migrations']
     end
 
     def zero_or_one_records?(table_name)
@@ -21,7 +21,8 @@ class DatabaseSanitizer
     end
 
     def record_count(table_name)
-      ActiveRecord::Base.connection.execute("SELECT COUNT(*) FROM #{table_name}").first['count'].to_i
+      count = ActiveRecord::Base.connection.execute("SELECT COUNT(*) FROM #{table_name}")
+      count.first['count'].to_i
     end
 
     def table_report(table_name)
@@ -55,15 +56,7 @@ class DatabaseSanitizer
     end
 
     def column_values(table_name, column)
-      if table_has_id_column?(table_name)
-        ActiveRecord::Base.connection.execute("SELECT DISTINCT #{column} FROM #{table_name}").values.flatten
-      else
-        ActiveRecord::Base.connection.execute("SELECT #{column} FROM #{table_name} GROUP BY #{table_name}.id").values.flatten
-      end
-    end
-
-    def table_has_id_column?(table_name)
-      ActiveRecord::Base.connection.execute("SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '#{table_name}') AND attname = 'id';").values.empty?
+      ActiveRecord::Base.connection.execute("SELECT DISTINCT #{column} FROM #{table_name}").values.flatten
     end
   end
 end

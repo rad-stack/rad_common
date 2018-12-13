@@ -1,7 +1,6 @@
-require_relative '../../lib/database_sanitizer'
 require 'rails_helper'
 
-describe DatabaseSanitizer do
+describe DatabaseUseChecker do
   before do
     SecurityRole.seed_items
   end
@@ -55,7 +54,6 @@ describe DatabaseSanitizer do
 
     before do
       expect(described_class).to receive(:table_columns).with(table_name).and_return([column_name]).at_least(:once)
-      expect(described_class).to receive(:table_has_id_column?).with(table_name).and_return(true).at_least(:once)
       allow(ActiveRecord::Base.connection).to receive_message_chain(:execute, :values, :flatten).and_return(values)
     end
 

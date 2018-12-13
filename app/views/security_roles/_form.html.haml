@@ -5,7 +5,7 @@
   .form-inputs
     = f.input :name
     - normalize_names(humanized_permission_fields).each do |name, permission|
-      = f.input permission.to_sym, label: name
+      = f.input permission.to_sym, label: name, tooltip: permission_tooltip(permission)
 
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'

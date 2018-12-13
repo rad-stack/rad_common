@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'faker'
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'haml-rails', '1.0.0'
+  s.add_dependency 'image_processing', '~> 1.2'
   s.add_dependency 'kaminari-bootstrap', '~> 3.0.1'
   s.add_dependency 'paperclip', '~> 6.1.0'
   s.add_dependency 'pg'
@@ -36,11 +37,13 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
+  s.add_development_dependency 'coffee-rails', '~> 4.2'
   s.add_development_dependency 'factory_bot_rails'
   s.add_development_dependency 'firebase', '0.2.6'
+  s.add_development_dependency 'listen', '~> 3.0.5'
+  s.add_development_dependency 'puma', '~> 3.7'
   s.add_development_dependency 'rad-style'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'rubocop'
   s.add_development_dependency 'rubocop-rspec'
-  s.add_development_dependency 'puma', '~> 3.7'
 end

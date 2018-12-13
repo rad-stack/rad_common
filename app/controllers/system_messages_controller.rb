@@ -4,20 +4,12 @@ class SystemMessagesController < ApplicationController
   authorize_actions_for Company
   authority_actions new: 'update', create: 'update'
 
-  def new
-    @super = params[:super].present? && params[:super] == 'true'
-  end
+  def new; end
 
   def create
-    if params[:message] && params[:super]
+    if params[:message]
       if params[:message][:message].present?
-        if params[:super] == 'false'
-          current_user.company.send_system_message(params[:message][:from], params[:message][:message])
-        else
-          raise 'Invalid parameters' unless current_user.user.super_admin
-          Company.send_system_message_global(params[:message][:from], params[:message][:message])
-        end
-
+        Company.main.send_system_message(params[:message][:message])
         flash[:success] = 'The message was successfully sent.'
       else
         flash[:error] = 'Please enter a message and try again.'

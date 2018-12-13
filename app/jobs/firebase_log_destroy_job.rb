@@ -10,7 +10,7 @@ class FirebaseLogDestroyJob < ActiveJob::Base
 
     def send_failure_email(current_user_id, log_id, response)
       user = User.find(current_user_id)
-      RadbearMailer.simple_message(Company.main, user, "Firebase error on #{I18n.t(:app_name)}", "Could not delete the #{log_id.titleize} logs: #{response.raw_body}").deliver_now
+      RadbearMailer.simple_message(user, "Firebase error on #{I18n.t(:app_name)}", "Could not delete the #{log_id.titleize} logs: #{response.raw_body}").deliver_now
     end
 
     def delete_all_logs(app, log_id, current_user_id)

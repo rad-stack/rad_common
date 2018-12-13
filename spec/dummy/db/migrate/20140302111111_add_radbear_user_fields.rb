@@ -13,7 +13,7 @@ class AddRadbearUserFields < ActiveRecord::Migration[5.0]
     add_column :users, :timezone, :string
     add_column :users, :provider_avatar, :string
 
-    add_attachment :users, :avatar
+    # add_attachment :users, :avatar
 
     add_index :users, :username, unique: true
   end

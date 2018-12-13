@@ -9,6 +9,20 @@ describe RadCommon::SecurityRoleHelper do
   let(:manage_formatted) { ['Manage (View, Edit, Create, Delete) Role Assignments', 'manage_role_assignment'] }
   let(:test_hash_formatted) { %w[Test test] }
 
+  describe '#permission_tooltip' do
+    subject { helper.permission_tooltip(permission) }
+
+    context 'with tooltip' do
+      let(:permission) { 'admin' }
+      it { is_expected.to eq 'Ability to do everything in the system.' }
+    end
+
+    context 'without tooltip' do
+      let(:permission) { 'read_user' }
+      it { is_expected.to be_blank }
+    end
+  end
+
   describe '#humanized_permission_fields' do
     it 'returns human-readable permission fields' do
       expect(helper.humanized_permission_fields).to eq(

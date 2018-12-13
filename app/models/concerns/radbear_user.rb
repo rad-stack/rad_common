@@ -8,10 +8,6 @@ module RadbearUser
     after_save :notify_user_approved
   end
 
-  def company
-    Company.main
-  end
-
   def notify_new_user
     User.admins.each do |admin|
       RadbearMailer.new_user_signed_up(admin, self).deliver_later
@@ -72,7 +68,7 @@ module RadbearUser
     def validate_email_address
       return if email.blank? || user_status_id.nil? || !user_status.validate_email
 
-      domains = company.valid_user_domains
+      domains = Company.main.valid_user_domains
       components = email.split('@')
       return if components.count == 2 && domains.include?(components[1])
 

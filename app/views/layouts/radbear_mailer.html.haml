@@ -1,22 +1,20 @@
--raise "@company is required for this mailer" if @require_company && @company.nil?
+-company = Company.main
 
--if @company && @company.respond_to?(:logo) && @company.logo.present?
-  -logo_includes_name = @company.company_logo_includes_name
-  -logo_url = @company.logo.url(:normal)
+-if company.respond_to?(:logo) && company.logo.present?
+  -logo_includes_name = company.company_logo_includes_name
+  -logo_url = company.logo.url(:normal)
 -else
-  -logo_includes_name = @company.respond_to?(:app_logo_includes_name) ? @company.app_logo_includes_name : Rails.application.config.app_logo_includes_name
+  -logo_includes_name = company.respond_to?(:app_logo_includes_name) ? company.app_logo_includes_name : Rails.application.config.app_logo_includes_name
   -protocol = Rails.env.production? ? "https" : "http"
   -logo_url = "#{protocol}://#{ActionMailer::Base.default_url_options[:host]}/app_logo.png"
 
--if @company
-  -site_name = @company.name
-  -website = @company.website
-  -company_name = @company.name
-  -company_full_address = @company.full_address
-  -company_phone_number = @company.phone_number
-  -admin_email = @company.email
-
-- has_avatar = Rails.application.config.use_avatar && @sender && @sender.respond_to?(:avatar) && @sender.avatar.present?
+-site_name = company.name
+-website = company.website
+-company_name = company.name
+-company_full_address = company.full_address
+-company_phone_number = company.phone_number
+-admin_email = company.email
+-has_avatar = Rails.application.config.use_avatar && @sender && @sender.respond_to?(:avatar) && @sender.avatar.present?
 
 !!!
 %head
@@ -38,7 +36,7 @@
             .text
               -if @recipient.respond_to?(:greeting)
                 = "#{@recipient.greeting},"
-              -elsif @recipient.class == String
+              -elsif @recipient.is_a?(String)
                 = "Hello #{@recipient},"
               -elsif @recipient.respond_to?(:count)
                 = 'Hello all,'

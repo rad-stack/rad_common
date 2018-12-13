@@ -5,7 +5,9 @@ class RadbearMailer < ActionMailer::Base
 
   layout 'radbear_mailer'
   before_action :set_defaults
-  default from: Rails.env.test? ? Devise.mailer_sender : "\"#{Company.main.name}\" <#{Company.main.email}>"
+
+  default from: Devise.mailer_sender
+  default reply_to: Rails.application.config.app_admin_email
 
   def new_user_signed_up(admin, user)
     auto_approve = user.auto_approve?
@@ -24,7 +26,6 @@ class RadbearMailer < ActionMailer::Base
   end
 
   def your_account_approved(user)
-    @company = user.company
     @email_action = { button_text: 'Get Started',
                       button_url: root_url }
 
@@ -45,29 +46,27 @@ class RadbearMailer < ActionMailer::Base
     mail(to: "\"#{admin}\" <#{admin.email}>", subject: "User Was Approved on #{I18n.t(:app_name)}")
   end
 
-  def simple_message(company, recipient, subject, message, options = {})
-    @company = company
-    @recipient = recipient
+  def simple_message(recipient, subject, message, options = {})
+    if recipient.respond_to?(:email)
+      @recipient = recipient
+      to_address = "#{recipient} <#{recipient.email}>"
+    elsif recipient.is_a?(String)
+      @recipient = recipient
+      to_address = recipient
+    elsif recipient.is_a?(Array)
+      @recipient = User.where(id: recipient)
+      to_address = @recipient.pluck(:email)
+    else
+      raise "recipient of type #{recipient.class} if not valid"
+    end
+
     @message = simple_format(message)
     @email_action = options[:email_action] if options[:email_action]
 
-    if @recipient.respond_to?(:email)
-      to_address = "\"#{@recipient}\" <#{@recipient.email}>"
-    elsif @recipient.class == String
-      to_address = @recipient
-    else
-      raise "recipient of type #{@recipient.class} if not valid"
-    end
-
-    if options[:from]
-      mail(to: to_address, subject: subject, from: options[:from])
-    else
-      mail(to: to_address, subject: subject)
-    end
+    mail(to: to_address, subject: subject)
   end
 
-  def global_validity(company, recipient, problems)
-    @company = company
+  def global_validity(recipient, problems)
     @recipient = recipient.count == 1 ? recipient.first : recipient
     @problems = problems
 
@@ -105,10 +104,7 @@ class RadbearMailer < ActionMailer::Base
         raise 'This mailer requires app_logo.png to be in both places.'
       end
 
-      @company = Company.main if Company.respond_to?(:main)
-
       @include_yield = true
       @optional = false
-      @require_company = true
     end
 end

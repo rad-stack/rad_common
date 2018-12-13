@@ -54,7 +54,7 @@ class RadbearDeviseMailer < Devise::Mailer
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "Someone has invited you to #{app_name}, you can accept it through the link below. If you don't want to accept the invitation, please ignore this email. Your account won't be created until you access the link and set your password."
+    @message = "Someone has invited you to #{t(:app_name)}, you can accept it through the link below. If you don't want to accept the invitation, please ignore this email. Your account won't be created until you access the link and set your password."
 
     @email_action = { message: 'Click the link to accept the invitation.',
                       button_text: 'Accept',
@@ -65,24 +65,12 @@ class RadbearDeviseMailer < Devise::Mailer
 
   private
 
-    def app_name
-      return t(:app_name) unless company_exists?
-      Company.main.respond_to?(:app_name) ? Company.main.app_name : t(:app_name)
-    end
-
-    def company_exists?
-      ActiveRecord::Base.connection.data_source_exists?('companies') && Company.respond_to?(:main) && Company.main
-    end
-
     def set_defaults
       unless File.exist?('app/assets/images/app_logo.png') == File.exist?('public/app_logo.png')
         raise 'This mailer requires app_logo.png to be in both places.'
       end
 
-      @company = Company.main if Company.respond_to?(:main)
-
       @include_yield = false
       @optional = false
-      @require_company = false
     end
 end

@@ -103,7 +103,7 @@ class GlobalAutocomplete
   private
 
   def klass
-    current_scope[:model]
+    current_scope[:model].constantize
   end
 
   def columns
