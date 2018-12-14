@@ -17,5 +17,7 @@
 
             - normalize_names(humanized_permission_fields).each do |name, permission|
               %tr
-                %td= link_to name, permission_security_roles_path(permission_name: permission)
+                %td
+                  = link_to name, permission_security_roles_path(permission_name: permission)
+                  = permission_tooltip_content(permission)
                 %td{class: all_perms.include?(permission) ? 'fa fa-check green-check' : 'fa fa-times red-x'}

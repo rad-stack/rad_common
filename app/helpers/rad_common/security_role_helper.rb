@@ -39,5 +39,13 @@ module RadCommon
     def permission_tooltip(permission)
       t "permission_tooltips.#{permission}", default: ''
     end
+
+    def permission_tooltip_content(permission)
+      return if permission_tooltip(permission).blank?
+
+      content_tag :i, '', class: 'fa fa-question-circle custom-tooltip tooltip-pad right-5x',
+                          'data-toggle': 'tooltip',
+                          title: permission_tooltip(permission)
+    end
   end
 end
