@@ -1,9 +1,11 @@
 module SimpleForm
   module Components
     module Tooltips
-      def icon(wrapper_options = nil)
+      def icon(_wrapper_options = nil)
         return tooltip_tag if options[:tooltip].present?
-        return icon_tag    if options[:icon].present?
+        return if options[:icon].blank?
+
+        icon_tag
       end
 
       def icon_tag
@@ -11,7 +13,9 @@ module SimpleForm
       end
 
       def tooltip_tag
-        template.content_tag(:i, '', class: "fa fa-question-circle custom-tooltip tooltip-pad", 'data-toggle' => 'tooltip', 'data-original-title' => options[:tooltip])
+        template.content_tag(:i, '', class: 'fa fa-question-circle custom-tooltip tooltip-pad',
+                                     'data-toggle' => 'tooltip',
+                                     'data-original-title' => options[:tooltip])
       end
     end
   end
