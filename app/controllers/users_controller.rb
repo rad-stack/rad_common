@@ -8,15 +8,15 @@ class UsersController < ApplicationController
   def index
     @pending = User.pending.by_name
 
-    if params[:status]
-      if params[:status] == "All"
-        @status = nil
-      else
-        @status = UserStatus.find(params[:status])
-      end
-    else
-      @status = UserStatus.default_active_status
-    end
+    @status = if params[:status].present?
+                if params[:status] == 'All'
+                  nil
+                else
+                  UserStatus.find(params[:status])
+                end
+              else
+                UserStatus.default_active_status
+              end
 
     @users = User.recent_first.page(params[:page])
     @users = @users.where(user_status: @status) if @status
@@ -48,18 +48,14 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    unless @user == current_user
-      if @user.audits_created(nil).any?
-        flash[:error] = "User has audit history, can't delete"
-      else
-        if @user.destroy
-          flash[:success] = 'User deleted.'
-        else
-          flash[:error] = @user.errors.full_messages.join(", ")
-        end
-      end
-    else
+    if @user == current_user
       flash[:error] = "Can't delete yourself."
+    elsif @user.audits_created(nil).any?
+      flash[:error] = "User has audit history, can't delete"
+    elsif @user.destroy
+      flash[:success] = 'User deleted.'
+    else
+      flash[:error] = @user.errors.full_messages.join(', ')
     end
 
     redirect_to users_path
@@ -73,7 +69,7 @@ class UsersController < ApplicationController
 
     def resolve_roles(role_ids)
       if role_ids
-        ids = role_ids.select{ |id| id != '' }.map{ |id| id.to_i }
+        ids = role_ids.select { |id| id != '' }.map { |id| id.to_i }
         SecurityRole.where(id: ids)
       else
         []
@@ -81,7 +77,7 @@ class UsersController < ApplicationController
     end
 
     def permitted_params
-      params.require(:user).permit(:user_status_id, :first_name, :last_name, :mobile_phone, :last_activity_at,
-                                   :password, :password_confirmation)
+      base_params = %i[user_status_id first_name last_name mobile_phone last_activity_at password password_confirmation]
+      params.require(:user).permit(base_params + Rails.application.config.additional_user_params)
     end
 end

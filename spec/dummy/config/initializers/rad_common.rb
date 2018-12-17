@@ -3,6 +3,8 @@ Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css r
 Rails.configuration.use_avatar = true
 Rails.configuration.authy_user_opt_in = true
 
+Rails.configuration.additional_user_params = []
+
 Rails.configuration.global_validity_days = 3
 Rails.configuration.global_validity_timeout = 1.hour
 Rails.configuration.global_validity_exclude = []
