@@ -1,5 +1,5 @@
-require "bootstrap_datetimepicker/version"
-require "bootstrap_datetimepicker/engine"
+require 'bootstrap_datetimepicker/version'
+require 'bootstrap_datetimepicker/engine'
 
 module BootstrapDatetimepicker
 end
