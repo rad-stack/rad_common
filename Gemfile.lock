@@ -49,7 +49,7 @@ PATH
       haml-rails (= 1.0.0)
       image_processing (~> 1.2)
       kaminari-bootstrap (~> 3.0.1)
-      momentjs-rails (~> 2.9)
+      momentjs-rails (~> 2.9, >= 2.9.0)
       paperclip (~> 6.1.0)
       pg
       premailer-rails (~> 1.10.2)
