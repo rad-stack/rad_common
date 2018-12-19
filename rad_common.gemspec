@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = 'A library of common functions for a standard business web app, developed by Radical Bear'
   s.license     = 'MIT'
 
-  s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
+  s.files = Dir['{app,config,db,lib,vendor}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
   s.add_dependency 'audited', '~> 4.8'
   s.add_dependency 'authority', '3.3.0'
@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml-rails', '1.0.0'
   s.add_dependency 'image_processing', '~> 1.2'
   s.add_dependency 'kaminari-bootstrap', '~> 3.0.1'
-  s.add_dependency 'momentjs-rails', '~> 2.9'
+  s.add_dependency 'momentjs-rails', '~> 2.9', '>= 2.9.0'
   s.add_dependency 'paperclip', '~> 6.1.0'
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
