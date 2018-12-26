@@ -13,6 +13,7 @@ module RadCommon
     require 'font-awesome-rails'
     require 'haml-rails'
     require 'kaminari-bootstrap'
+    require 'momentjs-rails'
     require 'nokogiri'
     require 'paperclip'
     require 'pg'
