@@ -6,6 +6,14 @@ module FirebaseSync
     after_commit :firebase_destroy_job, on: [:destroy]
   end
 
+  def firebase_app
+    FirebaseApp.new
+  end
+
+  def firebase_client
+    firebase_app.client
+  end
+
   def firebase_reference
     "#{self.class.table_name.camelize(:lower)}/id#{id}"
   end

@@ -2,7 +2,7 @@ module FirebaseAction
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def firebase_cleanup(app, user, error, path, data)
+    def firebase_cleanup(user, error, path, data)
       if error
         data['error'] = error
         RadbearMailer.simple_message(user, 'Problem', error).deliver_later if user
@@ -26,6 +26,8 @@ module FirebaseAction
       end
 
       data['timestamp'] = Time.zone.now.to_s
+
+      app = FirebaseApp.new
 
       response = RadicalRetry.perform_request { app.client.update("logs#{path}", data) }
       raise response.raw_body unless response.success?

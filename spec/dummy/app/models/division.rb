@@ -12,10 +12,10 @@ class Division < ApplicationRecord
 
   audited
 
-  def firebase_sync(app)
+  def firebase_sync
     data = { name: name }
 
-    response = RadicalRetry.perform_request { app.client.update(firebase_reference, data) }
+    response = RadicalRetry.perform_request { firebase_client.update(firebase_reference, data) }
     return if response.success?
 
     raise RadicallyIntermittentException, response.raw_body
