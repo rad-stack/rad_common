@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe FirebaseLogsController do
   let(:admin) { create :admin }
-  let(:app) { FirebaseApp.new }
 
   before do
     sign_in admin

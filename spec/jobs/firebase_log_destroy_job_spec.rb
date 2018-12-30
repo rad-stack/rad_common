@@ -1,8 +1,7 @@
 require 'rails_helper'
 
 describe FirebaseLogDestroyJob do
-  let(:app) { FirebaseApp.new }
-  let(:client) { app.client }
+  let(:client) { FirebaseApp.new.client }
   let(:user) { create :admin }
   let(:log_id) { 'registrations' }
   let(:error_log_key) { '4RnyUxuF2zNQR4CMzb13ONeEGlV2' }
@@ -16,7 +15,7 @@ describe FirebaseLogDestroyJob do
                                                          timestamp: '2018-12-30 15:07:27 UTC' } } }
   end
 
-  before { app.client.update('logs', data) }
+  before { client.update('logs', data) }
 
   it 'destroys all logs in category' do
     type = 'all'
