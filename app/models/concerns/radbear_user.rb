@@ -41,8 +41,8 @@ module RadbearUser
     Audited::Audit.unscoped.where('user_id = ?', id).order('created_at DESC')
   end
 
-  def update_firebase_info(app)
-    firebase_user = get_firebase_data(app, firebase_reference)
+  def update_firebase_info
+    firebase_user = get_firebase_data(firebase_reference)
     return unless firebase_user
 
     Audited.audit_class.as_user(self) do

@@ -26,8 +26,8 @@ module FirebaseSync
     date&.strftime('%Y-%m-%d') if date
   end
 
-  def get_firebase_data(app, path)
-    response = RadicalRetry.perform_request { app.client.get(path) }
+  def get_firebase_data(path)
+    response = RadicalRetry.perform_request { firebase_client.get(path) }
     raise RadicallyIntermittentException, response.raw_body unless response.success?
 
     response.body

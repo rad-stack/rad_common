@@ -35,7 +35,7 @@ module FirebaseAction
       response = RadicalRetry.perform_request { app.client.delete("transactions#{path}") }
       raise response.raw_body unless response.success?
 
-      user&.update_firebase_info(app)
+      user&.update_firebase_info
     end
   end
 end
