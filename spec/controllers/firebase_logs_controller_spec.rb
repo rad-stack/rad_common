@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe FirebaseLogsController do
   let(:admin) { create :admin }
-  let(:app) { FirebaseApp.find(1) }
+  let(:app) { FirebaseApp.new }
 
   before do
     sign_in admin
@@ -16,7 +16,7 @@ describe FirebaseLogsController do
   it 'destroy events' do
     allow_any_instance_of(FirebaseLogDestroyJob).to receive(:perform).and_return(nil)
     @request.env['HTTP_REFERER'] = firebase_logs_path
-    delete :destroy, params: { id: 'events', type: 'all', app_id: app.id }
-    expect(response).to redirect_to(firebase_logs_path(app_id: app.id))
+    delete :destroy, params: { id: 'events', type: 'all' }
+    expect(response).to redirect_to(firebase_logs_path)
   end
 end

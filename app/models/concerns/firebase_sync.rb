@@ -25,27 +25,17 @@ module FirebaseSync
     response.body
   end
 
-  def firebase_sync_apps
-    # override this as needed
-
-    FirebaseApp.all.map { |item| item.id }
-  end
-
   private
 
     def firebase_sync_job
       return unless FirebaseApp.enabled?
 
-      firebase_sync_apps.each do |app_id|
-        FirebaseSyncJob.perform_later(app_id, self.class.name, id) unless firebase_reference.nil?
-      end
+      FirebaseSyncJob.perform_later(self.class.name, id) unless firebase_reference.nil?
     end
 
     def firebase_destroy_job
       return unless FirebaseApp.enabled?
 
-      firebase_sync_apps.each do |app_id|
-        FirebaseDestroyJob.perform_later(app_id, firebase_reference) unless firebase_reference.nil?
-      end
+      FirebaseDestroyJob.perform_later(firebase_reference) unless firebase_reference.nil?
     end
 end

@@ -1,8 +1,8 @@
 class FirebaseSyncJob < ApplicationJob
   queue_as :firebase
 
-  def perform(app_id, model_name, record_id)
-    app = FirebaseApp.find(app_id)
+  def perform(model_name, record_id)
+    app = FirebaseApp.new
 
     klass = Object.const_get model_name
     record = klass.find_by_id(record_id)

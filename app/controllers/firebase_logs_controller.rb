@@ -5,21 +5,15 @@ class FirebaseLogsController < ApplicationController
   LOG_LIMIT = 100
 
   def index
-    if params[:app_id].present?
-      @app = FirebaseApp.find(params[:app_id])
-    else
-      @app = FirebaseApp.all.first
-    end
-
+    @app = FirebaseApp.new
     @limited_log_categories = limited_log_categories
     @firebase_logs = firebase_results
   end
 
   def destroy
-    app_id = params[:app_id].to_i
-    FirebaseLogDestroyJob.perform_later(app_id, params[:type], params[:id], current_user.id)
+    FirebaseLogDestroyJob.perform_later(params[:type], params[:id], current_user.id)
     flash[:info] = 'Firebase log destruction is in progress'
-    redirect_to firebase_logs_path(app_id: app_id)
+    redirect_to firebase_logs_path
   end
 
   private

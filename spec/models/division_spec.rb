@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Division, type: :model do
   let(:division) { create :division }
-  let(:app) { FirebaseApp.find(1) }
+  let(:app) { FirebaseApp.new }
   let(:first_email) { ActionMailer::Base.deliveries.first }
   let(:email) { ActionMailer::Base.deliveries.last }
 
