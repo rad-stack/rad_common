@@ -1,16 +1,3 @@
-.panel.panel-default
-  = render 'layouts/panel_header', action_name: 'custom', title: "Firebase Logs for App: #{@app.name}", icon: 'fa-list'
-  .panel-body
-    .row.button-row
-      .col-md-12
-        .btn-group
-          %a{class: 'btn dropdown-toggle btn-success', 'data-toggle' => 'dropdown', href: '#'}
-            = @app.name
-            %span.caret
-          %ul.dropdown-menu
-            - FirebaseApp.all.each do |app|
-              %li= link_to app.name, firebase_logs_path(app_id: app.id)
-
 -if @firebase_logs
 
   -can_clear = current_user.can_update?(Company)
@@ -19,8 +6,8 @@
     .panel.panel-default
       -if can_clear
         -actions = []
-        -actions.push(link_to("Delete All", firebase_log_path(log.first, type: 'all', app_id: @app.id), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))
-        -actions.push(link_to("Delete Non Errors", firebase_log_path(log.first, type: 'non_errors', app_id: @app.id), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))
+        -actions.push(link_to("Delete All", firebase_log_path(log.first, type: 'all'), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))
+        -actions.push(link_to("Delete Non Errors", firebase_log_path(log.first, type: 'non_errors'), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))
       = render "layouts/panel_header", action_name: "custom", title: log.first.titleize, icon: "fa-list", additional_actions: actions
       .panel-body
         - if @limited_log_categories.include?(log.first)

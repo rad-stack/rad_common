@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe Division, type: :model do
   let(:division) { create :division }
-  let(:app) { FirebaseApp.find(1) }
   let(:first_email) { ActionMailer::Base.deliveries.first }
   let(:email) { ActionMailer::Base.deliveries.last }
 
@@ -20,14 +19,14 @@ describe Division, type: :model do
       end
 
       it 'syncs' do
-        division.firebase_sync(app)
+        division.firebase_sync
       end
     end
 
     describe '#firebase_cleanup' do
       let!(:user) { create :super_admin }
 
-      before { Division.firebase_cleanup app, nil, 'foo', '/foo', {} }
+      before { Division.firebase_cleanup nil, 'foo', '/foo', {} }
 
       it 'emails firebase admins' do
         expect(email.subject).to eq 'User Error on Demo Foo'

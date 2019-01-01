@@ -1,8 +1,8 @@
 class PushNotificationJob < ActiveJob::Base
   queue_as :default
 
-  def perform(app_id, user_id, subject, message, badge)
-    app = FirebaseApp.find(app_id)
+  def perform(user_id, subject, message, badge)
+    app = FirebaseApp.new
     user = User.find_by(id: user_id)
 
     return unless user

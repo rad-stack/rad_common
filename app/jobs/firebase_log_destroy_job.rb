@@ -1,8 +1,8 @@
 class FirebaseLogDestroyJob < ActiveJob::Base
   queue_as :firebase
 
-  def perform(app_id, type, log_id, current_user_id)
-    app = FirebaseApp.find(app_id)
+  def perform(type, log_id, current_user_id)
+    app = FirebaseApp.new
     type == 'all' ? delete_all_logs(app, log_id, current_user_id) : delete_logs_individually(app, log_id, current_user_id)
   end
 

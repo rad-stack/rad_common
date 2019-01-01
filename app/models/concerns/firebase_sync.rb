@@ -6,6 +6,14 @@ module FirebaseSync
     after_commit :firebase_destroy_job, on: [:destroy]
   end
 
+  def firebase_app
+    FirebaseApp.new
+  end
+
+  def firebase_client
+    firebase_app.client
+  end
+
   def firebase_reference
     "#{self.class.table_name.camelize(:lower)}/id#{id}"
   end
@@ -18,17 +26,11 @@ module FirebaseSync
     date&.strftime('%Y-%m-%d') if date
   end
 
-  def get_firebase_data(app, path)
-    response = RadicalRetry.perform_request { app.client.get(path) }
+  def get_firebase_data(path)
+    response = RadicalRetry.perform_request { firebase_client.get(path) }
     raise RadicallyIntermittentException, response.raw_body unless response.success?
 
     response.body
-  end
-
-  def firebase_sync_apps
-    # override this as needed
-
-    FirebaseApp.all.map { |item| item.id }
   end
 
   private
@@ -36,16 +38,12 @@ module FirebaseSync
     def firebase_sync_job
       return unless FirebaseApp.enabled?
 
-      firebase_sync_apps.each do |app_id|
-        FirebaseSyncJob.perform_later(app_id, self.class.name, id) unless firebase_reference.nil?
-      end
+      FirebaseSyncJob.perform_later(self.class.name, id) unless firebase_reference.nil?
     end
 
     def firebase_destroy_job
       return unless FirebaseApp.enabled?
 
-      firebase_sync_apps.each do |app_id|
-        FirebaseDestroyJob.perform_later(app_id, firebase_reference) unless firebase_reference.nil?
-      end
+      FirebaseDestroyJob.perform_later(firebase_reference) unless firebase_reference.nil?
     end
 end
