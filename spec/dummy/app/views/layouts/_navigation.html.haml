@@ -16,6 +16,8 @@
               Admin
               %b.caret
             %ul.dropdown-menu
+              -if current_user.can_update?(Company)
+                %li= link_to 'Company Info', edit_company_path(Company.main)
               -if current_user.can_audit?(Company)
                 %li= link_to "Audit Search", audit_search_users_path
               -if current_user.can_read?(SecurityRole)

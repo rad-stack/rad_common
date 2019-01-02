@@ -6,6 +6,8 @@ module RadCompany
 
     scope :by_id, -> { order(:id) }
 
+    schema_validations except: :valid_user_domains
+
     validates :email, format: { with: Devise.email_regexp, message: 'has an invalid email format' }
     validate :validate_only_one, on: :create
     validate :validate_domains
@@ -18,6 +20,20 @@ module RadCompany
     def main
       Company.first
     end
+  end
+
+  def valid_user_domains_entry=(value)
+    if value
+      items = value.split(',')
+      stripped = items.map { |item| item.strip }
+      self.valid_user_domains = stripped.reject { |item| item.blank? }
+    else
+      self.valid_user_domains = '{}'
+    end
+  end
+
+  def valid_user_domains_entry
+    valid_user_domains&.join(', ')
   end
 
   def full_address

@@ -1,4 +1,4 @@
 .panel.panel-default
   = render 'layouts/panel_header'
   .panel-body
-    = render 'layouts/show_data_columns', data: [:name, :code], resource: @division
+    = render 'layouts/show_data_columns', data: %i[name code notify timezone], resource: @division

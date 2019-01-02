@@ -3,6 +3,18 @@ require 'rails_helper'
 describe Company, type: :model do
   let(:company) { Company.main }
 
+  describe 'valid user domains' do
+    it 'allows valid user domains' do
+      company.update! valid_user_domains_entry: 'foo.bar, me.too'
+      expect(company.valid_user_domains).to eq %w[foo.bar me.too]
+    end
+
+    it 'strips blank user domains' do
+      company.update! valid_user_domains_entry: 'foo.bar, me.too, '
+      expect(company.valid_user_domains).to eq %w[foo.bar me.too]
+    end
+  end
+
   describe '#full_address' do
     subject { company.full_address }
 
@@ -15,12 +27,12 @@ describe Company, type: :model do
     end
 
     context 'with address 2' do
-      it {is_expected.to eq 'Address 1, Address 2, City, State Zipcode' }
+      it { is_expected.to eq 'Address 1, Address 2, City, State Zipcode' }
     end
 
     context 'without address 2' do
       before { company.update! address_2: nil }
-      it {is_expected.to eq 'Address 1, City, State Zipcode' }
+      it { is_expected.to eq 'Address 1, City, State Zipcode' }
     end
   end
 

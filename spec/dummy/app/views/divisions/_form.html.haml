@@ -4,6 +4,8 @@
   .form-inputs
     = f.input :name
     = f.input :code
+    = f.input :notify
+    = f.input :timezone, as: :time_zone, priority: timezone_us_filter
 
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'

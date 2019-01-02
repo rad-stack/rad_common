@@ -5,6 +5,7 @@ describe RadCommon::ApplicationHelper do
   let(:division) { create :division }
   let(:user) { create :user }
   let(:security_role) { create :security_role }
+  let(:timestamp) { '2018-06-15 06:43 AM' }
 
   before do
     @user = create :user
@@ -171,9 +172,15 @@ describe RadCommon::ApplicationHelper do
     end
   end
 
+  describe '#format_date_long' do
+    it 'formats' do
+      expect(helper.format_date_long(Time.zone.parse(timestamp))).to eq('June 15, 2018')
+    end
+  end
+
   describe '#format_time' do
     it 'formats the time' do
-      expect(helper.format_time(Time.zone.parse('2018-06-15 06:43 AM'))).to eq('6:43am')
+      expect(helper.format_time(Time.zone.parse(timestamp))).to eq('6:43am')
     end
   end
 
