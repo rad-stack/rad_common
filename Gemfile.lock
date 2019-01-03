@@ -1,36 +1,8 @@
 GIT
-  remote: https://github.com/SynergyDataSystems/schema_plus_columns
-  revision: e82f5bcf74a773f4a12017b0e4fe2368894a3911
+  remote: https://github.com/SchemaPlus/schema_validations.git
+  revision: fce93b13cfcb61ab95295e772a4a740978b372a3
   specs:
-    schema_plus_columns (0.3.2)
-      activerecord (>= 4.2, < 5.3)
-      its-it (~> 1.2)
-      schema_plus_core
-      schema_plus_indexes (~> 0.3)
-
-GIT
-  remote: https://github.com/SynergyDataSystems/schema_plus_core
-  revision: 002554b02f8585c54d9bd024715eb9f223742099
-  specs:
-    schema_plus_core (2.2.1)
-      activerecord (~> 5.2)
-      its-it (~> 1.2)
-      schema_monkey (~> 2.1)
-
-GIT
-  remote: https://github.com/SynergyDataSystems/schema_plus_indexes
-  revision: 2269907bcccd27af2dec12d5d39fc94a2b9d60fd
-  specs:
-    schema_plus_indexes (0.4.0)
-      activerecord (>= 4.2, < 5.3)
-      its-it (~> 1.2)
-      schema_plus_core
-
-GIT
-  remote: https://github.com/SynergyDataSystems/schema_validations
-  revision: 1c73cb9c60fdb9fe406d07c242321c828f254948
-  specs:
-    schema_validations (2.4.1)
+    schema_validations (2.3.0)
       activerecord (~> 5.0)
       schema_plus_columns
       valuable
@@ -378,6 +350,19 @@ GEM
     schema_monkey (2.1.5)
       activerecord (>= 4.2)
       modware (~> 0.1)
+    schema_plus_columns (0.3.0)
+      activerecord (>= 4.2, < 5.3)
+      its-it (~> 1.2)
+      schema_plus_core
+      schema_plus_indexes (~> 0.2)
+    schema_plus_core (2.2.3)
+      activerecord (~> 5.0)
+      its-it (~> 1.2)
+      schema_monkey (~> 2.1)
+    schema_plus_indexes (0.3.1)
+      activerecord (>= 4.2, < 5.3)
+      its-it (~> 1.2)
+      schema_plus_core
     sexp_processor (4.11.0)
     sidekiq (5.2.3)
       connection_pool (~> 2.2, >= 2.2.2)
@@ -444,9 +429,6 @@ DEPENDENCIES
   rspec-rails
   rubocop
   rubocop-rspec
-  schema_plus_columns!
-  schema_plus_core!
-  schema_plus_indexes!
   schema_validations!
   simplecov
 
