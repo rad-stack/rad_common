@@ -1,4 +1,5 @@
 -no_timestamps = false if local_assigns[:no_timestamps].nil?
+-force_single_column = false if local_assigns[:force_single_column].nil?
 
 -stats = []
 -if !local_assigns[:resource].nil? && !no_timestamps
@@ -24,6 +25,8 @@
   -columns = [stats]
 -elsif all_data.count <= 5
   -columns = [all_data, stats]
+-elsif force_single_column
+  -columns = [all_data + stats]
 -else
   -all_data = all_data + stats
   -columns = all_data.each_slice((all_data.count / 2.to_f).ceil).to_a
