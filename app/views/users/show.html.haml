@@ -1,11 +1,5 @@
 .panel.panel-default
   = render 'layouts/panel_header', no_new_button: true
   .panel-body
-    -data = [:email, :mobile_phone, :user_status, :sign_in_count]
-    -if ENV['AUTHY_API_KEY'].present?
-      -data.push(:authy_id)
-    -data = data + [:current_sign_in_ip, :current_sign_in_at, :confirmed_at]
-    -if @user.respond_to?(:last_activity_at)
-      -data.push(:last_activity_at)
-    = render 'layouts/show_data_columns', data: data, resource: @user
+    = render 'layouts/show_data_columns', data: user_show_data(@user), resource: @user
 = render 'users/security'

@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 describe User, type: :model do
+  let(:user) { create :user }
+  let(:admin_role) { SecurityRole.find_by(name: 'Admin') }
+
   let(:attributes) do
     { first_name: 'Example',
       last_name: 'User',
@@ -10,6 +13,24 @@ describe User, type: :model do
   end
 
   describe 'validate' do
+    describe 'super admin' do
+      it 'requires admin role' do
+        user.super_admin = true
+        expect(user).not_to be_valid
+        expect(user.errors.full_messages.to_s).to include 'Super admin can only be enabled for an admin'
+
+        user.security_roles = [admin_role]
+        expect(user).to be_valid
+
+        user.super_admin = false
+        user.save!
+
+        user.super_admin = true
+        expect(user).to be_valid
+        user.save!
+      end
+    end
+
     it 'rejects unauthorized email addresses' do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo. user@foo.com user@foo.com]
 
@@ -46,7 +67,7 @@ describe User, type: :model do
     let(:new_phone_number) { '(456) 789-0123' }
     let(:authy_id) { '1234567' }
     let(:role1) { SecurityRole.find_by(name: 'User') }
-    let(:role2) { SecurityRole.find_by(name: 'Admin') }
+    let(:role2) { admin_role }
 
     it 'creates and updates the user on authy' do
       expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))

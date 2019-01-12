@@ -1,5 +1,13 @@
 module RadCommon
   module ApplicationHelper
+    def user_show_data(user)
+      items = %i[email mobile_phone user_status sign_in_count]
+      items.push(:authy_id) if ENV['AUTHY_API_KEY'].present?
+      items += %i[current_sign_in_ip current_sign_in_at confirmed_at super_admin]
+      items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
+      items
+    end
+
     def display_audited_changes(audit)
       audit_text = formatted_audited_changes(audit)
 
@@ -17,7 +25,7 @@ module RadCommon
     def audit_title(by_user)
       title = by_user ? 'Updates by ' : 'Updates for '
       title = (title + audit_model_link(nil, @model_object)).html_safe if @model_object
-      title = title + 'System' if by_user && @model_object.blank?
+      title += 'System' if by_user && @model_object.blank?
       title = (title + @deleted) if @deleted
       title + " (#{@audits.total_count})"
     end

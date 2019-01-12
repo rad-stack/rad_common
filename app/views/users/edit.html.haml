@@ -14,7 +14,8 @@
         .row
           .col-md-6= f.association :user_status, collection: UserStatus.by_id
           -if @user.respond_to?(:last_activity_at)
-            .col-md-6= f.input :last_activity_at, as: :date, html5: true
+            .col-md-3= f.input :last_activity_at, as: :date, html5: true
+          .col-md-3= f.input :super_admin
         .row
           .col-md-6= f.input :password, autocomplete: "off", input_html: {autocomplete: "off"}
           .col-md-6= f.input :password_confirmation

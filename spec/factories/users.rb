@@ -14,8 +14,10 @@ FactoryBot.define do
     end
 
     factory :super_admin do |f|
-      super_admin { true }
-      f.after(:create) { |user| user.security_roles << SecurityRole.find_by(name: 'Admin') }
+      f.after(:create) do |user|
+        user.security_roles << SecurityRole.find_by(name: 'Admin')
+        user.update!(super_admin: true)
+      end
     end
 
     factory :pending do

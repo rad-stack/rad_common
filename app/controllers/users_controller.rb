@@ -77,7 +77,9 @@ class UsersController < ApplicationController
     end
 
     def permitted_params
-      base_params = %i[user_status_id first_name last_name mobile_phone last_activity_at password password_confirmation]
+      base_params = %i[user_status_id first_name last_name mobile_phone last_activity_at
+                       password password_confirmation super_admin]
+
       params.require(:user).permit(base_params + Rails.application.config.additional_user_params)
     end
 end

@@ -2,15 +2,15 @@ require 'rails_helper'
 
 describe RadCommon::SendgridController, type: :controller do
   describe 'POST email_error' do
-    let!(:super_admin_user1) { create(:user, super_admin: true) }
-    let!(:super_admin_user2) { create(:user, super_admin: true) }
-    let!(:normal_user) { create(:user, super_admin: false) }
+    let!(:super_admin_user1) { create :super_admin }
+    let!(:super_admin_user2) { create :super_admin }
+    let!(:normal_user) { create :user }
     let!(:company) { Company.main }
 
     it 'sends an email to app admins' do
       ActionMailer::Base.deliveries = []
 
-      sendgrid_info = { '_json' => [{ 'email' => 'example@test.com', 'timestamp' => 1_493_994_015 }] }
+      sendgrid_info = { '_json': [{ 'email': 'example@test.com', 'timestamp': 1_493_994_015 }] }
       post :email_error, params: sendgrid_info.merge(use_route: :rad_common)
       emails = ActionMailer::Base.deliveries
       expect(emails.count).to eq(2)
