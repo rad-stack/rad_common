@@ -7,7 +7,7 @@ class PushNotificationJob < ActiveJob::Base
 
     return unless user
 
-    return if Rails.env.test? || user.firebase_id.blank?
+    return if user.firebase_id.blank?
 
     raise 'missing subject' if subject.blank?
     raise 'missing message' if message.blank?
