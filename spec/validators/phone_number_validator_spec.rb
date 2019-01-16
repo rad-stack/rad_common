@@ -3,6 +3,7 @@ require 'rails_helper'
 class TestModel
   include ActiveModel::Model
   attr_accessor :phone_number
+
   def initialize(phone_number)
     @phone_number = phone_number
   end
@@ -10,6 +11,7 @@ class TestModel
   def []=(attribute, value)
     public_send("#{attribute}=", value)
   end
+
   validates_with PhoneNumberValidator, fields: [:phone_number]
 end
 

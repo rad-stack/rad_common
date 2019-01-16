@@ -8,7 +8,7 @@ module RadCompany
 
     schema_validations except: :valid_user_domains
 
-    validates :email, format: { with: Devise.email_regexp, message: 'has an invalid email format' }
+    validates_with EmailAddressValidator, fields: %i[email]
     validate :validate_only_one, on: :create
     validate :validate_domains
     validates_with PhoneNumberValidator
