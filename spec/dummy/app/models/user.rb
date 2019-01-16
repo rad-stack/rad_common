@@ -3,6 +3,7 @@ class User < ApplicationRecord
   include Authority::Abilities
   include RadbearUser
   include RadAuthy
+  include FirebaseSync
 
   belongs_to :user_status
   has_many :security_roles_users, dependent: :destroy
