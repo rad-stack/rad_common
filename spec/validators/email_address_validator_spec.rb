@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-class TestModel
+class TestEmailModel
   include ActiveModel::Model
   attr_accessor :email
 
@@ -16,7 +16,7 @@ class TestModel
 end
 
 RSpec.describe EmailAddressValidator, type: :validator do
-  subject { TestModel.new(email) }
+  subject { TestEmailModel.new(email) }
 
   context 'when the email is nil' do
     let(:email) { nil }
@@ -45,7 +45,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
                        'foo@@bar.com']
 
       invalid_items.each do |item|
-        model = TestModel.new(item)
+        model = TestEmailModel.new(item)
         expect(model).to be_invalid
         expect(model.errors.full_messages.to_s).to include 'Email is not written in a valid format'
       end

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-class TestModel
+class TestPhoneModel
   include ActiveModel::Model
   attr_accessor :phone_number
 
@@ -20,20 +20,20 @@ RSpec.describe PhoneNumberValidator do
     invalid_numbers = ['232332', '211-333-1111', '(432)-111-2222', '905.444.2111', '905 444 2111']
 
     invalid_numbers.each do |phone_number|
-      model = TestModel.new(phone_number)
+      model = TestPhoneModel.new(phone_number)
       expect(model).to be_invalid
       expect(model.errors.full_messages.to_s).to include 'Invalid phone number, format must be'
     end
   end
 
   it 'can be valid' do
-    model = TestModel.new('(211) 333-1111')
+    model = TestPhoneModel.new('(211) 333-1111')
     expect(model).to be_valid
   end
 
   it 'converts a 10 digit number to a valid format' do
     number = '2813308004'
-    model = TestModel.new(number)
+    model = TestPhoneModel.new(number)
     expect(model).to be_valid
     expect(model.phone_number).to eq('(281) 330-8004')
   end
@@ -42,7 +42,7 @@ RSpec.describe PhoneNumberValidator do
     invalid_numbers = ['(999) 999-9999', '(000) 226-1245']
 
     invalid_numbers.each do |phone_number|
-      model = TestModel.new(phone_number)
+      model = TestPhoneModel.new(phone_number)
       expect(model).to be_invalid
       expect(model.errors.full_messages.to_s).to include 'Invalid phone number, format must be'
     end
