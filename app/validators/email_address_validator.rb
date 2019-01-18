@@ -3,11 +3,20 @@ class EmailAddressValidator < ActiveModel::Validator
     return if record.blank?
 
     fields = options[:fields]
+    multiples = options[:multiples]
 
     fields.each do |field|
       next if record.send(field).blank?
 
-      check_email(record.send(field), record)
+      attrs = record.send(field)
+      if multiples
+        attrs.split(',').each do |attr|
+          email = attr.strip
+          check_email(email, record)
+        end
+      else
+        check_email(attrs, record)
+      end
     end
   end
 
