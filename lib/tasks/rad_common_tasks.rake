@@ -1,7 +1,7 @@
 namespace :rad_common do
   task global_validity: :environment do
     Timeout.timeout(Rails.application.config.global_validity_timeout) do
-      RadCommon::GlobalValidity.check_all_companies
+      RadCommon::GlobalValidity.check_company
     end
   end
 
