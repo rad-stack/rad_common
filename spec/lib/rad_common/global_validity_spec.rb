@@ -12,7 +12,7 @@ describe RadCommon::GlobalValidity do
   before { ActionMailer::Base.deliveries.clear }
 
   context 'with valid data' do
-    let(:global_validity_check) { described_class.check_all_companies }
+    let(:global_validity_check) { described_class.check_company }
 
     it 'company validity_checked_at should update' do
       global_validity_check
@@ -32,7 +32,7 @@ describe RadCommon::GlobalValidity do
     end
 
     context 'without super admin' do
-      subject { described_class.check_all_companies }
+      subject { described_class.check_company }
       before { super_admin.update!(super_admin: false) }
 
       it 'should raise an exception' do
@@ -42,13 +42,13 @@ describe RadCommon::GlobalValidity do
       end
     end
 
-    describe '.check_all_companies' do
+    describe '.check_company' do
       before do
         Rails.configuration.global_validity_supress = [{ class: 'SomeSuppression', messages: ['Anything'] }]
       end
 
       it 'sends an email to super admins when data is invalid' do
-        described_class.check_all_companies
+        described_class.check_company
 
         expect(last_email.subject).to eq("Invalid data in #{I18n.t(:app_name)}")
         expect(last_email.to).to eq([super_admin.email])
@@ -70,7 +70,7 @@ describe RadCommon::GlobalValidity do
         end
 
         it 'sends an email to current user when data is invalid' do
-          described_class.check_all_companies
+          described_class.check_company
 
           expect(last_email.subject).to eq("Invalid data in #{I18n.t(:app_name)}")
           expect(last_email.to).to eq([super_admin.email])
@@ -85,7 +85,7 @@ describe RadCommon::GlobalValidity do
     describe 'with destroyed data', regression: true do
       it 'does not include destroyed record data' do
         expect_any_instance_of(SecurityRole).to receive(:persisted?).and_return(false)
-        described_class.check_all_companies
+        described_class.check_company
 
         expect(last_email.to).to eq([super_admin.email])
         expect(email_body_html).not_to include('requires all permissions to be true')
