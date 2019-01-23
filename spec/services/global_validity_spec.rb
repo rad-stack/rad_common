@@ -1,6 +1,7 @@
 require 'rails_helper'
 
-describe RadCommon::GlobalValidity do
+describe GlobalValidity, type: :service do
+  let(:global_validity) { GlobalValidity.new }
   let(:admin_security_role) { SecurityRole.find_by(name: 'Admin') }
   let(:company) { Company.main }
   let!(:super_admin) { create :super_admin }
@@ -11,8 +12,10 @@ describe RadCommon::GlobalValidity do
 
   before { ActionMailer::Base.deliveries.clear }
 
+  # TODO: add tests for override model feature
+
   context 'with valid data' do
-    let(:global_validity_check) { described_class.check_company }
+    let(:global_validity_check) { global_validity.run }
 
     it 'company validity_checked_at should update' do
       global_validity_check
@@ -32,7 +35,7 @@ describe RadCommon::GlobalValidity do
     end
 
     context 'without super admin' do
-      subject { described_class.check_company }
+      subject { global_validity.run }
       before { super_admin.update!(super_admin: false) }
 
       it 'should raise an exception' do
@@ -42,13 +45,13 @@ describe RadCommon::GlobalValidity do
       end
     end
 
-    describe '.check_company' do
+    describe '.run' do
       before do
         Rails.configuration.global_validity_supress = [{ class: 'SomeSuppression', messages: ['Anything'] }]
       end
 
       it 'sends an email to super admins when data is invalid' do
-        described_class.check_company
+        global_validity.run
 
         expect(last_email.subject).to eq("Invalid data in #{I18n.t(:app_name)}")
         expect(last_email.to).to eq([super_admin.email])
@@ -70,7 +73,7 @@ describe RadCommon::GlobalValidity do
         end
 
         it 'sends an email to current user when data is invalid' do
-          described_class.check_company
+          global_validity.run
 
           expect(last_email.subject).to eq("Invalid data in #{I18n.t(:app_name)}")
           expect(last_email.to).to eq([super_admin.email])
@@ -85,7 +88,7 @@ describe RadCommon::GlobalValidity do
     describe 'with destroyed data', regression: true do
       it 'does not include destroyed record data' do
         expect_any_instance_of(SecurityRole).to receive(:persisted?).and_return(false)
-        described_class.check_company
+        global_validity.run
 
         expect(last_email.to).to eq([super_admin.email])
         expect(email_body_html).not_to include('requires all permissions to be true')

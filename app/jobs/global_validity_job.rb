@@ -2,7 +2,8 @@ class GlobalValidityJob < ApplicationJob
   queue_as :default
 
   def perform(current_user)
-    problems = Company.main.check_global_validity
+    global_validity = GlobalValidity.new
+    problems = global_validity.check_global_validity
 
     if problems.any?
       RadbearMailer.global_validity([current_user], problems).deliver_later

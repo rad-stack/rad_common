@@ -1,7 +1,9 @@
 namespace :rad_common do
-  task global_validity: :environment do
+  task :global_validity, [:override_model] => :environment do |t, args|
     Timeout.timeout(Rails.application.config.global_validity_timeout) do
-      RadCommon::GlobalValidity.check_company
+      global_validity = GlobalValidity.new
+      global_validity.override_model = args[:override_model]
+      global_validity.run
     end
   end
 
