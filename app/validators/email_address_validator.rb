@@ -11,8 +11,7 @@ class EmailAddressValidator < ActiveModel::Validator
       attrs = record.send(field)
       if multiples
         attrs.split(',').each do |attr|
-          email = attr.strip
-          check_email(email, record)
+          attr.class == Array ? attr.each { |email| check_email(email, record) } : check_email(attr.strip, record)
         end
       else
         check_email(attrs, record)
