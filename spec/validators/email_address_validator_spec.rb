@@ -78,7 +78,8 @@ RSpec.describe EmailAddressValidator, type: :validator do
     context 'array format' do
       it 'validates to true' do
         valid_items = ['foo@example.com, bar@example.com',
-                       'foob@example.com, barf@example.com, xanz@example.com']
+                       'foob@example.com, barf@example.com, xanz@example.com',
+                       ['doot@example.com', 'poot@example.com']]
         valid_items.each do |item|
           model = TestEmailArrayModel.new(item)
           expect(model).to be_valid
