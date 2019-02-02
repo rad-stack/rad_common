@@ -60,69 +60,7 @@ module RadCompany
     update! validity_checked_at: Time.zone.now
   end
 
-  def check_global_validity
-    error_messages = []
-
-    exclude_models = [ActiveRecord::SchemaMigration,
-                      ApplicationRecord,
-                      Audited::Audit,
-                      SecurityRolesUser] + Rails.application.config.global_validity_exclude
-
-    Rails.application.eager_load!
-    all_models = ActiveRecord::Base.descendants
-    models = all_models - exclude_models
-
-    models.each do |model|
-      error_messages = error_messages.concat(check_model(model)) unless exclude_models.include?(model.to_s)
-    end
-
-    specific_queries = Rails.application.config.global_validity_include
-
-    specific_queries.each { |query| error_messages = error_messages.concat(check_query_records(query)) }
-
-    error_messages
-  end
-
   private
-
-    def check_model(model)
-      puts "global validity check: starting #{model}: #{Time.zone.now}"
-
-      problems = []
-      model.find_each { |record| validate_record(record, problems) }
-
-      puts "global validity check: ending #{model}: #{Time.zone.now}"
-
-      problems
-    end
-
-    def check_query_records(query)
-      puts "global validity check: starting #{query}: #{Time.zone.now}"
-
-      problems = []
-      records = query.call
-      records.find_each { |record| validate_record(record, problems) }
-
-      puts "global validity check: ending #{query}: #{Time.zone.now}"
-
-      problems
-    end
-
-    def validate_record(record, error_messages_array)
-      record.bypass_geocoding = true if record.respond_to?(:bypass_geocoding)
-
-      return if record.valid?
-
-      messages = record.errors.full_messages
-
-      supressions = Rails.application.config.global_validity_supress || []
-      supression = supressions.select { |item| item[:class] == record.class.to_s }.first
-
-      messages -= supression[:messages] if supression
-      return unless messages.any?
-
-      error_messages_array.push([record, messages.join(', ')])
-    end
 
     def validate_only_one
       errors.add(:base, 'Only one company record is allowed.') if Company.count.positive?

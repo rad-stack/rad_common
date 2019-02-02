@@ -51,7 +51,8 @@ RSpec.describe EmailAddressValidator, type: :validator do
       end
 
       it 'can not be valid' do
-        invalid_items = ['test@example.com,,',
+        invalid_items = ['another@example@com',
+                         'test@example.com,,',
                          'bar.foo@yahoo.com,',
                          '.....@a....',
                          'oh.boyyyd@SOME+THING-ODD!!.com',
@@ -103,7 +104,8 @@ RSpec.describe EmailAddressValidator, type: :validator do
       end
 
       it 'can not be valid' do
-        invalid_items = ['bar,foo@yahoo.com.',
+        invalid_items = ['user@example.com, another@example@com',
+                         'bar,foo@yahoo.com.',
                          '.....@a....',
                          'oh.boyyyd@SOME+THING-ODD!!.com',
                          'a.b@example,com',
@@ -114,6 +116,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
         invalid_items.each do |item|
           model = TestEmailArrayModel.new(item)
           expect(model).to be_invalid
+          expect(model.errors.full_messages.to_s).to include 'Email is not written in a valid format'
         end
       end
     end

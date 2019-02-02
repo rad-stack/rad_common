@@ -2,6 +2,7 @@ Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css r
 
 Rails.configuration.use_avatar = true
 Rails.configuration.authy_user_opt_in = true
+Rails.configuration.app_logo_includes_name = true
 
 Rails.configuration.additional_user_params = []
 

@@ -22,9 +22,6 @@
                                                         placeholder: 'Enter domains separated by commas. Example: abc.com, fyi.com',
                                                         tooltip: 'When a user signs up, this collection of domains authorizes what email addresses are valid. This protects the system with an extra layer of security to prevent unauthorized users on other email domains and can also prevent a typo on the email address entered.'
           .col-md-3= f.input :validity_checked_at, as: :date, html5: true
-        .row
-          .col-md-6= f.input :company_logo_includes_name
-          .col-md-6= f.input :app_logo_includes_name
 
       .form-actions
         = f.button :submit, 'Save', class: 'btn btn-primary'
