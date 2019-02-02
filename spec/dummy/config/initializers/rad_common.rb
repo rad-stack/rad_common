@@ -41,5 +41,6 @@ Rails.configuration.global_search_scopes =
       description: 'Search for users by division by name',
       columns: [],
       joins: 'JOIN divisions on divisions.owner_id = users.id',
-      query_where: 'divisions.name ilike :search' }
+      query_where: 'divisions.name ilike :search',
+      super_search_exclude: true }
   ]
