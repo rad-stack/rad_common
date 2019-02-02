@@ -9,7 +9,7 @@
 -company_full_address = company.full_address
 -company_phone_number = company.phone_number
 -admin_email = company.email
--has_avatar = Rails.application.config.use_avatar && @sender && @sender.respond_to?(:avatar) && @sender.avatar.present?
+-has_avatar = Rails.application.config.use_avatar && @sender && @sender.avatar.attached?
 
 !!!
 %head
@@ -41,7 +41,7 @@
         .email-col-12
           %br
           -if has_avatar
-            = image_tag(@sender.avatar.url(:small), alt: @sender.to_s, title: @sender.to_s)
+            = image_tag(@sender.avatar.variant(resize: '25x25'), alt: @sender.to_s, title: @sender.to_s)
           = @message
 
       -if @include_yield
