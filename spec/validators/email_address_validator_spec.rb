@@ -2,17 +2,17 @@ require 'rails_helper'
 
 class TestEmailModel
   include ActiveModel::Model
-  attr_accessor :email
+  attr_accessor :email_by_any_other_name
 
-  def initialize(email)
-    @email = email
+  def initialize(email_by_any_other_name)
+    @email_by_any_other_name = email_by_any_other_name
   end
 
   def []=(attribute, value)
     public_send("#{attribute}=", value)
   end
 
-  validates_with EmailAddressValidator, fields: %i[email]
+  validates_with EmailAddressValidator, fields: %i[email_by_any_other_name]
 end
 
 class TestEmailArrayModel
@@ -66,7 +66,8 @@ RSpec.describe EmailAddressValidator, type: :validator do
         invalid_items.each do |item|
           model = TestEmailModel.new(item)
           expect(model).to be_invalid
-          expect(model.errors.full_messages.to_s).to include 'Email is not written in a valid format'
+          expect(model.errors.details.first[0]).to eq :email_by_any_other_name
+          expect(model.errors.full_messages.to_s).to include 'Email by any other name is not written in a valid format'
         end
       end
     end
