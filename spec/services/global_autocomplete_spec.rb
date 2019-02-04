@@ -34,6 +34,18 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
     before { allow_any_instance_of(User).to receive(:can_read?).and_return(true) }
 
+    context 'scope has join' do
+      let(:term) { 'My Division' }
+      let!(:division) { create(:division, name: term) }
+      let(:params) { ActionController::Parameters.new(term: term, global_search_scope: 'user_by_division_name') }
+      let(:result) { auto_complete.autocomplete_result(scope) }
+
+      it 'finds results on joined table' do
+        expect(result.count).to eq(1)
+        expect(result.first[:model_name].constantize.find(result.first[:id])).to eq division.owner
+      end
+    end
+
     context 'scope has query where' do
       let(:result) { auto_complete.autocomplete_result(scope) }
 

@@ -32,7 +32,9 @@ class GlobalAutocomplete
 
     self.current_scope = scope
     order = scope[:query_order] || 'created_at DESC'
-    query = klass.where(where_query, { search: "%#{params[:term]}%" }).order(order)
+    query = klass
+    query = query.joins(joins) if joins
+    query = query.where(where_query, { search: "%#{params[:term]}%" }).order(order)
     query = query.authorized(user)
 
     query = query.limit(50)
@@ -108,6 +110,10 @@ class GlobalAutocomplete
 
   def columns
     current_scope[:columns]
+  end
+
+  def joins
+    current_scope[:joins]
   end
 
   def methods
