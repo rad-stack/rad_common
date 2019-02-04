@@ -1,7 +1,6 @@
 class EmailAddressValidator < ActiveModel::Validator
   def validate(record)
     return if record.blank?
-
     fields = options[:fields]
     multiples = options[:multiples]
 
@@ -11,18 +10,17 @@ class EmailAddressValidator < ActiveModel::Validator
       attrs = record.send(field)
       if multiples
         attrs.split(',').each do |attr|
-          email = attr.strip
-          check_email(email, record)
+          attr.class == Array ? attr.each { |email| check_email(email, field, record) } : check_email(attr.strip, field, record)
         end
       else
-        check_email(attrs, record)
+        check_email(attrs, field, record)
       end
     end
   end
 
-  def check_email(email, record)
+  def check_email(email, field, record)
     return if email =~ URI::MailTo::EMAIL_REGEXP
 
-    record.errors.add(:email, 'is not written in a valid format')
+    record.errors.add(field, 'is not written in a valid format')
   end
 end
