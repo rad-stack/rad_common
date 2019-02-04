@@ -2,8 +2,6 @@ class Status < ApplicationRecord
   include Authority::Abilities
   audited
 
-  def to_s
-    name
-  end
+  alias_attribute :to_s, :name
 
 end

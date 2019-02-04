@@ -100,7 +100,7 @@ ActiveRecord::Schema.define(version: 2019_02_04_202421) do
   end
 
   create_table "statuses", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       :null=>false, :index=>{:name=>"index_statuses_on_name", :unique=>true}
     t.datetime "created_at", :null=>false
     t.datetime "updated_at", :null=>false
   end
