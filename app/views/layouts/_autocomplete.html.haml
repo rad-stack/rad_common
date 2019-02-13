@@ -3,4 +3,4 @@
     - if defined?(show_required_star) && show_required_star == true
       %abbr{title: 'required'}*
     #{search_label}
-  %input.form-control.input-medium.ui-autocomplete-input.field-autocomplete{value: initial_value, :"data-autocomplete" => search_path, name: search_input_name, placeholder: search_placeholder, size: "50", type: "text",  autocomplete:"off", :"data-id-element" => id_element }
+  %input.form-control.input-medium.ui-autocomplete-input.field-autocomplete{value: initial_value, :"data-autocomplete" => search_path, name: search_input_name, id: id, placeholder: search_placeholder, size: "50", type: "text",  autocomplete:"off", :"data-id-element" => id_element }
