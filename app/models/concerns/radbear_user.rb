@@ -56,7 +56,7 @@ module RadbearUser
   end
 
   def firebase_device_tokens(app)
-    response = app.client.get firebase_reference + '/messagingTokens'
+    response = RadicalRetry.perform_request { app.client.get(firebase_reference + '/messagingTokens') }
     raise response.raw_body unless response.success?
 
     if response.body && response.body.count != 0

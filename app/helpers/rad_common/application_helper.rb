@@ -49,7 +49,7 @@ module RadCommon
       else
         if model_object.nil?
           label
-        elsif show_path_exists?(model_object) && current_user.can_read?(model_object)  # TODO: same as above
+        elsif show_path_exists?(model_object) && current_user.can_read?(model_object)
           link_to label, model_object
         else
           label
