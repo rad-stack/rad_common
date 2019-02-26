@@ -32,6 +32,8 @@ describe GlobalValidity, type: :service do
     before do
       admin_security_role.create_division = false
       admin_security_role.save!(validate: false)
+
+      SecurityRolesUser.first.user.update!(external: true)
     end
 
     context 'without super admin' do
@@ -57,7 +59,7 @@ describe GlobalValidity, type: :service do
         expect(last_email.to).to eq([super_admin.email])
         expect(email_body_text).to include('requires all permissions to be true')
         expect(email_body_html).to include('requires all permissions to be true')
-        expect(email_body_html).to include('There is 1 invalid record')
+        expect(email_body_html).to include('There are 2 invalid records')
         expect(email_body_html).to include("Security Role #{admin_security_role.id} (#{admin_security_role})")
         expect(email_body_html).to include(url)
       end
@@ -79,7 +81,7 @@ describe GlobalValidity, type: :service do
           expect(last_email.to).to eq([super_admin.email])
           expect(email_body_text).to include('requires all permissions to be true')
           expect(email_body_html).to include('requires all permissions to be true')
-          expect(email_body_html).to include('There is 1 invalid record')
+          expect(email_body_html).to include('There are 2 invalid records')
           expect(email_body_html).to include(url)
         end
       end

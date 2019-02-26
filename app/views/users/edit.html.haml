@@ -15,14 +15,16 @@
           .col-md-6= f.association :user_status, collection: UserStatus.by_id
           -if @user.respond_to?(:last_activity_at)
             .col-md-3= f.input :last_activity_at, as: :date, html5: true
-          .col-md-3= f.input :super_admin
+          -if @user.internal?
+            .col-md-3= f.input :super_admin
         .row
           .col-md-6= f.input :password, autocomplete: "off", input_html: {autocomplete: "off"}
           .col-md-6= f.input :password_confirmation
-        .row
-          .col-md-12
-            %label Security Roles
-            = f.input :security_roles, as: :check_boxes, item_wrapper_class: 'col-md-3 security-role-checkboxes', collection: security_role_collection, checked: @user.security_roles.ids, label: false
+        -if @user.internal?
+          .row
+            .col-md-12
+              %label Security Roles
+              = f.input :security_roles, as: :check_boxes, item_wrapper_class: 'col-md-3 security-role-checkboxes', collection: security_role_collection, checked: @user.security_roles.ids, label: false
 
       .form-actions
         = f.button :submit, "Save", class: "btn btn-primary"

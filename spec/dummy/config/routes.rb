@@ -14,6 +14,8 @@ Rails.application.routes.draw do
     get :permission, on: :collection
   end
 
+  resources :security_roles_users, only: :show
+
   resources :companies, only: %i[show edit update] do
     get :audit, on: :member
   end

@@ -74,6 +74,12 @@ describe User, type: :model do
         expect(user).to be_valid
       end
     end
+
+    it "doesn't allow super admin on external user" do
+      user = User.new(attributes.merge(external: true, super_admin: true))
+      expect(user).not_to be_valid
+      expect(user.errors.full_messages.to_s).to include 'is not applicable for external users'
+    end
   end
 
   describe 'authy' do

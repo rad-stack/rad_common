@@ -86,6 +86,7 @@ module RadbearUser
       return unless super_admin
 
       errors.add(:super_admin, 'can only be enabled for an admin') unless permission?(:admin)
+      errors.add(:super_admin, 'is not applicable for external users') if external?
     end
 
     def notify_user_approved
