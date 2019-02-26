@@ -1,8 +1,7 @@
--if @pending.any?
-  .panel.panel-default
-    = render 'layouts/panel_header', action_name: 'custom', title: "Pending Users (#{@pending.count})", icon: 'fa-list'
-    .panel-body
-      = render 'users/index', users: @pending
+.panel.panel-default
+  = render 'layouts/panel_header', action_name: 'custom', title: "Pending Users (#{@pending.count})", icon: 'fa-list', additional_actions: user_actions
+  .panel-body
+    = render 'users/index', users: @pending
 
 .panel.panel-default
   = render 'layouts/panel_header', no_new_button: true

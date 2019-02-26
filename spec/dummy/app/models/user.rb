@@ -9,7 +9,8 @@ class User < ApplicationRecord
   has_many :security_roles_users, dependent: :destroy
   has_many :security_roles, through: :security_roles_users, dependent: :destroy
 
-  devise :authy_authenticatable, :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable, :trackable, :validatable
+  devise :authy_authenticatable, :database_authenticatable, :registerable, :confirmable, :recoverable,
+         :rememberable, :trackable, :validatable, :invitable
 
   scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
   scope :admins, -> { active.where('users.id IN (SELECT user_id FROM security_roles_users INNER JOIN security_roles ON security_roles_users.security_role_id = security_roles.id WHERE security_roles.admin = TRUE)') }
@@ -25,6 +26,7 @@ class User < ApplicationRecord
   validates_with PhoneNumberValidator, fields: [:mobile_phone]
 
   before_validation :check_defaults
+  after_invitation_accepted :notify_user_accepted
 
   audited except: %i[password password_confirmation encrypted_password reset_password_token confirmation_token authentication_token unlock_token]
 
@@ -43,6 +45,14 @@ class User < ApplicationRecord
   def inactive_message
     if !user_status.active
       :not_approved
+    else
+      super
+    end
+  end
+
+  def send_reset_password_instructions
+    if invited_to_sign_up?
+      self.errors.add :email, :not_found
     else
       super
     end

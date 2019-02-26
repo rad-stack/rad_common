@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   mount RadCommon::Engine => '/rad_common'
 
-  devise_for :users, controllers: { confirmations: 'users/confirmations' }
+  devise_for :users, controllers: { confirmations: 'users/confirmations', invitations: 'users/invitations' }
 
   resources :users, only: %i[index show edit update destroy] do
     get :audit, on: :member

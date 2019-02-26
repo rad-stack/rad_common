@@ -17,6 +17,10 @@ module RadbearUser
     end
   end
 
+  def internal?
+    !external?
+  end
+
   def permission?(permission)
     security_roles.where("#{permission} = TRUE").count.positive?
   end
@@ -69,7 +73,7 @@ module RadbearUser
   private
 
     def validate_email_address
-      return if email.blank? || user_status_id.nil? || !user_status.validate_email
+      return if email.blank? || user_status_id.nil? || !user_status.validate_email || external?
 
       domains = Company.main.valid_user_domains
       components = email.split('@')
@@ -95,5 +99,9 @@ module RadbearUser
       User.admins.each do |admin|
         RadbearMailer.user_was_approved(admin, self, approved_by).deliver_later if admin.id != id
       end
+    end
+
+    def notify_user_accepted
+      RadbearMailer.simple_message(User.admins.pluck(:id), 'User Accepted', "#{self} has accepted the invitation to join #{I18n::t(:app_name)}.").deliver_later
     end
 end

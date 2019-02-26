@@ -13,16 +13,13 @@ class ApplicationController < ActionController::Base
     end
 
     def configure_devise_permitted_parameters
-      registration_params = %i[first_name last_name email password password_confirmation authy_enabled mobile_phone avatar]
+      additional_params = %i[first_name last_name authy_enabled mobile_phone avatar]
+      devise_parameter_sanitizer.permit(:sign_up, keys: additional_params)
+      devise_parameter_sanitizer.permit(:account_update, keys: additional_params)
 
-      if params[:action] == 'update'
-        devise_parameter_sanitizer.permit(:account_update) do |user_params|
-          user_params.permit(registration_params + [:current_password])
-        end
-      elsif params[:action] == 'create'
-        devise_parameter_sanitizer.permit(:sign_up) do |user_params|
-          user_params.permit(registration_params)
-        end
+      if params[:action] == 'create'
+        invite_params = %i[email first_name last_name external]
+        devise_parameter_sanitizer.permit(:invite) { |u| u.permit(invite_params) }
       end
     end
 end
