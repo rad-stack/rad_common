@@ -1,5 +1,5 @@
 .panel.panel-default
-  = render "layouts/panel_header", no_new_button: true
+  = render 'layouts/panel_header', no_new_button: true
   .panel-body
     = simple_form_for(@user) do |f|
       = f.error_notification
@@ -18,7 +18,9 @@
           -if @user.internal?
             .col-md-3= f.input :super_admin
         .row
-          .col-md-6= f.input :password, autocomplete: "off", input_html: {autocomplete: "off"}
+          -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
+          .col-md-6= f.input :password, autocomplete: 'off', input_html: { autocomplete: 'new-password' }
+
           .col-md-6= f.input :password_confirmation
         -if @user.internal?
           .row
@@ -27,4 +29,4 @@
               = f.input :security_roles, as: :check_boxes, item_wrapper_class: 'col-md-3 security-role-checkboxes', collection: security_role_collection, checked: @user.security_roles.ids, label: false
 
       .form-actions
-        = f.button :submit, "Save", class: "btn btn-primary"
+        = f.button :submit, 'Save', class: 'btn btn-primary'
