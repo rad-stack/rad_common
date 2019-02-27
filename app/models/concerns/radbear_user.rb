@@ -70,6 +70,14 @@ module RadbearUser
     end
   end
 
+  def display_style
+    if user_status.active || user_status == UserStatus.default_pending_status
+      external? ? 'warning' : ''
+    else
+      'danger'
+    end
+  end
+
   private
 
     def validate_email_address

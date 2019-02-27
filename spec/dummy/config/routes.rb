@@ -4,8 +4,12 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { confirmations: 'users/confirmations', invitations: 'users/invitations' }
 
   resources :users, only: %i[index show edit update destroy] do
-    get :audit, on: :member
-    get :audit_by, on: :member
+    member do
+      put :resend_invitation
+      get :audit
+      get :audit_by
+    end
+
     get :audit_search, on: :collection
   end
 

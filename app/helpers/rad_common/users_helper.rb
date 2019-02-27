@@ -3,7 +3,8 @@ module RadCommon
     def user_show_data(user)
       items = %i[email mobile_phone user_status sign_in_count]
       items.push(:authy_id) if ENV['AUTHY_API_KEY'].present?
-      items += %i[current_sign_in_ip current_sign_in_at confirmed_at super_admin]
+      items += %i[current_sign_in_ip current_sign_in_at confirmed_at]
+      items.push(:super_admin) if user.internal?
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
       items
     end

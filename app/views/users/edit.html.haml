@@ -14,9 +14,11 @@
         .row
           .col-md-6= f.association :user_status, collection: UserStatus.by_id
           -if @user.respond_to?(:last_activity_at)
-            .col-md-3= f.input :last_activity_at, as: :date, html5: true
+            .col-md-2= f.input :last_activity_at, as: :date, html5: true
           -if @user.internal?
-            .col-md-3= f.input :super_admin
+            .col-md-2= f.input :super_admin
+          -if Rails.application.config.external_users
+            .col-md-2= f.input :external
         .row
           -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
           .col-md-6= f.input :password, autocomplete: 'off', input_html: { autocomplete: 'new-password' }
