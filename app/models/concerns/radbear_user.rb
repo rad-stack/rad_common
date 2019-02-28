@@ -3,7 +3,9 @@ module RadbearUser
 
   included do
     attr_accessor :approved_by
+
     scope :by_permission, ->(permission_attr) { joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct }
+    scope :inactive, -> { joins(:user_status).where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)') }
 
     validate :validate_email_address
     validate :validate_super_admin
