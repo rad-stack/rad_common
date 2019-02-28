@@ -141,6 +141,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20180609150231_company_valid_domains.rb', 'company_valid_domains'
         apply_migration '../../../../../spec/dummy/db/migrate/20180925214758_remove_rad_common_unused_fields.rb', 'remove_rad_common_unused_fields'
         apply_migration '../../../../../spec/dummy/db/migrate/20190130182443_remove_logo_settings.rb', 'remove_logo_settings'
+        apply_migration '../../../../../spec/dummy/db/migrate/20190225194928_devise_invitable_add_to_users.rb', 'devise_invitable_add_to_users'
       end
 
       def self.next_migration_number(path)
