@@ -47,6 +47,7 @@ module RadCommon
         template '../../../../../spec/requests/users_spec.rb', 'spec/requests/users_spec.rb'
         template '../../../../../spec/requests/companies_spec.rb', 'spec/requests/companies_spec.rb'
         template '../../../../../spec/requests/security_roles_spec.rb', 'spec/requests/security_roles_spec.rb'
+        template '../../../../../spec/requests/invitations_spec.rb', 'spec/requests/invitations_spec.rb'
 
         # factories
         template '../../../../../spec/factories/companies.rb', 'spec/factories/companies.rb'
