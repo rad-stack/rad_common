@@ -1,5 +1,5 @@
 .panel.panel-default
-  = render "layouts/panel_header", no_new_button: true
+  = render 'layouts/panel_header', no_new_button: true
   .panel-body
     = simple_form_for(@user) do |f|
       = f.error_notification
@@ -14,15 +14,21 @@
         .row
           .col-md-6= f.association :user_status, collection: UserStatus.by_id
           -if @user.respond_to?(:last_activity_at)
-            .col-md-3= f.input :last_activity_at, as: :date, html5: true
-          .col-md-3= f.input :super_admin
+            .col-md-2= f.input :last_activity_at, as: :date, html5: true
+          -if @user.internal?
+            .col-md-2= f.input :super_admin
+          -if Rails.application.config.external_users
+            .col-md-2= f.input :external
         .row
-          .col-md-6= f.input :password, autocomplete: "off", input_html: {autocomplete: "off"}
+          -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
+          .col-md-6= f.input :password, autocomplete: 'off', input_html: { autocomplete: 'new-password' }
+
           .col-md-6= f.input :password_confirmation
-        .row
-          .col-md-12
-            %label Security Roles
-            = f.input :security_roles, as: :check_boxes, item_wrapper_class: 'col-md-3 security-role-checkboxes', collection: security_role_collection, checked: @user.security_roles.ids, label: false
+        -if @user.internal?
+          .row
+            .col-md-12
+              %label Security Roles
+              = f.input :security_roles, as: :check_boxes, item_wrapper_class: 'col-md-3 security-role-checkboxes', collection: security_role_collection, checked: @user.security_roles.ids, label: false
 
       .form-actions
-        = f.button :submit, "Save", class: "btn btn-primary"
+        = f.button :submit, 'Save', class: 'btn btn-primary'

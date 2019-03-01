@@ -3,7 +3,9 @@ module RadbearUser
 
   included do
     attr_accessor :approved_by
+
     scope :by_permission, ->(permission_attr) { joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct }
+    scope :inactive, -> { joins(:user_status).where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)') }
 
     validate :validate_email_address
     validate :validate_super_admin
@@ -15,6 +17,10 @@ module RadbearUser
     User.admins.each do |admin|
       RadbearMailer.new_user_signed_up(admin, self).deliver_later
     end
+  end
+
+  def internal?
+    !external?
   end
 
   def permission?(permission)
@@ -66,10 +72,18 @@ module RadbearUser
     end
   end
 
+  def display_style
+    if user_status.active || user_status == UserStatus.default_pending_status
+      external? ? 'warning' : ''
+    else
+      'danger'
+    end
+  end
+
   private
 
     def validate_email_address
-      return if email.blank? || user_status_id.nil? || !user_status.validate_email
+      return if email.blank? || user_status_id.nil? || !user_status.validate_email || external?
 
       domains = Company.main.valid_user_domains
       components = email.split('@')
@@ -82,6 +96,7 @@ module RadbearUser
       return unless super_admin
 
       errors.add(:super_admin, 'can only be enabled for an admin') unless permission?(:admin)
+      errors.add(:super_admin, 'is not applicable for external users') if external?
     end
 
     def notify_user_approved
@@ -95,5 +110,9 @@ module RadbearUser
       User.admins.each do |admin|
         RadbearMailer.user_was_approved(admin, self, approved_by).deliver_later if admin.id != id
       end
+    end
+
+    def notify_user_accepted
+      RadbearMailer.simple_message(User.admins.pluck(:id), 'User Accepted', "#{self} has accepted the invitation to join #{I18n::t(:app_name)}.").deliver_later
     end
 end

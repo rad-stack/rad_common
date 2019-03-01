@@ -1,9 +1,9 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: %i[show edit update destroy audit audit_by]
+  before_action :set_user, only: %i[show edit update destroy audit audit_by resend_invitation]
 
   authorize_actions_for User
-  authority_actions audit: 'audit', audit_by: 'audit', audit_search: 'audit'
+  authority_actions audit: 'audit', audit_by: 'audit', audit_search: 'audit', resend_invitation: 'create'
 
   def index
     @pending = User.pending.by_name
@@ -61,6 +61,12 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
+  def resend_invitation
+    @user.invite!(current_user)
+    flash[:success] = 'We resent the invitation to the user.'
+    redirect_back(fallback_location: root_path)
+  end
+
   private
 
     def set_user
@@ -78,7 +84,7 @@ class UsersController < ApplicationController
 
     def permitted_params
       base_params = %i[user_status_id first_name last_name mobile_phone last_activity_at
-                       password password_confirmation super_admin]
+                       password password_confirmation super_admin external]
 
       params.require(:user).permit(base_params + Rails.application.config.additional_user_params)
     end

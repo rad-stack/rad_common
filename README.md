@@ -85,12 +85,12 @@ To generate items related to the dummy app, first cd into the /spec/dummy direct
 
 This project contains a "dummy" app to run test against, see /spec/dummy. To prepare the test database, run the following command:
 
-`rake app:db:migrate`
-`rake app:db:test:prepare`
+`rails app:db:migrate`
+`rails app:db:test:prepare`
 
 To run the test suite, run the following command:
 
-`rspec --exclude-pattern 'spec/dummy/lib/**/*_spec.rb'`
+`bundle exec rspec --exclude-pattern 'spec/dummy/lib/**/*_spec.rb'`
 
 ### Point Projects to Local Source Instead of Github
 

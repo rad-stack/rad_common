@@ -1,4 +1,5 @@
 .panel.panel-default
-  = render 'layouts/panel_header'
+  -actions = [link_to('Right Button', root_path, class: 'btn btn-default btn-sm')]
+  = render 'layouts/panel_header', additional_external_actions: actions
   .panel-body
     = render 'layouts/show_data_columns', data: %i[name code notify timezone], resource: @division
