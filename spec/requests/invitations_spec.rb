@@ -88,7 +88,7 @@ describe 'Invitations', type: :request do
     it 'notifies admin when invitee accepts' do
       ActionMailer::Base.deliveries = []
 
-      @invitee.send(:notify_user_accepted)
+      @invitee.accept_invitation!
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.subject).to include 'Accepted'
