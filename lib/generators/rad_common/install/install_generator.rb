@@ -14,7 +14,6 @@ module RadCommon
 
         # controllers
         template '../../../../../spec/dummy/app/controllers/application_controller.rb', 'app/controllers/application_controller.rb'
-        template '../../../../../spec/dummy/app/controllers/users/confirmations_controller.rb', 'app/controllers/users/confirmations_controller.rb'
 
         # models
         template '../../../../../spec/dummy/app/models/user.rb', 'app/models/user.rb'
