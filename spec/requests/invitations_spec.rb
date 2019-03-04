@@ -63,6 +63,21 @@ describe 'Invitations', type: :request do
         end
       end
     end
+
+    describe 'resend' do
+      it 'resends invitation' do
+        visit new_user_invitation_path
+        fill_in 'Email', with: valid_email
+        fill_in 'First name', with: first_name
+        fill_in 'Last name', with: last_name
+        click_button 'Send'
+        expect(page).to have_content "We invited '#{first_name} #{last_name}'"
+
+        visit users_path
+        click_link 'Resend Invitation'
+        expect(page).to have_content 'We resent the invitation to the user.'
+      end
+    end
   end
 
   describe 'accept' do

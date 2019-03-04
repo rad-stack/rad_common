@@ -32,6 +32,8 @@ module RadCommon
         template '../../../../../spec/dummy/app/views/devise/sessions/new.html.haml', 'app/views/devise/sessions/new.html.haml'
         template '../../../../../spec/dummy/app/views/devise/shared/_links.html.haml', 'app/views/devise/shared/_links.html.haml'
         template '../../../../../spec/dummy/app/views/devise/unlocks/new.html.haml', 'app/views/devise/unlocks/new.html.haml'
+        template '../../../../../spec/dummy/app/views/devise/invitations/new.html.haml', 'app/views/devise/invitations/new.html.haml'
+        template '../../../../../spec/dummy/app/views/devise/invitations/edit.html.haml', 'app/views/devise/invitations/edit.html.haml'
 
         # specs
         template '../../../../../spec/models/company_spec.rb', 'spec/models/company_spec.rb'
@@ -96,10 +98,11 @@ module RadCommon
 
   mount RadCommon::Engine => '/rad_common'
 
-  devise_for :users, controllers: { confirmations: 'users/confirmations' }
+  devise_for :users, controllers: { confirmations: 'users/confirmations', invitations: 'users/invitations' }
 
   resources :users, only: %i[index show edit update destroy] do
     member do
+      put :resend_invitation
       get :audit
       get :audit_by
     end
