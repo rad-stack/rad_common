@@ -9,7 +9,7 @@ RSpec.describe SecurityRolesController, type: :controller do
   end
 
   let(:valid_attributes) do
-    { name: 'foo' }
+    { name: 'foo', read_audit: true }
   end
 
   let(:invalid_attributes) do
