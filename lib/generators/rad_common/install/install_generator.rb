@@ -38,6 +38,7 @@ module RadCommon
         # specs
         template '../../../../../spec/models/company_spec.rb', 'spec/models/company_spec.rb'
         template '../../../../../spec/models/user_spec.rb', 'spec/models/user_spec.rb'
+        template '../../../../../spec/models/security_roles_user_spec.rb', 'spec/models/security_roles_user_spec.rb'
         template '../../../../../spec/controllers/users/confirmations_controller_spec.rb', 'spec/controllers/users/confirmations_controller_spec.rb'
         template '../../../../../spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
         template '../../../../../spec/controllers/companies_controller_spec.rb', 'spec/controllers/companies_controller_spec.rb'
@@ -55,6 +56,7 @@ module RadCommon
         template '../../../../../spec/factories/security_roles.rb', 'spec/factories/security_roles.rb'
         template '../../../../../spec/factories/user_statuses.rb', 'spec/factories/user_statuses.rb'
         template '../../../../../spec/factories/users.rb', 'spec/factories/users.rb'
+        template '../../../../../spec/factories/security_roles_users.rb', 'spec/factories/security_roles_users.rb'
 
         # templates
 
