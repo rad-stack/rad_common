@@ -1,5 +1,5 @@
 .panel.panel-default
-  = render 'layouts/panel_header', no_new_button: true
+  = render 'layouts/panel_header', no_new_button: true, additional_actions: [user_confirm_action(@user)]
   .panel-body
     = render 'layouts/show_data_columns', data: user_show_data(@user), resource: @user
 = render 'users/security'

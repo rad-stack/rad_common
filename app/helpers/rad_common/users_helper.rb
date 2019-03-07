@@ -15,5 +15,14 @@ module RadCommon
       content = content_tag(:it, '', class: 'fa fa-plus-square right-5px') + 'Invite User'
       [link_to(content, new_user_invitation_path, class: 'btn btn-success btn-sm')]
     end
+
+    def user_confirm_action(user)
+      return unless current_user.can_update?(User) && current_user.can_update?(user) && !user.confirmed?
+
+      content = content_tag(:it, '', class: 'fa fa-check right-5px') + 'Confirm Email'
+      link_to content, confirm_user_path(@user), method: :put,
+                                                 data: { confirm: "This will manually confirm the user's email address and bypass this verification step. Are you sure?" },
+                                                 class: 'btn btn-warning btn-sm'
+    end
   end
 end

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :users, only: %i[index show edit update destroy] do
     member do
       put :resend_invitation
+      put :confirm
       get :audit
       get :audit_by
     end
