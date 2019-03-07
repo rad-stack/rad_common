@@ -1,4 +1,6 @@
 -show_roles = true if local_assigns[:show_roles].nil?
+-show_actions = true if local_assigns[:show_actions].nil?
+-show_actions = show_actions && (current_user.can_update?(User) || current_user.can_delete?(User))
 
 .row
   .col-md-12
@@ -16,7 +18,7 @@
           %th Roles
         -if Rails.application.config.external_users
           %th Client?
-        -if current_user.can_update?(User) || current_user.can_delete?(User)
+        -if show_actions
           %th.text-center Actions
 
       - users.each do |user|
@@ -35,7 +37,7 @@
                 %p
           -if Rails.application.config.external_users
             %td= format_boolean(user.external?)
-          -if current_user.can_update?(User) || current_user.can_delete?(User)
+          -if show_actions
             %td
               -if current_user.can_update?(user)
                 = link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', edit_user_path(user), class: 'btn btn-default btn-xs btn-block btn-block'
