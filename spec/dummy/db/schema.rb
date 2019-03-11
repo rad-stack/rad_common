@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_04_202421) do
+ActiveRecord::Schema.define(version: 2019_02_25_194928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,6 +142,14 @@ ActiveRecord::Schema.define(version: 2019_02_04_202421) do
     t.datetime "last_sign_in_with_authy"
     t.boolean  "authy_enabled",           :default=>false, :null=>false
     t.string   "firebase_id"
+    t.string   "invitation_token",        :index=>{:name=>"index_users_on_invitation_token", :unique=>true}
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer  "invitation_limit"
+    t.integer  "invited_by_id",           :index=>{:name=>"index_users_on_invited_by_id"}
+    t.integer  "invitations_count",       :default=>0, :index=>{:name=>"index_users_on_invitations_count"}
+    t.boolean  "external",                :default=>false, :null=>false
   end
 
   add_foreign_key "audits", "users"
@@ -149,4 +157,5 @@ ActiveRecord::Schema.define(version: 2019_02_04_202421) do
   add_foreign_key "security_roles_users", "security_roles"
   add_foreign_key "security_roles_users", "users"
   add_foreign_key "users", "user_statuses"
+  add_foreign_key "users", "users", column: "invited_by_id"
 end

@@ -1,4 +1,4 @@
--if current_user.can_read?(SecurityRole)
+-if @user.internal? && current_user.can_read?(SecurityRole)
   -all_perms = @user.all_permissions
   .row
     .col-md-6

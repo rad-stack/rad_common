@@ -14,7 +14,6 @@ module RadCommon
 
         # controllers
         template '../../../../../spec/dummy/app/controllers/application_controller.rb', 'app/controllers/application_controller.rb'
-        template '../../../../../spec/dummy/app/controllers/users/confirmations_controller.rb', 'app/controllers/users/confirmations_controller.rb'
 
         # models
         template '../../../../../spec/dummy/app/models/user.rb', 'app/models/user.rb'
@@ -33,10 +32,13 @@ module RadCommon
         template '../../../../../spec/dummy/app/views/devise/sessions/new.html.haml', 'app/views/devise/sessions/new.html.haml'
         template '../../../../../spec/dummy/app/views/devise/shared/_links.html.haml', 'app/views/devise/shared/_links.html.haml'
         template '../../../../../spec/dummy/app/views/devise/unlocks/new.html.haml', 'app/views/devise/unlocks/new.html.haml'
+        template '../../../../../spec/dummy/app/views/devise/invitations/new.html.haml', 'app/views/devise/invitations/new.html.haml'
+        template '../../../../../spec/dummy/app/views/devise/invitations/edit.html.haml', 'app/views/devise/invitations/edit.html.haml'
 
         # specs
         template '../../../../../spec/models/company_spec.rb', 'spec/models/company_spec.rb'
         template '../../../../../spec/models/user_spec.rb', 'spec/models/user_spec.rb'
+        template '../../../../../spec/models/security_roles_user_spec.rb', 'spec/models/security_roles_user_spec.rb'
         template '../../../../../spec/controllers/users/confirmations_controller_spec.rb', 'spec/controllers/users/confirmations_controller_spec.rb'
         template '../../../../../spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
         template '../../../../../spec/controllers/companies_controller_spec.rb', 'spec/controllers/companies_controller_spec.rb'
@@ -47,12 +49,14 @@ module RadCommon
         template '../../../../../spec/requests/users_spec.rb', 'spec/requests/users_spec.rb'
         template '../../../../../spec/requests/companies_spec.rb', 'spec/requests/companies_spec.rb'
         template '../../../../../spec/requests/security_roles_spec.rb', 'spec/requests/security_roles_spec.rb'
+        template '../../../../../spec/requests/invitations_spec.rb', 'spec/requests/invitations_spec.rb'
 
         # factories
         template '../../../../../spec/factories/companies.rb', 'spec/factories/companies.rb'
         template '../../../../../spec/factories/security_roles.rb', 'spec/factories/security_roles.rb'
         template '../../../../../spec/factories/user_statuses.rb', 'spec/factories/user_statuses.rb'
         template '../../../../../spec/factories/users.rb', 'spec/factories/users.rb'
+        template '../../../../../spec/factories/security_roles_users.rb', 'spec/factories/security_roles_users.rb'
 
         # templates
 
@@ -96,10 +100,12 @@ module RadCommon
 
   mount RadCommon::Engine => '/rad_common'
 
-  devise_for :users, controllers: { confirmations: 'users/confirmations' }
+  devise_for :users, controllers: { confirmations: 'users/confirmations', invitations: 'users/invitations' }
 
   resources :users, only: %i[index show edit update destroy] do
     member do
+      put :resend_invitation
+      put :confirm
       get :audit
       get :audit_by
     end
@@ -141,6 +147,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20180609150231_company_valid_domains.rb', 'company_valid_domains'
         apply_migration '../../../../../spec/dummy/db/migrate/20180925214758_remove_rad_common_unused_fields.rb', 'remove_rad_common_unused_fields'
         apply_migration '../../../../../spec/dummy/db/migrate/20190130182443_remove_logo_settings.rb', 'remove_logo_settings'
+        apply_migration '../../../../../spec/dummy/db/migrate/20190225194928_devise_invitable_add_to_users.rb', 'devise_invitable_add_to_users'
       end
 
       def self.next_migration_number(path)

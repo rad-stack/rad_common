@@ -1,36 +1,50 @@
+-show_roles = true if local_assigns[:show_roles].nil?
+-show_actions = true if local_assigns[:show_actions].nil?
+-show_actions = show_actions && (current_user.can_update?(User) || current_user.can_delete?(User))
+
 .row
   .col-md-12
     -if users.respond_to?(:current_page)
       = paginate users
 
-    %table.table.table-striped.table-bordered
+    %table.table.table-bordered
       %tr
         %th Name
         %th Email
         %th Signed In
         %th Created
         %th Status
-        %th Roles
-        -if current_user.can_update?(User) || current_user.can_delete?(User)
+        -if show_roles
+          %th Roles
+        -if Rails.application.config.external_users
+          %th Client?
+        -if show_actions
           %th.text-center Actions
 
       - users.each do |user|
-        %tr
+        %tr{ class: user.display_style }
           %td= secured_link(user)
           %td= link_to user.email, "mailto:#{user.email}"
           %td= format_datetime(user.current_sign_in_at)
           %td= format_date(user.created_at)
           %td= user.user_status
-          %td
-            -user.security_roles.each do |security_role|
-              = secured_link(security_role)
-              %p
-          -if current_user.can_update?(User) || current_user.can_delete?(User)
+          -if show_roles
+            %td
+              -if user.external?
+                n/a
+              -user.security_roles.each do |security_role|
+                = secured_link(security_role)
+                %p
+          -if Rails.application.config.external_users
+            %td= format_boolean(user.external?)
+          -if show_actions
             %td
               -if current_user.can_update?(user)
                 = link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', edit_user_path(user), class: 'btn btn-default btn-xs btn-block btn-block'
               -if current_user.can_delete?(user)
                 = link_to content_tag(:i, '', class: 'fa fa-times right-5x') + ' Delete', user, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger btn-xs btn-block btn-block"
+              -if current_user.can_create?(User) && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
+                = link_to 'Resend Invitation', resend_invitation_user_path(user), method: :put, class: 'btn btn-xs btn-success btn-block', data: { confirm: 'Are you sure?' }
 
     -if users.respond_to?(:current_page)
       = paginate users

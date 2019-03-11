@@ -31,9 +31,14 @@ RSpec.describe 'Divisions', type: :request do
   end
 
   describe 'show' do
+    before { visit division_path(division) }
+
     it 'shows the division' do
-      visit division_path(division)
       expect(page).to have_content(division.to_s)
+    end
+
+    it 'shows the right actions' do
+      expect(page).to have_content('Right Button')
     end
   end
 end

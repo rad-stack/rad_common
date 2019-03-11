@@ -9,6 +9,7 @@ module RadCommon
     require 'authority'
     require 'devise'
     require 'devise-authy'
+    require 'devise_invitable'
     require 'faker'
     require 'font-awesome-rails'
     require 'haml-rails'

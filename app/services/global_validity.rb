@@ -50,8 +50,7 @@ class GlobalValidity
 
       [ActiveRecord::SchemaMigration,
        ApplicationRecord,
-       Audited::Audit,
-       SecurityRolesUser] + Rails.application.config.global_validity_exclude
+       Audited::Audit] + Rails.application.config.global_validity_exclude
     end
 
     def check_model(model)
