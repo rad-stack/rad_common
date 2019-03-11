@@ -69,5 +69,16 @@ $ ->
   if $('.read-more').length
     $('.read-more').readmore( { speed: 75, moreLink: "<a class='btn btn-primary btn-xs read-more-btn more-btn' href='#'><div>Read more</div></a>", lessLink: "<a class='btn btn-primary btn-xs read-more-btn close-btn' href='#'><div>Close</div></a>" } )
 
+  checkClientUser()
+
+  $('#user_external').on 'change', ->
+    checkClientUser()
+
   humanize = (string) ->
     string[0].toUpperCase() + string.substring(1).replace(/([a-z])(?=[A-Z])/g, "$1 ")
+
+  checkClientUser = ->
+  if $('#user_external').is(':checked')
+    $('.internal').hide()
+  else
+    $('.internal').show()
