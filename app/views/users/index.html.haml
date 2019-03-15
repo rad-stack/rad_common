@@ -1,5 +1,5 @@
 .panel.panel-default
-  = render 'layouts/panel_header', action_name: 'custom', title: "Pending Users (#{@pending.count})", icon: 'fa-list', additional_actions: user_actions
+  = render 'layouts/panel_header', action_name: 'custom', title: "Pending Users (#{@pending.count})", icon: 'fa-list', additional_external_actions: users_actions
   .panel-body
     = render 'users/index', users: @pending
 

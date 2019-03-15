@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     member do
       put :resend_invitation
       put :confirm
+      put :reset_authy
       get :audit
       get :audit_by
     end

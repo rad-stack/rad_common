@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: %i[show edit update destroy audit audit_by resend_invitation confirm]
+  before_action :set_user, only: %i[show edit update destroy audit audit_by resend_invitation confirm reset_authy]
 
   authorize_actions_for User
 
@@ -8,7 +8,8 @@ class UsersController < ApplicationController
                     audit_by: 'audit',
                     audit_search: 'audit',
                     resend_invitation: 'create',
-                    confirm: 'update'
+                    confirm: 'update',
+                    reset_authy: 'update'
 
   def index
     @pending = User.pending.by_name
@@ -77,6 +78,14 @@ class UsersController < ApplicationController
 
     @user.confirm
     flash[:success] = 'User was successfully confirmed.'
+    redirect_to @user
+  end
+
+  def reset_authy
+    authorize_action_for @user
+
+    @user.reset_authy!
+    flash[:success] = 'User was successfully reset.'
     redirect_to @user
   end
 

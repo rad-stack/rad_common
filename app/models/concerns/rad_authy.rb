@@ -6,6 +6,11 @@ module RadAuthy
     before_validation :maybe_update_authy
   end
 
+  def reset_authy!
+    update! authy_enabled: false, authy_id: nil
+    update! authy_enabled: true
+  end
+
   private
 
     def validate_authy
