@@ -78,7 +78,7 @@ $ ->
     string[0].toUpperCase() + string.substring(1).replace(/([a-z])(?=[A-Z])/g, "$1 ")
 
   checkClientUser = ->
-  if $('#user_external').is(':checked')
-    $('.internal').hide()
-  else
-    $('.internal').show()
+    if $('#user_external').is(':checked')
+      $('.internal').hide()
+    else
+      $('.internal').show()
