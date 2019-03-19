@@ -9,7 +9,7 @@ class RadbearMailer < ActionMailer::Base
   default from: Devise.mailer_sender
   default reply_to: Rails.application.config.app_admin_email
 
-  def new_user_signed_up(admin, user)
+  def new_user_signed_up(recipients, user)
     auto_approve = user.auto_approve?
 
     action_message = 'Review their user registration information'
@@ -19,10 +19,13 @@ class RadbearMailer < ActionMailer::Base
                       button_text: auto_approve ? 'Review' : 'Review & Approve',
                       button_url: edit_user_url(user) }
 
-    @recipient = admin
+    @recipient = User.where(id: recipients)
+    to_address = @recipient.map { |item| item.formatted_email }
+
     @message = "#{user} has signed up on #{I18n.t(:app_name)}"
     @message += auto_approve ? '.' : ' and is awaiting approval.'
-    mail(to: "\"#{admin}\" <#{admin.email}>", subject: "New User on #{I18n.t(:app_name)}")
+
+    mail(to: to_address, subject: "New User on #{I18n.t(:app_name)}")
   end
 
   def your_account_approved(user)
@@ -31,19 +34,21 @@ class RadbearMailer < ActionMailer::Base
 
     @recipient = user
     @message = "Your account was approved and you can begin using #{I18n.t(:app_name)}."
-    mail(to: "\"#{user}\" <#{user.email}>", subject: 'Your Account Was Approved')
+    mail to: @recipient.formatted_email, subject: 'Your Account Was Approved'
   end
 
-  def user_was_approved(admin, user, approver)
+  def user_was_approved(recipients, user, approver)
     @email_action = { message: 'You can review this approval if desired.',
                       button_text: 'Review User',
                       button_url: user_url(user) }
 
     approved_by_name = (approver ? approver.to_s : 'an admin')
 
-    @recipient = admin
+    @recipient = User.where(id: recipients)
+    to_address = @recipient.map { |item| item.formatted_email }
+
     @message = "#{user} was approved by #{approved_by_name} on #{I18n.t(:app_name)}."
-    mail(to: "\"#{admin}\" <#{admin.email}>", subject: "User Was Approved on #{I18n.t(:app_name)}")
+    mail(to: to_address, subject: "User Was Approved on #{I18n.t(:app_name)}")
   end
 
   def simple_message(recipient, subject, message, options = {})
@@ -66,11 +71,22 @@ class RadbearMailer < ActionMailer::Base
     mail(to: to_address, subject: subject)
   end
 
-  def global_validity(recipient, problems)
-    @recipient = recipient.count == 1 ? recipient.first : recipient
+  def global_validity(recipients, problems)
+    @recipient = User.where(id: recipients)
+    to_address = @recipient.map { |item| item.formatted_email }
+
     @problems = problems
 
-    mail(to: recipient.pluck(:email), subject: "Invalid data in #{I18n.t(:app_name)}")
+    mail(to: to_address, subject: "Invalid data in #{I18n.t(:app_name)}")
+  end
+
+  def global_validity_on_demand(recipient, problems)
+    @recipient = recipient
+    @problems = problems
+
+    mail to: recipient.formatted_email,
+         subject: "Invalid data in #{I18n.t(:app_name)}",
+         template_name: 'global_validity'
   end
 
   def email_report(user, csv, report_name, options = {})
@@ -93,8 +109,7 @@ class RadbearMailer < ActionMailer::Base
     @message = "Attached is the #{report_name}" + message_date_string + '.'
     attachments["#{report_name}#{attachment_date_string}.csv"] = { mime_type: 'text/csv', content: csv }
 
-    mail(to: "\"#{@recipient.first_name} #{@recipient.last_name}\" <#{@recipient.email}>",
-         subject: "#{report_name}#{subject_date_string}")
+    mail to: @recipient.formatted_email, subject: "#{report_name}#{subject_date_string}"
   end
 
   private

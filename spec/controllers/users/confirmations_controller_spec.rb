@@ -2,10 +2,11 @@ require 'rails_helper'
 
 RSpec.describe Users::ConfirmationsController, type: :controller do
   describe 'show' do
-    let!(:user) { create(:admin) }
+    let(:user) { create(:admin) }
+    let(:notification) { create :notification, name: 'new_user_signed_up'}
+    let!(:user_notification) { create :user_notification, user: user, notification: notification }
 
     it 'sends a new user sign up email to the site admins' do
-      expect(User.admins.count).not_to eq 0
       new_user = create(:pending, confirmed_at: nil, confirmation_sent_at: nil)
       @request.env['devise.mapping'] = Devise.mappings[:user]
       ActionMailer::Base.deliveries = []

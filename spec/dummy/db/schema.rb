@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_25_194928) do
+ActiveRecord::Schema.define(version: 2019_03_18_115634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,12 @@ ActiveRecord::Schema.define(version: 2019_02_25_194928) do
     t.string   "timezone"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.string   "name",       :null=>false, :index=>{:name=>"index_notifications_on_name", :unique=>true}
+    t.datetime "created_at", :null=>false
+    t.datetime "updated_at", :null=>false
+  end
+
   create_table "security_roles", id: :serial, force: :cascade do |t|
     t.string   "name",            :null=>false, :index=>{:name=>"index_security_roles_on_name", :unique=>true}
     t.boolean  "admin",           :default=>false, :null=>false
@@ -103,6 +109,14 @@ ActiveRecord::Schema.define(version: 2019_02_25_194928) do
     t.string   "name",       :null=>false, :index=>{:name=>"index_statuses_on_name", :unique=>true}
     t.datetime "created_at", :null=>false
     t.datetime "updated_at", :null=>false
+  end
+
+  create_table "user_notifications", force: :cascade do |t|
+    t.integer  "user_id",         :null=>false, :index=>{:name=>"index_user_notifications_on_user_id_and_notification_id", :with=>["notification_id"], :unique=>true}
+    t.integer  "notification_id", :null=>false
+    t.boolean  "enabled",         :default=>true, :null=>false
+    t.datetime "created_at",      :null=>false
+    t.datetime "updated_at",      :null=>false
   end
 
   create_table "user_statuses", id: :serial, force: :cascade do |t|
@@ -156,6 +170,8 @@ ActiveRecord::Schema.define(version: 2019_02_25_194928) do
   add_foreign_key "divisions", "users", column: "owner_id"
   add_foreign_key "security_roles_users", "security_roles"
   add_foreign_key "security_roles_users", "users"
+  add_foreign_key "user_notifications", "notifications"
+  add_foreign_key "user_notifications", "users"
   add_foreign_key "users", "user_statuses"
   add_foreign_key "users", "users", column: "invited_by_id"
 end

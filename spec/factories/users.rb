@@ -8,6 +8,7 @@ FactoryBot.define do
     password_confirmation { 'password' }
     confirmed_at { Time.zone.now }
     association :user_status, factory: %i[user_status active]
+    do_not_notify_approved { true }
 
     factory :admin do |f|
       f.after(:create) { |user| user.security_roles << SecurityRole.find_by(name: 'Admin') }

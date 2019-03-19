@@ -29,6 +29,9 @@ describe GlobalValidity, type: :service do
   end
 
   context 'with invalid data' do
+    let(:notification) { create :notification, name: 'global_validity' }
+    let!(:user_notification) { create :user_notification, user: super_admin, notification: notification}
+
     before do
       admin_security_role.create_division = false
       admin_security_role.save!(validate: false)
@@ -36,12 +39,12 @@ describe GlobalValidity, type: :service do
 
     context 'without super admin' do
       subject { global_validity.run }
-      before { super_admin.update!(super_admin: false) }
+      before { user_notification.destroy! }
 
       it 'should raise an exception' do
         expect {
           subject
-        }.to raise_error(RuntimeError, 'no super admins are configured')
+        }.to raise_error(RuntimeError, 'no users for notification: global_validity')
       end
     end
 
