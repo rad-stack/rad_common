@@ -19,7 +19,6 @@ class DivisionsController < ApplicationController
 
   def create
     @division = Division.new(permitted_params)
-    @division.owner = current_user
 
     if @division.save
       redirect_to @division, notice: 'Division was successfully created.'
