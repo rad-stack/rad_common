@@ -45,17 +45,18 @@
   {
       jQuery(".ui-autocomplete-input").each( function()
                                              {
-                                              display_autocomplete_error(this);
+                                              display_autocomplete_error(this, "id-element");
+                                              display_autocomplete_error(this, "association-element");
                                              });
   }
 
-  function display_autocomplete_error(e)
+  function display_autocomplete_error(e, data_attribute)
   {
       formGroup = jQuery(e).parent(".form-group");
 
-      if( jQuery(e).data("id-element") )
+      if( jQuery(e).data(data_attribute) )
       {
-        idElement = jQuery( jQuery(e).data("id-element") );
+        idElement = jQuery( jQuery(e).data(data_attribute) );
         idFormGroup = idElement.parent(".form-group");
 
         idFormGroup.find("span.help-block").each( function()
