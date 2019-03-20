@@ -58,6 +58,6 @@ class DivisionsController < ApplicationController
     end
 
     def permitted_params
-      params.require(:division).permit(:name, :code, :notify, :timezone)
+      params.require(:division).permit(:name, :code, :notify, :timezone, :owner_id)
     end
 end
