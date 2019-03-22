@@ -4,7 +4,7 @@ module Notifications
 
       def notify_list
         users = default_users
-        users = users.where.not(id: NotificationSetting.where(notification_type: self.class.name, enabled: false).map(&:user_id))
+        users = users.where.not(id: NotificationSetting.where(notification_type: self.class.name, enabled: false))
 
         raise 'no users to notify' if users.count.zero?
 
