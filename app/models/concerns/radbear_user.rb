@@ -2,7 +2,7 @@ module RadbearUser
   extend ActiveSupport::Concern
 
   included do
-    has_many :user_notifications, dependent: :destroy
+    has_many :notification_settings, dependent: :destroy
 
     attr_accessor :approved_by, :do_not_notify_approved
 
@@ -113,7 +113,7 @@ module RadbearUser
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
       RadbearMailer.your_account_approved(self).deliver_later
-      Notification.user_was_approved(self, approved_by) unless do_not_notify_approved
+      Notifications::UserWasApprovedNotification.new.notify!([self, approved_by]) unless do_not_notify_approved
     end
 
     def notify_user_accepted

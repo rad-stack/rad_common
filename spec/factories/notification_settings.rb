@@ -1,7 +1,6 @@
 FactoryBot.define do
-  factory :user_notification do
+  factory :notification_setting do
     enabled { true }
     association :user
-    association :notification
   end
 end

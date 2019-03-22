@@ -1,24 +1,15 @@
 class UserNotifications < ActiveRecord::Migration[5.2]
   def change
-    create_table :notifications do |t|
-      t.string :name, null: false
-
-      t.timestamps
-    end
-
-    add_index :notifications, :name, unique: true
-
-    create_table :user_notifications do |t|
+    create_table :notification_settings do |t|
       t.integer :user_id, null: false
-      t.integer :notification_id, null: false
+      t.string :notification_type, null: false
       t.boolean :enabled, null: false, default: true
 
       t.timestamps
     end
 
-    add_index :user_notifications, %i[user_id notification_id], unique: true
+    add_index :notification_settings, %i[user_id notification_type], unique: true
 
-    add_foreign_key :user_notifications, :users
-    add_foreign_key :user_notifications, :notifications
+    add_foreign_key :notification_settings, :users
   end
 end
