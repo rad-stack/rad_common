@@ -1,0 +1,24 @@
+-can_update = current_user.can_update?(NotificationSetting)
+
+.panel.panel-default
+  = render 'layouts/panel_header', no_new_button: true
+  .panel-body
+    %table.table.table-striped.table-bordered
+      %tr
+        %th Notification
+        %th Enabled
+
+      - @notification_settings.each do |notification_setting|
+        %tr
+          %td= notification_setting.notification
+          %td
+            -if can_update && current_user.can_update?(notification_setting)
+              = simple_form_for(notification_setting) do |f|
+                = f.error_notification
+                .form-inputs
+                  = f.input :enabled
+                  = f.input :notification_type, as: :hidden
+                .form-actions
+                  = f.button :submit, 'Save', class: 'btn btn-xs btn-primary'
+            -else
+              = format_boolean(notification_setting.enabled)

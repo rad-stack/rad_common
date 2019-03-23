@@ -6,8 +6,6 @@ RSpec.describe Notifications::Notification, type: :model do
 
   describe '#notify_list' do
     subject { notification.send(:notify_list) }
-
-    # TODO: if this is enabled, another test fails
     it { is_expected.to eq [admin] }
 
     context 'when user opts out' do
@@ -19,14 +17,8 @@ RSpec.describe Notifications::Notification, type: :model do
                                       enabled: false
       end
 
-      # TODO: why do these fail and the next one using different syntax passes?
       it { is_expected.to include another }
       it { is_expected.to_not include admin }
-
-      it 'excludes them' do
-        expect(subject).to include another
-        expect(subject).to_not include admin
-      end
     end
   end
 

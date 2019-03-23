@@ -4,6 +4,7 @@ module RadSecurityRole
   included do
     has_many :security_roles_users
     has_many :users, through: :security_roles_users, dependent: :destroy
+    has_many :notification_security_roles, dependent: :destroy
 
     scope :by_name, -> { order(:name) }
     alias_attribute :to_s, :name

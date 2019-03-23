@@ -13,6 +13,10 @@ class SecurityRole < ApplicationRecord
       group = get_group('Admin')
       seed_all group
       group.save!
+
+      group.notification_security_roles.create! notification_type: 'Notifications::NewUserSignedUpNotification'
+      group.notification_security_roles.create! notification_type: 'Notifications::UserWasApprovedNotification'
+      group.notification_security_roles.create! notification_type: 'Notifications::GlobalValidityNotification'
     end
 
     private def seed_user

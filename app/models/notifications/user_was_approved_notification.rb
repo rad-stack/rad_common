@@ -5,10 +5,6 @@ module Notifications
       RadbearMailer.user_was_approved(users_except_self(user), user, subject.last).deliver_later
     end
 
-    def default_users
-      User.admins
-    end
-
     private
 
       def users_except_self(user)

@@ -4,7 +4,7 @@ describe GlobalValidity, type: :service do
   let(:global_validity) { GlobalValidity.new }
   let(:admin_security_role) { SecurityRole.find_by(name: 'Admin') }
   let(:company) { Company.main }
-  let!(:super_admin) { create :super_admin }
+  let!(:admin) { create :admin }
   let(:url) { "http://example.com/security_roles/#{admin_security_role.id}" }
   let(:last_email) { ActionMailer::Base.deliveries.last }
   let(:email_body_text) { last_email.body.parts.first.body.raw_source }
@@ -34,9 +34,9 @@ describe GlobalValidity, type: :service do
       admin_security_role.save!(validate: false)
     end
 
-    context 'without super admin' do
+    context 'without admin' do
       subject { global_validity.run }
-      before { super_admin.update!(super_admin: false) }
+      before { admin.update!(security_roles: [SecurityRole.find_by(name: 'User')]) }
 
       it 'should raise an exception' do
         expect {
@@ -50,11 +50,11 @@ describe GlobalValidity, type: :service do
         Rails.configuration.global_validity_supress = [{ class: 'SomeSuppression', messages: ['Anything'] }]
       end
 
-      it 'sends an email to super admins when data is invalid' do
+      it 'sends an email to admins when data is invalid' do
         global_validity.run
 
         expect(last_email.subject).to eq("Invalid data in #{I18n.t(:app_name)}")
-        expect(last_email.to).to eq([super_admin.email])
+        expect(last_email.to).to eq([admin.email])
         expect(email_body_text).to include('requires all permissions to be true')
         expect(email_body_html).to include('requires all permissions to be true')
         expect(email_body_html).to include('There is 1 invalid record')
@@ -76,7 +76,7 @@ describe GlobalValidity, type: :service do
           global_validity.run
 
           expect(last_email.subject).to eq("Invalid data in #{I18n.t(:app_name)}")
-          expect(last_email.to).to eq([super_admin.email])
+          expect(last_email.to).to eq([admin.email])
           expect(email_body_text).to include('requires all permissions to be true')
           expect(email_body_html).to include('requires all permissions to be true')
           expect(email_body_html).to include('There is 1 invalid record')
@@ -90,7 +90,7 @@ describe GlobalValidity, type: :service do
         expect_any_instance_of(SecurityRole).to receive(:persisted?).and_return(false)
         global_validity.run
 
-        expect(last_email.to).to eq([super_admin.email])
+        expect(last_email.to).to eq([admin.email])
         expect(email_body_html).not_to include('requires all permissions to be true')
       end
     end
