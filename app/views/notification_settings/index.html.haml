@@ -16,7 +16,7 @@
               = simple_form_for(notification_setting) do |f|
                 = f.error_notification
                 .form-inputs
-                  = f.input :enabled, input_html: { id: "notification_setting_enabled_#{notification_setting.id}" }
+                  = f.input :enabled, input_html: { id: "notification_setting_enabled_#{notification_setting.notification_type}" }
                   = f.input :notification_type, as: :hidden
                 .form-actions
                   = f.button :submit, 'Save', class: 'btn btn-xs btn-primary'
