@@ -9,7 +9,7 @@ class NotificationSettingsController < ApplicationController
     @notification_settings = []
 
     notifications.each do |notification|
-      @notification_settings.push NotificationSetting.find_or_initialize_by(notification_type: notification)
+      @notification_settings.push NotificationSetting.find_or_initialize_by(notification_type: notification, user_id: current_user.id)
     end
   end
 
