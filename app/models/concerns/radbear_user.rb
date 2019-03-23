@@ -117,6 +117,6 @@ module RadbearUser
     end
 
     def notify_user_accepted
-      RadbearMailer.simple_message(User.admins.pluck(:id), 'User Accepted', "#{self} has accepted the invitation to join #{I18n::t(:app_name)}.").deliver_later
+      Notifications::UserAcceptsInvitationNotification.new.notify!(self)
     end
 end

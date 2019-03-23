@@ -3,10 +3,12 @@ module Notifications
     def self.authorized(user)
       where_clause = 'security_role_id IN (SELECT security_role_id FROM security_roles_users WHERE user_id = ?)'
 
-      NotificationSecurityRole.select(:notification_type)
-                              .distinct(:notification_type)
-                              .where(where_clause, user.id)
-                              .pluck(:notification_type)
+      types = NotificationSecurityRole.select(:notification_type)
+                                      .distinct(:notification_type)
+                                      .where(where_clause, user.id)
+                                      .pluck(:notification_type)
+
+      types.sort
     end
 
     def self.description

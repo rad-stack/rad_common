@@ -16,6 +16,7 @@ class SecurityRole < ApplicationRecord
 
       group.notification_security_roles.create! notification_type: 'Notifications::NewUserSignedUpNotification'
       group.notification_security_roles.create! notification_type: 'Notifications::UserWasApprovedNotification'
+      group.notification_security_roles.create! notification_type: 'Notifications::UserAcceptsInvitationNotification'
       group.notification_security_roles.create! notification_type: 'Notifications::GlobalValidityNotification'
     end
 
