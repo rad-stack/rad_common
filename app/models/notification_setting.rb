@@ -6,7 +6,6 @@ class NotificationSetting < ApplicationRecord
   scope :enabled, -> { where(enabled: true) }
 
   def notification
-    # TODO: move this to the notification class
-    notification_type.gsub('Notifications::', '').underscore.titleize.gsub(' Notification', '')
+    notification_type.constantize
   end
 end

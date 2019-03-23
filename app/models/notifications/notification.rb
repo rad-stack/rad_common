@@ -9,13 +9,17 @@ module Notifications
                               .pluck(:notification_type)
     end
 
+    def self.description
+      to_s.gsub('Notifications::', '').underscore.titleize.gsub(' Notification', '')
+    end
+
     private
 
       def permitted_users
-        where_clause = 'id IN (SELECT user_id FROM security_roles_users WHERE security_role_id IN '\
+        where_clause = 'users.id IN (SELECT user_id FROM security_roles_users WHERE security_role_id IN '\
                        '(SELECT security_role_id FROM notification_security_roles WHERE notification_type = ?))'
 
-        User.where(where_clause, notification_type)
+        User.active.where(where_clause, notification_type)
       end
 
       def notification_type

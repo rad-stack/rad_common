@@ -10,7 +10,7 @@
 
       - @notification_settings.each do |notification_setting|
         %tr
-          %td= notification_setting.notification
+          %td= notification_setting.notification.description
           %td
             -if can_update && current_user.can_update?(notification_setting)
               = simple_form_for(notification_setting) do |f|
