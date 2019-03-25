@@ -13,7 +13,7 @@ class NotificationSettingsController < ApplicationController
   end
 
   def create
-    @notification_setting = NotificationSetting.find_or_initialize_by(notification_type: permitted_params[:notification_type], user_id: current_user.id)
+    @notification_setting = NotificationSetting.find_or_initialize_by(notification_type: permitted_params[:notification_type], user: current_user)
     @notification_setting.enabled = permitted_params[:enabled]
 
     result = if @notification_setting.save
