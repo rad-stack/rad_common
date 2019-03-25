@@ -13,7 +13,7 @@
           %td= notification_setting.notification.description
           %td
             -if can_update && current_user.can_update?(notification_setting)
-              = simple_form_for(notification_setting) do |f|
+              = simple_form_for notification_setting, url: "http://localhost:3000/notification_settings", method: :post do |f|
                 = f.error_notification
                 .form-inputs
                   = f.input :enabled, input_html: { id: "notification_setting_enabled_#{notification_setting.notification.description.parameterize.underscore}" }
