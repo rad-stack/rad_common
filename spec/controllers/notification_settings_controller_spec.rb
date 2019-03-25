@@ -35,12 +35,4 @@ RSpec.describe NotificationSettingsController, type: :controller do
       end
     end
   end
-
-    describe 'with invalid params' do
-      it 'redirects to the settings' do
-        put :update, params: { id: notification_setting.to_param, notification_setting: invalid_attributes }
-        expect(response).to redirect_to(notification_settings_path)
-      end
-    end
-  end
 end
