@@ -39,10 +39,15 @@ module RadCommon
         template '../../../../../spec/models/company_spec.rb', 'spec/models/company_spec.rb'
         template '../../../../../spec/models/user_spec.rb', 'spec/models/user_spec.rb'
         template '../../../../../spec/models/security_roles_user_spec.rb', 'spec/models/security_roles_user_spec.rb'
+        template '../../../../../spec/models/notifications/global_validity_notification_spec.rb', 'spec/models/notifications/global_validity_notification_spec.rb'
+        template '../../../../../spec/models/notifications/new_user_signed_up_notification_spec.rb', 'spec/models/notifications/new_user_signed_up_notification_spec.rb'
+        template '../../../../../spec/models/notifications/notification_spec.rb', 'spec/models/notifications/notification_spec.rb'
+        template '../../../../../spec/models/notifications/user_was_approved_notification_spec.rb', 'spec/models/notifications/user_was_approved_notification_spec.rb'
         template '../../../../../spec/controllers/users/confirmations_controller_spec.rb', 'spec/controllers/users/confirmations_controller_spec.rb'
         template '../../../../../spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
         template '../../../../../spec/controllers/companies_controller_spec.rb', 'spec/controllers/companies_controller_spec.rb'
         template '../../../../../spec/controllers/security_roles_controller_spec.rb', 'spec/controllers/security_roles_controller_spec.rb'
+        template '../../../../../spec/controllers/notification_settings_controller_spec.rb', 'spec/controllers/notification_settings_controller_spec.rb'
         template '../../../../../spec/requests/audit_history_spec.rb', 'spec/requests/audit_history_spec.rb'
         template '../../../../../spec/requests/audit_search_spec.rb', 'spec/requests/audit_search_spec.rb'
         template '../../../../../spec/requests/searches_spec.rb', 'spec/requests/searches_spec.rb'
@@ -50,6 +55,7 @@ module RadCommon
         template '../../../../../spec/requests/companies_spec.rb', 'spec/requests/companies_spec.rb'
         template '../../../../../spec/requests/security_roles_spec.rb', 'spec/requests/security_roles_spec.rb'
         template '../../../../../spec/requests/invitations_spec.rb', 'spec/requests/invitations_spec.rb'
+        template '../../../../../spec/requests/notification_settings_spec.rb', 'spec/requests/notification_settings_spec.rb'
 
         # factories
         template '../../../../../spec/factories/companies.rb', 'spec/factories/companies.rb'
@@ -57,6 +63,7 @@ module RadCommon
         template '../../../../../spec/factories/user_statuses.rb', 'spec/factories/user_statuses.rb'
         template '../../../../../spec/factories/users.rb', 'spec/factories/users.rb'
         template '../../../../../spec/factories/security_roles_users.rb', 'spec/factories/security_roles_users.rb'
+        template '../../../../../spec/factories/notification_settings.rb', 'spec/factories/notification_settings.rb'
 
         # templates
 
