@@ -7,7 +7,9 @@ RSpec.describe Notifications::Notification, type: :model do
   describe '#notify_list' do
     let!(:another) { create :admin }
     subject { notification.send(:notify_list) }
-    it { is_expected.to eq [admin, another] }
+
+    it { is_expected.to include admin }
+    it { is_expected.to include another }
 
     context 'when user opts out' do
       before do
