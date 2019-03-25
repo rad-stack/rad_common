@@ -8,18 +8,23 @@ class NotificationSettingsController < ApplicationController
     @notification_settings = []
 
     notifications.each do |notification|
-      @notification_settings.push NotificationSetting.find_or_initialize_by(notification_type: notification, user_id: current_user.id)
+      @notification_settings.push NotificationSetting.find_or_initialize_by(notification_type: notification,
+                                                                            user_id: current_user.id)
     end
   end
 
   def create
-    @notification_setting = NotificationSetting.find_or_initialize_by(notification_type: permitted_params[:notification_type], user: current_user)
-    @notification_setting.enabled = permitted_params[:enabled]
+    notification_type = permitted_params[:notification_type]
 
-    result = if @notification_setting.save
+    notification_setting = NotificationSetting.find_or_initialize_by(notification_type: notification_type,
+                                                                     user: current_user)
+
+    notification_setting.enabled = permitted_params[:enabled]
+
+    result = if notification_setting.save
                { notice: 'The setting was successfully saved.' }
              else
-               { error: "The setting could not be saved: #{@notification_setting.errors.full_messages.join(', ')}"}
+               { error: "The setting could not be saved: #{notification_setting.errors.full_messages.join(', ')}"}
              end
 
     redirect_to notification_settings_path, result
