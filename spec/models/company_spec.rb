@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe Company, type: :model do
   let(:company) { Company.main }
+  let!(:user) { create :admin }
 
   describe 'valid user domains' do
     it 'allows valid user domains' do
@@ -44,6 +45,13 @@ describe Company, type: :model do
 
       company.valid_user_domains = ['example.com']
       expect(company.valid?).to be true
+    end
+
+    it 'requires notifications to have users to notify' do
+      expect(company.valid?).to be true
+      user.update! security_roles: []
+      expect(company.valid?).to be false
+      expect(company.errors.full_messages.to_s).to include 'has empty notify list'
     end
   end
 

@@ -21,10 +21,12 @@ class NotificationSettingsController < ApplicationController
 
     notification_setting.enabled = permitted_params[:enabled]
 
+    authorize_action_for notification_setting
+
     result = if notification_setting.save
                { notice: 'The setting was successfully saved.' }
              else
-               { error: "The setting could not be saved: #{notification_setting.errors.full_messages.join(', ')}"}
+               { error: "The setting could not be saved: #{notification_setting.errors.full_messages.join(', ')}" }
              end
 
     redirect_to notification_settings_path, result

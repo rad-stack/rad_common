@@ -6,7 +6,7 @@ RSpec.describe Notifications::Notification, type: :model do
 
   describe '#notify_list' do
     let!(:another) { create :admin }
-    subject { notification.send(:notify_list) }
+    subject { notification.send(:notify_list, true) }
 
     it { is_expected.to include admin }
     it { is_expected.to include another }
