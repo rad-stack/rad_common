@@ -1,4 +1,4 @@
--can_update = current_user.can_update?(NotificationSetting)
+-can_create = current_user.can_create?(NotificationSetting)
 
 .panel.panel-default
   = render 'layouts/panel_header', no_new_button: true
@@ -12,7 +12,7 @@
         %tr
           %td= notification_setting.notification.description
           %td
-            -if can_update && current_user.can_update?(notification_setting)
+            -if can_create && current_user.can_create?(notification_setting)
               = simple_form_for notification_setting, url: notification_settings_path, method: :post do |f|
                 = f.error_notification
                 .form-inputs

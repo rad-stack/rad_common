@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Notifications::GlobalValidityNotification, type: :model do
-  let!(:admin) { create :super_admin }
+  let!(:admin) { create :admin }
   let(:notification) { described_class.new }
   let(:mail) { ActionMailer::Base.deliveries.last }
 

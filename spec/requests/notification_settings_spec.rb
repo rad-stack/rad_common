@@ -23,6 +23,7 @@ RSpec.describe 'NotificationSettings', type: :request do
       it 'does not display the settings' do
         visit notification_settings_path
         expect(page).to_not have_content(notification)
+        expect(page).to have_content 'Access Denied'
       end
     end
   end
