@@ -21,7 +21,6 @@ Rails.application.routes.draw do
   end
 
   resources :security_roles_users, only: :show
-  resources :notification_settings, only: %i[index update create]
 
   resources :companies, only: %i[show edit update] do
     get :audit, on: :member

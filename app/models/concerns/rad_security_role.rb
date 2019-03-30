@@ -2,6 +2,8 @@ module RadSecurityRole
   extend ActiveSupport::Concern
 
   included do
+    include Authority::Abilities
+
     has_many :security_roles_users
     has_many :users, through: :security_roles_users, dependent: :destroy
     has_many :notification_security_roles, dependent: :destroy
@@ -28,6 +30,31 @@ module RadSecurityRole
   end
 
   module ClassMethods
+    def self.seed_items
+      seed_admin
+      seed_user
+    end
+
+    def seed_admin(group_name = 'Admin')
+      group = get_group(group_name)
+      seed_all group
+      group.save!
+
+      group.notification_security_roles.create! notification_type: 'Notifications::NewUserSignedUpNotification'
+      group.notification_security_roles.create! notification_type: 'Notifications::UserWasApprovedNotification'
+      group.notification_security_roles.create! notification_type: 'Notifications::UserAcceptsInvitationNotification'
+      group.notification_security_roles.create! notification_type: 'Notifications::GlobalValidityNotification'
+    end
+
+    def seed_all(group)
+      permission_fields.each { |item| group.send(item + '=', true) }
+    end
+
+    def seed_user
+      group = get_group('User')
+      group.save!
+    end
+
     def permission_fields
       (SecurityRole.attribute_names - %w[id name created_at updated_at]).sort
     end

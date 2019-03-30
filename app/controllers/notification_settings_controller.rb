@@ -29,7 +29,7 @@ class NotificationSettingsController < ApplicationController
                { error: "The setting could not be saved: #{notification_setting.errors.full_messages.join(', ')}" }
              end
 
-    redirect_to notification_settings_path, result
+    redirect_to '/rad_common/notification_settings', result
   end
 
   private
