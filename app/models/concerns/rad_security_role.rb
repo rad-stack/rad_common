@@ -30,7 +30,7 @@ module RadSecurityRole
   end
 
   module ClassMethods
-    def self.seed_items
+    def seed_items
       seed_admin
       seed_user
     end
