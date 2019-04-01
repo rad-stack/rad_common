@@ -13,7 +13,7 @@ RSpec.describe NotificationSettingsController, type: :controller do
     context 'not authorized' do
       before { allow_any_instance_of(Notifications::Notification).to receive(:permitted_users).and_return([]) }
 
-      xit 'denies access' do
+      it 'denies access' do
         post :create, params: { notification_setting: valid_attributes }
         expect(response.code).to eq '403'
       end
