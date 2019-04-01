@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Users', type: :request do
+describe 'Users', type :system do
   let(:user) { create :user }
   let(:admin) { create :admin }
   let(:password) { 'password' }

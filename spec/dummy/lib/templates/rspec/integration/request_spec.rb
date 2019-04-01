@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe '<%= class_name.pluralize %>', type: :request do
+RSpec.describe '<%= class_name.pluralize %>', type :system do
   let(:user) { create :admin }
   let(:<%= file_name %>) { create :<%= file_name %> }
 

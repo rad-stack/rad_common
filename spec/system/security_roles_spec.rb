@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'SecurityRoles', type: :request do
+RSpec.describe 'SecurityRoles', type :system do
   let(:user) { create :admin }
   let(:security_role) { SecurityRole.first }
 

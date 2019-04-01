@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Searches', type: :request do
+describe 'Searches', type :system do
   let(:admin) { create :admin }
 
   describe 'searches' do

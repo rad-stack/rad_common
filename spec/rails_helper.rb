@@ -71,6 +71,14 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   include Warden::Test::Helpers
   config.include Capybara::DSL
+
+  config.before(:example, type: :system) do
+    driven_by :rack_test
+  end
+
+  config.before(:example, type: :system, js: true) do
+    driven_by :selenium_chrome_headless
+  end
 end
 
 Capybara.javascript_driver = :webkit
