@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Audit search', type :system do
+describe 'Audit search', type: :system do
   describe 'search' do
     let(:user) { create(:admin) }
 

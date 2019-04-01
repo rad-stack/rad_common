@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Companies', type :system do
+RSpec.describe 'Companies', type: :system do
   let(:user) { create :admin }
   let(:company) { Company.main }
 
