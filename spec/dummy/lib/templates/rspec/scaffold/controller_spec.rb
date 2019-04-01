@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 <% module_namespacing do -%>
-  RSpec.describe '<%= file_name.titleize.pluralize %>', type: :request do
+  RSpec.describe <%= controller_class_name %>Controller, type: :controller do
     let(:user) { create :admin }
     let(:<%= file_name %>) { create :<%= file_name %> }
 
     before do
-      login_as(user, scope: :user)
+      sign_in user
     end
 
     let(:valid_attributes) do
@@ -21,19 +21,19 @@ require 'rails_helper'
       describe 'with valid params' do
         it 'creates a new <%= class_name %>' do
           expect do
-            post '/<%= ns_file_name.pluralize %>', params: { <%= ns_file_name %>: valid_attributes }
+            post :create, params: { <%= ns_file_name %>: valid_attributes }
           end.to change(<%= class_name %>, :count).by(1)
         end
 
         it 'redirects to the created <%= ns_file_name %>' do
-          post '/<%= ns_file_name.pluralize %>', params: { <%= ns_file_name %>: valid_attributes }
+          post :create, params: { <%= ns_file_name %>: valid_attributes }
           expect(response).to redirect_to(<%= class_name %>.last)
         end
       end
 
       describe 'with invalid params' do
         it 're-renders the new template' do
-          post '/<%= ns_file_name.pluralize %>', params: { <%= ns_file_name %>: invalid_attributes }
+          post :create, params: { <%= ns_file_name %>: invalid_attributes }
           expect(response).to render_template('new')
         end
       end
@@ -46,35 +46,39 @@ require 'rails_helper'
         end
 
         it 'updates the requested <%= ns_file_name %>' do
-          put "/<%= ns_file_name.pluralize %>/#{<%= file_name %>.id}", params: { <%= ns_file_name %>: new_attributes }
+          put :update, params: { id: <%= file_name %>.to_param, <%= ns_file_name %>: new_attributes }
           <%= file_name %>.reload
           expect(<%= file_name %>.<%= attributes_names.first %>).to eq('bar')
         end
 
         it 'redirects to the <%= ns_file_name %>' do
-          put "/<%= ns_file_name.pluralize %>/#{<%= file_name %>.id}", params: { <%= ns_file_name %>: valid_attributes }
+          put :update, params: { id: <%= file_name %>.to_param, <%= ns_file_name %>: valid_attributes }
           expect(response).to redirect_to(<%= file_name %>)
         end
       end
 
       describe 'with invalid params' do
         it 're-renders the edit template' do
-          put "/<%= ns_file_name.pluralize %>/#{<%= file_name %>.id}", params: { <%= ns_file_name %>: invalid_attributes }
+          put :update, params: { id: <%= file_name %>.to_param, <%= ns_file_name %>: invalid_attributes }
           expect(response).to render_template('edit')
         end
       end
     end
 
     describe 'DELETE destroy' do
+      before do
+        @request.env['HTTP_REFERER'] =<%= singular_table_name %>_path(<%= singular_table_name %>)
+      end
+
       it 'destroys the requested <%= ns_file_name %>' do
         <%= file_name %>
         expect do
-          delete "/<%= ns_file_name.pluralize %>/#{<%= file_name %>.id}", headers: { HTTP_REFERER: <%= singular_table_name %>_path(<%= singular_table_name %>) }
+          delete :destroy, params: { id: <%= file_name %>.to_param }
         end.to change(<%= class_name %>, :count).by(-1)
       end
 
       it 'redirects to the <%= table_name %> list' do
-        delete "/<%= ns_file_name.pluralize %>/#{<%= file_name %>.id}", headers: { HTTP_REFERER: <%= singular_table_name %>_path(<%= singular_table_name %>) }
+        delete :destroy, params: { id: <%= file_name %>.to_param }
         expect(response).to redirect_to(<%= index_helper %>_url)
       end
     end
