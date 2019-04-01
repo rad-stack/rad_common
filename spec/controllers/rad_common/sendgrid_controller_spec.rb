@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe RadCommon::SendgridController, type: :controller do
+describe RadCommon::SendgridController, type: :request do
   describe 'POST email_error' do
     let!(:super_admin_user1) { create :super_admin }
     let!(:super_admin_user2) { create :super_admin }

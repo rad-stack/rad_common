@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe CompaniesController, type: :controller do
+RSpec.describe 'Companies', type: :request do
   let(:user) { create :admin }
   let(:company) { Company.main }
 
   before do
-    sign_in user
+    login_as(user, scope: :user)
   end
 
   let(:valid_attributes) do
@@ -23,20 +23,20 @@ RSpec.describe CompaniesController, type: :controller do
       end
 
       it 'updates the requested company' do
-        put :update, params: { id: company.to_param, company: new_attributes }
+        put "/companies/#{company.id}", params: { company: new_attributes }
         company.reload
         expect(company.name).to eq('bar')
       end
 
       it 'redirects to the company' do
-        put :update, params: { id: company.to_param, company: new_attributes }
+        put "/companies/#{company.id}", params: { company: new_attributes }
         expect(response).to redirect_to(company)
       end
     end
 
     describe 'with invalid params' do
       it 're-renders the edit template' do
-        put :update, params: { id: company.to_param, company: invalid_attributes }
+        put "/companies/#{company.id}", params: { company: invalid_attributes }
         expect(response).to render_template('edit')
       end
     end

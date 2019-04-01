@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 <% module_namespacing do -%>
-  RSpec.describe <%= controller_class_name %>Controller, type: :controller do
+  RSpec.describe <%= controller_class_name %>Controller, type: :request do
     let(:user) { create :admin }
     let(:<%= file_name %>) { create :<%= file_name %> }
 
     before do
-      sign_in user
+      login_as(user, scope: :user)
     end
 
     let(:valid_attributes) do
