@@ -58,14 +58,14 @@ RSpec.describe UsersController, type: :request do
       expect(response).to redirect_to(users_url)
     end
 
-    xit 'can not delete if user created audits' do
-      # TODO handle flash message tests
+    it 'can not delete if user created audits' do
       Audited::Audit.as_user(another) do
         user.update!(first_name: 'Foo')
       end
 
-      delete "/users/#{user.id}", headers: { HTTP_REFERER: users_path }
-      expect(flash[:error]).to include "User has audit history, can't delete"
+      delete "/users/#{another.id}", headers: { HTTP_REFERER: users_path }
+      follow_redirect!
+      expect(response.body).to include 'User has audit history'
     end
   end
 
