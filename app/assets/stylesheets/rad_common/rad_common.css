@@ -247,6 +247,11 @@ td.fa.security-group-td { border-style: none; }
   text-align: center;
 }
 
+.h-scroll-table {
+  width: auto;
+  overflow-x: scroll;
+}
+
 /* Mobile styles*/
 @media (max-width: 768px) {
   .content .global-search-group {

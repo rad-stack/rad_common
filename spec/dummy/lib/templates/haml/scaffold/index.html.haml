@@ -5,26 +5,27 @@
   .panel-body
     = paginate @<%= plural_table_name %>
 
-    %table.table.table-striped.table-bordered
-      %tr
-        %th Name
-    <% for attribute in attributes -%>
-    %th <%= attribute.human_name %>
-    <% end -%>
-    -if show_actions
-          %th Actions
-
-      - @<%= plural_table_name %>.each do |<%= singular_table_name %>|
+    .h-scroll-table
+      %table.table.table-striped.table-bordered
         %tr
-          %td= secured_link <%= singular_table_name %>
-    <% for attribute in attributes -%>
-      %td= <%= singular_table_name %>.<%= attribute.name %>
-    <% end -%>
+          %th Name
+      <% for attribute in attributes -%>
+      %th <%= attribute.human_name %>
+      <% end -%>
       -if show_actions
-            %td
-              -if current_user.can_update?(<%= singular_table_name %>)
-                = link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', edit_<%= singular_table_name %>_path(<%= singular_table_name %>), class: 'btn btn-xs btn-default btn-block'
-              -if current_user.can_delete?(<%= singular_table_name %>)
-                = link_to content_tag(:i, '', class: 'fa fa-times right-5x') + ' Delete', <%= singular_table_name %>, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs btn-block'
+            %th Actions
 
-    = paginate @<%= plural_table_name %>
+        - @<%= plural_table_name %>.each do |<%= singular_table_name %>|
+          %tr
+            %td= secured_link <%= singular_table_name %>
+      <% for attribute in attributes -%>
+        %td= <%= singular_table_name %>.<%= attribute.name %>
+      <% end -%>
+        -if show_actions
+              %td
+                -if current_user.can_update?(<%= singular_table_name %>)
+                  = link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', edit_<%= singular_table_name %>_path(<%= singular_table_name %>), class: 'btn btn-xs btn-default btn-block'
+                -if current_user.can_delete?(<%= singular_table_name %>)
+                  = link_to content_tag(:i, '', class: 'fa fa-times right-5x') + ' Delete', <%= singular_table_name %>, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs btn-block'
+
+      = paginate @<%= plural_table_name %>
