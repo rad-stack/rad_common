@@ -117,6 +117,8 @@ GEM
     capybara-webkit (1.15.1)
       capybara (>= 2.3, < 4.0)
       json
+    childprocess (0.9.0)
+      ffi (~> 1.0, >= 1.0.11)
     climate_control (0.2.0)
     coderay (1.1.2)
     coffee-rails (4.2.2)
@@ -351,6 +353,7 @@ GEM
       ffi (~> 1.9)
     ruby_parser (3.12.0)
       sexp_processor (~> 4.9)
+    rubyzip (1.2.2)
     schema_monkey (2.1.5)
       activerecord (>= 4.2)
       modware (~> 0.1)
@@ -367,6 +370,9 @@ GEM
       activerecord (>= 4.2, < 5.3)
       its-it (~> 1.2)
       schema_plus_core
+    selenium-webdriver (3.141.0)
+      childprocess (~> 0.5)
+      rubyzip (~> 1.2, >= 1.2.2)
     sexp_processor (4.11.0)
     sidekiq (5.2.5)
       connection_pool (~> 2.2, >= 2.2.2)
@@ -435,6 +441,7 @@ DEPENDENCIES
   rubocop
   rubocop-rspec
   schema_validations!
+  selenium-webdriver
   simplecov
 
 BUNDLED WITH
