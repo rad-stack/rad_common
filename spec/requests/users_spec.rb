@@ -96,4 +96,29 @@ RSpec.describe UsersController, type: :request do
       end
     end
   end
+
+  describe 'edit' do
+    before do
+      login_as(admin, scope: :user)
+    end
+
+    it 'renders the edit template' do
+      visit edit_user_path(user)
+      expect(page).to have_content('Editing User')
+    end
+
+    context 'dynamically changing fields', js: true do
+      it 'hides internal fields if client user is checked' do
+        visit edit_user_path(user)
+        find_field('user_external').set(false)
+        expect(page).to have_content 'Security Roles'
+      end
+
+      it 'shows internal fields if client user is not checked' do
+        visit edit_user_path(user)
+        find_field('user_external').set(true)
+        expect(page).not_to have_content 'Security Roles'
+      end
+    end
+  end
 end
