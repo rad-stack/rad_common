@@ -1,4 +1,6 @@
 class EmailAddressValidator < ActiveModel::Validator
+  EMAIL_REGEXP = %r{\A[a-z0-9.!\#$%&'*+\/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*\z}.freeze
+
   def validate(record)
     return if record.blank?
     fields = options[:fields]
@@ -19,7 +21,7 @@ class EmailAddressValidator < ActiveModel::Validator
   end
 
   def check_email(email, field, record)
-    return if email =~ URI::MailTo::EMAIL_REGEXP
+    return if email =~ EMAIL_REGEXP
 
     record.errors.add(field, 'is not written in a valid format')
   end
