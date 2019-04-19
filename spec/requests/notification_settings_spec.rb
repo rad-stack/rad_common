@@ -1,42 +1,74 @@
 require 'rails_helper'
 
 RSpec.describe 'Notification Settings', type: :request do
-  let(:user) { create :admin }
   let(:notification_type) { 'Notifications::NewUserSignedUpNotification' }
 
-  before { login_as(user, scope: :user)}
-
-  let(:valid_attributes) { { notification_type: notification_type, enabled: false } }
-  let(:invalid_attributes) { { notification_type: nil } }
+  before { login_as(user, scope: :user) }
 
   describe 'POST create' do
-    context 'not authorized' do
-      before { allow_any_instance_of(Notifications::Notification).to receive(:permitted_users).and_return([]) }
+    let(:attributes) { { notification_type: notification_type, enabled: false, user_id: target_user.id } }
 
-      it 'denies access' do
-        post '/rad_common/notification_settings', params: { notification_setting: valid_attributes }
-        expect(response.code).to eq '403'
+    subject { post '/rad_common/notification_settings', params: { notification_setting: attributes } }
+
+    context 'admin' do
+      let(:user) { create :admin }
+
+      context 'their settings' do
+        let(:target_user) { user }
+
+        context 'valid' do
+          it 'creates' do
+            expect { subject }.to change(NotificationSetting, :count).by(1)
+          end
+
+          it 'redirects to the settings' do
+            subject
+            expect(response).to redirect_to('/rad_common/notification_settings')
+          end
+        end
+
+        context 'invalid' do
+          let(:attributes) { { notification_type: nil, enabled: false, user_id: target_user.id } }
+
+          it 'fails' do
+            expect { subject }.to change(NotificationSetting, :count).by(0)
+          end
+        end
+      end
+
+      context "another's settings" do
+        let(:target_user) { create :user }
+
+        it 'creates' do
+          expect { subject }.to change(NotificationSetting, :count).by(1)
+        end
       end
     end
 
-    context 'authorized' do
-      describe 'with valid params' do
-        it 'creates a new NotificationSetting' do
-          expect {
-            post '/rad_common/notification_settings', params: { notification_setting: valid_attributes }
-          }.to change(NotificationSetting, :count).by(1)
-        end
+    context 'user' do
+      let(:user) { create :user }
+      let(:security_role) { SecurityRole.find_by(name: 'User') }
 
-        it 'redirects to the settings' do
-          post '/rad_common/notification_settings', params: { notification_setting: valid_attributes }
-          expect(response).to redirect_to('/rad_common/notification_settings')
+      before do
+        user.update! security_roles: [security_role]
+        NotificationSecurityRole.find_by(notification_type: notification_type).update! security_role: security_role
+      end
+
+      context 'their settings' do
+        let(:target_user) { user }
+
+        it 'creates' do
+          user
+          expect { subject }.to change(NotificationSetting, :count).by(1)
         end
       end
 
-      describe 'with invalid params' do
-        it 'redirects to the settings' do
-          post '/rad_common/notification_settings', params: { notification_setting: invalid_attributes }
-          expect(response).to redirect_to('/rad_common/notification_settings')
+      context "another's settings" do
+        let(:target_user) { create :user }
+
+        it 'denies access' do
+          subject
+          expect(response.code).to eq '403'
         end
       end
     end

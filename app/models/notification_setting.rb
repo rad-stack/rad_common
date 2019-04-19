@@ -5,6 +5,8 @@ class NotificationSetting < ApplicationRecord
 
   scope :enabled, -> { where(enabled: true) }
 
+  audited associated_with: :user
+
   def notification
     notification_type.constantize
   end

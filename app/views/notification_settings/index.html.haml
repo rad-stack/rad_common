@@ -1,24 +1,3 @@
--can_create = current_user.can_create?(NotificationSetting)
-
 .panel.panel-default
-  = render 'layouts/panel_header', no_new_button: true
-  .panel-body
-    %table.table.table-striped.table-bordered
-      %tr
-        %th Notification
-        %th Enabled
-
-      - @notification_settings.each do |notification_setting|
-        %tr
-          %td= notification_setting.notification.description
-          %td
-            -if can_create && current_user.can_create?(notification_setting)
-              = simple_form_for notification_setting, url: '/rad_common/notification_settings', method: :post do |f|
-                = f.error_notification
-                .form-inputs
-                  = f.input :enabled, input_html: { id: "notification_setting_enabled_#{notification_setting.notification.description.parameterize.underscore}" }
-                  = f.input :notification_type, as: :hidden
-                .form-actions
-                  = f.button :submit, 'Save', class: 'btn btn-xs btn-primary'
-            -else
-              = format_boolean(notification_setting.enabled)
+  = render 'layouts/panel_header', action_name: 'custom', title: 'Notification Settings', icon: 'fa-list'
+  = render 'notification_settings/index', settings: Notifications::Notification.settings_for_user(current_user)

@@ -31,6 +31,18 @@ module Notifications
       User.active.where(where_clause, notification_type)
     end
 
+    def self.settings_for_user(user)
+      notifications = Notifications::Notification.authorized(user)
+      settings = []
+
+      notifications.each do |notification|
+        settings.push NotificationSetting.find_or_initialize_by(notification_type: notification,
+                                                                user_id: user.id)
+      end
+
+      settings
+    end
+
     private
 
       def notification_type
