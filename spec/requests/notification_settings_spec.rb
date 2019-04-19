@@ -50,7 +50,6 @@ RSpec.describe 'Notification Settings', type: :request do
       let(:security_role) { SecurityRole.find_by(name: 'User') }
 
       before do
-        user.update! security_roles: [security_role]
         NotificationSecurityRole.find_by(notification_type: notification_type).update! security_role: security_role
       end
 
@@ -65,6 +64,8 @@ RSpec.describe 'Notification Settings', type: :request do
 
       context "another's settings" do
         let(:target_user) { create :user }
+
+        before { user.update! security_roles: [] }
 
         it 'denies access' do
           subject
