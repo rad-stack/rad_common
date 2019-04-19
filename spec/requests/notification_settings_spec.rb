@@ -47,7 +47,7 @@ RSpec.describe 'Notification Settings', type: :request do
 
     context 'user' do
       let(:user) { create :user }
-      let(:security_role) { SecurityRole.find_by(name: 'User') }
+      let(:security_role) { user.security_roles.first }
 
       before do
         NotificationSecurityRole.find_by(notification_type: notification_type).update! security_role: security_role
