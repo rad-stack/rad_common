@@ -41,13 +41,15 @@ describe 'Invitations', type: :request do
         end
 
         it 'invites an external user' do
-          visit new_user_invitation_path
-          fill_in 'Email', with: external_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
-          check 'External user?'
-          click_button 'Send'
-          expect(page).to have_content "We invited '#{first_name} #{last_name}'"
+          if Rails.application.config.external_users
+            visit new_user_invitation_path
+            fill_in 'Email', with: external_email
+            fill_in 'First name', with: first_name
+            fill_in 'Last name', with: last_name
+            check 'External user?'
+            click_button 'Send'
+            expect(page).to have_content "We invited '#{first_name} #{last_name}'"
+          end
         end
       end
 

@@ -62,15 +62,26 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.before do
+    SecurityRole.seed_items
+
     allow(Company).to receive(:main).and_return(create(:company))
+
     allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))
     allow(UserStatus).to receive(:default_active_status).and_return(create(:user_status, :active, name: 'Active'))
-    SecurityRole.seed_items
+    allow(UserStatus).to receive(:default_inactive_status).and_return(create(:user_status, :inactive, name: 'Inactive'))
   end
 
   config.include Devise::Test::ControllerHelpers, type: :controller
   include Warden::Test::Helpers
   config.include Capybara::DSL
+
+  config.before(:example, type: :system) do
+    driven_by :rack_test
+  end
+
+  config.before(:example, type: :system, js: true) do
+    driven_by :selenium_chrome_headless
+  end
 end
 
 Capybara.javascript_driver = :webkit

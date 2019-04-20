@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_25_194928) do
+ActiveRecord::Schema.define(version: 2019_03_18_115634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,6 +75,21 @@ ActiveRecord::Schema.define(version: 2019_02_25_194928) do
     t.integer  "division_status"
     t.boolean  "notify",          :default=>false, :null=>false
     t.string   "timezone"
+  end
+
+  create_table "notification_security_roles", force: :cascade do |t|
+    t.string   "notification_type", :null=>false
+    t.integer  "security_role_id",  :null=>false, :index=>{:name=>"unique_notification_roles", :with=>["notification_type"], :unique=>true}
+    t.datetime "created_at",        :null=>false
+    t.datetime "updated_at",        :null=>false
+  end
+
+  create_table "notification_settings", force: :cascade do |t|
+    t.integer  "user_id",           :null=>false, :index=>{:name=>"index_notification_settings_on_user_id_and_notification_type", :with=>["notification_type"], :unique=>true}
+    t.string   "notification_type", :null=>false
+    t.boolean  "enabled",           :default=>true, :null=>false
+    t.datetime "created_at",        :null=>false
+    t.datetime "updated_at",        :null=>false
   end
 
   create_table "security_roles", id: :serial, force: :cascade do |t|
@@ -154,6 +169,8 @@ ActiveRecord::Schema.define(version: 2019_02_25_194928) do
 
   add_foreign_key "audits", "users"
   add_foreign_key "divisions", "users", column: "owner_id"
+  add_foreign_key "notification_security_roles", "security_roles"
+  add_foreign_key "notification_settings", "users"
   add_foreign_key "security_roles_users", "security_roles"
   add_foreign_key "security_roles_users", "users"
   add_foreign_key "users", "user_statuses"
