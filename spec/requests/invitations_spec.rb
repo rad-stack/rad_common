@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe 'Invitations', type: :request do
-  let(:company) { Company.main }
   let!(:admin) { create :admin }
   let(:user) { create :user }
   let(:email_domain) { 'example.com' }

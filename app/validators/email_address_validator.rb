@@ -19,7 +19,7 @@ class EmailAddressValidator < ActiveModel::Validator
   end
 
   def check_email(email, field, record)
-    return if email =~ URI::MailTo::EMAIL_REGEXP
+    return if email =~ URI::MailTo::EMAIL_REGEXP && email !~ /[A-Z]/
 
     record.errors.add(field, 'is not written in a valid format')
   end

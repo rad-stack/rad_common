@@ -4,11 +4,8 @@ class GlobalValidity
   def run
     return unless needs_to_run?
 
-    admins = User.super_admins
-    raise 'no super admins are configured' if admins.blank?
-
     error_messages = check_global_validity
-    RadbearMailer.global_validity(admins, error_messages).deliver_now if error_messages.any?
+    Notifications::GlobalValidityNotification.new.notify!(error_messages) if error_messages.any?
     Company.main.global_validity_ran!
   end
 

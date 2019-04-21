@@ -126,9 +126,9 @@ describe User, type: :model do
     end
 
     it 'updates updated_at datetime when security roles are removed' do
-      user = create(:user, security_roles: [role1, role2])
+      user = create :user
       updated_at = user.updated_at
-      user.update!(security_roles: [role1])
+      user.update!(security_roles: [role2])
       expect(user.updated_at).not_to eq(updated_at)
     end
   end

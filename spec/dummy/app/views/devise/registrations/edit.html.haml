@@ -20,8 +20,8 @@
           -if Rails.application.config.use_avatar
             .col-md-3= f.input :avatar
         .row
-          .col-md-6= f.input :password, autocomplete: 'off', hint: "leave it blank if you don't want to change it", required: false, input_html: { autocomplete: 'off' }
-          .col-md-6= f.input :password_confirmation, required: false
+          .col-md-6= f.input :password, label: 'New Password', autocomplete: 'off', hint: "leave it blank if you don't want to change it", required: false, input_html: { autocomplete: 'off' }
+          .col-md-6= f.input :password_confirmation, label: 'New Password Confirmation', required: false
         .row
           .col-md-3= f.input :current_password, hint: 'we need your current password to confirm your changes', required: true
       .form-actions
