@@ -72,7 +72,7 @@ module RadCompany
     end
 
     def validate_notifications
-      return if NotificationSecurityRole.count.zero?
+      return if NotificationSecurityRole.count.zero? || User.count.zero?
 
       notification_types = NotificationSecurityRole.select(:notification_type)
                                                    .distinct(:notification_type)
