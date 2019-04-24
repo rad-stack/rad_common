@@ -62,8 +62,6 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.before do
-    SecurityRole.seed_items
-
     allow(Company).to receive(:main).and_return(create(:company))
 
     allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))
