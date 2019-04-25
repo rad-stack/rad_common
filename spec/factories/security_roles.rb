@@ -13,10 +13,10 @@ FactoryBot.define do
       delete_division { true }
 
       item.after(:create) do |role|
-        role.notification_security_roles.create! notification_type: 'Notifications::NewUserSignedUpNotification'
-        role.notification_security_roles.create! notification_type: 'Notifications::UserWasApprovedNotification'
-        role.notification_security_roles.create! notification_type: 'Notifications::UserAcceptsInvitationNotification'
-        role.notification_security_roles.create! notification_type: 'Notifications::GlobalValidityNotification'
+        role.notification_security_roles.find_or_create_by! notification_type: 'Notifications::NewUserSignedUpNotification'
+        role.notification_security_roles.find_or_create_by! notification_type: 'Notifications::UserWasApprovedNotification'
+        role.notification_security_roles.find_or_create_by! notification_type: 'Notifications::UserAcceptsInvitationNotification'
+        role.notification_security_roles.find_or_create_by! notification_type: 'Notifications::GlobalValidityNotification'
       end
     end
   end
