@@ -69,6 +69,10 @@ RSpec.configure do |config|
     allow(UserStatus).to receive(:default_inactive_status).and_return(create(:user_status, :inactive, name: 'Inactive'))
   end
 
+  config.after(:each) do
+    Warden.test_reset!
+  end
+
   config.include Devise::Test::ControllerHelpers, type: :controller
   include Warden::Test::Helpers
   config.include Capybara::DSL
