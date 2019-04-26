@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe User, type: :model do
   let(:user) { create :user }
-  let(:admin_role) { SecurityRole.find_by(name: 'Admin') }
+  let(:admin_role) { create :security_role, :admin }
   let(:app) { FirebaseApp.new }
 
   let(:attributes) do
@@ -87,7 +87,7 @@ describe User, type: :model do
     let(:phone_number) { '(123) 456-7111' }
     let(:new_phone_number) { '(456) 789-0123' }
     let(:authy_id) { '1234567' }
-    let(:role1) { SecurityRole.find_by(name: 'User') }
+    let(:role1) { create :security_role }
     let(:role2) { admin_role }
 
     it 'creates and updates the user on authy' do

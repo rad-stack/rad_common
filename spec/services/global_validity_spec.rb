@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe GlobalValidity, type: :service do
   let(:global_validity) { GlobalValidity.new }
-  let(:admin_security_role) { SecurityRole.find_by(name: 'Admin') }
+  let(:admin_security_role) { admin.security_roles.first }
   let(:company) { Company.main }
   let!(:admin) { create :admin }
   let(:url) { "http://example.com/security_roles/#{admin_security_role.id}" }
@@ -36,7 +36,7 @@ describe GlobalValidity, type: :service do
 
     context 'without admin' do
       subject { global_validity.run }
-      before { admin.update!(security_roles: [SecurityRole.find_by(name: 'User')]) }
+      before { admin.update!(security_roles: [create(:security_role)]) }
 
       it 'should raise an exception' do
         expect {
@@ -65,7 +65,7 @@ describe GlobalValidity, type: :service do
 
     describe 'with specific queries' do
       context 'table was ignored, but specific query hits it' do
-        let(:specific_query) { -> { SecurityRole.where(name: 'Admin') } }
+        let(:specific_query) { -> { SecurityRole.where(id: admin_security_role.id) } }
 
         before do
           Rails.configuration.global_validity_exclude = [SecurityRole]
@@ -82,16 +82,6 @@ describe GlobalValidity, type: :service do
           expect(email_body_html).to include('There is 1 invalid record')
           expect(email_body_html).to include(url)
         end
-      end
-    end
-
-    describe 'with destroyed data', regression: true do
-      it 'does not include destroyed record data' do
-        expect_any_instance_of(SecurityRole).to receive(:persisted?).and_return(false)
-        global_validity.run
-
-        expect(last_email.to).to eq([admin.email])
-        expect(email_body_html).not_to include('requires all permissions to be true')
       end
     end
   end
