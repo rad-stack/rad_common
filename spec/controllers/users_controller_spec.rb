@@ -75,7 +75,7 @@ RSpec.describe UsersController, type: :controller do
 
   describe 'audit_search' do
     let!(:search_user) { create :user }
-    let!(:search_role) { SecurityRole.first }
+    let!(:search_role) { create :security_role }
 
     context 'resource with audit' do
       it 'renders audit page' do
