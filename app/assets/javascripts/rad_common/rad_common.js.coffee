@@ -34,6 +34,10 @@ $ ->
       table
   )
 
+  $("#super_search").change ->
+    if( $(this).prop('checked') )
+        $(this).prop( 'checked', confirm('Are you sure you want to do a super search? This query may take a long time, selecting a normal query is preferred to get your results quickly') )
+
 
   defaultGlobalSearchPlaceholder = $('.global-search-autocomplete').attr('placeholder')
   if $('.super_search').val() == '1'
