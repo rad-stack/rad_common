@@ -51,6 +51,24 @@ describe 'Searches', type: :request do
         expect(page).to have_content('User')
         expect(page).to have_content('Division')
       end
+
+      context 'asks the user if they want to use' do
+        it 'clears checkbox if dismissed', js: true do
+          visit '/'
+          page.dismiss_confirm 'Are you sure you want to do a super search? This query may take a long time, selecting a normal query is preferred to get your results quickly' do
+            check 'super_search'
+          end
+          expect(find('#global_search_name')[:placeholder]).to eq 'Search for patient by name'
+        end
+
+        it 'uses if confirmed', js: true do
+          visit '/'
+          page.accept_confirm 'Are you sure you want to do a super search? This query may take a long time, selecting a normal query is preferred to get your results quickly' do
+            check 'super_search'
+          end
+          expect(find('#global_search_name')[:placeholder]).to eq 'Super Search'
+        end
+      end
     end
   end
 end
