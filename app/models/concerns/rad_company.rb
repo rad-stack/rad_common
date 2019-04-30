@@ -2,6 +2,8 @@ module RadCompany
   extend ActiveSupport::Concern
 
   included do
+    include HasAddress
+
     alias_attribute :to_s, :name
 
     scope :by_id, -> { order(:id) }
@@ -35,20 +37,6 @@ module RadCompany
 
   def valid_user_domains_entry
     valid_user_domains&.join(', ')
-  end
-
-  def full_address
-    "#{address_line_1}, #{address_line_2}"
-  end
-
-  def address_line_1
-    line = address_1
-    line = "#{line}, #{address_2}" if address_2.present?
-    line
-  end
-
-  def address_line_2
-    "#{city}, #{state} #{zipcode}"
   end
 
   def send_system_message(message)
