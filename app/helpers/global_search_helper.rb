@@ -19,8 +19,4 @@ module GlobalSearchHelper
 
     scopes
   end
-
-  def super_search_default
-    current_user.super_search_default ? '1' : '0'
-  end
 end

@@ -24,4 +24,6 @@
                 %li= link_to 'Company Info', edit_company_path(Company.main)
               -if current_user.can_audit?(Company)
                 %li= link_to "Audit Search", audit_search_users_path
+          %li.global-search-nav
+            = render "layouts/global_search"
       = render 'layouts/navigation_right'
