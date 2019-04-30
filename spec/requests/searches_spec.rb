@@ -58,7 +58,7 @@ describe 'Searches', type: :request do
           page.dismiss_confirm 'Are you sure you want to do a super search? This query may take a long time, selecting a normal query is preferred to get your results quickly' do
             check 'super_search'
           end
-          expect(find('#global_search_name')[:placeholder]).to eq 'Search for patient by name'
+          expect(find('#global_search_name')[:placeholder]).to eq 'Search for user by name'
         end
 
         it 'uses if confirmed', js: true do
