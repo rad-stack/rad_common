@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe SecurityRolesController, type: :controller do
   let(:user) { create :admin }
-  let(:security_role) { SecurityRole.first }
+  let(:security_role) { create :security_role }
 
   before do
     sign_in user

@@ -3,7 +3,7 @@ require 'rails_helper'
 describe RadCommon::SecuredLinkHelper do
   let(:user) { create :user }
   let!(:super_admin) { create :super_admin }
-  let(:admin_security_role) { SecurityRole.find_by(name: 'Admin') }
+  let(:admin_security_role) { super_admin.security_roles.first }
 
   describe '#link_authorized?' do
     context 'user' do

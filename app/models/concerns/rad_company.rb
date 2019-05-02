@@ -2,6 +2,8 @@ module RadCompany
   extend ActiveSupport::Concern
 
   included do
+    include HasAddress
+
     alias_attribute :to_s, :name
 
     scope :by_id, -> { order(:id) }
@@ -37,20 +39,6 @@ module RadCompany
     valid_user_domains&.join(', ')
   end
 
-  def full_address
-    "#{address_line_1}, #{address_line_2}"
-  end
-
-  def address_line_1
-    line = address_1
-    line = "#{line}, #{address_2}" if address_2.present?
-    line
-  end
-
-  def address_line_2
-    "#{city}, #{state} #{zipcode}"
-  end
-
   def send_system_message(message)
     User.active.each do |user|
       RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", message).deliver_later
@@ -72,7 +60,7 @@ module RadCompany
     end
 
     def validate_notifications
-      return if NotificationSecurityRole.count.zero?
+      return if NotificationSecurityRole.count.zero? || User.count.zero?
 
       notification_types = NotificationSecurityRole.select(:notification_type)
                                                    .distinct(:notification_type)

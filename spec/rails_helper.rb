@@ -62,13 +62,15 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.before do
-    SecurityRole.seed_items
-
     allow(Company).to receive(:main).and_return(create(:company))
 
     allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))
     allow(UserStatus).to receive(:default_active_status).and_return(create(:user_status, :active, name: 'Active'))
     allow(UserStatus).to receive(:default_inactive_status).and_return(create(:user_status, :inactive, name: 'Inactive'))
+  end
+
+  config.after(:each) do
+    Warden.test_reset!
   end
 
   config.include Devise::Test::ControllerHelpers, type: :controller

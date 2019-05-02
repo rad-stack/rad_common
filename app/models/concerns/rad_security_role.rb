@@ -12,7 +12,6 @@ module RadSecurityRole
     alias_attribute :to_s, :name
 
     validate :validate_standard_permissions
-    validate :validate_permission_uniqueness
 
     audited
   end
@@ -81,14 +80,6 @@ module RadSecurityRole
           errors.add(:admin, 'requires all permissions to be true')
           break
         end
-      end
-    end
-
-    def validate_permission_uniqueness
-      groups = SecurityRole.where.not(id: id)
-
-      groups.each do |group|
-        errors.add(:base, 'Role permissions cannot match another role') if permission_attributes == group.permission_attributes
       end
     end
 end

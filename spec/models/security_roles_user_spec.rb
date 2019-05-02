@@ -15,7 +15,7 @@ describe SecurityRolesUser, type: :model do
     end
 
     context 'external user' do
-      let(:user) { create :user, external: allow_external }
+      let(:user) { create :user, external: allow_external, security_roles: [] }
 
       it 'is invalid' do
         if allow_external

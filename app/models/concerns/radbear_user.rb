@@ -84,7 +84,7 @@ module RadbearUser
   private
 
     def validate_email_address
-      return if email.blank? || user_status_id.nil? || !user_status.validate_email || external?
+      return if email.blank? || user_status_id.nil? || !user_status.validate_email || external? || Company.main.blank?
 
       domains = Company.main.valid_user_domains
       components = email.split('@')

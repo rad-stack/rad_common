@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_18_115634) do
+ActiveRecord::Schema.define(version: 2019_04_29_211944) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -152,7 +152,6 @@ ActiveRecord::Schema.define(version: 2019_03_18_115634) do
     t.string   "global_search_default",   :limit=>255
     t.boolean  "super_admin",             :default=>false, :null=>false
     t.integer  "user_status_id",          :null=>false, :index=>{:name=>"index_users_on_user_status_id"}
-    t.boolean  "super_search_default",    :default=>false, :null=>false
     t.string   "authy_id",                :index=>{:name=>"index_users_on_authy_id"}
     t.datetime "last_sign_in_with_authy"
     t.boolean  "authy_enabled",           :default=>false, :null=>false
