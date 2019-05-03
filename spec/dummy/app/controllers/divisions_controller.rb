@@ -19,7 +19,6 @@ class DivisionsController < ApplicationController
 
   def create
     @division = Division.new(permitted_params)
-    @division.owner = current_user
 
     if @division.save
       redirect_to @division, notice: 'Division was successfully created.'
@@ -59,6 +58,6 @@ class DivisionsController < ApplicationController
     end
 
     def permitted_params
-      params.require(:division).permit(:name, :code, :notify, :timezone)
+      params.require(:division).permit(:name, :code, :notify, :timezone, :owner_id)
     end
 end
