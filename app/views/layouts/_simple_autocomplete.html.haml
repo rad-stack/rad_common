@@ -3,5 +3,6 @@
 = render 'layouts/autocomplete', search_path: search_path,
                                  search_input_name: "#{association}_name",
                                  search_placeholder: local_assigns.has_key?(:initial_value) ? local_assigns[:initial_value] : '',
+                                 show_required_star: local_assigns.has_key?(:required) ? local_assigns[:required] : false,
                                  search_label: local_assigns.has_key?(:search_label) ? local_assigns[:search_label] : association.to_s.titleize,
                                  initial_value: initial_value, id_element: "##{base_object.to_s}_#{association.to_s}_id", association_element: "##{base_object.to_s}_#{association.to_s}"
