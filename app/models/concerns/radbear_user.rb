@@ -28,6 +28,14 @@ module RadbearUser
     security_roles.where("#{permission} = TRUE").count.positive?
   end
 
+  def permission_or_pending?(permission)
+    if persisted?
+      permission?(permission)
+    else
+      security_roles.collect.pluck(permission).include?(true)
+    end
+  end
+
   def all_permissions
     permissions = []
 
