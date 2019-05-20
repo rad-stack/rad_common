@@ -4,6 +4,7 @@ Rails.configuration.use_avatar = true
 Rails.configuration.external_users = true
 Rails.configuration.authy_user_opt_in = true
 Rails.configuration.app_logo_includes_name = true
+Rails.configuration.portal_namespace = nil
 
 Rails.configuration.additional_user_params = []
 
