@@ -26,7 +26,7 @@ class GlobalValidity
     error_messages
   end
 
-  def log(start_time, end_time, model)
+  def log_time(start_time, end_time, model)
     Rails.logger.debug "#{model} took #{Time.at((end_time - start_time)).utc.strftime('%H:%M:%S')} to validate."
   end
 
