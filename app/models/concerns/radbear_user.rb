@@ -2,7 +2,9 @@ module RadbearUser
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor :approved_by
+    has_many :notification_settings, dependent: :destroy
+
+    attr_accessor :approved_by, :do_not_notify_approved
 
     scope :by_permission, ->(permission_attr) { joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct }
     scope :inactive, -> { joins(:user_status).where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)') }
@@ -14,10 +16,8 @@ module RadbearUser
     after_save :notify_user_approved
   end
 
-  def notify_new_user
-    User.admins.each do |admin|
-      RadbearMailer.new_user_signed_up(admin, self).deliver_later
-    end
+  def formatted_email
+    "\"#{self}\" <#{email}>"
   end
 
   def internal?
@@ -26,6 +26,14 @@ module RadbearUser
 
   def permission?(permission)
     security_roles.where("#{permission} = TRUE").count.positive?
+  end
+
+  def permission_or_pending?(permission)
+    if persisted?
+      permission?(permission)
+    else
+      security_roles.collect.pluck(permission).include?(true)
+    end
   end
 
   def all_permissions
@@ -84,7 +92,7 @@ module RadbearUser
   private
 
     def validate_email_address
-      return if email.blank? || user_status_id.nil? || !user_status.validate_email || external?
+      return if email.blank? || user_status_id.nil? || !user_status.validate_email || external? || Company.main.blank?
 
       domains = Company.main.valid_user_domains
       components = email.split('@')
@@ -113,13 +121,10 @@ module RadbearUser
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
       RadbearMailer.your_account_approved(self).deliver_later
-
-      User.admins.each do |admin|
-        RadbearMailer.user_was_approved(admin, self, approved_by).deliver_later if admin.id != id
-      end
+      Notifications::UserWasApprovedNotification.new.notify!([self, approved_by]) unless do_not_notify_approved
     end
 
     def notify_user_accepted
-      RadbearMailer.simple_message(User.admins.pluck(:id), 'User Accepted', "#{self} has accepted the invitation to join #{I18n::t(:app_name)}.").deliver_later
+      Notifications::UserAcceptsInvitationNotification.new.notify!(self)
     end
 end

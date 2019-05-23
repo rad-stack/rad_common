@@ -94,6 +94,10 @@ class PanelPresenter
     local_assigns[:no_show_link]
   end
 
+  def no_back_button
+    local_assigns[:no_back_button]
+  end
+
   def additional_actions
     local_assigns[:additional_actions] || []
   end

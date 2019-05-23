@@ -1,12 +1,16 @@
--if @user.internal? && current_user.can_read?(SecurityRole)
-  -all_perms = @user.all_permissions
-  .row
-    .col-md-6
+.row
+  - settings = Notifications::Notification.settings_for_user(@user)
+  - show_notifications = settings.count.positive?
+  - column_class = show_notifications ? 'col-md-4' : 'col-md-6'
+
+  -if @user.internal? && current_user.can_read?(SecurityRole)
+    -all_perms = @user.all_permissions
+    %div{ class: column_class }
       .panel.panel-default
         = render 'layouts/panel_header', action_name: 'custom', title: 'Security Roles', icon: 'fa-list'
         .panel-body
           = render 'security_roles/index', security_roles: @user.security_roles, show_actions: false
-    .col-md-6
+    %div{ class: column_class }
       .panel.panel-default
         = render 'layouts/panel_header', action_name: 'custom', title: 'Permissions', icon: 'fa-list'
         .panel-body
@@ -21,3 +25,8 @@
                   = link_to name, permission_security_roles_path(permission_name: permission)
                   = permission_tooltip_content(permission)
                 %td{class: all_perms.include?(permission) ? 'fa fa-check green-check' : 'fa fa-times red-x'}
+  -if show_notifications
+    %div{ class: column_class }
+      .panel.panel-default
+        = render 'layouts/panel_header', action_name: 'custom', title: 'Notification Settings', icon: 'fa-list'
+        = render 'notification_settings/index', settings: settings

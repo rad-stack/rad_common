@@ -28,14 +28,12 @@ class SearchController < ApplicationController
         current_user.update_column(:global_search_default, params[:global_search_scope])
       end
 
-      if params[:super_search].to_i == 1
-        current_user.update_column(:super_search_default, true)
-      else
-        current_user.update_column(:super_search_default, false)
-      end
-
       if the_object
-        redirect_to the_object
+        if current_user.external? && Rails.application.config.portal_namespace.present?
+          redirect_to [Rails.application.config.portal_namespace, the_object]
+        else
+          redirect_to the_object
+        end
       else
         flash[:error] = 'Could not find record, please try your search again.'
         redirect_to root_path

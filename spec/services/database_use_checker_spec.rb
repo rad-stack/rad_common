@@ -1,10 +1,6 @@
 require 'rails_helper'
 
 describe DatabaseUseChecker do
-  before do
-    SecurityRole.seed_items
-  end
-
   describe '.generate_report' do
     let(:tables) { ['users'] }
 

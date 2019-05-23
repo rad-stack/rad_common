@@ -84,6 +84,12 @@ describe RadCommon::ApplicationHelper do
     end
   end
 
+  describe 'options_for_enum' do
+    subject { options_for_enum(Division, :division_status) }
+    let(:options) { [%w[Pending status_pending], %w[Active status_active], %w[Inactive status_inactive]] }
+    it { is_expected.to eq options }
+  end
+
   describe '#gravatar_for' do
     context 'string size' do
       let(:size) { '60' }

@@ -13,6 +13,12 @@ RSpec.describe 'Divisions', type: :system do
       visit new_division_path
       expect(page).to have_content('New Division')
     end
+
+    it 'shows presence error on autocomplete field' do
+      visit new_division_path
+      click_button 'Save'
+      expect(page).to have_content('must exist')
+    end
   end
 
   describe 'edit' do

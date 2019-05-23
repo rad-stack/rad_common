@@ -56,7 +56,7 @@ class DatabaseUseChecker
     end
 
     def column_values(table_name, column)
-      ActiveRecord::Base.connection.execute("SELECT DISTINCT #{column} FROM #{table_name}").values.flatten
+      ActiveRecord::Base.connection.execute("SELECT DISTINCT \"#{column}\" FROM #{table_name}").values.flatten
     end
   end
 end

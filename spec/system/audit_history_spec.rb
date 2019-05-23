@@ -37,6 +37,7 @@ describe 'AuditHistory', type: :system do
     visit new_division_path
     fill_in 'Name', with: 'Foo'
     fill_in 'Code', with: 'Bar'
+    first('input#division_owner_id', visible: false).set(user.id.to_s)
 
     click_button 'Save'
     click_link 'Show History'
