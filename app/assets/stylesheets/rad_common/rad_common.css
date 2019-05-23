@@ -7,22 +7,23 @@
   padding-bottom: 29px;
   margin-bottom: -29px;
 }
-.navbar .navbar-nav > li.navbar-brand > a {
+.navbar-brand > a {
   padding-top: 0px;
   margin-top: 0px;
   margin-left: 8px;
 }
-.navbar .navbar-brand.by-line {
+.navbar-brand.by-line {
   padding-top: 22px;
   margin: 0;
   margin-top: 6px;
   margin-right: 15px;
 }
-.navbar .navbar-brand {
+.navbar-brand {
   height: auto;
   padding: 0;
+  float: left;
 }
-.navbar .navbar-brand img {
+.navbar-brand img {
   height: 77px;
   padding: 6px 15px;
 }
@@ -56,7 +57,7 @@
 }
 .global-search-nav {
   width: 290px;
-  padding-top: 21px;
+  padding-top: 5px;
   margin-left: 5px;
 }
 .security-role-checkboxes{
@@ -258,4 +259,37 @@ td.fa.security-group-td { border-style: none; }
   .navbar .navbar-nav > li > a {
     margin-bottom: 0;
   }
+}
+
+// preserved from B3
+
+.has-error .help-block,
+.has-error .control-label,
+.has-error .radio,
+.has-error .checkbox,
+.has-error .radio-inline,
+.has-error .checkbox-inline,
+.has-error.radio label,
+.has-error.checkbox label,
+.has-error.radio-inline label,
+.has-error.checkbox-inline label {
+  color: #a94442;
+}
+.has-error .form-control {
+  border-color: #a94442;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.has-error .form-control:focus {
+  border-color: #843534;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
+}
+.has-error .input-group-addon {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #a94442;
+}
+.has-error .form-control-feedback {
+  color: #a94442;
 }

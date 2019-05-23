@@ -22,6 +22,6 @@ module RadCommon
     require 'schema_validations'
     require 'sidekiq'
     require 'simple_form'
-    require 'twitter-bootstrap-rails'
+    require 'bootstrap'
   end
 end

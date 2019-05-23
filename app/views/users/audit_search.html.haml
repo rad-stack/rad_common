@@ -8,14 +8,14 @@
             .row
               .col-md-4
                 .form-group
-                  %label.control-label Model
+                  %label.col-form-label Model
                   %select.form-control{ name: 'model_name', id: 'record-search' }
                     %option{ value: '', selected: true}=''
                     -audit_models_to_search.each do |model|
                       %option{ value: model }= model
               .col-md-4
                 .form-group
-                  %label.control-label Record ID
+                  %label.col-form-label Record ID
                   %input.form-control{name: 'record_id'}
             .row
               .col-md-12
@@ -32,7 +32,7 @@
             .row
               .col-md-9
                 .form-group
-                  %label.control-label Model
+                  %label.col-form-label Model
                   %select.form-control{ name: 'model_name' }
                     %option{ value: '', selected: true}=''
                     -audit_models_to_search.each do |model|

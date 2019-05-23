@@ -18,6 +18,6 @@
                 = f.input :notification_type, as: :hidden
                 = f.input :user_id, as: :hidden
               .form-actions
-                = f.button :submit, 'Save', class: 'btn btn-xs btn-primary'
+                = f.button :submit, 'Save', class: 'btn btn-sm btn-primary'
           -else
             = format_boolean(notification_setting.enabled)

@@ -14,6 +14,6 @@
             %span.caret
           %ul.dropdown-menu
             -@user_statuses.each do |status|
-              %li= link_to status.name, users_path(status: status.id)
-            %li= link_to 'All Users', users_path(status: 'All')
+              %li= link_to status.name, users_path(status: status.id), class: 'dropdown-item'
+            %li= link_to 'All Users', users_path(status: 'All'), class: 'dropdown-item'
     = render 'users/index', users: @users

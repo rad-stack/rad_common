@@ -12,7 +12,7 @@ SimpleForm.setup do |config|
     b.optional :pattern
     b.optional :min_max
     b.optional :readonly
-    b.use :label, class: 'control-label'
+    b.use :label, class: 'col-form-label'
     b.use :icon
 
     b.use :input, class: 'form-control'
@@ -26,7 +26,7 @@ SimpleForm.setup do |config|
     b.optional :maxlength
     b.optional :minlength
     b.optional :readonly
-    b.use :label, class: 'control-label'
+    b.use :label, class: 'col-form-label'
     b.use :icon
 
     b.use :input
@@ -50,7 +50,7 @@ SimpleForm.setup do |config|
   config.wrappers :vertical_radio_and_checkboxes, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
     b.use :html5
     b.optional :readonly
-    b.use :label, class: 'control-label'
+    b.use :label, class: 'col-form-label'
     b.use :input
     b.use :icon
     b.use :error, wrap_with: { tag: 'span', class: 'help-block' }
@@ -65,7 +65,7 @@ SimpleForm.setup do |config|
     b.optional :pattern
     b.optional :min_max
     b.optional :readonly
-    b.use :label, class: 'col-sm-3 control-label'
+    b.use :label, class: 'col-sm-3 col-form-label'
     b.use :icon
 
     b.wrapper tag: 'div', class: 'col-sm-9' do |ba|
@@ -81,7 +81,7 @@ SimpleForm.setup do |config|
     b.optional :maxlength
     b.optional :minlength
     b.optional :readonly
-    b.use :label, class: 'col-sm-3 control-label'
+    b.use :label, class: 'col-sm-3 col-form-label'
     b.use :icon
 
     b.wrapper tag: 'div', class: 'col-sm-9' do |ba|
@@ -109,7 +109,7 @@ SimpleForm.setup do |config|
   config.wrappers :horizontal_radio_and_checkboxes, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
     b.use :html5
     b.optional :readonly
-    b.use :label, class: 'col-sm-3 control-label'
+    b.use :label, class: 'col-sm-3 col-form-label'
     b.use :icon
 
     b.wrapper tag: 'div', class: 'col-sm-9' do |ba|
@@ -138,7 +138,7 @@ SimpleForm.setup do |config|
   config.wrappers :multi_select, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
     b.use :html5
     b.optional :readonly
-    b.use :label, class: 'control-label'
+    b.use :label, class: 'col-form-label'
     b.wrapper tag: 'div', class: 'form-inline' do |ba|
       ba.use :input, class: 'form-control'
       ba.use :error, wrap_with: { tag: 'span', class: 'help-block' }

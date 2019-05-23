@@ -21,8 +21,8 @@
           -if show_actions
             %td
               -if current_user.can_update?(division)
-                = link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', edit_division_path(division), class: 'btn btn-xs btn-default btn-block'
+                = link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', edit_division_path(division), class: 'btn btn-sm btn-default btn-block'
               -if current_user.can_delete?(division)
-                = link_to content_tag(:i, '', class: 'fa fa-times right-5x') + ' Delete', division, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs btn-block'
+                = link_to content_tag(:i, '', class: 'fa fa-times right-5x') + ' Delete', division, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm btn-block'
 
     = paginate @divisions
