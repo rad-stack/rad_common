@@ -140,8 +140,7 @@ module RadCommon
     end
 
     def audit_models_to_search
-      # TODO: dunno if we can get the list from the audited gem, if so, would be faster
-      Audited::Audit.select(:auditable_type).distinct.pluck(:auditable_type)
+      Audited::Audit.select(:auditable_type).distinct.pluck(:auditable_type).sort
     end
 
     def mailer_image_url(image)
