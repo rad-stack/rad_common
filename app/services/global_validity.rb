@@ -12,15 +12,25 @@ class GlobalValidity
   def check_global_validity
     error_messages = []
 
+    log_output = []
+
     models_to_check.each do |model|
+      start_time = Time.zone.now
       error_messages = error_messages.concat(check_model(model)) unless exclude_models.include?(model.to_s)
+      end_time = Time.zone.now
+      log_output << log_text(start_time, end_time, model)
     end
 
+    log_output.each { |output_text| Rails.logger.debug(output_text) }
     specific_queries = Rails.application.config.global_validity_include
 
     specific_queries.each { |query| error_messages = error_messages.concat(check_query_records(query)) }
 
     error_messages
+  end
+
+  def log_text(start_time, end_time, model)
+    "GlobalValidity stats: #{model} took #{Time.at((end_time - start_time)).utc.strftime('%H:%M:%S')} to validate."
   end
 
   private
