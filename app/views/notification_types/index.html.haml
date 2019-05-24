@@ -1,0 +1,9 @@
+.panel.panel-default
+  = render 'layouts/panel_header'
+  .panel-body
+    %table.table.table-striped.table-bordered
+      %tr
+        %th Name
+      - @notification_types.each do |notification_type|
+        %tr
+          %td= link_to notification_type, "/rad_common/notification_types/#{notification_type.id}"

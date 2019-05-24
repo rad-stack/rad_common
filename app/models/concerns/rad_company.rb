@@ -14,7 +14,6 @@ module RadCompany
     validates_with PhoneNumberValidator
     validate :validate_only_one, on: :create
     validate :validate_domains
-    validate :validate_notifications, on: :update
 
     audited
   end
@@ -57,18 +56,5 @@ module RadCompany
 
     def validate_domains
       errors.add(:valid_user_domains, 'needs at least one domain') if valid_user_domains.count.zero?
-    end
-
-    def validate_notifications
-      return if NotificationSecurityRole.count.zero? || User.count.zero?
-
-      notification_types = NotificationSecurityRole.select(:notification_type)
-                                                   .distinct(:notification_type)
-                                                   .pluck(:notification_type)
-
-      notification_types.each do |notification_type|
-        notification = notification_type.constantize.new
-        errors.add(:base, "#{notification_type} has empty notify list") if notification.notify_list(false).count.zero?
-      end
     end
 end

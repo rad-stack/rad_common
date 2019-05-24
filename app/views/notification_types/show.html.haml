@@ -1,0 +1,10 @@
+.panel.panel-default
+  = render 'layouts/panel_header'
+  .panel-body
+    %table.table.table-striped.table-bordered
+      %tr
+        %th Security Roles to Notify
+
+      -@notification_type.security_roles.each do |security_role|
+        %tr
+          %td= secured_link(security_role)

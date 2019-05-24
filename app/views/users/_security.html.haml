@@ -1,5 +1,5 @@
 .row
-  - settings = Notifications::Notification.settings_for_user(@user)
+  - settings = NotificationSetting.settings_for_user(@user)
   - show_notifications = settings.count.positive?
   - column_class = show_notifications ? 'col-md-4' : 'col-md-6'
 

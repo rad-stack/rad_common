@@ -1,5 +1,5 @@
 module Notifications
-  class UserWasApprovedNotification < Notification
+  class UserWasApprovedNotification < ::Notification
     def notify!(subject)
       user = subject.first
       RadbearMailer.user_was_approved(users_except_self(user), user, subject.last).deliver_later

@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe 'Notification Settings', type: :request do
-  let(:notification_type) { 'Notifications::NewUserSignedUpNotification' }
+  let(:notification_type) { NotificationType.find_by(name: 'Notifications::NewUserSignedUpNotification') }
 
   before { login_as(user, scope: :user) }
 
   describe 'POST create' do
-    let(:attributes) { { notification_type: notification_type, enabled: false, user_id: target_user.id } }
+    let(:attributes) { { notification_type_id: notification_type.id, enabled: false, user_id: target_user.id } }
 
     subject { post '/rad_common/notification_settings', params: { notification_setting: attributes } }
 
@@ -28,7 +28,7 @@ RSpec.describe 'Notification Settings', type: :request do
         end
 
         context 'invalid' do
-          let(:attributes) { { notification_type: nil, enabled: false, user_id: target_user.id } }
+          let(:attributes) { { notification_type_id: nil, enabled: false, user_id: target_user.id } }
 
           it 'fails' do
             expect { subject }.to change(NotificationSetting, :count).by(0)
@@ -50,7 +50,7 @@ RSpec.describe 'Notification Settings', type: :request do
       let(:user) { create :user, security_roles: [security_role] }
 
       before do
-        NotificationSecurityRole.create! notification_type: notification_type, security_role: security_role
+        NotificationSecurityRole.create! notification_type_id: notification_type.id, security_role: security_role
       end
 
       context 'their settings' do

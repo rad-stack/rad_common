@@ -9,10 +9,9 @@ FactoryBot.define do
       end
 
       item.after(:create) do |role|
-        role.notification_security_roles.find_or_create_by! notification_type: 'Notifications::NewUserSignedUpNotification'
-        role.notification_security_roles.find_or_create_by! notification_type: 'Notifications::UserWasApprovedNotification'
-        role.notification_security_roles.find_or_create_by! notification_type: 'Notifications::UserAcceptsInvitationNotification'
-        role.notification_security_roles.find_or_create_by! notification_type: 'Notifications::GlobalValidityNotification'
+        NotificationType.all.each do |notification_type|
+          role.notification_security_roles.find_or_create_by! notification_type: notification_type
+        end
       end
     end
   end

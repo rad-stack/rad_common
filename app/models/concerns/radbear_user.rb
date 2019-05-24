@@ -3,6 +3,7 @@ module RadbearUser
 
   included do
     has_many :notification_settings, dependent: :destroy
+    has_many :notifications, dependent: :destroy
 
     attr_accessor :approved_by, :do_not_notify_approved
 

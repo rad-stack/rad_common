@@ -46,13 +46,6 @@ describe Company, type: :model do
       company.valid_user_domains = ['example.com']
       expect(company.valid?).to be true
     end
-
-    it 'requires notifications to have users to notify' do
-      expect(company.valid?).to be true
-      user.update! security_roles: []
-      expect(company.valid?).to be false
-      expect(company.errors.full_messages.to_s).to include 'has empty notify list'
-    end
   end
 
   describe 'system messages' do

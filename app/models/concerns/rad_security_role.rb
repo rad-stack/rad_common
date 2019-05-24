@@ -39,10 +39,9 @@ module RadSecurityRole
       seed_all group
       group.save!
 
-      group.notification_security_roles.create! notification_type: 'Notifications::NewUserSignedUpNotification'
-      group.notification_security_roles.create! notification_type: 'Notifications::UserWasApprovedNotification'
-      group.notification_security_roles.create! notification_type: 'Notifications::UserAcceptsInvitationNotification'
-      group.notification_security_roles.create! notification_type: 'Notifications::GlobalValidityNotification'
+      NotificationType.all.each do |notification_type|
+        group.notification_security_roles.create! notification_type: notification_type
+      end
     end
 
     def seed_all(group)
