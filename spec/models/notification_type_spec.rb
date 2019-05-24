@@ -13,6 +13,12 @@ RSpec.describe NotificationType, type: :model do
     end
   end
 
+  describe '#notify_user_ids' do
+    let(:notification_type) { Notifications::GlobalValidityNotification }
+    subject { notification_type.send(:notify_user_ids) }
+    it { is_expected.to eq [user.id] }
+  end
+
   describe '#notify_list' do
     let!(:another) { create :admin }
     subject { notification_type.notify_list(true) }

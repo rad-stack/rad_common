@@ -4,7 +4,7 @@ RSpec.describe Notifications::UserWasApprovedNotification, type: :model do
   let!(:admin) { create :admin }
   let(:another) { create :admin }
   let(:user) { create :user }
-  let(:notification) { described_class.new }
+  let(:notification) { described_class }
   let(:mail) { ActionMailer::Base.deliveries.last }
 
   describe '#users_except_self' do

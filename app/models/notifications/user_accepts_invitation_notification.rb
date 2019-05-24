@@ -1,6 +1,6 @@
 module Notifications
-  class UserAcceptsInvitationNotification < ::Notification
-    def notify!(subject)
+  class UserAcceptsInvitationNotification < ::NotificationType
+    def self.notify!(subject)
       options = { email_action: { message: 'Click here to view the user.',
                                   button_text: 'View',
                                   button_url: Rails.application.routes.url_helpers.user_url(subject) } }

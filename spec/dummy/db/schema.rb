@@ -98,13 +98,6 @@ ActiveRecord::Schema.define(version: 2019_05_24_132649) do
     t.datetime "updated_at", :null=>false
   end
 
-  create_table "notifications", force: :cascade do |t|
-    t.integer  "notification_type_id", :null=>false, :index=>{:name=>"index_notifications_on_notification_type_id"}
-    t.integer  "user_id",              :null=>false, :index=>{:name=>"index_notifications_on_user_id"}
-    t.datetime "created_at",           :null=>false
-    t.datetime "updated_at",           :null=>false
-  end
-
   create_table "security_roles", id: :serial, force: :cascade do |t|
     t.string   "name",            :null=>false, :index=>{:name=>"index_security_roles_on_name", :unique=>true}
     t.boolean  "admin",           :default=>false, :null=>false
@@ -185,8 +178,6 @@ ActiveRecord::Schema.define(version: 2019_05_24_132649) do
   add_foreign_key "notification_security_roles", "security_roles"
   add_foreign_key "notification_settings", "notification_types"
   add_foreign_key "notification_settings", "users"
-  add_foreign_key "notifications", "notification_types"
-  add_foreign_key "notifications", "users"
   add_foreign_key "security_roles_users", "security_roles"
   add_foreign_key "security_roles_users", "users"
   add_foreign_key "users", "user_statuses"

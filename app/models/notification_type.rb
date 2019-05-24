@@ -4,7 +4,6 @@ class NotificationType < ApplicationRecord
   has_many :notification_security_roles, dependent: :destroy
   has_many :security_roles, through: :notification_security_roles, dependent: :destroy
   has_many :notification_settings, dependent: :destroy
-  has_many :notifications, dependent: :restrict_with_error
 
   alias_attribute :to_s, :description
 
@@ -45,6 +44,15 @@ class NotificationType < ApplicationRecord
     users
   end
 
+  def notify_user_ids
+    notify_list(true).pluck(:id)
+  end
+
+  def self.notify_user_ids
+    the_instance = NotificationType.find_by(name: self.to_s)
+    the_instance.notify_user_ids
+  end
+
   private
 
     def validate_users
@@ -52,4 +60,5 @@ class NotificationType < ApplicationRecord
 
       errors.add(:base, 'empty notify list') if notify_list(false).count.zero?
     end
+
 end

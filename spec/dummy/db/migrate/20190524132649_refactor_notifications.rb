@@ -35,18 +35,5 @@ class RefactorNotifications < ActiveRecord::Migration[5.2]
     remove_column :notification_settings, :notification_type
     add_index :notification_settings, %i[notification_type_id user_id], unique: true
     add_foreign_key :notification_settings, :notification_types
-
-    create_table :notifications do |t|
-      t.integer :notification_type_id, null: false
-      t.integer :user_id, null: false
-
-      t.timestamps
-    end
-
-    add_index :notifications, :notification_type_id
-    add_index :notifications, :user_id
-
-    add_foreign_key :notifications, :notification_types
-    add_foreign_key :notifications, :users
   end
 end

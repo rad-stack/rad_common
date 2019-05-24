@@ -41,7 +41,7 @@ module RadCommon
         template '../../../../../spec/models/security_roles_user_spec.rb', 'spec/models/security_roles_user_spec.rb'
         template '../../../../../spec/models/notifications/global_validity_notification_spec.rb', 'spec/models/notifications/global_validity_notification_spec.rb'
         template '../../../../../spec/models/notifications/new_user_signed_up_notification_spec.rb', 'spec/models/notifications/new_user_signed_up_notification_spec.rb'
-        template '../../../../../spec/models/notifications/notification_spec.rb', 'spec/models/notifications/notification_spec.rb'
+        template '../../../../../spec/models/notifications/notification_type_spec.rb', 'spec/models/notifications/notification_type_spec.rb'
         template '../../../../../spec/models/notifications/user_was_approved_notification_spec.rb', 'spec/models/notifications/user_was_approved_notification_spec.rb'
         template '../../../../../spec/controllers/users/confirmations_controller_spec.rb', 'spec/controllers/users/confirmations_controller_spec.rb'
         template '../../../../../spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
