@@ -4,6 +4,13 @@
     %table.table.table-striped.table-bordered
       %tr
         %th Name
+        %th Roles to Notify
+        %th Actions
       - @notification_types.each do |notification_type|
         %tr
-          %td= link_to notification_type, "/rad_common/notification_types/#{notification_type.id}"
+          %td= link_to notification_type, "/rad_common/notification_types/#{notification_type.id}/edit"
+          %td
+            - notification_type.security_roles.each do |security_role|
+              = secured_link(security_role)
+              %p
+          %td= link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', "/rad_common/notification_types/#{notification_type.id}/edit", class: 'btn btn-xs btn-default btn-block'

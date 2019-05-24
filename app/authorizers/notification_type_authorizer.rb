@@ -4,10 +4,6 @@ class NotificationTypeAuthorizer < ApplicationAuthorizer
     false
   end
 
-  def self.updatable_by?(_user)
-    false
-  end
-
   def self.deletable_by?(_user)
     false
   end

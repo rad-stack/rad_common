@@ -9,7 +9,7 @@ class NotificationSetting < ApplicationRecord
   audited associated_with: :user
 
   def self.settings_for_user(user)
-    types = NotificationType.authorized(user)
+    types = NotificationType.authorized(user).by_name
     settings = []
 
     types.each do |notification_type|

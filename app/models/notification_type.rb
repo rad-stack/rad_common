@@ -7,7 +7,7 @@ class NotificationType < ApplicationRecord
 
   alias_attribute :to_s, :description
 
-  scope :by_name, -> {  order(:name) }
+  scope :by_name, -> { order(:name) }
 
   validate :validate_users
 
@@ -16,7 +16,10 @@ class NotificationType < ApplicationRecord
   end
 
   def self.authorized(user)
-    NotificationType.where('id IN (SELECT notification_type_id FROM notification_security_roles WHERE security_role_id IN (SELECT security_role_id FROM security_roles_users WHERE user_id = ?) )', user.id)
+    where_clause = 'id IN (SELECT notification_type_id FROM notification_security_roles WHERE security_role_id IN '\
+                         '(SELECT security_role_id FROM security_roles_users WHERE user_id = ?) )'
+
+    NotificationType.where(where_clause, user.id)
   end
 
   def permitted_users
@@ -49,7 +52,9 @@ class NotificationType < ApplicationRecord
   end
 
   def self.notify_user_ids
-    the_instance = NotificationType.find_by(name: self.to_s)
+    the_instance = NotificationType.find_by(name: to_s)
+    raise "missing notification type: #{self}" if the_instance.blank?
+
     the_instance.notify_user_ids
   end
 

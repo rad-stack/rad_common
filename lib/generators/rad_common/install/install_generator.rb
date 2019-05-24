@@ -158,6 +158,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20190318115634_user_notifications.rb', 'user_notifications'
         apply_migration '../../../../../spec/dummy/db/migrate/20190429211944_remove_super_search_from_users.rb', 'remove_super_search_from_users'
         apply_migration '../../../../../spec/dummy/db/migrate/20190502094454_tighten_audits.rb', 'tighten_audits'
+        apply_migration '../../../../../spec/dummy/db/migrate/20190524132649_refactor_notifications.rb', 'refactor_notifications'
       end
 
       def self.next_migration_number(path)
