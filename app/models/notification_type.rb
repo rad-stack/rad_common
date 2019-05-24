@@ -9,7 +9,7 @@ class NotificationType < ApplicationRecord
 
   scope :by_name, -> { order(:name) }
 
-  validate :validate_users
+  validate :validate_users, on: :update
 
   def description
     name.gsub('Notifications::', '').underscore.titleize.gsub(' Notification', '')
