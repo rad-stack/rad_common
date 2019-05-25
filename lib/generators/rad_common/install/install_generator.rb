@@ -59,11 +59,13 @@ module RadCommon
 
         # factories
         template '../../../../../spec/factories/companies.rb', 'spec/factories/companies.rb'
+        template '../../../../../spec/factories/notification_security_roles.rb', 'spec/factories/notification_security_roles.rb'
+        template '../../../../../spec/factories/notification_settings.rb', 'spec/factories/notification_settings.rb'
+        template '../../../../../spec/factories/notification_types.rb', 'spec/factories/notification_types.rb'
         template '../../../../../spec/factories/security_roles.rb', 'spec/factories/security_roles.rb'
+        template '../../../../../spec/factories/security_roles_users.rb', 'spec/factories/security_roles_users.rb'
         template '../../../../../spec/factories/user_statuses.rb', 'spec/factories/user_statuses.rb'
         template '../../../../../spec/factories/users.rb', 'spec/factories/users.rb'
-        template '../../../../../spec/factories/security_roles_users.rb', 'spec/factories/security_roles_users.rb'
-        template '../../../../../spec/factories/notification_settings.rb', 'spec/factories/notification_settings.rb'
 
         # templates
 
