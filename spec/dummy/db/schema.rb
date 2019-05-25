@@ -34,8 +34,8 @@ ActiveRecord::Schema.define(version: 2019_05_24_132649) do
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
-    t.integer  "auditable_id",    :null=>false, :index=>{:name=>"auditable_index", :with=>["auditable_type"]}
-    t.string   "auditable_type",  :null=>false
+    t.integer  "auditable_id",    :index=>{:name=>"auditable_index", :with=>["auditable_type"]}
+    t.string   "auditable_type"
     t.integer  "associated_id",   :index=>{:name=>"associated_index", :with=>["associated_type"]}
     t.string   "associated_type"
     t.integer  "user_id",         :index=>{:name=>"user_index", :with=>["user_type"]}
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 2019_05_24_132649) do
     t.string   "comment"
     t.string   "remote_address"
     t.string   "request_uuid",    :index=>{:name=>"index_audits_on_request_uuid"}
-    t.datetime "created_at",      :null=>false, :index=>{:name=>"index_audits_on_created_at"}
+    t.datetime "created_at",      :index=>{:name=>"index_audits_on_created_at"}
   end
 
   create_table "companies", id: :serial, force: :cascade do |t|
