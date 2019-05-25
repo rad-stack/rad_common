@@ -9,8 +9,6 @@ class NotificationType < ApplicationRecord
 
   scope :by_name, -> { order(:name) }
 
-  validate :validate_users, on: :update
-
   def description
     name.gsub('Notifications::', '').underscore.titleize.gsub(' Notification', '')
   end
@@ -52,18 +50,13 @@ class NotificationType < ApplicationRecord
   end
 
   def self.notify_user_ids
-    the_instance = NotificationType.find_by(name: to_s)
-    raise "missing notification type: #{self}" if the_instance.blank?
+    notification_type = NotificationType.find_by(name: to_s)
+    notification_type = NotificationType.create! name: to_s if notification_type.blank?
 
-    the_instance.notify_user_ids
-  end
-
-  private
-
-    def validate_users
-      return if NotificationSecurityRole.count.zero? || User.count.zero?
-
-      errors.add(:base, 'empty notify list') if notify_list(false).count.zero?
+    if notification_type.notification_security_roles.count.zero?
+      notification_type.notification_security_roles.create! security_role: SecurityRole.admin_role
     end
 
+    notification_type.notify_user_ids
+  end
 end

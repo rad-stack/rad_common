@@ -9,7 +9,7 @@ if User.count.zero?
                             first_name: 'Test',
                             last_name: 'Admin',
                             user_status: user_status,
-                            security_roles: [SecurityRole.find_by(name: 'Admin')]
+                            security_roles: [SecurityRole.admin_role]
 
   FactoryBot.create :user, email: 'user@example.com',
                            first_name: 'Test',
