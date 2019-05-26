@@ -46,6 +46,10 @@ module RadbearUser
     permissions
   end
 
+  def admin?
+    permission?(:admin)
+  end
+
   def auto_approve?
     # override this as needed in model
     false
