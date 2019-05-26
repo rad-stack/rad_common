@@ -13,6 +13,7 @@ class GlobalValidity
     error_messages = []
 
     log_output = []
+    total_start_time = Time.zone.now
 
     models_to_check.each do |model|
       start_time = Time.zone.now
@@ -21,7 +22,9 @@ class GlobalValidity
       log_output << log_text(start_time, end_time, model)
     end
 
+    total_end_time = Time.zone.now
     log_output.each { |output_text| Rails.logger.debug(output_text) }
+    Rails.logger.debug(log_text(total_start_time, total_end_time, 'All Models'))
     specific_queries = Rails.application.config.global_validity_include
 
     specific_queries.each { |query| error_messages = error_messages.concat(check_query_records(query)) }
