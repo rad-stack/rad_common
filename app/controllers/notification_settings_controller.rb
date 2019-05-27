@@ -6,9 +6,9 @@ class NotificationSettingsController < ApplicationController
   def index; end
 
   def create
-    notification_type = permitted_params[:notification_type]
+    notification_type_id = permitted_params[:notification_type_id]
 
-    notification_setting = NotificationSetting.find_or_initialize_by(notification_type: notification_type,
+    notification_setting = NotificationSetting.find_or_initialize_by(notification_type_id: notification_type_id,
                                                                      user_id: permitted_params[:user_id])
 
     notification_setting.enabled = permitted_params[:enabled]
@@ -27,6 +27,6 @@ class NotificationSettingsController < ApplicationController
   private
 
     def permitted_params
-      params.require(:notification_setting).permit(:notification_type, :enabled, :user_id)
+      params.require(:notification_setting).permit(:notification_type_id, :enabled, :user_id)
     end
 end

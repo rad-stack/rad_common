@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_02_094454) do
+ActiveRecord::Schema.define(version: 2019_05_24_132649) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,8 +34,8 @@ ActiveRecord::Schema.define(version: 2019_05_02_094454) do
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
-    t.integer  "auditable_id",    :null=>false, :index=>{:name=>"auditable_index", :with=>["auditable_type"]}
-    t.string   "auditable_type",  :null=>false
+    t.integer  "auditable_id",    :index=>{:name=>"auditable_index", :with=>["auditable_type"]}
+    t.string   "auditable_type"
     t.integer  "associated_id",   :index=>{:name=>"associated_index", :with=>["associated_type"]}
     t.string   "associated_type"
     t.integer  "user_id",         :index=>{:name=>"user_index", :with=>["user_type"]}
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 2019_05_02_094454) do
     t.string   "comment"
     t.string   "remote_address"
     t.string   "request_uuid",    :index=>{:name=>"index_audits_on_request_uuid"}
-    t.datetime "created_at",      :null=>false, :index=>{:name=>"index_audits_on_created_at"}
+    t.datetime "created_at",      :index=>{:name=>"index_audits_on_created_at"}
   end
 
   create_table "companies", id: :serial, force: :cascade do |t|
@@ -78,18 +78,24 @@ ActiveRecord::Schema.define(version: 2019_05_02_094454) do
   end
 
   create_table "notification_security_roles", force: :cascade do |t|
-    t.string   "notification_type", :null=>false
-    t.integer  "security_role_id",  :null=>false, :index=>{:name=>"unique_notification_roles", :with=>["notification_type"], :unique=>true}
-    t.datetime "created_at",        :null=>false
-    t.datetime "updated_at",        :null=>false
+    t.integer  "security_role_id",     :null=>false
+    t.datetime "created_at",           :null=>false
+    t.datetime "updated_at",           :null=>false
+    t.integer  "notification_type_id", :null=>false, :index=>{:name=>"unique_notification_roles", :with=>["security_role_id"], :unique=>true}
   end
 
   create_table "notification_settings", force: :cascade do |t|
-    t.integer  "user_id",           :null=>false, :index=>{:name=>"index_notification_settings_on_user_id_and_notification_type", :with=>["notification_type"], :unique=>true}
-    t.string   "notification_type", :null=>false
-    t.boolean  "enabled",           :default=>true, :null=>false
-    t.datetime "created_at",        :null=>false
-    t.datetime "updated_at",        :null=>false
+    t.integer  "user_id",              :null=>false
+    t.boolean  "enabled",              :default=>true, :null=>false
+    t.datetime "created_at",           :null=>false
+    t.datetime "updated_at",           :null=>false
+    t.integer  "notification_type_id", :null=>false, :index=>{:name=>"index_notification_settings_on_notification_type_id_and_user_id", :with=>["user_id"], :unique=>true}
+  end
+
+  create_table "notification_types", force: :cascade do |t|
+    t.string   "name",       :null=>false, :index=>{:name=>"index_notification_types_on_name", :unique=>true}
+    t.datetime "created_at", :null=>false
+    t.datetime "updated_at", :null=>false
   end
 
   create_table "security_roles", id: :serial, force: :cascade do |t|
@@ -168,7 +174,9 @@ ActiveRecord::Schema.define(version: 2019_05_02_094454) do
 
   add_foreign_key "audits", "users"
   add_foreign_key "divisions", "users", column: "owner_id"
+  add_foreign_key "notification_security_roles", "notification_types"
   add_foreign_key "notification_security_roles", "security_roles"
+  add_foreign_key "notification_settings", "notification_types"
   add_foreign_key "notification_settings", "users"
   add_foreign_key "security_roles_users", "security_roles"
   add_foreign_key "security_roles_users", "users"

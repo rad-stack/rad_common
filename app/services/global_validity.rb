@@ -5,7 +5,7 @@ class GlobalValidity
     return unless needs_to_run?
 
     error_messages = check_global_validity
-    Notifications::GlobalValidityNotification.new.notify!(error_messages) if error_messages.any?
+    Notifications::GlobalValidityNotification.notify!(error_messages) if error_messages.any?
     Company.main.global_validity_ran!
   end
 

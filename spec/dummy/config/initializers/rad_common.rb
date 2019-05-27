@@ -5,7 +5,7 @@ Rails.configuration.external_users = true
 Rails.configuration.authy_user_opt_in = true
 Rails.configuration.app_logo_includes_name = true
 Rails.configuration.portal_namespace = nil
-
+Rails.configuration.system_usage_models = %w[Division User]
 Rails.configuration.additional_user_params = []
 
 Rails.configuration.global_validity_days = 3
