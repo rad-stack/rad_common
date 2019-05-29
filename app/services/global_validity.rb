@@ -28,7 +28,7 @@ class GlobalValidity
       start_time = Time.zone.now
       error_messages = error_messages.concat(check_query_records(query))
       end_time = Time.zone.now
-      log_output << log_text(start_time, end_time, query)
+      log_output << log_text(start_time, end_time, query.call.to_sql)
     end
 
     log_output.each { |output_text| Rails.logger.info(output_text) }
