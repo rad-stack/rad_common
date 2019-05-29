@@ -5,7 +5,6 @@
         = current_user
         -if Rails.application.config.use_avatar && current_user.avatar.attached?
           = image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
-        %b.caret
       %ul.dropdown-menu
         %li= link_to 'My Account', edit_user_registration_path, class: 'dropdown-item'
         -if current_user.can_read?(NotificationSetting)

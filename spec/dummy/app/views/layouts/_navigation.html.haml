@@ -14,7 +14,6 @@
           %li.dropdown
             %a.dropdown-toggle{'data-toggle' => 'dropdown', href: '#'}
               Admin
-              %b.caret
             %ul.dropdown-menu
               -if current_user.can_read?(Division)
                 %li= link_to 'Divisions', divisions_path

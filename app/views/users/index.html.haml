@@ -11,7 +11,6 @@
         .btn-group
           %a{class: "btn dropdown-toggle #{@status.nil? ? 'btn-warning' : @status.button_style}", 'data-toggle' => 'dropdown', href: '#'}
             = @status.nil? ? 'All Users' : @status.name + ' Users'
-            %span.caret
           %ul.dropdown-menu
             -@user_statuses.each do |status|
               %li= link_to status.name, users_path(status: status.id), class: 'dropdown-item'
