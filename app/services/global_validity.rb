@@ -22,7 +22,6 @@ class GlobalValidity
       log_output << log_text(start_time, end_time, model)
     end
 
-    log_output.each { |output_text| puts(output_text) }
     specific_queries = Rails.application.config.global_validity_include
 
     specific_queries.each do |query|
@@ -31,6 +30,8 @@ class GlobalValidity
       end_time = Time.zone.now
       log_output << log_text(start_time, end_time, query)
     end
+
+    log_output.each { |output_text| puts(output_text) }
 
     total_end_time = Time.zone.now
     puts(log_text(total_start_time, total_end_time, 'All Models'))
