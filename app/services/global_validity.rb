@@ -31,10 +31,10 @@ class GlobalValidity
       log_output << log_text(start_time, end_time, query)
     end
 
-    log_output.each { |output_text| puts(output_text) }
+    log_output.each { |output_text| Rails.logger.info(output_text) }
 
     total_end_time = Time.zone.now
-    puts(log_text(total_start_time, total_end_time, 'All Models'))
+    Rails.logger.info(log_text(total_start_time, total_end_time, 'All Models'))
 
     error_messages
   end
