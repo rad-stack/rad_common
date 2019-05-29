@@ -22,7 +22,7 @@ class GlobalValidity
       log_output << log_text(start_time, end_time, model)
     end
 
-    log_output.each { |output_text| Rails.logger.debug(output_text) }
+    log_output.each { |output_text| puts(output_text) }
     specific_queries = Rails.application.config.global_validity_include
 
     specific_queries.each do |query|
