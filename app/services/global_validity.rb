@@ -5,26 +5,35 @@ class GlobalValidity
     return unless needs_to_run?
 
     error_messages = check_global_validity
-    Notifications::GlobalValidityNotification.new.notify!(error_messages) if error_messages.any?
+    Notifications::GlobalValidityNotification.notify!(error_messages) if error_messages.any?
     Company.main.global_validity_ran!
   end
 
   def check_global_validity
     error_messages = []
 
-    log_output = []
+    total_start_time = Time.zone.now
 
     models_to_check.each do |model|
+      Rails.logger.info("GlobalValidity stats: #{model} starting")
       start_time = Time.zone.now
       error_messages = error_messages.concat(check_model(model)) unless exclude_models.include?(model.to_s)
       end_time = Time.zone.now
-      log_output << log_text(start_time, end_time, model)
+      Rails.logger.info(log_text(start_time, end_time, model))
     end
 
-    log_output.each { |output_text| Rails.logger.debug(output_text) }
     specific_queries = Rails.application.config.global_validity_include
 
-    specific_queries.each { |query| error_messages = error_messages.concat(check_query_records(query)) }
+    specific_queries.each do |query|
+      Rails.logger.info("GlobalValidity stats: #{query.call.to_sql} starting")
+      start_time = Time.zone.now
+      error_messages = error_messages.concat(check_query_records(query))
+      end_time = Time.zone.now
+      Rails.logger.info(log_text(start_time, end_time, query.call.to_sql))
+    end
+
+    total_end_time = Time.zone.now
+    Rails.logger.info(log_text(total_start_time, total_end_time, 'All Models'))
 
     error_messages
   end

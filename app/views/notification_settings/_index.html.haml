@@ -1,4 +1,5 @@
 -can_create = current_user.can_create?(NotificationSetting)
+-can_type = current_user.can_update?(NotificationType)
 
 .panel-body
   %table.table.table-striped.table-bordered
@@ -8,14 +9,18 @@
 
     - settings.each do |notification_setting|
       %tr
-        %td= notification_setting.notification.description
+        %td
+          -if can_type
+            = link_to notification_setting.notification_type, "/rad_common/notification_types/#{notification_setting.notification_type_id}/edit"
+          -else
+            = notification_setting.notification_type
         %td
           -if can_create && current_user.can_create?(notification_setting)
             = simple_form_for notification_setting, url: '/rad_common/notification_settings', method: :post do |f|
               = f.error_notification
               .form-inputs
-                = f.input :enabled, input_html: { id: "notification_setting_enabled_#{notification_setting.notification.description.parameterize.underscore}" }
-                = f.input :notification_type, as: :hidden
+                = f.input :enabled, input_html: { id: "notification_setting_enabled_#{notification_setting.notification_type.description.parameterize.underscore}" }
+                = f.association :notification_type, as: :hidden
                 = f.input :user_id, as: :hidden
               .form-actions
                 = f.button :submit, 'Save', class: 'btn btn-sm btn-primary'
