@@ -22,12 +22,18 @@ class GlobalValidity
       log_output << log_text(start_time, end_time, model)
     end
 
-    total_end_time = Time.zone.now
     log_output.each { |output_text| Rails.logger.debug(output_text) }
-    Rails.logger.debug(log_text(total_start_time, total_end_time, 'All Models'))
     specific_queries = Rails.application.config.global_validity_include
 
-    specific_queries.each { |query| error_messages = error_messages.concat(check_query_records(query)) }
+    specific_queries.each do |query|
+      start_time = Time.zone.now
+      error_messages = error_messages.concat(check_query_records(query))
+      end_time = Time.zone.now
+      log_output << log_text(start_time, end_time, query)
+    end
+
+    total_end_time = Time.zone.now
+    puts(log_text(total_start_time, total_end_time, 'All Models'))
 
     error_messages
   end
