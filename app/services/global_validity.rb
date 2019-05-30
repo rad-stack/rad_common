@@ -36,7 +36,7 @@ class GlobalValidity
       error_messages = error_messages.concat(query_errors) if query_errors.present?
       end_time = Time.zone.now
       Rails.logger.info(log_time_text(start_time, end_time, query.call.to_sql))
-      Rails.logger.info(log_error_count_text(model, error_count)) unless error_count.zero?
+      Rails.logger.info(log_error_count_text(query.call.to_sql, error_count)) unless error_count.zero?
       total_error_count += error_count
     end
 
