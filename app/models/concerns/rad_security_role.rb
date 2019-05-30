@@ -41,6 +41,10 @@ module RadSecurityRole
     def seed_items
       seed_admin
       seed_user
+      return unless Rails.application.config.external_users
+
+      seed_portal_admin
+      seed_portal_user
     end
 
     def seed_admin(group_name = ADMIN_ROLE_NAME)
@@ -59,6 +63,17 @@ module RadSecurityRole
 
     def seed_user
       group = get_group('User')
+      group.save!
+    end
+
+    def seed_portal_admin
+      group = get_group('Portal Admin')
+      group.manage_user = true
+      group.save!
+    end
+
+    def seed_portal_user
+      group = get_group('Portal User')
       group.save!
     end
 

@@ -8,17 +8,19 @@
       = image_tag 'app_logo.png'
     .navbar-collapse.collapse.navbar-responsive-collapse
       - if user_signed_in?
+        - read_division = current_user.can_read?(Division)
+
         %ul.nav.navbar-nav.navbar-left
-          -if current_user.can_read?(Division)
+          -if read_division
             %li= link_to 'Divisions', divisions_path
-          %li.dropdown
-            %a.dropdown-toggle{'data-toggle' => 'dropdown', href: '#'}
-              Admin
-              %b.caret
-            %ul.dropdown-menu
-              -if current_user.can_read?(Division)
+          -if current_user.admin? || read_division
+            %li.dropdown
+              %a.dropdown-toggle{'data-toggle' => 'dropdown', href: '#'}
+                Admin
+                %b.caret
+              %ul.dropdown-menu
                 %li= link_to 'Divisions', divisions_path
-              = render 'layouts/navigation_admin'
+                = render 'layouts/navigation_admin'
           %li.global-search-nav
             = render "layouts/global_search"
       = render 'layouts/navigation_right'
