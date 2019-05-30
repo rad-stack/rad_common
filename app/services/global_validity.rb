@@ -15,9 +15,11 @@ class GlobalValidity
     total_start_time = Time.zone.now
     total_error_count = 0
     models_to_check.each do |model|
+      next if exclude_models.include?(model.to_s)
+
       Rails.logger.info("GlobalValidity stats: #{model} starting")
       start_time = Time.zone.now
-      model_errors, error_count = check_model(model) unless exclude_models.include?(model.to_s)
+      model_errors, error_count = check_model(model)
       error_messages = error_messages.concat(model_errors) if model_errors.present?
       end_time = Time.zone.now
       Rails.logger.info(log_time_text(start_time, end_time, model))
