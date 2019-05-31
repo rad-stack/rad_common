@@ -13,13 +13,18 @@ class GlobalValidity
     error_messages = []
 
     total_start_time = Time.zone.now
-
+    total_error_count = 0
     models_to_check.each do |model|
+      next if exclude_models.include?(model.to_s)
+
       Rails.logger.info("GlobalValidity stats: #{model} starting")
       start_time = Time.zone.now
-      error_messages = error_messages.concat(check_model(model)) unless exclude_models.include?(model.to_s)
+      model_errors, error_count = check_model(model)
+      error_messages = error_messages.concat(model_errors) if model_errors.present?
       end_time = Time.zone.now
-      Rails.logger.info(log_text(start_time, end_time, model))
+      Rails.logger.info(log_time_text(start_time, end_time, model))
+      Rails.logger.info(log_error_count_text(model, error_count)) unless error_count.zero?
+      total_error_count += error_count
     end
 
     specific_queries = Rails.application.config.global_validity_include
@@ -27,19 +32,27 @@ class GlobalValidity
     specific_queries.each do |query|
       Rails.logger.info("GlobalValidity stats: #{query.call.to_sql} starting")
       start_time = Time.zone.now
-      error_messages = error_messages.concat(check_query_records(query))
+      query_errors, error_count = check_query_records(query)
+      error_messages = error_messages.concat(query_errors) if query_errors.present?
       end_time = Time.zone.now
-      Rails.logger.info(log_text(start_time, end_time, query.call.to_sql))
+      Rails.logger.info(log_time_text(start_time, end_time, query.call.to_sql))
+      Rails.logger.info(log_error_count_text(query.call.to_sql, error_count)) unless error_count.zero?
+      total_error_count += error_count
     end
 
     total_end_time = Time.zone.now
-    Rails.logger.info(log_text(total_start_time, total_end_time, 'All Models'))
+    Rails.logger.info(log_time_text(total_start_time, total_end_time, 'All Models'))
+    Rails.logger.info(log_error_count_text('All Models', total_error_count)) unless total_error_count.zero?
 
     error_messages
   end
 
-  def log_text(start_time, end_time, model)
+  def log_time_text(start_time, end_time, model)
     "GlobalValidity stats: #{model} took #{Time.at((end_time - start_time)).utc.strftime('%H:%M:%S')} to validate."
+  end
+
+  def log_error_count_text(model, count)
+    "GlobalValidity stats: #{model} has #{ApplicationController.helpers.pluralize(count, 'invalid record')}."
   end
 
   private
@@ -71,15 +84,21 @@ class GlobalValidity
 
     def check_model(model)
       problems = []
-      model.find_each { |record| validate_record(record, problems) }
-      problems
+      error_count = 0
+      model.find_each do |record|
+        error_count += 1 if validate_record(record, problems)
+      end
+      [problems, error_count]
     end
 
     def check_query_records(query)
       problems = []
+      error_count = 0
       records = query.call
-      records.find_each { |record| validate_record(record, problems) }
-      problems
+      records.find_each do |record|
+        error_count += 1 if validate_record(record, problems)
+      end
+      [problems, error_count]
     end
 
     def validate_record(record, error_messages_array)
