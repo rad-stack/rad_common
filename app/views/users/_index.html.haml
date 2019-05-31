@@ -5,7 +5,7 @@
 .row
   .col-md-12
     -if users.respond_to?(:current_page)
-      = paginate users
+      = paginate users, theme: 'twitter-bootstrap-4'
 
     %table.table.table-bordered
       %tr
@@ -47,4 +47,4 @@
                 = link_to 'Resend Invitation', resend_invitation_user_path(user), method: :put, class: 'btn btn-sm btn-success btn-block', data: { confirm: 'Are you sure?' }
 
     -if users.respond_to?(:current_page)
-      = paginate users
+      = paginate users, theme: 'twitter-bootstrap-4'

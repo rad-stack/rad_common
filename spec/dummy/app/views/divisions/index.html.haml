@@ -3,7 +3,7 @@
 .panel.panel-default
   = render 'layouts/panel_header'
   .panel-body
-    = paginate @divisions
+    = paginate @divisions, theme: 'twitter-bootstrap-4'
 
     %table.table.table-striped.table-bordered
       %tr
@@ -25,4 +25,4 @@
               -if current_user.can_delete?(division)
                 = link_to content_tag(:i, '', class: 'fa fa-times right-5x') + ' Delete', division, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm btn-block'
 
-    = paginate @divisions
+    = paginate @divisions, theme: 'twitter-bootstrap-4'
