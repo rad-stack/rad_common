@@ -32,6 +32,33 @@ class MigratePaperclipFiles
     path = result[0]['key']
 
     # this url pattern can be changed to reflect whatever service you use
-    "https://s3.amazonaws.com/#{ENV['S3_BUCKET']}#{path}"
+    "https://s3.amazonaws.com/#{bucket_name}#{path}"
+  end
+
+  def bucket_name
+    parse_credentials[:bucket]
+  end
+
+  def parse_credentials(creds=Rails.root.join('config', 's3.yml'))
+    creds = creds.respond_to?(:call) ? creds.call(self) : creds
+    creds = find_credentials(creds).stringify_keys
+    (creds[Rails.env] || creds).symbolize_keys
+  end
+
+  def find_credentials(creds)
+    case creds
+    when File
+      YAML::load(ERB.new(File.read(creds.path)).result)
+    when String, Pathname
+      YAML::load(ERB.new(File.read(creds)).result)
+    when Hash
+      creds
+    else
+      if creds.respond_to?(:call)
+        creds.call(self)
+      else
+        raise ArgumentError, "Credentials are not a path, file, hash or proc."
+      end
+    end
   end
 end
