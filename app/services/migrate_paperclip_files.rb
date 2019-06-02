@@ -34,7 +34,7 @@ class MigratePaperclipFiles
                                                                join active_storage_blobs on active_storage_blobs.id = active_storage_attachments.blob_id
                                                                where record_type = '#{model_class}' AND record_id = #{record.id}
                                                                                                     AND name = '#{new_attachment_name}'
-                                                                                                    AND  metadata = '{}'")
+                                                                                                    AND metadata = '{}'")
     path = result[0]['key']
 
     # this url pattern can be changed to reflect whatever service you use
