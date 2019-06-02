@@ -3,9 +3,10 @@ class MigratePaperclipData
   attr_accessor :attachment_file_name
   attr_accessor :attachment_content_type
   attr_accessor :attachment_file_size
+  attr_accessor :new_attachment_new
   attr_accessor :model_class
 
-  def self.perform(model_class, attachment_name)
+  def self.perform(model_class, attachment_name, new_attachment_new)
     migrator = MigratePaperclipData.new
 
     migrator.model_class = model_class
@@ -13,6 +14,7 @@ class MigratePaperclipData
     migrator.attachment_file_name = "#{attachment_name}_file_name"
     migrator.attachment_content_type = "#{attachment_name}_content_type"
     migrator.attachment_file_size = "#{attachment_name}_file_size"
+    migrator.new_attachment_new = new_attachment_new
 
     migrator.perform_migration
   end
@@ -55,7 +57,7 @@ class MigratePaperclipData
     )
 
     # This will allow `record.attachment` calls to return an asset.
-    blob_name = attachment_name
+    blob_name = new_attachment_new
     record_type = record.class.name
     record_id = record.id
 
