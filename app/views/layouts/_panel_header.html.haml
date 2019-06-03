@@ -59,7 +59,7 @@
             = panel.delete_button_content
           -else
             = link_to content_tag(:i, '', class: 'fa fa-times right-5px') + 'Delete', panel.instance, method: :delete, data: { confirm: panel.delete_confirmation }, class: 'btn btn-danger btn-sm'
-      .pull-right
+      .float-right
         -panel.external_actions.each do |external_action|
           = external_action
         -if panel.action_name == 'edit' || panel.action_name == 'update' || panel.action_name == 'show'
@@ -75,5 +75,5 @@
           = action
       -if panel.action_name == 'new' || panel.action_name == 'create'
         -if !panel.no_back_button
-          .pull-right.top-3px
+          .float-right.top-3px
             = link_to content_tag(:it, '', class: 'fa fa-times'), :back, class: 'btn btn-warning btn-sm'
