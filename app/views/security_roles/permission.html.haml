@@ -1,8 +1,8 @@
 - permission_human_name = normalize_name(humanized_permission_field(@permission_name))
 
-.panel.panel-default
+.card.card-default
   = render 'layouts/panel_header', action_name: 'custom', title: "Permission: #{permission_human_name}", icon: 'fa-file'
-  .panel-body
+  .card-body
     - if permission_tooltip(@permission_name).present?
       .row
         .col-md-12

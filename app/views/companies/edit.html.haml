@@ -1,6 +1,6 @@
-.panel.panel-default
+.card.card-default
   = render 'layouts/panel_header', no_new_button: true, no_delete_button: true, no_index_button: true
-  .panel-body
+  .card-body
     = simple_form_for(@company) do |f|
       = f.error_notification
 

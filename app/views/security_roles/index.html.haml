@@ -1,6 +1,6 @@
-.panel.panel-default
+.card.card-default
   = render 'layouts/panel_header'
-  .panel-body
+  .card-body
     = paginate @security_roles, theme: 'twitter-bootstrap-4'
     = render 'security_roles/index', security_roles: @security_roles, show_actions: current_user.can_update?(SecurityRole) || current_user.can_delete?(SecurityRole)
     = paginate @security_roles, theme: 'twitter-bootstrap-4'

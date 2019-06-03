@@ -1,8 +1,8 @@
 -by_user = params[:action] == 'audit_by' || params[:system_audits].present?
 
-.panel.panel-default
+.card.card-default
   = render 'layouts/panel_header', action_name: 'custom', title: audit_title(by_user), icon: 'fa-list'
-  .panel-body
+  .card-body
     -if @audits.any?
       = paginate @audits, theme: 'twitter-bootstrap-4'
       %table.table.table-striped.table-bordered

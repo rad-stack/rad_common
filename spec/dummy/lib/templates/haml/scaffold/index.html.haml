@@ -1,8 +1,8 @@
 -show_actions = current_user.can_update?(<%= class_name %>) || current_user.can_delete?(<%= class_name %>)
 
-.panel.panel-default
+.card.card-default
   = render 'layouts/panel_header'
-  .panel-body
+  .card-body
     = paginate @<%= plural_table_name %>, theme: 'twitter-bootstrap-4'
 
     %table.table.table-striped.table-bordered

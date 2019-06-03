@@ -1,6 +1,6 @@
-.panel.panel-default
+.card.card-default
   = render 'layouts/panel_header', no_new_button: true
-  .panel-body
+  .card-body
     = simple_form_for(@user) do |f|
       = f.error_notification
       = f.error :base
