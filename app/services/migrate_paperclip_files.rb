@@ -23,22 +23,29 @@ class MigratePaperclipFiles
 
   def perform_migration
     model_class.where("#{attachment_file_name} is not null").find_each do |record|
-      record.send(new_attachment_name).attach(io: open(attachment_url(record)),
-                                          filename: record.send(attachment_file_name),
-                                          content_type: record.send(attachment_content_type))
+      result_key = attachment_result_key(record)
+      if result_key.present?
+        record.send(new_attachment_name).attach(io: open(attachment_url(result_key)),
+                                                filename: record.send(attachment_file_name),
+                                                content_type: record.send(attachment_content_type))
+      else
+        puts "Skipping #{model_class} #{record.id} it has already been processed"
+      end
     end
   end
 
-  def attachment_url(record)
+  def attachment_result_key(record)
     result = ActiveRecord::Base.connection.execute("select key from active_storage_attachments
                                                                join active_storage_blobs on active_storage_blobs.id = active_storage_attachments.blob_id
                                                                where record_type = '#{model_class}' AND record_id = #{record.id}
                                                                                                     AND name = '#{new_attachment_name}'
                                                                                                     AND metadata = '{}'")
-    path = result[0]['key']
 
-    # this url pattern can be changed to reflect whatever service you use
-    "https://s3.amazonaws.com/#{bucket_name}#{path}"
+    result.count.zero? ? nil : result[0]['key']
+  end
+
+  def attachment_url(result_key)
+    "https://s3.amazonaws.com/#{bucket_name}#{result_key}"
   end
 
   def bucket_name
