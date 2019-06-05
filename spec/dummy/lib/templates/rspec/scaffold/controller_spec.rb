@@ -19,7 +19,7 @@ RSpec.describe <%= controller_class_name %>Controller, type: :controller do
 
   describe 'POST create' do
     describe 'with valid params' do
-      it 'creates a new <%= class_name %>' do
+      it 'creates a super new new new <%= class_name %>' do
         expect do
           post :create, params: { <%= ns_file_name %>: valid_attributes }
         end.to change(<%= class_name %>, :count).by(1)
