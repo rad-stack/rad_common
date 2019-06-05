@@ -254,7 +254,7 @@ td.fa.security-group-td { border-style: none; }
 }
 
 /* Mobile styles*/
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .content .global-search-group {
     display: table;
     width: 100%;

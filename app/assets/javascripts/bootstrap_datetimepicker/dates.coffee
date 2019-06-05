@@ -60,11 +60,12 @@ class DateTimePicker
       # Init Picker
       $(this).datetimepicker({
         format: view,
-        showClear: true,
-        showTodayButton: true,
         keepOpen: keepOpen,
         useCurrent: default_current_date,
         defaultDate: default_date_or_time,
+        buttons:
+          showToday: true,
+          showClear: true,
 
         icons :
           time: 'fa fa-clock-o'
@@ -76,6 +77,14 @@ class DateTimePicker
           today: 'fa fa-calendar-o'
           clear: 'fa fa-times-circle'
       })
+
+      $(this).click ->
+        $(this).datetimepicker('show');
+        return
+
+      $(this).blur ->
+        $(this).datetimepicker('hide');
+        return
 
   addDateEvents : ->
 
