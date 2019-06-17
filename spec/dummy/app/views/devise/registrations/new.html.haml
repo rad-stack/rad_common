@@ -6,17 +6,17 @@
       = f.error :base
       .form-inputs
         .row
-          .col-md-4
+          .col-lg-4
             = f.input :email, required: true, autofocus: true
-          .col-md-4
+          .col-lg-4
             = f.input :first_name, required: true
-          .col-md-4
+          .col-lg-4
             = f.input :last_name, required: true
         .row
-          .col-md-4
-          .col-md-4
+          .col-lg-4
+          .col-lg-4
             = f.input :password, required: true
-          .col-md-4
+          .col-lg-4
             = f.input :password_confirmation, required: true
       .form-actions
         = f.button :submit, "Sign Up", class: "btn btn-primary"

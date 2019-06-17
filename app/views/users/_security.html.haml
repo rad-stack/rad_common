@@ -1,7 +1,7 @@
 .row
   - settings = NotificationSetting.settings_for_user(@user)
   - show_notifications = settings.count.positive?
-  - column_class = show_notifications ? 'col-md-4' : 'col-md-6'
+  - column_class = show_notifications ? 'col-lg-4' : 'col-lg-6'
 
   -if @user.internal? && current_user.can_read?(SecurityRole)
     -all_perms = @user.all_permissions

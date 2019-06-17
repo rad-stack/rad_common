@@ -7,7 +7,7 @@
   = render 'layouts/panel_header', no_new_button: true
   .card-body
     .row.button-row
-      .col-md-12
+      .col-lg-12
         .btn-group
           %a{class: "btn dropdown-toggle #{@status.nil? ? 'btn-warning' : @status.button_style}", 'data-toggle' => 'dropdown', href: '#'}
             = @status.nil? ? 'All Users' : @status.name + ' Users'

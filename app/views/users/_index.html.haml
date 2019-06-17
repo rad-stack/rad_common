@@ -3,7 +3,7 @@
 -show_actions = show_actions && (current_user.can_update?(User) || current_user.can_delete?(User))
 
 .row
-  .col-md-12
+  .col-lg-12
     -if users.respond_to?(:current_page)
       = paginate users, theme: 'twitter-bootstrap-4'
 
