@@ -11,7 +11,6 @@ module RadbearUser
 
     validate :validate_email_address
     validate :validate_super_admin
-    validate :validate_external
 
     after_save :notify_user_approved
   end
@@ -110,12 +109,6 @@ module RadbearUser
 
       errors.add(:super_admin, 'can only be enabled for an admin') unless permission?(:admin)
       errors.add(:super_admin, 'is not applicable for external users') if external?
-    end
-
-    def validate_external
-      return unless external?
-
-      errors.add(:external, 'is not applicable for users with security roles') if security_roles.any?
     end
 
     def notify_user_approved
