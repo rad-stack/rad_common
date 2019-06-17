@@ -11,6 +11,10 @@ FactoryBot.define do
     do_not_notify_approved { true }
     security_roles { [create(:security_role)] }
 
+    trait :external do
+      external { true }
+    end
+
     factory :admin do
       security_roles { [create(:security_role, :admin)] }
     end

@@ -16,4 +16,16 @@ if User.count.zero?
                            last_name: 'User',
                            user_status: user_status,
                            security_roles: [SecurityRole.find_by(name: 'User')]
+
+  FactoryBot.create :user, :external, email: 'admin@abc.com',
+                                      first_name: 'Portal',
+                                      last_name: 'Admin',
+                                      user_status: user_status,
+                                      security_roles: [SecurityRole.find_by(name: 'Portal Admin')]
+
+  FactoryBot.create :user, :external, email: 'user@abc.com',
+                           first_name: 'Portal',
+                           last_name: 'User',
+                           user_status: user_status,
+                           security_roles: [SecurityRole.find_by(name: 'Portal User')]
 end
