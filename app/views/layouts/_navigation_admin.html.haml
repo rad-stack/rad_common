@@ -7,7 +7,7 @@
   %li= link_to 'Security Roles', security_roles_path
   %li= link_to 'Notifications', '/rad_common/notification_types'
   %li= link_to 'Company Info', edit_company_path(company)
-  %li= link_to 'System Usage', "/rad_common/system_usages"
+  %li= link_to 'System Usage', '/rad_common/system_usages'
   %li= link_to 'System Message', RadCommon::Engine.routes.url_helpers.new_system_message_path
   %li= link_to 'Audit Search', audit_search_users_path
   -if current_user.super_admin
