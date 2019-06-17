@@ -120,6 +120,10 @@ class GlobalAutocomplete
     current_scope[:methods]
   end
 
+  def hide_global_nav?
+    current_scope[:hide_global_nav]
+  end
+
   def data_type(column)
     klass.new.has_attribute?(column) ? column_def(column).type : :string
   end
