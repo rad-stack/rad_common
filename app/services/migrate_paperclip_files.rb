@@ -23,13 +23,13 @@ class MigratePaperclipFiles
 
   def perform_migration
     model_class.where("#{attachment_file_name} is not null").find_each do |record|
-      Rails.logger.info "Attaching #{model_class} #{record.id} - #{attachment_name}"
+      Rails.logger.info "Attaching #{attachment_name} to #{model_class} #{record.id}"
       result_key = attachment_result_key(record)
       if result_key.present?
         record.send(new_attachment_name).attach(io: open(attachment_url(result_key)),
                                                 filename: record.send(attachment_file_name),
                                                 content_type: record.send(attachment_content_type))
-        Rails.logger.info "Finished Attaching #{model_class} #{record.id} - #{attachment_name}"
+        Rails.logger.info "Finised Attaching #{attachment_name} to #{model_class} #{record.id}"
       else
         puts "Skipping #{model_class} #{record.id}  - #{attachment_name}, it has already been processed"
       end
