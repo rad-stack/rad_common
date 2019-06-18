@@ -6,17 +6,17 @@ class MigratePaperclipData
   attr_accessor :new_attachment_name
   attr_accessor :model_class
 
-  def self.perform(model_class, attachments_to_process)
+  def self.perform(model_class, attachment_names)
 
-    attachments_to_process.each do |attachment_info|
+    attachment_names.each do |attachment_name|
       migrator = MigratePaperclipData.new
 
       migrator.model_class = model_class
-      migrator.attachment_name = attachment_info[:attachment_name]
-      migrator.attachment_file_name = "#{attachment_info[:attachment_name]}_file_name"
-      migrator.attachment_content_type = "#{attachment_info[:attachment_name]}_content_type"
-      migrator.attachment_file_size = "#{attachment_info[:attachment_name]}_file_size"
-      migrator.new_attachment_name = attachment_info[:new_attachment_name]
+      migrator.attachment_name = attachment_name
+      migrator.attachment_file_name = "#{attachment_name}_file_name"
+      migrator.attachment_content_type = "#{attachment_name}_content_type"
+      migrator.attachment_file_size = "#{attachment_name}_file_size"
+      migrator.new_attachment_name = "#{attachment_name}_new"
 
       migrator.perform_migration
     end

@@ -22,4 +22,16 @@ namespace :rad_common do
       DatabaseUseChecker.generate_report
     end
   end
+
+  task :migrate_paperclip_data, :model_class, :attachment_names do |_t, args|
+    model_class = args[:model_class].constantize
+    attachment_names = args[:attachment_names].split(' ')
+    MigratePaperclipData.perform(model_class, attachment_names)
+  end
+
+  task :migrate_paperclip_files, :model_class, :attachment_names do |_t, args|
+    model_class = args[:model_class].constantize
+    attachment_names = args[:attachment_names].split(' ')
+    MigratePaperclipData.perform(model_class, attachment_names)
+  end
 end
