@@ -13,16 +13,5 @@ describe SecurityRolesUser, type: :model do
         expect(security_roles_user).to be_valid
       end
     end
-
-    context 'external user' do
-      let(:user) { create :user, external: allow_external, security_roles: [] }
-
-      it 'is invalid' do
-        if allow_external
-          expect(security_roles_user).not_to be_valid
-          expect(security_roles_user.errors.full_messages.to_s).to include 'User is not valid when external'
-        end
-      end
-    end
   end
 end

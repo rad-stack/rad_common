@@ -133,4 +133,8 @@ class PanelPresenter
   def delete_confirmation
     local_assigns[:delete_confirmation] || 'Are you sure?'
   end
+
+  def index_path
+    local_assigns[:index_path] || "/#{controller_name}"
+  end
 end

@@ -14,7 +14,6 @@ module RadCompany
     validates_with PhoneNumberValidator
     validate :validate_only_one, on: :create
     validate :validate_domains
-    validate :validate_notifications, on: :update
 
     audited
   end
@@ -49,6 +48,32 @@ module RadCompany
     update! validity_checked_at: Time.zone.now
   end
 
+  def usage_stats
+    today = Time.zone.now
+
+    usage_headers = (0..5).to_a.reverse.map do |item|
+      { start: today.advance(months: -item).beginning_of_month.beginning_of_day,
+        end: today.advance(months: -item).end_of_month.end_of_day,
+        label: today.advance(months: -item).beginning_of_month.strftime('%B, %Y') }
+    end
+
+    usage_items = Rails.application.config.system_usage_models.sort
+    usage_data = []
+
+    usage_items.each do |item|
+      data = []
+
+      usage_headers.each do |header|
+        result = item.constantize.unscoped.where(created_at: header[:start]..header[:end]).count
+        data.push(result)
+      end
+
+      usage_data.push(data)
+    end
+
+    [usage_headers, usage_items, usage_data]
+  end
+
   private
 
     def validate_only_one
@@ -57,18 +82,5 @@ module RadCompany
 
     def validate_domains
       errors.add(:valid_user_domains, 'needs at least one domain') if valid_user_domains.count.zero?
-    end
-
-    def validate_notifications
-      return if NotificationSecurityRole.count.zero? || User.count.zero?
-
-      notification_types = NotificationSecurityRole.select(:notification_type)
-                                                   .distinct(:notification_type)
-                                                   .pluck(:notification_type)
-
-      notification_types.each do |notification_type|
-        notification = notification_type.constantize.new
-        errors.add(:base, "#{notification_type} has empty notify list") if notification.notify_list(false).count.zero?
-      end
     end
 end

@@ -19,8 +19,6 @@ module RadbearAuditsController
     resource_id = params['record_id']
     system_audits = params['system_audits']
 
-    @models = ActiveRecord::Base.connection.tables.sort.map { |model| model.capitalize.singularize.humanize }
-
     return unless (resource_type.present? && resource_id.present?) || system_audits.present?
 
     if resource_type.present? && resource_id.present?

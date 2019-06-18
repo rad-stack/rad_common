@@ -11,7 +11,6 @@ module RadbearUser
 
     validate :validate_email_address
     validate :validate_super_admin
-    validate :validate_external
 
     after_save :notify_user_approved
   end
@@ -44,6 +43,10 @@ module RadbearUser
     end
 
     permissions
+  end
+
+  def admin?
+    permission?(:admin)
   end
 
   def auto_approve?
@@ -108,12 +111,6 @@ module RadbearUser
       errors.add(:super_admin, 'is not applicable for external users') if external?
     end
 
-    def validate_external
-      return unless external?
-
-      errors.add(:external, 'is not applicable for users with security roles') if security_roles.any?
-    end
-
     def notify_user_approved
       return if auto_approve?
 
@@ -121,10 +118,10 @@ module RadbearUser
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
       RadbearMailer.your_account_approved(self).deliver_later
-      Notifications::UserWasApprovedNotification.new.notify!([self, approved_by]) unless do_not_notify_approved
+      Notifications::UserWasApprovedNotification.notify!([self, approved_by]) unless do_not_notify_approved
     end
 
     def notify_user_accepted
-      Notifications::UserAcceptsInvitationNotification.new.notify!(self)
+      Notifications::UserAcceptsInvitationNotification.notify!(self)
     end
 end

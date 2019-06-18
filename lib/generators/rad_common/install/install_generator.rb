@@ -41,7 +41,7 @@ module RadCommon
         template '../../../../../spec/models/security_roles_user_spec.rb', 'spec/models/security_roles_user_spec.rb'
         template '../../../../../spec/models/notifications/global_validity_notification_spec.rb', 'spec/models/notifications/global_validity_notification_spec.rb'
         template '../../../../../spec/models/notifications/new_user_signed_up_notification_spec.rb', 'spec/models/notifications/new_user_signed_up_notification_spec.rb'
-        template '../../../../../spec/models/notifications/notification_spec.rb', 'spec/models/notifications/notification_spec.rb'
+        template '../../../../../spec/models/notification_type_spec.rb', 'spec/models/notification_type_spec.rb'
         template '../../../../../spec/models/notifications/user_was_approved_notification_spec.rb', 'spec/models/notifications/user_was_approved_notification_spec.rb'
         template '../../../../../spec/controllers/users/confirmations_controller_spec.rb', 'spec/controllers/users/confirmations_controller_spec.rb'
         template '../../../../../spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
@@ -59,11 +59,13 @@ module RadCommon
 
         # factories
         template '../../../../../spec/factories/companies.rb', 'spec/factories/companies.rb'
+        template '../../../../../spec/factories/notification_security_roles.rb', 'spec/factories/notification_security_roles.rb'
+        template '../../../../../spec/factories/notification_settings.rb', 'spec/factories/notification_settings.rb'
+        template '../../../../../spec/factories/notification_types.rb', 'spec/factories/notification_types.rb'
         template '../../../../../spec/factories/security_roles.rb', 'spec/factories/security_roles.rb'
+        template '../../../../../spec/factories/security_roles_users.rb', 'spec/factories/security_roles_users.rb'
         template '../../../../../spec/factories/user_statuses.rb', 'spec/factories/user_statuses.rb'
         template '../../../../../spec/factories/users.rb', 'spec/factories/users.rb'
-        template '../../../../../spec/factories/security_roles_users.rb', 'spec/factories/security_roles_users.rb'
-        template '../../../../../spec/factories/notification_settings.rb', 'spec/factories/notification_settings.rb'
 
         # templates
 
@@ -157,6 +159,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20190225194928_devise_invitable_add_to_users.rb', 'devise_invitable_add_to_users'
         apply_migration '../../../../../spec/dummy/db/migrate/20190318115634_user_notifications.rb', 'user_notifications'
         apply_migration '../../../../../spec/dummy/db/migrate/20190429211944_remove_super_search_from_users.rb', 'remove_super_search_from_users'
+        apply_migration '../../../../../spec/dummy/db/migrate/20190524132649_refactor_notifications.rb', 'refactor_notifications'
       end
 
       def self.next_migration_number(path)
