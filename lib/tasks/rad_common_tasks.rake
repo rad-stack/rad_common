@@ -32,6 +32,6 @@ namespace :rad_common do
   task :migrate_paperclip_files, %i[model_class attachment_names] => :environment do |_t, args|
     model_class = args[:model_class].constantize
     attachment_names = args[:attachment_names].split(' ')
-    MigratePaperclipData.perform(model_class, attachment_names)
+    MigratePaperclipFiles.perform(model_class, attachment_names)
   end
 end
