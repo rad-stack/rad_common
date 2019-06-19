@@ -1,6 +1,7 @@
 .navbar {
   min-height: 80px;
   text-align: right;
+  margin-bottom: 20px;
 }
 
 .global-search-dropdown {
@@ -298,4 +299,31 @@ td.fa.security-group-td { border-style: none; }
 }
 .has-error .form-control-feedback {
   color: #a94442;
+}
+
+/* TODO: convert all usage of dl-horizontal and then remove class below https://v4-alpha.getbootstrap.com/migration/#typography */
+@media (min-width: 768px) {
+  .dl-horizontal dt {
+    float: left;
+    width: 160px;
+    overflow: hidden;
+    clear: left;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .dl-horizontal dd {
+    margin-left: 180px;
+    margin-bottom: 0;
+  }
+}
+
+.dl-horizontal dd:before,
+.dl-horizontal dd:after, {
+  display: table;
+  content: " ";
+}
+
+.dl-horizontal dd:after {
+  clear: both;
 }
