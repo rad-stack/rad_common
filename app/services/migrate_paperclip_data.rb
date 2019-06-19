@@ -39,7 +39,7 @@ class MigratePaperclipData
     ActiveRecord::Base.transaction do
       model_class.where("#{attachment_file_name} is not null").each do |record|
         Rails.logger.info "Starting Active Storage Blob and Attachment db insertions for #{model_class} #{record.id} - #{attachment_name}"
-        make_active_storage_records(record)
+        make_active_storage_records(record) unless record.send(new_attachment_name).attached?
         Rails.logger.info "Finished Active Storage Blob and Attachment db insertions for #{model_class} #{record.id} - #{attachment_name}"
       end
     end
