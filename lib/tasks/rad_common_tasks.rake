@@ -23,15 +23,21 @@ namespace :rad_common do
     end
   end
 
-  task :migrate_paperclip_data, %i[model_class attachment_names] => :environment do |_t, args|
-    model_class = args[:model_class].constantize
-    attachment_names = args[:attachment_names].split(' ')
-    MigratePaperclipData.perform(model_class, attachment_names)
+  task migrate_paperclip_data: :environment do |_t, args|
+    args.extras.each do |model_and_attachments|
+      model_and_attachments_array = model_and_attachments.split(' ')
+      model_class = model_and_attachments_array.first
+      attachment_names = model_and_attachments_array.drop(1)
+      MigratePaperclipData.perform(model_class, attachment_names)
+    end
   end
 
-  task :migrate_paperclip_files, %i[model_class attachment_names] => :environment do |_t, args|
-    model_class = args[:model_class].constantize
-    attachment_names = args[:attachment_names].split(' ')
-    MigratePaperclipFiles.perform(model_class, attachment_names)
+  task migrate_paperclip_files: :environment do |_t, args|
+    args.extras.each do |model_and_attachments|
+      model_and_attachments_array = model_and_attachments.split(' ')
+      model_class = model_and_attachments_array.first
+      attachment_names = model_and_attachments_array.drop(1)
+      MigratePaperclipFiles.perform(model_class, attachment_names)
+    end
   end
 end
