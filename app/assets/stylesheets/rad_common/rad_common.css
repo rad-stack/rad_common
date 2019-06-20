@@ -259,6 +259,7 @@ td.fa.security-group-td { border-style: none; }
   .content .global-search-group {
     display: table;
     width: 100%;
+    margin-bottom: 20px;
   }
   .nav > li.global-search-nav {
     display: none;
