@@ -6,8 +6,7 @@ class MigratePaperclipData
   attr_accessor :new_attachment_name
   attr_accessor :model_class
 
-  def self.perform(model_class, attachment_names)
-
+  def self.perform(model_class, attachment_names, sql_prepared)
     attachment_names.each do |attachment_name|
       migrator = MigratePaperclipData.new
 
@@ -18,11 +17,12 @@ class MigratePaperclipData
       migrator.attachment_file_size = "#{attachment_name}_file_size"
       migrator.new_attachment_name = "#{attachment_name}_new"
 
+      migrator.prepare_sql_statements unless sql_prepared
       migrator.perform_migration
     end
   end
 
-  def perform_migration
+  def prepare_sql_statements
     ActiveRecord::Base.connection.raw_connection.prepare('active_storage_blob_statement', <<-SQL)
       INSERT INTO active_storage_blobs (
         key, filename, content_type, metadata, byte_size, checksum, created_at
@@ -35,7 +35,9 @@ class MigratePaperclipData
         name, record_type, record_id, blob_id, created_at
       ) VALUES ($1, $2, $3, $4, $5)
     SQL
+  end
 
+  def perform_migration
     ActiveRecord::Base.transaction do
       model_class.where("#{attachment_file_name} is not null").each do |record|
         Rails.logger.info "Starting Active Storage Blob and Attachment db insertions for #{model_class} #{record.id} - #{attachment_name}"
