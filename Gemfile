@@ -16,6 +16,9 @@ gemspec
 gem 'schema_validations',  git: 'https://github.com/SchemaPlus/schema_validations.git'
 
 group :test do
+  gem 'capybara'
+  gem 'capybara-selenium'
+  gem 'chromedriver-helper'
   gem 'launchy'
   gem 'rails-controller-testing', '1.0.2'
   gem 'simplecov', require: false
