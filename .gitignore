@@ -9,4 +9,5 @@ spec/dummy/storage
 .DS_Store
 .idea/
 .env
+.env.test
 /coverage/
