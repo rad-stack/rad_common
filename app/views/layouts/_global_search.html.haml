@@ -1,6 +1,5 @@
 -if user_signed_in? && current_user
-
-  -search_scopes = global_search_scopes
+  -search_scopes = global_search_scopes.reject { |item| item[:hide_global_nav] }
 
   -if search_scopes.any?
     = form_tag("/rad_common/global_search_result", method: :get) do

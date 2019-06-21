@@ -29,7 +29,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'kaminari', '>= 0.13.0'
   s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
   s.add_dependency 'momentjs-rails', '~> 2.9', '>= 2.9.0'
-  s.add_dependency 'paperclip', '~> 6.1.0'
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
   s.add_dependency 'rails', '~> 5.2.1'

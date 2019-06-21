@@ -17,7 +17,6 @@ module RadCommon
     require 'bootstrap4-kaminari-views'
     require 'momentjs-rails'
     require 'nokogiri'
-    require 'paperclip'
     require 'pg'
     require 'premailer/rails'
     require 'schema_validations'
