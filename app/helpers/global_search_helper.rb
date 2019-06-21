@@ -1,7 +1,7 @@
 module GlobalSearchHelper
   def global_search_scopes
     raw_scopes = Rails.application.config.global_search_scopes
-    raw_scopes = raw_scopes.select { |item| current_user.can_read?(item[:model].constantize) && !item[:hide_global_nav] }
+    raw_scopes = raw_scopes.select { |item| current_user.can_read?(item[:model].constantize) }
 
     if current_user.global_search_default.blank?
       scopes = raw_scopes
