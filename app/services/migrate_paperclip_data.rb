@@ -6,7 +6,7 @@ class MigratePaperclipData
   attr_accessor :new_attachment_name
   attr_accessor :model_class
 
-  def self.perform(model_class, attachment_names, sql_prepared)
+  def self.perform(model_class, attachment_names, sql_prepared, session)
     attachment_names.each do |attachment_name|
       migrator = MigratePaperclipData.new
 
