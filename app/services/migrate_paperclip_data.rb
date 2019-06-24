@@ -6,23 +6,24 @@ class MigratePaperclipData
   attr_accessor :new_attachment_name
   attr_accessor :model_class
 
-  def self.perform(model_class, attachments_to_process)
-
-    attachments_to_process.each do |attachment_info|
+  def self.perform(model_class, attachment_names, sql_prepared, session)
+    attachment_names.each do |attachment_name|
+      session.reset_status
       migrator = MigratePaperclipData.new
 
       migrator.model_class = model_class
-      migrator.attachment_name = attachment_info[:attachment_name]
-      migrator.attachment_file_name = "#{attachment_info[:attachment_name]}_file_name"
-      migrator.attachment_content_type = "#{attachment_info[:attachment_name]}_content_type"
-      migrator.attachment_file_size = "#{attachment_info[:attachment_name]}_file_size"
-      migrator.new_attachment_name = attachment_info[:new_attachment_name]
+      migrator.attachment_name = attachment_name
+      migrator.attachment_file_name = "#{attachment_name}_file_name"
+      migrator.attachment_content_type = "#{attachment_name}_content_type"
+      migrator.attachment_file_size = "#{attachment_name}_file_size"
+      migrator.new_attachment_name = "#{attachment_name}_new"
 
-      migrator.perform_migration
+      migrator.prepare_sql_statements unless sql_prepared
+      migrator.perform_migration(session)
     end
   end
 
-  def perform_migration
+  def prepare_sql_statements
     ActiveRecord::Base.connection.raw_connection.prepare('active_storage_blob_statement', <<-SQL)
       INSERT INTO active_storage_blobs (
         key, filename, content_type, metadata, byte_size, checksum, created_at
@@ -35,10 +36,18 @@ class MigratePaperclipData
         name, record_type, record_id, blob_id, created_at
       ) VALUES ($1, $2, $3, $4, $5)
     SQL
+  end
 
+  def perform_migration(session)
     ActiveRecord::Base.transaction do
-      model_class.where("#{attachment_file_name} is not null").each do |record|
+      records_with_attachments = model_class.where("#{attachment_file_name} is not null")
+      count = records_with_attachments.count
+      records_with_attachments.each do |record|
+        break if session.check_status('performing migration', count)
+
+        Rails.logger.info "Starting Active Storage Blob and Attachment db insertions for #{model_class} #{record.id} - #{attachment_name}"
         make_active_storage_records(record)
+        Rails.logger.info "Finished Active Storage Blob and Attachment db insertions for #{model_class} #{record.id} - #{attachment_name}"
       end
     end
   end
