@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe UsersController, type: :request do
+RSpec.describe 'Users', type: :request do
   let(:admin) { create :admin }
   let(:user) { create :user }
   let(:another) { create :user }
@@ -86,7 +86,7 @@ RSpec.describe UsersController, type: :request do
 
   describe 'audit_search' do
     let!(:search_user) { create :user }
-    let!(:search_role) { SecurityRole.first }
+    let!(:search_role) { create :security_role }
 
     context 'resource with audit' do
       it 'renders audit page' do
