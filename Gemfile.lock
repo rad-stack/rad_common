@@ -27,6 +27,7 @@ PATH
       premailer-rails (~> 1.10.2)
       rails (~> 5.2.1)
       schema_validations
+      sentry-raven
       sidekiq (~> 5.2.2)
       simple_form
       twitter-bootstrap-rails (~> 4.0.0)
@@ -89,7 +90,7 @@ GEM
     authy (2.7.5)
       httpclient (>= 2.5.3.3)
     aws-eventstream (1.0.3)
-    aws-partitions (1.176.0)
+    aws-partitions (1.177.0)
     aws-sdk-core (3.56.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1.0)
@@ -165,6 +166,8 @@ GEM
       tty-pager (~> 0.12.0)
       tty-screen (~> 0.6.5)
       tty-tree (~> 0.3.0)
+    faraday (0.15.4)
+      multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
     firebase (0.2.6)
       httpclient
@@ -249,6 +252,7 @@ GEM
       key_struct (~> 0.4)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
+    multipart-post (2.1.1)
     nio4r (2.3.1)
     nokogiri (1.10.1)
       mini_portile2 (~> 2.4.0)
@@ -315,9 +319,9 @@ GEM
       ffi (>= 0.5.0, < 2)
     redis (4.1.2)
     regexp_parser (1.3.0)
-    responders (2.4.1)
-      actionpack (>= 4.2.0, < 6.0)
-      railties (>= 4.2.0, < 6.0)
+    responders (3.0.0)
+      actionpack (>= 5.0)
+      railties (>= 5.0)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.2)
@@ -366,6 +370,8 @@ GEM
       activerecord (>= 4.2, < 5.3)
       its-it (~> 1.2)
       schema_plus_core
+    sentry-raven (2.9.0)
+      faraday (>= 0.7.6, < 1.0)
     sexp_processor (4.12.1)
     sidekiq (5.2.7)
       connection_pool (~> 2.2, >= 2.2.2)
