@@ -269,8 +269,12 @@ td.fa.security-group-td { border-style: none; }
   }
 }
 
-/* preserved from B3 */
+/* custom bootstrap styles */
+.form-group.hidden {
+  display: none;
+}
 
+/* preserved from B3 */
 .has-error .help-block,
 .has-error .control-label,
 .has-error .radio,
