@@ -1,6 +1,6 @@
 namespace :firebase do
   task purge_all_data: :environment do
-    raise "can't do it" if Rails.env.production?
+    raise "can't do it" if Rails.env.production? && !Company.staging?
 
     FirebaseApp.new.client.delete '/'
   end
