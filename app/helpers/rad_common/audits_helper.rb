@@ -135,6 +135,8 @@ module RadCommon
         return false if current_user.admin?
 
         restricted_attributes = Rails.application.config.restricted_audit_attributes
+        return if restricted_attributes.count.zero?
+
         matches = restricted_attributes.select { |item| item[:model] == audit.auditable_type && item[:attribute] == changed_attribute }
         matches.count.positive?
       end
