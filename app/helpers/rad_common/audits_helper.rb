@@ -66,6 +66,7 @@ module RadCommon
         return '' if changes.blank?
 
         audit_text = ''
+        any_restricted = Rails.application.config.restricted_audit_attributes.count.positive?
 
         changes.each do |change|
           changed_attribute = change.first
@@ -82,7 +83,7 @@ module RadCommon
 
           action_label = audit.action == 'destroy' ? 'Deleted' : 'Changed'
 
-          if restricted_audit_attribute?(audit, changed_attribute, current_user)
+          if any_restricted && restricted_audit_attribute?(audit, changed_attribute, current_user)
             from_value = 'XXX' if from_value.present?
             to_value = 'XXX' if to_value.present?
           end
