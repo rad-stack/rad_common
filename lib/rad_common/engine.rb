@@ -20,6 +20,7 @@ module RadCommon
     require 'pg'
     require 'premailer/rails'
     require 'schema_validations'
+    require 'sentry-raven'
     require 'sidekiq'
     require 'simple_form'
     require 'bootstrap'
