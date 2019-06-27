@@ -4,11 +4,6 @@
   margin-bottom: 20px;
 }
 
-.global-search-dropdown {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
-
 .navbar .navbar-nav > li > a {
   font-size: 16px;
   padding-bottom: 29px;
@@ -61,6 +56,10 @@
   display: inline-block;
   vertical-align: top;
   margin-top: 3px;
+}
+.global-search-dropdown {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 .global-search-nav {
   width: 290px;
