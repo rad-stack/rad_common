@@ -22,6 +22,10 @@ module RadCompany
     def main
       Company.first
     end
+
+    def staging?
+      ENV['STAGING'] == 'true'
+    end
   end
 
   def valid_user_domains_entry=(value)

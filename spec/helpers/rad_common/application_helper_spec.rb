@@ -3,8 +3,6 @@ require 'rails_helper'
 describe RadCommon::ApplicationHelper do
   let(:date) { Time.current }
   let(:division) { create :division }
-  let(:user) { create :user }
-  let(:security_role) { create :security_role }
   let(:timestamp) { '2018-06-15 06:43 AM' }
 
   before do
@@ -12,61 +10,6 @@ describe RadCommon::ApplicationHelper do
 
     def helper.current_user
       @user
-    end
-  end
-
-  describe 'display_audited_changes' do
-    context 'without associated changes' do
-      subject { strip_tags(helper.display_audited_changes(audit)) }
-
-      let(:audit) { division.audits.reorder('created_at DESC').first }
-
-      context 'create' do
-        it { is_expected.to include "Changed Name to #{division.name}" }
-      end
-
-      context 'update' do
-        let(:old_name) { Faker::Company.name }
-        let(:new_name) { Faker::Company.name }
-
-        before do
-          division.update! name: old_name
-          division.update! name: new_name
-        end
-
-        it { is_expected.to include "Changed Name from #{old_name} to #{new_name}" }
-      end
-
-      context 'destroy' do
-        before { division.destroy! }
-
-        it { is_expected.to include 'deleted record' }
-      end
-    end
-
-    context 'with associated changes' do
-      subject { strip_tags(helper.display_audited_changes(audit)) }
-
-      let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
-
-      context 'create' do
-        before do
-          user.update!(security_roles: [])
-          user.update!(security_roles: [security_role])
-        end
-
-        it { is_expected.to include "Changed Security Role to #{security_role}" }
-      end
-
-      context 'destroy' do
-        before do
-          user.update!(security_roles: [])
-          user.update!(security_roles: [security_role])
-          user.update!(security_roles: [])
-        end
-
-        it { is_expected.to include "Deleted Security Role #{security_role}" }
-      end
     end
   end
 
@@ -213,41 +156,6 @@ describe RadCommon::ApplicationHelper do
       it 'formats the date' do
         expect(helper.format_datetime(date, include_zone: true)).to eq(date.in_time_zone.strftime('%-m/%-d/%Y %l:%M %p %Z'))
       end
-    end
-  end
-
-  describe '#classify_foreign_key' do
-    it 'returns class name' do
-      p = 'security_role_id'
-      expect(helper.classify_foreign_key(p, SecurityRole)).to eq SecurityRole
-    end
-
-    it 'returns original value if no class is found' do
-      p = 'security_roleee'
-      p2 = 'security_roleee_id'
-      expect(helper.classify_foreign_key(p, SecurityRole)).to eq p
-      expect(helper.classify_foreign_key(p2, SecurityRole)).to eq p2
-    end
-
-    it 'returns original value of there is no _id at end of string' do
-      p = 'security_role'
-      expect(helper.classify_foreign_key(p, SecurityRole)).to eq p
-    end
-
-    it 'works for other classes' do
-      u = 'user_id'
-      o = 'security_role_id'
-      division = 'division_id'
-
-      expect(helper.classify_foreign_key(u, User)).to eq User
-      expect(helper.classify_foreign_key(o, SecurityRole)).to eq SecurityRole
-      expect(helper.classify_foreign_key(division, Division)).to eq Division
-    end
-
-    it 'works for special relationships' do
-      o = 'owner_id'
-
-      expect(helper.classify_foreign_key(o, Division)).to eq User
     end
   end
 end
