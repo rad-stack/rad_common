@@ -16,7 +16,6 @@ gemspec
 gem 'schema_validations',  git: 'https://github.com/SchemaPlus/schema_validations.git'
 
 group :test do
-  gem 'capybara'
   gem 'capybara-selenium'
   gem 'chromedriver-helper'
   gem 'launchy'
