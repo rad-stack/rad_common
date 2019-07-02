@@ -13,6 +13,7 @@ module RadCommon
     require 'faker'
     require 'font-awesome-rails'
     require 'haml-rails'
+    require 'hashids'
     require 'kaminari'
     require 'bootstrap4-kaminari-views'
     require 'momentjs-rails'
