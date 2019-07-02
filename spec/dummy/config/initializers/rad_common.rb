@@ -49,5 +49,3 @@ Rails.configuration.global_search_scopes =
       query_where: 'divisions.name ilike :search',
       super_search_exclude: true }
   ]
-
-ActionController::Base.send :helper, RadCommon::BootstrapFlashHelper
