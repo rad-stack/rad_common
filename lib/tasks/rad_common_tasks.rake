@@ -24,22 +24,28 @@ namespace :rad_common do
   end
 
   task migrate_paperclip_data: :environment do |_t, args|
-    sql_prepared = false
-    args.extras.each do |model_and_attachments|
-      model_and_attachments_array = model_and_attachments.split(' ')
-      model_class = model_and_attachments_array.first.constantize
-      attachment_names = model_and_attachments_array.drop(1)
-      MigratePaperclipData.perform(model_class, attachment_names, sql_prepared)
-      sql_prepared = true
+    session = RakeSession.new(2.hours, 10)
+    Timeout.timeout(session.time_limit) do
+      sql_prepared = false
+      args.extras.each do |model_and_attachments|
+        model_and_attachments_array = model_and_attachments.split(' ')
+        model_class = model_and_attachments_array.first.constantize
+        attachment_names = model_and_attachments_array.drop(1)
+        MigratePaperclipData.perform(model_class, attachment_names, sql_prepared, session)
+        sql_prepared = true
+      end
     end
   end
 
   task migrate_paperclip_files: :environment do |_t, args|
-    args.extras.each do |model_and_attachments|
-      model_and_attachments_array = model_and_attachments.split(' ')
-      model_class = model_and_attachments_array.first.constantize
-      attachment_names = model_and_attachments_array.drop(1)
-      MigratePaperclipFiles.perform(model_class, attachment_names)
+    session = RakeSession.new(2.hours, 10)
+    Timeout.timeout(session.time_limit) do
+      args.extras.each do |model_and_attachments|
+        model_and_attachments_array = model_and_attachments.split(' ')
+        model_class = model_and_attachments_array.first.constantize
+        attachment_names = model_and_attachments_array.drop(1)
+        MigratePaperclipFiles.perform(model_class, attachment_names, session)
+      end
     end
   end
 end

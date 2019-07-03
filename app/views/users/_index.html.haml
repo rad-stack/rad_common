@@ -30,8 +30,6 @@
           %td= user.user_status
           -if show_roles
             %td
-              -if user.external?
-                n/a
               -user.security_roles.each do |security_role|
                 = secured_link(security_role)
                 %p

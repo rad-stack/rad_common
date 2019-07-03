@@ -6,9 +6,10 @@ class MigratePaperclipFiles
   attr_accessor :new_attachment_name
   attr_accessor :model_class
 
-  def self.perform(model_class, attachment_names)
+  def self.perform(model_class, attachment_names, session)
 
     attachment_names.each do |attachment_name|
+      session.reset_status
       migrator = MigratePaperclipFiles.new
 
       migrator.model_class = model_class
@@ -17,12 +18,16 @@ class MigratePaperclipFiles
       migrator.attachment_content_type = "#{attachment_name}_content_type"
       migrator.new_attachment_name = "#{attachment_name}_new"
 
-      migrator.perform_migration
+      migrator.perform_migration(session)
     end
   end
 
-  def perform_migration
-    model_class.where("#{attachment_file_name} is not null").find_each do |record|
+  def perform_migration(session)
+    records_with_attachments = model_class.where("#{attachment_file_name} is not null")
+    count = records_with_attachments.count
+    records_with_attachments.find_each do |record|
+      break if session.check_status('performing migration', count)
+
       Rails.logger.info "Attaching #{attachment_name} to #{model_class} #{record.id}"
       result_key = attachment_result_key(record)
       if result_key.present?
