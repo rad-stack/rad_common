@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'faker'
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'haml-rails', '1.0.0'
+  s.add_dependency 'hashids'
   s.add_dependency 'image_processing', '~> 1.2'
   s.add_dependency 'kaminari-bootstrap', '~> 3.0.1'
   s.add_dependency 'momentjs-rails', '~> 2.9', '>= 2.9.0'
