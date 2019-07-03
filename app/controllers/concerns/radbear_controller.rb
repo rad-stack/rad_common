@@ -12,7 +12,11 @@ module RadbearController
 
     if !file.content_type.in?(valid_types)
       flash[:error] = "File could not be saved. File type must be one of #{valid_types.join(', ')}."
-      render :edit
+      if action_methods.include?('edit')
+        render :edit
+      else
+        redirect_to record
+      end
       false
     else
       record.send(attribute).attach(file)
