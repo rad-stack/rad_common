@@ -6,7 +6,7 @@ module RadbearController
     before_action :set_raven_user_context
   end
 
-  def validate_attachment_type(record, attribute, file, valid_types)
+  def validate_active_storage_attachment(record, attribute, file, valid_types)
     # TODO: Remove this method and all calls when active storage validations are added (expected in Rails 6)
     return true if file.blank?
 
