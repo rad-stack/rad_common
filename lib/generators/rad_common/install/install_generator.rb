@@ -99,6 +99,7 @@ module RadCommon
       g.view_specs false
       g.helper_specs false
       g.routing_specs false
+      g.controller_specs false
     end
 
     Rails.configuration.app_admin_email = 'Radical Bear Admin <admin@radicalbear.com>'
