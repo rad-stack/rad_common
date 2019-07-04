@@ -43,17 +43,17 @@ module RadCommon
         template '../../../../../spec/models/notifications/new_user_signed_up_notification_spec.rb', 'spec/models/notifications/new_user_signed_up_notification_spec.rb'
         template '../../../../../spec/models/notification_type_spec.rb', 'spec/models/notification_type_spec.rb'
         template '../../../../../spec/models/notifications/user_was_approved_notification_spec.rb', 'spec/models/notifications/user_was_approved_notification_spec.rb'
-        template '../../../../../spec/controllers/users/confirmations_controller_spec.rb', 'spec/controllers/users/confirmations_controller_spec.rb'
-        template '../../../../../spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
-        template '../../../../../spec/controllers/companies_controller_spec.rb', 'spec/controllers/companies_controller_spec.rb'
-        template '../../../../../spec/controllers/security_roles_controller_spec.rb', 'spec/controllers/security_roles_controller_spec.rb'
-        template '../../../../../spec/requests/audit_history_spec.rb', 'spec/requests/audit_history_spec.rb'
-        template '../../../../../spec/requests/audit_search_spec.rb', 'spec/requests/audit_search_spec.rb'
-        template '../../../../../spec/requests/searches_spec.rb', 'spec/requests/searches_spec.rb'
+        template '../../../../../spec/requests/users/confirmations_spec.rb', 'spec/requests/users/confirmations_spec.rb'
         template '../../../../../spec/requests/users_spec.rb', 'spec/requests/users_spec.rb'
-        template '../../../../../spec/requests/companies_spec.rb', 'spec/requests/companies_spec.rb'
         template '../../../../../spec/requests/security_roles_spec.rb', 'spec/requests/security_roles_spec.rb'
-        template '../../../../../spec/requests/invitations_spec.rb', 'spec/requests/invitations_spec.rb'
+        template '../../../../../spec/requests/companies_spec.rb', 'spec/requests/companies_spec.rb'
+        template '../../../../../spec/requests/searches_spec.rb', 'spec/requests/searches_spec.rb'
+        template '../../../../../spec/system/audit_history_spec.rb', 'spec/system/audit_history_spec.rb'
+        template '../../../../../spec/system/audit_search_spec.rb', 'spec/system/audit_search_spec.rb'
+        template '../../../../../spec/system/users_spec.rb', 'spec/system/users_spec.rb'
+        template '../../../../../spec/system/companies_spec.rb', 'spec/system/companies_spec.rb'
+        template '../../../../../spec/system/security_roles_spec.rb', 'spec/system/security_roles_spec.rb'
+        template '../../../../../spec/system/invitations_spec.rb', 'spec/system/invitations_spec.rb'
         template '../../../../../spec/requests/notification_settings_spec.rb', 'spec/requests/notification_settings_spec.rb'
         template '../../../../../spec/system/notification_settings_spec.rb', 'spec/system/notification_settings_spec.rb'
 
@@ -84,6 +84,7 @@ module RadCommon
 
         # rspec templates
         copy_file '../../../../../spec/dummy/lib/templates/rspec/integration/request_spec.rb', 'lib/templates/rspec/integration/request_spec.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb', 'lib/templates/rspec/system/system_spec.rb'
         copy_file '../../../../../spec/dummy/lib/templates/rspec/scaffold/controller_spec.rb', 'lib/templates/rspec/scaffold/controller_spec.rb'
 
         gsub_file 'config/environments/production.rb', '#config.force_ssl = true', 'config.force_ssl = true'
@@ -98,6 +99,7 @@ module RadCommon
       g.view_specs false
       g.helper_specs false
       g.routing_specs false
+      g.controller_specs false
     end
 
     Rails.configuration.app_admin_email = 'Radical Bear Admin <admin@radicalbear.com>'

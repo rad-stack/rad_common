@@ -1,21 +1,20 @@
 require 'rails_helper'
 
-describe FirebaseLogsController do
+describe 'Firebase Logs', type: :request do
   let(:admin) { create :admin }
 
   before do
-    sign_in admin
+    login_as(admin, scope: :user)
   end
 
   it 'retrieves all available firebase logs' do
-    get :index
+    get '/firebase_logs'
     expect(assigns(:firebase_logs).first.first).to eq('registrations')
   end
 
   it 'destroy events' do
     allow_any_instance_of(FirebaseLogDestroyJob).to receive(:perform).and_return(nil)
-    @request.env['HTTP_REFERER'] = firebase_logs_path
-    delete :destroy, params: { id: 'events', type: 'all' }
+    delete '/firebase_logs/events', params: { type: 'all' }, headers: { HTTP_REFERER: firebase_logs_path}
     expect(response).to redirect_to(firebase_logs_path)
   end
 end
