@@ -24,12 +24,6 @@ module RadbearController
     end
   end
 
-  def validate_attachment_presence(record, attribute)
-    return if record.send(attribute).attached?
-
-    record.errors.add(attribute, 'must be attached')
-  end
-
   protected
 
     def set_raven_user_context
