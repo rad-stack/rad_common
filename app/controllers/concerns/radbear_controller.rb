@@ -27,7 +27,7 @@ module RadbearController
   def validate_attachment_presence(record, attribute)
     return if record.send(attribute).attached?
 
-    errors.add(attribute, 'must be attached')
+    record.errors.add(attribute, 'must be attached')
   end
 
   protected
