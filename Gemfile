@@ -19,7 +19,6 @@ group :test do
   gem 'capybara-selenium'
   gem 'chromedriver-helper'
   gem 'launchy'
-  gem 'rails-controller-testing', '1.0.2'
   gem 'simplecov', require: false
   gem 'selenium-webdriver'
 end
