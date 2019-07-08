@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Divisions', type: :request do
+RSpec.describe 'Divisions', type: :system do
   let(:user) { create :admin }
   let(:division) { create :division }
 

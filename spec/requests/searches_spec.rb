@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe 'Searches', type: :request do
   let(:admin) { create :admin }
+  let(:search_results) { JSON.parse(response.body) }
 
   describe 'searches' do
     before do
@@ -10,32 +11,26 @@ describe 'Searches', type: :request do
 
     context 'scope search' do
       it 'finds a user' do
-        visit "/rad_common/global_search?term=#{admin.first_name}"
-        expect(page).to have_content admin.first_name
-        expect(page).to have_content admin.last_name
-        expect(page).to have_content admin.id
+        get "/rad_common/global_search?term=#{admin.first_name}"
+        expect(search_results[0]['value']).to eq admin.to_s
+        expect(search_results[0]['id']).to eq admin.id
       end
 
       it 'shows a search result' do
-        visit "/rad_common/global_search_result?global_search_model_name=#{admin.class}&global_search_id=#{admin.id}"
-
-        expect(page).to have_content admin.email
-        expect(page).to have_content admin.first_name
-        expect(page).to have_content admin.last_name
+        get "/rad_common/global_search_result?global_search_model_name=#{admin.class}&global_search_id=#{admin.id}"
+        expect(response).to redirect_to "/users/#{admin.id}"
       end
 
       it 'can search with a compound data scope' do
-        visit "/rad_common/global_search?term=#{admin.first_name}&global_search_scope=user_name"
-        expect(page).to have_content admin.first_name
-        expect(page).to have_content admin.last_name
-        expect(page).to have_content admin.id
+        get "/rad_common/global_search?term=#{admin.first_name}&global_search_scope=user_name"
+        expect(search_results[0]['value']).to eq admin.to_s
+        expect(search_results[0]['id']).to eq admin.id
       end
 
       it 'can search with a compound data scope with no where scope' do
-        visit "/rad_common/global_search?term=#{admin.first_name}&global_search_scope=user_name_with_no_where"
-        expect(page).to have_content admin.first_name
-        expect(page).to have_content admin.last_name
-        expect(page).to have_content admin.id
+        get "/rad_common/global_search?term=#{admin.first_name}&global_search_scope=user_name_with_no_where"
+        expect(search_results[0]['value']).to eq admin.to_s
+        expect(search_results[0]['id']).to eq admin.id
       end
     end
 
@@ -46,11 +41,10 @@ describe 'Searches', type: :request do
       let(:prompt) { 'Are you sure you want to do a super (combined) search? This query may take a long time, selecting a normal query is preferred to get your results quickly and not bog down the system' }
 
       it 'can search for results across multiple tables' do
-        visit "rad_common/global_search?term=#{term}&super_search=1"
-        expect(page).to have_content(user.id)
-        expect(page).to have_content(division.id)
-        expect(page).to have_content('User')
-        expect(page).to have_content('Division')
+        get "/rad_common/global_search?term=#{term}&super_search=1"
+        expect(search_results[0]['model_name']).to eq 'User'
+        expect(search_results[0]['id']).to eq user.id
+        expect(search_results[1]['model_name']).to eq 'Division'
       end
 
       context 'asks the user if they want to use' do

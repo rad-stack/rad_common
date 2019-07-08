@@ -469,6 +469,7 @@ DEPENDENCIES
   rubocop
   rubocop-rspec
   schema_validations!
+  selenium-webdriver
   simplecov
 
 BUNDLED WITH

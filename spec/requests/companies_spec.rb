@@ -8,17 +8,37 @@ RSpec.describe 'Companies', type: :request do
     login_as(user, scope: :user)
   end
 
-  describe 'edit' do
-    it 'renders the edit template' do
-      visit edit_company_path(company)
-      expect(page).to have_content('Editing Company')
-    end
+  let(:valid_attributes) do
+    { name: 'foo' }
   end
 
-  describe 'show' do
-    it 'shows the company' do
-      visit company_path(company)
-      expect(page).to have_content(company.to_s)
+  let(:invalid_attributes) do
+    { name: nil }
+  end
+
+  describe 'PUT update' do
+    describe 'with valid params' do
+      let(:new_attributes) do
+        { name: 'bar' }
+      end
+
+      it 'updates the requested company' do
+        put "/companies/#{company.id}", params: { company: new_attributes }
+        company.reload
+        expect(company.name).to eq('bar')
+      end
+
+      it 'redirects to the company' do
+        put "/companies/#{company.id}", params: { company: new_attributes }
+        expect(response).to redirect_to(company)
+      end
+    end
+
+    describe 'with invalid params' do
+      it 're-renders the edit template' do
+        put "/companies/#{company.id}", params: { company: invalid_attributes }
+        expect(response).to render_template('edit')
+      end
     end
   end
 end

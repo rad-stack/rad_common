@@ -1,6 +1,7 @@
 require 'rails_helper'
 
-describe 'Invitations', type: :request do
+describe 'Invitations', type: :system do
+  let(:company) { Company.main }
   let!(:admin) { create :admin }
   let(:user) { create :user }
   let(:email_domain) { 'example.com' }
@@ -96,7 +97,7 @@ describe 'Invitations', type: :request do
       visit new_user_password_path
       fill_in 'Email', with: @invitee.email
       click_button 'Send Me Reset Password Instructions'
-      expect(page).to have_content 'not found'
+      expect(page).to have_content 'If your email address exists in our database, you will receive a password'
     end
 
     it 'notifies admin when invitee accepts' do
@@ -115,7 +116,7 @@ describe 'Invitations', type: :request do
       visit new_user_password_path
       fill_in 'Email', with: @invitee.email
       click_button 'Send Me Reset Password Instructions'
-      expect(page).to have_content 'not found'
+      expect(page).to have_content 'If your email address exists in our database, you will receive a password'
 
       expect(ActionMailer::Base.deliveries.count).to eq 0
     end
