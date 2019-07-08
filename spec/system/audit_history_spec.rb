@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'AuditHistory', type: :request do
+describe 'AuditHistory', type: :system do
   let(:admin) { create :admin }
   let(:user) { create :user }
   let(:division) { create :division }

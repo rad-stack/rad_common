@@ -69,6 +69,9 @@ Emails are sent in the background so make sure you have a mailers queue running 
 ### Email Template
 To use the common email template in your Rails project, just have your mailer subclass RadbearMailer.
 
+## Generating tests
+With the current version of rspec-rails we are not able to generate system ('feature') tests when we create the scaffold for an object. To achieve this you must run the generate command manually. Example: rails g rspec:system new_model
+
 ## Development
 
 ### Configuring
