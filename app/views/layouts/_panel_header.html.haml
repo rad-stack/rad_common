@@ -51,7 +51,7 @@
       .action-buttons
         -if panel.action_name == 'show'
           -if !panel.no_edit_button && current_user && current_user.can_update?(panel.klass) && current_user.can_update?(panel.instance)
-            = link_to content_tag(:i, '', class: 'fa fa-pencil right-5px') + 'Edit', panel.edit_url, class: 'btn btn-secondary btn-sm'
+            = link_to content_tag(:i, '', class: 'fa fa-pencil right-5px') + 'Edit', panel.edit_url, class: 'btn btn-light btn-sm'
         -panel.additional_actions.each do |action|
           = action
         -if !panel.no_delete_button && panel.instance && panel.instance.id && current_user && current_user.can_delete?(panel.klass) && current_user.can_delete?(panel.instance)
@@ -67,7 +67,7 @@
             = link_to content_tag(:it, '', class: 'fa fa-plus-square right-5px') + "Add Another #{panel.object_label}", panel.new_url, class: 'btn btn-success btn-sm', id: "new_#{panel.downcased_object_class}_link"
         -if !panel.no_index_button && ['show', 'edit', 'update', 'new', 'create'].include?(panel.action_name)
           -if current_user && current_user.can_read?(panel.klass)
-            = link_to content_tag(:it, '', class: 'fa fa-list right-5px') + 'View ' + panel.titleized_controller_name, panel.index_path, class: 'btn btn-secondary btn-sm'
+            = link_to content_tag(:it, '', class: 'fa fa-list right-5px') + 'View ' + panel.titleized_controller_name, panel.index_path, class: 'btn btn-light btn-sm'
         -if panel.action_name == 'index'
           -if !panel.no_new_button && current_user && current_user.can_create?(panel.klass)
             = link_to content_tag(:it, '', class: 'fa fa-plus-square right-5px') + "New #{panel.object_label}", panel.new_url, class: 'btn btn-success btn-sm', id: "new_#{panel.downcased_object_class}_link"
