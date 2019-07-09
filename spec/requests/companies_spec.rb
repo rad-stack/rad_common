@@ -37,7 +37,7 @@ RSpec.describe 'Companies', type: :request do
     describe 'with invalid params' do
       it 're-renders the edit template' do
         put "/companies/#{company.id}", params: { company: invalid_attributes }
-        expect(response).to render_template('edit')
+        expect(response).not_to redirect_to(company)
       end
     end
   end
