@@ -1,6 +1,6 @@
 .card.card-default
   -if current_user.can_global_validate?(@company)
-    -actions = [link_to('Global Validity Check', "/rad_common/companies/#{Company.main.id}/global_validity_check", class: 'btn btn-light btn-sm', method: :post, data: { confirm: 'This is an exhaustive effort that could cause performance problems on the database. Are you sure?' })]
+    -actions = [link_to('Global Validity Check', "/rad_common/companies/#{Company.main.id}/global_validity_check", class: 'btn btn-secondary btn-sm', method: :post, data: { confirm: 'This is an exhaustive effort that could cause performance problems on the database. Are you sure?' })]
   = render 'layouts/panel_header', no_new_button: true, no_delete_button: true, no_index_button: true, additional_actions: actions
   .card-body
     = render 'layouts/show_data_columns', resource: @company, data: [{ label: 'Address', value: @company.full_address }, { label: 'Phone Number', value: (link_to @company.phone_number, "tel:#{@company.phone_number}") }, { label: 'Website', value: (link_to @company.website, @company.website, target: :_blank) }, { label: 'Email', value:(mail_to @company.email) }, :validity_checked_at]

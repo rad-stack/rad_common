@@ -38,7 +38,7 @@
           -if show_actions
             %td
               -if current_user.can_update?(user)
-                = link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', edit_user_path(user), class: 'btn btn-light btn-sm btn-block btn-block'
+                = link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', edit_user_path(user), class: 'btn btn-secondary btn-sm btn-block btn-block'
               -if current_user.can_delete?(user)
                 = link_to content_tag(:i, '', class: 'fa fa-times right-5x') + ' Delete', user, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger btn-sm btn-block btn-block"
               -if current_user.can_create?(User) && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
