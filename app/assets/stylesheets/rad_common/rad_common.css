@@ -68,6 +68,7 @@
 .security-role-checkboxes{
   margin-top: 0 !important;
   vertical-align: text-top;
+  display: inline-block;
 }
 #search-options {
   cursor: pointer;
