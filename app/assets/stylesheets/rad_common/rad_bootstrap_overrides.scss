@@ -1,0 +1,46 @@
+/* card styles to emulate previous panel style capability*/
+.card-danger
+{
+  .card-header
+  {
+    @extend .alert-danger
+  }
+  border-color: #f5c6cb;
+}
+
+.card-success
+{
+  .card-header
+  {
+    @extend .alert-success
+  }
+
+  border-color: #c3e6cb;
+}
+
+.card-warning
+{
+  .card-header
+  {
+    @extend .alert-warning
+  }
+  border-color:#ffeeba;
+}
+
+.card-info
+{
+  .card-header
+  {
+    @extend .alert-info
+  }
+  border-color:#bee5eb;
+}
+
+.card-primary
+{
+  .card-header
+  {
+    @extend .alert-primary
+  }
+  border-color:#b8daff;
+}
