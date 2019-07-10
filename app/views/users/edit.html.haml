@@ -25,8 +25,7 @@
           .col-lg-6= f.input :password_confirmation
         .row.internal
           .col-lg-12
-            %label Security Roles
-            = f.input :security_roles, as: :check_boxes, item_wrapper_class: 'col-lg-3 security-role-checkboxes', collection: security_role_collection, checked: @user.security_roles.ids, label: false
+            = f.input :security_roles, as: :check_boxes, item_wrapper_class: 'col-lg-3 security-role-checkboxes', collection: security_role_collection, checked: @user.security_roles.ids
 
       .form-actions
         = f.button :submit, 'Save', class: 'btn btn-primary'

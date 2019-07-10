@@ -27,6 +27,6 @@ end
 group :development, :test do
   gem 'dotenv-rails'
   gem 'jquery-rails'
-  gem 'jquery-ui-rails'
+  gem 'jquery-ui-rails', '< 6.0'
   gem 'pry'
 end
