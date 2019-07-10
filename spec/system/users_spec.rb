@@ -177,13 +177,13 @@ describe 'Users', type: :system do
       it 'hides internal fields if client user is checked' do
         visit edit_user_path(user)
         find_field('user_external').set(false)
-        expect(page).to have_content 'Security Roles'
+        expect(page).to have_content 'Security roles'
       end
 
       it 'shows internal fields if client user is not checked' do
         visit edit_user_path(user)
         find_field('user_external').set(true)
-        expect(page).not_to have_content 'Security Roles'
+        expect(page).not_to have_content 'Security roles'
       end
     end
   end
