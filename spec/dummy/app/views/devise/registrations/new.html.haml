@@ -1,5 +1,5 @@
 .card.card-default
-  = render "layouts/panel_header", action_name: "custom", title: "Sign Up", icon: "fa-file"
+  = render "layouts/card_header", action_name: "custom", title: "Sign Up", icon: "fa-file"
   .card-body
     = simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
       = f.error_notification

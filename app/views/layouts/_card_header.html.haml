@@ -1,0 +1,79 @@
+- card_presenter(local_assigns) do |card|
+  .card-header
+    .title-header
+      .title-text
+        -if card.action_name == 'custom'
+          -if card.icon
+            %div{class: "fa #{card.icon}"}
+          -if card.title
+            = card.title
+        -elsif card.action_name == 'edit' || card.action_name == 'update'
+          -if card.icon
+            %div{class: "fa #{card.icon}"}
+          -else
+            .fa.fa-pencil
+          -if card.title
+            = card.title
+          -else
+            Editing #{card.object_label}:
+            -if card.no_show_link
+              = card.instance_label
+            -else
+              = link_to card.instance_label, card.instance
+        -elsif card.action_name == 'new' || card.action_name == 'create'
+          -if card.icon
+            %div{class: "fa #{card.icon}"}
+          -else
+            .fa.fa-plus
+          -if card.title
+            = card.title
+          -else
+            New #{card.object_label}
+        -elsif card.action_name == 'show'
+          -if card.icon
+            %div{class: "fa #{card.icon}"}
+          -else
+            .fa.fa-file
+          -if card.title
+            = card.title
+          -else
+            #{card.object_label}: #{card.instance_label}
+        -elsif card.action_name == 'index'
+          -if card.icon
+            %div{class: "fa #{card.icon}"}
+          -else
+            .fa.fa-list
+          -if card.title
+            = card.title
+          -else
+            -the_var = card.controller.instance_variable_get("@" + card.controller_name)
+            #{card.titleized_controller_name} (#{the_var.respond_to?(:total_count) ? the_var.total_count : the_var.count})
+      .action-buttons
+        -if card.action_name == 'show'
+          -if !card.no_edit_button && current_user && current_user.can_update?(card.klass) && current_user.can_update?(card.instance)
+            = link_to content_tag(:i, '', class: 'fa fa-pencil right-5px') + 'Edit', card.edit_url, class: 'btn btn-secondary btn-sm'
+        -card.additional_actions.each do |action|
+          = action
+        -if !card.no_delete_button && card.instance && card.instance.id && current_user && current_user.can_delete?(card.klass) && current_user.can_delete?(card.instance)
+          -if card.delete_button_content
+            = card.delete_button_content
+          -else
+            = link_to content_tag(:i, '', class: 'fa fa-times right-5px') + 'Delete', card.instance, method: :delete, data: { confirm: card.delete_confirmation }, class: 'btn btn-danger btn-sm'
+      .float-right
+        -card.external_actions.each do |external_action|
+          = external_action
+        -if card.action_name == 'edit' || card.action_name == 'update' || card.action_name == 'show'
+          -if !card.no_new_button && current_user && current_user.can_create?(card.klass)
+            = link_to content_tag(:it, '', class: 'fa fa-plus-square right-5px') + "Add Another #{card.object_label}", card.new_url, class: 'btn btn-success btn-sm', id: "new_#{card.downcased_object_class}_link"
+        -if !card.no_index_button && ['show', 'edit', 'update', 'new', 'create'].include?(card.action_name)
+          -if current_user && current_user.can_read?(card.klass)
+            = link_to content_tag(:it, '', class: 'fa fa-list right-5px') + 'View ' + card.titleized_controller_name, card.index_path, class: 'btn btn-secondary btn-sm'
+        -if card.action_name == 'index'
+          -if !card.no_new_button && current_user && current_user.can_create?(card.klass)
+            = link_to content_tag(:it, '', class: 'fa fa-plus-square right-5px') + "New #{card.object_label}", card.new_url, class: 'btn btn-success btn-sm', id: "new_#{card.downcased_object_class}_link"
+        -card.additional_external_actions.each do |action|
+          = action
+      -if card.action_name == 'new' || card.action_name == 'create'
+        -if !card.no_back_button
+          .float-right.top-3px
+            = link_to content_tag(:it, '', class: 'fa fa-times'), :back, class: 'btn btn-warning btn-sm'

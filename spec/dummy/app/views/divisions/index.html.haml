@@ -1,7 +1,7 @@
 -show_actions = current_user.can_update?(Division) || current_user.can_delete?(Division)
 
 .card.card-default
-  = render 'layouts/panel_header'
+  = render 'layouts/card_header'
   .card-body
     = paginate @divisions, theme: 'twitter-bootstrap-4'
 

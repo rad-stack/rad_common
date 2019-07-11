@@ -1,7 +1,7 @@
 -by_user = params[:action] == 'audit_by' || params[:system_audits].present?
 
 .card.card-default
-  = render 'layouts/panel_header', action_name: 'custom', title: audit_title(by_user), icon: 'fa-list'
+  = render 'layouts/card_header', action_name: 'custom', title: audit_title(by_user), icon: 'fa-list'
   .card-body
     -if @audits.any?
       = paginate @audits, theme: 'twitter-bootstrap-4'

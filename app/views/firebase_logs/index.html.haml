@@ -8,7 +8,7 @@
         -actions = []
         -actions.push(link_to("Delete All", firebase_log_path(log.first, type: 'all'), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))
         -actions.push(link_to("Delete Non Errors", firebase_log_path(log.first, type: 'non_errors'), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))
-      = render "layouts/panel_header", action_name: "custom", title: log.first.titleize, icon: "fa-list", additional_actions: actions
+      = render "layouts/card_header", action_name: "custom", title: log.first.titleize, icon: "fa-list", additional_actions: actions
       .card-body
         - if @limited_log_categories.include?(log.first)
           .alert.alert-warning

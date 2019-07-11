@@ -1,5 +1,5 @@
 .card.card-default
-  = render "layouts/panel_header", action_name: "custom", title: "Sign In", icon: "fa-sign-in"
+  = render "layouts/card_header", action_name: "custom", title: "Sign In", icon: "fa-sign-in"
   .card-body
     = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
       .form-inputs

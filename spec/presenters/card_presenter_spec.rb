@@ -1,10 +1,10 @@
 require 'spec_helper'
-require_relative '../../app/presenters/panel_presenter'
+require_relative '../../app/presenters/card_presenter'
 
-describe PanelPresenter do
+describe CardPresenter do
   let(:view_context) { double(:view_context) }
   let(:local_assigns) { {} }
-  let(:panel_presenter) { described_class.new(view_context, local_assigns) }
+  let(:card_presenter) { described_class.new(view_context, local_assigns) }
 
   describe '#controller_name' do
     let(:controller_name) { 'Foo' }
@@ -15,7 +15,7 @@ describe PanelPresenter do
 
     context 'a standard contoller name' do
       it 'returns the controller name' do
-        expect(panel_presenter.controller_name).to eq(controller_name)
+        expect(card_presenter.controller_name).to eq(controller_name)
       end
     end
 
@@ -24,7 +24,7 @@ describe PanelPresenter do
       let(:local_assigns) { { controller_name: special_controller_name } }
 
       it 'returns the special controller name' do
-        expect(panel_presenter.controller_name).to eq(special_controller_name)
+        expect(card_presenter.controller_name).to eq(special_controller_name)
       end
     end
   end
@@ -38,7 +38,7 @@ describe PanelPresenter do
 
     context 'no new_url param' do
       it 'creates the new url from the controller name' do
-        expect(panel_presenter.new_url).to eq("/#{controller_name}/new")
+        expect(card_presenter.new_url).to eq("/#{controller_name}/new")
       end
     end
 
@@ -47,7 +47,7 @@ describe PanelPresenter do
       let(:local_assigns) { { new_url: new_url } }
 
       it 'uses the supplied url instead' do
-        expect(panel_presenter.new_url).to eq(new_url)
+        expect(card_presenter.new_url).to eq(new_url)
       end
     end
   end
@@ -63,7 +63,7 @@ describe PanelPresenter do
 
     context 'no edit_url param' do
       it 'creates the edit url from the controller name' do
-        expect(panel_presenter.edit_url).to eq("/#{controller_name}/#{id}/edit")
+        expect(card_presenter.edit_url).to eq("/#{controller_name}/#{id}/edit")
       end
     end
 
@@ -72,7 +72,7 @@ describe PanelPresenter do
       let(:local_assigns) { { edit_url: edit_url  } }
 
       it 'uses the supplied url instead' do
-        expect(panel_presenter.edit_url).to eq(edit_url)
+        expect(card_presenter.edit_url).to eq(edit_url)
       end
     end
   end
@@ -83,13 +83,13 @@ describe PanelPresenter do
     end
 
     it 'returns something if not custom' do
-      allow(panel_presenter).to receive(:custom?).and_return(false)
-      expect(panel_presenter.klass).not_to be_nil
+      allow(card_presenter).to receive(:custom?).and_return(false)
+      expect(card_presenter.klass).not_to be_nil
     end
 
     it 'returns nil if custom' do
-      allow(panel_presenter).to receive(:custom?).and_return(true)
-      expect(panel_presenter.klass).to be_nil
+      allow(card_presenter).to receive(:custom?).and_return(true)
+      expect(card_presenter.klass).to be_nil
     end
   end
 
@@ -100,13 +100,13 @@ describe PanelPresenter do
     end
 
     it 'returns something if not custom' do
-      allow(panel_presenter).to receive(:custom?).and_return(false)
-      expect(panel_presenter.instance).not_to be_nil
+      allow(card_presenter).to receive(:custom?).and_return(false)
+      expect(card_presenter.instance).not_to be_nil
     end
 
     it 'returns nil if custom' do
-      allow(panel_presenter).to receive(:custom?).and_return(true)
-      expect(panel_presenter.instance).to be_nil
+      allow(card_presenter).to receive(:custom?).and_return(true)
+      expect(card_presenter.instance).to be_nil
     end
   end
 
@@ -115,35 +115,35 @@ describe PanelPresenter do
 
     context 'custom' do
       before do
-        allow(panel_presenter).to receive(:custom?).and_return(true)
+        allow(card_presenter).to receive(:custom?).and_return(true)
       end
 
       it 'returns nil' do
-        expect(panel_presenter.instance_label).to be_nil
+        expect(card_presenter.instance_label).to be_nil
       end
     end
 
     context 'not custom' do
       before do
-        allow(panel_presenter).to receive(:custom?).and_return(false)
+        allow(card_presenter).to receive(:custom?).and_return(false)
       end
 
       it 'defaults to return #to_s' do
-        allow(panel_presenter).to receive(:instance).and_return(double(:instance, to_s: to_s))
-        expect(panel_presenter.instance_label).to eq(to_s)
+        allow(card_presenter).to receive(:instance).and_return(double(:instance, to_s: to_s))
+        expect(card_presenter.instance_label).to eq(to_s)
       end
     end
   end
 
   describe '#custom?' do
     it 'true if custom' do
-      allow(panel_presenter).to receive(:action_name).and_return('custom')
-      expect(panel_presenter).to be_custom
+      allow(card_presenter).to receive(:action_name).and_return('custom')
+      expect(card_presenter).to be_custom
     end
 
     it 'false if custom' do
-      allow(panel_presenter).to receive(:action_name).and_return('not custom')
-      expect(panel_presenter).not_to be_custom
+      allow(card_presenter).to receive(:action_name).and_return('not custom')
+      expect(card_presenter).not_to be_custom
     end
   end
 
@@ -151,15 +151,15 @@ describe PanelPresenter do
     let(:local_assigns) { {} }
 
     it 'returns params action' do
-      expect(panel_presenter).to receive(:params).and_return({})
-      panel_presenter.action_name
+      expect(card_presenter).to receive(:params).and_return({})
+      card_presenter.action_name
     end
   end
 
   describe '#delete_confirmation' do
     context 'not specified' do
       it "defaults to 'Are You Sure?'" do
-        expect(panel_presenter.delete_confirmation).to eq('Are you sure?')
+        expect(card_presenter.delete_confirmation).to eq('Are you sure?')
       end
     end
 
@@ -168,7 +168,7 @@ describe PanelPresenter do
       let(:local_assigns) { { delete_confirmation: confirmation_text } }
 
       it 'returns specified value' do
-        expect(panel_presenter.delete_confirmation).to eq(confirmation_text)
+        expect(card_presenter.delete_confirmation).to eq(confirmation_text)
       end
     end
   end
@@ -177,7 +177,7 @@ describe PanelPresenter do
     let(:local_assigns) { {} }
 
     it 'returns an empty array' do
-      expect(panel_presenter.additional_actions).to eq([])
+      expect(card_presenter.additional_actions).to eq([])
     end
   end
 
@@ -187,7 +187,7 @@ describe PanelPresenter do
       let(:local_assigns) { { method => value } }
 
       it 'returns local assigns value' do
-        expect(panel_presenter.send(method)).to eq(value)
+        expect(card_presenter.send(method)).to eq(value)
       end
     end
   end
@@ -197,7 +197,7 @@ describe PanelPresenter do
       let(:local_assigns) { {} }
 
       it 'returns nil' do
-        expect(panel_presenter.send(method)).to be_falsy
+        expect(card_presenter.send(method)).to be_falsy
       end
     end
   end

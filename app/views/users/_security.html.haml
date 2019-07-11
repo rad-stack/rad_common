@@ -7,12 +7,12 @@
     -all_perms = @user.all_permissions
     %div{ class: column_class }
       .card.card-default
-        = render 'layouts/panel_header', action_name: 'custom', title: 'Security Roles', icon: 'fa-list'
+        = render 'layouts/card_header', action_name: 'custom', title: 'Security Roles', icon: 'fa-list'
         .card-body
           = render 'security_roles/index', security_roles: @user.security_roles, show_actions: false
     %div{ class: column_class }
       .card.card-default
-        = render 'layouts/panel_header', action_name: 'custom', title: 'Permissions', icon: 'fa-list'
+        = render 'layouts/card_header', action_name: 'custom', title: 'Permissions', icon: 'fa-list'
         .card-body
           %table.table.table-striped.table-bordered
             %tr
@@ -28,5 +28,5 @@
   -if show_notifications
     %div{ class: column_class }
       .card.card-default
-        = render 'layouts/panel_header', action_name: 'custom', title: 'Notification Settings', icon: 'fa-list'
+        = render 'layouts/card_header', action_name: 'custom', title: 'Notification Settings', icon: 'fa-list'
         = render 'notification_settings/index', settings: settings

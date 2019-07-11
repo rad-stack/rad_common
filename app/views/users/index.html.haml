@@ -1,10 +1,10 @@
 .card.card-default
-  = render 'layouts/panel_header', action_name: 'custom', title: "Pending Users (#{@pending.count})", icon: 'fa-list', additional_external_actions: users_actions
+  = render 'layouts/card_header', action_name: 'custom', title: "Pending Users (#{@pending.count})", icon: 'fa-list', additional_external_actions: users_actions
   .card-body
     = render 'users/index', users: @pending
 
 .card.card-default
-  = render 'layouts/panel_header', no_new_button: true
+  = render 'layouts/card_header', no_new_button: true
   .card-body
     .row.button-row
       .col-lg-12
