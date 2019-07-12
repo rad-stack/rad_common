@@ -59,7 +59,7 @@
             = card.delete_button_content
           -else
             = link_to content_tag(:i, '', class: 'fa fa-times right-5px') + 'Delete', card.instance, method: :delete, data: { confirm: card.delete_confirmation }, class: 'btn btn-danger btn-sm'
-      .float-right
+      .external-actions
         -card.external_actions.each do |external_action|
           = external_action
         -if card.action_name == 'edit' || card.action_name == 'update' || card.action_name == 'show'
@@ -75,5 +75,5 @@
           = action
       -if card.action_name == 'new' || card.action_name == 'create'
         -if !card.no_back_button
-          .float-right.top-3px
+          .back-button
             = link_to content_tag(:it, '', class: 'fa fa-times'), :back, class: 'btn btn-warning btn-sm'

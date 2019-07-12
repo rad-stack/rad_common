@@ -47,16 +47,33 @@
   font-size: 15px;
   margin-left: 30px;
 }
-.title-header .title-text {
-  display: inline-block;
-  font-size: 24px;
-  margin-right: 20px;
+
+.title-header {
+
+  display: flex;
+  align-items: center;
+
+  .title-text {
+    display: inline-block;
+    font-size: 24px;
+    margin-right: 20px;
+  }
+
+  .action-buttons {
+     display: inline-block;
+     vertical-align: top;
+     margin-top: 3px;
+   }
+
+   .external-actions {
+     margin-left: auto;
+   }
+
+  .back-button {
+    margin-left: 3px;
+  }
 }
-.title-header .action-buttons {
-  display: inline-block;
-  vertical-align: top;
-  margin-top: 3px;
-}
+
 .global-search-dropdown {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
