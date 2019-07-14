@@ -17,7 +17,7 @@ describe 'Audit search', type: :system do
 
       context 'resource deleted' do
         it 'loads audit page' do
-          deleted_role = create(:security_role, read_audit: true)
+          deleted_role = create(:security_role)
           deleted_role.destroy
           visit audit_search_users_path
           select deleted_role.class.to_s, from: 'record-search'

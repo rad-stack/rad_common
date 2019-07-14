@@ -3,7 +3,6 @@ require 'rails_helper'
 describe 'AuditHistory', type: :system do
   let(:admin) { create :admin }
   let(:user) { create :user }
-  let(:division) { create :division }
 
   before do
     login_as(admin, scope: :user)
@@ -21,23 +20,9 @@ describe 'AuditHistory', type: :system do
     expect(page).to have_content old_name
   end
 
-  it 'shows the change in division history' do
-    old_name = division.name
-    new_name = Faker::Name.first_name
-    visit edit_division_path(division)
-    fill_in 'Name', with: new_name
-    click_button 'Save'
-
-    click_link 'Show History'
-    expect(page).to have_content new_name
-    expect(page).to have_content old_name
-  end
-
-  it 'shows when the division was created in history' do
-    visit new_division_path
+  it 'shows when the security role was created in history' do
+    visit new_security_role_path
     fill_in 'Name', with: 'Foo'
-    fill_in 'Code', with: 'Bar'
-    first('input#division_owner_id', visible: false).set(user.id.to_s)
 
     click_button 'Save'
     click_link 'Show History'
