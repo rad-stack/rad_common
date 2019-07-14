@@ -78,6 +78,13 @@ describe 'Users', type: :system do
     end
 
     describe 'admin' do
+      let(:notification_type) { create :notification_type }
+      let(:notification_setting) { NotificationSetting.find_by(user: user, notification_type: notification_type) }
+
+      let!(:notification_security_role) do
+        create :notification_security_role, notification_type: notification_type, security_role: user.security_roles.first
+      end
+
       before do
         login_as(admin, scope: :user)
       end
@@ -97,7 +104,16 @@ describe 'Users', type: :system do
         end
 
         it 'shows field names in title case' do
-          expect(page).to have_content('User Status')
+          expect(page).to have_content 'User Status'
+        end
+
+        it 'allows updating notification settings' do
+          expect(page).to have_content 'Notification Settings'
+          uncheck 'Enabled'
+          click_button 'Save'
+          expect(page).to have_content 'The setting was successfully saved.'
+
+          expect(notification_setting.enabled).to be false
         end
 
         context 'attribute translation defined in locales' do
