@@ -118,6 +118,10 @@ module RadCommon
       flash_messages.join('\n').html_safe
     end
 
+    def base_errors(form)
+      form.error :base, class: 'alert alert-danger' if form.object.errors[:base].present?
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
