@@ -1,6 +1,6 @@
 #navbar.navbar.navbar-expand-lg.navbar-light.bg-light
   .container-fluid
-    %button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent')
+    %button.navbar-toggler{ type: 'button', data: { toggle: 'collapse', target: '#navbarSupportedContent' } }
       %span.navbar-toggler-icon
     = link_to root_path, { class: 'navbar-brand' } do
       = image_tag 'app_logo.png'
@@ -10,7 +10,7 @@
           -if current_user.can_read?(Division)
             %li= link_to 'Divisions', divisions_path, class: 'nav-link'
           %li.nav-item.dropdown
-            %a.nav-link.dropdown-toggle{'data-toggle' => 'dropdown', href: '#'}
+            %a.nav-link.dropdown-toggle{'data-toggle': 'dropdown', href: '#'}
               Admin
             %ul.dropdown-menu
               -if current_user.can_read?(Division)

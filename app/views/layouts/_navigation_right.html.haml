@@ -1,7 +1,7 @@
 %ul.nav.navbar-nav.ml-auto
   - if user_signed_in?
     %li.nav-item.dropdown
-      %a.nav-link.dropdown-toggle{'data-toggle' => 'dropdown', href: '#'}
+      %a.nav-link.dropdown-toggle{'data-toggle': 'dropdown', href: '#'}
         = current_user
         -if Rails.application.config.use_avatar && current_user.avatar.attached?
           = image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'

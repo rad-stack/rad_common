@@ -3,7 +3,7 @@
   .card-body
     = simple_form_for @notification_type, url: "/rad_common/notification_types/#{@notification_type.id}", method: :put do |f|
       = f.error_notification
-      = f.error :base
+      = base_errors(f)
       .form-inputs
         .row
           .col-lg-12
