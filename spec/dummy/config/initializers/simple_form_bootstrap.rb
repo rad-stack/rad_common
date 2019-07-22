@@ -77,8 +77,8 @@ SimpleForm.setup do |config|
     b.wrapper tag: 'div', class: 'row' do |ba|
       ba.wrapper tag: 'div', class: 'input-group col-md-12' do |append|
         append.use :input, class: 'form-control'
+        append.use :full_error, wrap_with: { tag: 'div', class: 'invalid-feedback' }
       end
-      ba.use :error, wrap_with: { tag: 'span', class: 'help-block' }
       ba.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
     end
   end
