@@ -115,7 +115,7 @@ module RadCommon
         end
       end
 
-      flash_messages.join('\n').html_safe
+      flash_messages.join.html_safe
     end
 
     def base_errors(form)
