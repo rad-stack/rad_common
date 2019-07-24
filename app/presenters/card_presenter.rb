@@ -66,6 +66,10 @@ class CardPresenter
     local_assigns[:title]
   end
 
+  def title_class
+    local_assigns[:title_class] || ''
+  end
+
   def controller_alias
     local_assigns[:controller_alias]
   end
