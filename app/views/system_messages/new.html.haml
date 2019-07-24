@@ -1,4 +1,4 @@
-.card.card-default
+.card
   = render 'layouts/card_header', action_name: 'custom', title: "Send System Message to All Active #{current_user.class.name}s", icon: 'fa-envelope'
   .card-body
     = simple_form_for(:message, url: "/rad_common/system_messages", method: :post) do |f|

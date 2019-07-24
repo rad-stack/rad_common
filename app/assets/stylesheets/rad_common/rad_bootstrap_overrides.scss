@@ -8,55 +8,6 @@ label, legend {
   font-weight: 500;
 }
 
-
-/* start card styles to emulate previous panel style capability*/
-.card-danger
-{
-  .card-header
-  {
-    @extend .alert-danger
-  }
-  border-color: #f5c6cb;
-}
-
-.card-success
-{
-  .card-header
-  {
-    @extend .alert-success
-  }
-
-  border-color: #c3e6cb;
-}
-
-.card-warning
-{
-  .card-header
-  {
-    @extend .alert-warning
-  }
-  border-color:#ffeeba;
-}
-
-.card-info
-{
-  .card-header
-  {
-    @extend .alert-info
-  }
-  border-color:#bee5eb;
-}
-
-.card-primary
-{
-  .card-header
-  {
-    @extend .alert-primary
-  }
-  border-color:#b8daff;
-}
-/* end card styles to emulate previous panel style capability*/
-
 /* to prevent button icons from wrapping*/
 .btn
 {
@@ -70,27 +21,6 @@ label, legend {
 
 .card {
   margin-bottom: 20px;
-}
-
-/* preserved from bootstrap 3 panel-default styles */
-/* TODO: convert views to standard card usage and remove the below */
-.card-default {
-  border-color: #ddd;
-}
-.card-default > .card-header {
-  color: #333;
-  background-color: #fff;
-  border-color: #ddd;
-}
-.card-default > .card-header + .card-collapse > .card-body {
-  border-top-color: #ddd;
-}
-.card-default > .card-header .badge {
-  color: #f5f5f5;
-  background-color: #333;
-}
-.card-default > .card-footer + .card-collapse > .card-body {
-  border-bottom-color: #ddd;
 }
 
 /* TODO: convert all usage of dl-horizontal and then remove class below https://v4-alpha.getbootstrap.com/migration/#typography */

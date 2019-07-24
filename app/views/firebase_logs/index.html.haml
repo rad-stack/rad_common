@@ -3,7 +3,7 @@
   -can_clear = current_user.can_update?(Company)
 
   -@firebase_logs.each do |log|
-    .card.card-default
+    .card
       -if can_clear
         -actions = []
         -actions.push(link_to("Delete All", firebase_log_path(log.first, type: 'all'), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))

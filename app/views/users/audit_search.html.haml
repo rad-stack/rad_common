@@ -1,6 +1,6 @@
 .row
   .col-lg-6
-    .card.card-default
+    .card
       = render 'layouts/card_header', action_name: 'custom', title: 'Audit Search', icon: 'fa-search'
       .card-body
         = form_tag(audit_search_users_path, method: 'get') do
@@ -23,7 +23,7 @@
                   %i.fa.fa-search
                   Search
   .col-lg-6
-    .card.card-default
+    .card
       = render 'layouts/card_header', action_name: 'custom', title: 'System Audits', icon: 'fa-search'
       .card-body
         = form_tag(audit_search_users_path(system_audits: true), method: 'get') do

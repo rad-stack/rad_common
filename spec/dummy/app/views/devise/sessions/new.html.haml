@@ -1,4 +1,4 @@
-.card.card-default
+.card
   = render "layouts/card_header", action_name: "custom", title: "Sign In", icon: "fa-sign-in"
   .card-body
     = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|

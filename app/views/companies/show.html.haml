@@ -1,4 +1,4 @@
-.card.card-default
+.card
   -if current_user.can_global_validate?(@company)
     -actions = [link_to('Global Validity Check', "/rad_common/companies/#{Company.main.id}/global_validity_check", class: 'btn btn-secondary btn-sm', method: :post, data: { confirm: 'This is an exhaustive effort that could cause performance problems on the database. Are you sure?' })]
   = render 'layouts/card_header', no_new_button: true, no_delete_button: true, no_index_button: true, additional_actions: actions

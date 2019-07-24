@@ -1,4 +1,4 @@
-.card.card-default
+.card
   = render 'layouts/card_header', no_show_link: true, index_path: '/rad_common/notification_types'
   .card-body
     = simple_form_for @notification_type, url: "/rad_common/notification_types/#{@notification_type.id}", method: :put do |f|

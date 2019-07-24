@@ -1,4 +1,4 @@
-.card.card-default
+.card
   = render "layouts/card_header", action_name: "custom", title: "Forgot Your Password?", icon: "fa-unlock"
   .card-body
     = simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|

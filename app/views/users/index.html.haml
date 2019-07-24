@@ -1,9 +1,9 @@
-.card.card-default
+.card
   = render 'layouts/card_header', action_name: 'custom', title: "Pending Users (#{@pending.count})", icon: 'fa-list', additional_external_actions: users_actions
   .card-body
     = render 'users/index', users: @pending
 
-.card.card-default
+.card
   = render 'layouts/card_header', no_new_button: true
   .card-body
     .row.button-row
