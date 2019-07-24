@@ -86,9 +86,9 @@ module RadbearUser
 
   def display_style
     if user_status.active || user_status == UserStatus.default_pending_status
-      external? ? 'table-warning' : ''
+      external? ? 'test' : ''
     else
-      'table-danger'
+      'test'
     end
   end
 
