@@ -4,6 +4,7 @@ html {
   font-size: 14px;
 }
 
+// We are making all of our labels and legends for checkbox groups slightly bold since BS4 got rid of this
 label, legend {
   font-weight: 500;
 }
@@ -41,7 +42,7 @@ label, legend {
 }
 
 .dl-horizontal dd:before,
-.dl-horizontal dd:after, {
+.dl-horizontal dd:after {
   display: table;
   content: " ";
 }
