@@ -83,9 +83,10 @@ class HerokuCommands
         puts "Changing passwords"
         change_user_passwords
 
-        puts "Removing avatars/logos/accounting keys"
+        puts "Clearing certain production data"
         remove_user_avatars
         remove_accounting_keys
+        User.update_all authy_enabled: false
 
         remove_unspecified_companies(specific_company_id) if specific_company_id.present?
 
