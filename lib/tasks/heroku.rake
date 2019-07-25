@@ -1,0 +1,22 @@
+# for projects with multiple heroku apps, run like this with the app name:
+#   rake heroku:clone_local["myappname"]
+
+namespace :heroku do
+  task :local_backup, [:heroku_app] => :environment do |t, args|
+    HerokuCommands.backup(args[:heroku_app])
+  end
+
+  task :clone_local, [:heroku_app, :company_id, :keep_dump_file] => :environment do |t, args|
+    HerokuCommands.clone(args[:heroku_app], specific_company_id: args[:company_id], keep_dump_file: args[:keep_dump_file])
+  end
+end
+
+namespace :local do
+  task :restore_from_backup, [:file_name] => :environment do |t, args|
+    HerokuCommands.restore_from_backup(args[:file_name])
+  end
+
+  task :dump, [:file_name] => :environment do |t, args|
+    HerokuCommands.dump(args[:file_name])
+  end
+end

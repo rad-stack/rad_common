@@ -69,6 +69,47 @@ Emails are sent in the background so make sure you have a mailers queue running 
 ### Email Template
 To use the common email template in your Rails project, just have your mailer subclass RadbearMailer.
 
+
+### Herok Database Utilities
+
+Provides rake tasks which backup the current heroku postgresql database and copy the postgresql database to local to help troubleshoot
+
+#### Tasks
+
+##### Heroku
+
+Save a local backup from Heroku:
+```
+rake heroku:local_backup[ground-swell-staging]
+```
+
+Clone your database from Heroku:
+```
+rake heroku:clone_local[ground-swell-staging]
+```
+
+Clone a specific company's data from Heroku (make sure to not put spaces in your array):
+```
+rake heroku:clone_local['ground-swell-staging',"5"]
+```
+
+Clone a specific company's data from Heroku and keep the dump file locally(make sure to not put spaces in your array):
+```
+rake heroku:clone_local['ground-swell-staging',"5","keep"]
+```
+
+##### Local
+
+Restore from a local backup:
+```
+rake local:restore_from_backup['latest.dump']
+```
+
+Dump your local database to an archive:
+```
+rake local:dump['your_data.dump']
+```
+
 ## Generating tests
 With the current version of rspec-rails we are not able to generate system ('feature') tests when we create the scaffold for an object. To achieve this you must run the generate command manually. Example: rails g rspec:system new_model
 
