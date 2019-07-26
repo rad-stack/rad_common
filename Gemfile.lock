@@ -14,6 +14,8 @@ PATH
       audited (~> 4.8)
       authority (= 3.3.0)
       aws-sdk-s3
+      bootstrap (~> 4.3.1)
+      bootstrap4-kaminari-views (~> 1.0.1)
       devise
       devise-authy
       devise_invitable
@@ -22,7 +24,7 @@ PATH
       haml-rails (= 1.0.0)
       hashids
       image_processing (~> 1.2)
-      kaminari-bootstrap (~> 3.0.1)
+      kaminari (>= 0.13.0)
       momentjs-rails (~> 2.9, >= 2.9.0)
       pg
       premailer-rails (~> 1.10.2)
@@ -31,7 +33,6 @@ PATH
       sentry-raven
       sidekiq (~> 5.2.2)
       simple_form
-      twitter-bootstrap-rails (~> 4.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -92,6 +93,8 @@ GEM
       activesupport (>= 3.0.0)
     authy (2.7.5)
       httpclient (>= 2.5.3.3)
+    autoprefixer-rails (9.6.0)
+      execjs
     aws-eventstream (1.0.3)
     aws-partitions (1.183.0)
     aws-sdk-core (3.58.0)
@@ -109,6 +112,13 @@ GEM
     aws-sigv4 (1.1.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
     bcrypt (3.1.13)
+    bootstrap (4.3.1)
+      autoprefixer-rails (>= 9.1.0)
+      popper_js (>= 1.14.3, < 2)
+      sassc-rails (>= 2.0.0)
+    bootstrap4-kaminari-views (1.0.1)
+      kaminari (>= 0.13)
+      rails (>= 3.1)
     builder (3.2.3)
     capybara (3.25.0)
       addressable
@@ -134,7 +144,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    commonjs (0.2.7)
     concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
     crass (1.0.4)
@@ -228,20 +237,10 @@ GEM
     kaminari-activerecord (1.1.1)
       activerecord
       kaminari-core (= 1.1.1)
-    kaminari-bootstrap (3.0.1)
-      kaminari (>= 0.13.0)
-      rails
     kaminari-core (1.1.1)
     key_struct (0.4.2)
     launchy (2.4.3)
       addressable (~> 2.3)
-    less (2.6.0)
-      commonjs (~> 0.2.7)
-    less-rails (2.8.0)
-      actionpack (>= 4.0)
-      less (~> 2.6.0)
-      sprockets (> 2, < 4)
-      tilt
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -274,6 +273,7 @@ GEM
       equatable (~> 0.6)
       tty-color (~> 0.5)
     pg (1.1.4)
+    popper_js (1.14.5)
     premailer (1.11.1)
       addressable
       css_parser (>= 1.6.0)
@@ -363,6 +363,15 @@ GEM
     ruby_parser (3.13.1)
       sexp_processor (~> 4.9)
     rubyzip (1.2.3)
+    sassc (2.0.1)
+      ffi (~> 1.9)
+      rake
+    sassc-rails (2.1.2)
+      railties (>= 4.0.0)
+      sassc (>= 2.0)
+      sprockets (> 3.0)
+      sprockets-rails
+      tilt
     schema_monkey (2.1.5)
       activerecord (>= 4.2)
       modware (~> 0.1)
@@ -422,11 +431,6 @@ GEM
     tty-screen (0.6.5)
     tty-tree (0.3.0)
     tty-which (0.4.1)
-    twitter-bootstrap-rails (4.0.0)
-      actionpack (~> 5.0, >= 5.0.1)
-      execjs (~> 2.7)
-      less-rails (~> 2.8, >= 2.8.0)
-      railties (~> 5.0, >= 5.0.1)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     unicode-display_width (1.6.0)

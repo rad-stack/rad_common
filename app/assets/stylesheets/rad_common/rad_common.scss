@@ -1,8 +1,14 @@
+trix-editor {
+  min-height: 15em;
+  margin-bottom: 10px;
+}
+
 .navbar {
   min-height: 80px;
+  margin-bottom: 20px;
 }
+
 .navbar .navbar-nav > li > a {
-  padding-top: 29px;
   font-size: 16px;
   padding-bottom: 29px;
   margin-bottom: -29px;
@@ -21,6 +27,7 @@
 .navbar .navbar-brand {
   height: auto;
   padding: 0;
+  justify-content: flex-start;
 }
 .navbar .navbar-brand img {
   height: 77px;
@@ -44,24 +51,45 @@
   font-size: 15px;
   margin-left: 30px;
 }
-.title-header .title-text {
-  display: inline-block;
-  font-size: 24px;
-  margin-right: 20px;
+
+.title-header {
+
+  display: flex;
+  align-items: center;
+
+  .title-text {
+    display: inline-block;
+    font-size: 24px;
+    margin-right: 20px;
+  }
+
+  .action-buttons {
+     display: inline-block;
+     vertical-align: top;
+     margin-top: 3px;
+   }
+
+   .external-actions {
+     margin-left: auto;
+   }
+
+  .back-button {
+    margin-left: 3px;
+  }
 }
-.title-header .action-buttons {
-  display: inline-block;
-  vertical-align: top;
-  margin-top: 3px;
+
+.global-search-dropdown {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 .global-search-nav {
   width: 290px;
-  padding-top: 21px;
   margin-left: 5px;
 }
 .security-role-checkboxes{
   margin-top: 0 !important;
   vertical-align: text-top;
+  display: inline-block;
 }
 #search-options {
   cursor: pointer;
@@ -248,9 +276,11 @@ td.fa.security-group-td { border-style: none; }
 }
 
 /* Mobile styles*/
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .content .global-search-group {
     display: table;
+    width: 100%;
+    margin-bottom: 20px;
   }
   .nav > li.global-search-nav {
     display: none;
@@ -259,3 +289,6 @@ td.fa.security-group-td { border-style: none; }
     margin-bottom: 0;
   }
 }
+
+/* custom bootstrap styles */
+

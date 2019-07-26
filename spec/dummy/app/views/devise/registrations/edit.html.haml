@@ -1,28 +1,28 @@
-.panel.panel-default
-  = render 'layouts/panel_header', action_name: 'custom', title: 'My Account', icon: 'fa-file'
-  .panel-body
+.card
+  = render 'layouts/card_header', action_name: 'custom', title: 'My Account', icon: 'fa-file'
+  .card-body
     = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
       = f.error_notification
-      = f.error :base
+      = base_errors(f)
       .form-inputs
         .row
-          .col-md-6= f.input :email, required: true, autofocus: true
-          .col-md-6
+          .col-lg-6= f.input :email, required: true, autofocus: true
+          .col-lg-6
             - if devise_mapping.confirmable? && resource.pending_reconfirmation?
               %p
                 Currently waiting confirmation for: #{resource.unconfirmed_email}
         .row
-          .col-md-6= f.input :first_name, required: true
-          .col-md-6= f.input :last_name, required: true
+          .col-lg-6= f.input :first_name, required: true
+          .col-lg-6= f.input :last_name, required: true
         .row
-          .col-md-6= f.input :mobile_phone
-          .col-md-3= f.input :authy_enabled, label: 'Enable Two-Factor Authentication?'
+          .col-lg-6= f.input :mobile_phone
+          .col-lg-3= f.input :authy_enabled, label: 'Enable Two-Factor Authentication?'
           -if Rails.application.config.use_avatar
-            .col-md-3= f.input :avatar
+            .col-lg-3= f.input :avatar
         .row
-          .col-md-6= f.input :password, label: 'New Password', autocomplete: 'off', hint: "leave it blank if you don't want to change it", required: false, input_html: { autocomplete: 'off' }
-          .col-md-6= f.input :password_confirmation, label: 'New Password Confirmation', required: false
+          .col-lg-6= f.input :password, label: 'New Password', autocomplete: 'off', hint: "leave it blank if you don't want to change it", required: false, input_html: { autocomplete: 'off' }
+          .col-lg-6= f.input :password_confirmation, label: 'New Password Confirmation', required: false
         .row
-          .col-md-3= f.input :current_password, hint: 'we need your current password to confirm your changes', required: true
+          .col-lg-3= f.input :current_password, hint: 'we need your current password to confirm your changes', required: true
       .form-actions
         = f.button :submit, 'Save', class: 'btn btn-primary'

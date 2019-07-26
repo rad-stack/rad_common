@@ -1,32 +1,31 @@
-.panel.panel-default
-  = render 'layouts/panel_header', no_new_button: true
-  .panel-body
+.card
+  = render 'layouts/card_header', no_new_button: true
+  .card-body
     = simple_form_for(@user) do |f|
       = f.error_notification
-      = f.error :base
+      = base_errors(f)
       .form-inputs
         .row
-          .col-md-6= f.input :first_name
-          .col-md-6= f.input :last_name
+          .col-lg-6= f.input :first_name
+          .col-lg-6= f.input :last_name
         .row
-          .col-md-6= f.input :mobile_phone
-          .col-md-6= f.input :email, disabled: true
+          .col-lg-6= f.input :mobile_phone
+          .col-lg-6= f.input :email, disabled: true
         .row
-          .col-md-6= f.association :user_status, collection: UserStatus.by_id
+          .col-lg-6= f.association :user_status, collection: UserStatus.by_id
           -if @user.respond_to?(:last_activity_at)
-            .col-md-2= f.input :last_activity_at, as: :date, html5: true
-          .col-md-2.internal= f.input :super_admin
+            .col-lg-2= f.input :last_activity_at, as: :date, html5: true
+          .col-lg-2.internal= f.input :super_admin
           -if Rails.application.config.external_users
-            .col-md-2= f.input :external
+            .col-lg-2= f.input :external
         .row
           -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
-          .col-md-6= f.input :password, autocomplete: 'off', input_html: { autocomplete: 'new-password' }
+          .col-lg-6= f.input :password, autocomplete: 'off', input_html: { autocomplete: 'new-password' }
 
-          .col-md-6= f.input :password_confirmation
+          .col-lg-6= f.input :password_confirmation
         .row.internal
-          .col-md-12
-            %label Security Roles
-            = f.input :security_roles, as: :check_boxes, item_wrapper_class: 'col-md-3 security-role-checkboxes', collection: security_role_collection, checked: @user.security_roles.ids, label: false
+          .col-lg-12
+            = f.input :security_roles, as: :check_boxes, item_wrapper_class: 'col-lg-3 security-role-checkboxes', collection: security_role_collection, checked: @user.security_roles.ids
 
       .form-actions
         = f.button :submit, 'Save', class: 'btn btn-primary'

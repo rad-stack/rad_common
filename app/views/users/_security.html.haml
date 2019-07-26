@@ -1,19 +1,19 @@
 .row
   - settings = NotificationSetting.settings_for_user(@user)
   - show_notifications = settings.count.positive?
-  - column_class = show_notifications ? 'col-md-4' : 'col-md-6'
+  - column_class = show_notifications ? 'col-lg-4' : 'col-lg-6'
 
   -if @user.internal? && current_user.can_read?(SecurityRole)
     -all_perms = @user.all_permissions
     %div{ class: column_class }
-      .panel.panel-default
-        = render 'layouts/panel_header', action_name: 'custom', title: 'Security Roles', icon: 'fa-list'
-        .panel-body
+      .card
+        = render 'layouts/card_header', action_name: 'custom', title: 'Security Roles', icon: 'fa-list'
+        .card-body
           = render 'security_roles/index', security_roles: @user.security_roles, show_actions: false
     %div{ class: column_class }
-      .panel.panel-default
-        = render 'layouts/panel_header', action_name: 'custom', title: 'Permissions', icon: 'fa-list'
-        .panel-body
+      .card
+        = render 'layouts/card_header', action_name: 'custom', title: 'Permissions', icon: 'fa-list'
+        .card-body
           %table.table.table-striped.table-bordered
             %tr
               %th Name
@@ -27,6 +27,6 @@
                 %td{class: all_perms.include?(permission) ? 'fa fa-check green-check' : 'fa fa-times red-x'}
   -if show_notifications
     %div{ class: column_class }
-      .panel.panel-default
-        = render 'layouts/panel_header', action_name: 'custom', title: 'Notification Settings', icon: 'fa-list'
+      .card
+        = render 'layouts/card_header', action_name: 'custom', title: 'Notification Settings', icon: 'fa-list'
         = render 'notification_settings/index', settings: settings

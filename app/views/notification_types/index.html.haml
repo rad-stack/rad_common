@@ -1,6 +1,6 @@
-.panel.panel-default
-  = render 'layouts/panel_header'
-  .panel-body
+.card
+  = render 'layouts/card_header'
+  .card-body
     %table.table.table-striped.table-bordered
       %tr
         %th Name
@@ -13,4 +13,4 @@
             - notification_type.security_roles.each do |security_role|
               = secured_link(security_role)
               %p
-          %td= link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', "/rad_common/notification_types/#{notification_type.id}/edit", class: 'btn btn-xs btn-default btn-block'
+          %td= link_to content_tag(:i, '', class: 'fa fa-pencil right-5x') + ' Edit', "/rad_common/notification_types/#{notification_type.id}/edit", class: 'btn btn-sm btn-secondary btn-block'

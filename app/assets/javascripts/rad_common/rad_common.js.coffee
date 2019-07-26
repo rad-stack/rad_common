@@ -71,7 +71,7 @@ $ ->
     $("[id=global_search_name]:visible").val("")
 
   if $('.read-more').length
-    $('.read-more').readmore( { speed: 75, moreLink: "<a class='btn btn-primary btn-xs read-more-btn more-btn' href='#'><div>Read more</div></a>", lessLink: "<a class='btn btn-primary btn-xs read-more-btn close-btn' href='#'><div>Close</div></a>" } )
+    $('.read-more').readmore( { speed: 75, moreLink: "<a class='btn btn-primary btn-sm read-more-btn more-btn' href='#'><div>Read more</div></a>", lessLink: "<a class='btn btn-primary btn-sm read-more-btn close-btn' href='#'><div>Close</div></a>" } )
 
   checkClientUser()
 

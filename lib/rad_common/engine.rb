@@ -14,7 +14,8 @@ module RadCommon
     require 'font-awesome-rails'
     require 'haml-rails'
     require 'hashids'
-    require 'kaminari-bootstrap'
+    require 'kaminari'
+    require 'bootstrap4-kaminari-views'
     require 'momentjs-rails'
     require 'nokogiri'
     require 'pg'
@@ -23,6 +24,6 @@ module RadCommon
     require 'sentry-raven'
     require 'sidekiq'
     require 'simple_form'
-    require 'twitter-bootstrap-rails'
+    require 'bootstrap'
   end
 end

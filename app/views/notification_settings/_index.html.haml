@@ -1,7 +1,7 @@
 -can_create = current_user.can_create?(NotificationSetting)
 -can_type = current_user.can_update?(NotificationType)
 
-.panel-body
+.card-body
   %table.table.table-striped.table-bordered
     %tr
       %th Notification
@@ -23,6 +23,6 @@
                 = f.association :notification_type, as: :hidden
                 = f.input :user_id, as: :hidden
               .form-actions
-                = f.button :submit, 'Save', class: 'btn btn-xs btn-primary'
+                = f.button :submit, 'Save', class: 'btn btn-sm btn-primary'
           -else
             = format_boolean(notification_setting.enabled)

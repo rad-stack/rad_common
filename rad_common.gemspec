@@ -27,7 +27,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml-rails', '1.0.0'
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing', '~> 1.2'
-  s.add_dependency 'kaminari-bootstrap', '~> 3.0.1'
+  s.add_dependency 'kaminari', '>= 0.13.0'
+  s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
   s.add_dependency 'momentjs-rails', '~> 2.9', '>= 2.9.0'
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
@@ -36,7 +37,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sentry-raven'
   s.add_dependency 'sidekiq', '~> 5.2.2'
   s.add_dependency 'simple_form'
-  s.add_dependency 'twitter-bootstrap-rails', '~> 4.0.0'
+  s.add_dependency 'bootstrap', '~> 4.3.1'
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'

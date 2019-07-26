@@ -1,22 +1,22 @@
 - permission_human_name = normalize_name(humanized_permission_field(@permission_name))
 
-.panel.panel-default
-  = render 'layouts/panel_header', action_name: 'custom', title: "Permission: #{permission_human_name}", icon: 'fa-file'
-  .panel-body
+.card
+  = render 'layouts/card_header', action_name: 'custom', title: "Permission: #{permission_human_name}", icon: 'fa-file'
+  .card-body
     - if permission_tooltip(@permission_name).present?
       .row
-        .col-md-12
+        .col-lg-12
           %dl.dl-horizontal
             %dt Description:
             %dd= permission_tooltip(@permission_name)
     .row
-      .col-md-6
+      .col-lg-6
         %h3 Roles with Permission (#{@security_roles.count})
         %table.table.table-striped.table-bordered
           - @security_roles.each do |security_role|
             %tr
               %td= link_to security_role.name, security_role
-      .col-md-6
+      .col-lg-6
         %h3 Users with Permission (#{@users.count})
         %table.table.table-striped.table-bordered
           - @users.each do |user|

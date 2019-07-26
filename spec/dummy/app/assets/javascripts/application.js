@@ -1,6 +1,7 @@
 //= require jquery
 //= require jquery_ujs
-//= require twitter/bootstrap
+//= require popper
+//= require bootstrap-sprockets
 //= require tooltip
 //= require jquery-ui/autocomplete
 //= require rad_common/autocomplete-rails

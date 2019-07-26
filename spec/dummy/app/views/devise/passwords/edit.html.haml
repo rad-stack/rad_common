@@ -1,6 +1,6 @@
-.panel.panel-default
-  = render "layouts/panel_header", action_name: "custom", title: "Change Your Password", icon: "fa-lock"
-  .panel-body
+.card
+  = render "layouts/card_header", action_name: "custom", title: "Change Your Password", icon: "fa-lock"
+  .card-body
     = simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f|
       = f.error_notification
       = f.input :reset_password_token, as: :hidden

@@ -1,4 +1,4 @@
-class PanelPresenter
+class CardPresenter
   attr_reader :local_assigns
 
   def initialize(view_context, local_assigns = nil)
@@ -64,6 +64,10 @@ class PanelPresenter
 
   def title
     local_assigns[:title]
+  end
+
+  def title_class
+    local_assigns[:title_class] || ''
   end
 
   def controller_alias

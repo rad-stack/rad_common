@@ -1,10 +1,10 @@
 -by_user = params[:action] == 'audit_by' || params[:system_audits].present?
 
-.panel.panel-default
-  = render 'layouts/panel_header', action_name: 'custom', title: audit_title(by_user), icon: 'fa-list'
-  .panel-body
+.card
+  = render 'layouts/card_header', action_name: 'custom', title: audit_title(by_user), icon: 'fa-list'
+  .card-body
     -if @audits.any?
-      = paginate @audits
+      = paginate @audits, theme: 'twitter-bootstrap-4'
       %table.table.table-striped.table-bordered
         %tr
           %th Date
@@ -31,6 +31,6 @@
             %td= audit.remote_address
             %td= audit.action
             %td= simple_format(display_audited_changes(audit))
-      = paginate @audits
+      = paginate @audits, theme: 'twitter-bootstrap-4'
     -else
       %p No activity exists for this item
