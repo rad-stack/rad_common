@@ -56,5 +56,10 @@ label, legend {
    We are doing this because _simple_autocomplete is not displaying errors in the right place refer to https://swell.radicalbear.com/tasks/30002 */
 .help-block {
   @extend .invalid-feedback;
-  display: block;
+}
+
+.has-error {
+  .help-block {
+    display: block;
+  }
 }
