@@ -10,7 +10,6 @@ module RadbearUser
     scope :inactive, -> { joins(:user_status).where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)') }
 
     validate :validate_email_address
-    validate :validate_super_admin
 
     after_save :notify_user_approved
   end
@@ -102,13 +101,6 @@ module RadbearUser
       return if components.count == 2 && domains.include?(components[1])
 
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
-    end
-
-    def validate_super_admin
-      return unless super_admin
-
-      errors.add(:super_admin, 'can only be enabled for an admin') unless permission?(:admin)
-      errors.add(:super_admin, 'is not applicable for external users') if external?
     end
 
     def notify_user_approved

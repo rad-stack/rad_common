@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_26_151953) do
+ActiveRecord::Schema.define(version: 2019_07_28_131439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,7 +157,6 @@ ActiveRecord::Schema.define(version: 2019_06_26_151953) do
     t.string   "mobile_phone",            :limit=>255
     t.string   "timezone",                :limit=>255
     t.string   "global_search_default",   :limit=>255
-    t.boolean  "super_admin",             :default=>false, :null=>false
     t.integer  "user_status_id",          :null=>false, :index=>{:name=>"index_users_on_user_status_id"}
     t.string   "authy_id",                :index=>{:name=>"index_users_on_authy_id"}
     t.datetime "last_sign_in_with_authy"
