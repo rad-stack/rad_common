@@ -122,6 +122,14 @@ module RadCommon
       form.error :base, class: 'alert alert-danger' if form.object.errors[:base].present?
     end
 
+    def icon(icon, text = nil, options = {})
+      text_class = text.present? ? 'mr-2' : nil
+      capture do
+        concat content_tag(:i, '', class: "fa fa-#{icon} #{text_class} #{options[:class]}".strip)
+        concat text
+      end
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
