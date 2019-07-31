@@ -58,12 +58,12 @@ label, legend {
   @extend .invalid-feedback;
 }
 
-.has-error {
+.has-error, .form-group-invalid {
   .help-block {
     display: block;
   }
 
-  .ui-autocomplete-input {
+  .ui-autocomplete-input, .form-control, .trix-content {
     @extend .form-control.is-invalid;
   }
 }
