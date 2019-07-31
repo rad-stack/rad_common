@@ -62,4 +62,8 @@ label, legend {
   .help-block {
     display: block;
   }
+
+  .ui-autocomplete-input {
+    @extend .form-control.is-invalid;
+  }
 }
