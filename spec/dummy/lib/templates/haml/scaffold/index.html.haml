@@ -12,7 +12,7 @@
     %th <%= attribute.human_name %>
     <% end -%>
     -if show_actions
-          %th Actions
+          %th.actions Actions
 
       - @<%= plural_table_name %>.each do |<%= singular_table_name %>|
         %tr
