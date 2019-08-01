@@ -13,6 +13,16 @@ describe RadCommon::AuditsHelper do
     end
   end
 
+  describe 'audit_models_to_search' do
+    subject { helper.audit_models_to_search }
+
+    let(:result) do
+      %w[Company Division NotificationSecurityRole NotificationSetting SecurityRole SecurityRolesUser Status User]
+    end
+
+    it { is_expected.to eq result }
+  end
+
   describe 'formatted_audited_changes' do
     subject { helper.send(:formatted_audited_changes, audit) }
     before { division.update! notify: true, hourly_rate: 100 }
