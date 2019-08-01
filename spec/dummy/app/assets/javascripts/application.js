@@ -3,6 +3,9 @@
 //= require popper
 //= require bootstrap-sprockets
 //= require tooltip
+//= require moment
+//= require bootstrap-datetimepicker
+//= require bootstrap_datetimepicker/dates
 //= require jquery-ui/autocomplete
 //= require rad_common/autocomplete-rails
 //= require rad_common/rad_common
