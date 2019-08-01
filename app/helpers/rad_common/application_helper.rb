@@ -60,7 +60,7 @@ module RadCommon
     end
 
     def icon_tag(icon, text)
-      content_tag(:i, '', class: "right-5px #{icon}") + text
+      content_tag(:i, '', class: "mr-2 #{icon}") + text
     end
 
     def timezone_us_filter

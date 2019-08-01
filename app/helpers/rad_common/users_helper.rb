@@ -12,8 +12,7 @@ module RadCommon
     def users_actions
       return unless current_user.can_create?(User)
 
-      content = content_tag(:it, '', class: 'fa fa-plus-square right-5px') + 'Invite User'
-      [link_to(content, new_user_invitation_path, class: 'btn btn-success btn-sm')]
+      [link_to(icon('plus-square', 'Invite User'), new_user_invitation_path, class: 'btn btn-success btn-sm')]
     end
 
     def user_actions(user)
@@ -23,9 +22,8 @@ module RadCommon
     def user_confirm_action(user)
       return unless current_user.can_update?(User) && current_user.can_update?(user) && !user.confirmed?
 
-      content = content_tag(:it, '', class: 'fa fa-check right-5px') + 'Confirm Email'
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
-      link_to content, confirm_user_path(@user), method: :put,
+      link_to icon(:check, 'Confirm Email'), confirm_user_path(@user), method: :put,
                                                  data: { confirm: confirm },
                                                  class: 'btn btn-warning btn-sm'
     end
@@ -33,14 +31,12 @@ module RadCommon
     def user_reset_authy_action(user)
       return unless current_user.can_update?(User) && current_user.can_update?(user) && user.authy_enabled?
 
-      content = content_tag(:it, '', class: 'fa fa-refresh right-5px') + 'Reset Two Factor'
-
       confirm = "This will reset the user's two factor authentication configuration if they are having problems. "\
                 'Are you sure?'
 
-      link_to content, reset_authy_user_path(@user), method: :put,
-                                                     data: { confirm: confirm },
-                                                     class: 'btn btn-warning btn-sm'
+      link_to icon(:refresh, 'Reset Two Factor'), reset_authy_user_path(@user), method: :put,
+                                                                                data: { confirm: confirm },
+                                                                                class: 'btn btn-warning btn-sm'
     end
   end
 end
