@@ -50,7 +50,10 @@ module RadCommon
     end
 
     def audit_models_to_search
-      Audited::Audit.select(:auditable_type).distinct.pluck(:auditable_type).sort
+      models = ActiveRecord::Base.connection.tables.map { |model| model.capitalize.singularize.camelize.safe_constantize }
+      models += ActiveRecord::Base.subclasses
+      models.uniq.select { |model| model.respond_to?(:auditing_enabled) && model.auditing_enabled }
+            .map(&:to_s).sort
     end
 
     private
