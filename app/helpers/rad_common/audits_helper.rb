@@ -51,7 +51,7 @@ module RadCommon
 
     def audit_models_to_search
       ActiveRecord::Base.connection.tables.map { |model| model.capitalize.singularize.camelize.safe_constantize }
-                        .select { |model| model.methods.include?(:auditing_enabled) && model.auditing_enabled }
+                        .select { |model| model.respond_to?(:auditing_enabled) && model.auditing_enabled }
                         .map(&:to_s).sort
     end
 
