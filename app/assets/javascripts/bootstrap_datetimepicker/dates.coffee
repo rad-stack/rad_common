@@ -82,6 +82,10 @@ class DateTimePicker
         $(this).datetimepicker('show');
         return
 
+      $(this).focus ->
+        $(this).datetimepicker('show');
+        return
+
       $(this).blur ->
         $(this).datetimepicker('hide');
         return
