@@ -1,11 +1,18 @@
 class DatabaseUseChecker
   class << self
     def generate_report
-      Rails.logger.silence do
+      if Rails.env.test?
         tables.each do |table_name|
           table_report(table_name) unless zero_or_one_records?(table_name)
         end
+      else
+        Rails.logger.silence do
+          tables.each do |table_name|
+            table_report(table_name) unless zero_or_one_records?(table_name)
+          end
+        end
       end
+
       'Report Generated! The above table columns are candidates for deletion.'
     end
 
