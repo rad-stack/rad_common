@@ -5,7 +5,7 @@
       %tr
         %th Name
         %th Roles to Notify
-        %th Actions
+        %th.actions Actions
       - @notification_types.each do |notification_type|
         %tr
           %td= link_to notification_type, "/rad_common/notification_types/#{notification_type.id}/edit"

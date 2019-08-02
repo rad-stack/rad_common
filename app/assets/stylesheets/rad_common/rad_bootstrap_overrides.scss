@@ -15,6 +15,12 @@ label, legend {
   white-space: nowrap;
 }
 
+/* this limits the actions column width so that the action buttons don't look super long */
+th.actions {
+  width: 200px;
+  text-align: center;
+}
+
 /* this is used because the "as: :hidden" option adds a hidden class to the form group, but that class was removed in b4. So for now without this, we're left with extra spacing around a hidden input. */
 .form-group.hidden {
   display: none;
