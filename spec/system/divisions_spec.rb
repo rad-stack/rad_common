@@ -26,6 +26,13 @@ RSpec.describe 'Divisions', type: :system do
       visit edit_division_path(division)
       expect(page).to have_content('Editing Division')
     end
+
+    it 'displays error for owner field when blank', js: true do
+      visit edit_division_path(division)
+      fill_in 'owner_name', with: ''
+      click_button 'Save'
+      expect(page).to have_content 'must exist and can\'t be blank'
+    end
   end
 
   describe 'index' do
