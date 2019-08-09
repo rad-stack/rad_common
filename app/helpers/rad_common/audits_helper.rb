@@ -101,7 +101,7 @@ module RadCommon
 
               from_value = from_instance.to_s if from_instance
               to_value = to_instance.to_s if to_instance
-            else
+            elsif klass.respond_to?(:find)
               to_instance = klass.find(to_value)
               from_instance = from_value.present? ? klass.find(from_value) : nil
 
