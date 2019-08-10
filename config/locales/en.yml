@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    attributes:
+      system_message:
+        send_tos:
+          preview: 'Me (preview)'

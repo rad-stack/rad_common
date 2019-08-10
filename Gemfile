@@ -14,6 +14,7 @@ gemspec
 # gem 'byebug', group: [:development, :test]
 
 gem 'schema_validations',  git: 'https://github.com/SchemaPlus/schema_validations.git'
+gem 'trix', git: 'https://github.com/markmercedes/trix.git', branch: 'master'
 
 group :test do
   gem 'capybara-selenium'

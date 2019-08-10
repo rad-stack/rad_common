@@ -1,23 +1,34 @@
 class SystemMessagesController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_system_message, only: %i[show]
 
-  authorize_actions_for Company
-  authority_actions new: 'update', create: 'update'
+  authorize_actions_for SystemMessage
 
-  def new; end
+  def show; end
+
+  def new
+    @system_message = SystemMessage.recent_or_new(current_user)
+  end
 
   def create
-    if params[:message]
-      if params[:message][:message].present?
-        Company.main.send_system_message(params[:message][:message])
-        flash[:success] = 'The message was successfully sent.'
-      else
-        flash[:error] = 'Please enter a message and try again.'
-      end
+    @system_message = SystemMessage.new(permitted_params)
+    @system_message.user = current_user
+
+    if @system_message.save
+      @system_message.send!
+      redirect_to "/rad_common/system_messages/#{@system_message.id}", notice: 'The message was successfully sent.'
     else
-      flash[:error] = 'Missing parameters'
+      render :new
+    end
+  end
+
+  private
+
+    def set_system_message
+      @system_message = SystemMessage.find(params[:id])
     end
 
-    redirect_to root_path
-  end
+    def permitted_params
+      params.require(:system_message).permit(:message, :send_to)
+    end
 end
