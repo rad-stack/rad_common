@@ -16,6 +16,7 @@ Rails.configuration.global_validity_timeout = 1.hour
 Rails.configuration.global_validity_exclude = []
 Rails.configuration.global_validity_include = []
 Rails.configuration.global_validity_supress = []
+Rails.configuration.global_validity_enable_interactive = true
 
 Devise.setup do |config|
   config.mailer = 'RadbearDeviseMailer'
