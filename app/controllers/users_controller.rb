@@ -26,6 +26,7 @@ class UsersController < ApplicationController
 
     @users = User.recent_first.page(params[:page])
     @users = @users.where(user_status: @status) if @status
+    @users = @users.where(external: params[:external]) if params[:external].present?
 
     @user_statuses = UserStatus.not_pending.by_id
   end
