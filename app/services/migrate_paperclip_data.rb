@@ -42,7 +42,7 @@ class MigratePaperclipData
     ActiveRecord::Base.transaction do
       records_with_attachments = model_class.where("#{attachment_file_name} is not null")
       count = records_with_attachments.count
-      records_with_attachments.each do |record|
+      records_with_attachments.order(updated_at: :desc).each do |record|
         break if session.check_status('performing migration', count)
 
         Rails.logger.info "Starting Active Storage Blob and Attachment db insertions for #{model_class} #{record.id} - #{attachment_name}"

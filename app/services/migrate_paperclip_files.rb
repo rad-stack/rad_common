@@ -25,7 +25,7 @@ class MigratePaperclipFiles
   def perform_migration(session)
     records_with_attachments = model_class.where("#{attachment_file_name} is not null")
     count = records_with_attachments.count
-    records_with_attachments.find_each do |record|
+    records_with_attachments.order(updated_at: :desc).find_each do |record|
       break if session.check_status('performing migration', count)
 
       Rails.logger.info "Attaching #{attachment_name} to #{model_class} #{record.id}"
