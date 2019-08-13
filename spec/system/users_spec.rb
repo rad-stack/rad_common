@@ -84,6 +84,7 @@ describe 'Users', type: :system do
       let!(:notification_security_role) do
         create :notification_security_role, notification_type: notification_type, security_role: user.security_roles.first
       end
+      let(:external_user) { create :user, :external }
 
       before do
         login_as(admin, scope: :user)
@@ -93,6 +94,14 @@ describe 'Users', type: :system do
         it 'shows users' do
           visit users_path(status: user.user_status_id)
           expect(page).to have_content user.to_s
+          expect(page).to have_content external_user.to_s
+        end
+
+        it 'filters by user type' do
+          external_user.update!(user_status: user.user_status)
+          visit users_path(status: user.user_status_id, external: true)
+          expect(page).not_to have_content user.email
+          expect(page).to have_content external_user.email
         end
       end
 

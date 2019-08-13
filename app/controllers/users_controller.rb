@@ -26,8 +26,21 @@ class UsersController < ApplicationController
 
     @users = User.recent_first.page(params[:page])
     @users = @users.where(user_status: @status) if @status
+    @users = @users.where(external: params[:external]) if params[:external].present?
+
+    @params = params.permit(:status, :external)
 
     @user_statuses = UserStatus.not_pending.by_id
+
+    respond_to do |format|
+      format.html
+      format.csv do
+        csv = UsersCsv.generate(@users)
+        RadbearMailer.email_report(current_user, csv, 'User Export').deliver_later
+        flash[:success] = "Your export file is generating. You'll receive an email when it finishes."
+        redirect_to users_path(@params)
+      end
+    end
   end
 
   def show; end
