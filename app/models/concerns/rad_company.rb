@@ -42,12 +42,6 @@ module RadCompany
     valid_user_domains&.join(', ')
   end
 
-  def send_system_message(message)
-    User.active.each do |user|
-      RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", message).deliver_later
-    end
-  end
-
   def global_validity_ran!
     update! validity_checked_at: Time.zone.now
   end

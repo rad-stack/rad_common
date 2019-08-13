@@ -47,17 +47,4 @@ describe Company, type: :model do
       expect(company.valid?).to be true
     end
   end
-
-  describe 'system messages' do
-    let!(:user) { create :admin }
-
-    it 'sends' do
-      ActionMailer::Base.deliveries = []
-
-      company.send_system_message 'foo bar yo'
-
-      mail = ActionMailer::Base.deliveries.last
-      expect(mail.body.encoded).to include 'foo bar yo'
-    end
-  end
 end

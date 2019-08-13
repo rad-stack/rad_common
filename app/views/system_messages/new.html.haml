@@ -1,11 +1,17 @@
 .card
-  = render 'layouts/card_header', action_name: 'custom', title: "Send System Message to All Active #{current_user.class.name}s", icon: 'fa-envelope'
+  = render 'layouts/card_header', title: 'Send System Message to Active Users', icon: 'fa-envelope', no_index_button: true, no_back_button: true
   .card-body
-    = simple_form_for(:message, url: "/rad_common/system_messages", method: :post) do |f|
+    = simple_form_for(@system_message, url: '/rad_common/system_messages') do |f|
       = f.error_notification
 
       .form-inputs
-        = f.input :message, placeholder: "Enter a message to be emailed to all active #{current_user.class.name.downcase}s in the system."
+        .row
+          .col-lg-3
+            = f.input :send_to, collection: options_for_enum(SystemMessage, :send_to), include_blank: false
+        .row
+          .col-lg-12
+            = f.input :message, as: :trix_editor,
+                                placeholder: 'Enter a message to be emailed to active users in the system.'
 
       .form-actions
         = f.button :submit, 'Send', class: 'btn btn-primary'

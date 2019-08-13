@@ -43,6 +43,7 @@ module RadCommon
         template '../../../../../spec/models/notifications/new_user_signed_up_notification_spec.rb', 'spec/models/notifications/new_user_signed_up_notification_spec.rb'
         template '../../../../../spec/models/notification_type_spec.rb', 'spec/models/notification_type_spec.rb'
         template '../../../../../spec/models/notifications/user_was_approved_notification_spec.rb', 'spec/models/notifications/user_was_approved_notification_spec.rb'
+        template '../../../../../spec/models/system_message_spec.rb', 'spec/models/system_message_spec.rb'
         template '../../../../../spec/requests/users/confirmations_spec.rb', 'spec/requests/users/confirmations_spec.rb'
         template '../../../../../spec/requests/users_spec.rb', 'spec/requests/users_spec.rb'
         template '../../../../../spec/requests/security_roles_spec.rb', 'spec/requests/security_roles_spec.rb'
@@ -53,6 +54,7 @@ module RadCommon
         template '../../../../../spec/system/users_spec.rb', 'spec/system/users_spec.rb'
         template '../../../../../spec/system/companies_spec.rb', 'spec/system/companies_spec.rb'
         template '../../../../../spec/system/security_roles_spec.rb', 'spec/system/security_roles_spec.rb'
+        template '../../../../../spec/system/system_messages_spec.rb', 'spec/system/system_messages_spec.rb'
         template '../../../../../spec/system/invitations_spec.rb', 'spec/system/invitations_spec.rb'
         template '../../../../../spec/requests/notification_settings_spec.rb', 'spec/requests/notification_settings_spec.rb'
         template '../../../../../spec/system/notification_settings_spec.rb', 'spec/system/notification_settings_spec.rb'
@@ -64,6 +66,7 @@ module RadCommon
         template '../../../../../spec/factories/notification_types.rb', 'spec/factories/notification_types.rb'
         template '../../../../../spec/factories/security_roles.rb', 'spec/factories/security_roles.rb'
         template '../../../../../spec/factories/security_roles_users.rb', 'spec/factories/security_roles_users.rb'
+        template '../../../../../spec/factories/system_messages.rb', 'spec/factories/system_messages.rb'
         template '../../../../../spec/factories/user_statuses.rb', 'spec/factories/user_statuses.rb'
         template '../../../../../spec/factories/users.rb', 'spec/factories/users.rb'
 
@@ -161,6 +164,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20190318115634_user_notifications.rb', 'user_notifications'
         apply_migration '../../../../../spec/dummy/db/migrate/20190429211944_remove_super_search_from_users.rb', 'remove_super_search_from_users'
         apply_migration '../../../../../spec/dummy/db/migrate/20190524132649_refactor_notifications.rb', 'refactor_notifications'
+        apply_migration '../../../../../spec/dummy/db/migrate/20190810122656_create_system_messages.rb', 'create_system_messages'
       end
 
       def self.next_migration_number(path)

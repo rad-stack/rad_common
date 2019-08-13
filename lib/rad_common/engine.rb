@@ -24,6 +24,7 @@ module RadCommon
     require 'sentry-raven'
     require 'sidekiq'
     require 'simple_form'
+    require 'trix'
     require 'bootstrap'
   end
 end

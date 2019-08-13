@@ -1,0 +1,13 @@
+.card
+  = render 'layouts/card_header', no_new_button: true,
+                                  no_index_button: true,
+                                  no_delete_button: true,
+                                  no_edit_button: true,
+                                  title: system_message_title(@system_message),
+                                  icon: 'fa-envelope'
+  .card-body
+    .row
+      .col-lg-1
+      .col-lg-10
+        = @system_message.message.html_safe
+      .col-lg-1

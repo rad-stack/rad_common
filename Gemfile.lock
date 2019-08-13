@@ -7,6 +7,14 @@ GIT
       schema_plus_columns
       valuable
 
+GIT
+  remote: https://github.com/markmercedes/trix.git
+  revision: 56d84ae42e34488b0bb301bd9bd0f54fac7fc811
+  branch: master
+  specs:
+    trix (0.11.1)
+      rails (> 4.1, <= 6.0)
+
 PATH
   remote: .
   specs:
@@ -33,6 +41,7 @@ PATH
       sentry-raven
       sidekiq (~> 5.2.2)
       simple_form
+      trix
 
 GEM
   remote: https://rubygems.org/
@@ -94,8 +103,8 @@ GEM
     autoprefixer-rails (9.6.1)
       execjs
     aws-eventstream (1.0.3)
-    aws-partitions (1.195.0)
-    aws-sdk-core (3.61.2)
+    aws-partitions (1.199.0)
+    aws-sdk-core (3.62.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1.0)
       aws-sigv4 (~> 1.1)
@@ -182,7 +191,7 @@ GEM
       railties (>= 3.2, < 6.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
-    haml (5.1.1)
+    haml (5.1.2)
       temple (>= 0.8.0)
       tilt
     haml-rails (1.0.0)
@@ -445,6 +454,7 @@ DEPENDENCIES
   schema_validations!
   selenium-webdriver
   simplecov
+  trix!
   webdrivers
 
 BUNDLED WITH
