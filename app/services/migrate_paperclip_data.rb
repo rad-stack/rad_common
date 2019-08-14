@@ -39,16 +39,19 @@ class MigratePaperclipData
   end
 
   def perform_migration(session)
-    ActiveRecord::Base.transaction do
-      records_with_attachments = model_class.where("#{attachment_file_name} is not null")
-      count = records_with_attachments.count
-      records_with_attachments.order(updated_at: :desc).each do |record|
-        break if session.check_status('performing migration', count)
+    records_with_attachments = model_class.where("#{attachment_file_name} is not null")
+    count = records_with_attachments.count
+    records_with_attachments.order(updated_at: :desc).each do |record|
+      break if session.check_status('performing migration', count)
 
-        Rails.logger.info "Starting Active Storage Blob and Attachment db insertions for #{model_class} #{record.id} - #{attachment_name}"
-        make_active_storage_records(record)
-        Rails.logger.info "Finished Active Storage Blob and Attachment db insertions for #{model_class} #{record.id} - #{attachment_name}"
+      if record.send(new_attachment_name).attached?
+        Rails.logger.info "Skipping all db insertions for #{model_class} #{record.id} - #{attachment_name} already attached"
+        next
       end
+
+      Rails.logger.info "Starting Active Storage Blob and Attachment db insertions for #{model_class} #{record.id} - #{attachment_name}"
+      make_active_storage_records(record)
+      Rails.logger.info "Finished Active Storage Blob and Attachment db insertions for #{model_class} #{record.id} - #{attachment_name}"
     end
   end
 
