@@ -103,7 +103,7 @@ class MigratePaperclipData
     Rails.logger.info "Copy meta data for file: #{record.send(attachment_name).path}"
     uri = URI.parse(resume_url)
 
-    opened_uri = uri.open.read
+    opened_uri =  RadicalRetry.perform_request { uri.open.read }
 
     Digest::MD5.base64digest(opened_uri)
   end
