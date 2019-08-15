@@ -84,12 +84,14 @@ th.actions {
       width: 100%;
     }
   }
-  
+
   .action-buttons, .external-actions {
     display: block !important;
-    .btn {
+    .btn, .btn-group {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+    }
+    .btn {
       padding: 10px;
     }
   }

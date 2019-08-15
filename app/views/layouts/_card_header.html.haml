@@ -9,9 +9,10 @@
       .action-buttons
         -card.output_actions.each do |action|
           = action
-      .external-actions
-        -card.output_external_actions.each do |action|
-          = action
+      -if card.output_external_actions.any?
+        .external-actions
+          -card.output_external_actions.each do |action|
+            = action
       -if card.output_back_button?
         .back-button
           = link_to content_tag(:it, '', class: 'fa fa-times'), :back, class: 'btn btn-warning btn-sm'
