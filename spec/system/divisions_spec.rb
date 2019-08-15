@@ -27,6 +27,26 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('Editing Division')
     end
 
+    it 'validates attachments' do
+      visit edit_division_path(division)
+      page.attach_file('Avatar', 'spec/test_files/radlogo.png')
+      page.attach_file('Logo', 'spec/test_files/radlogo.jpeg')
+      click_on 'Save'
+      expect(page).to have_content 'Logo, Avatar could not be saved due to invalid content types'
+      expect(division.logo.attached?).to be false
+      expect(division.avatar.attached?).to be false
+    end
+
+    it 'saves attachments that are valid' do
+      visit edit_division_path(division)
+      page.attach_file('Avatar', 'spec/test_files/radlogo.jpeg')
+      page.attach_file('Logo', 'spec/test_files/radlogo.jpeg')
+      click_on 'Save'
+      expect(page).to have_content 'Logo could not be saved due to invalid content types'
+      expect(division.logo.attached?).to be false
+      expect(division.avatar.attached?).to be true
+    end
+
     it 'displays error for owner field when blank', js: true do
       visit edit_division_path(division)
       fill_in 'owner_name', with: ''
