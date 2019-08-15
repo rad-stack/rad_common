@@ -7,6 +7,8 @@
     = f.input :notify
     = f.input :hourly_rate
     = f.input :timezone, as: :time_zone, priority: timezone_us_filter
+    = f.input :logo
+    = f.input :avatar
 
     = render 'layouts/simple_autocomplete', search_path: '/rad_common/global_search?global_search_scope=user_name',
                                             initial_value: @division.owner.to_s,

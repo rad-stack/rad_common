@@ -24,6 +24,31 @@ module RadbearController
     end
   end
 
+  def validate_multiple_attachments(record, model, attributes_and_types)
+    # TODO: Remove this method once native active storage validations are implemented
+
+    errors = []
+    attributes_and_types.each do |attribute_and_type|
+      file = params[model][attribute_and_type[:attr]]
+      next if file.blank?
+
+      if file.content_type.in?(attribute_and_type[:types])
+        record.send(attribute_and_type[:attr]).attach(file)
+      else
+        errors << attribute_and_type[:attr].to_s.humanize
+      end
+    end
+    return true if errors.empty?
+
+    flash[:error] = "#{errors.join(', ')} could not be saved due to invalid content types"
+    if action_methods.include?('edit')
+      render :edit
+    else
+      redirect_to record
+    end
+    false
+  end
+
   protected
 
     def set_raven_user_context
