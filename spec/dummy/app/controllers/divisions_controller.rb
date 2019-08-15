@@ -29,7 +29,9 @@ class DivisionsController < ApplicationController
 
   def update
     if @division.update(permitted_params)
-      redirect_to @division, notice: 'Division was successfully updated.'
+      if validate_multiple_attachments(@division, :division, division_attachments_and_types)
+        redirect_to @division, notice: 'Division was successfully updated.'
+      end
     else
       render :edit
     end
@@ -59,5 +61,9 @@ class DivisionsController < ApplicationController
 
     def permitted_params
       params.require(:division).permit(:name, :code, :notify, :timezone, :owner_id, :hourly_rate)
+    end
+
+    def division_attachments_and_types
+      [{ attr: :logo, types: ['image/png'] }, { attr: :avatar, types: ['image/jpeg'] }]
     end
 end
