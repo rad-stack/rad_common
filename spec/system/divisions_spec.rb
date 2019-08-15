@@ -27,24 +27,35 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('Editing Division')
     end
 
-    it 'validates attachments' do
-      visit edit_division_path(division)
-      page.attach_file('Avatar', 'spec/test_files/radlogo.png')
-      page.attach_file('Logo', 'spec/test_files/radlogo.jpeg')
-      click_on 'Save'
-      expect(page).to have_content 'Logo, Avatar could not be saved due to invalid content types'
-      expect(division.logo.attached?).to be false
-      expect(division.avatar.attached?).to be false
-    end
+    describe 'attachment validation' do
+      let(:file2) { 'spec/test_files/radlogo.jpeg' }
 
-    it 'saves attachments that are valid' do
-      visit edit_division_path(division)
-      page.attach_file('Avatar', 'spec/test_files/radlogo.jpeg')
-      page.attach_file('Logo', 'spec/test_files/radlogo.jpeg')
-      click_on 'Save'
-      expect(page).to have_content 'Logo could not be saved due to invalid content types'
-      expect(division.logo.attached?).to be false
-      expect(division.avatar.attached?).to be true
+      before do
+        visit edit_division_path(division)
+        page.attach_file('Avatar', file1)
+        page.attach_file('Logo', file2)
+        click_on 'Save'
+      end
+
+      context 'both invalid' do
+        let(:file1) { 'spec/test_files/radlogo.png' }
+
+        it 'validates' do
+          expect(page).to have_content 'Logo, Avatar could not be saved due to invalid content types'
+          expect(division.logo.attached?).to be false
+          expect(division.avatar.attached?).to be false
+        end
+      end
+
+      context 'one invalid' do
+        let(:file1) { 'spec/test_files/radlogo.jpeg' }
+
+        it 'validates' do
+          expect(page).to have_content 'Logo could not be saved due to invalid content types'
+          expect(division.logo.attached?).to be false
+          expect(division.avatar.attached?).to be true
+        end
+      end
     end
 
     it 'displays error for owner field when blank', js: true do
