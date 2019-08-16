@@ -47,7 +47,7 @@ class CardPresenter
   end
 
   def instance
-    controller.instance_variable_get(instance_variable_name) if !custom?
+    controller.instance_variable_get(instance_variable_name) unless custom?
   end
 
   def instance_label
@@ -55,7 +55,7 @@ class CardPresenter
   end
 
   def klass
-    Object.const_get(controller_name.classify) if !custom?
+    Object.const_get(controller_name.classify) unless custom?
   end
 
   def custom?
@@ -131,7 +131,7 @@ class CardPresenter
   end
 
   def instance_variable_name
-    "@" + (local_assigns[:instance_variable_name] || controller_name.classify.underscore)
+    '@' + (local_assigns[:instance_variable_name] || controller_name.classify.underscore)
   end
 
   def delete_confirmation
@@ -140,5 +140,99 @@ class CardPresenter
 
   def index_path
     local_assigns[:index_path] || "/#{controller_name}"
+  end
+
+  def current_user
+    @view_context.current_user
+  end
+
+  def output_icon
+    return icon if icon.present?
+    return 'fa-pencil' if action_name == 'edit' || action_name == 'update'
+    return 'fa-plus' if action_name == 'new' || action_name == 'create'
+    return 'fa-file' if action_name == 'show'
+    return 'fa-list' if action_name == 'index'
+
+    raise 'missing card header icon'
+  end
+
+  def output_title
+    return title if title.present?
+    return "New #{object_label}" if action_name == 'new' || action_name == 'create'
+    return @output_title = "#{object_label}: #{instance_label}" if action_name == 'show'
+
+    if action_name == 'index'
+      the_var = controller.instance_variable_get('@' + controller_name)
+      return "#{titleized_controller_name} (#{the_var.respond_to?(:total_count) ? the_var.total_count : the_var.count})"
+    end
+
+    if action_name == 'edit' || action_name == 'update'
+      the_title = "Editing #{object_label}:"
+
+      if no_show_link
+        the_title += " #{instance_label}"
+      else
+        the_title += ' ' + @view_context.link_to(instance_label, instance)
+        the_title = the_title.html_safe
+      end
+
+      return the_title
+    end
+
+    raise 'missing card header title'
+  end
+
+  def output_actions
+    actions = []
+
+    if action_name == 'show'
+      if !no_edit_button && current_user && current_user.can_update?(klass) && current_user.can_update?(instance)
+        actions.push(@view_context.link_to(@view_context.icon(:pencil, 'Edit'), edit_url, class: 'btn btn-secondary btn-sm'))
+      end
+    end
+
+    actions += additional_actions
+
+    if !no_delete_button && instance && instance.id && current_user && current_user.can_delete?(klass) && current_user.can_delete?(instance)
+      if delete_button_content
+        actions.push(delete_button_content)
+      else
+        actions.push(@view_context.link_to(@view_context.icon(:times, 'Delete'), instance, method: :delete, data: { confirm: delete_confirmation }, class: 'btn btn-danger btn-sm'))
+      end
+    end
+
+    actions
+  end
+
+  def output_external_actions
+    actions = []
+
+    actions += external_actions
+
+    if action_name == 'edit' || action_name == 'update' || action_name == 'show'
+      if !no_new_button && current_user && current_user.can_create?(klass)
+        actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"), new_url, class: 'btn btn-success btn-sm', id: "new_#{downcased_object_class}_link"))
+      end
+    end
+
+    if !no_index_button && ['show', 'edit', 'update', 'new', 'create'].include?(action_name)
+      if current_user && current_user.can_read?(klass)
+        actions.push(@view_context.link_to(@view_context.icon(:list, 'View ' + titleized_controller_name), index_path, class: 'btn btn-secondary btn-sm'))
+      end
+    end
+
+    if action_name == 'index'
+      if !no_new_button && current_user && current_user.can_create?(klass)
+        actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"), new_url, class: 'btn btn-success btn-sm', id: "new_#{downcased_object_class}_link"))
+      end
+    end
+
+    actions += additional_external_actions
+
+    actions
+  end
+
+  def output_back_button?
+    (action_name == 'new' || action_name == 'create') && !no_back_button
   end
 end

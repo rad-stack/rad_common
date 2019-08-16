@@ -1,4 +1,4 @@
 .card
-  = render 'layouts/card_header'
+  = render 'layouts/card_header', additional_actions: [render('divisions/dropdown_btn')]
   .card-body
     = render 'form'
