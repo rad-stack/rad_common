@@ -31,7 +31,8 @@ class MigratePaperclipFiles
       Rails.logger.info "Attaching #{attachment_name} to #{model_class} #{record.id}"
       result_key = attachment_result_key(record)
       if result_key.present?
-        record.send(new_attachment_name).attach(io: open(attachment_url(result_key)),
+        file = RadicalRetry.perform_request { URI.open(attachment_url(result_key)) }
+        record.send(new_attachment_name).attach(io: file,
                                                 filename: record.send(attachment_file_name),
                                                 content_type: record.send(attachment_content_type))
         Rails.logger.info "Finised Attaching #{attachment_name} to #{model_class} #{record.id}"
