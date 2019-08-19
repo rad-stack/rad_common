@@ -56,20 +56,3 @@ th.actions {
 .dl-horizontal dd:after {
   clear: both;
 }
-
-/* Adding this because auto complete and simple form require us to use the help block class,
-   so we are just extend invalid feedback in bootstrap so we get right style.
-   We are doing this because _simple_autocomplete is not displaying errors in the right place refer to https://swell.radicalbear.com/tasks/30002 */
-.help-block {
-  @extend .invalid-feedback;
-}
-
-.has-error, .form-group-invalid {
-  .help-block {
-    display: block;
-  }
-
-  .ui-autocomplete-input, .form-control, .trix-content {
-    @extend .form-control.is-invalid;
-  }
-}
