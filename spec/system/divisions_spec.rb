@@ -19,6 +19,32 @@ RSpec.describe 'Divisions', type: :system do
       click_button 'Save'
       expect(page).to have_content('must exist')
     end
+
+    describe 'single attachment validation' do
+      let(:file) { 'spec/test_files/radlogo.jpeg' }
+
+      before do
+        allow_any_instance_of(Division).to receive(:save).and_return true
+        visit new_division_path
+        page.attach_file('Icon', file)
+        click_on 'Save'
+      end
+
+      context 'invalid due to content type' do
+        it 'validates' do
+          expect(page).to have_content 'File could not be saved. File type must be one of image/png'
+          expect(division.icon.attached?).to be false
+        end
+      end
+
+      context 'invalid due to file size' do
+        let(:file) { 'spec/test_files/large_logo.png' }
+        it 'validates' do
+          expect(page).to have_content 'File could not be saved. File size must be less than 48.8 KB.'
+          expect(division.icon.attached?).to be false
+        end
+      end
+    end
   end
 
   describe 'edit' do
@@ -27,7 +53,7 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('Editing Division')
     end
 
-    describe 'attachment validation' do
+    describe 'multiple attachment validation' do
       let(:file2) { 'spec/test_files/radlogo.jpeg' }
 
       before do
