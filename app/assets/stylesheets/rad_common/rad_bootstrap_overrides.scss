@@ -56,3 +56,35 @@ th.actions {
 .dl-horizontal dd:after {
   clear: both;
 }
+
+//This is to make the action buttons look good on mobile in card headers
+@include media-breakpoint-down(md) {
+  .title-header {
+    width: 100%;
+    display:block !important;
+
+    .title-text {
+      width: 100%;
+    }
+  }
+
+  .action-buttons, .external-actions {
+    display: block !important;
+    .btn, .btn-group {
+      display: block;
+      margin-bottom: 8px;
+    }
+    .btn {
+      padding: 10px;
+    }
+  }
+
+  .external-actions {
+    padding-top: 10px;
+    border-top: solid 1px;
+  }
+
+  .action-buttons {
+    margin-bottom: 10px;
+  }
+}

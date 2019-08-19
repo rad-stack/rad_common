@@ -1,9 +1,9 @@
 #navbar.navbar.navbar-expand-lg.navbar-light.bg-light
   .container-fluid
-    %button.navbar-toggler{ type: 'button', data: { toggle: 'collapse', target: '#navbarSupportedContent' } }
-      %span.navbar-toggler-icon
     = link_to root_path, { class: 'navbar-brand' } do
       = image_tag 'app_logo.png'
+    %button.navbar-toggler{ type: 'button', data: { toggle: 'collapse', target: '#navbarSupportedContent' } }
+      %span.navbar-toggler-icon
     #navbarSupportedContent.navbar-collapse.collapse.navbar-responsive-collapse
       - if user_signed_in?
         %ul.nav.navbar-nav.navbar-left
@@ -17,5 +17,5 @@
                 %li= link_to 'Divisions', divisions_path, class: 'dropdown-item'
               = render 'layouts/navigation_admin'
           %li.global-search-nav
-            = render "layouts/global_search"
+            = render 'layouts/global_search'
       = render 'layouts/navigation_right'
