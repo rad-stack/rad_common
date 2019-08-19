@@ -63,6 +63,7 @@
                                                 {
                                                   formGroup.addClass("form-group-invalid");
                                                   formGroup.append( $(this).clone() );
+                                                  jQuery(e).addClass("is-invalid");
                                                 } );
       }
   }
