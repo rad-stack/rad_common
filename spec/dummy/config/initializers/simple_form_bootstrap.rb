@@ -60,9 +60,7 @@ SimpleForm.setup do |config|
     b.use :label
     b.use :icon
     b.use :input, class: 'form-control', error_class: 'is-invalid', valid_class: ''
-    # For some reason putting help-block here allows us to have the error at the correct place for autocompletes.
-    # We are doing this because _simple_autocomplete is not displaying errors in the right place refer to https://swell.radicalbear.com/tasks/30002
-    b.use :error, wrap_with: { tag: 'span', class: 'help-block' }
+    b.use :full_error, wrap_with: { tag: 'div', class: 'invalid-feedback' }
     b.use :hint, wrap_with: { tag: 'small', class: 'form-text text-muted' }
   end
 

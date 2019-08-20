@@ -59,10 +59,11 @@
         idElement = jQuery( jQuery(e).data(data_attribute) );
         idFormGroup = idElement.parent(".form-group");
 
-        idFormGroup.find("span.help-block").each( function()
+        idFormGroup.find("div.invalid-feedback").each( function()
                                                 {
-                                                  formGroup.addClass("has-error")
+                                                  formGroup.addClass("form-group-invalid");
                                                   formGroup.append( $(this).clone() );
+                                                  jQuery(e).addClass("is-invalid");
                                                 } );
       }
   }

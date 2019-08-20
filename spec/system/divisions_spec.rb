@@ -91,7 +91,7 @@ RSpec.describe 'Divisions', type: :system do
 
       if ENV['CI']
         # TODO: fix this so it works locally
-        expect(page).to have_content 'must exist and can\'t be blank'
+        expect(page).to have_content 'Owner must exist and Owner can\'t be blank'
       end
     end
   end
