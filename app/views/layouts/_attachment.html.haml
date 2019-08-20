@@ -1,0 +1,8 @@
+-if record.persisted? && record.send(attachment_name).attached?
+  - attachment = record.send(attachment_name)
+  -if attachment.content_type.include?('image')
+    - link = defined?(override_path) && override_path.present? ? override_path : url_for(attachment)
+    - target = defined?(new_tab) && new_tab ? '_blank' : nil
+    = link_to(image_tag(attachment, class: 'img-thumbnail img-fluid'), link, target: target)
+  -else
+    =link_to content_tag(:i, '', class: 'fa fa-paperclip'), url_for(attachment), target: '_blank'
