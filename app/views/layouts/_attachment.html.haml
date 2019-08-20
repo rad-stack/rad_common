@@ -1,0 +1,6 @@
+-if record.persisted? && record.send(attachment_name).attached?
+  - attachment = record.send(attachment_name)
+  -if attachment.content_type.include?('image')
+    = link_to(image_tag(attachment, class: 'img-thumbnail img-fluid'), url_for(attachment), target: '_blank')
+  -else
+    =link_to content_tag(:i, '', class: 'fa fa-paperclip'), url_for(attachment), target: '_blank'

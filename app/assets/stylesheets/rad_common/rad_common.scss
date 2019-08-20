@@ -185,6 +185,10 @@ td.fa.security-group-td { border-style: none; }
   text-align: center;
 }
 
+.img-thumbnail {
+  max-width: 100px;
+}
+
 /* Mobile styles*/
 @media (max-width: 992px) {
   .content .global-search-group {
@@ -201,4 +205,3 @@ td.fa.security-group-td { border-style: none; }
 }
 
 /* custom bootstrap styles */
-
