@@ -19,7 +19,7 @@ class PaperclipDataPrecheck
   def perform_precheck(session)
     records_with_attachments = model_class.where("#{attachment_file_name} is not null")
     count = records_with_attachments.count
-    faulty_attachment_records
+    faulty_attachment_records = []
     records_with_attachments.order(updated_at: :desc).each do |record|
       break if session.check_status('performing precheck', count)
 
@@ -27,7 +27,7 @@ class PaperclipDataPrecheck
       faulty_attachment_records << { record_id: record.id, error: error } if error
     end
 
-    Rails.logger.info("#{faulty_attachment_records.count} faulty attachments:")
+    Rails.logger.info("#{faulty_attachment_records.count} faulty #{model_class} attachments:")
     faulty_attachment_records.each { |attachment| Rails.logger.info("Record: #{attachment[:record]}, error: #{attachment[:error]}") }
   end
 
