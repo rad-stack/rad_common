@@ -41,7 +41,7 @@ class PaperclipDataPrecheck
     begin
       RadicalRetry.perform_request { uri.open.read }
     rescue RadicallyIntermittentException => e
-      return e.inspect
+      return e.message
     end
   end
 end
