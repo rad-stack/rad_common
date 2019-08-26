@@ -1,6 +1,7 @@
 class PaperclipDataPrecheck
   attr_accessor :attachment_name
   attr_accessor :new_attachment_name
+  attr_accessor :attachment_file_name
   attr_accessor :model_class
 
   def self.perform(model_class, attachment_names, session)
@@ -10,6 +11,7 @@ class PaperclipDataPrecheck
 
       checker.model_class = model_class
       checker.attachment_name = attachment_name
+      checker.attachment_file_name = "#{attachment_name}_file_name"
       checker.new_attachment_name = "#{attachment_name}_new"
 
       checker.perform_precheck(session)
