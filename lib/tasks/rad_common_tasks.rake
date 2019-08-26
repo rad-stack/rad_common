@@ -48,4 +48,16 @@ namespace :rad_common do
       end
     end
   end
+
+  task paperclip_data_precheck: :environment do |_t, args|
+    session = RakeSession.new(12.hours, 10)
+    Timeout.timeout(session.time_limit) do
+      args.extras.each do |model_and_attachments|
+        model_and_attachments_array = model_and_attachments.split(' ')
+        model_class = model_and_attachments_array.first.constantize
+        attachment_names = model_and_attachments_array.drop(1)
+        PaperclipDataPrecheck.perform(model_class, attachment_names, session)
+      end
+    end
+  end
 end
