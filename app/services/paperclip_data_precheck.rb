@@ -28,7 +28,7 @@ class PaperclipDataPrecheck
     end
 
     Rails.logger.info("#{faulty_attachment_records.count} faulty #{model_class} attachments:")
-    faulty_attachment_records.each { |attachment| Rails.logger.info("Record: #{attachment[:record]}, error: #{attachment[:error]}") }
+    faulty_attachment_records.each { |attachment| Rails.logger.info("Record: #{attachment[:record_id]}, error: #{attachment[:error]}") }
   end
 
   private
