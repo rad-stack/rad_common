@@ -37,17 +37,17 @@ module RadbearController
 
     errors = []
     attributes_and_types.each do |attribute_and_type|
-      if attribute_and_type[:attr].is_a?(Array)
-        files = params[model][attribute_and_type[:attr]]
-        next if files.empty?
+      file = params[model][attribute_and_type[:attr]]
 
-        if files.all? { |file| file.content_type.in?(attribute_and_type[:types]) }
+      if file.is_a?(Array)
+        next if file.empty?
+
+        if file.all? { |f| f.content_type.in?(attribute_and_type[:types]) }
           record.send(attribute_and_type[:attr]).attach(files)
         else
           errors << attribute_and_type[:attr].to_s.humanize
         end
       else
-        file = params[model][attribute_and_type[:attr]]
         next if file.blank?
 
         if file.content_type.in?(attribute_and_type[:types])
