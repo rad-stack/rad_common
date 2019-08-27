@@ -43,7 +43,7 @@ module RadbearController
         next if file.empty?
 
         if file.all? { |f| f.content_type.in?(attribute_and_type[:types]) }
-          record.send(attribute_and_type[:attr]).attach(files)
+          record.send(attribute_and_type[:attr]).attach(file)
         else
           errors << attribute_and_type[:attr].to_s.humanize
         end
