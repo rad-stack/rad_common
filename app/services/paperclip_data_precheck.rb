@@ -26,7 +26,7 @@ class PaperclipDataPrecheck
       break if session.check_status('performing precheck', count)
 
       error = check_attachment(record)
-      faulty_attachment_records << { record_id: record.id, error: error } if error
+      faulty_attachment_records << { record_id: record.id, error: error } if error.present?
     end
 
     Rails.logger.info("#{faulty_attachment_records.count} faulty #{model_class} attachments:")
@@ -40,6 +40,7 @@ class PaperclipDataPrecheck
     uri = URI.parse(resume_url)
     begin
       RadicalRetry.perform_request { uri.open.read }
+      return nil
     rescue OpenURI::HTTPError, RadicallyIntermittentException => e
       return e.message
     end
