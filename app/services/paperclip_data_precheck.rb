@@ -40,7 +40,7 @@ class PaperclipDataPrecheck
     uri = URI.parse(resume_url)
     begin
       RadicalRetry.perform_request { uri.open.read }
-    rescue OpenURI::HTTPError => e
+    rescue OpenURI::HTTPError, RadicallyIntermittentException => e
       return e.message
     end
   end
