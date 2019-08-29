@@ -12,8 +12,7 @@
         .row
           .col-lg-12
             = f.input :message, as: :trix_editor,
-                                placeholder: 'Enter a message to be emailed to active users in the system.',
-                                input_html: { id: 'email_message' }
+                                placeholder: 'Enter a message to be emailed to active users in the system.'
 
       .form-actions
         = f.button :submit, 'Send', class: 'btn btn-primary'
