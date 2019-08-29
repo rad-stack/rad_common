@@ -8,6 +8,8 @@ class SystemMessage < ApplicationRecord
 
   scope :recent_first, -> { order(created_at: :desc) }
 
+  before_validation :maybe_strip_tags
+
   def to_s
     "System Message from #{user}"
   end
@@ -39,4 +41,10 @@ class SystemMessage < ApplicationRecord
       SystemSMSJob.perform_later(message, recipients.map(&:id), current_user)
     end
   end
+
+  private
+
+    def maybe_strip_tags
+      ApplicationController.helpers.strip_tags(message) if sms?
+    end
 end
