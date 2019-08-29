@@ -99,6 +99,10 @@ module RadCompany
     end
   end
 
+  def sanitize_twilio_numbers
+    self.twilio_phone_numbers = twilio_phone_numbers.reject(&:blank?) if twilio_phone_numbers_changed? && twilio_phone_numbers.any?
+  end
+
   private
 
     def validate_only_one

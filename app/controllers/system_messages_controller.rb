@@ -1,8 +1,10 @@
 class SystemMessagesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: :twilio
   before_action :set_system_message, only: %i[show]
 
-  authorize_actions_for SystemMessage
+  ensure_authorization_performed except: :twilio
+
+  authorize_actions_for SystemMessage, except: :twilio
 
   def show; end
 
@@ -20,6 +22,14 @@ class SystemMessagesController < ApplicationController
     else
       render :new
     end
+  end
+
+  def twilio
+    @language_code   = 'en'
+    @header_message  = "Important message from #{Company.main.name}"
+    @message         = params[:message]
+    @repeat_message  = 'This message will now repeat.'
+    @goodbye_message = 'Goodbye.'
   end
 
   private
