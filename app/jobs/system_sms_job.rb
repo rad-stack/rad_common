@@ -1,5 +1,5 @@
 class SystemSMSJob < ApplicationJob
-  queue_as :system_sms
+  queue_as :default
 
   def perform(message, recipients, current_user)
     errors = []
