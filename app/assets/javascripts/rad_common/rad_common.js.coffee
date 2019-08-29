@@ -96,8 +96,6 @@ checkMessageType = ->
   if $('#system_message_message_type').val() == 'email'
     $('.email').show()
     $('.sms').hide()
-    $('.sms').val('')
   else
     $('.sms').show()
     $('.email').hide()
-    $('.email').val('')
