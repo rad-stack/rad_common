@@ -94,6 +94,10 @@ checkClientUser = ->
 
 checkMessageType = ->
   if $('#system_message_message_type').val() == 'email'
-    $('.trix-button-row').show()
+    $('.email').show()
+    $('.sms').hide()
+    $('.sms').val('')
   else
-    $('.trix-button-row').hide()
+    $('.sms').show()
+    $('.email').hide()
+    $('.email').val('')

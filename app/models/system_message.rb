@@ -8,10 +8,24 @@ class SystemMessage < ApplicationRecord
 
   scope :recent_first, -> { order(created_at: :desc) }
 
-  before_validation :maybe_strip_tags
-
   def to_s
     "System Message from #{user}"
+  end
+
+  def sms_message=(value)
+    self.message = value if sms?
+  end
+
+  def sms_message
+    message if last_message.sms?
+  end
+
+  def email_message=(value)
+    self.message = value if email?
+  end
+
+  def email_message
+    message if last_message.email?
   end
 
   def self.recent_or_new(user)
@@ -44,7 +58,7 @@ class SystemMessage < ApplicationRecord
 
   private
 
-    def maybe_strip_tags
-      self.message = ApplicationController.helpers.strip_tags(message) if message.present? && sms?
+    def last_message
+      SystemMessage.recent_first.first
     end
 end
