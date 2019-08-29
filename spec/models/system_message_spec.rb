@@ -10,7 +10,7 @@ RSpec.describe SystemMessage, type: :model do
 
     before do
       ActionMailer::Base.deliveries = []
-      system_message.send!
+      system_message.send!(user)
     end
 
     subject { mail.body.encoded }
