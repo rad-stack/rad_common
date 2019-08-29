@@ -8,12 +8,15 @@ module RadCompany
 
     scope :by_id, -> { order(:id) }
 
-    schema_validations except: :valid_user_domains
+    schema_validations except: %i[twilio_phone_numbers valid_user_domains]
+
+    before_validation :sanitize_twilio_numbers
 
     validates_with EmailAddressValidator, fields: %i[email]
     validates_with PhoneNumberValidator
     validate :validate_only_one, on: :create
     validate :validate_domains
+    validates :twilio_phone_numbers, presence: true
 
     audited
   end
@@ -70,6 +73,30 @@ module RadCompany
     end
 
     [usage_headers, usage_items, usage_data]
+  end
+
+  def next_phone_number
+    if Rails.env.development?
+      ENV['TWILIO_TEST_FROM_PHONE_NUMBER']
+    else
+      num_of_nums = twilio_phone_numbers.length
+
+      if num_of_nums.zero?
+        return nil
+      elsif num_of_nums == 1
+        return twilio_phone_numbers[0]
+      else
+        next_number = twilio_phone_numbers[current_phone]
+
+        if current_phone < (num_of_nums - 1)
+          update(current_phone: (current_phone + 1))
+        else
+          update(current_phone: 0)
+        end
+
+        next_number
+      end
+    end
   end
 
   private
