@@ -10,16 +10,16 @@ class TwilioPhoneValidator < ActiveModel::Validator
 
     fields.each do |field|
       next if record.send(field[:field]).blank? && (record.send(field[:field].to_s + '_changed?') || (use_comm_method(field) && record.communication_method_id_changed?))
-        response = get_phone_number(record, field)
 
-        begin
-          record.errors.add(field[:field], 'does not appear to be a valid mobile phone number') if mobile?(record, field) && response.carrier['type'] != 'mobile'
-          response.phone_number
-        rescue Twilio::REST::RequestError, NoMethodError => e
-          record.errors.add(field[:field], 'does not appear to be a valid phone number')
-        end
+      response = get_phone_number(record, field)
+
+      begin
+        record.errors.add(field[:field], 'does not appear to be a valid mobile phone number') if mobile?(record, field) && response.carrier['type'] != 'mobile'
+        response.phone_number
+      rescue Twilio::REST::RequestError, NoMethodError => e
+        record.errors.add(field[:field], 'does not appear to be a valid phone number')
       end
-    end
+      end
   end
 
   def use_comm_method(field)

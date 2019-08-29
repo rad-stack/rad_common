@@ -4,6 +4,7 @@ class SystemMessage < ApplicationRecord
   belongs_to :user
 
   enum send_to: %i[internal_users client_users all_users preview]
+  enum message_type: %i[email sms]
 
   scope :recent_first, -> { order(created_at: :desc) }
 
@@ -29,9 +30,13 @@ class SystemMessage < ApplicationRecord
     users
   end
 
-  def send!
-    recipients.each do |user|
-      RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", message).deliver_later
+  def send!(current_user)
+    if email?
+      recipients.each do |user|
+        RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", message).deliver_later
+      end
+    else
+      SMSJob.perform_later(message, recipients, current_user)
     end
   end
 end

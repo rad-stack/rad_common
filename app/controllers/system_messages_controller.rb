@@ -17,7 +17,7 @@ class SystemMessagesController < ApplicationController
     @system_message.user = current_user
 
     if @system_message.save
-      @system_message.send!
+      @system_message.send!(current_user)
       redirect_to "/rad_common/system_messages/#{@system_message.id}", notice: 'The message was successfully sent.'
     else
       render :new
@@ -39,6 +39,6 @@ class SystemMessagesController < ApplicationController
     end
 
     def permitted_params
-      params.require(:system_message).permit(:message, :send_to)
+      params.require(:system_message).permit(:message, :send_to, :message_type)
     end
 end

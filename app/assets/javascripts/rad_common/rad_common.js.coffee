@@ -78,6 +78,11 @@ $ ->
   $('#user_external').on 'change', ->
     checkClientUser()
 
+  checkMessageType()
+
+  $('#system_message_message_type').on 'change', ->
+    checkMessageType()
+
   humanize = (string) ->
     string[0].toUpperCase() + string.substring(1).replace(/([a-z])(?=[A-Z])/g, "$1 ")
 
@@ -86,3 +91,9 @@ checkClientUser = ->
     $('.internal').hide()
   else
     $('.internal').show()
+
+checkMessageType = ->
+  if $('#system_message_message_type').val() == 'email'
+    $('.trix-button-row').show()
+  else
+    $('.trix-button-row').hide()

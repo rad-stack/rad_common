@@ -6,12 +6,14 @@
 
       .form-inputs
         .row
+          .col-lg-3= f.input :message_type, collection: options_for_enum(SystemMessage, :message_type), include_blank: false
           .col-lg-3
             = f.input :send_to, collection: options_for_enum(SystemMessage, :send_to), include_blank: false
         .row
           .col-lg-12
             = f.input :message, as: :trix_editor,
-                                placeholder: 'Enter a message to be emailed to active users in the system.'
+                                placeholder: 'Enter a message to be emailed to active users in the system.',
+                                input_html: { id: 'email_message' }
 
       .form-actions
         = f.button :submit, 'Send', class: 'btn btn-primary'
