@@ -45,6 +45,6 @@ class SystemMessage < ApplicationRecord
   private
 
     def maybe_strip_tags
-      ApplicationController.helpers.strip_tags(message) if sms?
+      self.message = ApplicationController.helpers.strip_tags(message) if message.present? && sms?
     end
 end
