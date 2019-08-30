@@ -9,17 +9,17 @@ class TwilioPhoneValidator < ActiveModel::Validator
     # phone number validations that check whether valid mobile # cost half a penny per request
 
     fields.each do |field|
-      next if record.send(field[:field]).blank? && (record.send(field[:field].to_s + '_changed?') || (use_comm_method(field) && record.communication_method_id_changed?))
+      if !record.send(field[:field]).blank? && (record.send(field[:field].to_s + '_changed?') || (use_comm_method(field) && record.communication_method_id_changed?))
+        response = get_phone_number(record, field)
 
-      response = get_phone_number(record, field)
-
-      begin
-        record.errors.add(field[:field], 'does not appear to be a valid mobile phone number') if mobile?(record, field) && response.carrier['type'] != 'mobile'
-        response.phone_number
-      rescue Twilio::REST::RequestError, NoMethodError => e
-        record.errors.add(field[:field], 'does not appear to be a valid phone number')
+        begin
+          record.errors.add(field[:field], 'does not appear to be a valid mobile phone number') if is_mobile?(record, field) && response.carrier['type'] != 'mobile'
+          response.phone_number
+        rescue Twilio::REST::RequestError, NoMethodError => e
+          record.errors.add(field[:field], 'does not appear to be a valid phone number')
+        end
       end
-      end
+    end
   end
 
   def use_comm_method(field)
@@ -28,7 +28,7 @@ class TwilioPhoneValidator < ActiveModel::Validator
 
   def get_phone_number(record, field)
     converted_phone_number = record.send(field[:field]).gsub(/[^0-9a-z\\s]/i, '')
-    mobile?(record, field) ? lookup_number(converted_phone_number, 'carrier') : lookup_number(converted_phone_number)
+    is_mobile?(record, field) ? lookup_number(converted_phone_number, 'carrier') : lookup_number(converted_phone_number)
   end
 
   def lookup_number(number, type = nil)
@@ -36,7 +36,7 @@ class TwilioPhoneValidator < ActiveModel::Validator
     type ? lookup_client.phone_numbers.get(number, type: type) : lookup_client.phone_numbers.get(number)
   end
 
-  def mobile?(record, field)
+  def is_mobile?(record, field)
     return true if field[:type] && field[:type] == :mobile
     return (record.communication_method == CommunicationMethod.method_sms) if use_comm_method(field)
   end
