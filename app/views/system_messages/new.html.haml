@@ -10,11 +10,11 @@
           .col-lg-3
             = f.input :send_to, collection: options_for_enum(SystemMessage, :send_to), include_blank: false
         .row
-          .col-lg-12.email
+          .col-lg-12.email-message
             = f.input :email_message, as: :trix_editor,
                                       placeholder: 'Enter a message to be emailed to active users in the system.',
                                       label: 'Message'
-          .col-lg-12.sms= f.input :sms_message, as: :text, label: 'Message', input_html: { rows: 4 }
+          .col-lg-12.sms-message= f.input :sms_message, as: :text, label: 'Message', input_html: { rows: 4 }
 
       .form-actions
         = f.button :submit, 'Send', class: 'btn btn-primary'

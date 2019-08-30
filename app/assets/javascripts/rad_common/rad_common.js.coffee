@@ -94,8 +94,8 @@ checkClientUser = ->
 
 checkMessageType = ->
   if $('#system_message_message_type').val() == 'email'
-    $('.email').show()
-    $('.sms').hide()
+    $('.email-message').show()
+    $('.sms-message').hide()
   else
-    $('.sms').show()
-    $('.email').hide()
+    $('.sms-message').show()
+    $('.email-message').hide()
