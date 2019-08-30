@@ -5,11 +5,7 @@ class SystemSMSJob < ApplicationJob
     errors = []
     recipients.each do |user_id|
       user = User.find(user_id)
-      phone_number = if user.mobile_phone.present?
-                       user.mobile_phone
-                     else
-                       user.phone_number
-                     end
+      phone_number = user.mobile_phone
 
       if phone_number.blank?
         errors << user.id
@@ -28,6 +24,6 @@ class SystemSMSJob < ApplicationJob
     return if errors.empty?
 
     body = "These users did not receive a system SMS message: #{errors.join(', ')}"
-    RadbearMailer.simple_message([current_user.id], 'Error Sending System Message to Some Users', body).deliver_later
+    RadbearMailer.simple_message(current_user, 'Error Sending System Message to Some Users', body).deliver_later
   end
 end

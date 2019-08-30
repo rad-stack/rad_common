@@ -46,13 +46,13 @@ class SystemMessage < ApplicationRecord
     users
   end
 
-  def send!(current_user)
+  def send!
     if email?
       recipients.each do |user|
         RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", message).deliver_later
       end
     else
-      SystemSMSJob.perform_later(message, recipients.map(&:id), current_user)
+      SystemSMSJob.perform_later(message, recipients.map(&:id), user)
     end
   end
 
