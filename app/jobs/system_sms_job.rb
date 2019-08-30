@@ -5,7 +5,17 @@ class SystemSMSJob < ApplicationJob
     errors = []
     recipients.each do |user_id|
       user = User.find(user_id)
-      phone_number = user.phone_number
+      phone_number = if user.mobile_phone.present?
+                       user.mobile_phone
+                     else
+                       user.phone_number
+                     end
+
+      if phone_number.blank?
+        errors << user.id
+        next
+      end
+
       begin
         RadicalRetry.perform_request do
           RadicalTwilio.send_sms(to: phone_number, message: message, from: RadicalTwilio.twilio_phone_number)
