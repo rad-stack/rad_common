@@ -5,8 +5,10 @@ class MigratePaperclipFiles
   attr_accessor :attachment_file_size
   attr_accessor :new_attachment_name
   attr_accessor :model_class
+  attr_accessor :use_expiring_url
+  attr_accessor :limit
 
-  def self.perform(model_class, attachment_names, session)
+  def self.perform(model_class, attachment_names, session, use_expiring_url=false, limit=nil)
 
     attachment_names.each do |attachment_name|
       session.reset_status
@@ -17,6 +19,8 @@ class MigratePaperclipFiles
       migrator.attachment_file_name = "#{attachment_name}_file_name"
       migrator.attachment_content_type = "#{attachment_name}_content_type"
       migrator.new_attachment_name = "#{attachment_name}_new"
+      migrator.use_expiring_url = use_expiring_url
+      migrator.limit = limit
 
       migrator.perform_migration(session)
     end
@@ -24,6 +28,7 @@ class MigratePaperclipFiles
 
   def perform_migration(session)
     records_with_attachments = model_class.where("#{attachment_file_name} is not null")
+    records_with_attachments = records_with_attachments.limit(limit) if limit.present?
     count = records_with_attachments.count
     records_with_attachments.order(updated_at: :desc).find_each do |record|
       break if session.check_status('performing migration', count)
@@ -31,7 +36,7 @@ class MigratePaperclipFiles
       Rails.logger.info "Attaching #{attachment_name} to #{model_class} #{record.id}"
       result_key = attachment_result_key(record)
       if result_key.present?
-        file = RadicalRetry.perform_request { open(attachment_url(result_key)) }
+        file = RadicalRetry.perform_request { open(attachment_url(record)) }
         record.send(new_attachment_name).attach(io: file,
                                                 filename: record.send(attachment_file_name),
                                                 content_type: record.send(attachment_content_type))
@@ -52,8 +57,8 @@ class MigratePaperclipFiles
     result.count.zero? ? nil : result[0]['key']
   end
 
-  def attachment_url(result_key)
-    "https://s3.amazonaws.com/#{bucket_name}#{result_key}"
+  def attachment_url(record)
+    use_expiring_url ? record.send(attachment_name).expiring_url(60) : record.send(attachment_name).url
   end
 
   def bucket_name
