@@ -18,6 +18,8 @@ class User < ApplicationRecord
   scope :by_name, -> { order(:first_name, :last_name) }
   scope :super_admins, -> { active.where(super_admin: true) }
   scope :firebase_admins, -> { active.where(super_admin: true) }
+  scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
+  scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
   scope :recent_first, -> { order('users.created_at DESC') }
   scope :authorized, ->(_) {}
 

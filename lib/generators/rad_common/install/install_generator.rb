@@ -165,6 +165,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20190429211944_remove_super_search_from_users.rb', 'remove_super_search_from_users'
         apply_migration '../../../../../spec/dummy/db/migrate/20190524132649_refactor_notifications.rb', 'refactor_notifications'
         apply_migration '../../../../../spec/dummy/db/migrate/20190810122656_create_system_messages.rb', 'create_system_messages'
+        apply_migration '../../../../../spec/dummy/db/migrate/20190829220515_add_message_type_to_system_messages.rb', 'add_message_type_to_system_messages'
       end
 
       def self.next_migration_number(path)
