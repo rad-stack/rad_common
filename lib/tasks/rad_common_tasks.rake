@@ -43,8 +43,9 @@ namespace :rad_common do
       args.extras.each do |model_and_attachments|
         model_and_attachments_array = model_and_attachments.split(' ')
         model_class = model_and_attachments_array.first.constantize
-        attachment_names = model_and_attachments_array.drop(1)
-        MigratePaperclipFiles.perform(model_class, attachment_names, session)
+        use_expiring_url = model_and_attachments_array[1] == 'true'
+        attachment_names = model_and_attachments_array.drop(2)
+        MigratePaperclipFiles.perform(model_class, attachment_names, session, use_expiring_url)
       end
     end
   end
