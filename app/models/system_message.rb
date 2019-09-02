@@ -32,7 +32,9 @@ class SystemMessage < ApplicationRecord
     last_message = user.system_messages.recent_first.first
     return SystemMessage.new if last_message.blank?
 
-    SystemMessage.new(send_to: last_message.send_to, message: last_message.message)
+    SystemMessage.new(send_to: last_message.send_to,
+                      message: last_message.message,
+                      message_type: last_message.message_type)
   end
 
   def recipients
