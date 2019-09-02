@@ -42,21 +42,21 @@ RSpec.describe 'Users', type: :request do
         put "/users/#{user.id}", params: { user: invalid_attributes }
         expect(response).to render_template('edit')
       end
+    end
+  end
 
-      describe 'confirm' do
-        before do
-          user.update! confirmed_at: nil
-          visit user_path(user)
-        end
+  describe 'confirm' do
+    before do
+      user.update! confirmed_at: nil
+      visit user_path(user)
+    end
 
-        it 'can manually confirm a user', :js do
-          accept_confirm do
-            click_link 'Confirm Email'
-          end
-
-          expect(page.html).to include 'User was successfully confirmed'
-        end
+    it 'can manually confirm a user', :js do
+      accept_confirm do
+        click_link 'Confirm Email'
       end
+
+      expect(page.html).to include 'User was successfully confirmed'
     end
   end
 
