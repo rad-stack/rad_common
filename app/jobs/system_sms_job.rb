@@ -5,6 +5,10 @@ class SystemSMSJob < ApplicationJob
     errors = []
     recipients.each do |user_id|
       user = User.find(user_id)
+      if user.mobile_phone.blank?
+        errors << user.id
+        next
+      end
 
       begin
         RadicalRetry.perform_request do
