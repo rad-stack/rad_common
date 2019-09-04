@@ -1,5 +1,4 @@
 class Division < ApplicationRecord
-  include Authority::Abilities
   include FirebaseSync
   include FirebaseAction
 

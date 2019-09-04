@@ -1,11 +1,15 @@
 class ApplicationController < ActionController::Base
+  include Pundit
+
+  after_action :verify_authorized, except: %i[home global_search global_search_result],
+                                   if: :auditing_security?, unless: :devise_controller?
+
+  after_action :verify_policy_scoped, only: :index
+
   include RadbearController
   include RadbearAuditsController
 
   protect_from_forgery prepend: true, with: :exception
-
-  ensure_authorization_performed except: %i[home global_search global_search_result],
-                                 if: :auditing_security?, unless: :devise_controller?
 
   protected
 

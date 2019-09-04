@@ -1,6 +1,4 @@
 class NotificationType < ApplicationRecord
-  include Authority::Abilities
-
   has_many :notification_security_roles, dependent: :destroy
   has_many :security_roles, through: :notification_security_roles, dependent: :destroy
   has_many :notification_settings, dependent: :destroy
