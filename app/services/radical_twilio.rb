@@ -12,6 +12,33 @@ class RadicalTwilio
   end
 
   def self.twilio_phone_number
-    Company.main.next_phone_number
+    next_phone_number
+  end
+
+  def self.twilio_enabled?
+    defined?(Twilio).present? && Company.has_attribute?(:twilio_phone_numbers) && client.present?
+  end
+
+  def next_phone_number
+    company = Company.main
+    if Rails.env.development?
+      ENV['TWILIO_TEST_FROM_PHONE_NUMBER']
+    else
+      num_of_nums = company.twilio_phone_numbers.length
+
+      return nil if num_of_nums.zero?
+
+      return company.twilio_phone_numbers[0] if num_of_nums == 1
+
+      next_number = company.twilio_phone_numbers[current_phone]
+
+      if company.current_phone < (num_of_nums - 1)
+        company.update(current_phone: (current_phone + 1))
+      else
+        company.update(current_phone: 0)
+      end
+
+      next_number
+    end
   end
 end
