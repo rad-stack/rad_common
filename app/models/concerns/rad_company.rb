@@ -16,7 +16,7 @@ module RadCompany
     validates_with PhoneNumberValidator
     validate :validate_only_one, on: :create
     validate :validate_domains
-    validates :twilio_phone_numbers, presence: true
+    validates :twilio_phone_numbers, presence: true, if: -> { RadicalTwilio.twilio_enabled? }
 
     audited
   end
@@ -80,6 +80,8 @@ module RadCompany
   end
 
   def sanitize_twilio_numbers
+    return unless RadicalTwilio.twilio_enabled?
+
     self.twilio_phone_numbers = twilio_phone_numbers.reject(&:blank?) if twilio_phone_numbers_changed? && twilio_phone_numbers.any?
   end
 
