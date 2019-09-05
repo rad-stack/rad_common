@@ -11,15 +11,11 @@ class RadicalTwilio
     Twilio::REST::Client.new
   end
 
-  def self.twilio_phone_number
-    next_phone_number
-  end
-
   def self.twilio_enabled?
     defined?(Twilio).present? && Company.has_attribute?(:twilio_phone_numbers) && client.present?
   end
 
-  def next_phone_number
+  def self.next_phone_number
     company = Company.main
     if Rails.env.development?
       ENV['TWILIO_TEST_FROM_PHONE_NUMBER']

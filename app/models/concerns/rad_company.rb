@@ -75,30 +75,6 @@ module RadCompany
     [usage_headers, usage_items, usage_data]
   end
 
-  def next_phone_number
-    if Rails.env.development?
-      ENV['TWILIO_TEST_FROM_PHONE_NUMBER']
-    else
-      num_of_nums = twilio_phone_numbers.length
-
-      if num_of_nums.zero?
-        return nil
-      elsif num_of_nums == 1
-        return twilio_phone_numbers[0]
-      else
-        next_number = twilio_phone_numbers[current_phone]
-
-        if current_phone < (num_of_nums - 1)
-          update(current_phone: (current_phone + 1))
-        else
-          update(current_phone: 0)
-        end
-
-        next_number
-      end
-    end
-  end
-
   def sanitize_twilio_numbers
     self.twilio_phone_numbers = twilio_phone_numbers.reject(&:blank?) if twilio_phone_numbers_changed? && twilio_phone_numbers.any?
   end
