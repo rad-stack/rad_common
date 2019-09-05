@@ -18,6 +18,13 @@ module RadbearUser
     after_save :notify_user_approved
   end
 
+  def send_devise_notification(notification, *args)
+    # background devise emails
+    # https://github.com/plataformatec/devise#activejob-integration
+
+    devise_mailer.send(notification, self, *args).deliver_later
+  end
+
   def formatted_email
     "\"#{self}\" <#{email}>"
   end
