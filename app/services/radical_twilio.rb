@@ -29,7 +29,7 @@ class RadicalTwilio
       next_number = company.twilio_phone_numbers[current_phone]
 
       if company.current_phone < (num_of_nums - 1)
-        company.update(current_phone: (current_phone + 1))
+        company.update(current_phone: (company.current_phone + 1))
       else
         company.update(current_phone: 0)
       end

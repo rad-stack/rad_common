@@ -38,6 +38,8 @@ class TwilioPhoneValidator < ActiveModel::Validator
 
   def is_mobile?(record, field)
     return true if field[:type] && field[:type] == :mobile
-    return (record.communication_method == CommunicationMethod.method_sms) if use_comm_method(field)
+    return (record.communication_method == CommunicationMethod.method_sms) if defined?(CommunicationMethod) && use_comm_method(field)
+
+    false
   end
 end

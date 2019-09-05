@@ -15,10 +15,10 @@ class SystemSMSJob < ApplicationJob
       end
     end
 
-    return if errors.empty?
+    return if errors.empty? && recipients_without_phone.empty?
 
     body = "These users did not receive a system SMS message due to system error: #{errors.join(', ')}\n"
-    body += "These users did not receive a system SMS message because a mobile number was not present : #{recipients_without_phone.join(', ')}"
+    body += "These users did not receive a system SMS message because a mobile number was not present: #{recipients_without_phone.join(', ')}"
     RadbearMailer.simple_message(current_user, 'Error Sending System Message to Some Users', body).deliver_later
   end
 end

@@ -29,6 +29,10 @@ module RadCompany
     def staging?
       ENV['STAGING'] == 'true'
     end
+
+    def review_app?
+      ENV['REVIEW_APP'].present? && ENV['REVIEW_APP'] == 'true'
+    end
   end
 
   def valid_user_domains_entry=(value)
