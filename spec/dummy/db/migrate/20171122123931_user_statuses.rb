@@ -16,10 +16,10 @@ class UserStatuses < ActiveRecord::Migration[5.0]
 
     add_reference :users, :user_status, foreign_key: true
 
-    User.where.not(approved: true).update_all(user_status_id: inactive.id)
-    User.where(approved: true).update_all(user_status_id: active.id)
+    # User.where.not(approved: true).update_all(user_status_id: inactive.id)
+    # User.where(approved: true).update_all(user_status_id: active.id)
 
     change_column :users, :user_status_id, :integer, null: false
-    remove_column :users, :approved
+    # remove_column :users, :approved
   end
 end

@@ -17,7 +17,7 @@ class ConvertToRoles < ActiveRecord::Migration[5.0]
     ActiveRecord::Base.connection.execute 'INSERT INTO security_roles_users (security_role_id, user_id, created_at, updated_at) SELECT security_group_id, id, updated_at, updated_at FROM users'
 
     remove_column :users, :security_group_id
-    remove_column :users, :admin
+    # remove_column :users, :admin
 
     # add more permissions for dummy app
     rename_column :security_roles, :create_parent, :create_division
