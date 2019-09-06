@@ -16,10 +16,11 @@ class RadicalTwilio
   end
 
   def self.twilio_phone_numbers
-    ENV['TWILIO_PHONE_NUMBERS'].split(',')
+    ENV['TWILIO_PHONE_NUMBERS']&.split(',')
   end
 
   def self.next_phone_number
+    return if twilio_phone_numbers.blank?
     return twilio_phone_numbers.first if twilio_phone_numbers.count == 1
 
     company = Company.main
