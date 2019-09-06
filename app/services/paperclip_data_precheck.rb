@@ -50,7 +50,8 @@ class PaperclipDataPrecheck
   end
 
   def email_faulty_attachments(message)
-    RadbearMailer.simple_message(recipient, "Faulty Attachments - #{model_class} (#{attachment_name})", message)
+    recipients = User.where(email: %w[caleb.tocco@radicalbear.com gary@radicalbear.com]).map(&:id)
+    RadbearMailer.simple_message(recipients, "Faulty Attachments - #{model_class} (#{attachment_name})", message)
                  .deliver_later
   end
 end
