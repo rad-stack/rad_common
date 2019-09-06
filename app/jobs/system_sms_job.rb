@@ -1,15 +1,22 @@
 class SystemSMSJob < ApplicationJob
   queue_as :default
 
-  def perform(message, recipients, recipients_without_phone, current_user)
+  def perform(message, recipients, current_user)
     errors = []
+    recipients_without_phone = []
     from = RadicalTwilio.next_phone_number.presence || RadicalTwilio.single_twilio_number
     recipients.each do |user_id|
       user = User.find(user_id)
+      user_number = user.respond_to?(:mobile_phone) ? user.mobile_phone : user.phone_number
+
+      if user_number.blank?
+        recipients_without_phone << user.id
+        next
+      end
 
       begin
         RadicalRetry.perform_request do
-          RadicalTwilio.send_sms(to: user.mobile_phone, message: message, from: from)
+          RadicalTwilio.send_sms(to: user_number, message: message, from: from)
         end
       rescue Twilio::REST::RequestError
         errors << user.id

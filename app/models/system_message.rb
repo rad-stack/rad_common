@@ -54,9 +54,7 @@ class SystemMessage < ApplicationRecord
         RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", message).deliver_later
       end
     else
-      with_number = preview? ? [user.id] : recipients.with_mobile_phone.map(&:id)
-      without_number = preview? ? [] : recipients.without_mobile_phone.map(&:id)
-      SystemSMSJob.perform_later(message, with_number, without_number, user)
+      SystemSMSJob.perform_later(message, recipients.map(&:id), user)
     end
   end
 
