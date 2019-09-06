@@ -30,7 +30,10 @@ class PaperclipDataPrecheck
     end
 
     Rails.logger.info("#{faulty_attachment_records.count} faulty #{model_class} attachments:")
-    faulty_attachment_records.each { |attachment| Rails.logger.info("Record: #{attachment[:record_id]}, error: #{attachment[:error]}") }
+    message = faulty_attachment_records.map { |attachment| Rails.logger.info("Record: #{attachment[:record_id]}, error: #{attachment[:error]}") }.join("\n")
+
+    Rails.logger.info(message)
+    email_faulty_attachments(message)
   end
 
   private
@@ -44,5 +47,10 @@ class PaperclipDataPrecheck
     rescue OpenURI::HTTPError, RadicallyIntermittentException => e
       return e.message
     end
+  end
+
+  def email_faulty_attachments(message)
+    RadbearMailer.simple_message(recipient, "Faulty Attachments - #{model_class} (#{attachment_name})", message)
+                 .deliver_later
   end
 end
