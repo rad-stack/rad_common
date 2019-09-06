@@ -38,6 +38,7 @@ RSpec.describe SystemMessage, type: :model do
       end
 
       context 'a user does not receive message because mobile mumber is not present' do
+        # apps that have mobile_phone configured as non-nullable will fail here, just remove the test
         let!(:other_user) { create :user, mobile_phone: nil }
         before { system_message.send! }
 
