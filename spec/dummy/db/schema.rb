@@ -51,20 +51,19 @@ ActiveRecord::Schema.define(version: 2019_08_29_220515) do
   end
 
   create_table "companies", id: :serial, force: :cascade do |t|
-    t.string   "name",                 :limit=>255, :null=>false
-    t.string   "phone_number",         :limit=>255, :null=>false
-    t.string   "website",              :limit=>255, :null=>false
-    t.string   "email",                :limit=>255, :null=>false
-    t.string   "address_1",            :limit=>255, :null=>false
-    t.string   "address_2",            :limit=>255
-    t.string   "city",                 :limit=>255, :null=>false
-    t.string   "state",                :limit=>255, :null=>false
-    t.string   "zipcode",              :limit=>255, :null=>false
-    t.datetime "created_at",           :null=>false
-    t.datetime "updated_at",           :null=>false
+    t.string   "name",                :limit=>255, :null=>false
+    t.string   "phone_number",        :limit=>255, :null=>false
+    t.string   "website",             :limit=>255, :null=>false
+    t.string   "email",               :limit=>255, :null=>false
+    t.string   "address_1",           :limit=>255, :null=>false
+    t.string   "address_2",           :limit=>255
+    t.string   "city",                :limit=>255, :null=>false
+    t.string   "state",               :limit=>255, :null=>false
+    t.string   "zipcode",             :limit=>255, :null=>false
+    t.datetime "created_at",          :null=>false
+    t.datetime "updated_at",          :null=>false
     t.datetime "validity_checked_at"
-    t.text     "valid_user_domains",   :default=>[], :array=>true
-    t.text     "twilio_phone_numbers", :default=>[], :array=>true
+    t.text     "valid_user_domains",  :default=>[], :array=>true
   end
 
   create_table "divisions", id: :serial, force: :cascade do |t|
