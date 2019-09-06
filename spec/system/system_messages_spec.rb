@@ -8,7 +8,10 @@ RSpec.describe 'SystemMessages', type: :system do
 
   describe 'new' do
     context 'twilio disabled' do
-      before { visit 'rad_common/system_messages/new' }
+      before do
+        allow(RadicalTwilio).to receive(:twilio_enabled?).and_return false
+        visit 'rad_common/system_messages/new'
+      end
 
       it 'sends' do
         expect(page).to have_content 'Send System Message'
