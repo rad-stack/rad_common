@@ -12,10 +12,16 @@ class RadicalTwilio
   end
 
   def self.twilio_enabled?
-    defined?(Twilio).present? && Company.has_attribute?(:twilio_phone_numbers) && client.present?
+    ENV['TWILIO_ACCOUNT_SID'].present? && ENV['TWILIO_AUTH_TOKEN'].present?
+  end
+
+  def self.single_twilio_number
+    ENV['TWILIO_PHONE_NUMBER']
   end
 
   def self.next_phone_number
+    return unless Company.has_attribute?(:twilio_phone_numbers)
+
     company = Company.main
     if Rails.env.development?
       ENV['TWILIO_TEST_FROM_PHONE_NUMBER']
