@@ -8,15 +8,12 @@ module RadCompany
 
     scope :by_id, -> { order(:id) }
 
-    schema_validations except: %i[twilio_phone_numbers valid_user_domains]
-
-    before_validation :sanitize_twilio_numbers
+    schema_validations except: %i[valid_user_domains]
 
     validates_with EmailAddressValidator, fields: %i[email]
     validates_with PhoneNumberValidator
     validate :validate_only_one, on: :create
     validate :validate_domains
-    validates :twilio_phone_numbers, presence: true, if: -> { RadicalTwilio.twilio_enabled? && Company.has_attribute?(:twilio_phone_numbers) }
 
     audited
   end
@@ -77,12 +74,6 @@ module RadCompany
     end
 
     [usage_headers, usage_items, usage_data]
-  end
-
-  def sanitize_twilio_numbers
-    return unless RadicalTwilio.twilio_enabled? && Company.has_attribute?(:twilio_phone_numbers)
-
-    self.twilio_phone_numbers = twilio_phone_numbers.reject(&:blank?) if twilio_phone_numbers_changed? && twilio_phone_numbers.any?
   end
 
   private

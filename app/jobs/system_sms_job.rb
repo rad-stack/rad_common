@@ -4,7 +4,7 @@ class SystemSMSJob < ApplicationJob
   def perform(message, recipients, current_user)
     errors = []
     recipients_without_phone = []
-    from = RadicalTwilio.next_phone_number.presence || RadicalTwilio.single_twilio_number
+    from = RadicalTwilio.next_phone_number
     recipients.each do |user_id|
       user = User.find(user_id)
       user_number = user.respond_to?(:mobile_phone) ? user.mobile_phone : user.phone_number

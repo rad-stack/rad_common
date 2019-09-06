@@ -12,27 +12,27 @@ class RadicalTwilio
   end
 
   def self.twilio_enabled?
-    ENV['TWILIO_ACCOUNT_SID'].present? && ENV['TWILIO_AUTH_TOKEN'].present?
+    ENV['TWILIO_ACCOUNT_SID'].present? && ENV['TWILIO_AUTH_TOKEN'].present? && ENV['TWILIO_PHONE_NUMBERS'].present?
   end
 
-  def self.single_twilio_number
-    ENV['TWILIO_PHONE_NUMBER']
+  def self.twilio_phone_numbers
+    ENV['TWILIO_PHONE_NUMBERS'].split(',')
   end
 
   def self.next_phone_number
-    return unless Company.has_attribute?(:twilio_phone_numbers)
+    return twilio_phone_numbers.first if twilio_phone_numbers.count == 1
 
     company = Company.main
     if Rails.env.development?
       ENV['TWILIO_TEST_FROM_PHONE_NUMBER']
     else
-      num_of_nums = company.twilio_phone_numbers.length
+      num_of_nums = twilio_phone_numbers.length
 
       return nil if num_of_nums.zero?
 
-      return company.twilio_phone_numbers[0] if num_of_nums == 1
+      return twilio_phone_numbers[0] if num_of_nums == 1
 
-      next_number = company.twilio_phone_numbers[company.current_phone]
+      next_number = twilio_phone_numbers[company.current_phone]
 
       if company.current_phone < (num_of_nums - 1)
         company.update(current_phone: (company.current_phone + 1))
