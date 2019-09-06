@@ -30,7 +30,7 @@ class PaperclipDataPrecheck
     end
 
     Rails.logger.info("#{faulty_attachment_records.count} faulty #{model_class} attachments:")
-    message = faulty_attachment_records.map { |attachment| Rails.logger.info("Record: #{attachment[:record_id]}, error: #{attachment[:error]}") }.join("\n")
+    message = faulty_attachment_records.map { |attachment| "Record: #{attachment[:record_id]}, error: #{attachment[:error]}" }.join("\n")
 
     Rails.logger.info(message)
     email_faulty_attachments(message)
