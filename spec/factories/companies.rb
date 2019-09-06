@@ -9,6 +9,5 @@ FactoryBot.define do
     website { Faker::Internet.url }
     email { Faker::Internet.email }
     valid_user_domains { ['example.com'] }
-    twilio_phone_numbers { ['(555) 555-5555'] }
   end
 end

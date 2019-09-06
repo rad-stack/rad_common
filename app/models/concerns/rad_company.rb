@@ -80,7 +80,7 @@ module RadCompany
   end
 
   def sanitize_twilio_numbers
-    return unless RadicalTwilio.twilio_enabled?
+    return unless RadicalTwilio.twilio_enabled? && RadicalTwilio.next_phone_number.present?
 
     self.twilio_phone_numbers = twilio_phone_numbers.reject(&:blank?) if twilio_phone_numbers_changed? && twilio_phone_numbers.any?
   end
