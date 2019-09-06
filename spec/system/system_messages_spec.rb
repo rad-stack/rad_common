@@ -58,7 +58,7 @@ RSpec.describe 'SystemMessages', type: :system do
     end
 
     it 'shows the message type' do
-      expect(page).to have_content(system_message.message_type)
+      expect(page).to have_content(system_message.message_type.capitalize)
     end
   end
 end
