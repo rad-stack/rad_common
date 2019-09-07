@@ -51,7 +51,7 @@ namespace :rad_common do
   end
 
   task paperclip_data_precheck: :environment do |_t, args|
-    session = RakeSession.new(12.hours, 10)
+    session = RakeSession.new(48.hours, 10)
     Timeout.timeout(session.time_limit) do
       args.extras.each do |model_and_attachments|
         model_and_attachments_array = model_and_attachments.split(' ')
