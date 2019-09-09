@@ -8,7 +8,7 @@ module RadCompany
 
     scope :by_id, -> { order(:id) }
 
-    schema_validations except: :valid_user_domains
+    schema_validations except: %i[valid_user_domains]
 
     validates_with EmailAddressValidator, fields: %i[email]
     validates_with PhoneNumberValidator
@@ -25,6 +25,10 @@ module RadCompany
 
     def staging?
       ENV['STAGING'] == 'true'
+    end
+
+    def review_app?
+      ENV['REVIEW_APP'].present? && ENV['REVIEW_APP'] == 'true'
     end
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_10_122656) do
+ActiveRecord::Schema.define(version: 2019_08_29_220515) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -128,11 +128,12 @@ ActiveRecord::Schema.define(version: 2019_08_10_122656) do
   end
 
   create_table "system_messages", force: :cascade do |t|
-    t.text     "message",    :null=>false
-    t.integer  "user_id",    :null=>false, :index=>{:name=>"index_system_messages_on_user_id"}
-    t.integer  "send_to",    :default=>0, :null=>false
-    t.datetime "created_at", :null=>false
-    t.datetime "updated_at", :null=>false
+    t.text     "message",      :null=>false
+    t.integer  "user_id",      :null=>false, :index=>{:name=>"index_system_messages_on_user_id"}
+    t.integer  "send_to",      :default=>0, :null=>false
+    t.datetime "created_at",   :null=>false
+    t.datetime "updated_at",   :null=>false
+    t.integer  "message_type", :null=>false
   end
 
   create_table "user_statuses", id: :serial, force: :cascade do |t|
