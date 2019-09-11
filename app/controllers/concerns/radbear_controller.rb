@@ -4,6 +4,7 @@ module RadbearController
   included do
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     before_action :set_raven_user_context
+    around_action :user_time_zone, if: :current_user
   end
 
   def validate_active_storage_attachment(record, attribute, file, valid_types, no_redirect = false, max_file_size = nil)
@@ -74,5 +75,9 @@ module RadbearController
       return unless current_user
 
       Raven.context.user = { user_id: current_user.id }
+    end
+
+    def user_time_zone(&block)
+      Time.use_zone(current_user.timezone, &block)
     end
 end

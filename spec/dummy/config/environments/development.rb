@@ -71,6 +71,4 @@ Rails.application.configure do
       port: 1025,
       domain: 'example.com'
   }
-
-  config.time_zone = 'Eastern Time (US & Canada)'
 end

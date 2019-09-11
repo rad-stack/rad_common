@@ -15,6 +15,7 @@ module RadbearUser
     validate :validate_email_address
     validate :validate_super_admin
 
+    before_validation :set_timezone, on: :create
     after_save :notify_user_approved
   end
 
@@ -112,6 +113,10 @@ module RadbearUser
 
       errors.add(:super_admin, 'can only be enabled for an admin') unless permission?(:admin)
       errors.add(:super_admin, 'is not applicable for external users') if external?
+    end
+
+    def set_timezone
+      self.timezone = Company.main.timezone if new_record?
     end
 
     def notify_user_approved
