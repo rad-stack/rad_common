@@ -1,5 +1,14 @@
 module RadCommon
   module CompaniesHelper
+    def company_show_data(company)
+      [{ label: 'Address', value: company.full_address },
+       { label: 'Phone Number', value: (link_to company.phone_number, "tel:#{company.phone_number}") },
+       { label: 'Website', value: (link_to company.website, company.website, target: :_blank) },
+       { label: 'Email', value: (mail_to company.email) },
+       :timezone,
+       :validity_checked_at]
+    end
+
     def company_actions
       return unless Rails.application.config.global_validity_enable_interactive
       return unless current_user.can_global_validate?(@company)

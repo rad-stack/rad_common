@@ -9,5 +9,6 @@ FactoryBot.define do
     website { Faker::Internet.url }
     email { Faker::Internet.email }
     valid_user_domains { ['example.com'] }
+    timezone { 'Eastern Time (US & Canada)' }
   end
 end

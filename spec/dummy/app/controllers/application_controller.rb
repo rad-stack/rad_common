@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
     end
 
     def configure_devise_permitted_parameters
-      additional_params = %i[first_name last_name authy_enabled mobile_phone avatar]
+      additional_params = %i[first_name last_name authy_enabled mobile_phone avatar timezone]
       devise_parameter_sanitizer.permit(:sign_up, keys: additional_params)
       devise_parameter_sanitizer.permit(:account_update, keys: additional_params)
 

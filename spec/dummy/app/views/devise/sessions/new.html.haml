@@ -1,5 +1,5 @@
 .card
-  = render 'layouts/card_header', action_name: 'custom', title: "Sign In", icon: "fa-sign-in"
+  = render 'layouts/card_header', action_name: 'custom', title: 'Sign In', icon: 'fa-sign-in'
   .card-body
     = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
       .form-inputs
@@ -7,5 +7,5 @@
         = f.input :password, required: false
         = f.input :remember_me, as: :boolean if devise_mapping.rememberable?
       .form-actions
-        = f.button :submit, "Sign In", class: "btn btn-primary"
-    = render "devise/shared/links"
+        = f.button :submit, 'Sign In', class: 'btn btn-primary'
+    = render 'devise/shared/links'
