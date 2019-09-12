@@ -116,7 +116,7 @@ module RadbearUser
     end
 
     def set_timezone
-      self.timezone = Company.main.timezone if new_record?
+      self.timezone = Company.main.timezone if new_record? && timezone.blank?
     end
 
     def notify_user_approved
