@@ -46,7 +46,7 @@ describe 'Invitations', type: :system do
             fill_in 'Email', with: external_email
             fill_in 'First name', with: first_name
             fill_in 'Last name', with: last_name
-            check 'External user?'
+            check 'Client user?'
             click_button 'Send'
             expect(page).to have_content "We invited '#{first_name} #{last_name}'"
           end

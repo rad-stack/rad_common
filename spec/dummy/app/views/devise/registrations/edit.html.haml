@@ -16,7 +16,8 @@
           .col-lg-6= f.input :last_name, required: true
         .row
           .col-lg-6= f.input :mobile_phone
-          .col-lg-3= f.input :authy_enabled, label: 'Enable Two-Factor Authentication?'
+          -if Rails.application.config.authy_user_opt_in
+            .col-lg-3= f.input :authy_enabled, label: 'Enable Two-Factor Authentication?'
           -if Rails.application.config.use_avatar
             .col-lg-3= f.input :avatar
         .row
