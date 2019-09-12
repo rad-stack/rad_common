@@ -183,7 +183,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
     context 'value datetime' do
       it 'returns formatted datetime' do
-        datetime = Time.zone.now
+        datetime = Time.current
         expect(auto_complete.format_column_value(datetime)).to eq(format_datetime(datetime))
       end
     end

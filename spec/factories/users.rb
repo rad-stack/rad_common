@@ -6,7 +6,7 @@ FactoryBot.define do
     sequence(:email) { |n| "example#{n}@example.com" }
     password { 'password' }
     password_confirmation { 'password' }
-    confirmed_at { Time.zone.now }
+    confirmed_at { Time.current }
     association :user_status, factory: %i[user_status active]
     do_not_notify_approved { true }
     security_roles { [create(:security_role)] }

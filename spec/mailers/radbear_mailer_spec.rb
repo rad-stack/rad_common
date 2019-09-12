@@ -67,8 +67,8 @@ describe RadbearMailer, type: :mailer do
   describe '#email_report' do
     let(:csv) { CSV.generate { '' } }
     let(:report_name) { 'Sample Report' }
-    let(:start_date) { Time.zone.now }
-    let(:end_date) { Time.zone.now }
+    let(:start_date) { Time.current }
+    let(:end_date) { Time.current }
     let(:options) { { start_date: start_date, end_date: end_date } }
 
     before { RadbearMailer.email_report(user, csv, report_name, options).deliver_now }

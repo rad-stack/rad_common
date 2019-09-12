@@ -25,7 +25,7 @@ module FirebaseAction
         end
       end
 
-      data['timestamp'] = Time.zone.now.to_s
+      data['timestamp'] = Time.current.to_s
 
       app = FirebaseApp.new
 

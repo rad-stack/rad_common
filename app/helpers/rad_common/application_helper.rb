@@ -40,6 +40,7 @@ module RadCommon
 
     def format_datetime(value, options = {})
       return nil if value.blank?
+
       format_string = '%-m/%-d/%Y %l:%M'
       format_string += ':%S' if options[:include_seconds]
       format_string += ' %p'

@@ -47,11 +47,11 @@ module RadCompany
   end
 
   def global_validity_ran!
-    update! validity_checked_at: Time.zone.now
+    update! validity_checked_at: Time.current
   end
 
   def usage_stats
-    today = Time.zone.now
+    today = Time.current
 
     usage_headers = (0..5).to_a.reverse.map do |item|
       { start: today.advance(months: -item).beginning_of_month.beginning_of_day,
