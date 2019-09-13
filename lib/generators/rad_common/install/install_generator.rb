@@ -58,6 +58,7 @@ module RadCommon
         template '../../../../../spec/system/invitations_spec.rb', 'spec/system/invitations_spec.rb'
         template '../../../../../spec/requests/notification_settings_spec.rb', 'spec/requests/notification_settings_spec.rb'
         template '../../../../../spec/system/notification_settings_spec.rb', 'spec/system/notification_settings_spec.rb'
+        template '../../../../../spec/system/searches_spec.rb', 'spec/system/searches_spec.rb'
 
         # factories
         template '../../../../../spec/factories/companies.rb', 'spec/factories/companies.rb'
