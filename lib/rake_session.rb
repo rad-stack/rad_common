@@ -12,13 +12,13 @@ class RakeSession
   def reset_status
     raise "please set time_limit variable before running" if !self.time_limit
 
-    @start_time = Time.now
+    @start_time = Time.current
     @counter = 0
   end
 
   def check_status(label, count)
     @counter = @counter + 1
-    now = Time.now
+    now = Time.current
 
     if @counter == 1 || (@counter % self.status_frequency == 0)
       elapsed = distance_of_time_in_words(@start_time, now, include_seconds: true)

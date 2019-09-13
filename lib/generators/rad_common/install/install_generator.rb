@@ -172,7 +172,7 @@ module RadCommon
       def self.next_migration_number(path)
         next_migration_number = current_migration_number(path) + 1
         if ActiveRecord::Base.timestamped_migrations
-          [Time.now.utc.strftime('%Y%m%d%H%M%S'), '%.14d' % next_migration_number].max
+          [Time.current.utc.strftime('%Y%m%d%H%M%S'), '%.14d' % next_migration_number].max
         else
           '%.3d' % next_migration_number
         end

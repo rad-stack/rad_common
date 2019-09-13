@@ -6,9 +6,9 @@ class HerokuCommands
 
     def backup_dump_file(app_name = "")
       if app_name.blank?
-        "#{dump_folder}/#{Date.today}.backup"
+        "#{dump_folder}/#{Time.zone.today}.backup"
       else
-        "#{dump_folder}/#{app_name}_#{Date.today}.backup"
+        "#{dump_folder}/#{app_name}_#{Time.zone.today}.backup"
       end
     end
 
