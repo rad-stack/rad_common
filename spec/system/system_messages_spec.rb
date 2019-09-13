@@ -45,7 +45,7 @@ RSpec.describe 'SystemMessages', type: :system do
         it 'shows and hides trix editor based on message type' do
           expect(find('.email-message', visible: true))
           expect(find('.sms-message', visible: false))
-          select 'Sms', from: 'Message type'
+          select 'SMS', from: 'Message type'
           expect(find('.email-message', visible: false))
           expect(find('.sms-message', visible: true))
         end
