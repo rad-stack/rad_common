@@ -61,6 +61,28 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 
+  Capybara.register_driver :headless_chrome do |app|
+    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+        chromeOptions: { args: %w[headless disable-gpu], w3c: false }
+    )
+
+    Capybara::Selenium::Driver.new app,
+                                   browser: :chrome,
+                                   desired_capabilities: capabilities
+  end
+
+  Capybara.register_driver :chrome do |app|
+    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+        chromeOptions: { args: %w[disable-gpu], w3c: false }
+    )
+
+    Capybara::Selenium::Driver.new app,
+                                   browser: :chrome,
+                                   desired_capabilities: capabilities
+  end
+
+  Capybara.javascript_driver = ENV['show_browser'] ? :chrome : :headless_chrome
+
   config.before do
     allow(Company).to receive(:main).and_return(create(:company))
 
@@ -82,25 +104,6 @@ RSpec.configure do |config|
   end
 
   config.before(:example, type: :system, js: true) do
-    driven_by :selenium_chrome_headless
+    driven_by :headless_chrome
   end
 end
-
-Capybara.register_driver :headless_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: {
-      args: %w[headless disable-popup-blocking disable-gpu window-size=1400,900],
-      w3c: false
-    }
-  )
-
-  Capybara::Selenium::Driver.new app, browser: :chrome, desired_capabilities: capabilities
-end
-
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
-end
-
-chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
-
-Capybara.javascript_driver = chrome_driver
