@@ -6,8 +6,12 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
+        # procfile
+        template '../../../../../Procfile', 'Procfile'
+
         # initializers
         template '../../../../../spec/dummy/config/initializers/rad_common.rb', 'config/initializers/rad_common.rb'
+        template '../../../../../spec/dummy/config/initializers/sidekiq.rb', 'config/initializers/sidekiq.rb'
 
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml', 'config/locales/devise.authy.en.yml'
@@ -134,6 +138,10 @@ module RadCommon
 
   resources :companies, only: %i[show edit update] do
     get :audit, on: :member
+  end
+
+  authenticate :user, ->(u) { u.super_admin } do
+    mount Sidekiq::Web => '/sidekiq'
   end
 
   root to: 'pages#home'

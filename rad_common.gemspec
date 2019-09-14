@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'schema_validations'
   s.add_dependency 'sentry-raven'
   s.add_dependency 'sidekiq', '~> 5.2.2'
+  s.add_dependency 'sidekiq-failures'
   s.add_dependency 'simple_form'
   s.add_dependency 'trix'
   s.add_dependency 'bootstrap', '~> 4.3.1'

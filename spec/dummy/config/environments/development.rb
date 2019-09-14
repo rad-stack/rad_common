@@ -71,4 +71,6 @@ Rails.application.configure do
       port: 1025,
       domain: 'example.com'
   }
+
+  config.active_job.queue_adapter = :inline
 end
