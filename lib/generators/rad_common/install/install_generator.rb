@@ -7,7 +7,7 @@ module RadCommon
 
       def create_initializer_file
         # procfile
-        template '../../../../../Procfile', 'Procfile'
+        template '../../../../Procfile', 'Procfile'
 
         # initializers
         template '../../../../../spec/dummy/config/initializers/rad_common.rb', 'config/initializers/rad_common.rb'
