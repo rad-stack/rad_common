@@ -6,6 +6,14 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
+        search_and_replace 'Time.zone.today', 'Date.current'
+        search_and_replace 'DateTime.now', 'Time.current'
+        search_and_replace 'Time.now', 'Time.current'
+        search_and_replace 'Time.zone.now', 'Time.current'
+        search_and_replace 'Date.today', 'Date.current'
+        search_and_replace 'Date.tomorrow', 'Time.zone.tomorrow'
+        search_and_replace 'Date.yesterday', 'Time.zone.yesterday'
+
         # procfile
         template '../../../../Procfile', 'Procfile'
 
@@ -197,6 +205,9 @@ module RadCommon
           end
         end
 
+        def search_and_replace(search_string, replace_string)
+          system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed -i '' -e 's/#{search_string}/#{replace_string}/g'"
+        end
     end
   end
 end
