@@ -19,13 +19,6 @@ FactoryBot.define do
       security_roles { [create(:security_role, :admin)] }
     end
 
-    factory :super_admin do |f|
-      f.after(:create) do |user|
-        user.update! security_roles: [create(:security_role, :admin)]
-        user.update!(super_admin: true)
-      end
-    end
-
     factory :pending do
       association :user_status, factory: %i[user_status pending]
     end

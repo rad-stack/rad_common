@@ -28,24 +28,6 @@ describe User, type: :model do
   end
 
   describe 'validate' do
-    describe 'super admin' do
-      it 'requires admin role' do
-        user.super_admin = true
-        expect(user).not_to be_valid
-        expect(user.errors.full_messages.to_s).to include 'Super admin can only be enabled for an admin'
-
-        user.security_roles = [admin_role]
-        expect(user).to be_valid
-
-        user.super_admin = false
-        user.save!
-
-        user.super_admin = true
-        expect(user).to be_valid
-        user.save!
-      end
-    end
-
     it 'rejects unauthorized email addresses' do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo. user@foo.com user@foo.com]
 
@@ -73,12 +55,6 @@ describe User, type: :model do
         user = User.new(attributes.merge(email: address))
         expect(user).to be_valid
       end
-    end
-
-    it "doesn't allow super admin on external user" do
-      user = User.new(attributes.merge(external: true, super_admin: true))
-      expect(user).not_to be_valid
-      expect(user.errors.full_messages.to_s).to include 'is not applicable for external users'
     end
   end
 
