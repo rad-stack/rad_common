@@ -12,7 +12,7 @@ class UsersController < ApplicationController
                     reset_authy: 'update'
 
   def index
-    @pending = User.authorized(current_user).pending.by_name.page(params[:pending_page]).per(3)
+    @pending = User.authorized(current_user).pending.recent_first.page(params[:pending_page]).per(3)
 
     @status = if params[:status].present?
                 if params[:status] == 'All'
