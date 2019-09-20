@@ -15,12 +15,13 @@
             -@user_statuses.each do |status|
               %li= link_to status.name, users_path(status: status.id, external: params[:external]), class: 'dropdown-item'
             %li= link_to 'All Users', users_path(status: 'All', external: params[:external]), class: 'dropdown-item'
-        .btn-group
-          %a{class: "btn dropdown-toggle #{params[:external].present? ? 'btn-warning' : 'btn-success'}", 'data-toggle' => 'dropdown', href: '#'}
-            - user_label = params[:external] == 'true' ? 'Client' : 'Internal'
-            = params[:external].blank? ? 'All User Types' : user_label + ' Users'
-          %ul.dropdown-menu
-            %li= link_to 'All Users', users_path(status: params[:status]), class: 'dropdown-item'
-            %li= link_to 'Internal Users', users_path(external: false, status: params[:status]), class: 'dropdown-item'
-            %li= link_to 'Client Users', users_path(external: true, status: params[:status]), class: 'dropdown-item'
+        -if Rails.application.config.external_users
+          .btn-group
+            %a{class: "btn dropdown-toggle #{params[:external].present? ? 'btn-warning' : 'btn-success'}", 'data-toggle' => 'dropdown', href: '#'}
+              - user_label = params[:external] == 'true' ? 'Client' : 'Internal'
+              = params[:external].blank? ? 'All User Types' : user_label + ' Users'
+            %ul.dropdown-menu
+              %li= link_to 'All Users', users_path(status: params[:status]), class: 'dropdown-item'
+              %li= link_to 'Internal Users', users_path(external: false, status: params[:status]), class: 'dropdown-item'
+              %li= link_to 'Client Users', users_path(external: true, status: params[:status]), class: 'dropdown-item'
     = render 'users/index', users: @users
