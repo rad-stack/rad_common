@@ -167,7 +167,6 @@ ActiveRecord::Schema.define(version: 2019_09_19_163914) do
     t.string   "mobile_phone",            :limit=>255
     t.string   "timezone",                :limit=>255, :null=>false
     t.string   "global_search_default",   :limit=>255
-    t.boolean  "super_admin",             :default=>false, :null=>false
     t.integer  "user_status_id",          :null=>false, :index=>{:name=>"index_users_on_user_status_id"}
     t.string   "authy_id",                :index=>{:name=>"index_users_on_authy_id"}
     t.datetime "last_sign_in_with_authy"
