@@ -12,7 +12,7 @@ class UsersController < ApplicationController
                     reset_authy: 'update'
 
   def index
-    @pending = User.pending.by_name
+    @pending = User.authorized(current_user).pending.recent_first.page(params[:pending_page]).per(3)
 
     @status = if params[:status].present?
                 if params[:status] == 'All'
@@ -24,7 +24,7 @@ class UsersController < ApplicationController
                 UserStatus.default_active_status
               end
 
-    @users = User.recent_first
+    @users = User.authorized(current_user).recent_first
     @users = @users.where(user_status: @status) if @status
     @users = @users.where(external: params[:external]) if params[:external].present?
 
@@ -55,7 +55,9 @@ class UsersController < ApplicationController
 
     @user.assign_attributes(permitted_params)
     @user.approved_by = current_user
-    @user.security_roles = resolve_roles(params[:user][:security_roles])
+    @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
+
+    authorize_action_for @user
 
     if @user.save
       flash[:success] = 'User updated.'
@@ -67,17 +69,24 @@ class UsersController < ApplicationController
   end
 
   def destroy
+    destroyed = false
+
     if @user == current_user
       flash[:error] = "Can't delete yourself."
     elsif @user.audits_created(nil).any?
       flash[:error] = "User has audit history, can't delete"
     elsif @user.destroy
       flash[:success] = 'User deleted.'
+      destroyed = true
     else
       flash[:error] = @user.errors.full_messages.join(', ')
     end
 
-    redirect_to users_path
+    if destroyed && (URI(request.referer).path == user_path(@user)) || (URI(request.referer).path == edit_user_path(@user))
+      redirect_to users_path
+    else
+      redirect_back(fallback_location: users_path)
+    end
   end
 
   def resend_invitation
@@ -87,16 +96,12 @@ class UsersController < ApplicationController
   end
 
   def confirm
-    authorize_action_for @user
-
     @user.confirm
     flash[:success] = 'User was successfully confirmed.'
     redirect_to @user
   end
 
   def reset_authy
-    authorize_action_for @user
-
     @user.reset_authy!
     flash[:success] = 'User was successfully reset.'
     redirect_to @user
@@ -106,15 +111,7 @@ class UsersController < ApplicationController
 
     def set_user
       @user = User.find(params[:id])
-    end
-
-    def resolve_roles(role_ids)
-      if role_ids
-        ids = role_ids.select { |id| id != '' }.map { |id| id.to_i }
-        SecurityRole.where(id: ids)
-      else
-        []
-      end
+      authorize_action_for @user
     end
 
     def permitted_params

@@ -1,11 +1,12 @@
 -show_roles = true if local_assigns[:show_roles].nil?
 -show_actions = true if local_assigns[:show_actions].nil?
 -show_actions = show_actions && (current_user.can_update?(User) || current_user.can_delete?(User))
+-page_param_name = :page if local_assigns[:page_param_name].nil?
 
 .row
   .col-lg-12
     -if users.respond_to?(:current_page)
-      = paginate users, theme: 'twitter-bootstrap-4'
+      = paginate users, param_name: page_param_name, theme: 'twitter-bootstrap-4'
 
     %table.table.table-bordered
       %tr
@@ -45,4 +46,4 @@
                 = link_to 'Resend Invitation', resend_invitation_user_path(user), method: :put, class: 'btn btn-sm btn-success btn-block', data: { confirm: 'Are you sure?' }
 
     -if users.respond_to?(:current_page)
-      = paginate users, theme: 'twitter-bootstrap-4'
+      = paginate users, param_name: page_param_name, theme: 'twitter-bootstrap-4'

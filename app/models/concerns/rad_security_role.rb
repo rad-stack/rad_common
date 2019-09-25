@@ -31,6 +31,15 @@ module RadSecurityRole
   end
 
   module ClassMethods
+    def resolve_roles(role_ids)
+      if role_ids
+        ids = role_ids.select { |id| id != '' }.map { |id| id.to_i }
+        SecurityRole.where(id: ids)
+      else
+        []
+      end
+    end
+
     def admin_role
       role = SecurityRole.find_by(admin: true)
       raise 'missing admin security role' if role.blank?
