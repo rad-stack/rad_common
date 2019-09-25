@@ -11,7 +11,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   authority_actions audit: 'audit'
 
   def index
-    @<%= plural_table_name %> = <%= orm_class.sorted(class_name) %>.page(params[:page])
+    @<%= plural_table_name %> = <%= orm_class.by_name(class_name) %>.page(params[:page])
   end
 
   def show; end

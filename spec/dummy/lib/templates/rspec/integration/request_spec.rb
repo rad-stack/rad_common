@@ -5,17 +5,10 @@ RSpec.describe '<%= class_name.pluralize %>', type: :request do
   let(:user) { create :admin }
   let(:<%= file_name %>) { create :<%= file_name %> }
 
-  before do
-    sign_in user
-  end
+  before { login_as(user, scope: :user) }
 
-  let(:valid_attributes) do
-    { foo: 'bar', bar: 'foo' }
-  end
-
-  let(:invalid_attributes) do
-    { foo: nil }
-  end
+  let(:valid_attributes) { { foo: 'bar', bar: 'foo' } }
+  let(:invalid_attributes) { { foo: nil } }
 
   describe 'POST create' do
     describe 'with valid params' do
@@ -41,9 +34,7 @@ RSpec.describe '<%= class_name.pluralize %>', type: :request do
 
   describe 'PUT update' do
     describe 'with valid params' do
-      let(:new_attributes) do
-        { foo: 'bar' }
-      end
+      let(:new_attributes) { { foo: 'bar' } }
 
       it 'updates the requested<%= file_name.singularize %>' do
         put "/<%= table_name %>/#{<%= file_name %>.to_param}", params: {<%= file_name.singularize %>: new_attributes }
