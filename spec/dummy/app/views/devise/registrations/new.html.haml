@@ -3,11 +3,10 @@
   .card-body
     = simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
       = f.error_notification
-      = base_errors(f)
       .form-inputs
         .row
           .col-lg-4
-            = f.input :email, required: true, autofocus: true
+            = f.input :email, required: true, autofocus: true, input_html: { autocomplete: 'email' }
           .col-lg-4
             = f.input :first_name, required: true
           .col-lg-4
@@ -15,9 +14,11 @@
         .row
           .col-lg-4
           .col-lg-4
-            = f.input :password, required: true
+            = f.input :password, required: true,
+                                 hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                                 input_html: { autocomplete: 'new-password' }
           .col-lg-4
-            = f.input :password_confirmation, required: true
+            = f.input :password_confirmation, required: true, input_html: { autocomplete: 'new-password' }
       .form-actions
         = f.button :submit, 'Sign Up', class: 'btn btn-primary'
     = render 'devise/shared/links'
