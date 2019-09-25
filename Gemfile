@@ -18,7 +18,6 @@ gem 'trix', git: 'https://github.com/markmercedes/trix.git', branch: 'master'
 
 group :test do
   gem 'capybara-selenium'
-  gem 'launchy'
   gem 'rails-controller-testing', '~> 1.0.2'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
