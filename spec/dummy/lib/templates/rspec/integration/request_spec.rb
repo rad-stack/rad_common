@@ -34,9 +34,7 @@ RSpec.describe '<%= class_name.pluralize %>', type: :request do
 
   describe 'PUT update' do
     describe 'with valid params' do
-      let(:new_attributes) do
-        { foo: 'bar' }
-      end
+      let(:new_attributes) { { foo: 'bar' } }
 
       it 'updates the requested<%= file_name.singularize %>' do
         put "/<%= table_name %>/#{ <%= file_name %>.to_param}", params: {<%= file_name.singularize %>: new_attributes }
