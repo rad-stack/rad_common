@@ -4,7 +4,6 @@ module RadCommon
       items = %i[email mobile_phone user_status timezone sign_in_count invitation_accepted_at invited_by]
       items.push(:authy_id) if ENV['AUTHY_API_KEY'].present?
       items += %i[current_sign_in_ip current_sign_in_at confirmed_at]
-      items.push(:super_admin) if user.internal?
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
       items
     end

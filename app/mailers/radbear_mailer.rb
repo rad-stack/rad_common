@@ -1,7 +1,6 @@
 class RadbearMailer < ActionMailer::Base
   include ActionView::Helpers::TextHelper
   include RadCommon::ApplicationHelper
-  helper RadCommon::SecuredLinkHelper
 
   layout 'radbear_mailer'
   before_action :set_defaults

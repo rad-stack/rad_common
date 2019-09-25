@@ -24,7 +24,7 @@ describe Division, type: :model do
     end
 
     describe '#firebase_cleanup' do
-      let!(:user) { create :super_admin }
+      let!(:user) { create :admin }
 
       before { Division.firebase_cleanup nil, 'foo', '/foo', {} }
 

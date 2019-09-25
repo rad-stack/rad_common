@@ -8,11 +8,11 @@ module RadCommon
       end
 
       email = emails.first
-      super_admins = User.super_admins
+      admins = User.admins
 
       subject = 'Invalid Email'
       message = "Someone tried to send an email to #{email} and the email was not properly sent."
-      recipients = super_admins.map(&:email)
+      recipients = admins.map(&:email)
 
       recipients.each do |recipient|
         RadbearMailer.simple_message(recipient, subject, message).deliver_later
