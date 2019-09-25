@@ -1,28 +1,29 @@
 .card
   = render 'layouts/card_header', action_name: 'custom', title: t('devise.invitations.new.header'), icon: 'fa-plus'
   .card-body
-    = simple_form_for resource, as: resource_name, url: invitation_path(resource_name), html: {method: :post} do |f|
-      = render partial: 'devise/shared/error_messages', resource: resource
-      .row
-        .col-lg-4
-          = f.input :first_name, label: 'First name', required: true
-        .col-lg-8
-          = f.input :last_name, label: 'Last name', required: true
-      .row
-        .col-lg-4
-          - resource.class.invite_key_fields.each do |field|
-            = f.input field, required: true
-        .col-lg-4
-          %span= "* Valid Domains for Internal Users: #{Company.main.valid_user_domains.join(', ')}"
-          %p
-            You can add more valid domains in
-            = link_to 'Company Settings', edit_company_path(Company.main)
-            tab.
-        -if Rails.application.config.external_users
-          .col-lg-4
-            = f.input :external, tooltip: 'Invite your clients to access the client portal'
-      -unless Rails.application.config.authy_user_opt_in
+    = simple_form_for(resource, as: resource_name, url: invitation_path(resource_name), html: { method: :post }) do |f|
+      = f.error_notification
+      .form-inputs
         .row
-          .col-lg-4= f.input :mobile_phone
-
-      = f.submit t('devise.invitations.new.submit_button'), class: 'btn btn-primary'
+          .col-lg-4
+            = f.input :first_name, label: 'First name', required: true
+          .col-lg-8
+            = f.input :last_name, label: 'Last name', required: true
+        .row
+          .col-lg-4
+            - resource.class.invite_key_fields.each do |field|
+              = f.input field, required: true
+          .col-lg-4
+            %span= "* Valid Domains for Internal Users: #{Company.main.valid_user_domains.join(', ')}"
+            %p
+              You can add more valid domains in
+              = link_to 'Company Settings', edit_company_path(Company.main)
+              tab.
+          -if Rails.application.config.external_users
+            .col-lg-4
+              = f.input :external, tooltip: 'Invite your clients to access the client portal'
+        -unless Rails.application.config.authy_user_opt_in
+          .row
+            .col-lg-4= f.input :mobile_phone
+      .form-actions
+        = f.button :submit, t("devise.invitations.new.submit_button"), class: 'btn btn-primary'
