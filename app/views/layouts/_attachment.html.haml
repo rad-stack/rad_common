@@ -8,4 +8,4 @@
     = link_to(attachment_label, link, target: target)
   -else
     - attachment_label = label_override.present? ? label_override : content_tag(:i, '', class: 'fa fa-paperclip')
-    =link_to label_override, url_for(attachment), target: '_blank'
+    = link_to attachment_label, url_for(attachment), target: '_blank'
