@@ -18,7 +18,7 @@ module RadCommon
         template '../../../../../spec/dummy/Procfile', 'Procfile'
 
         # .env.example
-        template '../../../../../spec/dummy/env.example', 'env.example'
+        template '../../../../../spec/dummy/.env.example', '.env.example'
 
         # initializers
         template '../../../../../spec/dummy/config/initializers/rad_common.rb', 'config/initializers/rad_common.rb'
