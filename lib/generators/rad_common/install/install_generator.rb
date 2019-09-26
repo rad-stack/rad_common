@@ -15,10 +15,10 @@ module RadCommon
         search_and_replace 'Date.yesterday', 'Time.zone.yesterday'
 
         # procfile
-        template '../../../../Procfile', './Procfile'
+        copy_file '../../../../Procfile', './Procfile'
 
         # .env.example
-        template '../../../../.env.example', './.env.example'
+        copy_file '../../../../.env.example', './.env.example'
 
         # initializers
         template '../../../../../spec/dummy/config/initializers/rad_common.rb', 'config/initializers/rad_common.rb'
