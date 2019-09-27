@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
 
       return unless params[:action] == 'create'
 
-      invite_params = %i[email first_name last_name external]
+      invite_params = %i[email first_name last_name external mobile_phone]
       devise_parameter_sanitizer.permit(:invite) { |u| u.permit(invite_params) }
     end
 end
