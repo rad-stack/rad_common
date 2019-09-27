@@ -34,7 +34,7 @@ class GlobalAutocomplete
     order = scope[:query_order] || 'created_at DESC'
     query = klass
     query = query.joins(joins) if joins
-    query = query.where(where_query, { search: "%#{params[:term]}%" }).order(order)
+    query = query.where(where_query, search: "%#{params[:term]}%").order(order)
     query = query.authorized(user)
 
     query = query.limit(50)
@@ -104,35 +104,35 @@ class GlobalAutocomplete
 
   private
 
-  def klass
-    current_scope[:model].constantize
-  end
+    def klass
+      current_scope[:model].constantize
+    end
 
-  def columns
-    current_scope[:columns]
-  end
+    def columns
+      current_scope[:columns]
+    end
 
-  def joins
-    current_scope[:joins]
-  end
+    def joins
+      current_scope[:joins]
+    end
 
-  def methods
-    current_scope[:methods]
-  end
+    def methods
+      current_scope[:methods]
+    end
 
-  def data_type(column)
-    klass.new.has_attribute?(column) ? column_def(column).type : :string
-  end
+    def data_type(column)
+      klass.new.has_attribute?(column) ? column_def(column).type : :string
+    end
 
-  def array?(column)
-    klass.new.has_attribute?(column) ? column_def(column).array : false
-  end
+    def array?(column)
+      klass.new.has_attribute?(column) ? column_def(column).array : false
+    end
 
-  def column_def(column)
-    klass.new.column_for_attribute(column)
-  end
+    def column_def(column)
+      klass.new.column_for_attribute(column)
+    end
 
-  def scope_with_where?(scope)
-    scope[:columns].any? || scope[:query_where].present?
-  end
+    def scope_with_where?(scope)
+      scope[:columns].any? || scope[:query_where].present?
+    end
 end

@@ -215,8 +215,8 @@ class CardPresenter
       end
     end
 
-    if !no_index_button && ['show', 'edit', 'update', 'new', 'create'].include?(action_name)
-      if current_user && current_user.can_read?(klass)
+    if !no_index_button && %w[show edit update new create].include?(action_name)
+      if current_user&.can_read?(klass)
         actions.push(@view_context.link_to(@view_context.icon(:list, 'View ' + titleized_controller_name), index_path, class: 'btn btn-secondary btn-sm'))
       end
     end

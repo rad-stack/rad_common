@@ -25,12 +25,12 @@ class UserStatus < ApplicationRecord
   end
 
   def button_style
-    if self.name == 'Active'
-      return 'btn-success'
-    elsif self.name == 'Pending'
-      return 'btn-warning'
+    if name == 'Active'
+      'btn-success'
+    elsif name == 'Pending'
+      'btn-warning'
     else
-      return 'btn-danger'
+      'btn-danger'
     end
   end
 end

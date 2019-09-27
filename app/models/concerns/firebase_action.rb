@@ -16,7 +16,7 @@ module FirebaseAction
 
           email_action = { message: 'Check out the logs here.',
                            button_text: 'View Logs',
-                           button_url:  Rails.application.routes.url_helpers.firebase_logs_url }
+                           button_url: Rails.application.routes.url_helpers.firebase_logs_url }
 
           RadbearMailer.simple_message(admin,
                                        "User Error on #{I18n.t(:app_name)}",

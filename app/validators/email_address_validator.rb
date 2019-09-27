@@ -1,6 +1,7 @@
 class EmailAddressValidator < ActiveModel::Validator
   def validate(record)
     return if record.blank?
+
     fields = options[:fields]
     multiples = options[:multiples]
 

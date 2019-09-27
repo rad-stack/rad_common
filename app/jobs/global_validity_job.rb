@@ -8,7 +8,7 @@ class GlobalValidityJob < ApplicationJob
     if problems.any?
       RadbearMailer.global_validity_on_demand(current_user, problems).deliver_later
     else
-      message = "No invalid data found"
+      message = 'No invalid data found'
       RadbearMailer.simple_message(current_user, message, message).deliver_later
     end
   end

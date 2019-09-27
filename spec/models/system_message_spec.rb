@@ -7,7 +7,6 @@ RSpec.describe SystemMessage, type: :model do
 
   describe '#send!' do
     context 'email message' do
-
       before do
         ActionMailer::Base.deliveries = []
         system_message.send!

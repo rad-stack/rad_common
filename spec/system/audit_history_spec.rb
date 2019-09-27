@@ -41,6 +41,5 @@ describe 'AuditHistory', type: :system do
       visit "/users/#{admin.id}/audit_by"
       expect(page).to have_content 'Status - Foo'
     end
-
   end
 end

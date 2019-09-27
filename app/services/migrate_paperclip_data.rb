@@ -57,54 +57,54 @@ class MigratePaperclipData
 
   private
 
-  def make_active_storage_records(record)
-    blob_key = key(record)
-    filename = record.send attachment_file_name
-    content_type = record.send attachment_content_type
-    file_size = record.send attachment_file_size
-    file_checksum = checksum(record)
-    created_at = record.updated_at.iso8601
+    def make_active_storage_records(record)
+      blob_key = key(record)
+      filename = record.send attachment_file_name
+      content_type = record.send attachment_content_type
+      file_size = record.send attachment_file_size
+      file_checksum = checksum(record)
+      created_at = record.updated_at.iso8601
 
-    blob_values = [blob_key, filename, content_type, file_size, file_checksum, created_at]
-    ActiveRecord::Base.connection.raw_connection.exec_prepared(
+      blob_values = [blob_key, filename, content_type, file_size, file_checksum, created_at]
+      ActiveRecord::Base.connection.raw_connection.exec_prepared(
         'active_storage_blob_statement',
         blob_values
-    )
+      )
 
-    # This will allow `record.attachment` calls to return an asset.
-    blob_name = new_attachment_name
-    record_type = record.class.name
-    record_id = record.id
+      # This will allow `record.attachment` calls to return an asset.
+      blob_name = new_attachment_name
+      record_type = record.class.name
+      record_id = record.id
 
-    attachment_values = [blob_name, record_type, record_id, last_blob_id, created_at]
-    ActiveRecord::Base.connection.raw_connection.exec_prepared(
+      attachment_values = [blob_name, record_type, record_id, last_blob_id, created_at]
+      ActiveRecord::Base.connection.raw_connection.exec_prepared(
         'active_storage_attachment_statement',
         attachment_values
-    )
-  end
+      )
+    end
 
-  def last_blob_id
-    ActiveRecord::Base.connection.execute('select id, filename from active_storage_blobs order by id desc').first['id']
-  end
+    def last_blob_id
+      ActiveRecord::Base.connection.execute('select id, filename from active_storage_blobs order by id desc').first['id']
+    end
 
-  def key(record)
-    # This differs from the standard key mentioned in the
-    # migration guide, because on S3 our file is
-    # located under several nested folders. Just
-    # putting the filename as the key means Active Storage
-    # searches the root directory and the file is not there.
-    record.send(attachment_name).path
-  end
+    def key(record)
+      # This differs from the standard key mentioned in the
+      # migration guide, because on S3 our file is
+      # located under several nested folders. Just
+      # putting the filename as the key means Active Storage
+      # searches the root directory and the file is not there.
+      record.send(attachment_name).path
+    end
 
-  def checksum(record)
-    # This code covers a migration of S3 Paperclip files only.
+    def checksum(record)
+      # This code covers a migration of S3 Paperclip files only.
 
-    resume_url = record.send(attachment_name).expiring_url(60)
-    Rails.logger.info "Copy meta data for file: #{record.send(attachment_name).path}"
-    uri = URI.parse(resume_url)
+      resume_url = record.send(attachment_name).expiring_url(60)
+      Rails.logger.info "Copy meta data for file: #{record.send(attachment_name).path}"
+      uri = URI.parse(resume_url)
 
-    opened_uri =  RadicalRetry.perform_request { uri.open.read }
+      opened_uri = RadicalRetry.perform_request { uri.open.read }
 
-    Digest::MD5.base64digest(opened_uri)
-  end
+      Digest::MD5.base64digest(opened_uri)
+    end
 end

@@ -59,7 +59,7 @@ class User < ApplicationRecord
 
   def send_reset_password_instructions
     if invited_to_sign_up?
-      self.errors.add :email, :not_found
+      errors.add :email, :not_found
     else
       super
     end

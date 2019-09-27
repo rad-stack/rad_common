@@ -30,7 +30,7 @@ class NotificationTypesController < ApplicationController
 
     def resolve_roles(role_ids)
       if role_ids
-        ids = role_ids.select { |id| id != '' }.map { |id| id.to_i }
+        ids = role_ids.reject { |id| id == '' }.map(&:to_i)
         SecurityRole.where(id: ids)
       else
         []

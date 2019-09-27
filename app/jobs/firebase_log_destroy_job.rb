@@ -17,6 +17,7 @@ class FirebaseLogDestroyJob < ActiveJob::Base
       response = RadicalRetry.perform_request { app.client.delete("logs/#{log_id}") }
 
       return if response.success?
+
       send_failure_email(current_user_id, log_id, response)
     end
 
