@@ -1,4 +1,4 @@
-$:.push File.expand_path('../lib', __FILE__)
+$LOAD_PATH.push File.expand_path('lib', __dir__)
 
 # Maintain your gem's version:
 require 'rad_common/version'
@@ -19,6 +19,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'audited', '~> 4.8'
   s.add_dependency 'authority', '~> 3.3.0'
   s.add_dependency 'aws-sdk-s3'
+  s.add_dependency 'bootstrap', '~> 4.3.1'
+  s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
   s.add_dependency 'devise'
   s.add_dependency 'devise-authy'
   s.add_dependency 'devise_invitable'
@@ -28,7 +30,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing', '~> 1.9'
   s.add_dependency 'kaminari', '>= 0.13.0'
-  s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
   s.add_dependency 'momentjs-rails', '~> 2.9', '>= 2.9.0'
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
@@ -39,7 +40,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'sidekiq-failures'
   s.add_dependency 'simple_form', '~> 4.1.0'
   s.add_dependency 'trix'
-  s.add_dependency 'bootstrap', '~> 4.3.1'
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'

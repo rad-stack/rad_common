@@ -2,7 +2,7 @@ module RadCommon
   module Generators
     class InstallGenerator < Rails::Generators::Base
       include Rails::Generators::Migration
-      source_root File.expand_path('../templates', __FILE__)
+      source_root File.expand_path('templates', __dir__)
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
