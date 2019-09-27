@@ -22,8 +22,7 @@
           -if Rails.application.config.external_users
             .col-lg-4
               = f.input :external, tooltip: 'Invite your clients to access the client portal'
-        -unless Rails.application.config.authy_user_opt_in
-          .row
-            .col-lg-4= f.input :mobile_phone
+        .row
+          .col-lg-4= f.input :mobile_phone
       .form-actions
         = f.button :submit, t("devise.invitations.new.submit_button"), class: 'btn btn-primary'
