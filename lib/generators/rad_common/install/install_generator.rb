@@ -15,7 +15,10 @@ module RadCommon
         search_and_replace 'Date.yesterday', 'Time.zone.yesterday'
 
         # procfile
-        template '../../../../Procfile', 'Procfile'
+        template '../../../../../spec/dummy/Procfile', 'Procfile'
+
+        # .env.example
+        template '../../../../../spec/dummy/.env.example', '.env.example'
 
         # initializers
         template '../../../../../spec/dummy/config/initializers/rad_common.rb', 'config/initializers/rad_common.rb'
@@ -105,7 +108,6 @@ module RadCommon
         gsub_file 'config/environments/production.rb', '#config.force_ssl = true', 'config.force_ssl = true'
 
         inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
-
     # added by rad_common
     config.generators do |g|
       g.helper false
@@ -117,7 +119,7 @@ module RadCommon
       g.controller_specs false
     end
 
-    Rails.configuration.app_admin_email = 'Radical Bear Admin <admin@radicalbear.com>'
+    Rails.configuration.app_admin_email = ENV.fetch('APP_ADMIN_EMAIL')
 
         RUBY
         end

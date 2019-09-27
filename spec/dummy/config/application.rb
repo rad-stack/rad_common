@@ -28,6 +28,6 @@ module Dummy
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    Rails.configuration.app_admin_email = 'Radical Bear Admin <admin@radicalbear.com>'
+    Rails.configuration.app_admin_email = ENV.fetch('APP_ADMIN_EMAIL')
   end
 end
