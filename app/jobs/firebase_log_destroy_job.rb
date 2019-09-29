@@ -1,4 +1,4 @@
-class FirebaseLogDestroyJob < ActiveJob::Base
+class FirebaseLogDestroyJob < ApplicationJob
   queue_as :firebase
 
   def perform(type, log_id, current_user_id)

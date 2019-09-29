@@ -15,7 +15,7 @@ describe 'Sendgrid', type: :request do
       emails = ActionMailer::Base.deliveries
       expect(emails.count).to eq(2)
 
-      all_tos = emails.map { |item| item.to }.flatten
+      all_tos = emails.map(&:to).flatten
 
       expect(all_tos).to include(admin_user1.email)
       expect(all_tos).to include(admin_user2.email)

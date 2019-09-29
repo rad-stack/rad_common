@@ -55,7 +55,7 @@ class HerokuCommands
     end
 
     def dump(file_name = '')
-      dump_file_name = file_name.blank? ? 'your_data.dump' : file_name
+      dump_file_name = file_name.presence || 'your_data.dump'
       puts 'Dumping your local database'
       puts `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
     end

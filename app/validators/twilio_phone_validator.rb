@@ -9,7 +9,7 @@ class TwilioPhoneValidator < ActiveModel::Validator
     # phone number validations that check whether valid mobile # cost half a penny per request
 
     fields.each do |field|
-      next unless !record.send(field[:field]).blank? && (record.send(field[:field].to_s + '_changed?') || (use_comm_method(field) && record.communication_method_id_changed?))
+      next unless record.send(field[:field]).present? && (record.send(field[:field].to_s + '_changed?') || (use_comm_method(field) && record.communication_method_id_changed?))
 
       response = get_phone_number(record, field)
 

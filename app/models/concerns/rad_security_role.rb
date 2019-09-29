@@ -60,7 +60,7 @@ module RadSecurityRole
       seed_all group
       group.save!
 
-      NotificationType.all.each do |notification_type|
+      NotificationType.all.find_each do |notification_type|
         group.notification_security_roles.create! notification_type: notification_type
       end
     end

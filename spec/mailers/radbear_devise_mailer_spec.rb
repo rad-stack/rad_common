@@ -9,7 +9,7 @@ describe RadbearDeviseMailer, type: :mailer do
   describe '#confirmation_instructions' do
     let(:token) { 'foo' }
 
-    before { RadbearDeviseMailer.confirmation_instructions(user, token).deliver_now }
+    before { described_class.confirmation_instructions(user, token).deliver_now }
 
     it 'has the subject' do
       expect(email.subject).to include 'Confirmation instructions'

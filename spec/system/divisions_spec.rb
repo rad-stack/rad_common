@@ -39,6 +39,7 @@ RSpec.describe 'Divisions', type: :system do
 
       context 'invalid due to file size' do
         let(:file) { 'spec/test_files/large_logo.png' }
+
         it 'validates' do
           expect(page).to have_content 'File could not be saved. File size must be less than 48.8 KB.'
           expect(division.icon.attached?).to be false

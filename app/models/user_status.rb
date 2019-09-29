@@ -7,15 +7,15 @@ class UserStatus < ApplicationRecord
   alias_attribute :to_s, :name
 
   def self.default_pending_status
-    UserStatus.find_by_name('Pending')
+    UserStatus.find_by(name: 'Pending')
   end
 
   def self.default_active_status
-    UserStatus.find_by_name('Active')
+    UserStatus.find_by(name: 'Active')
   end
 
   def self.default_inactive_status
-    UserStatus.find_by_name('Inactive')
+    UserStatus.find_by(name: 'Inactive')
   end
 
   def self.seed_items

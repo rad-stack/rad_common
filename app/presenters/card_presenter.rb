@@ -10,13 +10,9 @@ class CardPresenter
     @view_context
   end
 
-  def params
-    _h.params
-  end
+  delegate :params, to: :_h
 
-  def controller
-    _h.controller
-  end
+  delegate :controller, to: :_h
 
   def controller_name
     local_assigns[:controller_name] || _h.controller_name

@@ -6,9 +6,9 @@ RSpec.describe 'Notification Settings', type: :request do
   before { login_as(user, scope: :user) }
 
   describe 'POST create' do
-    let(:attributes) { { notification_type_id: notification_type.id, enabled: false, user_id: target_user.id } }
-
     subject { post '/rad_common/notification_settings', params: { notification_setting: attributes } }
+
+    let(:attributes) { { notification_type_id: notification_type.id, enabled: false, user_id: target_user.id } }
 
     context 'admin' do
       let(:user) { create :admin }

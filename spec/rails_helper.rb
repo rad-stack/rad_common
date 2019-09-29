@@ -91,7 +91,7 @@ RSpec.configure do |config|
     allow(UserStatus).to receive(:default_inactive_status).and_return(create(:user_status, :inactive, name: 'Inactive'))
   end
 
-  config.after(:each) do
+  config.after do
     Warden.test_reset!
   end
 

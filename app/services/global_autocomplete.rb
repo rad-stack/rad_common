@@ -76,7 +76,7 @@ class GlobalAutocomplete
   end
 
   def scope_name
-    params[:global_search_scope].blank? ? search_scopes.first[:name] : params[:global_search_scope]
+    params[:global_search_scope].presence || search_scopes.first(:name)
   end
 
   def selected_scope

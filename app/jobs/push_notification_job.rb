@@ -1,4 +1,4 @@
-class PushNotificationJob < ActiveJob::Base
+class PushNotificationJob < ApplicationJob
   queue_as :default
 
   def perform(user_id, subject, message, badge)

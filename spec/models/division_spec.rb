@@ -26,7 +26,7 @@ describe Division, type: :model do
     describe '#firebase_cleanup' do
       let!(:user) { create :admin }
 
-      before { Division.firebase_cleanup nil, 'foo', '/foo', {} }
+      before { described_class.firebase_cleanup nil, 'foo', '/foo', {} }
 
       it 'emails firebase admins' do
         expect(email.subject).to eq 'User Error on Demo Foo'
