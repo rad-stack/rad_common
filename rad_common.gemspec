@@ -48,8 +48,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'firebase', '0.2.6'
   s.add_development_dependency 'listen', '~> 3.0.5'
   s.add_development_dependency 'puma', '~> 3.7'
-  s.add_development_dependency 'rad-style'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'rubocop-rails'
   s.add_development_dependency 'rubocop-rspec'
 end

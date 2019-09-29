@@ -284,8 +284,6 @@ GEM
       rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
-    rad-style (0.3.6)
-      rubocop (~> 0.7)
     rails (5.2.3)
       actioncable (= 5.2.3)
       actionmailer (= 5.2.3)
@@ -348,6 +346,9 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-rails (2.3.2)
+      rack (>= 1.1)
+      rubocop (>= 0.72.0)
     rubocop-rspec (1.35.0)
       rubocop (>= 0.60.0)
     ruby-progressbar (1.10.1)
@@ -444,11 +445,11 @@ DEPENDENCIES
   listen (~> 3.0.5)
   pry
   puma (~> 3.7)
-  rad-style
   rad_common!
   rails-controller-testing (~> 1.0.2)
   rspec-rails
   rubocop
+  rubocop-rails
   rubocop-rspec
   schema_validations!
   selenium-webdriver
