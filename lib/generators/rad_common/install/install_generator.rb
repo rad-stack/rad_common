@@ -187,6 +187,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20190829220515_add_message_type_to_system_messages.rb', 'add_message_type_to_system_messages'
         apply_migration '../../../../../spec/dummy/db/migrate/20190911120012_timezones.rb', 'timezones'
         apply_migration '../../../../../spec/dummy/db/migrate/20190919163914_remove_super_admin.rb', 'remove_super_admin'
+        apply_migration '../../../../../spec/dummy/db/migrate/20190929125052_notification_auth_mode.rb', 'notification_auth_mode'
       end
 
       def self.next_migration_number(path)
