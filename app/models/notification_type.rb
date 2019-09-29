@@ -10,6 +10,8 @@ class NotificationType < ApplicationRecord
 
   scope :by_name, -> { order(:name) }
 
+  validate :validate_auth, on: :update
+
   def description
     name.gsub('Notifications::', '').underscore.titleize.gsub(' Notification', '')
   end
@@ -87,4 +89,11 @@ class NotificationType < ApplicationRecord
     notification_type = NotificationType.create! name: to_s if notification_type.blank?
     notification_type
   end
+
+  private
+
+    def validate_auth
+      errors.add(:auth_mode, 'invalid with security roles') if absolute_user? && security_roles.count.positive?
+      errors.add(:auth_mode, 'invalid without security roles') if security_roles? && security_roles.count.zero?
+    end
 end
