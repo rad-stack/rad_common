@@ -1,1 +1,3 @@
-inherit_from: rubocop_defaults.yml
+inherit_gem:
+  rad-style:
+    - rubocop_defaults.yml
