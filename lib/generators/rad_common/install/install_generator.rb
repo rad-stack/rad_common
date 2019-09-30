@@ -318,6 +318,10 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20190919163914_remove_super_admin.rb',
                         'remove_super_admin'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20190929125052_notification_auth_mode.rb',
+                        'notification_auth_mode'
+
       end
 
       def self.next_migration_number(path)
