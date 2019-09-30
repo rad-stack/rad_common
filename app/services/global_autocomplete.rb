@@ -19,10 +19,12 @@ class GlobalAutocomplete
 
   def global_super_search_result
     scopes = search_scopes.select { |scope| scope_with_where?(scope) }
+
     results = scopes.map do |scope|
       result = autocomplete_result(scope) unless scope[:super_search_exclude]
       result
     end
+
     results = results.compact.flatten
     results.uniq { |result| [result[:model_name], result[:id]] }
   end
@@ -34,13 +36,19 @@ class GlobalAutocomplete
     order = scope[:query_order] || 'created_at DESC'
     query = klass
     query = query.joins(joins) if joins
-    query = query.where(where_query, { search: "%#{params[:term]}%" }).order(order)
+    query = query.where(where_query, search: "%#{params[:term]}%").order(order)
     query = query.authorized(user)
 
     query = query.limit(50)
     search_label = scope[:search_label] || :to_s
 
-    query.map { |record| { columns: get_columns_values(columns, methods, record), model_name: klass.name, id: record.id, label: record.send(search_label), value: record.to_s, scope_description: scope[:description] } }
+    query.map do |record|
+      { columns: get_columns_values(columns, methods, record),
+        model_name: klass.name, id: record.id,
+        label: record.send(search_label),
+        value: record.to_s,
+        scope_description: scope[:description] }
+    end
   end
 
   def get_columns_values(columns, methods, record)
@@ -76,7 +84,7 @@ class GlobalAutocomplete
   end
 
   def scope_name
-    params[:global_search_scope].blank? ? search_scopes.first[:name] : params[:global_search_scope]
+    params[:global_search_scope].presence || search_scopes.first[:name]
   end
 
   def selected_scope
