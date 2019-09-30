@@ -21,12 +21,12 @@ class CompaniesController < ApplicationController
 
   private
 
-  def set_company
-    @company = Company.main
-  end
+    def set_company
+      @company = Company.main
+    end
 
-  def permitted_params
-    params.require(:company).permit(:name, :phone_number, :website, :email, :address_1, :address_2, :city, :state,
-                                    :zipcode, :validity_checked_at, :valid_user_domains_entry, :timezone)
-  end
+    def permitted_params
+      params.require(:company).permit(:name, :phone_number, :website, :email, :address_1, :address_2, :city, :state,
+                                      :zipcode, :validity_checked_at, :valid_user_domains_entry, :timezone)
+    end
 end

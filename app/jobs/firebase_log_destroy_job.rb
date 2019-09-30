@@ -1,4 +1,4 @@
-class FirebaseLogDestroyJob < ActiveJob::Base
+class FirebaseLogDestroyJob < ApplicationJob
   queue_as :firebase
 
   def perform(type, log_id, current_user_id)
@@ -17,6 +17,7 @@ class FirebaseLogDestroyJob < ActiveJob::Base
       response = RadicalRetry.perform_request { app.client.delete("logs/#{log_id}") }
 
       return if response.success?
+
       send_failure_email(current_user_id, log_id, response)
     end
 

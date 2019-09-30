@@ -15,8 +15,10 @@ describe 'Sendgrid', type: :request do
       emails = ActionMailer::Base.deliveries
       expect(emails.count).to eq(2)
 
-      expect(emails.first.to).to eq([admin_user1.email])
-      expect(emails.last.to).to eq([admin_user2.email])
+      all_tos = emails.map(&:to).flatten
+
+      expect(all_tos).to include(admin_user1.email)
+      expect(all_tos).to include(admin_user2.email)
 
       expect(emails.first.subject).to eq('Invalid Email')
       expect(emails.last.subject).to eq('Invalid Email')

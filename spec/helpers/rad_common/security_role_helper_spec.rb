@@ -14,11 +14,13 @@ describe RadCommon::SecurityRoleHelper do
 
     context 'with tooltip' do
       let(:permission) { 'admin' }
+
       it { is_expected.to eq 'Ability to do everything in the system.' }
     end
 
     context 'without tooltip' do
       let(:permission) { 'read_user' }
+
       it { is_expected.to be_blank }
     end
   end

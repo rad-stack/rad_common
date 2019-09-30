@@ -67,9 +67,9 @@ Rails.application.configure do
   config.action_mailer.default charset: 'utf-8'
 
   config.action_mailer.smtp_settings = {
-      address: 'localhost',
-      port: 1025,
-      domain: 'example.com'
+    address: 'localhost',
+    port: 1025,
+    domain: 'example.com'
   }
 
   config.active_job.queue_adapter = :inline

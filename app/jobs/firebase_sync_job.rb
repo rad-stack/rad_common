@@ -3,7 +3,7 @@ class FirebaseSyncJob < ApplicationJob
 
   def perform(model_name, record_id)
     klass = Object.const_get model_name
-    record = klass.find_by_id(record_id)
+    record = klass.find_by(id: record_id)
 
     if record
       record.firebase_sync

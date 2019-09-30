@@ -23,8 +23,8 @@ module RadCommon
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
       link_to icon(:check, 'Confirm Email'), confirm_user_path(@user), method: :put,
-                                                 data: { confirm: confirm },
-                                                 class: 'btn btn-warning btn-sm'
+                                                                       data: { confirm: confirm },
+                                                                       class: 'btn btn-warning btn-sm'
     end
 
     def user_reset_authy_action(user)

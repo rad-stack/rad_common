@@ -7,6 +7,7 @@ RSpec.describe SystemMessage, type: :model do
 
   describe '#send!' do
     context 'email message' do
+      subject { mail.body.encoded }
 
       before do
         ActionMailer::Base.deliveries = []
@@ -16,12 +17,12 @@ RSpec.describe SystemMessage, type: :model do
       let(:message_type) { 'email' }
       let(:mail) { ActionMailer::Base.deliveries.last }
 
-      subject { mail.body.encoded }
-
       it { is_expected.to include message }
     end
 
     context 'sms message' do
+      subject { mail&.body&.encoded }
+
       let(:message_type) { 'sms' }
 
       before do
@@ -32,7 +33,6 @@ RSpec.describe SystemMessage, type: :model do
       end
 
       let(:mail) { ActionMailer::Base.deliveries.last }
-      subject { mail&.body&.encoded }
 
       context 'all users receive message' do
         it { is_expected.to be_nil }
@@ -41,6 +41,7 @@ RSpec.describe SystemMessage, type: :model do
       context 'a user does not receive message because mobile mumber is not present' do
         # apps that have mobile_phone configured as non-nullable will fail here, just remove the test
         let!(:other_user) { create :user, mobile_phone: nil }
+
         before { system_message.send! }
 
         it { is_expected.to include "These users did not receive a system SMS message because a mobile number was not present: #{other_user.id}" }

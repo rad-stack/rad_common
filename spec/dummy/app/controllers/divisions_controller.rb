@@ -21,7 +21,7 @@ class DivisionsController < ApplicationController
     @division = Division.new(permitted_params)
 
     if @division.save
-      if validate_active_storage_attachment(@division, 'icon', params['division']['icon'], ['image/png'], false, 50000)
+      if validate_active_storage_attachment(@division, 'icon', params['division']['icon'], ['image/png'], false, 50_000)
         redirect_to @division, notice: 'Division was successfully created.'
       end
     else

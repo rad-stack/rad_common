@@ -22,9 +22,7 @@ module RadSecurityRole
     filtered_attributes = attributes.dup
 
     filtered_attributes.each do |key, _value|
-      unless SecurityRole.permission_fields.include?(key)
-        filtered_attributes.delete(key)
-      end
+      filtered_attributes.delete(key) unless SecurityRole.permission_fields.include?(key)
     end
 
     filtered_attributes
@@ -33,7 +31,7 @@ module RadSecurityRole
   module ClassMethods
     def resolve_roles(role_ids)
       if role_ids
-        ids = role_ids.select { |id| id != '' }.map { |id| id.to_i }
+        ids = role_ids.reject { |id| id == '' }.map(&:to_i)
         SecurityRole.where(id: ids)
       else
         []
@@ -62,7 +60,7 @@ module RadSecurityRole
       seed_all group
       group.save!
 
-      NotificationType.all.each do |notification_type|
+      NotificationType.all.find_each do |notification_type|
         group.notification_security_roles.create! notification_type: notification_type
       end
     end

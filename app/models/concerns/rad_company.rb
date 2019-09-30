@@ -35,8 +35,8 @@ module RadCompany
   def valid_user_domains_entry=(value)
     if value
       items = value.split(',')
-      stripped = items.map { |item| item.strip }
-      self.valid_user_domains = stripped.reject { |item| item.blank? }
+      stripped = items.map(&:strip)
+      self.valid_user_domains = stripped.reject(&:blank?)
     else
       self.valid_user_domains = '{}'
     end

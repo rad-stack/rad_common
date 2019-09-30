@@ -10,13 +10,15 @@ RSpec.describe Notifications::UserWasApprovedNotification, type: :model do
   describe '#users_except_self' do
     context 'when user is approved' do
       subject { notification.send(:users_except_self, user) }
+
       it { is_expected.to include admin.id }
     end
 
     context 'when admin is approved' do
       subject { notification.send(:users_except_self, another) }
+
       it { is_expected.to include admin.id }
-      it { is_expected.to_not include another.id }
+      it { is_expected.not_to include another.id }
     end
   end
 

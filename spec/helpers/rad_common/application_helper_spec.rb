@@ -29,7 +29,9 @@ describe RadCommon::ApplicationHelper do
 
   describe 'options_for_enum' do
     subject { options_for_enum(Division, :division_status) }
+
     let(:options) { [%w[Pending status_pending], %w[Active status_active], %w[Inactive status_inactive]] }
+
     it { is_expected.to eq options }
   end
 

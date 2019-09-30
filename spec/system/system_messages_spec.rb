@@ -31,7 +31,7 @@ RSpec.describe 'SystemMessages', type: :system do
       end
 
       it 'shows the sms option' do
-        expect(page.all('#system_message_message_type option').map(&:value)).to eq ['email', 'sms']
+        expect(page.all('#system_message_message_type option').map(&:value)).to eq %w[email sms]
       end
 
       it 'sets the message type based on the previous system message' do

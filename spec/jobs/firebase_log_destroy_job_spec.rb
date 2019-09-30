@@ -20,7 +20,7 @@ describe FirebaseLogDestroyJob do
   it 'destroys all logs in category' do
     type = 'all'
     expect(logs.body.length).to eq(2)
-    FirebaseLogDestroyJob.perform_now(type, log_id, user.id)
+    described_class.perform_now(type, log_id, user.id)
     logs = client.get("logs/#{log_id}")
     expect(logs.body).to eq(nil)
   end
@@ -31,7 +31,7 @@ describe FirebaseLogDestroyJob do
     expect(logs.body.length).to eq(2)
     expect(logs.body[error_log_key]['error']).to eq('this is an error message')
 
-    FirebaseLogDestroyJob.perform_now(type, log_id, user.id)
+    described_class.perform_now(type, log_id, user.id)
 
     logs = client.get("logs/#{log_id}")
     expect(logs.body.length).to eq(1)
@@ -41,7 +41,7 @@ describe FirebaseLogDestroyJob do
   it 'sends a failure message if no response' do
     type = 'all'
     allow_any_instance_of(Firebase::Response).to receive(:success?).and_return(false)
-    FirebaseLogDestroyJob.perform_now(type, log_id, user.id)
+    described_class.perform_now(type, log_id, user.id)
     expect(ActionMailer::Base.deliveries.last.subject).to include('Firebase error')
   end
 end

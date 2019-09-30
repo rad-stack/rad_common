@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :user do |this|
+  factory :user do
     first_name { 'Test' }
     last_name { 'User' }
     mobile_phone { '(999) 231-1111' }

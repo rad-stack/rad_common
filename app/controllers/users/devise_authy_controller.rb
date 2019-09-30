@@ -4,7 +4,7 @@ class Users::DeviseAuthyController < Devise::DeviseAuthyController
     if response.ok?
       flash[:info] = 'A verification token has been texted to you.'
     else
-      flash[:alert] = "The verification code failed to send. Please click \"Resend Text\"."
+      flash[:alert] = 'The verification code failed to send. Please click "Resend Text".'
     end
     super
   end

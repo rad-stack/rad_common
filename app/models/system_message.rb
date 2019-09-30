@@ -3,8 +3,8 @@ class SystemMessage < ApplicationRecord
 
   belongs_to :user
 
-  enum send_to: %i[internal_users client_users all_users preview]
-  enum message_type: %i[email sms]
+  enum send_to: { internal_users: 0, client_users: 1, all_users: 2, preview: 3 }
+  enum message_type: { email: 0, sms: 1 }
 
   scope :recent_first, -> { order(created_at: :desc) }
 

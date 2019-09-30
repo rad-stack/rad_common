@@ -25,7 +25,9 @@ describe RadCommon::AuditsHelper do
 
   describe 'formatted_audited_changes' do
     subject { helper.send(:formatted_audited_changes, audit) }
+
     before { division.update! notify: true, hourly_rate: 100 }
+
     let(:audit) { division.audits.reorder('id DESC').first }
 
     context 'admin' do
