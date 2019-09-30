@@ -10,6 +10,6 @@ class DatetimeLocalInput < SimpleForm::Inputs::StringInput
   end
 
   def value(object)
-    object.send @attribute_name if object
+    object&.send @attribute_name
   end
 end

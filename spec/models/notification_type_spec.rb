@@ -10,14 +10,17 @@ RSpec.describe NotificationType, type: :model do
   end
 
   describe '#notify_user_ids' do
-    let(:notification_class) { Notifications::GlobalValidityNotification }
     subject { notification_class.send(:notify_user_ids) }
+
+    let(:notification_class) { Notifications::GlobalValidityNotification }
+
     it { is_expected.to eq [user.id] }
   end
 
   describe '#notify_list' do
-    let!(:another) { create :admin, security_roles: [security_role] }
     subject { notification_type.notify_list(true) }
+
+    let!(:another) { create :admin, security_roles: [security_role] }
 
     it { is_expected.to include user }
     it { is_expected.to include another }
@@ -28,12 +31,13 @@ RSpec.describe NotificationType, type: :model do
       end
 
       it { is_expected.to include another }
-      it { is_expected.to_not include user }
+      it { is_expected.not_to include user }
     end
 
     context 'inactive user' do
       before { user.update! user_status: UserStatus.default_inactive_status }
-      it { is_expected.to_not include user }
+
+      it { is_expected.not_to include user }
     end
   end
 end

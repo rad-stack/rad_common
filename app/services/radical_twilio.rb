@@ -4,7 +4,7 @@ class RadicalTwilio
   end
 
   def self.send_robocall(from:, to:, url:)
-    client.calls.create(from: from, to: to, url: URI::encode(url))
+    client.calls.create(from: from, to: to, url: URI.encode(url))
   end
 
   def self.client

@@ -64,6 +64,6 @@ class SecurityRolesController < ApplicationController
     end
 
     def permitted_params
-      params.require(:security_role).permit([:name] + SecurityRole.permission_fields.map { |item| item.to_sym })
+      params.require(:security_role).permit([:name] + SecurityRole.permission_fields.map(&:to_sym))
     end
 end

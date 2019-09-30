@@ -36,17 +36,20 @@ RSpec.describe EmailAddressValidator, type: :validator do
 
     context 'when the email is nil' do
       let(:email) { nil }
+
       it { is_expected.to be_valid }
     end
 
     context 'when the email is blank' do
       let(:email) { '' }
+
       it { is_expected.to be_valid }
     end
 
     context 'when the email is present' do
       context 'standard format' do
         let(:email) { Faker::Internet.email }
+
         it { is_expected.to be_valid }
       end
 
@@ -91,17 +94,20 @@ RSpec.describe EmailAddressValidator, type: :validator do
 
     context 'when the email is nil' do
       let(:email) { nil }
+
       it { is_expected.to be_valid }
     end
 
     context 'when the email is blank' do
       let(:email) { '' }
+
       it { is_expected.to be_valid }
     end
 
     context 'when the email is present' do
       context 'standard format' do
         let(:email) { Faker::Internet.email }
+
         it { is_expected.to be_valid }
       end
 

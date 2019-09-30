@@ -38,20 +38,20 @@ class PaperclipDataPrecheck
 
   private
 
-  def check_attachment(record)
-    resume_url = record.send(attachment_name).expiring_url(60)
-    uri = URI.parse(resume_url)
-    begin
-      RadicalRetry.perform_request { uri.open.read }
-      return nil
-    rescue OpenURI::HTTPError, RadicallyIntermittentException => e
-      return e.message
+    def check_attachment(record)
+      resume_url = record.send(attachment_name).expiring_url(60)
+      uri = URI.parse(resume_url)
+      begin
+        RadicalRetry.perform_request { uri.open.read }
+        return nil
+      rescue OpenURI::HTTPError, RadicallyIntermittentException => e
+        return e.message
+      end
     end
-  end
 
-  def email_faulty_attachments(message)
-    recipients = User.where(email: %w[caleb.tocco@radicalbear.com gary@radicalbear.com]).map(&:id)
-    RadbearMailer.simple_message(recipients, "Faulty Attachments - #{model_class} (#{attachment_name})", message)
-                 .deliver_later
-  end
+    def email_faulty_attachments(message)
+      recipients = User.where(email: %w[caleb.tocco@radicalbear.com gary@radicalbear.com]).map(&:id)
+      RadbearMailer.simple_message(recipients, "Faulty Attachments - #{model_class} (#{attachment_name})", message)
+                   .deliver_later
+    end
 end
