@@ -115,5 +115,27 @@ RSpec.describe 'Divisions', type: :system do
     it 'shows the right actions' do
       expect(page).to have_content('Right Button')
     end
+
+    context 'attachments' do
+      let(:prompt) { 'Are you sure? Attachment cannot be recovered.' }
+
+      before do
+        division.logo.attach(io: File.open(Rails.root.join('app', 'assets', 'images', 'app_logo.png')), filename: 'logo.png')
+        visit division_path(division)
+      end
+
+      it 'allows attachment to be deleted', js: true do
+        expect(ActiveStorage::Attachment.count).to eq 1
+
+        page.accept_confirm prompt do
+          click_link 'x'
+        end
+
+        division.reload
+        expect(page).to have_content 'Attachment successfully deleted'
+        expect(ActiveStorage::Attachment.count).to eq 0
+        expect(division.logo.attached?).to be false
+      end
+    end
   end
 end
