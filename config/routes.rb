@@ -9,6 +9,9 @@ RadCommon::Engine.routes.draw do
   end
 
   resources :system_messages, only: %i[new create show]
+  resources :attachments, only: [] do
+    get :download
+  end
 
   resources :system_usages, only: %i[index]
   resources :notification_types, only: %i[index edit update]
