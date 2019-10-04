@@ -91,23 +91,23 @@ RSpec.describe 'Users', type: :request do
     context 'resource with audit' do
       it 'renders audit page' do
         get '/users/audit_search', params: { model_name: search_user.class.to_s, record_id: search_user.id }
-        expect(response).to render_template('audits/index')
+        expect(response.body).to include "Updates for <a href=\"/users/#{search_user.id}\">User - Test User</a>"
       end
     end
 
     context 'resource with no audit' do
       it 'does not render audit page' do
         get '/users/audit_search', params: { model_name: search_role.class.to_s, record_id: -1 }
-        expect(response).not_to render_template('audits/index')
+        expect(response.body).not_to include "Updates for <a href=\"/users/#{search_user.id}\">User - Test User</a>"
       end
     end
 
     context 'no resource' do
       it 'does not render audit page' do
         get '/users/audit_search'
-        expect(response).not_to render_template('audits/index')
+        expect(response.body).not_to include 'Audit for Foo with ID of 9999 not found'
         get '/users/audit_search', params: { model_name: 'Foo', record_id: 9999 }
-        expect(response).not_to render_template('audits/index')
+        expect(response.body).to include 'Audit for Foo with ID of 9999 not found'
       end
     end
   end
