@@ -40,7 +40,7 @@ RSpec.describe 'Users', type: :request do
     describe 'with invalid params' do
       it 're-renders the edit template' do
         put "/users/#{user.id}", params: { user: invalid_attributes }
-        expect(response).to render_template('edit')
+        expect(response.body).to include 'Please review the problems below'
       end
     end
   end

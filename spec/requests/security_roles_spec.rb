@@ -33,7 +33,7 @@ RSpec.describe 'Security roles', type: :request do
     describe 'with invalid params' do
       it 're-renders the new template' do
         post '/security_roles', params: { security_role: invalid_attributes }
-        expect(response).to render_template('new')
+        expect(response.body).to include 'Please review the problems below'
       end
     end
   end
@@ -59,7 +59,7 @@ RSpec.describe 'Security roles', type: :request do
     describe 'with invalid params' do
       it 're-renders the edit template' do
         put "/security_roles/#{security_role.id}", params: { security_role: invalid_attributes }
-        expect(response).to render_template('edit')
+        expect(response.body).to include 'Please review the problems below'
       end
     end
   end
