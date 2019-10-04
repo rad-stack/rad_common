@@ -13,4 +13,6 @@ RadCommon::Engine.routes.draw do
   resources :system_usages, only: %i[index]
   resources :notification_types, only: %i[index edit update]
   resources :notification_settings, only: %i[index create]
+
+  resources :attachments, only: :destroy
 end

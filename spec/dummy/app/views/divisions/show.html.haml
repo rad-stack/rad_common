@@ -1,5 +1,9 @@
 .card
   -actions = [link_to('Right Button', root_path, class: 'btn btn-secondary btn-sm')]
+  -data = [:name, :code, :notify, :timezone, :hourly_rate,
+           { label: 'Logo', value: render('layouts/attachment', record: @division, attachment_name: 'logo', new_tab: true) },
+           { label: 'Icon', value: render('layouts/attachment', record: @division, attachment_name: 'icon', new_tab: true) },
+           { label: 'Avatar', value: render('layouts/attachment', record: @division, attachment_name: 'avatar', new_tab: true) }]
   = render 'layouts/card_header', additional_external_actions: actions
   .card-body
-    = render 'layouts/show_data_columns', data: %i[name code notify timezone hourly_rate], resource: @division
+    = render 'layouts/show_data_columns', data: data, resource: @division
