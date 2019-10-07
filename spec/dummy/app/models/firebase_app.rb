@@ -3,10 +3,10 @@ class FirebaseApp
 
   def initialize
     self.name = I18n.t(:app_name)
-    self.data_url = ENV['FIREBASE_DATA_URL']
-    self.secret_key = ENV['FIREBASE_SECRET_KEY']
-    self.push_url = ENV['FIREBASE_PUSH_URL']
-    self.push_key = ENV['FIREBASE_PUSH_KEY']
+    self.data_url = ENV.fetch('FIREBASE_DATA_URL')
+    self.secret_key = ENV.fetch('FIREBASE_SECRET_KEY')
+    self.push_url = ENV.fetch('FIREBASE_PUSH_URL')
+    self.push_key = ENV.fetch('FIREBASE_PUSH_KEY')
     self.categories = %w[registrations userActions]
   end
 

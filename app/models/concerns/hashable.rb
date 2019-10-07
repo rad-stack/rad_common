@@ -6,7 +6,7 @@ module Hashable
   end
 
   def self.hashids
-    salt = ENV['HASH_KEY']
+    salt = ENV.fetch('HASH_KEY')
     Hashids.new(salt, 6, 'abcdefghijklmnopqrstuvwxyz')
   end
 
