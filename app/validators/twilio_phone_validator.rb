@@ -1,6 +1,5 @@
 class TwilioPhoneValidator < ActiveModel::Validator
   def validate(record)
-    return if Company.review_app?
     return unless Rails.env.production? || (defined?(TwilioMockModel) && record.is_a?(TwilioMockModel))
     raise 'please specify options for this validation' unless options && options[:fields]
 
