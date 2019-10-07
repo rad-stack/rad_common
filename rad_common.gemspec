@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sentry-raven'
   s.add_dependency 'sidekiq', '~> 5.2.2'
   s.add_dependency 'sidekiq-failures'
-  s.add_dependency 'simple_form', '~> 4.1.0'
+  s.add_dependency 'simple_form', '~> 5.0.1'
   s.add_dependency 'trix'
 
   s.add_development_dependency 'active_record_doctor'
