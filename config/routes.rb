@@ -4,6 +4,8 @@ RadCommon::Engine.routes.draw do
 
   post :email_error, to: 'rad_common/sendgrid#email_error'
 
+  delete 'attachments/:id(.:format)', to: 'rad_common/attachments#destroy', as: :attachment
+
   resources :companies, only: [] do
     post :global_validity_check, on: :member
   end

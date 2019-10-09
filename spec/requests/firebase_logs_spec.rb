@@ -9,7 +9,7 @@ describe 'Firebase Logs', type: :request do
 
   it 'retrieves all available firebase logs' do
     get '/firebase_logs'
-    expect(assigns(:firebase_logs).first.first).to eq('registrations')
+    expect(response.body).to include 'Registrations'
   end
 
   it 'destroy events' do

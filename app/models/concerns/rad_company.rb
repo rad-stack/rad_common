@@ -24,11 +24,7 @@ module RadCompany
     end
 
     def staging?
-      ENV['STAGING'] == 'true'
-    end
-
-    def review_app?
-      ENV['REVIEW_APP'].present? && ENV['REVIEW_APP'] == 'true'
+      ENV.fetch('STAGING') == 'true'
     end
   end
 
