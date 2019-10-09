@@ -8,7 +8,11 @@ module RadCommon
 
     def download
       variant = params[:variant]
-      serve_active_storage_file(@record.send(variant), variant)
+      begin
+        serve_active_storage_file(@record.send(variant), variant)
+      rescue NoMethodError
+        render json: 'Attachment not found'
+      end
     end
 
     def destroy
