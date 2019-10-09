@@ -1,4 +1,4 @@
-class AttachmentsController < ApplicationController
+class DownloadAttachmentsController < ApplicationController
   include ActiveStorageDownloader
   before_action :set_record
 

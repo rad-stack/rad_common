@@ -11,7 +11,8 @@ RadCommon::Engine.routes.draw do
   end
 
   resources :system_messages, only: %i[new create show]
-  resources :attachments, only: [] do
+
+  resources :download_attachments, only: [] do
     get :download
   end
 
