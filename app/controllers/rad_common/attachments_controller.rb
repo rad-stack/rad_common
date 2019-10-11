@@ -31,8 +31,8 @@ module RadCommon
     private
 
       def set_record
-        klass = params[:class].constantize
-        @record = klass.find_decoded(params[:id])
+        attachment = ActiveStorage::Attachment.find(Hashable.hashids.decode(params[:id])[0])
+        @record = attachment.record
       end
   end
 end
