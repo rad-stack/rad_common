@@ -3,6 +3,6 @@ module Attachable
     protocol = Rails.env.production? ? 'https' : 'http'
     host = Rails.env.production? ? ENV.fetch('HOST_NAME') : 'localhost:3000'
     attachment_id = Hashable.hashids.encode(send(attachment).id)
-    "#{protocol}://#{host}/common/attachments/#{attachment_id}/#{variant}"
+    "#{protocol}://#{host}/rad_common/attachments/#{attachment_id}/#{variant}"
   end
 end
