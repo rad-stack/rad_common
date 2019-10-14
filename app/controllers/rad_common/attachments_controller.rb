@@ -7,9 +7,9 @@ module RadCommon
     authority_actions destroy: 'update'
 
     def download
-      variant = params[:variant]
+      attachment = params[:variant].present? ? @record.send(params[:variant]) : @attachment
       begin
-        serve_active_storage_file(@record.send(variant), variant)
+        serve_active_storage_file(attachment, @attachment.filename.base)
       rescue NoMethodError
         render json: 'Attachment not found'
       end
@@ -31,8 +31,8 @@ module RadCommon
     private
 
       def set_record
-        attachment = ActiveStorage::Attachment.find(Hashable.hashids.decode(params[:id])[0])
-        @record = attachment.record
+        @attachment = ActiveStorage::Attachment.find(Hashable.hashids.decode(params[:id])[0])
+        @record = @attachment.record
       end
   end
 end
