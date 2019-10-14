@@ -2,15 +2,14 @@ module RadCommon
   class AttachmentsController < ApplicationController
     include ActiveStorageDownloader
     before_action :authenticate_user!, only: :destroy
-    before_action :set_record, only: :download
+    before_action :set_variant, only: :download_variant
 
     authority_actions destroy: 'update'
 
-    def download
-      attachment = params[:variant].present? ? @record.send(params[:variant]) : @attachment
-      begin
-        serve_active_storage_file(attachment, @attachment.filename.base)
-      rescue NoMethodError
+    def download_variant
+      if @variant.present?
+        serve_active_storage_file(@variant, params[:variant])
+      else
         render json: 'Attachment not found'
       end
     end
@@ -30,9 +29,14 @@ module RadCommon
 
     private
 
-      def set_record
-        @attachment = ActiveStorage::Attachment.find(Hashable.hashids.decode(params[:id])[0])
-        @record = @attachment.record
+      def set_variant
+        klass = params[:class_name].classify.constantize
+        record = klass.find_decoded(params[:id])
+        begin
+          @variant = record.send(params[:variant]).processed
+        rescue NoMethodError
+          @variant = nil
+        end
       end
   end
 end
