@@ -1,5 +1,7 @@
 module RadCommon
   class AttachmentsController < ApplicationController
+    require 'open-uri'
+
     include ActiveStorage::Downloading
 
     before_action :authenticate_user!, only: :destroy
