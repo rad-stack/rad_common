@@ -11,6 +11,21 @@ module RadCommon
 
     authority_actions destroy: 'update'
 
+    def download
+      # TODO: refactor this with Hashable
+      ids = Hashable.hashids.decode(params[:id])
+      attachment_id = ids[0]
+      #
+
+      attachment = ActiveStorage::Attachment.find_by(id: attachment_id)
+
+      if attachment.present?
+        serve_active_storage_file(attachment, attachment.name)
+      else
+        render json: 'Attachment not found'
+      end
+    end
+
     def download_variant
       if @variant.present?
         serve_active_storage_file(@variant, params[:variant])
@@ -47,10 +62,15 @@ module RadCommon
       def serve_active_storage_file(attachment, filename)
         # TODO: refactor this to use single method for production and development, may need to wait until Rails 6
         if Rails.env.production?
-          serve_file(attachment.service_url, attachment.blob.filename.extension_with_delimiter, attachment.blob.content_type, filename)
+          serve_file attachment.service_url,
+                     attachment.blob.filename.extension_with_delimiter,
+                     attachment.blob.content_type,
+                     filename
         else
           @blob = attachment.blob
-          download_and_serve_file(attachment.blob.filename.extension_with_delimiter, attachment.blob.content_type, filename)
+          download_and_serve_file attachment.blob.filename.extension_with_delimiter,
+                                  attachment.blob.content_type,
+                                  filename
         end
       end
 
