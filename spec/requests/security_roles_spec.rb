@@ -3,18 +3,10 @@ require 'rails_helper'
 RSpec.describe 'Security roles', type: :request do
   let(:user) { create :admin }
   let(:security_role) { create :security_role }
+  let(:valid_attributes) { { name: 'foo', read_audit: true } }
+  let(:invalid_attributes) { { name: nil } }
 
-  before do
-    login_as(user, scope: :user)
-  end
-
-  let(:valid_attributes) do
-    { name: 'foo', read_audit: true }
-  end
-
-  let(:invalid_attributes) do
-    { name: nil }
-  end
+  before { login_as(user, scope: :user) }
 
   describe 'POST create' do
     describe 'with valid params' do

@@ -4,9 +4,7 @@ RSpec.describe 'Divisions', type: :system do
   let(:user) { create :admin }
   let(:division) { create :division }
 
-  before do
-    login_as(user, scope: :user)
-  end
+  before { login_as(user, scope: :user) }
 
   describe 'new' do
     it 'renders the new template' do

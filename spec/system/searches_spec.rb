@@ -5,9 +5,7 @@ describe 'Searches', type: :system do
   let(:search_results) { JSON.parse(response.body) }
 
   describe 'searches' do
-    before do
-      login_as(admin, scope: :user)
-    end
+    before { login_as(admin, scope: :user) }
 
     context 'super search' do
       let(:term) { 'Peters' }
