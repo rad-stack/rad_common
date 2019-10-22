@@ -4,10 +4,10 @@ describe 'Sendgrid', type: :request do
   describe 'POST email_error' do
     let!(:admin_user1) { create :admin }
     let!(:admin_user2) { create :admin }
-    let!(:normal_user) { create :user }
-    let!(:company) { Company.main }
 
     it 'sends an email to app admins' do
+      create :user
+
       ActionMailer::Base.deliveries = []
 
       sendgrid_info = { '_json': [{ 'email': 'example@test.com', 'timestamp': 1_493_994_015 }] }

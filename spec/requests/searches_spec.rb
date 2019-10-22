@@ -9,7 +9,7 @@ describe 'Searches', type: :request do
       login_as(admin, scope: :user)
     end
 
-    context 'scope search' do
+    context 'when scope search' do
       it 'finds a user' do
         get "/rad_common/global_search?term=#{admin.first_name}"
         expect(search_results[0]['value']).to eq admin.to_s
@@ -34,12 +34,13 @@ describe 'Searches', type: :request do
       end
     end
 
-    context 'super search' do
+    context 'when super search' do
       let(:term) { 'Peters' }
       let!(:user) { create(:user, last_name: term) }
-      let!(:division) { create(:division, name: term) }
 
       it 'can search for results across multiple tables' do
+        create :division, name: term
+
         get "/rad_common/global_search?term=#{term}&super_search=1"
         expect(search_results[0]['model_name']).to eq 'User'
         expect(search_results[0]['id']).to eq user.id

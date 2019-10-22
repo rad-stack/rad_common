@@ -12,9 +12,7 @@ describe 'Invitations', type: :system do
   let(:external_email) { Faker::Internet.user_name + '@' + external_domain }
 
   describe 'user' do
-    before do
-      login_as(user, scope: :user)
-    end
+    before { login_as(user, scope: :user) }
 
     describe 'new' do
       it 'does not allow' do
@@ -25,9 +23,7 @@ describe 'Invitations', type: :system do
   end
 
   describe 'admin' do
-    before do
-      login_as(admin, scope: :user)
-    end
+    before { login_as(admin, scope: :user) }
 
     describe 'new' do
       context 'valid' do

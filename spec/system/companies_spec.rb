@@ -4,9 +4,7 @@ RSpec.describe 'Companies', type: :system do
   let(:user) { create :admin }
   let(:company) { Company.main }
 
-  before do
-    login_as(user, scope: :user)
-  end
+  before { login_as(user, scope: :user) }
 
   describe 'edit' do
     it 'renders the edit template' do
