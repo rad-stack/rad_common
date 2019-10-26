@@ -53,18 +53,21 @@ class UsersController < ApplicationController
       params[:user].delete(:password_confirmation)
     end
 
-    @user.assign_attributes(permitted_params)
-    @user.approved_by = current_user
-    @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
+    ActiveRecord::Base.transaction do
+      @user.assign_attributes(permitted_params)
+      @user.approved_by = current_user
+      @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
 
-    authorize_action_for @user
+      authorize_action_for @user
 
-    if @user.save
-      flash[:success] = 'User updated.'
-      redirect_to @user
-    else
-      flash[:error] = "Unable to update user: #{@user.errors.full_messages.join(',')}"
-      render :edit
+      if @user.save
+        flash[:success] = 'User updated.'
+        redirect_to @user
+      else
+        flash[:error] = "Unable to update user: #{@user.errors.full_messages.join(',')}"
+        render :edit
+        raise ActiveRecord::Rollback
+      end
     end
   end
 

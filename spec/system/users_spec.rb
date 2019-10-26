@@ -204,13 +204,25 @@ describe 'Users', type: :system do
   end
 
   describe 'edit' do
-    before do
-      login_as(admin, scope: :user)
-    end
+    before { login_as admin, scope: :user }
 
     it 'renders the edit template' do
       visit edit_user_path(user)
       expect(page).to have_content('Editing User')
+    end
+
+    it "doesn't update roles if user isn't valid", :js do
+      security_role = create :security_role
+      expect(user.security_roles.count).to eq 1
+
+      visit edit_user_path(user)
+      fill_in 'Last name', with: ''
+      page.save_screenshot
+      check security_role.name
+      click_button 'Save'
+
+      user.reload
+      expect(user.security_roles.count).to eq 1
     end
 
     context 'dynamically changing fields', js: true do
