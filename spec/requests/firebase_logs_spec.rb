@@ -7,7 +7,7 @@ describe 'Firebase Logs', type: :request do
     login_as(admin, scope: :user)
   end
 
-  it 'retrieves all available firebase logs' do
+  it 'retrieves all available firebase logs', :vcr do
     get '/firebase_logs'
     expect(response.body).to include 'Registrations'
   end

@@ -26,6 +26,7 @@ module RadCommon
     require 'sidekiq-failures'
     require 'simple_form'
     require 'trix'
+    require 'twilio-ruby'
     require 'bootstrap'
   end
 end

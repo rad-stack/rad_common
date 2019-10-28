@@ -28,7 +28,7 @@ describe Division, type: :model do
 
       before { described_class.firebase_cleanup nil, 'foo', '/foo', {} }
 
-      it 'emails firebase admins' do
+      it 'emails firebase admins', :vcr do
         expect(email.subject).to eq 'User Error on Demo Foo'
       end
     end

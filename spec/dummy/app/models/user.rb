@@ -24,6 +24,7 @@ class User < ApplicationRecord
   has_one_attached :avatar
 
   validates_with PhoneNumberValidator, fields: [:mobile_phone]
+  validates_with TwilioPhoneValidator, fields: [{ field: :mobile_phone, type: :mobile }]
 
   before_validation :check_defaults
   after_invitation_accepted :notify_user_accepted

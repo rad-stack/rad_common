@@ -13,7 +13,7 @@ describe User, type: :model do
       password_confirmation: 'password' }
   end
 
-  describe '#firebase_device_tokens' do
+  describe '#firebase_device_tokens', :vcr do
     subject { user.firebase_device_tokens(app) }
 
     let(:tokens) do
@@ -89,7 +89,7 @@ describe User, type: :model do
       expect(user.reload.authy_id).to be_blank
     end
 
-    it "doesn't allow invalid email" do
+    it "doesn't allow invalid email", :vcr do
       user = build :user, mobile_phone: phone_number, email: 'foo@', authy_enabled: true
       user.save
       expect(user.errors.full_messages.to_s).to include('Could not register authy user')
