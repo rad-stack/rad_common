@@ -26,7 +26,7 @@ RSpec.describe TwilioPhoneValidator, type: :validator do
   let(:standard_phone) { '9045035030' }
   let(:invalid_phone) { '1234' }
 
-  it 'validates with mobile phone number', vcr: true do
+  it 'validates with mobile phone number', :vcr do
     model = TwilioMockModel.new(mobile_phone)
     model.valid?
     puts model.errors.full_messages.to_s
