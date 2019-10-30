@@ -8,6 +8,21 @@ module RadbearController
   end
 
   def validate_active_storage_attachment(record, attribute, file, valid_types, no_redirect = false, max_file_size = nil)
+    if valid_active_storage_attachment?(record, attribute, file, valid_types, max_file_size)
+      true
+    else
+      return false if no_redirect
+
+      if action_methods.include?('edit')
+        render :edit
+      else
+        redirect_to record
+      end
+      false
+    end
+  end
+
+  def valid_active_storage_attachment?(record, attribute, file, valid_types, max_file_size = nil)
     # TODO: Remove this method and all calls when active storage validations are added (expected in Rails 6)
     return true if file.blank?
 
@@ -19,13 +34,6 @@ module RadbearController
       error += " File type must be one of #{valid_types.join(', ')}" if invalid_content
       error += " File size must be less than #{ApplicationController.helpers.number_to_human_size(max_file_size)}." if invalid_file_size
       flash[:error] = error
-      return false if no_redirect
-
-      if action_methods.include?('edit')
-        render :edit
-      else
-        redirect_to record
-      end
       false
     else
       record.send(attribute).attach(file)
