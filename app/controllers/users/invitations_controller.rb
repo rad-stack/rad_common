@@ -1,6 +1,5 @@
 class Users::InvitationsController < Devise::InvitationsController
-  authorize_actions_for ApplicationAuthorizer, except: %i[edit update destroy],
-                                               actions: { new: 'create', create: 'create' }
+  authorize_actions_for User, except: %i[edit update destroy], actions: { new: 'create', create: 'create' }
 
   def create
     self.resource = invite_resource
