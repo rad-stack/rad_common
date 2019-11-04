@@ -1,25 +1,29 @@
 module RadCommon
   class SearchFilter
-    attr_reader :options, :column, :joins, :scopes, :multiple, :scope
+    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope
 
-    def initialize(column: nil, options:, scopes: nil, joins: nil, input_label: nil, blank_value_label: nil, scope: nil, multiple: false)
+    def initialize(column: nil, options:, scope_values: nil, joins: nil, input_label: nil, blank_value_label: nil, scope: nil, multiple: false)
       @column = column
       @options = options
       @joins = joins
       @input_label = input_label
       @blank_value_label = blank_value_label
-      @scopes = scopes
+      @scope_values = scope_values
       @scope = scope
       @multiple = multiple
     end
 
     def input_options
-      if @scopes.present?
-        scope_options = @scopes.keys.map { |option| [option, option]}
+      if @scope_values.present?
+        scope_options = @scope_values.keys.map { |option| [option, option]}
         scope_options + options.map { |option| [option.to_s, option.id] }
       else
         options
       end
+    end
+
+    def label_method
+      @scope_values.present? ? :first : :to_s
     end
 
     def apply_filter(results, value)
@@ -42,14 +46,18 @@ module RadCommon
     end
 
     def scope_value?(scope_name)
-      scopes.present? && scopes.has_key?(scope_name)
+      @scope_values.present? && @scope_values.has_key?(scope_name)
     end
 
     def apply_scope_value(results, scope_name)
-      scope = scopes[scope_name]
-      scope_name = scope.keys.first
-      scope_args = scope[scope_name]
-      results.send(scope_name, scope_args)
+      scope = @scope_values[scope_name]
+      if scope.is_a? Symbol
+        results.send(scope)
+      else
+        scope_name = scope.keys.first
+        scope_args = scope[scope_name]
+        results.send(scope_name, scope_args)
+      end
     end
 
     def apply_scope_filter(results, value)

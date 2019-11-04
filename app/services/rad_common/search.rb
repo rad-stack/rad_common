@@ -5,8 +5,7 @@ module RadCommon
     def initialize(query:, filters:, current_user:, params:)
       @results = query
       @filters = build_search_filters(filters)
-      @filter_scope_values = @filters.map(&:scopes).compact.reduce({}, :merge)
-      @filter_hash =  Hash[@filters.collect {|f| [f.searchable_name, f]}]
+      @filter_hash =  Hash[@filters.collect { |f| [f.searchable_name, f] }]
       @current_user = current_user
       @params = params
 
