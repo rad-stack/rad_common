@@ -18,7 +18,6 @@
             %p
               You can add more valid domains in
               = link_to 'Company Settings', edit_company_path(Company.main)
-              tab.
           -if Rails.application.config.external_users
             .col-lg-4
               = f.input :external, tooltip: 'Invite your clients to access the client portal'
