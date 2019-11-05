@@ -1,0 +1,16 @@
+- unless defined?(sort_columns)
+  - sort_columns = search.sort_columns
+
+- sort_columns.each do |sort_column|
+  %th
+    - if sort_column[:column]
+      - direction = (sort_column[:column] == search.sort_column && search.sort_direction == 'asc') ? 'desc' : 'asc'
+      - label = sort_column[:label] || sort_column[:column].titleize
+
+      = link_to label, { search: search.search_params.merge( { sort: sort_column[:column], direction: direction}),  }
+
+      - if sort_column[:column] == search.sort_column
+        - icon = search.sort_direction == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'
+        = content_tag "i class='#{icon} ml-1'"
+    - else
+      = sort_column[:label]
