@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_10_122656) do
+ActiveRecord::Schema.define(version: 2019_09_29_125052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 2019_08_10_122656) do
     t.datetime "updated_at",          :null=>false
     t.datetime "validity_checked_at"
     t.text     "valid_user_domains",  :default=>[], :array=>true
+    t.string   "timezone",            :null=>false
   end
 
   create_table "divisions", id: :serial, force: :cascade do |t|
@@ -97,6 +98,7 @@ ActiveRecord::Schema.define(version: 2019_08_10_122656) do
     t.string   "name",       :null=>false, :index=>{:name=>"index_notification_types_on_name", :unique=>true}
     t.datetime "created_at", :null=>false
     t.datetime "updated_at", :null=>false
+    t.integer  "auth_mode",  :default=>0, :null=>false
   end
 
   create_table "security_roles", id: :serial, force: :cascade do |t|
@@ -128,11 +130,12 @@ ActiveRecord::Schema.define(version: 2019_08_10_122656) do
   end
 
   create_table "system_messages", force: :cascade do |t|
-    t.text     "message",    :null=>false
-    t.integer  "user_id",    :null=>false, :index=>{:name=>"index_system_messages_on_user_id"}
-    t.integer  "send_to",    :default=>0, :null=>false
-    t.datetime "created_at", :null=>false
-    t.datetime "updated_at", :null=>false
+    t.text     "message",      :null=>false
+    t.integer  "user_id",      :null=>false, :index=>{:name=>"index_system_messages_on_user_id"}
+    t.integer  "send_to",      :default=>0, :null=>false
+    t.datetime "created_at",   :null=>false
+    t.datetime "updated_at",   :null=>false
+    t.integer  "message_type", :null=>false
   end
 
   create_table "user_statuses", id: :serial, force: :cascade do |t|
@@ -163,9 +166,8 @@ ActiveRecord::Schema.define(version: 2019_08_10_122656) do
     t.string   "first_name",              :limit=>255, :null=>false, :index=>{:name=>"index_users_on_first_name"}
     t.string   "last_name",               :limit=>255, :null=>false, :index=>{:name=>"index_users_on_last_name"}
     t.string   "mobile_phone",            :limit=>255
-    t.string   "timezone",                :limit=>255
+    t.string   "timezone",                :limit=>255, :null=>false
     t.string   "global_search_default",   :limit=>255
-    t.boolean  "super_admin",             :default=>false, :null=>false
     t.integer  "user_status_id",          :null=>false, :index=>{:name=>"index_users_on_user_status_id"}
     t.string   "authy_id",                :index=>{:name=>"index_users_on_authy_id"}
     t.datetime "last_sign_in_with_authy"

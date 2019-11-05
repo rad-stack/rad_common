@@ -12,16 +12,16 @@ class GlobalValidity
   def check_global_validity
     error_messages = []
 
-    total_start_time = Time.zone.now
+    total_start_time = Time.current
     total_error_count = 0
     models_to_check.each do |model|
       next if exclude_models.include?(model.to_s)
 
       Rails.logger.info("GlobalValidity stats: #{model} starting")
-      start_time = Time.zone.now
+      start_time = Time.current
       model_errors, error_count = check_model(model)
       error_messages = error_messages.concat(model_errors) if model_errors.present?
-      end_time = Time.zone.now
+      end_time = Time.current
       Rails.logger.info(log_time_text(start_time, end_time, model))
       Rails.logger.info(log_error_count_text(model, error_count)) unless error_count.zero?
       total_error_count += error_count
@@ -31,16 +31,16 @@ class GlobalValidity
 
     specific_queries.each do |query|
       Rails.logger.info("GlobalValidity stats: #{query.call.to_sql} starting")
-      start_time = Time.zone.now
+      start_time = Time.current
       query_errors, error_count = check_query_records(query)
       error_messages = error_messages.concat(query_errors) if query_errors.present?
-      end_time = Time.zone.now
+      end_time = Time.current
       Rails.logger.info(log_time_text(start_time, end_time, query.call.to_sql))
       Rails.logger.info(log_error_count_text(query.call.to_sql, error_count)) unless error_count.zero?
       total_error_count += error_count
     end
 
-    total_end_time = Time.zone.now
+    total_end_time = Time.current
     Rails.logger.info(log_time_text(total_start_time, total_end_time, 'All Models'))
     Rails.logger.info(log_error_count_text('All Models', total_error_count)) unless total_error_count.zero?
 

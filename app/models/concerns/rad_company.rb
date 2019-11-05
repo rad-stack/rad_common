@@ -8,7 +8,7 @@ module RadCompany
 
     scope :by_id, -> { order(:id) }
 
-    schema_validations except: :valid_user_domains
+    schema_validations except: %i[valid_user_domains]
 
     validates_with EmailAddressValidator, fields: %i[email]
     validates_with PhoneNumberValidator
@@ -24,15 +24,15 @@ module RadCompany
     end
 
     def staging?
-      ENV['STAGING'] == 'true'
+      ENV.fetch('STAGING') == 'true'
     end
   end
 
   def valid_user_domains_entry=(value)
     if value
       items = value.split(',')
-      stripped = items.map { |item| item.strip }
-      self.valid_user_domains = stripped.reject { |item| item.blank? }
+      stripped = items.map(&:strip)
+      self.valid_user_domains = stripped.reject(&:blank?)
     else
       self.valid_user_domains = '{}'
     end
@@ -43,11 +43,11 @@ module RadCompany
   end
 
   def global_validity_ran!
-    update! validity_checked_at: Time.zone.now
+    update! validity_checked_at: Time.current
   end
 
   def usage_stats
-    today = Time.zone.now
+    today = Time.current
 
     usage_headers = (0..5).to_a.reverse.map do |item|
       { start: today.advance(months: -item).beginning_of_month.beginning_of_day,

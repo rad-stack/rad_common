@@ -54,10 +54,9 @@ class DatabaseUseChecker
     def review_column(table_name, column)
       values = column_values(table_name, column)
 
-      case
-      when values.all?(&:blank?)
+      if values.all?(&:blank?)
         puts "  Blank: #{table_name}##{column}"
-      when values.size == 1
+      elsif values.size == 1
         puts "  Identical Values: #{table_name}##{column}"
       end
     end

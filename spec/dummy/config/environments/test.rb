@@ -46,7 +46,10 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: 'example.com' }
   Rails.application.routes.default_url_options[:host] = 'localhost:3000'
+
   config.active_job.queue_adapter = :inline
+  require 'sidekiq/testing'
+  Sidekiq::Testing.inline!
 
   unless ENV['RAILS_ENABLE_TEST_LOG']
     config.logger = Logger.new(nil)

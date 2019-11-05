@@ -7,7 +7,7 @@ module FirebaseAction
         data['error'] = error
         RadbearMailer.simple_message(user, 'Problem', error).deliver_later if user
 
-        User.firebase_admins.each do |admin|
+        User.admins.each do |admin|
           user_description = if user.nil?
                                'a user'
                              else
@@ -16,7 +16,7 @@ module FirebaseAction
 
           email_action = { message: 'Check out the logs here.',
                            button_text: 'View Logs',
-                           button_url:  Rails.application.routes.url_helpers.firebase_logs_url }
+                           button_url: Rails.application.routes.url_helpers.firebase_logs_url }
 
           RadbearMailer.simple_message(admin,
                                        "User Error on #{I18n.t(:app_name)}",
@@ -25,7 +25,7 @@ module FirebaseAction
         end
       end
 
-      data['timestamp'] = Time.zone.now.to_s
+      data['timestamp'] = Time.current.to_s
 
       app = FirebaseApp.new
 

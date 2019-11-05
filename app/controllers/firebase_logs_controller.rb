@@ -19,9 +19,7 @@ class FirebaseLogsController < ApplicationController
   private
 
     def check_result_success(result)
-      unless result.success?
-        raise "#{result.body}"
-      end
+      raise result.body.to_s unless result.success?
     end
 
     def limited_log_categories

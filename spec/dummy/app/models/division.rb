@@ -1,6 +1,7 @@
 class Division < ApplicationRecord
   include FirebaseSync
   include FirebaseAction
+  include Hashable
 
   belongs_to :owner, class_name: 'User'
 
@@ -22,5 +23,9 @@ class Division < ApplicationRecord
     return if response.success?
 
     raise RadicallyIntermittentException, response.raw_body
+  end
+
+  def logo_variant
+    logo.variant(resize: '290x218>').processed
   end
 end

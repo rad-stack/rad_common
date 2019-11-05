@@ -23,8 +23,10 @@ module RadCommon
     require 'schema_validations'
     require 'sentry-raven'
     require 'sidekiq'
+    require 'sidekiq-failures'
     require 'simple_form'
     require 'trix'
+    require 'twilio-ruby'
     require 'bootstrap'
   end
 end

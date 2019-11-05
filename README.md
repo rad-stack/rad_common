@@ -88,16 +88,6 @@ Clone your database from Heroku:
 rake heroku:clone_local[ground-swell-staging]
 ```
 
-Clone a specific company's data from Heroku (make sure to not put spaces in your array):
-```
-rake heroku:clone_local['ground-swell-staging',"5"]
-```
-
-Clone a specific company's data from Heroku and keep the dump file locally(make sure to not put spaces in your array):
-```
-rake heroku:clone_local['ground-swell-staging',"5","keep"]
-```
-
 ##### Local
 
 Restore from a local backup:

@@ -8,8 +8,7 @@ class MigratePaperclipFiles
   attr_accessor :use_expiring_url
   attr_accessor :limit
 
-  def self.perform(model_class, attachment_names, session, use_expiring_url=false, limit=nil)
-
+  def self.perform(model_class, attachment_names, session, use_expiring_url = false, limit = nil)
     attachment_names.each do |attachment_name|
       session.reset_status
       migrator = MigratePaperclipFiles.new
@@ -65,7 +64,7 @@ class MigratePaperclipFiles
     parse_credentials[:bucket]
   end
 
-  def parse_credentials(creds=Rails.root.join('config', 's3.yml'))
+  def parse_credentials(creds = Rails.root.join('config', 's3.yml'))
     creds = creds.respond_to?(:call) ? creds.call(self) : creds
     creds = find_credentials(creds).stringify_keys
     (creds[Rails.env] || creds).symbolize_keys
@@ -74,16 +73,16 @@ class MigratePaperclipFiles
   def find_credentials(creds)
     case creds
     when File
-      YAML::load(ERB.new(File.read(creds.path)).result)
+      YAML.safe_load(ERB.new(File.read(creds.path)).result)
     when String, Pathname
-      YAML::load(ERB.new(File.read(creds)).result)
+      YAML.safe_load(ERB.new(File.read(creds)).result)
     when Hash
       creds
     else
       if creds.respond_to?(:call)
         creds.call(self)
       else
-        raise ArgumentError, "Credentials are not a path, file, hash or proc."
+        raise ArgumentError, 'Credentials are not a path, file, hash or proc.'
       end
     end
   end

@@ -13,8 +13,8 @@ module RadbearUser
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
-    validate :validate_super_admin
 
+    before_validation :set_timezone, on: :create
     after_save :notify_user_approved
   end
 
@@ -42,7 +42,7 @@ module RadbearUser
     permissions = []
 
     security_roles.each do |role|
-      permissions += role.permission_attributes.to_a.reject { |item| !item[1] }.to_h.keys
+      permissions += role.permission_attributes.to_a.select { |item| item[1] }.to_h.keys
     end
 
     permissions
@@ -107,11 +107,8 @@ module RadbearUser
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
 
-    def validate_super_admin
-      return unless super_admin
-
-      errors.add(:super_admin, 'can only be enabled for an admin') unless permission?(:admin)
-      errors.add(:super_admin, 'is not applicable for external users') if external?
+    def set_timezone
+      self.timezone = Company.main.timezone if new_record? && timezone.blank?
     end
 
     def notify_user_approved

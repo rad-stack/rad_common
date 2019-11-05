@@ -11,6 +11,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   authority_actions audit: 'audit'
 
   def index
+    # TODO: change 'all' to a scope for ordering the records
     @<%= plural_table_name %> = <%= orm_class.all(class_name) %>.page(params[:page])
   end
 
@@ -49,7 +50,9 @@ class <%= controller_class_name %>Controller < ApplicationController
       flash[:error] = @<%= singular_table_name %>.errors.full_messages.join(', ')
     end
 
-    if destroyed && (URI(request.referer).path == <%= singular_table_name %>_path(@<%= singular_table_name %>)) || (URI(request.referer).path == edit_<%= singular_table_name %>_path(@<%= singular_table_name %>))
+    if destroyed &&
+       (URI(request.referer).path == <%= singular_table_name %>_path(@<%= singular_table_name %>)) ||
+       (URI(request.referer).path == edit_<%= singular_table_name %>_path(@<%= singular_table_name %>))
       redirect_to <%= index_helper %>_path
     else
       redirect_back(fallback_location: <%= index_helper %>_path)

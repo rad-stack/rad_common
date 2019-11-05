@@ -2,12 +2,12 @@ require 'rails_helper'
 
 describe 'Sendgrid', type: :request do
   describe 'POST email_error' do
-    let!(:super_admin_user1) { create :super_admin }
-    let!(:super_admin_user2) { create :super_admin }
-    let!(:normal_user) { create :user }
-    let!(:company) { Company.main }
+    let!(:admin_user1) { create :admin }
+    let!(:admin_user2) { create :admin }
 
     it 'sends an email to app admins' do
+      create :user
+
       ActionMailer::Base.deliveries = []
 
       sendgrid_info = { '_json': [{ 'email': 'example@test.com', 'timestamp': 1_493_994_015 }] }
@@ -15,8 +15,10 @@ describe 'Sendgrid', type: :request do
       emails = ActionMailer::Base.deliveries
       expect(emails.count).to eq(2)
 
-      expect(emails.first.to).to eq([super_admin_user1.email])
-      expect(emails.last.to).to eq([super_admin_user2.email])
+      all_tos = emails.map(&:to).flatten
+
+      expect(all_tos).to include(admin_user1.email)
+      expect(all_tos).to include(admin_user2.email)
 
       expect(emails.first.subject).to eq('Invalid Email')
       expect(emails.last.subject).to eq('Invalid Email')

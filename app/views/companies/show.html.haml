@@ -1,4 +1,4 @@
 .card
   = render 'layouts/card_header', no_new_button: true, no_delete_button: true, no_index_button: true, additional_actions: company_actions
   .card-body
-    = render 'layouts/show_data_columns', resource: @company, data: [{ label: 'Address', value: @company.full_address }, { label: 'Phone Number', value: (link_to @company.phone_number, "tel:#{@company.phone_number}") }, { label: 'Website', value: (link_to @company.website, @company.website, target: :_blank) }, { label: 'Email', value:(mail_to @company.email) }, :validity_checked_at]
+    = render 'layouts/show_data_columns', resource: @company, data: company_show_data(@company)

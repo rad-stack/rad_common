@@ -3,18 +3,10 @@ require 'rails_helper'
 RSpec.describe 'Security roles', type: :request do
   let(:user) { create :admin }
   let(:security_role) { create :security_role }
+  let(:valid_attributes) { { name: 'foo', read_audit: true } }
+  let(:invalid_attributes) { { name: nil } }
 
-  before do
-    login_as(user, scope: :user)
-  end
-
-  let(:valid_attributes) do
-    { name: 'foo', read_audit: true }
-  end
-
-  let(:invalid_attributes) do
-    { name: nil }
-  end
+  before { login_as(user, scope: :user) }
 
   describe 'POST create' do
     describe 'with valid params' do
@@ -33,7 +25,7 @@ RSpec.describe 'Security roles', type: :request do
     describe 'with invalid params' do
       it 're-renders the new template' do
         post '/security_roles', params: { security_role: invalid_attributes }
-        expect(response).to render_template('new')
+        expect(response.body).to include 'Please review the problems below'
       end
     end
   end
@@ -59,7 +51,7 @@ RSpec.describe 'Security roles', type: :request do
     describe 'with invalid params' do
       it 're-renders the edit template' do
         put "/security_roles/#{security_role.id}", params: { security_role: invalid_attributes }
-        expect(response).to render_template('edit')
+        expect(response.body).to include 'Please review the problems below'
       end
     end
   end

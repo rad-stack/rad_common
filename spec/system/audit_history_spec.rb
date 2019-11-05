@@ -30,7 +30,7 @@ describe 'AuditHistory', type: :system do
     expect(page).to have_content 'Changed Name to Foo'
   end
 
-  context 'audit by' do
+  describe 'audit by' do
     it 'shows audits for objects without show pages' do
       open_status = create :status, name: 'Open'
 
@@ -41,6 +41,5 @@ describe 'AuditHistory', type: :system do
       visit "/users/#{admin.id}/audit_by"
       expect(page).to have_content 'Status - Foo'
     end
-
   end
 end

@@ -12,9 +12,7 @@ describe 'Invitations', type: :system do
   let(:external_email) { Faker::Internet.user_name + '@' + external_domain }
 
   describe 'user' do
-    before do
-      login_as(user, scope: :user)
-    end
+    before { login_as(user, scope: :user) }
 
     describe 'new' do
       it 'does not allow' do
@@ -25,9 +23,7 @@ describe 'Invitations', type: :system do
   end
 
   describe 'admin' do
-    before do
-      login_as(admin, scope: :user)
-    end
+    before { login_as(admin, scope: :user) }
 
     describe 'new' do
       context 'valid' do
@@ -46,7 +42,7 @@ describe 'Invitations', type: :system do
             fill_in 'Email', with: external_email
             fill_in 'First name', with: first_name
             fill_in 'Last name', with: last_name
-            check 'External user?'
+            check 'Client user?'
             click_button 'Send'
             expect(page).to have_content "We invited '#{first_name} #{last_name}'"
           end

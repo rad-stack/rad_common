@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe GlobalValidity, type: :service do
-  let(:global_validity) { GlobalValidity.new }
+  let(:global_validity) { described_class.new }
   let(:admin_security_role) { admin.security_roles.first }
   let(:company) { Company.main }
   let!(:admin) { create :admin }
@@ -36,9 +36,10 @@ describe GlobalValidity, type: :service do
 
     context 'without admin' do
       subject { global_validity.run }
+
       before { admin.update!(security_roles: [create(:security_role)]) }
 
-      it 'should raise an exception' do
+      it 'raises an exception' do
         expect {
           subject
         }.to raise_error(RuntimeError, 'no users to notify')

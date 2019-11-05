@@ -4,18 +4,10 @@ RSpec.describe 'Users', type: :request do
   let(:admin) { create :admin }
   let(:user) { create :user }
   let(:another) { create :user }
+  let(:valid_attributes) { { first_name: Faker::Name.first_name, last_name: Faker::Name.last_name } }
+  let(:invalid_attributes) { { first_name: nil } }
 
-  before do
-    login_as(admin, scope: :user)
-  end
-
-  let(:valid_attributes) do
-    { first_name: Faker::Name.first_name, last_name: Faker::Name.last_name }
-  end
-
-  let(:invalid_attributes) do
-    { first_name: nil }
-  end
+  before { login_as(admin, scope: :user) }
 
   describe 'PUT update' do
     describe 'with valid params' do
@@ -40,23 +32,8 @@ RSpec.describe 'Users', type: :request do
     describe 'with invalid params' do
       it 're-renders the edit template' do
         put "/users/#{user.id}", params: { user: invalid_attributes }
-        expect(response).to render_template('edit')
+        expect(response.body).to include 'Please review the problems below'
       end
-    end
-  end
-
-  describe 'confirm' do
-    before do
-      user.update! confirmed_at: nil
-      visit user_path(user)
-    end
-
-    it 'can manually confirm a user', :js do
-      accept_confirm do
-        click_link 'Confirm Email'
-      end
-
-      expect(page.html).to include 'User was successfully confirmed'
     end
   end
 
@@ -88,26 +65,26 @@ RSpec.describe 'Users', type: :request do
     let!(:search_user) { create :user }
     let!(:search_role) { create :security_role }
 
-    context 'resource with audit' do
+    context 'with audit' do
       it 'renders audit page' do
         get '/users/audit_search', params: { model_name: search_user.class.to_s, record_id: search_user.id }
-        expect(response).to render_template('audits/index')
+        expect(response.body).to include "Updates for <a href=\"/users/#{search_user.id}\">User - Test User</a>"
       end
     end
 
-    context 'resource with no audit' do
+    context 'without audit' do
       it 'does not render audit page' do
         get '/users/audit_search', params: { model_name: search_role.class.to_s, record_id: -1 }
-        expect(response).not_to render_template('audits/index')
+        expect(response.body).not_to include "Updates for <a href=\"/users/#{search_user.id}\">User - Test User</a>"
       end
     end
 
-    context 'no resource' do
+    context 'without resource' do
       it 'does not render audit page' do
         get '/users/audit_search'
-        expect(response).not_to render_template('audits/index')
+        expect(response.body).not_to include 'Audit for Foo with ID of 9999 not found'
         get '/users/audit_search', params: { model_name: 'Foo', record_id: 9999 }
-        expect(response).not_to render_template('audits/index')
+        expect(response.body).to include 'Audit for Foo with ID of 9999 not found'
       end
     end
   end

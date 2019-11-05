@@ -1,10 +1,9 @@
 module RadCommon
   module UsersHelper
     def user_show_data(user)
-      items = %i[email mobile_phone user_status sign_in_count invitation_accepted_at invited_by]
+      items = %i[email mobile_phone user_status timezone sign_in_count invitation_accepted_at invited_by]
       items.push(:authy_id) if ENV['AUTHY_API_KEY'].present?
       items += %i[current_sign_in_ip current_sign_in_at confirmed_at]
-      items.push(:super_admin) if user.internal?
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
       items
     end
@@ -24,8 +23,8 @@ module RadCommon
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
       link_to icon(:check, 'Confirm Email'), confirm_user_path(@user), method: :put,
-                                                 data: { confirm: confirm },
-                                                 class: 'btn btn-warning btn-sm'
+                                                                       data: { confirm: confirm },
+                                                                       class: 'btn btn-warning btn-sm'
     end
 
     def user_reset_authy_action(user)

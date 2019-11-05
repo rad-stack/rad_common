@@ -6,7 +6,7 @@ describe 'Audit search', type: :system do
 
     before { login_as(user, scope: :user) }
 
-    context 'audit exists' do
+    context 'with audit' do
       it 'loads audit page' do
         visit audit_search_users_path
         select user.class.to_s, from: 'record-search'
@@ -15,7 +15,7 @@ describe 'Audit search', type: :system do
         expect(page).to have_content("Updates for #{user.class} - #{user}")
       end
 
-      context 'resource deleted' do
+      context 'when resource deleted' do
         it 'loads audit page' do
           deleted_role = create(:security_role)
           deleted_role.destroy
@@ -28,7 +28,7 @@ describe 'Audit search', type: :system do
       end
     end
 
-    context 'audit does not exist' do
+    context 'without audit' do
       it 'displays audit not found message' do
         invalid_user_id = 9999
         visit audit_search_users_path

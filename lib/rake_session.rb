@@ -10,17 +10,17 @@ class RakeSession
   end
 
   def reset_status
-    raise "please set time_limit variable before running" if !self.time_limit
+    raise 'please set time_limit variable before running' unless time_limit
 
-    @start_time = Time.now
+    @start_time = Time.current
     @counter = 0
   end
 
   def check_status(label, count)
-    @counter = @counter + 1
-    now = Time.now
+    @counter += 1
+    now = Time.current
 
-    if @counter == 1 || (@counter % self.status_frequency == 0)
+    if @counter == 1 || (@counter % status_frequency == 0)
       elapsed = distance_of_time_in_words(@start_time, now, include_seconds: true)
       minutes = ((now - @start_time) / 60).ceil
       per_hour = ((@counter / minutes) * 60).ceil
@@ -34,12 +34,12 @@ class RakeSession
           finished_label = ", finished in #{distance_of_time_in_words(from_time, from_time + hours_remaining.hours)}"
         end
 
-        puts "#{label} #{pluralize(@counter, "items")} #{count_label}in #{pluralize(minutes, "minute")}, #{per_hour} per hour, #{per_day} per day, elapsed: #{elapsed}#{finished_label}"
+        puts "#{label} #{pluralize(@counter, 'items')} #{count_label}in #{pluralize(minutes, 'minute')}, #{per_hour} per hour, #{per_day} per day, elapsed: #{elapsed}#{finished_label}"
       else
         puts "#{label}, elapsed: #{elapsed}"
       end
     end
 
-    return (now - @start_time) > (self.time_limit - (3.minutes))
+    (now - @start_time) > (time_limit - 3.minutes)
   end
 end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Company, type: :model do
-  let(:company) { Company.main }
+  let(:company) { described_class.main }
   let!(:user) { create :admin }
 
   describe 'valid user domains' do
@@ -33,6 +33,7 @@ describe Company, type: :model do
 
     context 'without address 2' do
       before { company.update! address_2: nil }
+
       it { is_expected.to eq 'Address 1, City, State Zipcode' }
     end
   end

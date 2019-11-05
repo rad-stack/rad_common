@@ -132,6 +132,21 @@ describe 'Users', type: :system do
           end
         end
       end
+
+      describe 'confirm' do
+        before do
+          user.update! confirmed_at: nil
+          visit user_path(user)
+        end
+
+        it 'can manually confirm a user', :js do
+          accept_confirm do
+            click_link 'Confirm Email'
+          end
+
+          expect(page.html).to include 'User was successfully confirmed'
+        end
+      end
     end
   end
 
@@ -189,13 +204,30 @@ describe 'Users', type: :system do
   end
 
   describe 'edit' do
-    before do
-      login_as(admin, scope: :user)
-    end
+    before { login_as admin, scope: :user }
 
     it 'renders the edit template' do
       visit edit_user_path(user)
       expect(page).to have_content('Editing User')
+    end
+
+    it "doesn't update roles if user isn't valid" do
+      security_role = create :security_role
+      expect(user.security_roles.count).to eq 1
+
+      visit edit_user_path(user)
+      fill_in 'Last name', with: ''
+      check security_role.name
+      click_button 'Save'
+
+      user.reload
+      expect(user.security_roles.count).to eq 1
+
+      fill_in 'Last name', with: 'Foo'
+      click_button 'Save'
+
+      user.reload
+      expect(user.security_roles.count).to eq 2
     end
 
     context 'dynamically changing fields', js: true do

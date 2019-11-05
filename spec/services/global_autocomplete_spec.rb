@@ -80,7 +80,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
         it 'builds query based on provided columns' do
           scopes = search_scopes.dup
           scopes[2][:columns] = [column]
-          auto_complete = GlobalAutocomplete.new(params, scopes, user)
+          auto_complete = described_class.new(params, scopes, user)
 
           result = auto_complete.autocomplete_result(scope)
           expect(result.count).to eq(1)
@@ -136,7 +136,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       it 'excludes scopes with super_search_exclude marked true' do
         scopes = search_scopes.dup
         scopes[3][:super_search_exclude] = true
-        auto_complete = GlobalAutocomplete.new(params, scopes, user)
+        auto_complete = described_class.new(params, scopes, user)
         result = auto_complete.global_super_search_result
         expect(result.count).to eq(1)
       end
@@ -183,7 +183,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
     context 'value datetime' do
       it 'returns formatted datetime' do
-        datetime = Time.zone.now
+        datetime = Time.current
         expect(auto_complete.format_column_value(datetime)).to eq(format_datetime(datetime))
       end
     end
@@ -241,7 +241,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
         it 'returns string query' do
           scopes = search_scopes.dup
           scopes[2][:columns] = [column]
-          auto_complete = GlobalAutocomplete.new(params, scopes, user)
+          auto_complete = described_class.new(params, scopes, user)
           expect(auto_complete.where_query).to eq("#{column} ILIKE :search")
         end
       end
@@ -252,7 +252,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
         it 'returns date query' do
           scopes = search_scopes.dup
           scopes[2][:columns] = [column]
-          auto_complete = GlobalAutocomplete.new(params, scopes, user)
+          auto_complete = described_class.new(params, scopes, user)
           expect(auto_complete.where_query).to eq("CAST(#{column} AS TEXT) LIKE :search")
         end
       end

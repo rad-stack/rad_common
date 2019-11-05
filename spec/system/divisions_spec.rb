@@ -4,9 +4,7 @@ RSpec.describe 'Divisions', type: :system do
   let(:user) { create :admin }
   let(:division) { create :division }
 
-  before do
-    login_as(user, scope: :user)
-  end
+  before { login_as(user, scope: :user) }
 
   describe 'new' do
     it 'renders the new template' do
@@ -39,6 +37,7 @@ RSpec.describe 'Divisions', type: :system do
 
       context 'invalid due to file size' do
         let(:file) { 'spec/test_files/large_logo.png' }
+
         it 'validates' do
           expect(page).to have_content 'File could not be saved. File size must be less than 48.8 KB.'
           expect(division.icon.attached?).to be false
@@ -113,6 +112,28 @@ RSpec.describe 'Divisions', type: :system do
 
     it 'shows the right actions' do
       expect(page).to have_content('Right Button')
+    end
+
+    context 'attachments' do
+      let(:prompt) { 'Are you sure? Attachment cannot be recovered.' }
+
+      before do
+        division.logo.attach(io: File.open(Rails.root.join('app', 'assets', 'images', 'app_logo.png')), filename: 'logo.png')
+        visit division_path(division)
+      end
+
+      it 'allows attachment to be deleted', js: true do
+        expect(ActiveStorage::Attachment.count).to eq 1
+
+        page.accept_confirm prompt do
+          click_link 'x'
+        end
+
+        division.reload
+        expect(page).to have_content 'Attachment successfully deleted'
+        expect(ActiveStorage::Attachment.count).to eq 0
+        expect(division.logo.attached?).to be false
+      end
     end
   end
 end

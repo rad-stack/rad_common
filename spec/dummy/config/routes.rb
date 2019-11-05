@@ -32,5 +32,9 @@ Rails.application.routes.draw do
 
   resources :firebase_logs, only: %i[index destroy]
 
+  authenticate :user, ->(u) { u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   root to: 'pages#home'
 end

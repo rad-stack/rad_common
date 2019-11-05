@@ -1,0 +1,46 @@
+class TwilioPhoneValidator < ActiveModel::Validator
+  def validate(record)
+    return unless Rails.env.production? || (defined?(TwilioMockModel) && record.is_a?(TwilioMockModel))
+    raise 'please specify options for this validation' unless options && options[:fields]
+
+    fields = options[:fields]
+    multiples = options[:multiples]
+
+    # phone number validations that check whether valid mobile # cost half a penny per request
+    fields.each do |field|
+      next if record.send(field[:field]).blank? || !record.send(field[:field].to_s + '_changed?')
+
+      mobile = field[:type] && field[:type] == :mobile
+      attribute = record.send(field[:field])
+      if multiples
+        numbers = attribute
+        message = 'appears to include at least one invalid'
+      else
+        numbers = [attribute]
+        message = 'does not appear to be a valid'
+      end
+
+      numbers.each do |number|
+        response = get_phone_number(number, mobile)
+
+        begin
+          record.errors.add(field[:field], "#{message} mobile phone number") if mobile\
+            && response.carrier['type'] != 'mobile'
+          response.phone_number
+        rescue Twilio::REST::RequestError, NoMethodError
+          record.errors.add(field[:field], "#{message} phone number")
+        end
+      end
+    end
+  end
+
+  def get_phone_number(attribute, mobile)
+    converted_phone_number = attribute.gsub(/[^0-9a-z\\s]/i, '')
+    mobile ? lookup_number(converted_phone_number, 'carrier') : lookup_number(converted_phone_number)
+  end
+
+  def lookup_number(number, type = nil)
+    lookup_client = Twilio::REST::LookupsClient.new
+    type ? lookup_client.phone_numbers.get(number, type: type) : lookup_client.phone_numbers.get(number)
+  end
+end

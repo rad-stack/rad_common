@@ -1,7 +1,6 @@
 class RadbearMailer < ActionMailer::Base
   include ActionView::Helpers::TextHelper
   include RadCommon::ApplicationHelper
-  helper RadCommon::SecuredLinkHelper
 
   layout 'radbear_mailer'
   before_action :set_defaults
@@ -20,7 +19,7 @@ class RadbearMailer < ActionMailer::Base
                       button_url: edit_user_url(user) }
 
     @recipient = User.where(id: recipients)
-    to_address = @recipient.map { |item| item.formatted_email }
+    to_address = @recipient.map(&:formatted_email)
 
     @message = "#{user} has signed up on #{I18n.t(:app_name)}"
     @message += auto_approve ? '.' : ' and is awaiting approval.'
@@ -45,7 +44,7 @@ class RadbearMailer < ActionMailer::Base
     approved_by_name = (approver ? approver.to_s : 'an admin')
 
     @recipient = User.where(id: recipients)
-    to_address = @recipient.map { |item| item.formatted_email }
+    to_address = @recipient.map(&:formatted_email)
 
     @message = "#{user} was approved by #{approved_by_name} on #{I18n.t(:app_name)}."
     mail(to: to_address, subject: "User Was Approved on #{I18n.t(:app_name)}")
@@ -73,7 +72,7 @@ class RadbearMailer < ActionMailer::Base
 
   def global_validity(recipients, problems)
     @recipient = User.where(id: recipients)
-    to_address = @recipient.map { |item| item.formatted_email }
+    to_address = @recipient.map(&:formatted_email)
 
     @problems = problems
 

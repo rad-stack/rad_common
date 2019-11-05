@@ -22,7 +22,7 @@ module RadCommon
 
     def gravatar_for(user, size)
       size = size_symbol_to_int(size) if size.is_a?(Symbol)
-      gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
+      gravatar_id = Digest::MD5.hexdigest(user.email.downcase)
       "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}&d=mm"
     end
 
@@ -40,6 +40,7 @@ module RadCommon
 
     def format_datetime(value, options = {})
       return nil if value.blank?
+
       format_string = '%-m/%-d/%Y %l:%M'
       format_string += ':%S' if options[:include_seconds]
       format_string += ' %p'
@@ -64,9 +65,9 @@ module RadCommon
     end
 
     def timezone_us_filter
-      regex_str = ActiveSupport::TimeZone.us_zones.map{ |z| z.name }.join('|')
-      regex_str.gsub!("(", "\\(", )
-      regex_str.gsub!(")", "\\)", )
+      regex_str = ActiveSupport::TimeZone.us_zones.map(&:name).join('|')
+      regex_str.gsub!('(', '\\(')
+      regex_str.gsub!(')', '\\)')
       regex_str = '(' + regex_str + ')'
       Regexp.new regex_str
     end
@@ -82,10 +83,10 @@ module RadCommon
     def options_for_enum(klass, enum)
       enums = enum.to_s.pluralize
       enum_values = klass.send(enums)
-      enum_values.map do |enum_value, db_value|
+      enum_values.map { |enum_value, _db_value|
         translated = enum_to_translated_option(klass, enums, enum_value)
         [translated, enum_value]
-      end.reject { |translated, enum_value| translated.blank? }
+      }.reject { |translated, _enum_value| translated.blank? }
     end
 
     def mailer_image_url(image)

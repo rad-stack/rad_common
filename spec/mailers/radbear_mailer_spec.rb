@@ -12,7 +12,7 @@ describe RadbearMailer, type: :mailer do
 
   describe '#global_validity' do
     context 'with one user' do
-      before { RadbearMailer.global_validity([user], []).deliver_now }
+      before { described_class.global_validity([user], []).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -22,7 +22,7 @@ describe RadbearMailer, type: :mailer do
     end
 
     context 'with multiple users' do
-      before { RadbearMailer.global_validity(User.where(id: [user.id, another_user.id]), []).deliver_now }
+      before { described_class.global_validity(User.where(id: [user.id, another_user.id]), []).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -36,10 +36,11 @@ describe RadbearMailer, type: :mailer do
   describe '#simple_message' do
     let(:recipient) { email }
 
-    before { RadbearMailer.simple_message(recipient, 'foo', 'bar').deliver_now }
+    before { described_class.simple_message(recipient, 'foo', 'bar').deliver_now }
 
     describe 'subject' do
       subject { last_email.subject }
+
       it { is_expected.to eq 'foo' }
     end
 
@@ -52,6 +53,7 @@ describe RadbearMailer, type: :mailer do
 
       context 'to a user' do
         let(:recipient) { user }
+
         it { is_expected.to eq [email] }
       end
 
@@ -67,11 +69,11 @@ describe RadbearMailer, type: :mailer do
   describe '#email_report' do
     let(:csv) { CSV.generate { '' } }
     let(:report_name) { 'Sample Report' }
-    let(:start_date) { Time.zone.now }
-    let(:end_date) { Time.zone.now }
+    let(:start_date) { Time.current }
+    let(:end_date) { Time.current }
     let(:options) { { start_date: start_date, end_date: end_date } }
 
-    before { RadbearMailer.email_report(user, csv, report_name, options).deliver_now }
+    before { described_class.email_report(user, csv, report_name, options).deliver_now }
 
     it 'emails a csv report' do
       expect(last_email.subject).to include('Sample Report')

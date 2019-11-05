@@ -11,7 +11,7 @@ class RefactorNotifications < ActiveRecord::Migration[5.2]
     add_index :notification_types, :name, unique: true
 
     if production
-      execute "INSERT INTO notification_types (name, created_at, updated_at) SELECT DISTINCT notification_type, current_timestamp, current_timestamp FROM notification_security_roles"
+      execute 'INSERT INTO notification_types (name, created_at, updated_at) SELECT DISTINCT notification_type, current_timestamp, current_timestamp FROM notification_security_roles'
     end
 
     add_column :notification_security_roles, :notification_type_id, :integer

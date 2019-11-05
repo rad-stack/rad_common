@@ -3,18 +3,10 @@ require 'rails_helper'
 RSpec.describe 'Companies', type: :request do
   let(:user) { create :admin }
   let(:company) { Company.main }
+  let(:valid_attributes) { { name: 'foo' } }
+  let(:invalid_attributes) { { name: nil } }
 
-  before do
-    login_as(user, scope: :user)
-  end
-
-  let(:valid_attributes) do
-    { name: 'foo' }
-  end
-
-  let(:invalid_attributes) do
-    { name: nil }
-  end
+  before { login_as(user, scope: :user) }
 
   describe 'PUT update' do
     describe 'with valid params' do
@@ -37,7 +29,7 @@ RSpec.describe 'Companies', type: :request do
     describe 'with invalid params' do
       it 're-renders the edit template' do
         put "/companies/#{company.id}", params: { company: invalid_attributes }
-        expect(response).to render_template('edit')
+        expect(response.body).to include 'Please review the problems below'
       end
     end
   end

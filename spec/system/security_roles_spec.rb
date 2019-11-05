@@ -4,9 +4,7 @@ RSpec.describe 'SecurityRoles', type: :system do
   let(:user) { create :admin }
   let(:security_role) { SecurityRole.first }
 
-  before do
-    login_as(user, scope: :user)
-  end
+  before { login_as(user, scope: :user) }
 
   describe 'new' do
     it 'renders the new template' do

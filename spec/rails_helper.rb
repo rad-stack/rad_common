@@ -29,7 +29,24 @@ require 'firebase'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+# Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+
+require 'vcr'
+
+VCR.configure do |c|
+  c.cassette_library_dir = Rails.root.join('spec', 'vcr')
+  c.hook_into :webmock
+  c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com'
+end
+
+RSpec.configure do |c|
+  c.around(:each, :vcr) do |example|
+    name = example.metadata[:full_description].split(/\s+/, 2).join('/').underscore.gsub(%r{[^\w/]+}, '_')
+    options = example.metadata.slice(:record, :match_requests_on).except(:example_group)
+    VCR.use_cassette(name, options) { example.call }
+  end
+end
+
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -61,6 +78,28 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 
+  Capybara.register_driver :headless_chrome do |app|
+    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+      chromeOptions: { args: %w[headless disable-popup-blocking disable-gpu window-size=1400,900], w3c: false }
+    )
+
+    Capybara::Selenium::Driver.new app,
+                                   browser: :chrome,
+                                   desired_capabilities: capabilities
+  end
+
+  Capybara.register_driver :chrome do |app|
+    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+      chromeOptions: { args: %w[disable-popup-blocking disable-gpu window-size=1400,900], w3c: false }
+    )
+
+    Capybara::Selenium::Driver.new app,
+                                   browser: :chrome,
+                                   desired_capabilities: capabilities
+  end
+
+  Capybara.javascript_driver = ENV['show_browser'] ? :chrome : :headless_chrome
+
   config.before do
     allow(Company).to receive(:main).and_return(create(:company))
 
@@ -69,7 +108,7 @@ RSpec.configure do |config|
     allow(UserStatus).to receive(:default_inactive_status).and_return(create(:user_status, :inactive, name: 'Inactive'))
   end
 
-  config.after(:each) do
+  config.after do
     Warden.test_reset!
   end
 
@@ -82,25 +121,6 @@ RSpec.configure do |config|
   end
 
   config.before(:example, type: :system, js: true) do
-    driven_by :selenium_chrome_headless
+    driven_by :headless_chrome
   end
 end
-
-Capybara.register_driver :headless_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: {
-      args: %w[headless disable-popup-blocking disable-gpu window-size=1400,900],
-      w3c: false
-    }
-  )
-
-  Capybara::Selenium::Driver.new app, browser: :chrome, desired_capabilities: capabilities
-end
-
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
-end
-
-chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
-
-Capybara.javascript_driver = chrome_driver
