@@ -3,6 +3,8 @@ module RadCommon
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope
 
     def initialize(column: nil, options:, scope_values: nil, joins: nil, input_label: nil, blank_value_label: nil, scope: nil, multiple: false)
+      raise 'Input label is required when options are not active record objects' if input_label.blank? && !options.respond_to?(:table_name)
+
       @column = column
       @options = options
       @joins = joins
@@ -11,10 +13,11 @@ module RadCommon
       @scope_values = scope_values
       @scope = scope
       @multiple = multiple
+      @grouped = false #todo make group select work
     end
 
     def input_options
-      if @scope_values.present?
+      if scope_values?
         scope_options = @scope_values.keys.map { |option| [option, option]}
         scope_options + options.map { |option| [option.to_s, option.id] }
       else
@@ -22,8 +25,12 @@ module RadCommon
       end
     end
 
+    def scope_values?
+      @scope_values.present?
+    end
+
     def label_method
-      @scope_values.present? ? :first : :to_s
+      @scope_values.present? || options.first.is_a?(Array) ? :first : :to_s
     end
 
     def apply_filter(results, value)
@@ -61,11 +68,22 @@ module RadCommon
     end
 
     def apply_scope_filter(results, value)
-      results.send(scope, value)
+      if scope.is_a? Hash
+        scope_proc = scope.values.first
+        scope_proc.call(results, value)
+      else
+        results.send(scope, value)
+      end
     end
 
     def searchable_name
-      @scope || @column
+      scope_name || @column
+    end
+
+    def scope_name
+      return if @scope.blank?
+
+      @scope.is_a?(Hash) ? @scope.keys.first : @scope
     end
 
     def blank_value_label
@@ -81,7 +99,7 @@ module RadCommon
     end
 
     def input_type
-      options.first.is_a?(Array) ? :grouped_select : :select
+      @grouped ? :grouped_select : :select
     end
   end
 end

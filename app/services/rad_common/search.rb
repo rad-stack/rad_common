@@ -1,13 +1,14 @@
 module RadCommon
   class Search
-    attr_reader :filters, :params, :current_user
+    attr_reader :filters, :sort_columns, :params, :current_user, :sort_column, :sort_direction
 
-    def initialize(query:, filters:, current_user:, params:)
+    def initialize(query:, filters:, sort_columns:[], current_user:, params:)
       @results = query
       @filters = build_search_filters(filters)
       @filter_hash =  Hash[@filters.collect { |f| [f.searchable_name, f] }]
       @current_user = current_user
       @params = params
+      @sort_columns = sort_columns
 
       setup_defaults
     end
