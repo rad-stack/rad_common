@@ -36,7 +36,7 @@ module RadCommon
     end
 
     def sort_params
-      params.require(:search).permit(:sort, :direction)
+      search_params? ? params.require(:search).permit(:sort, :direction) : {}
     end
   end
 end

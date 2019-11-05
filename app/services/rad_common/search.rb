@@ -21,5 +21,11 @@ module RadCommon
       apply_sorting
       @results
     end
+
+    private
+
+    def search_params?
+      params.has_key? :search
+    end
   end
 end

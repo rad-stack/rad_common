@@ -42,10 +42,6 @@ module RadCommon
 
     private
 
-    def search_params?
-      params.has_key? :search
-    end
-
     def apply_filtering
       apply_joins
       apply_filters
