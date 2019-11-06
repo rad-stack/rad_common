@@ -6,6 +6,10 @@ module RadbearController
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     before_action :set_raven_user_context
     around_action :user_time_zone, if: :current_user
+    after_action :verify_authorized, unless: :devise_controller?
+    # TODO: after_action :verify_policy_scoped, only: :index
+
+    rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   end
 
   def authorize_action_for(record)
@@ -92,5 +96,10 @@ module RadbearController
 
     def user_time_zone(&block)
       Time.use_zone(current_user.timezone, &block)
+    end
+
+    def user_not_authorized
+      flash[:alert] = 'You are not authorized to perform this action.'
+      redirect_to(request.referrer || root_path)
     end
 end

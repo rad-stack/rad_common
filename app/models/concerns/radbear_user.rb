@@ -95,6 +95,30 @@ module RadbearUser
     end
   end
 
+  def can_create?(klass)
+    Pundit.policy!(self, klass).create?
+  end
+
+  def can_read?(klass)
+    Pundit.policy!(self, klass).show?
+  end
+
+  def can_update?(klass)
+    Pundit.policy!(self, klass).update?
+  end
+
+  def can_delete?(klass)
+    Pundit.policy!(self, klass).destroy?
+  end
+
+  def can_audit?(klass)
+    Pundit.policy!(self, klass).audit?
+  end
+
+  def can_global_validate?(klass)
+    Pundit.policy!(self, klass).global_validate?
+  end
+
   private
 
     def validate_email_address
