@@ -5,6 +5,7 @@ class NotificationTypesController < ApplicationController
   authorize_actions_for NotificationType
 
   def index
+    authorize NotificationType
     @notification_types = NotificationType.by_name
   end
 
@@ -26,6 +27,7 @@ class NotificationTypesController < ApplicationController
 
     def set_notification_type
       @notification_type = NotificationType.find(params[:id])
+      authorize @notification_type
     end
 
     def resolve_roles(role_ids)

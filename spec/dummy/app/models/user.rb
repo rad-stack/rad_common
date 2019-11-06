@@ -51,6 +51,10 @@ class User < ApplicationRecord
     Pundit.policy!(self, klass).audit?
   end
 
+  def can_global_validate?(klass)
+    Pundit.policy!(self, klass).global_validate?
+  end
+
   def to_s
     "#{first_name} #{last_name}"
   end

@@ -1,20 +1,15 @@
 class ApplicationController < ActionController::Base
-  # after_action :verify_authorized, except: %i[home global_search global_search_result],
-  #                                  if: :auditing_security?, unless: :devise_controller?
-  #
-  # after_action :verify_policy_scoped, only: :index
+  after_action :verify_authorized, unless: :devise_controller?
+
+  # TODO: after_action :verify_policy_scoped, only: :index
 
   include RadbearController
   include RadbearAuditsController
 
   protect_from_forgery prepend: true, with: :exception
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   protected
-
-    def auditing_security?
-      controller_name = self.class
-      [RadCommon::SendgridController].exclude?(controller_name)
-    end
 
     def configure_devise_permitted_parameters
       additional_params = %i[first_name last_name authy_enabled mobile_phone avatar timezone]
@@ -25,5 +20,10 @@ class ApplicationController < ActionController::Base
 
       invite_params = %i[email first_name last_name external mobile_phone]
       devise_parameter_sanitizer.permit(:invite) { |u| u.permit(invite_params) }
+    end
+
+    def user_not_authorized
+      flash[:alert] = 'You are not authorized to perform this action.'
+      redirect_to(request.referrer || root_path)
     end
 end

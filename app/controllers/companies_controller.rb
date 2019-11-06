@@ -4,9 +4,6 @@ class CompaniesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_company, only: %i[show edit update global_validity_check audit]
 
-  authorize_actions_for Company
-  authority_actions global_validity_check: 'global_validate', audit: 'audit'
-
   def show; end
 
   def edit; end
@@ -23,6 +20,7 @@ class CompaniesController < ApplicationController
 
     def set_company
       @company = Company.main
+      authorize @company
     end
 
     def permitted_params

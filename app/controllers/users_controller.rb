@@ -2,16 +2,9 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user, only: %i[show edit update destroy audit audit_by resend_invitation confirm reset_authy]
 
-  authorize_actions_for User
-
-  authority_actions audit: 'audit',
-                    audit_by: 'audit',
-                    audit_search: 'audit',
-                    resend_invitation: 'create',
-                    confirm: 'update',
-                    reset_authy: 'update'
-
   def index
+    authorize User
+
     @pending = User.authorized(current_user).pending.recent_first.page(params[:pending_page]).per(3)
 
     @status = if params[:status].present?
@@ -114,7 +107,7 @@ class UsersController < ApplicationController
 
     def set_user
       @user = User.find(params[:id])
-      authorize_action_for @user
+      authorize @user
     end
 
     def permitted_params

@@ -3,7 +3,9 @@ class NotificationSettingsController < ApplicationController
 
   authorize_actions_for NotificationSetting
 
-  def index; end
+  def index
+    authorize NotificationSetting
+  end
 
   def create
     notification_type_id = permitted_params[:notification_type_id]

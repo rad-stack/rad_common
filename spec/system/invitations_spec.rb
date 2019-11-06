@@ -17,7 +17,7 @@ describe 'Invitations', type: :system do
     describe 'new' do
       it 'does not allow' do
         visit new_user_invitation_path
-        expect(page).to have_content 'Access Denied'
+        expect(page).to have_content 'You are not authorized to perform this action.'
       end
     end
   end

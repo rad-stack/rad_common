@@ -8,11 +8,13 @@ class SystemMessagesController < ApplicationController
 
   def new
     @system_message = SystemMessage.recent_or_new(current_user)
+    authorize @system_message
   end
 
   def create
     @system_message = SystemMessage.new(permitted_params)
     @system_message.user = current_user
+    authorize @system_message
 
     if @system_message.save
       @system_message.send!
@@ -26,6 +28,7 @@ class SystemMessagesController < ApplicationController
 
     def set_system_message
       @system_message = SystemMessage.find(params[:id])
+      authorize @system_message
     end
 
     def permitted_params
