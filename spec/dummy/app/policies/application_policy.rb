@@ -34,10 +34,6 @@ class ApplicationPolicy
     user.permission?(:admin)
   end
 
-  def global_validate?
-    user.permission?(:admin)
-  end
-
   def audit?
     user.permission?(:admin)
   end

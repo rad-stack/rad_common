@@ -10,5 +10,6 @@ class SecurityRolesUsersController < ApplicationController
 
     def set_security_roles_user
       @security_roles_user = SecurityRolesUser.find(params[:id])
+      authorize @security_roles_user.security_role
     end
 end

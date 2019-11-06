@@ -52,6 +52,7 @@ class SecurityRolesController < ApplicationController
   end
 
   def permission
+    authorize SecurityRole
     @permission_name = params[:permission_name]
     @security_roles = SecurityRole.where("#{@permission_name} = TRUE").by_name
     @users = User.by_permission(@permission_name).by_name
