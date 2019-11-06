@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DivisionAuthorizer, type: :authorizer do
+RSpec.describe DivisionPolicy, type: :policy do
   let(:creator_role) { create :security_role, read_division: true, create_division: true }
   let(:updator_role) { create :security_role, read_division: true, update_division: true }
 
@@ -17,25 +17,29 @@ RSpec.describe DivisionAuthorizer, type: :authorizer do
     manager.security_roles << updator_role
   end
 
-  describe 'creatable' do
+  subject { described_class }
+
+  permissions :create? do
     it 'authorizes admins' do
-      expect(admin.can_create?(Division)).to eq(true)
+      expect(subject).to permit(admin, Division.new)
     end
 
     it 'authorizes creator' do
-      expect(creator.can_create?(Division)).to eq(true)
+      expect(subject).to permit(creator, Division.new)
     end
 
     it 'authorizes manager' do
-      expect(manager.can_create?(Division)).to eq(true)
+      expect(subject).to permit(manager, Division.new)
     end
 
     it 'denies non-admins' do
-      expect(user.can_create?(Division)).to eq(false)
+      expect(subject).not_to permit(user, Division.new)
     end
 
     it 'denies updator' do
-      expect(updator.can_create?(Division)).to eq(false)
+      expect(subject).not_to permit(updator, Division.new)
     end
   end
 end
+
+

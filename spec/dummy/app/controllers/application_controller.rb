@@ -1,6 +1,4 @@
 class ApplicationController < ActionController::Base
-  include Pundit
-
   after_action :verify_authorized, except: %i[home global_search global_search_result],
                                    if: :auditing_security?, unless: :devise_controller?
 
