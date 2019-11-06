@@ -31,6 +31,26 @@ class User < ApplicationRecord
 
   audited except: %i[password password_confirmation encrypted_password reset_password_token confirmation_token authentication_token unlock_token]
 
+  def can_create?(klass)
+    Pundit.policy!(self, klass).create?
+  end
+
+  def can_read?(klass)
+    Pundit.policy!(self, klass).show?
+  end
+
+  def can_update?(klass)
+    Pundit.policy!(self, klass).update?
+  end
+
+  def can_delete?(klass)
+    Pundit.policy!(self, klass).destroy?
+  end
+
+  def can_audit?(klass)
+    Pundit.policy!(self, klass).audit?
+  end
+
   def to_s
     "#{first_name} #{last_name}"
   end
