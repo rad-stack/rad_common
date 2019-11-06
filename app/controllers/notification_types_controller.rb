@@ -2,8 +2,6 @@ class NotificationTypesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_notification_type, only: %i[edit update]
 
-  authorize_actions_for NotificationType
-
   def index
     authorize NotificationType
     @notification_types = NotificationType.by_name

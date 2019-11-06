@@ -1,16 +1,17 @@
 class FirebaseLogsController < ApplicationController
   before_action :authenticate_user!
 
-  authorize_actions_for User
   LOG_LIMIT = 100
 
   def index
+    authorize User, :update?
     @app = FirebaseApp.new
     @limited_log_categories = limited_log_categories
     @firebase_logs = firebase_results
   end
 
   def destroy
+    authorize User
     FirebaseLogDestroyJob.perform_later(params[:type], params[:id], current_user.id)
     flash[:info] = 'Firebase log destruction is in progress'
     redirect_to firebase_logs_path

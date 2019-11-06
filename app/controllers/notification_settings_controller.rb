@@ -1,8 +1,6 @@
 class NotificationSettingsController < ApplicationController
   before_action :authenticate_user!
 
-  authorize_actions_for NotificationSetting
-
   def index
     authorize NotificationSetting
   end

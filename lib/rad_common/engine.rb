@@ -6,7 +6,6 @@ module RadCommon
     end
 
     require 'audited'
-    require 'authority'
     require 'devise'
     require 'devise-authy'
     require 'devise_invitable'
