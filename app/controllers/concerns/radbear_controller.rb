@@ -8,6 +8,10 @@ module RadbearController
     around_action :user_time_zone, if: :current_user
   end
 
+  def authorize_action_for(record)
+    authorize record
+  end
+
   def validate_active_storage_attachment(record, attribute, file, valid_types, no_redirect = false, max_file_size = nil)
     if valid_active_storage_attachment?(record, attribute, file, valid_types, max_file_size)
       true
