@@ -1,4 +1,6 @@
 class UserStatus < ApplicationRecord
+  include Authority::Abilities
+
   scope :not_pending, -> { where.not(id: UserStatus.default_pending_status.id) }
   scope :by_id, -> { order(:id) }
 

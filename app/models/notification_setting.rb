@@ -1,4 +1,6 @@
 class NotificationSetting < ApplicationRecord
+  include Authority::Abilities
+
   belongs_to :notification_type
   belongs_to :user
 

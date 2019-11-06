@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include Authority::UserAbilities
+  include Authority::Abilities
   include RadbearUser
   include RadAuthy
   include FirebaseSync
