@@ -5,7 +5,7 @@ module RadCommon
     def secured_link(resource, format: nil)
       return unless resource
 
-      if current_user.can_read?(resource)
+      if Pundit.policy!(current_user, resource).show?
         link_to(resource_name(resource), resource, format: format)
       else
         resource_name(resource)
@@ -27,7 +27,7 @@ module RadCommon
     end
 
     def show_actions?(klass)
-      current_user.can_update?(klass) || current_user.can_delete?(klass)
+      policy(klass).update? || policy(klass).destroy?
     end
 
     def format_date(value)

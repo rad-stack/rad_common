@@ -9,7 +9,7 @@ module RadCommon
     end
 
     def users_actions
-      return unless current_user.can_create?(User)
+      return unless policy(User).create?
 
       [link_to(icon('plus-square', 'Invite User'), new_user_invitation_path, class: 'btn btn-success btn-sm')]
     end
@@ -19,7 +19,7 @@ module RadCommon
     end
 
     def user_confirm_action(user)
-      return unless current_user.can_update?(User) && current_user.can_update?(user) && !user.confirmed?
+      return unless policy(user).update? && !user.confirmed?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
       link_to icon(:check, 'Confirm Email'), confirm_user_path(@user), method: :put,
@@ -28,7 +28,7 @@ module RadCommon
     end
 
     def user_reset_authy_action(user)
-      return unless current_user.can_update?(User) && current_user.can_update?(user) && user.authy_enabled?
+      return unless policy(user).update? && user.authy_enabled?
 
       confirm = "This will reset the user's two factor authentication configuration if they are having problems. "\
                 'Are you sure?'

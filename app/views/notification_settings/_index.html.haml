@@ -1,5 +1,5 @@
--can_create = current_user.can_create?(NotificationSetting)
--can_type = current_user.can_update?(NotificationType)
+-can_create = policy(NotificationSetting).create?
+-can_type = policy(NotificationType).update?
 
 .card-body
   %table.table.table-striped.table-bordered
@@ -15,7 +15,7 @@
           -else
             = notification_setting.notification_type
         %td
-          -if can_create && current_user.can_create?(notification_setting)
+          -if can_create && policy(notification_setting).create?
             = simple_form_for notification_setting, url: '/rad_common/notification_settings', method: :post do |f|
               = f.error_notification
               .form-inputs

@@ -7,7 +7,6 @@ module RadbearController
     before_action :set_raven_user_context
     around_action :user_time_zone, if: :current_user
     after_action :verify_authorized, unless: :devise_controller?
-    # TODO: after_action :verify_policy_scoped, only: :index
 
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   end

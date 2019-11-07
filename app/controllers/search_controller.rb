@@ -3,7 +3,7 @@ class SearchController < ApplicationController
 
   def global_search
     # authorization is checked within the global_autocomplete_result
-    skip_authorization # TODO: see if we can move auth here with pundit
+    skip_authorization
 
     global_autocomplete = GlobalAutocomplete.new(params, view_context.global_search_scopes, current_user)
 
@@ -16,7 +16,7 @@ class SearchController < ApplicationController
 
   def global_search_result
     # authorization is checked by the redirect destination
-    skip_authorization # TODO: see if we can move auth here with pundit
+    skip_authorization
 
     if params[:global_search_model_name].blank? || params[:global_search_id].blank?
       flash[:error] = 'Missing parameters'

@@ -39,7 +39,7 @@ module RadCommon
     def destroy
       attachment = ActiveStorage::Attachment.find(params[:id])
       record = attachment.record
-      authorize record, :update? # TODO: test that this auth is working
+      authorize record, :update?
       attachment.purge_later
       flash[:success] = 'Attachment successfully deleted'
       redirect_back(fallback_location: record)

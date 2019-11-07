@@ -51,7 +51,7 @@ class UsersController < ApplicationController
       @user.approved_by = current_user
       @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
 
-      authorize_action_for @user
+      authorize @user
 
       if @user.save
         flash[:success] = 'User updated.'

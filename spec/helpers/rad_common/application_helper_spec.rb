@@ -89,7 +89,7 @@ describe RadCommon::ApplicationHelper do
       let(:resource) { build(:user) }
 
       context 'user is authorized' do
-        before { allow(@user).to receive(:can_read?).and_return(true) }
+        before { allow_any_instance_of(UserPolicy).to receive(:show?).and_return(true) }
 
         it 'renders a link' do
           expect(helper.secured_link(resource)).to include('href')
@@ -106,7 +106,7 @@ describe RadCommon::ApplicationHelper do
       end
 
       context 'user is unauthorized' do
-        before { expect(@user).to receive(:can_read?).and_return(false) }
+        before { allow_any_instance_of(UserPolicy).to receive(:show?).and_return(false) }
 
         it 'returns the resource name' do
           expect(helper.secured_link(resource)).to eq(resource.to_s)
