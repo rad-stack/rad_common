@@ -3,6 +3,7 @@ module RadbearAuditsController
 
   def audit
     the_instance = instance_variable_get('@' + controller_name.classify.underscore)
+    authorize the_instance
     show_audits the_instance
   end
 
