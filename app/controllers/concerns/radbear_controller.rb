@@ -8,7 +8,11 @@ module RadbearController
     around_action :user_time_zone, if: :current_user
     after_action :verify_authorized, unless: :devise_controller?
 
-    rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+    rescue_from Pundit::NotAuthorizedError do
+      # the application.rb config in the docs to do the same thing doesn't work
+      # https://github.com/varvet/pundit#rescuing-a-denied-authorization-in-rails
+      render file: Rails.root.join('public', '403'), formats: [:html], status: 403, layout: false
+    end
   end
 
   def authorize_action_for(record)
@@ -95,10 +99,5 @@ module RadbearController
 
     def user_time_zone(&block)
       Time.use_zone(current_user.timezone, &block)
-    end
-
-    def user_not_authorized
-      flash[:alert] = 'You are not authorized to perform this action.'
-      redirect_to(request.referrer || root_path)
     end
 end

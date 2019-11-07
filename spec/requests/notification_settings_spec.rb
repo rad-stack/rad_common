@@ -67,10 +67,9 @@ RSpec.describe 'Notification Settings', type: :request do
 
         before { user.update! security_roles: [] }
 
-        xit 'denies access' do
-          # TODO: fix
+        it 'denies access' do
           subject
-          expect(response.body).to include 'You are not authorized to perform this action.'
+          expect(response.code).to eq '403'
         end
       end
     end

@@ -26,7 +26,7 @@ RSpec.describe 'NotificationSettings', type: :system do
       it 'does not display the settings' do
         visit '/rad_common/notification_settings'
         expect(page).not_to have_content(notification_type.description)
-        expect(page).to have_content 'You are not authorized to perform this action.'
+        expect(page).to have_content 'Access Denied'
       end
     end
   end
