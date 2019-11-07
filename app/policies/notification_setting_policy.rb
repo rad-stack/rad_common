@@ -15,7 +15,5 @@ class NotificationSettingPolicy < ApplicationPolicy
     false
   end
 
-  def destroy?
-    false
-  end
+  alias destroy? update?
 end

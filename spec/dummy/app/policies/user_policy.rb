@@ -3,19 +3,8 @@ class UserPolicy < ApplicationPolicy
     audit?
   end
 
-  def audit_by?
-    audit?
-  end
-
-  def resend_invitation?
-    create?
-  end
-
-  def confirm?
-    update?
-  end
-
-  def reset_authy?
-    update?
-  end
+  alias audit_by? audit?
+  alias resend_invitation? create?
+  alias confirm? update?
+  alias reset_authy? update?
 end

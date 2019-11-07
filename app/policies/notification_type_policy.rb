@@ -3,7 +3,5 @@ class NotificationTypePolicy < ApplicationPolicy
     false
   end
 
-  def destroy?
-    false
-  end
+  alias destroy? create?
 end

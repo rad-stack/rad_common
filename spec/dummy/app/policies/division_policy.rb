@@ -3,9 +3,7 @@ class DivisionPolicy < ApplicationPolicy
     user.permission?(:read_division)
   end
 
-  def show?
-    index?
-  end
+  alias show? index?
 
   def create?
     user.permission?(:create_division)
@@ -17,11 +15,5 @@ class DivisionPolicy < ApplicationPolicy
 
   def destroy?
     user.permission?(:delete_division)
-  end
-
-  class Scope < Scope
-    def resolve
-      scope.all
-    end
   end
 end
