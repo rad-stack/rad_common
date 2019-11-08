@@ -8,16 +8,16 @@
     %table.table.table-striped.table-bordered
       %tr
         %th Name
-        %th Name
         %th Code
+        %th Owner
         -if show_actions
           %th.actions Actions
 
       - @divisions.each do |division|
         %tr
           %td= secured_link division
-          %td= division.name
           %td= division.code
+          %td= secured_link(division.owner)
           -if show_actions
             %td
               -if current_user.can_update?(division)
