@@ -6,7 +6,11 @@ class DivisionsController < ApplicationController
   authority_actions audit: 'audit'
 
   def index
-    @division_search = DivisionSearch.search(Division, params, current_user)
+    @division_search = RadCommon::Search.new(query: Division,
+                                             filters: [{ input_label: 'Owner', column: :owner_id, options: User.by_name }],
+                                             current_user: current_user,
+                                             params: params)
+
     @divisions = @division_search.results.page(params[:page])
   end
 
