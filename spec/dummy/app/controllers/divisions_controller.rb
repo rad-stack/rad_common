@@ -6,7 +6,7 @@ class DivisionsController < ApplicationController
   authority_actions audit: 'audit'
 
   def index
-    @division_search = DivisionSearch.search(Division.all, params, current_user)
+    @division_search = DivisionSearch.search(Division, params, current_user)
     @divisions = @division_search.results.page(params[:page])
   end
 

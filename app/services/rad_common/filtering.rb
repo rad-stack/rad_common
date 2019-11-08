@@ -29,7 +29,7 @@ module RadCommon
         else
           f.searchable_name
         end
-        }.flatten
+      }.flatten
     end
 
     def searchable_columns
@@ -42,34 +42,35 @@ module RadCommon
 
     private
 
-    def apply_filtering
-      apply_joins
-      apply_filters
-    end
-
-    def apply_filters
-      @filters.each do |filter|
-        results = filter.apply_filter(@results, search_params)
-        @results = results || @results
+      def apply_filtering
+        @results = @results.authorized(current_user)
+        apply_joins
+        apply_filters
       end
-    end
 
-    def apply_joins
-      @results = @results.joins(joins)
-    end
-
-    def build_search_filters(filters)
-      filters.map do |filter|
-        if filter.has_key? :type
-          filter[:type].send(:new, filter)
-        else
-          SearchFilter.new(filter)
+      def apply_filters
+        @filters.each do |filter|
+          results = filter.apply_filter(@results, search_params)
+          @results = results || @results
         end
       end
-    end
 
-    def joins
-      filters.map(&:joins).compact
-    end
+      def apply_joins
+        @results = @results.joins(joins)
+      end
+
+      def build_search_filters(filters)
+        filters.map do |filter|
+          if filter.has_key? :type
+            filter[:type].send(:new, filter)
+          else
+            SearchFilter.new(filter)
+          end
+        end
+      end
+
+      def joins
+        filters.map(&:joins).compact
+      end
   end
 end

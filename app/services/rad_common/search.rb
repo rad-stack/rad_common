@@ -2,6 +2,7 @@ module RadCommon
   class Search
     include RadCommon::Filtering
     include RadCommon::Sorting
+
     attr_reader :params, :current_user
 
     def initialize(query:, filters:, sort_columns: nil, current_user:, params:)
@@ -24,8 +25,8 @@ module RadCommon
 
     private
 
-    def search_params?
-      params.has_key? :search
-    end
+      def search_params?
+        params.has_key? :search
+      end
   end
 end
