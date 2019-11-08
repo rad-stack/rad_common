@@ -13,7 +13,7 @@ class Division < ApplicationRecord
   alias_attribute :to_s, :name
   enum division_status: %i[status_pending status_active status_inactive]
 
-  scope :authorized, ->(_) {}
+  scope :authorized, lambda { |user| where(owner_id: user.id) unless user.admin? }
 
   audited
 
