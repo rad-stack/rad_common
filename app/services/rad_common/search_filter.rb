@@ -52,7 +52,7 @@ module RadCommon
           values = value.select(&:present?).map(&:to_i)
           results.where("#{searchable_name} IN (?)", values) if values.present?
         else
-          results.where("#{searchable_name} = ?", value)
+          results.where("#{results.table_name}.#{searchable_name} = ?", value)
         end
       end
     end
