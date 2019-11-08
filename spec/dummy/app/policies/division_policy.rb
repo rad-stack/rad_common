@@ -1,9 +1,7 @@
 class DivisionPolicy < ApplicationPolicy
-  def index?
+  def show?
     user.permission?(:read_division)
   end
-
-  alias show? index?
 
   def create?
     user.permission?(:create_division)
@@ -16,4 +14,6 @@ class DivisionPolicy < ApplicationPolicy
   def destroy?
     user.permission?(:delete_division)
   end
+
+  alias_method :index?, :show?
 end

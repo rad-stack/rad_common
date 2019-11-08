@@ -18,5 +18,6 @@ class NotificationSettingPolicy < ApplicationPolicy
     false
   end
 
-  alias destroy? update?
+  alias_method :index?, :show?
+  alias_method :destroy?, :update?
 end

@@ -1,3 +1,3 @@
 class SecurityRolePolicy < ApplicationPolicy
-  alias permission? show?
+  alias_method :permission? , :show?
 end
