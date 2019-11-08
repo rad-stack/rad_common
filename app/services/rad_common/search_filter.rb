@@ -16,6 +16,10 @@ module RadCommon
       @grouped = false #todo make group select work
     end
 
+    def filter_view
+      'select_filter'
+    end
+
     def input_options
       if scope_values?
         scope_options = @scope_values.keys.map { |option| [option, option]}
@@ -33,7 +37,12 @@ module RadCommon
       @scope_values.present? || options.first.is_a?(Array) ? :first : :to_s
     end
 
-    def apply_filter(results, value)
+    def filter_value(search_params)
+      search_params[searchable_name]
+    end
+
+    def apply_filter(results, search_params)
+      value = filter_value(search_params)
       if scope_search?
         apply_scope_filter(results, value)
       elsif scope_value?(value)

@@ -5,7 +5,7 @@ module RadCommon
 
     def setup_filtering(filters:)
       @filters = build_search_filters(filters)
-      @filter_hash =  Hash[@filters.collect { |f| [f.searchable_name, f] }]
+      @filter_hash = Hash[@filters.collect { |f| [f.searchable_name, f] }]
 
       setup_filter_defaults
     end
@@ -21,7 +21,7 @@ module RadCommon
     def permitted_searchable_columns
       # we need to make sure any params that are an array value ( multiple select ) go to the bottom for permit to work
       columns = @filters.sort_by { |f| f.multiple ? 1 : 0 }
-      columns.map do |f|
+      columns.map { |f|
         if f.multiple
           hash = {}
           hash[f.searchable_name] = []
@@ -29,7 +29,7 @@ module RadCommon
         else
           f.searchable_name
         end
-      end
+        }.flatten
     end
 
     def searchable_columns
@@ -48,9 +48,9 @@ module RadCommon
     end
 
     def apply_filters
-      search_params.each do |key, value|
-        filter = @filter_hash[key.to_sym]
-        @results = filter.apply_filter(@results, value) || @results
+      @filters.each do |filter|
+        results = filter.apply_filter(@results, search_params)
+        @results = results || @results
       end
     end
 
@@ -59,7 +59,13 @@ module RadCommon
     end
 
     def build_search_filters(filters)
-      filters.map { |filter| SearchFilter.new(filter) }
+      filters.map do |filter|
+        if filter.has_key? :type
+          filter[:type].send(:new, filter)
+        else
+          SearchFilter.new(filter)
+        end
+      end
     end
 
     def joins

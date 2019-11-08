@@ -1,0 +1,7 @@
+= f.input filter.searchable_name, collection: filter.input_options, label: filter.input_label,
+                                  selected: search.selected_value(filter.searchable_name), include_blank: filter.blank_value_label,
+                                  as: filter.input_type, group_method: :last, required: false, label_method: filter.label_method,
+                                  input_html: { class: 'selectpicker',
+                                                multiple: filter.multiple,
+                                                'data-live-search' => true,
+                                                'data-style' => 'btn ' + ( search.selected_value(filter.column).blank? ? 'btn-success' : 'btn-warning' ) }
