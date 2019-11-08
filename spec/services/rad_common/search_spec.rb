@@ -5,16 +5,12 @@ RSpec.describe RadCommon::Search, type: :service do
     subject do
       described_class.new(query: Division,
                           filters: filters,
-                          sort_columns: sorts,
                           current_user: user,
                           params: {}).results
     end
 
     let!(:division) { create :division }
     let(:filters) { [{ input_label: 'Owner', column: :owner_id, options: User.by_name }] }
-
-    # TODO: sorts should be optional, remove from here when fixed
-    let(:sorts) { [{ column: 'name', label: 'Name', direction: 'desc' }] }
 
     context 'when authorized' do
       let(:user) { create :admin }
