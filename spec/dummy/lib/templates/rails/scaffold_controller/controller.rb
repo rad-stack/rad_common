@@ -8,6 +8,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   before_action :set_<%= singular_table_name %>, only: %i[show edit update destroy audit]
 
   def index
+    Authorize <%= orm_class.build(class_name) %>
     # TODO: change 'all' to a scope for ordering the records
     @<%= plural_table_name %> = <%= orm_class.all(class_name) %>.page(params[:page])
   end
@@ -16,12 +17,14 @@ class <%= controller_class_name %>Controller < ApplicationController
 
   def new
     @<%= singular_table_name %> = <%= orm_class.build(class_name) %>
+    authorize @<%= singular_table_name %>
   end
 
   def edit; end
 
   def create
     @<%= singular_table_name %> = <%= orm_class.build(class_name, "permitted_params") %>
+    authorize @<%= singular_table_name %>
 
     if @<%= orm_instance.save %>
       redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} was successfully created.'" %>
@@ -60,6 +63,7 @@ class <%= controller_class_name %>Controller < ApplicationController
 
     def set_<%= singular_table_name %>
       @<%= singular_table_name %> = <%= orm_class.find(class_name, "params[:id]") %>
+      authorize @<%= singular_table_name %>
     end
 
     def permitted_params
