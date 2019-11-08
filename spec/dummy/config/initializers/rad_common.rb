@@ -8,7 +8,7 @@ Rails.configuration.portal_namespace = nil
 Rails.configuration.system_usage_models = %w[Division User]
 Rails.configuration.additional_user_params = []
 
-# TODO: would be better to have this configuration exist inside the authorizers
+# TODO: would be better to have this configuration exist inside the policies
 Rails.configuration.restricted_audit_attributes = [{ model: 'Division', attribute: 'hourly_rate' }]
 
 Rails.configuration.global_validity_days = 3
