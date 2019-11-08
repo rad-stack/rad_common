@@ -3,5 +3,5 @@ class NotificationTypePolicy < ApplicationPolicy
     false
   end
 
-  alias_method :destroy?, :create?
+  alias destroy? create?
 end

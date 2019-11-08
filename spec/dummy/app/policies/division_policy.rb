@@ -15,5 +15,5 @@ class DivisionPolicy < ApplicationPolicy
     user.permission?(:delete_division)
   end
 
-  alias_method :index?, :show?
+  alias index? show?
 end
