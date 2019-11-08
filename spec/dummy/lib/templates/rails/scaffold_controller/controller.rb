@@ -8,7 +8,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   before_action :set_<%= singular_table_name %>, only: %i[show edit update destroy audit]
 
   def index
-    Authorize <%= orm_class.build(class_name) %>
+    authorize <%= class_name %>
     # TODO: change 'all' to a scope for ordering the records
     @<%= plural_table_name %> = <%= orm_class.all(class_name) %>.page(params[:page])
   end
