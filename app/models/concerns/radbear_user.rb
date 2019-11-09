@@ -95,6 +95,7 @@ module RadbearUser
     end
   end
 
+  # shims for authority to pundit compatibility
   def can_create?(klass)
     Pundit.policy!(self, klass).create?
   end
@@ -111,6 +112,10 @@ module RadbearUser
     Pundit.policy!(self, klass).destroy?
   end
 
+  def can_manage?(klass)
+    Pundit.policy!(self, klass).manage?
+  end
+
   def can_audit?(klass)
     Pundit.policy!(self, klass).audit?
   end
@@ -118,6 +123,7 @@ module RadbearUser
   def can_global_validate?(klass)
     Pundit.policy!(self, klass).global_validate?
   end
+  # end shims
 
   private
 
