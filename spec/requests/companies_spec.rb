@@ -6,7 +6,7 @@ RSpec.describe 'Companies', type: :request do
   let(:valid_attributes) { { name: 'foo' } }
   let(:invalid_attributes) { { name: nil } }
 
-  before { login_as(user, scope: :user) }
+  before { login_as user, scope: :user }
 
   describe 'PUT update' do
     describe 'with valid params' do

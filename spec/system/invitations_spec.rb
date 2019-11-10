@@ -12,7 +12,7 @@ describe 'Invitations', type: :system do
   let(:external_email) { Faker::Internet.user_name + '@' + external_domain }
 
   describe 'user' do
-    before { login_as(user, scope: :user) }
+    before { login_as user, scope: :user }
 
     describe 'new' do
       it 'does not allow' do
