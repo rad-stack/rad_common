@@ -7,7 +7,9 @@ task authority_to_pundit: :environment do
 
   policies = ApplicationRecord.subclasses.map { |item| { class_name: item.name, policy_name: item.name.underscore } } - exclude
 
-  File.rename Rails.root.join('app', 'authorizers'), Rails.root.join('app', 'policies')
+  if File.exist?(Rails.root.join('app', 'authorizers'))
+    FileUtils.mv Rails.root.join('app', 'authorizers'), Rails.root.join('app', 'policies')
+  end
 
   FileUtils.cp '../rad_common/spec/dummy/app/policies/application_policy.rb', Rails.root.join('app', 'policies', './')
   FileUtils.copy_entry '../rad_common/spec/dummy/lib/templates', Rails.root.join('lib', 'templates')
@@ -44,7 +46,8 @@ task authority_to_pundit: :environment do
     end
   end
 
-  File.delete Rails.root.join('config', 'initializers', 'authority.rb')
+  config_file = Rails.root.join('config', 'initializers', 'authority.rb')
+  File.delete config_file if File.exist?(config_file)
 end
 
 def search_and_replace(search_string, replace_string)
