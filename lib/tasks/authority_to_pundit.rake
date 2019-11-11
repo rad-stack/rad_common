@@ -1,9 +1,15 @@
 task authority_to_pundit: :environment do
-  File.delete Rails.root.join('config', 'initializers', 'authority.rb')
+  Rails.application.eager_load!
+
+  exclude = [{ class_name: 'Company', policy_name: 'company' },
+             { class_name: 'SecurityRole', policy_name: 'security_role' },
+             { class_name: 'User', policy_name: 'user' }]
+
+  policies = ApplicationRecord.subclasses.map { |item| { class_name: item.name, policy_name: item.name.underscore } } - exclude
+
   File.rename Rails.root.join('app', 'authorizers'), Rails.root.join('app', 'policies')
 
   FileUtils.cp '../rad_common/spec/dummy/app/policies/application_policy.rb', Rails.root.join('app', 'policies', './')
-  FileUtils.cp '../rad_common/spec/dummy/app/policies/company_policy.rb', Rails.root.join('app', 'policies', './')
 
   search_and_replace 'include Authority::Abilities', ''
   search_and_replace 'include Authority::UserAbilities', ''
@@ -25,19 +31,20 @@ task authority_to_pundit: :environment do
 
   search_and_replace 'Authorizer, type: :authorizer do', 'Policy, type: :policy do'
 
-  policy_names.each do |policy_name|
-    next if File.exist?(Rails.root.join('app', 'policies', "#{policy_name}_policy.rb"))
+  policies.each do |policy|
+    path = Rails.root.join('app', 'policies', "#{policy[:policy_name]}_policy.rb")
+    next if File.exist?(path)
 
-    system "bundle exec rails g pundit:policy #{policy_name}"
+    # system "bundle exec rails g pundit:policy #{policy_name}"
+    open(path, 'w') do |file|
+      file << "class #{policy[:class_name]}Policy < ApplicationPolicy \n"
+      file << "end\n"
+    end
   end
+
+  File.delete Rails.root.join('config', 'initializers', 'authority.rb')
 end
 
 def search_and_replace(search_string, replace_string)
   system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed -i '' -e 's/#{search_string}/#{replace_string}/g'"
-end
-
-def policy_names
-  Rails.application.eager_load!
-  all_items = ApplicationRecord.subclasses.map { |item| item.name.underscore }
-  all_items - %w[company security_role user]
 end
