@@ -13,8 +13,8 @@ module RadCommon
       start_at = start_at_value(params)
       end_at = end_at_value(params)
 
-      results.where("#{column} >= ?") if start_at.present?
-      results.where("#{column} <= ?") if end_at.present?
+      results.where("#{column} >= ?", start_at) if start_at.present?
+      results.where("#{column} <= ?", end_at) if end_at.present?
     end
 
     def searchable_name
