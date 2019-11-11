@@ -3,6 +3,7 @@ module RadbearAuditsController
 
   def audit
     the_instance = instance_variable_get('@' + controller_name.classify.underscore)
+    authorize the_instance
     show_audits the_instance
   end
 
@@ -15,6 +16,7 @@ module RadbearAuditsController
   end
 
   def audit_search
+    authorize User
     resource_type = params['model_name']
     resource_id = params['record_id']
     system_audits = params['system_audits']
@@ -51,7 +53,7 @@ module RadbearAuditsController
     end
 
     def show_audits(resource)
-      raise 'Unauthorized' unless current_user.can_audit?(resource) # controllers and UI should prevent coming here
+      raise 'Unauthorized' unless policy(resource).audit? # controllers and UI should prevent coming here
 
       @model_object = resource
       @audits = @model_object.own_and_associated_audits
@@ -60,7 +62,7 @@ module RadbearAuditsController
     end
 
     def show_system_audits(resource_type)
-      raise 'Unauthorized' unless current_user.can_audit?(Company) # controllers and UI should prevent coming here
+      raise 'Unauthorized' unless policy(Company).audit? # controllers and UI should prevent coming here
 
       @audits = Audited::Audit.where(user_id: nil)
       @audits = @audits.where(auditable_type: resource_type) if resource_type.present?

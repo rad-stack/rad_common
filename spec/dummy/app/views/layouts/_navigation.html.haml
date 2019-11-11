@@ -7,15 +7,15 @@
     #navbarSupportedContent.navbar-collapse.collapse.navbar-responsive-collapse
       - if user_signed_in?
         %ul.nav.navbar-nav.navbar-left
-          -if current_user.can_read?(Division)
+          -if policy(Division).index?
             %li= link_to 'Divisions', divisions_path, class: 'nav-link'
-          %li.nav-item.dropdown
-            %a.nav-link.dropdown-toggle{'data-toggle': 'dropdown', href: '#'}
-              Admin
-            %ul.dropdown-menu
-              -if current_user.can_read?(Division)
+          -if current_user.admin?
+            %li.nav-item.dropdown
+              %a.nav-link.dropdown-toggle{'data-toggle': 'dropdown', href: '#'}
+                Admin
+              %ul.dropdown-menu
                 %li= link_to 'Divisions', divisions_path, class: 'dropdown-item'
-              = render 'layouts/navigation_admin'
+                = render 'layouts/navigation_admin'
           %li.global-search-nav
             = render 'layouts/global_search'
       = render 'layouts/navigation_right'

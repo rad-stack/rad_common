@@ -1,7 +1,11 @@
 class Users::InvitationsController < Devise::InvitationsController
-  authorize_actions_for User, except: %i[edit update destroy], actions: { new: 'create', create: 'create' }
+  def new
+    authorize User
+    super
+  end
 
   def create
+    authorize User
     self.resource = invite_resource
     resource_invited = resource.errors.empty?
 

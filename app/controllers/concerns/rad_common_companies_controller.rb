@@ -6,7 +6,7 @@ module RadCommonCompaniesController
       raise 'interactive global validity check not enabled'
     end
 
-    authorize_action_for @company
+    authorize @company
 
     GlobalValidityJob.perform_later(current_user)
 

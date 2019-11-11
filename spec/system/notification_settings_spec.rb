@@ -8,7 +8,7 @@ RSpec.describe 'NotificationSettings', type: :system do
     create :notification_security_role, notification_type: notification_type, security_role: security_role
   end
 
-  before { login_as(user, scope: :user) }
+  before { login_as user, scope: :user }
 
   describe 'index' do
     context 'admin' do

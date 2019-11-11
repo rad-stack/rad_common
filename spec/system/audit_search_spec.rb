@@ -4,7 +4,7 @@ describe 'Audit search', type: :system do
   describe 'search' do
     let(:user) { create(:admin) }
 
-    before { login_as(user, scope: :user) }
+    before { login_as user, scope: :user }
 
     context 'with audit' do
       it 'loads audit page' do

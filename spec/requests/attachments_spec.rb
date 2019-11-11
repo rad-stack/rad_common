@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe 'Attachments', type: :request do
   let!(:division) { create :division }
+  let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('app', 'assets', 'images', 'app_logo.png')) }
 
-  before { division.logo.attach(io: Rack::Test::UploadedFile.new(Rails.root.join('app', 'assets', 'images', 'app_logo.png')), filename: 'logo.png') }
+  before { division.logo.attach(io: file, filename: 'logo.png') }
 
   context 'permanent attachment url' do
     it 'allows navigation' do

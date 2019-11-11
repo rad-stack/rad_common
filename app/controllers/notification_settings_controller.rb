@@ -1,9 +1,9 @@
 class NotificationSettingsController < ApplicationController
   before_action :authenticate_user!
 
-  authorize_actions_for NotificationSetting
-
-  def index; end
+  def index
+    authorize NotificationSetting
+  end
 
   def create
     notification_type_id = permitted_params[:notification_type_id]
@@ -13,7 +13,7 @@ class NotificationSettingsController < ApplicationController
 
     notification_setting.enabled = permitted_params[:enabled]
 
-    authorize_action_for notification_setting
+    authorize notification_setting
 
     result = if notification_setting.save
                { notice: 'The setting was successfully saved.' }

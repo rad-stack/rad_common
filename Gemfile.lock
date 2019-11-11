@@ -20,7 +20,6 @@ PATH
   specs:
     rad_common (0.1.0)
       audited (~> 4.8)
-      authority (~> 3.3.0)
       aws-sdk-s3
       bootstrap (~> 4.3.1)
       bootstrap4-kaminari-views (~> 1.0.1)
@@ -36,6 +35,7 @@ PATH
       momentjs-rails (~> 2.9, >= 2.9.0)
       pg
       premailer-rails (~> 1.10.2)
+      pundit
       rails (~> 5.2.1)
       schema_validations
       sentry-raven
@@ -98,8 +98,6 @@ GEM
     ast (2.4.0)
     audited (4.9.0)
       activerecord (>= 4.2, < 6.1)
-    authority (3.3.0)
-      activesupport (>= 3.0.0)
     authy (2.7.5)
       httpclient (>= 2.5.3.3)
     autoprefixer-rails (9.7.1)
@@ -285,6 +283,8 @@ GEM
       method_source (~> 0.9.0)
     public_suffix (4.0.1)
     puma (3.12.1)
+    pundit (2.1.0)
+      activesupport (>= 3.0.0)
     rack (2.0.7)
     rack-protection (2.0.7)
       rack

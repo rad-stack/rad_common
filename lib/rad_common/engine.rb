@@ -6,7 +6,6 @@ module RadCommon
     end
 
     require 'audited'
-    require 'authority'
     require 'devise'
     require 'devise-authy'
     require 'devise_invitable'
@@ -20,6 +19,7 @@ module RadCommon
     require 'nokogiri'
     require 'pg'
     require 'premailer/rails'
+    require 'pundit'
     require 'schema_validations'
     require 'sentry-raven'
     require 'sidekiq'

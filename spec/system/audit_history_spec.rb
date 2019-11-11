@@ -4,9 +4,7 @@ describe 'AuditHistory', type: :system do
   let(:admin) { create :admin }
   let(:user) { create :user }
 
-  before do
-    login_as(admin, scope: :user)
-  end
+  before { login_as admin, scope: :user }
 
   it 'shows the change in user history' do
     old_name = user.last_name

@@ -4,7 +4,7 @@ RSpec.describe 'SystemMessages', type: :system do
   let(:user) { create :admin }
   let!(:system_message) { create :system_message, user: user }
 
-  before { login_as(user, scope: :user) }
+  before { login_as user, scope: :user }
 
   describe 'new' do
     context 'twilio disabled' do

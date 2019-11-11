@@ -1,6 +1,4 @@
 class SystemMessage < ApplicationRecord
-  include Authority::Abilities
-
   belongs_to :user
 
   enum send_to: { internal_users: 0, client_users: 1, all_users: 2, preview: 3 }

@@ -40,9 +40,9 @@ module RadCommon
         template '../../../../../spec/dummy/app/models/company.rb', 'app/models/company.rb'
         template '../../../../../spec/dummy/app/models/security_role.rb', 'app/models/security_role.rb'
 
-        # authorizers
-        template '../../../../../spec/dummy/app/authorizers/application_authorizer.rb',
-                 'app/authorizers/application_authorizer.rb'
+        # policies
+        template '../../../../../spec/dummy/app/policies/application_policy.rb',
+                 'app/policies/application_policy.rb'
 
         # views
         template '../../../../../spec/dummy/app/views/devise/confirmations/new.html.haml',

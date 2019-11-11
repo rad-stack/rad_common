@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
   s.add_dependency 'audited', '~> 4.8'
-  s.add_dependency 'authority', '~> 3.3.0'
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap', '~> 4.3.1'
   s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
@@ -33,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'momentjs-rails', '~> 2.9', '>= 2.9.0'
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
+  s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 5.2.1'
   s.add_dependency 'schema_validations'
   s.add_dependency 'sentry-raven'

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Notification Settings', type: :request do
   let(:notification_type) { create :notification_type }
 
-  before { login_as(user, scope: :user) }
+  before { login_as user, scope: :user }
 
   describe 'POST create' do
     subject { post '/rad_common/notification_settings', params: { notification_setting: attributes } }
