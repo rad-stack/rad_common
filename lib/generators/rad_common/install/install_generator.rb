@@ -322,6 +322,8 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20190929125052_notification_auth_mode.rb',
                         'notification_auth_mode'
 
+        apply_migration '../../../../../spec/dummy/db/migrate/20191112111902_devise_lockable.rb',
+                        'devise_lockable'
       end
 
       def self.next_migration_number(path)
