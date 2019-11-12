@@ -12,9 +12,10 @@ module RadCommon
     def apply_filter(results, params)
       start_at = start_at_value(params)
       end_at = end_at_value(params)
-      return results if start_at.blank? || end_at.blank?
 
-      results.where("#{column} >= ? AND #{column} <= ? ", start_at, end_at)
+      results = results.where("#{column} >= ?", start_at) if start_at.present?
+      results = results.where("#{column} <= ?", end_at) if end_at.present?
+      results
     end
 
     def searchable_name
