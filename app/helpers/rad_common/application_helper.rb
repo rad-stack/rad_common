@@ -80,12 +80,13 @@ module RadCommon
       I18n.t(key, default: default)
     end
 
-    def options_for_enum(klass, enum)
+    def options_for_enum(klass, enum, db_values=false)
       enums = enum.to_s.pluralize
       enum_values = klass.send(enums)
       enum_values.map { |enum_value, _db_value|
         translated = enum_to_translated_option(klass, enums, enum_value)
-        [translated, enum_value]
+        value = db_values ? _db_value : enum_value
+        [translated, value]
       }.reject { |translated, _enum_value| translated.blank? }
     end
 
