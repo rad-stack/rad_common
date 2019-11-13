@@ -9,9 +9,9 @@ module RadCommon
 
     attr_reader :blob
 
-    authority_actions destroy: 'update'
-
     def download
+      skip_authorization
+
       # TODO: refactor this with Hashable
       ids = Hashable.hashids.decode(params[:id])
       attachment_id = ids[0]
@@ -27,6 +27,8 @@ module RadCommon
     end
 
     def download_variant
+      skip_authorization
+
       if @variant.present?
         serve_active_storage_file(@variant, params[:variant])
       else
@@ -37,7 +39,7 @@ module RadCommon
     def destroy
       attachment = ActiveStorage::Attachment.find(params[:id])
       record = attachment.record
-      authorize_action_for record
+      authorize record, :update?
       attachment.purge_later
       flash[:success] = 'Attachment successfully deleted'
       redirect_back(fallback_location: record)

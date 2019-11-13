@@ -1,6 +1,8 @@
 module RadCommon
   class SendgridController < ApplicationController
     def email_error
+      skip_authorization
+
       emails = []
 
       params[:_json].each do |param|

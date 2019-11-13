@@ -182,14 +182,14 @@ class CardPresenter
     actions = []
 
     if action_name == 'show'
-      if !no_edit_button && current_user && current_user.can_update?(klass) && current_user.can_update?(instance)
+      if !no_edit_button && current_user && Pundit.policy!(current_user, klass).update? && Pundit.policy!(current_user, instance).update?
         actions.push(@view_context.link_to(@view_context.icon(:pencil, 'Edit'), edit_url, class: 'btn btn-secondary btn-sm'))
       end
     end
 
     actions += additional_actions
 
-    if !no_delete_button && instance && instance.id && current_user && current_user.can_delete?(klass) && current_user.can_delete?(instance)
+    if !no_delete_button && instance && instance.id && current_user && Pundit.policy!(current_user, klass).destroy? && Pundit.policy!(current_user, instance).destroy?
       if delete_button_content
         actions.push(delete_button_content)
       else
@@ -206,19 +206,19 @@ class CardPresenter
     actions += external_actions
 
     if action_name == 'edit' || action_name == 'update' || action_name == 'show'
-      if !no_new_button && current_user && current_user.can_create?(klass)
+      if !no_new_button && current_user && Pundit.policy!(current_user, klass).create?
         actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"), new_url, class: 'btn btn-success btn-sm', id: "new_#{downcased_object_class}_link"))
       end
     end
 
     if !no_index_button && %w[show edit update new create].include?(action_name)
-      if current_user&.can_read?(klass)
+      if current_user && Pundit.policy!(current_user, klass).index?
         actions.push(@view_context.link_to(@view_context.icon(:list, 'View ' + titleized_controller_name), index_path, class: 'btn btn-secondary btn-sm'))
       end
     end
 
     if action_name == 'index'
-      if !no_new_button && current_user && current_user.can_create?(klass)
+      if !no_new_button && current_user && Pundit.policy!(current_user, klass).create?
         actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"), new_url, class: 'btn btn-success btn-sm', id: "new_#{downcased_object_class}_link"))
       end
     end

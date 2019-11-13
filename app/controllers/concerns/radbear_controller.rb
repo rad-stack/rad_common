@@ -1,10 +1,18 @@
 module RadbearController
   extend ActiveSupport::Concern
+  include Pundit
 
   included do
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     before_action :set_raven_user_context
     around_action :user_time_zone, if: :current_user
+    after_action :verify_authorized, unless: :devise_controller?
+
+    rescue_from Pundit::NotAuthorizedError do
+      # the application.rb config in the docs to do the same thing doesn't work
+      # https://github.com/varvet/pundit#rescuing-a-denied-authorization-in-rails
+      render file: Rails.root.join('public', '403'), formats: [:html], status: 403, layout: false
+    end
   end
 
   def validate_active_storage_attachment(record, attribute, file, valid_types, no_redirect = false, max_file_size = nil)

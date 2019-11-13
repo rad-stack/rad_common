@@ -86,9 +86,7 @@ describe 'Users', type: :system do
       end
       let(:external_user) { create :user, :external }
 
-      before do
-        login_as(admin, scope: :user)
-      end
+      before { login_as admin, scope: :user }
 
       describe 'index' do
         it 'shows users' do

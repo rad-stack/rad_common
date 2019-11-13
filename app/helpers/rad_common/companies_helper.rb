@@ -13,7 +13,7 @@ module RadCommon
       company = Company.main
 
       return unless Rails.application.config.global_validity_enable_interactive
-      return unless current_user.can_global_validate?(company)
+      return unless policy(company).global_validate?
 
       confirm = 'This is an exhaustive effort that could cause performance problems on the database. Are you sure?'
       path = "/rad_common/companies/#{company.id}/global_validity_check"

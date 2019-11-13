@@ -11,7 +11,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
   let(:auto_complete) { described_class.new(params, search_scopes, user) }
 
   describe '#global_autocomplete_result' do
-    before { allow_any_instance_of(User).to receive(:can_read?).and_return(true) }
+    before { allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true) }
 
     it 'returns results from selected scope' do
       scope = auto_complete.selected_scope
@@ -32,7 +32,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     let(:params) { ActionController::Parameters.new(term: term, global_search_scope: 'user_name') }
     let(:scope) { auto_complete.selected_scope }
 
-    before { allow_any_instance_of(User).to receive(:can_read?).and_return(true) }
+    before { allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true) }
 
     context 'scope has join' do
       let(:term) { 'My Division' }
@@ -103,7 +103,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
     context 'user cannot read class' do
       it 'returns empty array' do
-        allow_any_instance_of(User).to receive(:can_read?).and_return(false)
+        allow_any_instance_of(UserPolicy).to receive(:index?).and_return(false)
         expect(auto_complete.autocomplete_result(scope)).to eq([])
       end
     end
@@ -115,7 +115,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     let!(:another_user) { create(:user, last_name: term, email: "#{term}@example.com") }
     let!(:division) { create(:division, name: term, owner: user) }
 
-    before { allow_any_instance_of(User).to receive(:can_read?).and_return(true) }
+    before { allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true) }
 
     it 'includes results from multiple scopes' do
       result = auto_complete.global_super_search_result

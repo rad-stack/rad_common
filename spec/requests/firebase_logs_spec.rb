@@ -3,9 +3,7 @@ require 'rails_helper'
 describe 'Firebase Logs', type: :request do
   let(:admin) { create :admin }
 
-  before do
-    login_as(admin, scope: :user)
-  end
+  before { login_as admin, scope: :user }
 
   it 'retrieves all available firebase logs', :vcr do
     get '/firebase_logs'

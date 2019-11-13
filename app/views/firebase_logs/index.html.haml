@@ -1,6 +1,6 @@
 -if @firebase_logs
 
-  -can_clear = current_user.can_update?(Company)
+  -can_clear = policy(Company).update?
 
   -@firebase_logs.each do |log|
     .card

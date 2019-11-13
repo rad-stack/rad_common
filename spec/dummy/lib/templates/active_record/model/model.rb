@@ -1,6 +1,5 @@
 <% module_namespacing do -%>
 class <%= class_name %> < <%= parent_class_name.classify %>
-  include Authority::Abilities
   # alias_attribute :to_s, :name
   audited
 

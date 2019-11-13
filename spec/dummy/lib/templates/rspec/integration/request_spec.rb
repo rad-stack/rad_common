@@ -5,7 +5,7 @@ RSpec.describe '<%= class_name.pluralize %>', type: :request do
   let(:user) { create :admin }
   let(:<%= file_name %>) { create :<%= file_name %> }
 
-  before { login_as(user, scope: :user) }
+  before { login_as user, scope: :user }
 
   let(:valid_attributes) { { foo: 'bar', bar: 'foo' } }
   let(:invalid_attributes) { { foo: nil } }

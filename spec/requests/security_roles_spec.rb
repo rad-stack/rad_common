@@ -6,7 +6,7 @@ RSpec.describe 'Security roles', type: :request do
   let(:valid_attributes) { { name: 'foo', read_audit: true } }
   let(:invalid_attributes) { { name: nil } }
 
-  before { login_as(user, scope: :user) }
+  before { login_as user, scope: :user }
 
   describe 'POST create' do
     describe 'with valid params' do

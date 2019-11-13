@@ -2,10 +2,8 @@ class SecurityRolesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_security_role, only: %i[show edit update destroy audit]
 
-  authorize_actions_for SecurityRole
-  authority_actions audit: 'audit', permission: 'read'
-
   def index
+    authorize SecurityRole
     @security_roles = SecurityRole.by_name.page(params[:page])
   end
 
@@ -13,12 +11,14 @@ class SecurityRolesController < ApplicationController
 
   def new
     @security_role = SecurityRole.new
+    authorize @security_role
   end
 
   def edit; end
 
   def create
     @security_role = SecurityRole.new(permitted_params)
+    authorize @security_role
 
     if @security_role.save
       redirect_to @security_role, notice: 'Security role was successfully created.'
@@ -52,6 +52,7 @@ class SecurityRolesController < ApplicationController
   end
 
   def permission
+    authorize SecurityRole
     @permission_name = params[:permission_name]
     @security_roles = SecurityRole.where("#{@permission_name} = TRUE").by_name
     @users = User.by_permission(@permission_name).by_name
@@ -61,6 +62,7 @@ class SecurityRolesController < ApplicationController
 
     def set_security_role
       @security_role = SecurityRole.find(params[:id])
+      authorize @security_role
     end
 
     def permitted_params

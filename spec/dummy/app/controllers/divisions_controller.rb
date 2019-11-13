@@ -2,9 +2,6 @@ class DivisionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_division, only: %i[show edit update destroy audit]
 
-  authorize_actions_for Division
-  authority_actions audit: 'audit'
-
   def index
     @division_search = RadCommon::Search.new(query: Division,
                                              filters: [{ input_label: 'Owner', column: :owner_id, options: User.by_name }],
@@ -18,12 +15,14 @@ class DivisionsController < ApplicationController
 
   def new
     @division = Division.new
+    authorize @division
   end
 
   def edit; end
 
   def create
     @division = Division.new(permitted_params)
+    authorize @division
 
     if @division.save
       if validate_active_storage_attachment(@division, 'icon', params['division']['icon'], ['image/png'], false, 50_000)
@@ -64,6 +63,7 @@ class DivisionsController < ApplicationController
 
     def set_division
       @division = Division.find(params[:id])
+      authorize @division
     end
 
     def permitted_params

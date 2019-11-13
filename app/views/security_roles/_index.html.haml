@@ -9,7 +9,7 @@
       %td= secured_link security_role
       -if show_actions
         %td
-          -if current_user.can_update?(security_role)
+          -if policy(security_role).update?
             = link_to icon(:pencil, 'Edit'), edit_security_role_path(security_role), class: 'btn btn-sm btn-secondary btn-block'
-          -if current_user.can_delete?(security_role)
+          -if policy(security_role).destroy?
             = link_to icon(:times, 'Delete'), security_role, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm btn-block'
