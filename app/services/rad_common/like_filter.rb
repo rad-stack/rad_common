@@ -1,0 +1,40 @@
+module RadCommon
+  class DateFilter
+    attr_reader :column
+    def initialize(column:, type:)
+      @column = column
+    end
+
+    def filter_view
+      'like_filter'
+    end
+
+    def apply_filter(results, params)
+      value = like_value(params)
+
+      results = results.where("lower(courses.title) like ?", "%#{value.downcase}%") if value.present?
+      results
+    end
+
+    def searchable_name
+      [start_input, end_input]
+    end
+
+    def like_value(params)
+      params[like_input]
+    end
+
+    def like_input
+      "#{column}_like"
+    end
+
+    # todo maybe remove these below
+    def joins
+      []
+    end
+
+    def multiple
+      false
+    end
+  end
+end

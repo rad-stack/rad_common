@@ -6,7 +6,7 @@ module RadCommon
     end
 
     def filter_view
-      'date_filter'
+      'date'
     end
 
     def apply_filter(results, params)
