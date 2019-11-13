@@ -1,23 +1,23 @@
 module RadCommon
-  class DateFilter
+  class LikeFilter
     attr_reader :column
     def initialize(column:, type:)
       @column = column
     end
 
     def filter_view
-      'like_filter'
+      'like'
     end
 
     def apply_filter(results, params)
       value = like_value(params)
 
-      results = results.where("lower(courses.title) like ?", "%#{value.downcase}%") if value.present?
+      results = results.where("lower(#{column}) like ?", "%#{value.downcase}%") if value.present?
       results
     end
 
     def searchable_name
-      [start_input, end_input]
+      like_input
     end
 
     def like_value(params)
