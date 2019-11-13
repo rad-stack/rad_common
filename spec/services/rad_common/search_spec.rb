@@ -10,18 +10,31 @@ RSpec.describe RadCommon::Search, type: :service do
     end
 
     let!(:division) { create :division }
-    let(:filters) { [{ input_label: 'Owner', column: :owner_id, options: User.by_name }] }
 
-    context 'when authorized' do
-      let(:user) { create :admin }
-
-      it { is_expected.to eq [division] }
+    context 'like filter' do
+      it 'filters results'
     end
 
-    context 'when not authorized' do
-      let(:user) { create :user }
+    context 'date filter' do
+      it 'filters results'
+    end
 
-      it { is_expected.not_to eq [division] }
+    context 'select filter' do
+      let(:filters) { [{ input_label: 'Owner', column: :owner_id, options: User.by_name }] }
+
+      it 'filters results'
+
+      context 'when authorized' do
+        let(:user) { create :admin }
+
+        it { is_expected.to eq [division] }
+      end
+
+      context 'when not authorized' do
+        let(:user) { create :user }
+
+        it { is_expected.not_to eq [division] }
+      end
     end
   end
 end
