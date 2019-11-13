@@ -81,7 +81,7 @@ module RadCommon
         scope_proc = scope.values.first
         scope_proc.call(results, value)
       else
-        results.send(scope, value)
+        results.send(scope, value) if value.present?
       end
     end
 
