@@ -3,6 +3,8 @@ class DivisionsController < ApplicationController
   before_action :set_division, only: %i[show edit update destroy audit]
 
   def index
+    authorize Division
+    
     @division_search = RadCommon::Search.new(query: Division,
                                              filters: [{ input_label: 'Owner', column: :owner_id, options: User.by_name }],
                                              current_user: current_user,
