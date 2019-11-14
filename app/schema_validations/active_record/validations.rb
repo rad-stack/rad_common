@@ -1,3 +1,4 @@
+require 'schema_monkey'
 module SchemaValidations
   module ActiveRecord
     module Base
@@ -117,29 +118,7 @@ module SchemaValidations
 
             # NOT NULL constraints
             validate_logged :validates_presence_of, association.name if column.required_on
-
-            # UNIQUE constraints
-            add_uniqueness_validation(column) if column.unique?
           end
-        end
-
-        def add_uniqueness_validation(column) #:nodoc:
-          scope = column.unique_scope.map(&:to_sym)
-          name = column.name.to_sym
-
-          options = {}
-          options[:scope] = scope if scope.any?
-          options[:allow_nil] = true
-          options[:case_sensitive] = false if has_case_insensitive_index?(column, scope)
-          options[:if] = (proc do |record|
-            if scope.all? { |scope_sym| record.public_send(:"#{scope_sym}?") }
-              record.public_send(:"#{column.name}_changed?")
-            else
-              false
-            end
-          end)
-
-          validate_logged :validates_uniqueness_of, name, options
         end
 
         def has_case_insensitive_index?(column, scope)
@@ -156,3 +135,5 @@ module SchemaValidations
     end
   end
 end
+
+SchemaMonkey.register SchemaValidations
