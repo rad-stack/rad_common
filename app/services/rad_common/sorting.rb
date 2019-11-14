@@ -11,10 +11,13 @@ module RadCommon
       @results = sort_query(@results) if sort_column.present? && sort_direction.present?
     end
 
+    def sort_clause
+      @sort_column.split(',').map { |item| item.strip + ' ' + @sort_direction + ' NULLS LAST' }.join(', ')
+    end
+
     private
 
       def sort_query(query)
-        sort_clause = @sort_column.split(',').map { |item| item.strip + ' ' + @sort_direction + ' NULLS LAST' }.join(', ')
         query.order(sort_clause)
       end
 
