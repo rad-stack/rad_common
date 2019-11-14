@@ -11,15 +11,15 @@ RSpec.describe RadCommon::Search, type: :service do
 
     let!(:division) { create :division }
 
-    context 'like filter' do
+    context 'when using a like filter' do
       it 'filters results'
     end
 
-    context 'date filter' do
+    context 'when using a date filter' do
       it 'filters results'
     end
 
-    context 'select filter' do
+    context 'when using a select filter' do
       let(:filters) { [{ input_label: 'Owner', column: :owner_id, options: User.by_name }] }
 
       it 'filters results'
@@ -35,6 +35,13 @@ RSpec.describe RadCommon::Search, type: :service do
 
         it { is_expected.not_to eq [division] }
       end
+    end
+  end
+
+  describe 'search_params' do
+    context 'when using default params' do
+      it 'uses default params when params are not present'
+      it 'overrides defaults params when params are present'
     end
   end
 end
