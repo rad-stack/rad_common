@@ -34,13 +34,14 @@ Gem::Specification.new do |s|
   s.add_dependency 'premailer-rails', '~> 1.10.2'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 5.2.1'
-  s.add_dependency 'schema_validations'
+  s.add_dependency 'schema_plus_columns'
   s.add_dependency 'sentry-raven'
   s.add_dependency 'sidekiq', '~> 5.2.2'
   s.add_dependency 'sidekiq-failures'
   s.add_dependency 'simple_form', '~> 5.0.1'
   s.add_dependency 'trix'
   s.add_dependency 'twilio-ruby', '~> 4.11.1'
+  s.add_dependency 'valuable'
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
@@ -54,6 +55,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop'
   s.add_development_dependency 'rubocop-rails'
   s.add_development_dependency 'rubocop-rspec'
+  s.add_development_dependency 'schema_dev', '~> 3.6'
   s.add_development_dependency 'vcr'
   s.add_development_dependency 'webmock'
 end
