@@ -41,7 +41,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'simple_form', '~> 5.0.1'
   s.add_dependency 'trix'
   s.add_dependency 'twilio-ruby', '~> 4.11.1'
-  s.add_dependency 'valuable'
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
