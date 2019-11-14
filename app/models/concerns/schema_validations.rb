@@ -37,7 +37,7 @@ module SchemaValidations
           validate_logged :validates_inclusion_of, name, in: [true, false], message: :blank
         elsif !column.default.nil? && column.default.blank?
           validate_logged :validates_with, SchemaValidations::Validators::NotNilValidator, attributes: [name]
-        else
+        elsif tyoe != :datetime
           validate_logged :validates_presence_of, name
         end
       end
