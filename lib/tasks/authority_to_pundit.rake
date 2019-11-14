@@ -37,13 +37,21 @@ task authority_to_pundit: :environment do
 
   policies.each do |policy|
     path = Rails.root.join('app', 'policies', "#{policy[:policy_name]}_policy.rb")
-    next if File.exist?(path)
+    legacy_path = Rails.root.join('app', 'policies', "#{policy[:policy_name]}_authorizer.rb")
+    next if File.exist?(path) || File.exist?(legacy_path)
 
     # system "bundle exec rails g pundit:policy #{policy_name}"
     open(path, 'w') do |file|
       file << "class #{policy[:class_name]}Policy < ApplicationPolicy \n"
       file << "end\n"
     end
+  end
+
+  files_to_rename = Dir.glob(Rails.root.join('app', 'policies', '*_authorizer.rb'))
+  files_to_rename.each do |file_to_rename|
+    next if file_to_rename.include?('application_authorizer.rb')
+
+    FileUtils.mv file_to_rename, file_to_rename.gsub('_authorizer.rb', '_policy.rb')
   end
 
   config_file = Rails.root.join('config', 'initializers', 'authority.rb')
