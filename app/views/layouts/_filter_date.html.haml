@@ -1,7 +1,7 @@
 .row
   .col-lg-6
     = f.input filter.start_input, as: :date, html5: true,
-              input_html: {  value: search.search_params[filter.start_input] }
+              input_html: {  value: search.search_params[filter.start_input], data: { default: search.search_params[filter.start_input] } }
   .col-lg-6
     = f.input filter.end_input, as: :date, html5: true,
-              input_html: {  value: search.search_params[filter.end_input] }
+              input_html: {  value: search.search_params[filter.end_input], data: { default: search.search_params[filter.end_input] } }
