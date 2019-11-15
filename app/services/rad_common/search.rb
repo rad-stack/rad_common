@@ -5,11 +5,10 @@ module RadCommon
 
     attr_reader :params, :current_user
 
-    def initialize(query:, filters:, sort_columns: nil, current_user:, params:, default_params: nil)
+    def initialize(query:, filters:, sort_columns: nil, current_user:, params:)
       @results = query
       @current_user = current_user
       @params = params
-      @default_params = default_params
       setup_filtering(filters: filters)
       setup_sorting(sort_columns: sort_columns) if sort_columns
     end
