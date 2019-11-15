@@ -4,9 +4,10 @@ class DivisionsController < ApplicationController
 
   def index
     authorize Division
-    
+
     @division_search = RadCommon::Search.new(query: Division,
-                                             filters: [{ input_label: 'Owner', column: :owner_id, options: User.by_name }],
+                                             filters: [{ input_label: 'Owner', column: :owner_id, options: User.by_name },
+                                                       { column: :name, type: RadCommon::LikeFilter}],
                                              current_user: current_user,
                                              params: params)
 

@@ -33,7 +33,7 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:user_2) { create :user, confirmed_at: 3.days.from_now }
       let(:filters) { [{ column: :confirmed_at, type: RadCommon::DateFilter }] }
       let(:params) {
-        { confirmed_at_start: (3.days.ago).strftime('%Y-%m-%d'),
+        { confirmed_at_start: 3.days.ago.strftime('%Y-%m-%d'),
           confirmed_at_end: DateTime.current.strftime('%Y-%m-%d') } }
 
       it 'filters results' do
