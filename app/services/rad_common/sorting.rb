@@ -39,7 +39,8 @@ module RadCommon
       end
 
       def sort_params
-        search_params? ? params.require(:search).permit(:sort, :direction) : {}
+        parameters = search_params? ? params : ActionController::Parameters.new(search: default_params)
+        parameters.require(:search).permit(:sort, :direction)
       end
   end
 end
