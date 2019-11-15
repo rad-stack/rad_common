@@ -4,4 +4,4 @@
                                   input_html: { class: 'selectpicker',
                                                 multiple: filter.multiple,
                                                 'data-live-search' => true,
-                                                'data-style' => 'btn ' + ( search.selected_value(filter.column).blank? ? 'btn-success' : 'btn-warning' ) }
+                                                'data-style' => 'btn ' + ( search.blank?(filter.column) ? 'btn-success' : 'btn-warning' ) }

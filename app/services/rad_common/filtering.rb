@@ -36,6 +36,11 @@ module RadCommon
       filters.map(&:searchable_name)
     end
 
+    def blank?(column)
+      val = selected_value(column)
+      val.is_a?(Array) ? val.all?(&:blank?) : val.blank?
+    end
+
     def selected_value(column)
       search_params[column]
     end
