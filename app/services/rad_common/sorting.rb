@@ -11,10 +11,13 @@ module RadCommon
       @results = sort_query(@results) if sort_column.present? && sort_direction.present?
     end
 
+    def sort_clause
+      @sort_column.split(',').map { |item| item.strip + ' ' + @sort_direction + ' NULLS LAST' }.join(', ')
+    end
+
     private
 
       def sort_query(query)
-        sort_clause = @sort_column.split(',').map { |item| item.strip + ' ' + @sort_direction + ' NULLS LAST' }.join(', ')
         query.order(sort_clause)
       end
 
@@ -36,7 +39,8 @@ module RadCommon
       end
 
       def sort_params
-        search_params? ? params.require(:search).permit(:sort, :direction) : {}
+        parameters = search_params? ? params : ActionController::Parameters.new(search: default_params)
+        parameters.require(:search).permit(:sort, :direction)
       end
   end
 end

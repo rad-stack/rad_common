@@ -11,7 +11,17 @@ module RadCommon
     end
 
     def search_params
-      search_params? ? params.require(:search).permit(permitted_searchable_columns) : {}
+      search_params? ? permitted_search_params : default_params
+    end
+
+    def default_params
+      @default_params || {}
+    end
+
+    def permitted_search_params
+      permitted = params.require(:search).permit(permitted_searchable_columns)
+      permitted = @default_params.merge(permitted) if @default_params
+      permitted
     end
 
     def searchable_columns_strings

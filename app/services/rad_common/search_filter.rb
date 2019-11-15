@@ -17,7 +17,7 @@ module RadCommon
     end
 
     def filter_view
-      'select_filter'
+      'select'
     end
 
     def input_options
