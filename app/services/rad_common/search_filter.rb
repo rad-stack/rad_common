@@ -49,12 +49,16 @@ module RadCommon
         apply_scope_value(results, value)
       elsif value.present?
         if value.is_a? Array
-          values = value.select(&:present?).map(&:to_i)
+          values = convert_array_values(value)
           results.where("#{searchable_name} IN (?)", values) if values.present?
         else
           results.where("#{results.table_name}.#{searchable_name} = ?", value)
         end
       end
+    end
+
+    def convert_array_values(value)
+      value.select(&:present?).map(&:to_i)
     end
 
     def scope_search?
@@ -81,6 +85,7 @@ module RadCommon
         scope_proc = scope.values.first
         scope_proc.call(results, value)
       else
+        value = convert_array_values(value) if value.is_a? Array
         results.send(scope, value) if value.present?
       end
     end
