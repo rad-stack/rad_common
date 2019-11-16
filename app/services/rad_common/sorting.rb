@@ -3,6 +3,8 @@ module RadCommon
     attr_reader :sort_columns, :sort_column, :sort_direction
     def setup_sorting(sort_columns:)
       @sort_columns = sort_columns
+      return if sort_columns.blank?
+
       @sort_column = set_sort_column
       @sort_direction = set_sort_direction
     end
