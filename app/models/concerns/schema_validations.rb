@@ -4,9 +4,12 @@ module SchemaValidations
   TEXT_FIELDS = %i[text string].freeze
 
   def load_schema_validations
+    return if schema_validations_loaded
+
     load_index_validations
     load_column_validations
     load_association_validations
+    klass.schema_validations_loaded = true
   end
 
   def load_column_validations
@@ -63,7 +66,7 @@ module SchemaValidations
       columns = index.columns
       first_column = columns.first.to_sym
       options = {}
-      options[:allow_blank] = true
+      options[:allow_nil] = true
       options[:scope] = columns[1..-1].map(&:to_sym) if columns.count > 1
       validate_logged :validates_uniqueness_of, first_column, options, true
     end
