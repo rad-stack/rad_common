@@ -19,7 +19,7 @@ module SchemaValidations
 
       datatype = retrieve_data_type(column)
 
-      validate_numericality_and_length(name, datatype, column.limit)
+      validate_numericality_and_length(name, datatype, column)
       validate_presence(column, name, datatype)
     end
   end
@@ -39,11 +39,16 @@ module SchemaValidations
     end
   end
 
-  def validate_numericality_and_length(name, datatype, limit)
-    if datatype.in? %i[integer decimal numeric]
+  def validate_numericality_and_length(name, datatype, column)
+    if datatype.in?(%i[numeric integer])
       validate_logged :validates_numericality_of, name, allow_nil: true
+    elsif datatype == :decimal
+      if column.precision
+        limit = 10**(column.precision - (column.scale || 0))
+        validate_logged :validates_numericality_of, name, allow_nil: true, greater_than: -limit, less_than: limit
+      end
     elsif datatype == :text
-      validate_logged :validates_length_of, name, allow_nil: true, maximum: limit if limit.present?
+      validate_logged :validates_length_of, name, allow_nil: true, maximum: column.limit if column.limit.present?
     end
   end
 
@@ -102,6 +107,6 @@ module SchemaValidations
   end
 
   def skip_columns
-    defined?(klass::SKIP_SCHEMA_VALIDATION_COLUMNS) ? klass::SKIP_SCHEMA_VALIDATION_COLUMNS : []
+    klass.const_defined?('SKIP_SCHEMA_VALIDATION_COLUMNS') ? klass::SKIP_SCHEMA_VALIDATION_COLUMNS : []
   end
 end
