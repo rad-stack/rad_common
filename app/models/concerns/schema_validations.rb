@@ -63,7 +63,7 @@ module SchemaValidations
       columns = index.columns
       first_column = columns.first.to_sym
       options = {}
-      options[:allow_nil] = true
+      options[:allow_blank] = true
       options[:scope] = columns[1..-1].map(&:to_sym) if columns.count > 1
       validate_logged :validates_uniqueness_of, first_column, options, true
     end
@@ -92,11 +92,15 @@ module SchemaValidations
   end
 
   def exempt_column?(column)
-    # As of now, this only consists of timestamps. There are no user entry points to change these fields, so a database error will suffice.
-    column.in? EXEMPT_COLUMNS
+    # Timestamps and model-specific instances to be skipped
+    column.in?(EXEMPT_COLUMNS + skip_columns)
   end
 
   def klass
     self.class
+  end
+
+  def skip_columns
+    defined?(SKIP_SCHEMA_VALIDATIONS) ? SKIP_SCHEMA_VALIDATIONS : []
   end
 end
