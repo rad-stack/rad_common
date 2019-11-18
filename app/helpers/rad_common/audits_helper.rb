@@ -14,6 +14,18 @@ module RadCommon
       end
     end
 
+    def display_audited_action(audit)
+      # TODO: handle other associated models
+
+      action = if audit.associated.present? && audit.auditable_type == 'ActiveStorage::Attachment'
+                 "#{audit.action} attachment"
+               else
+                 audit.action
+               end
+
+      action.gsub('destroy', 'delete')
+    end
+
     def audit_title(by_user)
       title = by_user ? 'Updates by ' : 'Updates for '
       title = (title + audit_model_link(nil, @model_object)).html_safe if @model_object
@@ -46,10 +58,11 @@ module RadCommon
     end
 
     def audit_models_to_search
-      models = ActiveRecord::Base.connection.tables.map { |model| model.capitalize.singularize.camelize.safe_constantize }
-      models += ActiveRecord::Base.subclasses
-      models.uniq.select { |model| model.respond_to?(:auditing_enabled) && model.auditing_enabled }
-            .map(&:to_s).sort
+      models = ActiveRecord::Base.connection.tables.map do |model|
+        model.capitalize.singularize.camelize.safe_constantize
+      end
+
+      models.uniq.select { |model| model.respond_to?(:auditing_enabled) && model.auditing_enabled }.map(&:to_s).sort
     end
 
     private

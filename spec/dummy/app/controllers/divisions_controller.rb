@@ -4,7 +4,7 @@ class DivisionsController < ApplicationController
 
   def index
     authorize Division
-    @divisions = Division.all.page(params[:page])
+    @divisions = Division.sorted.page(params[:page])
   end
 
   def show; end
