@@ -4,7 +4,7 @@ module SchemaValidations
   TEXT_FIELDS = %i[text string].freeze
 
   def load_schema_validations
-    return if schema_validations_loaded
+    return if klass.schema_validations_loaded
 
     load_index_validations
     load_column_validations
@@ -68,13 +68,13 @@ module SchemaValidations
       options = {}
       options[:allow_nil] = true
       options[:scope] = columns[1..-1].map(&:to_sym) if columns.count > 1
-      validate_logged :validates_uniqueness_of, first_column, options, true
+      validate_logged :validates_uniqueness_of, first_column, options
     end
   end
 
   def load_association_validations
     klass.reflect_on_all_associations(:belongs_to).each do |association|
-      next if association.options[:optional]
+      next if association.options[:optional] || exempt_column?(association.name)
 
       foreign_key_method = association.respond_to?(:foreign_key) ? :foreign_key : :primary_key_name
       column = klass.columns_hash[association.send(foreign_key_method).to_s]
@@ -84,14 +84,12 @@ module SchemaValidations
     end
   end
 
-  def validate_logged(method, arg, opts = {}, class_method = false)
+  def validate_logged(method, arg, opts = {})
     msg = "[schema_validations] #{self.class.name}.#{method} #{arg.inspect}"
     msg += ", #{opts.inspect[1...-1]}" if opts.any?
     Rails.logger.info(msg)
 
-    return klass.send(method, arg, opts) if class_method
-
-    send method, arg, opts
+    klass.send(method, arg, opts)
   end
 
   def exempt_column?(column)
@@ -104,6 +102,6 @@ module SchemaValidations
   end
 
   def skip_columns
-    defined?(SKIP_SCHEMA_VALIDATIONS) ? SKIP_SCHEMA_VALIDATIONS : []
+    defined?(klass::SKIP_SCHEMA_VALIDATION_COLUMNS) ? klass::SKIP_SCHEMA_VALIDATION_COLUMNS : []
   end
 end
