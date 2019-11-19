@@ -19,4 +19,12 @@ RSpec.describe 'Companies', type: :system do
       expect(page).to have_content(company.to_s)
     end
   end
+
+  describe 'global validity' do
+    it 'runs' do
+      visit company_path(company)
+      click_on 'Global Validity Check'
+      expect(page).to have_content("We're checking the validity of all of your company's data.")
+    end
+  end
 end

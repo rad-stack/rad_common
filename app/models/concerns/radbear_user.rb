@@ -119,10 +119,6 @@ module RadbearUser
   def can_audit?(klass)
     Pundit.policy!(self, klass).audit?
   end
-
-  def can_global_validate?(klass)
-    Pundit.policy!(self, klass).global_validate?
-  end
   # end shims
 
   private
