@@ -25,6 +25,9 @@ module RadCommon
     def load_filter_defaults
       return if current_user.filter_defaults.blank?
 
+      defaults = current_user.filter_defaults.slice(*searchable_columns_strings)
+      return if defaults.blank?
+
       @params[:search] = current_user.filter_defaults.slice(*searchable_columns_strings)
     end
 
