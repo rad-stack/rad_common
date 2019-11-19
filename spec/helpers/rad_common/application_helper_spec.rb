@@ -13,6 +13,40 @@ describe RadCommon::ApplicationHelper do
     end
   end
 
+  describe '#show_actions?' do
+    let(:model_class) { Division }
+
+    context 'user can update resource' do
+      before { @user.security_roles.update_all update_division: true }
+
+      it 'returns true' do
+        expect(helper.show_actions?(model_class)).to eq(true)
+      end
+    end
+
+    context 'user can delete resource' do
+      before do
+        @user.security_roles.update_all update_division: false
+        @user.security_roles.update_all delete_division: true
+      end
+
+      it 'returns true' do
+        expect(helper.show_actions?(model_class)).to eq(true)
+      end
+    end
+
+    context 'user can neither update or delete resource' do
+      before do
+        @user.security_roles.update_all update_division: false
+        @user.security_roles.update_all delete_division: false
+      end
+
+      it 'returns false' do
+        expect(helper.show_actions?(model_class)).to eq(false)
+      end
+    end
+  end
+
   describe 'enum_to_translated_option' do
     it 'translates the value' do
       expect(enum_to_translated_option(Division, :division_status, division.division_status)).to eq 'Active'
