@@ -66,9 +66,9 @@ module RadCommon
 
       def permitted_searchable_columns
         # we need to make sure any params that are an array value ( multiple select ) go to the bottom for permit to work
-        columns = @filters.sort_by { |f| f.respond_to(:multiple) && f.multiple ? 1 : 0 }
+        columns = @filters.sort_by { |f| f.respond_to?(:multiple) && f.multiple ? 1 : 0 }
         columns.map { |f|
-          if f.respond_to(:multiple) && f.multiple
+          if f.respond_to?(:multiple) && f.multiple
             hash = {}
             hash[f.searchable_name] = []
             hash
