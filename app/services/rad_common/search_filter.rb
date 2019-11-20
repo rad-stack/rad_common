@@ -49,7 +49,11 @@ module RadCommon
 
     def input_options
       if scope_values?
-        scope_options = @scope_values.keys.map { |option| [option, option] }
+        scope_options = if @scope_values.is_a? Array
+                          @scope_values.map { |option| [option.to_s.titleize, option.to_s]}
+                        else
+                          @scope_values.keys.map { |option| [option, option] }
+                        end
         scope_options + options.map { |option| [option.to_s, option.id] } if options.present?
         scope_options
       else
@@ -106,10 +110,30 @@ module RadCommon
       end
 
       def scope_value?(scope_name)
-        @scope_values.present? && @scope_values.has_key?(scope_name)
+        if scope_name.present? && @scope_values.present?
+          if @scope_values.is_a? Array
+            @scope_values.include?(scope_name.to_sym)
+          else
+            @scope_values.has_key?(scope_name)
+          end
+        else
+          false
+        end
       end
 
       def apply_scope_value(results, scope_name)
+        if @scope_values.is_a? Hash
+          apply_scope_h_value(results, scope_name)
+        elsif @scope_values.is_a? Array
+          apply_scope_a_value(results, scope_name)
+        end
+      end
+
+      def apply_scope_a_value(results, scope_name)
+        results.send(scope_name) if @scope_values.include?(scope_name.to_sym)
+      end
+
+      def apply_scope_h_value(results, scope_name)
         scope = @scope_values[scope_name]
         if scope.is_a? Symbol
           results.send(scope)
