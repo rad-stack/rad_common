@@ -12,6 +12,8 @@
         %th Name
         %th Code
         %th Owner
+        %th Logo
+        %th Attachment
         -if show_actions
           %th.actions Actions
 
@@ -20,6 +22,8 @@
           %td= secured_link division
           %td= division.code
           %td= secured_link(division.owner)
+          %td= render 'layouts/attachment', record: division, attachment_name: 'logo', new_tab: true
+          %td= render 'layouts/attachment', record: division, attachment_name: 'attachment', new_tab: true
           -if show_actions
             %td
               -if policy(division).update?

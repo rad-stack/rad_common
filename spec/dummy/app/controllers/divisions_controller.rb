@@ -5,7 +5,7 @@ class DivisionsController < ApplicationController
   def index
     authorize Division
 
-    @division_search = RadCommon::Search.new(query: Division,
+    @division_search = RadCommon::Search.new(query: Division.sorted,
                                              filters: [{ input_label: 'Owner', column: :owner_id, options: User.by_name },
                                                        { column: :name, type: RadCommon::LikeFilter}],
                                              current_user: current_user,
@@ -74,6 +74,8 @@ class DivisionsController < ApplicationController
     end
 
     def division_attachments_and_types
-      [{ attr: :logo, types: ['image/png'] }, { attr: :avatar, types: ['image/jpeg'] }]
+      [{ attr: :logo, types: ['image/png'] },
+       { attr: :avatar, types: ['image/jpeg'] },
+       { attr: :attachment, types: ['image/jpeg', 'text/plain'] }]
     end
 end
