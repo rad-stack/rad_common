@@ -81,11 +81,11 @@ module RadCommon
     end
 
     def options_for_enum(klass, enum)
-      retreive_options_for_enum(klass, enum, false)
+      retrieve_options_for_enum(klass, enum, false)
     end
 
     def db_options_for_enum(klass, enum)
-      retreive_options_for_enum(klass, enum, true)
+      retrieve_options_for_enum(klass, enum, true)
     end
 
     def retrieve_options_for_enum(klass, enum, db_values)
