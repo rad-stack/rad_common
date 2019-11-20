@@ -18,6 +18,16 @@ describe 'AuditHistory', type: :system do
     expect(page).to have_content old_name
   end
 
+  it 'shows attachment created' do
+    visit '/users/edit'
+    page.attach_file('Avatar', 'spec/test_files/radlogo.png')
+    click_on 'Save'
+
+    visit "/users/#{admin.id}"
+    click_on 'Show History'
+    expect(page).to have_content 'create attachment'
+  end
+
   it 'shows when the security role was created in history' do
     visit new_security_role_path
     fill_in 'Name', with: 'Foo'
