@@ -17,16 +17,16 @@ module RadCommon
       retrieve_results
     end
 
-    def retrieve_results
-      apply_filtering
-      apply_sorting
-      @results
-    end
-
     private
 
       def search_params?
         params.has_key? :search
+      end
+
+      def retrieve_results
+        apply_filtering
+        apply_sorting
+        @results
       end
   end
 end

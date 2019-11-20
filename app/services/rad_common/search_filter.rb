@@ -20,6 +20,32 @@ module RadCommon
       'select'
     end
 
+    def searchable_name
+      scope_name || @column
+    end
+
+    def scope_name
+      return if @scope.blank?
+
+      @scope.is_a?(Hash) ? @scope.keys.first : @scope
+    end
+
+    def blank_value_label
+      @blank_value_label || "All #{model_name.pluralize}"
+    end
+
+    def input_label
+      @input_label || model_name
+    end
+
+    def model_name
+      @input_label || options.table_name.titleize.singularize
+    end
+
+    def input_type
+      @grouped ? :grouped_select : :select
+    end
+
     def input_options
       if scope_values?
         scope_options = @scope_values.keys.map { |option| [option, option]}
@@ -88,32 +114,6 @@ module RadCommon
         value = convert_array_values(value) if value.is_a? Array
         results.send(scope, value) if value.present?
       end
-    end
-
-    def searchable_name
-      scope_name || @column
-    end
-
-    def scope_name
-      return if @scope.blank?
-
-      @scope.is_a?(Hash) ? @scope.keys.first : @scope
-    end
-
-    def blank_value_label
-      @blank_value_label || "All #{model_name.pluralize}"
-    end
-
-    def input_label
-      @input_label || model_name
-    end
-
-    def model_name
-      @input_label || options.table_name.titleize.singularize
-    end
-
-    def input_type
-      @grouped ? :grouped_select : :select
     end
   end
 end

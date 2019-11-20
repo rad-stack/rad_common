@@ -1,23 +1,24 @@
 module RadCommon
   module Sorting
     attr_reader :sort_columns, :sort_column, :sort_direction
-    def setup_sorting(sort_columns:)
-      @sort_columns = sort_columns
-      return if sort_columns.blank?
-
-      @sort_column = set_sort_column
-      @sort_direction = set_sort_direction
-    end
-
-    def apply_sorting
-      @results = sort_query(@results) if sort_column.present? && sort_direction.present?
-    end
 
     def sort_clause
       @sort_column.split(',').map { |item| item.strip + ' ' + @sort_direction + ' NULLS LAST' }.join(', ')
     end
 
     private
+
+      def apply_sorting
+        @results = sort_query(@results) if sort_column.present? && sort_direction.present?
+      end
+
+      def setup_sorting(sort_columns:)
+        @sort_columns = sort_columns
+        return if sort_columns.blank?
+
+        @sort_column = set_sort_column
+        @sort_direction = set_sort_direction
+      end
 
       def sort_query(query)
         query.order(sort_clause)

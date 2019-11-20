@@ -9,13 +9,6 @@ module RadCommon
       'like'
     end
 
-    def apply_filter(results, params)
-      value = like_value(params)
-
-      results = results.where("lower(#{column}) like ?", "%#{value.downcase}%") if value.present?
-      results
-    end
-
     def searchable_name
       like_input
     end
@@ -36,5 +29,14 @@ module RadCommon
     def multiple
       false
     end
+
+    private
+
+      def apply_filter(results, params)
+        value = like_value(params)
+
+        results = results.where("lower(#{column}) like ?", "%#{value.downcase}%") if value.present?
+        results
+      end
   end
 end
