@@ -51,6 +51,40 @@ describe RadCommon::AuditsHelper do
     end
   end
 
+  describe 'display_audited_action' do
+    let(:audit) { division.own_and_associated_audits.reorder(id: :desc).first }
+    let(:file) { File.open(Rails.root.join('app', 'assets', 'images', 'app_logo.png')) }
+
+    subject { strip_tags(helper.display_audited_action(audit)) }
+
+    context 'when associated attachment' do
+      context 'when create' do
+        before { division.logo.attach(io: file, filename: 'logo.png') }
+
+        it { is_expected.to eq 'create attachment' }
+      end
+
+      context 'when destroy' do
+        before do
+          division.logo.attach(io: file, filename: 'logo.png')
+          division.logo.purge
+        end
+
+        it { is_expected.to eq 'delete attachment' }
+      end
+    end
+
+    context 'when create' do
+      it { is_expected.to eq 'create' }
+    end
+
+    context 'when destroy' do
+      before { division.destroy! }
+
+      it { is_expected.to eq 'delete' }
+    end
+  end
+
   describe 'display_audited_changes' do
     context 'without associated changes' do
       subject { strip_tags(helper.display_audited_changes(audit)) }

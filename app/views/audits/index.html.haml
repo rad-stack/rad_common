@@ -29,7 +29,7 @@
             -else
               %td= secured_link(audit.user)
             %td= audit.remote_address
-            %td= audit.action
+            %td= display_audited_action(audit)
             %td= simple_format(display_audited_changes(audit))
       = paginate @audits, theme: 'twitter-bootstrap-4'
     -else

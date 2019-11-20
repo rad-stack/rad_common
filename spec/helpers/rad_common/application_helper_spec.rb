@@ -105,10 +105,6 @@ describe RadCommon::ApplicationHelper do
     let(:size) { 80 }
     let(:filename) { 'avatar.png' }
 
-    before { Rails.application.config.use_avatar = true }
-
-    after  { Rails.application.config.use_avatar = false }
-
     context 'user does not have avatar' do
       let(:resource) { build(:user, avatar: nil) }
 
