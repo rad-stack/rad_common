@@ -21,15 +21,6 @@ module RadCommon
       "#{column}_like"
     end
 
-    # todo maybe remove these below
-    def joins
-      []
-    end
-
-    def multiple
-      false
-    end
-
     def apply_filter(results, params)
       value = like_value(params)
 

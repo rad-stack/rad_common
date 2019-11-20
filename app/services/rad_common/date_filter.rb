@@ -30,15 +30,6 @@ module RadCommon
       "#{column}_end"
     end
 
-    # todo maybe remove these below
-    def joins
-      []
-    end
-
-    def multiple
-      false
-    end
-
     def apply_filter(results, params)
       start_at = start_at_value(params)
       end_at = end_at_value(params)
