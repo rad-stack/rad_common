@@ -5,7 +5,6 @@ module RadCommon
       @column = column
     end
 
-
     def filter_view
       'date'
     end
