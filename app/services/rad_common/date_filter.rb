@@ -5,17 +5,9 @@ module RadCommon
       @column = column
     end
 
+
     def filter_view
       'date'
-    end
-
-    def apply_filter(results, params)
-      start_at = start_at_value(params)
-      end_at = end_at_value(params)
-
-      results = results.where("#{column} >= ?", start_at) if start_at.present?
-      results = results.where("#{column} <= ?", end_at) if end_at.present?
-      results
     end
 
     def searchable_name
@@ -45,6 +37,15 @@ module RadCommon
 
     def multiple
       false
+    end
+
+    def apply_filter(results, params)
+      start_at = start_at_value(params)
+      end_at = end_at_value(params)
+
+      results = results.where("#{column} >= ?", start_at) if start_at.present?
+      results = results.where("#{column} <= ?", end_at) if end_at.present?
+      results
     end
   end
 end

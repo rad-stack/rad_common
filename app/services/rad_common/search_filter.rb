@@ -55,16 +55,8 @@ module RadCommon
       end
     end
 
-    def scope_values?
-      @scope_values.present?
-    end
-
     def label_method
       @scope_values.present? || options.first.is_a?(Array) ? :first : :to_s
-    end
-
-    def filter_value(search_params)
-      search_params[searchable_name]
     end
 
     def apply_filter(results, search_params)
@@ -87,33 +79,43 @@ module RadCommon
       value.select(&:present?).map(&:to_i)
     end
 
-    def scope_search?
-      scope.present?
-    end
+    private
 
-    def scope_value?(scope_name)
-      @scope_values.present? && @scope_values.has_key?(scope_name)
-    end
-
-    def apply_scope_value(results, scope_name)
-      scope = @scope_values[scope_name]
-      if scope.is_a? Symbol
-        results.send(scope)
-      else
-        scope_name = scope.keys.first
-        scope_args = scope[scope_name]
-        results.send(scope_name, scope_args)
+      def filter_value(search_params)
+        search_params[searchable_name]
       end
-    end
 
-    def apply_scope_filter(results, value)
-      if scope.is_a? Hash
-        scope_proc = scope.values.first
-        scope_proc.call(results, value)
-      else
-        value = convert_array_values(value) if value.is_a? Array
-        results.send(scope, value) if value.present?
+      def scope_values?
+        @scope_values.present?
       end
-    end
+
+      def scope_search?
+        scope.present?
+      end
+
+      def apply_scope_filter(results, value)
+        if scope.is_a? Hash
+          scope_proc = scope.values.first
+          scope_proc.call(results, value)
+        else
+          value = convert_array_values(value) if value.is_a? Array
+          results.send(scope, value) if value.present?
+        end
+      end
+
+      def scope_value?(scope_name)
+        @scope_values.present? && @scope_values.has_key?(scope_name)
+      end
+
+      def apply_scope_value(results, scope_name)
+        scope = @scope_values[scope_name]
+        if scope.is_a? Symbol
+          results.send(scope)
+        else
+          scope_name = scope.keys.first
+          scope_args = scope[scope_name]
+          results.send(scope_name, scope_args)
+        end
+      end
   end
 end

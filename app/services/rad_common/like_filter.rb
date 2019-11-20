@@ -30,13 +30,11 @@ module RadCommon
       false
     end
 
-    private
+    def apply_filter(results, params)
+      value = like_value(params)
 
-      def apply_filter(results, params)
-        value = like_value(params)
-
-        results = results.where("lower(#{column}) like ?", "%#{value.downcase}%") if value.present?
-        results
-      end
+      results = results.where("lower(#{column}) like ?", "%#{value.downcase}%") if value.present?
+      results
+    end
   end
 end
