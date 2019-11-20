@@ -22,6 +22,10 @@ Devise.setup do |config|
   config.mailer = 'RadbearDeviseMailer'
 end
 
+Rails.configuration.to_prepare do
+  ActiveStorage::Attachment.audited associated_with: :record
+end
+
 Rails.configuration.global_search_scopes =
   [
     { name: 'user_name', model: 'User',
