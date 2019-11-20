@@ -2,8 +2,9 @@ module RadCommon
   class SearchFilter
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope
 
-    def initialize(column: nil, options:, scope_values: nil, joins: nil, input_label: nil, blank_value_label: nil, scope: nil, multiple: false)
+    def initialize(column: nil, options: nil, scope_values: nil, joins: nil, input_label: nil, blank_value_label: nil, scope: nil, multiple: false)
       raise 'Input label is required when options are not active record objects' if input_label.blank? && !options.respond_to?(:table_name)
+      raise 'options or scope_values' if options.nil? && scope_values.nil?
 
       @column = column
       @options = options
@@ -48,8 +49,9 @@ module RadCommon
 
     def input_options
       if scope_values?
-        scope_options = @scope_values.keys.map { |option| [option, option]}
-        scope_options + options.map { |option| [option.to_s, option.id] }
+        scope_options = @scope_values.keys.map { |option| [option, option] }
+        scope_options + options.map { |option| [option.to_s, option.id] } if options.present?
+        scope_options
       else
         options
       end
