@@ -80,7 +80,15 @@ module RadCommon
       I18n.t(key, default: default)
     end
 
-    def options_for_enum(klass, enum, db_values=false)
+    def options_for_enum(klass, enum)
+      retreive_options_for_enum(klass, enum, false)
+    end
+
+    def db_options_for_enum(klass, enum)
+      retreive_options_for_enum(klass, enum, true)
+    end
+
+    def retrieve_options_for_enum(klass, enum, db_values)
       enums = enum.to_s.pluralize
       enum_values = klass.send(enums)
       enum_values.map { |enum_value, _db_value|
