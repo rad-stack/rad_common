@@ -1,5 +1,5 @@
 class CompanyPolicy < ApplicationPolicy
-  def global_validate?
+  def global_validity_check?
     user.permission?(:admin)
   end
 end

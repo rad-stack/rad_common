@@ -8,16 +8,18 @@
     %table.table.table-striped.table-bordered
       %tr
         %th Name
-        %th Name
         %th Code
+        %th Logo
+        %th Attachment
         -if show_actions
           %th.actions Actions
 
       - @divisions.each do |division|
         %tr
           %td= secured_link division
-          %td= division.name
           %td= division.code
+          %td= render 'layouts/attachment', record: division, attachment_name: 'logo', new_tab: true
+          %td= render 'layouts/attachment', record: division, attachment_name: 'attachment', new_tab: true
           -if show_actions
             %td
               -if policy(division).update?

@@ -3,7 +3,8 @@
   -data = [:name, :code, :notify, :timezone, :hourly_rate,
            { label: 'Logo', value: render('layouts/attachment', record: @division, attachment_name: 'logo', new_tab: true) },
            { label: 'Icon', value: render('layouts/attachment', record: @division, attachment_name: 'icon', new_tab: true) },
-           { label: 'Avatar', value: render('layouts/attachment', record: @division, attachment_name: 'avatar', new_tab: true) }]
+           { label: 'Avatar', value: render('layouts/attachment', record: @division, attachment_name: 'avatar', new_tab: true) },
+           { label: 'Attachment', value: render('layouts/attachment', record: @division, attachment_name: 'attachment', new_tab: true) }]
   = render 'layouts/card_header', additional_external_actions: actions
   .card-body
     = render 'layouts/show_data_columns', data: data, resource: @division
