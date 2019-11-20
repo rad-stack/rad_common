@@ -8,10 +8,12 @@ class Division < ApplicationRecord
   has_one_attached :logo
   has_one_attached :avatar
   has_one_attached :icon
+  has_one_attached :attachment
 
   alias_attribute :to_s, :name
   enum division_status: %i[status_pending status_active status_inactive]
 
+  scope :sorted, -> { order(:name) }
   scope :authorized, ->(_) {}
 
   audited

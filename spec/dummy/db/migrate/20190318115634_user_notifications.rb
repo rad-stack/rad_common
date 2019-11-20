@@ -20,14 +20,5 @@ class UserNotifications < ActiveRecord::Migration[5.2]
 
     add_index :notification_security_roles, %i[security_role_id notification_type], unique: true, name: 'unique_notification_roles'
     add_foreign_key :notification_security_roles, :security_roles
-
-    if Rails.env.production?
-      group = SecurityRole.find_by(name: 'Admin')
-
-      group.notification_security_roles.create! notification_type: 'Notifications::NewUserSignedUpNotification'
-      group.notification_security_roles.create! notification_type: 'Notifications::UserWasApprovedNotification'
-      group.notification_security_roles.create! notification_type: 'Notifications::UserAcceptsInvitationNotification'
-      group.notification_security_roles.create! notification_type: 'Notifications::GlobalValidityNotification'
-    end
   end
 end
