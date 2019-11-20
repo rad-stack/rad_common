@@ -71,7 +71,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
           model = TestEmailModel.new(item)
           expect(model).to be_invalid
           expect(model.errors.details.first[0]).to eq :email_by_any_other_name
-          expect(model.errors.full_messages.to_s).to include 'Email by any other name is not written in a valid format. Email cannot have capital letters, domain must be less than 62 characters and doesnt not allow special characters.'
+          expect(model.errors.full_messages.to_s).to include 'Email by any other name is not written in a valid format. Email cannot have capital letters, domain must be less than 62 characters and does not allow special characters.'
         end
       end
     end
@@ -124,7 +124,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
         invalid_items.each do |item|
           model = TestEmailArrayModel.new(item)
           expect(model).to be_invalid
-          expect(model.errors.full_messages.to_s).to include 'Email by any other name is not written in a valid format. Email cannot have capital letters, domain must be less than 62 characters and doesnt not allow special characters.'
+          expect(model.errors.full_messages.to_s).to include 'Email is not written in a valid format. Email cannot have capital letters, domain must be less than 62 characters and does not allow special characters.'
         end
       end
     end
