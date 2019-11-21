@@ -11,7 +11,7 @@ module RadCommon
 
       if clear_filters?
         clear_filter_defaults
-      elsif search.search_params?
+      elsif @search.search_params?
         update_user_filter_defaults
       else
         @search.params[:search] = load_filter_defaults
