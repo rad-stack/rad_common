@@ -8,7 +8,7 @@ module RadCommon
       @current_user = current_user
       @params = params
       @filters = Filters.new(filters: filters, search: self)
-      FilterDefaulting.apply_defaults(current_user, search)
+      FilterDefaulting.apply_defaults(current_user, self)
       @sorts = Sorts.new(sort_columns: sort_columns, search: self)
     end
 
