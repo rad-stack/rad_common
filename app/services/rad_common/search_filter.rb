@@ -54,7 +54,7 @@ module RadCommon
                         else
                           @scope_values.keys.map { |option| [option, option] }
                         end
-        scope_options + options.map { |option| [option.to_s, option.id] } if options.present?
+        scope_options += options.map { |option| [option.to_s, option.id] } if options.present?
         scope_options
       else
         options
@@ -114,7 +114,7 @@ module RadCommon
           if @scope_values.is_a? Array
             @scope_values.include?(scope_name.to_sym)
           else
-            @scope_values.has_key?(scope_name)
+            @scope_values.symbolize_keys.has_key?(scope_name.to_sym)
           end
         else
           false
@@ -134,7 +134,7 @@ module RadCommon
       end
 
       def apply_scope_h_value(results, scope_name)
-        scope = @scope_values[scope_name]
+        scope = @scope_values.symbolize_keys[scope_name.to_sym]
         if scope.is_a? Symbol
           results.send(scope)
         else

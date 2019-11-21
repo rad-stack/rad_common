@@ -9,7 +9,7 @@ RSpec.describe RadCommon::Search, type: :service do
       described_class.new(query: query,
                           filters: filters,
                           current_user: user,
-                          params: params ).results
+                          params: params).results
     end
 
     let!(:division) { create :division }
@@ -48,7 +48,7 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:user_active) { create :user, user_status: UserStatus.default_active_status }
       let(:user_pending) { create :user, user_status: UserStatus.default_pending_status }
       let(:filters) { [{ column: :user_status_id, options: UserStatus.by_id }] }
-      let(:params) { ActionController::Parameters.new( search: { user_status_id: UserStatus.default_active_status.id }) }
+      let(:params) { ActionController::Parameters.new(search: { user_status_id: UserStatus.default_active_status.id }) }
 
       it 'filters results' do
         expect(subject).to include user_active
@@ -73,6 +73,29 @@ RSpec.describe RadCommon::Search, type: :service do
         it { is_expected.not_to eq [division] }
       end
     end
+  end
+
+  describe 'filters' do
+    subject do
+      described_class.new(query: query,
+                          filters: filters,
+                          current_user: user,
+                          params: params).filters
+    end
+
+    context 'when using scope_values' do
+      let(:query) { Division }
+      let(:filters) { [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }] }
+      let(:params) { ActionController::Parameters.new }
+
+      it 'has both scope and normal options' do
+        expect(subject.first.input_options).to include ['Pending Values', 'Pending Values']
+        expect(subject.first.input_options).to include ['Test User', 1]
+      end
+
+    end
+
+
   end
 
   describe 'search_params' do
