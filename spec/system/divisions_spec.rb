@@ -103,10 +103,6 @@ RSpec.describe 'Divisions', type: :system do
     end
   end
 
-  describe 'search' do
-    pending 'filter by division_status enum'
-  end
-
   describe 'show' do
     before { visit division_path(division) }
 

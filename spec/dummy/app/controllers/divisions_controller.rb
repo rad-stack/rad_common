@@ -5,9 +5,13 @@ class DivisionsController < ApplicationController
   def index
     authorize Division
 
+    filters = [{ input_label: 'Owner', column: :owner_id, options: User.by_name },
+               { input_label: 'Status', column: :division_status,
+                 options: ApplicationController.helpers.db_options_for_enum(Division, :division_status) },
+               { column: :name, type: RadCommon::LikeFilter }]
+
     @division_search = RadCommon::Search.new(query: Division.sorted,
-                                             filters: [{ input_label: 'Owner', column: :owner_id, options: User.by_name },
-                                                       { column: :name, type: RadCommon::LikeFilter}],
+                                             filters: filters,
                                              current_user: current_user,
                                              params: params)
 
@@ -70,7 +74,7 @@ class DivisionsController < ApplicationController
     end
 
     def permitted_params
-      params.require(:division).permit(:name, :code, :notify, :timezone, :owner_id, :hourly_rate)
+      params.require(:division).permit(:name, :code, :notify, :timezone, :owner_id, :hourly_rate, :division_status)
     end
 
     def division_attachments_and_types
