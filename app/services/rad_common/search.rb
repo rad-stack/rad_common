@@ -1,6 +1,5 @@
 module RadCommon
   class Search
-
     attr_reader :params, :current_user
 
     def initialize(query:, filters:, sort_columns: nil, current_user:, params:)
@@ -15,6 +14,18 @@ module RadCommon
 
     def results
       retrieve_results
+    end
+
+    def sort_columns
+      @sorting.sort_columns
+    end
+
+    def sort_column
+      @sorting.sort_column
+    end
+
+    def sort_direction
+      @sorting.sort_direction
     end
 
     def search_params?
