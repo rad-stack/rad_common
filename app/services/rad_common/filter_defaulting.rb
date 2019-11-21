@@ -6,7 +6,7 @@ module RadCommon
       @current_user = current_user
     end
 
-    def self.apply_defaults
+    def apply_defaults
       return unless @current_user.respond_to?(:filter_defaults)
 
       if clear_filters?
