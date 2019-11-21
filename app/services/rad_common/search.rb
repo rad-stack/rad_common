@@ -40,9 +40,8 @@ module RadCommon
     private
 
       def retrieve_results
-        @results = @filters.apply
-        @results = @sorts.apply_sorting(@results)
         @results = @filters.apply_filtering(@results)
+        @results = @sorts.apply_sorting(@results)
       end
 
       def searchable_columns
