@@ -69,6 +69,14 @@ describe RadCommon::ApplicationHelper do
     it { is_expected.to eq options }
   end
 
+  describe 'db_options_for_enum' do
+    subject { db_options_for_enum(Division, :division_status) }
+
+    let(:options) { [['Pending', 0], ['Active', 1], ['Inactive', 2]] }
+
+    it { is_expected.to eq options }
+  end
+
   describe '#gravatar_for' do
     context 'string size' do
       let(:size) { '60' }
