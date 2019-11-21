@@ -1,6 +1,7 @@
 module RadCommon
   class DateFilter
     attr_reader :column
+
     def initialize(column:, type:)
       @column = column
     end
