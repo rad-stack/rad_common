@@ -7,7 +7,7 @@
       - direction = (sort_column[:column] == search.sort_column && search.sort_direction == 'asc') ? 'desc' : 'asc'
       - label = sort_column[:label] || sort_column[:column].titleize
 
-      = link_to label, { search: search.search_params.merge( { 'sort' => sort_column[:column], 'direction' => direction}) }
+      = link_to label, { search: search.search_params.merge( { 'sort': sort_column[:column], 'direction': direction}) }
 
       - if sort_column[:column] == search.sort_column
         - icon = search.sort_direction == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'
