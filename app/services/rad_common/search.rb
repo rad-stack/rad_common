@@ -28,6 +28,10 @@ module RadCommon
       @sorting.sort_direction
     end
 
+    def sort_clause
+      @sorting.sort_clause
+    end
+
     def search_params?
       params.has_key? :search
     end
