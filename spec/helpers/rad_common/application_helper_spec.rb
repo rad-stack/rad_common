@@ -69,6 +69,8 @@ describe RadCommon::ApplicationHelper do
     it { is_expected.to eq options }
   end
 
+  pending 'db_options_for_enum'
+
   describe '#gravatar_for' do
     context 'string size' do
       let(:size) { '60' }
