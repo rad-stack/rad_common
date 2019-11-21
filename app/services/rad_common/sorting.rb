@@ -29,6 +29,10 @@ module RadCommon
       @sort_direction = set_sort_direction
     end
 
+    def sort_clause
+      @sort_column.split(',').map { |item| item.strip + ' ' + @sort_direction + ' NULLS LAST' }.join(', ')
+    end
+
     def sort_query(query)
       query.order(sort_clause)
     end
