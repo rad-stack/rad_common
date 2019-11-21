@@ -110,7 +110,7 @@ module RadCommon
       end
 
       def scope_value?(scope_name)
-        if scope_name.present? && @scope_values.present?
+        if scope_name.present? && @scope_values.present? && scope_name.is_a?(String)
           if @scope_values.is_a? Array
             @scope_values.include?(scope_name.to_sym)
           else
