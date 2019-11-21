@@ -90,7 +90,7 @@ RSpec.describe RadCommon::Search, type: :service do
 
       it 'has both scope and normal options' do
         expect(subject.first.input_options).to include ['Pending Values', 'Pending Values']
-        expect(subject.first.input_options).to include ['Test User', 1]
+        expect(subject.first.input_options).to include [User.by_name.first.to_s, User.by_name.first.id]
       end
 
     end
