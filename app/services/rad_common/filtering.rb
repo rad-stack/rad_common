@@ -1,5 +1,5 @@
 module RadCommon
-  class Filters
+  class Filtering
     attr_reader :filters
 
     def initialize(filters:, search: search)

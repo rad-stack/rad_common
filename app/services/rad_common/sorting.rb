@@ -1,5 +1,5 @@
 module RadCommon
-  class Sorts
+  class Sorting
     attr_reader :sort_columns, :sort_column, :sort_direction
 
     def initialize(sort_columns:, search:)
