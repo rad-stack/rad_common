@@ -14,7 +14,7 @@ module RadCommon
       elsif @search.search_params?
         update_user_filter_defaults
       else
-        @search.params[:search] = load_filter_defaults
+        load_filter_defaults
       end
     end
 
@@ -36,7 +36,7 @@ module RadCommon
         defaults = @current_user.filter_defaults.slice(*@search.searchable_columns_strings)
         return if defaults.blank?
 
-        @current_user.filter_defaults.slice(*@search.searchable_columns_strings)
+        @search.params[:search] = @current_user.filter_defaults.slice(*@search.searchable_columns_strings)
       end
 
       def update_user_filter_defaults
