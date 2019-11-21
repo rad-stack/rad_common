@@ -12,7 +12,11 @@ module RadCommon
     end
 
     def apply_sorting(results)
-      sort_query(results) if sort_column.present? && sort_direction.present?
+      if sort_column.present? && sort_direction.present?
+        sort_query(results)
+      else
+        results
+      end
     end
 
     private
