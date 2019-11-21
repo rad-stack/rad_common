@@ -19,8 +19,8 @@ module RadCommon
 
       def apply_filters(results)
         @filters.each do |filter|
-          results = filter.apply_filter(@results, @search.search_params)
-          results ||= @results
+          applied_results = filter.apply_filter(results, @search.search_params)
+          results = applied_results || results
         end
 
         results
