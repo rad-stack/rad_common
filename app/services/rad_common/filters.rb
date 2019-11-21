@@ -6,8 +6,6 @@ module RadCommon
       @search = search
       @filters = build_search_filters(filters)
       @filter_hash = Hash[@filters.collect { |f| [f.searchable_name, f] }]
-
-      setup_filter_defaults
     end
 
     def apply_filtering(results)
