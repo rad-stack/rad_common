@@ -187,6 +187,10 @@ class CardPresenter
       end
     end
 
+    if action_name == 'edit' || action_name == 'new'
+      actions.push(@view_context.content_tag(:button, 'Save', class: 'btn btn-sm btn-primary', id: 'save_button'))
+    end
+
     actions += additional_actions
 
     if !no_delete_button && instance && instance.id && current_user && Pundit.policy!(current_user, klass).destroy? && Pundit.policy!(current_user, instance).destroy?
