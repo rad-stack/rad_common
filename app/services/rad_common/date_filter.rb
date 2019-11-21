@@ -13,14 +13,6 @@ module RadCommon
       [start_input, end_input]
     end
 
-    def start_at_value(params)
-      Date.parse(params[start_input]) if params[start_input].present?
-    end
-
-    def end_at_value(params)
-      Date.parse(params[end_input]) if params[end_input].present?
-    end
-
     def start_input
       "#{column}_start"
     end
@@ -37,5 +29,15 @@ module RadCommon
       results = results.where("#{column} <= ?", end_at) if end_at.present?
       results
     end
+
+    private
+
+      def start_at_value(params)
+        Date.parse(params[start_input]) if params[start_input].present?
+      end
+
+      def end_at_value(params)
+        Date.parse(params[end_input]) if params[end_input].present?
+      end
   end
 end

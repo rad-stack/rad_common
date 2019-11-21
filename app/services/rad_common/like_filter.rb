@@ -13,10 +13,6 @@ module RadCommon
       like_input
     end
 
-    def like_value(params)
-      params[like_input]
-    end
-
     def like_input
       "#{column}_like"
     end
@@ -27,5 +23,11 @@ module RadCommon
       results = results.where("lower(#{column}) like ?", "%#{value.downcase}%") if value.present?
       results
     end
+
+    private
+
+      def like_value(params)
+        params[like_input]
+      end
   end
 end
