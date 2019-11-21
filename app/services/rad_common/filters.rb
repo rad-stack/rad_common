@@ -4,12 +4,13 @@ module RadCommon
 
     def initialize(filters:, search: search)
       @search = search
+      @current_user = search.current_user
       @filters = build_search_filters(filters)
       @filter_hash = Hash[@filters.collect { |f| [f.searchable_name, f] }]
     end
 
     def apply_filtering(results)
-      results = results.authorized(current_user)
+      results = results.authorized(@current_user)
       results = apply_joins(results)
       apply_filters(results)
     end
