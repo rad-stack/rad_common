@@ -52,7 +52,7 @@ module RadCommon
         scope_options = if @scope_values.is_a? Array
                           @scope_values.map { |option| [option.to_s.titleize, option.to_s]}
                         else
-                          @scope_values.keys.map { |option| [option, option] }
+                          @scope_values.keys.map { |option| [option.to_s, option.to_s] }
                         end
         scope_options += options.map { |option| [option.to_s, option.id] } if options.present?
         scope_options
