@@ -25,9 +25,9 @@ module RadCommon
       end
 
       def clear_filter_defaults
-        current_filter_defaults = current_user.filter_defaults
-        searchable_columns_strings.each { |column| current_filter_defaults[column] = '' }
-        current_user.update_column(:filter_defaults, current_filter_defaults)
+        current_filter_defaults = @current_user.filter_defaults
+        @search.searchable_columns_strings.each { |column| current_filter_defaults[column] = '' }
+        @current_user.update_column(:filter_defaults, current_filter_defaults)
       end
 
       def load_filter_defaults
