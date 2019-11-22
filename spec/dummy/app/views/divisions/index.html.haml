@@ -3,12 +3,15 @@
 .card
   = render 'layouts/card_header'
   .card-body
+    = render 'layouts/filter', search: @division_search, path: divisions_path
+
     = paginate @divisions, theme: 'twitter-bootstrap-4'
 
     %table.table.table-striped.table-bordered
       %tr
         %th Name
         %th Code
+        %th Owner
         %th Logo
         %th Attachment
         -if show_actions
@@ -18,6 +21,7 @@
         %tr
           %td= secured_link division
           %td= division.code
+          %td= secured_link(division.owner)
           %td= render 'layouts/attachment', record: division, attachment_name: 'logo', new_tab: true
           %td= render 'layouts/attachment', record: division, attachment_name: 'attachment', new_tab: true
           -if show_actions

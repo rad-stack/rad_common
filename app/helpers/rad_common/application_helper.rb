@@ -81,11 +81,20 @@ module RadCommon
     end
 
     def options_for_enum(klass, enum)
+      retrieve_options_for_enum(klass, enum, false)
+    end
+
+    def db_options_for_enum(klass, enum)
+      retrieve_options_for_enum(klass, enum, true)
+    end
+
+    def retrieve_options_for_enum(klass, enum, db_values)
       enums = enum.to_s.pluralize
       enum_values = klass.send(enums)
       enum_values.map { |enum_value, _db_value|
         translated = enum_to_translated_option(klass, enums, enum_value)
-        [translated, enum_value]
+        value = db_values ? _db_value : enum_value
+        [translated, value]
       }.reject { |translated, _enum_value| translated.blank? }
     end
 

@@ -113,7 +113,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     let(:term) { 'Peters' }
     let(:params) { ActionController::Parameters.new(term: term) }
     let!(:another_user) { create(:user, last_name: term, email: "#{term}@example.com") }
-    let!(:division) { create(:division, name: term) }
+    let!(:division) { create(:division, name: term, owner: user) }
 
     before { allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true) }
 

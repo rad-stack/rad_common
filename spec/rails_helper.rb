@@ -30,7 +30,8 @@ require 'pundit/rspec'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-# Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 require 'vcr'
 
@@ -99,7 +100,8 @@ RSpec.configure do |config|
                                    desired_capabilities: capabilities
   end
 
-  Capybara.javascript_driver = ENV['show_browser'] ? :chrome : :headless_chrome
+  chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
+  Capybara.javascript_driver = chrome_driver
 
   config.before do
     allow(Company).to receive(:main).and_return(create(:company))
@@ -122,6 +124,6 @@ RSpec.configure do |config|
   end
 
   config.before(:example, type: :system, js: true) do
-    driven_by :headless_chrome
+    driven_by chrome_driver
   end
 end
