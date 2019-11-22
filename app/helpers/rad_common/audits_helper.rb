@@ -58,11 +58,7 @@ module RadCommon
     end
 
     def audit_models_to_search
-      models = ActiveRecord::Base.connection.tables.map do |model|
-        model.capitalize.singularize.camelize.safe_constantize
-      end
-
-      models.uniq.select { |model| model.respond_to?(:auditing_enabled) && model.auditing_enabled }.map(&:to_s).sort
+      RadCommon::AppInfo.new.audited_models
     end
 
     private
