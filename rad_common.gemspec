@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'audited', '~> 4.8'
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap', '~> 4.3.1'
+  s.add_dependency 'bootstrap-select-rails', '~> 1.13.8'
   s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
   s.add_dependency 'devise'
   s.add_dependency 'devise-authy'

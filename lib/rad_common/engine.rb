@@ -28,5 +28,6 @@ module RadCommon
     require 'trix'
     require 'twilio-ruby'
     require 'bootstrap'
+    require 'bootstrap-select-rails'
   end
 end
