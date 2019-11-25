@@ -2,7 +2,7 @@ module RadCommon
   class Filtering
     attr_reader :filters
 
-    def initialize(filters:, search: search)
+    def initialize(filters:, search:)
       @search = search
       @current_user = search.current_user
       @filters = build_search_filters(filters)
