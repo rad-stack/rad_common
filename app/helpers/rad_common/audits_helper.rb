@@ -1,5 +1,24 @@
 module RadCommon
   module AuditsHelper
+    def audit_model_instance
+      @auditable_object || instance_variable_get("@#{controller_name.classify.underscore}")
+    end
+
+    def show_auditing
+      return false if audit_model_instance.blank?
+
+      audit_model_instance.class.name != 'ActiveStorage::Attachment' &&
+      audit_model_instance.respond_to?(:audits) &&
+      audit_model_instance.persisted? &&
+      policy(audit_model_instance).audit? &&
+      params[:action] != 'audit' &&
+      params[:action] != 'audit_by'
+    end
+
+    def show_audit_history_link
+      "/#{controller_name}/#{audit_model_instance.id}/audit"
+    end
+
     def display_audited_changes(audit)
       audit_text = formatted_audited_changes(audit)
 
