@@ -196,6 +196,13 @@ td.fa.security-group-td { border-style: none; }
   background-color: transparent;
 }
 
+.attachment-button-box {
+  width: 200px;
+  .attachment-link {
+    width: 100px;
+  }
+}
+
 /* Mobile styles*/
 @media (max-width: 992px) {
   .content .global-search-group {
