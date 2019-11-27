@@ -15,7 +15,7 @@ class GlobalValidity
     total_start_time = Time.current
     total_error_count = 0
     models_to_check.each do |model|
-      next if exclude_models.include?(model.to_s)
+      next if exclude_models.include?(model)
 
       Rails.logger.info("GlobalValidity stats: #{model} starting")
       start_time = Time.current
@@ -69,25 +69,23 @@ class GlobalValidity
     def models_to_check
       return [@override_model.constantize] if @override_model.present?
 
-      Rails.application.eager_load!
-      all_models = ActiveRecord::Base.descendants
-      all_models - exclude_models
+      RadCommon::AppInfo.new.application_models - exclude_models
     end
 
     def exclude_models
       return [] if @override_model.present?
 
-      [ActiveRecord::SchemaMigration,
-       ApplicationRecord,
-       Audited::Audit] + Rails.application.config.global_validity_exclude
+      Rails.application.config.global_validity_exclude
     end
 
     def check_model(model)
       problems = []
       error_count = 0
-      model.find_each do |record|
+
+      model.safe_constantize.find_each do |record|
         error_count += 1 if validate_record(record, problems)
       end
+
       [problems, error_count]
     end
 
