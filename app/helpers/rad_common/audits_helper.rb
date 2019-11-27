@@ -1,5 +1,24 @@
 module RadCommon
   module AuditsHelper
+    def audit_model_instance
+      @auditable_object || instance_variable_get("@#{controller_name.classify.underscore}")
+    end
+
+    def show_auditing
+      return false if audit_model_instance.blank?
+
+      audit_model_instance.class.name != 'ActiveStorage::Attachment' &&
+      audit_model_instance.respond_to?(:audits) &&
+      audit_model_instance.persisted? &&
+      policy(audit_model_instance).audit? &&
+      params[:action] != 'audit' &&
+      params[:action] != 'audit_by'
+    end
+
+    def show_audit_history_link
+      "/#{controller_name}/#{audit_model_instance.id}/audit"
+    end
+
     def display_audited_changes(audit)
       audit_text = formatted_audited_changes(audit)
 
@@ -12,6 +31,18 @@ module RadCommon
       else
         ''
       end
+    end
+
+    def display_audited_action(audit)
+      # TODO: handle other associated models
+
+      action = if audit.associated.present? && audit.auditable_type == 'ActiveStorage::Attachment'
+                 "#{audit.action} attachment"
+               else
+                 audit.action
+               end
+
+      action.gsub('destroy', 'delete')
     end
 
     def audit_title(by_user)
@@ -46,10 +77,7 @@ module RadCommon
     end
 
     def audit_models_to_search
-      models = ActiveRecord::Base.connection.tables.map { |model| model.capitalize.singularize.camelize.safe_constantize }
-      models += ActiveRecord::Base.subclasses
-      models.uniq.select { |model| model.respond_to?(:auditing_enabled) && model.auditing_enabled }
-            .map(&:to_s).sort
+      RadCommon::AppInfo.new.audited_models
     end
 
     private

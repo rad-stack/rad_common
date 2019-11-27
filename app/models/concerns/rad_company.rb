@@ -8,7 +8,7 @@ module RadCompany
 
     scope :by_id, -> { order(:id) }
 
-    schema_validations except: %i[valid_user_domains]
+    SKIP_SCHEMA_VALIDATION_COLUMNS = [:valid_user_domains]
 
     validates_with EmailAddressValidator, fields: %i[email]
     validates_with PhoneNumberValidator

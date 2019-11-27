@@ -17,7 +17,7 @@ class DatabaseUseChecker
     end
 
     def tables
-      ActiveRecord::Base.connection.tables - ['schema_migrations']
+      RadCommon::AppInfo.new.application_tables
     end
 
     def zero_or_one_records?(table_name)

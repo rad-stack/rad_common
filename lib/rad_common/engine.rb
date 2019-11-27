@@ -20,7 +20,6 @@ module RadCommon
     require 'pg'
     require 'premailer/rails'
     require 'pundit'
-    require 'schema_validations'
     require 'sentry-raven'
     require 'sidekiq'
     require 'sidekiq-failures'
@@ -28,5 +27,6 @@ module RadCommon
     require 'trix'
     require 'twilio-ruby'
     require 'bootstrap'
+    require 'bootstrap-select-rails'
   end
 end

@@ -14,6 +14,17 @@ describe GlobalValidity, type: :service do
 
   # TODO: add tests for override model feature
 
+  describe 'models_to_check' do
+    subject { global_validity.send(:models_to_check).map(&:to_s) }
+
+    let(:models) do
+      %w[Company Division NotificationSecurityRole NotificationSetting NotificationType SecurityRole SecurityRolesUser
+         Status SystemMessage User UserStatus]
+    end
+
+    it { is_expected.to eq models }
+  end
+
   context 'with valid data' do
     let(:global_validity_check) { global_validity.run }
 
@@ -69,7 +80,7 @@ describe GlobalValidity, type: :service do
         let(:specific_query) { -> { SecurityRole.where(id: admin_security_role.id) } }
 
         before do
-          Rails.configuration.global_validity_exclude = [SecurityRole]
+          Rails.configuration.global_validity_exclude = ['SecurityRole']
           Rails.configuration.global_validity_include = [specific_query]
         end
 

@@ -1,10 +1,7 @@
 - if user_signed_in?
-  -model_name = controller_name.classify
-  -model_object = @auditable_object || instance_variable_get("@#{model_name.underscore}")
-
-  -if model_object && model_object.respond_to?(:audits) && model_object.persisted? && policy(model_object).audit? && params[:action] != "audit" && params[:action] != "audit_by"
+  -if show_auditing
     .float-right
-      = link_to "Show History", "/#{controller_name}/#{model_object.id}/audit"
-      -if model_name == 'User'
+      = link_to 'Show History', show_audit_history_link
+      -if audit_model_instance.class.name == 'User'
         %br
         = link_to "Show Changes Made by #{@user}", audit_by_user_path(@user)

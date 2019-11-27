@@ -17,6 +17,7 @@ module RadbearAuditsController
 
   def audit_search
     authorize User
+
     resource_type = params['model_name']
     resource_id = params['record_id']
     system_audits = params['system_audits']

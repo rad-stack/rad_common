@@ -69,6 +69,14 @@ describe RadCommon::ApplicationHelper do
     it { is_expected.to eq options }
   end
 
+  describe 'db_options_for_enum' do
+    subject { db_options_for_enum(Division, :division_status) }
+
+    let(:options) { [['Pending', 0], ['Active', 1], ['Inactive', 2]] }
+
+    it { is_expected.to eq options }
+  end
+
   describe '#gravatar_for' do
     context 'string size' do
       let(:size) { '60' }
@@ -104,10 +112,6 @@ describe RadCommon::ApplicationHelper do
   describe '#avatar_image' do
     let(:size) { 80 }
     let(:filename) { 'avatar.png' }
-
-    before { Rails.application.config.use_avatar = true }
-
-    after  { Rails.application.config.use_avatar = false }
 
     context 'user does not have avatar' do
       let(:resource) { build(:user, avatar: nil) }
