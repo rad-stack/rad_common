@@ -75,6 +75,7 @@ module SchemaValidations
         options = {}
         options[:allow_nil] = true
         options[:scope] = columns[1..-1].map(&:to_sym) if columns.count > 1
+        options[:conditions] = (-> { where(index.where) }) if index.where.present?
         validate_logged :validates_uniqueness_of, first_column, options
       end
     end
