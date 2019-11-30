@@ -50,7 +50,7 @@ describe 'SchemaValidations', type: :module do
     end
   end
 
-  describe 'unique index valdiations' do
+  describe 'unique index validations' do
     subject { user_status.errors.full_messages }
 
     let(:user_status) { create :user_status }
@@ -58,5 +58,21 @@ describe 'SchemaValidations', type: :module do
     before { user_status.update(name: UserStatus.first.name) }
 
     it { is_expected.to include 'Name has already been taken' }
+
+    context 'with conditional exception' do
+      let(:division) { create :division, division_status: 0 }
+      let(:division2) { create :division, division_status: 0 }
+      let(:division3) { create :division, division_status: 1 }
+
+      before do
+        division2.update(name: division.name)
+        division3.update(name: division.name)
+      end
+
+      it 'excludes records not present in where clause' do
+        expect(division2.errors.full_messages).to include 'Name has already been taken'
+        expect(division3).to be_valid
+      end
+    end
   end
 end
