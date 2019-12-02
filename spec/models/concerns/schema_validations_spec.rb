@@ -59,17 +59,17 @@ describe 'SchemaValidations', type: :module do
 
     it { is_expected.to include 'Name has already been taken' }
 
-    context 'with conditional exception' do
-      let(:division) { create :division, division_status: 0 }
-      let(:division2) { create :division, division_status: 0 }
-      let(:division3) { create :division, division_status: 1 }
+    context 'included in skipped constant' do
+      let(:division) { create :division, division_status: 'status_pending' }
+      let(:division2) { create :division, division_status: 'status_pending' }
+      let(:division3) { create :division, division_status: 'status_active' }
 
       before do
         division2.update(name: division.name)
         division3.update(name: division.name)
       end
 
-      it 'excludes records not present in where clause' do
+      it 'does not add validation based on schema' do
         expect(division2.errors.full_messages).to include 'Name has already been taken'
         expect(division3).to be_valid
       end
