@@ -9,7 +9,7 @@ describe RadCommon::ApplicationHelper do
     @user = create :user
 
     def helper.current_user
-      @user
+      @user.reload
     end
   end
 
