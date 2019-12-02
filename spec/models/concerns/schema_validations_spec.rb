@@ -50,7 +50,7 @@ describe 'SchemaValidations', type: :module do
     end
   end
 
-  describe 'unique index valdiations' do
+  describe 'unique index validations' do
     subject { user_status.errors.full_messages }
 
     let(:user_status) { create :user_status }
@@ -58,5 +58,22 @@ describe 'SchemaValidations', type: :module do
     before { user_status.update(name: UserStatus.first.name) }
 
     it { is_expected.to include 'Name has already been taken' }
+
+    context 'included in skipped constant' do
+      let(:division) { create :division, division_status: 'status_pending' }
+      let(:division2) { create :division, division_status: 'status_pending' }
+      let(:division3) { create :division, division_status: 'status_active' }
+
+      before do
+        division2.update(name: division.name)
+        division3.update(name: division.name)
+      end
+
+      it 'does not add validation based on schema' do
+        expect(division2.errors.full_messages).to include 'Name has already been taken for a pending division'
+        expect(division2.errors.full_messages).not_to include 'Name has already been taken'
+        expect(division3).to be_valid
+      end
+    end
   end
 end

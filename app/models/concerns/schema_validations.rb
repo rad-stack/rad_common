@@ -68,7 +68,7 @@ module SchemaValidations
 
     def load_index_validations
       klass.connection.indexes(klass.table_name.to_sym).each do |index|
-        next unless index.unique
+        next if index.name.to_sym.in?(skip_indexes) || !index.unique
 
         columns = index.columns
         first_column = columns.first.to_sym
@@ -110,5 +110,9 @@ module SchemaValidations
 
     def skip_columns
       klass.const_defined?('SKIP_SCHEMA_VALIDATION_COLUMNS') ? klass::SKIP_SCHEMA_VALIDATION_COLUMNS : []
+    end
+
+    def skip_indexes
+      klass.const_defined?('SKIP_SCHEMA_VALIDATION_INDEXES') ? klass::SKIP_SCHEMA_VALIDATION_INDEXES : []
     end
 end
