@@ -17,7 +17,7 @@ class Division < ApplicationRecord
   scope :authorized, lambda { |user| where(owner_id: user.id) unless user.admin? }
   scope :sorted, -> { order(:name) }
 
-  validates :name, uniqueness: true, if: -> { status_pending? }
+  validates :name, uniqueness: { message: 'has already been taken for a pending division' }, if: -> { status_pending? }
 
   audited
 

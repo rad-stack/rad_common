@@ -70,7 +70,8 @@ describe 'SchemaValidations', type: :module do
       end
 
       it 'does not add validation based on schema' do
-        expect(division2.errors.full_messages).to include 'Name has already been taken'
+        expect(division2.errors.full_messages).to include 'Name has already been taken for a pending division'
+        expect(division2.errors.full_messages).not_to include 'Name has already been taken'
         expect(division3).to be_valid
       end
     end
