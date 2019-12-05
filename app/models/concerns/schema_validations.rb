@@ -94,7 +94,7 @@ module SchemaValidations
     def validate_logged(method, arg, opts = {})
       msg = "[schema_validations] #{self.class.name}.#{method} #{arg.inspect}"
       msg += ", #{opts.inspect[1...-1]}" if opts.any?
-      Rails.logger.info(msg)
+      Rails.logger.debug(msg)
 
       klass.send(method, arg, opts)
     end
