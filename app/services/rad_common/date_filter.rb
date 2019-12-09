@@ -26,8 +26,8 @@ module RadCommon
       start_at = start_at_value(params)
       end_at = end_at_value(params)
 
-      results = results.where("#{column} >= ?", start_at) if start_at.present?
-      results = results.where("#{column} <= ?", end_at) if end_at.present?
+      results = results.where("#{column} >= ?", start_at&.beginning_of_day) if start_at.present?
+      results = results.where("#{column} <= ?", end_at&.end_of_day) if end_at.present?
       results
     end
 
