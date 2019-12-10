@@ -8,7 +8,7 @@ class User < ApplicationRecord
   has_many :security_roles, through: :security_roles_users, dependent: :destroy
 
   devise :authy_authenticatable, :database_authenticatable, :registerable, :confirmable, :recoverable,
-         :rememberable, :trackable, :validatable, :invitable
+         :rememberable, :trackable, :validatable, :invitable, :lockable
 
   scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
   scope :admins, -> { active.where('users.id IN (SELECT user_id FROM security_roles_users INNER JOIN security_roles ON security_roles_users.security_role_id = security_roles.id WHERE security_roles.admin = TRUE)') }

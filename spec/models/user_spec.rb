@@ -58,6 +58,30 @@ describe User, type: :model do
     end
   end
 
+  describe 'devise lockable' do
+    subject { user.access_locked? }
+
+    before { attempts.times { user.valid_for_authentication? { false } } }
+
+    context 'without enough attempts' do
+      let(:attempts) { 5 }
+
+      it { is_expected.to be false }
+    end
+
+    context 'with exactly enough attempts' do
+      let(:attempts) { 10 }
+
+      it { is_expected.to be true }
+    end
+
+    context 'with more than enough attempts' do
+      let(:attempts) { 15 }
+
+      it { is_expected.to be true }
+    end
+  end
+
   describe 'authy' do
     let(:user) { create :user, mobile_phone: phone_number }
     let(:phone_number) { '(123) 456-7111' }

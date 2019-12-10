@@ -199,6 +199,9 @@ ActiveRecord::Schema.define(version: 2019_11_30_162719) do
     t.integer "invited_by_id"
     t.integer "invitations_count", default: 0
     t.boolean "external", default: false, null: false
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.index ["authy_id"], name: "index_users_on_authy_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
