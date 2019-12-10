@@ -9,7 +9,41 @@ describe RadCommon::ApplicationHelper do
     @user = create :user
 
     def helper.current_user
-      @user
+      @user.reload
+    end
+  end
+
+  describe '#show_actions?' do
+    let(:model_class) { Division }
+
+    context 'user can update resource' do
+      before { @user.security_roles.update_all update_division: true }
+
+      it 'returns true' do
+        expect(helper.show_actions?(model_class)).to eq(true)
+      end
+    end
+
+    context 'user can delete resource' do
+      before do
+        @user.security_roles.update_all update_division: false
+        @user.security_roles.update_all delete_division: true
+      end
+
+      it 'returns true' do
+        expect(helper.show_actions?(model_class)).to eq(true)
+      end
+    end
+
+    context 'user can neither update or delete resource' do
+      before do
+        @user.security_roles.update_all update_division: false
+        @user.security_roles.update_all delete_division: false
+      end
+
+      it 'returns false' do
+        expect(helper.show_actions?(model_class)).to eq(false)
+      end
     end
   end
 
@@ -31,6 +65,14 @@ describe RadCommon::ApplicationHelper do
     subject { options_for_enum(Division, :division_status) }
 
     let(:options) { [%w[Pending status_pending], %w[Active status_active], %w[Inactive status_inactive]] }
+
+    it { is_expected.to eq options }
+  end
+
+  describe 'db_options_for_enum' do
+    subject { db_options_for_enum(Division, :division_status) }
+
+    let(:options) { [['Pending', 0], ['Active', 1], ['Inactive', 2]] }
 
     it { is_expected.to eq options }
   end
@@ -70,10 +112,6 @@ describe RadCommon::ApplicationHelper do
   describe '#avatar_image' do
     let(:size) { 80 }
     let(:filename) { 'avatar.png' }
-
-    before { Rails.application.config.use_avatar = true }
-
-    after  { Rails.application.config.use_avatar = false }
 
     context 'user does not have avatar' do
       let(:resource) { build(:user, avatar: nil) }

@@ -1,3 +1,8 @@
+/*
+ *= require_self
+ *= require bootstrap-select
+*/
+
 trix-editor {
   min-height: 15em;
   margin-bottom: 10px;
@@ -189,6 +194,17 @@ td.fa.security-group-td { border-style: none; }
   max-width: 100px;
   border: 0;
   background-color: transparent;
+}
+
+.attachment-wrapper{
+  white-space: nowrap;
+  
+  .attachment-button-box {
+    width: 200px;
+    .attachment-link {
+      width: 100px;
+    }
+  }
 }
 
 /* Mobile styles*/

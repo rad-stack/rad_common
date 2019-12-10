@@ -27,7 +27,7 @@ module RadbearUser
   end
 
   def permission?(permission)
-    security_roles.where("#{permission} = TRUE").count.positive?
+    security_roles.select {|x| x[permission] }.length.positive?
   end
 
   def permission_or_pending?(permission)
@@ -118,10 +118,6 @@ module RadbearUser
 
   def can_audit?(klass)
     Pundit.policy!(self, klass).audit?
-  end
-
-  def can_global_validate?(klass)
-    Pundit.policy!(self, klass).global_validate?
   end
   # end shims
 

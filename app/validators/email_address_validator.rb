@@ -22,6 +22,7 @@ class EmailAddressValidator < ActiveModel::Validator
   def check_email(email, field, record)
     return if email =~ URI::MailTo::EMAIL_REGEXP && email !~ /[A-Z]/
 
-    record.errors.add(field, 'is not written in a valid format')
+    record.errors.add(field, 'is not written in a valid format. Email cannot have capital letters, '\
+                              'domain must be less than 62 characters and does not allow special characters.')
   end
 end

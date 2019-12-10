@@ -1,4 +1,5 @@
 class Division < ApplicationRecord
+  SKIP_SCHEMA_VALIDATION_INDEXES = [:index_divisions_on_name].freeze
   include FirebaseSync
   include FirebaseAction
   include Hashable
@@ -8,11 +9,15 @@ class Division < ApplicationRecord
   has_one_attached :logo
   has_one_attached :avatar
   has_one_attached :icon
+  has_one_attached :attachment
 
   alias_attribute :to_s, :name
   enum division_status: %i[status_pending status_active status_inactive]
 
-  scope :authorized, ->(_) {}
+  scope :authorized, lambda { |user| where(owner_id: user.id) unless user.admin? }
+  scope :sorted, -> { order(:name) }
+
+  validates :name, uniqueness: { message: 'has already been taken for a pending division' }, if: -> { status_pending? }
 
   audited
 

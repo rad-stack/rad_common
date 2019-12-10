@@ -125,8 +125,8 @@ RSpec.describe 'Divisions', type: :system do
       it 'allows attachment to be deleted', js: true do
         expect(ActiveStorage::Attachment.count).to eq 1
 
-        page.accept_confirm prompt do
-          click_link 'x'
+        page.accept_alert prompt do
+          first('dd .fa-times').click
         end
 
         division.reload
