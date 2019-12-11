@@ -26,16 +26,6 @@ Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
 end
 
-if ENV.fetch('STAGING') == 'true'
-  class ChangeStagingEmailSubject
-    def self.delivering_email(mail)
-      mail.subject = '[STAGING] ' + mail.subject
-    end
-  end
-
-  ActionMailer::Base.register_interceptor(ChangeStagingEmailSubject)
-end
-
 Rails.configuration.global_search_scopes =
   [
     { name: 'user_name', model: 'User',
