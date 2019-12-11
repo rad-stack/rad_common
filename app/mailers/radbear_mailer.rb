@@ -24,7 +24,7 @@ class RadbearMailer < ActionMailer::Base
     @message = "#{user} has signed up on #{I18n.t(:app_name)}"
     @message += auto_approve ? '.' : ' and is awaiting approval.'
 
-    mail(to: to_address, subject: "New User on #{I18n.t(:app_name)}")
+    mail to: to_address, subject: prepare_subject("New User on #{I18n.t(:app_name)}")
   end
 
   def your_account_approved(user)
@@ -33,7 +33,7 @@ class RadbearMailer < ActionMailer::Base
 
     @recipient = user
     @message = "Your account was approved and you can begin using #{I18n.t(:app_name)}."
-    mail to: @recipient.formatted_email, subject: 'Your Account Was Approved'
+    mail to: @recipient.formatted_email, subject: prepare_subject('Your Account Was Approved')
   end
 
   def user_was_approved(recipients, user, approver)
@@ -47,7 +47,7 @@ class RadbearMailer < ActionMailer::Base
     to_address = @recipient.map(&:formatted_email)
 
     @message = "#{user} was approved by #{approved_by_name} on #{I18n.t(:app_name)}."
-    mail(to: to_address, subject: "User Was Approved on #{I18n.t(:app_name)}")
+    mail to: to_address, subject: prepare_subject("User Was Approved on #{I18n.t(:app_name)}")
   end
 
   def simple_message(recipient, subject, message, options = {})
@@ -67,7 +67,7 @@ class RadbearMailer < ActionMailer::Base
     @message = simple_format(message)
     @email_action = options[:email_action] if options[:email_action]
 
-    mail(to: to_address, subject: subject)
+    mail to: to_address, subject: prepare_subject(subject)
   end
 
   def global_validity(recipients, problems)
@@ -76,7 +76,7 @@ class RadbearMailer < ActionMailer::Base
 
     @problems = problems
 
-    mail(to: to_address, subject: "Invalid data in #{I18n.t(:app_name)}")
+    mail to: to_address, subject: prepare_subject("Invalid data in #{I18n.t(:app_name)}")
   end
 
   def global_validity_on_demand(recipient, problems)
@@ -84,7 +84,7 @@ class RadbearMailer < ActionMailer::Base
     @problems = problems
 
     mail to: recipient.formatted_email,
-         subject: "Invalid data in #{I18n.t(:app_name)}",
+         subject: prepare_subject("Invalid data in #{I18n.t(:app_name)}"),
          template_name: 'global_validity'
   end
 
@@ -108,7 +108,7 @@ class RadbearMailer < ActionMailer::Base
     @message = "Attached is the #{report_name}" + message_date_string + '.'
     attachments["#{report_name}#{attachment_date_string}.csv"] = { mime_type: 'text/csv', content: csv }
 
-    mail to: @recipient.formatted_email, subject: "#{report_name}#{subject_date_string}"
+    mail to: @recipient.formatted_email, subject: prepare_subject("#{report_name}#{subject_date_string}")
   end
 
   private
@@ -120,5 +120,11 @@ class RadbearMailer < ActionMailer::Base
 
       @include_yield = true
       @optional = false
+    end
+
+    def prepare_subject(subject)
+      return subject unless Company.staging?
+
+      "*** STAGING SYSTEM *** #{subject}"
     end
 end
