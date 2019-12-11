@@ -34,24 +34,14 @@ describe RadbearMailer, type: :mailer do
   end
 
   describe '#simple_message' do
-    let(:staging) { false }
     let(:recipient) { email }
 
-    before do
-      allow(Company).to receive(:staging?).and_return(staging)
-      described_class.simple_message(recipient, 'foo', 'bar').deliver_now
-    end
+    before { described_class.simple_message(recipient, 'foo', 'bar').deliver_now }
 
     describe 'subject' do
       subject { last_email.subject }
 
       it { is_expected.to eq 'foo' }
-
-      context 'when staging' do
-        let(:staging) { true }
-
-        it { is_expected.to eq '*** STAGING SYSTEM *** foo' }
-      end
     end
 
     describe 'to' do
