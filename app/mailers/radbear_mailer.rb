@@ -24,7 +24,7 @@ class RadbearMailer < ActionMailer::Base
     @message = "#{user} has signed up on #{I18n.t(:app_name)}"
     @message += auto_approve ? '.' : ' and is awaiting approval.'
 
-    mail to: to_address, subject: "New User on #{I18n.t(:app_name)}"
+    mail(to: to_address, subject: "New User on #{I18n.t(:app_name)}")
   end
 
   def your_account_approved(user)
@@ -47,7 +47,7 @@ class RadbearMailer < ActionMailer::Base
     to_address = @recipient.map(&:formatted_email)
 
     @message = "#{user} was approved by #{approved_by_name} on #{I18n.t(:app_name)}."
-    mail to: to_address, subject: "User Was Approved on #{I18n.t(:app_name)}"
+    mail(to: to_address, subject: "User Was Approved on #{I18n.t(:app_name)}")
   end
 
   def simple_message(recipient, subject, message, options = {})
@@ -67,7 +67,7 @@ class RadbearMailer < ActionMailer::Base
     @message = simple_format(message)
     @email_action = options[:email_action] if options[:email_action]
 
-    mail to: to_address, subject: subject
+    mail(to: to_address, subject: subject)
   end
 
   def global_validity(recipients, problems)
@@ -76,7 +76,7 @@ class RadbearMailer < ActionMailer::Base
 
     @problems = problems
 
-    mail to: to_address, subject: "Invalid data in #{I18n.t(:app_name)}"
+    mail(to: to_address, subject: "Invalid data in #{I18n.t(:app_name)}")
   end
 
   def global_validity_on_demand(recipient, problems)
@@ -113,12 +113,12 @@ class RadbearMailer < ActionMailer::Base
 
   private
 
-    def set_defaults
-      unless File.exist?('app/assets/images/app_logo.png') == File.exist?('public/app_logo.png')
-        raise 'This mailer requires app_logo.png to be in both places.'
-      end
-
-      @include_yield = true
-      @optional = false
+  def set_defaults
+    unless File.exist?('app/assets/images/app_logo.png') == File.exist?('public/app_logo.png')
+      raise 'This mailer requires app_logo.png to be in both places.'
     end
+
+    @include_yield = true
+    @optional = false
+  end
 end
