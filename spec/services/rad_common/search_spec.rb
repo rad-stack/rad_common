@@ -28,10 +28,11 @@ RSpec.describe RadCommon::Search, type: :service do
     end
 
     context 'when using a date filter' do
-      let(:query) { User }
+      let(:query) { User.joins(:security_roles) }
       let(:user_1) { create :user, confirmed_at: 2.days.ago }
       let(:user_2) { create :user, confirmed_at: 3.days.from_now }
       let!(:user_3) { create :user, confirmed_at: DateTime.current.end_of_day }
+      let!(:user_4) { create :user, confirmed_at: 2.days.ago, security_roles: [] }
       let(:filters) { [{ column: :confirmed_at, type: RadCommon::DateFilter }] }
       let(:params) do
         ActionController::Parameters.new(search: { confirmed_at_start: 3.days.ago.strftime('%Y-%m-%d'),
@@ -41,6 +42,7 @@ RSpec.describe RadCommon::Search, type: :service do
       it 'filters results' do
         expect(subject).to include user_1
         expect(subject).to include user_3
+        expect(subject).not_to include user_4
         expect(subject).not_to include user_2
       end
     end
