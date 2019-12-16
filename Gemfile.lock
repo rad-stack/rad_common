@@ -34,7 +34,7 @@ PATH
       sidekiq-failures
       simple_form (~> 5.0.1)
       trix
-      twilio-ruby (~> 4.11.1)
+      twilio-ruby (~> 5.31.0)
 
 GEM
   remote: https://rubygems.org/
@@ -94,13 +94,13 @@ GEM
     autoprefixer-rails (9.7.3)
       execjs
     aws-eventstream (1.0.3)
-    aws-partitions (1.251.0)
-    aws-sdk-core (3.84.0)
+    aws-partitions (1.255.0)
+    aws-sdk-core (3.86.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.26.0)
+    aws-sdk-kms (1.27.0)
       aws-sdk-core (~> 3, >= 3.71.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-s3 (1.59.0)
@@ -217,7 +217,7 @@ GEM
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
     json (2.2.0)
-    jwt (1.5.6)
+    jwt (2.2.1)
     kaminari (1.1.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.1.1)
@@ -248,7 +248,6 @@ GEM
     minitest (5.12.0)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
-    multi_json (1.14.1)
     multipart-post (2.1.1)
     nio4r (2.5.1)
     nokogiri (1.10.5)
@@ -389,10 +388,10 @@ GEM
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.10)
-    twilio-ruby (4.11.1)
-      builder (>= 2.1.2)
-      jwt (~> 1.0)
-      multi_json (>= 1.3.0)
+    twilio-ruby (5.31.0)
+      faraday (~> 0.9)
+      jwt (>= 1.5, <= 2.5)
+      nokogiri (>= 1.6, < 2.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     unicode-display_width (1.6.0)

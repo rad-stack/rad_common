@@ -4,7 +4,7 @@ class PhoneNumberValidator < ActiveModel::Validator
     fields.each do |field|
       phone_value = fix_phone_number(record, field, record.send(field))
       if phone_value.present? && !valid_phone_number?(phone_value)
-        record.errors.add(field, 'Invalid phone number, format must be (999) 999-9999')
+        record.errors.add(field, 'invalid, format must be (999) 999-9999')
       end
     end
   end

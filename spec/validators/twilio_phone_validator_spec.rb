@@ -2,14 +2,13 @@ require 'rails_helper'
 
 class TwilioMockModel
   include ActiveModel::Validations
-  attr_reader :number, :multiple_numbers
-
-  def initialize(number, multiple_numbers = [])
-    @number = number
-    @multiple_numbers = multiple_numbers
-  end
+  attr_accessor :number, :multiple_numbers, :mobile
 
   def number_changed?
+    true
+  end
+
+  def mobile_changed?
     true
   end
 
@@ -17,47 +16,60 @@ class TwilioMockModel
     true
   end
 
-  validates_with TwilioPhoneValidator, fields: [field: :number]
+  validates_with TwilioPhoneValidator, fields: [{ field: :number }, { field: :mobile, type: :mobile }]
   validates_with TwilioPhoneValidator, fields: [field: :multiple_numbers], multiples: true
 end
 
 RSpec.describe TwilioPhoneValidator, type: :validator do
-  let(:mobile_phone) { '9043252071' }
-  let(:standard_phone) { '9045035030' }
+  let(:mobile_phone) { '(904) 325-2071' }
+  let(:standard_phone) { '(904) 503-5030' }
   let(:invalid_phone) { '1234' }
 
   it 'validates with mobile phone number', :vcr do
-    model = TwilioMockModel.new(mobile_phone)
-    model.valid?
-    puts model.errors.full_messages.to_s
+    model = TwilioMockModel.new
+    model.mobile = mobile_phone
     expect(model.valid?).to eq(true)
   end
 
-  it 'validates a non-mobile phone number', vcr: true, regression: true do
-    model = TwilioMockModel.new(standard_phone)
+  it 'validates a non-mobile phone number', :vcr do
+    model = TwilioMockModel.new
+    model.number = standard_phone
     expect(model.valid?).to eq(true)
   end
 
-  it 'validates with multiple numbers', vcr: true do
-    model = TwilioMockModel.new(mobile_phone, [mobile_phone, mobile_phone])
+  it 'invalidates mobile number with a non-mobile number', :vcr do
+    model = TwilioMockModel.new
+    model.mobile = standard_phone
+    expect(model.valid?).to eq(false)
+    expect(model.errors.full_messages.first).to eq('Mobile does not appear to be a valid mobile phone number')
+  end
+
+  it 'validates with multiple numbers', :vcr do
+    model = TwilioMockModel.new
+    model.mobile = mobile_phone
+    model.multiple_numbers = [mobile_phone, mobile_phone]
     expect(model.valid?).to eq(true)
   end
 
-  it 'invalidates with a non 10 digit number', vcr: true do
-    model = TwilioMockModel.new(invalid_phone)
+  it 'invalidates with a non 10 digit number' do
+    model = TwilioMockModel.new
+    model.number = invalid_phone
     expect(model.valid?).to eq(false)
-    expect(model.errors.full_messages.first).to eq('Number does not appear to be a valid phone number')
+    expect(model.errors.full_messages.first).to eq('Number invalid, format must be (999) 999-9999')
   end
 
-  it 'invalidates without a number', vcr: true do
-    model = TwilioMockModel.new('_')
+  it 'invalidates without a number' do
+    model = TwilioMockModel.new
+    model.number = '_'
     expect(model.valid?).to eq(false)
-    expect(model.errors.full_messages.first).to eq('Number does not appear to be a valid phone number')
+    expect(model.errors.full_messages.first).to eq('Number invalid, format must be (999) 999-9999')
   end
 
-  it 'invalidates with mutliple phone numbers', vcr: true do
-    model = TwilioMockModel.new(mobile_phone, [mobile_phone, invalid_phone])
+  it 'invalidates with mutliple phone numbers', :vcr do
+    model = TwilioMockModel.new
+    model.mobile = mobile_phone
+    model.multiple_numbers = [mobile_phone, invalid_phone]
     expect(model.valid?).to eq(false)
-    expect(model.errors.full_messages.first).to eq('Multiple numbers appears to include at least one invalid phone number')
+    expect(model.errors.full_messages.first).to eq('Multiple numbers invalid, format must be (999) 999-9999')
   end
 end

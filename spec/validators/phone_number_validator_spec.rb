@@ -22,7 +22,7 @@ RSpec.describe PhoneNumberValidator do
     invalid_numbers.each do |phone_number|
       model = TestPhoneModel.new(phone_number)
       expect(model).to be_invalid
-      expect(model.errors.full_messages.to_s).to include 'Invalid phone number, format must be'
+      expect(model.errors.full_messages.to_s).to include 'number invalid, format must be'
     end
   end
 
@@ -44,7 +44,7 @@ RSpec.describe PhoneNumberValidator do
     invalid_numbers.each do |phone_number|
       model = TestPhoneModel.new(phone_number)
       expect(model).to be_invalid
-      expect(model.errors.full_messages.to_s).to include 'Invalid phone number, format must be'
+      expect(model.errors.full_messages.to_s).to include 'number invalid, format must be'
     end
   end
 end

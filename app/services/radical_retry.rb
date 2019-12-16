@@ -3,7 +3,7 @@ class RadicalRetry
     def perform_request(no_delay: false, &block)
       retries ||= 5
       block.call
-    rescue Net::OpenTimeout, OpenURI::HTTPError, HTTPClient::ConnectTimeoutError, Errno::EPIPE, SocketError, OpenSSL::SSL::SSLError, Errno::ENOENT, Twilio::REST::ServerError => e
+    rescue Net::OpenTimeout, OpenURI::HTTPError, HTTPClient::ConnectTimeoutError, Errno::EPIPE, SocketError, OpenSSL::SSL::SSLError, Errno::ENOENT => e
       if (retries -= 1) > 0
         exponential_pause(retries, no_delay)
         retry
