@@ -17,7 +17,7 @@ class SystemSMSJob < ApplicationJob
         RadicalRetry.perform_request do
           RadicalTwilio.send_sms(to: user.mobile_phone, message: message, from: from)
         end
-      rescue Twilio::REST::RequestError
+      rescue Twilio::REST::RestError
         errors << user.id
       end
     end

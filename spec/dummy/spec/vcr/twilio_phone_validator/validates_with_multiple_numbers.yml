@@ -7,23 +7,23 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     headers:
-      Accept:
-      - application/json
+      User-Agent:
+      - twilio-ruby/5.31.0 (ruby/x86_64-darwin18 2.6.4-p104)
       Accept-Charset:
       - utf-8
-      User-Agent:
-      - twilio-ruby/4.11.1 (ruby/x86_64-darwin18 2.6.4-p104)
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
       Authorization:
       - Basic QUMzZjA1YzEyZjBkYjA2ZGVmNDc3ZTVmMDdlMDRkM2Y0MjpmNDhmMTYzMjRiMjMyOTVjYWJiOWNiNTI1MDU3ZDE3Zg==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 28 Oct 2019 13:10:56 GMT
+      - Mon, 16 Dec 2019 14:02:44 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -33,9 +33,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQc1c5d1aa1cc84f9b90f6f9e5d2e44c96
+      - RQ83a59f324be24935b63278d812c4ad34
       Twilio-Request-Duration:
-      - '0.013'
+      - '0.019'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -63,7 +63,7 @@ http_interactions:
         "national_format": "(904) 325-2071", "carrier": null, "add_ons": null, "url":
         "https://lookups.twilio.com/v1/PhoneNumbers/+19043252071"}'
     http_version: 
-  recorded_at: Mon, 28 Oct 2019 13:10:56 GMT
+  recorded_at: Mon, 16 Dec 2019 14:02:44 GMT
 - request:
     method: get
     uri: https://lookups.twilio.com/v1/PhoneNumbers/9043252071
@@ -71,23 +71,23 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     headers:
-      Accept:
-      - application/json
+      User-Agent:
+      - twilio-ruby/5.31.0 (ruby/x86_64-darwin18 2.6.4-p104)
       Accept-Charset:
       - utf-8
-      User-Agent:
-      - twilio-ruby/4.11.1 (ruby/x86_64-darwin18 2.6.4-p104)
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
       Authorization:
       - Basic QUMzZjA1YzEyZjBkYjA2ZGVmNDc3ZTVmMDdlMDRkM2Y0MjpmNDhmMTYzMjRiMjMyOTVjYWJiOWNiNTI1MDU3ZDE3Zg==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 28 Oct 2019 13:10:56 GMT
+      - Mon, 16 Dec 2019 14:02:44 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -97,7 +97,7 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQc7577fbc35cd4af7ab89605188878add
+      - RQe9bcb3dd9a904a339b4f31aa1daa6d41
       Twilio-Request-Duration:
       - '0.014'
       Access-Control-Allow-Origin:
@@ -127,7 +127,7 @@ http_interactions:
         "national_format": "(904) 325-2071", "carrier": null, "add_ons": null, "url":
         "https://lookups.twilio.com/v1/PhoneNumbers/+19043252071"}'
     http_version: 
-  recorded_at: Mon, 28 Oct 2019 13:10:56 GMT
+  recorded_at: Mon, 16 Dec 2019 14:02:44 GMT
 - request:
     method: get
     uri: https://lookups.twilio.com/v1/PhoneNumbers/9043252071
@@ -135,23 +135,23 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     headers:
-      Accept:
-      - application/json
+      User-Agent:
+      - twilio-ruby/5.31.0 (ruby/x86_64-darwin18 2.6.4-p104)
       Accept-Charset:
       - utf-8
-      User-Agent:
-      - twilio-ruby/4.11.1 (ruby/x86_64-darwin18 2.6.4-p104)
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
       Authorization:
       - Basic QUMzZjA1YzEyZjBkYjA2ZGVmNDc3ZTVmMDdlMDRkM2Y0MjpmNDhmMTYzMjRiMjMyOTVjYWJiOWNiNTI1MDU3ZDE3Zg==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 28 Oct 2019 13:10:56 GMT
+      - Mon, 16 Dec 2019 14:02:44 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -161,9 +161,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQfe65e2beefd94a82866029714b953b71
+      - RQ468093978220491b9acf1fcf9ce07831
       Twilio-Request-Duration:
-      - '0.012'
+      - '0.013'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -191,5 +191,5 @@ http_interactions:
         "national_format": "(904) 325-2071", "carrier": null, "add_ons": null, "url":
         "https://lookups.twilio.com/v1/PhoneNumbers/+19043252071"}'
     http_version: 
-  recorded_at: Mon, 28 Oct 2019 13:10:56 GMT
+  recorded_at: Mon, 16 Dec 2019 14:02:44 GMT
 recorded_with: VCR 5.0.0

@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sidekiq-failures'
   s.add_dependency 'simple_form', '~> 5.0.1'
   s.add_dependency 'trix'
-  s.add_dependency 'twilio-ruby', '~> 4.11.1'
+  s.add_dependency 'twilio-ruby', '~> 5.31.0'
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
