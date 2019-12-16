@@ -1,4 +1,4 @@
-module CoreExtenions
+module CoreExtensions
   module ActiveRecord
     module Base
       module SchemaValidations
