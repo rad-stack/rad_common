@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://lookups.twilio.com/v1/PhoneNumbers/9043252071?Type=carrier
+    uri: https://lookups.twilio.com/v1/PhoneNumbers/9045035030?Type=carrier
     body:
       encoding: US-ASCII
       string: ''
@@ -23,19 +23,19 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 16 Dec 2019 14:42:16 GMT
+      - Mon, 16 Dec 2019 14:44:02 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '373'
+      - '376'
       Connection:
       - keep-alive
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ85214a4376af457e8aefebc854555ecf
+      - RQ31ccdb1c3e8b43eda7540a64d83a0cc7
       Twilio-Request-Duration:
-      - '0.198'
+      - '0.061'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -59,10 +59,11 @@ http_interactions:
       - max-age=31536000
     body:
       encoding: UTF-8
-      string: '{"caller_name": null, "country_code": "US", "phone_number": "+19043252071",
-        "national_format": "(904) 325-2071", "carrier": {"mobile_country_code": "310",
-        "mobile_network_code": "160", "name": "T-Mobile USA, Inc. (form. Metro PCS,
-        Inc.)", "type": "mobile", "error_code": null}, "add_ons": null, "url": "https://lookups.twilio.com/v1/PhoneNumbers/+19043252071?Type=carrier"}'
+      string: '{"caller_name": null, "country_code": "US", "phone_number": "+19045035030",
+        "national_format": "(904) 503-5030", "carrier": {"mobile_country_code": null,
+        "mobile_network_code": null, "name": "Bandwidth SMSEnabled - Bandwidth CLEC
+        - Sybase365", "type": "voip", "error_code": null}, "add_ons": null, "url":
+        "https://lookups.twilio.com/v1/PhoneNumbers/+19045035030?Type=carrier"}'
     http_version: 
-  recorded_at: Mon, 16 Dec 2019 14:42:16 GMT
+  recorded_at: Mon, 16 Dec 2019 14:44:02 GMT
 recorded_with: VCR 5.0.0

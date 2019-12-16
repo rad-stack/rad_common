@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://lookups.twilio.com/v1/PhoneNumbers/9043252071
+    uri: https://lookups.twilio.com/v1/PhoneNumbers/9043252071?Type=carrier
     body:
       encoding: US-ASCII
       string: ''
@@ -23,19 +23,19 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 16 Dec 2019 14:31:29 GMT
+      - Mon, 16 Dec 2019 14:42:16 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '212'
+      - '373'
       Connection:
       - keep-alive
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQab2521fc41c54f38b3a3b4b728f788c9
+      - RQ7f023ab0e288463aabdea36213e22768
       Twilio-Request-Duration:
-      - '0.014'
+      - '0.040'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -60,10 +60,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"caller_name": null, "country_code": "US", "phone_number": "+19043252071",
-        "national_format": "(904) 325-2071", "carrier": null, "add_ons": null, "url":
-        "https://lookups.twilio.com/v1/PhoneNumbers/+19043252071"}'
+        "national_format": "(904) 325-2071", "carrier": {"mobile_country_code": "310",
+        "mobile_network_code": "160", "name": "T-Mobile USA, Inc. (form. Metro PCS,
+        Inc.)", "type": "mobile", "error_code": null}, "add_ons": null, "url": "https://lookups.twilio.com/v1/PhoneNumbers/+19043252071?Type=carrier"}'
     http_version: 
-  recorded_at: Mon, 16 Dec 2019 14:31:29 GMT
+  recorded_at: Mon, 16 Dec 2019 14:42:16 GMT
 - request:
     method: get
     uri: https://lookups.twilio.com/v1/PhoneNumbers/9043252071
@@ -87,7 +88,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 16 Dec 2019 14:31:29 GMT
+      - Mon, 16 Dec 2019 14:42:17 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -97,9 +98,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ5c05922b78544e1894472f76d64e9bc2
+      - RQa5bab69bf9904ec5b0e384a62787aacc
       Twilio-Request-Duration:
-      - '0.014'
+      - '0.015'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -127,7 +128,7 @@ http_interactions:
         "national_format": "(904) 325-2071", "carrier": null, "add_ons": null, "url":
         "https://lookups.twilio.com/v1/PhoneNumbers/+19043252071"}'
     http_version: 
-  recorded_at: Mon, 16 Dec 2019 14:31:29 GMT
+  recorded_at: Mon, 16 Dec 2019 14:42:17 GMT
 - request:
     method: get
     uri: https://lookups.twilio.com/v1/PhoneNumbers/9043252071
@@ -151,7 +152,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 16 Dec 2019 14:31:29 GMT
+      - Mon, 16 Dec 2019 14:42:17 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -161,9 +162,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQfb74d1d2f37545a5bff0e5345b7bb562
+      - RQa2217836fe9444eda09f3da20b723a04
       Twilio-Request-Duration:
-      - '0.013'
+      - '0.016'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -191,5 +192,5 @@ http_interactions:
         "national_format": "(904) 325-2071", "carrier": null, "add_ons": null, "url":
         "https://lookups.twilio.com/v1/PhoneNumbers/+19043252071"}'
     http_version: 
-  recorded_at: Mon, 16 Dec 2019 14:31:29 GMT
+  recorded_at: Mon, 16 Dec 2019 14:42:17 GMT
 recorded_with: VCR 5.0.0
