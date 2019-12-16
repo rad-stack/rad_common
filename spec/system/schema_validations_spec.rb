@@ -13,7 +13,10 @@ RSpec.describe 'Divisions', type: :system do
   it 'loads validations when edit form renders' do
     Object.send(:remove_const, :Division)
     load 'division.rb'
-    visit edit_division_path(create(:division))
+    Division.schema_validations_loaded = true
+    division = create(:division)
+    Division.schema_validations_loaded = false
+    visit edit_division_path(division)
     expect(page).to have_css '.string.required'
   end
 end
