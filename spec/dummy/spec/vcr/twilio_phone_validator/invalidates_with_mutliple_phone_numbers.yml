@@ -23,7 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 16 Dec 2019 14:02:44 GMT
+      - Mon, 16 Dec 2019 14:31:29 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -33,9 +33,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQe0ef0ac2f11b49f1a33362cd123d230f
+      - RQ1620010836d84556bba1e6d915095ca3
       Twilio-Request-Duration:
-      - '0.018'
+      - '0.012'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -63,7 +63,7 @@ http_interactions:
         "national_format": "(904) 325-2071", "carrier": null, "add_ons": null, "url":
         "https://lookups.twilio.com/v1/PhoneNumbers/+19043252071"}'
     http_version: 
-  recorded_at: Mon, 16 Dec 2019 14:02:44 GMT
+  recorded_at: Mon, 16 Dec 2019 14:31:29 GMT
 - request:
     method: get
     uri: https://lookups.twilio.com/v1/PhoneNumbers/9043252071
@@ -87,7 +87,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 16 Dec 2019 14:02:45 GMT
+      - Mon, 16 Dec 2019 14:31:30 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -97,9 +97,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQfe35f7b1914a4839898a305be90b4c07
+      - RQca1a5b194f5a452fb4557a7d45e9625e
       Twilio-Request-Duration:
-      - '0.025'
+      - '0.014'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -127,5 +127,5 @@ http_interactions:
         "national_format": "(904) 325-2071", "carrier": null, "add_ons": null, "url":
         "https://lookups.twilio.com/v1/PhoneNumbers/+19043252071"}'
     http_version: 
-  recorded_at: Mon, 16 Dec 2019 14:02:45 GMT
+  recorded_at: Mon, 16 Dec 2019 14:31:30 GMT
 recorded_with: VCR 5.0.0

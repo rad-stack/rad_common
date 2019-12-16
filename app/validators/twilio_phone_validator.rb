@@ -22,7 +22,7 @@ class TwilioPhoneValidator < ActiveModel::Validator
 
       numbers.each do |number|
         unless PhoneNumberValidator.new.valid_phone_number?(number)
-          record.errors.add(field[:field], 'not valid, format must be (999) 999-9999')
+          record.errors.add(field[:field], 'invalid, format must be (999) 999-9999')
           next
         end
 

@@ -44,18 +44,18 @@ RSpec.describe TwilioPhoneValidator, type: :validator do
   it 'invalidates with a non 10 digit number' do
     model = TwilioMockModel.new(invalid_phone)
     expect(model.valid?).to eq(false)
-    expect(model.errors.full_messages.first).to eq('Number not valid, format must be (999) 999-9999')
+    expect(model.errors.full_messages.first).to eq('Number invalid, format must be (999) 999-9999')
   end
 
   it 'invalidates without a number' do
     model = TwilioMockModel.new('_')
     expect(model.valid?).to eq(false)
-    expect(model.errors.full_messages.first).to eq('Number not valid, format must be (999) 999-9999')
+    expect(model.errors.full_messages.first).to eq('Number invalid, format must be (999) 999-9999')
   end
 
   it 'invalidates with mutliple phone numbers', :vcr do
     model = TwilioMockModel.new(mobile_phone, [mobile_phone, invalid_phone])
     expect(model.valid?).to eq(false)
-    expect(model.errors.full_messages.first).to eq('Multiple numbers not valid, format must be (999) 999-9999')
+    expect(model.errors.full_messages.first).to eq('Multiple numbers invalid, format must be (999) 999-9999')
   end
 end
