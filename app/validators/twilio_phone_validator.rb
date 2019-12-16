@@ -44,7 +44,7 @@ class TwilioPhoneValidator < ActiveModel::Validator
   end
 
   def lookup_number(number, type = nil)
-    lookup_client = Twilio::REST::Client.new
+    lookup_client = Twilio::REST::Client.new(ENV.fetch('TWILIO_ACCOUNT_SID'), ENV.fetch('TWILIO_AUTH_TOKEN'))
     type ? lookup_client.lookups.phone_numbers(number).fetch(type: [type]) : lookup_client.lookups.phone_numbers(number).fetch
   end
 end

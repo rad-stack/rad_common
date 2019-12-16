@@ -8,7 +8,7 @@ class RadicalTwilio
   end
 
   def self.client
-    Twilio::REST::Client.new
+    Twilio::REST::Client.new(ENV.fetch('TWILIO_ACCOUNT_SID'), ENV.fetch('TWILIO_AUTH_TOKEN'))
   end
 
   def self.twilio_enabled?
