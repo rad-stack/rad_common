@@ -3,6 +3,6 @@ class ApplicationRecord < ActiveRecord::Base
 
   class_attribute :schema_validations_loaded
 
-  validate :load_schema_validations
+  before_validation :load_schema_validations
   self.abstract_class = true
 end
