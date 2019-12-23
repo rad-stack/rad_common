@@ -4,9 +4,7 @@ RSpec.describe "<%= class_name.pluralize %>", <%= type_metatag(:system) %> do
   let(:user) { create :admin }
   let(:<%= file_name %>) { create :<%= file_name %> }
 
-  before do
-    login_as(user, scope: :user)
-  end
+  before { login_as user, scope: :user }
 
   describe 'new' do
     it 'renders the new template' do
