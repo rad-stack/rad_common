@@ -1,7 +1,14 @@
 module SchemaValidations
+  extend ActiveSupport::Concern
+
   EXEMPT_COLUMNS = %i[created_at updated_at].freeze
   DECIMAL_FIELDS = %i[decimal money].freeze
   TEXT_FIELDS = %i[text string].freeze
+
+  included do
+    class_attribute :schema_validations_loaded
+    before_validation :load_schema_validations
+  end
 
   def load_schema_validations
     return if klass.schema_validations_loaded
@@ -94,7 +101,7 @@ module SchemaValidations
     def validate_logged(method, arg, opts = {})
       msg = "[schema_validations] #{self.class.name}.#{method} #{arg.inspect}"
       msg += ", #{opts.inspect[1...-1]}" if opts.any?
-      Rails.logger.info(msg)
+      Rails.logger.debug(msg)
 
       klass.send(method, arg, opts)
     end
