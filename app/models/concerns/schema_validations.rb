@@ -1,7 +1,14 @@
 module SchemaValidations
+  extend ActiveSupport::Concern
+
   EXEMPT_COLUMNS = %i[created_at updated_at].freeze
   DECIMAL_FIELDS = %i[decimal money].freeze
   TEXT_FIELDS = %i[text string].freeze
+
+  included do
+    class_attribute :schema_validations_loaded
+    before_validation :load_schema_validations
+  end
 
   def load_schema_validations
     return if klass.schema_validations_loaded
