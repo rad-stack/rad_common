@@ -17,7 +17,6 @@ class User < ApplicationRecord
   scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
   scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
   scope :recent_first, -> { order('users.created_at DESC') }
-  scope :authorized, ->(_) {}
 
   has_one_attached :avatar
 

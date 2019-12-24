@@ -1,7 +1,6 @@
 class UserStatus < ApplicationRecord
   scope :not_pending, -> { where.not(id: UserStatus.default_pending_status.id) }
   scope :by_id, -> { order(:id) }
-  scope :authorized, ->(_) {}
 
   alias_attribute :to_s, :name
 

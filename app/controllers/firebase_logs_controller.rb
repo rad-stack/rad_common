@@ -5,6 +5,8 @@ class FirebaseLogsController < ApplicationController
 
   def index
     authorize User, :update?
+    skip_policy_scope
+
     @app = FirebaseApp.new
     @limited_log_categories = limited_log_categories
     @firebase_logs = firebase_results
