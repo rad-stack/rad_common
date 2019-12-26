@@ -2,7 +2,7 @@ module RadCommon
   class SearchFilter
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope
 
-    def initialize(column: nil, options: nil, scope_values: nil, joins: nil, input_label: nil, blank_value_label: nil, scope: nil, multiple: false)
+    def initialize(column: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil, blank_value_label: nil, scope: nil, multiple: false)
       raise 'Input label is required when options are not active record objects' if input_label.blank? && !options.respond_to?(:table_name)
       raise 'options or scope_values' if options.nil? && scope_values.nil?
 
@@ -14,7 +14,7 @@ module RadCommon
       @scope_values = scope_values
       @scope = scope
       @multiple = multiple
-      @grouped = false #todo make group select work
+      @grouped = grouped
     end
 
     def filter_view
@@ -62,6 +62,8 @@ module RadCommon
     end
 
     def label_method
+      return :to_s if @grouped
+
       @scope_values.present? || options.first.is_a?(Array) ? :first : :to_s
     end
 
@@ -76,9 +78,15 @@ module RadCommon
           values = convert_array_values(value)
           results.where("#{searchable_name} IN (?)", values) if values.present?
         else
-          results.where("#{results.table_name}.#{searchable_name} = ?", value)
+          results.where("#{query_column(results)} = ?", value)
         end
       end
+    end
+
+    def query_column(results)
+      return searchable_name if searchable_name.respond_to?(:split) && searchable_name.split('.').length > 1
+
+      "#{results.table_name}.#{searchable_name}"
     end
 
     def convert_array_values(value)
