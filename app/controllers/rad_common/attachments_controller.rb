@@ -15,9 +15,12 @@ module RadCommon
       # TODO: refactor this with Hashable
       ids = Hashable.hashids.decode(params[:id])
       attachment_id = ids[0]
-      #
 
-      attachment = ActiveStorage::Attachment.find_by(id: attachment_id)
+      attachment = if params[:override_model].present? && params[:override_attachment_name].present?
+                     params[:override_model].constantize.find(attachment_id).send(params[:override_attachment_name]).attachment
+                   else
+                     ActiveStorage::Attachment.find_by(id: attachment_id)
+                   end
 
       if attachment.present?
         serve_active_storage_file(attachment, attachment.name)
