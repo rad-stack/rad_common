@@ -17,7 +17,7 @@ module RadCommon
       attachment_id = ids[0]
 
       attachment = if params[:override_model].present? && params[:override_attachment_name].present?
-                     params[:override_model].constantize.find(attachment_id).send(params[:override_attachment_name]).attachment
+                     params[:override_model].constantize.find_by(id: attachment_id)&.send(params[:override_attachment_name])&.attachment
                    else
                      ActiveStorage::Attachment.find_by(id: attachment_id)
                    end
