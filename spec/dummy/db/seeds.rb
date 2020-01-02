@@ -36,5 +36,7 @@ if User.count.zero?
                                       security_roles: [SecurityRole.find_by(name: 'Portal User')]
 end
 
+users = User.all
+
 puts 'seeding divisions'
-30.times { FactoryBot.create :division } if Division.count.zero?
+30.times { FactoryBot.create :division, owner: users.sample } if Division.count.zero?

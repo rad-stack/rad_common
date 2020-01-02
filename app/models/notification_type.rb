@@ -14,14 +14,6 @@ class NotificationType < ApplicationRecord
     name.gsub('Notifications::', '').underscore.titleize.gsub(' Notification', '')
   end
 
-  def self.authorized(user)
-    where_clause = 'notification_types.auth_mode = 1 OR '\
-                   '(id IN (SELECT notification_type_id FROM notification_security_roles WHERE security_role_id IN '\
-                   '(SELECT security_role_id FROM security_roles_users WHERE user_id = ?) ))'
-
-    NotificationType.where(where_clause, user.id)
-  end
-
   def permitted_users
     users = User.active
 

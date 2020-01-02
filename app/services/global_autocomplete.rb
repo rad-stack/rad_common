@@ -34,10 +34,9 @@ class GlobalAutocomplete
 
     self.current_scope = scope
     order = scope[:query_order] || 'created_at DESC'
-    query = klass
+    query = Pundit.policy_scope!(user, klass)
     query = query.joins(joins) if joins
     query = query.where(where_query, search: "%#{params[:term]}%").order(order)
-    query = query.authorized(user)
 
     query = query.limit(50)
     search_label = scope[:search_label] || :to_s

@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   def index
     authorize User
 
-    @pending = User.authorized(current_user).pending.recent_first.page(params[:pending_page]).per(3)
+    @pending = policy_scope(User).pending.recent_first.page(params[:pending_page]).per(3)
 
     @status = if params[:status].present?
                 if params[:status] == 'All'
@@ -17,7 +17,7 @@ class UsersController < ApplicationController
                 UserStatus.default_active_status
               end
 
-    @users = User.authorized(current_user).recent_first
+    @users = policy_scope(User).recent_first
     @users = @users.where(user_status: @status) if @status
     @users = @users.where(external: params[:external]) if params[:external].present?
 

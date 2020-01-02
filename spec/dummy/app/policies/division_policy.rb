@@ -16,4 +16,14 @@ class DivisionPolicy < ApplicationPolicy
   end
 
   alias index? show?
+
+  class Scope < Scope
+    def resolve
+      if user.admin?
+        scope.all
+      else
+        scope.where(owner_id: user.id)
+      end
+    end
+  end
 end
