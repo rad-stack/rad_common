@@ -15,6 +15,14 @@ module RadCommon
       end
     end
 
+    def host_name
+      review_app? ? "#{ENV.fetch('HEROKU_APP_NAME')}.herokuapp.com" : ENV.fetch('HOST_NAME')
+    end
+
+    def review_app?
+      ENV['REVIEW_APP'].present? && ENV['REVIEW_APP'] == 'true'
+    end
+
     private
 
       def exclude_tables
