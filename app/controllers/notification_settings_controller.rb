@@ -3,6 +3,7 @@ class NotificationSettingsController < ApplicationController
 
   def index
     authorize NotificationSetting
+    skip_policy_scope
   end
 
   def create

@@ -4,6 +4,7 @@ class DivisionsController < ApplicationController
 
   def index
     authorize Division
+    skip_policy_scope
 
     filters = [{ input_label: 'Owner', column: :owner_id, options: User.by_name },
                { input_label: 'Status', column: :division_status,

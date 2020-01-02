@@ -10,7 +10,7 @@ module RadCommon
     end
 
     def apply_filtering(results)
-      results = results.authorized(@current_user)
+      results = Pundit.policy_scope!(@current_user, results)
       results = apply_joins(results)
       apply_filters(results)
     end

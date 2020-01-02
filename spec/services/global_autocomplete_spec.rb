@@ -3,26 +3,58 @@ require 'rails_helper'
 RSpec.describe GlobalAutocomplete, type: :service do
   include RadCommon::ApplicationHelper
 
-  let!(:user) { create(:user) }
+  let!(:user) { create :user }
   let!(:search_user) { create(:user, first_name: 'Alex', last_name: 'Smith') }
   let!(:another_search_user) { create(:user, first_name: 'John', last_name: 'Smith') }
+  let!(:division) { create :division }
   let(:search_scopes) { Rails.application.config.global_search_scopes }
   let(:params) { ActionController::Parameters.new }
   let(:auto_complete) { described_class.new(params, search_scopes, user) }
 
   describe '#global_autocomplete_result' do
-    before { allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true) }
+    context 'when searching users' do
+      before { allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true) }
 
-    it 'returns results from selected scope' do
-      scope = auto_complete.selected_scope
-      expect(auto_complete.global_autocomplete_result).to eq(auto_complete.autocomplete_result(scope))
+      it 'returns results from selected scope' do
+        scope = auto_complete.selected_scope
+        expect(auto_complete.global_autocomplete_result).to eq(auto_complete.autocomplete_result(scope))
+      end
+
+      context 'search scopes empty' do
+        let(:auto_complete) { described_class.new(params, [], user) }
+
+        it 'returns empty array' do
+          expect(auto_complete.global_autocomplete_result).to eq([])
+        end
+      end
     end
 
-    context 'search scopes empty' do
-      let(:auto_complete) { described_class.new(params, [], user) }
+    context 'when searching divisions' do
+      let(:params) { ActionController::Parameters.new(term: division.name, global_search_scope: 'division_name') }
+      let(:result) { auto_complete.global_autocomplete_result }
 
-      it 'returns empty array' do
-        expect(auto_complete.global_autocomplete_result).to eq([])
+      context 'when admin' do
+        let!(:user) { create :admin }
+
+        it 'returns results' do
+          expect(result.count).to eq(1)
+          expect(result.first[:id]).to eq division.id
+        end
+      end
+
+      context 'when user owner' do
+        let!(:user) { division.owner }
+
+        it 'returns results' do
+          expect(result.count).to eq(1)
+          expect(result.first[:id]).to eq division.id
+        end
+      end
+
+      context 'when user non owner' do
+        it 'returns results' do
+          expect(result.count).to eq(0)
+        end
       end
     end
   end
