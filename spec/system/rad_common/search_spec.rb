@@ -21,22 +21,43 @@ RSpec.describe 'Search', type: :system do
   end
 
   describe 'select filter' do
+    before { visit divisions_path }
+
     it 'displays a select input', js: true do
-      visit divisions_path
-      expect(page).to have_selector(".bootstrap-select .dropdown-toggle[data-id='search_owner_id']")
+      expect(page).to have_selector(".bootstrap-select .dropdown-toggle[data-id='search_division_status']")
     end
 
-    xit 'retains search value after applying filters', js: true do
-      visit divisions_path
-      bootstrap_select User.first.to_s, from: 'search_owner_id'
+    it 'retains search value after applying filters' do
+      select 'Active', from: 'search_division_status'
       click_button 'Apply Filters'
+      expect(find_field('search_division_status').value).to eq Division.division_statuses['status_active'].to_s
     end
-    it 'select should have success style when default value is selected'
-    it 'select should have warning style when a value is selected other than default'
+
+    it 'select should have success style when default value is selected' do
+      select 'All Statuses', from: 'search_division_status'
+      click_button 'Apply Filters'
+      expect(find_field('search_division_status')['data-style']).to eq 'btn btn-success'
+    end
+
+    it 'select should have warning style when a value is selected other than default' do
+      select 'Active', from: 'search_division_status'
+      click_button 'Apply Filters'
+      expect(find_field('search_division_status')['data-style']).to eq 'btn btn-warning'
+    end
   end
 
   describe 'date filter' do
-    it 'should display a start and end inputs'
-    it 'should retain search value after applying filters'\
+    before { visit divisions_path }
+
+    it 'should display a start and end inputs' do
+      expect(page).to have_css('#search_created_at_start')
+      expect(page).to have_css('#search_created_at_end')
+    end
+
+    it 'should retain search value after applying filters' do
+      fill_in 'search_created_at_start', with: '01/01/2020'
+      click_button 'Apply Filters'
+      expect(find_field('search_created_at_start').value).to eq '01/01/2020'
+    end
   end
 end
