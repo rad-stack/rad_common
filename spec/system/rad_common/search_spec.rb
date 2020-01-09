@@ -30,7 +30,7 @@ RSpec.describe 'Search', type: :system do
     it 'retains search value after applying filters' do
       select 'Active', from: 'search_division_status'
       click_button 'Apply Filters'
-      expect(find_field('search_division_status').value).to eq Division.division_statuses['status_active']
+      expect(find_field('search_division_status').value).to eq Division.division_statuses['status_active'].to_s
     end
 
     it 'select should have success style when default value is selected' do
