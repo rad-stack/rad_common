@@ -10,7 +10,9 @@ class DivisionsController < ApplicationController
                { input_label: 'Status', column: :division_status,
                  options: ApplicationController.helpers.db_options_for_enum(Division, :division_status) },
                { column: :name, type: RadCommon::LikeFilter },
-               { column: :created_at, type: RadCommon::DateFilter }]
+               { column: :created_at, type: RadCommon::DateFilter,
+                 start_input_label: 'Division Created At Start',
+                 end_input_label: 'Division Created At Start' }]
 
     @division_search = RadCommon::Search.new(query: Division.sorted,
                                              filters: filters,
