@@ -5,6 +5,7 @@ module RadCommon
     end
 
     def show_auditing
+      return false if current_user.external?
       return false if audit_model_instance.blank?
 
       audit_model_instance.class.name != 'ActiveStorage::Attachment' &&
