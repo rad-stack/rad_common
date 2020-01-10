@@ -12,7 +12,7 @@ class DivisionsController < ApplicationController
                { column: :name, type: RadCommon::LikeFilter },
                { column: :created_at, type: RadCommon::DateFilter,
                  start_input_label: 'Division Created At Start',
-                 end_input_label: 'Division Created At Start' }]
+                 end_input_label: 'Division Created At End' }]
 
     @division_search = RadCommon::Search.new(query: Division.sorted,
                                              filters: filters,
