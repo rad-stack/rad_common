@@ -30,11 +30,11 @@ class GlobalAutocomplete
   end
 
   def autocomplete_result(scope)
-    return [] unless scope && Pundit.policy!(user, klass).index?
+    return [] unless scope && Pundit.policy!(user, check_policy).index?
 
     self.current_scope = scope
     order = scope[:query_order] || 'created_at DESC'
-    query = Pundit.policy_scope!(user, klass)
+    query = Pundit.policy_scope!(user, check_policy)
     query = query.joins(joins) if joins
     query = query.where(where_query, search: "%#{params[:term]}%").order(order)
 
@@ -141,5 +141,13 @@ class GlobalAutocomplete
 
     def scope_with_where?(scope)
       scope[:columns].any? || scope[:query_where].present?
+    end
+
+    def check_policy
+      if user.external? && Rails.application.config.portal_namespace.present?
+        [Rails.application.config.portal_namespace, klass]
+      else
+        klass
+      end
     end
 end

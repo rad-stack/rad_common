@@ -1,7 +1,17 @@
 module GlobalSearchHelper
   def global_search_scopes
     raw_scopes = Rails.application.config.global_search_scopes
-    raw_scopes = raw_scopes.select { |item| policy(item[:model].constantize).index? }
+
+    raw_scopes = raw_scopes.select do |item|
+
+      check_policy = if current_user.external? && Rails.application.config.portal_namespace.present?
+                       [Rails.application.config.portal_namespace, item[:model].constantize]
+                     else
+                       item[:model].constantize
+                     end
+
+      policy(check_policy).index?
+    end
 
     if current_user.global_search_default.blank?
       scopes = raw_scopes
