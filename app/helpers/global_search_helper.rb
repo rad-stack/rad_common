@@ -3,14 +3,7 @@ module GlobalSearchHelper
     raw_scopes = Rails.application.config.global_search_scopes
 
     raw_scopes = raw_scopes.select do |item|
-
-      check_policy = if current_user.external? && Rails.application.config.portal_namespace.present?
-                       [Rails.application.config.portal_namespace, item[:model].constantize]
-                     else
-                       item[:model].constantize
-                     end
-
-      policy(check_policy).index?
+      policy(GlobalAutocomplete.check_policy_klass(current_user, item[:model].constantize)).index?
     end
 
     if current_user.global_search_default.blank?
