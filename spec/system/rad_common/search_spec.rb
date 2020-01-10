@@ -54,6 +54,11 @@ RSpec.describe 'Search', type: :system do
       expect(page).to have_css('#search_created_at_end')
     end
 
+    it 'allows for start and end input label overrides' do
+      expect(page).to have_content 'Division Created At Start'
+      expect(page).to have_content 'Division Created At End'
+    end
+
     it 'should retain search value after applying filters' do
       fill_in 'search_created_at_start', with: '01/01/2020'
       click_button 'Apply Filters'
