@@ -121,6 +121,10 @@ module RadbearUser
   end
   # end shims
 
+  def portal?
+    external? && Rails.application.config.portal_namespace.present?
+  end
+
   private
 
     def validate_email_address

@@ -110,7 +110,7 @@ class GlobalAutocomplete
   end
 
   def self.check_policy_klass(user, klass)
-    if user.external? && Rails.application.config.portal_namespace.present?
+    if user.portal?
       [Rails.application.config.portal_namespace, klass]
     else
       klass

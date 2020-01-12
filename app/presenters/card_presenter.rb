@@ -235,7 +235,7 @@ class CardPresenter
   private
 
     def check_policy_klass
-      if current_user.external? && Rails.application.config.portal_namespace.present?
+      if current_user.portal?
         [Rails.application.config.portal_namespace, klass]
       else
         klass
@@ -243,7 +243,7 @@ class CardPresenter
     end
 
     def check_policy_instance
-      if current_user.external? && Rails.application.config.portal_namespace.present?
+      if current_user.portal?
         [Rails.application.config.portal_namespace, instance]
       else
         instance

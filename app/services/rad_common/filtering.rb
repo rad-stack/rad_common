@@ -45,7 +45,7 @@ module RadCommon
       end
 
       def check_policy(query)
-        if @current_user.external? && Rails.application.config.portal_namespace.present?
+        if @current_user.portal?
           [Rails.application.config.portal_namespace, query]
         else
           query
