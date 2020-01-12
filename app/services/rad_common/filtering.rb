@@ -10,9 +10,17 @@ module RadCommon
     end
 
     def apply_filtering(results)
-      results = Pundit.policy_scope!(@current_user, results)
+      results = Pundit.policy_scope!(@current_user, check_policy(results))
       results = apply_joins(results)
       apply_filters(results)
+    end
+
+    def check_policy(query)
+      if current_user.external? && Rails.application.config.portal_namespace.present?
+        [Rails.application.config.portal_namespace, query]
+      else
+        query
+      end
     end
 
     private
