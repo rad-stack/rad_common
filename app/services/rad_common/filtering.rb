@@ -15,14 +15,6 @@ module RadCommon
       apply_filters(results)
     end
 
-    def check_policy(query)
-      if current_user.external? && Rails.application.config.portal_namespace.present?
-        [Rails.application.config.portal_namespace, query]
-      else
-        query
-      end
-    end
-
     private
 
       def apply_filters(results)
@@ -50,6 +42,14 @@ module RadCommon
 
       def joins
         filters.select { |f| f.respond_to? :joins }.map(&:joins).compact
+      end
+
+      def check_policy(query)
+        if @current_user.external? && Rails.application.config.portal_namespace.present?
+          [Rails.application.config.portal_namespace, query]
+        else
+          query
+        end
       end
   end
 end
