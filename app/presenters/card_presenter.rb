@@ -206,7 +206,7 @@ class CardPresenter
     actions += external_actions
 
     if action_name == 'edit' || action_name == 'update' || action_name == 'show'
-      if !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass_new).create?
+      if !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass).create?
         actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"), new_url, class: 'btn btn-success btn-sm', id: "new_#{downcased_object_class}_link"))
       end
     end
@@ -218,7 +218,7 @@ class CardPresenter
     end
 
     if action_name == 'index'
-      if !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass_new).create?
+      if !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass).create?
         actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"), new_url, class: 'btn btn-success btn-sm', id: "new_#{downcased_object_class}_link"))
       end
     end
@@ -235,14 +235,6 @@ class CardPresenter
   private
 
     def check_policy_klass
-      if current_user.portal?
-        [Rails.application.config.portal_namespace, klass]
-      else
-        klass
-      end
-    end
-
-    def check_policy_klass_new
       if current_user.portal?
         [Rails.application.config.portal_namespace, klass.new]
       else

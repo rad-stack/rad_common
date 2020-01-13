@@ -54,23 +54,23 @@ module RadCommon
       title + " (#{@audits.total_count})"
     end
 
-    def audit_model_link(audit, model_object)
-      label = if model_object.nil?
+    def audit_model_link(audit, record)
+      label = if record.nil?
                 "#{audit.auditable_type} (#{audit.auditable_id})"
-              elsif model_object.respond_to?(:to_s)
-                model_object.class.to_s + ' - ' + model_object.to_s
+              elsif record.respond_to?(:to_s)
+                record.class.to_s + ' - ' + record.to_s
               else
                 label = "#{audit.auditable_type} (#{audit.auditable_id})"
               end
 
-      if (audit.nil? && model_object.nil?) || model_object.class.name == 'Rate' || model_object.class.name == 'DraftInvoice'
+      if (audit.nil? && record.nil?) || record.class.name == 'Rate' || record.class.name == 'DraftInvoice'
         # TODO: ignore this some other way rather than by hardcoding name
         label
       else
-        if model_object.nil?
+        if record.nil?
           label
-        elsif show_path_exists?(model_object) && policy(model_object).show?
-          link_to label, model_object
+        elsif show_path_exists?(record) && policy(record).show?
+          link_to label, record
         else
           label
         end
@@ -83,8 +83,8 @@ module RadCommon
 
     private
 
-      def show_path_exists?(model_object)
-        respond_to? "#{model_object.class.table_name.singularize}_path"
+      def show_path_exists?(record)
+        respond_to? "#{record.class.table_name.singularize}_path"
       end
 
       def formatted_audited_changes(audit)
