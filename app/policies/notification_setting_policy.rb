@@ -1,11 +1,7 @@
 class NotificationSettingPolicy < ApplicationPolicy
   def create?
-    # class rules
     return false unless user.permission?(:admin) || notification_types?
-    return true unless record.is_a?(NotificationSetting)
-
-    # instance rules
-    return true if record.notification_type.blank?
+    return true if record.notification_type.blank? || record.user.blank?
 
     user.permission?(:admin) || record.notification_type.permitted_users.include?(record.user)
   end
