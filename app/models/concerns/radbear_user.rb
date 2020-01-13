@@ -95,32 +95,6 @@ module RadbearUser
     end
   end
 
-  # shims for authority to pundit compatibility
-  def can_create?(klass)
-    Pundit.policy!(self, klass).create?
-  end
-
-  def can_read?(klass)
-    Pundit.policy!(self, klass).show?
-  end
-
-  def can_update?(klass)
-    Pundit.policy!(self, klass).update?
-  end
-
-  def can_delete?(klass)
-    Pundit.policy!(self, klass).destroy?
-  end
-
-  def can_manage?(klass)
-    Pundit.policy!(self, klass).manage?
-  end
-
-  def can_audit?(klass)
-    Pundit.policy!(self, klass).audit?
-  end
-  # end shims
-
   def portal?
     external? && Rails.application.config.portal_namespace.present?
   end
