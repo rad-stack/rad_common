@@ -7,8 +7,6 @@ module RadCommon
     before_action :authenticate_user!, only: :destroy
     before_action :set_variant, only: :download_variant
 
-    attr_reader :blob
-
     def download
       skip_authorization
 

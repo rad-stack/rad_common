@@ -1,7 +1,8 @@
 module ActiveStorageDownloader
   extend ActiveSupport::Concern
-
   include ActiveStorage::Downloading
+
+  attr_reader :blob
 
   private
 
