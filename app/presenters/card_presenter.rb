@@ -236,9 +236,9 @@ class CardPresenter
 
     def check_policy_klass
       if current_user.portal?
-        [Rails.application.config.portal_namespace, klass]
+        [Rails.application.config.portal_namespace, klass.new]
       else
-        klass
+        klass.new
       end
     end
 

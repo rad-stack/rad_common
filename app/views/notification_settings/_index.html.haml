@@ -1,5 +1,5 @@
--can_create = policy(NotificationSetting).create?
--can_type = policy(NotificationType).update?
+-can_create = policy(NotificationSetting.new).create?
+-can_type = policy(NotificationType.new).update?
 
 .card-body
   %table.table.table-striped.table-bordered
