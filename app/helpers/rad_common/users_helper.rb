@@ -9,7 +9,7 @@ module RadCommon
     end
 
     def users_actions
-      return unless policy(User.new).create?
+      return unless policy(User.new).new?
 
       [link_to(icon('plus-square', 'Invite User'), new_user_invitation_path, class: 'btn btn-success btn-sm')]
     end
