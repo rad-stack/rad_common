@@ -15,6 +15,10 @@ module RadCommon
       apply_filters(results)
     end
 
+    def filter(column)
+      @filter_hash[column]
+    end
+
     private
 
       def apply_filters(results)

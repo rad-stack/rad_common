@@ -1,8 +1,8 @@
 module RadCommon
   class SearchFilter
-    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope
+    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value
 
-    def initialize(column: nil, options: nil, scope_values: nil, joins: nil, input_label: nil, blank_value_label: nil, scope: nil, multiple: false)
+    def initialize(column: nil, options: nil, scope_values: nil, joins: nil, input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, multiple: false)
       raise 'Input label is required when options are not active record objects' if input_label.blank? && !options.respond_to?(:table_name)
       raise 'options or scope_values' if options.nil? && scope_values.nil?
 
@@ -15,6 +15,7 @@ module RadCommon
       @scope = scope
       @multiple = multiple
       @grouped = false #todo make group select work
+      @default_value = default_value
     end
 
     def filter_view
