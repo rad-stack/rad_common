@@ -5,6 +5,9 @@ module RadCommon
   cattr_accessor :use_avatar
   @@use_avatar = false
 
+  cattr_accessor :disable_sign_up
+  @@disable_sign_up = false
+
   def self.setup
     yield self
   end
