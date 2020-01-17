@@ -80,8 +80,8 @@ describe GlobalValidity, type: :service do
         let(:specific_query) { -> { SecurityRole.where(id: admin_security_role.id) } }
 
         before do
-          Rails.configuration.global_validity_exclude = ['SecurityRole']
-          Rails.configuration.global_validity_include = [specific_query]
+          RadCommon.global_validity_exclude = ['SecurityRole']
+          RadCommon.global_validity_include = [specific_query]
         end
 
         it 'sends an email to current user when data is invalid' do

@@ -96,7 +96,7 @@ module RadbearUser
   end
 
   def portal?
-    external? && Rails.application.config.portal_namespace.present?
+    external? && RadCommon.portal_namespace.present?
   end
 
   private

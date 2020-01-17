@@ -27,7 +27,7 @@ class GlobalValidity
       total_error_count += error_count
     end
 
-    specific_queries = Rails.application.config.global_validity_include
+    specific_queries = RadCommon.global_validity_include
 
     specific_queries.each do |query|
       Rails.logger.info("GlobalValidity stats: #{query.call.to_sql} starting")
@@ -63,7 +63,7 @@ class GlobalValidity
       company = Company.main
 
       company.validity_checked_at.blank? ||
-        company.validity_checked_at <= Rails.application.config.global_validity_days.days.ago
+        company.validity_checked_at <= RadCommon.global_validity_days.days.ago
     end
 
     def models_to_check
@@ -75,7 +75,7 @@ class GlobalValidity
     def exclude_models
       return [] if @override_model.present?
 
-      Rails.application.config.global_validity_exclude
+      RadCommon.global_validity_exclude
     end
 
     def check_model(model)
@@ -106,7 +106,7 @@ class GlobalValidity
 
       messages = record.errors.full_messages
 
-      supressions = Rails.application.config.global_validity_supress || []
+      supressions = RadCommon.global_validity_supress || []
       supression = supressions.select { |item| item[:class] == record.class.to_s }.first
 
       messages -= supression[:messages] if supression

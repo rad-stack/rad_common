@@ -1,6 +1,6 @@
 module GlobalSearchHelper
   def global_search_scopes
-    raw_scopes = Rails.application.config.global_search_scopes
+    raw_scopes = RadCommon.global_search_scopes
     raw_scopes = raw_scopes.select { |item| item[:show_in_portal] } if current_user.portal?
 
     raw_scopes = raw_scopes.select do |item|
