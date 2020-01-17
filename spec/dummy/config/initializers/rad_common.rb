@@ -53,3 +53,7 @@ Rails.configuration.global_search_scopes =
       query_where: 'divisions.name ilike :search',
       super_search_exclude: true }
   ]
+
+  RadCommon.setup do |config|
+    config.use_avatar = true
+  end
