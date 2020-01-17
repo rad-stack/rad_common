@@ -6,7 +6,7 @@ class DivisionsController < ApplicationController
     authorize Division
     skip_policy_scope
 
-    filters = [{ input_label: 'Owner', column: :owner_id, options: User.by_name },
+    filters = [{ input_label: 'Owner', column: :owner_id, options: User.by_name, default_value: current_user.id },
                { input_label: 'Status', column: :division_status,
                  options: ApplicationController.helpers.db_options_for_enum(Division, :division_status) },
                { column: :name, type: RadCommon::LikeFilter },
