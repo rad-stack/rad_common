@@ -9,7 +9,7 @@
 -company_full_address = company.full_address
 -company_phone_number = company.phone_number
 -admin_email = company.email
--has_avatar = Rails.application.config.use_avatar && @sender && @sender.avatar.attached?
+-has_avatar = RadCommon.use_avatar && @sender && @sender.avatar.attached?
 
 !!!
 %head
