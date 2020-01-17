@@ -11,6 +11,7 @@ class User < ApplicationRecord
          :rememberable, :trackable, :validatable, :invitable, :lockable
 
   scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
+  scope :inactive, -> { joins(:user_status).where('user_statuses.active = FALSE') }
   scope :admins, -> { active.where('users.id IN (SELECT user_id FROM security_roles_users INNER JOIN security_roles ON security_roles_users.security_role_id = security_roles.id WHERE security_roles.admin = TRUE)') }
   scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
   scope :by_name, -> { order(:first_name, :last_name) }
