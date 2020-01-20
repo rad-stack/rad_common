@@ -1,7 +1,5 @@
 Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css rad_common/radbear_mailer_reset.css]
 
-# TODO: would be better to have this configuration exist inside the policies
-
 Devise.setup do |config|
   config.mailer = 'RadbearDeviseMailer'
 end
@@ -15,16 +13,8 @@ RadCommon.setup do |config|
   config.external_users = true
   config.authy_user_opt_in = true
   config.app_logo_includes_name = true
-  config.portal_namespace = nil
   config.system_usage_models = %w[Division User]
-  config.additional_user_params = []
   config.restricted_audit_attributes = [{ model: 'Division', attribute: 'hourly_rate' }]
-  config.global_validity_days = 3
-  config.global_validity_timeout = 1.hour
-  config.global_validity_exclude = []
-  config.global_validity_include = []
-  config.global_validity_supress = []
-  config.global_validity_enable_interactive = true
   config.global_search_scopes =
     [
       { name: 'user_name', model: 'User',
