@@ -1,13 +1,3 @@
-Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css rad_common/radbear_mailer_reset.css]
-
-Devise.setup do |config|
-  config.mailer = 'RadbearDeviseMailer'
-end
-
-Rails.configuration.to_prepare do
-  ActiveStorage::Attachment.audited associated_with: :record
-end
-
 RadCommon.setup do |config|
   config.use_avatar = true
   config.external_users = true
