@@ -32,7 +32,7 @@ class SearchController < ApplicationController
       end
 
       if the_object
-        if current_user.external? && Rails.application.config.portal_namespace.present?
+        if current_user.portal?
           redirect_to [Rails.application.config.portal_namespace, the_object]
         else
           redirect_to the_object

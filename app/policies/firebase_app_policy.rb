@@ -1,0 +1,2 @@
+class FirebaseAppPolicy < ApplicationPolicy
+end
