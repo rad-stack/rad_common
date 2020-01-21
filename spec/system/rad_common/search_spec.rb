@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Search', type: :system do
   let(:user) { create :admin }
+  let!(:inactive_user) { create(:admin, user_status: UserStatus.default_inactive_status) }
   let(:division) { create :division }
 
   before do
@@ -27,6 +28,11 @@ RSpec.describe 'Search', type: :system do
     before { visit divisions_path }
 
     it 'displays a select input', js: true do
+      visit divisions_path
+      expect(page).to have_selector(".bootstrap-select .dropdown-toggle[data-id='search_owner_id']")
+      click_bootstrap_select(from: 'search_owner_id')
+      expect(page).to have_css('.dropdown-header.optgroup-1 span', text: 'Active')
+      expect(page).to have_selector('.dropdown-header.optgroup-2 span', text: 'Inactive')
       expect(page).to have_selector(".bootstrap-select .dropdown-toggle[data-id='search_division_status']")
     end
 

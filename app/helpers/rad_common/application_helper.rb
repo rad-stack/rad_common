@@ -27,7 +27,7 @@ module RadCommon
     end
 
     def show_actions?(klass)
-      Pundit.policy!(current_user, klass).update? || Pundit.policy!(current_user, klass).destroy?
+      Pundit.policy!(current_user, klass.new).update? || Pundit.policy!(current_user, klass.new).destroy?
     end
 
     def format_date(value)
