@@ -49,9 +49,15 @@ module RadCommon
     end
 
     def input_options
-      if scope_values?
+      if grouped_scope_values?
+        options.map do |option|
+          group_key = option.first
+          group_options = option.second
+          [group_key, transform_group_options(group_options)]
+        end
+      elsif scope_values?
         scope_options = if @scope_values.is_a? Array
-                          @scope_values.map { |option| [option.to_s.titleize, option.to_s]}
+                          @scope_values.map { |option| [option.to_s.titleize, option.to_s] }
                         else
                           @scope_values.keys.map { |option| [option.to_s, option.to_s] }
                         end
@@ -62,7 +68,18 @@ module RadCommon
       end
     end
 
+    def transform_group_options(group_options)
+      group_options.map do |option|
+        if scope_value_option?(option)
+          [option[:scope_value].to_s.titleize, option[:scope_value].to_s]
+        else
+          [option.to_s, option.id]
+        end
+      end
+    end
+
     def label_method
+      return :first if grouped_scope_values?
       return :to_s if @grouped
 
       @scope_values.present? || options.first.is_a?(Array) ? :first : :to_s
@@ -104,6 +121,29 @@ module RadCommon
         @scope_values.present?
       end
 
+      def grouped_scope_values?
+        @grouped && grouped_scope_values.present?
+      end
+
+      def grouped_scope_values
+        all_group_values.select(&method(:scope_value_option?)).map { |option| option[:scope_value] }
+      end
+
+      def grouped_scope_value?(value)
+        values = grouped_scope_values
+        return false if values.blank?
+
+        values.include?(value.to_sym)
+      end
+
+      def scope_value_option?(option)
+        option.is_a?(Hash) && option.keys.include?(:scope_value)
+      end
+
+      def all_group_values
+        options.map(&:second).flatten
+      end
+
       def scope_search?
         scope.present?
       end
@@ -119,7 +159,10 @@ module RadCommon
       end
 
       def scope_value?(scope_name)
-        if scope_name.present? && @scope_values.present? && scope_name.is_a?(String)
+        return false if scope_name.blank?
+        return true if grouped_scope_value?(scope_name)
+
+        if @scope_values.present? && scope_name.is_a?(String)
           if @scope_values.is_a? Array
             @scope_values.include?(scope_name.to_sym)
           else
@@ -131,11 +174,17 @@ module RadCommon
       end
 
       def apply_scope_value(results, scope_name)
-        if @scope_values.is_a? Hash
+        if grouped_scope_values?
+          apply_scope_grouped_value(results, scope_name)
+        elsif @scope_values.is_a? Hash
           apply_scope_h_value(results, scope_name)
         elsif @scope_values.is_a? Array
           apply_scope_a_value(results, scope_name)
         end
+      end
+
+      def apply_scope_grouped_value(results, scope_name)
+        results.send(scope_name)
       end
 
       def apply_scope_a_value(results, scope_name)

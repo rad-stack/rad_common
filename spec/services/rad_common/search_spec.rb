@@ -79,7 +79,7 @@ RSpec.describe RadCommon::Search, type: :service do
     end
   end
 
-  describe 'filters' do
+  describe 'scope value filters' do
     subject do
       described_class.new(query: query,
                           filters: filters,
@@ -96,7 +96,22 @@ RSpec.describe RadCommon::Search, type: :service do
         expect(subject.first.input_options).to include ['Pending Values', 'Pending Values']
         expect(subject.first.input_options).to include [User.by_name.first.to_s, User.by_name.first.id]
       end
+    end
 
+    context 'when using scope_value in grouped options' do
+      let(:query) { Division }
+      let(:filters) do
+        [{ column: :owner_id, input_label: 'Users', grouped: true,
+           options: [['...', [user, { scope_value: :unassigned }]],
+                     ['Active', User.active.by_name],
+                     ['Inactive', User.inactive.by_name]] }]
+      end
+      let(:params) { ActionController::Parameters.new }
+      let(:group_values) { subject.first.input_options.map(&:last) }
+
+      it 'has both scope and normal options' do
+        expect(group_values).to include [[user.to_s, user.id], ['Unassigned', 'unassigned']]
+      end
     end
 
 
