@@ -11,7 +11,7 @@ module RadCommon
   @@external_users = false
 
   cattr_accessor :authy_user_opt_in
-  @@authy_user_opt_in = false
+  @@authy_user_opt_in = true
 
   cattr_accessor :app_logo_includes_name
   @@app_logo_includes_name = true
@@ -20,7 +20,7 @@ module RadCommon
   @@portal_namespace = nil
 
   cattr_accessor :system_usage_models
-  @@system_usage_models = []
+  @@system_usage_models = %w[User]
 
   cattr_accessor :restricted_audit_attributes
   @@restricted_audit_attributes = []
