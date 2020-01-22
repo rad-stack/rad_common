@@ -24,9 +24,6 @@ module RadCommon
         template '../../../../../spec/dummy/config/initializers/rad_common.rb',
                  'config/initializers/rad_common.rb'
 
-        template '../../../../../spec/dummy/config/initializers/sidekiq.rb',
-                 'config/initializers/sidekiq.rb'
-
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
                  'config/locales/devise.authy.en.yml'
