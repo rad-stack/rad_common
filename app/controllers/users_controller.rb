@@ -114,6 +114,6 @@ class UsersController < ApplicationController
       base_params = %i[user_status_id first_name last_name mobile_phone last_activity_at
                        password password_confirmation external timezone]
 
-      params.require(:user).permit(base_params + Rails.application.config.additional_user_params)
+      params.require(:user).permit(base_params + RadCommon.additional_user_params)
     end
 end

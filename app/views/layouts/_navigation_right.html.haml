@@ -3,7 +3,7 @@
     %li.nav-item.dropdown
       %a.nav-link.dropdown-toggle{'data-toggle': 'dropdown', href: '#'}
         = current_user
-        -if Rails.application.config.use_avatar && current_user.avatar.attached?
+        -if RadCommon.use_avatar && current_user.avatar.attached?
           = image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
       %ul.dropdown-menu.dropdown-menu-right
         %li= link_to 'My Account', edit_user_registration_path, class: 'dropdown-item'
@@ -12,4 +12,5 @@
         %li= link_to 'Sign Out', destroy_user_session_path, method: 'delete', class: 'dropdown-item'
   -else
     %li= link_to 'Sign In', new_user_session_path, class: 'nav-link'
-    %li= link_to 'Sign Up', new_user_registration_path, class: 'nav-link'
+    -unless RadCommon.disable_sign_up
+      %li= link_to 'Sign Up', new_user_registration_path, class: 'nav-link'

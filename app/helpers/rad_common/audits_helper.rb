@@ -94,7 +94,7 @@ module RadCommon
         return '' if changes.blank?
 
         audit_text = ''
-        any_restricted = Rails.application.config.restricted_audit_attributes.count.positive?
+        any_restricted = RadCommon.restricted_audit_attributes.count.positive?
 
         changes.each do |change|
           changed_attribute = change.first
@@ -163,7 +163,7 @@ module RadCommon
       def restricted_audit_attribute?(audit, changed_attribute, current_user)
         return false if current_user.admin?
 
-        restricted_attributes = Rails.application.config.restricted_audit_attributes
+        restricted_attributes = RadCommon.restricted_audit_attributes
         return if restricted_attributes.count.zero?
 
         matches = restricted_attributes.select { |item| item[:model] == audit.auditable_type && item[:attribute] == changed_attribute }

@@ -15,7 +15,7 @@ module RadAuthy
 
     def validate_authy
       if authy_enabled
-        if Rails.application.config.authy_user_opt_in && mobile_phone.blank?
+        if RadCommon.authy_user_opt_in && mobile_phone.blank?
           errors.add(:mobile_phone, 'is required two factor authentication')
           return
         end

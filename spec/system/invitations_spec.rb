@@ -37,7 +37,7 @@ describe 'Invitations', type: :system do
         end
 
         it 'invites an external user' do
-          if Rails.application.config.external_users
+          if RadCommon.external_users
             visit new_user_invitation_path
             fill_in 'Email', with: external_email
             fill_in 'First name', with: first_name
