@@ -19,7 +19,7 @@ module RadCommon
 
   # Only includes company name in email header if app logo does not include name
   cattr_accessor :app_logo_includes_name
-  @@app_logo_includes_name = false
+  @@app_logo_includes_name = true
 
   # Set to namespace for portal users. This is needed to control authentication.
   cattr_accessor :portal_namespace

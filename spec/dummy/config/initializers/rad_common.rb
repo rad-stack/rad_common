@@ -2,9 +2,9 @@ RadCommon.setup do |config|
   config.use_avatar = true
   config.external_users = true
   config.authy_user_opt_in = true
-  config.app_logo_includes_name = true
   config.system_usage_models = %w[Division User]
   config.restricted_audit_attributes = [{ model: 'Division', attribute: 'hourly_rate' }]
+
   config.global_search_scopes =
     [
       { name: 'user_name', model: 'User',
