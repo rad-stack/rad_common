@@ -21,7 +21,7 @@ module RadCommon
         template '../../../../../spec/dummy/.env.example', '.env.example'
 
         # initializers
-        template '../../../../../spec/dummy/config/initializers/rad_common.rb',
+        template 'rad_common.rb',
                  'config/initializers/rad_common.rb'
 
         # locales
