@@ -44,7 +44,7 @@ module RadCommon
 
   # Sets the time allowed for the global validity to run before timing out / raising an error
   cattr_accessor :global_validity_timeout
-  @@global_validity_timeout = 1.hour
+  @@global_validity_timeout = 3.hours
 
   # Determines models to be excluded in the global validity check
   cattr_accessor :global_validity_exclude
