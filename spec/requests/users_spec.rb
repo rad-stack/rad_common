@@ -68,14 +68,14 @@ RSpec.describe 'Users', type: :request do
     context 'with audit' do
       it 'renders audit page' do
         get '/users/audit_search', params: { model_name: search_user.class.to_s, record_id: search_user.id }
-        expect(response.body).to include "Updates for <a href=\"/users/#{search_user.id}\">User - Test User</a>"
+        expect(response.body).to include "Updates for <a href=\"/users/#{search_user.id}\">User - #{search_user}</a>"
       end
     end
 
     context 'without audit' do
       it 'does not render audit page' do
         get '/users/audit_search', params: { model_name: search_role.class.to_s, record_id: -1 }
-        expect(response.body).not_to include "Updates for <a href=\"/users/#{search_user.id}\">User - Test User</a>"
+        expect(response.body).not_to include "Updates for <a href=\"/users/#{search_user.id}\">User - #{search_user}</a>"
       end
     end
 
