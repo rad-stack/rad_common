@@ -150,30 +150,34 @@ describe 'Users', type: :system do
 
   describe 'sign up' do
     it 'signs up' do
-      visit new_user_registration_path
+      unless RadCommon.disable_sign_up
+        visit new_user_registration_path
 
-      fill_in 'First name', with: Faker::Name.first_name
-      fill_in 'Last name', with: Faker::Name.last_name
-      fill_in 'Email', with: Faker::Internet.user_name + '@example.com'
-      fill_in 'user_password', with: password
-      fill_in 'user_password_confirmation', with: password
+        fill_in 'First name', with: Faker::Name.first_name
+        fill_in 'Last name', with: Faker::Name.last_name
+        fill_in 'Email', with: Faker::Internet.user_name + '@example.com'
+        fill_in 'user_password', with: password
+        fill_in 'user_password_confirmation', with: password
 
-      click_button 'Sign Up'
-      expect(page.html).to include('message with a confirmation link has been sent')
+        click_button 'Sign Up'
+        expect(page.html).to include('message with a confirmation link has been sent')
+      end
     end
 
     it "can't sign up with invalid email address" do
-      visit new_user_registration_path
+      unless RadCommon.disable_sign_up
+        visit new_user_registration_path
 
-      fill_in 'First name', with: Faker::Name.first_name
-      fill_in 'Last name', with: Faker::Name.last_name
-      fill_in 'Email', with: 'test_user@'
-      fill_in 'user_password', with: password
-      fill_in 'user_password_confirmation', with: password
+        fill_in 'First name', with: Faker::Name.first_name
+        fill_in 'Last name', with: Faker::Name.last_name
+        fill_in 'Email', with: 'test_user@'
+        fill_in 'user_password', with: password
+        fill_in 'user_password_confirmation', with: password
 
-      click_button 'Sign Up'
+        click_button 'Sign Up'
 
-      expect(page.html).to include('is not authorized')
+        expect(page.html).to include('is not authorized')
+      end
     end
   end
 

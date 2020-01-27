@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'SecurityRoles', type: :system do
   let(:user) { create :admin }
-  let(:security_role) { SecurityRole.first }
+  let(:security_role) { create :security_role }
 
   before { login_as user, scope: :user }
 

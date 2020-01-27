@@ -15,7 +15,7 @@
             -@user_statuses.each do |status|
               %li= link_to status.name, users_path(status: status.id, external: params[:external]), class: 'dropdown-item'
             %li= link_to 'All Users', users_path(status: 'All', external: params[:external]), class: 'dropdown-item'
-        -if Rails.application.config.external_users
+        -if RadCommon.external_users
           .btn-group
             %a{class: "btn dropdown-toggle #{params[:external].present? ? 'btn-warning' : 'btn-success'}", 'data-toggle' => 'dropdown', href: '#'}
               - user_label = params[:external] == 'true' ? 'Client' : 'Internal'

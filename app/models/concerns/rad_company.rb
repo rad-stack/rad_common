@@ -55,7 +55,7 @@ module RadCompany
         label: today.advance(months: -item).beginning_of_month.strftime('%B, %Y') }
     end
 
-    usage_items = Rails.application.config.system_usage_models.sort
+    usage_items = RadCommon.system_usage_models.sort
     usage_data = []
 
     usage_items.each do |item|
