@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe RadCommon::Search, type: :service do
-
   let(:user) { create(:user) }
 
   describe 'results' do
@@ -23,7 +22,7 @@ RSpec.describe RadCommon::Search, type: :service do
 
       it 'filters results' do
         expect(subject).to include role_1
-        expect(subject).to_not include role_2
+        expect(subject).not_to include role_2
       end
     end
 
@@ -96,10 +95,7 @@ RSpec.describe RadCommon::Search, type: :service do
         expect(subject.first.input_options).to include ['Pending Values', 'Pending Values']
         expect(subject.first.input_options).to include [User.by_name.first.to_s, User.by_name.first.id]
       end
-
     end
-
-
   end
 
   describe 'search_params' do

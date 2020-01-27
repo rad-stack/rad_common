@@ -3,7 +3,10 @@ module RadCommon
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope
 
     def initialize(column: nil, options: nil, scope_values: nil, joins: nil, input_label: nil, blank_value_label: nil, scope: nil, multiple: false)
-      raise 'Input label is required when options are not active record objects' if input_label.blank? && !options.respond_to?(:table_name)
+      if input_label.blank? && !options.respond_to?(:table_name)
+        raise 'Input label is required when options are not active record objects'
+      end
+
       raise 'options or scope_values' if options.nil? && scope_values.nil?
 
       @column = column
@@ -14,7 +17,7 @@ module RadCommon
       @scope_values = scope_values
       @scope = scope
       @multiple = multiple
-      @grouped = false #todo make group select work
+      @grouped = false # TODO: make group select work
     end
 
     def filter_view
@@ -50,7 +53,7 @@ module RadCommon
     def input_options
       if scope_values?
         scope_options = if @scope_values.is_a? Array
-                          @scope_values.map { |option| [option.to_s.titleize, option.to_s]}
+                          @scope_values.map { |option| [option.to_s.titleize, option.to_s] }
                         else
                           @scope_values.keys.map { |option| [option.to_s, option.to_s] }
                         end

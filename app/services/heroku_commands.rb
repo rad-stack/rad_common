@@ -108,7 +108,10 @@ class HerokuCommands
         User.order(:id).find_each do |user|
           user.password = 'password'
           user.password_confirmation = 'password'
-          puts "could not change password for user #{user.id}: #{user.errors.full_messages.join(' ')}" unless user.save(validate: false)
+
+          unless user.save(validate: false)
+            puts "could not change password for user #{user.id}: #{user.errors.full_messages.join(' ')}"
+          end
         end
       end
 

@@ -9,11 +9,11 @@ module RadCommon
       return false if audit_model_instance.blank?
 
       audit_model_instance.class.name != 'ActiveStorage::Attachment' &&
-      audit_model_instance.respond_to?(:audits) &&
-      audit_model_instance.persisted? &&
-      policy(audit_model_instance).audit? &&
-      params[:action] != 'audit' &&
-      params[:action] != 'audit_by'
+        audit_model_instance.respond_to?(:audits) &&
+        audit_model_instance.persisted? &&
+        policy(audit_model_instance).audit? &&
+        params[:action] != 'audit' &&
+        params[:action] != 'audit_by'
     end
 
     def show_audit_history_link

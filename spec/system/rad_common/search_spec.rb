@@ -49,7 +49,7 @@ RSpec.describe 'Search', type: :system do
   describe 'date filter' do
     before { visit divisions_path }
 
-    it 'should display a start and end inputs' do
+    it 'displays a start and end inputs' do
       expect(page).to have_css('#search_created_at_start')
       expect(page).to have_css('#search_created_at_end')
     end
@@ -59,7 +59,7 @@ RSpec.describe 'Search', type: :system do
       expect(page).to have_content 'Division Created At End'
     end
 
-    it 'should retain search value after applying filters' do
+    it 'retains search value after applying filters' do
       fill_in 'search_created_at_start', with: '01/01/2020'
       click_button 'Apply Filters'
       expect(find_field('search_created_at_start').value).to eq '01/01/2020'

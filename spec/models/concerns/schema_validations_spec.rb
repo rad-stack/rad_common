@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe 'SchemaValidations', type: :module do
   subject { division.errors.full_messages }
+
   let(:division) { create :division }
 
   describe 'presence validations' do

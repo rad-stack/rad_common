@@ -3,7 +3,7 @@ class NotificationType < ApplicationRecord
   has_many :security_roles, through: :notification_security_roles, dependent: :destroy
   has_many :notification_settings, dependent: :destroy
 
-  enum auth_mode: %i[security_roles absolute_user]
+  enum auth_mode: { security_roles: 0, absolute_user: 1 }
   alias_attribute :to_s, :description
 
   scope :by_name, -> { order(:name) }
