@@ -8,6 +8,9 @@ class SystemMessage < ApplicationRecord
 
   has_rich_text :email_message_body
 
+  validates :message, presence: true, if: :sms?
+  validates :email_message_body, presence: true, if: :email?
+
   def to_s
     "System Message from #{user}"
   end
@@ -18,10 +21,6 @@ class SystemMessage < ApplicationRecord
 
   def sms_message
     message if last_message&.sms?
-  end
-
-  def email_message
-    message if last_message&.email?
   end
 
   def self.recent_or_new(user)
@@ -42,6 +41,10 @@ class SystemMessage < ApplicationRecord
     users = users.external if client_users?
 
     users
+  end
+
+  def html_message
+    message ? message.html_safe : email_message_body
   end
 
   def send!
