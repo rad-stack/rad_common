@@ -133,6 +133,8 @@ module RadCommon
       end
 
       def grouped_scope_value?(value)
+        return false unless @grouped
+
         values = grouped_scope_values
         return false if values.blank?
 
