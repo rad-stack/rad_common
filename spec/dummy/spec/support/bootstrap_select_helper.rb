@@ -6,6 +6,5 @@ module BootstrapSelectHelper
 
   def click_bootstrap_select(attrs)
     find(".bootstrap-select .dropdown-toggle[data-id='#{attrs[:from]}']").click
-    find('ul.inner li a span', text: value).click
   end
 end
