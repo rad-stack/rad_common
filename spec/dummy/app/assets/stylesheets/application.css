@@ -5,6 +5,5 @@
  *= require jquery-ui/autocomplete
  *= require bootstrap-datetimepicker
  *= require bootstrap_datetimepicker/dates
- *= require trix
  *= require rad_common/rad_common
 */

@@ -1,4 +1,4 @@
-Dir[Rails.root.join('../factories/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join('../factories/**/*.rb')].sort.each { |f| require f }
 
 puts 'seeding standard items'
 NotificationType.seed_items if NotificationType.count.zero?
