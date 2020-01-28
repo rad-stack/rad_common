@@ -52,10 +52,10 @@ describe RadCommon::AuditsHelper do
   end
 
   describe 'display_audited_action' do
+    subject { strip_tags(helper.display_audited_action(audit)) }
+
     let(:audit) { division.own_and_associated_audits.reorder(id: :desc).first }
     let(:file) { File.open(Rails.root.join('app', 'assets', 'images', 'app_logo.png')) }
-
-    subject { strip_tags(helper.display_audited_action(audit)) }
 
     context 'when associated attachment' do
       context 'when create' do

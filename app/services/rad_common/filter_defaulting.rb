@@ -1,6 +1,5 @@
 module RadCommon
   class FilterDefaulting
-
     def initialize(current_user:, search:)
       @search = search
       @current_user = current_user

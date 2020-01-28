@@ -1,12 +1,12 @@
 RadCommon.setup do |config|
   # Enables/Disables user avatars being uploaded and displayed in the application
-  config.use_avatar = true
+  # config.use_avatar = false
 
   # Does not allow users to manually sign up
   # config.disable_sign_up = false
 
   # Allows users to be marked as external/client users, adjusts user filtering and seeds to account for this
-  config.external_users = true
+  # config.external_users = false
 
   # When two-factor authentication is enabled, allow users to opt in or out voluntarily
   # config.authy_user_opt_in = true
@@ -18,10 +18,10 @@ RadCommon.setup do |config|
   # config.portal_namespace = nil
 
   # Determines which models should be included in the system_usages route
-  config.system_usage_models = %w[Division User]
+  # config.system_usage_models = %w[User]
 
   # Determines which attributes should be hidden in the audits for non-admin users
-  config.restricted_audit_attributes = [{ model: 'Division', attribute: 'hourly_rate' }]
+  # config.restricted_audit_attributes = []
 
   # allows for additional parameters to be passed into the users controller thus
   # avoiding the need to override the controller in many cases)
@@ -47,32 +47,5 @@ RadCommon.setup do |config|
   # config.global_validity_enable_interactive = true
 
   # Sets search scopes to be included in the navigation search bar
-  config.global_search_scopes =
-    [
-      { name: 'user_name', model: 'User',
-        description: 'Search user by name',
-        columns: ['email'],
-        methods: [:user_status],
-        query_where: "last_name || ', ' || first_name ilike :search",
-        query_order: 'last_name ASC, first_name ASC, created_at DESC' },
-      { name: 'user_email', model: 'User',
-        description: 'Search user by email',
-        columns: ['email'],
-        query_where: 'email ilike :search' },
-      { name: 'user_name_with_no_where', model: 'User',
-        description: 'Search user by name',
-        columns: [],
-        query_order: 'last_name ASC, first_name ASC, created_at DESC' },
-      { name: 'division_name', model: 'Division',
-        description: 'Search division by name',
-        columns: ['name'],
-        query_where: 'name ilike :search',
-        query_order: 'name' },
-      { name: 'user_by_division_name', model: 'User',
-        description: 'Search user by division name',
-        columns: [],
-        joins: 'JOIN divisions on divisions.owner_id = users.id',
-        query_where: 'divisions.name ilike :search',
-        super_search_exclude: true }
-    ]
+  # config.global_search_scopes = []
 end

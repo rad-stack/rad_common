@@ -2,9 +2,7 @@ module RadCommonCompaniesController
   extend ActiveSupport::Concern
 
   def global_validity_check
-    unless Rails.application.config.global_validity_enable_interactive
-      raise 'interactive global validity check not enabled'
-    end
+    raise 'interactive global validity check not enabled' unless RadCommon.global_validity_enable_interactive
 
     authorize @company
 

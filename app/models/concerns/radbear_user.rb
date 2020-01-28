@@ -27,7 +27,7 @@ module RadbearUser
   end
 
   def permission?(permission)
-    security_roles.select {|x| x[permission] }.length.positive?
+    security_roles.select { |x| x[permission] }.length.positive?
   end
 
   def permission_or_pending?(permission)
@@ -96,7 +96,7 @@ module RadbearUser
   end
 
   def portal?
-    external? && Rails.application.config.portal_namespace.present?
+    external? && RadCommon.portal_namespace.present?
   end
 
   private

@@ -17,7 +17,7 @@
         .row
           -if @user.respond_to?(:last_activity_at)
             .col-lg-2= f.input :last_activity_at, as: :date, html5: true
-          -if Rails.application.config.external_users
+          -if RadCommon.external_users
             .col-lg-2= f.input :external
         .row
           -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill

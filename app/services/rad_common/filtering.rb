@@ -50,7 +50,7 @@ module RadCommon
 
       def check_policy(query)
         if @current_user.portal?
-          [Rails.application.config.portal_namespace, query]
+          [RadCommon.portal_namespace, query]
         else
           query
         end

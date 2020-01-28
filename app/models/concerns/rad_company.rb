@@ -8,7 +8,7 @@ module RadCompany
 
     scope :by_id, -> { order(:id) }
 
-    SKIP_SCHEMA_VALIDATION_COLUMNS = [:valid_user_domains]
+    SKIP_SCHEMA_VALIDATION_COLUMNS = [:valid_user_domains].freeze
 
     validates_with EmailAddressValidator, fields: %i[email]
     validates_with PhoneNumberValidator
@@ -55,7 +55,7 @@ module RadCompany
         label: today.advance(months: -item).beginning_of_month.strftime('%B, %Y') }
     end
 
-    usage_items = Rails.application.config.system_usage_models.sort
+    usage_items = RadCommon.system_usage_models.sort
     usage_data = []
 
     usage_items.each do |item|

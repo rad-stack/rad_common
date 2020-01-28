@@ -1,10 +1,11 @@
 class RadicalRetry
   class << self
-    def perform_request(no_delay: false, &block)
-      retries ||= 5
+    def perform_request(no_delay: false, retry_count: 5, &block)
+      retries ||= retry_count
       block.call
-    rescue Net::OpenTimeout, OpenURI::HTTPError, HTTPClient::ConnectTimeoutError, Errno::EPIPE, SocketError, OpenSSL::SSL::SSLError, Errno::ENOENT => e
-      if (retries -= 1) > 0
+    rescue Net::OpenTimeout, OpenURI::HTTPError, HTTPClient::ConnectTimeoutError, Errno::EPIPE, SocketError,
+           OpenSSL::SSL::SSLError, Errno::ENOENT, Errno::ECONNRESET => e
+      if (retries -= 1).positive?
         exponential_pause(retries, no_delay)
         retry
       else
