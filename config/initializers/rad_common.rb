@@ -21,3 +21,5 @@ end
 Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
 end
+
+Rails.configuration.app_admin_email = ENV.fetch('APP_ADMIN_EMAIL')
