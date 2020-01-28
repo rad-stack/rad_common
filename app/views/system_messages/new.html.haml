@@ -11,9 +11,8 @@
             = f.input :send_to, collection: options_for_enum(SystemMessage, :send_to), include_blank: false
         .row
           .col-lg-12.email-message
-            -# TODO: removed "as: :trix_editor"
-            = f.input :email_message, placeholder: 'Enter a message to be emailed to active users in the system.',
-                                      label: 'Message'
+            = f.input :email_message_body, placeholder: 'Enter a message to be emailed to active users in the system.',
+                                           label: 'Message', as: :rich_text_area
           .col-lg-12.sms-message= f.input :sms_message, as: :text, label: 'Message', input_html: { rows: 4 }
 
       .form-actions
