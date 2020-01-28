@@ -90,8 +90,10 @@ describe 'Users', type: :system do
 
       describe 'index' do
         it 'shows users' do
+          external_user.update! user_status: user.user_status
           visit users_path(status: user.user_status_id)
           expect(page).to have_content user.to_s
+          expect(page).to have_content external_user.to_s
         end
 
         it 'filters by user type' do
