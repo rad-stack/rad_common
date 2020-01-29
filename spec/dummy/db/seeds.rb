@@ -39,4 +39,4 @@ end
 users = User.all
 
 puts 'seeding divisions'
-FactoryBot.create_list :division, 30, owner: users.sample if Division.count.zero?
+30.times { FactoryBot.create :division, owner: users.sample } if Division.count.zero?
