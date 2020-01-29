@@ -67,11 +67,11 @@ describe RadCommon::AuditsHelper do
       context 'when destroy' do
         before do
           division.logo.attach(io: file, filename: 'logo.png')
+          division.logo.attachment.send(:audit_destroy)
           division.logo.purge
         end
 
-        # TODO: this broke in Rails 6
-        xit { is_expected.to eq 'delete attachment' }
+        it { is_expected.to eq 'delete attachment' }
       end
     end
 

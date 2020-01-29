@@ -38,6 +38,7 @@ module RadCommon
       attachment = ActiveStorage::Attachment.find(params[:id])
       record = attachment.record
       authorize record, :update?
+      attachment.send(:audit_destroy)
       attachment.purge_later
       flash[:success] = 'Attachment successfully deleted'
       redirect_back(fallback_location: record)
