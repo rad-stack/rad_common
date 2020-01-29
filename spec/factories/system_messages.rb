@@ -10,7 +10,7 @@ FactoryBot.define do
 
     trait :sms do
       message_type { 'sms' }
-      message { Faker::Movies::StarWars.quote }
+      sms_message_body { Faker::Movies::StarWars.quote }
     end
   end
 end

@@ -13,7 +13,7 @@ RSpec.describe 'SystemMessages', type: :system do
         visit 'rad_common/system_messages/new'
       end
 
-      xit 'sends' do
+      it 'sends' do
         expect(page).to have_content 'Send System Message'
         click_button 'Send'
         expect(page).to have_content 'The message was successfully sent'
@@ -57,7 +57,7 @@ RSpec.describe 'SystemMessages', type: :system do
     before { visit "rad_common/system_messages/#{system_message.id}" }
 
     it 'shows the message' do
-      expect(page).to have_content(system_message.message)
+      expect(page).to have_content(system_message.sms_message_body)
     end
 
     it 'shows the message type' do

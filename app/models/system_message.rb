@@ -8,8 +8,8 @@ class SystemMessage < ApplicationRecord
 
   has_rich_text :email_message_body
 
-  validates :message, presence: true, if: :sms?
-  validates :message, absence: true, if: :email?
+  validates :sms_message_body, presence: true, if: :sms?
+  validates :sms_message_body, absence: true, if: :email?
 
   validates :email_message_body, presence: true, if: :email?
   validates :email_message_body, absence: true, if: :sms?
@@ -18,21 +18,16 @@ class SystemMessage < ApplicationRecord
     "System Message from #{user}"
   end
 
-  def sms_message=(value)
-    self.message = value if sms?
-  end
-
-  def sms_message
-    message if last_message&.sms?
-  end
-
   def self.recent_or_new(user)
     last_message = user.system_messages.recent_first.first
     return SystemMessage.new if last_message.blank?
 
-    SystemMessage.new(send_to: last_message.send_to,
-                      message: last_message.message,
-                      message_type: last_message.message_type)
+    msg = SystemMessage.new(send_to: last_message.send_to,
+                            message_type: last_message.message_type,
+                            sms_message_body: last_message.sms_message_body)
+
+    msg.email_message_body = last_message.email_message_body if last_message.email?
+    msg
   end
 
   def recipients
@@ -47,7 +42,7 @@ class SystemMessage < ApplicationRecord
   end
 
   def html_message
-    message ? message.html_safe : email_message_body
+    sms? ? sms_message_body.html_safe : email_message_body
   end
 
   def send!
@@ -56,13 +51,7 @@ class SystemMessage < ApplicationRecord
         RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", email_message_body, do_not_format: true).deliver_later
       end
     else
-      SystemSMSJob.perform_later(message, recipients.map(&:id), user)
+      SystemSMSJob.perform_later(sms_message_body, recipients.map(&:id), user)
     end
   end
-
-  private
-
-    def last_message
-      SystemMessage.recent_first.first
-    end
 end

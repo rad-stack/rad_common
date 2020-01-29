@@ -156,7 +156,7 @@ ActiveRecord::Schema.define(version: 2020_01_29_191131) do
   end
 
   create_table "system_messages", force: :cascade do |t|
-    t.text "message"
+    t.text "sms_message_body"
     t.integer "user_id", null: false
     t.integer "send_to", default: 0, null: false
     t.datetime "created_at", null: false
