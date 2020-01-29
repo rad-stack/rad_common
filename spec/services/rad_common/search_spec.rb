@@ -59,6 +59,32 @@ RSpec.describe RadCommon::Search, type: :service do
       end
     end
 
+    context 'when a filter has a default value' do
+      let(:query) { Division }
+      let(:filters) { [{ column: :owner_id, options: User.by_name, default_value: user.id }] }
+      let(:user) { create :admin }
+      let!(:other_division) { create(:division) }
+      let!(:default_division) { create(:division, owner: user) }
+
+      context 'in a blank query' do
+        let(:params) { ActionController::Parameters.new }
+
+        it 'filters results using default value' do
+          expect(subject).to include default_division
+          expect(subject).to_not include other_division
+        end
+      end
+
+      context 'in a query where value is selected' do
+        let(:params) { ActionController::Parameters.new(search: { owner_id: other_division.id }) }
+
+        it 'filters results using selected value' do
+          expect(subject).to include other_division
+          expect(subject).to_not include default_division
+        end
+      end
+    end
+
     describe 'authorized' do
       let(:query) { Division }
       let(:filters) { [{ input_label: 'Owner', column: :owner_id, options: User.by_name }] }

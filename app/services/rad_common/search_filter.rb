@@ -117,6 +117,8 @@ module RadCommon
     private
 
       def filter_value(search_params)
+        return @default_value.to_s if search_params.blank? && @default_value
+
         search_params[searchable_name]
       end
 
