@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'SystemMessages', type: :system do
   let(:user) { create :admin }
-  let!(:system_message) { create :system_message, user: user }
+  let!(:system_message) { create :system_message, user: user, message_type: 'email' }
 
   before { login_as user, scope: :user }
 

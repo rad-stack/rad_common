@@ -8,8 +8,8 @@ class SystemMessage < ApplicationRecord
 
   has_rich_text :email_message_body
 
-  validates :message, presence: true, if: :sms?
-  validates :email_message_body, presence: true, if: :email?
+  # validates :message, presence: true, if: :sms?
+  # validates :email_message_body, presence: true, if: :email?
 
   def to_s
     "System Message from #{user}"
