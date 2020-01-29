@@ -321,6 +321,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20191112111902_devise_lockable.rb',
                         'devise_lockable'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200128185735_make_message_not_required.rb',
+                        'make_message_not_required'
       end
 
       def self.next_migration_number(path)

@@ -3,10 +3,11 @@ require 'rails_helper'
 RSpec.describe SystemMessage, type: :model do
   let!(:user) { create :admin }
   let(:message) { 'foo bar yo' }
-  let(:system_message) { create :system_message, user: user, message: message, message_type: message_type }
 
   describe '#send!' do
     context 'email message' do
+      let(:system_message) { create :system_message, :email, user: user, email_message_body: message }
+
       subject { mail.body.encoded }
 
       before do
@@ -14,16 +15,15 @@ RSpec.describe SystemMessage, type: :model do
         system_message.send!
       end
 
-      let(:message_type) { 'email' }
       let(:mail) { ActionMailer::Base.deliveries.last }
 
       it { is_expected.to include message }
     end
 
     context 'sms message' do
-      subject { mail&.body&.encoded }
+      let(:system_message) { create :system_message, :sms, user: user, message: message }
 
-      let(:message_type) { 'sms' }
+      subject { mail&.body&.encoded }
 
       before do
         User.update_all(mobile_phone: '(555) - 555 - 5555')

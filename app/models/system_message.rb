@@ -6,6 +6,14 @@ class SystemMessage < ApplicationRecord
 
   scope :recent_first, -> { order(created_at: :desc) }
 
+  has_rich_text :email_message_body
+
+  validates :message, presence: true, if: :sms?
+  validates :message, absence: true, if: :email?
+
+  validates :email_message_body, presence: true, if: :email?
+  validates :email_message_body, absence: true, if: :sms?
+
   def to_s
     "System Message from #{user}"
   end
@@ -16,14 +24,6 @@ class SystemMessage < ApplicationRecord
 
   def sms_message
     message if last_message&.sms?
-  end
-
-  def email_message=(value)
-    self.message = value if email?
-  end
-
-  def email_message
-    message if last_message&.email?
   end
 
   def self.recent_or_new(user)
@@ -46,10 +46,14 @@ class SystemMessage < ApplicationRecord
     users
   end
 
+  def html_message
+    message ? message.html_safe : email_message_body
+  end
+
   def send!
     if email?
       recipients.each do |user|
-        RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", message).deliver_later
+        RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", email_message_body, do_not_format: true).deliver_later
       end
     else
       SystemSMSJob.perform_later(message, recipients.map(&:id), user)
