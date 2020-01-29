@@ -2,7 +2,15 @@ FactoryBot.define do
   factory :system_message do
     send_to { :all_users }
     association :user
-    message { Faker::Movies::StarWars.quote }
-    message_type { 'sms' }
+
+    trait :email do
+      message_type { 'email' }
+      email_message_body { Faker::Movies::StarWars.quote }
+    end
+
+    trait :sms do
+      message_type { 'sms' }
+      message { Faker::Movies::StarWars.quote }
+    end
   end
 end
