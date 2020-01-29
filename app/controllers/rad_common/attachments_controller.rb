@@ -38,6 +38,8 @@ module RadCommon
       attachment = ActiveStorage::Attachment.find(params[:id])
       record = attachment.record
       authorize record, :update?
+      # purge_later calls delete instead of destroy in Rails 6 neglecting callbacks
+      # this hack creates the attachment destroy audit before purging
       attachment.send(:audit_destroy)
       attachment.purge_later
       flash[:success] = 'Attachment successfully deleted'
