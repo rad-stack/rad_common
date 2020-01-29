@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Divisions', type: :system do
   let(:user) { create :admin }
-  let(:division) { create :division }
+  let(:division) { create :division, owner: user }
 
   before { login_as user, scope: :user }
 
