@@ -32,6 +32,7 @@ class SystemMessage < ApplicationRecord
 
     SystemMessage.new(send_to: last_message.send_to,
                       message: last_message.message,
+                      email_message_body: last_message.email_message_body,
                       message_type: last_message.message_type)
   end
 
