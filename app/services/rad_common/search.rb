@@ -45,6 +45,12 @@ module RadCommon
       val.is_a?(Array) ? val.all?(&:blank?) : val.blank?
     end
 
+    def default_value?(column)
+      val = selected_value(column)
+      filter = @filtering.filter(column)
+      val && filter.default_value && val.to_s == filter.default_value.to_s
+    end
+
     def selected_value(column)
       search_params[column]
     end
