@@ -59,6 +59,32 @@ RSpec.describe RadCommon::Search, type: :service do
       end
     end
 
+    context 'when a filter has a default value' do
+      let(:query) { Division }
+      let(:filters) { [{ column: :owner_id, options: User.by_name, default_value: user.id }] }
+      let(:user) { create :admin }
+      let!(:other_division) { create(:division) }
+      let!(:default_division) { create(:division, owner: user) }
+
+      context 'in a blank query' do
+        let(:params) { ActionController::Parameters.new }
+
+        it 'filters results using default value' do
+          expect(subject).to include default_division
+          expect(subject).to_not include other_division
+        end
+      end
+
+      context 'in a query where value is selected' do
+        let(:params) { ActionController::Parameters.new(search: { owner_id: other_division.owner_id }) }
+
+        it 'filters results using selected value' do
+          expect(subject).to include other_division
+          expect(subject).to_not include default_division
+        end
+      end
+    end
+
     describe 'authorized' do
       let(:query) { Division }
       let(:filters) { [{ input_label: 'Owner', column: :owner_id, options: User.by_name }] }
@@ -78,7 +104,7 @@ RSpec.describe RadCommon::Search, type: :service do
     end
   end
 
-  describe 'filters' do
+  describe 'scope value filters' do
     subject do
       described_class.new(query: query,
                           filters: filters,
@@ -94,6 +120,22 @@ RSpec.describe RadCommon::Search, type: :service do
       it 'has both scope and normal options' do
         expect(subject.first.input_options).to include ['Pending Values', 'Pending Values']
         expect(subject.first.input_options).to include [User.by_name.first.to_s, User.by_name.first.id]
+      end
+    end
+
+    context 'when using scope_value in grouped options' do
+      let(:query) { Division }
+      let(:filters) do
+        [{ column: :owner_id, input_label: 'Users', grouped: true,
+           options: [['...', [user, { scope_value: :unassigned }]],
+                     ['Active', User.active.by_name],
+                     ['Inactive', User.inactive.by_name]] }]
+      end
+      let(:params) { ActionController::Parameters.new }
+      let(:group_values) { subject.first.input_options.map(&:last) }
+
+      it 'has both scope and normal options' do
+        expect(group_values).to include [[user.to_s, user.id], ['Unassigned', 'unassigned']]
       end
     end
   end
