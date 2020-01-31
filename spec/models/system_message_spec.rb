@@ -21,7 +21,7 @@ RSpec.describe SystemMessage, type: :model do
     end
 
     context 'sms message' do
-      let(:system_message) { create :system_message, :sms, user: user, message: message }
+      let(:system_message) { create :system_message, :sms, user: user, sms_message_body: message }
 
       subject { mail&.body&.encoded }
 

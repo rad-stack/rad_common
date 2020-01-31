@@ -49,6 +49,13 @@ class User < ApplicationRecord
     end
   end
 
+  def send_devise_notification(notification, *args)
+    # background devise emails
+    # https://github.com/plataformatec/devise#activejob-integration
+
+    devise_mailer.send(notification, self, *args).deliver_later
+  end
+
   def send_reset_password_instructions
     if invited_to_sign_up?
       errors.add :email, :not_found

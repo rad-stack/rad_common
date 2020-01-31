@@ -30,6 +30,6 @@ class SystemMessagesController < ApplicationController
     end
 
     def permitted_params
-      params.require(:system_message).permit(:send_to, :message_type, :sms_message, :email_message, :email_message_body)
+      params.require(:system_message).permit(:send_to, :message_type, :sms_message_body, :email_message_body)
     end
 end
