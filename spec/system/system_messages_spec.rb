@@ -7,7 +7,7 @@ RSpec.describe 'SystemMessages', type: :system do
   before { login_as user, scope: :user }
 
   describe 'new' do
-    context 'twilio disabled' do
+    context 'with twilio disabled' do
       before do
         allow(RadicalTwilio).to receive(:twilio_enabled?).and_return false
         visit 'rad_common/system_messages/new'
@@ -24,7 +24,7 @@ RSpec.describe 'SystemMessages', type: :system do
       end
     end
 
-    context 'twilio enabled' do
+    context 'with twilio enabled' do
       before do
         allow(RadicalTwilio).to receive(:twilio_enabled?).and_return true
         visit 'rad_common/system_messages/new'
