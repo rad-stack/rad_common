@@ -57,7 +57,7 @@ RSpec.describe 'SystemMessages', type: :system do
     before { visit "rad_common/system_messages/#{system_message.id}" }
 
     it 'shows the message' do
-      expect(page).to have_content(system_message.sms_message_body)
+      expect(page).to have_content(system_message.email_message_body.to_plain_text)
     end
 
     it 'shows the message type' do
