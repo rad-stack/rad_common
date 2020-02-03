@@ -14,6 +14,8 @@ class SystemMessage < ApplicationRecord
   validates :email_message_body, presence: true, if: :email?
   validates :email_message_body, absence: true, if: :sms?
 
+  before_validation :erase_other
+
   def to_s
     "System Message from #{user}"
   end
@@ -54,4 +56,11 @@ class SystemMessage < ApplicationRecord
       SystemSMSJob.perform_later(sms_message_body, recipients.map(&:id), user)
     end
   end
+
+  private
+
+    def erase_other
+      self.sms_message_body = nil if email?
+      self.email_message_body = nil if sms?
+    end
 end
