@@ -324,6 +324,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20200128185735_make_message_not_required.rb',
                         'make_message_not_required'
+
+        apply_migration '../../../../../spec/dummy/db/20200203163827_convert_rich_text.rb',
+                        'convert_rich_text'
       end
 
       def self.next_migration_number(path)
