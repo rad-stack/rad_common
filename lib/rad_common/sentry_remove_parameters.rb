@@ -1,6 +1,6 @@
-module RadCommon
-  require 'raven'
+require 'raven'
 
+module RadCommon
   class SentryRemoveParameters < Raven::Processor
     def process(data)
       process_if_symbol_keys(data) if data[:request]
