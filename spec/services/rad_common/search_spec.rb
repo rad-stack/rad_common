@@ -129,7 +129,6 @@ RSpec.describe RadCommon::Search, type: :service do
     end
 
     it 'runs query using custom value' do
-      binding.pry
       expect(subject.results.where('confirmed_at >= ? AND confirmed_at <= ?', 
                                    subject.search_params['custom_column_start'], 
                                    subject.search_params['custom_column_end']).count).to eq 1
