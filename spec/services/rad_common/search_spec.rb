@@ -83,6 +83,10 @@ RSpec.describe RadCommon::Search, type: :service do
           expect(subject).to_not include default_division
         end
       end
+
+      context 'with a boolean filter' do
+        it 'filters results using selected value'
+      end
     end
 
     describe 'authorized' do

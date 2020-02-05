@@ -24,6 +24,8 @@ module RadCommon
         template 'rad_common.rb',
                  'config/initializers/rad_common.rb'
 
+        template '../../../../../spec/dummy/config/initializers/raven.rb', 'config/initializers/raven.rb'
+
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
                  'config/locales/devise.authy.en.yml'
