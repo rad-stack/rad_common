@@ -108,6 +108,33 @@ RSpec.describe RadCommon::Search, type: :service do
     end
   end
 
+  describe 'custom date filter' do
+    let(:query) { User.joins(:security_roles) }
+    let!(:user_1) { create :user, confirmed_at: 1.day.ago }
+    let!(:user_2) { create :user, confirmed_at: 3.days.from_now }
+    let(:filters) { [{ column: :custom_column, type: RadCommon::DateFilter, custom: true }] }
+    let(:params) { ActionController::Parameters.new(search: { custom_column_start: 3.days.from_now.beginning_of_day, 
+                                                              custom_column_end: 3.days.from_now.end_of_day }) }
+
+    subject do
+      described_class.new(query: query,
+                          filters: filters,
+                          current_user: user,
+                          params: params)
+    end
+
+    it 'is included in search params' do
+      expect(subject.search_params.keys).to include 'custom_column_start'
+      expect(subject.search_params.keys).to include 'custom_column_end'
+    end
+
+    it 'runs query using custom value' do
+      expect(subject.results.where('confirmed_at >= ? AND confirmed_at <= ?', 
+                                   subject.search_params['custom_column_start'], 
+                                   subject.search_params['custom_column_end']).count).to eq 1
+    end
+  end
+
   describe 'scope value filters' do
     subject do
       described_class.new(query: query,
