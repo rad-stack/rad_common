@@ -4,4 +4,8 @@ class UserPolicy < ApplicationPolicy
   alias resend_invitation? create?
   alias confirm? update?
   alias reset_authy? update?
+
+  def invite_user?
+    user.permission?(:invite_user) || user.permission?(:admin)
+  end
 end

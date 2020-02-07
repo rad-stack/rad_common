@@ -1,11 +1,11 @@
 class Users::InvitationsController < Devise::InvitationsController
   def new
-    authorize User
+    authorize User, :invite_user?
     super
   end
 
   def create
-    authorize User
+    authorize User, :invite_user?
     self.resource = invite_resource
     resource_invited = resource.errors.empty?
 
