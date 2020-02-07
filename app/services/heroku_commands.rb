@@ -33,7 +33,7 @@ class HerokuCommands
     end
 
     def backup(app_name = '')
-      check_development do
+      check_production do
         FileUtils.mkdir_p dump_folder
 
         Bundler.with_clean_env do
@@ -61,7 +61,7 @@ class HerokuCommands
     end
 
     def clone(app_name = '', specific_company_id: nil, keep_dump_file: nil)
-      check_development do
+      check_production do
         puts 'Running backup on Heroku...'
         Bundler.with_clean_env do
           capture_output = `heroku pg:backups capture #{app_option(app_name)}`
@@ -96,11 +96,11 @@ class HerokuCommands
 
     private
 
-      def check_development
-        if Rails.env.development?
+      def check_production
+        if !Rails.env.production?
           yield
         else
-          puts 'This is only available in the development environment.'
+          puts 'This is not available in the production environment.'
         end
       end
 

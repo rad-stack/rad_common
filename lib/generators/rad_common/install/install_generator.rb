@@ -104,6 +104,9 @@ module RadCommon
         template '../../../../../spec/requests/security_roles_spec.rb',
                  'spec/requests/security_roles_spec.rb'
 
+        template '../../../../../spec/requests/notification_types_spec.rb',
+                 'spec/requests/notification_types_spec.rb'
+
         template '../../../../../spec/requests/companies_spec.rb', 'spec/requests/companies_spec.rb'
         template '../../../../../spec/requests/searches_spec.rb', 'spec/requests/searches_spec.rb'
         template '../../../../../spec/system/audit_history_spec.rb', 'spec/system/audit_history_spec.rb'
@@ -111,6 +114,9 @@ module RadCommon
         template '../../../../../spec/system/users_spec.rb', 'spec/system/users_spec.rb'
         template '../../../../../spec/system/companies_spec.rb', 'spec/system/companies_spec.rb'
         template '../../../../../spec/system/security_roles_spec.rb', 'spec/system/security_roles_spec.rb'
+
+        template '../../../../../spec/system/notification_types_spec.rb',
+                 'spec/system/notification_types_spec.rb'
 
         template '../../../../../spec/system/system_messages_spec.rb',
                  'spec/system/system_messages_spec.rb'

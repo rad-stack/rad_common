@@ -87,6 +87,6 @@ class DivisionsController < ApplicationController
     def division_attachments_and_types
       [{ attr: :logo, types: ['image/png'] },
        { attr: :avatar, types: ['image/jpeg'] },
-       { attr: :attachment, types: ['image/jpeg', 'text/plain'] }]
+       { attr: :attachment, types: %w[image/jpeg text/plain application/pdf] }]
     end
 end
