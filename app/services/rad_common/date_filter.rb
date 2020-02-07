@@ -2,10 +2,11 @@ module RadCommon
   class DateFilter
     attr_reader :column
 
-    def initialize(column:, type:, start_input_label: nil, end_input_label: nil)
+    def initialize(column:, type:, start_input_label: nil, end_input_label: nil, custom:false)
       @column = column
       @start_input_label = start_input_label
       @end_input_label = end_input_label
+      @custom = custom
     end
 
     def filter_view
@@ -33,6 +34,8 @@ module RadCommon
     end
 
     def apply_filter(results, params)
+      return results if @custom
+
       start_at = start_at_value(params)
       end_at = end_at_value(params)
 
