@@ -11,7 +11,7 @@
       = link_to(attachment_label, link, target: target, class: 'mr-5')
       = delete_link
     -else
-      - attachment_label = label_override.present? ? label_override : content_tag(:i, '', class: 'fa fa-paperclip')
+      - attachment_label = label_override.present? ? label_override : content_tag(:i, '', class: "fa #{RadCommon::ContentTypeIcon.new(attachment.content_type)}")
       .attachment-button-box
         = link_to attachment_label, url_for(attachment), target: '_blank', class: 'btn btn-secondary mr-5 attachment-link'
         = delete_link
