@@ -201,8 +201,6 @@ module RadCommon
       g.controller_specs false
     end
 
-    Rails.configuration.app_admin_email = ENV.fetch('APP_ADMIN_EMAIL')
-
         RUBY
         end
 
