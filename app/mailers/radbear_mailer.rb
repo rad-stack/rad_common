@@ -123,8 +123,8 @@ class RadbearMailer < ActionMailer::Base
     end
 
     def parse_recipients_array(recipients)
-      users_emails = User.where(id: recipients).pluck(:email)
-      string_emails = recipients.select { |address| address.to_i.zero? }
+      string_emails, user_ids = recipients.partition { |email| email.to_i.zero? }
+      users_emails = User.where(id: user_ids).pluck(:email)
       users_emails + string_emails
     end
 end

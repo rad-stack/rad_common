@@ -62,6 +62,13 @@ describe RadbearMailer, type: :mailer do
 
         it { is_expected.to include user.email }
         it { is_expected.to include another_user.email }
+
+        context 'with combination of user ids and email addresses' do
+          let(:recipient) { [user.id, 'string_email@example.com'] }
+
+          it { is_expected.to include user.email }
+          it { is_expected.to include 'string_email@example.com' }
+        end
       end
     end
   end
