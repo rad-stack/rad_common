@@ -58,8 +58,8 @@ class RadbearMailer < ActionMailer::Base
       @recipient = recipient
       to_address = recipient
     elsif recipient.is_a?(Array)
-      @recipient = User.where(id: recipient)
-      to_address = @recipient.pluck(:email)
+      @recipient = parse_recipients_array(recipient)
+      to_address = @recipient
     else
       raise "recipient of type #{recipient.class} if not valid"
     end
@@ -120,5 +120,11 @@ class RadbearMailer < ActionMailer::Base
 
       @include_yield = true
       @optional = false
+    end
+
+    def parse_recipients_array(recipients)
+      users_emails = User.where(id: recipients).pluck(:email)
+      string_emails = recipients.select { |address| address.to_i.zero? }
+      users_emails + string_emails
     end
 end
