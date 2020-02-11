@@ -137,6 +137,7 @@ RSpec.describe RadCommon::Search, type: :service do
 
   describe 'valid?' do
     subject { search.valid? }
+
     let(:search) do
       described_class.new(query: query,
                           filters: filters,
