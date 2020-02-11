@@ -135,6 +135,32 @@ RSpec.describe RadCommon::Search, type: :service do
     end
   end
 
+  describe 'valid?' do
+    subject { search.valid? }
+    let(:search) do
+      described_class.new(query: query,
+                          filters: filters,
+                          current_user: user,
+                          params: params)
+    end
+    let(:query) { User.joins(:security_roles) }
+    let(:filters) { [{ column: :confirmed_at, type: RadCommon::DateFilter }] }
+
+
+    context 'invalid params' do
+      let(:params) do
+        ActionController::Parameters.new(search: { confirmed_at_start: '2019-13-01',
+                                                   confirmed_at_end: '2019-12-02' })
+      end
+
+      it 'returns false and displays error message' do
+        expect(subject).to eq false
+        expect(search.error_messages).to eq 'Invalid date entered for confirmed_at'
+      end
+    end
+  end
+
+
   describe 'scope value filters' do
     subject do
       described_class.new(query: query,
