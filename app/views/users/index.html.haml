@@ -1,5 +1,5 @@
 .card
-  = render 'layouts/card_header', action_name: 'custom', title: "Pending Users (#{@pending.count})", icon: 'fa-list', additional_external_actions: users_actions
+  = render 'layouts/card_header', action_name: 'custom', title: "Pending Users (#{@pending.total_count})", icon: 'fa-list', additional_external_actions: users_actions
   .card-body
     = render 'users/index', users: @pending, page_param_name: :pending_page
 
