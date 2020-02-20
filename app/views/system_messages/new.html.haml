@@ -1,5 +1,9 @@
 .card
-  = render 'layouts/card_header', title: 'Send System Message to Active Users', icon: 'fa-envelope', no_index_button: true, no_back_button: true
+  = render 'layouts/card_header', title: 'Send System Message to Active Users',
+                                  icon: 'fa-envelope',
+                                  no_index_button: true,
+                                  no_back_button: true
+
   .card-body
     = simple_form_for(@system_message, url: '/rad_common/system_messages') do |f|
       = f.error_notification
@@ -8,7 +12,7 @@
         .row
           .col-lg-3= f.input :message_type, collection: message_type_options, include_blank: false
           .col-lg-3
-            = f.input :send_to, collection: options_for_enum(SystemMessage, :send_to), include_blank: false
+            = f.input :send_to, collection: message_send_to_options, include_blank: false
         .row
           .col-lg-12.email-message
             = f.input :email_message_body, placeholder: 'Enter a message to be emailed to active users in the system.',
