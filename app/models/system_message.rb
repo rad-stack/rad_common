@@ -4,7 +4,7 @@ class SystemMessage < ApplicationRecord
   enum send_to: { internal_users: 0, client_users: 1, all_users: 2, preview: 3 }
   enum message_type: { email: 0, sms: 1 }
 
-  scope :recent_first, -> { order(created_at: :desc) }
+  scope :recent_first, -> { order(id: :desc) }
 
   has_rich_text :email_message_body
 
