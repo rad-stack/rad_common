@@ -111,6 +111,12 @@ class RadbearMailer < ActionMailer::Base
     mail to: @recipient.formatted_email, subject: "#{report_name}#{subject_date_string}"
   end
 
+  def default_url_options
+    return { host: RadCommon::AppInfo.new.portal_host_name } if @recipient.is_a?(User) && @recipient.external?
+
+    { host: RadCommon::AppInfo.new.host_name }
+  end
+
   private
 
     def set_defaults

@@ -98,11 +98,6 @@ module RadCommon
       }.reject { |translated, _enum_value| translated.blank? }
     end
 
-    def mailer_image_url(image)
-      protocol = Rails.env.production? ? 'https' : 'http'
-      "#{protocol}://#{ActionMailer::Base.default_url_options[:host]}/#{image}"
-    end
-
     def bootstrap_flash(options = {})
       flash_messages = []
       flash.each do |type, message|
