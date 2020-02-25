@@ -6,6 +6,7 @@ RSpec.describe 'Users', type: :request do
   let(:another) { create :user }
   let(:valid_attributes) { { first_name: Faker::Name.first_name, last_name: Faker::Name.last_name } }
   let(:invalid_attributes) { { first_name: nil } }
+  let(:escaped_user_name) { ERB::Util.html_escape(search_user.to_s) }
 
   before { login_as(admin, scope: :user) }
 
@@ -68,14 +69,14 @@ RSpec.describe 'Users', type: :request do
     context 'with audit' do
       it 'renders audit page' do
         get '/users/audit_search', params: { model_name: search_user.class.to_s, record_id: search_user.id }
-        expect(response.body).to include "Updates for <a href=\"/users/#{search_user.id}\">User - #{search_user}</a>"
+        expect(response.body).to include "Updates for <a href=\"/users/#{search_user.id}\">User - #{escaped_user_name}</a>"
       end
     end
 
     context 'without audit' do
       it 'does not render audit page' do
         get '/users/audit_search', params: { model_name: search_role.class.to_s, record_id: -1 }
-        expect(response.body).not_to include "Updates for <a href=\"/users/#{search_user.id}\">User - #{search_user}</a>"
+        expect(response.body).not_to include "Updates for <a href=\"/users/#{search_user.id}\">User - #{escaped_user_name}</a>"
       end
     end
 
