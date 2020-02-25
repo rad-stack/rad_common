@@ -21,7 +21,7 @@ class RadbearMailer < ActionMailer::Base
     @recipient = User.where(id: recipients)
     to_address = @recipient.map(&:formatted_email)
 
-    @message = "#{user} has signed up on #{I18n.t(:app_name)}"
+    @message = "#{user} has signed up on #{app_name(user)}"
     @message += auto_approve ? '.' : ' and is awaiting approval.'
 
     mail(to: to_address, subject: "New User on #{I18n.t(:app_name)}")
@@ -135,5 +135,9 @@ class RadbearMailer < ActionMailer::Base
       string_emails, user_ids = recipients.partition { |email| email.to_i.zero? }
       users_emails = User.where(id: user_ids).pluck(:email)
       users_emails + string_emails
+    end
+
+    def app_name(user)
+      user.internal? ? I18n.t(:app_name) : I18n.t(:portal_app_name)
     end
 end
