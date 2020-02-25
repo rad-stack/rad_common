@@ -24,7 +24,7 @@ class RadbearMailer < ActionMailer::Base
     @message = "#{user} has signed up on #{app_name(user)}"
     @message += auto_approve ? '.' : ' and is awaiting approval.'
 
-    mail(to: to_address, subject: "New User on #{I18n.t(:app_name)}")
+    mail(to: to_address, subject: "New User on #{app_name(user)}")
   end
 
   def your_account_approved(user)
