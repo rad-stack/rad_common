@@ -1,0 +1,20 @@
+.card
+  = render 'layouts/card_header'
+  .card-body
+    %table.table.table-striped.table-bordered
+      %tr
+        %th When
+        %th Type
+        %th Content
+        %th Unread
+      - @notifications.each do |notification|
+        %tr
+          %td
+            %p= format_datetime(notification.created_at)
+            %p= "#{distance_of_time_in_words_to_now(notification.created_at)} ago"
+          %td= notification.notification_type
+          %td= notification.content
+          %td{ class: notification.unread ? 'text-danger' : '' }
+            = format_boolean(notification.unread)
+
+- current_user.read_notifications!

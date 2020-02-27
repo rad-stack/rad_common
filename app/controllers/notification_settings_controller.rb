@@ -13,6 +13,9 @@ class NotificationSettingsController < ApplicationController
                                                                      user_id: permitted_params[:user_id])
 
     notification_setting.enabled = permitted_params[:enabled]
+    notification_setting.email = permitted_params[:email]
+    notification_setting.feed = permitted_params[:feed]
+    notification_setting.sms = permitted_params[:sms]
 
     authorize notification_setting
 
@@ -28,6 +31,6 @@ class NotificationSettingsController < ApplicationController
   private
 
     def permitted_params
-      params.require(:notification_setting).permit(:notification_type_id, :enabled, :user_id)
+      params.require(:notification_setting).permit(:notification_type_id, :enabled, :user_id, :email, :feed, :sms)
     end
 end

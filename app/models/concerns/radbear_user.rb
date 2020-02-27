@@ -4,6 +4,7 @@ module RadbearUser
   included do
     has_many :notification_settings, dependent: :destroy
     has_many :system_messages, dependent: :destroy
+    has_many :notifications, dependent: :destroy
 
     attr_accessor :approved_by, :do_not_notify_approved
 
@@ -97,6 +98,10 @@ module RadbearUser
 
   def portal?
     external? && RadCommon.portal_namespace.present?
+  end
+
+  def read_notifications!
+    notifications.unread.update_all unread: false
   end
 
   private

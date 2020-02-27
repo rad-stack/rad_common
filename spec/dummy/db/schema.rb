@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_03_163827) do
+ActiveRecord::Schema.define(version: 2020_02_27_134827) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,6 +113,9 @@ ActiveRecord::Schema.define(version: 2020_02_03_163827) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "notification_type_id", null: false
+    t.boolean "email", default: true, null: false
+    t.boolean "feed", default: false, null: false
+    t.boolean "sms", default: false, null: false
     t.index ["notification_type_id", "user_id"], name: "index_notification_settings_on_notification_type_id_and_user_id", unique: true
   end
 
@@ -122,6 +125,16 @@ ActiveRecord::Schema.define(version: 2020_02_03_163827) do
     t.datetime "updated_at", null: false
     t.integer "auth_mode", default: 0, null: false
     t.index ["name"], name: "index_notification_types_on_name", unique: true
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "notification_type_id", null: false
+    t.boolean "unread", default: true, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["notification_type_id"], name: "index_notifications_on_notification_type_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "security_roles", id: :serial, force: :cascade do |t|
@@ -231,6 +244,8 @@ ActiveRecord::Schema.define(version: 2020_02_03_163827) do
   add_foreign_key "notification_security_roles", "security_roles"
   add_foreign_key "notification_settings", "notification_types"
   add_foreign_key "notification_settings", "users"
+  add_foreign_key "notifications", "notification_types"
+  add_foreign_key "notifications", "users"
   add_foreign_key "security_roles_users", "security_roles"
   add_foreign_key "security_roles_users", "users"
   add_foreign_key "system_messages", "users"

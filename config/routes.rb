@@ -13,8 +13,8 @@ RadCommon::Engine.routes.draw do
   end
 
   resources :system_messages, only: %i[new create show]
-
   resources :system_usages, only: %i[index]
   resources :notification_types, only: %i[index edit update]
   resources :notification_settings, only: %i[index create]
+  resources :notifications, only: :index
 end

@@ -23,6 +23,7 @@ class SystemSmsJob < ApplicationJob
     end
 
     return if errors.empty? && recipients_without_phone.empty?
+    return if current_user.blank?
 
     body = "These users did not receive a system SMS message due to system error: #{errors.join(', ')}\n"
     body += "These users did not receive a system SMS message because a mobile number was not present: #{recipients_without_phone.join(', ')}"

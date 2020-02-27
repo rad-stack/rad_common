@@ -80,6 +80,33 @@ class NotificationType < ApplicationRecord
     notification_type
   end
 
+  def self.notify!(subject)
+    klass = to_s.constantize
+
+    klass.notify_feed!(subject)
+    klass.notify_email!(subject)
+    klass.notify_sms!(subject)
+  end
+
+  def self.notify_feed!(subject)
+    # TODO: only send to recipients that want feed
+
+    notification_type = set_notification_type
+
+    recipient_user_ids(subject).each do |user_id|
+      Notification.create! user_id: user_id, notification_type: notification_type, content: feed_content(subject)
+    end
+  end
+
+  def self.notify_sms!(subject)
+    # TODO: enable this
+    return
+
+    # TODO: only if SMS is configured on the system
+    # TODO: only send to recipients that want SMS
+    SystemSmsJob.perform_later("Message from #{I18n.t(:app_name)}: #{sms_content(subject)}", recipient_user_ids(subject), nil)
+  end
+
   private
 
     def validate_auth
