@@ -6,6 +6,9 @@
       = base_errors(f)
       .form-inputs
         .row
+          .col-lg-4
+            = f.input :auth_mode, collection: options_for_enum(NotificationType, :auth_mode)
+        .row
           .col-lg-12
             = f.input :security_roles, as: :check_boxes, item_wrapper_class: 'col-lg-3 security-role-checkboxes', collection: security_role_collection, checked: @notification_type.security_roles.ids, label: 'Security Roles to Notify'
 

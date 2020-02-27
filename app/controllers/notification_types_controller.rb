@@ -12,6 +12,7 @@ class NotificationTypesController < ApplicationController
 
   def update
     @notification_type.security_roles = resolve_roles(params[:notification_type][:security_roles])
+    @notification_type.assign_attributes(permitted_params)
 
     if @notification_type.save
       flash[:success] = 'Notification Type updated.'
@@ -36,5 +37,9 @@ class NotificationTypesController < ApplicationController
       else
         []
       end
+    end
+
+    def permitted_params
+      params.require(:notification_type).permit(:auth_mode)
     end
 end
