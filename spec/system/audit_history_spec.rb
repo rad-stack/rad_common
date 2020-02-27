@@ -20,11 +20,14 @@ describe 'AuditHistory', type: :system do
 
   it 'shows attachment created' do
     visit '/users/edit'
+    fill_in 'Current password', with: 'password'
     page.attach_file('Avatar', 'spec/test_files/radlogo.png')
     click_on 'Save'
+    expect(page).to have_content 'account has been updated successfully'
 
     visit "/users/#{admin.id}"
     click_on 'Show History'
+
     expect(page).to have_content 'create attachment'
   end
 

@@ -31,7 +31,7 @@ require 'pundit/rspec'
 # require only the support files necessary.
 #
 
-Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 
 require 'vcr'
 
@@ -103,6 +103,11 @@ RSpec.configure do |config|
   Capybara.javascript_driver = chrome_driver
 
   config.before do
+    # TODO: workaround for this issue:
+    # https://github.com/rails/rails/issues/37270
+    (ActiveJob::Base.descendants << ActiveJob::Base).each(&:disable_test_adapter)
+    # TODO: end of workaround
+
     allow(Company).to receive(:main).and_return(create(:company))
 
     allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))

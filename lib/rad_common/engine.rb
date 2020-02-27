@@ -24,9 +24,9 @@ module RadCommon
     require 'sidekiq'
     require 'sidekiq-failures'
     require 'simple_form'
-    require 'trix'
     require 'twilio-ruby'
     require 'bootstrap'
     require 'bootstrap-select-rails'
+    require 'webpacker'
   end
 end

@@ -64,7 +64,7 @@ class RadbearMailer < ActionMailer::Base
       raise "recipient of type #{recipient.class} if not valid"
     end
 
-    @message = simple_format(message)
+    @message = options[:do_not_format] ? message : simple_format(message)
     @email_action = options[:email_action] if options[:email_action]
 
     mail(to: to_address, subject: subject)

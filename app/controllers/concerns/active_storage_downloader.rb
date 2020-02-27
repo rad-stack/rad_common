@@ -1,6 +1,5 @@
 module ActiveStorageDownloader
   extend ActiveSupport::Concern
-  include ActiveStorage::Downloading
 
   attr_reader :blob
 
@@ -23,7 +22,7 @@ module ActiveStorageDownloader
 
     def download_and_serve_file(ext, content_type, filename)
       # does not support variants/resizing
-      download_blob_to_tempfile do |file|
+      @blob.open do |file|
         send_data file.read, filename: "#{filename}.#{ext}", type: content_type, disposition: 'inline'
       end
     end

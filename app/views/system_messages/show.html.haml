@@ -6,4 +6,4 @@
                                   title: system_message_title(@system_message),
                                   icon: 'fa-envelope'
   .card-body
-    = render 'layouts/show_data_columns', resource: @system_message, data: [{ label: 'Message', value: @system_message.message.html_safe }, { label: 'Message Type', value: enum_to_translated_option(SystemMessage, :message_type, @system_message.message_type) }]
+    = render 'layouts/show_data_columns', resource: @system_message, data: [{ label: 'Message', value: @system_message.html_message }, { label: 'Message Type', value: enum_to_translated_option(SystemMessage, :message_type, @system_message.message_type) }]

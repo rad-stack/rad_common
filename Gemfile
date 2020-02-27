@@ -13,8 +13,6 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-gem 'trix', git: 'https://github.com/markmercedes/trix.git', branch: 'master'
-
 group :test do
   gem 'capybara-selenium'
   gem 'selenium-webdriver'
