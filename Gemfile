@@ -21,6 +21,7 @@ group :test do
 end
 
 group :development, :test do
+  gem 'bootsnap', require: false
   gem 'dotenv-rails'
   gem 'jquery-rails'
   gem 'jquery-ui-rails', '< 6.0'
