@@ -7,15 +7,15 @@ RSpec.describe Notifications::UserWasApprovedNotification, type: :model do
   let(:notification) { described_class }
   let(:mail) { ActionMailer::Base.deliveries.last }
 
-  describe '#users_except_self' do
+  describe '#notify_user_ids' do
     context 'when user is approved' do
-      subject { notification.send(:users_except_self, [user, admin]) }
+      subject { notification.send(:notify_user_ids, [user, admin]) }
 
       it { is_expected.to include admin.id }
     end
 
     context 'when admin is approved' do
-      subject { notification.send(:users_except_self, [another, admin]) }
+      subject { notification.send(:notify_user_ids, [another, admin]) }
 
       it { is_expected.to include admin.id }
       it { is_expected.not_to include another.id }

@@ -2,7 +2,7 @@ module Notifications
   class UserWasApprovedNotification < ::NotificationType
     def self.notify_email!(subject)
       # TODO: don't send unless user wants emails
-      RadbearMailer.user_was_approved(recipient_user_ids(subject), approvee(subject), approver(subject)).deliver_later
+      RadbearMailer.user_was_approved(notify_user_ids(subject), approvee(subject), approver(subject)).deliver_later
     end
 
     class << self
@@ -17,12 +17,8 @@ module Notifications
           feed_content(subject)
         end
 
-        def recipient_user_ids(subject)
-          users_except_self(subject)
-        end
-
-        def users_except_self(subject)
-          notify_user_ids - [approvee(subject).id]
+        def exclude_user_ids(subject)
+          approvee(subject).id
         end
 
         def approvee(subject)

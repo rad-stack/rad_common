@@ -51,7 +51,7 @@ class NotificationType < ApplicationRecord
     notify_list(true).pluck(:id)
   end
 
-  def self.notify_user_ids
+  def self.notify_user_ids(subject)
     notification_type = set_notification_type
     raise 'invalid auth mode' if notification_type.absolute_user?
 
@@ -59,7 +59,7 @@ class NotificationType < ApplicationRecord
       notification_type.notification_security_roles.create! security_role: SecurityRole.admin_role
     end
 
-    notification_type.notify_user_ids
+    notification_type.notify_user_ids - [exclude_user_ids(subject)]
   end
 
   def self.absolute_user?(user)
@@ -93,7 +93,7 @@ class NotificationType < ApplicationRecord
 
     notification_type = set_notification_type
 
-    recipient_user_ids(subject).each do |user_id|
+    notify_user_ids(subject).each do |user_id|
       Notification.create! user_id: user_id, notification_type: notification_type, content: feed_content(subject)
     end
   end
@@ -104,7 +104,7 @@ class NotificationType < ApplicationRecord
 
     # TODO: only if SMS is configured on the system
     # TODO: only send to recipients that want SMS
-    SystemSmsJob.perform_later("Message from #{I18n.t(:app_name)}: #{sms_content(subject)}", recipient_user_ids(subject), nil)
+    SystemSmsJob.perform_later("Message from #{I18n.t(:app_name)}: #{sms_content(subject)}", notify_user_ids(subject), nil)
   end
 
   private

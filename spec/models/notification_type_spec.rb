@@ -10,7 +10,7 @@ RSpec.describe NotificationType, type: :model do
   end
 
   describe '#notify_user_ids' do
-    subject { notification_class.send(:notify_user_ids) }
+    subject { notification_class.send(:notify_user_ids, user) }
 
     let(:notification_class) { Notifications::GlobalValidityNotification }
 
