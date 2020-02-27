@@ -6,7 +6,7 @@ class RadicalRetry
     def perform_request(no_delay: false, retry_count: 5, additional_errors: [], &block)
       retries ||= retry_count
       block.call
-    rescue *(additional_errors + RESCUABLE_ERRORS) => e
+    rescue *(RESCUABLE_ERRORS + additional_errors) => e
       raise e unless (retries -= 1).positive?
 
       exponential_pause(retries, no_delay)
