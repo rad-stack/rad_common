@@ -7,12 +7,10 @@ class RadicalRetry
       retries ||= retry_count
       block.call
     rescue *(additional_errors + RESCUABLE_ERRORS) => e
-      if (retries -= 1).positive?
-        exponential_pause(retries, no_delay)
-        retry
-      else
-        raise e
-      end
+      raise e unless (retries -= 1).positive?
+
+      exponential_pause(retries, no_delay)
+      retry
     end
     alias try perform_request
 
