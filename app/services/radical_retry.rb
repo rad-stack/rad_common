@@ -1,10 +1,12 @@
 class RadicalRetry
+  RESCUABLE_ERRORS = [Net::OpenTimeout, OpenURI::HTTPError, HTTPClient::ConnectTimeoutError, Errno::EPIPE, SocketError,
+                      OpenSSL::SSL::SSLError, Errno::ENOENT, Errno::ECONNRESET, Twilio::REST::TwilioError].freeze
+
   class << self
-    def perform_request(no_delay: false, retry_count: 5, &block)
+    def perform_request(no_delay: false, retry_count: 5, additional_errors: [], &block)
       retries ||= retry_count
       block.call
-    rescue Net::OpenTimeout, OpenURI::HTTPError, HTTPClient::ConnectTimeoutError, Errno::EPIPE, SocketError,
-           OpenSSL::SSL::SSLError, Errno::ENOENT, Errno::ECONNRESET => e
+    rescue *(additional_errors + RESCUABLE_ERRORS) => e
       if (retries -= 1).positive?
         exponential_pause(retries, no_delay)
         retry
