@@ -44,6 +44,20 @@ class NotificationType < ApplicationRecord
     klass.notify_sms!(subject)
   end
 
+  def enabled_for_method?(user, notification_method)
+    setting = notification_settings.find_by(user_id: user.id)
+
+    if notification_method == :email
+      return true if setting.blank?
+
+      setting.enabled? && setting.email?
+    elsif setting.blank? || !setting.enabled
+      false
+    else
+      setting.send(notification_method)
+    end
+  end
+
   class << self
     protected
 
@@ -85,18 +99,13 @@ class NotificationType < ApplicationRecord
         subtotal_user_ids - opt_out_by_notification_method(notification_method, subtotal_user_ids)
       end
 
-      def absolute_user?(user)
-        # TODO: limit by notification_method which can be :email, :feed or :sms
-
+      def absolute_user?(user, notification_method)
         raise 'absolute user must be active' unless user.active
 
         notification_type = set_notification_type
         raise 'invalid auth mode' if notification_type.security_roles?
 
-        setting = notification_type.notification_settings.find_by(user_id: user.id)
-        return true if setting.blank?
-
-        setting.enabled
+        notification_type.enabled_for_method?(user, notification_method)
       end
 
       def set_notification_type
@@ -112,8 +121,7 @@ class NotificationType < ApplicationRecord
         if notification_method == :email
           settings.where(email: false).pluck(:user_id)
         elsif %i[feed sms].include?(notification_method)
-          # used brute force logic for now due to complexity, needs to be optimized
-          # performance could be a problem on larger databases
+          # TODO: refactor with enabled_for_method?
 
           opted_out = []
 

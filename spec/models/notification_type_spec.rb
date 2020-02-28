@@ -12,7 +12,7 @@ RSpec.describe NotificationType, type: :model do
   before { create :notification_security_role, notification_type: notification_type, security_role: security_role }
 
   describe 'absolute_user?' do
-    subject { notification_class.send(:absolute_user?, user) }
+    subject { notification_class.send(:absolute_user?, user, notification_method) }
 
     let(:auth_mode) { :absolute_user }
 
@@ -30,12 +30,6 @@ RSpec.describe NotificationType, type: :model do
       it { expect { subject }.to raise_error 'absolute user must be active' }
     end
 
-    context 'when excluding users' do
-      before { allow(notification_class).to receive(:exclude_user_ids).and_return [user.id] }
-
-      xit { is_expected.to be false }
-    end
-
     context 'when email is turned off' do
       before do
         create :notification_setting, user: user,
@@ -45,14 +39,14 @@ RSpec.describe NotificationType, type: :model do
                                       feed: true
       end
 
-      xit { is_expected.to be false }
+      it { is_expected.to be false }
     end
 
     context 'when feed' do
       let(:notification_method) { :feed }
 
       context 'without setting' do
-        xit { is_expected.to be false }
+        it { is_expected.to be false }
       end
 
       context 'with setting enabled' do
@@ -76,7 +70,7 @@ RSpec.describe NotificationType, type: :model do
                                         feed: false
         end
 
-        xit { is_expected.to be false }
+        it { is_expected.to be false }
       end
     end
   end
