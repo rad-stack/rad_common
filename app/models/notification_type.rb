@@ -44,8 +44,8 @@ class NotificationType < ApplicationRecord
     klass.notify_sms!(subject)
   end
 
-  def enabled_for_method?(user, notification_method)
-    setting = notification_settings.find_by(user_id: user.id)
+  def enabled_for_method?(user_id, notification_method)
+    setting = notification_settings.find_by(user_id: user_id)
 
     if notification_method == :email
       return true if setting.blank?
@@ -105,40 +105,24 @@ class NotificationType < ApplicationRecord
         notification_type = set_notification_type
         raise 'invalid auth mode' if notification_type.security_roles?
 
-        notification_type.enabled_for_method?(user, notification_method)
+        notification_type.enabled_for_method?(user.id, notification_method)
+      end
+
+      def opt_out_by_notification_method(notification_method, user_ids)
+        notification_type = set_notification_type
+        opted_out = []
+
+        user_ids.each do |user_id|
+          opted_out.push(user_id) unless notification_type.enabled_for_method?(user_id, notification_method)
+        end
+
+        opted_out
       end
 
       def set_notification_type
         notification_type = NotificationType.find_by(name: to_s)
         notification_type = NotificationType.create! name: to_s if notification_type.blank?
         notification_type
-      end
-
-      def opt_out_by_notification_method(notification_method, user_ids)
-        notification_type = set_notification_type
-        settings = NotificationSetting.enabled.where(notification_type: notification_type)
-
-        if notification_method == :email
-          settings.where(email: false).pluck(:user_id)
-        elsif %i[feed sms].include?(notification_method)
-          # TODO: refactor with enabled_for_method?
-
-          opted_out = []
-
-          user_ids.each do |user_id|
-            user_setting = settings.find_by(user_id: user_id)
-
-            if user_setting.blank? || !user_setting.enabled
-              opted_out.push(user_id)
-            elsif !user_setting.send(notification_method)
-              opted_out.push(user_id)
-            end
-          end
-
-          opted_out
-        else
-          raise "invalid notification method: #{notification_method}"
-        end
       end
   end
 
