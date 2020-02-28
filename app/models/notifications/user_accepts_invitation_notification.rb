@@ -26,8 +26,11 @@ module Notifications
         end
 
         def feed_content(subject)
-          # TODO: add link
           "#{subject} has accepted the invitation to join."
+        end
+
+        def feed_record(subject)
+          subject
         end
 
         def sms_content(subject)

@@ -15,6 +15,10 @@ module Notifications
           'Invalid data was found in the system.'
         end
 
+        def feed_record(_subject)
+          nil
+        end
+
         def sms_content(subject)
           feed_content(subject)
         end

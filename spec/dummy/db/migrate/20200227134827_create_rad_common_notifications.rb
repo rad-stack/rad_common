@@ -3,7 +3,9 @@ class CreateRadCommonNotifications < ActiveRecord::Migration[6.0]
     create_table :notifications do |t|
       t.integer :user_id, null: false
       t.integer :notification_type_id, null: false
+      t.string :content, null: false
       t.boolean :unread, null: false, default: true
+      t.references :record, polymorphic: true, index: true
 
       t.timestamps
     end

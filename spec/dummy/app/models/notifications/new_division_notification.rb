@@ -29,8 +29,12 @@ module Notifications
           mailer_subject(subject)
         end
 
+        def feed_record(subject)
+          subject
+        end
+
         def sms_content(subject)
-          feed_content(subject)
+          "Division '#{subject}' was updated: #{Rails.application.routes.url_helpers.division_url(subject)}"
         end
 
         def absolute_user_id(subject)

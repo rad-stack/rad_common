@@ -12,8 +12,11 @@ module Notifications
         end
 
         def feed_content(subject)
-          # TODO: add link
           "#{approvee(subject)} was approved by #{approved_by_name(subject)}."
+        end
+
+        def feed_record(subject)
+          approvee(subject)
         end
 
         def sms_content(subject)

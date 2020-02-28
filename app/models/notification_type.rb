@@ -79,7 +79,10 @@ class NotificationType < ApplicationRecord
         notification_type = set_notification_type
 
         notify_user_ids(subject, :feed).each do |user_id|
-          Notification.create! user_id: user_id, notification_type: notification_type, content: feed_content(subject)
+          Notification.create! user_id: user_id,
+                               notification_type: notification_type,
+                               content: feed_content(subject),
+                               record: feed_record(subject)
         end
       end
 

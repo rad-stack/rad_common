@@ -12,12 +12,15 @@ module Notifications
         end
 
         def feed_content(subject)
-          # TODO: add link
           "#{subject} signed up."
         end
 
+        def feed_record(subject)
+          subject
+        end
+
         def sms_content(subject)
-          feed_content(subject)
+          "#{subject} signed up: #{Rails.application.routes.url_helpers.user_url(subject)}"
         end
 
         def exclude_user_ids(_subject)

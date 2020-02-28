@@ -13,7 +13,10 @@
             %p= format_datetime(notification.created_at)
             %p= "#{distance_of_time_in_words_to_now(notification.created_at)} ago"
           %td= notification.notification_type
-          %td= notification.content
+          %td
+            = notification.content
+            - if notification.record.present?
+              %p= secured_link(notification.record)
           %td{ class: notification.unread ? 'text-danger' : '' }
             = format_boolean(notification.unread)
 

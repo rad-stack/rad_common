@@ -10,6 +10,7 @@ RSpec.describe NotificationType, type: :model do
   before { create :notification_security_role, notification_type: notification_type, security_role: security_role }
 
   describe 'notify_user_ids with absolute_user' do
+    # remove this on all other apps, division is only in dummy app of rad_common
     subject { notification_class.send(:notify_user_ids, notification_subject, notification_method) }
 
     let(:notification_name) { 'Notifications::NewDivisionNotification' }
