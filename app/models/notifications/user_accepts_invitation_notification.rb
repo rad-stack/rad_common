@@ -1,20 +1,20 @@
 module Notifications
   class UserAcceptsInvitationNotification < ::NotificationType
-    def self.notify_email!(subject)
-      options = { email_action: { message: 'Click here to view the user.',
-                                  button_text: 'View',
-                                  button_url: Rails.application.routes.url_helpers.user_url(subject) } }
-
-      body = "#{subject} has accepted the invitation to join #{I18n.t(:app_name)}."
-
-      RadbearMailer.simple_message(notify_user_ids(subject, :email),
-                                   'User Accepted',
-                                   body,
-                                   options).deliver_later
-    end
-
     class << self
-      private
+      protected
+
+        def notify_email!(subject)
+          options = { email_action: { message: 'Click here to view the user.',
+                                      button_text: 'View',
+                                      button_url: Rails.application.routes.url_helpers.user_url(subject) } }
+
+          body = "#{subject} has accepted the invitation to join #{I18n.t(:app_name)}."
+
+          RadbearMailer.simple_message(notify_user_ids(subject, :email),
+                                       'User Accepted',
+                                       body,
+                                       options).deliver_later
+        end
 
         def feed_content(subject)
           # TODO: add link

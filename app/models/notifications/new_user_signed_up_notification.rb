@@ -1,11 +1,11 @@
 module Notifications
   class NewUserSignedUpNotification < ::NotificationType
-    def self.notify_email!(subject)
-      RadbearMailer.new_user_signed_up(notify_user_ids(subject, :email), subject).deliver_later
-    end
-
     class << self
-      private
+      protected
+
+        def notify_email!(subject)
+          RadbearMailer.new_user_signed_up(notify_user_ids(subject, :email), subject).deliver_later
+        end
 
         def feed_content(subject)
           # TODO: add link

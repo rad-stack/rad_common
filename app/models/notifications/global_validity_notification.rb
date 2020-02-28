@@ -1,11 +1,11 @@
 module Notifications
   class GlobalValidityNotification < ::NotificationType
-    def self.notify_email!(subject)
-      RadbearMailer.global_validity(notify_user_ids(subject, :email), subject).deliver_later
-    end
-
     class << self
-      private
+      protected
+
+        def notify_email!(subject)
+          RadbearMailer.global_validity(notify_user_ids(subject, :email), subject).deliver_later
+        end
 
         def feed_content(_subject)
           'Invalid data was found in the system.'

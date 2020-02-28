@@ -1,13 +1,13 @@
 module Notifications
   class UserWasApprovedNotification < ::NotificationType
-    def self.notify_email!(subject)
-      RadbearMailer.user_was_approved(notify_user_ids(subject, :email),
-                                      approvee(subject),
-                                      approver(subject)).deliver_later
-    end
-
     class << self
-      private
+      protected
+
+        def notify_email!(subject)
+          RadbearMailer.user_was_approved(notify_user_ids(subject, :email),
+                                          approvee(subject),
+                                          approver(subject)).deliver_later
+        end
 
         def feed_content(subject)
           # TODO: add link
