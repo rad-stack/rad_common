@@ -1,6 +1,7 @@
 .card
   = render 'layouts/card_header'
   .card-body
+    = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
     %table.table.table-striped.table-bordered
       %tr
         %th When
@@ -16,5 +17,6 @@
           %td= notification.content
           %td{ class: notification.unread ? 'text-danger' : '' }
             = format_boolean(notification.unread)
+    = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
 
 - current_user.read_notifications!
