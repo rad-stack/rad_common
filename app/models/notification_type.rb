@@ -64,7 +64,14 @@ class NotificationType < ApplicationRecord
       def notify_feed!(subject)
         notification_type = set_notification_type
 
-        notify_user_ids(subject, :feed).each do |user_id|
+        # TODO: refactor this with below
+        user_ids = if notification_type.absolute_user?
+                     [absolute_user(subject)]
+                   else
+                     notify_user_ids(subject, :feed)
+                   end
+
+        user_ids.each do |user_id|
           Notification.create! user_id: user_id, notification_type: notification_type, content: feed_content(subject)
         end
       end
@@ -72,9 +79,14 @@ class NotificationType < ApplicationRecord
       def notify_sms!(subject)
         return unless RadicalTwilio.twilio_enabled?
 
-        SystemSmsJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content(subject)}",
-                                   notify_user_ids(subject, :sms),
-                                   nil
+        # TODO: refactor this with above
+        user_ids = if notification_type.absolute_user?
+                     [absolute_user(subject)]
+                   else
+                     notify_user_ids(subject, :sms)
+                   end
+
+        SystemSmsJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content(subject)}", user_ids, nil
       end
 
     private
