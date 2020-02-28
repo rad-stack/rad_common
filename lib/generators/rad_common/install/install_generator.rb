@@ -334,7 +334,7 @@ module RadCommon
         apply_migration '../../../../../spec/dummy/db/migrate/20200203163827_convert_rich_text.rb',
                         'convert_rich_text'
 
-        apply_migration '../../../../../spec/dummy/db/20200227134827_create_rad_common_notifications.rb',
+        apply_migration '../../../../../spec/dummy/db/migrate/20200227134827_create_rad_common_notifications.rb',
                         'create_rad_common_notifications'
       end
 
