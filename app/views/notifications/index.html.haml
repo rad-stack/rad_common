@@ -1,6 +1,10 @@
 .card
-  = render 'layouts/card_header'
+  = render 'layouts/card_header', title: "Notifications (#{current_user.notifications.unread.count} unread)"
   .card-body
+
+    -# see kaminari monkey patch on initializers/rad_common.rb
+    = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+
     %table.table.table-striped.table-bordered
       %tr
         %th When
@@ -19,5 +23,8 @@
               %p= secured_link(notification.record)
           %td{ class: notification.unread ? 'text-danger' : '' }
             = format_boolean(notification.unread)
+
+    -# see kaminari monkey patch on initializers/rad_common.rb
+    = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
 
 - current_user.read_notifications!
