@@ -148,7 +148,7 @@ RSpec.describe RadCommon::Search, type: :service do
     let(:filters) { [{ column: :confirmed_at, type: RadCommon::DateFilter }] }
 
 
-    context 'invalid params' do
+    context 'invalid date params' do
       let(:params) do
         ActionController::Parameters.new(search: { confirmed_at_start: '2019-13-01',
                                                    confirmed_at_end: '2019-12-02' })
@@ -157,6 +157,18 @@ RSpec.describe RadCommon::Search, type: :service do
       it 'returns false and displays error message' do
         expect(subject).to eq false
         expect(search.error_messages).to eq 'Invalid date entered for confirmed_at'
+      end
+    end
+
+    context 'start date after end date' do
+      let(:params) do
+        ActionController::Parameters.new(search: { confirmed_at_start: '2019-12-03',
+                                                   confirmed_at_end: '2019-12-02' })
+      end
+
+      it 'returns false and displays error message' do
+        expect(subject).to eq false
+        expect(search.error_messages).to eq 'Start at date must before end date'
       end
     end
   end

@@ -44,17 +44,20 @@ module RadCommon
       results = results.where("#{results.table_name}.#{column} <= ?", end_at&.end_of_day) if end_at.present?
       results
     end
-    
+
     def validate_params(params)
       begin
-        start_at_value(params)
-        end_at_value(params)
+        if start_at_value(params).present? && end_at_value(params).present? &&
+           start_at_value(params) > end_at_value(params)
+          errors << 'Start at date must before end date'
+          return false
+        end
       rescue ArgumentError
         errors << "Invalid date entered for #{column}"
         return false
       end
 
-      true  
+      true
     end
 
     private
