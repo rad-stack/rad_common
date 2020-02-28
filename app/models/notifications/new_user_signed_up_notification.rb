@@ -3,8 +3,12 @@ module Notifications
     class << self
       protected
 
-        def notify_email!(subject)
-          RadbearMailer.new_user_signed_up(notify_user_ids(subject, :email), subject).deliver_later
+        def mailer_class
+          'RadbearMailer'
+        end
+
+        def mailer_method
+          'new_user_signed_up'
         end
 
         def feed_content(subject)

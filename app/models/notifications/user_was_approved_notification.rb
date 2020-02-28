@@ -3,10 +3,12 @@ module Notifications
     class << self
       protected
 
-        def notify_email!(subject)
-          RadbearMailer.user_was_approved(notify_user_ids(subject, :email),
-                                          approvee(subject),
-                                          approver(subject)).deliver_later
+        def mailer_class
+          'RadbearMailer'
+        end
+
+        def mailer_method
+          'user_was_approved'
         end
 
         def feed_content(subject)

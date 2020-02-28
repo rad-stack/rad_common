@@ -39,8 +39,8 @@ class NotificationType < ApplicationRecord
   def self.notify!(subject)
     klass = to_s.constantize
 
-    klass.notify_feed!(subject)
     klass.notify_email!(subject)
+    klass.notify_feed!(subject)
     klass.notify_sms!(subject)
   end
 
@@ -60,6 +60,20 @@ class NotificationType < ApplicationRecord
 
   class << self
     protected
+
+      def notify_email!(subject)
+        if mailer_class == 'RadbearMailer' && mailer_method == 'simple_message'
+
+          RadbearMailer.simple_message(notify_user_ids(subject, :email),
+                                       mailer_subject(subject),
+                                       mailer_message(subject),
+                                       mailer_options(subject)).deliver_later
+
+        else
+          mailer = mailer_class.constantize
+          mailer.send(mailer_method, notify_user_ids(subject, :email), subject).deliver_later
+        end
+      end
 
       def notify_feed!(subject)
         notification_type = set_notification_type
@@ -81,31 +95,35 @@ class NotificationType < ApplicationRecord
 
       def notify_user_ids(subject, notification_method)
         notification_type = set_notification_type
-        raise 'invalid auth mode' if notification_type.absolute_user?
 
         if notification_type.security_roles? && notification_type.notification_security_roles.count.zero?
           notification_type.notification_security_roles.create! security_role: SecurityRole.admin_role
         end
 
-        users = notification_type.permitted_users
+        if notification_type.security_roles?
+          users = notification_type.permitted_users
+        else
+          user = User.find(absolute_user_id(subject))
+          raise 'absolute user must be active' unless user.active
+
+          users = User.where(id: user.id)
+        end
+
         users = users.where
                      .not(id: NotificationSetting.where(notification_type: notification_type, enabled: false)
                      .pluck(:user_id))
 
-        raise 'no users to notify' if users.count.zero?
-        raise 'exclude_user_ids is invalid' unless exclude_user_ids(subject).is_a?(Array)
+        raise 'no users to notify' if notification_type.security_roles? && users.count.zero?
 
-        subtotal_user_ids = users.pluck(:id) - exclude_user_ids(subject)
+        subtotal_user_ids = users.pluck(:id)
+
+        if notification_type.security_roles?
+          raise 'exclude_user_ids is invalid' unless exclude_user_ids(subject).is_a?(Array)
+
+          subtotal_user_ids -= exclude_user_ids(subject)
+        end
+
         subtotal_user_ids - opt_out_by_notification_method(notification_method, subtotal_user_ids)
-      end
-
-      def absolute_user?(user, notification_method)
-        raise 'absolute user must be active' unless user.active
-
-        notification_type = set_notification_type
-        raise 'invalid auth mode' if notification_type.security_roles?
-
-        notification_type.enabled_for_method?(user.id, notification_method)
       end
 
       def opt_out_by_notification_method(notification_method, user_ids)

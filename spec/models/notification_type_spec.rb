@@ -3,25 +3,25 @@ require 'rails_helper'
 RSpec.describe NotificationType, type: :model do
   let(:security_role) { create :security_role, :admin }
   let!(:user) { create :admin, security_roles: [security_role] }
-  let(:notification_name) { 'Notifications::GlobalValidityNotification' }
   let(:notification_class) { notification_name.constantize }
   let(:notification_type) { create :notification_type, name: notification_name, auth_mode: auth_mode }
   let(:notification_method) { :email }
-  let(:notification_subject) { [] }
 
   before { create :notification_security_role, notification_type: notification_type, security_role: security_role }
 
-  describe 'absolute_user?' do
-    subject { notification_class.send(:absolute_user?, user, notification_method) }
+  describe 'notify_user_ids with absolute_user' do
+    subject { notification_class.send(:notify_user_ids, notification_subject, notification_method) }
 
+    let(:notification_name) { 'Notifications::NewDivisionNotification' }
+    let(:notification_subject) { create :division, owner: user }
     let(:auth_mode) { :absolute_user }
 
-    it { is_expected.to be true }
+    it { is_expected.to eq [user.id] }
 
     context 'when user opts out' do
       before { create :notification_setting, user: user, notification_type: notification_type, enabled: false }
 
-      it { is_expected.to be false }
+      it { is_expected.to eq [] }
     end
 
     context 'with inactive user' do
@@ -39,14 +39,14 @@ RSpec.describe NotificationType, type: :model do
                                       feed: true
       end
 
-      it { is_expected.to be false }
+      it { is_expected.to eq [] }
     end
 
     context 'when feed' do
       let(:notification_method) { :feed }
 
       context 'without setting' do
-        it { is_expected.to be false }
+        it { is_expected.to eq [] }
       end
 
       context 'with setting enabled' do
@@ -58,7 +58,7 @@ RSpec.describe NotificationType, type: :model do
                                         feed: true
         end
 
-        it { is_expected.to be true }
+        it { is_expected.to eq [user.id] }
       end
 
       context 'with setting disabled' do
@@ -70,14 +70,16 @@ RSpec.describe NotificationType, type: :model do
                                         feed: false
         end
 
-        it { is_expected.to be false }
+        it { is_expected.to eq [] }
       end
     end
   end
 
-  describe 'notify_user_ids' do
+  describe 'notify_user_ids with security_roles' do
     subject { notification_class.send(:notify_user_ids, notification_subject, notification_method) }
 
+    let(:notification_name) { 'Notifications::GlobalValidityNotification' }
+    let(:notification_subject) { [] }
     let(:auth_mode) { :security_roles }
     let!(:another) { create :admin, security_roles: [security_role] }
 
@@ -96,12 +98,6 @@ RSpec.describe NotificationType, type: :model do
 
       it { is_expected.not_to include user.id }
       it { is_expected.to include another.id }
-    end
-
-    context 'when wrong auth mode' do
-      let(:auth_mode) { :absolute_user }
-
-      it { expect { subject }.to raise_error 'invalid auth mode' }
     end
 
     context 'when excluding users' do

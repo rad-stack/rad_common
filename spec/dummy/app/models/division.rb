@@ -20,6 +20,8 @@ class Division < ApplicationRecord
 
   audited
 
+  after_update :notify_owner
+
   def firebase_sync
     data = { name: name }
 
@@ -31,5 +33,11 @@ class Division < ApplicationRecord
 
   def logo_variant
     logo.variant(resize: '290x218>').processed
+  end
+
+  private
+
+  def notify_owner
+    Notifications::NewDivisionNotification.notify! self
   end
 end

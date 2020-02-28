@@ -6,6 +6,8 @@ SecurityRole.seed_items if SecurityRole.count.zero?
 FactoryBot.create :company if Company.count.zero?
 UserStatus.seed_items if UserStatus.count.zero?
 
+NotificationType.create! name: 'Notifications::NewDivisionNotification', auth_mode: :absolute_user
+
 if User.count.zero?
   puts 'seeding users'
 
@@ -38,5 +40,7 @@ end
 
 users = User.all
 
-puts 'seeding divisions'
-30.times { FactoryBot.create :division, owner: users.sample } if Division.count.zero?
+if Division.count.zero?
+  puts 'seeding divisions'
+  30.times { FactoryBot.create :division, owner: users.sample }
+end

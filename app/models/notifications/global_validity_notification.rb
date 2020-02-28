@@ -3,8 +3,12 @@ module Notifications
     class << self
       protected
 
-        def notify_email!(subject)
-          RadbearMailer.global_validity(notify_user_ids(subject, :email), subject).deliver_later
+        def mailer_class
+          'RadbearMailer'
+        end
+
+        def mailer_method
+          'global_validity'
         end
 
         def feed_content(_subject)
