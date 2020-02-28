@@ -15,7 +15,7 @@ class NotificationSettingsController < ApplicationController
     notification_setting.enabled = permitted_params[:enabled]
     notification_setting.email = permitted_params[:email]
     notification_setting.feed = permitted_params[:feed]
-    notification_setting.sms = permitted_params[:sms]
+    notification_setting.sms = permitted_params[:sms] if RadicalTwilio.twilio_enabled?
 
     authorize notification_setting
 
