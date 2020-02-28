@@ -70,7 +70,7 @@ class NotificationType < ApplicationRecord
       end
 
       def notify_sms!(subject)
-        raise 'Twilio SMS features are not enabled' unless RadicalTwilio.twilio_enabled?
+        return unless RadicalTwilio.twilio_enabled?
 
         SystemSmsJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content(subject)}",
                                    notify_user_ids(subject, :sms),
