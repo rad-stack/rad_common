@@ -9,13 +9,13 @@ RSpec.describe Notifications::UserWasApprovedNotification, type: :model do
 
   describe '#notify_user_ids' do
     context 'when user is approved' do
-      subject { notification.send(:notify_user_ids, [user, admin]) }
+      subject { notification.send(:notify_user_ids, [user, admin], :email) }
 
       it { is_expected.to include admin.id }
     end
 
     context 'when admin is approved' do
-      subject { notification.send(:notify_user_ids, [another, admin]) }
+      subject { notification.send(:notify_user_ids, [another, admin], :email) }
 
       it { is_expected.to include admin.id }
       it { is_expected.not_to include another.id }

@@ -1,7 +1,7 @@
 module Notifications
   class GlobalValidityNotification < ::NotificationType
     def self.notify_email!(subject)
-      RadbearMailer.global_validity(notify_user_ids(subject), subject).deliver_later
+      RadbearMailer.global_validity(notify_user_ids(subject, :email), subject).deliver_later
     end
 
     class << self

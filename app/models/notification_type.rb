@@ -36,50 +36,6 @@ class NotificationType < ApplicationRecord
     items.each { |item| NotificationType.create! name: item }
   end
 
-  def notify_list(fatal)
-    raise 'invalid auth mode' if absolute_user?
-
-    users = permitted_users
-    users = users.where.not(id: NotificationSetting.where(notification_type: self, enabled: false).pluck(:user_id))
-
-    raise 'no users to notify' if fatal && users.count.zero?
-
-    users
-  end
-
-  def notify_user_ids
-    notify_list(true).pluck(:id)
-  end
-
-  def self.notify_user_ids(subject)
-    notification_type = set_notification_type
-    raise 'invalid auth mode' if notification_type.absolute_user?
-
-    if notification_type.security_roles? && notification_type.notification_security_roles.count.zero?
-      notification_type.notification_security_roles.create! security_role: SecurityRole.admin_role
-    end
-
-    notification_type.notify_user_ids - [exclude_user_ids(subject)]
-  end
-
-  def self.absolute_user?(user)
-    raise 'absolute user must be active' unless user.active
-
-    notification_type = set_notification_type
-    raise 'invalid auth mode' if notification_type.security_roles?
-
-    setting = notification_type.notification_settings.find_by(user_id: user.id)
-    return true if setting.blank?
-
-    setting.enabled
-  end
-
-  def self.set_notification_type
-    notification_type = NotificationType.find_by(name: to_s)
-    notification_type = NotificationType.create! name: to_s if notification_type.blank?
-    notification_type
-  end
-
   def self.notify!(subject)
     klass = to_s.constantize
 
@@ -88,23 +44,94 @@ class NotificationType < ApplicationRecord
     klass.notify_sms!(subject)
   end
 
-  def self.notify_feed!(subject)
-    # TODO: only send to recipients that want feed
+  class << self
+    protected
 
-    notification_type = set_notification_type
+      def notify_feed!(subject)
+        notification_type = set_notification_type
 
-    notify_user_ids(subject).each do |user_id|
-      Notification.create! user_id: user_id, notification_type: notification_type, content: feed_content(subject)
-    end
-  end
+        notify_user_ids(subject, :feed).each do |user_id|
+          Notification.create! user_id: user_id, notification_type: notification_type, content: feed_content(subject)
+        end
+      end
 
-  def self.notify_sms!(subject)
-    # TODO: enable this
-    return
+      def notify_sms!(subject)
+        raise 'Twilio SMS features are not enabled' unless RadicalTwilio.twilio_enabled?
 
-    # TODO: only if SMS is configured on the system
-    # TODO: only send to recipients that want SMS
-    SystemSmsJob.perform_later("Message from #{I18n.t(:app_name)}: #{sms_content(subject)}", notify_user_ids(subject), nil)
+        SystemSmsJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content(subject)}",
+                                   notify_user_ids(subject, :sms),
+                                   nil
+      end
+
+    private
+
+      def notify_user_ids(subject, notification_method)
+        notification_type = set_notification_type
+        raise 'invalid auth mode' if notification_type.absolute_user?
+
+        if notification_type.security_roles? && notification_type.notification_security_roles.count.zero?
+          notification_type.notification_security_roles.create! security_role: SecurityRole.admin_role
+        end
+
+        users = notification_type.permitted_users
+        users = users.where
+                     .not(id: NotificationSetting.where(notification_type: notification_type, enabled: false)
+                     .pluck(:user_id))
+
+        raise 'no users to notify' if users.count.zero?
+        raise 'exclude_user_ids is invalid' unless exclude_user_ids(subject).is_a?(Array)
+
+        subtotal_user_ids = users.pluck(:id) - exclude_user_ids(subject)
+        subtotal_user_ids - opt_out_by_notification_method(notification_method, subtotal_user_ids)
+      end
+
+      def absolute_user?(user)
+        # TODO: limit by notification_method which can be :email, :feed or :sms
+
+        raise 'absolute user must be active' unless user.active
+
+        notification_type = set_notification_type
+        raise 'invalid auth mode' if notification_type.security_roles?
+
+        setting = notification_type.notification_settings.find_by(user_id: user.id)
+        return true if setting.blank?
+
+        setting.enabled
+      end
+
+      def set_notification_type
+        notification_type = NotificationType.find_by(name: to_s)
+        notification_type = NotificationType.create! name: to_s if notification_type.blank?
+        notification_type
+      end
+
+      def opt_out_by_notification_method(notification_method, user_ids)
+        notification_type = set_notification_type
+        settings = NotificationSetting.enabled.where(notification_type: notification_type)
+
+        if notification_method == :email
+          settings.where(email: false).pluck(:user_id)
+        elsif %i[feed sms].include?(notification_method)
+          # used brute force logic for now due to complexity, needs to be optimized
+          # performance could be a problem on larger databases
+
+          opted_out = []
+
+          user_ids.each do |user_id|
+            user_setting = settings.find_by(user_id: user_id)
+
+            if user_setting.blank? || !user_setting.enabled
+              opted_out.push(user_id)
+            elsif !user_setting.send(notification_method)
+              opted_out.push(user_id)
+            end
+          end
+
+          opted_out
+        else
+          raise "invalid notification method: #{notification_method}"
+        end
+      end
   end
 
   private
