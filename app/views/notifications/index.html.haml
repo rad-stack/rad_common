@@ -8,16 +8,15 @@
     %table.table.table-striped.table-bordered
       %tr
         %th When
-        %th Type
         %th Content
+        %th Subject
       - @notifications.each do |notification|
         %tr{ class: notification.unread? ? 'text-danger' : '' }
           %td
             %p= format_datetime(notification.created_at)
             %p= "#{distance_of_time_in_words_to_now(notification.created_at)} ago"
-          %td= notification.notification_type
+          %td= notification.content
           %td
-            = notification.content
             - if notification.record.present?
               %p= secured_link(notification.record)
 

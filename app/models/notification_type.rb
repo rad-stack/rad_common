@@ -65,6 +65,16 @@ class NotificationType < ApplicationRecord
     []
   end
 
+  def feed_record
+    # this can be overridden on each notification as needed
+    payload
+  end
+
+  def feed_content
+    # this can be overridden on each notification as needed
+    self.class.name.gsub('Notifications::', '').underscore.titleize.gsub(' Notification', '')
+  end
+
   private
 
     def validate_auth

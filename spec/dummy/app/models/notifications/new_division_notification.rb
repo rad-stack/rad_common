@@ -22,14 +22,6 @@ module Notifications
                         button_url: Rails.application.routes.url_helpers.division_url(payload) } }
     end
 
-    def feed_content
-      mailer_subject
-    end
-
-    def feed_record
-      payload
-    end
-
     def sms_content
       "Division '#{payload}' was updated: #{Rails.application.routes.url_helpers.division_url(payload)}"
     end

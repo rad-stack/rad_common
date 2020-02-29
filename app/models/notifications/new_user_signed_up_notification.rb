@@ -8,14 +8,6 @@ module Notifications
       'new_user_signed_up'
     end
 
-    def feed_content
-      "#{payload} signed up."
-    end
-
-    def feed_record
-      payload
-    end
-
     def sms_content
       "#{payload} signed up: #{Rails.application.routes.url_helpers.user_url(payload)}"
     end

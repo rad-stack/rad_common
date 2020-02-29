@@ -22,14 +22,6 @@ module Notifications
                         button_url: Rails.application.routes.url_helpers.user_url(payload) } }
     end
 
-    def feed_content
-      "#{payload} has accepted the invitation to join."
-    end
-
-    def feed_record
-      payload
-    end
-
     def sms_content
       feed_content
     end
