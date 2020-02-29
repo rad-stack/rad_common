@@ -64,25 +64,29 @@ class NotificationType < ApplicationRecord
       def notify_email!(subject)
         if mailer_class == 'RadbearMailer' && mailer_method == 'simple_message'
 
-          RadbearMailer.simple_message(notify_user_ids(subject, :email),
+          RadbearMailer.simple_message(notify_user_ids_opted(subject, :email),
                                        mailer_subject(subject),
                                        mailer_message(subject),
                                        mailer_options(subject)).deliver_later
 
         else
           mailer = mailer_class.constantize
-          mailer.send(mailer_method, notify_user_ids(subject, :email), subject).deliver_later
+          mailer.send(mailer_method, notify_user_ids_opted(subject, :email), subject).deliver_later
         end
       end
 
       def notify_feed!(subject)
         notification_type = set_notification_type
 
-        notify_user_ids(subject, :feed).each do |user_id|
+        all_ids = notify_user_ids_all(subject)
+        opted_ids = notify_user_ids_opted(subject, :feed)
+
+        all_ids.each do |user_id|
           Notification.create! user_id: user_id,
                                notification_type: notification_type,
                                content: feed_content(subject),
-                               record: feed_record(subject)
+                               record: feed_record(subject),
+                               unread: opted_ids.include?(user_id)
         end
       end
 
@@ -90,13 +94,13 @@ class NotificationType < ApplicationRecord
         return unless RadicalTwilio.twilio_enabled?
 
         SystemSmsJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content(subject)}",
-                                   notify_user_ids(subject, :sms),
+                                   notify_user_ids_opted(subject, :sms),
                                    nil
       end
 
     private
 
-      def notify_user_ids(subject, notification_method)
+      def notify_user_ids_all(subject)
         notification_type = set_notification_type
 
         if notification_type.security_roles? && notification_type.notification_security_roles.count.zero?
@@ -112,21 +116,21 @@ class NotificationType < ApplicationRecord
           users = User.where(id: user.id)
         end
 
-        users = users.where
-                     .not(id: NotificationSetting.where(notification_type: notification_type, enabled: false)
-                     .pluck(:user_id))
+        user_ids = users.where
+                        .not(id: NotificationSetting.where(notification_type: notification_type, enabled: false)
+                        .pluck(:user_id)).pluck(:id)
 
-        raise 'no users to notify' if notification_type.security_roles? && users.count.zero?
+        raise 'no users to notify' if notification_type.security_roles? && user_ids.count.zero?
 
-        subtotal_user_ids = users.pluck(:id)
+        return user_ids unless notification_type.security_roles?
+        raise 'exclude_user_ids is invalid' unless exclude_user_ids(subject).is_a?(Array)
 
-        if notification_type.security_roles?
-          raise 'exclude_user_ids is invalid' unless exclude_user_ids(subject).is_a?(Array)
+        user_ids - exclude_user_ids(subject)
+      end
 
-          subtotal_user_ids -= exclude_user_ids(subject)
-        end
-
-        subtotal_user_ids - opt_out_by_notification_method(notification_method, subtotal_user_ids)
+      def notify_user_ids_opted(subject, notification_method)
+        user_ids = notify_user_ids_all(subject)
+        user_ids - opt_out_by_notification_method(notification_method, user_ids)
       end
 
       def opt_out_by_notification_method(notification_method, user_ids)

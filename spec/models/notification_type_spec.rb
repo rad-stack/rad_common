@@ -6,12 +6,40 @@ RSpec.describe NotificationType, type: :model do
   let(:notification_class) { notification_name.constantize }
   let(:notification_type) { create :notification_type, name: notification_name, auth_mode: auth_mode }
   let(:notification_method) { :email }
+  let(:notification_name) { 'Notifications::GlobalValidityNotification' }
+  let(:notification_subject) { [] }
+  let(:auth_mode) { :security_roles }
 
   before { create :notification_security_role, notification_type: notification_type, security_role: security_role }
 
-  describe 'notify_user_ids with absolute_user' do
+  describe 'notify_feed' do
+    subject { user.notifications.last.unread }
+
+    before do
+      create :notification_setting, user: user,
+                                    notification_type: notification_type,
+                                    enabled: true,
+                                    feed: opt_in
+
+      notification_class.send(:notify_feed!, notification_subject)
+    end
+
+    context 'when opted in' do
+      let(:opt_in) { true }
+
+      it { is_expected.to be true }
+    end
+
+    context 'when opted out' do
+      let(:opt_in) { false }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe 'notify_user_ids_opted with absolute_user' do
     # remove this on all other apps, division is only in dummy app of rad_common
-    subject { notification_class.send(:notify_user_ids, notification_subject, notification_method) }
+    subject { notification_class.send(:notify_user_ids_opted, notification_subject, notification_method) }
 
     let(:notification_name) { 'Notifications::NewDivisionNotification' }
     let(:notification_subject) { create :division, owner: user }
@@ -76,12 +104,9 @@ RSpec.describe NotificationType, type: :model do
     end
   end
 
-  describe 'notify_user_ids with security_roles' do
-    subject { notification_class.send(:notify_user_ids, notification_subject, notification_method) }
+  describe 'notify_user_ids_opted with security_roles' do
+    subject { notification_class.send(:notify_user_ids_opted, notification_subject, notification_method) }
 
-    let(:notification_name) { 'Notifications::GlobalValidityNotification' }
-    let(:notification_subject) { [] }
-    let(:auth_mode) { :security_roles }
     let!(:another) { create :admin, security_roles: [security_role] }
 
     it { is_expected.to include user.id }
