@@ -7,7 +7,7 @@ RSpec.describe 'Notifications', type: :system do
   before { login_as user, scope: :user }
 
   describe 'index' do
-    let(:notification) { user.notifications.first }
+    let(:notification) { user.notifications.recent_first.first }
 
     before { create_list :notification, 50, user: user, notification_type: notification_type }
 

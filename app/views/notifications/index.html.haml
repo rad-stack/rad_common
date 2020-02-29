@@ -10,9 +10,8 @@
         %th When
         %th Type
         %th Content
-        %th Unread
       - @notifications.each do |notification|
-        %tr
+        %tr{ class: notification.unread? ? 'text-danger' : '' }
           %td
             %p= format_datetime(notification.created_at)
             %p= "#{distance_of_time_in_words_to_now(notification.created_at)} ago"
@@ -21,8 +20,6 @@
             = notification.content
             - if notification.record.present?
               %p= secured_link(notification.record)
-          %td{ class: notification.unread ? 'text-danger' : '' }
-            = format_boolean(notification.unread)
 
     -# see kaminari monkey patch on initializers/rad_common.rb
     = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
