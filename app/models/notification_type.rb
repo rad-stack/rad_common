@@ -36,12 +36,12 @@ class NotificationType < ApplicationRecord
     items.each { |item| NotificationType.create! name: item }
   end
 
-  def self.notify!(subject)
+  def self.notify!(payload)
     klass = to_s.constantize
 
-    klass.notify_email!(subject)
-    klass.notify_feed!(subject)
-    klass.notify_sms!(subject)
+    klass.notify_email!(payload)
+    klass.notify_feed!(payload)
+    klass.notify_sms!(payload)
   end
 
   def enabled_for_method?(user_id, notification_method)
@@ -61,46 +61,46 @@ class NotificationType < ApplicationRecord
   class << self
     protected
 
-      def notify_email!(subject)
+      def notify_email!(payload)
         if mailer_class == 'RadbearMailer' && mailer_method == 'simple_message'
 
-          RadbearMailer.simple_message(notify_user_ids_opted(subject, :email),
-                                       mailer_subject(subject),
-                                       mailer_message(subject),
-                                       mailer_options(subject)).deliver_later
+          RadbearMailer.simple_message(notify_user_ids_opted(payload, :email),
+                                       mailer_subject(payload),
+                                       mailer_message(payload),
+                                       mailer_options(payload)).deliver_later
 
         else
           mailer = mailer_class.constantize
-          mailer.send(mailer_method, notify_user_ids_opted(subject, :email), subject).deliver_later
+          mailer.send(mailer_method, notify_user_ids_opted(payload, :email), payload).deliver_later
         end
       end
 
-      def notify_feed!(subject)
+      def notify_feed!(payload)
         notification_type = set_notification_type
 
-        all_ids = notify_user_ids_all(subject)
-        opted_ids = notify_user_ids_opted(subject, :feed)
+        all_ids = notify_user_ids_all(payload)
+        opted_ids = notify_user_ids_opted(payload, :feed)
 
         all_ids.each do |user_id|
           Notification.create! user_id: user_id,
                                notification_type: notification_type,
-                               content: feed_content(subject),
-                               record: feed_record(subject),
+                               content: feed_content(payload),
+                               record: feed_record(payload),
                                unread: opted_ids.include?(user_id)
         end
       end
 
-      def notify_sms!(subject)
+      def notify_sms!(payload)
         return unless RadicalTwilio.twilio_enabled?
 
-        SystemSmsJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content(subject)}",
-                                   notify_user_ids_opted(subject, :sms),
+        SystemSmsJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content(payload)}",
+                                   notify_user_ids_opted(payload, :sms),
                                    nil
       end
 
     private
 
-      def notify_user_ids_all(subject)
+      def notify_user_ids_all(payload)
         notification_type = set_notification_type
 
         if notification_type.security_roles? && notification_type.notification_security_roles.count.zero?
@@ -110,7 +110,7 @@ class NotificationType < ApplicationRecord
         if notification_type.security_roles?
           users = notification_type.permitted_users
         else
-          user = User.find(absolute_user_id(subject))
+          user = User.find(absolute_user_id(payload))
           raise 'absolute user must be active' unless user.active
 
           users = User.where(id: user.id)
@@ -123,13 +123,13 @@ class NotificationType < ApplicationRecord
         raise 'no users to notify' if notification_type.security_roles? && user_ids.count.zero?
 
         return user_ids unless notification_type.security_roles?
-        raise 'exclude_user_ids is invalid' unless exclude_user_ids(subject).is_a?(Array)
+        raise 'exclude_user_ids is invalid' unless exclude_user_ids(payload).is_a?(Array)
 
-        user_ids - exclude_user_ids(subject)
+        user_ids - exclude_user_ids(payload)
       end
 
-      def notify_user_ids_opted(subject, notification_method)
-        user_ids = notify_user_ids_all(subject)
+      def notify_user_ids_opted(payload, notification_method)
+        user_ids = notify_user_ids_all(payload)
         user_ids - opt_out_by_notification_method(notification_method, user_ids)
       end
 

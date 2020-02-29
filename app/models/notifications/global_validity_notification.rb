@@ -11,19 +11,19 @@ module Notifications
           'global_validity'
         end
 
-        def feed_content(_subject)
+        def feed_content(_payload)
           'Invalid data was found in the system.'
         end
 
-        def feed_record(_subject)
+        def feed_record(_payload)
           nil
         end
 
-        def sms_content(subject)
-          feed_content(subject)
+        def sms_content(payload)
+          feed_content(payload)
         end
 
-        def exclude_user_ids(_subject)
+        def exclude_user_ids(_payload)
           []
         end
     end

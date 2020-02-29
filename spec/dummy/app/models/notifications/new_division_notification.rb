@@ -11,34 +11,34 @@ module Notifications
           'simple_message'
         end
 
-        def mailer_subject(subject)
-          "Division '#{subject}' was Updated"
+        def mailer_subject(payload)
+          "Division '#{payload}' was Updated"
         end
 
-        def mailer_message(subject)
-          "Your division '#{subject}' was updated and we thought you might like to know."
+        def mailer_message(payload)
+          "Your division '#{payload}' was updated and we thought you might like to know."
         end
 
-        def mailer_options(subject)
+        def mailer_options(payload)
           { email_action: { message: 'Click here to view the details.',
                             button_text: 'View',
-                            button_url: Rails.application.routes.url_helpers.division_url(subject) } }
+                            button_url: Rails.application.routes.url_helpers.division_url(payload) } }
         end
 
-        def feed_content(subject)
-          mailer_subject(subject)
+        def feed_content(payload)
+          mailer_subject(payload)
         end
 
-        def feed_record(subject)
-          subject
+        def feed_record(payload)
+          payload
         end
 
-        def sms_content(subject)
-          "Division '#{subject}' was updated: #{Rails.application.routes.url_helpers.division_url(subject)}"
+        def sms_content(payload)
+          "Division '#{payload}' was updated: #{Rails.application.routes.url_helpers.division_url(payload)}"
         end
 
-        def absolute_user_id(subject)
-          subject.owner_id
+        def absolute_user_id(payload)
+          payload.owner_id
         end
     end
   end
