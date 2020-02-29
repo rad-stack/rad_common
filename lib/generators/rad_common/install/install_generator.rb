@@ -129,6 +129,9 @@ module RadCommon
         template '../../../../../spec/system/notification_settings_spec.rb',
                  'spec/system/notification_settings_spec.rb'
 
+        template '../../../../../spec/system/notifications_spec.rb',
+                 'spec/system/notifications_spec.rb'
+
         template '../../../../../spec/system/searches_spec.rb', 'spec/system/searches_spec.rb'
 
         # factories
