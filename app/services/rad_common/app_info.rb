@@ -19,6 +19,13 @@ module RadCommon
       review_app? ? "#{ENV.fetch('HEROKU_APP_NAME')}.herokuapp.com" : ENV.fetch('HOST_NAME')
     end
 
+    def portal_host_name
+      raise 'portal_host_name not yet implemented for review apps' if review_app?
+      return host_name unless RadCommon.external_users
+
+      ENV.fetch('PORTAL_HOST_NAME')
+    end
+
     def review_app?
       ENV['REVIEW_APP'].present? && ENV['REVIEW_APP'] == 'true'
     end
