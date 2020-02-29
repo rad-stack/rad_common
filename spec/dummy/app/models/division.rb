@@ -38,6 +38,6 @@ class Division < ApplicationRecord
   private
 
   def notify_owner
-    Notifications::NewDivisionNotification.notify! self
+    Notifications::NewDivisionNotification.new.notify! self
   end
 end
