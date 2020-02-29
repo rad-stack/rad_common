@@ -19,11 +19,11 @@
             = simple_form_for notification_setting, url: '/rad_common/notification_settings', method: :post do |f|
               = f.error_notification
               .form-inputs
-                = f.input :enabled, input_html: { id: "notification_setting_enabled_#{notification_setting.notification_type.description.parameterize.underscore}" }
-                = f.input :email, input_html: { id: "notification_setting_email_#{notification_setting.notification_type.description.parameterize.underscore}" }
-                = f.input :feed, input_html: { id: "notification_setting_feed_#{notification_setting.notification_type.description.parameterize.underscore}" }
+                = f.input :enabled, tooltip: 'Turn this notification on or off.', input_html: { id: "notification_setting_enabled_#{notification_setting.notification_type.description.parameterize.underscore}" }
+                = f.input :email, tooltip: 'Enable email notifications.', input_html: { id: "notification_setting_email_#{notification_setting.notification_type.description.parameterize.underscore}" }
                 - if RadicalTwilio.twilio_enabled?
-                  = f.input :sms, input_html: { id: "notification_setting_sms_#{notification_setting.notification_type.description.parameterize.underscore}" }
+                  = f.input :sms, tooltip: 'Enable SMS (text message) notifications.', input_html: { id: "notification_setting_sms_#{notification_setting.notification_type.description.parameterize.underscore}" }
+                = f.input :feed, tooltip: 'Show a red badge on the top right navigation when a notification occurs.', input_html: { id: "notification_setting_feed_#{notification_setting.notification_type.description.parameterize.underscore}" }
                 = f.association :notification_type, as: :hidden
                 = f.input :user_id, as: :hidden
               .form-actions
