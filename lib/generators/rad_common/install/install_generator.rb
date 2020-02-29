@@ -146,6 +146,9 @@ module RadCommon
         template '../../../../../spec/factories/notification_types.rb',
                  'spec/factories/notification_types.rb'
 
+        template '../../../../../spec/factories/notifications.rb',
+                 'spec/factories/notifications.rb'
+
         template '../../../../../spec/factories/security_roles.rb', 'spec/factories/security_roles.rb'
 
         template '../../../../../spec/factories/security_roles_users.rb',
