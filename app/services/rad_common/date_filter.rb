@@ -1,12 +1,13 @@
 module RadCommon
   class DateFilter
-    attr_reader :column
+    attr_reader :column, :errors
 
     def initialize(column:, type:, start_input_label: nil, end_input_label: nil, custom:false)
       @column = column
       @start_input_label = start_input_label
       @end_input_label = end_input_label
       @custom = custom
+      @errors = []
     end
 
     def filter_view
@@ -42,6 +43,21 @@ module RadCommon
       results = results.where("#{results.table_name}.#{column} >= ?", start_at&.beginning_of_day) if start_at.present?
       results = results.where("#{results.table_name}.#{column} <= ?", end_at&.end_of_day) if end_at.present?
       results
+    end
+
+    def validate_params(params)
+      begin
+        if start_at_value(params).present? && end_at_value(params).present? &&
+           start_at_value(params) > end_at_value(params)
+          errors << 'Start at date must before end date'
+          return false
+        end
+      rescue ArgumentError
+        errors << "Invalid date entered for #{column}"
+        return false
+      end
+
+      true
     end
 
     private

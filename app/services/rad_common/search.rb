@@ -16,6 +16,18 @@ module RadCommon
       retrieve_results
     end
 
+    def valid?
+      @filtering.validate_params
+    end
+
+    def errors
+      @filtering.errors
+    end
+
+    def error_messages
+      errors.join(',')
+    end
+
     def sort_columns
       @sorting.sort_columns
     end
