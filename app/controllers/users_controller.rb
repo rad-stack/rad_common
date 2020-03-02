@@ -112,7 +112,7 @@ class UsersController < ApplicationController
 
     def permitted_params
       base_params = %i[user_status_id first_name last_name mobile_phone last_activity_at
-                       password password_confirmation external timezone]
+                       password password_confirmation external timezone avatar]
 
       params.require(:user).permit(base_params + RadCommon.additional_user_params)
     end

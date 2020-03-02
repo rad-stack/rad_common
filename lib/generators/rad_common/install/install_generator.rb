@@ -201,8 +201,6 @@ module RadCommon
       g.controller_specs false
     end
 
-    Rails.configuration.app_admin_email = ENV.fetch('APP_ADMIN_EMAIL')
-
         RUBY
         end
 
@@ -329,6 +327,12 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20191112111902_devise_lockable.rb',
                         'devise_lockable'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200128185735_make_message_not_required.rb',
+                        'make_message_not_required'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200203163827_convert_rich_text.rb',
+                        'convert_rich_text'
       end
 
       def self.next_migration_number(path)

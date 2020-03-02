@@ -2,12 +2,12 @@ require 'rails_helper'
 
 RSpec.describe 'SystemMessages', type: :system do
   let(:user) { create :admin }
-  let!(:system_message) { create :system_message, user: user }
+  let!(:system_message) { create :system_message, :email, user: user }
 
   before { login_as user, scope: :user }
 
   describe 'new' do
-    context 'twilio disabled' do
+    context 'with twilio disabled' do
       before do
         allow(RadicalTwilio).to receive(:twilio_enabled?).and_return false
         visit 'rad_common/system_messages/new'
@@ -24,7 +24,7 @@ RSpec.describe 'SystemMessages', type: :system do
       end
     end
 
-    context 'twilio enabled' do
+    context 'with twilio enabled' do
       before do
         allow(RadicalTwilio).to receive(:twilio_enabled?).and_return true
         visit 'rad_common/system_messages/new'
@@ -36,7 +36,7 @@ RSpec.describe 'SystemMessages', type: :system do
 
       it 'sets the message type based on the previous system message' do
         expect(find_field('Message type').value).to eq 'email'
-        create(:system_message, message_type: 'sms', user: user)
+        create :system_message, :sms, user: user
         visit 'rad_common/system_messages/new'
         expect(find_field('Message type').value).to eq 'sms'
       end
@@ -57,7 +57,7 @@ RSpec.describe 'SystemMessages', type: :system do
     before { visit "rad_common/system_messages/#{system_message.id}" }
 
     it 'shows the message' do
-      expect(page).to have_content(system_message.message)
+      expect(page).to have_content(system_message.email_message_body.to_plain_text)
     end
 
     it 'shows the message type' do

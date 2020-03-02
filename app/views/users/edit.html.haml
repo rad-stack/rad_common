@@ -24,6 +24,9 @@
           .col-lg-6= f.input :password, autocomplete: 'off', input_html: { autocomplete: 'new-password' }
 
           .col-lg-6= f.input :password_confirmation
+        -if RadCommon.use_avatar
+          .row
+            .col-lg-3= f.input :avatar
         .row.internal
           .col-lg-12
             = f.input :security_roles, as: :check_boxes, item_wrapper_class: 'col-lg-3 security-role-checkboxes', collection: security_role_collection, checked: @user.security_roles.ids

@@ -67,6 +67,7 @@ describe RadCommon::AuditsHelper do
       context 'when destroy' do
         before do
           division.logo.attach(io: file, filename: 'logo.png')
+          division.logo.attachment.send(:audit_destroy)
           division.logo.purge
         end
 

@@ -21,10 +21,10 @@ class RadbearMailer < ActionMailer::Base
     @recipient = User.where(id: recipients)
     to_address = @recipient.map(&:formatted_email)
 
-    @message = "#{user} has signed up on #{I18n.t(:app_name)}"
+    @message = "#{user} has signed up on #{app_name(user)}"
     @message += auto_approve ? '.' : ' and is awaiting approval.'
 
-    mail(to: to_address, subject: "New User on #{I18n.t(:app_name)}")
+    mail(to: to_address, subject: "New User on #{app_name(user)}")
   end
 
   def your_account_approved(user)
@@ -64,7 +64,7 @@ class RadbearMailer < ActionMailer::Base
       raise "recipient of type #{recipient.class} if not valid"
     end
 
-    @message = simple_format(message)
+    @message = options[:do_not_format] ? message : simple_format(message)
     @email_action = options[:email_action] if options[:email_action]
 
     mail(to: to_address, subject: subject)
@@ -111,6 +111,15 @@ class RadbearMailer < ActionMailer::Base
     mail to: @recipient.formatted_email, subject: "#{report_name}#{subject_date_string}"
   end
 
+  def default_url_options
+    # this won't work for links called using the route helpers outside of the mailer context
+    # this won't detect when to use the portal host unless @recipient is a User
+
+    return { host: RadCommon::AppInfo.new.portal_host_name } if @recipient.is_a?(User) && @recipient.external?
+
+    { host: RadCommon::AppInfo.new.host_name }
+  end
+
   private
 
     def set_defaults
@@ -126,5 +135,9 @@ class RadbearMailer < ActionMailer::Base
       string_emails, user_ids = recipients.partition { |email| email.to_i.zero? }
       users_emails = User.where(id: user_ids).pluck(:email)
       users_emails + string_emails
+    end
+
+    def app_name(user)
+      user.internal? ? I18n.t(:app_name) : I18n.t(:portal_app_name)
     end
 end

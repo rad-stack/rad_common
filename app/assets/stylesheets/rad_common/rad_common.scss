@@ -4,8 +4,11 @@
 */
 
 trix-editor {
-  min-height: 15em;
+  min-height: 15em !important;
   margin-bottom: 10px;
+
+  /* we have to do this because bootstrap tries to calc the height which messes up trix styles */
+  height: auto !important;
 }
 
 .navbar {

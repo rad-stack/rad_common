@@ -77,5 +77,10 @@ RSpec.describe 'Search', type: :system do
       click_button 'Apply Filters'
       expect(find_field('search_created_at_start').value).to eq '01/01/2020'
     end
+
+    it 'displays error message when invalid date entered' do
+      visit divisions_path(search: { created_at_start: '2019-13-01', created_at_end: '2019-12-02'})
+      expect(page).to have_content 'Invalid date entered for created_at'
+    end
   end
 end

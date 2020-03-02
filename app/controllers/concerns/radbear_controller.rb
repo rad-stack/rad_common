@@ -12,7 +12,7 @@ module RadbearController
     rescue_from Pundit::NotAuthorizedError do
       # the application.rb config in the docs to do the same thing doesn't work
       # https://github.com/varvet/pundit#rescuing-a-denied-authorization-in-rails
-      render file: Rails.root.join('public', '403'), formats: [:html], status: 403, layout: false
+      render file: Rails.root.join('public/403.html'), formats: [:html], status: 403, layout: false
     end
   end
 
