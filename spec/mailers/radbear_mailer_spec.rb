@@ -88,4 +88,8 @@ describe RadbearMailer, type: :mailer do
       expect(last_email.attachments.first.content_type).to eq('text/csv')
     end
   end
+
+  describe 'new_user_signed_up' do
+    pending 'shows portal app name for external users'
+  end
 end

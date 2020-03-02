@@ -63,6 +63,14 @@ class RadbearDeviseMailer < Devise::Mailer
     super
   end
 
+  def default_url_options
+    if @resource.internal?
+      { host: RadCommon::AppInfo.new.host_name }
+    else
+      { host: RadCommon::AppInfo.new.portal_host_name }
+    end
+  end
+
   private
 
     def set_defaults

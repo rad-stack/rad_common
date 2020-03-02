@@ -22,7 +22,12 @@ class DivisionsController < ApplicationController
                                              current_user: current_user,
                                              params: params)
 
-    @divisions = @division_search.results.page(params[:page])
+    if @division_search.valid?
+      @divisions = @division_search.results.page(params[:page])
+    else
+      @divisions = Division.none.page(params[:page])
+      flash[:error] = @division_search.error_messages
+    end
   end
 
   def show; end

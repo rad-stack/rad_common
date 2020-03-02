@@ -15,6 +15,19 @@ module RadCommon
       apply_filters(results)
     end
 
+    def validate_params
+      valid = true
+      @filters.each do |filter|
+        valid = filter.validate_params(@search.search_params) if filter.respond_to? :validate_params
+      end
+
+      valid
+    end
+
+    def errors
+      @filters.select{ |f| f.respond_to? :errors }.map(&:errors).flatten
+    end
+
     def filter(column)
       @filter_hash[column]
     end
