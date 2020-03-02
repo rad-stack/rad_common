@@ -5,7 +5,9 @@ module Notifications
                                   button_text: 'View',
                                   button_url: Rails.application.routes.url_helpers.user_url(subject) } }
 
-      body = "#{subject} has accepted the invitation to join #{I18n.t(:app_name)}."
+      app_name = subject.internal? ? I18n.t(:app_name) : I18n.t(:portal_app_name)
+
+      body = "#{subject} has accepted the invitation to join #{app_name}."
       RadbearMailer.simple_message(notify_user_ids, 'User Accepted', body, options).deliver_later
     end
   end

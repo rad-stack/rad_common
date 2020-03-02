@@ -26,7 +26,8 @@ class RadbearDeviseMailer < Devise::Mailer
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "Someone has requested a link to change your password. If you didn't request this, please ignore this email."
+    @message = 'Someone has requested a link to change your password. '\
+               "If you didn't request this, please ignore this email."
 
     @email_action = { message: "Your password won't change until you click this link and create a new one.",
                       button_text: 'Change My Password',
@@ -54,7 +55,9 @@ class RadbearDeviseMailer < Devise::Mailer
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "Someone has invited you to #{t(:app_name)}, you can accept it through the link below. If you don't want to accept the invitation, please ignore this email. Your account won't be created until you access the link and set your password."
+    @message = "Someone has invited you to #{app_name}, you can accept it through the link below. If you don't "\
+               "want to accept the invitation, please ignore this email. Your account won't be created until you "\
+               'access the link and set your password.'
 
     @email_action = { message: 'Click the link to accept the invitation.',
                       button_text: 'Accept',
@@ -80,5 +83,9 @@ class RadbearDeviseMailer < Devise::Mailer
 
       @include_yield = false
       @optional = false
+    end
+
+    def app_name
+      @resource.internal? ? I18n.t(:app_name) : I18n.t(:portal_app_name)
     end
 end
