@@ -1,5 +1,6 @@
 en:
   app_name: Demo Foo
+  portal_app_name: Foo Portal
   activerecord:
     attributes:
       user:
