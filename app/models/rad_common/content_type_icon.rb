@@ -8,32 +8,21 @@ module RadCommon
     end
 
     def icon
-      case content_type
-      when 'application/msword'
-        'fa-file-word-o'
-      when 'application/pdf'
-        'fa-file-pdf-o'
-      when 'application/vnd.ms-excel.sheet.macroenabled.12'
-        'fa-file-excel-o'
-      when 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-        'fa-tv'
-      when 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        'fa-table'
-      when 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        'fa-file-text-o'
-      when 'application/zip'
-        'fa-file-archive-o'
-      when 'text/csv'
-        'fa-table'
-      when 'text/html'
-        'fa-code'
-      when 'text/plain'
-        'fa-file-o'
-      when 'video/quicktime'
-        'fa-file-video-o'
-      else
-        'fa-paperclip'
-      end
+      types = {
+        'application/msword' => 'fa-file-word-o',
+        'application/pdf' => 'fa-file-pdf-o',
+        'application/vnd.ms-excel.sheet.macroenabled.12' => 'fa-file-excel-o',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'fa-tv',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fa-table',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'fa-file-text-o',
+        'application/zip' => 'fa-file-archive-o',
+        'text/csv' => 'fa-table',
+        'text/html' => 'fa-code',
+        'text/plain' => 'fa-file-o',
+        'video/quicktime' => 'fa-file-video-o'
+      }
+
+      types[content_type].presence || 'fa-paperclip'
     end
   end
 end
