@@ -5,7 +5,7 @@ describe GlobalValidity, type: :service do
   let(:admin_security_role) { admin.security_roles.first }
   let(:company) { Company.main }
   let!(:admin) { create :admin }
-  let(:url) { "http://example.com/security_roles/#{admin_security_role.id}" }
+  let(:url) { "http://localhost:3000/security_roles/#{admin_security_role.id}" }
   let(:last_email) { ActionMailer::Base.deliveries.last }
   let(:email_body_text) { last_email.body.parts.first.body.raw_source }
   let(:email_body_html) { last_email.body.parts.second.body.raw_source }
