@@ -25,7 +25,7 @@ module RadCommon
     end
 
     def errors
-      @filters.select{ |f| f.respond_to? :errors }.map(&:errors).flatten
+      @filters.select { |f| f.respond_to? :errors }.map(&:errors).flatten
     end
 
     def filter(column)

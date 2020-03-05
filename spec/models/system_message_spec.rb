@@ -6,9 +6,9 @@ RSpec.describe SystemMessage, type: :model do
 
   describe '#send!' do
     context 'email message' do
-      let(:system_message) { create :system_message, :email, user: user, email_message_body: message }
-
       subject { mail.body.encoded }
+
+      let(:system_message) { create :system_message, :email, user: user, email_message_body: message }
 
       before do
         ActionMailer::Base.deliveries = []
@@ -21,9 +21,9 @@ RSpec.describe SystemMessage, type: :model do
     end
 
     context 'sms message' do
-      let(:system_message) { create :system_message, :sms, user: user, sms_message_body: message }
-
       subject { mail&.body&.encoded }
+
+      let(:system_message) { create :system_message, :sms, user: user, sms_message_body: message }
 
       before do
         User.update_all(mobile_phone: '(555) - 555 - 5555')

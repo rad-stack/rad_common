@@ -2,7 +2,7 @@ module RadCommon
   class DateFilter
     attr_reader :column, :errors
 
-    def initialize(column:, type:, start_input_label: nil, end_input_label: nil, custom:false)
+    def initialize(column:, type:, start_input_label: nil, end_input_label: nil, custom: false)
       @column = column
       @start_input_label = start_input_label
       @end_input_label = end_input_label
