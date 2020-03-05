@@ -19,13 +19,26 @@ class NotificationSettingsController < ApplicationController
 
     authorize notification_setting
 
-    result = if notification_setting.save
-               { notice: 'The setting was successfully saved.' }
-             else
-               { error: "The setting could not be saved: #{notification_setting.errors.full_messages.join(', ')}" }
-             end
+    respond_to do |format|
+      format.html do
+        result = if notification_setting.save
+                   { notice: 'The setting was successfully saved.' }
+                 else
+                   { error: "The setting could not be saved: #{notification_setting.errors.full_messages.join(', ')}" }
+                 end
 
-    redirect_back fallback_location: '/rad_common/notification_settings', flash: result
+        redirect_back fallback_location: '/rad_common/notification_settings', flash: result
+      end
+      format.json do
+        if notification_setting.save
+          render json: { status: 'The setting was successfully saved.' }, status: :ok
+        else
+          render json: { error:
+                          "The setting could not be saved: #{notification_setting.errors.full_messages.join(', ')}" },
+                 status: :unprocessable_entity
+        end
+      end
+    end
   end
 
   private
