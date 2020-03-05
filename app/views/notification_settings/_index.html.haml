@@ -5,7 +5,9 @@
   %table.table.table-striped.table-bordered
     %tr
       %th Notification
-      %th Enabled
+      %th
+        Enabled
+        %p Email/SMS/Feed
 
     - settings.each do |notification_setting|
       %tr
@@ -32,3 +34,6 @@
               = f.input :user_id, as: :hidden
           -else
             = format_boolean(notification_setting.enabled)
+            = format_boolean(notification_setting.email)
+            = format_boolean(notification_setting.sms)
+            = format_boolean(notification_setting.feed)
