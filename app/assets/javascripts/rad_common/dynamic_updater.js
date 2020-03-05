@@ -1,14 +1,12 @@
 $(document).ready( function() {
     $('form.dynamic-updater input').change(function() {
-        let url = $(this).closest('form').attr('action') + ".json";
+        let form = $(this).closest('form')
+        let url = form.attr('action') + ".json";
         let data = $(this).closest('form').serializeArray();
         $.post(url, data)
             .fail(function(data) {
-                addAlert('danger', data.responseJSON.error)
+                alert(data.responseJSON.error);
+                form[0].reset();
             });
     });
-
-    function addAlert(type, message) {
-        $('.card-body').prepend( $("<div class='alert alert-" + type + "'>" + message + "</div>") )
-    }
 });
