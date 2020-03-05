@@ -71,7 +71,7 @@ RSpec.describe RadCommon::Search, type: :service do
 
         it 'filters results using default value' do
           expect(subject).to include default_division
-          expect(subject).to_not include other_division
+          expect(subject).not_to include other_division
         end
       end
 
@@ -80,7 +80,7 @@ RSpec.describe RadCommon::Search, type: :service do
 
         it 'filters results using selected value' do
           expect(subject).to include other_division
-          expect(subject).to_not include default_division
+          expect(subject).not_to include default_division
         end
       end
 
@@ -109,18 +109,20 @@ RSpec.describe RadCommon::Search, type: :service do
   end
 
   describe 'custom date filter' do
-    let(:query) { User.joins(:security_roles) }
-    let!(:user_1) { create :user, confirmed_at: 1.day.ago }
-    let!(:user_2) { create :user, confirmed_at: 3.days.from_now }
-    let(:filters) { [{ column: :custom_column, type: RadCommon::DateFilter, custom: true }] }
-    let(:params) { ActionController::Parameters.new(search: { custom_column_start: 3.days.from_now.beginning_of_day, 
-                                                              custom_column_end: 3.days.from_now.end_of_day }) }
-
     subject do
       described_class.new(query: query,
                           filters: filters,
                           current_user: user,
                           params: params)
+    end
+
+    let(:query) { User.joins(:security_roles) }
+    let!(:user_1) { create :user, confirmed_at: 1.day.ago }
+    let!(:user_2) { create :user, confirmed_at: 3.days.from_now }
+    let(:filters) { [{ column: :custom_column, type: RadCommon::DateFilter, custom: true }] }
+    let(:params) do
+      ActionController::Parameters.new(search: { custom_column_start: 3.days.from_now.beginning_of_day,
+                                                 custom_column_end: 3.days.from_now.end_of_day })
     end
 
     it 'is included in search params' do
@@ -129,8 +131,8 @@ RSpec.describe RadCommon::Search, type: :service do
     end
 
     it 'runs query using custom value' do
-      expect(subject.results.where('confirmed_at >= ? AND confirmed_at <= ?', 
-                                   subject.search_params['custom_column_start'], 
+      expect(subject.results.where('confirmed_at >= ? AND confirmed_at <= ?',
+                                   subject.search_params['custom_column_start'],
                                    subject.search_params['custom_column_end']).count).to eq 1
     end
   end
@@ -146,7 +148,6 @@ RSpec.describe RadCommon::Search, type: :service do
     end
     let(:query) { User.joins(:security_roles) }
     let(:filters) { [{ column: :confirmed_at, type: RadCommon::DateFilter }] }
-
 
     context 'invalid date params' do
       let(:params) do
@@ -172,7 +173,6 @@ RSpec.describe RadCommon::Search, type: :service do
       end
     end
   end
-
 
   describe 'scope value filters' do
     subject do
@@ -205,7 +205,7 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:group_values) { subject.first.input_options.map(&:last) }
 
       it 'has both scope and normal options' do
-        expect(group_values).to include [[user.to_s, user.id], ['Unassigned', 'unassigned']]
+        expect(group_values).to include [[user.to_s, user.id], %w[Unassigned unassigned]]
       end
     end
   end

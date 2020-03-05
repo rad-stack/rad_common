@@ -21,4 +21,4 @@ module SimpleForm
   end
 end
 
-SimpleForm::Inputs::Base.send(:include, SimpleForm::Components::Tooltips)
+SimpleForm::Inputs::Base.include SimpleForm::Components::Tooltips

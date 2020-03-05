@@ -35,5 +35,5 @@ describe RadbearDeviseMailer, type: :mailer do
     end
   end
 
-  pending 'uses portal host name in links'  # see RadbearDeviseMailer.default_url_options
+  pending 'uses portal host name in links' # see RadbearDeviseMailer.default_url_options
 end

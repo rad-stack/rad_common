@@ -79,7 +79,7 @@ RSpec.describe 'Search', type: :system do
     end
 
     it 'displays error message when invalid date entered' do
-      visit divisions_path(search: { created_at_start: '2019-13-01', created_at_end: '2019-12-02'})
+      visit divisions_path(search: { created_at_start: '2019-13-01', created_at_end: '2019-12-02' })
       expect(page).to have_content 'Invalid date entered for created_at'
     end
   end
