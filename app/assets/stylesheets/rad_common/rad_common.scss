@@ -210,6 +210,12 @@ td.fa.security-group-td { border-style: none; }
   }
 }
 
+.form-inline {
+  fieldset {
+    margin-right : 12px;
+  }
+}
+
 /* Mobile styles*/
 @media (max-width: 992px) {
   .content .global-search-group {

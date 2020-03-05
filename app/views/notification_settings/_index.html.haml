@@ -18,13 +18,17 @@
           -if can_create && policy(notification_setting).create?
             = simple_form_for notification_setting, url: '/rad_common/notification_settings', method: :post, html: { class: 'dynamic-updater' } do |f|
               = f.error_notification
-              .form-inputs
-                = f.input :enabled, tooltip: 'Turn this notification on or off.', input_html: { id: "notification_setting_enabled_#{notification_setting.notification_type.description.parameterize.underscore}" }
-                = f.input :email, tooltip: 'Enable email notifications.', input_html: { id: "notification_setting_email_#{notification_setting.notification_type.description.parameterize.underscore}" }
-                - if RadicalTwilio.twilio_enabled?
-                  = f.input :sms, tooltip: 'Enable SMS (text message) notifications.', input_html: { id: "notification_setting_sms_#{notification_setting.notification_type.description.parameterize.underscore}" }
-                = f.input :feed, tooltip: 'Show a red badge on the top right navigation when a notification occurs.', input_html: { id: "notification_setting_feed_#{notification_setting.notification_type.description.parameterize.underscore}" }
-                = f.association :notification_type, as: :hidden
-                = f.input :user_id, as: :hidden
+              .row
+                .col-lg
+                  = f.input :enabled, tooltip: 'Turn this notification on or off.', input_html: { id: "notification_setting_enabled_#{notification_setting.notification_type.description.parameterize.underscore}" }
+              .row
+                .col-lg-12
+                  .form-inline
+                    = f.input :email, tooltip: 'Enable email notifications.', input_html: { id: "notification_setting_email_#{notification_setting.notification_type.description.parameterize.underscore}" }
+                    - if RadicalTwilio.twilio_enabled?
+                      = f.input :sms, tooltip: 'Enable SMS (text message) notifications.', input_html: { id: "notification_setting_sms_#{notification_setting.notification_type.description.parameterize.underscore}" }
+                    = f.input :feed, tooltip: 'Show a red badge on the top right navigation when a notification occurs.', input_html: { id: "notification_setting_feed_#{notification_setting.notification_type.description.parameterize.underscore}" }
+              = f.association :notification_type, as: :hidden
+              = f.input :user_id, as: :hidden
           -else
             = format_boolean(notification_setting.enabled)
