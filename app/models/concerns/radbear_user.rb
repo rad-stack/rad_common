@@ -14,6 +14,7 @@ module RadbearUser
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
+    validate :validate_sms_mobile_phone, on: :update
 
     before_validation :set_timezone, on: :create
     after_save :notify_user_approved
@@ -114,6 +115,13 @@ module RadbearUser
       return if components.count == 2 && domains.include?(components[1])
 
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
+    end
+
+    def validate_sms_mobile_phone
+      return if !RadicalTwilio.twilio_enabled? || mobile_phone.present?
+      return if notification_settings.enabled.where(sms: true).count.zero?
+
+      errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
     end
 
     def set_timezone

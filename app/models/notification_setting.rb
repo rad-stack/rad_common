@@ -5,7 +5,8 @@ class NotificationSetting < ApplicationRecord
   scope :enabled, -> { where(enabled: true) }
 
   validate :validate_notify_methods
-  validate :validate_sms_possible
+  validate :validate_sms_possible_app
+  validate :validate_sms_possible_user
 
   audited associated_with: :user
 
@@ -32,9 +33,16 @@ class NotificationSetting < ApplicationRecord
       errors.add(:enabled, 'requires one of email/sms/feed be turned on')
     end
 
-    def validate_sms_possible
+    def validate_sms_possible_app
       return if RadicalTwilio.twilio_enabled? || !sms?
 
       errors.add(:sms, 'is not available for this application')
+    end
+
+    def validate_sms_possible_user
+      return if user.blank?
+      return unless sms? && user.mobile_phone.blank?
+
+      errors.add(:sms, 'is not available unless mobile phone is entered')
     end
 end
