@@ -115,12 +115,10 @@ describe 'Users', type: :system do
           expect(page).to have_content 'User Status'
         end
 
-        it 'allows updating notification settings' do
+        it 'allows updating notification settings', :js do
           expect(page).to have_content 'Notification Settings'
           uncheck 'Enabled'
-          click_button 'Save'
-          expect(page).to have_content 'The setting was successfully saved.'
-
+          sleep 2
           expect(notification_setting.enabled).to be false
         end
 
