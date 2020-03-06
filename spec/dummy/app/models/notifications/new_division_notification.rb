@@ -1,13 +1,5 @@
 module Notifications
   class NewDivisionNotification < ::NotificationType
-    def mailer_class
-      'RadbearMailer'
-    end
-
-    def mailer_method
-      'simple_message'
-    end
-
     def mailer_subject
       "Division '#{payload}' was Updated"
     end

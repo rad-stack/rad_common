@@ -1,13 +1,5 @@
 module Notifications
   class UserAcceptsInvitationNotification < ::NotificationType
-    def mailer_class
-      'RadbearMailer'
-    end
-
-    def mailer_method
-      'simple_message'
-    end
-
     def mailer_subject
       'User Accepted'
     end

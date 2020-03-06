@@ -60,6 +60,21 @@ class NotificationType < ApplicationRecord
     end
   end
 
+  def mailer_class
+    # this can be overridden on each notification as needed
+    'RadbearMailer'
+  end
+
+  def mailer_method
+    # this can be overridden on each notification as needed
+    'simple_message'
+  end
+
+  def mailer_options
+    # this can be overridden on each notification as needed
+    {}
+  end
+
   def exclude_user_ids
     # this can be overridden on each notification as needed
     []
@@ -73,6 +88,11 @@ class NotificationType < ApplicationRecord
   def feed_content
     # this can be overridden on each notification as needed
     self.class.name.gsub('Notifications::', '').underscore.titleize.gsub(' Notification', '')
+  end
+
+  def sms_content
+    # this can be overridden on each notification as needed
+    feed_content
   end
 
   private
