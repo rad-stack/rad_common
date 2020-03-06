@@ -25,7 +25,7 @@
                   = f.input :enabled, tooltip: 'Turn this notification on or off.', input_html: { id: "notification_setting_enabled_#{notification_setting.notification_type.description.parameterize.underscore}" }
               .row
                 .col-lg-12
-                  .form-inline.inline-settings
+                  .form-inline#notification-settings
                     = f.input :email, tooltip: 'Enable email notifications.', input_html: { id: "notification_setting_email_#{notification_setting.notification_type.description.parameterize.underscore}" }
                     - if RadicalTwilio.twilio_enabled?
                       = f.input :sms, tooltip: 'Enable SMS (text message) notifications.', input_html: { id: "notification_setting_sms_#{notification_setting.notification_type.description.parameterize.underscore}" }
