@@ -83,16 +83,19 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_email!
+      id_list = notify_user_ids_opted(:email)
+      return if id_list.count.zero?
+
       if mailer_class == 'RadbearMailer' && mailer_method == 'simple_message'
 
-        RadbearMailer.simple_message(notify_user_ids_opted(:email),
+        RadbearMailer.simple_message(id_list,
                                      mailer_subject,
                                      mailer_message,
                                      mailer_options).deliver_later
 
       else
         mailer = mailer_class.constantize
-        mailer.send(mailer_method, notify_user_ids_opted(:email), payload).deliver_later
+        mailer.send(mailer_method, id_list, payload).deliver_later
       end
     end
 
@@ -100,6 +103,8 @@ class NotificationType < ApplicationRecord
       notification_type = set_notification_type
 
       all_ids = notify_user_ids_all
+      return if all_ids.count.zero?
+
       opted_ids = notify_user_ids_opted(:feed)
 
       all_ids.each do |user_id|
@@ -114,9 +119,10 @@ class NotificationType < ApplicationRecord
     def notify_sms!
       return unless RadicalTwilio.twilio_enabled?
 
-      SystemSmsJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content}",
-                                 notify_user_ids_opted(:sms),
-                                 nil
+      id_list = notify_user_ids_opted(:sms)
+      return if id_list.count.zero?
+
+      SystemSmsJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content}", id_list, nil
     end
 
     def notify_user_ids_all
