@@ -28,9 +28,9 @@ RSpec.describe 'Notification Settings', type: :request do
             expect { subject }.to change(NotificationSetting, :count).by(1)
           end
 
-          it 'redirects to the settings' do
+          it 'responds with success json' do
             subject
-            expect(response).to redirect_to('/rad_common/notification_settings')
+            expect(response.body).to include('The setting was successfully saved.')
           end
         end
 
