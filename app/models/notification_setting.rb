@@ -13,7 +13,7 @@ class NotificationSetting < ApplicationRecord
   def self.settings_for_user(user)
     return [] if user.external?
 
-    types = Pundit.policy_scope!(user, NotificationType).by_name
+    types = Pundit.policy_scope!(user, NotificationType).by_type
     settings = []
 
     types.each do |notification_type|

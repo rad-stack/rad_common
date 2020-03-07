@@ -3,17 +3,15 @@ class NotificationType < ApplicationRecord
   has_many :security_roles, through: :notification_security_roles, dependent: :destroy
   has_many :notification_settings, dependent: :destroy
 
-  enum auth_mode: { security_roles: 0, absolute_user: 1 }
-
   attr_accessor :payload
   alias_attribute :to_s, :description
 
-  scope :by_name, -> { order(:name) }
+  scope :by_type, -> { order(:type) }
 
   validate :validate_auth, on: :update
 
   def description
-    name.gsub('Notifications::', '').underscore.titleize.gsub(' Notification', '')
+    type.gsub('Notifications::', '').underscore.titleize.gsub(' Notification', '')
   end
 
   def permitted_users
@@ -30,12 +28,14 @@ class NotificationType < ApplicationRecord
   end
 
   def self.seed_items
-    items = %w[Notifications::NewUserSignedUpNotification
-               Notifications::UserWasApprovedNotification
-               Notifications::UserAcceptsInvitationNotification
-               Notifications::GlobalValidityNotification]
+    Notifications::NewUserSignedUpNotification.create!
+    Notifications::UserWasApprovedNotification.create!
+    Notifications::UserAcceptsInvitationNotification.create!
+    Notifications::GlobalValidityNotification.create!
+  end
 
-    items.each { |item| NotificationType.create! name: item }
+  def self.main
+    NotificationType.find_or_create_by!(type: self.name)
   end
 
   def notify!(payload)
@@ -87,7 +87,7 @@ class NotificationType < ApplicationRecord
 
   def feed_content
     # this can be overridden on each notification as needed
-    self.class.name.gsub('Notifications::', '').underscore.titleize.gsub(' Notification', '')
+    description
   end
 
   def sms_content
@@ -95,11 +95,27 @@ class NotificationType < ApplicationRecord
     feed_content
   end
 
+  def auth_mode
+    :security_roles
+  end
+
+  def auth_mode_name
+    security_roles? ? 'Security Roles' : 'Absolute User'
+  end
+
+  def security_roles?
+    auth_mode == :security_roles
+  end
+
+  def absolute_user?
+    auth_mode == :absolute_user
+  end
+
   private
 
     def validate_auth
-      errors.add(:auth_mode, 'invalid with security roles') if absolute_user? && security_roles.count.positive?
-      errors.add(:auth_mode, 'invalid without security roles') if security_roles? && security_roles.count.zero?
+      errors.add(:base, 'invalid with security roles') if absolute_user? && security_roles.count.positive?
+      errors.add(:base, 'invalid without security roles') if security_roles? && security_roles.count.zero?
     end
 
     def notify_email!
@@ -120,8 +136,6 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_feed!
-      notification_type = set_notification_type
-
       all_ids = notify_user_ids_all
       return if all_ids.count.zero?
 
@@ -129,7 +143,7 @@ class NotificationType < ApplicationRecord
 
       all_ids.each do |user_id|
         Notification.create! user_id: user_id,
-                             notification_type: notification_type,
+                             notification_type: self,
                              content: feed_content,
                              record: feed_record,
                              unread: opted_ids.include?(user_id)
@@ -146,14 +160,12 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_user_ids_all
-      notification_type = set_notification_type
-
-      if notification_type.security_roles? && notification_type.notification_security_roles.count.zero?
-        notification_type.notification_security_roles.create! security_role: SecurityRole.admin_role
+      if security_roles? && notification_security_roles.count.zero?
+        notification_security_roles.create! security_role: SecurityRole.admin_role
       end
 
-      if notification_type.security_roles?
-        users = notification_type.permitted_users
+      if security_roles?
+        users = permitted_users
       else
         user = User.find(absolute_user_id)
         raise 'absolute user must be active' unless user.active
@@ -162,12 +174,12 @@ class NotificationType < ApplicationRecord
       end
 
       user_ids = users.where
-                      .not(id: NotificationSetting.where(notification_type: notification_type, enabled: false)
+                      .not(id: NotificationSetting.where(notification_type: self, enabled: false)
                       .pluck(:user_id)).pluck(:id)
 
-      raise 'no users to notify' if notification_type.security_roles? && user_ids.count.zero?
+      raise 'no users to notify' if security_roles? && user_ids.count.zero?
 
-      return user_ids unless notification_type.security_roles?
+      return user_ids unless security_roles?
       raise 'exclude_user_ids is invalid' unless exclude_user_ids.is_a?(Array)
 
       user_ids - exclude_user_ids
@@ -179,19 +191,12 @@ class NotificationType < ApplicationRecord
     end
 
     def opt_out_by_notification_method(notification_method, user_ids)
-      notification_type = set_notification_type
       opted_out = []
 
       user_ids.each do |user_id|
-        opted_out.push(user_id) unless notification_type.enabled_for_method?(user_id, notification_method)
+        opted_out.push(user_id) unless enabled_for_method?(user_id, notification_method)
       end
 
       opted_out
-    end
-
-    def set_notification_type
-      notification_type = NotificationType.find_by(name: self.class.name)
-      notification_type = NotificationType.create! name: self.class.name if notification_type.blank?
-      notification_type
     end
 end

@@ -342,6 +342,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20200227134827_create_rad_common_notifications.rb',
                         'create_rad_common_notifications'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200306204548_notifications_sti.rb',
+                        'notifications_sti'
       end
 
       def self.next_migration_number(path)

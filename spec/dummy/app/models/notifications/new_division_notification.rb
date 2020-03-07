@@ -1,5 +1,9 @@
 module Notifications
   class NewDivisionNotification < ::NotificationType
+    def auth_mode
+      :absolute_user
+    end
+
     def mailer_subject
       "Division '#{payload}' was Updated"
     end

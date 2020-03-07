@@ -6,7 +6,7 @@ SecurityRole.seed_items if SecurityRole.count.zero?
 FactoryBot.create :company if Company.count.zero?
 UserStatus.seed_items if UserStatus.count.zero?
 
-NotificationType.create! name: 'Notifications::NewDivisionNotification', auth_mode: :absolute_user
+Notifications::NewDivisionNotification.create!
 
 if User.count.zero?
   puts 'seeding users'

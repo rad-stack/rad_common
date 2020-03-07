@@ -5,14 +5,13 @@ class NotificationTypesController < ApplicationController
   def index
     authorize NotificationType
     skip_policy_scope
-    @notification_types = NotificationType.by_name
+    @notification_types = NotificationType.by_type
   end
 
   def edit; end
 
   def update
-    @notification_type.security_roles = resolve_roles(params[:notification_type][:security_roles])
-    @notification_type.assign_attributes(permitted_params)
+    @notification_type.security_roles = resolve_roles(params[type_param_name][:security_roles])
 
     if @notification_type.save
       flash[:success] = 'Notification Type updated.'
@@ -27,7 +26,7 @@ class NotificationTypesController < ApplicationController
 
     def set_notification_type
       @notification_type = NotificationType.find(params[:id])
-      authorize @notification_type
+      authorize @notification_type, policy_class: NotificationTypePolicy
     end
 
     def resolve_roles(role_ids)
@@ -39,7 +38,7 @@ class NotificationTypesController < ApplicationController
       end
     end
 
-    def permitted_params
-      params.require(:notification_type).permit(:auth_mode)
+    def type_param_name
+      @notification_type.class.name.underscore.gsub('/','_')
     end
 end

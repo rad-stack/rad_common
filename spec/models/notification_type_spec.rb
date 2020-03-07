@@ -1,19 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe NotificationType, type: :model do
-  let(:security_role) { create :security_role, :admin }
-  let!(:user) { create :admin, security_roles: [security_role] }
-  let(:notification_class) { notification_name.constantize }
-  let(:notification_type) { create :notification_type, name: notification_name, auth_mode: auth_mode }
+  let!(:user) { create :admin }
+  let(:security_role) { user.security_roles.first }
+  let(:notification_type) { Notifications::GlobalValidityNotification.main }
   let(:notification_method) { :email }
-  let(:notification_name) { 'Notifications::GlobalValidityNotification' }
-  let(:notifier) { notification_class.new }
   let(:notification_payload) { [] }
-  let(:auth_mode) { :security_roles }
 
   before do
     create :notification_security_role, notification_type: notification_type, security_role: security_role
-    notifier.payload = notification_payload
+    notification_type.payload = notification_payload
   end
 
   describe 'notify_feed' do
@@ -25,7 +21,7 @@ RSpec.describe NotificationType, type: :model do
                                     enabled: true,
                                     feed: opt_in
 
-      notifier.send(:notify_feed!)
+      notification_type.send(:notify_feed!)
     end
 
     context 'when opted in' do
@@ -43,11 +39,10 @@ RSpec.describe NotificationType, type: :model do
 
   describe 'notify_user_ids_opted with absolute_user' do
     # remove this on all other apps, division is only in dummy app of rad_common
-    subject { notifier.send(:notify_user_ids_opted, notification_method) }
+    subject { notification_type.send(:notify_user_ids_opted, notification_method) }
 
-    let(:notification_name) { 'Notifications::NewDivisionNotification' }
+    let(:notification_type) { Notifications::NewDivisionNotification.main }
     let(:notification_payload) { create :division, owner: user }
-    let(:auth_mode) { :absolute_user }
 
     it { is_expected.to eq [user.id] }
 
@@ -109,7 +104,7 @@ RSpec.describe NotificationType, type: :model do
   end
 
   describe 'notify_user_ids_opted with security_roles' do
-    subject { notifier.send(:notify_user_ids_opted, notification_method) }
+    subject { notification_type.send(:notify_user_ids_opted, notification_method) }
 
     let!(:another) { create :admin, security_roles: [security_role] }
 
@@ -131,7 +126,7 @@ RSpec.describe NotificationType, type: :model do
     end
 
     context 'when excluding users' do
-      before { allow(notifier).to receive(:exclude_user_ids).and_return [user.id] }
+      before { allow(notification_type).to receive(:exclude_user_ids).and_return [user.id] }
 
       it { is_expected.not_to include user.id }
       it { is_expected.to include another.id }

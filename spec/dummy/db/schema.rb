@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_27_134827) do
+ActiveRecord::Schema.define(version: 2020_03_06_204548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,11 +120,10 @@ ActiveRecord::Schema.define(version: 2020_02_27_134827) do
   end
 
   create_table "notification_types", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "auth_mode", default: 0, null: false
-    t.index ["name"], name: "index_notification_types_on_name", unique: true
+    t.index ["type"], name: "index_notification_types_on_type", unique: true
   end
 
   create_table "notifications", force: :cascade do |t|
