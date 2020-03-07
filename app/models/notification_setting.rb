@@ -28,9 +28,21 @@ class NotificationSetting < ApplicationRecord
 
     def validate_notify_methods
       return unless enabled?
-      return if email? || sms? || feed?
 
-      errors.add(:enabled, 'requires one of email/sms/feed be turned on')
+      errors.add(:enabled, 'requires one of email/sms/feed be turned on') if !email? && !sms? && !feed?
+      return if notification_type.blank?
+
+      if !notification_type.email_enabled? && email?
+        errors.add(:email, 'is not enabled for this notification type')
+      end
+
+      if !notification_type.sms_enabled? && sms?
+        errors.add(:sms, 'is not enabled for this notification type')
+      end
+
+      if !notification_type.feed_enabled? && feed?
+        errors.add(:feed, 'is not enabled for this notification type')
+      end
     end
 
     def validate_sms_possible_app

@@ -10,6 +10,50 @@ class NotificationType < ApplicationRecord
 
   validate :validate_auth, on: :update
 
+  def email_enabled?
+    true
+  end
+
+  def sms_enabled?
+    true
+  end
+
+  def feed_enabled?
+    true
+  end
+
+  def mailer_class
+    'RadbearMailer'
+  end
+
+  def mailer_method
+    'simple_message'
+  end
+
+  def mailer_options
+    {}
+  end
+
+  def exclude_user_ids
+    []
+  end
+
+  def feed_record
+    payload
+  end
+
+  def feed_content
+    description
+  end
+
+  def sms_content
+    feed_content
+  end
+
+  def auth_mode
+    :security_roles
+  end
+
   def description
     type.gsub('Notifications::', '').underscore.titleize.gsub(' Notification', '')
   end
@@ -35,7 +79,7 @@ class NotificationType < ApplicationRecord
   end
 
   def self.main
-    NotificationType.find_or_create_by!(type: self.name)
+    NotificationType.find_or_create_by!(type: name)
   end
 
   def notify!(payload)
@@ -44,59 +88,6 @@ class NotificationType < ApplicationRecord
     notify_email!
     notify_feed!
     notify_sms!
-  end
-
-  def enabled_for_method?(user_id, notification_method)
-    setting = notification_settings.find_by(user_id: user_id)
-
-    if notification_method == :email
-      return true if setting.blank?
-
-      setting.enabled? && setting.email?
-    elsif setting.blank? || !setting.enabled
-      false
-    else
-      setting.send(notification_method)
-    end
-  end
-
-  def mailer_class
-    # this can be overridden on each notification as needed
-    'RadbearMailer'
-  end
-
-  def mailer_method
-    # this can be overridden on each notification as needed
-    'simple_message'
-  end
-
-  def mailer_options
-    # this can be overridden on each notification as needed
-    {}
-  end
-
-  def exclude_user_ids
-    # this can be overridden on each notification as needed
-    []
-  end
-
-  def feed_record
-    # this can be overridden on each notification as needed
-    payload
-  end
-
-  def feed_content
-    # this can be overridden on each notification as needed
-    description
-  end
-
-  def sms_content
-    # this can be overridden on each notification as needed
-    feed_content
-  end
-
-  def auth_mode
-    :security_roles
   end
 
   def auth_mode_name
@@ -198,5 +189,19 @@ class NotificationType < ApplicationRecord
       end
 
       opted_out
+    end
+
+    def enabled_for_method?(user_id, notification_method)
+      setting = notification_settings.find_by(user_id: user_id)
+
+      if notification_method == :email
+        return true if setting.blank?
+
+        setting.enabled? && setting.email?
+      elsif setting.blank? || !setting.enabled
+        false
+      else
+        setting.send(notification_method)
+      end
     end
 end
