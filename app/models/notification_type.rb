@@ -110,6 +110,8 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_email!
+      return unless email_enabled?
+
       id_list = notify_user_ids_opted(:email)
       return if id_list.count.zero?
 
@@ -127,6 +129,8 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_feed!
+      return unless feed_enabled?
+
       all_ids = notify_user_ids_all
       return if all_ids.count.zero?
 
@@ -142,7 +146,7 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_sms!
-      return unless RadicalTwilio.twilio_enabled?
+      return unless sms_content && RadicalTwilio.twilio_enabled?
 
       id_list = notify_user_ids_opted(:sms)
       return if id_list.count.zero?
