@@ -13,20 +13,23 @@ RSpec.describe 'NotificationTypes', type: :request do
     describe 'with valid params' do
       it 'updates the requested notification_type' do
         expect(notification_type.security_roles.count).to eq 0
-        put "/rad_common/notification_types/#{notification_type.to_param}", params: { notification_type: valid_attributes }
+        put "/rad_common/notification_types/#{notification_type.to_param}",
+            params: { notifications_new_user_signed_up_notification: valid_attributes }
         notification_type.reload
         expect(notification_type.security_roles.count).to eq 1
       end
 
       it 'redirects to the notification_type' do
-        put "/rad_common/notification_types/#{notification_type.to_param}", params: { notification_type: valid_attributes }
+        put "/rad_common/notification_types/#{notification_type.to_param}",
+            params: { notifications_new_user_signed_up_notification: valid_attributes }
         expect(response).to redirect_to('/rad_common/notification_types')
       end
     end
 
     describe 'with invalid params' do
       it 're-renders the edit template' do
-        put "/rad_common/notification_types/#{notification_type.to_param}", params: { notification_type: invalid_attributes }
+        put "/rad_common/notification_types/#{notification_type.to_param}",
+            params: { notifications_new_user_signed_up_notification: invalid_attributes }
         expect(response.body).to include 'Please review the problems below'
       end
     end
