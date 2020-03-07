@@ -143,9 +143,6 @@ module RadCommon
         template '../../../../../spec/factories/notification_settings.rb',
                  'spec/factories/notification_settings.rb'
 
-        template '../../../../../spec/factories/notification_types.rb',
-                 'spec/factories/notification_types.rb'
-
         template '../../../../../spec/factories/notifications.rb',
                  'spec/factories/notifications.rb'
 
