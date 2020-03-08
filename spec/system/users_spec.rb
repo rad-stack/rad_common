@@ -78,13 +78,8 @@ describe 'Users', type: :system do
     end
 
     describe 'admin' do
-      let(:notification_type) { Notifications::NewUserSignedUpNotification.main }
+      let!(:notification_type) { Notifications::NewUserSignedUpNotification.create! security_roles: [user.security_roles.first] }
       let(:notification_setting) { NotificationSetting.find_by(user: user, notification_type: notification_type) }
-
-      let!(:notification_security_role) do
-        create :notification_security_role, notification_type: notification_type, security_role: user.security_roles.first
-      end
-
       let(:external_user) { create :user, :external }
 
       before { login_as admin, scope: :user }

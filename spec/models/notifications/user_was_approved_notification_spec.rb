@@ -1,14 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Notifications::UserWasApprovedNotification, type: :model do
-  let!(:admin) { create :admin }
-  let(:security_role) { admin.security_roles.first }
+  let(:admin) { create :admin }
   let(:another) { create :admin }
   let(:user) { create :user }
-  let(:notification_type) { described_class.new }
+  let(:notification_type) { create :user_was_approved_notification, security_roles: [admin.security_roles.first] }
   let(:mail) { ActionMailer::Base.deliveries.last }
-
-  before { create :notification_security_role, notification_type: notification_type, security_role: security_role }
 
   describe '#notify_user_ids_opted' do
     before { notification_type.payload = payload }

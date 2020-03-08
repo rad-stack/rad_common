@@ -8,7 +8,7 @@ class NotificationType < ApplicationRecord
 
   scope :by_type, -> { order(:type) }
 
-  validate :validate_auth, on: :update
+  validate :validate_auth
 
   def email_enabled?
     true
@@ -72,14 +72,14 @@ class NotificationType < ApplicationRecord
   end
 
   def self.seed_items
-    Notifications::NewUserSignedUpNotification.create!
-    Notifications::UserWasApprovedNotification.create!
-    Notifications::UserAcceptsInvitationNotification.create!
-    Notifications::GlobalValidityNotification.create!
+    Notifications::NewUserSignedUpNotification.create! security_roles: [SecurityRole.admin_role]
+    Notifications::UserWasApprovedNotification.create! security_roles: [SecurityRole.admin_role]
+    Notifications::UserAcceptsInvitationNotification.create! security_roles: [SecurityRole.admin_role]
+    Notifications::GlobalValidityNotification.create! security_roles: [SecurityRole.admin_role]
   end
 
   def self.main
-    NotificationType.find_or_create_by!(type: name)
+    NotificationType.find_by!(type: name)
   end
 
   def notify!(payload)
@@ -105,8 +105,8 @@ class NotificationType < ApplicationRecord
   private
 
     def validate_auth
-      errors.add(:base, 'invalid with security roles') if absolute_user? && security_roles.count.positive?
-      errors.add(:base, 'invalid without security roles') if security_roles? && security_roles.count.zero?
+      errors.add(:base, 'invalid with security roles') if absolute_user? && security_roles.present?
+      errors.add(:base, 'invalid without security roles') if security_roles? && security_roles.blank?
     end
 
     def notify_email!
@@ -155,10 +155,6 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_user_ids_all
-      if security_roles? && notification_security_roles.count.zero?
-        notification_security_roles.create! security_role: SecurityRole.admin_role
-      end
-
       if security_roles?
         users = permitted_users
       else

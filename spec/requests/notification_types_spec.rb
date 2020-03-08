@@ -2,21 +2,22 @@ require 'rails_helper'
 
 RSpec.describe 'NotificationTypes', type: :request do
   let(:user) { create :admin }
-  let(:notification_type) { Notifications::NewUserSignedUpNotification.main }
+  let(:another_role) { create :security_role }
+  let(:notification_type) { create :new_user_signed_up_notification }
 
   before { login_as user, scope: :user }
 
   describe 'PUT update' do
-    let(:valid_attributes) { { security_roles: [user.security_roles.first.id.to_s] } }
+    let(:valid_attributes) { { security_roles: [user.security_roles.first.id.to_s, another_role.id.to_s] } }
     let(:invalid_attributes) { { security_roles: %w[111 999] } }
 
     describe 'with valid params' do
       it 'updates the requested notification_type' do
-        expect(notification_type.security_roles.count).to eq 0
+        expect(notification_type.security_roles.count).to eq 1
         put "/rad_common/notification_types/#{notification_type.to_param}",
             params: { notifications_new_user_signed_up_notification: valid_attributes }
         notification_type.reload
-        expect(notification_type.security_roles.count).to eq 1
+        expect(notification_type.security_roles.count).to eq 2
       end
 
       it 'redirects to the notification_type' do

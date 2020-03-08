@@ -3,14 +3,11 @@ require 'rails_helper'
 RSpec.describe NotificationType, type: :model do
   let!(:user) { create :admin }
   let(:security_role) { user.security_roles.first }
-  let(:notification_type) { Notifications::GlobalValidityNotification.main }
+  let(:notification_type) { create :global_validity_notification, security_roles: [security_role] }
   let(:notification_method) { :email }
   let(:notification_payload) { [] }
 
-  before do
-    create :notification_security_role, notification_type: notification_type, security_role: security_role
-    notification_type.payload = notification_payload
-  end
+  before { notification_type.payload = notification_payload }
 
   describe 'notify_feed' do
     subject { user.notifications.last.unread }
@@ -41,7 +38,7 @@ RSpec.describe NotificationType, type: :model do
     # remove this on all other apps, division is only in dummy app of rad_common
     subject { notification_type.send(:notify_user_ids_opted, notification_method) }
 
-    let(:notification_type) { Notifications::NewDivisionNotification.main }
+    let(:notification_type) { create :new_division_notification }
     let(:notification_payload) { create :division, owner: user }
 
     it { is_expected.to eq [user.id] }

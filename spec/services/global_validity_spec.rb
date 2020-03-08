@@ -10,7 +10,10 @@ describe GlobalValidity, type: :service do
   let(:email_body_text) { last_email.body.parts.first.body.raw_source }
   let(:email_body_html) { last_email.body.parts.second.body.raw_source }
 
-  before { ActionMailer::Base.deliveries.clear }
+  before do
+    create :global_validity_notification, security_roles: [admin_security_role]
+    ActionMailer::Base.deliveries.clear
+  end
 
   # TODO: add tests for override model feature
 

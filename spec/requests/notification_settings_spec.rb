@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Notification Settings', type: :request do
-  let(:notification_type) { Notifications::NewUserSignedUpNotification.main }
+  let(:notification_type) { create :new_user_signed_up_notification }
 
   before { login_as user, scope: :user }
 

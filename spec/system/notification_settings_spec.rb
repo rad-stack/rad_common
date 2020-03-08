@@ -1,12 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'NotificationSettings', type: :system do
-  let(:notification_type) { Notifications::NewUserSignedUpNotification.main }
+  let!(:notification_type) { create :new_user_signed_up_notification, security_roles: [security_role] }
   let(:security_role) { create :security_role, :admin }
-
-  let!(:notification_security_role) do
-    create :notification_security_role, notification_type: notification_type, security_role: security_role
-  end
 
   before { login_as user, scope: :user }
 

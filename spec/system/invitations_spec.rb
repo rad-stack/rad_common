@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'Invitations', type: :system do
   let(:company) { Company.main }
-  let!(:admin) { create :admin }
+  let(:admin) { create :admin }
   let(:user) { create :user }
   let(:email_domain) { 'example.com' }
   let(:external_domain) { 'abc.com' }
@@ -100,6 +100,7 @@ describe 'Invitations', type: :system do
 
     it 'notifies admin when invitee accepts' do
       ActionMailer::Base.deliveries = []
+      create :user_accepts_invitation_notification, security_roles: [admin.security_roles.first]
 
       @invitee.accept_invitation!
 
