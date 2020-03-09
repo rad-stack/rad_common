@@ -45,6 +45,8 @@ RSpec.describe GlobalAutocomplete, type: :service do
       context 'when user owner' do
         let!(:user) { division.owner }
 
+        before { user.security_roles.first.update! read_division: true }
+
         it 'returns results' do
           expect(result.count).to eq(1)
           expect(result.first[:id]).to eq division.id
