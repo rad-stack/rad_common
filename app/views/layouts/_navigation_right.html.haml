@@ -11,7 +11,7 @@
           = image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
       %ul.dropdown-menu.dropdown-menu-right
         %li= link_to 'My Account', edit_user_registration_path, class: 'dropdown-item'
-        -if policy(Notification).index?
+        -if current_user.internal? && policy(Notification).index?
           %li
             = link_to '/rad_common/notifications', class: 'dropdown-item' do
               Notifications
