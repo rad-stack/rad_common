@@ -114,6 +114,11 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('Right Button')
     end
 
+    it 'shows translated version of field name' do
+      expect(page).to have_content 'Additional data'
+      expect(page).not_to have_content 'Additional info'
+    end
+
     context 'attachments' do
       let(:prompt) { 'Are you sure? Attachment cannot be recovered.' }
 

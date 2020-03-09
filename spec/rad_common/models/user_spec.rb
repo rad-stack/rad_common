@@ -8,6 +8,8 @@ describe User, type: :model do
   let(:attributes) do
     { first_name: 'Example',
       last_name: 'User',
+      authy_enabled: false,
+      mobile_phone: '(999) 231-1111',
       email: 'user@example.com',
       password: 'password',
       password_confirmation: 'password' }

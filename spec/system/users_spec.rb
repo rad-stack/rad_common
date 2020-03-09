@@ -50,24 +50,6 @@ describe 'Users', type: :system do
     end
   end
 
-  describe 'show' do
-    let!(:notification_type) { Notifications::NewUserSignedUpNotification.create! security_roles: [user.security_roles.first] }
-    let(:notification_setting) { NotificationSetting.find_by(user: user, notification_type: notification_type) }
-    let(:external_user) { create :user, :external }
-
-    before do
-      login_as admin, scope: :user
-      visit user_path(user)
-    end
-
-    context 'attribute translation defined in locales' do
-      it 'shows translated version of field name' do
-        expect(page).to have_content 'Phone number'
-        expect(page).not_to have_content 'Mobile Phone'
-      end
-    end
-  end
-
   describe 'edit' do
     before do
       login_as admin, scope: :user
