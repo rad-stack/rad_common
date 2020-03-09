@@ -75,7 +75,7 @@ module RadCommon
                  'app/views/devise/invitations/edit.html.haml'
 
         # specs
-        directory '../../../../../spec/rad_common/', 'spec/'
+        directory '../../../../../spec/rad_common/', 'spec/rad_common/'
 
         # templates
 

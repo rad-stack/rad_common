@@ -5,25 +5,11 @@ RSpec.describe SystemMessage, type: :model do
   let(:message) { 'foo bar yo' }
 
   describe '#send!' do
-    context 'email message' do
-      subject { mail.body.encoded }
-
-      let(:system_message) { create :system_message, :email, user: user, email_message_body: message }
-
-      before do
-        ActionMailer::Base.deliveries = []
-        system_message.send!
-      end
-
-      let(:mail) { ActionMailer::Base.deliveries.last }
-
-      it { is_expected.to include message }
-    end
-
-    context 'sms message' do
+    context 'with sms message' do
       subject { mail&.body&.encoded }
 
       let(:system_message) { create :system_message, :sms, user: user, sms_message_body: message }
+      let(:mail) { ActionMailer::Base.deliveries.last }
 
       before do
         User.update_all(mobile_phone: '(555) - 555 - 5555')
@@ -32,10 +18,12 @@ RSpec.describe SystemMessage, type: :model do
         system_message.send!
       end
 
-      let(:mail) { ActionMailer::Base.deliveries.last }
+      context 'when a user does not receive message because mobile mumber is not present' do
+        let!(:other_user) { create :user, mobile_phone: nil }
 
-      context 'all users receive message' do
-        it { is_expected.to be_nil }
+        before { system_message.send! }
+
+        it { is_expected.to include "These users did not receive a system SMS message because a mobile number was not present: #{other_user.id}" }
       end
     end
   end

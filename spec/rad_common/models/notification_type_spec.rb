@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe NotificationType, type: :model do
-  let!(:user) { create :admin }
+  let(:user) { create :admin }
   let(:security_role) { user.security_roles.first }
   let(:notification_type) { create :global_validity_notification, security_roles: [security_role] }
   let(:notification_method) { :email }
@@ -31,72 +31,6 @@ RSpec.describe NotificationType, type: :model do
       let(:opt_in) { false }
 
       it { is_expected.to be false }
-    end
-  end
-
-  describe 'notify_user_ids_opted with absolute_user' do
-    # remove this on all other apps, division is only in dummy app of rad_common
-    subject { notification_type.send(:notify_user_ids_opted, notification_method) }
-
-    let(:notification_type) { create :new_division_notification }
-    let(:notification_payload) { create :division, owner: user }
-
-    it { is_expected.to eq [user.id] }
-
-    context 'when user opts out' do
-      before { create :notification_setting, user: user, notification_type: notification_type, enabled: false }
-
-      it { is_expected.to eq [] }
-    end
-
-    context 'with inactive user' do
-      before { user.update! user_status: UserStatus.default_inactive_status }
-
-      it { expect { subject }.to raise_error 'absolute user must be active' }
-    end
-
-    context 'when email is turned off' do
-      before do
-        create :notification_setting, user: user,
-                                      notification_type: notification_type,
-                                      enabled: true,
-                                      email: false,
-                                      feed: true
-      end
-
-      it { is_expected.to eq [] }
-    end
-
-    context 'when feed' do
-      let(:notification_method) { :feed }
-
-      context 'without setting' do
-        it { is_expected.to eq [] }
-      end
-
-      context 'with setting enabled' do
-        before do
-          create :notification_setting, user: user,
-                                        notification_type: notification_type,
-                                        enabled: true,
-                                        email: false,
-                                        feed: true
-        end
-
-        it { is_expected.to eq [user.id] }
-      end
-
-      context 'with setting disabled' do
-        before do
-          create :notification_setting, user: user,
-                                        notification_type: notification_type,
-                                        enabled: true,
-                                        email: true,
-                                        feed: false
-        end
-
-        it { is_expected.to eq [] }
-      end
     end
   end
 

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Security roles', type: :request do
   let(:user) { create :admin }
   let(:security_role) { create :security_role }
-  let(:valid_attributes) { { name: 'foo', read_audit: true } }
+  let(:valid_attributes) { { name: 'foo' } }
   let(:invalid_attributes) { { name: nil } }
 
   before { login_as user, scope: :user }

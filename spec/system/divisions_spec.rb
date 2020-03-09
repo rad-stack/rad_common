@@ -19,7 +19,7 @@ RSpec.describe 'Divisions', type: :system do
     end
 
     describe 'single attachment validation' do
-      let(:file) { 'spec/test_files/radlogo.jpeg' }
+      let(:file) { 'spec/fixtures/radlogo.jpeg' }
 
       before do
         allow_any_instance_of(Division).to receive(:save).and_return true
@@ -36,7 +36,7 @@ RSpec.describe 'Divisions', type: :system do
       end
 
       context 'invalid due to file size' do
-        let(:file) { 'spec/test_files/large_logo.png' }
+        let(:file) { 'spec/fixtures/large_logo.png' }
 
         it 'validates' do
           expect(page).to have_content 'File could not be saved. File size must be less than 48.8 KB.'
@@ -53,7 +53,7 @@ RSpec.describe 'Divisions', type: :system do
     end
 
     describe 'multiple attachment validation' do
-      let(:file2) { 'spec/test_files/radlogo.jpeg' }
+      let(:file2) { 'spec/fixtures/radlogo.jpeg' }
 
       before do
         visit edit_division_path(division)
@@ -63,7 +63,7 @@ RSpec.describe 'Divisions', type: :system do
       end
 
       context 'both invalid' do
-        let(:file1) { 'spec/test_files/radlogo.png' }
+        let(:file1) { 'spec/fixtures/radlogo.png' }
 
         it 'validates' do
           expect(page).to have_content 'Logo, Avatar could not be saved due to invalid content types'
@@ -73,7 +73,7 @@ RSpec.describe 'Divisions', type: :system do
       end
 
       context 'one invalid' do
-        let(:file1) { 'spec/test_files/radlogo.jpeg' }
+        let(:file1) { 'spec/fixtures/radlogo.jpeg' }
 
         it 'validates' do
           expect(page).to have_content 'Logo could not be saved due to invalid content types'
