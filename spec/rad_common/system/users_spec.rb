@@ -108,17 +108,25 @@ describe 'Users', type: :system do
 
     describe 'show' do
       it 'does not allow' do
-        visit user_path(user)
-        expect(page.status_code).to eq 403
-        expect(page).to have_content 'Access Denied'
+        if RadCommon.portal_namespace.present?
+          expect { visit user_path(user) }.to raise_error ActionController::RoutingError
+        else
+          visit user_path(user)
+          expect(page.status_code).to eq 403
+          expect(page).to have_content 'Access Denied'
+        end
       end
     end
 
     describe 'index' do
       it 'does not allow' do
-        visit users_path
-        expect(page.status_code).to eq 403
-        expect(page).to have_content 'Access Denied'
+        if RadCommon.portal_namespace.present?
+          expect { visit users_path }.to raise_error ActionController::RoutingError
+        else
+          visit users_path
+          expect(page.status_code).to eq 403
+          expect(page).to have_content 'Access Denied'
+        end
       end
     end
   end

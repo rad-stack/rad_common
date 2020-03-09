@@ -6,6 +6,8 @@ module RadbearUser
     has_many :system_messages, dependent: :destroy
     has_many :notifications, dependent: :destroy
 
+    has_one_attached :avatar
+
     attr_accessor :approved_by, :do_not_notify_approved
 
     scope :by_permission, ->(permission_attr) { joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct }

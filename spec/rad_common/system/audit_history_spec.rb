@@ -19,9 +19,11 @@ describe 'AuditHistory', type: :system do
   end
 
   it 'shows attachment created' do
+    allow(RadCommon).to receive(:use_avatar).and_return true
+
     visit '/users/edit'
     fill_in 'Current password', with: 'password'
-    page.attach_file('Avatar', 'spec/fixtures/radlogo.png')
+    page.attach_file('Avatar', 'spec/fixtures/test_photo.png')
     click_on 'Save'
     expect(page).to have_content 'account has been updated successfully'
 
