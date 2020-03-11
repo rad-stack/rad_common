@@ -7,7 +7,7 @@ $ ->
   $(".content .global-search-autocomplete").bind "autocompletefocus", (event, ui) ->
     select_global_search_item($(this), event, ui)
 
-  $("#global_search_name").on "keyup keypress", (e) ->
+  $(".global_search_name").on "keyup keypress", (e) ->
     code = e.keyCode or e.which
     if code is 13
       e.preventDefault()
