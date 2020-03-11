@@ -41,7 +41,7 @@ class NotificationType < ApplicationRecord
   end
 
   def mailer_options
-    return {} if subject_record.blank? || subject_url.blank?
+    return {} if subject_url.blank?
 
     { email_action: { message: 'Click here to view the details.',
                       button_text: 'View',
