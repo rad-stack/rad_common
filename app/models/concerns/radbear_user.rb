@@ -141,6 +141,6 @@ module RadbearUser
     end
 
     def notify_user_accepted
-      Notifications::UserAcceptsInvitationNotification.main.notify!(self)
+      Notifications::UserAcceptedInvitationNotification.main.notify!(self)
     end
 end

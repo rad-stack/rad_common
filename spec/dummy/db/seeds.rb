@@ -7,7 +7,7 @@ UserStatus.seed_items if UserStatus.count.zero?
 
 if NotificationType.count.zero?
   NotificationType.seed_items
-  Notifications::NewDivisionNotification.create!
+  Notifications::DivisionUpdatedNotification.create!
 end
 
 if User.count.zero?

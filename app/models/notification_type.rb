@@ -30,15 +30,29 @@ class NotificationType < ApplicationRecord
     'simple_message'
   end
 
+  def mailer_subject
+    description
+  end
+
+  def mailer_message
+    return description if subject_record.blank?
+
+    "#{description}: #{subject_record}"
+  end
+
   def mailer_options
-    {}
+    return {} if subject_record.blank? || subject_url.blank?
+
+    { email_action: { message: 'Click here to view the details.',
+                      button_text: 'View',
+                      button_url: subject_url } }
   end
 
   def exclude_user_ids
     []
   end
 
-  def feed_record
+  def subject_record
     payload
   end
 
@@ -47,7 +61,16 @@ class NotificationType < ApplicationRecord
   end
 
   def sms_content
-    feed_content
+    "#{description}: #{subject_url}"
+  end
+
+  def subject_url
+    return if subject_record.blank?
+
+    url_method = "#{subject_record.class.table_name.singularize}_url"
+    return unless Rails.application.routes.url_helpers.respond_to? url_method
+
+    Rails.application.routes.url_helpers.send(url_method, subject_record)
   end
 
   def auth_mode
@@ -74,8 +97,8 @@ class NotificationType < ApplicationRecord
   def self.seed_items
     Notifications::NewUserSignedUpNotification.create! security_roles: [SecurityRole.admin_role]
     Notifications::UserWasApprovedNotification.create! security_roles: [SecurityRole.admin_role]
-    Notifications::UserAcceptsInvitationNotification.create! security_roles: [SecurityRole.admin_role]
-    Notifications::GlobalValidityNotification.create! security_roles: [SecurityRole.admin_role]
+    Notifications::UserAcceptedInvitationNotification.create! security_roles: [SecurityRole.admin_role]
+    Notifications::InvalidDataWasFoundNotification.create! security_roles: [SecurityRole.admin_role]
   end
 
   def self.main
@@ -140,7 +163,7 @@ class NotificationType < ApplicationRecord
         Notification.create! user_id: user_id,
                              notification_type: self,
                              content: feed_content,
-                             record: feed_record,
+                             record: subject_record,
                              unread: opted_ids.include?(user_id)
       end
     end

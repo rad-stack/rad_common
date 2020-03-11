@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :global_validity_notification, class: 'Notifications::GlobalValidityNotification' do
+  factory :global_validity_notification, class: 'Notifications::InvalidDataWasFoundNotification' do
     security_roles { [create(:security_role, :admin)] }
   end
 
@@ -11,7 +11,7 @@ FactoryBot.define do
     security_roles { [create(:security_role, :admin)] }
   end
 
-  factory :user_accepts_invitation_notification, class: 'Notifications::UserAcceptsInvitationNotification' do
+  factory :user_accepts_invitation_notification, class: 'Notifications::UserAcceptedInvitationNotification' do
     security_roles { [create(:security_role, :admin)] }
   end
 end

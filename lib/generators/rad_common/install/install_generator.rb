@@ -266,6 +266,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20200306204548_notifications_sti.rb',
                         'notifications_sti'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200311113900_fix_notification_names.rb',
+                        'fix_notification_names'
       end
 
       def self.next_migration_number(path)

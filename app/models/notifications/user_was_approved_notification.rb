@@ -8,12 +8,12 @@ module Notifications
       "#{approvee} was approved by #{approved_by_name}."
     end
 
-    def feed_record
+    def subject_record
       approvee
     end
 
     def sms_content
-      feed_content
+      "#{feed_content} #{subject_url}"
     end
 
     def approvee
