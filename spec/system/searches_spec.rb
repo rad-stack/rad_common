@@ -17,7 +17,7 @@ describe 'Searches', type: :system do
         page.dismiss_confirm prompt do
           check 'super_search'
         end
-        expect(find('#global_search_name')[:placeholder]).to eq 'Search user by name'
+        expect(first('.global_search_name', match: :first)[:placeholder]).to eq 'Search user by name'
       end
 
       it 'uses if confirmed', js: true do
@@ -25,7 +25,7 @@ describe 'Searches', type: :system do
         page.accept_confirm prompt do
           check 'super_search'
         end
-        expect(find('#global_search_name')[:placeholder]).to eq 'Super Search'
+        expect(first('.global_search_name')[:placeholder]).to eq 'Super Search'
       end
     end
   end
