@@ -1,21 +1,27 @@
 require 'rails_helper'
 
 RSpec.describe Notifications::UserWasApprovedNotification, type: :model do
-  let!(:admin) { create :admin }
+  let(:admin) { create :admin }
   let(:another) { create :admin }
   let(:user) { create :user }
-  let(:notification) { described_class }
+  let(:notification_type) { create :user_was_approved_notification, security_roles: [admin.security_roles.first] }
   let(:mail) { ActionMailer::Base.deliveries.last }
 
-  describe '#users_except_self' do
+  describe '#notify_user_ids_opted' do
+    before { notification_type.payload = payload }
+
     context 'when user is approved' do
-      subject { notification.send(:users_except_self, user) }
+      subject { notification_type.send(:notify_user_ids_opted, :email) }
+
+      let(:payload) { [user, admin] }
 
       it { is_expected.to include admin.id }
     end
 
     context 'when admin is approved' do
-      subject { notification.send(:users_except_self, another) }
+      subject { notification_type.send(:notify_user_ids_opted, :email) }
+
+      let(:payload) { [another, admin] }
 
       it { is_expected.to include admin.id }
       it { is_expected.not_to include another.id }
@@ -25,7 +31,7 @@ RSpec.describe Notifications::UserWasApprovedNotification, type: :model do
   describe '#notify!' do
     before do
       ActionMailer::Base.deliveries = []
-      notification.notify! [user, admin]
+      notification_type.notify! [user, admin]
     end
 
     it 'emails' do

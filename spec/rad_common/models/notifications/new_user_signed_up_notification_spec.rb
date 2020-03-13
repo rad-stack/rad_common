@@ -1,15 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe Notifications::NewUserSignedUpNotification, type: :model do
-  let!(:admin) { create :admin }
   let(:user) { create :user }
-  let(:notification) { described_class }
+  let(:security_role) { user.security_roles.first }
+  let(:notification_type) { create :new_user_signed_up_notification, security_roles: [security_role] }
   let(:mail) { ActionMailer::Base.deliveries.last }
 
   describe '#notify!' do
     before do
       ActionMailer::Base.deliveries = []
-      notification.notify! user
+      notification_type.notify! user
     end
 
     it 'emails' do

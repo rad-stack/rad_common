@@ -19,8 +19,6 @@ class User < ApplicationRecord
   scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
   scope :recent_first, -> { order('users.created_at DESC') }
 
-  has_one_attached :avatar
-
   validates_with PhoneNumberValidator, fields: [:mobile_phone]
   validates_with TwilioPhoneValidator, fields: [{ field: :mobile_phone, type: :mobile }]
 

@@ -1,43 +1,72 @@
 require 'rails_helper'
 
 RSpec.describe NotificationType, type: :model do
-  let(:security_role) { create :security_role, :admin }
-  let!(:user) { create :admin, security_roles: [security_role] }
-  let(:notification_type) { create :notification_type }
+  let(:user) { create :admin }
+  let(:notification_type) { create :new_division_notification }
+  let(:notification_payload) { create :division, owner: user }
+  let(:notification_method) { :email }
 
-  let!(:notification_security_role) do
-    create :notification_security_role, notification_type: notification_type, security_role: security_role
-  end
+  before { notification_type.payload = notification_payload }
 
-  describe '#notify_user_ids' do
-    subject { notification_class.send(:notify_user_ids) }
-
-    let(:notification_class) { Notifications::GlobalValidityNotification }
+  describe 'notify_user_ids_opted with absolute_user' do
+    subject { notification_type.send(:notify_user_ids_opted, notification_method) }
 
     it { is_expected.to eq [user.id] }
-  end
-
-  describe '#notify_list' do
-    subject { notification_type.notify_list(true) }
-
-    let!(:another) { create :admin, security_roles: [security_role] }
-
-    it { is_expected.to include user }
-    it { is_expected.to include another }
 
     context 'when user opts out' do
-      before do
-        create :notification_setting, user: user, notification_type: notification_type, enabled: false
-      end
+      before { create :notification_setting, user: user, notification_type: notification_type, enabled: false }
 
-      it { is_expected.to include another }
-      it { is_expected.not_to include user }
+      it { is_expected.to eq [] }
     end
 
-    context 'inactive user' do
+    context 'with inactive user' do
       before { user.update! user_status: UserStatus.default_inactive_status }
 
-      it { is_expected.not_to include user }
+      it { expect { subject }.to raise_error 'absolute user must be active' }
+    end
+
+    context 'when email is turned off' do
+      before do
+        create :notification_setting, user: user,
+                                      notification_type: notification_type,
+                                      enabled: true,
+                                      email: false,
+                                      feed: true
+      end
+
+      it { is_expected.to eq [] }
+    end
+
+    context 'when feed' do
+      let(:notification_method) { :feed }
+
+      context 'without setting' do
+        it { is_expected.to eq [] }
+      end
+
+      context 'with setting enabled' do
+        before do
+          create :notification_setting, user: user,
+                                        notification_type: notification_type,
+                                        enabled: true,
+                                        email: false,
+                                        feed: true
+        end
+
+        it { is_expected.to eq [user.id] }
+      end
+
+      context 'with setting disabled' do
+        before do
+          create :notification_setting, user: user,
+                                        notification_type: notification_type,
+                                        enabled: true,
+                                        email: true,
+                                        feed: false
+        end
+
+        it { is_expected.to eq [] }
+      end
     end
   end
 end

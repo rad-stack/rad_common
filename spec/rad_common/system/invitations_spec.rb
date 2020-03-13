@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'Invitations', type: :system do
   let(:company) { Company.main }
-  let!(:admin) { create :admin }
+  let(:admin) { create :admin }
   let(:user) { create :user }
   let(:email_domain) { 'example.com' }
   let(:external_domain) { 'abc.com' }
@@ -27,21 +27,23 @@ describe 'Invitations', type: :system do
 
     describe 'new' do
       context 'valid' do
-        it 'invites a user' do
+        it 'invites a user', :vcr do
           visit new_user_invitation_path
           fill_in 'Email', with: valid_email
           fill_in 'First name', with: first_name
           fill_in 'Last name', with: last_name
+          fill_in 'Mobile phone', with: '(999) 231-1111'
           click_button 'Send'
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
         end
 
-        it 'invites an external user' do
+        it 'invites an external user', :vcr do
           if RadCommon.external_users
             visit new_user_invitation_path
             fill_in 'Email', with: external_email
             fill_in 'First name', with: first_name
             fill_in 'Last name', with: last_name
+            fill_in 'Mobile phone', with: '(999) 231-1111'
             check 'Client user?'
             click_button 'Send'
             expect(page).to have_content "We invited '#{first_name} #{last_name}'"
@@ -50,12 +52,13 @@ describe 'Invitations', type: :system do
       end
 
       context 'invalid' do
-        it 'because of invalid email' do
+        it 'because of invalid email', :vcr do
           visit new_user_invitation_path
           bad_email = 'j@g.com'
           fill_in 'Email', with: bad_email
           fill_in 'First name', with: first_name
           fill_in 'Last name', with: last_name
+          fill_in 'Mobile phone', with: '(999) 231-1111'
           click_button 'Send'
           expect(page).to have_content ' is not authorized for this application'
         end
@@ -63,11 +66,12 @@ describe 'Invitations', type: :system do
     end
 
     describe 'resend' do
-      it 'resends invitation' do
+      it 'resends invitation', :vcr do
         visit new_user_invitation_path
         fill_in 'Email', with: valid_email
         fill_in 'First name', with: first_name
         fill_in 'Last name', with: last_name
+        fill_in 'Mobile phone', with: '(999) 231-1111'
         click_button 'Send'
         expect(page).to have_content "We invited '#{first_name} #{last_name}'"
 
@@ -82,10 +86,11 @@ describe 'Invitations', type: :system do
     before do
       @invitee = User.invite!(email: Faker::Internet.user_name + '@' + email_domain,
                               first_name: Faker::Name.first_name,
-                              last_name: Faker::Name.last_name)
+                              last_name: Faker::Name.last_name,
+                              mobile_phone: '(999) 231-1111')
     end
 
-    it 'does not allow invitee to reset password after invite expires' do
+    it 'does not allow invitee to reset password after invite expires', :vcr do
       @invitee = User.find(@invitee.id)
       expect(@invitee.errors.count).to eq(0)
       @invitee.invitation_created_at = 3.weeks.ago
@@ -98,8 +103,9 @@ describe 'Invitations', type: :system do
       expect(page).to have_content 'If your email address exists in our database, you will receive a password'
     end
 
-    it 'notifies admin when invitee accepts' do
+    it 'notifies admin when invitee accepts', :vcr do
       ActionMailer::Base.deliveries = []
+      create :user_accepts_invitation_notification, security_roles: [admin.security_roles.first]
 
       @invitee.accept_invitation!
 
@@ -108,7 +114,7 @@ describe 'Invitations', type: :system do
       expect(mail.to).to include admin.email
     end
 
-    it "doesn't let unaccepted invitee reset password" do
+    it "doesn't let unaccepted invitee reset password", :vcr do
       ActionMailer::Base.deliveries = []
 
       visit new_user_password_path

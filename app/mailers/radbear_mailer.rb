@@ -36,7 +36,10 @@ class RadbearMailer < ActionMailer::Base
     mail to: @recipient.formatted_email, subject: 'Your Account Was Approved'
   end
 
-  def user_was_approved(recipients, user, approver)
+  def user_was_approved(recipients, user_and_approver)
+    user = user_and_approver.first
+    approver = user_and_approver.last
+
     @email_action = { message: 'You can review this approval if desired.',
                       button_text: 'Review User',
                       button_url: user_url(user) }

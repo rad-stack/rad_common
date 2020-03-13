@@ -4,6 +4,9 @@ module RadbearUser
   included do
     has_many :notification_settings, dependent: :destroy
     has_many :system_messages, dependent: :destroy
+    has_many :notifications, dependent: :destroy
+
+    has_one_attached :avatar
 
     attr_accessor :approved_by, :do_not_notify_approved
 
@@ -13,6 +16,7 @@ module RadbearUser
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
+    validate :validate_sms_mobile_phone, on: :update
 
     before_validation :set_timezone, on: :create
     after_save :notify_user_approved
@@ -99,6 +103,10 @@ module RadbearUser
     external? && RadCommon.portal_namespace.present?
   end
 
+  def read_notifications!
+    notifications.unread.update_all unread: false
+  end
+
   private
 
     def validate_email_address
@@ -109,6 +117,13 @@ module RadbearUser
       return if components.count == 2 && domains.include?(components[1])
 
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
+    end
+
+    def validate_sms_mobile_phone
+      return if !RadicalTwilio.twilio_enabled? || mobile_phone.present?
+      return if notification_settings.enabled.where(sms: true).count.zero?
+
+      errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
     end
 
     def set_timezone
@@ -122,10 +137,10 @@ module RadbearUser
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
       RadbearMailer.your_account_approved(self).deliver_later
-      Notifications::UserWasApprovedNotification.notify!([self, approved_by]) unless do_not_notify_approved
+      Notifications::UserWasApprovedNotification.main.notify!([self, approved_by]) unless do_not_notify_approved
     end
 
     def notify_user_accepted
-      Notifications::UserAcceptsInvitationNotification.notify!(self)
+      Notifications::UserAcceptedInvitationNotification.main.notify!(self)
     end
 end

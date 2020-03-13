@@ -1,4 +1,5 @@
 #= require bootstrap-select
+#= require rad_common/dynamic_updater
 
 $ ->
   $(".global-search-autocomplete").bind "autocompleteselect", (event, ui) ->

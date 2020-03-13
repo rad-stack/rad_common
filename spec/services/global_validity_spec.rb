@@ -10,7 +10,10 @@ describe GlobalValidity, type: :service do
   let(:email_body_text) { last_email.body.parts.first.body.raw_source }
   let(:email_body_html) { last_email.body.parts.second.body.raw_source }
 
-  before { ActionMailer::Base.deliveries.clear }
+  before do
+    create :global_validity_notification, security_roles: [admin_security_role]
+    ActionMailer::Base.deliveries.clear
+  end
 
   # TODO: add tests for override model feature
 
@@ -18,8 +21,8 @@ describe GlobalValidity, type: :service do
     subject { global_validity.send(:models_to_check).map(&:to_s) }
 
     let(:models) do
-      %w[Company Division NotificationSecurityRole NotificationSetting NotificationType SecurityRole SecurityRolesUser
-         Status SystemMessage User UserStatus]
+      %w[Company Division Notification NotificationSecurityRole NotificationSetting NotificationType SecurityRole
+         SecurityRolesUser Status SystemMessage User UserStatus]
     end
 
     it { is_expected.to eq models }

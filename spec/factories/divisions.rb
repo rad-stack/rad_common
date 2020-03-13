@@ -4,5 +4,6 @@ FactoryBot.define do
     sequence(:code) { |n| "Code #{n + 1}" }
     association :owner, factory: :user
     division_status { :status_active }
+    additional_info { 'blah' }
   end
 end

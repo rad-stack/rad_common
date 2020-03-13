@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_03_163827) do
+ActiveRecord::Schema.define(version: 2020_03_11_113900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(version: 2020_02_03_163827) do
     t.boolean "notify", default: false, null: false
     t.string "timezone"
     t.decimal "hourly_rate", precision: 8, scale: 2, default: "0.0", null: false
+    t.string "additional_info"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
   end
@@ -113,15 +114,31 @@ ActiveRecord::Schema.define(version: 2020_02_03_163827) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "notification_type_id", null: false
+    t.boolean "email", default: true, null: false
+    t.boolean "feed", default: false, null: false
+    t.boolean "sms", default: false, null: false
     t.index ["notification_type_id", "user_id"], name: "index_notification_settings_on_notification_type_id_and_user_id", unique: true
   end
 
   create_table "notification_types", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "auth_mode", default: 0, null: false
-    t.index ["name"], name: "index_notification_types_on_name", unique: true
+    t.index ["type"], name: "index_notification_types_on_type", unique: true
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "notification_type_id", null: false
+    t.string "content", null: false
+    t.boolean "unread", default: true, null: false
+    t.string "record_type"
+    t.bigint "record_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["notification_type_id"], name: "index_notifications_on_notification_type_id"
+    t.index ["record_type", "record_id"], name: "index_notifications_on_record_type_and_record_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "security_roles", id: :serial, force: :cascade do |t|
@@ -231,6 +248,8 @@ ActiveRecord::Schema.define(version: 2020_02_03_163827) do
   add_foreign_key "notification_security_roles", "security_roles"
   add_foreign_key "notification_settings", "notification_types"
   add_foreign_key "notification_settings", "users"
+  add_foreign_key "notifications", "notification_types"
+  add_foreign_key "notifications", "users"
   add_foreign_key "security_roles_users", "security_roles"
   add_foreign_key "security_roles_users", "users"
   add_foreign_key "system_messages", "users"
