@@ -65,12 +65,9 @@ class NotificationType < ApplicationRecord
   end
 
   def subject_url
-    return if subject_record.blank?
+    return if subject_record.blank? || !ApplicationController.helpers.show_route_exists_for?(subject_record)
 
-    url_method = "#{subject_record.class.table_name.singularize}_url"
-    return unless Rails.application.routes.url_helpers.respond_to? url_method
-
-    Rails.application.routes.url_helpers.send(url_method, subject_record)
+    Rails.application.routes.url_helpers.url_for(subject_record)
   end
 
   def auth_mode
