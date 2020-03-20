@@ -31,6 +31,30 @@ describe RadbearMailer, type: :mailer do
         expect(last_email.body.encoded).to include('There are 0 invalid records')
       end
     end
+
+    context 'with a problem with a link' do
+      before { described_class.global_validity([user], [[user, 'foo bar']]).deliver_now }
+
+      it 'matches as expected' do
+        expect(last_email.subject).to include 'Invalid data in'
+        expect(last_email.to).to include email
+        expect(last_email.body.encoded).to include('There is 1 invalid record')
+        expect(last_email.body.encoded).to include("/users/#{user.id}")
+      end
+    end
+
+    context 'with a problem without a link' do
+      let(:notification_setting) { create :notification_setting, notification_type: create(:global_validity_notification) }
+
+      before { described_class.global_validity([user], [[notification_setting, 'foo bar']]).deliver_now }
+
+      it 'matches as expected' do
+        expect(last_email.subject).to include 'Invalid data in'
+        expect(last_email.to).to include email
+        expect(last_email.body.encoded).to include('There is 1 invalid record')
+        expect(last_email.body.encoded).to include(notification_setting.to_s)
+      end
+    end
   end
 
   describe '#simple_message' do

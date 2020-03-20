@@ -14,6 +14,7 @@ class GlobalValidity
 
     total_start_time = Time.current
     total_error_count = 0
+
     models_to_check.each do |model|
       next if exclude_models.include?(model)
 

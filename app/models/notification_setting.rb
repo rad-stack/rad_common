@@ -10,6 +10,10 @@ class NotificationSetting < ApplicationRecord
 
   audited associated_with: :user
 
+  def to_s
+    "#{user} - #{notification_type}"
+  end
+
   def self.settings_for_user(user)
     return [] if user.external?
 
