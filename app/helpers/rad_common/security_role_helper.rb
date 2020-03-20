@@ -33,7 +33,7 @@ module RadCommon
     end
 
     def security_role_collection
-      SecurityRole.all.map { |role| [role.name, role.id] }
+      SecurityRole.by_name.map { |role| [role.name, role.id] }
     end
 
     def permission_tooltip(permission)
