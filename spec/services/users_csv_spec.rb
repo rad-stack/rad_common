@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'csv'
 
-RSpec.describe UsersCsv, type: :service do
+RSpec.describe UsersCSV, type: :service do
   describe '.generate' do
     let(:user) { create :user, external: false, current_sign_in_at: Time.current }
     let(:csv) { described_class.generate([user]) }

@@ -28,7 +28,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html { @users = @users.page(params[:page]) }
       format.csv do
-        csv = UsersCsv.generate(@users)
+        csv = UsersCSV.generate(@users)
         RadbearMailer.email_report(current_user, csv, 'User Export').deliver_later
         flash[:success] = "Your export file is generating. You'll receive an email when it finishes."
         redirect_to users_path(@params)

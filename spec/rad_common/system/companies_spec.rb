@@ -22,9 +22,11 @@ RSpec.describe 'Companies', type: :system do
 
   describe 'global validity' do
     it 'runs' do
-      visit company_path(company)
-      click_on 'Global Validity Check'
-      expect(page).to have_content("We're checking the validity of all of your company's data.")
+      if RadCommon.global_validity_enable_interactive
+        visit company_path(company)
+        click_on 'Global Validity Check'
+        expect(page).to have_content("We're checking the validity of all of your company's data.")
+      end
     end
   end
 end

@@ -1,5 +1,12 @@
 require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record/base/schema_validations"
 
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.acronym 'SMS'
+  inflect.acronym 'PDF'
+  inflect.acronym 'CRM'
+  inflect.acronym 'CSV'
+end
+
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 
 if ENV.fetch('STAGING') == 'true'
