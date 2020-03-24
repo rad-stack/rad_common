@@ -1,4 +1,4 @@
-class SystemSmsJob < ApplicationJob
+class SystemSMSJob < ApplicationJob
   queue_as :default
 
   def perform(message, recipients, current_user)

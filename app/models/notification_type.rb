@@ -171,7 +171,7 @@ class NotificationType < ApplicationRecord
       id_list = notify_user_ids_opted(:sms)
       return if id_list.count.zero?
 
-      SystemSmsJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content}", id_list, nil
+      SystemSMSJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content}", id_list, nil
     end
 
     def notify_user_ids_all
