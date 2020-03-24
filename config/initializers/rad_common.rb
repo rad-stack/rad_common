@@ -3,6 +3,7 @@ require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_exten
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'SMS'
   inflect.acronym 'PDF'
+  inflect.acronym 'CRM'
 end
 
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
