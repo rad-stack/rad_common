@@ -4,6 +4,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'SMS'
   inflect.acronym 'PDF'
   inflect.acronym 'CRM'
+  inflect.acronym 'CSV'
 end
 
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations

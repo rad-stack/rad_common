@@ -1,4 +1,4 @@
-class UsersCsv
+class UsersCSV
   def self.generate(users)
     CSV.generate do |csv|
       csv << headers
