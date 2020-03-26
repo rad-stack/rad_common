@@ -73,6 +73,9 @@ module RadCommon
         template '../../../../../spec/dummy/app/views/devise/invitations/new.html.haml',
                  'app/views/devise/invitations/new.html.haml'
 
+        template '../../../../../spec/dummy/app/views/devise/password_expired/show.html.haml',
+                 'app/views/devise/password_expired/show.html.haml'
+
         template '../../../../../spec/dummy/app/views/devise/invitations/edit.html.haml',
                  'app/views/devise/invitations/edit.html.haml'
 
