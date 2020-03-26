@@ -21,10 +21,12 @@ module RadCommon
         template '../../../../../spec/dummy/.env.example', '.env.example'
 
         # initializers
-        template 'rad_common.rb',
-                 'config/initializers/rad_common.rb'
-
+        template 'rad_common.rb', 'config/initializers/rad_common.rb'
         template '../../../../../spec/dummy/config/initializers/raven.rb', 'config/initializers/raven.rb'
+        template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
+
+        template '../../../../../spec/dummy/config/initializers/devise-security.rb',
+                 'config/initializers/devise-security.rb'
 
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
@@ -269,6 +271,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20200311113900_fix_notification_names.rb',
                         'fix_notification_names'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200325152933_devise_security_updates.rb',
+                        'devise_security_updates'
       end
 
       def self.next_migration_number(path)
