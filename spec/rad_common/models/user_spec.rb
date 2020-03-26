@@ -11,8 +11,8 @@ describe User, type: :model do
       authy_enabled: false,
       mobile_phone: '(999) 231-1111',
       email: 'user@example.com',
-      password: 'cOmpl3x_password',
-      password_confirmation: 'cOmpl3x_password' }
+      password: 'cOmpl3x_p@55w0rd',
+      password_confirmation: 'cOmpl3x_p@55w0rd' }
   end
 
   describe 'password validations' do

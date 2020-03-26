@@ -22,7 +22,7 @@ describe 'AuditHistory', type: :system do
     allow(RadCommon).to receive(:use_avatar).and_return true
 
     visit '/users/edit'
-    fill_in 'Current password', with: 'cOmpl3x_password'
+    fill_in 'Current password', with: 'cOmpl3x_p@55w0rd'
     page.attach_file('Avatar', 'spec/fixtures/test_photo.png')
     click_on 'Save'
     expect(page).to have_content 'account has been updated successfully'
