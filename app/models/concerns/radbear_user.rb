@@ -17,6 +17,7 @@ module RadbearUser
 
     validate :validate_email_address
     validate :validate_sms_mobile_phone, on: :update
+    validate :password_excludes_name
 
     before_validation :set_timezone, on: :create
     after_save :notify_user_approved
@@ -124,6 +125,14 @@ module RadbearUser
       return if notification_settings.enabled.where(sms: true).count.zero?
 
       errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
+    end
+
+    def password_excludes_name
+      return unless password.present? && first_name.present? && last_name.present?
+
+      if password.downcase.include?(first_name.downcase) || password.downcase.include?(last_name.downcase)
+        errors.add(:password, 'cannot contain your name')
+      end
     end
 
     def set_timezone

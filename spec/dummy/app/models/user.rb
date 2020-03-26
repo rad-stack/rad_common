@@ -8,7 +8,8 @@ class User < ApplicationRecord
   has_many :security_roles, through: :security_roles_users, dependent: :destroy
 
   devise :authy_authenticatable, :database_authenticatable, :registerable, :confirmable, :recoverable,
-         :rememberable, :trackable, :validatable, :invitable, :lockable
+         :trackable, :timeoutable, :lockable, :password_archivable, :password_expirable,
+         :secure_validatable, :expirable, :invitable
 
   scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
   scope :inactive, -> { joins(:user_status).where('user_statuses.active = FALSE') }
