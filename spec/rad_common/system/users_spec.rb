@@ -136,7 +136,7 @@ describe 'Users', type: :system do
   end
 
   describe 'sign up' do
-    it 'signs up' do
+    it 'signs up', :vcr do
       unless RadCommon.disable_sign_up
         visit new_user_registration_path
 
@@ -390,7 +390,7 @@ describe 'Users', type: :system do
       user.update!(authy_enabled: true, mobile_phone: '(904) 226-4901')
     end
 
-    it 'allows user to login with authentication token' do
+    it 'allows user to login with authentication token', :vcr do
       expect(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
 
       visit new_user_session_path
@@ -403,7 +403,7 @@ describe 'Users', type: :system do
       expect(page).to have_content 'Signed in successfully'
     end
 
-    it 'does not allow user to login with invalid authy token' do
+    it 'does not allow user to login with invalid authy token', :vcr do
       visit new_user_session_path
 
       fill_in 'user_email', with: user.email
