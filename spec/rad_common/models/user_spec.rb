@@ -64,7 +64,7 @@ describe User, type: :model do
         expect(user.errors.full_messages.to_s).to include 'was used previously'
       end
 
-      expect(user.update(password: 'EoC9ShWd1hWq4vBgFw!', password_confirmation: 'EoC9ShWd1hWq4vBgFw!')).to eq true
+      expect(user.update(password: 'cOmpl3x_p@55w0rd', password_confirmation: 'cOmpl3x_p@55w0rd')).to eq true
     end
   end
 

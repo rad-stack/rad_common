@@ -200,17 +200,6 @@ describe 'Users', type: :system do
       expect(page).to have_content 'Invalid Email or password'
     end
 
-    it 'does not allow user to login with invalid authy token', vcr: true do
-      user.update!(authy_id: '54079846', authy_enabled: true)
-      visit new_user_session_path
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      fill_in 'authy-token', with: 'Not the authy token'
-      click_button 'Verify and Sign in'
-      expect(page).to have_content('The entered token is invalid')
-    end
-
     it 'cannot sign in with expired password' do
       current_password = password
       new_password = 'Passwords2!!!!!'
@@ -247,13 +236,6 @@ describe 'Users', type: :system do
       fill_in 'user_password', with: password
       click_button 'Sign In'
       expect(page).to have_content('Signed in successfully')
-    end
-
-    it 'wrong password - does not specify if email or password is wrong' do
-      visit new_user_session_path
-      fill_in 'user_email', with: user.email
-      click_button 'Sign In'
-      expect(page).to have_content('Invalid Email or password.')
     end
 
     it 'sign in times out after 2 hours' do
