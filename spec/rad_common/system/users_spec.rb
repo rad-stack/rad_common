@@ -201,54 +201,60 @@ describe 'Users', type: :system do
     end
 
     it 'cannot sign in with expired password' do
-      current_password = password
-      new_password = 'Passwords2!!!!!'
+      if Devise.mappings[:user].password_expirable?
+        current_password = password
+        new_password = 'Passwords2!!!!!'
 
-      user.update(password_changed_at: 98.days.ago)
-      user.reload
+        user.update(password_changed_at: 98.days.ago)
+        user.reload
 
-      visit new_user_session_path
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: current_password
-      click_button 'Sign In'
-      expect(page).to have_content('Your password is expired.')
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: current_password
+        click_button 'Sign In'
+        expect(page).to have_content('Your password is expired.')
 
-      fill_in 'user_password', with: new_password
-      fill_in 'user_password_confirmation', with: new_password
-      fill_in 'user_current_password', with: current_password
-      click_button 'Change My Password'
-      expect(page).to have_content 'Your new password is saved.'
+        fill_in 'user_password', with: new_password
+        fill_in 'user_password_confirmation', with: new_password
+        fill_in 'user_current_password', with: current_password
+        click_button 'Change My Password'
+        expect(page).to have_content 'Your new password is saved.'
+      end
     end
 
     it 'cannot sign in when expired' do
-      user.update!(last_activity_at: 98.days.ago)
-      user.reload
+      if Devise.mappings[:user].expirable?
+        user.update!(last_activity_at: 98.days.ago)
+        user.reload
 
-      visit new_user_session_path
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      expect(page).to have_content('Your account has expired due to inactivity')
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content('Your account has expired due to inactivity')
 
-      user.update!(last_activity_at: Time.current)
+        user.update!(last_activity_at: Time.current)
 
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      expect(page).to have_content('Signed in successfully')
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content('Signed in successfully')
+      end
     end
 
     it 'sign in times out after 2 hours' do
-      visit new_user_session_path
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      expect(page).to have_content('Signed in successfully')
+      if Devise.mappings[:user].timeoutable?
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content('Signed in successfully')
 
-      Timecop.travel(125.minutes.from_now)
-      visit users_path
-      expect(page).to have_content('Your session expired. Please sign in again to continue.')
-      Timecop.return
+        Timecop.travel(125.minutes.from_now)
+        visit users_path
+        expect(page).to have_content('Your session expired. Please sign in again to continue.')
+        Timecop.return
+      end
     end
   end
 
@@ -351,14 +357,16 @@ describe 'Users', type: :system do
         let(:another_user) { create :admin }
 
         it 'updates last_activity_at' do
-          another_user.update!(last_activity_at: 91.days.ago)
-          expect(another_user.expired?).to eq(true)
-          visit edit_user_path(another_user)
-          fill_in :user_last_activity_at, with: Date.current
-          click_button 'Save'
-          expect(page).to have_content('User updated')
-          expect(another_user.reload.last_activity_at.to_date).to eq(Date.current)
-          expect(another_user.expired?).to eq(false)
+          if Devise.mappings[:user].expirable?
+            another_user.update!(last_activity_at: 91.days.ago)
+            expect(another_user.expired?).to eq(true)
+            visit edit_user_path(another_user)
+            fill_in :user_last_activity_at, with: Date.current
+            click_button 'Save'
+            expect(page).to have_content('User updated')
+            expect(another_user.reload.last_activity_at.to_date).to eq(Date.current)
+            expect(another_user.expired?).to eq(false)
+          end
         end
       end
     end
