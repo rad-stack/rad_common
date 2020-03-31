@@ -3,102 +3,102 @@ require 'rails_helper'
 describe 'Users', type: :system do
   let(:user) { create :user }
   let(:admin) { create :admin }
-  let(:password) { 'password' }
+  let(:password) { 'cOmpl3x_p@55w0rd' }
   let(:external_user) { create :user, :external }
 
-  describe 'authenticated' do
-    describe 'user' do
-      before { login_as(user, scope: :user) }
+  describe 'user' do
+    before { login_as(user, scope: :user) }
 
-      describe 'index' do
-        it 'shows users' do
-          visit users_path
-          expect(page).to have_content 'Access Denied'
-        end
-      end
-
-      describe 'profile' do
-        it 'updates profile' do
-          visit edit_user_registration_path
-          expect(find_field('First name').value).to eq user.first_name
-          new_name = Faker::Name.first_name
-          fill_in 'First name', with: new_name
-          fill_in 'Current password', with: password
-          click_button 'Save'
-          user.reload
-          expect(user.first_name).to eq new_name
-        end
+    describe 'index' do
+      it 'shows users' do
+        visit users_path
+        expect(page).to have_content 'Access Denied'
       end
     end
 
-    describe 'admin' do
-      let!(:notification_type) { Notifications::NewUserSignedUpNotification.create! security_roles: [user.security_roles.first] }
-      let(:notification_setting) { NotificationSetting.find_by(user: user, notification_type: notification_type) }
-      let(:external_user) { create :user, :external }
-
-      before { login_as admin, scope: :user }
-
-      describe 'index' do
-        it 'shows users' do
-          external_user.update! user_status: user.user_status
-          visit users_path(status: user.user_status_id)
-          expect(page).to have_content user.to_s
-          expect(page).to have_content external_user.to_s
-        end
-
-        it 'filters by user type' do
-          external_user.update!(user_status: user.user_status)
-          visit users_path(status: user.user_status_id, external: true)
-          expect(page).not_to have_content user.email
-          expect(page).to have_content external_user.email
-        end
-      end
-
-      it 'updates the user' do
-        visit edit_user_path(admin)
-        new = 'foo'
-        fill_in 'First name', with: new
+    describe 'profile' do
+      it 'updates profile' do
+        visit edit_user_registration_path
+        expect(find_field('First name').value).to eq user.first_name
+        new_name = Faker::Name.first_name
+        fill_in 'First name', with: new_name
+        fill_in 'Current password', with: password
         click_button 'Save'
-        expect(page).to have_content new
+        user.reload
+        expect(user.first_name).to eq new_name
+      end
+    end
+  end
+
+  describe 'admin' do
+    let!(:notification_type) { Notifications::NewUserSignedUpNotification.create! security_roles: [user.security_roles.first] }
+    let(:notification_setting) { NotificationSetting.find_by(user: user, notification_type: notification_type) }
+    let(:external_user) { create :user, :external }
+
+    before { login_as admin, scope: :user }
+
+    describe 'index' do
+      it 'shows users' do
+        external_user.update! user_status: user.user_status
+        visit users_path(status: user.user_status_id)
+        expect(page).to have_content user.to_s
+        expect(page).to have_content external_user.to_s
       end
 
-      describe 'show' do
-        before { visit user_path(user) }
+      it 'filters by user type' do
+        external_user.update!(user_status: user.user_status)
+        visit users_path(status: user.user_status_id, external: true)
+        expect(page).not_to have_content user.email
+        expect(page).to have_content external_user.email
+      end
+    end
 
-        it 'shows the user' do
-          expect(page).to have_content user.to_s
-        end
+    it 'updates the user' do
+      visit edit_user_path(admin)
+      new = 'foo'
+      fill_in 'First name', with: new
+      click_button 'Save'
+      expect(page).to have_content new
+    end
 
-        it 'shows client user' do
+    describe 'show' do
+      before { visit user_path(user) }
+
+      it 'shows the user' do
+        expect(page).to have_content user.to_s
+      end
+
+      it 'shows client user' do
+        if RadCommon.external_users
           visit user_path(external_user)
           expect(page).to have_content admin.first_name
         end
-
-        it 'shows field names in title case' do
-          expect(page).to have_content 'User Status'
-        end
-
-        it 'allows updating notification settings', :js do
-          expect(page).to have_content 'Notification Settings'
-          uncheck 'Enabled'
-          sleep 2
-          expect(notification_setting.enabled).to be false
-        end
       end
 
-      describe 'confirm' do
-        before do
-          user.update! confirmed_at: nil
-          visit user_path(user)
+      it 'shows field names in title case' do
+        expect(page).to have_content 'User Status'
+      end
+
+      it 'allows updating notification settings', :js do
+        expect(page).to have_content 'Notification Settings'
+        uncheck 'Enabled'
+        sleep 2
+        expect(notification_setting.enabled).to be false
+      end
+    end
+
+    describe 'confirm' do
+      before do
+        user.update! confirmed_at: nil
+        visit user_path(user)
+      end
+
+      it 'can manually confirm a user', :js do
+        accept_confirm do
+          click_link 'Confirm Email'
         end
 
-        it 'can manually confirm a user', :js do
-          accept_confirm do
-            click_link 'Confirm Email'
-          end
-
-          expect(page.html).to include 'User was successfully confirmed'
-        end
+        expect(page.html).to include 'User was successfully confirmed'
       end
     end
   end
@@ -108,36 +108,41 @@ describe 'Users', type: :system do
 
     describe 'show' do
       it 'does not allow' do
-        if RadCommon.portal_namespace.present?
-          expect { visit user_path(user) }.to raise_error ActionController::RoutingError
-        else
-          visit user_path(user)
-          expect(page.status_code).to eq 403
-          expect(page).to have_content 'Access Denied'
+        if RadCommon.external_users
+          if RadCommon.portal_namespace.present?
+            expect { visit user_path(user) }.to raise_error ActionController::RoutingError
+          else
+            visit user_path(user)
+            expect(page.status_code).to eq 403
+            expect(page).to have_content 'Access Denied'
+          end
         end
       end
     end
 
     describe 'index' do
       it 'does not allow' do
-        if RadCommon.portal_namespace.present?
-          expect { visit users_path }.to raise_error ActionController::RoutingError
-        else
-          visit users_path
-          expect(page.status_code).to eq 403
-          expect(page).to have_content 'Access Denied'
+        if RadCommon.external_users
+          if RadCommon.portal_namespace.present?
+            expect { visit users_path }.to raise_error ActionController::RoutingError
+          else
+            visit users_path
+            expect(page.status_code).to eq 403
+            expect(page).to have_content 'Access Denied'
+          end
         end
       end
     end
   end
 
   describe 'sign up' do
-    it 'signs up' do
+    it 'signs up', :vcr do
       unless RadCommon.disable_sign_up
         visit new_user_registration_path
 
         fill_in 'First name', with: Faker::Name.first_name
         fill_in 'Last name', with: Faker::Name.last_name
+        fill_in 'Mobile phone', with: '(345) 222-1111'
         fill_in 'Email', with: Faker::Internet.user_name + '@example.com'
         fill_in 'user_password', with: password
         fill_in 'user_password_confirmation', with: password
@@ -186,6 +191,71 @@ describe 'Users', type: :system do
       click_button 'Sign In'
       expect(page.html).to include('Signed in successfully.')
     end
+
+    it 'does not allow with invalid email' do
+      visit new_user_session_path
+      fill_in 'user_email', with: 'foo' + user.email
+      fill_in 'user_password', with: password
+      click_button 'Sign In'
+      expect(page).to have_content 'Invalid Email or password'
+    end
+
+    it 'cannot sign in with expired password' do
+      if Devise.mappings[:user].password_expirable?
+        current_password = password
+        new_password = 'Passwords2!!!!!'
+
+        user.update(password_changed_at: 98.days.ago)
+        user.reload
+
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: current_password
+        click_button 'Sign In'
+        expect(page).to have_content('Your password is expired.')
+
+        fill_in 'user_password', with: new_password
+        fill_in 'user_password_confirmation', with: new_password
+        fill_in 'user_current_password', with: current_password
+        click_button 'Change My Password'
+        expect(page).to have_content 'Your new password is saved.'
+      end
+    end
+
+    it 'cannot sign in when expired' do
+      if Devise.mappings[:user].expirable?
+        user.update!(last_activity_at: 98.days.ago)
+        user.reload
+
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content('Your account has expired due to inactivity')
+
+        user.update!(last_activity_at: Time.current)
+
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content('Signed in successfully')
+      end
+    end
+
+    it 'sign in times out after 2 hours' do
+      if Devise.mappings[:user].timeoutable?
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content('Signed in successfully')
+
+        Timecop.travel(125.minutes.from_now)
+        visit users_path
+        expect(page).to have_content('Your session expired. Please sign in again to continue.')
+        Timecop.return
+      end
+    end
   end
 
   describe 'edit' do
@@ -213,6 +283,137 @@ describe 'Users', type: :system do
 
       user.reload
       expect(user.security_roles.count).to eq 2
+    end
+  end
+
+  describe 'devise paranoid setting' do
+    it 'wrong password - does not specify if email or password is wrong' do
+      visit new_user_session_path
+      fill_in 'user_email', with: user.email
+      click_button 'Sign In'
+      expect(page).to have_content('Invalid Email or password.')
+    end
+
+    describe 'confirming' do
+      let(:user) { create(:user, confirmed_at: nil) }
+
+      it 'should not say whether the email exists' do
+        visit new_user_session_path
+
+        click_link "Didn't Receive Confirmation Instructions?"
+        fill_in 'Email', with: user.email
+        click_button 'Resend Confirmation Instructions'
+
+        expect(page).not_to have_content 'not found'
+        expect(page).to have_content 'If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes.'
+        expect(current_path).to eq(new_user_session_path)
+      end
+    end
+
+    describe 'unlock' do
+      let(:user) { create(:user, confirmed_at: nil) }
+
+      it 'should not say whether the email exists' do
+        visit new_user_session_path
+        click_link "Didn't Receive Unlock Instructions?"
+
+        fill_in 'Email', with: user.email
+        click_button 'Resend Unlock Instructions'
+
+        expect(page).to_not have_content 'not found'
+        expect(page).to have_content "If your account exists, you will receive an email with instructions for how to unlock it in a few minutes."
+      end
+    end
+
+    describe 'resetting password' do
+      it 'should not say whether the email exists' do
+        visit new_user_session_path
+        click_link 'Forgot Your Password?'
+
+        fill_in 'Email', with: user.email
+        click_button 'Send Me Reset Password Instructions'
+
+        expect(page).not_to have_content 'not found'
+        expect(page).to have_content 'If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes.'
+      end
+    end
+  end
+
+  describe 'authenticated admin' do
+    let(:user) { create :admin }
+
+    before { login_as user, scope: :user }
+
+    describe 'update' do
+      it 'updates Twilio when updating an accounts mobile phone', vcr: true do
+        visit edit_user_registration_path
+        fill_in 'user_mobile_phone', with: '(345) 222-1111'
+        fill_in 'user_current_password', with: password
+        click_button 'Save'
+        expect(page).to have_content('Your account has been updated successfully.')
+      end
+
+      context 'a different user' do
+        let(:another_user) { create :admin }
+
+        it 'updates last_activity_at' do
+          if Devise.mappings[:user].expirable?
+            another_user.update!(last_activity_at: 91.days.ago)
+            expect(another_user.expired?).to eq(true)
+            visit edit_user_path(another_user)
+            fill_in :user_last_activity_at, with: Date.current
+            click_button 'Save'
+            expect(page).to have_content('User updated')
+            expect(another_user.reload.last_activity_at.to_date).to eq(Date.current)
+            expect(another_user.expired?).to eq(false)
+          end
+        end
+      end
+    end
+  end
+
+  describe 'two factor authentication' do
+    let(:authy_id) { '1234567' }
+
+    before do
+      expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+      user.update!(authy_enabled: true, mobile_phone: '(904) 226-4901')
+    end
+
+    it 'allows user to login with authentication token', :vcr do
+      expect(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
+
+      visit new_user_session_path
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: password
+      click_button 'Sign In'
+      expect(page).to have_content 'Remember this device for 7 days'
+      fill_in 'authy-token', with: '7721070'
+      click_button 'Verify and Sign in'
+      expect(page).to have_content 'Signed in successfully'
+    end
+
+    it 'does not allow user to login with invalid authy token', :vcr do
+      visit new_user_session_path
+
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: password
+      click_button 'Sign In'
+      fill_in 'authy-token', with: 'Not the authy token'
+      click_button 'Verify and Sign in'
+      expect(page).to have_content('The entered token is invalid')
+    end
+
+    it 'updates authy when updating an accounts mobile phone' do
+      expect(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
+      expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+
+      login_as(user, scope: :user)
+      visit edit_user_registration_path
+      fill_in 'user_mobile_phone', with: '(345) 222-1111'
+      fill_in 'user_current_password', with: password
+      click_button 'Save'
+      expect(page).to have_content('Your account has been updated successfully.')
     end
   end
 end

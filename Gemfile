@@ -17,6 +17,7 @@ group :test do
   gem 'capybara-selenium'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
+  gem 'timecop'
   gem 'webdrivers'
 end
 

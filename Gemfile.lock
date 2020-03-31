@@ -9,6 +9,7 @@ PATH
       bootstrap4-kaminari-views (~> 1.0.1)
       devise
       devise-authy
+      devise-security
       devise_invitable
       faker
       font-awesome-rails
@@ -21,6 +22,7 @@ PATH
       premailer-rails (~> 1.10.2)
       pundit
       rails (~> 6.0.2.2)
+      rails_email_validator
       sentry-raven (~> 3.0.0)
       sidekiq (~> 5.2.2)
       sidekiq-failures
@@ -99,7 +101,7 @@ GEM
     autoprefixer-rails (9.7.5)
       execjs
     aws-eventstream (1.0.3)
-    aws-partitions (1.286.0)
+    aws-partitions (1.287.0)
     aws-sdk-core (3.92.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
@@ -162,6 +164,9 @@ GEM
     devise-authy (1.11.1)
       authy (>= 2.7.5)
       devise (>= 3.0.0)
+    devise-security (0.14.3)
+      devise (>= 4.3.0, < 5.0)
+      rails (>= 4.2.0, < 7.0)
     devise_invitable (2.0.1)
       actionmailer (>= 5.0)
       devise (>= 4.6)
@@ -179,7 +184,7 @@ GEM
     factory_bot_rails (5.1.1)
       factory_bot (~> 5.1.0)
       railties (>= 4.2.0)
-    faker (2.10.2)
+    faker (2.11.0)
       i18n (>= 1.6, < 2)
     faraday (1.0.0)
       multipart-post (>= 1.2, < 3)
@@ -307,6 +312,8 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.3.0)
       loofah (~> 2.3)
+    rails_email_validator (0.1.4)
+      activemodel (>= 3.0.0)
     railties (6.0.2.2)
       actionpack (= 6.0.2.2)
       activesupport (= 6.0.2.2)
@@ -401,6 +408,7 @@ GEM
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    timecop (0.9.1)
     twilio-ruby (5.31.6)
       faraday (~> 1.0.0)
       jwt (>= 1.5, <= 2.5)
@@ -456,6 +464,7 @@ DEPENDENCIES
   rubocop-rspec
   selenium-webdriver
   simplecov
+  timecop
   vcr
   webdrivers
   webmock
