@@ -9,7 +9,7 @@ RSpec.describe RadicalRetry, type: :service do
         expect(described_class).to receive(:exponential_pause).at_least(4).times
         expect {
           described_class.perform_request(no_delay: true) { request_block }
-        }.to raise_error(OpenURI::HTTPError)
+        }.to raise_error(RadicallyIntermittentException)
       end
 
       context 'with retry count specified' do
@@ -17,7 +17,7 @@ RSpec.describe RadicalRetry, type: :service do
           expect(described_class).to receive(:exponential_pause).twice
           expect {
             described_class.perform_request(no_delay: true, retry_count: 3) { request_block }
-          }.to raise_error(OpenURI::HTTPError)
+          }.to raise_error(RadicallyIntermittentException)
         end
       end
 
@@ -35,7 +35,7 @@ RSpec.describe RadicalRetry, type: :service do
           expect(described_class).to receive(:exponential_pause)
           expect {
             described_class.perform_request(no_delay: true, retry_count: 2, additional_errors: [ActiveStorage::IntegrityError]) { request_block }
-          }.to raise_error(ActiveStorage::IntegrityError)
+          }.to raise_error(RadicallyIntermittentException)
         end
       end
     end

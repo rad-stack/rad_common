@@ -7,7 +7,7 @@ class RadicalRetry
       retries ||= retry_count
       block.call
     rescue *(RESCUABLE_ERRORS + additional_errors) => e
-      raise e unless (retries -= 1).positive?
+      raise RadicallyIntermittentException, e unless (retries -= 1).positive?
 
       exponential_pause(retries, no_delay)
       retry
