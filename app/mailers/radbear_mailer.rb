@@ -91,6 +91,16 @@ class RadbearMailer < ActionMailer::Base
          template_name: 'global_validity'
   end
 
+  def global_validity_ran_long(recipients, run_stats)
+    @recipient = User.where(id: recipients)
+    to_address = @recipient.map(&:formatted_email)
+
+    @run_stats = run_stats
+    @total_time = Time.at((@run_stats.sum { |item| item[:run_seconds] })).utc.strftime('%H:%M:%S')
+
+    mail(to: to_address, subject: "Global Validity in #{I18n.t(:app_name)} Ran Long")
+  end
+
   def email_report(user, csv, report_name, options = {})
     start_date = options[:start_date]
     end_date   = options[:end_date]

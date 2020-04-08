@@ -277,6 +277,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20200325152933_devise_security_updates.rb',
                         'devise_security_updates'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200408180735_ran_long_notification.rb',
+                        'ran_long_notification'
       end
 
       def self.next_migration_number(path)
