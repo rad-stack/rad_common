@@ -96,6 +96,7 @@ class NotificationType < ApplicationRecord
     Notifications::UserWasApprovedNotification.create! security_roles: [SecurityRole.admin_role]
     Notifications::UserAcceptedInvitationNotification.create! security_roles: [SecurityRole.admin_role]
     Notifications::InvalidDataWasFoundNotification.create! security_roles: [SecurityRole.admin_role]
+    Notifications::GlobalValidityRanLongNotification.create! security_roles: [SecurityRole.admin_role]
   end
 
   def self.main

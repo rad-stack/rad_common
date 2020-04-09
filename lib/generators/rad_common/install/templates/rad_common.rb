@@ -30,7 +30,8 @@ RadCommon.setup do |config|
   # Determines how ofter the global validity check will run
   # config.global_validity_days = 3
 
-  # Sets the time allowed for the global validity to run before timing out / raising an error
+  # A notification email with a report of how long each item took will be sent if it runs beyond this timeout
+  # There is a hard time out of 24 hours which will raise an exception and terminate the rake task
   # config.global_validity_timeout = 3.hours
 
   # Determines models to be excluded in the global validity check
