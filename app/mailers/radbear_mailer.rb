@@ -78,6 +78,7 @@ class RadbearMailer < ActionMailer::Base
     to_address = @recipient.map(&:formatted_email)
 
     @problems = problems
+    @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
     mail(to: to_address, subject: "Invalid data in #{I18n.t(:app_name)}")
   end
@@ -85,6 +86,7 @@ class RadbearMailer < ActionMailer::Base
   def global_validity_on_demand(recipient, problems)
     @recipient = recipient
     @problems = problems
+    @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
     mail to: recipient.formatted_email,
          subject: "Invalid data in #{I18n.t(:app_name)}",
@@ -96,7 +98,8 @@ class RadbearMailer < ActionMailer::Base
     to_address = @recipient.map(&:formatted_email)
 
     @run_stats = run_stats
-    @total_time = Time.at((@run_stats.sum { |item| item[:run_seconds] })).utc.strftime('%H:%M:%S')
+    total_time = Time.at((@run_stats.sum { |item| item[:run_seconds] })).utc.strftime('%H:%M:%S')
+    @message = "The Global Validity task took #{total_time} to complete, which is beyond the configured timeout."
 
     mail(to: to_address, subject: "Global Validity in #{I18n.t(:app_name)} Ran Long")
   end

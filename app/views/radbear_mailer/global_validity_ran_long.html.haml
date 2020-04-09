@@ -1,6 +1,8 @@
-%p= "The Global Validity task took #{@total_time} to complete, which is beyond the configured timeout."
-- @run_stats.each do |item|
-  %p
-    = Time.at(item[:run_seconds]).utc.strftime('%H:%M:%S')
-    -
-    = item[:item_name]
+.email.row
+  .email-col-12
+    .email-info-box
+      %table.info-table
+        -@run_stats.each do |item|
+          %tr
+            %th= Time.at(item[:run_seconds]).utc.strftime('%H:%M:%S')
+            %td= item[:item_name]
