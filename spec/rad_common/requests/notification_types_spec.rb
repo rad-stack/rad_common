@@ -9,7 +9,7 @@ RSpec.describe 'NotificationTypes', type: :request do
 
   describe 'PUT update' do
     let(:valid_attributes) { { security_roles: [user.security_roles.first.id.to_s, another_role.id.to_s] } }
-    let(:invalid_attributes) { { security_roles: %w[111 999] } }
+    let(:invalid_attributes) { { security_roles: [] } }
 
     describe 'with valid params' do
       it 'updates the requested notification_type' do
