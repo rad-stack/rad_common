@@ -39,6 +39,6 @@ class NotificationTypesController < ApplicationController
     end
 
     def type_param_name
-      @notification_type.class.name.underscore.gsub('/','_')
+      @notification_type.class.name.underscore.gsub('/', '_')
     end
 end

@@ -8,7 +8,7 @@ $ ->
   $(".content .global-search-autocomplete").bind "autocompletefocus", (event, ui) ->
     select_global_search_item($(this), event, ui)
 
-  $("#global_search_name").on "keyup keypress", (e) ->
+  $(".global_search_name").on "keyup keypress", (e) ->
     code = e.keyCode or e.which
     if code is 13
       e.preventDefault()
@@ -37,7 +37,7 @@ $ ->
       table
   )
 
-  $("#super_search").change ->
+  $(".super_search").change ->
     if( $(this).prop('checked') )
         $(this).prop( 'checked', confirm('Are you sure you want to do a super (combined) search? This query may take a long time, selecting a normal query is preferred to get your results quickly and not bog down the system.') )
 
@@ -68,10 +68,10 @@ $ ->
     ), 300
 
   $(".search-option").click ->
-    $("[id=global_search_scope]").val( $(this).data("search-scope"))
-    $("[id=global_search_name]:visible").focus()
-    $("[id=global_search_name]:visible").attr("placeholder", $(this).html())
-    $("[id=global_search_name]:visible").val("")
+    $('.global_search_scope').val( $(this).data("search-scope"))
+    $(".global_search_name").focus()
+    $(".global_search_name").attr("placeholder", $(this).html())
+    $(".global_search_name").val("")
 
   if $('.read-more').length
     $('.read-more').readmore( { speed: 75, moreLink: "<a class='btn btn-primary btn-sm read-more-btn more-btn' href='#'><div>Read more</div></a>", lessLink: "<a class='btn btn-primary btn-sm read-more-btn close-btn' href='#'><div>Close</div></a>" } )

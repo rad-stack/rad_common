@@ -117,6 +117,11 @@ RSpec.configure do |config|
     allow_any_instance_of(Division).to receive(:notify_owner).and_return(nil)
   end
 
+  config.after(:each, type: :system, js: true) do
+    errors = page.driver.browser.manage.logs.get(:browser)
+    expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
+  end
+
   config.after do
     Warden.test_reset!
   end
