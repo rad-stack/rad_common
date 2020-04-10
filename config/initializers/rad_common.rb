@@ -1,5 +1,12 @@
 require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record/base/schema_validations"
 
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.acronym 'SMS'
+  inflect.acronym 'PDF'
+  inflect.acronym 'CRM'
+  inflect.acronym 'CSV'
+end
+
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 
 if ENV.fetch('STAGING') == 'true'
@@ -23,3 +30,18 @@ Rails.configuration.to_prepare do
 end
 
 Rails.configuration.app_admin_email = ENV.fetch('APP_ADMIN_EMAIL')
+
+module Kaminari
+
+  # monkey patch to fix paging on engine routes
+  # https://github.com/radicalbear/rad_common/pull/211/files
+  # https://github.com/kaminari/kaminari/issues/457
+
+  module Helpers
+    class Tag
+      def page_url_for(page)
+        (@options[:routes_proxy] || @template).url_for @params.merge(@param_name => (page <= 1 ? nil : page))
+      end
+    end
+  end
+end

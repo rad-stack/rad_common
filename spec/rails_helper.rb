@@ -113,6 +113,8 @@ RSpec.configure do |config|
     allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))
     allow(UserStatus).to receive(:default_active_status).and_return(create(:user_status, :active, name: 'Active'))
     allow(UserStatus).to receive(:default_inactive_status).and_return(create(:user_status, :inactive, name: 'Inactive'))
+
+    allow_any_instance_of(Division).to receive(:notify_owner).and_return(nil)
   end
 
   config.after(:each, type: :system, js: true) do

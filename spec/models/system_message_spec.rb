@@ -1,29 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe SystemMessage, type: :model do
-  let!(:user) { create :admin }
+  let(:user) { create :admin }
   let(:message) { 'foo bar yo' }
 
   describe '#send!' do
-    context 'email message' do
-      subject { mail.body.encoded }
-
-      let(:system_message) { create :system_message, :email, user: user, email_message_body: message }
-
-      before do
-        ActionMailer::Base.deliveries = []
-        system_message.send!
-      end
-
-      let(:mail) { ActionMailer::Base.deliveries.last }
-
-      it { is_expected.to include message }
-    end
-
-    context 'sms message' do
+    context 'with sms message' do
       subject { mail&.body&.encoded }
 
       let(:system_message) { create :system_message, :sms, user: user, sms_message_body: message }
+      let(:mail) { ActionMailer::Base.deliveries.last }
 
       before do
         User.update_all(mobile_phone: '(555) - 555 - 5555')
@@ -32,14 +18,7 @@ RSpec.describe SystemMessage, type: :model do
         system_message.send!
       end
 
-      let(:mail) { ActionMailer::Base.deliveries.last }
-
-      context 'all users receive message' do
-        it { is_expected.to be_nil }
-      end
-
-      context 'a user does not receive message because mobile mumber is not present' do
-        # apps that have mobile_phone configured as non-nullable will fail here, just remove the test
+      context 'when a user does not receive message because mobile mumber is not present' do
         let!(:other_user) { create :user, mobile_phone: nil }
 
         before { system_message.send! }

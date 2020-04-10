@@ -1,16 +1,35 @@
 module Notifications
   class UserWasApprovedNotification < ::NotificationType
-    def self.notify!(subject)
-      user = subject.first
-      RadbearMailer.user_was_approved(users_except_self(user), user, subject.last).deliver_later
+    def mailer_method
+      'user_was_approved'
     end
 
-    class << self
-      private
+    def feed_content
+      "#{approvee} was approved by #{approved_by_name}."
+    end
 
-        def users_except_self(user)
-          notify_user_ids - [user.id]
-        end
+    def subject_record
+      approvee
+    end
+
+    def sms_content
+      "#{feed_content} #{subject_url}"
+    end
+
+    def approvee
+      payload.first
+    end
+
+    def approver
+      payload.last
+    end
+
+    def approved_by_name
+      (approver ? approver.to_s : 'an admin')
+    end
+
+    def exclude_user_ids
+      [approvee.id]
     end
   end
 end

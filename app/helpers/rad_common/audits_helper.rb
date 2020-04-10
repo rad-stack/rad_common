@@ -69,7 +69,7 @@ module RadCommon
       else
         if record.nil?
           label
-        elsif show_path_exists?(record) && policy(record).show?
+        elsif show_route_exists_for?(record) && policy(record).show?
           link_to label, record
         else
           label
@@ -82,10 +82,6 @@ module RadCommon
     end
 
     private
-
-      def show_path_exists?(record)
-        respond_to? "#{record.class.table_name.singularize}_path"
-      end
 
       def formatted_audited_changes(audit)
         return 'deleted record' if audit.action == 'destroy' && audit.associated.blank?

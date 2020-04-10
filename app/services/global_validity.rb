@@ -1,58 +1,52 @@
 class GlobalValidity
-  attr_accessor :override_model
+  attr_accessor :override_model, :run_stats
+
+  def initialize
+    @run_stats = []
+  end
 
   def run
     return unless needs_to_run?
 
     error_messages = check_global_validity
-    Notifications::GlobalValidityNotification.notify!(error_messages) if error_messages.any?
+
+    Notifications::InvalidDataWasFoundNotification.main.notify!(error_messages) if error_messages.any?
+    Notifications::GlobalValidityRanLongNotification.main.notify!(@run_stats) if took_too_long?
+
     Company.main.global_validity_ran!
   end
 
   def check_global_validity
     error_messages = []
 
-    total_start_time = Time.current
     total_error_count = 0
+
     models_to_check.each do |model|
       next if exclude_models.include?(model)
 
-      Rails.logger.info("GlobalValidity stats: #{model} starting")
       start_time = Time.current
       model_errors, error_count = check_model(model)
       error_messages = error_messages.concat(model_errors) if model_errors.present?
       end_time = Time.current
-      Rails.logger.info(log_time_text(start_time, end_time, model))
-      Rails.logger.info(log_error_count_text(model, error_count)) unless error_count.zero?
+      add_stats model, start_time, end_time, error_count
       total_error_count += error_count
     end
 
     specific_queries = RadCommon.global_validity_include
 
     specific_queries.each do |query|
-      Rails.logger.info("GlobalValidity stats: #{query.call.to_sql} starting")
       start_time = Time.current
       query_errors, error_count = check_query_records(query)
       error_messages = error_messages.concat(query_errors) if query_errors.present?
       end_time = Time.current
-      Rails.logger.info(log_time_text(start_time, end_time, query.call.to_sql))
-      Rails.logger.info(log_error_count_text(query.call.to_sql, error_count)) unless error_count.zero?
+      add_stats query.call.to_sql, start_time, end_time, error_count
       total_error_count += error_count
     end
 
-    total_end_time = Time.current
-    Rails.logger.info(log_time_text(total_start_time, total_end_time, 'All Models'))
-    Rails.logger.info(log_error_count_text('All Models', total_error_count)) unless total_error_count.zero?
+    @run_stats.sort_by! { |item| item[:run_seconds] }
+    @run_stats.reverse!
 
     error_messages
-  end
-
-  def log_time_text(start_time, end_time, model)
-    "GlobalValidity stats: #{model} took #{Time.at((end_time - start_time)).utc.strftime('%H:%M:%S')} to validate."
-  end
-
-  def log_error_count_text(model, count)
-    "GlobalValidity stats: #{model} has #{ApplicationController.helpers.pluralize(count, 'invalid record')}."
   end
 
   private
@@ -113,5 +107,17 @@ class GlobalValidity
       return unless messages.any?
 
       error_messages_array.push([record, messages.join(', ')])
+    end
+
+    def add_stats(item_name, start_time, end_time, error_count)
+      @run_stats.push(item_name: item_name,
+                      start_time: start_time,
+                      end_time: end_time,
+                      run_seconds: (end_time - start_time).round,
+                      error_count: error_count)
+    end
+
+    def took_too_long?
+      @run_stats.sum { |item| item[:run_seconds] } > RadCommon.global_validity_timeout.to_i
     end
 end

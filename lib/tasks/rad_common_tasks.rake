@@ -1,6 +1,6 @@
 namespace :rad_common do
   task :global_validity, [:override_model] => :environment do |_t, args|
-    Timeout.timeout(RadCommon.global_validity_timeout) do
+    Timeout.timeout(24.hours) do
       global_validity = GlobalValidity.new
       global_validity.override_model = args[:override_model]
       global_validity.run

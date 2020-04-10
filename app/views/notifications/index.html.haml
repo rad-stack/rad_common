@@ -1,0 +1,26 @@
+.card
+  = render 'layouts/card_header', title: "Notifications (#{current_user.notifications.unread.count} unread)"
+  .card-body
+
+    -# see kaminari monkey patch on initializers/rad_common.rb
+    = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+
+    %table.table.table-striped.table-bordered
+      %tr
+        %th When
+        %th Content
+        %th Subject
+      - @notifications.each do |notification|
+        %tr{ class: notification.unread? ? 'text-danger' : '' }
+          %td
+            %p= format_datetime(notification.created_at)
+            %p= "#{distance_of_time_in_words_to_now(notification.created_at)} ago"
+          %td= notification.content
+          %td
+            - if notification.record.present?
+              %p= secured_link(notification.record)
+
+    -# see kaminari monkey patch on initializers/rad_common.rb
+    = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+
+- current_user.read_notifications!

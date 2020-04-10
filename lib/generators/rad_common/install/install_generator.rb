@@ -21,10 +21,12 @@ module RadCommon
         template '../../../../../spec/dummy/.env.example', '.env.example'
 
         # initializers
-        template 'rad_common.rb',
-                 'config/initializers/rad_common.rb'
-
+        template 'rad_common.rb', 'config/initializers/rad_common.rb'
         template '../../../../../spec/dummy/config/initializers/raven.rb', 'config/initializers/raven.rb'
+        template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
+
+        template '../../../../../spec/dummy/config/initializers/devise-security.rb',
+                 'config/initializers/devise-security.rb'
 
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
@@ -71,86 +73,16 @@ module RadCommon
         template '../../../../../spec/dummy/app/views/devise/invitations/new.html.haml',
                  'app/views/devise/invitations/new.html.haml'
 
+        template '../../../../../spec/dummy/app/views/devise/password_expired/show.html.haml',
+                 'app/views/devise/password_expired/show.html.haml'
+
         template '../../../../../spec/dummy/app/views/devise/invitations/edit.html.haml',
                  'app/views/devise/invitations/edit.html.haml'
 
         # specs
-        template '../../../../../spec/models/company_spec.rb', 'spec/models/company_spec.rb'
-        template '../../../../../spec/models/user_spec.rb', 'spec/models/user_spec.rb'
-
-        template '../../../../../spec/models/security_roles_user_spec.rb',
-                 'spec/models/security_roles_user_spec.rb'
-
-        template '../../../../../spec/models/notifications/global_validity_notification_spec.rb',
-                 'spec/models/notifications/global_validity_notification_spec.rb'
-
-        template '../../../../../spec/models/notifications/new_user_signed_up_notification_spec.rb',
-                 'spec/models/notifications/new_user_signed_up_notification_spec.rb'
-
-        template '../../../../../spec/models/notification_type_spec.rb',
-                 'spec/models/notification_type_spec.rb'
-
-        template '../../../../../spec/models/notifications/user_was_approved_notification_spec.rb',
-                 'spec/models/notifications/user_was_approved_notification_spec.rb'
-
-        template '../../../../../spec/models/system_message_spec.rb',
-                 'spec/models/system_message_spec.rb'
-
-        template '../../../../../spec/requests/users/confirmations_spec.rb',
-                 'spec/requests/users/confirmations_spec.rb'
-
-        template '../../../../../spec/requests/users_spec.rb', 'spec/requests/users_spec.rb'
-
-        template '../../../../../spec/requests/security_roles_spec.rb',
-                 'spec/requests/security_roles_spec.rb'
-
-        template '../../../../../spec/requests/notification_types_spec.rb',
-                 'spec/requests/notification_types_spec.rb'
-
-        template '../../../../../spec/requests/companies_spec.rb', 'spec/requests/companies_spec.rb'
-        template '../../../../../spec/requests/searches_spec.rb', 'spec/requests/searches_spec.rb'
-        template '../../../../../spec/system/audit_history_spec.rb', 'spec/system/audit_history_spec.rb'
-        template '../../../../../spec/system/audit_search_spec.rb', 'spec/system/audit_search_spec.rb'
-        template '../../../../../spec/system/users_spec.rb', 'spec/system/users_spec.rb'
-        template '../../../../../spec/system/companies_spec.rb', 'spec/system/companies_spec.rb'
-        template '../../../../../spec/system/security_roles_spec.rb', 'spec/system/security_roles_spec.rb'
-
-        template '../../../../../spec/system/notification_types_spec.rb',
-                 'spec/system/notification_types_spec.rb'
-
-        template '../../../../../spec/system/system_messages_spec.rb',
-                 'spec/system/system_messages_spec.rb'
-
-        template '../../../../../spec/system/invitations_spec.rb', 'spec/system/invitations_spec.rb'
-
-        template '../../../../../spec/requests/notification_settings_spec.rb',
-                 'spec/requests/notification_settings_spec.rb'
-
-        template '../../../../../spec/system/notification_settings_spec.rb',
-                 'spec/system/notification_settings_spec.rb'
-
-        template '../../../../../spec/system/searches_spec.rb', 'spec/system/searches_spec.rb'
-
-        # factories
-        template '../../../../../spec/factories/companies.rb', 'spec/factories/companies.rb'
-
-        template '../../../../../spec/factories/notification_security_roles.rb',
-                 'spec/factories/notification_security_roles.rb'
-
-        template '../../../../../spec/factories/notification_settings.rb',
-                 'spec/factories/notification_settings.rb'
-
-        template '../../../../../spec/factories/notification_types.rb',
-                 'spec/factories/notification_types.rb'
-
-        template '../../../../../spec/factories/security_roles.rb', 'spec/factories/security_roles.rb'
-
-        template '../../../../../spec/factories/security_roles_users.rb',
-                 'spec/factories/security_roles_users.rb'
-
-        template '../../../../../spec/factories/system_messages.rb', 'spec/factories/system_messages.rb'
-        template '../../../../../spec/factories/user_statuses.rb', 'spec/factories/user_statuses.rb'
-        template '../../../../../spec/factories/users.rb', 'spec/factories/users.rb'
+        directory '../../../../../spec/rad_common/', 'spec/rad_common/'
+        directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/'
+        copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
 
         # templates
 
@@ -333,6 +265,21 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20200203163827_convert_rich_text.rb',
                         'convert_rich_text'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200227134827_create_rad_common_notifications.rb',
+                        'create_rad_common_notifications'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200306204548_notifications_sti.rb',
+                        'notifications_sti'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200311113900_fix_notification_names.rb',
+                        'fix_notification_names'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200325152933_devise_security_updates.rb',
+                        'devise_security_updates'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200408180735_ran_long_notification.rb',
+                        'ran_long_notification'
       end
 
       def self.next_migration_number(path)

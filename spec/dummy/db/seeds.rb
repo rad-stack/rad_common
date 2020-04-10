@@ -1,10 +1,14 @@
 Dir[Rails.root.join('../factories/**/*.rb')].sort.each { |f| require f }
 
 puts 'seeding standard items'
-NotificationType.seed_items if NotificationType.count.zero?
 SecurityRole.seed_items if SecurityRole.count.zero?
 FactoryBot.create :company if Company.count.zero?
 UserStatus.seed_items if UserStatus.count.zero?
+
+if NotificationType.count.zero?
+  NotificationType.seed_items
+  Notifications::DivisionUpdatedNotification.create!
+end
 
 if User.count.zero?
   puts 'seeding users'
@@ -38,5 +42,7 @@ end
 
 users = User.all
 
-puts 'seeding divisions'
-30.times { FactoryBot.create :division, owner: users.sample } if Division.count.zero?
+if Division.count.zero?
+  puts 'seeding divisions'
+  30.times { FactoryBot.create :division, owner: users.sample }
+end

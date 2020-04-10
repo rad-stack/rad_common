@@ -1,7 +1,7 @@
 module Notifications
   class NewUserSignedUpNotification < ::NotificationType
-    def self.notify!(subject)
-      RadbearMailer.new_user_signed_up(notify_user_ids, subject).deliver_later
+    def mailer_method
+      'new_user_signed_up'
     end
   end
 end

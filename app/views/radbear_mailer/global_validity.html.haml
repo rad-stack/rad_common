@@ -1,6 +1,16 @@
-%p= "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
-- @problems.each do |record, error_messages|
-  - if record.persisted?
-    %p
-      = link_to "#{record.class.to_s.titleize} #{record.id} (#{record}):", url_for(record)
-      = error_messages
+.email.row
+  .email-col-12
+    .email-info-box
+      %table.info-table
+        - @problems.each do |record, error_messages|
+          - if record.persisted?
+            %tr
+              %th
+                - item_label = "#{record.class.to_s.titleize} #{record.id} (#{record}):"
+
+                - if ApplicationController.helpers.show_route_exists_for?(record)
+                  = link_to item_label, url_for(record)
+                - else
+                  = item_label
+              %td
+                = error_messages

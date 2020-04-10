@@ -8,7 +8,8 @@ class User < ApplicationRecord
   has_many :security_roles, through: :security_roles_users, dependent: :destroy
 
   devise :authy_authenticatable, :database_authenticatable, :registerable, :confirmable, :recoverable,
-         :rememberable, :trackable, :validatable, :invitable, :lockable
+         :trackable, :timeoutable, :lockable, :password_archivable, :password_expirable,
+         :secure_validatable, :expirable, :invitable
 
   scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
   scope :inactive, -> { joins(:user_status).where('user_statuses.active = FALSE') }
@@ -18,8 +19,6 @@ class User < ApplicationRecord
   scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
   scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
   scope :recent_first, -> { order('users.created_at DESC') }
-
-  has_one_attached :avatar
 
   validates_with PhoneNumberValidator, fields: [:mobile_phone]
   validates_with TwilioPhoneValidator, fields: [{ field: :mobile_phone, type: :mobile }]

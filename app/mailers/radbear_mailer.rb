@@ -36,7 +36,10 @@ class RadbearMailer < ActionMailer::Base
     mail to: @recipient.formatted_email, subject: 'Your Account Was Approved'
   end
 
-  def user_was_approved(recipients, user, approver)
+  def user_was_approved(recipients, user_and_approver)
+    user = user_and_approver.first
+    approver = user_and_approver.last
+
     @email_action = { message: 'You can review this approval if desired.',
                       button_text: 'Review User',
                       button_url: user_url(user) }
@@ -75,6 +78,7 @@ class RadbearMailer < ActionMailer::Base
     to_address = @recipient.map(&:formatted_email)
 
     @problems = problems
+    @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
     mail(to: to_address, subject: "Invalid data in #{I18n.t(:app_name)}")
   end
@@ -82,10 +86,22 @@ class RadbearMailer < ActionMailer::Base
   def global_validity_on_demand(recipient, problems)
     @recipient = recipient
     @problems = problems
+    @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
     mail to: recipient.formatted_email,
          subject: "Invalid data in #{I18n.t(:app_name)}",
          template_name: 'global_validity'
+  end
+
+  def global_validity_ran_long(recipients, run_stats)
+    @recipient = User.where(id: recipients)
+    to_address = @recipient.map(&:formatted_email)
+
+    @run_stats = run_stats
+    total_time = Time.at((@run_stats.sum { |item| item[:run_seconds] })).utc.strftime('%H:%M:%S')
+    @message = "The Global Validity task took #{total_time} to complete, which is beyond the configured timeout."
+
+    mail(to: to_address, subject: "Global Validity in #{I18n.t(:app_name)} Ran Long")
   end
 
   def email_report(user, csv, report_name, options = {})
