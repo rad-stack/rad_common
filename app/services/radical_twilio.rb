@@ -24,24 +24,19 @@ class RadicalTwilio
     return twilio_phone_numbers.first if twilio_phone_numbers.count == 1
 
     company = Company.main
-    if Rails.env.development?
-      ENV['TWILIO_TEST_FROM_PHONE_NUMBER']
+    num_of_nums = twilio_phone_numbers.length
+    return nil if num_of_nums.zero?
+
+    return twilio_phone_numbers[0] if num_of_nums == 1
+
+    next_number = twilio_phone_numbers[company.current_phone]
+
+    if company.current_phone < (num_of_nums - 1)
+      company.update(current_phone: (company.current_phone + 1))
     else
-      num_of_nums = twilio_phone_numbers.length
-
-      return nil if num_of_nums.zero?
-
-      return twilio_phone_numbers[0] if num_of_nums == 1
-
-      next_number = twilio_phone_numbers[company.current_phone]
-
-      if company.current_phone < (num_of_nums - 1)
-        company.update(current_phone: (company.current_phone + 1))
-      else
-        company.update(current_phone: 0)
-      end
-
-      next_number
+      company.update(current_phone: 0)
     end
+
+    next_number
   end
 end
