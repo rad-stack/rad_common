@@ -28,10 +28,14 @@ class TwilioPhoneValidator < ActiveModel::Validator
 
         begin
           response = get_phone_number(number, mobile)
-          record.errors.add(field[:field], "#{message} mobile phone number") if mobile\
-            && response.carrier['type'] != 'mobile'
+
+          if mobile && response.carrier['type'] != 'mobile'
+            record.errors.add(field[:field], "#{message} mobile phone number")
+          end
+
           response.phone_number
-        rescue Twilio::REST::RestError, NoMethodError
+        rescue Twilio::REST::RestError, NoMethodError => e
+          puts "twilio lookup error: #{e}"
           record.errors.add(field[:field], "#{message} phone number")
         end
       end
@@ -45,6 +49,11 @@ class TwilioPhoneValidator < ActiveModel::Validator
 
   def lookup_number(number, type = nil)
     lookup_client = Twilio::REST::Client.new(ENV.fetch('TWILIO_ACCOUNT_SID'), ENV.fetch('TWILIO_AUTH_TOKEN'))
-    type ? lookup_client.lookups.phone_numbers(number).fetch(type: [type]) : lookup_client.lookups.phone_numbers(number).fetch
+
+    if type
+      lookup_client.lookups.phone_numbers(number).fetch(type: [type])
+    else
+      lookup_client.lookups.phone_numbers(number).fetch
+    end
   end
 end
