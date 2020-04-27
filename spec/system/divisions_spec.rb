@@ -30,7 +30,7 @@ RSpec.describe 'Divisions', type: :system do
 
       context 'invalid due to content type' do
         it 'validates' do
-          expect(page).to have_content 'File could not be saved. File type must be one of image/png'
+          expect(page).to have_content 'File could not be saved. File type of image/jpeg must be one of image/png'
           expect(division.icon.attached?).to be false
         end
       end

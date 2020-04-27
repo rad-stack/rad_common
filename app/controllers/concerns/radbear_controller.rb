@@ -40,7 +40,7 @@ module RadbearController
 
     if invalid_content || invalid_file_size
       error = 'File could not be saved.'
-      error += " File type must be one of #{valid_types.join(', ')}" if invalid_content
+      error += " File type of #{file.content_type} must be one of #{valid_types.join(', ')}" if invalid_content
 
       if invalid_file_size
         error += " File size must be less than #{ApplicationController.helpers.number_to_human_size(max_file_size)}."
