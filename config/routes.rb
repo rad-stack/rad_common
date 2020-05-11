@@ -17,4 +17,5 @@ RadCommon::Engine.routes.draw do
   resources :notification_types, only: %i[index edit update]
   resources :notification_settings, only: %i[index create]
   resources :notifications, only: :index
+  resources :sentry_tests, only: %i[edit update]
 end
