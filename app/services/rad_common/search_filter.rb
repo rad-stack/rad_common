@@ -1,7 +1,33 @@
 module RadCommon
+  ##
+  # This is used to generate dropdown filter containing options to be filtered on
   class SearchFilter
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value
 
+    ##
+    # @param column the database column that is being filtered
+    # @param options the options to be displayed in the dropdown. This is required when no scope values are specified.
+    # @param grouped will the options be grouped
+    # @param scope_values An array of scopes active record scopes represented by symbols to be inserted into the dropdown options.For example :closed_orders, :open_orders. This is required when no options are specified.
+    # @param [optinal] joins any necessary sql joins so that the query can be performed
+    # @param [optional] input_label by default the input label for the dropdown is determined by the column name but you can override that by specifying it here
+    # @param [optional] default_value the default value selected in the dropdown options
+    # @param [optional] blank_value_label the text displayed in the dropdown when there is no value selected. By default this is calculated based on the query model name but can be overidden here
+    # @param [optional] scope an active record scope to apply the filter to.
+    # @param [Boolean optional] multiple when set to true the dropdown becomes a multiple select
+    #
+    # @example
+    #   {column: }
+    # @example active record list
+    #   options: User.all
+    # @example Two dimensional array options
+    #   options: [['Option 1', 1],['Option 2', 2], ['Option 3', 3]]
+    # @example Grouped options mixed with scoped values
+    #   options: [['...', [user, { scope_value: :unassigned }]],
+    #            ['Active', User.active.by_name],
+    #            ['Inactive', User.inactive.by_name]]
+    # @example Using scope values
+    #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
     def initialize(column: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, multiple: false)
       if input_label.blank? && !options.respond_to?(:table_name)
         raise 'Input label is required when options are not active record objects'

@@ -1,7 +1,15 @@
 module RadCommon
+  ##
+  # This is a common search pattern to be used within the UI to help filter, display, and sorts results to be displayed within the UI
   class Search
     attr_reader :params, :current_user
 
+    ##
+    # @param query The base query to start the search off with
+    # @param filters An array of filters to be displayed at the top of the search. {SearchFilter}, {DateFilter}, or {LikeFilter}
+    # @param sort_columns An array of columns to sort the query by.
+    # @param current_user the current user running the query
+    # @param params the url params from the current url
     def initialize(query:, filters:, sort_columns: nil, current_user:, params:)
       @results = query
       @current_user = current_user

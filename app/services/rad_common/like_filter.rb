@@ -1,6 +1,10 @@
 module RadCommon
+  ##
+  # This is used to generate an input used for a SQL like filter
   class LikeFilter
     attr_reader :column
+    ##
+    # @param column the database column that is being filtered
     def initialize(column:, type:)
       @column = column
     end
