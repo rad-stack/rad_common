@@ -1,6 +1,7 @@
 -show_roles = true if local_assigns[:show_roles].nil?
 -show_actions = true if local_assigns[:show_actions].nil?
 -show_actions = show_actions && show_actions?(User)
+-sort_columns = false if local_assigns[:sort_columns].nil?
 -page_param_name = :page if local_assigns[:page_param_name].nil?
 
 .row
@@ -10,15 +11,18 @@
 
     %table.table.table-bordered
       %tr
-        %th Name
-        %th Email
-        %th Signed In
-        %th Created
-        %th Status
-        -if show_roles
-          %th Roles
-        -if RadCommon.external_users
-          %th Client?
+        -if sort_columns
+          = render 'layouts/sort_headers', search: @user_search
+        -else
+          %th Name
+          %th Email
+          %th Signed In
+          %th Created
+          %th Status
+          -if show_roles
+            %th Roles
+          -if RadCommon.external_users
+            %th Client?
         -if show_actions
           %th.text-center Actions
 
