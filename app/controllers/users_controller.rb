@@ -8,20 +8,7 @@ class UsersController < ApplicationController
 
     @pending = policy_scope(User).pending.recent_first.page(params[:pending_page]).per(3)
 
-    filters = [{ input_label: 'Status',
-                 column: :user_status_id,
-                 options: UserStatus.not_pending.by_id,
-                 default_value: UserStatus.default_active_status.id }]
-
-    if RadCommon.external_users
-      filters.push({ input_label: 'Type', column: :external, scope_values: %i[internal external] })
-    end
-
-    @user_search = RadCommon::Search.new(query: User.recent_first,
-                                         filters: filters,
-                                         current_user: current_user,
-                                         params: params)
-
+    @user_search = UserSearch.new(params, current_user)
     @users = @user_search.results
 
     respond_to do |format|

@@ -12,4 +12,4 @@
 
   .card-body
     = render 'layouts/filter', search: @user_search, path: users_path
-    = render 'users/index', users: @users
+    = render 'users/index', users: @users, sort_columns: true
