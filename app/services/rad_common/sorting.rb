@@ -4,12 +4,13 @@ module RadCommon
 
     # @param [Array] sort_columns An array of sort columns
     # @option sort_columns [String] :label The label displayed on column header
-    # @option sort_columns :column The column to sort on
+    # @option sort_columns [String] :column The column to sort on.
     # @option sort_columns [String optional] :direction The direction of the sort either asc or desc
     # @option sort_columns [Boolean optional] :default When true this makes this sort the default sort for the query
     # @example
     #   [{label: 'Order', column: 'orders.order_number'},
-    #    {label: 'Due Date', column: 'orders.due_date', default: true, direction: 'asc'}]
+    #    {label: 'Due Date', column: 'orders.due_date', default: true, direction: 'asc'},
+    #    {label: 'Name', column: 'users.first_name, users.last_name'}]
     def initialize(sort_columns:, search:)
       @sort_columns = sort_columns
       @search = search
