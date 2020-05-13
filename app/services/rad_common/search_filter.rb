@@ -5,7 +5,7 @@ module RadCommon
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value
 
     ##
-    # @param [Symbo optional] column the database column that is being filtered
+    # @param [Symbol optional] column the database column that is being filtered
     # @param [Symbol optional] name an identifying named to be used for inputs. This is only used
     #   in conjunction with scope_values instead of column
     # @param [ActiveRecord_Relation, Array] options the options to be displayed in the dropdown. See examples
