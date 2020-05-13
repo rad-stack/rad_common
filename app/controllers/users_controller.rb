@@ -4,34 +4,36 @@ class UsersController < ApplicationController
 
   def index
     authorize User
+    skip_policy_scope
 
     @pending = policy_scope(User).pending.recent_first.page(params[:pending_page]).per(3)
 
-    @status = if params[:status].present?
-                if params[:status] == 'All'
-                  nil
-                else
-                  UserStatus.find(params[:status])
-                end
-              else
-                UserStatus.default_active_status
-              end
+    filters = [{ input_label: 'Status',
+                 column: :user_status_id,
+                 options: UserStatus.not_pending.by_id,
+                 default_value: UserStatus.default_active_status.id }]
 
-    @users = policy_scope(User).recent_first
-    @users = @users.where(user_status: @status) if @status
-    @users = @users.where(external: params[:external]) if params[:external].present?
+    if RadCommon.external_users
+      filters.push({ input_label: 'Type', column: :external, scope_values: %i[internal external] })
+    end
 
-    @params = params.permit(:status, :external)
+    @user_search = RadCommon::Search.new(query: User.recent_first,
+                                         filters: filters,
+                                         current_user: current_user,
+                                         params: params)
 
-    @user_statuses = UserStatus.not_pending.by_id
+    @users = @user_search.results
 
     respond_to do |format|
-      format.html { @users = @users.page(params[:page]) }
+      format.html do
+        @users = @users.page(params[:page])
+      end
+
       format.csv do
         csv = UsersCSV.generate(@users)
         RadbearMailer.email_report(current_user, csv, 'User Export').deliver_later
         flash[:success] = "Your export file is generating. You'll receive an email when it finishes."
-        redirect_to users_path(@params)
+        redirect_back fallback_location: users_path
       end
     end
   end
