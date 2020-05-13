@@ -182,7 +182,7 @@ RSpec.describe RadCommon::Search, type: :service do
                           params: params).filters
     end
 
-    context 'when using scope_values' do
+    context 'when using mixed scope_values' do
       let(:query) { Division }
       let(:filters) { [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }] }
       let(:params) { ActionController::Parameters.new }
@@ -190,6 +190,16 @@ RSpec.describe RadCommon::Search, type: :service do
       it 'has both scope and normal options' do
         expect(subject.first.input_options).to include ['Pending Values', 'Pending Values']
         expect(subject.first.input_options).to include [User.by_name.first.to_s, User.by_name.first.id]
+      end
+    end
+
+    context 'when using only scope_values' do
+      let(:query) { Division }
+      let(:filters) { [{ input_label: 'Type', name: :external, scope_values: %i[internal external] }] }
+      let(:params) { ActionController::Parameters.new }
+
+      it 'has both scope  optins' do
+        expect(subject.first.input_options.map(&:first)).to eq ['Internal', 'External']
       end
     end
 

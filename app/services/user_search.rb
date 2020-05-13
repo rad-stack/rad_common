@@ -16,7 +16,7 @@ class UserSearch < RadCommon::Search
                  default_value: UserStatus.default_active_status.id }]
 
       if RadCommon.external_users
-        items.push({ input_label: 'Type', column: :external, scope_values: %i[internal external] })
+        items.push({ input_label: 'Type', name: :external, scope_values: %i[internal external] })
       end
 
       items

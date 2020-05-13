@@ -31,13 +31,16 @@ module RadCommon
     #               ['Inactive', User.inactive.by_name]] }]
     # @example Using scope values
     #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
-    def initialize(column: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, multiple: false)
+    def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, multiple: false)
       if input_label.blank? && !options.respond_to?(:table_name)
         raise 'Input label is required when options are not active record objects'
       end
 
       raise 'options or scope_values' if options.nil? && scope_values.nil?
+      raise 'name is only valid when scope_values are present' if name.present? && scope_values.blank?
+      raise 'must have a column, name, or scope defined' if column.blank? && name.blank? && scope.blank?
 
+      @name = name
       @column = column
       @options = options
       @joins = joins
@@ -56,7 +59,7 @@ module RadCommon
     end
 
     def searchable_name
-      scope_name || @column
+      scope_name || @column || @name
     end
 
     def blank_value_label
@@ -124,6 +127,7 @@ module RadCommon
     end
 
     private
+
       def scope_name
         return if @scope.blank?
 
