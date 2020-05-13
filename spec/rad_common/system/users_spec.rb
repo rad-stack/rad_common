@@ -46,10 +46,12 @@ describe 'Users', type: :system do
       end
 
       it 'filters by user type' do
-        external_user.update!(user_status: user.user_status)
-        visit users_path(search: { user_status_id: user.user_status_id, external: 'external' })
-        expect(page).not_to have_content user.email
-        expect(page).to have_content external_user.email
+        if RadCommon.external_users
+          external_user.update!(user_status: user.user_status)
+          visit users_path(search: { user_status_id: user.user_status_id, external: 'external' })
+          expect(page).not_to have_content user.email
+          expect(page).to have_content external_user.email
+        end
       end
     end
 
