@@ -406,7 +406,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(column: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, multiple: false)  &#x21d2; SearchFilter </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, multiple: false)  &#x21d2; SearchFilter </a>
     
 
     
@@ -574,7 +574,7 @@
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    #<strong>initialize</strong>(column: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, multiple: false)  &#x21d2; <tt><span class='object_link'><a href="" title="RadCommon::SearchFilter (class)">SearchFilter</a></span></tt> 
+    #<strong>initialize</strong>(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, multiple: false)  &#x21d2; <tt><span class='object_link'><a href="" title="RadCommon::SearchFilter (class)">SearchFilter</a></span></tt> 
   
 
   
@@ -633,7 +633,7 @@
         <span class='name'>column</span>
       
       
-        <span class='type'>(<tt>Symbol</tt>)</span>
+        <span class='type'>(<tt>Symbo optional</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>nil</tt>)</em>
@@ -642,6 +642,24 @@
         &mdash;
         <div class='inline'>
 <p>the database column that is being filtered</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>Symbol optional</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>an identifying named to be used for inputs. This is only used in conjunction with scope_values instead of column</p>
 </div>
       
     </li>
@@ -817,8 +835,6 @@
       <pre class="lines">
 
 
-34
-35
 36
 37
 38
@@ -834,18 +850,26 @@
 48
 49
 50
-51</pre>
+51
+52
+53
+54
+55
+56</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 34</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 36</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='label'>column:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>options:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>grouped:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>scope_values:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>joins:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>input_label:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>default_value:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>blank_value_label:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>scope:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>multiple:</span> <span class='kw'>false</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='label'>column:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>name:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>options:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>grouped:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>scope_values:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>joins:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>input_label:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>default_value:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>blank_value_label:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>scope:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>multiple:</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_input_label'>input_label</span><span class='period'>.</span><span class='id identifier rubyid_blank?'>blank?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:table_name</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Input label is required when options are not active record objects</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>end</span>
 
   <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>options or scope_values</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_scope_values'>scope_values</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>name is only valid when scope_values are present</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_present?'>present?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_scope_values'>scope_values</span><span class='period'>.</span><span class='id identifier rubyid_blank?'>blank?</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>must have a column, name, or scope defined</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_column'>column</span><span class='period'>.</span><span class='id identifier rubyid_blank?'>blank?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_blank?'>blank?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_scope'>scope</span><span class='period'>.</span><span class='id identifier rubyid_blank?'>blank?</span>
 
+  <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_name'>name</span>
   <span class='ivar'>@column</span> <span class='op'>=</span> <span class='id identifier rubyid_column'>column</span>
   <span class='ivar'>@options</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span>
   <span class='ivar'>@joins</span> <span class='op'>=</span> <span class='id identifier rubyid_joins'>joins</span>
@@ -1237,11 +1261,6 @@
       <pre class="lines">
 
 
-110
-111
-112
-113
-114
 115
 116
 117
@@ -1251,10 +1270,15 @@
 121
 122
 123
-124</pre>
+124
+125
+126
+127
+128
+129</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 110</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 115</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_apply_filter'>apply_filter</span><span class='lparen'>(</span><span class='id identifier rubyid_results'>results</span><span class='comma'>,</span> <span class='id identifier rubyid_search_params'>search_params</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='id identifier rubyid_filter_value'>filter_value</span><span class='lparen'>(</span><span class='id identifier rubyid_search_params'>search_params</span><span class='rparen'>)</span>
@@ -1291,12 +1315,12 @@
       <pre class="lines">
 
 
-62
-63
-64</pre>
+67
+68
+69</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 67</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_blank_value_label'>blank_value_label</span>
   <span class='ivar'>@blank_value_label</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>All </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_model_name'>model_name</span><span class='period'>.</span><span class='id identifier rubyid_pluralize'>pluralize</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
@@ -1350,12 +1374,12 @@
       <pre class="lines">
 
 
-54
-55
-56</pre>
+59
+60
+61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 54</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 59</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_filter_view'>filter_view</span>
   <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>select</span><span class='tstring_end'>&#39;</span></span>
@@ -1380,12 +1404,12 @@
       <pre class="lines">
 
 
-66
-67
-68</pre>
+71
+72
+73</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 66</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 71</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_input_label'>input_label</span>
   <span class='ivar'>@input_label</span> <span class='op'>||</span> <span class='id identifier rubyid_model_name'>model_name</span>
@@ -1439,11 +1463,6 @@
       <pre class="lines">
 
 
-79
-80
-81
-82
-83
 84
 85
 86
@@ -1457,10 +1476,15 @@
 94
 95
 96
-97</pre>
+97
+98
+99
+100
+101
+102</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 79</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 84</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_input_options'>input_options</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_grouped_scope_values?'>grouped_scope_values?</span>
@@ -1501,12 +1525,12 @@
       <pre class="lines">
 
 
-74
-75
-76</pre>
+79
+80
+81</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 74</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 79</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_input_type'>input_type</span>
   <span class='ivar'>@grouped</span> <span class='op'>?</span> <span class='symbol'>:grouped_select</span> <span class='op'>:</span> <span class='symbol'>:select</span>
@@ -1560,15 +1584,15 @@
       <pre class="lines">
 
 
-100
-101
-102
-103
-104
-105</pre>
+105
+106
+107
+108
+109
+110</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 100</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 105</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_label_method'>label_method</span>
   <span class='kw'>return</span> <span class='symbol'>:first</span> <span class='kw'>if</span> <span class='id identifier rubyid_grouped_scope_values?'>grouped_scope_values?</span>
@@ -1596,12 +1620,12 @@
       <pre class="lines">
 
 
-70
-71
-72</pre>
+75
+76
+77</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 70</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 75</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_model_name'>model_name</span>
   <span class='ivar'>@input_label</span> <span class='op'>||</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_table_name'>table_name</span><span class='period'>.</span><span class='id identifier rubyid_titleize'>titleize</span><span class='period'>.</span><span class='id identifier rubyid_singularize'>singularize</span>
@@ -1626,15 +1650,15 @@
       <pre class="lines">
 
 
-58
-59
-60</pre>
+63
+64
+65</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 63</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_searchable_name'>searchable_name</span>
-  <span class='id identifier rubyid_scope_name'>scope_name</span> <span class='op'>||</span> <span class='ivar'>@column</span>
+  <span class='id identifier rubyid_scope_name'>scope_name</span> <span class='op'>||</span> <span class='ivar'>@column</span> <span class='op'>||</span> <span class='ivar'>@name</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1646,7 +1670,7 @@
 </div>
 
       <div id="footer">
-  Generated on Wed May 13 11:46:07 2020 by
+  Generated on Wed May 13 14:52:35 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.25 (ruby-2.6.4).
 </div>
