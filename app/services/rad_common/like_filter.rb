@@ -4,7 +4,8 @@ module RadCommon
   class LikeFilter
     attr_reader :column
     ##
-    # @param column the database column that is being filtered
+    # @param [String] column the database column that is being filtered
+    # @param [Symbol] type the type of filter
     def initialize(column:, type:)
       @column = column
     end

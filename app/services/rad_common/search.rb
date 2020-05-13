@@ -5,11 +5,11 @@ module RadCommon
     attr_reader :params, :current_user
 
     ##
-    # @param query The base query to start the search off with
-    # @param filters An array of filters to be displayed at the top of the search. {SearchFilter}, {DateFilter}, or {LikeFilter}
-    # @param sort_columns An array of columns to sort the query by.
-    # @param current_user the current user running the query
-    # @param params the url params from the current url
+    # @param [ActiveRecord_Relation] query The base query to start the search off with
+    # @param [Array] filters An array of filters to be displayed at the top of the search. {SearchFilter}, {DateFilter}, or {LikeFilter}
+    # @param [Array optional] sort_columns An array of columns to sort the query by. See {Sorting} for more details.
+    # @param [User] current_user the current user running the query
+    # @param [Hash] params the url params from the current url
     def initialize(query:, filters:, sort_columns: nil, current_user:, params:)
       @results = query
       @current_user = current_user

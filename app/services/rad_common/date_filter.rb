@@ -5,13 +5,16 @@ module RadCommon
     attr_reader :column, :errors
 
     ##
-    # @param column the database column that is being filtered
-    # @param [optional] start_input_label by default the start input label for the input is determined by the column name but you can override that by specifying it here
-    # @param [optional] end_input_label by default the end input label for the input is determined by the column name but you can override that by specifying it here
-    # @param [Boolean optional] custom when true we assume the actual filtering is being taken care of in a custom fashion and we skip applying the filter.
+    # @param [Symbol] column the database column that is being filtered
+    # @param [String optional] start_input_label by default the start input label for the input is determined
+    #   by the column name but you can override that by specifying it here
+    # @param [String optional] end_input_label by default the end input label for the input is determined
+    #   by the column name but you can override that by specifying it here
+    # @param [Boolean optional] custom when true we assume the actual filtering is being taken care of
+    #   in a custom fashion and we skip applying the filter.
     #
     # @example
-    # { column: :created_at, type: RadCommon::DateFilter, start_input_label 'The Start', end_input_label: 'The End' }
+    #   { column: :created_at, type: RadCommon::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
     def initialize(column:, type:, start_input_label: nil, end_input_label: nil, custom: false)
       @column = column
       @start_input_label = start_input_label

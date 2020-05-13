@@ -5,27 +5,30 @@ module RadCommon
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value
 
     ##
-    # @param column the database column that is being filtered
-    # @param options the options to be displayed in the dropdown. This is required when no scope values are specified.
-    # @param grouped will the options be grouped
-    # @param scope_values An array of scopes active record scopes represented by symbols to be inserted into the dropdown options.For example :closed_orders, :open_orders. This is required when no options are specified.
-    # @param [optinal] joins any necessary sql joins so that the query can be performed
-    # @param [optional] input_label by default the input label for the dropdown is determined by the column name but you can override that by specifying it here
-    # @param [optional] default_value the default value selected in the dropdown options
-    # @param [optional] blank_value_label the text displayed in the dropdown when there is no value selected. By default this is calculated based on the query model name but can be overidden here
-    # @param [optional] scope an active record scope to apply the filter to.
+    # @param [Symbol] column the database column that is being filtered
+    # @param [ActiveRecord_Relation, Array] options the options to be displayed in the dropdown. See examples
+    #   This is required when no scope values are specified.
+    # @param [Boolean optional] grouped will the options be grouped
+    # @param [Array optional] scope_values An array of scopes active record scopes represented by symbols to be inserted
+    #   into the dropdown options.For example :closed_orders, :open_orders. This is required when no options are specified.
+    # @param [String optional] joins any necessary sql joins so that the query can be performed
+    # @param [String optional] input_label by default the input label for the dropdown is determined by the column name
+    #   but you can override that by specifying it here
+    # @param [Object optional] default_value the default value selected in the dropdown options
+    # @param [String optional] blank_value_label the text displayed in the dropdown when there is no value selected.
+    #   By default this is calculated based on the query model name but can be overidden here
+    # @param [Symbol optional] scope an active record scope to apply the filter to.
     # @param [Boolean optional] multiple when set to true the dropdown becomes a multiple select
     #
-    # @example
-    #   {column: }
     # @example active record list
-    #   options: User.all
+    #   [{column: :user_id, options: User.all}]
     # @example Two dimensional array options
-    #   options: [['Option 1', 1],['Option 2', 2], ['Option 3', 3]]
+    #   [{column: :my_column, options: [['Option 1', 1],['Option 2', 2], ['Option 3', 3]]}]
     # @example Grouped options mixed with scoped values
-    #   options: [['...', [user, { scope_value: :unassigned }]],
-    #            ['Active', User.active.by_name],
-    #            ['Inactive', User.inactive.by_name]]
+    #   [{ column: :owner_id, input_label: 'Users', grouped: true,
+    #      options: [['...', [user, { scope_value: :unassigned }]],
+    #               ['Active', User.active.by_name],
+    #               ['Inactive', User.inactive.by_name]] }]
     # @example Using scope values
     #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
     def initialize(column: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, multiple: false)
@@ -47,18 +50,13 @@ module RadCommon
       @grouped = grouped
     end
 
+    # @return [String] the name of the view to be used to render the filter input
     def filter_view
       'select'
     end
 
     def searchable_name
       scope_name || @column
-    end
-
-    def scope_name
-      return if @scope.blank?
-
-      @scope.is_a?(Hash) ? @scope.keys.first : @scope
     end
 
     def blank_value_label
@@ -77,6 +75,7 @@ module RadCommon
       @grouped ? :grouped_select : :select
     end
 
+    # @return input options for the select html input.
     def input_options
       if grouped_scope_values?
         options.map do |option|
@@ -97,16 +96,7 @@ module RadCommon
       end
     end
 
-    def transform_group_options(group_options)
-      group_options.map do |option|
-        if scope_value_option?(option)
-          [option[:scope_value].to_s.titleize, option[:scope_value].to_s]
-        else
-          [option.to_s, option.id]
-        end
-      end
-    end
-
+    # @return the method that simple form should use to determine the label of the select option
     def label_method
       return :first if grouped_scope_values?
       return :to_s if @grouped
@@ -114,6 +104,9 @@ module RadCommon
       @scope_values.present? || options.first.is_a?(Array) ? :first : :to_s
     end
 
+    # Applies the filter to the result set
+    # @param results active record results query
+    # @param search_params the url params from the search
     def apply_filter(results, search_params)
       value = filter_value(search_params)
       if scope_search?
@@ -130,17 +123,32 @@ module RadCommon
       end
     end
 
-    def query_column(results)
-      return searchable_name if searchable_name.respond_to?(:split) && searchable_name.split('.').length > 1
-
-      "#{results.table_name}.#{searchable_name}"
-    end
-
-    def convert_array_values(value)
-      value.select(&:present?).map(&:to_i)
-    end
-
     private
+      def scope_name
+        return if @scope.blank?
+
+        @scope.is_a?(Hash) ? @scope.keys.first : @scope
+      end
+
+      def transform_group_options(group_options)
+        group_options.map do |option|
+          if scope_value_option?(option)
+            [option[:scope_value].to_s.titleize, option[:scope_value].to_s]
+          else
+            [option.to_s, option.id]
+          end
+        end
+      end
+
+      def query_column(results)
+        return searchable_name if searchable_name.respond_to?(:split) && searchable_name.split('.').length > 1
+
+        "#{results.table_name}.#{searchable_name}"
+      end
+
+      def convert_array_values(value)
+        value.select(&:present?).map(&:to_i)
+      end
 
       def filter_value(search_params)
         return @default_value.to_s if search_params.blank? && @default_value

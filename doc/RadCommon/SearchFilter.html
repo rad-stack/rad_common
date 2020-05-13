@@ -350,7 +350,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Applies the filter to the result set.</p>
+</div></span>
   
 </li>
 
@@ -380,7 +382,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#convert_array_values-instance_method" title="#convert_array_values (instance method)">#<strong>convert_array_values</strong>(value)  &#x21d2; Object </a>
+      <a href="#filter_view-instance_method" title="#filter_view (instance method)">#<strong>filter_view</strong>  &#x21d2; String </a>
     
 
     
@@ -394,29 +396,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#filter_view-instance_method" title="#filter_view (instance method)">#<strong>filter_view</strong>  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>The name of the view to be used to render the filter input.</p>
+</div></span>
   
 </li>
 
@@ -486,7 +468,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Input options for the select html input.</p>
+</div></span>
   
 </li>
 
@@ -530,7 +514,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>The method that simple form should use to determine the label of the select option.</p>
+</div></span>
   
 </li>
 
@@ -560,73 +546,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#query_column-instance_method" title="#query_column (instance method)">#<strong>query_column</strong>(results)  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#scope_name-instance_method" title="#scope_name (instance method)">#<strong>scope_name</strong>  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#searchable_name-instance_method" title="#searchable_name (instance method)">#<strong>searchable_name</strong>  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#transform_group_options-instance_method" title="#transform_group_options (instance method)">#<strong>transform_group_options</strong>(group_options)  &#x21d2; Object </a>
     
 
     
@@ -678,23 +598,24 @@
 <p>active record list</p>
 </div></p>
       
-      <pre class="example code"><code>options: User.all</code></pre>
+      <pre class="example code"><code><span class='lbracket'>[</span><span class='lbrace'>{</span><span class='label'>column:</span> <span class='symbol'>:user_id</span><span class='comma'>,</span> <span class='label'>options:</span> <span class='const'>User</span><span class='period'>.</span><span class='id identifier rubyid_all'>all</span><span class='rbrace'>}</span><span class='rbracket'>]</span></code></pre>
     
       
         <p class="example_title"><div class='inline'>
 <p>Two dimensional array options</p>
 </div></p>
       
-      <pre class="example code"><code>options: [[&#39;Option 1&#39;, 1],[&#39;Option 2&#39;, 2], [&#39;Option 3&#39;, 3]]</code></pre>
+      <pre class="example code"><code><span class='lbracket'>[</span><span class='lbrace'>{</span><span class='label'>column:</span> <span class='symbol'>:my_column</span><span class='comma'>,</span> <span class='label'>options:</span> <span class='lbracket'>[</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Option 1</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Option 2</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='int'>2</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Option 3</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='int'>3</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='rbrace'>}</span><span class='rbracket'>]</span></code></pre>
     
       
         <p class="example_title"><div class='inline'>
 <p>Grouped options mixed with scoped values</p>
 </div></p>
       
-      <pre class="example code"><code>options: [[&#39;...&#39;, [user, { scope_value: :unassigned }]],
-         [&#39;Active&#39;, User.active.by_name],
-         [&#39;Inactive&#39;, User.inactive.by_name]]</code></pre>
+      <pre class="example code"><code><span class='lbracket'>[</span><span class='lbrace'>{</span> <span class='label'>column:</span> <span class='symbol'>:owner_id</span><span class='comma'>,</span> <span class='label'>input_label:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Users</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>grouped:</span> <span class='kw'>true</span><span class='comma'>,</span>
+   <span class='label'>options:</span> <span class='lbracket'>[</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>...</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='id identifier rubyid_user'>user</span><span class='comma'>,</span> <span class='lbrace'>{</span> <span class='label'>scope_value:</span> <span class='symbol'>:unassigned</span> <span class='rbrace'>}</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='comma'>,</span>
+            <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Active</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='const'>User</span><span class='period'>.</span><span class='id identifier rubyid_active'>active</span><span class='period'>.</span><span class='id identifier rubyid_by_name'>by_name</span><span class='rbracket'>]</span><span class='comma'>,</span>
+            <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Inactive</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='const'>User</span><span class='period'>.</span><span class='id identifier rubyid_inactive'>inactive</span><span class='period'>.</span><span class='id identifier rubyid_by_name'>by_name</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='rbrace'>}</span><span class='rbracket'>]</span></code></pre>
     
       
         <p class="example_title"><div class='inline'>
@@ -712,7 +633,7 @@
         <span class='name'>column</span>
       
       
-        <span class='type'></span>
+        <span class='type'>(<tt>Symbol</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>nil</tt>)</em>
@@ -730,7 +651,7 @@
         <span class='name'>options</span>
       
       
-        <span class='type'></span>
+        <span class='type'>(<tt>ActiveRecord_Relation</tt>, <tt>Array</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>nil</tt>)</em>
@@ -738,7 +659,7 @@
       
         &mdash;
         <div class='inline'>
-<p>the options to be displayed in the dropdown. This is required when no scope values are specified.</p>
+<p>the options to be displayed in the dropdown. See examples This is required when no scope values are specified.</p>
 </div>
       
     </li>
@@ -748,7 +669,7 @@
         <span class='name'>grouped</span>
       
       
-        <span class='type'></span>
+        <span class='type'>(<tt>Boolean optional</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>false</tt>)</em>
@@ -766,7 +687,7 @@
         <span class='name'>scope_values</span>
       
       
-        <span class='type'></span>
+        <span class='type'>(<tt>Array optional</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>nil</tt>)</em>
@@ -784,7 +705,7 @@
         <span class='name'>joins</span>
       
       
-        <span class='type'></span>
+        <span class='type'>(<tt>String optional</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>nil</tt>)</em>
@@ -802,7 +723,7 @@
         <span class='name'>input_label</span>
       
       
-        <span class='type'>(<tt>optional</tt>)</span>
+        <span class='type'>(<tt>String optional</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>nil</tt>)</em>
@@ -820,7 +741,7 @@
         <span class='name'>default_value</span>
       
       
-        <span class='type'>(<tt>optional</tt>)</span>
+        <span class='type'>(<tt>Object optional</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>nil</tt>)</em>
@@ -838,7 +759,7 @@
         <span class='name'>blank_value_label</span>
       
       
-        <span class='type'>(<tt>optional</tt>)</span>
+        <span class='type'>(<tt>String optional</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>nil</tt>)</em>
@@ -856,11 +777,16 @@
         <span class='name'>scope</span>
       
       
-        <span class='type'>(<tt>optional</tt>)</span>
+        <span class='type'>(<tt>Symbol optional</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>nil</tt>)</em>
       
+      
+        &mdash;
+        <div class='inline'>
+<p>an active record scope to apply the filter to.</p>
+</div>
       
     </li>
   
@@ -891,11 +817,6 @@
       <pre class="lines">
 
 
-29
-30
-31
-32
-33
 34
 35
 36
@@ -908,10 +829,15 @@
 43
 44
 45
-46</pre>
+46
+47
+48
+49
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 29</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='label'>column:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>options:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>grouped:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>scope_values:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>joins:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>input_label:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>default_value:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>blank_value_label:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>scope:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>multiple:</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_input_label'>input_label</span><span class='period'>.</span><span class='id identifier rubyid_blank?'>blank?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:table_name</span><span class='rparen'>)</span>
@@ -1258,12 +1184,64 @@
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Applies the filter to the result set</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>results</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>active record results query</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>search_params</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the url params from the search</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
+110
+111
+112
+113
+114
 115
 116
 117
@@ -1273,15 +1251,10 @@
 121
 122
 123
-124
-125
-126
-127
-128
-129</pre>
+124</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 115</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 110</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_apply_filter'>apply_filter</span><span class='lparen'>(</span><span class='id identifier rubyid_results'>results</span><span class='comma'>,</span> <span class='id identifier rubyid_search_params'>search_params</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='id identifier rubyid_filter_value'>filter_value</span><span class='lparen'>(</span><span class='id identifier rubyid_search_params'>search_params</span><span class='rparen'>)</span>
@@ -1334,56 +1307,55 @@
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="convert_array_values-instance_method">
-  
-    #<strong>convert_array_values</strong>(value)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-137
-138
-139</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 137</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_convert_array_values'>convert_array_values</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:present?</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:to_i</span><span class='rparen'>)</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
   <h3 class="signature " id="filter_view-instance_method">
   
-    #<strong>filter_view</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>filter_view</strong>  &#x21d2; <tt>String</tt> 
   
 
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the name of the view to be used to render the filter input.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name of the view to be used to render the filter input</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-48
-49
-50</pre>
+54
+55
+56</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 48</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 54</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_filter_view'>filter_view</span>
   <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>select</span><span class='tstring_end'>&#39;</span></span>
@@ -1432,13 +1404,41 @@
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns input options for the select html input.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        
+        <div class='inline'>
+<p>input options for the select html input.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-78
 79
 80
 81
@@ -1456,10 +1456,11 @@
 93
 94
 95
-96</pre>
+96
+97</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 78</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 79</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_input_options'>input_options</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_grouped_scope_values?'>grouped_scope_values?</span>
@@ -1524,21 +1525,50 @@
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the method that simple form should use to determine the label of the select option.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        
+        <div class='inline'>
+<p>the method that simple form should use to determine the label of the select option</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-108
-109
-110
-111
-112
-113</pre>
+100
+101
+102
+103
+104
+105</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 108</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 100</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_label_method'>label_method</span>
   <span class='kw'>return</span> <span class='symbol'>:first</span> <span class='kw'>if</span> <span class='id identifier rubyid_grouped_scope_values?'>grouped_scope_values?</span>
@@ -1582,74 +1612,6 @@
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="query_column-instance_method">
-  
-    #<strong>query_column</strong>(results)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-131
-132
-133
-134
-135</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 131</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_query_column'>query_column</span><span class='lparen'>(</span><span class='id identifier rubyid_results'>results</span><span class='rparen'>)</span>
-  <span class='kw'>return</span> <span class='id identifier rubyid_searchable_name'>searchable_name</span> <span class='kw'>if</span> <span class='id identifier rubyid_searchable_name'>searchable_name</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:split</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_searchable_name'>searchable_name</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>&gt;</span> <span class='int'>1</span>
-
-  <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_results'>results</span><span class='period'>.</span><span class='id identifier rubyid_table_name'>table_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_searchable_name'>searchable_name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="scope_name-instance_method">
-  
-    #<strong>scope_name</strong>  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-56
-57
-58
-59
-60</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 56</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_scope_name'>scope_name</span>
-  <span class='kw'>return</span> <span class='kw'>if</span> <span class='ivar'>@scope</span><span class='period'>.</span><span class='id identifier rubyid_blank?'>blank?</span>
-
-  <span class='ivar'>@scope</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='ivar'>@scope</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span> <span class='op'>:</span> <span class='ivar'>@scope</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
   <h3 class="signature " id="searchable_name-instance_method">
   
     #<strong>searchable_name</strong>  &#x21d2; <tt>Object</tt> 
@@ -1664,57 +1626,15 @@
       <pre class="lines">
 
 
-52
-53
-54</pre>
+58
+59
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 52</span>
+      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 58</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_searchable_name'>searchable_name</span>
   <span class='id identifier rubyid_scope_name'>scope_name</span> <span class='op'>||</span> <span class='ivar'>@column</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="transform_group_options-instance_method">
-  
-    #<strong>transform_group_options</strong>(group_options)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-98
-99
-100
-101
-102
-103
-104
-105
-106</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'app/services/rad_common/search_filter.rb', line 98</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_transform_group_options'>transform_group_options</span><span class='lparen'>(</span><span class='id identifier rubyid_group_options'>group_options</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_group_options'>group_options</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_option'>option</span><span class='op'>|</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_scope_value_option?'>scope_value_option?</span><span class='lparen'>(</span><span class='id identifier rubyid_option'>option</span><span class='rparen'>)</span>
-      <span class='lbracket'>[</span><span class='id identifier rubyid_option'>option</span><span class='lbracket'>[</span><span class='symbol'>:scope_value</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_titleize'>titleize</span><span class='comma'>,</span> <span class='id identifier rubyid_option'>option</span><span class='lbracket'>[</span><span class='symbol'>:scope_value</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rbracket'>]</span>
-    <span class='kw'>else</span>
-      <span class='lbracket'>[</span><span class='id identifier rubyid_option'>option</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span> <span class='id identifier rubyid_option'>option</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1726,7 +1646,7 @@
 </div>
 
       <div id="footer">
-  Generated on Tue May 12 15:55:10 2020 by
+  Generated on Wed May 13 10:56:44 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.25 (ruby-2.6.4).
 </div>
