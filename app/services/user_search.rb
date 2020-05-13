@@ -1,7 +1,7 @@
 class UserSearch < RadCommon::Search
   def initialize(params, current_user)
     super(query: User.joins(:user_status),
-          filters: filter_def,
+          filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
           current_user: current_user)
@@ -9,7 +9,7 @@ class UserSearch < RadCommon::Search
 
   private
 
-    def filter_def
+    def filters_def
       items = [{ input_label: 'Status',
                  column: :user_status_id,
                  options: UserStatus.not_pending.by_id,
