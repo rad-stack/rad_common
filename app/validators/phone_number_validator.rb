@@ -1,6 +1,7 @@
 class PhoneNumberValidator < ActiveModel::Validator
   def validate(record)
     fields = options.has_key?(:fields) ? options[:fields] : [:phone_number]
+
     fields.each do |field|
       phone_value = fix_phone_number(record, field, record.send(field))
       if phone_value.present? && !valid_phone_number?(phone_value)
@@ -25,8 +26,9 @@ class PhoneNumberValidator < ActiveModel::Validator
 
   def fix_phone_number(record, field, phone_number)
     if phone_number.present? && phone_number.length == 10 && is_integer?(phone_number)
-      record[field] = '(' + phone_number[0, 3] + ') ' + phone_number[3, 3] + '-' + phone_number[6, 4]
+      record.send("#{field}=", '(' + phone_number[0, 3] + ') ' + phone_number[3, 3] + '-' + phone_number[6, 4])
     end
+
     record.send(field)
   end
 
