@@ -237,6 +237,26 @@ describe User, type: :model do
     end
   end
 
+  describe 'Email Changed' do
+    subject { ActionMailer::Base.deliveries[ActionMailer::Base.deliveries.length - 2].subject }
+
+    let!(:user) { create :user }
+
+    before { user.update!(email: 'foobar@example.com') }
+
+    it { is_expected.to eq('Email Changed') }
+  end
+
+  describe 'Password Changed' do
+    subject { ActionMailer::Base.deliveries.last.subject }
+
+    let!(:user) { create :user }
+
+    before { user.update!(password: 'NewPassword2!', password_confirmation: 'NewPassword2!') }
+
+    it { is_expected.to eq 'Password Changed' }
+  end
+
   def assert_password_with_name(first_name, last_name, password, valid)
     user = FactoryBot.build(:user, first_name: first_name,
                                    last_name: last_name,
