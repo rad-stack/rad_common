@@ -5,12 +5,13 @@
 
   -unless no_divider
     %li.dropdown-divider
+
   %li= link_to 'Users', users_path, class: 'dropdown-item'
   %li= link_to 'Security Roles', security_roles_path, class: 'dropdown-item'
   %li= link_to 'Notification Types', '/rad_common/notification_types', class: 'dropdown-item'
   %li= link_to 'Company Info', edit_company_path(company), class: 'dropdown-item'
   %li= link_to 'System Usage', '/rad_common/system_usages', class: 'dropdown-item'
   %li= link_to 'System Message', RadCommon::Engine.routes.url_helpers.new_system_message_path, class: 'dropdown-item'
-  %li= link_to 'Audit Search', audit_search_users_path, class: 'dropdown-item'
+  %li= link_to 'Audit Search', '/rad_common/audits', class: 'dropdown-item'
   %li= link_to 'Sentry Test', RadCommon::Engine.routes.url_helpers.edit_sentry_test_path(current_user), class: 'dropdown-item'
   %li= link_to 'Background Jobs', '/sidekiq', target: '_blank', class: 'dropdown-item'

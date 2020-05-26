@@ -1,36 +1,39 @@
--by_user = params[:action] == 'audit_by' || params[:system_audits].present?
-
 .card
-  = render 'layouts/card_header', action_name: 'custom', title: audit_title(by_user), icon: 'fa-list'
+  = render 'layouts/card_header', action_name: 'custom', title: audits_title(@show_search, @resource), icon: 'fa-list'
   .card-body
-    -if @audits.any?
-      = paginate @audits, theme: 'twitter-bootstrap-4'
+    -if @show_search
+      = render 'layouts/filter', search: @audit_search, path: '/rad_common/audits'
+    -if @audits.count.positive? || @show_search
+      = paginate @audits, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
       %table.table.table-striped.table-bordered
         %tr
-          %th Date
-          -if by_user
-            %th Record
+          -if @show_search
+            = render 'layouts/sort_headers', search: @audit_search
           -else
+            %th Date
+            -if @show_search
+              %th Record
+              %th Record ID
             %th User
-          %th Address
-          %th Action
-          %th Changes
+            %th Remote Address
+            %th Action
+            %th Changes
 
         -@audits.each do |audit|
           %tr
             %td
               %p= format_datetime(audit.created_at)
               %p= "#{distance_of_time_in_words_to_now(audit.created_at)} ago"
-            -if by_user
+            -if @show_search
               -if audit.action == 'destroy'
                 %td= "#{audit.auditable_type} (#{audit.auditable_id})"
               -else
                 %td= audit_model_link(audit, audit.auditable)
-            -else
-              %td= secured_link(audit.user)
+              %td= audit.auditable_id
+            %td= secured_link(audit.user)
             %td= audit.remote_address
             %td= display_audited_action(audit)
             %td= simple_format(display_audited_changes(audit))
-      = paginate @audits, theme: 'twitter-bootstrap-4'
+      = paginate @audits, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
     -else
       %p No activity exists for this item

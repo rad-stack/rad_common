@@ -1,6 +1,6 @@
 class DivisionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_division, only: %i[show edit update destroy audit]
+  before_action :set_division, only: %i[show edit update destroy]
 
   def index
     authorize Division
