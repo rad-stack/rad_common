@@ -20,6 +20,7 @@ class DivisionsController < ApplicationController
     @division_search = RadCommon::Search.new(query: Division.sorted,
                                              filters: filters,
                                              current_user: current_user,
+                                             search_name: 'divisions_search',
                                              params: params)
 
     if @division_search.valid?
