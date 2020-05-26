@@ -280,6 +280,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20200408180735_ran_long_notification.rb',
                         'ran_long_notification'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200526144750_convert_filter_defaults_to_json.rb',
+                        'convert_filter_defaults_to_json.rb'
       end
 
       def self.next_migration_number(path)
