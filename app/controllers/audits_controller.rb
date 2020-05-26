@@ -7,8 +7,7 @@ class AuditsController < ApplicationController
       authorize @resource, :audit?
       skip_policy_scope
 
-      @audits = @resource.own_and_associated_audits
-      @audits = @audits.reorder('created_at DESC').page(params[:page])
+      @audits = @resource.own_and_associated_audits.page(params[:page])
       @show_search = false
     else
       authorize RadAudit
