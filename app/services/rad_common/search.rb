@@ -10,6 +10,7 @@ module RadCommon
     # @param [Array optional] sort_columns An array of columns to sort the query by. See {Sorting} for more details.
     # @param [User] current_user the current user running the query
     # @param [Hash] params the url params from the current url
+    # @param [String optional] search_name an identifying named used for storing user defaults. Only required when user defaults enabled and not using a custom search class
     def initialize(query:, filters:, sort_columns: nil, current_user:, params:, search_name: nil)
       if current_user.respond_to?(:filter_defaults) && search_name.nil? && self.class.to_s == 'RadCommon::Search'
         raise 'search_name is required when not using a custom search class'
