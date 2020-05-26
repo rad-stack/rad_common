@@ -48,10 +48,9 @@ module RadCommon
 
       def update_user_filter_defaults
         filter_defaults = @current_user.filter_defaults
-        if filter_defaults.blank?
-          filter_defaults = {}
-          filter_defaults[search_name] = {}
-        end
+        filter_defaults = {} if filter_defaults.blank?
+        filter_defaults[search_name] = {} if filter_defaults[search_name].blank?
+
         @search.search_params.each do |filter_name, value|
           filter_defaults[search_name][filter_name.to_s] = value
         end
