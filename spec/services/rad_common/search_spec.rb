@@ -109,6 +109,45 @@ RSpec.describe RadCommon::Search, type: :service do
     end
   end
 
+  describe 'user filter_defaults' do
+    subject do
+      described_class.new(query: query,
+                          filters: filters,
+                          current_user: user,
+                          search_name: 'divisions_search',
+                          params: params).results
+    end
+
+    let(:query) { User }
+    let!(:user_active) { create :user, user_status: UserStatus.default_active_status }
+    let!(:user_pending) { create :user, user_status: UserStatus.default_pending_status }
+    let(:filters) { [{ column: :user_status_id, options: UserStatus.by_id }] }
+    let(:params) { ActionController::Parameters.new }
+
+    before do
+      default_values = { 'divisions_search' => { user_status_id: UserStatus.default_active_status.id } }
+      user.update!(filter_defaults: default_values)
+    end
+
+    context 'when no params are passed' do
+      it 'filters from stored user default values' do
+        expect(subject).to include user_active
+        expect(subject).not_to include user_pending
+      end
+    end
+
+    context 'when clear_filters params are passed in' do
+      let(:params) { ActionController::Parameters.new(clear_filters: true) }
+
+      it 'resets stored user default values' do
+        expect {subject}.to change { user.filter_defaults['divisions_search']['user_status_id'] }
+         .from( UserStatus.default_active_status.id).to('')
+        expect(subject).to include user_active
+        expect(subject).to include user_pending
+      end
+    end
+  end
+
   describe 'custom date filter' do
     subject do
       described_class.new(query: query,
