@@ -96,7 +96,7 @@ describe 'Users', type: :system do
       end
 
       it 'can manually confirm a user', :js do
-        accept_confirm do
+        page.accept_confirm do
           click_link 'Confirm Email'
         end
 
