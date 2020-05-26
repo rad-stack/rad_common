@@ -91,7 +91,7 @@ module RadCommon
       end
 
       def searchable_columns
-        filters.map(&:searchable_name)
+        filters.map(&:searchable_name).flatten
       end
 
       def permitted_searchable_columns
