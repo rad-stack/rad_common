@@ -8,6 +8,7 @@ RSpec.describe RadCommon::Search, type: :service do
       described_class.new(query: query,
                           filters: filters,
                           current_user: user,
+                          search_name: 'divisions_search',
                           params: params).results
     end
 
@@ -112,6 +113,7 @@ RSpec.describe RadCommon::Search, type: :service do
     subject do
       described_class.new(query: query,
                           filters: filters,
+                          search_name: 'divisions_search',
                           current_user: user,
                           params: params)
     end
@@ -143,6 +145,7 @@ RSpec.describe RadCommon::Search, type: :service do
     let(:search) do
       described_class.new(query: query,
                           filters: filters,
+                          search_name: 'divisions_search',
                           current_user: user,
                           params: params)
     end
@@ -178,6 +181,7 @@ RSpec.describe RadCommon::Search, type: :service do
     subject do
       described_class.new(query: query,
                           filters: filters,
+                          search_name: 'divisions_search',
                           current_user: user,
                           params: params).filters
     end
