@@ -75,6 +75,12 @@ RSpec.describe RadCommon::Search, type: :service do
         end
       end
 
+      context 'in a date filter' do
+        let(:params) { ActionController::Parameters.new }
+
+        it 'filters results using default value'
+      end
+
       context 'in a query where value is selected' do
         let(:params) { ActionController::Parameters.new(search: { owner_id: other_division.owner_id }) }
 
