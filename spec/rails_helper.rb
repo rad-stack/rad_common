@@ -126,7 +126,6 @@ RSpec.configure do |config|
     Warden.test_reset!
   end
 
-  config.include Devise::Test::ControllerHelpers, type: :controller
   include Warden::Test::Helpers
   config.include Capybara::DSL
 
