@@ -16,7 +16,7 @@ class DivisionsController < ApplicationController
                { column: :created_at, type: RadCommon::DateFilter,
                  start_input_label: 'Division Created At Start',
                  end_input_label: 'Division Created At End',
-                 default_start_value: DateTime.current, default_end_value: DateTime.current }]
+                 default_start_value: Date.current, default_end_value: Date.current }]
 
     @division_search = RadCommon::Search.new(query: Division.sorted,
                                              filters: filters,
