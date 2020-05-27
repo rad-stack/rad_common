@@ -240,6 +240,7 @@ ActiveRecord::Schema.define(version: 2020_05_26_144750) do
     t.datetime "password_changed_at"
     t.datetime "last_activity_at"
     t.datetime "expired_at"
+    t.jsonb "filter_defaults"
     t.index ["authy_id"], name: "index_users_on_authy_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
