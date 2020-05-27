@@ -2,7 +2,7 @@ module RadCommon
   ##
   # This is used to generate a date filter input, which filters a date column between a start date and end date range.
   class DateFilter
-    attr_reader :column, :errors
+    attr_reader :column, :errors, :default_start_value, :default_end_value
 
     ##
     # @param [Symbol] column the database column that is being filtered
@@ -12,13 +12,18 @@ module RadCommon
     #   by the column name but you can override that by specifying it here
     # @param [Boolean optional] custom when true we assume the actual filtering is being taken care of
     #   in a custom fashion and we skip applying the filter.
+    # @param [Date optional] default_start_value default start at value for the date filter
+    # @param [Date optional] default_end_value default end at value for the date filter
     #
     # @example
     #   { column: :created_at, type: RadCommon::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
-    def initialize(column:, type:, start_input_label: nil, end_input_label: nil, custom: false)
+    def initialize(column:, type:, start_input_label: nil, end_input_label: nil, custom: false,
+                   default_start_value: nil, default_end_value: nil)
       @column = column
       @start_input_label = start_input_label
       @end_input_label = end_input_label
+      @default_start_value = default_start_value
+      @default_end_value = default_end_value
       @custom = custom
       @errors = []
     end
@@ -76,10 +81,14 @@ module RadCommon
     private
 
       def start_at_value(params)
+        return @default_start_value.to_date if params.blank? && @default_start_value
+
         Date.parse(params[start_input]) if params[start_input].present?
       end
 
       def end_at_value(params)
+        return @default_end_value.to_date if params.blank? && @default_end_value
+
         Date.parse(params[end_input]) if params[end_input].present?
       end
   end
