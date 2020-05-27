@@ -118,7 +118,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :system, js: true) do
-    errors = page.driver.browser.manage.logs.get(:browser)
+    errors = page.driver.browser.manage.logs.get(:browser).reject { |e| e.level == 'WARNING' }
     expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
   end
 
@@ -126,7 +126,6 @@ RSpec.configure do |config|
     Warden.test_reset!
   end
 
-  config.include Devise::Test::ControllerHelpers, type: :controller
   include Warden::Test::Helpers
   config.include Capybara::DSL
 

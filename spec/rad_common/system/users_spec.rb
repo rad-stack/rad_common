@@ -96,11 +96,11 @@ describe 'Users', type: :system do
       end
 
       it 'can manually confirm a user', :js do
-        accept_confirm do
+        page.accept_confirm do
           click_link 'Confirm Email'
         end
 
-        expect(page.html).to include 'User was successfully confirmed'
+        expect(page).to have_content 'User was successfully confirmed'
       end
     end
   end
@@ -150,7 +150,7 @@ describe 'Users', type: :system do
         fill_in 'user_password_confirmation', with: password
 
         click_button 'Sign Up'
-        expect(page.html).to include('message with a confirmation link has been sent')
+        expect(page).to have_content 'message with a confirmation link has been sent'
       end
     end
 
@@ -166,7 +166,7 @@ describe 'Users', type: :system do
 
         click_button 'Sign Up'
 
-        expect(page.html).to include('is not authorized')
+        expect(page).to have_content 'is not authorized'
       end
     end
   end
@@ -181,7 +181,7 @@ describe 'Users', type: :system do
       fill_in 'user_password', with: password
 
       click_button 'Sign In'
-      expect(page.html).to include('Your account has not been approved by your administrator yet.')
+      expect(page).to have_content 'Your account has not been approved by your administrator yet.'
     end
 
     it 'signs in' do
@@ -191,7 +191,7 @@ describe 'Users', type: :system do
       fill_in 'user_password', with: password
 
       click_button 'Sign In'
-      expect(page.html).to include('Signed in successfully.')
+      expect(page).to have_content 'Signed in successfully.'
     end
 
     it 'does not allow with invalid email' do
