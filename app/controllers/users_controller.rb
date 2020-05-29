@@ -4,12 +4,11 @@ class UsersController < ApplicationController
 
   def index
     authorize User
-    skip_policy_scope
 
     @pending = policy_scope(User).pending.recent_first.page(params[:pending_page]).per(3)
 
     @user_search = UserSearch.new(params, current_user)
-    @users = @user_search.results
+    @users = policy_scope(@user_search.results)
 
     respond_to do |format|
       format.html do
