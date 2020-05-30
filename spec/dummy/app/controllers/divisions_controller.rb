@@ -22,6 +22,7 @@ class DivisionsController < ApplicationController
                                              filters: filters,
                                              current_user: current_user,
                                              search_name: 'divisions_search',
+                                             sticky_filters: true,
                                              params: params)
 
     if @division_search.valid?

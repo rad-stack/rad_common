@@ -121,6 +121,7 @@ RSpec.describe RadCommon::Search, type: :service do
                           filters: filters,
                           current_user: user,
                           search_name: 'divisions_search',
+                          sticky_filters: true,
                           params: params).results
     end
 
