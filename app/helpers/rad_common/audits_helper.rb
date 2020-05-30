@@ -1,7 +1,7 @@
 module RadCommon
   module AuditsHelper
     def audit_model_instance
-      @auditable_object || instance_variable_get("@#{controller_name.classify.underscore}")
+      instance_variable_get("@#{controller_name.classify.underscore}")
     end
 
     def show_auditing
@@ -11,13 +11,15 @@ module RadCommon
       audit_model_instance.class.name != 'ActiveStorage::Attachment' &&
         audit_model_instance.respond_to?(:audits) &&
         audit_model_instance.persisted? &&
-        policy(audit_model_instance).audit? &&
-        params[:action] != 'audit' &&
-        params[:action] != 'audit_by'
+        policy(audit_model_instance).audit?
     end
 
-    def show_audit_history_link
-      "/#{controller_name}/#{audit_model_instance.id}/audit"
+    def audit_history_link
+      "/rad_common/audits/?auditable_type=#{audit_model_instance.class}&auditable_id=#{audit_model_instance.id}"
+    end
+
+    def user_audit_history_link(user)
+      "/rad_common/audits/?#{ { search: { user_id: user.id } }.to_query }"
     end
 
     def display_audited_changes(audit)
@@ -46,12 +48,10 @@ module RadCommon
       action.gsub('destroy', 'delete')
     end
 
-    def audit_title(by_user)
-      title = by_user ? 'Updates by ' : 'Updates for '
-      title = (title + audit_model_link(nil, @model_object)).html_safe if @model_object
-      title += 'System' if by_user && @model_object.blank?
-      title = (title + @deleted) if @deleted
-      title + " (#{@audits.total_count})"
+    def audits_title(show_search, resource)
+      return "Audits (#{@audits.total_count})" if show_search
+
+      ('Audits for ' + audit_model_link(nil, resource)).html_safe + " (#{@audits.total_count})"
     end
 
     def audit_model_link(audit, record)
@@ -75,10 +75,6 @@ module RadCommon
           label
         end
       end
-    end
-
-    def audit_models_to_search
-      RadCommon::AppInfo.new.audited_models
     end
 
     private

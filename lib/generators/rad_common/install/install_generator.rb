@@ -146,11 +146,7 @@ module RadCommon
     member do
       put :resend_invitation
       put :confirm
-      get :audit
-      get :audit_by
     end
-
-    get :audit_search, on: :collection
   end
 
   resources :security_roles do

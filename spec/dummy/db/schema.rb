@@ -154,7 +154,6 @@ ActiveRecord::Schema.define(version: 2020_05_26_144750) do
     t.string "name", null: false
     t.boolean "admin", default: false, null: false
     t.boolean "read_user", default: false, null: false
-    t.boolean "read_audit", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "create_division", default: false, null: false
