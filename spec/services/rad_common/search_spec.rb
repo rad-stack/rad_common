@@ -4,7 +4,7 @@ RSpec.describe RadCommon::Search, type: :service do
   let(:user) { create(:user) }
 
   describe 'results' do
-    subject do
+    subject(:search) do
       described_class.new(query: query,
                           filters: filters,
                           current_user: user,
@@ -22,8 +22,8 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:params) { ActionController::Parameters.new(search: { name_like: 'foo' }) }
 
       it 'filters results' do
-        expect(subject).to include role_1
-        expect(subject).not_to include role_2
+        expect(search).to include role_1
+        expect(search).not_to include role_2
       end
     end
 
@@ -40,10 +40,10 @@ RSpec.describe RadCommon::Search, type: :service do
       end
 
       it 'filters results' do
-        expect(subject).to include user_1
-        expect(subject).to include user_3
-        expect(subject).not_to include user_4
-        expect(subject).not_to include user_2
+        expect(search).to include user_1
+        expect(search).to include user_3
+        expect(search).not_to include user_4
+        expect(search).not_to include user_2
       end
     end
 
@@ -55,8 +55,8 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:params) { ActionController::Parameters.new(search: { user_status_id: UserStatus.default_active_status.id }) }
 
       it 'filters results' do
-        expect(subject).to include user_active
-        expect(subject).not_to include user_pending
+        expect(search).to include user_active
+        expect(search).not_to include user_pending
       end
     end
 
@@ -67,27 +67,27 @@ RSpec.describe RadCommon::Search, type: :service do
       let!(:other_division) { create(:division) }
       let!(:default_division) { create(:division, owner: user) }
 
-      context 'in a blank query' do
+      context 'when in a blank query' do
         let(:params) { ActionController::Parameters.new }
 
         it 'filters results using default value' do
-          expect(subject).to include default_division
-          expect(subject).not_to include other_division
+          expect(search).to include default_division
+          expect(search).not_to include other_division
         end
       end
 
-      context 'in a date filter' do
+      context 'when in a date filter' do
         let(:params) { ActionController::Parameters.new }
 
         it 'filters results using default value'
       end
 
-      context 'in a query where value is selected' do
+      context 'when in a query where value is selected' do
         let(:params) { ActionController::Parameters.new(search: { owner_id: other_division.owner_id }) }
 
         it 'filters results using selected value' do
-          expect(subject).to include other_division
-          expect(subject).not_to include default_division
+          expect(search).to include other_division
+          expect(search).not_to include default_division
         end
       end
 
@@ -116,7 +116,7 @@ RSpec.describe RadCommon::Search, type: :service do
   end
 
   describe 'user filter_defaults' do
-    subject do
+    subject(:search) do
       described_class.new(query: query,
                           filters: filters,
                           current_user: user,
@@ -132,14 +132,14 @@ RSpec.describe RadCommon::Search, type: :service do
     let(:params) { ActionController::Parameters.new }
 
     before do
-      default_values = { 'divisions_search' => { user_status_id: UserStatus.default_active_status.id } }
+      default_values = { 'divisions_search': { user_status_id: UserStatus.default_active_status.id } }
       user.update!(filter_defaults: default_values)
     end
 
     context 'when no params are passed' do
       it 'filters from stored user default values' do
-        expect(subject).to include user_active
-        expect(subject).not_to include user_pending
+        expect(search).to include user_active
+        expect(search).not_to include user_pending
       end
     end
 
@@ -147,16 +147,16 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:params) { ActionController::Parameters.new(clear_filters: true) }
 
       it 'resets stored user default values' do
-        expect {subject}.to change { user.filter_defaults['divisions_search']['user_status_id'] }
-         .from( UserStatus.default_active_status.id).to('')
-        expect(subject).to include user_active
-        expect(subject).to include user_pending
+        expect { search }.to change { user.filter_defaults['divisions_search']['user_status_id'] }
+          .from(UserStatus.default_active_status.id).to('')
+        expect(search).to include user_active
+        expect(search).to include user_pending
       end
     end
   end
 
   describe 'custom date filter' do
-    subject do
+    subject(:search) do
       described_class.new(query: query,
                           filters: filters,
                           search_name: 'divisions_search',
@@ -165,28 +165,32 @@ RSpec.describe RadCommon::Search, type: :service do
     end
 
     let(:query) { User.joins(:security_roles) }
-    let!(:user_1) { create :user, confirmed_at: 1.day.ago }
-    let!(:user_2) { create :user, confirmed_at: 3.days.from_now }
     let(:filters) { [{ column: :custom_column, type: RadCommon::DateFilter, custom: true }] }
+
     let(:params) do
       ActionController::Parameters.new(search: { custom_column_start: 3.days.from_now.beginning_of_day,
                                                  custom_column_end: 3.days.from_now.end_of_day })
     end
 
+    before do
+      create :user, confirmed_at: 1.day.ago
+      create :user, confirmed_at: 3.days.from_now
+    end
+
     it 'is included in search params' do
-      expect(subject.search_params.keys).to include 'custom_column_start'
-      expect(subject.search_params.keys).to include 'custom_column_end'
+      expect(search.search_params.keys).to include 'custom_column_start'
+      expect(search.search_params.keys).to include 'custom_column_end'
     end
 
     it 'runs query using custom value' do
-      expect(subject.results.where('confirmed_at >= ? AND confirmed_at <= ?',
-                                   subject.search_params['custom_column_start'],
-                                   subject.search_params['custom_column_end']).count).to eq 1
+      expect(search.results.where('confirmed_at >= ? AND confirmed_at <= ?',
+                                  search.search_params['custom_column_start'],
+                                  search.search_params['custom_column_end']).count).to eq 1
     end
   end
 
   describe 'valid?' do
-    subject { search.valid? }
+    subject(:valid) { search.valid? }
 
     let(:search) do
       described_class.new(query: query,
@@ -198,33 +202,33 @@ RSpec.describe RadCommon::Search, type: :service do
     let(:query) { User.joins(:security_roles) }
     let(:filters) { [{ column: :confirmed_at, type: RadCommon::DateFilter }] }
 
-    context 'invalid date params' do
+    context 'with invalid date params' do
       let(:params) do
         ActionController::Parameters.new(search: { confirmed_at_start: '2019-13-01',
                                                    confirmed_at_end: '2019-12-02' })
       end
 
       it 'returns false and displays error message' do
-        expect(subject).to eq false
+        expect(valid).to eq false
         expect(search.error_messages).to eq 'Invalid date entered for confirmed_at'
       end
     end
 
-    context 'start date after end date' do
+    context 'when start date after end date' do
       let(:params) do
         ActionController::Parameters.new(search: { confirmed_at_start: '2019-12-03',
                                                    confirmed_at_end: '2019-12-02' })
       end
 
       it 'returns false and displays error message' do
-        expect(subject).to eq false
+        expect(valid).to eq false
         expect(search.error_messages).to eq 'Start at date must before end date'
       end
     end
   end
 
   describe 'scope value filters' do
-    subject do
+    subject(:search) do
       described_class.new(query: query,
                           filters: filters,
                           search_name: 'divisions_search',
@@ -238,8 +242,8 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:params) { ActionController::Parameters.new }
 
       it 'has both scope and normal options' do
-        expect(subject.first.input_options).to include ['Pending Values', 'Pending Values']
-        expect(subject.first.input_options).to include [User.by_name.first.to_s, User.by_name.first.id]
+        expect(search.first.input_options).to include ['Pending Values', 'Pending Values']
+        expect(search.first.input_options).to include [User.by_name.first.to_s, User.by_name.first.id]
       end
     end
 
@@ -249,7 +253,7 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:params) { ActionController::Parameters.new }
 
       it 'has both scope  optins' do
-        expect(subject.first.input_options.map(&:first)).to eq ['Internal', 'External']
+        expect(search.first.input_options.map(&:first)).to eq %w[Internal External]
       end
     end
 
@@ -262,7 +266,7 @@ RSpec.describe RadCommon::Search, type: :service do
                      ['Inactive', User.inactive.by_name]] }]
       end
       let(:params) { ActionController::Parameters.new }
-      let(:group_values) { subject.first.input_options.map(&:last) }
+      let(:group_values) { search.first.input_options.map(&:last) }
 
       it 'has both scope and normal options' do
         expect(group_values).to include [[user.to_s, user.id], %w[Unassigned unassigned]]
