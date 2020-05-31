@@ -121,10 +121,11 @@ RSpec.describe RadCommon::Search, type: :service do
                           filters: filters,
                           current_user: user,
                           search_name: 'divisions_search',
-                          sticky_filters: true,
+                          sticky_filters: sticky_filters,
                           params: params).results
     end
 
+    let(:sticky_filters) { true }
     let(:query) { User }
     let!(:user_active) { create :user, user_status: UserStatus.default_active_status }
     let!(:user_pending) { create :user, user_status: UserStatus.default_pending_status }
@@ -137,9 +138,20 @@ RSpec.describe RadCommon::Search, type: :service do
     end
 
     context 'when no params are passed' do
-      it 'filters from stored user default values' do
-        expect(search).to include user_active
-        expect(search).not_to include user_pending
+      context 'with sticky filters' do
+        it 'filters from stored user default values' do
+          expect(search).to include user_active
+          expect(search).not_to include user_pending
+        end
+      end
+
+      context 'without sticky filters' do
+        let(:sticky_filters) { false }
+
+        it 'filters from stored user default values' do
+          expect(search).to include user_active
+          expect(search).to include user_pending
+        end
       end
     end
 
