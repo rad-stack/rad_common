@@ -1,12 +1,13 @@
 module RadCommon
   class FilterDefaulting
-    def initialize(current_user:, search:)
+    def initialize(current_user:, search:, enabled:)
       @search = search
       @current_user = current_user
+      @enabled = enabled
     end
 
     def apply_defaults
-      return unless @current_user.respond_to?(:filter_defaults)
+      return unless @enabled
 
       if clear_filters?
         clear_filter_defaults
@@ -54,6 +55,7 @@ module RadCommon
         @search.search_params.each do |filter_name, value|
           filter_defaults[search_name][filter_name.to_s] = value
         end
+
         @current_user.update_column(:filter_defaults, filter_defaults)
       end
   end

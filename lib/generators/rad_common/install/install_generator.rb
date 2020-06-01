@@ -279,6 +279,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20200526144750_convert_filter_defaults_to_json.rb',
                         'convert_filter_defaults_to_json.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200530154123_filter_defaults_for_all.rb',
+                        'filter_defaults_for_all.rb'
       end
 
       def self.next_migration_number(path)

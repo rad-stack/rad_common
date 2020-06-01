@@ -11,8 +11,9 @@ module RadCommon
     # @param [User] current_user the current user running the query
     # @param [Hash] params the url params from the current url
     # @param [String optional] search_name an identifying named used for storing user defaults. Only required when user defaults enabled and not using a custom search class
-    def initialize(query:, filters:, sort_columns: nil, current_user:, params:, search_name: nil)
-      if current_user.respond_to?(:filter_defaults) && search_name.nil? && self.class.to_s == 'RadCommon::Search'
+    # @param [Boolean optional] turns on sticky filters (aka FilterDefaulting) so that user filter selections are remembered
+    def initialize(query:, filters:, sort_columns: nil, current_user:, params:, search_name: nil, sticky_filters: false)
+      if sticky_filters && search_name.nil? && self.class.to_s == 'RadCommon::Search'
         raise 'search_name is required when not using a custom search class'
       end
 
@@ -21,7 +22,7 @@ module RadCommon
       @params = params
       @search_name = search_name
       @filtering = Filtering.new(filters: filters, search: self)
-      defaulting = FilterDefaulting.new(current_user: current_user, search: self)
+      defaulting = FilterDefaulting.new(current_user: current_user, search: self, enabled: sticky_filters)
       defaulting.apply_defaults
       @sorting = Sorting.new(sort_columns: sort_columns, search: self)
     end
