@@ -212,7 +212,8 @@ describe User, type: :model do
     end
 
     it 'deletes authy user if mobile phone wiped out' do
-      # this test is not applicable for projects that require mobile phone presence
+      skip('not applicable for projects that require mobile phone presence') if mobile_phone_required?
+
       user.update!(authy_enabled: false, mobile_phone: nil)
       expect(user.reload.authy_id).to be_blank
     end
@@ -270,5 +271,12 @@ describe User, type: :model do
     else
       expect(user.errors.full_messages.to_s).to include 'Password cannot contain your name'
     end
+  end
+
+  def mobile_phone_required?
+    User.validators.collect { |validation| validation if validation.class == ActiveRecord::Validations::PresenceValidator }
+        .compact
+        .collect(&:attributes)
+        .flatten.include? :mobile_phone
   end
 end
