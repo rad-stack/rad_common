@@ -1,0 +1,2 @@
+class SecurityRolesUserPolicy < ApplicationPolicy
+end

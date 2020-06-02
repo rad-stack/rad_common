@@ -8,28 +8,16 @@ Rails.application.routes.draw do
       put :resend_invitation
       put :confirm
       put :reset_authy
-      get :audit
-      get :audit_by
     end
-
-    get :audit_search, on: :collection
   end
 
   resources :security_roles do
-    get :audit, on: :member
     get :permission, on: :collection
   end
 
   resources :security_roles_users, only: :show
-
-  resources :companies, only: %i[show edit update] do
-    get :audit, on: :member
-  end
-
-  resources :divisions do
-    get :audit, on: :member
-  end
-
+  resources :companies, only: %i[show edit update]
+  resources :divisions
   resources :firebase_logs, only: %i[index destroy]
 
   authenticate :user, ->(u) { u.admin? } do

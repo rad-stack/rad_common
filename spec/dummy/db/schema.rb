@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_08_180735) do
+ActiveRecord::Schema.define(version: 2020_05_30_154123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,7 +154,6 @@ ActiveRecord::Schema.define(version: 2020_04_08_180735) do
     t.string "name", null: false
     t.boolean "admin", default: false, null: false
     t.boolean "read_user", default: false, null: false
-    t.boolean "read_audit", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "create_division", default: false, null: false
@@ -241,6 +240,7 @@ ActiveRecord::Schema.define(version: 2020_04_08_180735) do
     t.datetime "password_changed_at"
     t.datetime "last_activity_at"
     t.datetime "expired_at"
+    t.jsonb "filter_defaults"
     t.index ["authy_id"], name: "index_users_on_authy_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true

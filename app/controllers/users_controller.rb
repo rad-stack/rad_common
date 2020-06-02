@@ -1,15 +1,14 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: %i[show edit update destroy audit audit_by resend_invitation confirm reset_authy]
+  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm reset_authy]
 
   def index
     authorize User
-    skip_policy_scope
 
     @pending = policy_scope(User).pending.recent_first.page(params[:pending_page]).per(3)
 
     @user_search = UserSearch.new(params, current_user)
-    @users = @user_search.results
+    @users = policy_scope(@user_search.results)
 
     respond_to do |format|
       format.html do
@@ -58,7 +57,7 @@ class UsersController < ApplicationController
 
     if @user == current_user
       flash[:error] = "Can't delete yourself."
-    elsif @user.audits_created(nil).any?
+    elsif @user.audits_created.count.positive?
       flash[:error] = "User has audit history, can't delete"
     elsif @user.destroy
       flash[:success] = 'User deleted.'

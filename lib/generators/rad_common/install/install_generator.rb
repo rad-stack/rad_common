@@ -146,11 +146,7 @@ module RadCommon
     member do
       put :resend_invitation
       put :confirm
-      get :audit
-      get :audit_by
     end
-
-    get :audit_search, on: :collection
   end
 
   resources :security_roles do
@@ -280,6 +276,12 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20200408180735_ran_long_notification.rb',
                         'ran_long_notification'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200526144750_convert_filter_defaults_to_json.rb',
+                        'convert_filter_defaults_to_json.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200530154123_filter_defaults_for_all.rb',
+                        'filter_defaults_for_all.rb'
       end
 
       def self.next_migration_number(path)

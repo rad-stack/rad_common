@@ -1,6 +1,6 @@
 class DivisionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_division, only: %i[show edit update destroy audit]
+  before_action :set_division, only: %i[show edit update destroy]
 
   def index
     authorize Division
@@ -15,11 +15,14 @@ class DivisionsController < ApplicationController
                { column: :name, type: RadCommon::LikeFilter },
                { column: :created_at, type: RadCommon::DateFilter,
                  start_input_label: 'Division Created At Start',
-                 end_input_label: 'Division Created At End' }]
+                 end_input_label: 'Division Created At End',
+                 default_start_value: Date.current, default_end_value: Date.current }]
 
     @division_search = RadCommon::Search.new(query: Division.sorted,
                                              filters: filters,
                                              current_user: current_user,
+                                             search_name: 'divisions_search',
+                                             sticky_filters: true,
                                              params: params)
 
     if @division_search.valid?

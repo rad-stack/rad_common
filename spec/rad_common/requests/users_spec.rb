@@ -6,9 +6,8 @@ RSpec.describe 'Users', type: :request do
   let(:another) { create :user }
   let(:valid_attributes) { { first_name: Faker::Name.first_name, last_name: Faker::Name.last_name } }
   let(:invalid_attributes) { { first_name: nil } }
-  let(:escaped_user_name) { ERB::Util.html_escape(search_user.to_s) }
 
-  before { login_as(admin, scope: :user) }
+  before { login_as admin, scope: :user }
 
   describe 'PUT update' do
     describe 'with valid params' do
@@ -59,34 +58,6 @@ RSpec.describe 'Users', type: :request do
       delete "/users/#{another.id}", headers: { HTTP_REFERER: users_path }
       follow_redirect!
       expect(response.body).to include 'User has audit history'
-    end
-  end
-
-  describe 'audit_search' do
-    let!(:search_user) { create :user }
-    let!(:search_role) { create :security_role }
-
-    context 'with audit' do
-      it 'renders audit page' do
-        get '/users/audit_search', params: { model_name: search_user.class.to_s, record_id: search_user.id }
-        expect(response.body).to include "Updates for <a href=\"/users/#{search_user.id}\">User - #{escaped_user_name}</a>"
-      end
-    end
-
-    context 'without audit' do
-      it 'does not render audit page' do
-        get '/users/audit_search', params: { model_name: search_role.class.to_s, record_id: -1 }
-        expect(response.body).not_to include "Updates for <a href=\"/users/#{search_user.id}\">User - #{escaped_user_name}</a>"
-      end
-    end
-
-    context 'without resource' do
-      it 'does not render audit page' do
-        get '/users/audit_search'
-        expect(response.body).not_to include 'Audit for Foo with ID of 9999 not found'
-        get '/users/audit_search', params: { model_name: 'Foo', record_id: 9999 }
-        expect(response.body).to include 'Audit for Foo with ID of 9999 not found'
-      end
     end
   end
 end

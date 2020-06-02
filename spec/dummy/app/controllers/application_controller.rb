@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   include RadbearController
-  include RadbearAuditsController
 
   protect_from_forgery prepend: true, with: :exception
 

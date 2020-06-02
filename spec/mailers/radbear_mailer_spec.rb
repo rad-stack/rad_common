@@ -71,17 +71,17 @@ describe RadbearMailer, type: :mailer do
     describe 'to' do
       subject { last_email.to }
 
-      context 'to an email address' do
+      context 'when to an email address' do
         it { is_expected.to eq [email] }
       end
 
-      context 'to a user' do
+      context 'when to a user' do
         let(:recipient) { user }
 
         it { is_expected.to eq [email] }
       end
 
-      context 'to multiple users' do
+      context 'when to multiple users' do
         let(:recipient) { [user.id, another_user.id] }
 
         it { is_expected.to include user.email }
@@ -92,6 +92,12 @@ describe RadbearMailer, type: :mailer do
 
           it { is_expected.to include user.email }
           it { is_expected.to include 'string_email@example.com' }
+        end
+
+        context 'with just one user id' do
+          let(:recipient) { [user.id] }
+
+          it { is_expected.to eq [user.email] }
         end
       end
     end

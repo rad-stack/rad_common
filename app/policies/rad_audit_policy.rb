@@ -1,0 +1,2 @@
+class RadAuditPolicy < ApplicationPolicy
+end

@@ -66,8 +66,8 @@ module RadbearUser
     "Hello #{first_name}"
   end
 
-  def audits_created(_user)
-    Audited::Audit.unscoped.where('user_id = ?', id).order('created_at DESC')
+  def audits_created
+    Audited::Audit.where(user_id: id).order(created_at: :desc)
   end
 
   def update_firebase_info

@@ -5,7 +5,7 @@ require_dependency "<%= namespaced_file_path %>/application_controller"
 <% module_namespacing do -%>
 class <%= controller_class_name %>Controller < ApplicationController
   before_action :authenticate_user!
-  before_action :set_<%= singular_table_name %>, only: %i[show edit update destroy audit]
+  before_action :set_<%= singular_table_name %>, only: %i[show edit update destroy]
 
   def index
     authorize <%= class_name %>
