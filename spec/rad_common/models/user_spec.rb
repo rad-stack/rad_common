@@ -212,7 +212,8 @@ describe User, type: :model do
     end
 
     it 'deletes authy user if mobile phone wiped out' do
-      # this test is not applicable for projects that require mobile phone presence
+      skip('not applicable for projects that require mobile phone presence') if mobile_phone_required?
+
       user.update!(authy_enabled: false, mobile_phone: nil)
       expect(user.reload.authy_id).to be_blank
     end
@@ -237,6 +238,26 @@ describe User, type: :model do
     end
   end
 
+  describe 'Email Changed' do
+    subject { ActionMailer::Base.deliveries[ActionMailer::Base.deliveries.length - 2].subject }
+
+    let!(:user) { create :user }
+
+    before { user.update!(email: 'foobar@example.com') }
+
+    it { is_expected.to eq('Email Changed') }
+  end
+
+  describe 'Password Changed' do
+    subject { ActionMailer::Base.deliveries.last.subject }
+
+    let!(:user) { create :user }
+
+    before { user.update!(password: 'NewPassword2!', password_confirmation: 'NewPassword2!') }
+
+    it { is_expected.to eq 'Password Changed' }
+  end
+
   def assert_password_with_name(first_name, last_name, password, valid)
     user = FactoryBot.build(:user, first_name: first_name,
                                    last_name: last_name,
@@ -250,5 +271,12 @@ describe User, type: :model do
     else
       expect(user.errors.full_messages.to_s).to include 'Password cannot contain your name'
     end
+  end
+
+  def mobile_phone_required?
+    User.validators.collect { |validation| validation if validation.class == ActiveRecord::Validations::PresenceValidator }
+        .compact
+        .collect(&:attributes)
+        .flatten.include? :mobile_phone
   end
 end

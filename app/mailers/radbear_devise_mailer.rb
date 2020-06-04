@@ -66,6 +66,27 @@ class RadbearDeviseMailer < Devise::Mailer
     super
   end
 
+  def email_changed(record, opts = {})
+    initialize_from_record(record)
+
+    @recipient = @resource
+    @message = "The email address for your #{app_name} account was recently changed. If you made this change, please "\
+               "disregard this message. If you didn't make this change, please let us know immediately."
+
+    super
+  end
+
+  def password_change(record, opts = {})
+    initialize_from_record(record)
+
+    @recipient = @resource
+    @message = "The password for your #{app_name} account was recently changed. If you made this change, you don't "\
+               "need to do anything more. If you didn't make this change, please let us know, and reset your password "\
+               'immediately.'
+
+    super
+  end
+
   def default_url_options
     if @resource.internal?
       { host: RadCommon::AppInfo.new.host_name }
