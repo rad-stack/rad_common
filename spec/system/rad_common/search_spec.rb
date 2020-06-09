@@ -57,6 +57,13 @@ RSpec.describe 'Search', type: :system do
       click_button 'Apply Filters'
       expect(find_field('search_division_status')['data-style']).to eq 'btn btn-warning'
     end
+
+    it 'select should have warning style when a value a blank value is selected on filter without default', js: true do
+      expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-success]')
+      bootstrap_select 'All Owners', from: 'search_owner_id'
+      click_button 'Apply Filters'
+      expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-warning]')
+    end
   end
 
   describe 'date filter' do

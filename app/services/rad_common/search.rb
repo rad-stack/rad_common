@@ -78,10 +78,13 @@ module RadCommon
 
     def default_value?(column)
       filter = @filtering.filter(column)
-      
+
       return blank?(column) unless filter.default_value
 
       val = selected_value(column)
+      return true if val.nil?
+      return false if blank?(column)
+
       val && filter.default_value && val.to_s == filter.default_value.to_s
     end
 
