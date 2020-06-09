@@ -160,7 +160,7 @@ RSpec.describe RadCommon::Search, type: :service do
 
       it 'resets stored user default values' do
         expect { search }.to change { user.filter_defaults['divisions_search']['user_status_id'] }
-          .from(UserStatus.default_active_status.id).to('')
+          .from(UserStatus.default_active_status.id).to(nil)
         expect(search).to include user_active
         expect(search).to include user_pending
       end
