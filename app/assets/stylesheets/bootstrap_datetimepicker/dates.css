@@ -24,5 +24,3 @@ input[type=date]:not([data-html-5='true'])::-webkit-datetime-edit-year-field {
     -webkit-appearance: none;
     display: none;
 }
-
-/*.datetimepicker-input { position: relative; }*/
