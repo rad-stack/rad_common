@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_30_154123) do
+ActiveRecord::Schema.define(version: 2020_06_15_193248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 2020_05_30_154123) do
     t.string "timezone"
     t.decimal "hourly_rate", precision: 8, scale: 2, default: "0.0", null: false
     t.string "additional_info"
+    t.date "date_established"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
   end
