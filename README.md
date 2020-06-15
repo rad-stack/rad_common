@@ -55,6 +55,11 @@ Set a `data-default` option:
 - Example: `f.input :some_date, as: :date, html5: true, input_html: { 'data-default' => '2017-01-01' }`
 - Example: `time_field_tag 'some_time', nil, { class: 'time', 'data-default' => '13:04'`
 
+##### If you want try the experimental built in browser date picker add the html-5 data attribute
+```
+= f.input :start_date, as: :date, html5: true, input_html: { data: { "html-5" => true } }
+```
+
 ## Usage
 
 ### Server
