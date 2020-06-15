@@ -58,8 +58,11 @@ module RadCommon
       start_at = start_at_value(params)
       end_at = end_at_value(params)
 
-      results = results.where("#{results.table_name}.#{column} >= ?", start_at&.beginning_of_day) if start_at.present?
-      results = results.where("#{results.table_name}.#{column} <= ?", end_at&.end_of_day) if end_at.present?
+      start_at = start_at.beginning_of_day if start_at && results.model.column_for_attribute(@column).type == :datetime
+      end_at = end_at.beginning_of_day if end_at && results.model.column_for_attribute(@column).type == :datetim
+
+      results = results.where("#{results.table_name}.#{column} >= ?", start_at) if start_at.present?
+      results = results.where("#{results.table_name}.#{column} <= ?", end_at) if end_at.present?
       results
     end
 
