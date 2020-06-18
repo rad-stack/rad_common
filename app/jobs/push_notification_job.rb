@@ -7,8 +7,6 @@ class PushNotificationJob < ApplicationJob
 
     return unless user
 
-    return if user.firebase_id.blank?
-
     raise 'missing subject' if subject.blank?
     raise 'missing message' if message.blank?
 
