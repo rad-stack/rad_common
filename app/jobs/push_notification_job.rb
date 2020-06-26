@@ -31,6 +31,8 @@ class PushNotificationJob < ApplicationJob
       res = http.request(req)
 
       raise RadicallyIntermittentException, res.body.to_s unless res.code == '200'
+      json = JSON.parse res.body
+      raise RadicallyIntermittentException, res.body.to_s if json['failure'].positive?
     end
   end
 end
