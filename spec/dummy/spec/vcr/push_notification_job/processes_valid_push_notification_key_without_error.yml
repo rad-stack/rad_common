@@ -1,0 +1,56 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://fcm.googleapis.com/fcm/send
+    body:
+      encoding: UTF-8
+      string: '{"to":"eaRGtEwMoeQ:APA91bFvQAqnXU0F1yhvotXohwOLkflP41ugVfMfLZZZI8BtaBiJwH6vY7U7JyHUyQO3FgPnRFyVtr_g19wK7GuPO5TNLp8sbAHTuAoDaNFgCU6_-rAWjyLWkneLogKqxyMD09uEqgC-","notification":{"title":"test","body":"this
+        is a test message","badge":null,"sound":"default"}}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - fcm.googleapis.com
+      Content-Type:
+      - application/json
+      Authorization:
+      - key= AAAAPp5edMk:APA91bHzHU_U1wFmLWTzCZ9WrIYlbAJrMVBF-EqMDutE2k_DpilAz6i9JOIvTNs3LR-QDUGgOsvWnSjMQxFxUO3q3j8WYm6VVMGeqxNVT2blTRyEDnmtpCTW6TLFaEAipqgs4rssQz9P
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Fri, 26 Jun 2020 18:16:01 GMT
+      Expires:
+      - Fri, 26 Jun 2020 18:16:01 GMT
+      Cache-Control:
+      - private, max-age=0
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Alt-Svc:
+      - h3-27=":443"; ma=2592000,h3-25=":443"; ma=2592000,h3-T050=":443"; ma=2592000,h3-Q050=":443";
+        ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443";
+        ma=2592000; v="46,43"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"multicast_id":5903848579994252804,"success":1,"failure":0,"canonical_ids":0,"results":[{"message_id":"0:1593195361155917%cc9b4facf9fd7ecd"}]}'
+  recorded_at: Fri, 26 Jun 2020 18:16:01 GMT
+recorded_with: VCR 6.0.0

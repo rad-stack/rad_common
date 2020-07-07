@@ -15,6 +15,8 @@ class PushNotificationJob < ApplicationJob
     device_tokens = user.firebase_device_tokens(app)
     return if device_tokens.nil?
 
+    errors = {}
+
     device_tokens.each do |device_token|
       uri = URI(app.push_url)
       notification = { title: subject, body: message, badge: badge, sound: 'default' }
@@ -31,6 +33,16 @@ class PushNotificationJob < ApplicationJob
       res = http.request(req)
 
       raise RadicallyIntermittentException, res.body.to_s unless res.code == '200'
+      json = JSON.parse res.body
+      if json['failure'].positive? && errors_to_ignore.exclude?(json['results'].first['error'])
+        errors[device_token] = res.body.to_s
+      end
     end
+
+    raise RadicallyIntermittentException, errors if errors.present?
+  end
+
+  def errors_to_ignore
+    ['NotRegistered']
   end
 end
