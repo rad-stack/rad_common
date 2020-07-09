@@ -3,6 +3,10 @@ class RadicalTwilio
     client.messages.create(from: from, to: to, body: message)
   end
 
+  def self.send_mms(from:, to:, message:, media_url:)
+    client.messages.create(from: from, to: to, body: message, media_url: media_url)
+  end
+
   def self.send_robocall(from:, to:, url:)
     client.calls.create(from: from, to: to, url: URI.encode(url))
   end
