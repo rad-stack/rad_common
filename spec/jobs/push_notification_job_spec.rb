@@ -5,7 +5,7 @@ describe PushNotificationJob do
 
   it 'shows exception if server returned error', :vcr do
     allow_any_instance_of(User).to receive(:firebase_device_tokens).and_return(['my_token'])
-    expect { described_class.perform_now(user.id, 'test', 'this is a test message', nil) }.to raise_exception
+    expect { described_class.perform_now(user.id, 'test', 'this is a test message', nil) }.to raise_exception(RadicallyIntermittentException)
   end
 
   it 'processes valid push notification key without error', :vcr do
