@@ -9,3 +9,8 @@ en:
           sms: 'SMS'
       user:
         external: 'Client user?'
+  faker:
+    phone_number:
+      formats: ['(###) ###-####']
+    cell_phone:
+      formats: ['(###) ###-####']
