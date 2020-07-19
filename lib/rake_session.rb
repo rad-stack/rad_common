@@ -27,16 +27,23 @@ class RakeSession
       per_day = per_hour * 24
 
       if count
-        if per_hour > 0
+        if per_hour.positive?
           count_label = "of #{count} "
           hours_remaining = (count - @counter) / (per_hour * 1.0)
           from_time = now
           finished_label = ", finished in #{distance_of_time_in_words(from_time, from_time + hours_remaining.hours)}"
+        else
+          count_label = nil
+          finished_label = nil
         end
 
-        puts "#{label} #{pluralize(@counter, 'items')} #{count_label}in #{pluralize(minutes, 'minute')}, #{per_hour} per hour, #{per_day} per day, elapsed: #{elapsed}#{finished_label}"
+        unless Rails.env.test?
+          puts "#{label} #{pluralize(@counter, 'items')} #{count_label}in "\
+               "#{pluralize(minutes, 'minute')}, #{per_hour} per hour, #{per_day} per day, elapsed: "\
+               "#{elapsed}#{finished_label}"
+        end
       else
-        puts "#{label}, elapsed: #{elapsed}"
+        puts "#{label}, elapsed: #{elapsed}" unless Rails.env.test?
       end
     end
 
