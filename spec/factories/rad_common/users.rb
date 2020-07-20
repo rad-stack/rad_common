@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :user do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
-    mobile_phone { '(999) 231-1111' }
+    mobile_phone { Faker::PhoneNumber.cell_phone }
     sequence(:email) { |n| "example#{n}@example.com" }
     password { Rails.env.development? ? 'password' : 'cOmpl3x_p@55w0rd' }
     password_confirmation { Rails.env.development? ? 'password' : 'cOmpl3x_p@55w0rd' }
