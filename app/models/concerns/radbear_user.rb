@@ -1,6 +1,9 @@
 module RadbearUser
   extend ActiveSupport::Concern
 
+  USER_AUDIT_COLUMNS_DISABLED = %i[password password_confirmation encrypted_password reset_password_token
+                                   confirmation_token authentication_token unlock_token].freeze
+
   included do
     belongs_to :user_status
 
