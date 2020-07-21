@@ -29,11 +29,14 @@ module RadbearUser
     validate :validate_email_address
     validate :validate_sms_mobile_phone, on: :update
     validate :password_excludes_name
+
     validates_with PhoneNumberValidator, fields: [:mobile_phone]
+    validates_with TwilioPhoneValidator, fields: [{ field: :mobile_phone, type: :mobile }]
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
     after_save :notify_user_approved
+
     after_invitation_accepted :notify_user_accepted
   end
 
