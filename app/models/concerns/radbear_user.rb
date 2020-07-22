@@ -33,6 +33,7 @@ module RadbearUser
     scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
     scope :recent_first, -> { order('users.created_at DESC') }
     scope :recent_last, -> { order('users.created_at') }
+    scope :except_user, ->(user) { where.not(id: user.id) }
 
     scope :by_permission, lambda { |permission_attr|
       joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct
