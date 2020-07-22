@@ -18,7 +18,14 @@ module RadbearUser
     attr_accessor :approved_by, :do_not_notify_approved
 
     scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
-    scope :admins, -> { active.where('users.id IN (SELECT user_id FROM security_roles_users INNER JOIN security_roles ON security_roles_users.security_role_id = security_roles.id WHERE security_roles.admin = TRUE)') }
+
+    scope :admins, lambda {
+      active.where('users.id IN ('\
+                 'SELECT user_id FROM security_roles_users '\
+                 'INNER JOIN security_roles ON security_roles_users.security_role_id = security_roles.id '\
+                 'WHERE security_roles.admin = TRUE)')
+    }
+
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
     scope :by_name, -> { order(:first_name, :last_name) }
     scope :by_last, -> { order(:last_name, :first_name) }
@@ -26,8 +33,16 @@ module RadbearUser
     scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
     scope :recent_first, -> { order('users.created_at DESC') }
     scope :recent_last, -> { order('users.created_at') }
-    scope :by_permission, ->(permission_attr) { joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct }
-    scope :inactive, -> { joins(:user_status).where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)') }
+
+    scope :by_permission, lambda { |permission_attr|
+      joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct
+    }
+
+    scope :inactive, lambda {
+      joins(:user_status)
+        .where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)')
+    }
+
     scope :not_inactive, -> { where.not(user_status_id: UserStatus.default_inactive_status.id) }
     scope :in_timezone, ->(timezone) { joins(:account).where('accounts.timezone = ?', timezone) }
     scope :internal, -> { where(external: false) }
@@ -38,7 +53,9 @@ module RadbearUser
     validate :password_excludes_name
 
     validates_with PhoneNumberValidator, fields: [:mobile_phone]
-    validates_with TwilioPhoneValidator, fields: [{ field: :mobile_phone, type: :mobile }]
+
+    validates_with TwilioPhoneValidator, fields: [{ field: :mobile_phone, type: :mobile }],
+                                         if: -> { RadicalTwilio.twilio_enabled? }
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
