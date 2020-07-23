@@ -9,7 +9,7 @@ describe User, type: :model do
     { first_name: 'Example',
       last_name: 'User',
       authy_enabled: false,
-      mobile_phone: '(999) 231-1111',
+      mobile_phone: Faker::PhoneNumber.cell_phone,
       email: 'user@example.com',
       password: 'cOmpl3x_p@55w0rd',
       password_confirmation: 'cOmpl3x_p@55w0rd' }
@@ -108,7 +108,7 @@ describe User, type: :model do
       { first_name: 'Example',
         last_name: 'User',
         authy_enabled: false,
-        mobile_phone: '(999) 231-1111',
+        mobile_phone: Faker::PhoneNumber.cell_phone,
         password: 'cH@ngem3',
         password_confirmation: 'cH@ngem3',
         user_status: active_status,

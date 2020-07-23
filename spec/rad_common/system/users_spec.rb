@@ -349,7 +349,7 @@ describe 'Users', type: :system do
     describe 'update' do
       it 'updates Twilio when updating an accounts mobile phone', vcr: true do
         visit edit_user_registration_path
-        fill_in 'user_mobile_phone', with: '(345) 222-1111'
+        fill_in 'user_mobile_phone', with: Faker::PhoneNumber.cell_phone
         fill_in 'user_current_password', with: password
         click_button 'Save'
         expect(page).to have_content('Your account has been updated successfully.')
@@ -412,7 +412,7 @@ describe 'Users', type: :system do
 
       login_as(user, scope: :user)
       visit edit_user_registration_path
-      fill_in 'user_mobile_phone', with: '(345) 222-1111'
+      fill_in 'user_mobile_phone', with: Faker::PhoneNumber.cell_phone
       fill_in 'user_current_password', with: password
       click_button 'Save'
       expect(page).to have_content('Your account has been updated successfully.')

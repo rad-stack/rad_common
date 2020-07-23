@@ -87,7 +87,7 @@ describe 'Invitations', type: :system do
       @invitee = User.invite!(email: Faker::Internet.user_name + '@' + email_domain,
                               first_name: Faker::Name.first_name,
                               last_name: Faker::Name.last_name,
-                              mobile_phone: '(999) 231-1111')
+                              mobile_phone: Faker::PhoneNumber.cell_phone)
     end
 
     it 'does not allow invitee to reset password after invite expires', :vcr do
