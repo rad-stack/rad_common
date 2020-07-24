@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe Company, type: :model do
   let(:company) { described_class.main }
-  let!(:user) { create :admin }
 
   describe 'valid user domains' do
     it 'allows valid user domains' do

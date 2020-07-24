@@ -297,7 +297,7 @@ GEM
       rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
-    rad-style (1.0.4)
+    rad-style (1.0.5)
     rails (6.0.3.2)
       actioncable (= 6.0.3.2)
       actionmailbox (= 6.0.3.2)
