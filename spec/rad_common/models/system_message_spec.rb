@@ -26,7 +26,7 @@ RSpec.describe SystemMessage, type: :model do
       let(:system_message) { create :system_message, :sms, user: user, sms_message_body: message }
 
       before do
-        User.update_all(mobile_phone: Faker::PhoneNumber.cell_phone)
+        User.update_all(mobile_phone: create(:phone_number, :mobile))
         allow(RadicalTwilio).to receive(:send_sms).and_return true
         ActionMailer::Base.deliveries = []
         system_message.send!

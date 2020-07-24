@@ -21,7 +21,7 @@ class TwilioMockModel
 end
 
 RSpec.describe TwilioPhoneValidator, type: :validator do
-  let(:mobile_phone) { '(904) 325-2071' }
+  let(:mobile_phone) { create :phone_number, :real_mobile }
   let(:standard_phone) { '(904) 503-5030' }
   let(:invalid_phone) { '1234' }
 

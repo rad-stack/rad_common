@@ -8,7 +8,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - twilio-ruby/5.31.0 (ruby/x86_64-darwin18 2.6.4-p104)
+      - twilio-ruby/5.31.6 (ruby/x86_64-darwin19 2.6.4-p104)
       Accept-Charset:
       - utf-8
       Accept:
@@ -23,7 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 16 Dec 2019 14:42:16 GMT
+      - Fri, 24 Jul 2020 10:06:01 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -33,9 +33,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQd2fe7199c2044f12a43117df3bd0f2ec
+      - RQbfc71d29061949adbf4eea643302e6fc
       Twilio-Request-Duration:
-      - '0.014'
+      - '0.017'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -62,6 +62,5 @@ http_interactions:
       string: '{"caller_name": null, "country_code": "US", "phone_number": "+19045035030",
         "national_format": "(904) 503-5030", "carrier": null, "add_ons": null, "url":
         "https://lookups.twilio.com/v1/PhoneNumbers/+19045035030"}'
-    http_version: 
-  recorded_at: Mon, 16 Dec 2019 14:42:16 GMT
-recorded_with: VCR 5.0.0
+  recorded_at: Fri, 24 Jul 2020 10:06:01 GMT
+recorded_with: VCR 6.0.0
