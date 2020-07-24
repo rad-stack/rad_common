@@ -7,7 +7,7 @@ RSpec.describe 'NotificationSettings', type: :system do
   before { login_as user, scope: :user }
 
   describe 'index' do
-    context 'admin' do
+    context 'when admin' do
       let(:user) { create :admin, security_roles: [security_role] }
 
       it 'displays the settings' do
@@ -32,7 +32,7 @@ RSpec.describe 'NotificationSettings', type: :system do
       end
     end
 
-    context 'user' do
+    context 'when user' do
       let(:user) { create :user }
 
       it 'does not display the settings' do
