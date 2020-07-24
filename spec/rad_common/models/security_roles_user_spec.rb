@@ -6,7 +6,7 @@ describe SecurityRolesUser, type: :model do
     let(:security_role) { create :security_role }
     let(:security_roles_user) { build :security_roles_user, user: user, security_role: security_role }
 
-    context 'internal user' do
+    context 'with internal user' do
       let(:user) { create :user }
 
       it 'is valid' do

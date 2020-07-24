@@ -41,14 +41,14 @@ RSpec.describe 'SystemMessages', type: :system do
         expect(find_field('Message type').value).to eq 'sms'
       end
 
-      context 'dynamically changing fields', js: true do
+      context 'when dynamically changing fields', js: true do
         it 'shows and hides trix editor based on message type' do
           find('body').click
-          expect(find('.email-message', visible: true))
-          expect(find('.sms-message', visible: false))
+          expect(page).to have_css('.email-message', visible: :visible)
+          expect(page).to have_css('.sms-message', visible: :hidden)
           select 'SMS', from: 'Message type'
-          expect(find('.email-message', visible: false))
-          expect(find('.sms-message', visible: true))
+          expect(page).to have_css('.email-message', visible: :hidden)
+          expect(page).to have_css('.sms-message', visible: :visible)
         end
       end
     end

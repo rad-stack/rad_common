@@ -5,25 +5,25 @@ RSpec.describe SystemMessage, type: :model do
   let(:message) { 'foo bar yo' }
 
   describe '#send!' do
-    context 'email message' do
+    context 'with email message' do
       subject { mail.body.encoded }
 
       let(:system_message) { create :system_message, :email, user: user, email_message_body: message }
+      let(:mail) { ActionMailer::Base.deliveries.last }
 
       before do
         ActionMailer::Base.deliveries = []
         system_message.send!
       end
 
-      let(:mail) { ActionMailer::Base.deliveries.last }
-
       it { is_expected.to include message }
     end
 
-    context 'sms message' do
+    context 'with sms message' do
       subject { mail&.body&.encoded }
 
       let(:system_message) { create :system_message, :sms, user: user, sms_message_body: message }
+      let(:mail) { ActionMailer::Base.deliveries.last }
 
       before do
         User.update_all(mobile_phone: create(:phone_number, :mobile))
@@ -32,9 +32,7 @@ RSpec.describe SystemMessage, type: :model do
         system_message.send!
       end
 
-      let(:mail) { ActionMailer::Base.deliveries.last }
-
-      context 'all users receive message' do
+      context 'when all users receive message' do
         it { is_expected.to be_nil }
       end
     end

@@ -299,7 +299,7 @@ describe 'Users', type: :system do
     describe 'confirming' do
       let(:user) { create(:user, confirmed_at: nil) }
 
-      it 'should not say whether the email exists' do
+      it "doesn't say whether the email exists" do
         visit new_user_session_path
 
         click_link "Didn't Receive Confirmation Instructions?"
@@ -315,20 +315,20 @@ describe 'Users', type: :system do
     describe 'unlock' do
       let(:user) { create(:user, confirmed_at: nil) }
 
-      it 'should not say whether the email exists' do
+      it "doesn't say whether the email exists" do
         visit new_user_session_path
         click_link "Didn't Receive Unlock Instructions?"
 
         fill_in 'Email', with: user.email
         click_button 'Resend Unlock Instructions'
 
-        expect(page).to_not have_content 'not found'
-        expect(page).to have_content "If your account exists, you will receive an email with instructions for how to unlock it in a few minutes."
+        expect(page).not_to have_content 'not found'
+        expect(page).to have_content 'If your account exists, you will receive an email with instructions for how to unlock it in a few minutes.'
       end
     end
 
     describe 'resetting password' do
-      it 'should not say whether the email exists' do
+      it "doesn't say whether the email exists" do
         visit new_user_session_path
         click_link 'Forgot Your Password?'
 
@@ -355,7 +355,7 @@ describe 'Users', type: :system do
         expect(page).to have_content('Your account has been updated successfully.')
       end
 
-      context 'a different user' do
+      context 'with a different user' do
         let(:another_user) { create :admin }
 
         it 'updates last_activity_at' do

@@ -26,7 +26,7 @@ describe 'Invitations', type: :system do
     before { login_as(admin, scope: :user) }
 
     describe 'new' do
-      context 'valid' do
+      context 'when valid' do
         it 'invites a user', :vcr do
           visit new_user_invitation_path
           fill_in 'Email', with: valid_email
@@ -51,7 +51,7 @@ describe 'Invitations', type: :system do
         end
       end
 
-      context 'invalid' do
+      context 'when invalid' do
         it 'because of invalid email', :vcr do
           visit new_user_invitation_path
           bad_email = 'j@g.com'
@@ -83,22 +83,21 @@ describe 'Invitations', type: :system do
   end
 
   describe 'accept' do
-    before do
-      @invitee = User.invite!(email: Faker::Internet.user_name + '@' + email_domain,
-                              first_name: Faker::Name.first_name,
-                              last_name: Faker::Name.last_name,
-                              mobile_phone: create(:phone_number, :mobile))
+    let!(:invitee) do
+      User.invite!(email: Faker::Internet.user_name + '@' + email_domain,
+                   first_name: Faker::Name.first_name,
+                   last_name: Faker::Name.last_name,
+                   mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'does not allow invitee to reset password after invite expires', :vcr do
-      @invitee = User.find(@invitee.id)
-      expect(@invitee.errors.count).to eq(0)
-      @invitee.invitation_created_at = 3.weeks.ago
-      @invitee.invitation_sent_at = 3.weeks.ago
-      @invitee.save!
+      expect(invitee.errors.count).to eq(0)
+      invitee.invitation_created_at = 3.weeks.ago
+      invitee.invitation_sent_at = 3.weeks.ago
+      invitee.save!
 
       visit new_user_password_path
-      fill_in 'Email', with: @invitee.email
+      fill_in 'Email', with: invitee.email
       click_button 'Send Me Reset Password Instructions'
       expect(page).to have_content 'If your email address exists in our database, you will receive a password'
     end
@@ -107,7 +106,7 @@ describe 'Invitations', type: :system do
       ActionMailer::Base.deliveries = []
       create :user_accepts_invitation_notification, security_roles: [admin.security_roles.first]
 
-      @invitee.accept_invitation!
+      invitee.accept_invitation!
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.subject).to include 'Accepted'
@@ -118,7 +117,7 @@ describe 'Invitations', type: :system do
       ActionMailer::Base.deliveries = []
 
       visit new_user_password_path
-      fill_in 'Email', with: @invitee.email
+      fill_in 'Email', with: invitee.email
       click_button 'Send Me Reset Password Instructions'
       expect(page).to have_content 'If your email address exists in our database, you will receive a password'
 
