@@ -27,6 +27,7 @@ module RadCommon
     require 'sidekiq'
     require 'sidekiq-failures'
     require 'simple_form'
+    require 'strip_attributes'
     require 'twilio-ruby'
     require 'bootstrap'
     require 'bootstrap-select-rails'

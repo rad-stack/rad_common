@@ -63,6 +63,8 @@ module RadbearUser
     after_save :notify_user_approved
 
     after_invitation_accepted :notify_user_accepted
+
+    strip_attributes
   end
 
   def to_s

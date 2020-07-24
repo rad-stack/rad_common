@@ -38,6 +38,7 @@ describe User, type: :model do
 
     it 'rejects passwords that contain name' do
       assert_password_with_name 'John', 'Smith', 'John1!', false
+      assert_password_with_name 'John ', 'Smith', 'John1!', false
       assert_password_with_name 'John', 'Smith', 'JOHN1!', false
       assert_password_with_name 'John', 'Smith', 'Smith1!', false
       assert_password_with_name 'John', 'Smith', 'SMITH1!', false
