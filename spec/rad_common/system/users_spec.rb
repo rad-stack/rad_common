@@ -379,7 +379,7 @@ describe 'Users', type: :system do
 
     before do
       expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
-      user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :real_mobile))
+      user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'allows user to login with authentication token', :vcr do
