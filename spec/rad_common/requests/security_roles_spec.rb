@@ -32,9 +32,7 @@ RSpec.describe 'Security roles', type: :request do
 
   describe 'PUT update' do
     describe 'with valid params' do
-      let(:new_attributes) do
-        { name: 'bar' }
-      end
+      let(:new_attributes) { { name: 'bar' } }
 
       it 'updates the requested security_role' do
         put "/security_roles/#{security_role.id}", params: { security_role: new_attributes }

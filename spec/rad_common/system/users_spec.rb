@@ -308,7 +308,7 @@ describe 'Users', type: :system do
 
         expect(page).not_to have_content 'not found'
         expect(page).to have_content 'If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes.'
-        expect(current_path).to eq(new_user_session_path)
+        expect(page).to have_current_path(new_user_session_path)
       end
     end
 

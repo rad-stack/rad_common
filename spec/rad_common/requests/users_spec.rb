@@ -13,9 +13,7 @@ RSpec.describe 'Users', type: :request do
     describe 'with valid params' do
       let(:new_name) { 'Gary' }
 
-      let(:new_attributes) do
-        { first_name: new_name }
-      end
+      let(:new_attributes) { { first_name: new_name } }
 
       it 'updates the requested user' do
         put "/users/#{user.id}", params: { user: new_attributes }
@@ -51,9 +49,7 @@ RSpec.describe 'Users', type: :request do
     end
 
     it 'can not delete if user created audits' do
-      Audited::Audit.as_user(another) do
-        user.update!(first_name: 'Foo')
-      end
+      Audited::Audit.as_user(another) { user.update!(first_name: 'Foo') }
 
       delete "/users/#{another.id}", headers: { HTTP_REFERER: users_path }
       follow_redirect!

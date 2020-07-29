@@ -10,9 +10,7 @@ RSpec.describe 'Companies', type: :request do
 
   describe 'PUT update' do
     describe 'with valid params' do
-      let(:new_attributes) do
-        { name: 'bar' }
-      end
+      let(:new_attributes) { { name: 'bar' } }
 
       it 'updates the requested company' do
         put "/companies/#{company.id}", params: { company: new_attributes }
