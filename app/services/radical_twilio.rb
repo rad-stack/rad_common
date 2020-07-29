@@ -16,7 +16,15 @@ class RadicalTwilio
   end
 
   def self.twilio_enabled?
-    ENV['TWILIO_ACCOUNT_SID'].present? && ENV['TWILIO_AUTH_TOKEN'].present? && ENV['TWILIO_PHONE_NUMBERS'].present?
+    if ENV['TWILIO_ACCOUNT_SID'].blank? && ENV['TWILIO_AUTH_TOKEN'].blank? && ENV['TWILIO_PHONE_NUMBERS'].blank?
+      return false
+    end
+
+    if ENV['TWILIO_ACCOUNT_SID'].present? && ENV['TWILIO_AUTH_TOKEN'].present? && ENV['TWILIO_PHONE_NUMBERS'].present?
+      return true
+    end
+
+    raise 'inconsistent twilio config'
   end
 
   def self.twilio_phone_numbers
