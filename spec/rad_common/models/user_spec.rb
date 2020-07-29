@@ -275,7 +275,8 @@ describe User, type: :model do
   end
 
   def mobile_phone_required?
-    User.validators.collect { |validation| validation if validation.class == ActiveRecord::Validations::PresenceValidator }
+    User.validators
+        .collect { |validation| validation if validation.class == ActiveRecord::Validations::PresenceValidator }
         .compact
         .collect(&:attributes)
         .flatten.include? :mobile_phone
