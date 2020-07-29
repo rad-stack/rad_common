@@ -1,6 +1,6 @@
 class TwilioPhoneValidator < ActiveModel::Validator
   def validate(record)
-    return unless Rails.env.production? || (defined?(TwilioMockModel) && record.is_a?(TwilioMockModel))
+    return unless RadicalTwilio.twilio_enabled?
     raise 'please specify options for this validation' unless options && options[:fields]
 
     fields = options[:fields]

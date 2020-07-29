@@ -1,17 +1,51 @@
 module RadbearUser
   extend ActiveSupport::Concern
 
+  USER_AUDIT_COLUMNS_DISABLED = %i[password password_confirmation encrypted_password reset_password_token
+                                   confirmation_token authentication_token unlock_token].freeze
+
   included do
+    belongs_to :user_status
+
     has_many :notification_settings, dependent: :destroy
     has_many :system_messages, dependent: :destroy
     has_many :notifications, dependent: :destroy
+    has_many :security_roles_users, dependent: :destroy
+    has_many :security_roles, through: :security_roles_users, dependent: :destroy
 
     has_one_attached :avatar
 
     attr_accessor :approved_by, :do_not_notify_approved
 
-    scope :by_permission, ->(permission_attr) { joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct }
-    scope :inactive, -> { joins(:user_status).where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)') }
+    scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
+
+    scope :admins, lambda {
+      active.where('users.id IN ('\
+                 'SELECT user_id FROM security_roles_users '\
+                 'INNER JOIN security_roles ON security_roles_users.security_role_id = security_roles.id '\
+                 'WHERE security_roles.admin = TRUE)')
+    }
+
+    scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
+    scope :by_name, -> { order(:first_name, :last_name) }
+    scope :by_last, -> { order(:last_name, :first_name) }
+    scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
+    scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
+    scope :recent_first, -> { order('users.created_at DESC') }
+    scope :recent_last, -> { order('users.created_at') }
+    scope :except_user, ->(user) { where.not(id: user.id) }
+
+    scope :by_permission, lambda { |permission_attr|
+      joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct
+    }
+
+    scope :inactive, lambda {
+      joins(:user_status)
+        .where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)')
+    }
+
+    scope :not_inactive, -> { where.not(user_status_id: UserStatus.default_inactive_status.id) }
+    scope :in_timezone, ->(timezone) { joins(:account).where('accounts.timezone = ?', timezone) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
 
@@ -19,8 +53,26 @@ module RadbearUser
     validate :validate_sms_mobile_phone, on: :update
     validate :password_excludes_name
 
+    validates_with PhoneNumberValidator, fields: [:mobile_phone]
+
+    validates_with TwilioPhoneValidator, fields: [{ field: :mobile_phone, type: :mobile }],
+                                         if: -> { RadicalTwilio.twilio_enabled? }
+
+    before_validation :check_defaults
     before_validation :set_timezone, on: :create
     after_save :notify_user_approved
+
+    after_invitation_accepted :notify_user_accepted
+
+    strip_attributes
+  end
+
+  def to_s
+    "#{first_name} #{last_name}"
+  end
+
+  def active
+    active_for_authentication?
   end
 
   def formatted_email
@@ -108,7 +160,39 @@ module RadbearUser
     notifications.unread.update_all unread: false
   end
 
+  def active_for_authentication?
+    super && user_status && user_status.active
+  end
+
+  def inactive_message
+    if !user_status.active
+      :not_approved
+    else
+      super
+    end
+  end
+
+  def send_devise_notification(notification, *args)
+    # background devise emails
+    # https://github.com/plataformatec/devise#activejob-integration
+
+    devise_mailer.send(notification, self, *args).deliver_later
+  end
+
+  def send_reset_password_instructions
+    if invited_to_sign_up?
+      errors.add :email, :not_found
+    else
+      super
+    end
+  end
+
   private
+
+    def check_defaults
+      status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
+      self.user_status = status if new_record? && !user_status
+    end
 
     def validate_email_address
       return if email.blank? || user_status_id.nil? || !user_status.validate_email || external? || Company.main.blank?

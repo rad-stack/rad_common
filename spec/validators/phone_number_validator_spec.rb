@@ -16,6 +16,12 @@ class TestPhoneModel
 end
 
 RSpec.describe PhoneNumberValidator do
+  let(:phone_number) { create :phone_number }
+
+  let(:phone_number_stripped) do
+    phone_number.delete('(').delete(')').delete('-').delete(' ')
+  end
+
   it 'can not be valid' do
     invalid_numbers = ['232332', '211-333-1111', '(432)-111-2222', '905.444.2111', '905 444 2111']
 
@@ -27,15 +33,14 @@ RSpec.describe PhoneNumberValidator do
   end
 
   it 'can be valid' do
-    model = TestPhoneModel.new('(211) 333-1111')
+    model = TestPhoneModel.new(phone_number)
     expect(model).to be_valid
   end
 
   it 'converts a 10 digit number to a valid format' do
-    number = '2813308004'
-    model = TestPhoneModel.new(number)
+    model = TestPhoneModel.new(phone_number_stripped)
     expect(model).to be_valid
-    expect(model.phone_number).to eq('(281) 330-8004')
+    expect(model.phone_number).to eq(phone_number)
   end
 
   it 'identifies valid but fake numbers' do

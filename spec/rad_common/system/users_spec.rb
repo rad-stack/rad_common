@@ -349,7 +349,7 @@ describe 'Users', type: :system do
     describe 'update' do
       it 'updates Twilio when updating an accounts mobile phone', vcr: true do
         visit edit_user_registration_path
-        fill_in 'user_mobile_phone', with: '(345) 222-1111'
+        fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
         fill_in 'user_current_password', with: password
         click_button 'Save'
         expect(page).to have_content('Your account has been updated successfully.')
@@ -379,7 +379,7 @@ describe 'Users', type: :system do
 
     before do
       expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
-      user.update!(authy_enabled: true, mobile_phone: '(904) 226-4901')
+      user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'allows user to login with authentication token', :vcr do
@@ -412,7 +412,7 @@ describe 'Users', type: :system do
 
       login_as(user, scope: :user)
       visit edit_user_registration_path
-      fill_in 'user_mobile_phone', with: '(345) 222-1111'
+      fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
       fill_in 'user_current_password', with: password
       click_button 'Save'
       expect(page).to have_content('Your account has been updated successfully.')

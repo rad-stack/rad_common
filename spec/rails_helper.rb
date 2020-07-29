@@ -108,6 +108,8 @@ RSpec.configure do |config|
     (ActiveJob::Base.descendants << ActiveJob::Base).each(&:disable_test_adapter)
     # TODO: end of workaround
 
+    allow(RadicalTwilio).to receive(:twilio_enabled?).and_return(false)
+
     allow(Company).to receive(:main).and_return(create(:company))
 
     allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))

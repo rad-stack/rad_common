@@ -9,7 +9,7 @@ describe User, type: :model do
     { first_name: 'Example',
       last_name: 'User',
       authy_enabled: false,
-      mobile_phone: '(999) 231-1111',
+      mobile_phone: create(:phone_number, :mobile),
       email: 'user@example.com',
       password: 'cOmpl3x_p@55w0rd',
       password_confirmation: 'cOmpl3x_p@55w0rd' }
@@ -38,6 +38,7 @@ describe User, type: :model do
 
     it 'rejects passwords that contain name' do
       assert_password_with_name 'John', 'Smith', 'John1!', false
+      assert_password_with_name 'John ', 'Smith', 'John1!', false
       assert_password_with_name 'John', 'Smith', 'JOHN1!', false
       assert_password_with_name 'John', 'Smith', 'Smith1!', false
       assert_password_with_name 'John', 'Smith', 'SMITH1!', false
@@ -108,7 +109,7 @@ describe User, type: :model do
       { first_name: 'Example',
         last_name: 'User',
         authy_enabled: false,
-        mobile_phone: '(999) 231-1111',
+        mobile_phone: create(:phone_number, :mobile),
         password: 'cH@ngem3',
         password_confirmation: 'cH@ngem3',
         user_status: active_status,
@@ -187,8 +188,8 @@ describe User, type: :model do
 
   describe 'authy' do
     let(:user) { create :user, mobile_phone: phone_number }
-    let(:phone_number) { '(123) 456-7111' }
-    let(:new_phone_number) { '(456) 789-0123' }
+    let(:phone_number) { create :phone_number, :mobile }
+    let(:new_phone_number) { create :phone_number, :mobile }
     let(:authy_id) { '1234567' }
     let(:admin_role) { create :security_role, :admin }
     let(:role1) { create :security_role }
