@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       Date:
-      - Mon, 28 Oct 2019 13:10:28 GMT
+      - Thu, 30 Jul 2020 15:28:54 GMT
       Content-Type:
       - application/json
   response:
@@ -23,7 +23,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Mon, 28 Oct 2019 13:10:29 GMT
+      - Thu, 30 Jul 2020 15:28:55 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -39,6 +39,5 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '["eKUEUPDWW3I:APA91bHdhnsF7bGr8BOz3NcFWJrr1nBrjJDa1Uz-GWmrBC0_YD63asWukwmTn3LBKtZS7stiluDybaBgV4bH0M_AuizdWztyeMeVrrCeNlcPEnkXKln5sjolgH1WOtB6NBpQTc3hR_9F","dQUulxDx3sk:APA91bGO1YR0b95FMCeIh2FamYYGJyR7LymRziH7Kq9i2GubkOicRcWAuposSVOUi7ZJlRxEwzi6aoK9kUnWUAUEmtJ9svs0WyTyUnjViTtTNoBS6yQZjebeo-ZP-dfr69-OELLBCvxc","cy2w20Xdg60:APA91bFdlYH0yzzYVmhXl1yp58KM_547ce_hXtEUtURh9CwHHDLynqVjff082bmzO56nsJ5Isz0RmYws6IVOs2VP94DZwrXC5knzKHPkgHP8r5diEqyFmJWnweFanRf5xk0iORnzjIzb"]'
-    http_version: 
-  recorded_at: Mon, 28 Oct 2019 13:10:29 GMT
-recorded_with: VCR 5.0.0
+  recorded_at: Thu, 30 Jul 2020 15:28:55 GMT
+recorded_with: VCR 6.0.0
