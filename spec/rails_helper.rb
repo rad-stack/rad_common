@@ -43,11 +43,11 @@ VCR.configure do |c|
   c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { ENV.fetch('TEST_MOBILE_PHONE') }
   c.filter_sensitive_data('<TEST_PHONE_NUMBER>') { ENV.fetch('TEST_PHONE_NUMBER') }
 
-  c.filter_sensitive_data('<TEST_MOBILE_PHONE>') do
+  c.filter_sensitive_data('<TEST_MOBILE_PHONE_STRIPPED>') do
     ENV.fetch('TEST_MOBILE_PHONE').gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
   end
 
-  c.filter_sensitive_data('<TEST_PHONE_NUMBER>') do
+  c.filter_sensitive_data('<TEST_PHONE_NUMBER_STRIPPED>') do
     ENV.fetch('TEST_PHONE_NUMBER').gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
   end
 end

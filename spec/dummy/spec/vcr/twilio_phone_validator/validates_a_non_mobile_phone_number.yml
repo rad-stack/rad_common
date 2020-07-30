@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://lookups.twilio.com/v1/PhoneNumbers/<TEST_PHONE_NUMBER>
+    uri: https://lookups.twilio.com/v1/PhoneNumbers/<TEST_PHONE_NUMBER_STRIPPED>
     body:
       encoding: US-ASCII
       string: ''
@@ -23,7 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 30 Jul 2020 15:12:42 GMT
+      - Thu, 30 Jul 2020 15:29:55 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -33,9 +33,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ4276c6c155f54123998cf90f04f9f730
+      - RQ806f17e3e8ce433e954783e90b9a4438
       Twilio-Request-Duration:
-      - '0.037'
+      - '0.027'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -59,8 +59,8 @@ http_interactions:
       - max-age=31536000
     body:
       encoding: UTF-8
-      string: '{"caller_name": null, "country_code": "US", "phone_number": "+1<TEST_PHONE_NUMBER>",
+      string: '{"caller_name": null, "country_code": "US", "phone_number": "+1<TEST_PHONE_NUMBER_STRIPPED>",
         "national_format": "<TEST_PHONE_NUMBER>", "carrier": null, "add_ons": null,
-        "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_PHONE_NUMBER>"}'
-  recorded_at: Thu, 30 Jul 2020 15:12:42 GMT
+        "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_PHONE_NUMBER_STRIPPED>"}'
+  recorded_at: Thu, 30 Jul 2020 15:29:55 GMT
 recorded_with: VCR 6.0.0

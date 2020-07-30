@@ -5,14 +5,14 @@ http_interactions:
     uri: https://api.authy.com//protected/json/users/new
     body:
       encoding: UTF-8
-      string: user%5Bemail%5D=foo%40&user%5Bcountry_code%5D=1&user%5Bcellphone%5D=%28433%29+779-0183&send_install_link_via_sms=true
+      string: user%5Bemail%5D=foo%40&user%5Bcountry_code%5D=1&user%5Bcellphone%5D=%28679%29+921-4730&send_install_link_via_sms=true
     headers:
       User-Agent:
       - DeviseAuthy/2.2.0 - AuthyRuby/2.7.5 (x86_64-darwin19, Ruby 2.6.4)
       Accept:
       - "*/*"
       Date:
-      - Thu, 30 Jul 2020 15:11:53 GMT
+      - Thu, 30 Jul 2020 15:29:03 GMT
       X-Authy-Api-Key:
       - sgalMzexqBj8DxXW2Wdw65kKR6IfTMNT
       Content-Type:
@@ -25,7 +25,7 @@ http_interactions:
       Server:
       - nginx/1.14.0 (Ubuntu)
       Date:
-      - Thu, 30 Jul 2020 15:11:54 GMT
+      - Thu, 30 Jul 2020 15:29:04 GMT
       Content-Type:
       - application/json;charset=utf-8
       Content-Length:
@@ -38,5 +38,5 @@ http_interactions:
       encoding: UTF-8
       string: '{"email":"is invalid","message":"User was not valid","success":false,"errors":{"email":"is
         invalid","message":"User was not valid"},"error_code":"60027"}'
-  recorded_at: Thu, 30 Jul 2020 15:11:54 GMT
+  recorded_at: Thu, 30 Jul 2020 15:29:04 GMT
 recorded_with: VCR 6.0.0

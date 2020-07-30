@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       Date:
-      - Thu, 30 Jul 2020 15:12:19 GMT
+      - Thu, 30 Jul 2020 15:29:32 GMT
       Content-Type:
       - application/json
   response:
@@ -23,7 +23,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Thu, 30 Jul 2020 15:12:20 GMT
+      - Thu, 30 Jul 2020 15:29:32 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -39,7 +39,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: 'null'
-  recorded_at: Thu, 30 Jul 2020 15:12:20 GMT
+  recorded_at: Thu, 30 Jul 2020 15:29:32 GMT
 - request:
     method: get
     uri: https://abn-live-test.firebaseio.com/logs/userActions.json?auth=EhgZYoZDGqv7I9RrwCgXbMryTxQ1Tg2hZzwS9Idi&limitToLast=101&orderBy=%22timestamp%22
@@ -52,7 +52,7 @@ http_interactions:
       Accept:
       - "*/*"
       Date:
-      - Thu, 30 Jul 2020 15:12:20 GMT
+      - Thu, 30 Jul 2020 15:29:32 GMT
       Content-Type:
       - application/json
   response:
@@ -63,7 +63,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Thu, 30 Jul 2020 15:12:20 GMT
+      - Thu, 30 Jul 2020 15:29:33 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -79,7 +79,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: 'null'
-  recorded_at: Thu, 30 Jul 2020 15:12:20 GMT
+  recorded_at: Thu, 30 Jul 2020 15:29:33 GMT
 - request:
     method: get
     uri: https://abn-live-test.firebaseio.com/logs/registrations.json?auth=EhgZYoZDGqv7I9RrwCgXbMryTxQ1Tg2hZzwS9Idi&limitToLast=100&orderBy=%22timestamp%22
@@ -92,7 +92,7 @@ http_interactions:
       Accept:
       - "*/*"
       Date:
-      - Thu, 30 Jul 2020 15:12:20 GMT
+      - Thu, 30 Jul 2020 15:29:33 GMT
       Content-Type:
       - application/json
   response:
@@ -103,7 +103,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Thu, 30 Jul 2020 15:12:20 GMT
+      - Thu, 30 Jul 2020 15:29:33 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -119,7 +119,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: 'null'
-  recorded_at: Thu, 30 Jul 2020 15:12:20 GMT
+  recorded_at: Thu, 30 Jul 2020 15:29:33 GMT
 - request:
     method: get
     uri: https://abn-live-test.firebaseio.com/logs/userActions.json?auth=EhgZYoZDGqv7I9RrwCgXbMryTxQ1Tg2hZzwS9Idi&limitToLast=100&orderBy=%22timestamp%22
@@ -132,7 +132,7 @@ http_interactions:
       Accept:
       - "*/*"
       Date:
-      - Thu, 30 Jul 2020 15:12:20 GMT
+      - Thu, 30 Jul 2020 15:29:33 GMT
       Content-Type:
       - application/json
   response:
@@ -143,7 +143,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Thu, 30 Jul 2020 15:12:21 GMT
+      - Thu, 30 Jul 2020 15:29:33 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -159,5 +159,5 @@ http_interactions:
     body:
       encoding: UTF-8
       string: 'null'
-  recorded_at: Thu, 30 Jul 2020 15:12:21 GMT
+  recorded_at: Thu, 30 Jul 2020 15:29:33 GMT
 recorded_with: VCR 6.0.0
