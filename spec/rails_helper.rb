@@ -39,6 +39,17 @@ VCR.configure do |c|
   c.cassette_library_dir = Rails.root.join('spec', 'vcr')
   c.hook_into :webmock
   c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com'
+
+  c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { ENV.fetch('TEST_MOBILE_PHONE') }
+  c.filter_sensitive_data('<TEST_PHONE_NUMBER>') { ENV.fetch('TEST_PHONE_NUMBER') }
+
+  c.filter_sensitive_data('<TEST_MOBILE_PHONE>') do
+    ENV.fetch('TEST_MOBILE_PHONE').gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
+  end
+
+  c.filter_sensitive_data('<TEST_PHONE_NUMBER>') do
+    ENV.fetch('TEST_PHONE_NUMBER').gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
+  end
 end
 
 RSpec.configure do |c|
