@@ -1,14 +1,11 @@
 -if @firebase_logs
-
-  -can_clear = policy(Company.main).update?
-
   -@firebase_logs.each do |log|
     .card
-      -if can_clear
-        -actions = []
-        -actions.push(link_to("Delete All", firebase_log_path(log.first, type: 'all'), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))
-        -actions.push(link_to("Delete Non Errors", firebase_log_path(log.first, type: 'non_errors'), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))
-      = render 'layouts/card_header', action_name: 'custom', title: log.first.titleize, icon: 'fa-list', additional_actions: actions
+      = render 'layouts/card_header', action_name: 'custom',
+                                      title: log.first.titleize,
+                                      icon: 'fa-list',
+                                      additional_actions: firebase_logs_actions(log)
+
       .card-body
         - if @limited_log_categories.include?(log.first)
           .alert.alert-warning
@@ -20,11 +17,9 @@
             %th Error
             %th Log
 
-          -rows = log.last.to_a.map {|item| {key: item.first, timestamp: item.last["timestamp"], error: item.last["error"], log: item.last}}
-
-          -rows.sort_by {|item| item[:timestamp]}.reverse.each do |row|
-            -row[:log].delete("error")
-            -row[:log].delete("timestamp")
+          -firebase_log_rows(log).each do |row|
+            -row[:log].delete('error')
+            -row[:log].delete('timestamp')
 
             %tr
               %td

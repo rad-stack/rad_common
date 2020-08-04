@@ -1,6 +1,6 @@
 -company = Company.main
 -logo_includes_name = RadCommon.app_logo_includes_name
--protocol = Rails.env.production? ? "https" : "http"
+-protocol = Rails.env.production? ? 'https' : 'http'
 -logo_url = "#{protocol}://#{RadCommon::AppInfo.new.host_name}/app_logo.png"
 
 -site_name = company.name
@@ -13,8 +13,8 @@
 
 !!!
 %head
-  = stylesheet_link_tag "rad_common/radbear_mailer_reset", media: "all"
-  = stylesheet_link_tag "rad_common/radbear_mailer", media: "all"
+  = stylesheet_link_tag 'rad_common/radbear_mailer_reset', media: 'all'
+  = stylesheet_link_tag 'rad_common/radbear_mailer', media: 'all'
 %body
   .email-container
     .email-header
@@ -48,7 +48,7 @@
         = yield
 
       -if @email_action
-        = render "layouts/email_action", message: @email_action[:message], button_text: @email_action[:button_text], button_url: @email_action[:button_url]
+        = render 'layouts/email_action', message: @email_action[:message], button_text: @email_action[:button_text], button_url: @email_action[:button_url]
     .email-header
       .email-row
         .email-col-12.text-align-center
@@ -66,4 +66,4 @@
             .footer
               .footer-item
                 To unsubscribe from these optional email messages, please
-                = link_to "update your profile.", edit_user_registration_url
+                = link_to 'update your profile.', edit_user_registration_url

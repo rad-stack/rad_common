@@ -1,4 +1,8 @@
 .card
-  = render 'layouts/card_header', no_new_button: true, no_delete_button: true, no_index_button: true, additional_actions: company_actions
+  = render 'layouts/card_header', no_new_button: true,
+                                  no_delete_button: true,
+                                  no_index_button: true,
+                                  additional_actions: company_actions
+
   .card-body
     = render 'layouts/show_data_columns', resource: @company, data: company_show_data(@company)
