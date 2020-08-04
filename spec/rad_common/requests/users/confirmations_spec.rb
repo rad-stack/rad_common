@@ -12,7 +12,8 @@ RSpec.describe 'User Confirmations', type: :request do
 
     it 'sends a new user sign up email to the site admins' do
       get '/users/confirmation', params: { confirmation_token: new_user.confirmation_token }
-      expect(ActionMailer::Base.deliveries.last.body.encoded).to include('Review their user registration information and approve them if desired.')
+      expect(ActionMailer::Base.deliveries.last.body.encoded).to include('Review their user registration information '\
+                                                                         'and approve them if desired.')
     end
   end
 end

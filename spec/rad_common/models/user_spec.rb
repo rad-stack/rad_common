@@ -49,11 +49,20 @@ describe User, type: :model do
 
     it 'rejects simple passwords' do
       if Devise.mappings[:user].secure_validatable?
-        expect(FactoryBot.build(:user, password: 'password', password_confirmation: 'password')).not_to be_valid
-        expect(FactoryBot.build(:user, password: 'Password', password_confirmation: 'Password')).not_to be_valid
-        expect(FactoryBot.build(:user, password: 'Password55757', password_confirmation: 'Password55757')).not_to be_valid
-        expect(FactoryBot.build(:user, password: 'Password!!!', password_confirmation: 'Password!!!')).not_to be_valid
-        expect(FactoryBot.build(:user, password: 'Password!!!4646', password_confirmation: 'Password!!!4646')).to be_valid
+        expect(FactoryBot.build(:user, password: 'password',
+                                       password_confirmation: 'password')).not_to be_valid
+
+        expect(FactoryBot.build(:user, password: 'Password',
+                                       password_confirmation: 'Password')).not_to be_valid
+
+        expect(FactoryBot.build(:user, password: 'Password55757',
+                                       password_confirmation: 'Password55757')).not_to be_valid
+
+        expect(FactoryBot.build(:user, password: 'Password!!!',
+                                       password_confirmation: 'Password!!!')).not_to be_valid
+
+        expect(FactoryBot.build(:user, password: 'Password!!!4646',
+                                       password_confirmation: 'Password!!!4646')).to be_valid
       end
     end
 

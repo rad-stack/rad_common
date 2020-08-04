@@ -31,7 +31,10 @@ describe 'Users', type: :system do
   end
 
   describe 'admin' do
-    let!(:notification_type) { Notifications::NewUserSignedUpNotification.create! security_roles: [user.security_roles.first] }
+    let!(:notification_type) do
+      Notifications::NewUserSignedUpNotification.create! security_roles: [user.security_roles.first]
+    end
+
     let(:notification_setting) { NotificationSetting.find_by(user: user, notification_type: notification_type) }
     let(:external_user) { create :user, :external }
 
@@ -299,6 +302,11 @@ describe 'Users', type: :system do
     describe 'confirming' do
       let(:user) { create(:user, confirmed_at: nil) }
 
+      let(:message) do
+        'If your email address exists in our database, you will receive an email with instructions for how to '\
+        'confirm your email address in a few minutes.'
+      end
+
       it "doesn't say whether the email exists" do
         visit new_user_session_path
 
@@ -307,13 +315,17 @@ describe 'Users', type: :system do
         click_button 'Resend Confirmation Instructions'
 
         expect(page).not_to have_content 'not found'
-        expect(page).to have_content 'If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes.'
+        expect(page).to have_content message
         expect(page).to have_current_path(new_user_session_path)
       end
     end
 
     describe 'unlock' do
       let(:user) { create(:user, confirmed_at: nil) }
+
+      let(:message) do
+        'If your account exists, you will receive an email with instructions for how to unlock it in a few minutes.'
+      end
 
       it "doesn't say whether the email exists" do
         visit new_user_session_path
@@ -323,11 +335,16 @@ describe 'Users', type: :system do
         click_button 'Resend Unlock Instructions'
 
         expect(page).not_to have_content 'not found'
-        expect(page).to have_content 'If your account exists, you will receive an email with instructions for how to unlock it in a few minutes.'
+        expect(page).to have_content message
       end
     end
 
     describe 'resetting password' do
+      let(:message) do
+        'If your email address exists in our database, you will receive a password recovery link at your email '\
+        'address in a few minutes.'
+      end
+
       it "doesn't say whether the email exists" do
         visit new_user_session_path
         click_link 'Forgot Your Password?'
@@ -336,7 +353,7 @@ describe 'Users', type: :system do
         click_button 'Send Me Reset Password Instructions'
 
         expect(page).not_to have_content 'not found'
-        expect(page).to have_content 'If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes.'
+        expect(page).to have_content message
       end
     end
   end
