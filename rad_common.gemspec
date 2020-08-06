@@ -17,8 +17,12 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
   s.add_dependency 'audited', '~> 4.9'
+
+  # this dependency can be removed once task 32743 is resolved, it's a dep of boostrap
+  s.add_dependency 'autoprefixer-rails', '9.8.5'
+
   s.add_dependency 'aws-sdk-s3'
-  s.add_dependency 'bootstrap', '~> 4.3.1'
+  s.add_dependency 'bootstrap'
   s.add_dependency 'bootstrap-select-rails', '~> 1.13.8'
   s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
   s.add_dependency 'devise'
