@@ -8,8 +8,8 @@ describe 'Invitations', type: :system do
   let(:external_domain) { 'abc.com' }
   let(:first_name) { Faker::Name.first_name }
   let(:last_name) { Faker::Name.last_name }
-  let(:valid_email) { Faker::Internet.user_name + '@' + email_domain }
-  let(:external_email) { Faker::Internet.user_name + '@' + external_domain }
+  let(:valid_email) { "#{Faker::Internet.user_name}@#{email_domain}" }
+  let(:external_email) { "#{Faker::Internet.user_name}@#{external_domain}" }
 
   describe 'user' do
     before { login_as user, scope: :user }
@@ -84,7 +84,7 @@ describe 'Invitations', type: :system do
 
   describe 'accept' do
     let!(:invitee) do
-      User.invite!(email: Faker::Internet.user_name + '@' + email_domain,
+      User.invite!(email: "#{Faker::Internet.user_name}@#{email_domain}",
                    first_name: Faker::Name.first_name,
                    last_name: Faker::Name.last_name,
                    mobile_phone: create(:phone_number, :mobile))

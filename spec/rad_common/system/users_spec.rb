@@ -148,7 +148,7 @@ describe 'Users', type: :system do
         fill_in 'First name', with: Faker::Name.first_name
         fill_in 'Last name', with: Faker::Name.last_name
         fill_in 'Mobile phone', with: '(345) 222-1111'
-        fill_in 'Email', with: Faker::Internet.user_name + '@example.com'
+        fill_in 'Email', with: "#{Faker::Internet.user_name}@example.com"
         fill_in 'user_password', with: password
         fill_in 'user_password_confirmation', with: password
 
@@ -199,7 +199,7 @@ describe 'Users', type: :system do
 
     it 'does not allow with invalid email' do
       visit new_user_session_path
-      fill_in 'user_email', with: 'foo' + user.email
+      fill_in 'user_email', with: "foo#{user.email}"
       fill_in 'user_password', with: password
       click_button 'Sign In'
       expect(page).to have_content 'Invalid Email or password'
