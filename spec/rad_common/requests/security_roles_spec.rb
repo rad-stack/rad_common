@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Security roles', type: :request do
+RSpec.describe 'Security Roles', type: :request do
   let(:user) { create :admin }
   let(:security_role) { create :security_role }
   let(:valid_attributes) { { name: 'foo' } }

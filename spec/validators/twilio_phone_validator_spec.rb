@@ -17,7 +17,7 @@ class TwilioMockModel
   end
 
   validates_with TwilioPhoneValidator, fields: [{ field: :number }, { field: :mobile, type: :mobile }]
-  validates_with TwilioPhoneValidator, fields: [field: :multiple_numbers], multiples: true
+  validates_with TwilioPhoneValidator, fields: [{ field: :multiple_numbers }], multiples: true
 end
 
 RSpec.describe TwilioPhoneValidator, type: :validator do

@@ -1,5 +1,5 @@
 require 'rails_helper'
-require 'rake_session.rb'
+require 'rake_session'
 
 RSpec.describe RakeSession, type: :lib do
   let(:time_limit) { 1.minute }
