@@ -31,6 +31,8 @@ end
 
 Rails.configuration.app_admin_email = ENV.fetch('APP_ADMIN_EMAIL')
 
+AuthTrail.geocode = false
+
 module Kaminari
 
   # monkey patch to fix paging on engine routes
