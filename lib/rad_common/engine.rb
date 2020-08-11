@@ -6,6 +6,7 @@ module RadCommon
     end
 
     require 'audited'
+    require 'authtrail'
     require 'devise'
     require 'devise-authy'
     require 'devise-security'
