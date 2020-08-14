@@ -1,7 +1,7 @@
 .card
   = render 'layouts/card_header', title: "Sign In Activity (#{@login_activities.total_count})"
   .card-body
-    = paginate @login_activities, theme: 'twitter-bootstrap-4'
+    = paginate @login_activities, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
 
     %table.table.table-bordered
       %tr
@@ -23,4 +23,4 @@
           %td= login_activity.user_agent
           %td= login_activity.referrer
 
-    = paginate @login_activities, theme: 'twitter-bootstrap-4'
+    = paginate @login_activities, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
