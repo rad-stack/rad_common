@@ -58,7 +58,7 @@ module RadCommon
         klass = params[:class_name].classify.constantize
         record = klass.find_decoded(params[:id])
         begin
-          @variant = record.send(params[:variant]).processed
+          @variant = RadicalRetry.perform_request(retry_count: 2) { record.send(params[:variant]).processed }
         rescue NoMethodError
           @variant = nil
         end
