@@ -23,7 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 30 Jul 2020 15:29:55 GMT
+      - Mon, 31 Aug 2020 20:34:27 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -33,9 +33,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ6a3872a905774af6a9c9fb6d71ef3ec7
+      - RQ93ee25ad7490404191c8eb7b1a71e259
       Twilio-Request-Duration:
-      - '0.040'
+      - '0.113'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -63,5 +63,5 @@ http_interactions:
         "national_format": "<TEST_MOBILE_PHONE>", "carrier": {"mobile_country_code":
         "311", "mobile_network_code": "180", "name": "AT&T Wireless", "type": "mobile",
         "error_code": null}, "add_ons": null, "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_MOBILE_PHONE_STRIPPED>?Type=carrier"}'
-  recorded_at: Thu, 30 Jul 2020 15:29:55 GMT
+  recorded_at: Mon, 31 Aug 2020 20:34:27 GMT
 recorded_with: VCR 6.0.0

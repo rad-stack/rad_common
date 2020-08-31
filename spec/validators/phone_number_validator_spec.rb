@@ -12,7 +12,7 @@ class TestPhoneModel
     public_send("#{attribute}=", value)
   end
 
-  validates_with PhoneNumberValidator, fields: [:phone_number]
+  validates_with PhoneNumberValidator, fields: [{ field: :phone_number }]
 end
 
 RSpec.describe PhoneNumberValidator do
