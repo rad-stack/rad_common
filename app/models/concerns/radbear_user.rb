@@ -12,6 +12,7 @@ module RadbearUser
     has_many :notifications, dependent: :destroy
     has_many :security_roles_users, dependent: :destroy
     has_many :security_roles, through: :security_roles_users, dependent: :destroy
+    has_many :login_activities, as: :user, dependent: :destroy
 
     has_one_attached :avatar
 

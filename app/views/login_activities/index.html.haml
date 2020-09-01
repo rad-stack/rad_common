@@ -1,0 +1,26 @@
+.card
+  = render 'layouts/card_header', title: "Sign In Activity (#{@login_activities.total_count})"
+  .card-body
+    = paginate @login_activities, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+
+    %table.table.table-bordered
+      %tr
+        %th When
+        %th Email
+        %th Success
+        %th Failure
+        %th IP
+        %th Agent
+        %th Referrer
+
+      - @login_activities.each do |login_activity|
+        %tr{class: login_activity.success ? 'alert-success' : 'alert-danger'}
+          %td= format_datetime(login_activity.created_at)
+          %td= login_activity.identity
+          %td= format_boolean(login_activity.success)
+          %td= login_activity.failure_reason
+          %td= login_activity.ip
+          %td= login_activity.user_agent
+          %td= login_activity.referrer
+
+    = paginate @login_activities, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine

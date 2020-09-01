@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   # this dependency can be removed once task 32743 is resolved, it's a dep of boostrap
   s.add_dependency 'autoprefixer-rails', '9.8.5'
 
+  s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap'
   s.add_dependency 'bootstrap-select-rails', '~> 1.13.8'

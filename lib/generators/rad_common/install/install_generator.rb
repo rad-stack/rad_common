@@ -282,6 +282,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20200530154123_filter_defaults_for_all.rb',
                         'filter_defaults_for_all.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200810143832_create_login_activities.rb',
+                        'create_login_activities.rb'
       end
 
       def self.next_migration_number(path)

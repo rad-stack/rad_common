@@ -6,5 +6,7 @@ class User < ApplicationRecord
   include RadAuthy
   include FirebaseSync
 
+  has_many :divisions, foreign_key: 'owner_id', dependent: :restrict_with_error
+
   audited except: USER_AUDIT_COLUMNS_DISABLED
 end

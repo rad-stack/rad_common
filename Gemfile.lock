@@ -3,6 +3,7 @@ PATH
   specs:
     rad_common (0.1.0)
       audited (~> 4.9)
+      authtrail
       autoprefixer-rails (= 9.8.5)
       aws-sdk-s3
       bootstrap
@@ -101,12 +102,17 @@ GEM
     ast (2.4.1)
     audited (4.9.0)
       activerecord (>= 4.2, < 6.1)
+    authtrail (0.2.0)
+      activerecord (>= 5)
+      geocoder
+      railties (>= 5)
+      warden
     authy (2.7.5)
       httpclient (>= 2.5.3.3)
     autoprefixer-rails (9.8.5)
       execjs
     aws-eventstream (1.1.0)
-    aws-partitions (1.351.0)
+    aws-partitions (1.353.0)
     aws-sdk-core (3.104.3)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
@@ -115,7 +121,7 @@ GEM
     aws-sdk-kms (1.36.0)
       aws-sdk-core (~> 3, >= 3.99.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.75.0)
+    aws-sdk-s3 (1.76.0)
       aws-sdk-core (~> 3, >= 3.104.1)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
@@ -124,7 +130,7 @@ GEM
     bcrypt (3.1.15)
     bootsnap (1.4.7)
       msgpack (~> 1.0)
-    bootstrap (4.5.0)
+    bootstrap (4.5.2)
       autoprefixer-rails (>= 9.1.0)
       popper_js (>= 1.14.3, < 2)
       sassc-rails (>= 2.0.0)
@@ -199,6 +205,7 @@ GEM
       json
     font-awesome-rails (4.7.0.5)
       railties (>= 3.2, < 6.1)
+    geocoder (1.6.3)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     haml (5.1.2)
