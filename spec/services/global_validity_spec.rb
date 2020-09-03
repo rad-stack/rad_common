@@ -22,7 +22,7 @@ describe GlobalValidity, type: :service do
 
     let(:models) do
       %w[Company Division Notification NotificationSecurityRole NotificationSetting NotificationType SecurityRole
-         SecurityRolesUser Status SystemMessage User UserStatus]
+         Status SystemMessage User UserSecurityRole UserStatus]
     end
 
     it { is_expected.to eq models }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_15_193248) do
+ActiveRecord::Schema.define(version: 2020_09_03_192242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,6 +101,29 @@ ActiveRecord::Schema.define(version: 2020_06_15_193248) do
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
   end
 
+  create_table "login_activities", force: :cascade do |t|
+    t.string "scope"
+    t.string "strategy"
+    t.string "identity"
+    t.boolean "success"
+    t.string "failure_reason"
+    t.string "user_type"
+    t.bigint "user_id"
+    t.string "context"
+    t.string "ip"
+    t.text "user_agent"
+    t.text "referrer"
+    t.string "city"
+    t.string "region"
+    t.string "country"
+    t.float "latitude"
+    t.float "longitude"
+    t.datetime "created_at"
+    t.index ["identity"], name: "index_login_activities_on_identity"
+    t.index ["ip"], name: "index_login_activities_on_ip"
+    t.index ["user_type", "user_id"], name: "index_login_activities_on_user_type_and_user_id"
+  end
+
   create_table "notification_security_roles", force: :cascade do |t|
     t.integer "security_role_id", null: false
     t.datetime "created_at", null: false
@@ -164,16 +187,6 @@ ActiveRecord::Schema.define(version: 2020_06_15_193248) do
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 
-  create_table "security_roles_users", id: :serial, force: :cascade do |t|
-    t.integer "security_role_id", null: false
-    t.integer "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["security_role_id", "user_id"], name: "index_security_roles_users_on_security_role_id_and_user_id", unique: true
-    t.index ["security_role_id"], name: "index_security_roles_users_on_security_role_id"
-    t.index ["user_id"], name: "index_security_roles_users_on_user_id"
-  end
-
   create_table "statuses", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -189,6 +202,16 @@ ActiveRecord::Schema.define(version: 2020_06_15_193248) do
     t.datetime "updated_at", null: false
     t.integer "message_type", null: false
     t.index ["user_id"], name: "index_system_messages_on_user_id"
+  end
+
+  create_table "user_security_roles", id: :serial, force: :cascade do |t|
+    t.integer "security_role_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["security_role_id", "user_id"], name: "index_user_security_roles_on_security_role_id_and_user_id", unique: true
+    t.index ["security_role_id"], name: "index_user_security_roles_on_security_role_id"
+    t.index ["user_id"], name: "index_user_security_roles_on_user_id"
   end
 
   create_table "user_statuses", id: :serial, force: :cascade do |t|
@@ -266,9 +289,9 @@ ActiveRecord::Schema.define(version: 2020_06_15_193248) do
   add_foreign_key "notification_settings", "users"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
-  add_foreign_key "security_roles_users", "security_roles"
-  add_foreign_key "security_roles_users", "users"
   add_foreign_key "system_messages", "users"
+  add_foreign_key "user_security_roles", "security_roles"
+  add_foreign_key "user_security_roles", "users"
   add_foreign_key "users", "user_statuses"
   add_foreign_key "users", "users", column: "invited_by_id"
 end

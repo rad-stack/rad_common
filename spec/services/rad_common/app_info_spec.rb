@@ -8,7 +8,7 @@ RSpec.describe RadCommon::AppInfo, type: :service do
 
     let(:result) do
       %w[companies divisions notification_security_roles notification_settings notification_types notifications
-         security_roles security_roles_users statuses system_messages user_statuses users]
+         security_roles statuses system_messages user_security_roles user_statuses users]
     end
 
     it { is_expected.to eq result }
@@ -19,7 +19,7 @@ RSpec.describe RadCommon::AppInfo, type: :service do
 
     let(:result) do
       %w[Company Division Notification NotificationSecurityRole NotificationSetting NotificationType SecurityRole
-         SecurityRolesUser Status SystemMessage User UserStatus]
+         Status SystemMessage User UserSecurityRole UserStatus]
     end
 
     it { is_expected.to eq result }
@@ -29,7 +29,7 @@ RSpec.describe RadCommon::AppInfo, type: :service do
     subject { service.audited_models }
 
     let(:result) do
-      %w[Company Division NotificationSecurityRole NotificationSetting SecurityRole SecurityRolesUser Status User]
+      %w[Company Division NotificationSecurityRole NotificationSetting SecurityRole Status User UserSecurityRole]
     end
 
     it { is_expected.to eq result }
