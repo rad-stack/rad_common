@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 describe User, type: :model do
-  let(:user) { create :user }
+  let(:security_role) { create :security_role }
+  let(:user) { create :user, security_roles: [security_role] }
   let(:active_status) { create :user_status, :active }
   let(:inactive_status) { create :user_status, :inactive }
 
@@ -13,6 +14,37 @@ describe User, type: :model do
       email: 'user@example.com',
       password: 'cOmpl3x_p@55w0rd',
       password_confirmation: 'cOmpl3x_p@55w0rd' }
+  end
+
+  describe 'auditing of associations' do
+    let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
+
+    context 'with create' do
+      before do
+        user.update!(security_roles: [])
+        user.update!(security_roles: [security_role])
+      end
+
+      it 'audits' do
+        expect(audit.auditable_type).to eq 'UserSecurityRole'
+        expect(audit.associated).to eq user
+        expect(audit.action).to eq 'create'
+      end
+    end
+
+    context 'with destroy' do
+      before do
+        user.update!(security_roles: [])
+        user.update!(security_roles: [security_role])
+        user.update!(security_roles: [])
+      end
+
+      it 'audits' do
+        expect(audit.auditable_type).to eq 'UserSecurityRole'
+        expect(audit.associated).to eq user
+        expect(audit.action).to eq 'destroy'
+      end
+    end
   end
 
   describe 'password validations' do

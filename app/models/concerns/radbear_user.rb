@@ -10,8 +10,8 @@ module RadbearUser
     has_many :notification_settings, dependent: :destroy
     has_many :system_messages, dependent: :destroy
     has_many :notifications, dependent: :destroy
-    has_many :security_roles_users, dependent: :destroy
-    has_many :security_roles, through: :security_roles_users, dependent: :destroy
+    has_many :user_security_roles, dependent: :destroy
+    has_many :security_roles, through: :user_security_roles, dependent: :destroy
     has_many :login_activities, as: :user, dependent: :destroy
 
     has_one_attached :avatar
@@ -22,8 +22,8 @@ module RadbearUser
 
     scope :admins, lambda {
       active.where('users.id IN ('\
-                 'SELECT user_id FROM security_roles_users '\
-                 'INNER JOIN security_roles ON security_roles_users.security_role_id = security_roles.id '\
+                 'SELECT user_id FROM user_security_roles '\
+                 'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id '\
                  'WHERE security_roles.admin = TRUE)')
     }
 

@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :security_roles_user do
+  factory :user_security_role do
     association :user
     association :security_role
   end

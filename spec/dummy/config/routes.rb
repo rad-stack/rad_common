@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     get :permission, on: :collection
   end
 
-  resources :security_roles_users, only: :show
+  resources :user_security_roles, only: :show
   resources :companies, only: %i[show edit update]
   resources :divisions
   resources :firebase_logs, only: %i[index destroy]

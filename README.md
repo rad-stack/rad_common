@@ -85,24 +85,24 @@ Provides rake tasks which backup the current heroku postgresql database and copy
 
 Save a local backup from Heroku:
 ```
-rake heroku:local_backup[ground-swell-staging]
+rails heroku:local_backup[ground-swell-staging]
 ```
 
 Clone your database from Heroku:
 ```
-rake heroku:clone_local[ground-swell-staging]
+rails heroku:clone_local[ground-swell-staging]
 ```
 
 ##### Local
 
 Restore from a local backup:
 ```
-rake local:restore_from_backup['latest.dump']
+rails local:restore_from_backup[latest.dump]
 ```
 
 Dump your local database to an archive:
 ```
-rake local:dump['your_data.dump']
+rails local:dump[your_data.dump]
 ```
 
 ## Generating tests

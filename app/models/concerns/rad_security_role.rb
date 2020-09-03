@@ -4,8 +4,8 @@ module RadSecurityRole
   extend ActiveSupport::Concern
 
   included do
-    has_many :security_roles_users, dependent: :restrict_with_error
-    has_many :users, through: :security_roles_users, dependent: :destroy
+    has_many :user_security_roles, dependent: :restrict_with_error
+    has_many :users, through: :user_security_roles, dependent: :destroy
     has_many :notification_security_roles, dependent: :destroy
 
     scope :by_name, -> { order(:name) }

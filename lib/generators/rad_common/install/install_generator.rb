@@ -285,6 +285,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20200810143832_create_login_activities.rb',
                         'create_login_activities.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20200903192242_rename_security_roles.rb',
+                        'rename_security_roles.rb'
       end
 
       def self.next_migration_number(path)
