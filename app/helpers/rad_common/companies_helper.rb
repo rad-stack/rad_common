@@ -11,8 +11,6 @@ module RadCommon
 
     def company_actions
       company = Company.main
-
-      return unless RadCommon.global_validity_enable_interactive
       return unless policy(company).global_validity_check?
 
       confirm = 'This is an exhaustive effort that could cause performance problems on the database. Are you sure?'
