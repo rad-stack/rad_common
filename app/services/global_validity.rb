@@ -94,7 +94,7 @@ class GlobalValidity
     end
 
     def validate_record(record, error_messages_array)
-      record.running_global_validity = true
+      record.running_global_validity = true if record.respond_to?(:running_global_validity)
 
       return if record.valid?
 
