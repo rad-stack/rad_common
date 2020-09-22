@@ -18,7 +18,6 @@ Rails.application.routes.draw do
   resources :user_security_roles, only: :show
   resources :companies, only: %i[show edit update]
   resources :divisions
-  resources :firebase_logs, only: %i[index destroy]
 
   authenticate :user, ->(u) { u.admin? } do
     mount Sidekiq::Web => '/sidekiq'

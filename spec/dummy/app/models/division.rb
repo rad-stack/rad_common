@@ -1,7 +1,5 @@
 class Division < ApplicationRecord
   SKIP_SCHEMA_VALIDATION_INDEXES = [:index_divisions_on_name].freeze
-  include FirebaseSync
-  include FirebaseAction
   include Hashable
 
   belongs_to :owner, class_name: 'User'
@@ -21,15 +19,6 @@ class Division < ApplicationRecord
   audited
 
   after_update :notify_owner
-
-  def firebase_sync
-    data = { name: name }
-
-    response = RadicalRetry.perform_request { firebase_client.update(firebase_reference, data) }
-    return if response.success?
-
-    raise RadicallyIntermittentException, response.raw_body
-  end
 
   def logo_variant
     logo.variant(resize: '290x218>').processed

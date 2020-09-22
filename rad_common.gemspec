@@ -60,7 +60,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'coffee-rails', '~> 5.0'
   s.add_development_dependency 'factory_bot_rails'
-  s.add_development_dependency 'firebase', '0.2.6'
   s.add_development_dependency 'listen', '~> 3.0.5'
   s.add_development_dependency 'rad-style'
   s.add_development_dependency 'rspec-rails'
