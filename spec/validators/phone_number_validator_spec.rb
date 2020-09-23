@@ -2,7 +2,7 @@ require 'rails_helper'
 
 class TestPhoneModel
   include ActiveModel::Model
-  attr_accessor :phone_number, :mobile_phone
+  attr_accessor :running_global_validity, :phone_number, :mobile_phone
 
   validates_with PhoneNumberValidator, fields: [{ field: :phone_number }, { field: :mobile_phone, type: :mobile }]
 

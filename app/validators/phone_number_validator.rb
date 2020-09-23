@@ -12,6 +12,7 @@ class PhoneNumberValidator < ActiveModel::Validator
       end
 
       next unless RadicalTwilio.twilio_enabled?
+      next if record.running_global_validity
 
       # twilio phone number validations that check whether valid mobile # cost half a penny per request
       next unless record.send("#{field[:field]}_changed?")
