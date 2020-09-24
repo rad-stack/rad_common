@@ -44,9 +44,6 @@ RadCommon.setup do |config|
   # Allows for specific messages to be excluded from the global validity emailed result
   # config.global_validity_supress = []
 
-  # Allows for manual trigger of global validity check on the company show page
-  # config.global_validity_enable_interactive = true
-
   # Sets search scopes to be included in the navigation search bar
   config.global_search_scopes =
     [

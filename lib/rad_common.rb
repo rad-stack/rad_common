@@ -43,9 +43,6 @@ module RadCommon
   cattr_accessor :global_validity_supress
   @@global_validity_supress = []
 
-  cattr_accessor :global_validity_enable_interactive
-  @@global_validity_enable_interactive = true
-
   cattr_accessor :global_search_scopes
   @@global_search_scopes = []
 

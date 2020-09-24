@@ -2,8 +2,6 @@ module RadCommonCompaniesController
   extend ActiveSupport::Concern
 
   def global_validity_check
-    raise 'interactive global validity check not enabled' unless RadCommon.global_validity_enable_interactive
-
     authorize @company
 
     GlobalValidityJob.perform_later(current_user)

@@ -26,7 +26,7 @@ class GlobalValidity
 
       start_time = Time.current
       model_errors, error_count = check_model(model)
-      error_messages = error_messages.concat(model_errors) if model_errors.present?
+      error_messages.concat(model_errors) if model_errors.present?
       end_time = Time.current
       add_stats model, start_time, end_time, error_count
       total_error_count += error_count
@@ -37,7 +37,7 @@ class GlobalValidity
     specific_queries.each do |query|
       start_time = Time.current
       query_errors, error_count = check_query_records(query)
-      error_messages = error_messages.concat(query_errors) if query_errors.present?
+      error_messages.concat(query_errors) if query_errors.present?
       end_time = Time.current
       add_stats query.call.to_sql, start_time, end_time, error_count
       total_error_count += error_count
@@ -94,7 +94,7 @@ class GlobalValidity
     end
 
     def validate_record(record, error_messages_array)
-      record.bypass_geocoding = true if record.respond_to?(:bypass_geocoding)
+      record.running_global_validity = true if record.respond_to?(:running_global_validity)
 
       return if record.valid?
 
