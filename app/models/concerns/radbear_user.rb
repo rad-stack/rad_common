@@ -120,28 +120,6 @@ module RadbearUser
     Audited::Audit.where(user_id: id).order(created_at: :desc)
   end
 
-  def update_firebase_info
-    firebase_user = get_firebase_data(firebase_reference)
-    return unless firebase_user
-
-    Audited.audit_class.as_user(self) do
-      update!(mobile_client_platform: firebase_user['platform'],
-              mobile_client_version: firebase_user['version'],
-              current_device_type: firebase_user['deviceType'])
-    end
-  end
-
-  def firebase_device_tokens(app)
-    response = RadicalRetry.perform_request { app.client.get(firebase_reference + '/messagingTokens') }
-    raise response.raw_body unless response.success?
-
-    if response.body && response.body.count != 0
-      response.body
-    else
-      []
-    end
-  end
-
   def display_style
     if user_status.active || user_status == UserStatus.default_pending_status
       external? ? 'table-warning' : ''

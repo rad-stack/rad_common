@@ -112,7 +112,6 @@ With the current version of rspec-rails we are not able to generate system ('fea
 
 ### Configuring
 Add a .env file in `spec/dummy` containing the `AUTHY_API_KEY` that can be obtained by creating an authy app or from another developer
-Add a .env.test file in `spec/dummy` containing `FIREBASE_DATA_URL` and `FIREBASE_SECRET_KEY` that can be obtained from the codeship build environment variables or from another developer
 
 ### Running
 `bundle exec rails s`

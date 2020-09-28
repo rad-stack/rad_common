@@ -4,7 +4,6 @@ class User < ApplicationRecord
 
   include RadbearUser
   include RadAuthy
-  include FirebaseSync
 
   has_many :divisions, foreign_key: 'owner_id', dependent: :restrict_with_error
 
