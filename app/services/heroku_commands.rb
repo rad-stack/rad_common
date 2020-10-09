@@ -36,7 +36,7 @@ class HerokuCommands
       check_production do
         FileUtils.mkdir_p dump_folder
 
-        Bundler.with_clean_env do
+        Bundler.with_unbundled_env do
           url_output = `heroku pg:backups public-url #{app_option(app_name)}`
           backup_url = '"' + url_output.strip + '"'
 
