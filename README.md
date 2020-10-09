@@ -140,4 +140,3 @@ When refactoring and modifying code in this project while developing other proje
 to undo this and revert to the remote github repository:
 
 `bundle config --delete local.rad_common`
-
