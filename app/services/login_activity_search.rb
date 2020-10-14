@@ -21,7 +21,7 @@ class LoginActivitySearch < RadCommon::Search
        options:
           [['Users', user_emails],
            ['Clients', client_emails],
-           ['Inactive', inactive_user_emails],
+           ['Inactive', inactive_user_emails]],
        blank_value_label: 'All Emails',
        grouped: true }]
   end
