@@ -44,6 +44,6 @@ class LoginActivitySearch < RadCommon::Search
   end
 
   def inactive_user_emails
-    Pundit.policy_scope!(current_user, User).inactive.select(:email.order(email: :asc)
+    Pundit.policy_scope!(current_user, User).inactive.select(:email).order(email: :asc)
   end
 end
