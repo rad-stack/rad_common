@@ -26,6 +26,15 @@ class LoginActivitySearch < RadCommon::Search
        grouped: true }]
   end
 
+  def sort_columns_def
+    [{ label: 'When', column: 'created_at', direction: 'desc', default: true },
+     { label: 'Email', column: 'users.email' },
+     { label: 'Login Status'},
+     { label: 'IP', column: :ip },
+     { label: 'Agent', column: :user_agent },
+     { label: 'Referrer', column: :referrer }]
+  end
+
   def client_emails
     Pundit.policy_scope!(current_user, User).active.external.select(:email).order(email: :asc)
   end
