@@ -26,10 +26,6 @@ class LoginActivitySearch < RadCommon::Search
        grouped: true }]
   end
 
-  def all_emails
-    Pundit.policy_scope!(current_user, User).active.select(:email).order(email: :asc)
-  end
-
   def client_emails
     Pundit.policy_scope!(current_user, User).active.external.select(:email).order(email: :asc)
   end
