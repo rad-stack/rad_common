@@ -47,7 +47,7 @@ module RadSecurityRole
       seed_admin
       seed_user
 
-      return unless RadCommon.external_users
+      return true unless RadCommon.external_users
 
       seed_portal_admin
       seed_portal_user
