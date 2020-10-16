@@ -2,7 +2,7 @@ class LoginActivitySearch < RadCommon::Search
   def initialize(params, current_user)
     @current_user = current_user
 
-    super(query: LoginActivity,
+    super(query: LoginActivity.recent_first,
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
@@ -17,14 +17,18 @@ class LoginActivitySearch < RadCommon::Search
        column: :created_at,
        type: RadCommon::DateFilter},
      { input_label: 'Email',
-       joins: 'JOIN users ON users.id = login_activities.user_id',
+       joins: 'LEFT JOIN users ON users.id = login_activities.user_id',
        column: 'users.email',
        options:
           [['Users', user_emails],
            ['Clients', client_emails],
            ['Inactive', inactive_user_emails]],
        blank_value_label: 'All Emails',
-       grouped: true }]
+       grouped: true },
+     { input_label: 'Login Status',
+       name: :status,
+       scope_values: { 'Failure': :failure, 'Success': :successful },
+       blank_value_label: 'All'}]
   end
 
   def sort_columns_def
