@@ -17,6 +17,7 @@ class LoginActivitySearch < RadCommon::Search
        column: :created_at,
        type: RadCommon::DateFilter},
      { input_label: 'Email',
+       joins: 'JOIN users ON users.id = login_activities.user_id',
        column: 'users.email',
        options:
           [['Users', user_emails],
@@ -27,23 +28,23 @@ class LoginActivitySearch < RadCommon::Search
   end
 
   def sort_columns_def
-    [{ label: 'When', column: 'created_at', direction: 'desc', default: true },
+    [{ label: 'When' },
      { label: 'Email' },
      { label: 'Login Status'},
-     { label: 'IP', column: :ip },
-     { label: 'Agent', column: :user_agent },
-     { label: 'Referrer', column: :referrer }]
+     { label: 'IP' },
+     { label: 'Agent' },
+     { label: 'Referrer' }]
   end
 
   def client_emails
-    Pundit.policy_scope!(current_user, User).active.external.order(email: :asc)
+    Pundit.policy_scope!(current_user, User).active.external.order(email: :asc).map{ |user| user.email }
   end
 
   def user_emails
-    Pundit.policy_scope!(current_user, User).active.internal.select(:email).order(email: :asc)
+    Pundit.policy_scope!(current_user, User).active.internal.order(email: :asc).map{ |user| user.email }
   end
 
   def inactive_user_emails
-    Pundit.policy_scope!(current_user, User).inactive.order(email: :asc)
+    Pundit.policy_scope!(current_user, User).inactive.order(email: :asc).map{ |user| user.email }
   end
 end
