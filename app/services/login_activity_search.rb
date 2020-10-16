@@ -28,7 +28,10 @@ class LoginActivitySearch < RadCommon::Search
      { input_label: 'Login Status',
        name: :status,
        scope_values: { 'Failure': :failure, 'Success': :successful },
-       blank_value_label: 'All'}]
+       blank_value_label: 'All'},
+     { input_label: 'IP',
+       column: :ip,
+       options: LoginActivity.all.map{ |activity| activity.ip }}]
   end
 
   def sort_columns_def
@@ -51,4 +54,8 @@ class LoginActivitySearch < RadCommon::Search
   def inactive_user_emails
     Pundit.policy_scope!(current_user, User).inactive.order(email: :asc).map{ |user| user.email }
   end
+
+  # def user_ips
+  #   Pundit.policy_scope!(current_user, User).inactive.order(email: :asc).map{ |user| user.ip }
+  # end
 end
