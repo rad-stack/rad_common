@@ -31,11 +31,17 @@ class LoginActivitySearch < RadCommon::Search
        blank_value_label: 'All'},
      { input_label: 'IP',
        column: :ip,
-       options: LoginActivity.all.map{ |activity| activity.ip }}]
+       options: login_activity_ips},
+     { input_label: 'Agent',
+       column: :user_agent,
+       options: login_activity_agents},
+     { input_label: 'Referrer',
+       column: :referrer,
+       options: login_activity_referrers}]
   end
 
   def sort_columns_def
-    [{ label: 'When' },
+    [{ label: 'When', column: 'created_at' },
      { label: 'Email' },
      { label: 'Login Status'},
      { label: 'IP' },
@@ -55,7 +61,15 @@ class LoginActivitySearch < RadCommon::Search
     Pundit.policy_scope!(current_user, User).inactive.order(email: :asc).map{ |user| user.email }
   end
 
-  # def user_ips
-  #   Pundit.policy_scope!(current_user, User).inactive.order(email: :asc).map{ |user| user.ip }
-  # end
+  def login_activity_ips
+    Pundit.policy_scope!(current_user, LoginActivity).map{ |activity| activity.ip }.uniq
+  end
+
+  def login_activity_agents
+    Pundit.policy_scope!(current_user, LoginActivity).map{ |activity| activity.user_agent.truncate(30) }.uniq
+  end
+
+  def login_activity_referrers
+    Pundit.policy_scope!(current_user, LoginActivity).map{ |activity| activity.referrer }.uniq
+  end
 end
