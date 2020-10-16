@@ -49,6 +49,8 @@ VCR.configure do |c|
   c.filter_sensitive_data('<TEST_PHONE_NUMBER_STRIPPED>') do
     ENV.fetch('TEST_PHONE_NUMBER').gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
   end
+
+  c.filter_sensitive_data('<AUTHY_API_KEY>') { ENV.fetch('AUTHY_API_KEY') }
 end
 
 RSpec.configure do |c|
