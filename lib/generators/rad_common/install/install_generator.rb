@@ -111,8 +111,8 @@ module RadCommon
                   'lib/templates/rails/scaffold_controller/controller.rb'
 
         # rspec templates
-        copy_file '../../../../../spec/dummy/lib/templates/rspec/integration/request_spec.rb',
-                  'lib/templates/rspec/integration/request_spec.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rspec/scaffold/request_spec.rb',
+                  'lib/templates/rspec/scaffold/request_spec.rb'
 
         copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb',
                   'lib/templates/rspec/system/system_spec.rb'
