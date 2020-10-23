@@ -63,7 +63,7 @@ class HerokuCommands
     def clone(app_name = '', specific_company_id: nil, keep_dump_file: nil)
       check_production do
         puts 'Running backup on Heroku...'
-        Bundler.with_clean_env do
+        Bundler.with_unbundled_env do
           capture_output = `heroku pg:backups capture #{app_option(app_name)}`
           url_output     = `heroku pg:backups public-url #{app_option(app_name)}`
           backup_url     = '"' + url_output.strip + '"'

@@ -169,7 +169,7 @@ describe 'Users', type: :system do
 
         click_button 'Sign Up'
 
-        expect(page).to have_content 'is not authorized'
+        expect(page).to have_content 'Email is invalid'
       end
     end
   end
