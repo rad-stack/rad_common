@@ -59,12 +59,14 @@ RSpec.describe '<%= class_name.pluralize %>', type: :request do
     it 'destroys the requested <%= file_name.singularize %>' do
       <%= file_name %>
       expect {
-        delete "/<%= table_name %>/#{<%= file_name %>.to_param}", headers: { HTTP_REFERER: "/<%= table_name %>/#{<%= file_name %>.to_param}" }
+        delete "/<%= table_name %>/#{<%= file_name %>.to_param}",
+               headers: { HTTP_REFERER: "/<%= table_name %>/#{<%= file_name %>.to_param}" }
       }.to change(<%= class_name %>, :count).by(-1)
     end
 
     it 'redirects to the <%= table_name %> list' do
-      delete "/<%= table_name %>/#{<%= file_name %>.to_param}", headers: { HTTP_REFERER: "/<%= table_name %>/#{<%= file_name %>.to_param}" }
+      delete "/<%= table_name %>/#{<%= file_name %>.to_param}",
+             headers: { HTTP_REFERER: "/<%= table_name %>/#{<%= file_name %>.to_param}" }
       expect(response).to redirect_to(<%= index_helper %>_url)
     end
   end
