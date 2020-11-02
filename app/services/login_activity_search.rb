@@ -31,7 +31,7 @@ class LoginActivitySearch < RadCommon::Search
        blank_value_label: 'All'},
      { input_label: 'IP',
        column: :ip,
-       options: login_activity_ips},
+       options: LoginActivity.all},
      { input_label: 'Agent',
        column: :user_agent,
        options: login_activity_agents},
@@ -41,7 +41,7 @@ class LoginActivitySearch < RadCommon::Search
   end
 
   def sort_columns_def
-    [{ label: 'When', column: 'created_at' },
+    [{ label: 'When' },
      { label: 'Email' },
      { label: 'Login Status'},
      { label: 'IP' },
