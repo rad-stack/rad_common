@@ -15,7 +15,7 @@ class LoginActivitySearch < RadCommon::Search
     [{ start_input_label: 'Start Date',
        end_input_label: 'End Date',
        column: :created_at,
-       type: RadCommon::DateFilter},
+       type: RadCommon::DateFilter },
      { input_label: 'Email',
        joins: 'LEFT JOIN users ON users.id = login_activities.user_id',
        column: 'users.email',
@@ -28,48 +28,48 @@ class LoginActivitySearch < RadCommon::Search
      { input_label: 'Login Status',
        name: :status,
        scope_values: { 'Failure': :failure, 'Success': :successful },
-       blank_value_label: 'All'},
+       blank_value_label: 'All' },
      { input_label: 'IP',
        column: :ip,
-       options: LoginActivity.all},
+       options: login_activity_ips },
      { input_label: 'Agent',
        column: :user_agent,
-       options: login_activity_agents},
+       options: login_activity_agents },
      { input_label: 'Referrer',
        column: :referrer,
-       options: login_activity_referrers}]
+       options: login_activity_referrers }]
   end
 
   def sort_columns_def
-    [{ label: 'When' },
+    [{ label: 'When', column: 'created_at' },
      { label: 'Email' },
-     { label: 'Login Status'},
+     { label: 'Login Status' },
      { label: 'IP' },
      { label: 'Agent' },
      { label: 'Referrer' }]
   end
 
   def client_emails
-    Pundit.policy_scope!(current_user, User).active.external.order(email: :asc).map{ |user| user.email }
+    Pundit.policy_scope!(current_user, User).active.external.order(email: :asc).map(&:email)
   end
 
   def user_emails
-    Pundit.policy_scope!(current_user, User).active.internal.order(email: :asc).map{ |user| user.email }
+    Pundit.policy_scope!(current_user, User).active.internal.order(email: :asc).map(&:email)
   end
 
   def inactive_user_emails
-    Pundit.policy_scope!(current_user, User).inactive.order(email: :asc).map{ |user| user.email }
+    Pundit.policy_scope!(current_user, User).inactive.order(email: :asc).map(&:email)
   end
 
   def login_activity_ips
-    Pundit.policy_scope!(current_user, LoginActivity).map{ |activity| activity.ip }.uniq
+    Pundit.policy_scope!(current_user, LoginActivity).map(&:ip).uniq
   end
 
   def login_activity_agents
-    Pundit.policy_scope!(current_user, LoginActivity).map{ |activity| activity.user_agent.truncate(30) }.uniq
+    Pundit.policy_scope!(current_user, LoginActivity).map { |activity| activity.user_agent.truncate(30) }.uniq
   end
 
   def login_activity_referrers
-    Pundit.policy_scope!(current_user, LoginActivity).map{ |activity| activity.referrer }.uniq
+    Pundit.policy_scope!(current_user, LoginActivity).map(&:referrer).uniq
   end
 end
