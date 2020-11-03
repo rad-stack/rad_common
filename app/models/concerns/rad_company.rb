@@ -46,13 +46,26 @@ module RadCompany
     update! validity_checked_at: Time.current
   end
 
-  def usage_stats
+  def usage_stats(mode)
     today = Time.current
 
     usage_headers = (0..5).to_a.reverse.map do |item|
-      { start: today.advance(months: -item).beginning_of_month.beginning_of_day,
-        end: today.advance(months: -item).end_of_month.end_of_day,
-        label: today.advance(months: -item).beginning_of_month.strftime('%B, %Y') }
+      case mode
+      when 'monthly'
+        { start: today.advance(months: -item).beginning_of_month.beginning_of_day,
+          end: today.advance(months: -item).end_of_month.end_of_day,
+          label: today.advance(months: -item).beginning_of_month.strftime('%B, %Y') }
+      when 'weekly'
+        { start: today.advance(weeks: -item).beginning_of_week.beginning_of_day,
+          end: today.advance(weeks: -item).end_of_week.end_of_day,
+          label: ApplicationController.helpers.format_date(today.advance(weeks: -item).beginning_of_week) }
+      when 'daily'
+        { start: today.advance(days: -item).beginning_of_day,
+          end: today.advance(days: -item).end_of_day,
+          label: ApplicationController.helpers.format_date(today.advance(days: -item).beginning_of_day) }
+      else
+        raise 'invalid mode'
+      end
     end
 
     usage_items = RadCommon.system_usage_models.sort
