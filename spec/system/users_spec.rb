@@ -10,7 +10,7 @@ describe 'Users', type: :system do
       visit edit_user_path(user)
     end
 
-    context 'dynamically changing fields', js: true do
+    context 'when dynamically changing fields', js: true do
       it 'hides internal fields if client user is checked' do
         find_field('user_external').set(false)
         expect(page).to have_content 'Security roles'

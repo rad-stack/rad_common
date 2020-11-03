@@ -47,7 +47,7 @@ module RadSecurityRole
       seed_admin
       seed_user
 
-      return unless RadCommon.external_users
+      return true unless RadCommon.external_users
 
       seed_portal_admin
       seed_portal_user
@@ -61,6 +61,8 @@ module RadSecurityRole
       NotificationType.all.find_each do |notification_type|
         group.notification_security_roles.create! notification_type: notification_type
       end
+
+      true
     end
 
     def seed_all(group)

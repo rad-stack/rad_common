@@ -10,7 +10,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   def index
     authorize <%= class_name %>
     # TODO: change 'all' to a scope for ordering the records
-    @<%= plural_table_name %> = <%= orm_class.all(class_name) %>.page(params[:page])
+    @<%= plural_table_name %> = policy_scope(<%= orm_class.all(class_name) %>).page(params[:page])
   end
 
   def show; end
