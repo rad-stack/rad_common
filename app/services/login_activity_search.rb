@@ -71,7 +71,7 @@ class LoginActivitySearch < RadCommon::Search
   end
 
   def login_activity_agents
-    Pundit.policy_scope!(current_user, LoginActivity).map { |activity| activity.user_agent.truncate(30) }.uniq
+    Pundit.policy_scope!(current_user, LoginActivity).map { |activity| activity.user_agent&.truncate(30) }.uniq
   end
 
   def login_activity_referrers
