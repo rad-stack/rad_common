@@ -29,6 +29,10 @@ class LoginActivitySearch < RadCommon::Search
        name: :status,
        scope_values: { 'Failure': :failure, 'Success': :successful },
        blank_value_label: 'All' },
+     { input_label: 'Failure Reason',
+       column: :failure_reason,
+       options: failure_reasons,
+       blank_value_label: 'All' },
      { input_label: 'IP',
        column: :ip,
        options: login_activity_ips },
@@ -41,12 +45,13 @@ class LoginActivitySearch < RadCommon::Search
   end
 
   def sort_columns_def
-    [{ label: 'When', column: 'created_at' },
-     { label: 'Email' },
-     { label: 'Login Status' },
-     { label: 'IP' },
-     { label: 'Agent' },
-     { label: 'Referrer' }]
+    [{ label: 'When', column: 'created_at', direction: 'desc', default: true },
+     { label: 'Email', column: 'email' },
+     { label: 'Success' },
+     { label: 'Failure', column: 'failure_reason' },
+     { label: 'IP', column: 'ip' },
+     { label: 'Agent', column: 'user_agent' },
+     { label: 'Referrer', column: 'referrer' }]
   end
 
   def client_emails
@@ -71,5 +76,9 @@ class LoginActivitySearch < RadCommon::Search
 
   def login_activity_referrers
     Pundit.policy_scope!(current_user, LoginActivity).map(&:referrer).uniq
+  end
+
+  def failure_reasons
+    Pundit.policy_scope!(current_user, LoginActivity).failure.map(&:failure_reason).uniq
   end
 end
