@@ -39,6 +39,10 @@ module RadCommon
       @filtering.validate_params
     end
 
+    def invalid?
+      !valid?
+    end
+
     def errors
       @filtering.errors
     end
@@ -103,8 +107,12 @@ module RadCommon
     private
 
       def retrieve_results
-        @results = @filtering.apply_filtering(@results)
-        @results = @sorting.apply_sorting(@results)
+        if valid?
+          @results = @filtering.apply_filtering(@results)
+          @results = @sorting.apply_sorting(@results)
+        else
+          @results = @results.none
+        end
       end
 
       def searchable_columns
