@@ -67,6 +67,8 @@ module RadCommon
     end
 
     def validate_params(params)
+      return true if @custom
+
       begin
         if start_at_value(params).present? && end_at_value(params).present? &&
            start_at_value(params) > end_at_value(params)
