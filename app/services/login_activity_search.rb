@@ -48,7 +48,7 @@ class LoginActivitySearch < RadCommon::Search
     [{ label: 'When', column: 'created_at', direction: 'desc', default: true },
      { label: 'Email', column: 'email' },
      { label: 'Success' },
-     { label: 'Failure', column: 'failure_reason' },
+     { label: 'Failure' },
      { label: 'IP', column: 'ip' },
      { label: 'Agent', column: 'user_agent' },
      { label: 'Referrer', column: 'referrer' }]
