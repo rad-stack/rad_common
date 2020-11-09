@@ -2,7 +2,7 @@ class LoginActivitySearch < RadCommon::Search
   def initialize(params, current_user)
     @current_user = current_user
 
-    super(query: LoginActivity.joins('LEFT JOIN users ON users.id = login_activities.user_id').recent_first,
+    super(query: LoginActivity,
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
@@ -16,7 +16,7 @@ class LoginActivitySearch < RadCommon::Search
          end_input_label: 'End Date',
          column: :created_at,
          type: RadCommon::DateFilter },
-       { column: 'users.email',
+       { column: 'identity',
          type: RadCommon::LikeFilter },
        { input_label: 'Login Status',
          name: :status,
@@ -35,24 +35,12 @@ class LoginActivitySearch < RadCommon::Search
 
     def sort_columns_def
       [{ label: 'When', column: 'created_at', direction: 'desc', default: true },
-       { column: 'email' },
+       { label: 'Email', column: 'identity' },
        { label: 'Success' },
        { label: 'Failure' },
        { label: 'IP', column: 'ip' },
        { label: 'Agent', column: 'user_agent' },
        { column: 'referrer' }]
-    end
-
-    def client_emails
-      Pundit.policy_scope!(current_user, User).active.external.map(&:email)
-    end
-
-    def user_emails
-      Pundit.policy_scope!(current_user, User).active.internal.map(&:email)
-    end
-
-    def inactive_user_emails
-      Pundit.policy_scope!(current_user, User).inactive.map(&:email)
     end
 
     def failure_reasons
