@@ -150,4 +150,16 @@ RSpec.configure do |config|
   config.before(:example, type: :system, js: true) do
     driven_by chrome_driver
   end
+
+  def confirm_present?
+    confirm_accepted = false
+    begin
+      page.accept_confirm do
+        confirm_accepted = true
+      end
+      confirm_accepted
+    rescue
+      false
+    end
+  end
 end
