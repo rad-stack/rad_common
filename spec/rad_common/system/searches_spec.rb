@@ -4,7 +4,7 @@ describe 'Searches', type: :system do
   let(:admin) { create :admin }
   let(:search_results) { JSON.parse(response.body) }
 
-  before { login_as(admin, scope: :user) }
+  before { login_as admin, scope: :user }
 
   context 'without super search' do
     it 'does not warn on leaving page when filling out search field', js: true do
