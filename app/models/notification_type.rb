@@ -4,6 +4,7 @@ class NotificationType < ApplicationRecord
   has_many :notification_settings, dependent: :destroy
 
   attr_accessor :payload
+
   alias_attribute :to_s, :description
 
   scope :by_type, -> { order(:type) }

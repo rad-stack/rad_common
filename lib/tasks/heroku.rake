@@ -3,20 +3,20 @@
 
 namespace :heroku do
   task :local_backup, [:heroku_app] => :environment do |_t, args|
-    HerokuCommands.backup(args[:heroku_app])
+    HerokuCommands.backup args[:heroku_app]
   end
 
-  task :clone_local, %i[heroku_app company_id keep_dump_file] => :environment do |_t, args|
-    HerokuCommands.clone(args[:heroku_app], specific_company_id: args[:company_id], keep_dump_file: args[:keep_dump_file])
+  task :clone_local, %i[heroku_app keep_dump_file] => :environment do |_t, args|
+    HerokuCommands.clone args[:heroku_app], keep_dump_file: args[:keep_dump_file]
   end
 end
 
 namespace :local do
   task :restore_from_backup, [:file_name] => :environment do |_t, args|
-    HerokuCommands.restore_from_backup(args[:file_name])
+    HerokuCommands.restore_from_backup args[:file_name]
   end
 
   task :dump, [:file_name] => :environment do |_t, args|
-    HerokuCommands.dump(args[:file_name])
+    HerokuCommands.dump args[:file_name]
   end
 end
