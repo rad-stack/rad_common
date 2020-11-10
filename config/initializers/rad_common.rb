@@ -12,7 +12,7 @@ ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 if ENV.fetch('STAGING') == 'true'
   class ChangeStagingEmailSubject
     def self.delivering_email(mail)
-      mail.subject = '[STAGING] ' + mail.subject
+      mail.subject = "[STAGING] #{mail.subject}"
     end
   end
 
@@ -34,7 +34,6 @@ Rails.configuration.app_admin_email = ENV.fetch('APP_ADMIN_EMAIL')
 AuthTrail.geocode = false
 
 module Kaminari
-
   # monkey patch to fix paging on engine routes
   # https://github.com/radicalbear/rad_common/pull/211/files
   # https://github.com/kaminari/kaminari/issues/457
