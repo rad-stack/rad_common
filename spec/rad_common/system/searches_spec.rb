@@ -4,7 +4,26 @@ describe 'Searches', type: :system do
   let(:admin) { create :admin }
   let(:search_results) { JSON.parse(response.body) }
 
-  before { login_as(admin, scope: :user) }
+  before { login_as admin, scope: :user }
+
+  context 'without super search' do
+    it 'does not warn on leaving page when filling out search field', js: true do
+      visit '/'
+      fill_in 'global_search_name', with: 'test'
+      find('body').click
+      visit current_path
+
+      expect(confirm_present?).to eq false
+    end
+
+    it 'does warn on leaving page when filling out normal fields', js: true do
+      visit edit_company_path(Company.main)
+      fill_in 'Name', with: 'test'
+      visit current_path
+
+      expect(confirm_present?).to eq true
+    end
+  end
 
   context 'with super search' do
     let(:term) { 'Peters' }
