@@ -22,8 +22,8 @@ module RadCommon
       @params = params
       @search_name = search_name
       @filtering = Filtering.new(filters: filters, search: self)
-      defaulting = FilterDefaulting.new(current_user: current_user, search: self, enabled: sticky_filters)
-      defaulting.apply_defaults
+      @defaulting = FilterDefaulting.new(current_user: current_user, search: self, enabled: sticky_filters)
+      @defaulting.apply_defaults
       @sorting = Sorting.new(sort_columns: sort_columns, search: self)
     end
 
@@ -108,6 +108,7 @@ module RadCommon
 
       def retrieve_results
         if valid?
+          @defaulting.update_defaults
           @results = @filtering.apply_filtering(@results)
           @results = @sorting.apply_sorting(@results)
         else
