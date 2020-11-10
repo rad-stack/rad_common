@@ -95,7 +95,15 @@ RSpec.describe 'Search', type: :system do
       expect(page).to have_content 'Invalid date entered for created_at'
       visit '/'
       visit divisions_path
-      expect(page).to_not have_content 'Invalid date entered for created_at'
+      expect(page).not_to have_content 'Invalid date entered for created_at'
+    end
+
+    it 'does save valid date to users.filter_defaults'do
+      visit divisions_path(search: { created_at_start: '2019-12-01', created_at_end: '2019-12-02' })
+      visit '/'
+      visit divisions_path
+      expect(page.body).to include '2019-12-01'
+      expect(page.body).to include '2019-12-02'
     end
   end
 end
