@@ -1,17 +1,12 @@
 .card
   = render 'layouts/card_header', title: "Sign In Activity (#{@login_activities.total_count})"
   .card-body
+    = render 'layouts/filter', search: @login_activity_search, path: '/rad_common/login_activities'
     = paginate @login_activities, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
 
     %table.table.table-bordered
       %tr
-        %th When
-        %th Email
-        %th Success
-        %th Failure
-        %th IP
-        %th Agent
-        %th Referrer
+        = render 'layouts/sort_headers', search: @login_activity_search
 
       - @login_activities.each do |login_activity|
         %tr{class: login_activity.success ? 'alert-success' : 'alert-danger'}
