@@ -13,7 +13,6 @@ module RadCommon
       # TODO: refactor this with Hashable
       ids = Hashable.hashids.decode(params[:id])
       attachment_id = ids[0]
-      #
 
       attachment = ActiveStorage::Attachment.find_by(id: attachment_id)
 

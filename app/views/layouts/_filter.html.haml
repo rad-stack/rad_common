@@ -1,3 +1,5 @@
+-if search.invalid?
+  - flash[:error] = search.error_messages
 = simple_form_for :search, url: path, method: :get do |f|
   -search.filters.each_slice(5) do |filters|
     .row

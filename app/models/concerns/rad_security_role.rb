@@ -66,7 +66,7 @@ module RadSecurityRole
     end
 
     def seed_all(group)
-      permission_fields.each { |item| group.send(item + '=', true) }
+      permission_fields.each { |item| group.send("#{item}=", true) }
     end
 
     def seed_user
@@ -93,7 +93,7 @@ module RadSecurityRole
 
       # init all perms to false
       SecurityRole.permission_fields.each do |field|
-        group.send(field + '=', false)
+        group.send("#{field}=", false)
       end
 
       group
