@@ -22,6 +22,13 @@ Add the following to your Javascript manifest file (`application.js`):
 //= require bootstrap_datetimepicker/dates
 ```
 
+When using jquery are you sure the below MUST always be added after the bootstrap-datetimepicker in the application.js
+```
+
+//= require rad_common/jquery.are_you_sure
+//= require rad_common/are_you_sure_datepickers
+```
+
 Also, modify your `application.css`:
 ```
 *= require bootstrap-datetimepicker
