@@ -1,6 +1,4 @@
 class AuditsController < ApplicationController
-  before_action :authenticate_user!
-
   def index
     if params[:auditable_type].present? && params[:auditable_id].present?
       @resource = params[:auditable_type].constantize.find(params[:auditable_id])

@@ -1,5 +1,4 @@
 class SystemMessagesController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_system_message, only: %i[show]
 
   def show; end

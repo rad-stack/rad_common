@@ -1,6 +1,4 @@
 class NotificationSettingsController < ApplicationController
-  before_action :authenticate_user!
-
   def index
     authorize NotificationSetting
     skip_policy_scope

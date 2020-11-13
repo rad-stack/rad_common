@@ -4,7 +4,7 @@ module RadCommon
 
     include ActiveStorageDownloader
 
-    before_action :authenticate_user!, only: :destroy
+    skip_before_action :authenticate_user!, except: :destroy
     before_action :set_variant, only: :download_variant
 
     def download

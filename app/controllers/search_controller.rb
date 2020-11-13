@@ -1,6 +1,4 @@
 class SearchController < ApplicationController
-  before_action :authenticate_user!
-
   def global_search
     # authorization is checked within the global_autocomplete_result
     skip_authorization
