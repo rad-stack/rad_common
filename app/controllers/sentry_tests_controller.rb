@@ -1,6 +1,4 @@
 class SentryTestsController < ApplicationController
-  before_action :authenticate_user!
-
   def edit
     skip_authorization
 
