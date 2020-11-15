@@ -7,7 +7,7 @@ describe 'Users', type: :system do
   let(:external_user) { create :user, :external }
 
   describe 'user' do
-    before { login_as(user, scope: :user) }
+    before { login_as user, scope: :user }
 
     describe 'index' do
       it 'shows users' do
