@@ -47,26 +47,35 @@ RadCommon.setup do |config|
   # Sets search scopes to be included in the navigation search bar
   config.global_search_scopes =
     [
-      { name: 'user_name', model: 'User',
+      { name: 'user_name',
+        model: 'User',
         description: 'Search user by name',
         columns: ['email'],
         methods: [:user_status],
         query_where: "last_name || ', ' || first_name ilike :search",
         query_order: 'last_name ASC, first_name ASC, created_at DESC' },
-      { name: 'user_email', model: 'User',
+
+      { name: 'user_email',
+        model: 'User',
         description: 'Search user by email',
         columns: ['email'],
         query_where: 'email ilike :search' },
-      { name: 'user_name_with_no_where', model: 'User',
+
+      { name: 'user_name_with_no_where',
+        model: 'User',
         description: 'Search user by name',
         columns: [],
         query_order: 'last_name ASC, first_name ASC, created_at DESC' },
-      { name: 'division_name', model: 'Division',
+
+      { name: 'division_name',
+        model: 'Division',
         description: 'Search division by name',
         columns: ['name'],
         query_where: 'name ilike :search',
         query_order: 'name' },
-      { name: 'user_by_division_name', model: 'User',
+      { name: 'user_by_division_name',
+        model: 'User',
+
         description: 'Search user by division name',
         columns: [],
         joins: 'JOIN divisions on divisions.owner_id = users.id',
