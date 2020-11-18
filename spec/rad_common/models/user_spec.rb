@@ -115,6 +115,8 @@ describe User, type: :model do
   end
 
   describe 'validate email address' do
+    before { Company.main.update! valid_user_domains: %w[example.com radicalbear.com] }
+
     it 'rejects unauthorized email addresses' do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo. user@foo.com user@foo.com]
 
@@ -136,7 +138,7 @@ describe User, type: :model do
     end
 
     it 'allows valid email addresses' do
-      addresses = %w[joe@example.com bob@example.com sally@example.com]
+      addresses = %w[joe@example.com bob@example.com sally@example.com brah@radicalbear.com]
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
@@ -157,9 +159,21 @@ describe User, type: :model do
         external: true }
     end
 
-    it 'allows invalid email addresses for inactive users' do
+    before { Company.main.update! valid_user_domains: %w[example.com radicalbear.com] }
+
+    it 'rejects unauthorized email addresses' do
+      addresses = %w[user@example.com user@radicalbear.com]
+
+      addresses.each do |address|
+        user = described_class.new(attributes.merge(email: address))
+        expect(user).not_to be_valid
+        expect(user.errors.full_messages.to_s).to include 'Email is not authorized for this application'
+      end
+    end
+
+    it 'allows unauthorized email addresses for inactive users' do
       if RadCommon.external_users
-        addresses = %w[user@bar.com user@foo.com]
+        addresses = %w[user@example.com user@radicalbear.com]
 
         addresses.each do |address|
           user = described_class.new(attributes.merge(email: address, user_status: inactive_status))

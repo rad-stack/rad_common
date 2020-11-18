@@ -171,11 +171,12 @@ module RadbearUser
     end
 
     def validate_email_address
-      return if email.blank? || user_status_id.nil? || !user_status.validate_email || external? || Company.main.blank?
+      return if email.blank? || user_status_id.nil? || !user_status.validate_email || Company.main.blank?
 
       domains = Company.main.valid_user_domains
       components = email.split('@')
-      return if components.count == 2 && domains.include?(components[1])
+      match_domains = components.count == 2 && domains.include?(components[1])
+      return if (internal? && match_domains) || (external? && !match_domains)
 
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
