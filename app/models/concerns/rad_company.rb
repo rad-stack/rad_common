@@ -46,32 +46,6 @@ module RadCompany
     update! validity_checked_at: Time.current
   end
 
-  def usage_stats
-    today = Time.current
-
-    usage_headers = (0..5).to_a.reverse.map do |item|
-      { start: today.advance(months: -item).beginning_of_month.beginning_of_day,
-        end: today.advance(months: -item).end_of_month.end_of_day,
-        label: today.advance(months: -item).beginning_of_month.strftime('%B, %Y') }
-    end
-
-    usage_items = RadCommon.system_usage_models.sort
-    usage_data = []
-
-    usage_items.each do |item|
-      data = []
-
-      usage_headers.each do |header|
-        result = item.constantize.unscoped.where(created_at: header[:start]..header[:end]).count
-        data.push(result)
-      end
-
-      usage_data.push(data)
-    end
-
-    [usage_headers, usage_items, usage_data]
-  end
-
   private
 
     def validate_only_one
