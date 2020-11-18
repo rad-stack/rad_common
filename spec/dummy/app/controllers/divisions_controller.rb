@@ -1,5 +1,4 @@
 class DivisionsController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_division, only: %i[show edit update destroy]
 
   def index
@@ -25,12 +24,7 @@ class DivisionsController < ApplicationController
                                              sticky_filters: true,
                                              params: params)
 
-    if @division_search.valid?
-      @divisions = @division_search.results.page(params[:page])
-    else
-      @divisions = Division.none.page(params[:page])
-      flash[:error] = @division_search.error_messages
-    end
+    @divisions = @division_search.results.page(params[:page])
   end
 
   def show; end

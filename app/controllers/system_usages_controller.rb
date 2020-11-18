@@ -1,6 +1,4 @@
 class SystemUsagesController < ApplicationController
-  before_action :authenticate_user!
-
   def index
     @company = Company.main
     authorize @company, :update?

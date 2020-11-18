@@ -7,7 +7,7 @@ describe 'Users', type: :system do
   let(:external_user) { create :user, :external }
 
   describe 'user' do
-    before { login_as(user, scope: :user) }
+    before { login_as user, scope: :user }
 
     describe 'index' do
       it 'shows users' do
@@ -395,12 +395,12 @@ describe 'Users', type: :system do
     let(:authy_id) { '1234567' }
 
     before do
-      expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
       user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'allows user to login with authentication token', :vcr do
-      expect(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
+      allow(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
 
       visit new_user_session_path
       fill_in 'user_email', with: user.email
@@ -424,8 +424,8 @@ describe 'Users', type: :system do
     end
 
     it 'updates authy when updating an accounts mobile phone' do
-      expect(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
-      expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+      allow(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
+      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
 
       login_as(user, scope: :user)
       visit edit_user_registration_path

@@ -126,7 +126,7 @@ describe User, type: :model do
     end
 
     it 'rejects invalid email addresses' do
-      addresses = ['foo @example.com', '.b ar@example.com']
+      addresses = ['foo @example.com', '.b ar@example.com', 'com@none']
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
@@ -227,6 +227,26 @@ describe User, type: :model do
     end
   end
 
+  describe 'Email Changed' do
+    subject { ActionMailer::Base.deliveries[ActionMailer::Base.deliveries.length - 2].subject }
+
+    let!(:user) { create :user }
+
+    before { user.update!(email: 'foobar@example.com') }
+
+    it { is_expected.to eq('Email Changed') }
+  end
+
+  describe 'Password Changed' do
+    subject { ActionMailer::Base.deliveries.last.subject }
+
+    let!(:user) { create :user }
+
+    before { user.update!(password: 'NewPassword2!', password_confirmation: 'NewPassword2!') }
+
+    it { is_expected.to eq 'Password Changed' }
+  end
+
   describe 'authy' do
     let(:user) { create :user, mobile_phone: phone_number }
     let(:phone_number) { create :phone_number, :mobile }
@@ -237,7 +257,7 @@ describe User, type: :model do
     let(:role2) { admin_role }
 
     it 'creates and updates the user on authy' do
-      expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
 
       expect(user.authy_id).to be_nil
       user.update!(authy_enabled: true)
@@ -245,7 +265,7 @@ describe User, type: :model do
     end
 
     it 'returns a failure message if authy doesnt update' do
-      expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: false, message: 'mocked message'))
+      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: false, message: 'mocked message'))
 
       user.authy_enabled = true
       user.mobile_phone = new_phone_number
@@ -278,26 +298,6 @@ describe User, type: :model do
       user.update!(security_roles: [role2])
       expect(user.updated_at).not_to eq(updated_at)
     end
-  end
-
-  describe 'Email Changed' do
-    subject { ActionMailer::Base.deliveries[ActionMailer::Base.deliveries.length - 2].subject }
-
-    let!(:user) { create :user }
-
-    before { user.update!(email: 'foobar@example.com') }
-
-    it { is_expected.to eq('Email Changed') }
-  end
-
-  describe 'Password Changed' do
-    subject { ActionMailer::Base.deliveries.last.subject }
-
-    let!(:user) { create :user }
-
-    before { user.update!(password: 'NewPassword2!', password_confirmation: 'NewPassword2!') }
-
-    it { is_expected.to eq 'Password Changed' }
   end
 
   def assert_password_with_name(first_name, last_name, password, valid)

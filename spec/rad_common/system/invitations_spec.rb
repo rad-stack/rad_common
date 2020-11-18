@@ -23,7 +23,7 @@ describe 'Invitations', type: :system do
   end
 
   describe 'admin' do
-    before { login_as(admin, scope: :user) }
+    before { login_as admin, scope: :user }
 
     describe 'new' do
       context 'when valid' do

@@ -14,6 +14,12 @@ module RadCommon
         search_and_replace 'Date.tomorrow', 'Time.zone.tomorrow'
         search_and_replace 'Date.yesterday', 'Time.zone.yesterday'
 
+        search_and_replace 'before { login_as(user, scope: :user) }',
+                           'before { login_as user, scope: :user }'
+
+        search_and_replace 'before { login_as(admin, scope: :user) }',
+                           'before { login_as admin, scope: :user }'
+
         # procfile
         template '../../../../../spec/dummy/Procfile', 'Procfile'
 

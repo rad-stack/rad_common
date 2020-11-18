@@ -4,7 +4,7 @@ module RadCommon
 
     include ActiveStorageDownloader
 
-    before_action :authenticate_user!, only: :destroy
+    skip_before_action :authenticate_user!, except: :destroy
     before_action :set_variant, only: :download_variant
 
     def download
@@ -13,7 +13,6 @@ module RadCommon
       # TODO: refactor this with Hashable
       ids = Hashable.hashids.decode(params[:id])
       attachment_id = ids[0]
-      #
 
       attachment = ActiveStorage::Attachment.find_by(id: attachment_id)
 

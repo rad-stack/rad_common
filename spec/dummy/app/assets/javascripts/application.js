@@ -8,4 +8,6 @@
 //= require bootstrap_datetimepicker/dates
 //= require jquery-ui/autocomplete
 //= require rad_common/autocomplete-rails
+//= require rad_common/jquery.are_you_sure
+//= require rad_common/are_you_sure_datepickers
 //= require rad_common/rad_common
