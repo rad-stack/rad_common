@@ -185,6 +185,7 @@ class CardPresenter
        !no_edit_button &&
        instance&.persisted? &&
        current_user &&
+       Pundit.policy!(current_user, check_policy_klass).update? &&
        Pundit.policy!(current_user, check_policy_instance).update?
 
       actions.push(@view_context.link_to(@view_context.icon(:pencil, 'Edit'),
@@ -197,6 +198,7 @@ class CardPresenter
     if !no_delete_button &&
        instance&.persisted? &&
        current_user &&
+       Pundit.policy!(current_user, check_policy_klass).destroy? &&
        Pundit.policy!(current_user, check_policy_instance).destroy?
 
       if delete_button_content
