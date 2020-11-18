@@ -7,7 +7,7 @@ class SystemUsage
       when 'yearly'
         { start: today.advance(years: -item).beginning_of_year.beginning_of_day,
           end: today.advance(years: -item).end_of_year.end_of_day,
-          label: today.advance(years: -item).beginning_of_year.strftime('%B, %Y') }
+          label: today.advance(years: -item).beginning_of_year.strftime('%Y') }
       when 'monthly'
         { start: today.advance(months: -item).beginning_of_month.beginning_of_day,
           end: today.advance(months: -item).end_of_month.end_of_day,
