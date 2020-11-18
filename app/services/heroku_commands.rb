@@ -1,37 +1,5 @@
 class HerokuCommands
   class << self
-    def app_option(app_name = '')
-      app_name.blank? ? '' : "--app #{app_name}"
-    end
-
-    def backup_dump_file(app_name = '')
-      if app_name.blank?
-        "#{dump_folder}/#{Date.current}.backup"
-      else
-        "#{dump_folder}/#{app_name}_#{Date.current}.backup"
-      end
-    end
-
-    def clone_dump_file
-      'latest.dump'
-    end
-
-    def dump_folder
-      "#{Rails.root}/heroku_backups"
-    end
-
-    def local_host
-      'localhost'
-    end
-
-    def local_user
-      `whoami`.strip!
-    end
-
-    def dbname
-      YAML.load_file('config/database.yml')['development']['database']
-    end
-
     def backup(app_name = '')
       check_production do
         FileUtils.mkdir_p dump_folder
@@ -94,6 +62,38 @@ class HerokuCommands
     end
 
     private
+
+      def app_option(app_name = '')
+        app_name.blank? ? '' : "--app #{app_name}"
+      end
+
+      def backup_dump_file(app_name = '')
+        if app_name.blank?
+          "#{dump_folder}/#{Date.current}.backup"
+        else
+          "#{dump_folder}/#{app_name}_#{Date.current}.backup"
+        end
+      end
+
+      def clone_dump_file
+        'latest.dump'
+      end
+
+      def dump_folder
+        "#{Rails.root}/heroku_backups"
+      end
+
+      def local_host
+        'localhost'
+      end
+
+      def local_user
+        `whoami`.strip!
+      end
+
+      def dbname
+        YAML.load_file('config/database.yml')['development']['database']
+      end
 
       def check_production
         if Rails.env.production?

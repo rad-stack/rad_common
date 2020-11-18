@@ -1,8 +1,9 @@
 class SystemUsagesController < ApplicationController
   def index
-    @company = Company.main
-    authorize @company, :update?
+    authorize SystemUsage.new, :index?
     skip_policy_scope
-    @usage_headers, @usage_items, @usage_data = @company.usage_stats
+
+    @mode = params[:mode].presence || 'monthly'
+    @usage_headers, @usage_items, @usage_data = SystemUsage.usage_stats(@mode)
   end
 end
