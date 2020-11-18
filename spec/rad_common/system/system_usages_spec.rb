@@ -4,7 +4,7 @@ RSpec.describe 'SystemUsages', type: :system do
   let(:user) { create :admin }
 
   before do
-    create_list :division, 5
+    create_list :user, 4
     login_as user, scope: :user
   end
 

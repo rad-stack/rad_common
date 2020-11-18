@@ -18,7 +18,10 @@ RadCommon.setup do |config|
   # config.portal_namespace = nil
 
   # Determines which models should be included in the system_usages route
-  config.system_usage_models = %w[Division User]
+  config.system_usage_models = [['Division', 'status_pending', 'Pending Divisions'],
+                                ['Division', 'status_active', 'Active Divisions'],
+                                ['Division', 'status_inactive', 'Inactive Divisions'],
+                                'User']
 
   # Determines which attributes should be hidden in the audits for non-admin users
   config.restricted_audit_attributes = [{ model: 'Division', attribute: 'hourly_rate' }]

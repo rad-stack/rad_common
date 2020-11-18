@@ -1,6 +1,6 @@
 .card
   = render 'layouts/card_header', action_name: 'custom',
-                                  title: "System Usage for #{@company.name}",
+                                  title: "System Usage for #{Company.main.name}",
                                   icon: 'fa-area-chart'
 
   .card-body
@@ -21,6 +21,6 @@
 
       - @usage_items.each_with_index do |item, item_index|
         %tr
-          %td= item
+          %td= @usage_data[item_index].first[:name]
           -@usage_headers.each_with_index do |header, header_index|
-            %td= @usage_data[item_index][header_index]
+            %td= @usage_data[item_index][header_index][:value]
