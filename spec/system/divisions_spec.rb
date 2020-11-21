@@ -53,17 +53,17 @@ RSpec.describe 'Divisions', type: :system do
     end
 
     describe 'multiple attachment validation' do
-      let(:file2) { 'spec/fixtures/radlogo.jpeg' }
+      let(:file_2) { 'spec/fixtures/radlogo.jpeg' }
 
       before do
         visit edit_division_path(division)
-        page.attach_file('Avatar', file1)
-        page.attach_file('Logo', file2)
+        page.attach_file('Avatar', file_1)
+        page.attach_file('Logo', file_2)
         click_on 'Save'
       end
 
       context 'when both invalid' do
-        let(:file1) { 'spec/fixtures/radlogo.png' }
+        let(:file_1) { 'spec/fixtures/radlogo.png' }
 
         it 'validates' do
           expect(page).to have_content 'Logo, Avatar could not be saved due to invalid content types'
@@ -73,7 +73,7 @@ RSpec.describe 'Divisions', type: :system do
       end
 
       context 'when one invalid' do
-        let(:file1) { 'spec/fixtures/radlogo.jpeg' }
+        let(:file_1) { 'spec/fixtures/radlogo.jpeg' }
 
         it 'validates' do
           expect(page).to have_content 'Logo could not be saved due to invalid content types'

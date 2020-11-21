@@ -20,7 +20,7 @@ describe RadCommon::AuditsHelper do
 
     let(:audit) { division.audits.reorder('id DESC').first }
 
-    context 'admin' do
+    context 'when admin' do
       let(:security_role) { create :security_role, :admin }
 
       let(:result) do
@@ -31,7 +31,7 @@ describe RadCommon::AuditsHelper do
       it { is_expected.to eq result }
     end
 
-    context 'user' do
+    context 'when user' do
       let(:result) do
         "Changed <strong>Notify</strong> to <strong>true</strong>\n"\
         "Changed <strong>Hourly Rate</strong> from <strong>XXX</strong> to <strong>XXX</strong>\n"
@@ -45,7 +45,7 @@ describe RadCommon::AuditsHelper do
     subject { strip_tags(helper.display_audited_action(audit)) }
 
     let(:audit) { division.own_and_associated_audits.reorder(id: :desc).first }
-    let(:file) { File.open(Rails.root.join('app', 'assets', 'images', 'app_logo.png')) }
+    let(:file) { File.open(Rails.root.join('app/assets/images/app_logo.png')) }
 
     context 'when associated attachment' do
       context 'when create' do

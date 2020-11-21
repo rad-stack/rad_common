@@ -44,7 +44,9 @@ describe RadbearMailer, type: :mailer do
     end
 
     context 'with a problem without a link' do
-      let(:notification_setting) { create :notification_setting, notification_type: create(:global_validity_notification) }
+      let(:notification_setting) do
+        create :notification_setting, notification_type: create(:global_validity_notification)
+      end
 
       before { described_class.global_validity([user], [[notification_setting, 'foo bar']]).deliver_now }
 

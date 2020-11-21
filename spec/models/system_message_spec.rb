@@ -21,9 +21,13 @@ RSpec.describe SystemMessage, type: :model do
       context 'when a user does not receive message because mobile mumber is not present' do
         let!(:other_user) { create :user, mobile_phone: nil }
 
+        let(:result) do
+          "These users did not receive a system SMS message because a mobile number was not present: #{other_user.id}"
+        end
+
         before { system_message.send! }
 
-        it { is_expected.to include "These users did not receive a system SMS message because a mobile number was not present: #{other_user.id}" }
+        it { is_expected.to include result }
       end
     end
   end

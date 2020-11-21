@@ -6,25 +6,25 @@ describe 'SchemaValidations', type: :module do
   let(:division) { create :division }
 
   describe 'presence validations' do
-    context 'text field' do
+    context 'with text field' do
       before { division.update(name: nil) }
 
       it { is_expected.to include "Name can't be blank" }
     end
 
-    context 'numeric field' do
+    context 'with numeric field' do
       before { division.update(hourly_rate: nil) }
 
       it { is_expected.to include "Hourly rate can't be blank" }
     end
 
-    context 'boolean field' do
+    context 'with boolean field' do
       before { division.update(notify: nil) }
 
       it { is_expected.to include "Notify can't be blank" }
     end
 
-    context 'association' do
+    context 'with association' do
       before { division.update(owner: nil) }
 
       it { is_expected.to include "Owner can't be blank" }
@@ -32,13 +32,13 @@ describe 'SchemaValidations', type: :module do
   end
 
   describe 'numericality validations' do
-    context 'not a number' do
+    context 'when not a number' do
       before { division.update(hourly_rate: 'string') }
 
       it { is_expected.to include 'Hourly rate is not a number' }
     end
 
-    context 'decimal value outside of precision range' do
+    context 'when decimal value outside of precision range' do
       before { division.update(hourly_rate: 1_000_000_000) }
 
       it { is_expected.to include 'Hourly rate must be less than 1000000' }
@@ -60,7 +60,7 @@ describe 'SchemaValidations', type: :module do
 
     it { is_expected.to include 'Name has already been taken' }
 
-    context 'included in skipped constant' do
+    context 'when included in skipped constant' do
       let(:division) { create :division, division_status: 'status_pending' }
       let(:division2) { create :division, division_status: 'status_pending' }
       let(:division3) { create :division, division_status: 'status_active' }

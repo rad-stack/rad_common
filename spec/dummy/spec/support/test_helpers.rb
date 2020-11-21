@@ -14,10 +14,8 @@ module TestHelpers
     begin
       page.accept_confirm { confirm_accepted = true }
       confirm_accepted
-    rescue
+    rescue StandardError
       false
     end
   end
 end
-
-include TestHelpers

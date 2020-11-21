@@ -8,19 +8,19 @@ RSpec.describe RadCommon::DateFilter, type: :service do
 
     let(:results) { Division.all }
 
-    context 'created_at' do
+    context 'with created_at' do
       let(:column) { :created_at }
 
       it 'detects datetime correctly' do
-        expect(subject).to eq true
+        expect(date_filter).to eq true
       end
     end
 
-    context 'date_established' do
+    context 'with date_established' do
       let(:column) { :date_established }
 
       it 'detects datetime correctly' do
-        expect(subject).to eq false
+        expect(date_filter).to eq false
       end
     end
   end

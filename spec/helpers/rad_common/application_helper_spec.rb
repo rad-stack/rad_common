@@ -194,7 +194,8 @@ describe RadCommon::ApplicationHelper do
 
     context 'with zone option' do
       it 'formats the date' do
-        expect(helper.format_datetime(date, include_zone: true)).to eq(date.in_time_zone.strftime('%-m/%-d/%Y %l:%M %p %Z'))
+        result = date.in_time_zone.strftime('%-m/%-d/%Y %l:%M %p %Z')
+        expect(helper.format_datetime(date, include_zone: true)).to eq(result)
       end
     end
   end
