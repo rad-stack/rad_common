@@ -82,11 +82,11 @@ describe RadCommon::AuditsHelper do
 
       let(:audit) { division.audits.reorder('created_at DESC').first }
 
-      context 'create' do
+      context 'when create' do
         it { is_expected.to include "Changed Name to #{division.name}" }
       end
 
-      context 'update' do
+      context 'when update' do
         let(:old_name) { Faker::Company.name }
         let(:new_name) { Faker::Company.name }
 
@@ -98,7 +98,7 @@ describe RadCommon::AuditsHelper do
         it { is_expected.to include "Changed Name from #{old_name} to #{new_name}" }
       end
 
-      context 'destroy' do
+      context 'when destroy' do
         before { division.destroy! }
 
         it { is_expected.to include 'deleted record' }
@@ -110,7 +110,7 @@ describe RadCommon::AuditsHelper do
 
       let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
 
-      context 'create' do
+      context 'when create' do
         before do
           user.update!(security_roles: [])
           user.update!(security_roles: [security_role])
@@ -119,7 +119,7 @@ describe RadCommon::AuditsHelper do
         it { is_expected.to include "Changed Security Role to #{security_role}" }
       end
 
-      context 'destroy' do
+      context 'when destroy' do
         before do
           user.update!(security_roles: [])
           user.update!(security_roles: [security_role])
@@ -139,9 +139,9 @@ describe RadCommon::AuditsHelper do
 
     it 'returns original value if no class is found' do
       p = 'security_roleee'
-      p2 = 'security_roleee_id'
+      p_2 = 'security_roleee_id'
       expect(helper.send(:classify_foreign_key, p, SecurityRole)).to eq p
-      expect(helper.send(:classify_foreign_key, p2, SecurityRole)).to eq p2
+      expect(helper.send(:classify_foreign_key, p_2, SecurityRole)).to eq p_2
     end
 
     it 'returns original value of there is no _id at end of string' do

@@ -14,3 +14,5 @@ en:
       formats: ['(###) ###-####']
     cell_phone:
       formats: ['(###) ###-####']
+  tooltip:
+    valid_user_domains: 'When a user signs up, this collection of domains authorizes what email addresses are valid. This protects the system with an extra layer of security to prevent unauthorized users on other email domains and can also prevent a typo on the email address entered.'

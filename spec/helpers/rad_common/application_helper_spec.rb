@@ -16,7 +16,7 @@ describe RadCommon::ApplicationHelper do
   describe '#show_actions?' do
     let(:model_class) { Division }
 
-    context 'user can update resource' do
+    context 'when user can update resource' do
       before { @user.security_roles.update_all update_division: true }
 
       it 'returns true' do
@@ -24,7 +24,7 @@ describe RadCommon::ApplicationHelper do
       end
     end
 
-    context 'user can delete resource' do
+    context 'when user can delete resource' do
       before do
         @user.security_roles.update_all update_division: false
         @user.security_roles.update_all delete_division: true
@@ -35,7 +35,7 @@ describe RadCommon::ApplicationHelper do
       end
     end
 
-    context 'user can neither update or delete resource' do
+    context 'when user can neither update or delete resource' do
       before do
         @user.security_roles.update_all update_division: false
         @user.security_roles.update_all delete_division: false
@@ -78,7 +78,7 @@ describe RadCommon::ApplicationHelper do
   end
 
   describe '#gravatar_for' do
-    context 'string size' do
+    context 'with string size' do
       let(:size) { '60' }
       let(:resource) { build(:user) }
 
@@ -88,7 +88,7 @@ describe RadCommon::ApplicationHelper do
       end
     end
 
-    context 'integer size' do
+    context 'with integer size' do
       let(:size) { 100 }
       let(:resource) { build(:user) }
 
@@ -98,7 +98,7 @@ describe RadCommon::ApplicationHelper do
       end
     end
 
-    context 'symbol size' do
+    context 'with symbol size' do
       let(:resource) { build(:user) }
 
       it 'returns a url with a non string size' do
@@ -113,7 +113,7 @@ describe RadCommon::ApplicationHelper do
     let(:size) { 80 }
     let(:filename) { 'avatar.png' }
 
-    context 'user does not have avatar' do
+    context 'when user does not have avatar' do
       let(:resource) { build(:user, avatar: nil) }
 
       it 'returns an image tag with the user gravatar' do
@@ -123,10 +123,10 @@ describe RadCommon::ApplicationHelper do
   end
 
   describe '#secured_link' do
-    context 'resource' do
+    context 'with resource' do
       let(:resource) { build(:user) }
 
-      context 'user is authorized' do
+      context 'when user is authorized' do
         before { allow_any_instance_of(UserPolicy).to receive(:show?).and_return(true) }
 
         it 'renders a link' do
@@ -143,7 +143,7 @@ describe RadCommon::ApplicationHelper do
         end
       end
 
-      context 'user is unauthorized' do
+      context 'when user is unauthorized' do
         before { allow_any_instance_of(UserPolicy).to receive(:show?).and_return(false) }
 
         it 'returns the resource name' do
@@ -152,7 +152,7 @@ describe RadCommon::ApplicationHelper do
       end
     end
 
-    context 'no resource' do
+    context 'without resource' do
       let(:resource) { nil }
 
       it 'returns nil' do
