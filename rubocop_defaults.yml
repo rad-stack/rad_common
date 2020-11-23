@@ -59,8 +59,8 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*_spec.rb'
     - 'config/routes.rb'
-    - 'spec/dummy/config/routes.rb'
     - 'config/environments/**/*.rb'
+    - 'spec/dummy/config/routes.rb'
     - 'spec/factories/**/*.rb'
     - 'spec/rails_helper.rb'
 
