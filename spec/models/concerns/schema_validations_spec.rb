@@ -62,18 +62,18 @@ describe 'SchemaValidations', type: :module do
 
     context 'when included in skipped constant' do
       let(:division) { create :division, division_status: 'status_pending' }
-      let(:division2) { create :division, division_status: 'status_pending' }
-      let(:division3) { create :division, division_status: 'status_active' }
+      let(:division_2) { create :division, division_status: 'status_pending' }
+      let(:division_3) { create :division, division_status: 'status_active' }
 
       before do
-        division2.update(name: division.name)
-        division3.update(name: division.name)
+        division_2.update(name: division.name)
+        division_3.update(name: division.name)
       end
 
       it 'does not add validation based on schema' do
-        expect(division2.errors.full_messages).to include 'Name has already been taken for a pending division'
-        expect(division2.errors.full_messages).not_to include 'Name has already been taken'
-        expect(division3).to be_valid
+        expect(division_2.errors.full_messages).to include 'Name has already been taken for a pending division'
+        expect(division_2.errors.full_messages).not_to include 'Name has already been taken'
+        expect(division_3).to be_valid
       end
     end
   end
