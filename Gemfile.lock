@@ -302,7 +302,6 @@ GEM
       rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
-    rad-style (1.0.9)
     rails (6.0.3.4)
       actioncable (= 6.0.3.4)
       actionmailbox (= 6.0.3.4)
@@ -472,7 +471,6 @@ DEPENDENCIES
   jquery-ui-rails (< 6.0)
   listen (~> 3.0.5)
   pry
-  rad-style
   rad_common!
   rspec-rails
   rubocop
