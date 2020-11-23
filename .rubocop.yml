@@ -1,12 +1,3 @@
 inherit_gem:
   rad-style:
     - rubocop_defaults.yml
-
-AllCops:
-  Exclude:
-    - 'spec/dummy/db/schema.rb'
-    - 'spec/dummy/db/migrate/*'
-    - 'spec/dummy/lib/templates/**/*'
-    - 'spec/dummy/node_modules/**/*'
-    - 'spec/dummy/config/initializers/simple_form_bootstrap.rb'
-    - 'spec/dummy/config/initializers/simple_form.rb'
