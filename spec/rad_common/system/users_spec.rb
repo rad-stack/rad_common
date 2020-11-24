@@ -48,10 +48,7 @@ describe 'Users', type: :system do
       it 'shows users' do
         visit users_path(search: { user_status_id: user.user_status_id })
         expect(page).to have_content user.to_s
-
-        if RadCommon.external_users
-          expect(page).to have_content external_user.to_s
-        end
+        expect(page).to have_content external_user.to_s if RadCommon.external_users
       end
 
       it 'filters by user type' do
