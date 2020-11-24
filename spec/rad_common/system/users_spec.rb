@@ -41,11 +41,17 @@ describe 'Users', type: :system do
     before { login_as admin, scope: :user }
 
     describe 'index' do
+      before do
+        external_user.update! user_status: user.user_status if RadCommon.external_users
+      end
+
       it 'shows users' do
-        external_user.update! user_status: user.user_status
         visit users_path(search: { user_status_id: user.user_status_id })
         expect(page).to have_content user.to_s
-        expect(page).to have_content external_user.to_s
+
+        if RadCommon.external_users
+          expect(page).to have_content external_user.to_s
+        end
       end
 
       it 'filters by user type' do
@@ -109,7 +115,9 @@ describe 'Users', type: :system do
   end
 
   describe 'client user' do
-    before { login_as external_user, scope: :user }
+    before do
+      login_as(external_user, scope: :user) if RadCommon.external_users
+    end
 
     describe 'show' do
       it 'does not allow' do

@@ -16,6 +16,7 @@ AllCops:
     - 'config/initializers/simple_form.rb'
     - 'config/initializers/simple_form_bootstrap.rb'
     - 'config/initializers/simple_form_components.rb'
+    - 'spec/spec_helper.rb'
     - 'spec/dummy/db/schema.rb'
     - 'spec/dummy/db/migrate/*'
     - 'spec/dummy/lib/templates/**/*'
