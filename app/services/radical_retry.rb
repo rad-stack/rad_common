@@ -2,7 +2,7 @@ class RadicalRetry
   RESCUABLE_ERRORS = [Net::OpenTimeout, OpenURI::HTTPError, HTTPClient::ConnectTimeoutError, Errno::EPIPE, SocketError,
                       OpenSSL::SSL::SSLError, Errno::ENOENT, Errno::ECONNRESET, Twilio::REST::TwilioError,
                       Net::ReadTimeout, Errno::ECONNREFUSED, ActiveStorage::FileNotFoundError, Timeout::Error,
-                      HTTPClient::ReceiveTimeoutError, RestClient::ServiceUnavailable].freeze
+                      HTTPClient::ReceiveTimeoutError].freeze
 
   class << self
     def perform_request(no_delay: false, retry_count: 5, additional_errors: [], &block)
