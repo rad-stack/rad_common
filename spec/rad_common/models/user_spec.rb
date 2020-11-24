@@ -267,8 +267,8 @@ describe User, type: :model do
     let(:new_phone_number) { create :phone_number, :mobile }
     let(:authy_id) { '1234567' }
     let(:admin_role) { create :security_role, :admin }
-    let(:role1) { create :security_role }
-    let(:role2) { admin_role }
+    let(:role_1) { create :security_role }
+    let(:role_2) { admin_role }
 
     it 'creates and updates the user on authy' do
       allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
@@ -302,14 +302,14 @@ describe User, type: :model do
 
     it 'updates updated_at datetime when security roles are added' do
       updated_at = user.updated_at
-      user.update!(security_roles: [role1, role2])
+      user.update!(security_roles: [role_1, role_2])
       expect(user.updated_at).not_to eq(updated_at)
     end
 
     it 'updates updated_at datetime when security roles are removed' do
       user = create :user
       updated_at = user.updated_at
-      user.update!(security_roles: [role2])
+      user.update!(security_roles: [role_2])
       expect(user.updated_at).not_to eq(updated_at)
     end
   end

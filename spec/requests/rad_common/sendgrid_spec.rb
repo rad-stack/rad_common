@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe 'Sendgrid', type: :request do
   describe 'POST email_error' do
-    let!(:admin_user1) { create :admin }
-    let!(:admin_user2) { create :admin }
+    let!(:admin_user_1) { create :admin }
+    let!(:admin_user_2) { create :admin }
 
     it 'sends an email to app admins' do
       create :user
@@ -17,8 +17,8 @@ describe 'Sendgrid', type: :request do
 
       all_tos = emails.map(&:to).flatten
 
-      expect(all_tos).to include(admin_user1.email)
-      expect(all_tos).to include(admin_user2.email)
+      expect(all_tos).to include(admin_user_1.email)
+      expect(all_tos).to include(admin_user_2.email)
 
       expect(emails.first.subject).to eq('Invalid Email')
       expect(emails.last.subject).to eq('Invalid Email')

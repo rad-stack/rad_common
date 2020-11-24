@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe RadicalRetry, type: :service do
   describe '#perform_request' do
-    context 'request fails' do
+    context 'when request fails' do
       let(:request_block) { raise OpenURI::HTTPError.new('foo', 'bar') }
 
       it 'retries the request' do
@@ -40,7 +40,7 @@ RSpec.describe RadicalRetry, type: :service do
       end
     end
 
-    context 'request succeeds' do
+    context 'when request succeeds' do
       let(:request_block) { 'Success' }
 
       it 'executes the block if there are no failures' do

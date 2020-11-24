@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe 'Search', type: :system do
   let(:user) { create :admin }
-  let!(:inactive_user) { create(:admin, user_status: UserStatus.default_inactive_status) }
   let(:division) { create :division }
 
   before do
+    create :admin, user_status: UserStatus.default_inactive_status
     create_list(:user, 3)
     login_as user, scope: :user
   end
@@ -37,7 +37,8 @@ RSpec.describe 'Search', type: :system do
     end
 
     it 'selects a default value', js: true do
-      expect(page).to have_selector(".bootstrap-select .dropdown-toggle[data-id='search_owner_id'] .filter-option-inner-inner", text: user.to_s)
+      selector = ".bootstrap-select .dropdown-toggle[data-id='search_owner_id'] .filter-option-inner-inner"
+      expect(page).to have_selector(selector, text: user.to_s)
     end
 
     it 'retains search value after applying filters' do
@@ -98,7 +99,7 @@ RSpec.describe 'Search', type: :system do
       expect(page).not_to have_content 'Invalid date entered for created_at'
     end
 
-    it 'does save valid date to users.filter_defaults'do
+    it 'does save valid date to users.filter_defaults' do
       visit divisions_path(search: { created_at_start: '2019-12-01', created_at_end: '2019-12-02' })
       visit '/'
       visit divisions_path

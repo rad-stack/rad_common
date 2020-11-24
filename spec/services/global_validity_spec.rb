@@ -49,13 +49,13 @@ describe GlobalValidity, type: :service do
     end
 
     context 'without admin' do
-      subject { global_validity.run }
+      subject(:result) { global_validity.run }
 
       before { admin.update!(security_roles: [create(:security_role)]) }
 
       it 'raises an exception' do
         expect {
-          subject
+          result
         }.to raise_error(RuntimeError, 'no users to notify')
       end
     end
@@ -79,7 +79,7 @@ describe GlobalValidity, type: :service do
     end
 
     describe 'with specific queries' do
-      context 'table was ignored, but specific query hits it' do
+      context 'when table was ignored, but specific query hits it' do
         let(:specific_query) { -> { SecurityRole.where(id: admin_security_role.id) } }
 
         before do

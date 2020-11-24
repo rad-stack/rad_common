@@ -35,7 +35,7 @@ Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 require 'vcr'
 
 VCR.configure do |c|
-  c.cassette_library_dir = Rails.root.join('spec', 'vcr')
+  c.cassette_library_dir = Rails.root.join('spec/vcr')
   c.hook_into :webmock
   c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com'
 
@@ -66,6 +66,8 @@ end
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
+  include TestHelpers
+
   config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
