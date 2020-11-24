@@ -13,6 +13,7 @@ FactoryBot.define do
     authy_enabled { false }
 
     trait :external do
+      sequence(:email) { |n| "example#{n}@abc.com" }
       external { true }
     end
 
