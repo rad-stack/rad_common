@@ -26,6 +26,7 @@ AllCops:
     - 'spec/dummy/config/initializers/simple_form.rb'
     - 'spec/dummy/config/initializers/simple_form_bootstrap.rb'
     - 'spec/dummy/config/initializers/simple_form_components.rb'
+    - 'spec/dummy/config.ru'
 
 # Want to use even indentation for the various methods within a class, and
 # also want to be able to indent private methods without errors
@@ -61,6 +62,7 @@ Metrics/BlockLength:
     - 'spec/**/*_spec.rb'
     - 'config/routes.rb'
     - 'config/environments/**/*.rb'
+    - 'spec/dummy/config/environments/**/*.rb'
     - 'spec/dummy/config/routes.rb'
     - 'spec/factories/**/*.rb'
     - 'spec/rails_helper.rb'

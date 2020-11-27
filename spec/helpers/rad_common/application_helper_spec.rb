@@ -1,23 +1,20 @@
 require 'rails_helper'
 
 describe RadCommon::ApplicationHelper do
+  let(:me) { create :user }
   let(:date) { Time.current }
   let(:division) { create :division }
   let(:timestamp) { '2018-06-15 06:43 AM' }
-
-  before do
-    @user = create :user
-
-    def helper.current_user
-      @user.reload
-    end
-  end
 
   describe '#show_actions?' do
     let(:model_class) { Division }
 
     context 'when user can update resource' do
-      before { @user.security_roles.update_all update_division: true }
+      before do
+        me.security_roles.update_all update_division: true
+        me.reload
+        allow(controller).to receive(:current_user).and_return(me)
+      end
 
       it 'returns true' do
         expect(helper.show_actions?(model_class)).to eq(true)
@@ -26,8 +23,10 @@ describe RadCommon::ApplicationHelper do
 
     context 'when user can delete resource' do
       before do
-        @user.security_roles.update_all update_division: false
-        @user.security_roles.update_all delete_division: true
+        me.security_roles.update_all update_division: false
+        me.security_roles.update_all delete_division: true
+        me.reload
+        allow(controller).to receive(:current_user).and_return(me)
       end
 
       it 'returns true' do
@@ -37,8 +36,10 @@ describe RadCommon::ApplicationHelper do
 
     context 'when user can neither update or delete resource' do
       before do
-        @user.security_roles.update_all update_division: false
-        @user.security_roles.update_all delete_division: false
+        me.security_roles.update_all update_division: false
+        me.security_roles.update_all delete_division: false
+        me.reload
+        allow(controller).to receive(:current_user).and_return(me)
       end
 
       it 'returns false' do
@@ -123,6 +124,8 @@ describe RadCommon::ApplicationHelper do
   end
 
   describe '#secured_link' do
+    before { allow(controller).to receive(:current_user).and_return(me) }
+
     context 'with resource' do
       let(:resource) { build(:user) }
 

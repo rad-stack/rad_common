@@ -34,9 +34,10 @@ RSpec.describe GlobalAutocomplete, type: :service do
       let(:result) { auto_complete.global_autocomplete_result }
 
       context 'when admin' do
-        let!(:user) { create :admin }
+        let(:user) { create :admin }
 
         it 'returns results' do
+          user
           expect(result.count).to eq(1)
           expect(result.first[:id]).to eq division.id
         end

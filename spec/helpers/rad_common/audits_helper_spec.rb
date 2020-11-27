@@ -1,17 +1,12 @@
 require 'rails_helper'
 
 describe RadCommon::AuditsHelper do
+  let(:me) { create :user, security_roles: [security_role] }
   let(:division) { create :division }
   let(:user) { create :user }
   let(:security_role) { create :security_role }
 
-  before do
-    @user = create :user, security_roles: [security_role]
-
-    def helper.current_user
-      @user
-    end
-  end
+  before { allow(controller).to receive(:current_user).and_return(me) }
 
   describe 'formatted_audited_changes' do
     subject { helper.send(:formatted_audited_changes, audit) }

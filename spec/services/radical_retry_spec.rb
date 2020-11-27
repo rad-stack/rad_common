@@ -32,9 +32,10 @@ RSpec.describe RadicalRetry, type: :service do
         end
 
         it 'rescues the error if included in additional_erorrs' do
+          args = { no_delay: true, retry_count: 2, additional_errors: [ActiveStorage::IntegrityError] }
           expect(described_class).to receive(:exponential_pause)
           expect {
-            described_class.perform_request(no_delay: true, retry_count: 2, additional_errors: [ActiveStorage::IntegrityError]) { request_block }
+            described_class.perform_request(args) { request_block }
           }.to raise_error(RadicallyIntermittentException)
         end
       end
