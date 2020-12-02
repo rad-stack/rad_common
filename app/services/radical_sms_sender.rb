@@ -1,4 +1,4 @@
-class SMSSender
+class RadicalSmsSender
   attr_accessor :message, :recipients, :current_user, :media_url, :error_lines, :from
 
   def initialize(message, recipients, current_user, media_url)
@@ -39,7 +39,7 @@ class SMSSender
       end
     rescue Twilio::REST::RestError => e
       # TODO: will this be captured even though that exception is handled by rad retry?
-      error_lines.push "The message to #{user} failed: #{e.description}."
+      error_lines.push "The message to #{user} failed: #{e}."
     end
 
     def handle_problems

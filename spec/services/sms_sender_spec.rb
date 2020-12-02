@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SMSSender, type: :service do
+RSpec.describe RadicalSmsSender, type: :service do
   let(:user_1) { create :user }
   let(:user_2) { create :user }
   let(:user_3) { create :user }
