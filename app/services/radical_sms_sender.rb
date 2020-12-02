@@ -1,4 +1,4 @@
-class RadicalSmsSender
+class RadicalSMSSender
   attr_accessor :message, :recipients, :current_user, :media_url, :error_lines, :from
 
   def initialize(message, recipients, current_user, media_url)
