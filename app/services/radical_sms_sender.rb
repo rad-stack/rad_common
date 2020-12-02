@@ -31,15 +31,13 @@ class RadicalSMSSender
     def send_message(user)
       RadicalRetry.perform_request do
         if media_url.present?
-          RadicalTwilio.send_mms from: from, to: "+1#{user.mobile_phone}", message: message, media_url: media_url
+          RadicalTwilio.send_mms from: from, to: user.mobile_phone, message: message, media_url: media_url
         else
-          # TODO: why not +1 like above?
           RadicalTwilio.send_sms from: from, to: user.mobile_phone, message: message
         end
       end
     rescue Twilio::REST::RestError => e
-      # TODO: will this be captured even though that exception is handled by rad retry?
-      error_lines.push "The message to #{user} failed: #{e}."
+      error_lines.push "The message to #{user} failed: #{e}"
     end
 
     def handle_problems
