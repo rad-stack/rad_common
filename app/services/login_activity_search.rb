@@ -35,7 +35,7 @@ class LoginActivitySearch < RadCommon::Search
 
     def sort_columns_def
       [{ label: 'When', column: 'created_at', direction: 'desc', default: true },
-       { label: 'Email', column: 'identity' },
+       { label: 'Identity', column: 'identity' },
        { label: 'Success' },
        { label: 'Failure' },
        { label: 'IP', column: 'ip' },

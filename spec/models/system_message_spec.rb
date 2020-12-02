@@ -21,9 +21,7 @@ RSpec.describe SystemMessage, type: :model do
       context 'when a user does not receive message because mobile mumber is not present' do
         let!(:other_user) { create :user, mobile_phone: nil }
 
-        let(:result) do
-          "These users did not receive a system SMS message because a mobile number was not present: #{other_user.id}"
-        end
+        let(:result) { "The message to #{other_user} failed: they do not have a mobile phone number." }
 
         before { system_message.send! }
 

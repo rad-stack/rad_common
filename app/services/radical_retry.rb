@@ -1,7 +1,7 @@
 class RadicalRetry
   RESCUABLE_ERRORS = [Net::OpenTimeout, OpenURI::HTTPError, HTTPClient::ConnectTimeoutError, Errno::EPIPE, SocketError,
                       OpenSSL::SSL::SSLError, Errno::ENOENT, Errno::ECONNRESET, Twilio::REST::TwilioError,
-                      Net::ReadTimeout, Errno::ECONNREFUSED, ActiveStorage::FileNotFoundError, Timeout::Error,
+                      Net::ReadTimeout, Errno::ECONNREFUSED, ActiveStorage::FileNotFoundError,
                       HTTPClient::ReceiveTimeoutError].freeze
 
   class << self
