@@ -39,14 +39,21 @@ class RadicalSMSSender
 
       RadbearMailer.simple_message(recipient,
                                    "SMS Message from #{I18n.t(:app_name)} Failed",
-                                   body).deliver_later
+                                   body,
+                                   email_action: email_action).deliver_later
     end
 
     def error_body
       'The system tried to send you an SMS message but your mobile phone number that we have on '\
       "file #{recipient.mobile_phone} failed, most likely due to being previously opted out. We have removed "\
       'the mobile phone number from our system to prevent this issue in future communications. If you would like '\
-      'to continue to receive text messages, you can add back your mobile # to your user account, and send the '\
-      "message 'YES' to #{from}."
+      'to continue to receive text messages, you can add back your mobile number to your user profile, and send the '\
+      "message 'YES' to #{from}. Please reply to this email with any questions or concerns that you might have."
+    end
+
+    def email_action
+      { message: 'Click here to update your profile.',
+        button_text: 'Update Profile',
+        button_url: Rails.application.routes.url_helpers.edit_user_registration_url }
     end
 end
