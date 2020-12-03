@@ -171,9 +171,10 @@ class NotificationType < ApplicationRecord
       return unless sms_enabled? && sms_content && RadicalTwilio.twilio_enabled?
 
       id_list = notify_user_ids_opted(:sms)
-      return if id_list.count.zero?
 
-      SystemSMSJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content}", id_list, nil, nil
+      id_list.each do |user_id|
+        SystemSMSJob.perform_later "Message from #{I18n.t(:app_name)}: #{sms_content}", user_id, nil
+      end
     end
 
     def notify_user_ids_all
