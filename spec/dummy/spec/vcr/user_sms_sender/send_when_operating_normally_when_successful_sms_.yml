@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
     body:
       encoding: UTF-8
-      string: Body=test+message&From=%2B15005550006&To=%2B15005550009
+      string: Body=test+message&From=%2B15005550006&To=%2B16187222169
     headers:
       User-Agent:
       - twilio-ruby/5.31.6 (ruby/x86_64-darwin19 2.7.2-p137)
@@ -21,21 +21,23 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
-      code: 400
-      message: BAD REQUEST
+      code: 201
+      message: CREATED
     headers:
       Date:
-      - Thu, 03 Dec 2020 14:28:41 GMT
+      - Thu, 03 Dec 2020 16:21:12 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '149'
+      - '776'
       Connection:
       - keep-alive
+      Twilio-Concurrent-Requests:
+      - '1'
       Twilio-Request-Id:
-      - RQ3da9cbefa3c740f597fd02d81d434731
+      - RQ3b8e964ceeb44883ae756a7d8b4cfb27
       Twilio-Request-Duration:
-      - '0.045'
+      - '0.070'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -59,8 +61,13 @@ http_interactions:
       - max-age=31536000
     body:
       encoding: UTF-8
-      string: '{"code": 21614, "message": "To number: +15005550009, is not a mobile
-        number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
-        400}'
-  recorded_at: Thu, 03 Dec 2020 14:28:41 GMT
+      string: '{"sid": "SM508ea48bacca45c887b297defb7a86f4", "date_created": "Thu,
+        03 Dec 2020 16:21:12 +0000", "date_updated": "Thu, 03 Dec 2020 16:21:12 +0000",
+        "date_sent": null, "account_sid": "AC2540a6d0062cb347979e6b695b61ff0a", "to":
+        "+16187222169", "from": "+15005550006", "messaging_service_sid": null, "body":
+        "test message", "status": "queued", "num_segments": "1", "num_media": "0",
+        "direction": "outbound-api", "api_version": "2010-04-01", "price": null, "price_unit":
+        "USD", "error_code": null, "error_message": null, "uri": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages/SM508ea48bacca45c887b297defb7a86f4.json",
+        "subresource_uris": {"media": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages/SM508ea48bacca45c887b297defb7a86f4/Media.json"}}'
+  recorded_at: Thu, 03 Dec 2020 16:21:12 GMT
 recorded_with: VCR 6.0.0

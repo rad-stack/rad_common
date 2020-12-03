@@ -25,7 +25,7 @@ http_interactions:
       message: BAD REQUEST
     headers:
       Date:
-      - Thu, 03 Dec 2020 14:28:40 GMT
+      - Thu, 03 Dec 2020 16:21:13 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -33,9 +33,9 @@ http_interactions:
       Connection:
       - keep-alive
       Twilio-Request-Id:
-      - RQ2d6366c3d9f543a2ac0ec0158a0c5c90
+      - RQ22f1af07a7f144e19c0cc839584cb03c
       Twilio-Request-Duration:
-      - '0.048'
+      - '0.038'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -62,5 +62,5 @@ http_interactions:
       string: '{"code": 21610, "message": "The message From/To pair violates a blacklist
         rule.", "more_info": "https://www.twilio.com/docs/errors/21610", "status":
         400}'
-  recorded_at: Thu, 03 Dec 2020 14:28:40 GMT
+  recorded_at: Thu, 03 Dec 2020 16:21:13 GMT
 recorded_with: VCR 6.0.0

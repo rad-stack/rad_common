@@ -21,7 +21,7 @@ class UserSMSSender
     end
   rescue Twilio::REST::RestError => e
     self.exception = e
-    raise e.to_s unless blacklisted?
+    raise e.message unless blacklisted?
 
     handle_blacklist
   end
@@ -33,7 +33,7 @@ class UserSMSSender
     end
 
     def blacklisted?
-      exception.to_s.include?('violates a blacklist rule')
+      exception.message.include?('violates a blacklist rule')
     end
 
     def handle_blacklist

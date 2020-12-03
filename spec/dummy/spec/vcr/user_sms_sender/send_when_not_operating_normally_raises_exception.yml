@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
     body:
       encoding: UTF-8
-      string: Body=test+message&From=%2B15005550006&To=%2B15005550004
+      string: Body=test+message&From=%2B15005550006&To=%2B15005550009
     headers:
       User-Agent:
       - twilio-ruby/5.31.6 (ruby/x86_64-darwin19 2.7.2-p137)
@@ -25,17 +25,17 @@ http_interactions:
       message: BAD REQUEST
     headers:
       Date:
-      - Thu, 03 Dec 2020 14:28:41 GMT
+      - Thu, 03 Dec 2020 16:21:13 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '153'
+      - '149'
       Connection:
       - keep-alive
       Twilio-Request-Id:
-      - RQ4f2bb9a8628740949085f2f117dc6ec7
+      - RQ4d35e218b38e4a9cbb72c29645371f69
       Twilio-Request-Duration:
-      - '0.037'
+      - '0.058'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -59,8 +59,8 @@ http_interactions:
       - max-age=31536000
     body:
       encoding: UTF-8
-      string: '{"code": 21610, "message": "The message From/To pair violates a blacklist
-        rule.", "more_info": "https://www.twilio.com/docs/errors/21610", "status":
+      string: '{"code": 21614, "message": "To number: +15005550009, is not a mobile
+        number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
         400}'
-  recorded_at: Thu, 03 Dec 2020 14:28:41 GMT
+  recorded_at: Thu, 03 Dec 2020 16:21:13 GMT
 recorded_with: VCR 6.0.0
