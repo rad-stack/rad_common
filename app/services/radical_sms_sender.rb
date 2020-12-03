@@ -1,12 +1,12 @@
 class RadicalSMSSender
-  attr_accessor :message, :recipient, :media_url, :from, :exception
+  attr_accessor :message, :recipient, :media_url, :from_number, :exception
 
   def initialize(message, recipient_id, media_url)
     self.message = message
     self.recipient = User.find(recipient_id)
     self.media_url = media_url
 
-    self.from = RadicalTwilio.next_phone_number
+    self.from_number = RadicalTwilio.next_phone_number
 
     raise "The message to #{recipient} failed: they do not have a mobile phone number." if recipient.mobile_phone.blank?
   end
@@ -14,19 +14,23 @@ class RadicalSMSSender
   def send!
     RadicalRetry.perform_request do
       if media_url.present?
-        RadicalTwilio.send_mms from: from, to: recipient.mobile_phone, message: message, media_url: media_url
+        RadicalTwilio.send_mms from: from_number, to: to_number, message: message, media_url: media_url
       else
-        RadicalTwilio.send_sms from: from, to: recipient.mobile_phone, message: message
+        RadicalTwilio.send_sms from: from_number, to: to_number, message: message
       end
     end
   rescue Twilio::REST::RestError => e
     self.exception = e
-    raise StandardError(e) unless blacklisted?
+    raise e.to_s unless blacklisted?
 
     handle_blacklist
   end
 
   private
+
+    def to_number
+      "+1#{recipient.mobile_phone.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')}"
+    end
 
     def blacklisted?
       exception.to_s.include?('violates a blacklist rule')
@@ -45,10 +49,10 @@ class RadicalSMSSender
 
     def error_body
       'The system tried to send you an SMS message but your mobile phone number that we have on '\
-      "file #{recipient.mobile_phone} failed, most likely due to being previously opted out. We have removed "\
+      "file #{recipient.mobile_phone}, failed, most likely due to being previously opted out. We have removed "\
       'the mobile phone number from our system to prevent this issue in future communications. If you would like '\
       'to continue to receive text messages, you can add back your mobile number to your user profile, and send the '\
-      "message 'YES' to #{from}. Please reply to this email with any questions or concerns that you might have."
+      "message 'YES' to #{from_number}. Please reply to this email with any questions or concerns that you might have."
     end
 
     def email_action
