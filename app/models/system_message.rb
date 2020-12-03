@@ -55,7 +55,7 @@ class SystemMessage < ApplicationRecord
                                      email_message_body,
                                      do_not_format: true).deliver_later
       else
-        SystemSMSJob.perform_later(sms_message_body, recipient.id, nil)
+        UserSMSSenderJob.perform_later(sms_message_body, recipient.id, nil)
       end
     end
   end

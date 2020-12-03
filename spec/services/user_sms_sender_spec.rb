@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RadicalSMSSender, type: :service do
+RSpec.describe UserSMSSender, type: :service do
   let(:user) { create :user, mobile_phone: '(618) 722-2169' }
   let(:message) { 'test message' }
   let(:media_url) { nil }
