@@ -1,5 +1,5 @@
 class PhoneSMSSender
-  attr_accessor :message, :mobile_phone, :exception
+  attr_accessor :message, :mobile_phone, :exception, :current_from_number
 
   def initialize(message, mobile_phone)
     self.message = message
@@ -10,10 +10,9 @@ class PhoneSMSSender
   end
 
   def send!
-    RadicalRetry.perform_request do
-      RadicalTwilio.new.send_sms to: to_number, message: message
-    end
-
+    twilio = RadicalTwilio.new
+    self.current_from_number = twilio.current_from_number
+    RadicalRetry.perform_request { twilio.send_sms to: to_number, message: message }
     true
   rescue Twilio::REST::RestError => e
     self.exception = e
