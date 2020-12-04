@@ -1,22 +1,23 @@
 class UserSMSSender
-  attr_accessor :message, :recipient, :media_url, :from_number, :exception
+  attr_accessor :message, :recipient, :media_url, :exception, :current_from_number
 
   def initialize(message, recipient_id, media_url)
     self.message = message
     self.recipient = User.find(recipient_id)
     self.media_url = media_url
 
-    self.from_number = RadicalTwilio.next_phone_number
-
     raise "The message to #{recipient} failed: they do not have a mobile phone number." if recipient.mobile_phone.blank?
   end
 
   def send!
     RadicalRetry.perform_request do
+      twilio = RadicalTwilio.new
+      self.current_from_number = twilio.current_from_number
+
       if media_url.present?
-        RadicalTwilio.send_mms from: from_number, to: to_number, message: message, media_url: media_url
+        twilio.send_mms to: to_number, message: message, media_url: media_url
       else
-        RadicalTwilio.send_sms from: from_number, to: to_number, message: message
+        twilio.send_sms to: to_number, message: message
       end
     end
   rescue Twilio::REST::RestError => e
@@ -52,7 +53,8 @@ class UserSMSSender
       "file #{recipient.mobile_phone}, failed, most likely due to being previously opted out. We have removed "\
       'the mobile phone number from our system to prevent this issue in future communications. If you would like '\
       'to continue to receive text messages, you can add back your mobile number to your user profile, and send the '\
-      "message 'YES' to #{from_number}. Please reply to this email with any questions or concerns that you might have."
+      "message 'YES' to #{current_from_number}. Please reply to this email with any questions or concerns that you "\
+      'might have.'
     end
 
     def email_action

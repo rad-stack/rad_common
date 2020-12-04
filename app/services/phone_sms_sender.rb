@@ -1,11 +1,9 @@
 class PhoneSMSSender
-  attr_accessor :message, :mobile_phone, :from_number, :exception
+  attr_accessor :message, :mobile_phone, :exception
 
   def initialize(message, mobile_phone)
     self.message = message
     self.mobile_phone = mobile_phone
-
-    self.from_number = RadicalTwilio.next_phone_number
 
     raise 'The message failed: the mobile phone number is blank.' if mobile_phone.blank?
     raise "The message to #{mobile_phone} failed: the message is blank." if message.blank?
@@ -13,7 +11,7 @@ class PhoneSMSSender
 
   def send!
     RadicalRetry.perform_request do
-      RadicalTwilio.send_sms from: from_number, to: to_number, message: message
+      RadicalTwilio.new.send_sms to: to_number, message: message
     end
 
     true
