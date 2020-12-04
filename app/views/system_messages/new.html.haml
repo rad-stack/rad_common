@@ -16,8 +16,14 @@
         .row
           .col-lg-12.email-message
             = f.input :email_message_body, placeholder: 'Enter a message to be emailed to active users in the system.',
-                                           label: 'Message', as: :rich_text_area
-          .col-lg-12.sms-message= f.input :sms_message_body, as: :text, label: 'Message', input_html: { rows: 4 }
+                                           label: 'Message',
+                                           as: :rich_text_area
+
+          .col-lg-12.sms-message
+            %h6.text-danger Please note: only users with a mobile phone # on file will receive the message.
+            = f.input :sms_message_body, placeholder: 'Enter a message to be texted to all active users that have a mobile phone #.',
+                                         label: 'Message',
+                                         as: :text, input_html: { rows: 4 }
 
       .form-actions
         = f.button :submit, 'Send', class: 'btn btn-primary'
