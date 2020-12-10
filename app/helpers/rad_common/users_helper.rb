@@ -28,9 +28,9 @@ module RadCommon
       return unless policy(user).update? && !user.confirmed?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
-      link_to icon(:check, 'Confirm Email'), confirm_user_path(@user), method: :put,
-                                                                       data: { confirm: confirm },
-                                                                       class: 'btn btn-warning btn-sm'
+      link_to icon(:check, 'Confirm Email'), confirm_user_path(user), method: :put,
+                                                                      data: { confirm: confirm },
+                                                                      class: 'btn btn-warning btn-sm'
     end
 
     def user_reset_authy_action(user)
@@ -39,9 +39,9 @@ module RadCommon
       confirm = "This will reset the user's two factor authentication configuration if they are having problems. "\
                 'Are you sure?'
 
-      link_to icon(:refresh, 'Reset Two Factor'), reset_authy_user_path(@user), method: :put,
-                                                                                data: { confirm: confirm },
-                                                                                class: 'btn btn-warning btn-sm'
+      link_to icon(:refresh, 'Reset Two Factor'), reset_authy_user_path(user), method: :put,
+                                                                               data: { confirm: confirm },
+                                                                               class: 'btn btn-warning btn-sm'
     end
   end
 end

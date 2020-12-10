@@ -1,7 +1,7 @@
 class CompaniesController < ApplicationController
   include RadCommonCompaniesController
 
-  before_action :set_company, only: %i[show edit update global_validity_check]
+  before_action :set_company, only: %i[show edit update]
 
   def show; end
 

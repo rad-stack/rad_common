@@ -65,7 +65,8 @@ class UsersController < ApplicationController
       flash[:error] = @user.errors.full_messages.join(', ')
     end
 
-    if destroyed && (URI(request.referer).path == user_path(@user)) || (URI(request.referer).path == edit_user_path(@user))
+    if destroyed && (URI(request.referer).path == user_path(@user)) ||
+       (URI(request.referer).path == edit_user_path(@user))
       redirect_to users_path
     else
       redirect_back(fallback_location: users_path)

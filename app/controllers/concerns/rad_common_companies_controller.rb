@@ -2,6 +2,7 @@ module RadCommonCompaniesController
   extend ActiveSupport::Concern
 
   def global_validity_check
+    @company = Company.main
     authorize @company
 
     GlobalValidityJob.perform_later(current_user)

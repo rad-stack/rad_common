@@ -54,7 +54,7 @@ Lint/StructNewOverride:
 # Calculated by number of assignments, branches, and conditions within a method
 # using this formula: http://c2.com/cgi/wiki?AbcMetric
 Metrics/AbcSize:
-  Max: 20
+  Max: 25
 
 # Checks to see if the length of a block exceeds 25 lines
 Metrics/BlockLength:
@@ -77,6 +77,9 @@ Metrics/ClassLength:
 # the code easier to read (by naming things), but can also clutter the class
 Metrics/MethodLength:
   Max: 15
+
+Metrics/ParameterLists:
+  Max: 6
 
 # This is unnecessary. Calling the argument `other` in all cases makes no sense
 Naming/BinaryOperatorParameterName:

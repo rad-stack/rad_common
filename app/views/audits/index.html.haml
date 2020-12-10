@@ -1,5 +1,8 @@
 .card
-  = render 'layouts/card_header', action_name: 'custom', title: audits_title(@show_search, @resource), icon: 'fa-list'
+  = render 'layouts/card_header', action_name: 'custom',
+                                  title: audits_title(@audits, @show_search, @resource),
+                                  icon: 'fa-list'
+
   .card-body
     -if @show_search
       = render 'layouts/filter', search: @audit_search, path: '/rad_common/audits'

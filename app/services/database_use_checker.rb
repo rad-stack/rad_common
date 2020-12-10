@@ -23,8 +23,8 @@ class DatabaseUseChecker
     def zero_or_one_records?(table_name)
       num_records = record_count(table_name)
 
-      puts "Table #{table_name}\n  No Records" if num_records == 0
-      num_records == 1 || num_records == 0
+      puts "Table #{table_name}\n  No Records" if num_records.zero?
+      num_records == 1 || num_records.zero?
     end
 
     def record_count(table_name)

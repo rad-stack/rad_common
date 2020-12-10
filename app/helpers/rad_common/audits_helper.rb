@@ -19,14 +19,14 @@ module RadCommon
     end
 
     def user_audit_history_link(user)
-      "/rad_common/audits/?#{ { search: { user_id: user.id } }.to_query }"
+      "/rad_common/audits/?#{{ search: { user_id: user.id } }.to_query}"
     end
 
     def display_audited_changes(audit)
       audit_text = formatted_audited_changes(audit)
 
       if audit_text.present? && audit.comment.present?
-        audit_text + "\n" + audit.comment
+        "#{audit_text}\n#{audit.comment}"
       elsif audit_text.present?
         audit_text
       elsif audit.comment.present?
@@ -48,33 +48,27 @@ module RadCommon
       action.gsub('destroy', 'delete')
     end
 
-    def audits_title(show_search, resource)
-      return "Audits (#{@audits.total_count})" if show_search
+    def audits_title(audits, show_search, resource)
+      return "Audits (#{audits.total_count})" if show_search
 
-      ('Audits for ' + audit_model_link(nil, resource)).html_safe + " (#{@audits.total_count})"
+      "Audits for #{audit_model_link(nil, resource)}".html_safe + " (#{audits.total_count})"
     end
 
     def audit_model_link(audit, record)
-      label = if record.nil?
-                "#{audit.auditable_type} (#{audit.auditable_id})"
-              elsif record.respond_to?(:to_s)
-                record.class.to_s + ' - ' + record.to_s
+      label = if record.respond_to?(:to_s)
+                "#{record.class} - #{record}"
               else
-                label = "#{audit.auditable_type} (#{audit.auditable_id})"
+                "#{audit.auditable_type} (#{audit.auditable_id})"
               end
 
       if (audit.nil? && record.nil?) || record.class.name == 'Rate' || record.class.name == 'DraftInvoice'
         # TODO: ignore this some other way rather than by hardcoding name
-        label
-      else
-        if record.nil?
-          label
-        elsif show_route_exists_for?(record) && policy(record).show?
-          link_to label, record
-        else
-          label
-        end
+        return label
       end
+
+      return link_to(label, record) if record.present? && show_route_exists_for?(record) && policy(record).show?
+
+      label
     end
 
     private
@@ -91,7 +85,7 @@ module RadCommon
         changes.each do |change|
           changed_attribute = change.first
 
-          if change[1].class.name == 'Array'
+          if change[1].instance_of?(Array)
             from_value = change[1][0]
             to_value = change[1][1]
           else
@@ -129,7 +123,7 @@ module RadCommon
 
           audit_text += "from <strong>#{from_value}</strong> " if from_value
           audit_text += 'to ' unless audit.action == 'destroy' && audit.associated.present?
-          audit_text += "<strong>#{to_value}</strong>" + "\n"
+          audit_text += "<strong>#{to_value}</strong>\n"
         end
 
         audit_text
@@ -158,7 +152,10 @@ module RadCommon
         restricted_attributes = RadCommon.restricted_audit_attributes
         return if restricted_attributes.count.zero?
 
-        matches = restricted_attributes.select { |item| item[:model] == audit.auditable_type && item[:attribute] == changed_attribute }
+        matches = restricted_attributes.select do |item|
+          item[:model] == audit.auditable_type && item[:attribute] == changed_attribute
+        end
+
         matches.count.positive?
       end
   end

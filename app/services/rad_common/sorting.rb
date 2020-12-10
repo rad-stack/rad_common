@@ -29,7 +29,7 @@ module RadCommon
     end
 
     def sort_clause
-      @sort_column.split(',').map { |item| item.strip + ' ' + @sort_direction + ' NULLS LAST' }.join(', ')
+      @sort_column.split(',').map { |item| "#{item.strip} #{@sort_direction} NULLS LAST" }.join(', ')
     end
 
     private

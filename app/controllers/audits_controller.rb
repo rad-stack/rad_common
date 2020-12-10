@@ -1,6 +1,6 @@
 class AuditsController < ApplicationController
   def index
-    if params[:auditable_type].present? && params[:auditable_id].present?
+    if single_resource?
       @resource = params[:auditable_type].constantize.find(params[:auditable_id])
       authorize @resource, :audit?
       skip_policy_scope
@@ -16,4 +16,10 @@ class AuditsController < ApplicationController
       @show_search = true
     end
   end
+
+  private
+
+    def single_resource?
+      params[:auditable_type].present? && params[:auditable_id].present?
+    end
 end

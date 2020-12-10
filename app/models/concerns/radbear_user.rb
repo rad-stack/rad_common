@@ -141,10 +141,10 @@ module RadbearUser
   end
 
   def inactive_message
-    if !user_status.active
-      :not_approved
-    else
+    if user_status.active
       super
+    else
+      :not_approved
     end
   end
 
@@ -190,10 +190,9 @@ module RadbearUser
 
     def password_excludes_name
       return unless password.present? && first_name.present? && last_name.present?
+      return unless password.downcase.include?(first_name.downcase) || password.downcase.include?(last_name.downcase)
 
-      if password.downcase.include?(first_name.downcase) || password.downcase.include?(last_name.downcase)
-        errors.add(:password, 'cannot contain your name')
-      end
+      errors.add(:password, 'cannot contain your name')
     end
 
     def set_timezone

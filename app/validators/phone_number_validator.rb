@@ -28,7 +28,7 @@ class PhoneNumberValidator < ActiveModel::Validator
 
         response.phone_number
       rescue Twilio::REST::RestError, NoMethodError => e
-        puts "twilio lookup error: #{e}"
+        Rails.logger.info "twilio lookup error: #{e}"
         record.errors.add(field[:field], 'does not appear to be a valid phone number')
       end
     end
@@ -52,7 +52,7 @@ class PhoneNumberValidator < ActiveModel::Validator
 
     def fix_phone_number(record, field, phone_number)
       if phone_number.present? && phone_number.length == 10 && integer?(phone_number)
-        record.send("#{field}=", '(' + phone_number[0, 3] + ') ' + phone_number[3, 3] + '-' + phone_number[6, 4])
+        record.send("#{field}=", "(#{phone_number[0, 3]}) #{phone_number[3, 3]}-#{phone_number[6, 4]}")
       end
 
       record.send(field)

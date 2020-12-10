@@ -23,9 +23,10 @@ class UserStatus < ApplicationRecord
   end
 
   def button_style
-    if name == 'Active'
+    case name
+    when 'Active'
       'btn-success'
-    elsif name == 'Pending'
+    when 'Pending'
       'btn-warning'
     else
       'btn-danger'

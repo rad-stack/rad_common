@@ -315,10 +315,10 @@ module RadCommon
           end
         end
 
-        def search_and_replace(search_string, replace_string)
-          system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed -i '' -e 's/#{search_string}/#{replace_string}/g'"
-          system "find . -type f -name \"*.haml\" -print0 | xargs -0 sed -i '' -e 's/#{search_string}/#{replace_string}/g'"
-          system "find . -type f -name \"*.rake\" -print0 | xargs -0 sed -i '' -e 's/#{search_string}/#{replace_string}/g'"
+        def search_and_replace(search, replace)
+          system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          system "find . -type f -name \"*.haml\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          system "find . -type f -name \"*.rake\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
         end
     end
   end

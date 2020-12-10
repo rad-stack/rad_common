@@ -58,21 +58,21 @@ module RadCommon
 
     def format_boolean(value)
       if value
-        content_tag(:div, nil, class: 'fa fa-check')
+        tag.div(nil, class: 'fa fa-check')
       else
-        content_tag(:div, nil, class: 'fa fa-circle-o')
+        tag.div(nil, class: 'fa fa-circle-o')
       end
     end
 
     def icon_tag(icon, text)
-      content_tag(:i, '', class: "mr-2 #{icon}") + text
+      tag.i('', class: "mr-2 #{icon}") + text
     end
 
     def timezone_us_filter
       regex_str = ActiveSupport::TimeZone.us_zones.map(&:name).join('|')
       regex_str.gsub!('(', '\\(')
       regex_str.gsub!(')', '\\)')
-      regex_str = '(' + regex_str + ')'
+      regex_str = "(#{regex_str})"
       Regexp.new regex_str
     end
 
@@ -95,9 +95,9 @@ module RadCommon
     def retrieve_options_for_enum(klass, enum, db_values)
       enums = enum.to_s.pluralize
       enum_values = klass.send(enums)
-      enum_values.map { |enum_value, _db_value|
+      enum_values.map { |enum_value, db_value|
         translated = enum_to_translated_option(klass, enums, enum_value)
-        value = db_values ? _db_value : enum_value
+        value = db_values ? db_value : enum_value
         [translated, value]
       }.reject { |translated, _enum_value| translated.blank? }
     end
@@ -116,10 +116,10 @@ module RadCommon
 
         tag_class = options.extract!(:class)[:class]
         tag_options = { class: "alert in alert-#{type} #{tag_class}" }.merge(options)
-        close_button = content_tag(:button, raw('&times;'), type: 'button', class: 'close', 'data-dismiss' => 'alert')
+        close_button = tag.button(raw('&times;'), type: 'button', class: 'close', 'data-dismiss' => 'alert')
 
         Array(message).each do |msg|
-          text = content_tag(:div, close_button + msg, tag_options)
+          text = tag.div(close_button + msg, tag_options)
           flash_messages << text if msg
         end
       end
@@ -134,7 +134,7 @@ module RadCommon
     def icon(icon, text = nil, options = {})
       text_class = text.present? ? 'mr-2' : nil
       capture do
-        concat content_tag(:i, '', class: "fa fa-#{icon} #{text_class} #{options[:class]}".strip)
+        concat tag.i('', class: "fa fa-#{icon} #{text_class} #{options[:class]}".strip)
         concat text
       end
     end
