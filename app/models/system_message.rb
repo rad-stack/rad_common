@@ -33,12 +33,12 @@ class SystemMessage < ApplicationRecord
   end
 
   def recipients
-    return [user] if preview?
-
     users = User.active
 
+    users = users.where(id: user.id) if preview?
     users = users.internal if internal_users?
     users = users.external if client_users?
+    users = users.with_mobile_phone if sms?
 
     users
   end
@@ -48,12 +48,15 @@ class SystemMessage < ApplicationRecord
   end
 
   def send!
-    if email?
-      recipients.each do |user|
-        RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", email_message_body, do_not_format: true).deliver_later
+    recipients.each do |recipient|
+      if email?
+        RadbearMailer.simple_message(recipient,
+                                     "Important Message From #{I18n.t(:app_name)}",
+                                     email_message_body,
+                                     do_not_format: true).deliver_later
+      else
+        UserSMSSenderJob.perform_later(sms_message_body, recipient.id, nil)
       end
-    else
-      SystemSMSJob.perform_later(sms_message_body, recipients.map(&:id), user)
     end
   end
 

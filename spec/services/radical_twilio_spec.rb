@@ -6,11 +6,11 @@ RSpec.describe RadicalTwilio, type: :service do
       before { ENV['TWILIO_PHONE_NUMBERS'] = '9044444444,9044444445,9044444446' }
 
       it 'returns the numbers' do
-        expect(described_class.next_phone_number).to eq '9044444444'
-        expect(described_class.next_phone_number).to eq '9044444445'
-        expect(described_class.next_phone_number).to eq '9044444446'
-        expect(described_class.next_phone_number).to eq '9044444444'
-        expect(described_class.next_phone_number).to eq '9044444445'
+        expect(described_class.new.current_from_number).to eq '9044444444'
+        expect(described_class.new.current_from_number).to eq '9044444445'
+        expect(described_class.new.current_from_number).to eq '9044444446'
+        expect(described_class.new.current_from_number).to eq '9044444444'
+        expect(described_class.new.current_from_number).to eq '9044444445'
       end
     end
 
@@ -18,9 +18,9 @@ RSpec.describe RadicalTwilio, type: :service do
       before { ENV['TWILIO_PHONE_NUMBERS'] = '9044444444' }
 
       it 'returns the number' do
-        expect(described_class.next_phone_number).to eq '9044444444'
-        expect(described_class.next_phone_number).to eq '9044444444'
-        expect(described_class.next_phone_number).to eq '9044444444'
+        expect(described_class.new.current_from_number).to eq '9044444444'
+        expect(described_class.new.current_from_number).to eq '9044444444'
+        expect(described_class.new.current_from_number).to eq '9044444444'
       end
     end
 
@@ -28,7 +28,7 @@ RSpec.describe RadicalTwilio, type: :service do
       before { ENV['TWILIO_PHONE_NUMBERS'] = nil }
 
       it 'returns nil' do
-        expect(described_class.next_phone_number).to eq nil
+        expect(described_class.new.current_from_number).to eq nil
       end
     end
   end
