@@ -61,6 +61,8 @@ class RadicalTwilio
     end
 
     def full_body(message)
-      "#{message} - Reply STOP to unsubscribe"
+      return "#{message} - Reply STOP to unsubscribe" unless %w[. ! ?].include?(message[-1])
+
+      "#{message} Reply STOP to unsubscribe."
     end
 end
