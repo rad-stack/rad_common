@@ -54,7 +54,16 @@ Lint/StructNewOverride:
 # Calculated by number of assignments, branches, and conditions within a method
 # using this formula: http://c2.com/cgi/wiki?AbcMetric
 Metrics/AbcSize:
-  Max: 25
+  Max: 30
+
+Metrics/CyclomaticComplexity:
+  Max: 8
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Metrics/ModuleLength:
+  Max: 200
 
 # Checks to see if the length of a block exceeds 25 lines
 Metrics/BlockLength:
@@ -76,7 +85,7 @@ Metrics/ClassLength:
 # Too short methods lead to extraction of single-use methods, which can make
 # the code easier to read (by naming things), but can also clutter the class
 Metrics/MethodLength:
-  Max: 15
+  Max: 20
 
 Metrics/ParameterLists:
   Max: 6
