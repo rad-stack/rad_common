@@ -21,7 +21,7 @@ class Division < ApplicationRecord
   after_update :notify_owner
 
   def logo_variant
-    logo.variant(resize: '290x218>').processed
+    logo.variant(resize: '290x218>')
   end
 
   private

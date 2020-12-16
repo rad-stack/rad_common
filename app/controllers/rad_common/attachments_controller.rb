@@ -56,6 +56,7 @@ module RadCommon
       def set_variant
         klass = params[:class_name].classify.constantize
         record = klass.find_decoded(params[:id])
+
         begin
           @variant = RadicalRetry.perform_request(retry_count: 2) { record.send(params[:variant]).processed }
         rescue NoMethodError
