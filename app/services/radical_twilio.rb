@@ -6,11 +6,11 @@ class RadicalTwilio
   end
 
   def send_sms(to:, message:)
-    client.messages.create(from: current_from_number, to: to, body: message)
+    client.messages.create(from: current_from_number, to: to, body: full_body(message))
   end
 
   def send_mms(to:, message:, media_url:)
-    client.messages.create(from: current_from_number, to: to, body: message, media_url: media_url)
+    client.messages.create(from: current_from_number, to: to, body: full_body(message), media_url: media_url)
   end
 
   def send_robocall(to:, url:)
@@ -58,5 +58,11 @@ class RadicalTwilio
       end
 
       next_number
+    end
+
+    def full_body(message)
+      return "#{message} - Reply STOP to unsubscribe" unless %w[. ! ?].include?(message[-1])
+
+      "#{message} Reply STOP to unsubscribe."
     end
 end
