@@ -18,28 +18,8 @@ class CardPresenter
     local_assigns[:controller_name] || _h.controller_name
   end
 
-  def object_class
-    controller_name.classify.titleize
-  end
-
-  def object_label
-    if controller_alias
-      controller_alias.classify.titleize
-    else
-      object_class
-    end
-  end
-
   def downcased_object_class
     controller_name.classify.downcase
-  end
-
-  def titleized_controller_name
-    if controller_alias
-      controller_alias.titleize
-    else
-      controller_name.titleize
-    end
   end
 
   def instance
@@ -64,10 +44,6 @@ class CardPresenter
 
   def title_class
     local_assigns[:title_class] || ''
-  end
-
-  def controller_alias
-    local_assigns[:controller_alias]
   end
 
   def icon
@@ -159,7 +135,7 @@ class CardPresenter
 
     if action_name == 'index'
       the_var = controller.instance_variable_get("@#{controller_name}")
-      return "#{titleized_controller_name} (#{the_var.respond_to?(:total_count) ? the_var.total_count : the_var.count})"
+      return "#{object_label_plural} (#{the_var.respond_to?(:total_count) ? the_var.total_count : the_var.count})"
     end
 
     if action_name == 'edit' || action_name == 'update'
@@ -231,7 +207,7 @@ class CardPresenter
 
     if !no_index_button && %w[show edit update new create].include?(action_name)
       if current_user && Pundit.policy!(current_user, check_policy_klass).index?
-        actions.push(@view_context.link_to(@view_context.icon(:list, "View #{titleized_controller_name}"),
+        actions.push(@view_context.link_to(@view_context.icon(:list, "View #{object_label_plural}"),
                                            index_path,
                                            class: 'btn btn-secondary btn-sm'))
       end
@@ -256,6 +232,14 @@ class CardPresenter
   end
 
   private
+
+    def object_label_plural
+      object_label.pluralize
+    end
+
+    def object_label
+      klass.model_name.human.titleize
+    end
 
     def check_policy_klass
       if current_user.portal?
