@@ -55,7 +55,7 @@ class HerokuCommands
         write_log 'Clearing certain production data'
         remove_user_avatars
         remove_accounting_keys
-        User.update_all authy_enabled: false
+        User.update_all authy_enabled: false, authy_id: nil
 
         dump if keep_dump_file.present?
       end
