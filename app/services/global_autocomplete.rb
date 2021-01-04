@@ -43,7 +43,9 @@ class GlobalAutocomplete
 
     query.map do |record|
       { columns: get_columns_values(columns, methods, record),
-        model_name: klass.name, id: record.id,
+        model_name: klass.name,
+        human_name: klass.model_name.human,
+        id: record.id,
         label: record.send(search_label),
         value: record.to_s,
         scope_description: scope[:description] }

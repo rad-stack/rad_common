@@ -31,7 +31,7 @@ $ ->
 
       if item.scope_description != undefined && $('.super_search').val() == '1'
         tr = $("<tr>")
-        tr.append("<td class='search-scope-model-name'>" + humanize(item.model_name) + "</td>")
+        tr.append("<td class='search-scope-model-name'>" + item.human_name + "</td>")
       tr.appendTo(table)
       table.appendTo(ul)
       table
