@@ -31,8 +31,8 @@ module RadCommon
         template '../../../../../spec/dummy/config/initializers/raven.rb', 'config/initializers/raven.rb'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
-        template '../../../../../spec/dummy/config/initializers/devise-security.rb',
-                 'config/initializers/devise-security.rb'
+        template '../../../../../spec/dummy/config/initializers/devise_security.rb',
+                 'config/initializers/devise_security.rb'
 
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
