@@ -31,8 +31,8 @@ module RadCommon
         template '../../../../../spec/dummy/config/initializers/raven.rb', 'config/initializers/raven.rb'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
-        template '../../../../../spec/dummy/config/initializers/devise-security.rb',
-                 'config/initializers/devise-security.rb'
+        template '../../../../../spec/dummy/config/initializers/devise_security.rb',
+                 'config/initializers/devise_security.rb'
 
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
@@ -294,6 +294,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20200903192242_rename_security_roles.rb',
                         'rename_security_roles.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20210104154427_remove_current_phone.rb',
+                        'remove_current_phone.rb'
       end
 
       def self.next_migration_number(path)

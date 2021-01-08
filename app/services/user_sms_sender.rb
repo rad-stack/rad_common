@@ -1,5 +1,5 @@
 class UserSMSSender
-  attr_accessor :message, :recipient, :media_url, :exception, :current_from_number
+  attr_accessor :message, :recipient, :media_url, :exception, :from_number
 
   def initialize(message, recipient_id, media_url)
     self.message = message
@@ -12,7 +12,7 @@ class UserSMSSender
   def send!
     RadicalRetry.perform_request do
       twilio = RadicalTwilio.new
-      self.current_from_number = twilio.current_from_number
+      self.from_number = twilio.from_number
 
       if media_url.present?
         twilio.send_mms to: to_number, message: message, media_url: media_url
@@ -53,7 +53,7 @@ class UserSMSSender
       "file #{recipient.mobile_phone}, failed, most likely due to being previously opted out. We have removed "\
       'the mobile phone number from our system to prevent this issue in future communications. If you would like '\
       'to continue to receive text messages, you can add back your mobile number to your user profile, and send the '\
-      "message 'YES' to #{current_from_number}. Please reply to this email with any questions or concerns that you "\
+      "message 'YES' to #{from_number}. Please reply to this email with any questions or concerns that you "\
       'might have.'
     end
 
