@@ -18,8 +18,8 @@
               %th Record
               %th Record ID
             %th User
-            %th Remote Address
             %th Action
+            %th Remote Address
             %th Changes
 
         -@audits.each do |audit|
@@ -34,8 +34,8 @@
                 %td= audit_model_link(audit, audit.auditable)
               %td= audit.auditable_id
             %td= secured_link(audit.user)
-            %td= audit.remote_address
             %td= display_audited_action(audit)
+            %td= audit.remote_address
             %td= simple_format(display_audited_changes(audit))
       = paginate @audits, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
     -else

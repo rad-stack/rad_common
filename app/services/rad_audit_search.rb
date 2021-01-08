@@ -27,6 +27,9 @@ class RadAuditSearch < RadCommon::Search
               ['Clients', client_users],
               ['Inactive', inactive_users]],
          blank_value_label: 'All Users', grouped: true },
+       { input_label: 'Action',
+         column: :action,
+         options: %w[create update destroy] },
        { column: :remote_address, type: RadCommon::LikeFilter }]
     end
 
@@ -35,8 +38,8 @@ class RadAuditSearch < RadCommon::Search
        { label: 'Record Type', column: 'auditable_type' },
        { label: 'Record ID', column: 'auditable_id' },
        { label: 'User' },
-       { label: 'Remote Address', column: 'remote_address' },
        { label: 'Action' },
+       { label: 'Remote Address', column: 'remote_address' },
        { label: 'Changes' }]
     end
 
