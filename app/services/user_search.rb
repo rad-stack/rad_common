@@ -1,6 +1,6 @@
 class UserSearch < RadCommon::Search
   def initialize(params, current_user)
-    super(query: User.joins(:user_status),
+    super(query: User.joins(:user_status).includes(:user_status, :security_roles),
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,

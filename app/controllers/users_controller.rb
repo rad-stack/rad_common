@@ -4,7 +4,10 @@ class UsersController < ApplicationController
   def index
     authorize User
 
-    @pending = policy_scope(User).pending.recent_first.page(params[:pending_page]).per(3)
+    @pending = policy_scope(User).includes(:user_status, :security_roles)
+                                 .pending
+                                 .recent_first
+                                 .page(params[:pending_page]).per(3)
 
     @user_search = UserSearch.new(params, current_user)
     @users = policy_scope(@user_search.results)
