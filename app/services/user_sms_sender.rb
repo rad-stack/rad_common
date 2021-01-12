@@ -19,6 +19,8 @@ class UserSMSSender
       else
         twilio.send_sms to: to_number, message: message
       end
+
+      log_event true
     end
   rescue Twilio::REST::RestError => e
     self.exception = e
@@ -38,13 +40,13 @@ class UserSMSSender
     end
 
     def handle_blacklist
-      body = error_body
+      log_event false
 
       recipient.update! mobile_phone: nil
 
       RadbearMailer.simple_message(recipient,
                                    "SMS Message from #{I18n.t(:app_name)} Failed",
-                                   body,
+                                   error_body,
                                    email_action: email_action).deliver_later
     end
 
@@ -61,5 +63,14 @@ class UserSMSSender
       { message: 'Click here to update your profile.',
         button_text: 'Update Profile',
         button_url: Rails.application.routes.url_helpers.edit_user_registration_url }
+    end
+
+    def log_event(success)
+      TwilioLog.create! to_number: to_number,
+                        from_number: from_number,
+                        user: recipient,
+                        message: message,
+                        media_url: media_url,
+                        success: success
     end
 end

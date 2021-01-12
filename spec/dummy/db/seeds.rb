@@ -46,3 +46,8 @@ if Division.count.zero?
   puts 'seeding divisions'
   30.times { FactoryBot.create :division, owner: users.sample }
 end
+
+if TwilioLog.count.zero?
+  puts 'seeding twilio logs'
+  30.times { FactoryBot.create :twilio_log }
+end

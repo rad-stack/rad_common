@@ -297,6 +297,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20210104154427_remove_current_phone.rb',
                         'remove_current_phone.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20210111201627_create_twilio_logs.rb',
+                        'create_twilio_logs.rb'
       end
 
       def self.next_migration_number(path)
