@@ -1,20 +1,18 @@
 class UserSMSSender
-  attr_accessor :message, :recipient, :media_url, :exception, :from_number
+  attr_accessor :message, :recipient, :media_url, :exception, :twilio
 
   def initialize(message, recipient_id, media_url)
     self.message = message
     self.recipient = User.find(recipient_id)
     self.media_url = media_url
+    self.twilio = RadicalTwilio.new
 
     raise "The message to #{recipient} failed: they do not have a mobile phone number." if recipient.mobile_phone.blank?
   end
 
   def send!
     RadicalRetry.perform_request do
-      twilio = RadicalTwilio.new
-      self.from_number = twilio.from_number
-
-      if media_url.present?
+      if mms?
         twilio.send_mms to: to_number, message: message, media_url: media_url
       else
         twilio.send_sms to: to_number, message: message
@@ -29,7 +27,15 @@ class UserSMSSender
     handle_blacklist
   end
 
+  def from_number
+    mms? ? twilio.from_number_mms : twilio.from_number
+  end
+
   private
+
+    def mms?
+      media_url.present?
+    end
 
     def to_number
       "+1#{recipient.mobile_phone.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')}"

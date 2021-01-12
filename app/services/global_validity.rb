@@ -69,7 +69,7 @@ class GlobalValidity
     def exclude_models
       return [] if @override_model.present?
 
-      RadCommon.global_validity_exclude
+      RadCommon.global_validity_exclude + ['TwilioLog']
     end
 
     def check_model(model)
