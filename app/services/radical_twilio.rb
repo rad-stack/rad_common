@@ -4,7 +4,7 @@ class RadicalTwilio
   end
 
   def send_mms(to:, message:, media_url:)
-    client.messages.create(from: from_number, to: to, body: full_body(message), media_url: media_url)
+    client.messages.create(from: from_number_mms, to: to, body: full_body(message), media_url: media_url)
   end
 
   def send_robocall(to:, url:)
