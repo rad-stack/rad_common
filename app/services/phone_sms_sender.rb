@@ -13,11 +13,14 @@ class PhoneSMSSender
     twilio = RadicalTwilio.new
     self.from_number = twilio.from_number
     RadicalRetry.perform_request { twilio.send_sms to: to_number, message: message }
+
+    log_event true
     true
   rescue Twilio::REST::RestError => e
     self.exception = e
     raise e.to_s unless blacklisted?
 
+    log_event false
     false
   end
 
@@ -29,5 +32,12 @@ class PhoneSMSSender
 
     def blacklisted?
       exception.message.include?('violates a blacklist rule')
+    end
+
+    def log_event(success)
+      TwilioLog.create! to_number: to_number,
+                        from_number: from_number,
+                        message: message,
+                        success: success
     end
 end

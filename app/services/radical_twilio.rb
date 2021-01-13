@@ -27,6 +27,10 @@ class RadicalTwilio
     ENV.fetch('TWILIO_PHONE_NUMBER')
   end
 
+  def from_number_mms
+    ENV.fetch('TWILIO_MMS_PHONE_NUMBER')
+  end
+
   private
 
     def client
