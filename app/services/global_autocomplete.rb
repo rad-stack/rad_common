@@ -47,6 +47,7 @@ class GlobalAutocomplete
       query = Pundit.policy_scope!(user, GlobalAutocomplete.check_policy_klass(user, klass))
       query = query.joins(joins) if joins
       query = query.where(where_query, search: "%#{params[:term]}%").order(order)
+      query = query.where.not(id: params[:excluded_ids]) if params[:excluded_ids].present?
 
       query = query.limit(50)
       search_label = scope[:search_label] || :to_s

@@ -69,6 +69,28 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
     before { allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true) }
 
+    context "when excluding id's" do
+      let(:user) { create :admin }
+      let(:term) { 'Testing' }
+
+      let!(:division_1) { create(:division, name: "#{term} 1") }
+      let!(:division_2) { create(:division, name: "#{term} 2") }
+      let!(:division_3) { create(:division, name: "#{term} 3") }
+
+      let(:params) do
+        ActionController::Parameters.new(term: term,
+                                         global_search_scope: 'division_name',
+                                         excluded_ids: [division_2.id, division_3.id])
+      end
+
+      let(:result) { auto_complete.send(:autocomplete_result, scope) }
+
+      it 'finds the records exluding some' do
+        expect(result.count).to eq(1)
+        expect(result.first[:model_name].constantize.find(result.first[:id])).to eq division_1
+      end
+    end
+
     context 'when scope has join' do
       let(:term) { 'My Division' }
       let!(:division) { create(:division, name: term) }
