@@ -1,6 +1,7 @@
 class User < ApplicationRecord
-  devise :authy_authenticatable, :database_authenticatable, :registerable, :confirmable, :recoverable, :trackable,
-         :timeoutable, :lockable, :password_archivable, :password_expirable, :secure_validatable, :expirable, :invitable
+  devise :database_authenticatable, :registerable, :confirmable, :recoverable, :trackable, :lockable, :invitable,
+         :timeoutable, :password_archivable, :password_expirable, :secure_validatable, :expirable,
+         :authy_authenticatable
 
   include RadbearUser
   include RadAuthy

@@ -58,7 +58,7 @@ RSpec.describe 'Security Roles', type: :request do
     it 'destroys the requested security_role' do
       security_role
       expect {
-        delete :"/security_roles/#{security_role.id}", headers: { HTTP_REFERER: security_role_path(security_role) }
+        delete "/security_roles/#{security_role.id}", headers: { HTTP_REFERER: security_role_path(security_role) }
       }.to change(SecurityRole, :count).by(-1)
     end
 
