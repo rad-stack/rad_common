@@ -300,6 +300,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20210111201627_create_twilio_logs.rb',
                         'create_twilio_logs.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20210119145517_external_security_roles.rb',
+                        'external_security_roles.rb'
       end
 
       def self.next_migration_number(path)

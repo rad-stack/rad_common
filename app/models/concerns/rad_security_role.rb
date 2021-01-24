@@ -9,6 +9,9 @@ module RadSecurityRole
     has_many :notification_security_roles, dependent: :destroy
 
     scope :by_name, -> { order(:name) }
+    scope :internal, -> { where(external: false) }
+    scope :external, -> { where(external: true) }
+
     alias_attribute :to_s, :name
 
     validate :validate_standard_permissions
@@ -76,16 +79,18 @@ module RadSecurityRole
 
     def seed_portal_admin
       group = get_group('Portal Admin')
+      group.external = true
       group.save!
     end
 
     def seed_portal_user
       group = get_group('Portal User')
+      group.external = true
       group.save!
     end
 
     def permission_fields
-      (SecurityRole.attribute_names - %w[id name created_at updated_at]).sort
+      (SecurityRole.attribute_names - %w[id name created_at updated_at external]).sort
     end
 
     def get_group(name)

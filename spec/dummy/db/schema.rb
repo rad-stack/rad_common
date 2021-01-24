@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_11_201627) do
+ActiveRecord::Schema.define(version: 2021_01_19_145517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 2021_01_11_201627) do
     t.boolean "read_division", default: false, null: false
     t.boolean "update_division", default: false, null: false
     t.boolean "delete_division", default: false, null: false
+    t.boolean "external", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 
