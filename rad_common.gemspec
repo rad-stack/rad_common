@@ -52,13 +52,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'twilio-ruby', '~> 5.31.0'
   s.add_dependency 'webpacker'
 
-  # force security update, this line can be removed when resolved
-  s.add_dependency 'rack', '~> 2.2.3'
-
-  # TODO: to fix deprecation warning, see task 32583
-  # this line can be completely removed when resolved
-  s.add_dependency 'thor', '~> 0.20.3'
-
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'coffee-rails', '~> 5.0'

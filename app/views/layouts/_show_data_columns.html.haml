@@ -2,6 +2,7 @@
 -force_single_column = false if local_assigns[:force_single_column].nil?
 
 -stats = []
+
 -if !local_assigns[:resource].nil? && !no_timestamps
   -if resource.respond_to?(:created_at)
     -stats.push({label: "Created", value: format_datetime(resource.created_at)})
@@ -9,6 +10,7 @@
     -stats.push({label: "Updated", value: format_datetime(resource.updated_at)})
 
 -all_data = []
+
 -if data
   -data.each do |item|
     -if item.is_a?(Hash)
@@ -33,7 +35,7 @@
 
 .row
   -columns.each do |column|
-    .col-lg-6
+    %div{ class: force_single_column ? 'col-lg-12' : 'col-lg-6'}
       %dl.dl-horizontal
         -column.each do |item|
           -if item.is_a?(Hash)
