@@ -167,6 +167,29 @@ RSpec.describe RadCommon::Search, type: :service do
     end
   end
 
+  describe 'equals filter' do
+    subject(:search) do
+      described_class.new(query: query,
+                          filters: filters,
+                          search_name: 'users_search',
+                          current_user: user,
+                          params: params)
+    end
+
+    let(:query) { User }
+    let!(:user_1) { create :user }
+    let!(:user_2) { create :user }
+    let(:filters) { [{ column: :id, type: RadCommon::EqualsFilter, data_type: :integer }] }
+
+    let(:params) do
+      ActionController::Parameters.new(search: { id_equals: user_1.id })
+    end
+
+    it 'shows correct results' do
+      expect(search.results.count).to eq 1
+    end
+  end
+
   describe 'custom date filter' do
     subject(:search) do
       described_class.new(query: query,
