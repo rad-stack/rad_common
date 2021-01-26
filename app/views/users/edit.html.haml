@@ -29,7 +29,17 @@
             .col-lg-3= f.input :avatar
         .row.internal
           .col-lg-12
-            = f.input :security_roles, as: :check_boxes, item_wrapper_class: 'col-lg-3 security-role-checkboxes', collection: security_role_collection, checked: @user.security_roles.ids
+            = f.input :security_roles, as: :check_boxes,
+                                       item_wrapper_class: 'col-lg-3 security-role-checkboxes',
+                                       collection: security_role_collection(:internal),
+                                       checked: @user.security_roles.ids
+        -if RadCommon.external_users && security_role_collection(:external).any?
+          .row.external
+            .col-lg-12
+              = f.input :security_roles, as: :check_boxes,
+                                         item_wrapper_class: 'col-lg-3 security-role-checkboxes',
+                                         collection: security_role_collection(:external),
+                                         checked: @user.security_roles.ids
 
       .form-actions
         = f.button :submit, 'Save', class: 'btn btn-primary'

@@ -3,9 +3,18 @@
   = base_errors(f)
 
   .form-inputs
-    = f.input :name
-    - normalize_names(humanized_permission_fields).each do |name, permission|
-      = f.input permission.to_sym, label: name, tooltip: permission_tooltip(permission)
+    .row
+      .col-lg-6
+        .row
+          .col-lg-12= f.input :name
+        -if RadCommon.external_users
+          .row
+            .col-lg-12= f.input :external
+      .col-lg-6
+        .row
+          .col-lg-12
+            - normalize_names(humanized_permission_fields).each do |name, permission|
+              = f.input permission.to_sym, label: name, tooltip: permission_tooltip(permission)
 
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'

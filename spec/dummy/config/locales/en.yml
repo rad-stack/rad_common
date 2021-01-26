@@ -5,6 +5,8 @@ en:
     attributes:
       user:
         external: 'Client user?'
+      security_role:
+        external: 'Client user?'
       division:
         additional_info: Additional data
         division_statuses:

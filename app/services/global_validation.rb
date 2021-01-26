@@ -1,4 +1,4 @@
-class GlobalValidity
+class GlobalValidation
   attr_accessor :override_model, :run_stats
 
   def initialize
@@ -49,6 +49,16 @@ class GlobalValidity
     error_messages
   end
 
+  def self.available_models
+    GlobalValidation.new.models_to_check
+  end
+
+  def models_to_check
+    return [@override_model] if @override_model.present?
+
+    RadCommon::AppInfo.new.application_models - exclude_models
+  end
+
   private
 
     def needs_to_run?
@@ -58,12 +68,6 @@ class GlobalValidity
 
       company.validity_checked_at.blank? ||
         company.validity_checked_at <= RadCommon.global_validity_days.days.ago
-    end
-
-    def models_to_check
-      return [@override_model.constantize] if @override_model.present?
-
-      RadCommon::AppInfo.new.application_models - exclude_models
     end
 
     def exclude_models

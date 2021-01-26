@@ -1,10 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe UserSMSSender, type: :service do
+  let(:from_user) { create :user }
   let(:user) { create :user, mobile_phone: '(618) 722-2169' }
   let(:message) { 'test message' }
   let(:media_url) { nil }
-  let(:sms_sender) { described_class.new(message, user.id, media_url) }
+  let(:sms_sender) { described_class.new(message, from_user.id, user.id, media_url) }
   let(:last_email) { ActionMailer::Base.deliveries.last }
 
   describe 'send', :vcr do
