@@ -50,5 +50,11 @@ end
 
 if TwilioLog.count.zero?
   puts 'seeding twilio logs'
-  30.times { FactoryBot.create :twilio_log, user: users.sample }
+
+  30.times do
+    from_user = users.sample
+    to_user = [1, 2].sample == 1 ? users.sample : nil
+
+    FactoryBot.create :twilio_log, from_user: from_user, to_user: to_user
+  end
 end

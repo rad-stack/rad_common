@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_19_145517) do
+ActiveRecord::Schema.define(version: 2021_01_26_120121) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -206,15 +206,17 @@ ActiveRecord::Schema.define(version: 2021_01_19_145517) do
   end
 
   create_table "twilio_logs", force: :cascade do |t|
-    t.string "to_number", null: false
     t.string "from_number", null: false
-    t.integer "user_id"
+    t.string "to_number", null: false
+    t.integer "from_user_id", null: false
+    t.integer "to_user_id"
     t.string "message", null: false
     t.string "media_url"
     t.boolean "success", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_twilio_logs_on_user_id"
+    t.index ["from_user_id"], name: "index_twilio_logs_on_from_user_id"
+    t.index ["to_user_id"], name: "index_twilio_logs_on_to_user_id"
   end
 
   create_table "user_security_roles", id: :serial, force: :cascade do |t|
@@ -302,7 +304,8 @@ ActiveRecord::Schema.define(version: 2021_01_19_145517) do
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
   add_foreign_key "system_messages", "users"
-  add_foreign_key "twilio_logs", "users"
+  add_foreign_key "twilio_logs", "users", column: "from_user_id"
+  add_foreign_key "twilio_logs", "users", column: "to_user_id"
   add_foreign_key "user_security_roles", "security_roles"
   add_foreign_key "user_security_roles", "users"
   add_foreign_key "users", "user_statuses"

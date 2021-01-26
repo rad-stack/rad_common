@@ -1,8 +1,9 @@
 class PhoneSMSSender
-  attr_accessor :message, :mobile_phone, :exception, :from_number
+  attr_accessor :message, :from_user_id, :mobile_phone, :exception, :from_number
 
-  def initialize(message, mobile_phone)
+  def initialize(message, from_user_id, mobile_phone)
     self.message = message
+    self.from_user_id = from_user_id
     self.mobile_phone = mobile_phone
 
     raise 'The message failed: the mobile phone number is blank.' if mobile_phone.blank?
@@ -35,8 +36,9 @@ class PhoneSMSSender
     end
 
     def log_event(success)
-      TwilioLog.create! to_number: to_number,
-                        from_number: from_number,
+      TwilioLog.create! from_number: from_number,
+                        to_number: to_number,
+                        from_user_id: from_user_id,
                         message: message,
                         success: success
     end
