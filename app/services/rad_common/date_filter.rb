@@ -69,7 +69,7 @@ module RadCommon
     def query_column(results)
       return column if column.respond_to?(:split) && column.split('.').length > 1
 
-      "#{results.table_name}.#{searchable_name}"
+      "#{results.table_name}.#{column}"
     end
 
     def validate_params(params)
