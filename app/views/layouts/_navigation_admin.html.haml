@@ -15,5 +15,7 @@
   %li= link_to 'Sign In Activity', '/rad_common/login_activities', class: 'dropdown-item'
   %li= link_to 'System Message', RadCommon::Engine.routes.url_helpers.new_system_message_path, class: 'dropdown-item'
   %li= link_to 'System Usage', '/rad_common/system_usages', class: 'dropdown-item'
-  %li= link_to 'Twilio Logs', '/rad_common/twilio_logs', class: 'dropdown-item'
+  -if RadicalTwilio.twilio_enabled?
+    %li= link_to 'Twilio Logs', '/rad_common/twilio_logs', class: 'dropdown-item'
   %li= link_to 'Users', users_path, class: 'dropdown-item'
+  %li= link_to 'Validate Database', '/rad_common/global_validations/new', class: 'dropdown-item'

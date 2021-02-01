@@ -3,7 +3,7 @@
   - show_notifications = settings.count.positive?
   - column_class = show_notifications ? 'col-lg-4' : 'col-lg-6'
 
-  -if @user.internal? && policy(SecurityRole).index?
+  -if policy(SecurityRole).index?
     -all_perms = @user.all_permissions
     %div{ class: column_class }
       .card

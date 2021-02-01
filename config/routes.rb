@@ -8,10 +8,6 @@ RadCommon::Engine.routes.draw do
   get 'attachments/:class_name/:id(.:format)/:variant(.:format)', to: 'rad_common/attachments#download_variant'
   get 'attachments/:id(.:format)', to: 'rad_common/attachments#download'
 
-  resources :companies, only: [] do
-    post :global_validity_check, on: :member
-  end
-
   resources :audits, only: :index
   resources :system_messages, only: %i[new create show]
   resources :system_usages, only: %i[index]
@@ -21,4 +17,5 @@ RadCommon::Engine.routes.draw do
   resources :sentry_tests, only: %i[edit update]
   resources :login_activities, only: :index
   resources :twilio_logs, only: :index
+  resources :global_validations, only: %i[new create]
 end

@@ -92,8 +92,10 @@ $ ->
 checkClientUser = ->
   if $('#user_external').is(':checked')
     $('.internal').hide()
+    $('.external').show()
   else
     $('.internal').show()
+    $('.external').hide()
 
 checkMessageType = ->
   if $('#system_message_message_type').val() == 'email'

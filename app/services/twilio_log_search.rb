@@ -15,14 +15,25 @@ class TwilioLogSearch < RadCommon::Search
       [{ start_input_label: 'Start Date',
          end_input_label: 'End Date',
          column: :created_at,
-         type: RadCommon::DateFilter }]
+         type: RadCommon::DateFilter },
+       { input_label: 'From User',
+         column: :from_user_id,
+         options: [['Active', User.active.by_name],
+                   ['Inactive', User.inactive.by_name]],
+         grouped: true },
+       { input_label: 'To User',
+         column: :to_user_id,
+         options: [['Active', User.active.by_name],
+                   ['Inactive', User.inactive.by_name]],
+         grouped: true }]
     end
 
     def sort_columns_def
       [{ label: 'When', column: 'created_at', direction: 'desc', default: true },
        { column: 'from_number' },
        { column: 'to_number' },
-       { label: 'User' },
+       { label: 'From User' },
+       { label: 'To User' },
        { column: 'message' },
        { column: 'media_url' },
        { column: 'success' }]

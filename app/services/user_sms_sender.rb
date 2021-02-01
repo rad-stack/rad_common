@@ -1,13 +1,14 @@
 class UserSMSSender
-  attr_accessor :message, :recipient, :media_url, :exception, :twilio
+  attr_accessor :message, :from_user_id, :to_user, :media_url, :exception, :twilio
 
-  def initialize(message, recipient_id, media_url)
+  def initialize(message, from_user_id, to_user_id, media_url)
     self.message = message
-    self.recipient = User.find(recipient_id)
+    self.from_user_id = from_user_id
+    self.to_user = User.find(to_user_id)
     self.media_url = media_url
     self.twilio = RadicalTwilio.new
 
-    raise "The message to #{recipient} failed: they do not have a mobile phone number." if recipient.mobile_phone.blank?
+    raise "The message to #{to_user} failed: they do not have a mobile phone number." if to_user.mobile_phone.blank?
   end
 
   def send!
@@ -38,7 +39,7 @@ class UserSMSSender
     end
 
     def to_number
-      "+1#{recipient.mobile_phone.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')}"
+      "+1#{to_user.mobile_phone.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')}"
     end
 
     def blacklisted?
@@ -48,9 +49,9 @@ class UserSMSSender
     def handle_blacklist
       log_event false
 
-      recipient.update! mobile_phone: nil
+      to_user.update! mobile_phone: nil
 
-      RadbearMailer.simple_message(recipient,
+      RadbearMailer.simple_message(to_user,
                                    "SMS Message from #{I18n.t(:app_name)} Failed",
                                    error_body,
                                    email_action: email_action).deliver_later
@@ -58,7 +59,7 @@ class UserSMSSender
 
     def error_body
       'The system tried to send you an SMS message but your mobile phone number that we have on '\
-      "file #{recipient.mobile_phone}, failed, most likely due to being previously opted out. We have removed "\
+      "file #{to_user.mobile_phone}, failed, most likely due to being previously opted out. We have removed "\
       'the mobile phone number from our system to prevent this issue in future communications. If you would like '\
       'to continue to receive text messages, you can add back your mobile number to your user profile, and send the '\
       "message 'YES' to #{from_number}. Please reply to this email with any questions or concerns that you "\
@@ -74,7 +75,8 @@ class UserSMSSender
     def log_event(success)
       TwilioLog.create! to_number: to_number,
                         from_number: from_number,
-                        user: recipient,
+                        to_user: to_user,
+                        from_user_id: from_user_id,
                         message: message,
                         media_url: media_url,
                         success: success

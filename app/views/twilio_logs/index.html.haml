@@ -13,7 +13,8 @@
           %td= format_datetime twilio_log.created_at
           %td= twilio_log.from_number
           %td= twilio_log.to_number
-          %td= secured_link twilio_log.user
+          %td= secured_link twilio_log.from_user
+          %td= secured_link twilio_log.to_user
           %td= twilio_log.message
           %td= twilio_log.media_url
           %td= format_boolean twilio_log.success

@@ -15,6 +15,7 @@ FactoryBot.define do
     trait :external do
       sequence(:email) { |n| "example#{n}@abc.com" }
       external { true }
+      security_roles { [create(:security_role, :external)] }
     end
 
     factory :admin do
