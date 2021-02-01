@@ -2,8 +2,7 @@ module RadCommon
   ##
   # This is used to generate an input used for a SQL like filter
   class EqualsFilter
-    attr_reader :column
-    attr_reader :data_type
+    attr_reader :column, :data_type
 
     ##
     # @param [String] column the database column that is being filtered
@@ -36,12 +35,12 @@ module RadCommon
 
     private
 
-    def equals_value(params)
-      params[equals_input]
-    end
+      def equals_value(params)
+        params[equals_input]
+      end
 
-    def supported_data_types
-      %i[integer string]
-    end
+      def supported_data_types
+        %i[integer string]
+      end
   end
 end
