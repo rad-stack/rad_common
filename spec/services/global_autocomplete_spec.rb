@@ -201,6 +201,14 @@ RSpec.describe GlobalAutocomplete, type: :service do
         expect(result.count).to eq(1)
       end
     end
+
+    context "when excluding id's" do
+      let(:params) { ActionController::Parameters.new(term: term, excluded_ids: [999]) }
+
+      it 'is not applicable and raises an exception' do
+        expect { auto_complete.global_super_search_result }.to raise_error RuntimeError
+      end
+    end
   end
 
   describe '#get_columns_values' do

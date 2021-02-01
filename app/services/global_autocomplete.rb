@@ -18,6 +18,8 @@ class GlobalAutocomplete
   end
 
   def global_super_search_result
+    raise 'exluded_ids not applicable for super search' if params[:excluded_ids].present?
+
     scopes = search_scopes.select { |scope| scope_with_where?(scope) }
 
     results = scopes.map do |scope|
@@ -47,7 +49,12 @@ class GlobalAutocomplete
       query = Pundit.policy_scope!(user, GlobalAutocomplete.check_policy_klass(user, klass))
       query = query.joins(joins) if joins
       query = query.where(where_query, search: "%#{params[:term]}%").order(order)
-      query = query.where.not(id: params[:excluded_ids]) if params[:excluded_ids].present?
+
+      if params[:excluded_ids].present?
+        # TODO: this will fail when scope has joins due to ambiguous id column
+        # it's not too bad a fix but also unlikely we'll hit the scenario any time soon
+        query = query.where.not(id: params[:excluded_ids])
+      end
 
       query = query.limit(50)
       search_label = scope[:search_label] || :to_s
