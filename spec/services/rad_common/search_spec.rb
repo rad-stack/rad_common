@@ -310,9 +310,36 @@ RSpec.describe RadCommon::Search, type: :service do
   end
 
   describe 'search_params' do
-    context 'when using default params' do
-      it 'uses default params when params are not present'
-      it 'overrides defaults params when params are present'
+    subject(:search) do
+      described_class.new(query: query,
+                          filters: filters,
+                          search_name: 'divisions_search',
+                          current_user: user,
+                          params: params)
+    end
+
+    let(:query) { Division }
+    let!(:user_1) { create(:user)}
+    let!(:user_2) { create(:user)}
+    let(:filters) do
+      [{ column: :owner_id, input_label: 'Users', options: User.all, default_value: user_1.id }]
+    end
+    let(:params) { ActionController::Parameters.new }
+
+    context 'when using default params and params are not present' do
+      it 'uses default params' do
+        expect(search.filters.first.selected_value(search)).to eq user_1.id
+      end
+    end
+
+    context 'when using default params and params are present' do
+      let(:params) do
+        ActionController::Parameters.new(search: { owner_id: user_2.id })
+      end
+
+      it 'overrides defaults params' do
+        expect(search.filters.first.selected_value(search)).to eq user_2.id
+      end
     end
   end
 end
