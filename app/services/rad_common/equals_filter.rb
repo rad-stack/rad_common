@@ -6,9 +6,8 @@ module RadCommon
 
     ##
     # @param [String] column the database column that is being filtered
-    # @param [Symbol] type the type of filter
     # @param [Symbol] data_type controls what the input type is based on data type of column
-    def initialize(column:, type:, data_type:)
+    def initialize(column:, data_type:)
       raise 'data_type must be either :integer or :string' if supported_data_types.exclude?(data_type)
 
       @column = column

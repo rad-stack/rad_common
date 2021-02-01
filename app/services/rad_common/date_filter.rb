@@ -17,7 +17,7 @@ module RadCommon
     #
     # @example
     #   { column: :created_at, type: RadCommon::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
-    def initialize(column:, type:, start_input_label: nil, end_input_label: nil, custom: false,
+    def initialize(column:, start_input_label: nil, end_input_label: nil, custom: false,
                    default_start_value: nil, default_end_value: nil)
       @column = column
       @start_input_label = start_input_label
