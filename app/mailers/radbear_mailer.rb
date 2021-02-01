@@ -123,7 +123,7 @@ class RadbearMailer < ActionMailer::Base
     subject_date_string += " - #{end_date.strftime('%m/%d/%Y')}" if end_date.present?
 
     @recipient = user
-    @message = "Attached is the #{report_name}#{message_date_string}."
+    @message = "Attached is the #{report_name}" + message_date_string + '.'
     attachments["#{report_name}#{attachment_date_string}.csv"] = { mime_type: 'text/csv', content: csv }
 
     mail to: @recipient.formatted_email, subject: "#{report_name}#{subject_date_string}"
