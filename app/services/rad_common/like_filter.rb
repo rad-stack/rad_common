@@ -6,8 +6,7 @@ module RadCommon
 
     ##
     # @param [String] column the database column that is being filtered
-    # @param [Symbol] type the type of filter
-    def initialize(column:, type:)
+    def initialize(column:)
       @column = column
     end
 
