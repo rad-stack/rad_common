@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe RadCommon::DateFilter, type: :service do
   describe 'datetime_column?' do
     subject(:date_filter) do
-      described_class.new(column: column, type: described_class).send(:datetime_column?, results)
+      described_class.new(column: column).send(:datetime_column?, results)
     end
 
     let(:results) { Division.all }
