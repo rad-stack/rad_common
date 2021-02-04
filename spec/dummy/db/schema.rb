@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_26_120121) do
+ActiveRecord::Schema.define(version: 2021_02_04_112040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -202,6 +202,8 @@ ActiveRecord::Schema.define(version: 2021_01_26_120121) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "message_type", null: false
+    t.integer "security_role_id"
+    t.index ["security_role_id"], name: "index_system_messages_on_security_role_id"
     t.index ["user_id"], name: "index_system_messages_on_user_id"
   end
 
@@ -303,6 +305,7 @@ ActiveRecord::Schema.define(version: 2021_01_26_120121) do
   add_foreign_key "notification_settings", "users"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
+  add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
   add_foreign_key "twilio_logs", "users", column: "from_user_id"
   add_foreign_key "twilio_logs", "users", column: "to_user_id"
