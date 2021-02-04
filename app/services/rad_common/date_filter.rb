@@ -61,9 +61,15 @@ module RadCommon
       start_at = start_at.beginning_of_day if start_at && datetime_column?(results)
       end_at = end_at.end_of_day if end_at && datetime_column?(results)
 
-      results = results.where("#{results.table_name}.#{column} >= ?", start_at) if start_at.present?
-      results = results.where("#{results.table_name}.#{column} <= ?", end_at) if end_at.present?
+      results = results.where("#{query_column(results)} >= ?", start_at) if start_at.present?
+      results = results.where("#{query_column(results)} <= ?", end_at) if end_at.present?
       results
+    end
+
+    def query_column(results)
+      return column if column.respond_to?(:split) && column.split('.').length > 1
+
+      "#{results.table_name}.#{column}"
     end
 
     def validate_params(params)

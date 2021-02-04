@@ -1,6 +1,7 @@
 Dir[Rails.root.join('../factories/**/*.rb')].sort.each { |f| require f }
 
 puts 'seeding standard items'
+
 SecurityRole.seed_items if SecurityRole.count.zero?
 FactoryBot.create :company if Company.count.zero?
 UserStatus.seed_items if UserStatus.count.zero?
@@ -49,5 +50,11 @@ end
 
 if TwilioLog.count.zero?
   puts 'seeding twilio logs'
-  30.times { FactoryBot.create :twilio_log }
+
+  30.times do
+    from_user = users.sample
+    to_user = [1, 2].sample == 1 ? users.sample : nil
+
+    FactoryBot.create :twilio_log, from_user: from_user, to_user: to_user
+  end
 end

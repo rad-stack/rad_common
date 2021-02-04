@@ -1,5 +1,6 @@
 class SystemMessage < ApplicationRecord
   belongs_to :user
+  belongs_to :security_role, optional: true
 
   enum send_to: { internal_users: 0, client_users: 1, all_users: 2, preview: 3 }
   enum message_type: { email: 0, sms: 1 }
@@ -33,7 +34,11 @@ class SystemMessage < ApplicationRecord
   end
 
   def recipients
-    users = User.active
+    users = if security_role.present?
+              security_role.users.active
+            else
+              User.active
+            end
 
     users = users.where(id: user.id) if preview?
     users = users.internal if internal_users?
@@ -55,7 +60,7 @@ class SystemMessage < ApplicationRecord
                                      email_message_body,
                                      do_not_format: true).deliver_later
       else
-        UserSMSSenderJob.perform_later(sms_message_body, recipient.id, nil)
+        UserSMSSenderJob.perform_later(sms_message_body, user.id, recipient.id, nil)
       end
     end
   end

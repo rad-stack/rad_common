@@ -11,7 +11,9 @@ class DivisionSearch < RadCommon::Search
   end
 
   def search_filters
-    [{ input_label: 'Owner', column: :owner_id, default_value: current_user.id,
+    [{ input_label: 'Owner',
+       column: :owner_id,
+       default_value: current_user.id,
        options: [['Active', User.active.by_name],
                  ['Inactive', User.inactive.by_name]],
        grouped: true },

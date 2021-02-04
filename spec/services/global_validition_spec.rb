@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe GlobalValidity, type: :service do
+describe GlobalValidation, type: :service do
   let(:global_validity) { described_class.new }
   let(:admin_security_role) { admin.security_roles.first }
   let(:company) { Company.main }

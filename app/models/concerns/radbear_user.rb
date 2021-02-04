@@ -13,6 +13,8 @@ module RadbearUser
     has_many :user_security_roles, dependent: :destroy
     has_many :security_roles, through: :user_security_roles, dependent: :destroy
     has_many :login_activities, as: :user, dependent: :destroy
+    has_many :twilio_logs, foreign_key: 'from_user_id', dependent: :destroy, inverse_of: :from_user
+    has_many :twilio_logs, foreign_key: 'to_user_id', dependent: :destroy, inverse_of: :to_user
 
     has_one_attached :avatar
 
@@ -46,7 +48,7 @@ module RadbearUser
     }
 
     scope :not_inactive, -> { where.not(user_status_id: UserStatus.default_inactive_status.id) }
-    scope :in_timezone, ->(timezone) { joins(:account).where('accounts.timezone = ?', timezone) }
+    scope :in_timezone, ->(timezone) { joins(:account).where(accounts: { timezone: timezone }) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
 

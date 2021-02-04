@@ -47,6 +47,24 @@ RSpec.describe RadCommon::Search, type: :service do
       end
     end
 
+    context 'when using a joins date filter' do
+      let(:query) { SystemMessage.joins(:user) }
+      let!(:message_1) { create :system_message, :email, user: create(:user, created_at: 1.day.ago) }
+      let!(:message_2) { create :system_message, :email, user: create(:user, created_at: 2.days.ago) }
+      let!(:message_3) { create :system_message, :email, user: create(:user, created_at: 5.days.ago) }
+      let(:filters) { [{ column: 'users.created_at', type: RadCommon::DateFilter }] }
+      let(:params) do
+        ActionController::Parameters.new(search: { 'users.created_at_start': 3.days.ago.strftime('%Y-%m-%d'),
+                                                   'users.created_at_end': Date.today.strftime('%Y-%m-%d') })
+      end
+
+      it 'filters results' do
+        expect(search).to include message_1
+        expect(search).to include message_2
+        expect(search).not_to include message_3
+      end
+    end
+
     context 'when using a select filter' do
       let(:query) { User }
       let(:user_active) { create :user, user_status: UserStatus.default_active_status }

@@ -1,8 +1,9 @@
-class GlobalValidityJob < ApplicationJob
+class GlobalValidationJob < ApplicationJob
   queue_as :default
 
-  def perform(current_user)
-    global_validity = GlobalValidity.new
+  def perform(current_user, single_model)
+    global_validity = GlobalValidation.new
+    global_validity.override_model = single_model if single_model.present?
     problems = global_validity.check_global_validity
 
     if problems.any?

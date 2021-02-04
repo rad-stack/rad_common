@@ -1,27 +1,39 @@
 .card
   = render 'layouts/card_header', action_name: 'custom',
-                                  title: "System Usage for #{Company.main.name}",
+                                  title: @system_usage.title,
                                   icon: 'fa-area-chart'
 
   .card-body
-    .row
+    .row.button-row
       .col-lg-12
         .btn-group
-          %a{class: "btn dropdown-toggle #{@mode == 'monthly' ? 'btn-success' : 'btn-warning'}", 'data-toggle': 'dropdown', href: '#'}
-            = @mode.titlecase
+          %a.btn.dropdown-toggle.btn-success{ 'data-toggle': 'dropdown', href: '#' }
+            = @system_usage.date_mode
           %ul.dropdown-menu
-            %li= link_to 'Yearly', '/rad_common/system_usages?mode=yearly', class: 'dropdown-item'
-            %li= link_to 'Monthly', '/rad_common/system_usages?mode=monthly', class: 'dropdown-item'
-            %li= link_to 'Weekly', '/rad_common/system_usages?mode=weekly', class: 'dropdown-item'
-            %li= link_to 'Daily', '/rad_common/system_usages?mode=daily', class: 'dropdown-item'
+            -SystemUsage.date_mode_options.each do |item|
+              %li
+                = link_to item,
+                          "/rad_common/system_usages?date_mode=#{item}&date_range_count=#{@system_usage.date_range_count}",
+                          class: 'dropdown-item'
+
+        .btn-group
+          %a.nav-link.dropdown-toggle.btn-success{ 'data-toggle': 'dropdown', href: '#' }
+            = "#{@system_usage.date_range_count} Columns"
+          %ul.dropdown-menu
+            -SystemUsage.date_range_count_options.each do |item|
+              %li
+                = link_to "#{item} Columns",
+                          "/rad_common/system_usages?date_mode=#{@system_usage.date_mode}&date_range_count=#{item}",
+                          class: 'dropdown-item'
+
     %table.table.table-striped.table-bordered
       %tr
         %th Item
-        -@usage_headers.each_with_index do |header|
-          %th= header[:label]
+        -@system_usage.date_column_ranges.each do |item|
+          %th= item[:label]
 
-      - @usage_items.each_with_index do |item, item_index|
+      -@system_usage.usage_items.each_with_index do |_item, item_index|
         %tr
-          %td= @usage_data[item_index].first[:name]
-          -@usage_headers.each_with_index do |header, header_index|
-            %td= @usage_data[item_index][header_index][:value]
+          %td= @system_usage.usage_data[item_index].first[:name]
+          -@system_usage.date_column_ranges.each_with_index do |_header, header_index|
+            %td= @system_usage.usage_data[item_index][header_index][:value]

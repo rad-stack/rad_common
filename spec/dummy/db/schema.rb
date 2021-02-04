@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_11_201627) do
+ActiveRecord::Schema.define(version: 2021_02_04_112040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 2021_01_11_201627) do
     t.boolean "read_division", default: false, null: false
     t.boolean "update_division", default: false, null: false
     t.boolean "delete_division", default: false, null: false
+    t.boolean "external", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 
@@ -201,19 +202,23 @@ ActiveRecord::Schema.define(version: 2021_01_11_201627) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "message_type", null: false
+    t.integer "security_role_id"
+    t.index ["security_role_id"], name: "index_system_messages_on_security_role_id"
     t.index ["user_id"], name: "index_system_messages_on_user_id"
   end
 
   create_table "twilio_logs", force: :cascade do |t|
-    t.string "to_number", null: false
     t.string "from_number", null: false
-    t.integer "user_id"
+    t.string "to_number", null: false
+    t.integer "from_user_id", null: false
+    t.integer "to_user_id"
     t.string "message", null: false
     t.string "media_url"
     t.boolean "success", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_twilio_logs_on_user_id"
+    t.index ["from_user_id"], name: "index_twilio_logs_on_from_user_id"
+    t.index ["to_user_id"], name: "index_twilio_logs_on_to_user_id"
   end
 
   create_table "user_security_roles", id: :serial, force: :cascade do |t|
@@ -300,8 +305,10 @@ ActiveRecord::Schema.define(version: 2021_01_11_201627) do
   add_foreign_key "notification_settings", "users"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
+  add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
-  add_foreign_key "twilio_logs", "users"
+  add_foreign_key "twilio_logs", "users", column: "from_user_id"
+  add_foreign_key "twilio_logs", "users", column: "to_user_id"
   add_foreign_key "user_security_roles", "security_roles"
   add_foreign_key "user_security_roles", "users"
   add_foreign_key "users", "user_statuses"

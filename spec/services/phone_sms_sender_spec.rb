@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe PhoneSMSSender, type: :service do
-  let(:sending_user) { create :user }
+  let(:from_user) { create :user }
   let(:mobile_phone) { '(618) 722-2169' }
   let(:message) { 'test message' }
-  let(:sms_sender) { described_class.new(message, mobile_phone) }
+  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone) }
 
   describe 'send', :vcr do
     subject(:result) { sms_sender.send! }
