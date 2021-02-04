@@ -7,6 +7,7 @@ module RadSecurityRole
     has_many :user_security_roles, dependent: :restrict_with_error
     has_many :users, through: :user_security_roles, dependent: :destroy
     has_many :notification_security_roles, dependent: :destroy
+    has_many :system_messages, dependent: :destroy
 
     scope :by_name, -> { order(:name) }
     scope :internal, -> { where(external: false) }
