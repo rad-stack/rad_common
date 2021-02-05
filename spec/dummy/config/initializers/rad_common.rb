@@ -78,7 +78,6 @@ RadCommon.setup do |config|
         query_order: 'name' },
       { name: 'user_by_division_name',
         model: 'User',
-
         description: 'Search user by division name',
         columns: [],
         joins: 'JOIN divisions on divisions.owner_id = users.id',
