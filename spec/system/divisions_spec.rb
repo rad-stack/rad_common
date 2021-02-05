@@ -85,7 +85,7 @@ RSpec.describe 'Divisions', type: :system do
 
     it 'displays error for owner field when blank', js: true do
       visit edit_division_path(division)
-      fill_in 'owner_name', with: ''
+      fill_in 'owner_name_search', with: ''
       click_button 'Save'
 
       if ENV['CI']

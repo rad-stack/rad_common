@@ -7,7 +7,7 @@
 - search_label = local_assigns.has_key?(:search_label) ? local_assigns[:search_label] : association.to_s.titleize
 
 = render 'layouts/autocomplete', search_path: search_path,
-                                 search_input_name: "#{association}_name",
+                                 search_input_name: "#{association}_name_search",
                                  search_placeholder: search_placeholder,
                                  show_required_star: show_required_star,
                                  search_label: search_label,
