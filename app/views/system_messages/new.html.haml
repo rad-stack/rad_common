@@ -13,6 +13,8 @@
           .col-lg-3= f.input :message_type, collection: message_type_options, include_blank: false
           .col-lg-3
             = f.input :send_to, collection: message_send_to_options, include_blank: false
+          .col-lg-3
+            = f.association :security_role, collection: SecurityRole.by_name, label: 'Limit To Security Role (optional)'
         .row
           .col-lg-12.email-message
             = f.input :email_message_body, placeholder: 'Enter a message to be emailed to active users in the system.',

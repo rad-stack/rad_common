@@ -20,7 +20,8 @@ module RadCommon
     def system_message_show_data(system_message)
       [{ label: 'Message', value: system_message.html_message },
        { label: 'Message Type',
-         value: enum_to_translated_option(SystemMessage, :message_type, system_message.message_type) }]
+         value: enum_to_translated_option(SystemMessage, :message_type, system_message.message_type) },
+       :security_role]
     end
   end
 end
