@@ -1,15 +1,17 @@
 = f.input "#{association.to_s}_id", as: :hidden
 = f.input association, as: :hidden
 
+- excluded_ids = local_assigns.has_key?(:excluded_ids) ? local_assigns[:excluded_ids] : nil
 - search_placeholder = local_assigns.has_key?(:initial_value) ? local_assigns[:initial_value] : ''
 - show_required_star = local_assigns.has_key?(:required) ? local_assigns[:required] : false
 - search_label = local_assigns.has_key?(:search_label) ? local_assigns[:search_label] : association.to_s.titleize
 
 = render 'layouts/autocomplete', search_path: search_path,
-                                 search_input_name: "#{association}_name",
+                                 search_input_name: "#{association}_name_search",
                                  search_placeholder: search_placeholder,
                                  show_required_star: show_required_star,
                                  search_label: search_label,
                                  initial_value: initial_value,
+                                 excluded_ids: excluded_ids,
                                  id_element: "##{base_object.to_s}_#{association.to_s}_id",
                                  association_element: "##{base_object.to_s}_#{association.to_s}"

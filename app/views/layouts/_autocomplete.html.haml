@@ -1,8 +1,20 @@
+-excluded_ids = local_assigns.has_key?(:excluded_ids) ? local_assigns[:excluded_ids] : nil
+-a_element = local_assigns[:association_element]
+
 .form-group.string.optional
   %label.string.optional.col-form-label
     - if defined?(show_required_star) && show_required_star == true
       %span{title: 'required'}*
     #{search_label}
-  %input.form-control.input-medium.ui-autocomplete-input.field-autocomplete{value: initial_value, name: search_input_name, id: search_input_name, placeholder: search_placeholder,
-                                                                            size: "50", type: "text",  autocomplete:"off",
-                                                                            :"data-id-element" => id_element, :"data-association-element" => local_assigns[:association_element], :"data-autocomplete" => search_path }
+
+  %input.form-control.input-medium.ui-autocomplete-input.field-autocomplete{ value: initial_value,
+                                                                             name: search_input_name,
+                                                                             id: search_input_name,
+                                                                             placeholder: search_placeholder,
+                                                                             size: '50',
+                                                                             type: 'text',
+                                                                             autocomplete:'off',
+                                                                            'data-excluded-ids': excluded_ids,
+                                                                            :'data-id-element' => id_element,
+                                                                            :'data-association-element' => a_element,
+                                                                            :'data-autocomplete' => search_path }
