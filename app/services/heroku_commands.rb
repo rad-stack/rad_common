@@ -10,7 +10,7 @@ class HerokuCommands
 
           write_log backup_url
           write_log 'Downloading last backup file:'
-          write_log `curl -o #{backup_dump_file} #{backup_url}`
+          write_log `curl -o #{backup_dump_file(app_name)} #{backup_url}`
         end
       end
     end
@@ -67,12 +67,8 @@ class HerokuCommands
         app_name.blank? ? '' : "--app #{app_name}"
       end
 
-      def backup_dump_file(app_name = '')
-        if app_name.blank?
-          "#{dump_folder}/#{Date.current}.backup"
-        else
-          "#{dump_folder}/#{app_name}_#{Date.current}.backup"
-        end
+      def backup_dump_file(app_name)
+        "#{dump_folder}/#{app_name}_#{Date.current}.backup"
       end
 
       def clone_dump_file
