@@ -50,7 +50,9 @@ module RadCommon
       def build_search_filters(filters)
         filters.map do |filter|
           if filter.has_key? :type
-            filter[:type].send(:new, filter)
+            filter_type = filter[:type]
+            filter.delete(:type)
+            filter_type.send(:new, filter)
           else
             SearchFilter.new(filter)
           end

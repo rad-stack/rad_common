@@ -30,7 +30,8 @@ class RadAuditSearch < RadCommon::Search
        { input_label: 'Action',
          column: :action,
          options: %w[create update destroy] },
-       { column: :remote_address, type: RadCommon::LikeFilter }]
+       { column: :remote_address, type: RadCommon::LikeFilter },
+       { column: :auditable_id, type: RadCommon::EqualsFilter, data_type: :integer }]
     end
 
     def sort_columns_def

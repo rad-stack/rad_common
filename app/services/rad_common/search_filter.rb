@@ -128,6 +128,10 @@ module RadCommon
       end
     end
 
+    def selected_value(search)
+      search.selected_value(searchable_name) || default_value
+    end
+
     private
 
       def scope_name
