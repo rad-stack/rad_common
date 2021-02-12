@@ -88,3 +88,29 @@ th.actions {
     margin-bottom: 10px;
   }
 }
+
+// This is to add rounded borders around radio button groups so it matches the style of other inputs
+.radio_buttons {
+  display:flex;
+}
+
+.radio_buttons div:last-of-type {
+  border-right: 1px solid #ced4da;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  flex-grow: 1;
+}
+.form-check-inline {
+  border: 1px solid #ced4da;
+  padding: 7px;
+  border-left: none;
+  border-right: none;
+  margin: 0;
+}
+
+.radio_buttons div:first-of-type {
+  border-left: 1px solid #ced4da;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-right: none;
+}
