@@ -171,7 +171,8 @@ class CardPresenter
 
     actions += additional_actions
 
-    if !no_delete_button &&
+    if action_name != 'index' &&
+       !no_delete_button &&
        instance&.persisted? &&
        current_user &&
        Pundit.policy!(current_user, check_policy_klass).destroy? &&
@@ -233,27 +234,27 @@ class CardPresenter
 
   private
 
-    def object_label_plural
-      object_label.pluralize
-    end
+  def object_label_plural
+    object_label.pluralize
+  end
 
-    def object_label
-      klass.model_name.human.titleize
-    end
+  def object_label
+    klass.model_name.human.titleize
+  end
 
-    def check_policy_klass
-      if current_user.portal?
-        [RadCommon.portal_namespace, klass.new]
-      else
-        klass.new
-      end
+  def check_policy_klass
+    if current_user.portal?
+      [RadCommon.portal_namespace, klass.new]
+    else
+      klass.new
     end
+  end
 
-    def check_policy_instance
-      if current_user.portal?
-        [RadCommon.portal_namespace, instance]
-      else
-        instance
-      end
+  def check_policy_instance
+    if current_user.portal?
+      [RadCommon.portal_namespace, instance]
+    else
+      instance
     end
+  end
 end
