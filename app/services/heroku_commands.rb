@@ -1,6 +1,6 @@
 class HerokuCommands
   class << self
-    def backup(app_name = '')
+    def backup(app_name)
       check_production do
         FileUtils.mkdir_p dump_folder
 
@@ -28,7 +28,7 @@ class HerokuCommands
       write_log `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
     end
 
-    def clone(app_name = '', keep_dump_file: nil)
+    def clone(app_name)
       check_production do
         write_log 'Running backup on Heroku...'
 
@@ -56,15 +56,13 @@ class HerokuCommands
         remove_user_avatars
         remove_accounting_keys
         User.update_all authy_enabled: false, authy_id: nil
-
-        dump if keep_dump_file.present?
       end
     end
 
     private
 
-      def app_option(app_name = '')
-        app_name.blank? ? '' : "--app #{app_name}"
+      def app_option(app_name)
+        "--app #{app_name}"
       end
 
       def backup_dump_file(app_name)

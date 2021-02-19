@@ -2,12 +2,14 @@ require 'rails_helper'
 require 'csv'
 
 RSpec.describe HerokuCommands, type: :service do
+  let(:app_name) { 'foo' }
+
   before { allow(described_class).to receive(:dbname).and_return 'foo' }
 
   describe 'backup' do
     it 'runs' do
       # TODO: make this an actual test when time permits
-      expect(described_class.backup).to be_nil
+      expect(described_class.backup(app_name)).to be_nil
     end
   end
 
@@ -30,7 +32,7 @@ RSpec.describe HerokuCommands, type: :service do
   describe 'clone' do
     it 'runs' do
       # TODO: make this an actual test when time permits
-      expect(described_class.clone).to be_nil
+      expect(described_class.clone(app_name)).to eq 0
     end
   end
 end
