@@ -32,15 +32,17 @@ class GlobalValidation
       total_error_count += error_count
     end
 
-    specific_queries = RadCommon.global_validity_include
+    if @override_model.blank?
+      specific_queries = RadCommon.global_validity_include
 
-    specific_queries.each do |query|
-      start_time = Time.current
-      query_errors, error_count = check_query_records(query)
-      error_messages.concat(query_errors) if query_errors.present?
-      end_time = Time.current
-      add_stats query.call.to_sql, start_time, end_time, error_count
-      total_error_count += error_count
+      specific_queries.each do |query|
+        start_time = Time.current
+        query_errors, error_count = check_query_records(query)
+        error_messages.concat(query_errors) if query_errors.present?
+        end_time = Time.current
+        add_stats query.call.to_sql, start_time, end_time, error_count
+        total_error_count += error_count
+      end
     end
 
     @run_stats.sort_by! { |item| item[:run_seconds] }
@@ -91,9 +93,11 @@ class GlobalValidation
       problems = []
       error_count = 0
       records = query.call
+
       records.find_each do |record|
         error_count += 1 if validate_record(record, problems)
       end
+
       [problems, error_count]
     end
 
