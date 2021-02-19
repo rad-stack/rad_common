@@ -122,6 +122,10 @@ module RadbearUser
     Audited::Audit.where(user_id: id).order(created_at: :desc)
   end
 
+  def other_audits_created
+    audits_created.where.not(auditable_id: id, auditable_type: 'User')
+  end
+
   def display_style
     if user_status.active || user_status == UserStatus.default_pending_status
       external? ? 'table-warning' : ''

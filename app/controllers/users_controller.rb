@@ -59,9 +59,19 @@ class UsersController < ApplicationController
 
     if @user == current_user
       flash[:error] = "Can't delete yourself."
-    elsif @user.audits_created.count.positive?
+      redirect_back(fallback_location: users_path)
+      return
+    end
+
+    if @user.other_audits_created.count.positive?
       flash[:error] = "User has audit history, can't delete"
-    elsif @user.destroy
+      redirect_back(fallback_location: users_path)
+      return
+    elsif @user.audits_created.count.positive?
+      @user.audits_created.delete_all
+    end
+
+    if @user.destroy
       flash[:success] = 'User deleted.'
       destroyed = true
     else

@@ -55,5 +55,7 @@ RSpec.describe 'Users', type: :request do
       follow_redirect!
       expect(response.body).to include 'User has audit history'
     end
+
+    pending 'can delete if user created audits on itself'
   end
 end
