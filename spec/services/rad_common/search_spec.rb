@@ -82,7 +82,7 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:query) { Division }
       let(:filters) { [{ column: :owner_id, options: User.by_name, default_value: user.id }] }
       let(:user) { create :admin }
-      let!(:other_division) { create(:division) }
+      let!(:other_division) { create(:division, created_at: 2.days.ago) }
       let!(:default_division) { create(:division, owner: user) }
 
       context 'when in a blank query' do
@@ -95,9 +95,16 @@ RSpec.describe RadCommon::Search, type: :service do
       end
 
       context 'when in a date filter' do
+        let(:filters) do
+          [{ column: :created_at, type: RadCommon::DateFilter,
+             default_start_value: 1.day.ago, default_end_value: 2.days.from_now }]
+        end
         let(:params) { ActionController::Parameters.new }
 
-        it 'filters results using default value'
+        it 'filters results using default value' do
+          expect(search).to include default_division
+          expect(search).not_to include other_division
+        end
       end
 
       context 'when in a query where value is selected' do
@@ -107,10 +114,6 @@ RSpec.describe RadCommon::Search, type: :service do
           expect(search).to include other_division
           expect(search).not_to include default_division
         end
-      end
-
-      context 'with a boolean filter' do
-        it 'filters results using selected value'
       end
     end
 
