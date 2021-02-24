@@ -19,10 +19,6 @@ module RadCommon
       like_input
     end
 
-    def input_label
-      @label
-    end
-
     def like_input
       "#{column}_like"
     end
