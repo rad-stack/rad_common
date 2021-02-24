@@ -6,8 +6,9 @@ module RadCommon
 
     ##
     # @param [String] column the database column that is being filtered
-    def initialize(column:)
+    def initialize(column:, label: nil)
       @column = column
+      @label = label
     end
 
     def filter_view
@@ -16,6 +17,10 @@ module RadCommon
 
     def searchable_name
       like_input
+    end
+
+    def input_label
+      @label
     end
 
     def like_input
