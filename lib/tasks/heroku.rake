@@ -6,8 +6,8 @@ namespace :heroku do
     HerokuCommands.backup args[:heroku_app]
   end
 
-  task :clone_local, %i[heroku_app keep_dump_file] => :environment do |_t, args|
-    HerokuCommands.clone args[:heroku_app], keep_dump_file: args[:keep_dump_file]
+  task :clone_local, %i[heroku_app] => :environment do |_t, args|
+    HerokuCommands.clone args[:heroku_app]
   end
 end
 
