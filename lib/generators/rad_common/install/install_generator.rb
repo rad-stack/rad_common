@@ -26,6 +26,11 @@ module RadCommon
         # .env.example
         template '../../../../../spec/dummy/.env.example', '.env.example'
 
+        # code style config
+        copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
+        copy_file '../../../../../.hound.yml', '.hound.yml'
+        copy_file '../../../../../.rubocop.yml', '.rubocop.yml'
+
         # initializers
         template 'rad_common.rb', 'config/initializers/rad_common.rb'
         template '../../../../../spec/dummy/config/initializers/raven.rb', 'config/initializers/raven.rb'
