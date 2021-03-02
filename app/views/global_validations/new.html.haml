@@ -13,7 +13,7 @@
       %a.btn.dropdown-toggle.btn-lg.btn-warning{ 'data-toggle': 'dropdown', href: '#' }
         = icon(:check, 'Validate Single Item')
       %ul.dropdown-menu
-        -GlobalValidation.available_models.each do |item|
+        - GlobalValidation.available_models.each do |item|
           %li
             = link_to item,
                       "/rad_common/global_validations?single_model=#{item}",
