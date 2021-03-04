@@ -1,4 +1,4 @@
--show_actions = show_actions?(Division)
+- show_actions = show_actions?(Division)
 
 .card
   = render 'layouts/card_header'
@@ -14,7 +14,7 @@
         %th Owner
         %th Logo
         %th Attachment
-        -if show_actions
+        - if show_actions
           %th.actions Actions
 
       - @divisions.each do |division|
@@ -24,11 +24,18 @@
           %td= secured_link(division.owner)
           %td= render 'layouts/attachment', record: division, attachment_name: 'logo', new_tab: true
           %td= render 'layouts/attachment', record: division, attachment_name: 'attachment', new_tab: true
-          -if show_actions
+          - if show_actions
             %td
-              -if policy(division).update?
-                = link_to icon(:pencil, 'Edit'), edit_division_path(division), class: 'btn btn-sm btn-secondary btn-block'
-              -if policy(division).destroy?
-                = link_to icon(:times, 'Delete'), division, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm btn-block'
+              - if policy(division).update?
+                = link_to icon(:pencil, 'Edit'),
+                          edit_division_path(division),
+                          class: 'btn btn-sm btn-secondary btn-block'
+
+              - if policy(division).destroy?
+                = link_to icon(:times, 'Delete'),
+                          division,
+                          method: :delete,
+                          data: { confirm: 'Are you sure?' },
+                          class: 'btn btn-danger btn-sm btn-block'
 
     = paginate @divisions, theme: 'twitter-bootstrap-4'

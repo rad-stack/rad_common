@@ -1,18 +1,18 @@
 - card_presenter(local_assigns) do |card|
   .card-header
     .title-header
-      %div{class: "title-text #{card.title_class}"}
-        -if card.output_icon.present?
-          %div{class: "fa #{card.output_icon}"}
-        -if card.output_title.present?
+      %div{ class: "title-text #{card.title_class}" }
+        - if card.output_icon.present?
+          %div{ class: "fa #{card.output_icon}" }
+        - if card.output_title.present?
           = card.output_title
       .action-buttons
-        -card.output_actions.each do |action|
+        - card.output_actions.each do |action|
           = action
-      -if card.output_external_actions.any?
+      - if card.output_external_actions.any?
         .external-actions
-          -card.output_external_actions.each do |action|
+          - card.output_external_actions.each do |action|
             = action
-      -if card.output_back_button?
+      - if card.output_back_button?
         .back-button
           = link_to content_tag(:it, '', class: 'fa fa-times'), :back, class: 'btn btn-warning btn-sm'

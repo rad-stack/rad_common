@@ -1,7 +1,7 @@
--if user_signed_in? && current_user
-  -search_scopes = global_search_scopes.reject { |item| item[:hide_global_nav] }
+- if user_signed_in? && current_user
+  - search_scopes = global_search_scopes.reject { |item| item[:hide_global_nav] }
 
-  -if search_scopes.any?
+  - if search_scopes.any?
     = form_tag('/rad_common/global_search_result', method: :get) do
       .global-search-group
         .input-group
@@ -13,7 +13,7 @@
                        'aria-expanded': 'true',
                        'data-toggle': 'dropdown' }
 
-                %ul.dropdown-menu{'aria-labelledby': 'dropdownMenu1', role: 'menu'}
+                %ul.dropdown-menu{ 'aria-labelledby': 'dropdownMenu1', role: 'menu' }
                   - search_scopes.each_with_index do |scope, index|
                     %li{ role: 'presentation', class: index == 0 ? 'selected-search' : '' }
 
@@ -38,7 +38,7 @@
                      data: { toggle: 'tooltip', placement: 'top'},
                      title: 'Super search takes longer than scoped search.' }
 
-              %input{type: 'checkbox', name: 'super_search', class: 'super_search ml-2'}
-              %input{type: 'hidden', name: 'global_search_id', class: 'global_search_id'}
-              %input{type: 'hidden', name: 'global_search_model_name', class: 'global_search_model_name'}
-              %input{type: 'hidden', name: 'global_search_scope', class: 'global_search_scope'}
+              %input{ type: 'checkbox', name: 'super_search', class: 'super_search ml-2' }
+              %input{ type: 'hidden', name: 'global_search_id', class: 'global_search_id' }
+              %input{ type: 'hidden', name: 'global_search_model_name', class: 'global_search_model_name' }
+              %input{ type: 'hidden', name: 'global_search_scope', class: 'global_search_scope' }

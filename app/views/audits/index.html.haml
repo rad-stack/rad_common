@@ -26,10 +26,10 @@
           %tr
             %td
               %p= format_datetime(audit.created_at)
-              %p= "#{distance_of_time_in_words_to_now(audit.created_at)} ago"
+              %p #{distance_of_time_in_words_to_now(audit.created_at)} ago
             - if @show_search
               - if audit.action == 'destroy'
-                %td= "#{audit.auditable_type} (#{audit.auditable_id})"
+                %td #{audit.auditable_type} (#{audit.auditable_id})
               - else
                 %td= audit_model_link(audit, audit.auditable)
               %td= audit.auditable_id

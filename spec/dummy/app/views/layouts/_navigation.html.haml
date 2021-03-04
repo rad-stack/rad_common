@@ -1,17 +1,17 @@
-#navbar.navbar.navbar-expand-lg.navbar-light.bg-light
+.navbar.navbar-expand-lg.navbar-light.bg-light#navbar
   .container-fluid
     = link_to root_path, { class: 'navbar-brand' } do
       = image_tag 'app_logo.png'
     %button.navbar-toggler{ type: 'button', data: { toggle: 'collapse', target: '#navbarSupportedContent' } }
       %span.navbar-toggler-icon
-    #navbarSupportedContent.navbar-collapse.collapse.navbar-responsive-collapse
+    .navbar-collapse.collapse.navbar-responsive-collapse#navbarSupportedContent
       - if user_signed_in?
         %ul.nav.navbar-nav.navbar-left
-          -if policy(Division).index?
+          - if policy(Division).index?
             %li= link_to 'Divisions', divisions_path, class: 'nav-link'
-          -if current_user.admin?
+          - if current_user.admin?
             %li.nav-item.dropdown
-              %a.nav-link.dropdown-toggle{'data-toggle': 'dropdown', href: '#'}
+              %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#' }
                 Admin
               %ul.dropdown-menu
                 %li= link_to 'Divisions', divisions_path, class: 'dropdown-item'

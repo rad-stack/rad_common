@@ -9,13 +9,13 @@
 
       - search_params = { search: search.search_params.merge( { 'sort': sort_column[:column], 'direction': direction}) }
 
-      -if search.class.to_s == 'RadAuditSearch'
+      - if search.class.to_s == 'RadAuditSearch'
         = link_to label, "/rad_common/audits?#{search_params.to_query}"
-      -elsif search.class.to_s == 'LoginActivitySearch'
+      - elsif search.class.to_s == 'LoginActivitySearch'
         = link_to label, "/rad_common/login_activities?#{search_params.to_query}"
-      -elsif search.class.to_s == 'TwilioLogSearch'
+      - elsif search.class.to_s == 'TwilioLogSearch'
         = link_to label, "/rad_common/twilio_logs?#{search_params.to_query}"
-      -else
+      - else
         = link_to label, search_params
 
       - if sort_column[:column] == search.sort_column

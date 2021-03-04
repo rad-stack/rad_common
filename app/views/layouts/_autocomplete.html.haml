@@ -1,10 +1,10 @@
--excluded_ids = local_assigns.has_key?(:excluded_ids) ? local_assigns[:excluded_ids] : nil
--a_element = local_assigns[:association_element]
+- excluded_ids = local_assigns.has_key?(:excluded_ids) ? local_assigns[:excluded_ids] : nil
+- a_element = local_assigns[:association_element]
 
 .form-group.string.optional
   %label.string.optional.col-form-label
     - if defined?(show_required_star) && show_required_star == true
-      %span{title: 'required'}*
+      %span{ title: 'required' }*
     #{search_label}
 
   %input.form-control.input-medium.ui-autocomplete-input.field-autocomplete{ value: initial_value,

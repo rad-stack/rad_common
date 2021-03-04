@@ -10,7 +10,7 @@
           %a.btn.dropdown-toggle.btn-success{ 'data-toggle': 'dropdown', href: '#' }
             = @system_usage.date_mode
           %ul.dropdown-menu
-            -SystemUsage.date_mode_options.each do |item|
+            - SystemUsage.date_mode_options.each do |item|
               %li
                 = link_to item,
                           "/rad_common/system_usages?date_mode=#{item}&date_range_count=#{@system_usage.date_range_count}",
@@ -20,7 +20,7 @@
           %a.nav-link.dropdown-toggle.btn-success{ 'data-toggle': 'dropdown', href: '#' }
             = "#{@system_usage.date_range_count} Columns"
           %ul.dropdown-menu
-            -SystemUsage.date_range_count_options.each do |item|
+            - SystemUsage.date_range_count_options.each do |item|
               %li
                 = link_to "#{item} Columns",
                           "/rad_common/system_usages?date_mode=#{@system_usage.date_mode}&date_range_count=#{item}",
@@ -29,11 +29,11 @@
     %table.table.table-striped.table-bordered
       %tr
         %th Item
-        -@system_usage.date_column_ranges.each do |item|
+        - @system_usage.date_column_ranges.each do |item|
           %th= item[:label]
 
-      -@system_usage.usage_items.each_with_index do |_item, item_index|
+      - @system_usage.usage_items.each_with_index do |_item, item_index|
         %tr
           %td= @system_usage.usage_data[item_index].first[:name]
-          -@system_usage.date_column_ranges.each_with_index do |_header, header_index|
+          - @system_usage.date_column_ranges.each_with_index do |_header, header_index|
             %td= @system_usage.usage_data[item_index][header_index][:value]

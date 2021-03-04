@@ -3,8 +3,8 @@
   - show_notifications = settings.count.positive?
   - column_class = show_notifications ? 'col-lg-4' : 'col-lg-6'
 
-  -if policy(SecurityRole).index?
-    -all_perms = @user.all_permissions
+  - if policy(SecurityRole).index?
+    - all_perms = @user.all_permissions
     %div{ class: column_class }
       .card
         = render 'layouts/card_header', action_name: 'custom', title: 'Security Roles', icon: 'fa-list'
@@ -24,8 +24,8 @@
                 %td
                   = link_to name, permission_security_roles_path(permission_name: permission)
                   = permission_tooltip_content(permission)
-                %td{class: all_perms.include?(permission) ? 'fa fa-check green-check' : 'fa fa-times red-x'}
-  -if show_notifications
+                %td{ class: all_perms.include?(permission) ? 'fa fa-check green-check' : 'fa fa-times red-x' }
+  - if show_notifications
     %div{ class: column_class }
       .card
         = render 'layouts/card_header', action_name: 'custom', title: 'Notification Settings', icon: 'fa-list'

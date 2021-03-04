@@ -2,6 +2,10 @@
 # frameworks such as Jekyll/Middleman
 skip_frontmatter: false
 
+exclude:
+  - 'lib/templates/**/*'
+  - 'spec/dummy/lib/templates/**/*'
+
 linters:
   AltText:
     enabled: false
@@ -35,6 +39,8 @@ linters:
     enabled: true
 
   LineLength:
+    exclude:
+      - 'spec/dummy/app/views/devise/**/*.html.haml'
     enabled: true
     max: 120
 

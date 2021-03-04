@@ -1,11 +1,11 @@
--if message
+- if message
   .email-row
     .email-col-12
       .email-info-box.email-action-box
         .email-action
           = message
         = link_to button_text, button_url, class: 'email-btn-success'
--else
+- else
   .email-row
     .email-col-12.text-align-center
       = link_to button_text, button_url, class: 'email-btn-success'
