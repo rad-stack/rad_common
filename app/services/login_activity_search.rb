@@ -20,7 +20,7 @@ class LoginActivitySearch < RadCommon::Search
          type: RadCommon::LikeFilter },
        { input_label: 'Login Status',
          name: :status,
-         scope_values: { 'Failure': :failure, 'Success': :successful },
+         scope_values: { Failure: :failure, Success: :successful },
          blank_value_label: 'All' },
        { input_label: 'Failure Reason',
          column: :failure_reason,

@@ -55,7 +55,7 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:filters) { [{ column: 'users.created_at', type: RadCommon::DateFilter }] }
       let(:params) do
         ActionController::Parameters.new(search: { 'users.created_at_start': 3.days.ago.strftime('%Y-%m-%d'),
-                                                   'users.created_at_end': Date.today.strftime('%Y-%m-%d') })
+                                                   'users.created_at_end': Date.current.strftime('%Y-%m-%d') })
       end
 
       it 'filters results' do
@@ -154,7 +154,7 @@ RSpec.describe RadCommon::Search, type: :service do
     let(:params) { ActionController::Parameters.new }
 
     before do
-      default_values = { 'divisions_search': { user_status_id: UserStatus.default_active_status.id } }
+      default_values = { divisions_search: { user_status_id: UserStatus.default_active_status.id } }
       user.update!(filter_defaults: default_values)
     end
 
@@ -199,12 +199,13 @@ RSpec.describe RadCommon::Search, type: :service do
 
     let(:query) { User }
     let!(:user_1) { create :user }
-    let!(:user_2) { create :user }
     let(:filters) { [{ column: :id, type: RadCommon::EqualsFilter, data_type: :integer }] }
 
     let(:params) do
       ActionController::Parameters.new(search: { id_equals: user_1.id })
     end
+
+    before { create :user }
 
     it 'shows correct results' do
       expect(search.results.count).to eq 1
@@ -340,8 +341,8 @@ RSpec.describe RadCommon::Search, type: :service do
     end
 
     let(:query) { Division }
-    let!(:user_1) { create(:user)}
-    let!(:user_2) { create(:user)}
+    let!(:user_1) { create(:user) }
+    let!(:user_2) { create(:user) }
     let(:filters) do
       [{ column: :owner_id, input_label: 'Users', options: User.all, default_value: user_1.id }]
     end

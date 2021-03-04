@@ -234,27 +234,27 @@ class CardPresenter
 
   private
 
-  def object_label_plural
-    object_label.pluralize
-  end
-
-  def object_label
-    klass.model_name.human.titleize
-  end
-
-  def check_policy_klass
-    if current_user.portal?
-      [RadCommon.portal_namespace, klass.new]
-    else
-      klass.new
+    def object_label_plural
+      object_label.pluralize
     end
-  end
 
-  def check_policy_instance
-    if current_user.portal?
-      [RadCommon.portal_namespace, instance]
-    else
-      instance
+    def object_label
+      klass.model_name.human.titleize
     end
-  end
+
+    def check_policy_klass
+      if current_user.portal?
+        [RadCommon.portal_namespace, klass.new]
+      else
+        klass.new
+      end
+    end
+
+    def check_policy_instance
+      if current_user.portal?
+        [RadCommon.portal_namespace, instance]
+      else
+        instance
+      end
+    end
 end

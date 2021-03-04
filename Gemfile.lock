@@ -101,7 +101,7 @@ GEM
     ast (2.4.2)
     audited (4.10.0)
       activerecord (>= 4.2, < 6.2)
-    authtrail (0.3.0)
+    authtrail (0.3.1)
       activerecord (>= 5.2)
       geocoder
       railties (>= 5.2)
@@ -275,7 +275,7 @@ GEM
       railties (>= 3.1)
     msgpack (1.4.2)
     multipart-post (2.1.1)
-    nio4r (2.5.5)
+    nio4r (2.5.7)
     nokogiri (1.11.1)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)

@@ -9,14 +9,14 @@ RSpec.describe 'Companies', type: :system do
     visit '/rad_common/global_validations/new'
   end
 
-  context 'full database' do
+  context 'when full database' do
     it 'runs' do
       click_on 'Validate Full Database'
       expect(page).to have_content(result)
     end
   end
 
-  context 'single item' do
+  context 'when single item' do
     it 'runs' do
       click_on 'Company'
       expect(page).to have_content(result)
