@@ -2,9 +2,9 @@
   .container-fluid
     = link_to root_path, { class: 'navbar-brand' } do
       = image_tag 'app_logo.png'
-    %button.navbar-toggler{ type: 'button', data: { toggle: 'collapse', target: '#navbarSupportedContent' } }
+    %button.navbar-toggler{ type: 'button', data: { toggle: 'collapse', target: '#navbar-supported-content' } }
       %span.navbar-toggler-icon
-    .navbar-collapse.collapse.navbar-responsive-collapse#navbarSupportedContent
+    .navbar-collapse.collapse.navbar-responsive-collapse#navbar-supported-content
       - if user_signed_in?
         %ul.nav.navbar-nav.navbar-left
           - if policy(Division).index?

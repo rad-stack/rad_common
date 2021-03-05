@@ -43,5 +43,11 @@ module RadCommon
                                                                                data: { confirm: confirm },
                                                                                class: 'btn btn-warning btn-sm'
     end
+
+    def export_users_button(user_search)
+      link_to 'Export to File',
+              users_path(search: user_search.search_params, format: :csv),
+              class: 'btn btn-sm btn-secondary'
+    end
   end
 end

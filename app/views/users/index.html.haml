@@ -7,9 +7,7 @@
   .card-body
     = render 'users/index', users: @pending, page_param_name: :pending_page
 .card
-  = render 'layouts/card_header', no_new_button: true,
-                                  additional_actions: [link_to('Export to File', users_path(search: @user_search.search_params, format: :csv), class: 'btn btn-sm btn-secondary')]
-
+  = render 'layouts/card_header', no_new_button: true, additional_actions: [export_users_button(@user_search)]
   .card-body
     = render 'layouts/filter', search: @user_search, path: users_path
     = render 'users/index', users: @users, sort_columns: true

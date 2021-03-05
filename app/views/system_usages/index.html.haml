@@ -12,13 +12,17 @@
           %ul.dropdown-menu
             - SystemUsage.date_mode_options.each do |item|
               %li
+                :ruby
+                  path_string = "/rad_common/system_usages?date_mode=#{item}&date_range_"\
+                                "count=#{@system_usage.date_range_count}"
+
                 = link_to item,
-                          "/rad_common/system_usages?date_mode=#{item}&date_range_count=#{@system_usage.date_range_count}",
+                          path_string,
                           class: 'dropdown-item'
 
         .btn-group
           %a.nav-link.dropdown-toggle.btn-success{ 'data-toggle': 'dropdown', href: '#' }
-            = "#{@system_usage.date_range_count} Columns"
+            #{@system_usage.date_range_count} Columns
           %ul.dropdown-menu
             - SystemUsage.date_range_count_options.each do |item|
               %li

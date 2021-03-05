@@ -1,15 +1,15 @@
-- company = Company.main
-- logo_includes_name = RadCommon.app_logo_includes_name
-- protocol = Rails.env.production? ? 'https' : 'http'
-- logo_url = "#{protocol}://#{RadCommon::AppInfo.new.host_name}/app_logo.png"
-
-- site_name = company.name
-- website = company.website
-- company_name = company.name
-- company_full_address = company.full_address
-- company_phone_number = company.phone_number
-- admin_email = company.email
-- has_avatar = RadCommon.use_avatar && @sender && @sender.avatar.attached?
+:ruby
+  company = Company.main
+  logo_includes_name = RadCommon.app_logo_includes_name
+  protocol = Rails.env.production? ? 'https' : 'http'
+  logo_url = "#{protocol}://#{RadCommon::AppInfo.new.host_name}/app_logo.png"
+  site_name = company.name
+  website = company.website
+  company_name = company.name
+  company_full_address = company.full_address
+  company_phone_number = company.phone_number
+  admin_email = company.email
+  has_avatar = RadCommon.use_avatar && @sender && @sender.avatar.attached?
 
 !!!
 %head
@@ -30,11 +30,11 @@
           .greeting
             .text
               - if @recipient.respond_to?(:greeting)
-                = "#{@recipient.greeting},"
+                #{@recipient.greeting},
               - elsif @recipient.is_a?(String)
-                = "Hello #{@recipient},"
+                Hello #{@recipient},
               - elsif @recipient.respond_to?(:count)
-                = 'Hello all,'
+                Hello all,
               - else
                 - raise "please set up greeting method in #{@recipient.class} before using this mailer"
       .email-row

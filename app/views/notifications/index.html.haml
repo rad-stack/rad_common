@@ -14,7 +14,7 @@
         %tr{ class: notification.unread? ? 'text-danger' : '' }
           %td
             %p= format_datetime(notification.created_at)
-            %p= "#{distance_of_time_in_words_to_now(notification.created_at)} ago"
+            %p #{distance_of_time_in_words_to_now(notification.created_at)} ago
           %td= notification.content
           %td
             - if notification.record.present?

@@ -23,7 +23,8 @@
 
           .col-lg-12.sms-message
             %h6.text-danger Please note: only users with a mobile phone # on file will receive the message.
-            = f.input :sms_message_body, placeholder: 'Enter a message to be texted to all active users that have a mobile phone #.',
+            - placeholder = 'Enter a message to be texted to all active users that have a mobile phone #.'
+            = f.input :sms_message_body, placeholder: placeholder,
                                          label: 'Message',
                                          as: :text, input_html: { rows: 4 }
 

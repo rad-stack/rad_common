@@ -1,7 +1,22 @@
 .row
   .col-lg-6
-    = f.input filter.start_input, as: :date, html5: true, label: filter.start_input_label, required: false,
-              input_html: {  value: search.search_params[filter.start_input] || filter.default_start_value.to_s, data: { default: search.search_params[filter.start_input] || filter.default_start_value.to_s } }
+    - input_data = { default: search.search_params[filter.start_input] || filter.default_start_value.to_s }
+
+    = f.input filter.start_input,
+              as: :date,
+              html5: true,
+              label: filter.start_input_label,
+              required: false,
+              input_html: { value: search.search_params[filter.start_input] || filter.default_start_value.to_s,
+                            data: input_data }
+
   .col-lg-6
-    = f.input filter.end_input, as: :date, html5: true, label: filter.end_input_label, required: false,
-              input_html: {  value: search.search_params[filter.end_input] || filter.default_end_value.to_s, data: { default: search.search_params[filter.end_input] || filter.default_end_value.to_s } }
+    - input_data = { default: search.search_params[filter.end_input] || filter.default_end_value.to_s }
+
+    = f.input filter.end_input,
+              as: :date,
+              html5: true,
+              label: filter.end_input_label,
+              required: false,
+              input_html: { value: search.search_params[filter.end_input] || filter.default_end_value.to_s,
+                            data: input_data }

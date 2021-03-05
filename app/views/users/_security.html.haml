@@ -1,7 +1,8 @@
 .row
-  - settings = NotificationSetting.settings_for_user(@user)
-  - show_notifications = settings.count.positive?
-  - column_class = show_notifications ? 'col-lg-4' : 'col-lg-6'
+  :ruby
+    settings = NotificationSetting.settings_for_user(@user)
+    show_notifications = settings.count.positive?
+    column_class = show_notifications ? 'col-lg-4' : 'col-lg-6'
 
   - if policy(SecurityRole).index?
     - all_perms = @user.all_permissions
