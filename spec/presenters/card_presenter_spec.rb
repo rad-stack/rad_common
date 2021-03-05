@@ -79,7 +79,7 @@ describe CardPresenter do
 
   describe '#klass' do
     before do
-      allow(view_context).to receive_message_chain(:controller_name, :classify).and_return('Class')
+      allow(view_context).to receive(:controller_name, :classify).and_return('Class')
     end
 
     it 'returns something if not custom' do
