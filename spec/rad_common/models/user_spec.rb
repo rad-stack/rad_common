@@ -62,7 +62,6 @@ describe User, type: :model do
       end
 
       it 'audits' do
-        audit = user.own_and_associated_audits.reorder('created_at DESC').first
         expect(audit.auditable_type).to eq 'UserSecurityRole'
         expect(audit.associated).to eq user
         expect(audit.action).to eq 'destroy'
