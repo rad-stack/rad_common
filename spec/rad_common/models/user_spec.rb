@@ -39,7 +39,7 @@ describe User, type: :model do
   end
 
   describe 'auditing of associations' do
-    let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
+    let!(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
 
     context 'with create' do
       before do
