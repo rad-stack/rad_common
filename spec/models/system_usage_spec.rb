@@ -10,6 +10,7 @@ describe SystemUsage, type: :model do
 
     let(:first_day_of_week) { Time.current.beginning_of_week(:sunday).beginning_of_day }
     let(:last_day_of_week) { Time.current.end_of_week(:sunday).end_of_day }
+
     let(:expected_date_ranges) do
       [[first_day_of_week - 3.weeks, last_day_of_week - 3.weeks],
        [first_day_of_week - 2.weeks, last_day_of_week - 2.weeks],
@@ -17,9 +18,9 @@ describe SystemUsage, type: :model do
        [first_day_of_week, last_day_of_week]]
     end
 
-    before do
-      Timecop.freeze(Time.current.beginning_of_week)
-    end
+    before { Timecop.freeze(Time.current.beginning_of_week) }
+
+    after { Timecop.return }
 
     it 'returns list of weekly date ranges' do
       expect(date_ranges).to eq(expected_date_ranges)
