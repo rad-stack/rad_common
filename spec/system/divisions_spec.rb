@@ -109,6 +109,15 @@ RSpec.describe 'Divisions', type: :system do
       click_button 'Apply Filters'
       expect(page).to have_content('Invalid date entered')
     end
+
+    context 'with hidden filter' do
+      it 'shows header' do
+        visit divisions_path(search: { show_header: true })
+        expect(page.body).to have_content 'Showing header'
+        visit divisions_path
+        expect(page.body).not_to have_content 'Showing header'
+      end
+    end
   end
 
   describe 'show' do

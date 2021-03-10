@@ -59,7 +59,9 @@ module RadCommon
         filter_defaults[search_name] = {} if filter_defaults[search_name].blank?
 
         @search.search_params.each do |filter_name, value|
-          filter_defaults[search_name][filter_name.to_s] = value
+          unless @search.skip_default?(filter_name)
+            filter_defaults[search_name][filter_name.to_s] = value
+          end
         end
 
         @current_user.update_column(:filter_defaults, filter_defaults)

@@ -5,7 +5,7 @@
     .row
       - col_class = filters.count > 2 ? 'col-lg' : 'col-lg-4'
       - filters.each do |filter|
-        %div{ class: col_class }
+        %div{ class: "#{col_class} #{filter_col_class(filter)}" }
           = render "layouts/filter_#{filter.filter_view}", filter: filter, search: search, f: f
 
   .form-actions

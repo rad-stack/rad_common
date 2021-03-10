@@ -23,6 +23,7 @@ class DivisionSearch < RadCommon::Search
      { column: :created_at, type: RadCommon::DateFilter,
        start_input_label: 'Division Created At Start',
        end_input_label: 'Division Created At End',
-       default_start_value: Date.current, default_end_value: Date.current }]
+       default_start_value: Date.current, default_end_value: Date.current },
+     { name: 'show_header', type: RadCommon::HiddenFilter } ]
   end
 end
