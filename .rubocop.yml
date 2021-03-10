@@ -91,6 +91,8 @@ Metrics/MethodLength:
 
 Metrics/ParameterLists:
   Max: 6
+  Exclude:
+    - 'db/seeds.rb'
 
 # This is unnecessary. Calling the argument `other` in all cases makes no sense
 Naming/BinaryOperatorParameterName:
