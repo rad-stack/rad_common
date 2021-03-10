@@ -64,7 +64,7 @@ module RadCommon
       end
 
       def sort_params
-        return {} unless @search.search_params
+        return {} unless @search.search_params?
 
         @search.params.require(:search).slice(:sort, :direction).permit(:sort, :direction)
       end
