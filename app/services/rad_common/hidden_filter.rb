@@ -3,9 +3,10 @@ module RadCommon
   # This is used to generate a hidden input to pass url parameters to query
   class HiddenFilter
     attr_reader :name
+
     ##
     # @param [String] name the input name for hidden input
-    def initialize(name:, input_label: nil)
+    def initialize(name:)
       @name = name
     end
 
@@ -21,7 +22,7 @@ module RadCommon
       @name
     end
 
-    def apply_filter(results, params)
+    def apply_filter(results, _params)
       # For now do nothing with this
       results
     end
