@@ -78,8 +78,11 @@ describe CardPresenter do
   end
 
   describe '#klass' do
+    let(:controller_name) { 'a_controller' }
+
     before do
-      allow(view_context).to receive_message_chain(:controller_name, :classify).and_return('Class')
+      allow(view_context).to receive(:controller_name).and_return(controller_name)
+      allow(controller_name).to receive(:classify).and_return('Class')
     end
 
     it 'returns something if not custom' do
@@ -94,9 +97,17 @@ describe CardPresenter do
   end
 
   describe '#instance' do
+    let(:controller) { 'controller' }
+    let(:controller_name) { 'a_controller' }
+    let(:klass) { 'Class' }
+
     before do
-      allow(view_context).to receive_message_chain(:controller, :instance_variable_get).and_return('something')
-      allow(view_context).to receive_message_chain(:controller_name, :classify, :underscore).and_return('whatever')
+      allow(view_context).to receive(:controller).and_return(controller)
+      allow(controller).to receive(:instance_variable_get).and_return('something')
+
+      allow(view_context).to receive(:controller_name).and_return(controller_name)
+      allow(controller_name).to receive(:classify).and_return(klass)
+      allow(klass).to receive(:underscore).and_return('whatever')
     end
 
     it 'returns something if not custom' do
