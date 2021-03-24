@@ -1,5 +1,5 @@
 .card
-  = render 'layouts/card_header', no_new_button: true, no_delete_button: true, no_index_button: true
+  = render "layouts/card_header", no_new_button: true, no_delete_button: true, no_index_button: true
   .card-body
     = simple_form_for(@company) do |f|
       = f.error_notification
