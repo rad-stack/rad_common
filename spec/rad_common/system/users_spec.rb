@@ -252,7 +252,7 @@ describe 'Users', type: :system do
       end
     end
 
-    it 'sign in times out after 2 hours' do
+    it 'sign in times out after 3 hours' do
       if Devise.mappings[:user].timeoutable?
         visit new_user_session_path
         fill_in 'user_email', with: user.email
@@ -260,7 +260,7 @@ describe 'Users', type: :system do
         click_button 'Sign In'
         expect(page).to have_content('Signed in successfully')
 
-        Timecop.travel(125.minutes.from_now)
+        Timecop.travel(185.minutes.from_now)
         visit users_path
         expect(page).to have_content('Your session expired. Please sign in again to continue.')
         Timecop.return
