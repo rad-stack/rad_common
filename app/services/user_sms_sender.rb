@@ -52,7 +52,7 @@ class UserSMSSender
       to_user.update! mobile_phone: nil
 
       RadbearMailer.simple_message(to_user,
-                                   "SMS Message from #{I18n.t(:app_name)} Failed",
+                                   "SMS Message from #{RadCommon::AppInfo.new.app_name} Failed",
                                    error_body,
                                    email_action: email_action).deliver_later
     end

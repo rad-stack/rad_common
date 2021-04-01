@@ -1,5 +1,11 @@
 module RadCommon
   class AppInfo
+    def app_name
+      return ENV['APP_NAME'] if ENV['APP_NAME'].present?
+
+      I18n.t(:app_name)
+    end
+
     def application_tables
       (ActiveRecord::Base.connection.tables - exclude_tables).sort
     end

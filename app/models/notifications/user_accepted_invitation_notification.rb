@@ -7,7 +7,7 @@ module Notifications
     private
 
       def app_name
-        payload.internal? ? I18n.t(:app_name) : I18n.t(:portal_app_name)
+        payload.internal? ? RadCommon::AppInfo.new.app_name : I18n.t(:portal_app_name)
       end
   end
 end
