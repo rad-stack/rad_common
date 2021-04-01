@@ -32,7 +32,7 @@ class RadbearMailer < ActionMailer::Base
                       button_url: root_url }
 
     @recipient = user
-    @message = "Your account was approved and you can begin using #{I18n.t(:app_name)}."
+    @message = "Your account was approved and you can begin using #{RadCommon::AppInfo.new.app_name}."
     mail to: @recipient.formatted_email, subject: 'Your Account Was Approved'
   end
 
@@ -49,8 +49,8 @@ class RadbearMailer < ActionMailer::Base
     @recipient = User.where(id: recipients)
     to_address = @recipient.map(&:formatted_email)
 
-    @message = "#{user} was approved by #{approved_by_name} on #{I18n.t(:app_name)}."
-    mail(to: to_address, subject: "User Was Approved on #{I18n.t(:app_name)}")
+    @message = "#{user} was approved by #{approved_by_name} on #{RadCommon::AppInfo.new.app_name}."
+    mail(to: to_address, subject: "User Was Approved on #{RadCommon::AppInfo.new.app_name}")
   end
 
   def simple_message(recipient, subject, message, options = {})
@@ -82,7 +82,7 @@ class RadbearMailer < ActionMailer::Base
     @problems = problems
     @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
-    mail(to: to_address, subject: "Invalid data in #{I18n.t(:app_name)}")
+    mail(to: to_address, subject: "Invalid data in #{RadCommon::AppInfo.new.app_name}")
   end
 
   def global_validity_on_demand(recipient, problems)
@@ -91,7 +91,7 @@ class RadbearMailer < ActionMailer::Base
     @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
     mail to: recipient.formatted_email,
-         subject: "Invalid data in #{I18n.t(:app_name)}",
+         subject: "Invalid data in #{RadCommon::AppInfo.new.app_name}",
          template_name: 'global_validity'
   end
 
@@ -103,7 +103,7 @@ class RadbearMailer < ActionMailer::Base
     total_time = Time.at((@run_stats.sum { |item| item[:run_seconds] })).utc.strftime('%H:%M:%S')
     @message = "The Global Validity task took #{total_time} to complete, which is beyond the configured timeout."
 
-    mail(to: to_address, subject: "Global Validity in #{I18n.t(:app_name)} Ran Long")
+    mail(to: to_address, subject: "Global Validity in #{RadCommon::AppInfo.new.app_name} Ran Long")
   end
 
   def email_report(user, csv, report_name, options = {})
@@ -156,6 +156,6 @@ class RadbearMailer < ActionMailer::Base
     end
 
     def app_name(user)
-      user.internal? ? I18n.t(:app_name) : I18n.t(:portal_app_name)
+      user.internal? ? RadCommon::AppInfo.new.app_name : I18n.t(:portal_app_name)
     end
 end

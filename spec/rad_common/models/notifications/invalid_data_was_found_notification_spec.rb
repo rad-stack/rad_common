@@ -13,7 +13,7 @@ RSpec.describe Notifications::InvalidDataWasFoundNotification, type: :model do
     end
 
     it 'emails' do
-      expect(mail.subject).to eq "Invalid data in #{I18n.t(:app_name)}"
+      expect(mail.subject).to eq "Invalid data in #{RadCommon::AppInfo.new.app_name}"
     end
   end
 end
