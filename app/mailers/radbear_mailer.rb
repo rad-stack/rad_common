@@ -156,6 +156,6 @@ class RadbearMailer < ActionMailer::Base
     end
 
     def app_name(user)
-      user.internal? ? RadCommon::AppInfo.new.app_name : I18n.t(:portal_app_name)
+      user.internal? ? RadCommon::AppInfo.new.app_name : RadCommon::AppInfo.new.portal_app_name
     end
 end
