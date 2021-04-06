@@ -4,7 +4,7 @@ module RadCommon
       return if title.blank?
 
       tag(html_tag.to_s,
-          class: "fa #{icon} tooltip-pad custom-tooltip",
+          class: 'fa fa-question-circle tooltip-pad custom-tooltip',
           data: { toggle: 'tooltip', placement: placement.to_s },
           title: title.to_s)
     end
