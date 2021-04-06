@@ -1,6 +1,6 @@
 module RadCommon
   module TooltipHelper
-    def icon_tooltip(html_tag, title, placement = 'top', icon = 'fa-question-circle')
+    def icon_tooltip(html_tag, title, placement = 'top')
       return if title.blank?
 
       tag(html_tag.to_s,
