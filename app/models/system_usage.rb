@@ -4,8 +4,8 @@ class SystemUsage
   def initialize(params, current_user)
     @params = params
     @current_user = current_user
-    @usage_items = RadCommon.system_usage_models
 
+    calc_usage_items
     calc_usage_stats
   end
 
@@ -50,6 +50,23 @@ class SystemUsage
 
   private
 
+    def calc_usage_items
+      @usage_items = []
+
+      RadCommon.system_usage_models.each do |item|
+        case item.class.to_s
+        when 'String'
+          klass = item.constantize
+        when 'Array'
+          klass = item.first.constantize
+        else
+          raise "invalid option: #{item.class}"
+        end
+
+        @usage_items.push(item) if Pundit.policy!(current_user, klass).index?
+      end
+    end
+
     def calc_usage_stats
       @usage_data = []
 
@@ -61,7 +78,7 @@ class SystemUsage
           when 'String'
             name = item.pluralize
             klass = item.constantize
-            result = klass.unscoped
+            result = Pundit.policy_scope!(current_user, klass)
           when 'Array'
             name = item.last
             klass = item.first.constantize
@@ -70,9 +87,7 @@ class SystemUsage
             raise "invalid option: #{item.class}"
           end
 
-          if Pundit.policy!(current_user, klass).index?
-            data.push(name: name, value: result.where(created_at: header[:start]..header[:end]).count)
-          end
+          data.push(name: name, value: result.where(created_at: header[:start]..header[:end]).count)
         end
 
         @usage_data.push(data)
