@@ -4,6 +4,7 @@ class SystemUsage
   def initialize(params, current_user)
     @params = params
     @current_user = current_user
+    @usage_items = RadCommon.system_usage_models
 
     calc_usage_stats
   end
@@ -31,26 +32,16 @@ class SystemUsage
   end
 
   def date_column_ranges
-    today = Time.current
-
     (0..date_range_count - 1).to_a.reverse.map do |item|
       case date_mode
       when 'Yearly'
-        { start: today.advance(years: -item).beginning_of_year.beginning_of_day,
-          end: today.advance(years: -item).end_of_year.end_of_day,
-          label: today.advance(years: -item).beginning_of_year.strftime('%Y') }
+        yearly_hash item
       when 'Monthly'
-        { start: today.advance(months: -item).beginning_of_month.beginning_of_day,
-          end: today.advance(months: -item).end_of_month.end_of_day,
-          label: today.advance(months: -item).beginning_of_month.strftime('%B, %Y') }
+        monthly_hash item
       when 'Weekly'
-        { start: today.advance(weeks: -item).beginning_of_week(:sunday).beginning_of_day,
-          end: today.advance(weeks: -item).end_of_week(:sunday).end_of_day,
-          label: ApplicationController.helpers.format_date(today.advance(weeks: -item).beginning_of_week(:sunday)) }
+        weekly_hash item
       when 'Daily'
-        { start: today.advance(days: -item).beginning_of_day,
-          end: today.advance(days: -item).end_of_day,
-          label: ApplicationController.helpers.format_date(today.advance(days: -item).beginning_of_day) }
+        daily_hash item
       else
         raise 'invalid mode'
       end
@@ -60,7 +51,6 @@ class SystemUsage
   private
 
     def calc_usage_stats
-      @usage_items = RadCommon.system_usage_models
       @usage_data = []
 
       @usage_items.each do |item|
@@ -70,18 +60,50 @@ class SystemUsage
           case item.class.to_s
           when 'String'
             name = item.pluralize
-            result = item.constantize.unscoped
+            klass = item.constantize
+            result = klass.unscoped
           when 'Array'
             name = item.last
-            result = item.first.constantize.send(item[1].to_sym)
+            klass = item.first.constantize
+            result = Pundit.policy_scope!(current_user, klass.send(item[1].to_sym))
           else
             raise "invalid option: #{item.class}"
           end
 
-          data.push(name: name, value: result.where(created_at: header[:start]..header[:end]).count)
+          if Pundit.policy!(current_user, klass).index?
+            data.push(name: name, value: result.where(created_at: header[:start]..header[:end]).count)
+          end
         end
 
         @usage_data.push(data)
       end
+    end
+
+    def today
+      Time.current
+    end
+
+    def yearly_hash(item)
+      { start: today.advance(years: -item).beginning_of_year.beginning_of_day,
+        end: today.advance(years: -item).end_of_year.end_of_day,
+        label: today.advance(years: -item).beginning_of_year.strftime('%Y') }
+    end
+
+    def monthly_hash(item)
+      { start: today.advance(months: -item).beginning_of_month.beginning_of_day,
+        end: today.advance(months: -item).end_of_month.end_of_day,
+        label: today.advance(months: -item).beginning_of_month.strftime('%B, %Y') }
+    end
+
+    def weekly_hash(item)
+      { start: today.advance(weeks: -item).beginning_of_week(:sunday).beginning_of_day,
+        end: today.advance(weeks: -item).end_of_week(:sunday).end_of_day,
+        label: ApplicationController.helpers.format_date(today.advance(weeks: -item).beginning_of_week(:sunday)) }
+    end
+
+    def daily_hash(item)
+      { start: today.advance(days: -item).beginning_of_day,
+        end: today.advance(days: -item).end_of_day,
+        label: ApplicationController.helpers.format_date(today.advance(days: -item).beginning_of_day) }
     end
 end
