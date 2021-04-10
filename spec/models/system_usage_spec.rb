@@ -5,20 +5,6 @@ describe SystemUsage, type: :model do
   let(:params) { { date_mode: 'Weekly', date_range_count: 4 } }
   let(:system_usage) { described_class.new(params, user) }
 
-  describe 'usage_data' do
-    context 'when allowed' do
-      pending 'it works'
-    end
-
-    context 'without index permisison' do
-      pending 'it works'
-    end
-
-    context 'with policy scope' do
-      pending 'it works'
-    end
-  end
-
   describe 'date_column_ranges' do
     subject(:date_ranges) { system_usage.date_column_ranges.map { |range| [range[:start], range[:end]] } }
 

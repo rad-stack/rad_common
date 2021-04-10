@@ -34,8 +34,4 @@ RSpec.describe RadCommon::AppInfo, type: :service do
 
     it { is_expected.to eq result }
   end
-
-  describe 'portal_host_name' do
-    pending 'works'
-  end
 end
