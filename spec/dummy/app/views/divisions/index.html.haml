@@ -3,6 +3,8 @@
 .card
   = render 'layouts/card_header'
   .card-body
+    - if @division_search.show_header?
+      %h3 Showing header
     = render 'layouts/filter', search: @division_search, path: divisions_path
 
     = paginate @divisions, theme: 'twitter-bootstrap-4'

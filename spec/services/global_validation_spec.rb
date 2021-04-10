@@ -68,7 +68,7 @@ describe GlobalValidation, type: :service do
       it 'sends an email to admins when data is invalid' do
         global_validity.run
 
-        expect(last_email.subject).to eq("Invalid data in #{I18n.t(:app_name)}")
+        expect(last_email.subject).to eq("Invalid data in #{RadCommon::AppInfo.new.app_name}")
         expect(last_email.to).to eq([admin.email])
         expect(email_body_text).to include('requires all permissions to be true')
         expect(email_body_html).to include('requires all permissions to be true')
@@ -90,7 +90,7 @@ describe GlobalValidation, type: :service do
         it 'sends an email to current user when data is invalid' do
           global_validity.run
 
-          expect(last_email.subject).to eq("Invalid data in #{I18n.t(:app_name)}")
+          expect(last_email.subject).to eq("Invalid data in #{RadCommon::AppInfo.new.app_name}")
           expect(last_email.to).to eq([admin.email])
           expect(email_body_text).to include('requires all permissions to be true')
           expect(email_body_html).to include('requires all permissions to be true')

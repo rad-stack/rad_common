@@ -92,6 +92,13 @@ module RadCommon
       val && filter.default_value && val.to_s == filter.default_value.to_s
     end
 
+    def skip_default?(name)
+      filter = @filtering.filter(name)
+      return false unless filter.respond_to?(:skip_default?)
+
+      filter.skip_default?
+    end
+
     def selected_value(column)
       search_params[column]
     end

@@ -45,7 +45,7 @@ class SystemUsage
           label: today.advance(months: -item).beginning_of_month.strftime('%B, %Y') }
       when 'Weekly'
         { start: today.advance(weeks: -item).beginning_of_week(:sunday).beginning_of_day,
-          end: today.advance(weeks: -item).end_of_week.end_of_day,
+          end: today.advance(weeks: -item).end_of_week(:sunday).end_of_day,
           label: ApplicationController.helpers.format_date(today.advance(weeks: -item).beginning_of_week(:sunday)) }
       when 'Daily'
         { start: today.advance(days: -item).beginning_of_day,

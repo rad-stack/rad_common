@@ -13,7 +13,7 @@ RSpec.describe Notifications::NewUserSignedUpNotification, type: :model do
     end
 
     it 'emails' do
-      expect(mail.subject).to eq "New User on #{I18n.t(:app_name)}"
+      expect(mail.subject).to eq "New User on #{RadCommon::AppInfo.new.app_name}"
     end
   end
 end

@@ -3,14 +3,14 @@ class DivisionSearch < RadCommon::Search
     @current_user = current_user
 
     super(query: Division.sorted,
-          filters: search_filters,
+          filters: filters_def,
           current_user: current_user,
           search_name: 'divisions_search',
           sticky_filters: true,
           params: params)
   end
 
-  def search_filters
+  def filters_def
     [{ input_label: 'Owner',
        column: :owner_id,
        default_value: current_user.id,
@@ -23,6 +23,11 @@ class DivisionSearch < RadCommon::Search
      { column: :created_at, type: RadCommon::DateFilter,
        start_input_label: 'Division Created At Start',
        end_input_label: 'Division Created At End',
-       default_start_value: Date.current, default_end_value: Date.current }]
+       default_start_value: Date.current, default_end_value: Date.current },
+     { name: 'show_header', type: RadCommon::HiddenFilter }]
+  end
+
+  def show_header?
+    selected_value('show_header') == 'true'
   end
 end
