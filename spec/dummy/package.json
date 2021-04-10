@@ -7,5 +7,9 @@
   },
   "devDependencies": {
     "webpack-dev-server": "^3.10.2"
+  },
+  "resolutions": {
+    "serialize-javascript": "^3.1.0",
+    "ssri": "^8.0.1"
   }
 }
