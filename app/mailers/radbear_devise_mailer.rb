@@ -107,6 +107,6 @@ class RadbearDeviseMailer < Devise::Mailer
     end
 
     def app_name
-      @resource.internal? ? I18n.t(:app_name) : I18n.t(:portal_app_name)
+      @resource.internal? ? RadCommon::AppInfo.new.app_name : RadCommon::AppInfo.new.portal_app_name
     end
 end

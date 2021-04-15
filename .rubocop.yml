@@ -63,7 +63,7 @@ Metrics/PerceivedComplexity:
   Max: 10
 
 Metrics/ModuleLength:
-  Max: 200
+  Max: 1500
 
 # Checks to see if the length of a block exceeds 25 lines
 Metrics/BlockLength:

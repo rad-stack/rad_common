@@ -20,17 +20,22 @@
                       %a.dropdown-item.search-option{ href: '#',
                                                       role: 'menuitem',
                                                       tabindex: '-1',
-                                                      'data-search-scope': scope[:name]} #{scope[:description] }
+                                                      'data-search-scope': scope[:name] }= scope[:description]
 
-          %input{ class: 'form-control input-medium global-search-autocomplete ui-autocomplete-input global_search_name',
+          %input{ class: %w(form-control
+                            input-medium
+                            global-search-autocomplete
+                            ui-autocomplete-input
+                            global_search_name),
                   'data-autocomplete': '/rad_common/global_search',
-                  'data-autocomplete-fields': "{ \"global_search_scope\" : \".global_search_scope\", \"super_search\" : \".super_search\"}",
+                  'data-autocomplete-fields': "{ \"global_search_scope\" :
+                                                \".global_search_scope\",
+                                                \"super_search\" : \".super_search\"}",
                   name: 'global_search_name',
                   placeholder: search_scopes.first[:description],
                   size: '50',
                   type: 'text',
                   autocomplete:'off' }
-
           .input-group-append
             %span.input-group-text
 
@@ -38,7 +43,7 @@
                      data: { toggle: 'tooltip', placement: 'top'},
                      title: 'Super search takes longer than scoped search.' }
 
-              %input{ type: 'checkbox', name: 'super_search', class: 'super_search ml-2' }
-              %input{ type: 'hidden', name: 'global_search_id', class: 'global_search_id' }
-              %input{ type: 'hidden', name: 'global_search_model_name', class: 'global_search_model_name' }
-              %input{ type: 'hidden', name: 'global_search_scope', class: 'global_search_scope' }
+              %input.super_search.ml-2{ type: 'checkbox', name: 'super_search' }
+              %input.global_search_id{ type: 'hidden', name: 'global_search_id' }
+              %input.global_search_model_name{ type: 'hidden', name: 'global_search_model_name' }
+              %input.global_search_scope{ type: 'hidden', name: 'global_search_scope' }
