@@ -1,0 +1,159 @@
+.card
+  = render 'layouts/card_header', action_name: 'custom', title: "Fixing #{pluralize_model_string( @model.to_s )} (#{@duplicates_count})", icon: 'fa-cubes'
+
+.card
+  - if policy(@record).destroy? && !params["#{@model.to_s.downcase}_id"]
+    -actions = [link_to('Skip for now, review later', duplicate_do_later_path(@record), method: :put, class: 'btn btn-warning btn-sm')]
+  - else
+    -actions = nil
+  = render 'layouts/card_header', action_name: 'custom', title: "Current #{@model.to_s}", icon: 'fa-file', additional_actions: actions
+  .card-body
+    %table.table.table-striped.table-bordered#current-patient-table
+      %tr
+        %th
+        %th
+        %th Score
+        %th Last Name
+        %th First Name
+        - if @model.use_company_name?
+          %th Company Name
+        %th Phone #
+        - if @model.use_fax_number?
+          %th Fax #
+        %th Email
+        - if @model.use_birth_date?
+          %th Birth Date
+        - if @model.use_address?
+          %th Address 1
+          %th Address 2
+          %th City
+          %th State
+          %th Zipcode
+        - if @model.use_locations?
+          %th Locations
+        - if @model.use_sales_rep?
+          %th Sales Rep
+        %th Entered
+      %tr
+        %td
+        %td
+        %td= @record.duplicate_score
+        %td= link_to @record.last_name, @record
+        %td= link_to @record.first_name, @record
+        - if @model.use_company_name?
+          %td= @record.company_name
+        %td= @record.phone_number
+        - if @model.use_fax_number?
+          %td= @record.fax_number
+        %td= @record.email
+        - if @model.use_birth_date?
+          %td= format_date(@record.birth_date)
+        - if @model.use_address?
+          %td= @record.address_1
+          %td= @record.address_2
+          %td= @record.city
+          %td= @record.state
+          %td= @record.zipcode
+        - if @model.use_locations?
+          %td= @record.locations_description
+        - if @model.use_sales_rep?
+          %td= secured_link(@record.sales_rep)
+        %td= format_date(@record.created_at)
+
+= simple_form_for(@record, url: merge_duplicates_path(@record)) do |f|
+  .card
+    .card-header
+      .title-header
+        .title-text
+          .fa.fa-list
+          Possible Matches
+        - if policy(@record).destroy?
+          .action-buttons
+            %button.btn.btn-success{ type: 'submit', data: {confirm: 'This process can not be reversed, are you sure you want to proceed?'} }
+              %i.fa.fa-level-down
+              Merge Selected
+            %button.btn.btn-success#merge-all{data: {confirm: 'This process can not be reversed, are you sure you want to proceed?'}}
+              %i.fa.fa-level-down
+              Merge All
+        .external-actions
+          .legend-block.mt-2
+            .legend-label
+              Matched
+              .table-success
+            .legend-label
+              Different
+              .table-danger
+
+    .card-body
+      %table.table.table-striped.table-bordered#other-patients-table
+        %tr
+          %th Merge?
+          %th.actions Actions
+          %th Score
+          %th Last Name
+          %th First Name
+          - if @model.use_company_name?
+            %th Company Name
+          %th Phone #
+          - if @model.use_fax_number?
+            %th Fax #
+          %th Email
+          - if @model.use_birth_date?
+            %th Birth Date
+          - if @model.use_address?
+            %th Address 1
+            %th Address 2
+            %th City
+            %th State
+            %th Zipcode
+          - if @model.use_locations?
+            %th Locations
+          - if @model.use_sales_rep?
+            %th Sales Rep
+          %th Entered
+        - @records.each_with_index do |record_result, index|
+          - record = record_result[:record]
+          %tr
+            %td
+              %input.merge_data{ name: "merge_data[#{record.id}]", type: 'checkbox'}
+            %td
+              - if policy(record).destroy?
+                = link_to 'Not a duplicate', not_duplicate_path( record, @record ), class: 'btn btn-sm btn-warning btn-block'
+              = link_to "Switch to #{@model.to_s.downcase}", show_current_duplicates_path( record ), class: 'btn btn-sm btn-success btn-block'
+            %td= record_result[:score]
+            %td{ class: duplicate_class(@record.last_name, record.last_name ) }
+              = link_to record.last_name, record
+            %td{ class: duplicate_class(@record.first_name, record.first_name ) }
+              = link_to record.first_name, record
+            - if @model.use_company_name?
+              %td{ class: duplicate_class(@record.company_name, record.company_name ) }
+                = record.company_name
+            %td{ class: duplicate_class(@record.phone_number, record.phone_number ) }
+              = record.phone_number
+            - if @model.use_fax_number?
+              %td{ class: duplicate_class(@record.fax_number, record.fax_number ) }
+                = record.fax_number
+            %td{ class: duplicate_class(@record.email, record.email ) }
+              = record.email
+            - if @model.use_birth_date?
+              %td{ class: duplicate_class(@record.birth_date, record.birth_date ) }
+                = format_date(record.birth_date)
+            - if @model.use_address?
+              %td{ class: duplicate_class(@record.address_1, record.address_1 ) }
+                = record.address_1
+              %td{ class: duplicate_class(@record.address_2, record.address_2 ) }
+                = record.address_2
+              %td{ class: duplicate_class(@record.city, record.city ) }
+                = record.city
+              %td{ class: duplicate_class(@record.state, record.state ) }
+                = record.state
+              %td{ class: duplicate_class(@record.zipcode, record.zipcode ) }
+                = record.zipcode
+            - if @model.use_locations?
+              %td{ class: duplicate_class(@record.locations_description, record.locations_description ) }
+                = record.locations_description
+            - if @model.use_sales_rep?
+              %td{ class: duplicate_class(@record.sales_rep_id, record.sales_rep_id ) }
+                = secured_link(record.sales_rep)
+            %td
+              = format_date(record.created_at)
