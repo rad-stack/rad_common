@@ -30,7 +30,8 @@ class MergeDuplicatesJob < ApplicationJob
         duplicate_record.clean_up_duplicate(record)
         duplicate_record.reload
         unless duplicate_record.destroy
-          error = "Could not remove the unused duplicate record id #{duplicate_record.id}: #{duplicate_record.errors.full_messages.join(', ')}"
+          error = 'Could not remove the unused duplicate record '\
+                  "id #{duplicate_record.id}: #{duplicate_record.errors.full_messages.join(', ')}"
         end
       else
         error = 'You do not have authorization to merge these duplicates.'
