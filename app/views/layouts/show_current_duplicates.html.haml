@@ -7,7 +7,7 @@
   = render 'layouts/card_header', action_name: 'custom',
                                   title: "Current #{@model.to_s}",
                                   icon: 'fa-file',
-                                  dditional_actions: duplicate_actions(@record, @model)
+                                  additional_actions: duplicate_actions(@record, @model)
 
   .card-body
     %table.table.table-striped.table-bordered#current-patient-table

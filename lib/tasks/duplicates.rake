@@ -5,9 +5,9 @@ namespace :duplicates do
     session = RakeSession.new(20.minutes, 100)
 
     Timeout.timeout(session.time_limit) do
-      [Patient, Prescriber, Attorney].each do |klass|
+      Rails.application.config.duplicate_model_names.each do |model_name|
         session.reset_status
-        records = klass.duplicates_to_process
+        records = model_name.constantize.duplicates_to_process
         count = records.count
 
         records.each do |record|
@@ -24,9 +24,9 @@ namespace :duplicates do
 
     Timeout.timeout(session.time_limit) do
       if Date.current.wday == 1
-        Prescriber.where('duplicate_sort <> 500').update_all(duplicate_sort: 500)
-        Patient.where('duplicate_sort <> 500').update_all(duplicate_sort: 500)
-        Attorney.where('duplicate_sort <> 500').update_all(duplicate_sort: 500)
+        Rails.application.config.duplicate_model_names.each do |model_name|
+          model_name.constantize.where('duplicate_sort <> 500').update_all(duplicate_sort: 500)
+        end
       end
     end
   end
