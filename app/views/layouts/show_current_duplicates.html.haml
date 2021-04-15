@@ -1,12 +1,14 @@
 .card
-  = render 'layouts/card_header', action_name: 'custom', title: "Fixing #{pluralize_model_string( @model.to_s )} (#{@duplicates_count})", icon: 'fa-cubes'
+  = render 'layouts/card_header', action_name: 'custom',
+                                  title: "Fixing #{pluralize_model_string( @model.to_s )} (#{@duplicates_count})",
+                                  icon: 'fa-cubes'
 
 .card
-  - if policy(@record).destroy? && !params["#{@model.to_s.downcase}_id"]
-    -actions = [link_to('Skip for now, review later', duplicate_do_later_path(@record), method: :put, class: 'btn btn-warning btn-sm')]
-  - else
-    -actions = nil
-  = render 'layouts/card_header', action_name: 'custom', title: "Current #{@model.to_s}", icon: 'fa-file', additional_actions: actions
+  = render 'layouts/card_header', action_name: 'custom',
+                                  title: "Current #{@model.to_s}",
+                                  icon: 'fa-file',
+                                  dditional_actions: duplicate_actions(@record, @model)
+
   .card-body
     %table.table.table-striped.table-bordered#current-patient-table
       %tr
@@ -70,11 +72,12 @@
           .fa.fa-list
           Possible Matches
         - if policy(@record).destroy?
+          - confirm_text = 'This process can not be reversed, are you sure you want to proceed?'
           .action-buttons
-            %button.btn.btn-success{ type: 'submit', data: {confirm: 'This process can not be reversed, are you sure you want to proceed?'} }
+            %button.btn.btn-success{ type: 'submit', data: { confirm: confirm_text } }
               %i.fa.fa-level-down
               Merge Selected
-            %button.btn.btn-success#merge-all{data: {confirm: 'This process can not be reversed, are you sure you want to proceed?'}}
+            %button.btn.btn-success#merge-all{ data: { confirm: confirm_text } }
               %i.fa.fa-level-down
               Merge All
         .external-actions
@@ -118,11 +121,17 @@
           - record = record_result[:record]
           %tr
             %td
-              %input.merge_data{ name: "merge_data[#{record.id}]", type: 'checkbox'}
+              %input.merge_data{ name: "merge_data[#{record.id}]", type: 'checkbox' }
             %td
               - if policy(record).destroy?
-                = link_to 'Not a duplicate', not_duplicate_path( record, @record ), class: 'btn btn-sm btn-warning btn-block'
-              = link_to "Switch to #{@model.to_s.downcase}", show_current_duplicates_path( record ), class: 'btn btn-sm btn-success btn-block'
+                = link_to 'Not a duplicate',
+                          not_duplicate_path(record, @record),
+                          class: 'btn btn-sm btn-warning btn-block'
+
+              = link_to "Switch to #{@model.to_s.downcase}",
+                        show_current_duplicates_path(record),
+                        class: 'btn btn-sm btn-success btn-block'
+
             %td= record_result[:score]
             %td{ class: duplicate_class(@record.last_name, record.last_name ) }
               = link_to record.last_name, record

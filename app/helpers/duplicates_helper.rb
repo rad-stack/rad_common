@@ -1,4 +1,13 @@
 module DuplicatesHelper
+  def duplicate_actions(record, model)
+    return unless policy(record).destroy? && !params["#{model.to_s.downcase}_id"]
+
+    [link_to('Skip for now, review later',
+             duplicate_do_later_path(record),
+             method: :put,
+             class: 'btn btn-warning btn-sm')]
+  end
+
   def plural_model_name(model)
     model.class.to_s.pluralize(2)
   end

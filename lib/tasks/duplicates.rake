@@ -12,6 +12,7 @@ namespace :duplicates do
 
         records.each do |record|
           break if session.check_status('checking records for duplicates', count)
+
           record.process_duplicates
         end
       end
