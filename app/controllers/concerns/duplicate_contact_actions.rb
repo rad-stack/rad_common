@@ -59,7 +59,7 @@ module DuplicateContactActions
       flash[:success] = "The duplicates are processing, we'll email you when complete."
       redirect_to show_current_duplicates_path
     else
-      flash[:error] = 'missing parameters'
+      flash[:error] = 'Missing parameters'
       redirect_back(fallback_location: root_path)
     end
   end
