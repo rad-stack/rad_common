@@ -28,6 +28,10 @@ module DuplicateFixable
       method_defined?('company_name')
     end
 
+    def use_email?
+      method_defined?('email')
+    end
+
     def use_fax_number?
       method_defined?('fax_number')
     end
@@ -161,6 +165,8 @@ module DuplicateFixable
     end
 
     def email_matches
+      return [] unless model_klass.use_email? && email.present?
+
       model_klass.where("id <> ? AND email IS NOT NULL AND email <> '' AND upper(email) = ?",
                         id,
                         email.to_s.upcase).map(&:id)
@@ -208,11 +214,13 @@ module DuplicateFixable
     end
 
     def name_weight
-      instance_of?(Prescriber) ? 20 : 10
+      # override as needed in models
+      10
     end
 
     def other_weight
-      instance_of?(Prescriber) ? 10 : 20
+      # override as needed in models
+      20
     end
 
     def duplicate_field_score(duplicate_patient, attribute, weight)

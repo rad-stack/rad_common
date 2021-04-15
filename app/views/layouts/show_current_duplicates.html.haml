@@ -20,7 +20,8 @@
         %th Phone #
         - if @model.use_fax_number?
           %th Fax #
-        %th Email
+        - if @model.use_email?
+          %th Email
         - if @model.use_birth_date?
           %th Birth Date
         - if @model.use_address?
@@ -45,7 +46,8 @@
         %td= @record.phone_number
         - if @model.use_fax_number?
           %td= @record.fax_number
-        %td= @record.email
+        - if @model.use_email?
+          %td= @record.email
         - if @model.use_birth_date?
           %td= format_date(@record.birth_date)
         - if @model.use_address?
@@ -97,7 +99,8 @@
           %th Phone #
           - if @model.use_fax_number?
             %th Fax #
-          %th Email
+          - if @model.use_email?
+            %th Email
           - if @model.use_birth_date?
             %th Birth Date
           - if @model.use_address?
@@ -133,8 +136,9 @@
             - if @model.use_fax_number?
               %td{ class: duplicate_class(@record.fax_number, record.fax_number ) }
                 = record.fax_number
-            %td{ class: duplicate_class(@record.email, record.email ) }
-              = record.email
+            - if @model.use_email?
+              %td{ class: duplicate_class(@record.email, record.email ) }
+                = record.email
             - if @model.use_birth_date?
               %td{ class: duplicate_class(@record.birth_date, record.birth_date ) }
                 = format_date(record.birth_date)
