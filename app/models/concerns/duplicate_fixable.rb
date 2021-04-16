@@ -1,25 +1,31 @@
 module DuplicateFixable
   extend ActiveSupport::Concern
 
-  SCORE_UPPER_THRESHOLD = 50
-  SCORE_LOWER_THRESHOLD = 15
-
   included do
     scope :duplicates_to_process, lambda {
       where('duplicates_processed_at IS NULL OR updated_at > duplicates_processed_at').order(:id)
     }
 
     scope :relevant_duplicates, lambda {
-      where('duplicate_score IS NOT NULL AND duplicate_score >= ?', DuplicateFixable::SCORE_LOWER_THRESHOLD)
+      where('duplicate_score IS NOT NULL AND duplicate_score >= ?', score_lower_threshold)
     }
 
     scope :high_duplicates, lambda {
-      where('duplicate_score IS NOT NULL AND duplicate_score >= ? AND duplicate_sort <= 500',
-            DuplicateFixable::SCORE_UPPER_THRESHOLD)
+      where('duplicate_score IS NOT NULL AND duplicate_score >= ? AND duplicate_sort <= 500', score_upper_threshold)
     }
   end
 
   module ClassMethods
+    def score_upper_threshold
+      # override as needed in models
+      50
+    end
+
+    def score_lower_threshold
+      # override as needed in models
+      15
+    end
+
     def use_birth_date?
       method_defined?('birth_date')
     end
@@ -89,7 +95,7 @@ module DuplicateFixable
 
       dupes.each do |dupe|
         contact = model_klass.find_by(id: dupe['id'])
-        contacts.push(record: contact, score: dupe['score']) if contact && (dupe['score'] >= SCORE_LOWER_THRESHOLD)
+        contacts.push(record: contact, score: dupe['score']) if contact && (dupe['score'] >= self.class.score_lower_threshold)
       end
 
       contacts.sort_by { |item| item[:score] }.reverse

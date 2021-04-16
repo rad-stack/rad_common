@@ -11,7 +11,7 @@ module DuplicateContactActions
     else
       @record = model.relevant_duplicates.order(duplicate_sort: :asc, duplicate_score: :desc)
       @record = @record.order(:sales_rep_id) if model.new.respond_to?(:sales_rep_id)
-      @record = @record.order(updated_at: :desc)
+      @record = @record.order(updated_at: :desc, id: :desc)
       @record = @record.limit(1).first
     end
 
