@@ -22,24 +22,24 @@ class MergeDuplicatesJob < ApplicationJob
     end
   end
 
-  def cleanup_duplicate(key, model, record, current_user)
-    error = nil
-    duplicate_record = model.find_by(id: key)
-    if duplicate_record
-      if Pundit.policy!(current_user, duplicate_record).destroy?
-        duplicate_record.clean_up_duplicate(record)
-        duplicate_record.reload
-        unless duplicate_record.destroy
-          error = 'Could not remove the unused duplicate record '\
-                  "id #{duplicate_record.id}: #{duplicate_record.errors.full_messages.join(', ')}"
-        end
-      else
-        error = 'You do not have authorization to merge these duplicates.'
-      end
-    else
-      error = 'Invalid record data, perhaps something has changed or another user has resolved these duplicates.'
-    end
+  private
 
-    error
-  end
+    def cleanup_duplicate(key, model, record, current_user)
+      duplicate_record = model.find_by(id: key)
+
+      if duplicate_record.blank?
+        return 'Invalid record data, perhaps something has changed or another user has resolved these duplicates.'
+      end
+
+      unless Pundit.policy!(current_user, duplicate_record).destroy?
+        return 'You do not have authorization to merge these duplicates.'
+      end
+
+      duplicate_record.clean_up_duplicate(record)
+      duplicate_record.reload
+      return nil if duplicate_record.destroy
+
+      'Could not remove the unused duplicate record '\
+        "id #{duplicate_record.id}: #{duplicate_record.errors.full_messages.join(', ')}"
+    end
 end
