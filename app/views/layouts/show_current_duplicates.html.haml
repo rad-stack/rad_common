@@ -1,11 +1,11 @@
 .card
   = render 'layouts/card_header', action_name: 'custom',
-                                  title: "Fixing #{pluralize_model_string( @model.to_s )} (#{@duplicates_count})",
+                                  title: "Fixing #{pluralize_model_string(@model.to_s)} (#{@duplicates_count})",
                                   icon: 'fa-cubes'
 
 .card
   = render 'layouts/card_header', action_name: 'custom',
-                                  title: "Current #{@model.to_s}",
+                                  title: "Current #{@model}",
                                   icon: 'fa-file',
                                   additional_actions: duplicate_actions(@record, @model)
 
@@ -64,7 +64,7 @@
           %td= secured_link(@record.sales_rep)
         %td= format_date(@record.created_at)
 
-= simple_form_for(@record, url: merge_duplicates_path(@record)) do |f|
+= simple_form_for(@record, url: merge_duplicates_path(@record))
   .card
     .card-header
       .title-header
