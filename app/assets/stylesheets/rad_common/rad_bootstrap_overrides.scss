@@ -114,3 +114,21 @@ th.actions {
   border-bottom-left-radius: 3px;
   border-right: none;
 }
+
+// These are for duplicates display
+.legend-block {
+  display: inline-block;
+}
+
+.legend-label {
+  display: inline-block;
+  margin-bottom: 5px;
+  font-weight: bold;
+
+  .table-success, .table-danger {
+    width: 60px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: bottom;
+  }
+}
