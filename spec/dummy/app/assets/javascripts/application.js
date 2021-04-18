@@ -11,3 +11,4 @@
 //= require rad_common/jquery.are_you_sure
 //= require rad_common/are_you_sure_datepickers
 //= require rad_common/rad_common
+//= require duplicates

@@ -19,6 +19,19 @@ Rails.application.routes.draw do
   resources :companies, only: %i[show edit update]
   resources :divisions
 
+  resources :attorneys do
+    member do
+      get :not_duplicate
+      put :duplicate_do_later
+      put :reset_duplicates
+      patch :merge_duplicates
+    end
+
+    collection do
+      get :show_current_duplicates
+    end
+  end
+
   namespace :api, defaults: { format: :json } do
     resources :divisions, only: :show
   end
