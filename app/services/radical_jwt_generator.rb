@@ -1,4 +1,6 @@
 class RadicalJwtGenerator
+  JWT_ALGORITHM = 'HS256'.freeze
+
   attr_accessor :valid_for_minutes
 
   def initialize(valid_for_minutes = 5)
@@ -6,7 +8,7 @@ class RadicalJwtGenerator
   end
 
   def token
-    "Bearer #{JWT.encode(payload, secret, algorithm)}"
+    JWT.encode payload, secret, JWT_ALGORITHM
   end
 
   private
@@ -17,10 +19,6 @@ class RadicalJwtGenerator
 
     def secret
       ENV.fetch('RADICAL_JWT_SECRET')
-    end
-
-    def algorithm
-      'HS256'
     end
 
     def expires_at

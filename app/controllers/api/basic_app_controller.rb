@@ -11,9 +11,7 @@ module Api
       end
 
       def token
-        return nil if request.headers['HTTP_AUTHORIZATION'].blank?
-
-        request.headers['HTTP_AUTHORIZATION'].gsub('Bearer ', '')
+        request.headers['HTTP_AUTHORIZATION']
       end
 
       def valid_token?
