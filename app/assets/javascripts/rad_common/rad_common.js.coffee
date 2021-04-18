@@ -2,6 +2,9 @@
 #= require rad_common/dynamic_updater
 
 $ ->
+  $("#merge-all").click ->
+    $(".merge_data").prop("checked", true)
+
   $(".global-search-autocomplete").bind "autocompleteselect", (event, ui) ->
     select_global_search_item($(this), event, ui)
 
