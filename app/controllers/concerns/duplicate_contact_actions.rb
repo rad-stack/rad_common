@@ -3,17 +3,7 @@ module DuplicateContactActions
 
   def show_current_duplicates
     @model = model
-
-    if params[id_attribute]
-      record = model.find_by(id: params[id_attribute])
-      record&.process_duplicates
-      @record = model.relevant_duplicates.where(id: params[id_attribute]).first
-    else
-      @record = model.relevant_duplicates.order(duplicate_sort: :asc, duplicate_score: :desc)
-      @record = @record.order(:sales_rep_id) if model.new.respond_to?(:sales_rep_id)
-      @record = @record.order(updated_at: :desc, id: :desc)
-      @record = @record.limit(1).first
-    end
+    @record = gather_record
 
     if @record.nil?
       skip_authorization
@@ -112,6 +102,19 @@ module DuplicateContactActions
   end
 
   private
+
+    def gather_record
+      if params[id_attribute]
+        record = @model.find_by(id: params[id_attribute])
+        record&.process_duplicates
+        @model.relevant_duplicates.where(id: params[id_attribute]).first
+      else
+        record = @model.relevant_duplicates.order(duplicate_sort: :asc, duplicate_score: :desc)
+        record = record.order(:sales_rep_id) if @model.new.respond_to?(:sales_rep_id)
+        record = record.order(updated_at: :desc, id: :desc)
+        record.limit(1).first
+      end
+    end
 
     def model
       Object.const_get controller_name.classify

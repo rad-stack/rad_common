@@ -117,7 +117,7 @@
           - if @model.use_sales_rep?
             %th Sales Rep
           %th Entered
-        - @records.each_with_index do |record_result, index|
+        - @records.each_with_index do |record_result, _index|
           - record = record_result[:record]
           %tr
             %td
@@ -133,40 +133,40 @@
                         class: 'btn btn-sm btn-success btn-block'
 
             %td= record_result[:score]
-            %td{ class: duplicate_class(@record.last_name, record.last_name ) }
+            %td{ class: duplicate_class(@record.last_name, record.last_name) }
               = link_to record.last_name, record
-            %td{ class: duplicate_class(@record.first_name, record.first_name ) }
+            %td{ class: duplicate_class(@record.first_name, record.first_name) }
               = link_to record.first_name, record
             - if @model.use_company_name?
-              %td{ class: duplicate_class(@record.company_name, record.company_name ) }
+              %td{ class: duplicate_class(@record.company_name, record.company_name) }
                 = record.company_name
-            %td{ class: duplicate_class(@record.phone_number, record.phone_number ) }
+            %td{ class: duplicate_class(@record.phone_number, record.phone_number) }
               = record.phone_number
             - if @model.use_fax_number?
-              %td{ class: duplicate_class(@record.fax_number, record.fax_number ) }
+              %td{ class: duplicate_class(@record.fax_number, record.fax_number) }
                 = record.fax_number
             - if @model.use_email?
-              %td{ class: duplicate_class(@record.email, record.email ) }
+              %td{ class: duplicate_class(@record.email, record.email) }
                 = record.email
             - if @model.use_birth_date?
-              %td{ class: duplicate_class(@record.birth_date, record.birth_date ) }
+              %td{ class: duplicate_class(@record.birth_date, record.birth_date) }
                 = format_date(record.birth_date)
             - if @model.use_address?
-              %td{ class: duplicate_class(@record.address_1, record.address_1 ) }
+              %td{ class: duplicate_class(@record.address_1, record.address_1) }
                 = record.address_1
-              %td{ class: duplicate_class(@record.address_2, record.address_2 ) }
+              %td{ class: duplicate_class(@record.address_2, record.address_2) }
                 = record.address_2
-              %td{ class: duplicate_class(@record.city, record.city ) }
+              %td{ class: duplicate_class(@record.city, record.city) }
                 = record.city
-              %td{ class: duplicate_class(@record.state, record.state ) }
+              %td{ class: duplicate_class(@record.state, record.state) }
                 = record.state
-              %td{ class: duplicate_class(@record.zipcode, record.zipcode ) }
+              %td{ class: duplicate_class(@record.zipcode, record.zipcode) }
                 = record.zipcode
             - if @model.use_locations?
-              %td{ class: duplicate_class(@record.locations_description, record.locations_description ) }
+              %td{ class: duplicate_class(@record.locations_description, record.locations_description) }
                 = record.locations_description
             - if @model.use_sales_rep?
-              %td{ class: duplicate_class(@record.sales_rep_id, record.sales_rep_id ) }
+              %td{ class: duplicate_class(@record.sales_rep_id, record.sales_rep_id) }
                 = secured_link(record.sales_rep)
             %td
               = format_date(record.created_at)

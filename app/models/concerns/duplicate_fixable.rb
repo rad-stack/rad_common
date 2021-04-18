@@ -95,7 +95,10 @@ module DuplicateFixable
 
       dupes.each do |dupe|
         contact = model_klass.find_by(id: dupe['id'])
-        contacts.push(record: contact, score: dupe['score']) if contact && (dupe['score'] >= self.class.score_lower_threshold)
+
+        if contact && (dupe['score'] >= self.class.score_lower_threshold)
+          contacts.push(record: contact, score: dupe['score'])
+        end
       end
 
       contacts.sort_by { |item| item[:score] }.reverse

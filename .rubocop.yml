@@ -117,6 +117,8 @@ Rails/SkipsModelValidations:
   Enabled: true
   Exclude:
     - 'spec/**/*_spec.rb'
+    - 'app/controllers/concerns/duplicate_contact_actions.rb'
+    - 'app/models/concerns/duplicate_fixable.rb'
 
 # Check for uses of braces around single-line blocks, and also for multi-line blocks with an
 # attached method like: {...}.where
