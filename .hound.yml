@@ -2,5 +2,4 @@ rubocop:
   version: 1.5.2
   config_file: .rubocop.yml
 haml:
-  version: 0.37.0
   config_file: .haml-lint.yml
