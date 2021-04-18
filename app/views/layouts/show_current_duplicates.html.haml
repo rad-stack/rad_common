@@ -64,7 +64,7 @@
           %td= secured_link(@record.sales_rep)
         %td= format_date(@record.created_at)
 
-= simple_form_for(@record, url: merge_duplicates_path(@record))
+= simple_form_for(@record, url: merge_duplicates_path(@record)) do
   .card
     .card-header
       .title-header
