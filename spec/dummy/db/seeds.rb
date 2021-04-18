@@ -49,7 +49,7 @@ if Division.count.zero?
 end
 
 if Attorney.count.zero?
-  20.times { FactoryBot.create :attorney }
+  FactoryBot.create_list :attorney, 20
 
   puts 'seeding duplicate attorneys'
 

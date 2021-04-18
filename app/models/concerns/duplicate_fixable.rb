@@ -211,15 +211,28 @@ module DuplicateFixable
     end
 
     def family_member_same_home?(duplicate_record)
-      duplicate_birth_date = (model_klass.use_birth_date? ? duplicate_record.birth_date : 1)
-      self_birth_date = (model_klass.use_birth_date? ? birth_date : 2)
+      return false unless model_klass.use_address? && name_and_address_present?(self)
+      return false if duplicate_record.first_name.blank?
 
-      model_klass.use_address? && duplicate_birth_date && duplicate_record.first_name.present? &&
-        first_name.present? && last_name.present? && address_1.present? && city.present? && state.present? &&
-        zipcode.present? && self_birth_date && first_name != duplicate_record.first_name &&
-        self_birth_date != duplicate_birth_date && last_name == duplicate_record.last_name &&
+      birth_date_compare(duplicate_record, 1) && birth_date_compare(self, 2) &&
+        first_name != duplicate_record.first_name &&
+        birth_date_compare(self, 2) != birth_date_compare(duplicate_record, 1) &&
+        same_last_name_and_address?(duplicate_record)
+    end
+
+    def birth_date_compare(record, fallback)
+      model_klass.use_birth_date? ? record.birth_date : fallback
+    end
+
+    def same_last_name_and_address?(duplicate_record)
+      last_name == duplicate_record.last_name &&
         address_1 == duplicate_record.address_1 && city == duplicate_record.city &&
         state == duplicate_record.state && zipcode == duplicate_record.zipcode
+    end
+
+    def name_and_address_present?(record)
+      record.first_name.present? && record.last_name.present? &&
+        record.address_1.present? && record.city.present? && record.state.present? && record.zipcode.present?
     end
 
     def name_weight
@@ -234,17 +247,17 @@ module DuplicateFixable
 
     def duplicate_field_score(duplicate_patient, attribute, weight)
       return 0 if self[attribute].blank? || duplicate_patient[attribute].blank?
+      return calc_string_weight(self[attribute], duplicate_patient[attribute], weight) if self[attribute].is_a?(String)
+      return weight if self[attribute] == duplicate_patient[attribute]
 
-      if self[attribute].is_a?(String)
-        if self[attribute].upcase == duplicate_patient[attribute].upcase
-          weight
-        elsif Text::Levenshtein.distance(self[attribute].upcase, duplicate_patient[attribute].upcase) <= 2
-          weight / 2
-        else
-          0
-        end
-      elsif self[attribute] == duplicate_patient[attribute]
+      0
+    end
+
+    def calc_string_weight(attribute_1, attribute_2, weight)
+      if attribute_1.upcase == attribute_2.upcase
         weight
+      elsif Text::Levenshtein.distance(attribute_1.upcase, attribute_2.upcase) <= 2
+        weight / 2
       else
         0
       end

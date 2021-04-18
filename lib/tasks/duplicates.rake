@@ -18,7 +18,9 @@ namespace :duplicates do
       end
     end
   end
+end
 
+namespace :duplicates do
   task reset_sort: :environment do
     session = RakeSession.new(5.minutes, 1)
 
@@ -30,7 +32,9 @@ namespace :duplicates do
       end
     end
   end
+end
 
+namespace :duplicates do
   task reset_all: :environment do
     session = RakeSession.new(5.minutes, 1)
 
