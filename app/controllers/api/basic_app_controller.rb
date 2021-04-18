@@ -2,11 +2,11 @@ module Api
   class BasicAppController < ActionController::Base
     protect_from_forgery with: :null_session, only: proc { |c| c.request.format.json? }
 
-    before_action :require_jwt
+    before_action :authorize_with_jwt
 
     private
 
-      def require_jwt
+      def authorize_with_jwt
         head :forbidden unless valid_token?
       end
 
