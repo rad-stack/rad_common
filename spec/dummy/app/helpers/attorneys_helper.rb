@@ -4,7 +4,7 @@ module AttorneysHelper
   end
 
   def fix_duplicates_attorney_action(attorney)
-    return unless attorney.duplicate_score && policy(Attorney).show?
+    return unless attorney.duplicate.present? && attorney.duplicate.duplicate_score.present? && policy(Attorney).show?
 
     link_to(icon(:cubes, 'Fix Duplicates'),
             show_current_duplicates_attorneys_path(attorney_id: attorney.id),

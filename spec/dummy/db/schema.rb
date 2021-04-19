@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_18_155755) do
+ActiveRecord::Schema.define(version: 2021_04_19_154203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -59,11 +59,6 @@ ActiveRecord::Schema.define(version: 2021_04_18_155755) do
     t.string "city", null: false
     t.string "state", null: false
     t.string "zipcode", null: false
-    t.text "duplicates_info"
-    t.text "duplicates_not"
-    t.integer "duplicate_score"
-    t.integer "duplicate_sort", default: 500, null: false
-    t.datetime "duplicates_processed_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -121,6 +116,18 @@ ActiveRecord::Schema.define(version: 2021_04_18_155755) do
     t.date "date_established"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
+  end
+
+  create_table "duplicates", force: :cascade do |t|
+    t.string "duplicatable_type", null: false
+    t.bigint "duplicatable_id", null: false
+    t.text "duplicates_info"
+    t.text "duplicates_not"
+    t.integer "duplicate_score"
+    t.integer "duplicate_sort", default: 500, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["duplicatable_type", "duplicatable_id"], name: "index_duplicates_on_duplicatable_type_and_duplicatable_id"
   end
 
   create_table "login_activities", force: :cascade do |t|

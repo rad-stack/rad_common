@@ -314,6 +314,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20210204112040_system_message_role.rb',
                         'system_message_role.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20210419153508_create_duplicates.rb',
+                        'create_duplicates.rb'
       end
 
       def self.next_migration_number(path)

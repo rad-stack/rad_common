@@ -121,10 +121,7 @@ RSpec.describe 'Attorneys', type: :system do
     end
 
     def process_duplicate_attorneys
-      attorneys = Attorney.where('duplicates_processed_at IS NULL OR updated_at > duplicates_processed_at')
-                          .order(:id)
-
-      attorneys.each(&:process_duplicates)
+      Attorney.all.each(&:process_duplicates)
     end
   end
 end

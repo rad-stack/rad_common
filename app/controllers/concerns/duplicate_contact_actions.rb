@@ -77,15 +77,16 @@ module DuplicateContactActions
     @record = model.find_by(id: params[:id])
     authorize @record
 
-    max = model.maximum(:duplicate_sort)
+    max = Duplicate.where(duplicatable_type: model.name).maximum(:duplicate_sort)
     sort = (max ? max + 1 : 1)
-    @record.update_attribute(:duplicate_sort, sort)
+    @record.create_or_update_metadata! duplicate_sort: sort
 
-    if @record.duplicate_score
+    if @record.duplicate.present? && @record.duplicate.duplicate_score.present?
       dupes = @record.duplicates
+
       if dupes.count == 1
         record = dupes.first[:record]
-        record.update_attribute(:duplicate_sort, sort)
+        record.create_or_update_metadata! duplicate_sort: sort
       end
     end
 

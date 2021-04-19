@@ -7,7 +7,7 @@ RSpec.describe RadCommon::AppInfo, type: :service do
     subject { service.application_tables }
 
     let(:result) do
-      %w[attorneys companies divisions notification_security_roles notification_settings notification_types
+      %w[attorneys companies divisions duplicates notification_security_roles notification_settings notification_types
          notifications security_roles statuses system_messages user_security_roles user_statuses users]
     end
 
@@ -18,7 +18,7 @@ RSpec.describe RadCommon::AppInfo, type: :service do
     subject { service.application_models }
 
     let(:result) do
-      %w[Attorney Company Division Notification NotificationSecurityRole NotificationSetting NotificationType
+      %w[Attorney Company Division Duplicate Notification NotificationSecurityRole NotificationSetting NotificationType
          SecurityRole Status SystemMessage User UserSecurityRole UserStatus]
     end
 

@@ -25,11 +25,7 @@ namespace :duplicates do
     session = RakeSession.new(5.minutes, 1)
 
     Timeout.timeout(session.time_limit) do
-      if Date.current.wday == 1
-        RadCommon.duplicate_models.each do |model_name|
-          model_name.constantize.where('duplicate_sort <> 500').update_all(duplicate_sort: 500)
-        end
-      end
+      Duplicate.where.not(duplicate_sort: 500).update_all duplicate_sort: 500 if Date.current.wday == 1
     end
   end
 end
@@ -39,12 +35,7 @@ namespace :duplicates do
     session = RakeSession.new(5.minutes, 1)
 
     Timeout.timeout(session.time_limit) do
-      RadCommon.duplicate_models.each do |model_name|
-        model_name.constantize.update_all duplicate_sort: 500,
-                                          duplicates_not: nil,
-                                          duplicate_score: nil,
-                                          duplicates_processed_at: nil
-      end
+      Duplicate.delete_all
     end
   end
 end

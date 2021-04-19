@@ -2,16 +2,21 @@ module DuplicateFixable
   extend ActiveSupport::Concern
 
   included do
+    has_one :duplicate, as: :duplicatable, dependent: :destroy
+
     scope :duplicates_to_process, lambda {
-      where('duplicates_processed_at IS NULL OR updated_at > duplicates_processed_at').order(:id)
+      left_outer_joins(:duplicate)
+        .where("duplicates.updated_at IS NULL OR #{table_name}.updated_at > duplicates.updated_at")
+        .order(:id)
     }
 
     scope :relevant_duplicates, lambda {
-      where('duplicate_score IS NOT NULL AND duplicate_score >= ?', score_lower_threshold)
+      joins(:duplicate).where('duplicate_score IS NOT NULL AND duplicate_score >= ?', score_lower_threshold)
     }
 
     scope :high_duplicates, lambda {
-      where('duplicate_score IS NOT NULL AND duplicate_score >= ? AND duplicate_sort <= 500', score_upper_threshold)
+      joins(:duplicate).where('duplicate_score IS NOT NULL AND duplicate_score >= ? AND duplicate_sort <= 500',
+                              score_upper_threshold)
     }
   end
 
@@ -62,42 +67,33 @@ module DuplicateFixable
     end
 
     dupes = (contacts.to_json if contacts.count.positive?)
-
-    # update column data, bypass callbacks and validation
-    update_column :duplicates_info, dupes
-    update_column :duplicate_score, scores.max.positive? ? scores.max : nil
-    update_column :duplicates_processed_at, Time.current
+    create_or_update_metadata! duplicates_info: dupes, duplicate_score: scores.max.positive? ? scores.max : nil
   end
 
   def reset_duplicates
-    # update column data, bypass callbacks and validation
-    update_column :duplicates_info, nil
-    update_column :duplicate_score, nil
-    update_column :duplicates_processed_at, nil
-    update_column :duplicates_not, nil
-    update_column :duplicate_sort, 500
+    if duplicate.present?
+      duplicate.destroy!
+      reload
+    end
 
     process_duplicates
   end
 
   def duplicates
-    if duplicates_info.blank?
-      []
-    else
-      dupes = JSON.parse(duplicates_info)
+    return [] if duplicate.blank? || duplicate.duplicates_info.blank?
 
-      contacts = []
+    dupes = JSON.parse(duplicate.duplicates_info)
+    contacts = []
 
-      dupes.each do |dupe|
-        contact = model_klass.find_by(id: dupe['id'])
+    dupes.each do |dupe|
+      contact = model_klass.find_by(id: dupe['id'])
 
-        if contact && (dupe['score'] >= self.class.score_lower_threshold)
-          contacts.push(record: contact, score: dupe['score'])
-        end
+      if contact && (dupe['score'] >= self.class.score_lower_threshold)
+        contacts.push(record: contact, score: dupe['score'])
       end
-
-      contacts.sort_by { |item| item[:score] }.reverse
     end
+
+    contacts.sort_by { |item| item[:score] }.reverse
   end
 
   def not_duplicate(other_record)
@@ -105,10 +101,22 @@ module DuplicateFixable
     set_not_duplicate other_record, self
   end
 
+  def create_or_update_metadata!(attributes)
+    if duplicate.blank?
+      Duplicate.create! attributes.merge(duplicatable: self)
+    else
+      duplicate.update! attributes
+    end
+  end
+
   private
 
     def model_klass
       self.class.to_s.constantize
+    end
+
+    def table_name
+      "#{self.class.to_s.underscore}s"
     end
 
     def all_matches
@@ -269,15 +277,15 @@ module DuplicateFixable
       items.push(record_2.id)
       items = items.uniq
 
-      record_1.update! duplicates_not: items.to_json
+      record_1.create_or_update_metadata! duplicates_not: items.to_json
       record_1.process_duplicates
     end
 
     def no_matches(record)
-      if record.duplicates_not.blank?
+      if record.duplicate.blank? || record.duplicate.duplicates_not.blank?
         []
       else
-        JSON.parse(record.duplicates_not)
+        JSON.parse(record.duplicate.duplicates_not)
       end
     end
 end
