@@ -51,4 +51,10 @@ module DuplicatesHelper
       'table-danger'
     end
   end
+
+  def show_duplicate_item(item, record)
+    return secured_link(record.send(item[:name].to_s.gsub('_id', ''))) if item[:type] == :association
+
+    record.attributes[item[:name].to_s]
+  end
 end

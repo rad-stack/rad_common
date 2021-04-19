@@ -27,35 +27,26 @@ module DuplicateFixable
     end
 
     def use_birth_date?
-      method_defined?('birth_date')
-    end
-
-    def use_company_name?
-      method_defined?('company_name')
-    end
-
-    def use_email?
-      method_defined?('email')
+      respond_to?(:birth_date)
     end
 
     def use_address?
-      method_defined?('address_1')
-    end
-
-    def use_locations?
-      to_s == 'Prescriber'
+      respond_to?(:address_1)
     end
 
     def additional_duplicate_items
-      [{ name: :fax_number, label: 'Fax #', display_only: false },
-       { name: :sales_rep_id, label: 'Sales Rep', display_only: true },
-       { name: :language_id, label: 'Language', display_only: false },
-       { name: :parent_type_id, label: 'Parent Type', display_only: false },
-       { name: :gender_id, label: 'Gender', display_only: false }]
+      [{ name: :company_name, label: 'Company Name', type: :levenshtein, display_only: false, weight: 10 },
+       { name: :email, label: 'Email', type: :string, display_only: false, weight: 20 },
+       { name: :fax_number, label: 'Fax #', type: :string, display_only: false, weight: 10 },
+       { name: :sales_rep_id, label: 'Sales Rep', type: :association, display_only: true },
+       { name: :language_id, label: 'Language', type: :association, display_only: false, weight: 10 },
+       { name: :parent_type_id, label: 'Parent Type', type: :association, display_only: false, weight: 10 },
+       { name: :gender_id, label: 'Gender', type: :association, display_only: false, weight: 10 },
+       { name: :locations_description, label: 'Locations', type: :string, display_only: true }]
     end
 
     def applicable_duplicate_items
-      additional_duplicate_items.select { |item| self.new.respond_to?(item[:name]) }
+      additional_duplicate_items.select { |item| new.respond_to?(item[:name]) }
     end
   end
 
@@ -124,9 +115,7 @@ module DuplicateFixable
       (name_matches +
        similar_name_matches +
        birth_date_matches +
-       company_name_matches +
        phone_number_matches +
-       email_matches +
        additional_item_matches).uniq - no_matches(self)
     end
 
@@ -134,14 +123,14 @@ module DuplicateFixable
       model_klass.where('id <> ? AND upper(first_name) = ? AND upper(last_name) = ?',
                         id,
                         first_name.upcase,
-                        last_name.upcase).map(&:id)
+                        last_name.upcase).pluck(:id)
     end
 
     def similar_name_matches
       model_klass.where('id <> ? AND levenshtein(upper(first_name), ?) <= 1 AND levenshtein(upper(last_name), ?) <= 1',
                         id,
                         first_name.upcase,
-                        last_name.upcase).map(&:id)
+                        last_name.upcase).pluck(:id)
     end
 
     def birth_date_matches
@@ -154,28 +143,27 @@ module DuplicateFixable
                         id,
                         birth_date,
                         first_name.upcase,
-                        last_name.upcase).map(&:id)
-    end
-
-    def company_name_matches
-      return [] unless model_klass.use_company_name? && company_name.present?
-
-      model_klass.where('id <> ? AND levenshtein(upper(company_name), ?) <= 1', id, company_name.upcase).map(&:id)
+                        last_name.upcase).pluck(:id)
     end
 
     def additional_item_matches
       items = []
 
       model_klass.applicable_duplicate_items.each do |item|
-        next if item[:display_only]
+        item_value = attributes[item[:name]]
+        next if item[:display_only] || item_value.blank?
 
-        query = if item[:name].to_s.include?('_id')
+        query = case item[:type]
+                when :association
                   "id <> ? AND #{item[:name]} IS NOT NULL AND #{item[:name]} = ?"
+                when :levenshtein
+                  "id <> ? AND levenshtein(upper(#{item[:name]}), ?) <= 1"
                 else
                   "id <> ? AND #{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?"
                 end
 
-        items += model_klass.where(query, id, attributes[item[:name]]).pluck(:id)
+        check_value = item[:type] == :levenshtein ? item_value.upcase : item_value
+        items += model_klass.where(query, id, check_value).pluck(:id)
       end
 
       items
@@ -184,47 +172,41 @@ module DuplicateFixable
     def phone_number_matches
       model_klass.where("id <> ? AND phone_number IS NOT NULL AND phone_number <> '' AND phone_number = ?",
                         id,
-                        phone_number).map(&:id)
-    end
-
-    def email_matches
-      return [] unless model_klass.use_email? && email.present?
-
-      model_klass.where("id <> ? AND email IS NOT NULL AND email <> '' AND upper(email) = ?",
-                        id,
-                        email.to_s.upcase).map(&:id)
+                        phone_number).pluck(:id)
     end
 
     def duplicate_record_score(duplicate_record)
       score = 0
 
-      attributes = [{ name: 'first_name', weight: name_weight },
-                    { name: 'last_name', weight: name_weight },
-                    { name: 'phone_number', weight: other_weight },
-                    { name: 'email', weight: 20 }]
-
-      attributes.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
-      attributes.push(name: 'company_name', weight: 10) if model_klass.use_company_name?
-
-      model_klass.applicable_duplicate_items.each do |item|
-        attributes.push(name: item[:name].to_s, weight: 10) if respond_to?(item[:name])
-      end
-
-      if model_klass.use_address?
-        attributes += [{ name: 'city', weight: 10 },
-                       { name: 'state', weight: 10 },
-                       { name: 'zipcode', weight: 10 },
-                       { name: 'address_1', weight: other_weight },
-                       { name: 'address_2', weight: other_weight }]
-      end
-
-      attributes.each do |attribute|
+      all_duplicate_attributes.each do |attribute|
         score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
       end
 
       score = 5 if family_member_same_home?(duplicate_record)
 
-      ((score / attributes.pluck(:weight).sum.to_f) * 100).to_i
+      ((score / all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
+    end
+
+    def all_duplicate_attributes
+      items = [{ name: 'first_name', weight: name_weight },
+               { name: 'last_name', weight: name_weight },
+               { name: 'phone_number', weight: other_weight }]
+
+      items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
+
+      model_klass.applicable_duplicate_items.each do |item|
+        items.push(name: item[:name].to_s, weight: item[:weight]) if respond_to?(item[:name])
+      end
+
+      if model_klass.use_address?
+        items += [{ name: 'city', weight: 10 },
+                  { name: 'state', weight: 10 },
+                  { name: 'zipcode', weight: 10 },
+                  { name: 'address_1', weight: other_weight },
+                  { name: 'address_2', weight: other_weight }]
+      end
+
+      items
     end
 
     def family_member_same_home?(duplicate_record)

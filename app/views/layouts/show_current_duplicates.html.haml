@@ -17,13 +17,9 @@
         %th Score
         %th Last Name
         %th First Name
-        - if @model.use_company_name?
-          %th Company Name
         %th Phone #
         - @model.applicable_duplicate_items.each do |item|
           %th= item[:label]
-        - if @model.use_email?
-          %th Email
         - if @model.use_birth_date?
           %th Birth Date
         - if @model.use_address?
@@ -32,8 +28,6 @@
           %th City
           %th State
           %th Zipcode
-        - if @model.use_locations?
-          %th Locations
         %th Entered
       %tr
         %td
@@ -41,17 +35,9 @@
         %td= @record.duplicate_score
         %td= link_to @record.last_name, @record
         %td= link_to @record.first_name, @record
-        - if @model.use_company_name?
-          %td= @record.company_name
         %td= @record.phone_number
         - @model.applicable_duplicate_items.each do |item|
-          %td
-            - if item[:name].to_s.include?('_id')
-              = secured_link @record.send(item[:name].to_s.gsub('_id', ''))
-            - else
-              = @record.attributes[item[:name].to_s]
-        - if @model.use_email?
-          %td= @record.email
+          %td= show_duplicate_item item, @record
         - if @model.use_birth_date?
           %td= format_date(@record.birth_date)
         - if @model.use_address?
@@ -60,8 +46,6 @@
           %td= @record.city
           %td= @record.state
           %td= @record.zipcode
-        - if @model.use_locations?
-          %td= @record.locations_description
         %td= format_date(@record.created_at)
 
 = simple_form_for(@record, url: merge_duplicates_path(@record)) do
@@ -97,13 +81,9 @@
           %th Score
           %th Last Name
           %th First Name
-          - if @model.use_company_name?
-            %th Company Name
           %th Phone #
           - @model.applicable_duplicate_items.each do |item|
             %th= item[:label]
-          - if @model.use_email?
-            %th Email
           - if @model.use_birth_date?
             %th Birth Date
           - if @model.use_address?
@@ -112,8 +92,6 @@
             %th City
             %th State
             %th Zipcode
-          - if @model.use_locations?
-            %th Locations
           %th Entered
         - @records.each_with_index do |record_result, _index|
           - record = record_result[:record]
@@ -135,20 +113,11 @@
               = link_to record.last_name, record
             %td{ class: duplicate_class(@record.first_name, record.first_name) }
               = link_to record.first_name, record
-            - if @model.use_company_name?
-              %td{ class: duplicate_class(@record.company_name, record.company_name) }
-                = record.company_name
             %td{ class: duplicate_class(@record.phone_number, record.phone_number) }
               = record.phone_number
             - @model.applicable_duplicate_items.each do |item|
               %td{ class: duplicate_class(@record.attributes[item[:name].to_s], record.attributes[item[:name].to_s]) }
-                - if item[:name].to_s.include?('_id')
-                  = secured_link record.send(item[:name].to_s.gsub('_id', ''))
-                - else
-                  = record.attributes[item[:name].to_s]
-            - if @model.use_email?
-              %td{ class: duplicate_class(@record.email, record.email) }
-                = record.email
+                = show_duplicate_item item, record
             - if @model.use_birth_date?
               %td{ class: duplicate_class(@record.birth_date, record.birth_date) }
                 = format_date(record.birth_date)
@@ -163,8 +132,5 @@
                 = record.state
               %td{ class: duplicate_class(@record.zipcode, record.zipcode) }
                 = record.zipcode
-            - if @model.use_locations?
-              %td{ class: duplicate_class(@record.locations_description, record.locations_description) }
-                = record.locations_description
             %td
               = format_date(record.created_at)
