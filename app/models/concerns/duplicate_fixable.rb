@@ -27,11 +27,11 @@ module DuplicateFixable
     end
 
     def use_birth_date?
-      respond_to?(:birth_date)
+      new.respond_to?(:birth_date)
     end
 
     def use_address?
-      respond_to?(:address_1)
+      new.respond_to?(:address_1)
     end
 
     def additional_duplicate_items
