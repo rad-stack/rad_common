@@ -195,6 +195,8 @@ module DuplicateFixable
       items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
 
       model_klass.applicable_duplicate_items.each do |item|
+        next if item[:display_only]
+
         items.push(name: item[:name].to_s, weight: item[:weight]) if respond_to?(item[:name])
       end
 
