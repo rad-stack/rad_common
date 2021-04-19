@@ -38,20 +38,24 @@ module DuplicateFixable
       method_defined?('email')
     end
 
-    def use_fax_number?
-      method_defined?('fax_number')
-    end
-
-    def use_sales_rep?
-      method_defined?('sales_rep_id')
-    end
-
     def use_address?
       method_defined?('address_1')
     end
 
     def use_locations?
       to_s == 'Prescriber'
+    end
+
+    def additional_duplicate_items
+      [{ name: :fax_number, label: 'Fax #', display_only: false },
+       { name: :sales_rep_id, label: 'Sales Rep', display_only: true },
+       { name: :language_id, label: 'Language', display_only: false },
+       { name: :parent_type_id, label: 'Parent Type', display_only: false },
+       { name: :gender_id, label: 'Gender', display_only: false }]
+    end
+
+    def applicable_duplicate_items
+      additional_duplicate_items.select { |item| self.new.respond_to?(item[:name]) }
     end
   end
 
@@ -105,9 +109,9 @@ module DuplicateFixable
     end
   end
 
-  def not_duplicate(other_patient)
-    set_not_duplicate self, other_patient
-    set_not_duplicate other_patient, self
+  def not_duplicate(other_record)
+    set_not_duplicate self, other_record
+    set_not_duplicate other_record, self
   end
 
   private
@@ -120,10 +124,10 @@ module DuplicateFixable
       (name_matches +
        similar_name_matches +
        birth_date_matches +
-       fax_number_matches +
        company_name_matches +
        phone_number_matches +
-       email_matches).uniq - no_matches(self)
+       email_matches +
+       additional_item_matches).uniq - no_matches(self)
     end
 
     def name_matches
@@ -159,12 +163,22 @@ module DuplicateFixable
       model_klass.where('id <> ? AND levenshtein(upper(company_name), ?) <= 1', id, company_name.upcase).map(&:id)
     end
 
-    def fax_number_matches
-      return [] unless model_klass.use_fax_number?
+    def additional_item_matches
+      items = []
 
-      model_klass.where("id <> ? AND fax_number IS NOT NULL AND fax_number <> '' AND fax_number = ?",
-                        id,
-                        fax_number).map(&:id)
+      model_klass.applicable_duplicate_items.each do |item|
+        next if item[:display_only]
+
+        query = if item[:name].to_s.include?('_id')
+                  "id <> ? AND #{item[:name]} IS NOT NULL AND #{item[:name]} = ?"
+                else
+                  "id <> ? AND #{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?"
+                end
+
+        items += model_klass.where(query, id, attributes[item[:name]]).pluck(:id)
+      end
+
+      items
     end
 
     def phone_number_matches
@@ -191,7 +205,10 @@ module DuplicateFixable
 
       attributes.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
       attributes.push(name: 'company_name', weight: 10) if model_klass.use_company_name?
-      attributes.push(name: 'fax_number', weight: 10) if model_klass.use_fax_number?
+
+      model_klass.applicable_duplicate_items.each do |item|
+        attributes.push(name: item[:name].to_s, weight: 10) if respond_to?(item[:name])
+      end
 
       if model_klass.use_address?
         attributes += [{ name: 'city', weight: 10 },
@@ -245,10 +262,10 @@ module DuplicateFixable
       20
     end
 
-    def duplicate_field_score(duplicate_patient, attribute, weight)
-      return 0 if self[attribute].blank? || duplicate_patient[attribute].blank?
-      return calc_string_weight(self[attribute], duplicate_patient[attribute], weight) if self[attribute].is_a?(String)
-      return weight if self[attribute] == duplicate_patient[attribute]
+    def duplicate_field_score(duplicate_record, attribute, weight)
+      return 0 if self[attribute].blank? || duplicate_record[attribute].blank?
+      return calc_string_weight(self[attribute], duplicate_record[attribute], weight) if self[attribute].is_a?(String)
+      return weight if self[attribute] == duplicate_record[attribute]
 
       0
     end

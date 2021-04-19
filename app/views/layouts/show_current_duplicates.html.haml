@@ -10,7 +10,7 @@
                                   additional_actions: duplicate_actions(@record, @model)
 
   .card-body
-    %table.table.table-striped.table-bordered#current-patient-table
+    %table.table.table-striped.table-bordered#current-duplicate-table
       %tr
         %th
         %th
@@ -20,8 +20,8 @@
         - if @model.use_company_name?
           %th Company Name
         %th Phone #
-        - if @model.use_fax_number?
-          %th Fax #
+        - @model.applicable_duplicate_items.each do |item|
+          %th= item[:label]
         - if @model.use_email?
           %th Email
         - if @model.use_birth_date?
@@ -34,8 +34,6 @@
           %th Zipcode
         - if @model.use_locations?
           %th Locations
-        - if @model.use_sales_rep?
-          %th Sales Rep
         %th Entered
       %tr
         %td
@@ -46,8 +44,12 @@
         - if @model.use_company_name?
           %td= @record.company_name
         %td= @record.phone_number
-        - if @model.use_fax_number?
-          %td= @record.fax_number
+        - @model.applicable_duplicate_items.each do |item|
+          %td
+            - if item[:name].to_s.include?('_id')
+              = secured_link @record.send(item[:name].to_s.gsub('_id', ''))
+            - else
+              = @record.attributes[item[:name].to_s]
         - if @model.use_email?
           %td= @record.email
         - if @model.use_birth_date?
@@ -60,8 +62,6 @@
           %td= @record.zipcode
         - if @model.use_locations?
           %td= @record.locations_description
-        - if @model.use_sales_rep?
-          %td= secured_link(@record.sales_rep)
         %td= format_date(@record.created_at)
 
 = simple_form_for(@record, url: merge_duplicates_path(@record)) do
@@ -90,7 +90,7 @@
               .table-danger
 
     .card-body
-      %table.table.table-striped.table-bordered#other-patients-table
+      %table.table.table-striped.table-bordered#other-duplicates-table
         %tr
           %th Merge?
           %th.actions Actions
@@ -100,8 +100,8 @@
           - if @model.use_company_name?
             %th Company Name
           %th Phone #
-          - if @model.use_fax_number?
-            %th Fax #
+          - @model.applicable_duplicate_items.each do |item|
+            %th= item[:label]
           - if @model.use_email?
             %th Email
           - if @model.use_birth_date?
@@ -114,8 +114,6 @@
             %th Zipcode
           - if @model.use_locations?
             %th Locations
-          - if @model.use_sales_rep?
-            %th Sales Rep
           %th Entered
         - @records.each_with_index do |record_result, _index|
           - record = record_result[:record]
@@ -142,9 +140,12 @@
                 = record.company_name
             %td{ class: duplicate_class(@record.phone_number, record.phone_number) }
               = record.phone_number
-            - if @model.use_fax_number?
-              %td{ class: duplicate_class(@record.fax_number, record.fax_number) }
-                = record.fax_number
+            - @model.applicable_duplicate_items.each do |item|
+              %td{ class: duplicate_class(@record.attributes[item[:name].to_s], record.attributes[item[:name].to_s]) }
+                - if item[:name].to_s.include?('_id')
+                  = secured_link record.send(item[:name].to_s.gsub('_id', ''))
+                - else
+                  = record.attributes[item[:name].to_s]
             - if @model.use_email?
               %td{ class: duplicate_class(@record.email, record.email) }
                 = record.email
@@ -165,8 +166,5 @@
             - if @model.use_locations?
               %td{ class: duplicate_class(@record.locations_description, record.locations_description) }
                 = record.locations_description
-            - if @model.use_sales_rep?
-              %td{ class: duplicate_class(@record.sales_rep_id, record.sales_rep_id) }
-                = secured_link(record.sales_rep)
             %td
               = format_date(record.created_at)

@@ -17,6 +17,13 @@ $ ->
       e.preventDefault()
       false
 
+  if $("#other-duplicates-table").length
+    columnWidths = []
+    $("#other-duplicates-table th").each ->
+      columnWidths.push( $(this).width() )
+    $("#current-duplicate-table th").each ( index ) ->
+      $(this).width(columnWidths[index])
+
   $('.global-search-autocomplete').each( (index, object) ->
     instance = $(object).autocomplete().autocomplete("instance")
     instance._renderItem = (ul, item) ->
