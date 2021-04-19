@@ -5,7 +5,7 @@ namespace :duplicates do
     session = RakeSession.new(20.minutes, 10)
 
     Timeout.timeout(session.time_limit) do
-      Rails.application.config.duplicate_model_names.each do |model_name|
+      RadCommon.duplicate_models.each do |model_name|
         session.reset_status
         records = model_name.constantize.duplicates_to_process
         count = records.count
@@ -26,7 +26,7 @@ namespace :duplicates do
 
     Timeout.timeout(session.time_limit) do
       if Date.current.wday == 1
-        Rails.application.config.duplicate_model_names.each do |model_name|
+        RadCommon.duplicate_models.each do |model_name|
           model_name.constantize.where('duplicate_sort <> 500').update_all(duplicate_sort: 500)
         end
       end
@@ -39,7 +39,7 @@ namespace :duplicates do
     session = RakeSession.new(5.minutes, 1)
 
     Timeout.timeout(session.time_limit) do
-      Rails.application.config.duplicate_model_names.each do |model_name|
+      RadCommon.duplicate_models.each do |model_name|
         model_name.constantize.update_all duplicate_sort: 500,
                                           duplicates_not: nil,
                                           duplicate_score: nil,

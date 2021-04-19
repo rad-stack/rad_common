@@ -38,11 +38,11 @@ module DuplicateFixable
       [{ name: :company_name, label: 'Company Name', type: :levenshtein, display_only: false, weight: 10 },
        { name: :email, label: 'Email', type: :string, display_only: false, weight: 20 },
        { name: :fax_number, label: 'Fax #', type: :string, display_only: false, weight: 10 },
-       { name: :sales_rep_id, label: 'Sales Rep', type: :association, display_only: true },
        { name: :language_id, label: 'Language', type: :association, display_only: false, weight: 10 },
        { name: :parent_type_id, label: 'Parent Type', type: :association, display_only: false, weight: 10 },
        { name: :gender_id, label: 'Gender', type: :association, display_only: false, weight: 10 },
-       { name: :locations_description, label: 'Locations', type: :string, display_only: true }]
+       { name: :locations_description, label: 'Locations', type: :string, display_only: true },
+       { name: :sales_rep_id, label: 'Sales Rep', type: :association, display_only: true }]
     end
 
     def applicable_duplicate_items
