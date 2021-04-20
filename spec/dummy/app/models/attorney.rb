@@ -14,8 +14,4 @@ class Attorney < ApplicationRecord
     the_name = "#{the_name} #{middle_name}" if middle_name.present?
     the_name
   end
-
-  def clean_up_duplicate(_new_record)
-    # nothing to do
-  end
 end

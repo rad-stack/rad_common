@@ -42,7 +42,11 @@ module DuplicateFixable
     def additional_duplicate_items
       [{ name: :company_name, label: 'Company Name', type: :levenshtein, display_only: false, weight: 10 },
        { name: :email, label: 'Email', type: :string, display_only: false, weight: 20 },
-       { name: :phone_number, label: 'Phone #', type: :string, display_only: false, weight: new.duplicate_other_weight },
+       { name: :phone_number,
+         label: 'Phone #',
+         type: :string,
+         display_only: false,
+         weight: new.duplicate_other_weight },
        { name: :fax_number, label: 'Fax #', type: :string, display_only: false, weight: 10 },
        { name: :language_id, label: 'Language', type: :association, display_only: false, weight: 10 },
        { name: :parent_type_id, label: 'Parent Type', type: :association, display_only: false, weight: 10 },
@@ -108,6 +112,10 @@ module DuplicateFixable
     else
       duplicate.update! attributes
     end
+  end
+
+  def clean_up_duplicate(_new_record)
+    # override as needed in models
   end
 
   def duplicate_name_weight

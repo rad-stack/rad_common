@@ -35,26 +35,28 @@ RSpec.describe 'Attorneys', type: :system do
     end
   end
 
-  describe 'duplicate attorneys' do
+  describe 'duplicates' do
     let(:user) { create :admin }
-    let(:index_path) { '/rad_common/duplicates?model=Attorney' }
+    let(:model_name) { 'Attorney' }
+    let(:record) { attorney }
+    let(:index_path) { "/rad_common/duplicates?model=#{model_name}" }
 
     before do
-      attorney.first_name = 'Fredx'
-      attorney.last_name = 'Flintstonex'
-      attorney.phone_number = '(435) 123-1200'
-      attorney.save!
+      record.first_name = 'Fredx'
+      record.last_name = 'Flintstonex'
+      record.phone_number = '(435) 123-1200'
+      record.save!
 
-      duplicate_attorney = create(:attorney)
-      duplicate_attorney.first_name = 'Fredx'
-      duplicate_attorney.last_name = 'Flintstonex'
-      duplicate_attorney.phone_number = '(435) 123-1200'
-      duplicate_attorney.save!
+      duplicate_record = create :attorney
+      duplicate_record.first_name = 'Fredx'
+      duplicate_record.last_name = 'Flintstonex'
+      duplicate_record.phone_number = '(435) 123-1200'
+      duplicate_record.save!
 
-      process_duplicate_attorneys
+      process_duplicates
     end
 
-    it 'allows user to mark attorney record as not duplicate', js: true do
+    it 'allows user to mark record record as not duplicate', js: true do
       visit index_path
       expect(page).to have_content('Fixing Attorneys (2)')
 
@@ -69,20 +71,20 @@ RSpec.describe 'Attorneys', type: :system do
       expect(page).not_to have_content('Birth Date')
     end
 
-    it 'allows user to skip duplicate attorney for later review' do
-      duplicate_attorney_2 = create(:attorney)
-      duplicate_attorney_2.first_name = 'Johnx'
-      duplicate_attorney_2.last_name = 'Smithx'
-      duplicate_attorney_2.phone_number = '(123) 555-9999'
-      duplicate_attorney_2.email = 'tester@example.com'
-      duplicate_attorney_2.save!(validate: false)
-      duplicate_attorney_3 = create(:attorney)
-      duplicate_attorney_3.first_name = 'Johnx'
-      duplicate_attorney_3.last_name = 'Smithx'
-      duplicate_attorney_3.phone_number = '(123) 555-0000'
-      duplicate_attorney_3.email = 'tester@example.com'
-      duplicate_attorney_3.save!(validate: false)
-      process_duplicate_attorneys
+    it 'allows user to skip duplicate record for later review' do
+      duplicate_record_2 = create :attorney
+      duplicate_record_2.first_name = 'Johnx'
+      duplicate_record_2.last_name = 'Smithx'
+      duplicate_record_2.phone_number = '(123) 555-9999'
+      duplicate_record_2.email = 'tester@example.com'
+      duplicate_record_2.save!(validate: false)
+      duplicate_record_3 = create :attorney
+      duplicate_record_3.first_name = 'Johnx'
+      duplicate_record_3.last_name = 'Smithx'
+      duplicate_record_3.phone_number = '(123) 555-0000'
+      duplicate_record_3.email = 'tester@example.com'
+      duplicate_record_3.save!(validate: false)
+      process_duplicates
 
       visit index_path
       expect(page).to have_content('Fixing Attorneys (4)')
@@ -117,11 +119,11 @@ RSpec.describe 'Attorneys', type: :system do
       visit attorney_path(attorney)
       expect(page).not_to have_content('Fix Duplicates')
 
-      visit "/rad_common/duplicates?model=Attorney&id=#{attorney.id}"
+      visit "/rad_common/duplicates?model=#{model_name}&id=#{record.id}"
       expect(page).to have_content('Congratulations, there are no more duplicates found!')
     end
 
-    def process_duplicate_attorneys
+    def process_duplicates
       Attorney.all.each(&:process_duplicates)
     end
   end
