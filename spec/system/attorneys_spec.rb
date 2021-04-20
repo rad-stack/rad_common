@@ -37,6 +37,7 @@ RSpec.describe 'Attorneys', type: :system do
 
   describe 'duplicate attorneys' do
     let(:user) { create :admin }
+    let(:index_path) { '/rad_common/duplicates?model=Attorney' }
 
     before do
       attorney.first_name = 'Fredx'
@@ -54,7 +55,7 @@ RSpec.describe 'Attorneys', type: :system do
     end
 
     it 'allows user to mark attorney record as not duplicate', js: true do
-      visit show_current_duplicates_attorneys_path
+      visit index_path
       expect(page).to have_content('Fixing Attorneys (2)')
 
       click_link 'Switch to attorney'
@@ -64,7 +65,7 @@ RSpec.describe 'Attorneys', type: :system do
     end
 
     it 'does not show the birth date column' do
-      visit show_current_duplicates_attorneys_path
+      visit index_path
       expect(page).not_to have_content('Birth Date')
     end
 
@@ -83,7 +84,7 @@ RSpec.describe 'Attorneys', type: :system do
       duplicate_attorney_3.save!(validate: false)
       process_duplicate_attorneys
 
-      visit show_current_duplicates_attorneys_path
+      visit index_path
       expect(page).to have_content('Fixing Attorneys (4)')
       expect(page).to have_content('Johnx')
       expect(page).to have_content('Smithx')
@@ -98,7 +99,7 @@ RSpec.describe 'Attorneys', type: :system do
     end
 
     it 'allows user to merge duplicate contacts', js: true do
-      visit show_current_duplicates_attorneys_path
+      visit index_path
       expect(page).to have_content('Fixing Attorneys (2)')
 
       page.accept_confirm { click_button 'Merge All' }
@@ -116,7 +117,7 @@ RSpec.describe 'Attorneys', type: :system do
       visit attorney_path(attorney)
       expect(page).not_to have_content('Fix Duplicates')
 
-      visit show_current_duplicates_attorneys_path(attorney_id: attorney.id)
+      visit "/rad_common/duplicates?model=Attorney&id=#{attorney.id}"
       expect(page).to have_content('Congratulations, there are no more duplicates found!')
     end
 

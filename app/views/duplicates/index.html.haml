@@ -105,7 +105,7 @@
                           class: 'btn btn-sm btn-warning btn-block'
 
               = link_to "Switch to #{@model.to_s.downcase}",
-                        show_current_duplicates_path(record),
+                        index_duplicates_path_record(record),
                         class: 'btn btn-sm btn-success btn-block'
 
             %td= record_result[:score]

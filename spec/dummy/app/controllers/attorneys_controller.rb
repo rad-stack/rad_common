@@ -1,6 +1,4 @@
 class AttorneysController < ApplicationController
-  include DuplicateContactActions
-
   before_action :set_attorney, only: %i[show edit update destroy]
 
   def index

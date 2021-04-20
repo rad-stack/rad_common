@@ -18,19 +18,7 @@ Rails.application.routes.draw do
   resources :user_security_roles, only: :show
   resources :companies, only: %i[show edit update]
   resources :divisions
-
-  resources :attorneys do
-    member do
-      get :not_duplicate
-      put :duplicate_do_later
-      put :reset_duplicates
-      patch :merge_duplicates
-    end
-
-    collection do
-      get :show_current_duplicates
-    end
-  end
+  resources :attorneys
 
   namespace :api, defaults: { format: :json } do
     resources :divisions, only: :show

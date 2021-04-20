@@ -1,7 +1,7 @@
-module DuplicateContactActions
-  extend ActiveSupport::Concern
+class DuplicatesController < ApplicationController
+  def index
+    skip_policy_scope
 
-  def show_current_duplicates
     @model = model
     @record = gather_record
 
@@ -12,51 +12,40 @@ module DuplicateContactActions
       return
     end
 
-    authorize @record
+    authorize @record, :index_duplicates?
 
     @records = []
     @duplicates_count = model.relevant_duplicates.count
 
     @records = @record.duplicates
-    if @records.count.positive?
-      render 'layouts/show_current_duplicates'
-      return
-    end
+    return if @records.count.positive?
 
     @record.process_duplicates
 
     flash[:error] = "Invalid #{model.to_s.downcase} data, perhaps something has changed or another user has "\
                     'resolved these duplicates.'
 
-    redirect_to show_current_duplicates_path
+    redirect_to index_path
   end
 
-  def plural_model_name
-    model.to_s.downcase.pluralize(2)
-  end
-
-  def show_current_duplicates_path
-    "/#{plural_model_name}/show_current_duplicates"
-  end
-
-  def merge_duplicates
+  def merge
     @record = model.find_by(id: params[:id])
-    authorize @record
+    authorize @record, :merge_duplicates?
 
     if params[:merge_data]
       MergeDuplicatesJob.perform_later(params[:merge_data].keys, @record.class.to_s, @record.id, current_user.id)
 
       flash[:success] = "The duplicates are processing, we'll email you when complete."
-      redirect_to show_current_duplicates_path
+      redirect_to index_path
     else
       flash[:error] = 'Missing parameters'
       redirect_back(fallback_location: root_path)
     end
   end
 
-  def not_duplicate
+  def not
     @record = model.find_by(id: params[:id])
-    authorize @record
+    authorize @record, :not_duplicate?
     other_record = model.find_by(id: params[:master_record])
 
     if other_record # else it's no longer there, moot point
@@ -64,18 +53,18 @@ module DuplicateContactActions
         @record.not_duplicate(other_record)
       else
         flash[:error] = 'You do not have authorization to modify this record.'
-        redirect_to show_current_duplicates_path
+        redirect_to index_path
         return
       end
     end
 
     flash[:success] = 'The record was marked as not a duplicate.'
-    redirect_to show_current_duplicates_path
+    redirect_to index_path
   end
 
-  def duplicate_do_later
+  def do_later
     @record = model.find_by(id: params[:id])
-    authorize @record
+    authorize @record, :duplicate_do_later?
 
     max = Duplicate.where(duplicatable_type: model.name).maximum(:duplicate_sort)
     sort = (max ? max + 1 : 1)
@@ -91,12 +80,12 @@ module DuplicateContactActions
     end
 
     flash[:notice] = "#{model} was successfully updated."
-    redirect_to show_current_duplicates_path
+    redirect_to index_path
   end
 
-  def reset_duplicates
+  def reset
     @record = model.find_by(id: params[:id])
-    authorize @record
+    authorize @record, :reset_duplicates?
 
     @record.reset_duplicates
     redirect_to @record
@@ -104,11 +93,15 @@ module DuplicateContactActions
 
   private
 
+    def index_path
+      "/rad_common/duplicates?model=#{model}"
+    end
+
     def gather_record
-      if params[id_attribute]
-        record = @model.find_by(id: params[id_attribute])
+      if params[:id].present?
+        record = @model.find_by(id: params[:id])
         record&.process_duplicates
-        @model.relevant_duplicates.where(id: params[id_attribute]).first
+        @model.relevant_duplicates.where(id: params[:id]).first
       else
         record = @model.relevant_duplicates.order(duplicate_sort: :asc, duplicate_score: :desc)
         record = record.order(:sales_rep_id) if @model.new.respond_to?(:sales_rep_id)
@@ -118,10 +111,6 @@ module DuplicateContactActions
     end
 
     def model
-      Object.const_get controller_name.classify
-    end
-
-    def id_attribute
-      "#{controller_name.singularize}_id"
+      Object.const_get params[:model]
     end
 end

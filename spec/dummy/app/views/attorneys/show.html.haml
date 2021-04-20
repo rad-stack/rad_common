@@ -1,6 +1,4 @@
 .card
-  = render 'layouts/card_header', additional_actions: attorney_actions(@attorney)
+  = render 'layouts/card_header'
   .card-body
     = render 'layouts/show_data_columns', data: attorney_show_data, resource: @attorney
-
-= render 'layouts/reset_duplicates', record: @attorney, path: reset_duplicates_attorney_path(@attorney)

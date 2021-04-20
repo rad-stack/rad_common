@@ -38,6 +38,12 @@ class ApplicationPolicy
     user.permission?(:admin)
   end
 
+  alias not_duplicate? destroy?
+  alias reset_duplicates? destroy?
+  alias merge_duplicates? destroy?
+  alias index_duplicates? index?
+  alias duplicate_do_later? destroy?
+
   class Scope
     attr_reader :user, :scope
 

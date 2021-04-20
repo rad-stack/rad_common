@@ -22,7 +22,7 @@
                 %li= link_to 'Attorneys', attorneys_path, class: 'dropdown-item'
                 - if can_dupe
                   %li
-                    = link_to(show_current_duplicates_attorneys_path, class: 'dropdown-item') do
+                    = link_to(index_duplicates_path('Attorney'), class: 'dropdown-item') do
                       Fix Duplicate Attorneys
                       - if dupes.positive?
                         %span.badge.alert-danger= dupes
