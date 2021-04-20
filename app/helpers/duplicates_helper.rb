@@ -23,6 +23,27 @@ module DuplicatesHelper
     record.present? && RadCommon.duplicate_models.include?(record.class.name) && policy(record).reset_duplicates?
   end
 
+  def duplicates_badge(klass)
+    return unless policy(klass.new).index_duplicates?
+
+    count = klass.high_duplicates.count
+    return unless count.positive?
+
+    tag.span(class: 'badge alert-danger') do
+      count.to_s
+    end
+  end
+
+  def duplicates_nav_item(klass, label = "Duplicate #{pluralize_model_string(klass.name)}")
+    return unless policy(klass.new).index_duplicates?
+
+    tag.li do
+      link_to(index_duplicates_path('Attorney'), class: 'dropdown-item') do
+        safe_join([label, ' ', duplicates_badge(klass)])
+      end
+    end
+  end
+
   def pluralize_model_string(model_string)
     model_string.pluralize(2)
   end
