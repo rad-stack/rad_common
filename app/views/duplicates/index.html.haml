@@ -17,7 +17,6 @@
         %th Score
         %th Last Name
         %th First Name
-        %th Phone #
         - @model.applicable_duplicate_items.each do |item|
           %th= item[:label]
         - if @model.use_birth_date?
@@ -35,7 +34,6 @@
         %td= @record.duplicate.duplicate_score
         %td= link_to @record.last_name, @record
         %td= link_to @record.first_name, @record
-        %td= @record.phone_number
         - @model.applicable_duplicate_items.each do |item|
           %td= show_duplicate_item item, @record
         - if @model.use_birth_date?
@@ -81,7 +79,6 @@
           %th Score
           %th Last Name
           %th First Name
-          %th Phone #
           - @model.applicable_duplicate_items.each do |item|
             %th= item[:label]
           - if @model.use_birth_date?
@@ -113,8 +110,6 @@
               = link_to record.last_name, record
             %td{ class: duplicate_class(@record.first_name, record.first_name) }
               = link_to record.first_name, record
-            %td{ class: duplicate_class(@record.phone_number, record.phone_number) }
-              = record.phone_number
             - @model.applicable_duplicate_items.each do |item|
               %td{ class: duplicate_class(@record.attributes[item[:name].to_s], record.attributes[item[:name].to_s]) }
                 = show_duplicate_item item, record

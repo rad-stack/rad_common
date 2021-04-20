@@ -38,7 +38,7 @@ module DuplicatesHelper
     return unless policy(klass.new).index_duplicates?
 
     tag.li do
-      link_to(index_duplicates_path('Attorney'), class: 'dropdown-item') do
+      link_to(index_duplicates_path(klass.name), class: 'dropdown-item') do
         safe_join([label, ' ', duplicates_badge(klass)])
       end
     end

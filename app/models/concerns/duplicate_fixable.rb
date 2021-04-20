@@ -42,6 +42,7 @@ module DuplicateFixable
     def additional_duplicate_items
       [{ name: :company_name, label: 'Company Name', type: :levenshtein, display_only: false, weight: 10 },
        { name: :email, label: 'Email', type: :string, display_only: false, weight: 20 },
+       { name: :phone_number, label: 'Phone #', type: :string, display_only: false, weight: new.duplicate_other_weight },
        { name: :fax_number, label: 'Fax #', type: :string, display_only: false, weight: 10 },
        { name: :language_id, label: 'Language', type: :association, display_only: false, weight: 10 },
        { name: :parent_type_id, label: 'Parent Type', type: :association, display_only: false, weight: 10 },
@@ -109,6 +110,16 @@ module DuplicateFixable
     end
   end
 
+  def duplicate_name_weight
+    # override as needed in models
+    10
+  end
+
+  def duplicate_other_weight
+    # override as needed in models
+    20
+  end
+
   private
 
     def model_klass
@@ -123,7 +134,6 @@ module DuplicateFixable
       (name_matches +
        similar_name_matches +
        birth_date_matches +
-       phone_number_matches +
        additional_item_matches).uniq - no_matches(self)
     end
 
@@ -177,12 +187,6 @@ module DuplicateFixable
       items
     end
 
-    def phone_number_matches
-      model_klass.where("id <> ? AND phone_number IS NOT NULL AND phone_number <> '' AND phone_number = ?",
-                        id,
-                        phone_number).pluck(:id)
-    end
-
     def duplicate_record_score(duplicate_record)
       score = 0
 
@@ -196,9 +200,8 @@ module DuplicateFixable
     end
 
     def all_duplicate_attributes
-      items = [{ name: 'first_name', weight: name_weight },
-               { name: 'last_name', weight: name_weight },
-               { name: 'phone_number', weight: other_weight }]
+      items = [{ name: 'first_name', weight: duplicate_name_weight },
+               { name: 'last_name', weight: duplicate_name_weight }]
 
       items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
 
@@ -212,8 +215,8 @@ module DuplicateFixable
         items += [{ name: 'city', weight: 10 },
                   { name: 'state', weight: 10 },
                   { name: 'zipcode', weight: 10 },
-                  { name: 'address_1', weight: other_weight },
-                  { name: 'address_2', weight: other_weight }]
+                  { name: 'address_1', weight: duplicate_other_weight },
+                  { name: 'address_2', weight: duplicate_other_weight }]
       end
 
       items
@@ -242,16 +245,6 @@ module DuplicateFixable
     def name_and_address_present?(record)
       record.first_name.present? && record.last_name.present? &&
         record.address_1.present? && record.city.present? && record.state.present? && record.zipcode.present?
-    end
-
-    def name_weight
-      # override as needed in models
-      10
-    end
-
-    def other_weight
-      # override as needed in models
-      20
     end
 
     def duplicate_field_score(duplicate_record, attribute, weight)
