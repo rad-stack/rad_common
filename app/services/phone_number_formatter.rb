@@ -16,8 +16,8 @@ class PhoneNumberFormatter
   class << self
     private
 
-    def integer?(string_value)
-      /\A[-+]?\d+\z/ === string_value
-    end
+      def integer?(string_value)
+        /\A[-+]?\d+\z/ === string_value
+      end
   end
 end
