@@ -17,7 +17,7 @@ class PhoneNumberFormatter
     private
 
       def integer?(string_value)
-        /\A[-+]?\d+\z/ === string_value
+        /\A[-+]?\d+\z/.match(string_value).present?
       end
   end
 end
