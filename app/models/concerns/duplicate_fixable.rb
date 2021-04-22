@@ -184,7 +184,7 @@ module DuplicateFixable
       items = []
 
       model_klass.applicable_duplicate_items.each do |item|
-        item_value = attributes[item[:name].to_s]
+        item_value = send(item[:name])
         next if item[:display_only] || item_value.blank?
 
         query = case item[:type]
@@ -228,7 +228,7 @@ module DuplicateFixable
       model_klass.applicable_duplicate_items.each do |item|
         next if item[:display_only]
 
-        items.push(name: item[:name].to_s, weight: item[:weight]) if respond_to?(item[:name])
+        items.push(name: item[:name], weight: item[:weight]) if respond_to?(item[:name])
       end
 
       if model_klass.use_address?
@@ -270,9 +270,9 @@ module DuplicateFixable
     end
 
     def duplicate_field_score(duplicate_record, attribute, weight)
-      return 0 if self[attribute].blank? || duplicate_record[attribute].blank?
-      return calc_string_weight(self[attribute], duplicate_record[attribute], weight) if self[attribute].is_a?(String)
-      return weight if self[attribute] == duplicate_record[attribute]
+      return 0 if self.send(attribute).blank? || duplicate_record.send(attribute).blank?
+      return calc_string_weight(self.send(attribute), duplicate_record.send(attribute), weight) if self.send(attribute).is_a?(String)
+      return weight if self.send(attribute) == duplicate_record.send(attribute)
 
       0
     end

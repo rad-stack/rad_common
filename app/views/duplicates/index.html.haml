@@ -115,7 +115,7 @@
               %td{ class: duplicate_class(@record.first_name, record.first_name) }
                 = link_to record.first_name, record
             - @model.applicable_duplicate_items.each do |item|
-              %td{ class: duplicate_class(@record.attributes[item[:name].to_s], record.attributes[item[:name].to_s]) }
+              %td{ class: duplicate_class(@record.send(item[:name]), record.send(item[:name])) }
                 = show_duplicate_item item, record
             - if @model.use_birth_date?
               %td{ class: duplicate_class(@record.birth_date, record.birth_date) }
