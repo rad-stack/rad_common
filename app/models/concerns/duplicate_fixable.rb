@@ -270,9 +270,13 @@ module DuplicateFixable
     end
 
     def duplicate_field_score(duplicate_record, attribute, weight)
-      return 0 if self.send(attribute).blank? || duplicate_record.send(attribute).blank?
-      return calc_string_weight(self.send(attribute), duplicate_record.send(attribute), weight) if self.send(attribute).is_a?(String)
-      return weight if self.send(attribute) == duplicate_record.send(attribute)
+      return 0 if send(attribute).blank? || duplicate_record.send(attribute).blank?
+
+      if send(attribute).is_a?(String)
+        return calc_string_weight(send(attribute), duplicate_record.send(attribute), weight)
+      end
+
+      return weight if send(attribute) == duplicate_record.send(attribute)
 
       0
     end
