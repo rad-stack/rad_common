@@ -20,7 +20,5 @@ class CreateAttorneys < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
-
-    ActiveRecord::Base.connection.execute("CREATE EXTENSION fuzzystrmatch;")
   end
 end

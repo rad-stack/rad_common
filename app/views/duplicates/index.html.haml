@@ -15,8 +15,9 @@
         %th
         %th
         %th Score
-        %th Last Name
-        %th First Name
+        - if @model.use_first_last_name?
+          %th Last Name
+          %th First Name
         - @model.applicable_duplicate_items.each do |item|
           %th= item[:label]
         - if @model.use_birth_date?
@@ -32,8 +33,9 @@
         %td
         %td
         %td= @record.duplicate.duplicate_score
-        %td= link_to @record.last_name, @record
-        %td= link_to @record.first_name, @record
+        - if @model.use_first_last_name?
+          %td= link_to @record.last_name, @record
+          %td= link_to @record.first_name, @record
         - @model.applicable_duplicate_items.each do |item|
           %td= show_duplicate_item item, @record
         - if @model.use_birth_date?
@@ -77,8 +79,9 @@
           %th Merge?
           %th.actions Actions
           %th Score
-          %th Last Name
-          %th First Name
+          - if @model.use_first_last_name?
+            %th Last Name
+            %th First Name
           - @model.applicable_duplicate_items.each do |item|
             %th= item[:label]
           - if @model.use_birth_date?
@@ -106,10 +109,11 @@
                         class: 'btn btn-sm btn-success btn-block'
 
             %td= record_result[:score]
-            %td{ class: duplicate_class(@record.last_name, record.last_name) }
-              = link_to record.last_name, record
-            %td{ class: duplicate_class(@record.first_name, record.first_name) }
-              = link_to record.first_name, record
+            - if @model.use_first_last_name?
+              %td{ class: duplicate_class(@record.last_name, record.last_name) }
+                = link_to record.last_name, record
+              %td{ class: duplicate_class(@record.first_name, record.first_name) }
+                = link_to record.first_name, record
             - @model.applicable_duplicate_items.each do |item|
               %td{ class: duplicate_class(@record.attributes[item[:name].to_s], record.attributes[item[:name].to_s]) }
                 = show_duplicate_item item, record

@@ -24,7 +24,7 @@ module DuplicatesHelper
   end
 
   def duplicates_badge(klass)
-    return unless policy(klass.new).index_duplicates?
+    return unless RadCommon.duplicate_models.include?(klass.name) && policy(klass.new).index_duplicates?
 
     count = klass.high_duplicates.count
     return unless count.positive?
@@ -35,7 +35,7 @@ module DuplicatesHelper
   end
 
   def duplicates_nav_item(klass, label = "Duplicate #{pluralize_model_string(klass.name)}")
-    return unless policy(klass.new).index_duplicates?
+    return unless RadCommon.duplicate_models.include?(klass.name) && policy(klass.new).index_duplicates?
 
     tag.li do
       link_to(index_duplicates_path(klass.name), class: 'dropdown-item') do

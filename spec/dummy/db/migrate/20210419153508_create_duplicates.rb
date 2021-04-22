@@ -1,5 +1,7 @@
 class CreateDuplicates < ActiveRecord::Migration[6.0]
   def change
+    ActiveRecord::Base.connection.execute("CREATE EXTENSION fuzzystrmatch;")
+
     create_table :duplicates do |t|
       t.string :duplicatable_type, null: false
       t.bigint :duplicatable_id, null: false

@@ -39,6 +39,10 @@ module DuplicateFixable
       new.respond_to?(:address_1)
     end
 
+    def use_first_last_name?
+      new.respond_to?(:first_name)
+    end
+
     def additional_duplicate_items
       [{ name: :company_name, label: 'Company Name', type: :levenshtein, display_only: false, weight: 10 },
        { name: :email, label: 'Email', type: :string, display_only: false, weight: 20 },
@@ -146,6 +150,8 @@ module DuplicateFixable
     end
 
     def name_matches
+      return [] unless model_klass.use_first_last_name?
+
       model_klass.where('id <> ? AND upper(first_name) = ? AND upper(last_name) = ?',
                         id,
                         first_name.upcase,
@@ -153,6 +159,8 @@ module DuplicateFixable
     end
 
     def similar_name_matches
+      return [] unless model_klass.use_first_last_name?
+
       model_klass.where('id <> ? AND levenshtein(upper(first_name), ?) <= 1 AND levenshtein(upper(last_name), ?) <= 1',
                         id,
                         first_name.upcase,
@@ -160,7 +168,7 @@ module DuplicateFixable
     end
 
     def birth_date_matches
-      return [] unless model_klass.use_birth_date?
+      return [] unless model_klass.use_birth_date? && model_klass.use_first_last_name?
 
       query_string = 'id <> ? AND birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR '\
                      'levenshtein(upper(last_name), ?) <= 1)'
@@ -176,7 +184,7 @@ module DuplicateFixable
       items = []
 
       model_klass.applicable_duplicate_items.each do |item|
-        item_value = attributes[item[:name]]
+        item_value = attributes[item[:name].to_s]
         next if item[:display_only] || item_value.blank?
 
         query = case item[:type]
@@ -208,8 +216,12 @@ module DuplicateFixable
     end
 
     def all_duplicate_attributes
-      items = [{ name: 'first_name', weight: duplicate_name_weight },
-               { name: 'last_name', weight: duplicate_name_weight }]
+      items = []
+
+      if model_klass.use_first_last_name?
+        items += [{ name: 'first_name', weight: duplicate_name_weight },
+                  { name: 'last_name', weight: duplicate_name_weight }]
+      end
 
       items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
 
@@ -251,6 +263,8 @@ module DuplicateFixable
     end
 
     def name_and_address_present?(record)
+      return false unless model_klass.use_first_last_name?
+
       record.first_name.present? && record.last_name.present? &&
         record.address_1.present? && record.city.present? && record.state.present? && record.zipcode.present?
     end
