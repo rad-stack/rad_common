@@ -72,11 +72,6 @@ RSpec.describe 'Attorneys', type: :system do
       record_2.process_duplicates
       duplicate_1.process_duplicates
       duplicate_2.process_duplicates
-
-      record_1.update_column :updated_at, 5.days.ago
-      record_2.update_column :updated_at, 4.days.ago
-      duplicate_1.update_column :updated_at, 3.days.ago
-      duplicate_2.update_column :updated_at, 2.days.ago
     end
 
     it 'allows user to mark record record as not duplicate' do
