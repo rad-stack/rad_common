@@ -25,7 +25,7 @@ namespace :duplicates do
     session = RakeSession.new(5.minutes, 1)
 
     Timeout.timeout(session.time_limit) do
-      Duplicate.where.not(duplicate_sort: 500).update_all duplicate_sort: 500 if Date.current.wday == 1
+      Duplicate.where.not(sort: 500).update_all sort: 500 if Date.current.wday == 1
     end
   end
 end

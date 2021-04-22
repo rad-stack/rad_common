@@ -7,8 +7,8 @@ class CreateDuplicates < ActiveRecord::Migration[6.0]
       t.bigint :duplicatable_id, null: false
       t.text :duplicates_info
       t.text :duplicates_not
-      t.integer :duplicate_score
-      t.integer :duplicate_sort, default: 500, null: false
+      t.integer :score
+      t.integer :sort, default: 500, null: false
 
       t.timestamps
     end

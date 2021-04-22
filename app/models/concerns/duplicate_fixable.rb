@@ -11,12 +11,11 @@ module DuplicateFixable
     }
 
     scope :relevant_duplicates, lambda {
-      joins(:duplicate).where('duplicate_score IS NOT NULL AND duplicate_score >= ?', score_lower_threshold)
+      joins(:duplicate).where('score IS NOT NULL AND score >= ?', score_lower_threshold)
     }
 
     scope :high_duplicates, lambda {
-      joins(:duplicate).where('duplicate_score IS NOT NULL AND duplicate_score >= ? AND duplicate_sort <= 500',
-                              score_upper_threshold)
+      joins(:duplicate).where('score IS NOT NULL AND score >= ? AND sort <= 500', score_upper_threshold)
     }
   end
 
@@ -76,7 +75,7 @@ module DuplicateFixable
     end
 
     dupes = (contacts.to_json if contacts.count.positive?)
-    create_or_update_metadata! duplicates_info: dupes, duplicate_score: scores.max.positive? ? scores.max : nil
+    create_or_update_metadata! duplicates_info: dupes, score: scores.max.positive? ? scores.max : nil
   end
 
   def reset_duplicates

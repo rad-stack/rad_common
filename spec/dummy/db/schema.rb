@@ -123,8 +123,8 @@ ActiveRecord::Schema.define(version: 2021_04_19_154203) do
     t.bigint "duplicatable_id", null: false
     t.text "duplicates_info"
     t.text "duplicates_not"
-    t.integer "duplicate_score"
-    t.integer "duplicate_sort", default: 500, null: false
+    t.integer "score"
+    t.integer "sort", default: 500, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["duplicatable_type", "duplicatable_id"], name: "index_duplicates_on_duplicatable_type_and_duplicatable_id"

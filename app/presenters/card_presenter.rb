@@ -174,7 +174,7 @@ class CardPresenter
     if action_name == 'show' &&
        duplicates_enabled? &&
        instance.duplicate.present? &&
-       instance.duplicate.duplicate_score.present?
+       instance.duplicate.score.present?
 
       actions.push(@view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
                                          "/rad_common/duplicates?model=#{instance.class}&id=#{instance.id}",

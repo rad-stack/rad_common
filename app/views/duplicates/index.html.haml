@@ -32,7 +32,7 @@
       %tr
         %td
         %td
-        %td= @record.duplicate.duplicate_score
+        %td= @record.duplicate.score
         - if @model.use_first_last_name?
           %td= link_to @record.last_name, @record
           %td= link_to @record.first_name, @record

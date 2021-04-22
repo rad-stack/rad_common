@@ -9,7 +9,7 @@ describe DuplicateFixable, type: :model do
   let!(:attorney_2) { create :attorney, attorney_attributes }
 
   describe 'process_duplicates' do
-    subject { attorney_1.duplicate.duplicate_score }
+    subject { attorney_1.duplicate.score }
 
     before do
       attorney_1.process_duplicates

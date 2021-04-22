@@ -66,16 +66,16 @@ class DuplicatesController < ApplicationController
     @record = model.find_by(id: params[:id])
     authorize @record, :duplicate_do_later?
 
-    max = Duplicate.where(duplicatable_type: model.name).maximum(:duplicate_sort)
+    max = Duplicate.where(duplicatable_type: model.name).maximum(:sort)
     sort = (max ? max + 1 : 1)
-    @record.create_or_update_metadata! duplicate_sort: sort
+    @record.create_or_update_metadata! sort: sort
 
-    if @record.duplicate.present? && @record.duplicate.duplicate_score.present?
+    if @record.duplicate.present? && @record.duplicate.score.present?
       dupes = @record.duplicates
 
       if dupes.count == 1
         record = dupes.first[:record]
-        record.create_or_update_metadata! duplicate_sort: sort
+        record.create_or_update_metadata! sort: sort
       end
     end
 
@@ -103,7 +103,7 @@ class DuplicatesController < ApplicationController
         record&.process_duplicates
         @model.relevant_duplicates.where(id: params[:id]).first
       else
-        record = @model.relevant_duplicates.order(duplicate_sort: :asc, duplicate_score: :desc)
+        record = @model.relevant_duplicates.order(sort: :asc, score: :desc)
         record = record.order(:sales_rep_id) if @model.new.respond_to?(:sales_rep_id)
         record = record.order(updated_at: :desc, id: :desc)
         record.limit(1).first

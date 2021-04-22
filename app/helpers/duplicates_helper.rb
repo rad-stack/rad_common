@@ -9,7 +9,7 @@ module DuplicatesHelper
   end
 
   def fix_duplicates_action(record)
-    return unless record.duplicate.present? && record.duplicate.duplicate_score.present? && policy(record).show?
+    return unless record.duplicate.present? && record.duplicate.score.present? && policy(record).show?
 
     link_to(icon(:cubes, 'Fix Duplicates'),
             "/rad_common/duplicates?model=#{record.class}&id=#{record.id}",
