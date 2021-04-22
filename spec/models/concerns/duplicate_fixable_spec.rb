@@ -5,8 +5,8 @@ describe DuplicateFixable, type: :model do
   let(:email) { Faker::Internet.email }
   let(:first_name) { Faker::Name.first_name }
   let(:last_name) { Faker::Name.last_name }
-  let!(:attorney_1) { create :attorney, attorney_attributes }
-  let!(:attorney_2) { create :attorney, attorney_attributes }
+  let!(:attorney_1) { create :attorney, attorney_attributes.merge(company_name: 'ABC') }
+  let!(:attorney_2) { create :attorney, attorney_attributes.merge(company_name: 'XYZ') }
 
   describe 'process_duplicates' do
     subject { attorney_1.duplicate.score }
