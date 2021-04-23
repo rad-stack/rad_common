@@ -189,3 +189,8 @@ Rails/HttpPositionalArguments:
     # this just doesn't seem right for things like 'on: :member'
     - 'spec/dummy/config/routes.rb'
     - 'config/routes.rb'
+
+Rails/ApplicationController:
+  Exclude:
+    - 'app/controllers/api/basic_app_controller.rb'
+

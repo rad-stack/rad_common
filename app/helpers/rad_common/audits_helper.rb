@@ -1,21 +1,18 @@
 module RadCommon
   module AuditsHelper
-    def audit_model_instance
-      instance_variable_get("@#{controller_name.classify.underscore}")
-    end
-
-    def show_auditing
+    def show_auditing?
       return false if current_user.external?
-      return false if audit_model_instance.blank?
+      return false if current_instance_variable.blank?
 
-      audit_model_instance.class.name != 'ActiveStorage::Attachment' &&
-        audit_model_instance.respond_to?(:audits) &&
-        audit_model_instance.persisted? &&
-        policy(audit_model_instance).audit?
+      current_instance_variable.class.name != 'ActiveStorage::Attachment' &&
+        current_instance_variable.respond_to?(:audits) &&
+        current_instance_variable.persisted? &&
+        policy(current_instance_variable).audit?
     end
 
     def audit_history_link
-      "/rad_common/audits/?auditable_type=#{audit_model_instance.class}&auditable_id=#{audit_model_instance.id}"
+      "/rad_common/audits/?auditable_type=#{current_instance_variable.class}&auditable"\
+        "_id=#{current_instance_variable.id}"
     end
 
     def user_audit_history_link(user)

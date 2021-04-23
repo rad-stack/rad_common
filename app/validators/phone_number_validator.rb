@@ -51,15 +51,11 @@ class PhoneNumberValidator < ActiveModel::Validator
     end
 
     def fix_phone_number(record, field, phone_number)
-      if phone_number.present? && phone_number.length == 10 && integer?(phone_number)
-        record.send("#{field}=", "(#{phone_number[0, 3]}) #{phone_number[3, 3]}-#{phone_number[6, 4]}")
+      PhoneNumberFormatter.format(phone_number) do |formatted_number|
+        record.send("#{field}=", formatted_number)
       end
 
       record.send(field)
-    end
-
-    def integer?(string_value)
-      /\A[-+]?\d+\z/ === string_value
     end
 
     def get_phone_number(attribute, mobile)

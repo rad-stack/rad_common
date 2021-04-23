@@ -2,6 +2,9 @@
 #= require rad_common/dynamic_updater
 
 $ ->
+  $("#merge-all").click ->
+    $(".merge_data").prop("checked", true)
+
   $(".global-search-autocomplete").bind "autocompleteselect", (event, ui) ->
     select_global_search_item($(this), event, ui)
 
@@ -13,6 +16,13 @@ $ ->
     if code is 13
       e.preventDefault()
       false
+
+  if $("#other-duplicates-table").length
+    columnWidths = []
+    $("#other-duplicates-table th").each ->
+      columnWidths.push( $(this).width() )
+    $("#current-duplicate-table th").each ( index ) ->
+      $(this).width(columnWidths[index])
 
   $('.global-search-autocomplete').each( (index, object) ->
     instance = $(object).autocomplete().autocomplete("instance")

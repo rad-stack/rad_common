@@ -171,6 +171,16 @@ class CardPresenter
 
     actions += additional_actions
 
+    if action_name == 'show' &&
+       duplicates_enabled? &&
+       instance.duplicate.present? &&
+       instance.duplicate.score.present?
+
+      actions.push(@view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
+                                         "/rad_common/duplicates?model=#{instance.class}&id=#{instance.id}",
+                                         class: 'btn btn-info btn-sm'))
+    end
+
     if action_name != 'index' &&
        !no_delete_button &&
        instance&.persisted? &&
@@ -223,9 +233,7 @@ class CardPresenter
       end
     end
 
-    actions += additional_external_actions
-
-    actions
+    actions + additional_external_actions
   end
 
   def output_back_button?
@@ -256,5 +264,9 @@ class CardPresenter
       else
         instance
       end
+    end
+
+    def duplicates_enabled?
+      RadCommon.duplicate_models.include?(klass.name)
     end
 end

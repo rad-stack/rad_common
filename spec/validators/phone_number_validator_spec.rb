@@ -23,7 +23,7 @@ RSpec.describe PhoneNumberValidator do
   end
 
   it 'can not be valid' do
-    invalid_numbers = ['232332', '211-333-1111', '(432)-111-2222', '905.444.2111', '905 444 2111', '1234', '-']
+    invalid_numbers = %w([232332 1234 -])
 
     invalid_numbers.each do |phone_number|
       model = TestPhoneModel.new

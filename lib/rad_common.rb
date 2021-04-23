@@ -22,6 +22,9 @@ module RadCommon
   cattr_accessor :system_usage_models
   @@system_usage_models = %w[User]
 
+  cattr_accessor :duplicate_models
+  @@duplicate_models = []
+
   cattr_accessor :restricted_audit_attributes
   @@restricted_audit_attributes = []
 

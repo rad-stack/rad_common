@@ -48,6 +48,24 @@ if Division.count.zero?
   30.times { FactoryBot.create :division, owner: users.sample }
 end
 
+if Attorney.count.zero?
+  FactoryBot.create_list :attorney, 20
+
+  puts 'seeding duplicate attorneys'
+
+  2.times do
+    FactoryBot.build(:attorney,
+                     first_name: 'Bruh',
+                     last_name: 'Bro',
+                     company_name: 'Bruh, Bro and Brah',
+                     city: 'Atlanta',
+                     state: 'GA',
+                     email: 'bruh_bro@example.com').save!(validate: false)
+  end
+
+  Attorney.all.each(&:process_duplicates)
+end
+
 if TwilioLog.count.zero?
   puts 'seeding twilio logs'
 

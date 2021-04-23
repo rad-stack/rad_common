@@ -20,6 +20,9 @@ RadCommon.setup do |config|
   # Determines which models should be included in the system_usages route
   # config.system_usage_models = %w[User]
 
+  # Determines which models should be included in the duplicates processing features
+  # config.duplicate_models = []
+
   # Determines which attributes should be hidden in the audits for non-admin users
   # config.restricted_audit_attributes = []
 

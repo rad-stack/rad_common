@@ -23,6 +23,9 @@ RadCommon.setup do |config|
                                 ['Division', 'status_inactive', 'Inactive Divisions'],
                                 'User']
 
+  # Determines which models should be included in the duplicates processing features
+  config.duplicate_models = ['Attorney']
+
   # Determines which attributes should be hidden in the audits for non-admin users
   config.restricted_audit_attributes = [{ model: 'Division', attribute: 'hourly_rate' }]
 

@@ -18,6 +18,11 @@ Rails.application.routes.draw do
   resources :user_security_roles, only: :show
   resources :companies, only: %i[show edit update]
   resources :divisions
+  resources :attorneys
+
+  namespace :api, defaults: { format: :json } do
+    resources :divisions, only: :show
+  end
 
   authenticate :user, ->(u) { u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
