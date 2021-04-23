@@ -11,7 +11,7 @@ namespace :duplicates do
         count = records.count
 
         records.each do |record|
-          break if session.check_status('checking records for duplicates', count)
+          break if session.check_status("checking #{model_name} records for duplicates", count)
 
           record.process_duplicates
         end

@@ -58,10 +58,10 @@
         - if policy(@record).destroy?
           - confirm_text = 'This process can not be reversed, are you sure you want to proceed?'
           .action-buttons
-            %button.btn.btn-success{ type: 'submit', data: { confirm: confirm_text } }
+            %button.btn.btn-success.btn-sm{ type: 'submit', data: { confirm: confirm_text } }
               %i.fa.fa-level-down
               Merge Selected
-            %button.btn.btn-success#merge-all{ data: { confirm: confirm_text } }
+            %button.btn.btn-success.btn-sm#merge-all{ data: { confirm: confirm_text } }
               %i.fa.fa-level-down
               Merge All
         .external-actions
@@ -100,11 +100,11 @@
               %input.merge_data{ name: "merge_data[#{record.id}]", type: 'checkbox' }
             %td
               - if policy(record).destroy?
-                = link_to 'Not a duplicate',
+                = link_to icon(:times, 'Not a duplicate'),
                           not_duplicate_path(record, @record),
                           class: 'btn btn-sm btn-warning btn-block'
 
-              = link_to 'Switch to this one',
+              = link_to icon('arrow-up', 'Switch to Current'),
                         index_duplicates_path_record(record),
                         class: 'btn btn-sm btn-success btn-block'
 

@@ -2,7 +2,7 @@ module DuplicatesHelper
   def duplicate_actions(record, model)
     return unless policy(record).destroy? && !params["#{model.to_s.downcase}_id"]
 
-    [link_to('Skip for now, review later',
+    [link_to(icon('arrow-right', 'Skip for now, review later'),
              "/rad_common/duplicates/do_later?model=#{record.class}&id=#{record.id}",
              method: :put,
              class: 'btn btn-warning btn-sm')]

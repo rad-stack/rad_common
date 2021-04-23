@@ -60,7 +60,7 @@ RSpec.describe 'Attorneys', type: :system do
       expect(page).to have_content(record_2.first_name)
       expect(page).not_to have_content(record_1.first_name)
 
-      click_link 'Switch to this one'
+      click_link 'Switch to Current'
 
       click_link 'Not a duplicate'
       expect(page).to have_content('(2)')
