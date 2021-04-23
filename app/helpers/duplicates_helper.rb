@@ -36,6 +36,7 @@ module DuplicatesHelper
 
   def duplicates_nav_item(klass, label = "Duplicate #{pluralize_model_string(klass.name)}")
     return unless RadCommon.duplicate_models.include?(klass.name) && policy(klass.new).index_duplicates?
+    return if klass.relevant_duplicates.size.zero?
 
     tag.li do
       link_to(index_duplicates_path(klass.name), class: 'dropdown-item') do

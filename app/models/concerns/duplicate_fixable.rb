@@ -30,12 +30,17 @@ module DuplicateFixable
       15
     end
 
+    def duplicates_bypass_address?
+      # override as needed in models
+      false
+    end
+
     def use_birth_date?
       new.respond_to?(:birth_date)
     end
 
     def use_address?
-      new.respond_to?(:address_1)
+      new.respond_to?(:address_1) && !duplicates_bypass_address?
     end
 
     def use_first_last_name?

@@ -15,10 +15,12 @@ class MergeDuplicatesJob < ApplicationJob
     if error.present?
       message = "Unable to process duplicates for #{model_class} #{model_id}"
       RadbearMailer.simple_message(current_user, message, error).deliver_later
+      RadbearMailer.simple_message('gary@radicalbear.com', message, error).deliver_later
     else
       record.process_duplicates
       message = "The duplicates for #{model_class} #{model_id} were successfully resolved."
       RadbearMailer.simple_message(current_user, message, message).deliver_later
+      RadbearMailer.simple_message('gary@radicalbear.com', message, message).deliver_later
     end
   end
 
