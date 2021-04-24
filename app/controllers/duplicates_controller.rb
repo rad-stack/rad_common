@@ -103,10 +103,7 @@ class DuplicatesController < ApplicationController
         record&.process_duplicates
         @model.relevant_duplicates.where(id: params[:id]).first
       else
-        record = @model.relevant_duplicates.order(sort: :asc, score: :desc)
-        record = record.order(:sales_rep_id) if @model.new.respond_to?(:sales_rep_id)
-        record = record.order(updated_at: :desc, id: :desc)
-        record.limit(1).first
+        @model.relevant_duplicates.order(sort: :asc, score: :desc, updated_at: :desc, id: :desc).limit(1).first
       end
     end
 
