@@ -40,10 +40,10 @@ RSpec.describe 'Attorneys', type: :system do
     let(:model_name) { 'Attorney' }
     let(:index_path) { "/rad_common/duplicates?model=#{model_name}" }
     let(:record_1_path) { attorney_path(record_1) }
-    let!(:record_1) { create :attorney, first_name: 'Fred', last_name: 'Flintstone' }
-    let!(:record_2) { create :attorney, first_name: 'John', last_name: 'Smith' }
-    let!(:duplicate_1) { create :attorney, first_name: 'Fred', last_name: 'Flintstone' }
-    let!(:duplicate_2) { create :attorney, first_name: 'John', last_name: 'Smith' }
+    let!(:record_1) { create :attorney, first_name: 'Fred123', last_name: 'Flintstone' }
+    let!(:record_2) { create :attorney, first_name: 'John456', last_name: 'Smith' }
+    let!(:duplicate_1) { create :attorney, first_name: 'Fred123', last_name: 'Flintstone' }
+    let!(:duplicate_2) { create :attorney, first_name: 'John456', last_name: 'Smith' }
 
     before do
       allow_any_instance_of(DuplicateFixable).to receive(:duplicate_record_score).and_return 60
