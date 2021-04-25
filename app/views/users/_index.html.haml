@@ -53,7 +53,7 @@
                           user,
                           method: :delete,
                           data: { confirm: 'Are you sure?' },
-                          class: "btn btn-danger btn-sm btn-block btn-block"
+                          class: 'btn btn-danger btn-sm btn-block btn-block'
 
               - if policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
                 = link_to 'Resend Invitation',
