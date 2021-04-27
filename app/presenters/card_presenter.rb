@@ -172,7 +172,7 @@ class CardPresenter
     actions += additional_actions
 
     if action_name == 'show' &&
-       duplicates_enabled? &&
+       RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
        instance.duplicate.present? &&
        instance.duplicate.score.present?
 
@@ -264,9 +264,5 @@ class CardPresenter
       else
         instance
       end
-    end
-
-    def duplicates_enabled?
-      RadCommon.duplicate_models.include?(klass.name)
     end
 end

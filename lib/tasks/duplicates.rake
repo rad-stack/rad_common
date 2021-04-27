@@ -5,7 +5,7 @@ namespace :duplicates do
     session = RakeSession.new(50.minutes, 10)
 
     Timeout.timeout(session.time_limit) do
-      RadCommon.duplicate_models.each do |model_name|
+      RadCommon::AppInfo.new.duplicate_models.each do |model_name|
         session.reset_status
         records = model_name.constantize.duplicates_to_process
         count = records.count

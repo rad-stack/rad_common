@@ -58,11 +58,7 @@ module RadCommon
                 "#{audit.auditable_type} (#{audit.auditable_id})"
               end
 
-      if (audit.nil? && record.nil?) || record.class.name == 'Rate' || record.class.name == 'DraftInvoice'
-        # TODO: ignore this some other way rather than by hardcoding name
-        return label
-      end
-
+      return label if audit.nil? && record.nil?
       return link_to(label, record) if record.present? && show_route_exists_for?(record) && policy(record).show?
 
       label

@@ -1,3 +1,5 @@
+- show_actions = policy(@record.class.new).destroy?
+
 .card
   = render 'layouts/card_header', action_name: 'custom',
                                   title: "Fixing #{pluralize_model_string(@model.to_s)} (#{@duplicates_count})",
@@ -29,6 +31,8 @@
           %th State
           %th Zipcode
         %th Entered
+        - if show_actions
+          %th Actions
       %tr
         %td
         %td
@@ -47,6 +51,14 @@
           %td= @record.state
           %td= @record.zipcode
         %td= format_date(@record.created_at)
+        - if show_actions
+          %td
+            - if policy(@record).destroy?
+              = link_to icon(:times, 'Delete'),
+                            @record,
+                            method: :delete,
+                            data: { confirm: 'Are you sure?' },
+                            class: 'btn btn-danger btn-sm btn-block'
 
 = simple_form_for(@record, url: merge_duplicates_path(@record)) do
   .card
@@ -93,6 +105,8 @@
             %th State
             %th Zipcode
           %th Entered
+          - if show_actions
+            %th Actions
         - @records.each_with_index do |record_result, _index|
           - record = record_result[:record]
           %tr
@@ -133,3 +147,11 @@
                 = record.zipcode
             %td
               = format_date(record.created_at)
+            -if show_actions
+              %td
+                - if policy(record).destroy?
+                  = link_to icon(:times, 'Delete'),
+                                record,
+                                method: :delete,
+                                data: { confirm: 'Are you sure?' },
+                                class: 'btn btn-danger btn-sm btn-block'
