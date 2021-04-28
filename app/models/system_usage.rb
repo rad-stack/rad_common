@@ -9,6 +9,10 @@ class SystemUsage
     calc_usage_stats
   end
 
+  def total(item_index)
+    usage_data[item_index].sum { |item| item[:value] }
+  end
+
   def date_mode
     params[:date_mode] || 'Weekly'
   end

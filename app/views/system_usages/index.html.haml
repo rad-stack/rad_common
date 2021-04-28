@@ -35,9 +35,11 @@
         %th Item
         - @system_usage.date_column_ranges.each do |item|
           %th= item[:label]
+        %th Total
 
       - @system_usage.usage_items.each_with_index do |_item, item_index|
         %tr
           %td= @system_usage.usage_data[item_index].first[:name]
           - @system_usage.date_column_ranges.each_with_index do |_header, header_index|
             %td= @system_usage.usage_data[item_index][header_index][:value]
+          %td= @system_usage.total item_index
