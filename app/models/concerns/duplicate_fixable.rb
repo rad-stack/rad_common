@@ -44,6 +44,10 @@ module DuplicateFixable
       new.respond_to?(:first_name)
     end
 
+    def allow_merge_all?
+      new.duplicate_model_config[:allow_merge_all].nil? ? false : new.duplicate_model_config[:allow_merge_all]
+    end
+
     def additional_duplicate_items
       [{ name: :company_name, label: 'Company Name', type: :levenshtein, display_only: false, weight: 10 },
        { name: :email, label: 'Email', type: :string, display_only: false, weight: 20 },

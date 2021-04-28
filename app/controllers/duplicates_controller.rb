@@ -58,7 +58,16 @@ class DuplicatesController < ApplicationController
       end
     end
 
-    flash[:success] = 'The record was marked as not a duplicate.'
+    message = 'The record was marked as not a duplicate.'
+
+    email_options = { email_action: { message: 'Click here to view the details.',
+                                      button_text: 'View',
+                                      button_url: url_for(@record) } }
+
+    # TODO: remove this once done monitoring
+    RadbearMailer.simple_message('gary@radicalbear.com', message, message, email_options).deliver_later
+
+    flash[:success] = message
     redirect_to index_path
   end
 

@@ -16,7 +16,7 @@
       %tr
         %th
         %th
-        %th Score
+        %th
         - if @model.use_first_last_name?
           %th Last Name
           %th First Name
@@ -36,7 +36,7 @@
       %tr
         %td
         %td
-        %td= @record.duplicate.score
+        %td
         - if @model.use_first_last_name?
           %td= link_to @record.last_name, @record
           %td= link_to @record.first_name, @record
@@ -66,16 +66,17 @@
       .title-header
         .title-text
           .fa.fa-list
-          Possible Matches
-        - if policy(@record).destroy?
+          Possible Matches (#{@records.size})
+        - if policy(@record).merge_duplicates?
           - confirm_text = 'This process can not be reversed, are you sure you want to proceed?'
           .action-buttons
             %button.btn.btn-success.btn-sm{ type: 'submit', data: { confirm: confirm_text } }
               %i.fa.fa-level-down
               Merge Selected
-            %button.btn.btn-success.btn-sm#merge-all{ data: { confirm: confirm_text } }
-              %i.fa.fa-level-down
-              Merge All
+            - if @model.allow_merge_all?
+              %button.btn.btn-success.btn-sm#merge-all{ data: { confirm: confirm_text } }
+                %i.fa.fa-level-down
+                Merge All
         .external-actions
           .legend-block.mt-2
             .legend-label
@@ -147,7 +148,7 @@
                 = record.zipcode
             %td
               = format_date(record.created_at)
-            -if show_actions
+            - if show_actions
               %td
                 - if policy(record).destroy?
                   = link_to icon(:times, 'Delete'),
