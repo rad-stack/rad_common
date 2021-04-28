@@ -84,6 +84,9 @@ module DuplicateFixable
       contacts.push(id: record.id, score: score)
     end
 
+    # TODO: remove when done debugging test
+    puts all_matches.to_s
+
     dupes = (contacts.to_json if contacts.count.positive?)
     create_or_update_metadata! duplicates_info: dupes, score: scores.max.positive? ? scores.max : nil
   end
