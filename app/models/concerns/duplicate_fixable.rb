@@ -74,21 +74,22 @@ module DuplicateFixable
   end
 
   def process_duplicates
-    scores = [0]
     contacts = []
 
     all_matches.each do |match|
       record = model_klass.find(match)
       score = duplicate_record_score(record)
-      scores.push(score)
       contacts.push(id: record.id, score: score)
     end
 
-    # TODO: remove when done debugging test
-    puts all_matches.to_s
+    contacts = contacts.sort_by { |item| item[:score] }.reverse.first(100)
 
-    dupes = (contacts.to_json if contacts.count.positive?)
-    create_or_update_metadata! duplicates_info: dupes, score: scores.max.positive? ? scores.max : nil
+    if contacts.any?
+      raw_score = contacts.first[:score]
+      create_or_update_metadata! duplicates_info: contacts.to_json, score: raw_score.positive? ? raw_score : nil
+    else
+      create_or_update_metadata! duplicates_info: nil, score: nil
+    end
   end
 
   def reset_duplicates
@@ -103,15 +104,14 @@ module DuplicateFixable
   def duplicates
     return [] if duplicate.blank? || duplicate.duplicates_info.blank?
 
-    dupes = JSON.parse(duplicate.duplicates_info)
+    dupes = JSON.parse(duplicate.duplicates_info).select { |item| item['score'] >= self.class.score_lower_threshold }
     contacts = []
 
     dupes.each do |dupe|
       contact = model_klass.find_by(id: dupe['id'])
+      next if contact.blank?
 
-      if contact && (dupe['score'] >= self.class.score_lower_threshold)
-        contacts.push(record: contact, score: dupe['score'])
-      end
+      contacts.push(record: contact, score: dupe['score'])
     end
 
     contacts.sort_by { |item| item[:score] }.reverse

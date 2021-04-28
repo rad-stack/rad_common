@@ -20,8 +20,6 @@
         - if @model.use_first_last_name?
           %th Last Name
           %th First Name
-        - @model.applicable_duplicate_items.each do |item|
-          %th= item[:label]
         - if @model.use_birth_date?
           %th Birth Date
         - if @model.use_address?
@@ -30,6 +28,8 @@
           %th City
           %th State
           %th Zipcode
+        - @model.applicable_duplicate_items.each do |item|
+          %th= item[:label]
         %th Entered
         - if show_actions
           %th Actions
@@ -40,8 +40,6 @@
         - if @model.use_first_last_name?
           %td= link_to @record.last_name, @record
           %td= link_to @record.first_name, @record
-        - @model.applicable_duplicate_items.each do |item|
-          %td= show_duplicate_item item, @record
         - if @model.use_birth_date?
           %td= format_date(@record.birth_date)
         - if @model.use_address?
@@ -50,6 +48,8 @@
           %td= @record.city
           %td= @record.state
           %td= @record.zipcode
+        - @model.applicable_duplicate_items.each do |item|
+          %td= show_duplicate_item item, @record
         %td= format_date(@record.created_at)
         - if show_actions
           %td
@@ -95,8 +95,6 @@
           - if @model.use_first_last_name?
             %th Last Name
             %th First Name
-          - @model.applicable_duplicate_items.each do |item|
-            %th= item[:label]
           - if @model.use_birth_date?
             %th Birth Date
           - if @model.use_address?
@@ -105,6 +103,8 @@
             %th City
             %th State
             %th Zipcode
+          - @model.applicable_duplicate_items.each do |item|
+            %th= item[:label]
           %th Entered
           - if show_actions
             %th Actions
@@ -129,9 +129,6 @@
                 = link_to record.last_name, record
               %td{ class: duplicate_class(@record.first_name, record.first_name) }
                 = link_to record.first_name, record
-            - @model.applicable_duplicate_items.each do |item|
-              %td{ class: duplicate_class(@record.send(item[:name]), record.send(item[:name])) }
-                = show_duplicate_item item, record
             - if @model.use_birth_date?
               %td{ class: duplicate_class(@record.birth_date, record.birth_date) }
                 = format_date(record.birth_date)
@@ -146,6 +143,9 @@
                 = record.state
               %td{ class: duplicate_class(@record.zipcode, record.zipcode) }
                 = record.zipcode
+            - @model.applicable_duplicate_items.each do |item|
+              %td{ class: duplicate_class(@record.send(item[:name]), record.send(item[:name])) }
+                = show_duplicate_item item, record
             %td
               = format_date(record.created_at)
             - if show_actions

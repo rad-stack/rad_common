@@ -317,6 +317,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20210419153508_create_duplicates.rb',
                         'create_duplicates.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20210428131743_unique_duplicates.rb',
+                        'unique_duplicates.rb'
       end
 
       def self.next_migration_number(path)
