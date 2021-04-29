@@ -2,7 +2,7 @@ require 'rake_session'
 
 namespace :duplicates do
   task process: :environment do
-    session = RakeSession.new(50.minutes, 10)
+    session = RakeSession.new(58.minutes, 10)
 
     Timeout.timeout(session.time_limit) do
       RadCommon::AppInfo.new.duplicate_models.each do |model_name|
