@@ -244,9 +244,7 @@ describe User, type: :model do
     it 'has a password that expires after 90 days' do
       if Devise.mappings[:user].password_expirable?
         expect(user.need_change_password?).to eq(false)
-        Timecop.travel(91.days.from_now)
-        expect(user.need_change_password?).to eq(true)
-        Timecop.return
+        Timecop.travel(91.days.from_now) { expect(user.need_change_password?).to eq(true) }
       end
     end
   end
@@ -256,9 +254,8 @@ describe User, type: :model do
       if Devise.mappings[:user].expirable?
         user.update!(last_activity_at: Time.current)
         expect(user.expired?).to eq(false)
-        Timecop.travel(91.days.from_now)
-        expect(user.expired?).to eq(true)
-        Timecop.return
+
+        Timecop.travel(91.days.from_now) { expect(user.expired?).to eq(true) }
       end
     end
   end

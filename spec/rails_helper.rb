@@ -122,6 +122,8 @@ RSpec.configure do |config|
     (ActiveJob::Base.descendants << ActiveJob::Base).each(&:disable_test_adapter)
     # TODO: end of workaround
 
+    Timecop.safe_mode = true
+
     allow(RadicalTwilio).to receive(:twilio_enabled?).and_return(false)
 
     allow(Company).to receive(:main).and_return(create(:company))
