@@ -18,12 +18,8 @@ describe SystemUsage, type: :model do
        [first_day_of_week, last_day_of_week]]
     end
 
-    before { Timecop.freeze(Time.current.beginning_of_week) }
-
-    after { Timecop.return }
-
     it 'returns list of weekly date ranges' do
-      expect(date_ranges).to eq(expected_date_ranges)
+      Timecop.freeze(Time.current.beginning_of_week) { expect(date_ranges).to eq(expected_date_ranges) }
     end
   end
 end

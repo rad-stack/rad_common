@@ -20,11 +20,11 @@ module DuplicatesHelper
     return false if current_user.external?
 
     record = current_instance_variable
-    record.present? && RadCommon.duplicate_models.include?(record.class.name) && policy(record).reset_duplicates?
+    record.present? && RadCommon::AppInfo.new.duplicates_enabled?(record.class.name) && policy(record).reset_duplicates?
   end
 
   def duplicates_badge(klass)
-    return unless RadCommon.duplicate_models.include?(klass.name) && policy(klass.new).index_duplicates?
+    return unless RadCommon::AppInfo.new.duplicates_enabled?(klass.name) && policy(klass.new).index_duplicates?
 
     count = klass.high_duplicates.count
     return unless count.positive?
@@ -35,7 +35,7 @@ module DuplicatesHelper
   end
 
   def duplicates_nav_item(klass, label = "Duplicate #{pluralize_model_string(klass.name)}")
-    return unless RadCommon.duplicate_models.include?(klass.name) && policy(klass.new).index_duplicates?
+    return unless RadCommon::AppInfo.new.duplicates_enabled?(klass.name) && policy(klass.new).index_duplicates?
     return if klass.relevant_duplicates.size.zero?
 
     tag.li do

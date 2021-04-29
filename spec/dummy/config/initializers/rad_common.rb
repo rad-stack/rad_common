@@ -24,7 +24,7 @@ RadCommon.setup do |config|
                                 'User']
 
   # Determines which models should be included in the duplicates processing features
-  config.duplicate_models = ['Attorney']
+  config.duplicates = { models: [{ name: 'Attorney' }] }
 
   # Determines which attributes should be hidden in the audits for non-admin users
   config.restricted_audit_attributes = [{ model: 'Division', attribute: 'hourly_rate' }]

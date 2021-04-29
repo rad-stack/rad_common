@@ -1,3 +1,5 @@
+- show_actions = policy(@record.class.new).destroy?
+
 .card
   = render 'layouts/card_header', action_name: 'custom',
                                   title: "Fixing #{pluralize_model_string(@model.to_s)} (#{@duplicates_count})",
@@ -14,12 +16,10 @@
       %tr
         %th
         %th
-        %th Score
+        %th
         - if @model.use_first_last_name?
           %th Last Name
           %th First Name
-        - @model.applicable_duplicate_items.each do |item|
-          %th= item[:label]
         - if @model.use_birth_date?
           %th Birth Date
         - if @model.use_address?
@@ -28,16 +28,18 @@
           %th City
           %th State
           %th Zipcode
+        - @model.applicable_duplicate_items.each do |item|
+          %th= item[:label]
         %th Entered
+        - if show_actions
+          %th Actions
       %tr
         %td
         %td
-        %td= @record.duplicate.score
+        %td
         - if @model.use_first_last_name?
           %td= link_to @record.last_name, @record
           %td= link_to @record.first_name, @record
-        - @model.applicable_duplicate_items.each do |item|
-          %td= show_duplicate_item item, @record
         - if @model.use_birth_date?
           %td= format_date(@record.birth_date)
         - if @model.use_address?
@@ -46,7 +48,17 @@
           %td= @record.city
           %td= @record.state
           %td= @record.zipcode
+        - @model.applicable_duplicate_items.each do |item|
+          %td= show_duplicate_item item, @record
         %td= format_date(@record.created_at)
+        - if show_actions
+          %td
+            - if policy(@record).destroy?
+              = link_to icon(:times, 'Delete'),
+                            @record,
+                            method: :delete,
+                            data: { confirm: 'Are you sure?' },
+                            class: 'btn btn-danger btn-sm btn-block'
 
 = simple_form_for(@record, url: merge_duplicates_path(@record)) do
   .card
@@ -54,16 +66,17 @@
       .title-header
         .title-text
           .fa.fa-list
-          Possible Matches
-        - if policy(@record).destroy?
+          Possible Matches (#{@records.size})
+        - if policy(@record).merge_duplicates?
           - confirm_text = 'This process can not be reversed, are you sure you want to proceed?'
           .action-buttons
             %button.btn.btn-success.btn-sm{ type: 'submit', data: { confirm: confirm_text } }
               %i.fa.fa-level-down
               Merge Selected
-            %button.btn.btn-success.btn-sm#merge-all{ data: { confirm: confirm_text } }
-              %i.fa.fa-level-down
-              Merge All
+            - if @model.allow_merge_all?
+              %button.btn.btn-success.btn-sm#merge-all{ data: { confirm: confirm_text } }
+                %i.fa.fa-level-down
+                Merge All
         .external-actions
           .legend-block.mt-2
             .legend-label
@@ -82,8 +95,6 @@
           - if @model.use_first_last_name?
             %th Last Name
             %th First Name
-          - @model.applicable_duplicate_items.each do |item|
-            %th= item[:label]
           - if @model.use_birth_date?
             %th Birth Date
           - if @model.use_address?
@@ -92,7 +103,11 @@
             %th City
             %th State
             %th Zipcode
+          - @model.applicable_duplicate_items.each do |item|
+            %th= item[:label]
           %th Entered
+          - if show_actions
+            %th Actions
         - @records.each_with_index do |record_result, _index|
           - record = record_result[:record]
           %tr
@@ -114,9 +129,6 @@
                 = link_to record.last_name, record
               %td{ class: duplicate_class(@record.first_name, record.first_name) }
                 = link_to record.first_name, record
-            - @model.applicable_duplicate_items.each do |item|
-              %td{ class: duplicate_class(@record.send(item[:name]), record.send(item[:name])) }
-                = show_duplicate_item item, record
             - if @model.use_birth_date?
               %td{ class: duplicate_class(@record.birth_date, record.birth_date) }
                 = format_date(record.birth_date)
@@ -131,5 +143,16 @@
                 = record.state
               %td{ class: duplicate_class(@record.zipcode, record.zipcode) }
                 = record.zipcode
+            - @model.applicable_duplicate_items.each do |item|
+              %td{ class: duplicate_class(@record.send(item[:name]), record.send(item[:name])) }
+                = show_duplicate_item item, record
             %td
               = format_date(record.created_at)
+            - if show_actions
+              %td
+                - if policy(record).destroy?
+                  = link_to icon(:times, 'Delete'),
+                                record,
+                                method: :delete,
+                                data: { confirm: 'Are you sure?' },
+                                class: 'btn btn-danger btn-sm btn-block'

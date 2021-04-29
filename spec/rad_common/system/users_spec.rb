@@ -260,10 +260,10 @@ describe 'Users', type: :system do
         click_button 'Sign In'
         expect(page).to have_content('Signed in successfully')
 
-        Timecop.travel(185.minutes.from_now)
-        visit users_path
-        expect(page).to have_content('Your session expired. Please sign in again to continue.')
-        Timecop.return
+        Timecop.travel(185.minutes.from_now) do
+          visit users_path
+          expect(page).to have_content('Your session expired. Please sign in again to continue.')
+        end
       end
     end
   end

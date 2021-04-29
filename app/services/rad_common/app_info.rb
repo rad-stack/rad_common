@@ -42,6 +42,18 @@ module RadCommon
       ENV['REVIEW_APP'].present? && ENV['REVIEW_APP'] == 'true'
     end
 
+    def duplicate_models
+      RadCommon.duplicates[:models].pluck(:name)
+    end
+
+    def duplicates_enabled?(model_name)
+      duplicate_model_config(model_name).present?
+    end
+
+    def duplicate_model_config(model_name)
+      RadCommon.duplicates[:models].select { |item| item[:name] == model_name }.first
+    end
+
     private
 
       def exclude_tables

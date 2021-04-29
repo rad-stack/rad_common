@@ -20,19 +20,22 @@ module DuplicateFixable
   end
 
   module ClassMethods
+    def duplicates_enabled?
+      new.duplicate_model_config.present?
+    end
+
     def score_upper_threshold
-      # override as needed in models
-      50
+      return 50 unless duplicates_enabled?
+
+      new.duplicate_model_config[:score_upper_threshold].presence || 50
     end
 
     def score_lower_threshold
-      # override as needed in models
-      15
+      new.duplicate_model_config[:score_lower_threshold].presence || 15
     end
 
-    def duplicates_bypass_address?
-      # override as needed in models
-      false
+    def configured_duplicate_items
+      new.duplicate_model_config[:additional_items].presence || []
     end
 
     def use_birth_date?
@@ -40,11 +43,15 @@ module DuplicateFixable
     end
 
     def use_address?
-      new.respond_to?(:address_1) && !duplicates_bypass_address?
+      new.respond_to?(:address_1) && !new.duplicates_bypass_address?
     end
 
     def use_first_last_name?
       new.respond_to?(:first_name)
+    end
+
+    def allow_merge_all?
+      new.duplicate_model_config[:allow_merge_all].nil? ? false : new.duplicate_model_config[:allow_merge_all]
     end
 
     def additional_duplicate_items
@@ -60,12 +67,11 @@ module DuplicateFixable
          type: :string,
          display_only: false,
          weight: new.duplicate_other_weight },
-       { name: :fax_number, label: 'Fax #', type: :string, display_only: false, weight: 10 },
-       { name: :language_id, label: 'Language', type: :association, display_only: false, weight: 10 },
-       { name: :parent_type_id, label: 'Parent Type', type: :association, display_only: false, weight: 10 },
-       { name: :gender_id, label: 'Gender', type: :association, display_only: false, weight: 10 },
-       { name: :locations_description, label: 'Locations', type: :string, display_only: true },
-       { name: :sales_rep_id, label: 'Sales Rep', type: :association, display_only: true }]
+       { name: :fax_number,
+         label: 'Fax #',
+         type: :string,
+         display_only: false,
+         weight: 10 }] + configured_duplicate_items
     end
 
     def applicable_duplicate_items
@@ -74,18 +80,22 @@ module DuplicateFixable
   end
 
   def process_duplicates
-    scores = [0]
     contacts = []
 
     all_matches.each do |match|
       record = model_klass.find(match)
       score = duplicate_record_score(record)
-      scores.push(score)
       contacts.push(id: record.id, score: score)
     end
 
-    dupes = (contacts.to_json if contacts.count.positive?)
-    create_or_update_metadata! duplicates_info: dupes, score: scores.max.positive? ? scores.max : nil
+    contacts = contacts.sort_by { |item| item[:score] }.reverse.first(100)
+
+    if contacts.any?
+      raw_score = contacts.first[:score]
+      create_or_update_metadata! duplicates_info: contacts.to_json, score: raw_score.positive? ? raw_score : nil
+    else
+      create_or_update_metadata! duplicates_info: nil, score: nil
+    end
   end
 
   def reset_duplicates
@@ -100,15 +110,14 @@ module DuplicateFixable
   def duplicates
     return [] if duplicate.blank? || duplicate.duplicates_info.blank?
 
-    dupes = JSON.parse(duplicate.duplicates_info)
+    dupes = JSON.parse(duplicate.duplicates_info).select { |item| item['score'] >= self.class.score_lower_threshold }
     contacts = []
 
     dupes.each do |dupe|
       contact = model_klass.find_by(id: dupe['id'])
+      next if contact.blank?
 
-      if contact && (dupe['score'] >= self.class.score_lower_threshold)
-        contacts.push(record: contact, score: dupe['score'])
-      end
+      contacts.push(record: contact, score: dupe['score'])
     end
 
     contacts.sort_by { |item| item[:score] }.reverse
@@ -127,18 +136,29 @@ module DuplicateFixable
     end
   end
 
+  def can_merge_duplicate?(_new_record)
+    # override as needed in models
+    true
+  end
+
   def clean_up_duplicate(_new_record)
     # override as needed in models
   end
 
   def duplicate_name_weight
-    # override as needed in models
-    10
+    duplicate_model_config[:name_weight].presence || 10
   end
 
   def duplicate_other_weight
-    # override as needed in models
-    20
+    duplicate_model_config[:other_weight].presence || 20
+  end
+
+  def duplicates_bypass_address?
+    duplicate_model_config[:bypass_address].nil? ? false : duplicate_model_config[:bypass_address]
+  end
+
+  def duplicate_model_config
+    RadCommon::AppInfo.new.duplicate_model_config(self.class.name)
   end
 
   private

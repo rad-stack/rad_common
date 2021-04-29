@@ -71,11 +71,23 @@ class UsersController < ApplicationController
       @user.audits_created.delete_all
     end
 
+    duplicates = if duplicates_enabled?
+                   @user.duplicates
+                 else
+                   []
+                 end
+
     if @user.destroy
       flash[:success] = 'User deleted.'
       destroyed = true
     else
       flash[:error] = @user.errors.full_messages.join(', ')
+    end
+
+    if destroyed
+      duplicates.each do |item|
+        item[:record].process_duplicates
+      end
     end
 
     if destroyed && (URI(request.referer).path == user_path(@user)) ||
@@ -116,5 +128,9 @@ class UsersController < ApplicationController
                        password password_confirmation external timezone avatar]
 
       params.require(:user).permit(base_params + RadCommon.additional_user_params)
+    end
+
+    def duplicates_enabled?
+      RadCommon::AppInfo.new.duplicates_enabled?('User')
     end
 end

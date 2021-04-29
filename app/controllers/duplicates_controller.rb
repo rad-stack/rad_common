@@ -25,7 +25,7 @@ class DuplicatesController < ApplicationController
     flash[:error] = "Invalid #{model.to_s.downcase} data, perhaps something has changed or another user has "\
                     'resolved these duplicates.'
 
-    redirect_to index_path
+    redirect_to root_path
   end
 
   def merge
@@ -58,7 +58,16 @@ class DuplicatesController < ApplicationController
       end
     end
 
-    flash[:success] = 'The record was marked as not a duplicate.'
+    message = 'The record was marked as not a duplicate.'
+
+    email_options = { email_action: { message: 'Click here to view the details.',
+                                      button_text: 'View',
+                                      button_url: url_for(@record) } }
+
+    # TODO: remove this once done monitoring
+    RadbearMailer.simple_message('gary@radicalbear.com', message, message, email_options).deliver_later
+
+    flash[:success] = message
     redirect_to index_path
   end
 
@@ -99,8 +108,6 @@ class DuplicatesController < ApplicationController
 
     def gather_record
       if params[:id].present?
-        record = @model.find_by(id: params[:id])
-        record&.process_duplicates
         @model.relevant_duplicates.where(id: params[:id]).first
       else
         @model.relevant_duplicates.order(sort: :asc, score: :desc, updated_at: :desc, id: :desc).limit(1).first

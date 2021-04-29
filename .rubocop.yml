@@ -160,6 +160,10 @@ Style/ParenthesesAroundCondition:
 Style/SignalException:
   EnforcedStyle: only_raise
 
+Style/ClassVars:
+  Exclude:
+    - 'lib/rad_common.rb'
+
 RSpec/ExampleLength:
   Enabled: false
 
