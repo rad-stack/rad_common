@@ -20,7 +20,13 @@ module DuplicateFixable
   end
 
   module ClassMethods
+    def duplicates_enabled?
+      new.duplicate_model_config.present?
+    end
+
     def score_upper_threshold
+      return 50 unless duplicates_enabled?
+
       new.duplicate_model_config[:score_upper_threshold].presence || 50
     end
 
