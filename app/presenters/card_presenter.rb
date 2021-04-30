@@ -157,47 +157,11 @@ class CardPresenter
   def output_actions
     actions = []
 
-    if action_name == 'show' &&
-       !no_edit_button &&
-       instance&.persisted? &&
-       current_user &&
-       Pundit.policy!(current_user, check_policy_klass).update? &&
-       Pundit.policy!(current_user, check_policy_instance).update?
-
-      actions.push(@view_context.link_to(@view_context.icon(:pencil, 'Edit'),
-                                         edit_url,
-                                         class: 'btn btn-secondary btn-sm'))
-    end
-
+    actions.push(edit_action) if include_edit_action?
     actions += additional_actions
-
-    if action_name == 'show' &&
-       RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
-       instance.duplicate.present? &&
-       instance.duplicate.score.present?
-
-      actions.push(@view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                                         "/rad_common/duplicates?model=#{instance.class}&id=#{instance.id}",
-                                         class: 'btn btn-info btn-sm'))
-    end
-
-    if action_name != 'index' &&
-       !no_delete_button &&
-       instance&.persisted? &&
-       current_user &&
-       Pundit.policy!(current_user, check_policy_klass).destroy? &&
-       Pundit.policy!(current_user, check_policy_instance).destroy?
-
-      if delete_button_content
-        actions.push(delete_button_content)
-      else
-        actions.push(@view_context.link_to(@view_context.icon(:times, 'Delete'),
-                                           instance,
-                                           method: :delete,
-                                           data: { confirm: delete_confirmation },
-                                           class: 'btn btn-danger btn-sm'))
-      end
-    end
+    actions.push(duplicate_action) if include_duplicate_action?
+    actions.push(duplicates_action) if include_duplicates_action?
+    actions.push(delete_action) if include_delete_action?
 
     actions
   end
@@ -264,5 +228,61 @@ class CardPresenter
       else
         instance
       end
+    end
+
+    def include_edit_action?
+      action_name == 'show' &&
+        !no_edit_button &&
+        instance&.persisted? &&
+        current_user &&
+        Pundit.policy!(current_user, check_policy_klass).update? &&
+        Pundit.policy!(current_user, check_policy_instance).update?
+    end
+
+    def edit_action
+      @view_context.link_to(@view_context.icon(:pencil, 'Edit'), edit_url, class: 'btn btn-secondary btn-sm')
+    end
+
+    def include_duplicate_action?
+      action_name == 'show' &&
+        RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
+        instance.duplicate.present? &&
+        instance.duplicate.score.present?
+    end
+
+    def duplicate_action
+      @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
+                            "/rad_common/duplicates?model=#{instance.class}&id=#{instance.id}",
+                            class: 'btn btn-warning btn-sm')
+    end
+
+    def include_duplicates_action?
+      action_name == 'index' &&
+        RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
+        Pundit.policy!(current_user, klass.new).index_duplicates? &&
+        klass.relevant_duplicates.size.positive?
+    end
+
+    def duplicates_action
+      @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
+                            "/rad_common/duplicates?model=#{klass}",
+                            class: 'btn btn-warning btn-sm')
+    end
+
+    def include_delete_action?
+      action_name != 'index' &&
+        !no_delete_button &&
+        instance&.persisted? &&
+        current_user &&
+        Pundit.policy!(current_user, check_policy_klass).destroy? &&
+        Pundit.policy!(current_user, check_policy_instance).destroy?
+    end
+
+    def delete_action
+      delete_button_content || @view_context.link_to(@view_context.icon(:times, 'Delete'),
+                                                     instance,
+                                                     method: :delete,
+                                                     data: { confirm: delete_confirmation },
+                                                     class: 'btn btn-danger btn-sm')
     end
 end

@@ -34,17 +34,6 @@ module DuplicatesHelper
     end
   end
 
-  def duplicates_nav_item(klass, label = "Duplicate #{pluralize_model_string(klass.name)}")
-    return unless RadCommon::AppInfo.new.duplicates_enabled?(klass.name) && policy(klass.new).index_duplicates?
-    return if klass.relevant_duplicates.size.zero?
-
-    tag.li do
-      link_to(index_duplicates_path(klass.name), class: 'dropdown-item') do
-        safe_join([label, ' ', duplicates_badge(klass)])
-      end
-    end
-  end
-
   def pluralize_model_string(model_string)
     model_string.pluralize(2)
   end
