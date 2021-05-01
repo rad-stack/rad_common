@@ -29,7 +29,7 @@ module DuplicatesHelper
     count = klass.high_duplicates.count
     return unless count.positive?
 
-    tag.span(class: 'badge alert-danger') do
+    tag.span(class: 'badge alert-warning') do
       count.to_s
     end
   end
