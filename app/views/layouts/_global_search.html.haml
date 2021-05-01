@@ -15,7 +15,7 @@
 
                 %ul.dropdown-menu{ 'aria-labelledby': 'dropdownMenu1', role: 'menu' }
                   - search_scopes.each_with_index do |scope, index|
-                    %li{ role: 'presentation', class: index == 0 ? 'selected-search' : '' }
+                    %li{ role: 'presentation', class: index.zero? ? 'selected-search' : '' }
 
                       %a.dropdown-item.search-option{ href: '#',
                                                       role: 'menuitem',
@@ -35,7 +35,7 @@
                   placeholder: search_scopes.first[:description],
                   size: '50',
                   type: 'text',
-                  autocomplete:'off' }
+                  autocomplete: 'off' }
           .input-group-append
             %span.input-group-text
 

@@ -5,9 +5,9 @@
 
 - if !local_assigns[:resource].nil? && !no_timestamps
   - if resource.respond_to?(:created_at)
-    - stats.push({label: "Created", value: format_datetime(resource.created_at)})
+    - stats.push(label: 'Created', value: format_datetime(resource.created_at))
   - if resource.respond_to?(:updated_at) && resource.updated_at != resource.created_at
-    - stats.push({label: "Updated", value: format_datetime(resource.updated_at)})
+    - stats.push(label: 'Updated', value: format_datetime(resource.updated_at))
 
 - all_data = []
 
@@ -18,7 +18,7 @@
         - all_data.push(item)
     - elsif item.is_a?(Symbol)
       - value = resource.send(item)
-      - if !value.blank? || value.class.to_s == "FalseClass"
+      - if !value.blank? || value.class.to_s == 'FalseClass'
         - all_data.push(item)
     - else
       - raise "invalid data type: #{item.class.to_s}"
@@ -56,17 +56,17 @@
             - else
               %dt= translation
             %dd
-              - if value.class.to_s == "ActiveSupport::TimeWithZone"
+              - if value.class.to_s == 'ActiveSupport::TimeWithZone'
                 = format_datetime(value)
-              - elsif value.class.to_s == "Date"
+              - elsif value.class.to_s == 'Date'
                 = format_date(value)
-              - elsif value.class.to_s == "Time"
+              - elsif value.class.to_s == 'Time'
                 = format_time(value)
-              - elsif value.class.to_s == "TrueClass"
+              - elsif value.class.to_s == 'TrueClass'
                 = format_boolean(value)
-              - elsif value.class.to_s == "FalseClass"
+              - elsif value.class.to_s == 'FalseClass'
                 = format_boolean(value)
-              - elsif value.class.to_s == "Array"
-                = value.join(", ")
+              - elsif value.class.to_s == 'Array'
+                = value.join(', ')
               - else
                 = value

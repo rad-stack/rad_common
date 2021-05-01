@@ -7,7 +7,7 @@
     delete_link = if no_delete
                     nil
                   else
-                    link_to content_tag(:i, '', class: 'fa fa-times'),
+                    link_to tag.i('', class: 'fa fa-times'),
                             RadCommon::Engine.routes.url_helpers.attachment_path(record.send(attachment_name).id),
                             method: :delete,
                             data: { confirm: 'Are you sure? Attachment cannot be recovered.' },
@@ -30,15 +30,16 @@
       = delete_link
     - else
       :ruby
-        if label_override.present?
-          attachment_label = label_override
-        else
-          attachment_label = content_tag(:i, '', class: "fa #{RadCommon::ContentTypeIcon.new(attachment.content_type)}")
-        end
+        attachment_label = if label_override.present?
+                             label_override
+                           else
+                              tag.i('', class: "fa #{RadCommon::ContentTypeIcon.new(attachment.content_type)}")
+                           end
       .attachment-button-box
         = link_to attachment_label,
                   url_for(attachment),
                   target: '_blank',
+                  rel: :noopener,
                   class: 'btn btn-secondary mr-5 attachment-link'
 
         = delete_link

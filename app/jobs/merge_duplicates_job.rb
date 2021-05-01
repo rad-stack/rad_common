@@ -19,7 +19,7 @@ class MergeDuplicatesJob < ApplicationJob
       notify_user "Unable to process duplicates for #{model_class} #{model_id}", error
     else
       record.process_duplicates
-      subject = "The duplicates for #{model_class} #{model_id} were successfully resolved."
+      subject = "The duplicates for #{model_class} '#{@record}' were successfully resolved."
       notify_user subject, subject
     end
   end

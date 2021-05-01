@@ -58,9 +58,9 @@
         .email-col-12.text-align-center
           .footer
             .footer-item= company_name
-            - unless company_full_address.blank?
+            - if company_full_address.present?
               .footer-item= company_full_address
-            - unless company_phone_number.blank?
+            - if company_phone_number.present?
               .footer-item= link_to company_phone_number, "tel:#{company_phone_number}"
             .footer-item= link_to website, website
             .footer-item= link_to admin_email, "mailto:#{admin_email}"

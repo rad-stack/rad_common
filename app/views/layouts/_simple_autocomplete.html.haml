@@ -1,4 +1,4 @@
-= f.input "#{association.to_s}_id", as: :hidden
+= f.input "#{association}_id", as: :hidden
 = f.input association, as: :hidden
 
 :ruby
@@ -14,5 +14,5 @@
                                  search_label: search_label,
                                  initial_value: initial_value,
                                  excluded_ids: excluded_ids,
-                                 id_element: "##{base_object.to_s}_#{association.to_s}_id",
-                                 association_element: "##{base_object.to_s}_#{association.to_s}"
+                                 id_element: "##{base_object}_#{association}_id",
+                                 association_element: "##{base_object}_#{association}"
