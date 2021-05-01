@@ -15,8 +15,10 @@
                 Attorneys
                 = duplicates_badge Attorney
               %ul.dropdown-menu
-                %li= link_to 'Attorneys', attorneys_path, class: 'dropdown-item'
-                = duplicates_nav_item Attorney
+                %li
+                  = link_to attorneys_path, class: 'dropdown-item' do
+                    Attorneys
+                    = duplicates_badge Attorney
           - if current_user.admin?
             %li.nav-item.dropdown
               %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#' }
