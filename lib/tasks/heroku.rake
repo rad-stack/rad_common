@@ -1,13 +1,13 @@
-# for projects with multiple heroku apps, run like this with the app name:
-#   rake heroku:clone_local["myappname"]
-
 namespace :heroku do
   task :local_backup, [:heroku_app] => :environment do |_t, args|
     HerokuCommands.backup args[:heroku_app]
   end
 
-  task :clone_local, %i[heroku_app] => :environment do |_t, args|
-    HerokuCommands.clone args[:heroku_app]
+  task :clone_local, %i[heroku_app backup_id] => :environment do |_t, args|
+    # to run this with multiple args, the brackets must be escaped like this:
+    # rails heroku:clone_local\[better-way-ars,a1010\]
+
+    HerokuCommands.clone args[:heroku_app], args[:backup_id]
   end
 end
 

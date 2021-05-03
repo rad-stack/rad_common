@@ -28,13 +28,19 @@ class HerokuCommands
       write_log `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
     end
 
-    def clone(app_name)
+    def clone(app_name, backup_id)
       check_production do
         write_log 'Running backup on Heroku...'
 
         Bundler.with_unbundled_env do
           `heroku pg:backups capture #{app_option(app_name)}`
-          url_output = `heroku pg:backups public-url #{app_option(app_name)}`
+
+          url_output = if backup_id.present?
+                         `heroku pg:backups public-url #{backup_id} #{app_option(app_name)}`
+                       else
+                         `heroku pg:backups public-url #{app_option(app_name)}`
+                       end
+
           backup_url = "\"#{url_output.strip}\""
 
           write_log 'Downloading dump file:'
