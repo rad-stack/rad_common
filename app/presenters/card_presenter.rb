@@ -260,7 +260,7 @@ class CardPresenter
       action_name == 'index' &&
         RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
         Pundit.policy!(current_user, klass.new).index_duplicates? &&
-        klass.relevant_duplicates.size.positive?
+        klass.high_duplicates.size.positive?
     end
 
     def duplicates_action
