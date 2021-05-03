@@ -20,21 +20,16 @@
         link = defined?(override_path) && override_path.present? ? override_path : url_for(attachment)
         target = defined?(new_tab) && new_tab ? '_blank' : nil
 
-        attachment_label = if label_override.present?
-                             label_override
-                           else
-                             image_tag(attachment, class: 'img-fluid rounded', id: 'attachment_layout')
-                           end
+        attachment_label =
+          label_override.presence || image_tag(attachment, class: 'img-fluid rounded', id: 'attachment_layout')
 
       = link_to(attachment_label, link, target: target, class: 'mr-5')
       = delete_link
     - else
       :ruby
-        attachment_label = if label_override.present?
-                             label_override
-                           else
-                              tag.i('', class: "fa #{RadCommon::ContentTypeIcon.new(attachment.content_type)}")
-                           end
+        attachment_label =
+          label_override.presence || tag.i('', class: "fa #{RadCommon::ContentTypeIcon.new(attachment.content_type)}")
+
       .attachment-button-box
         = link_to attachment_label,
                   url_for(attachment),

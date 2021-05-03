@@ -3,27 +3,34 @@
   force_single_column = false if local_assigns[:force_single_column].nil?
   stats = []
 
-- if !local_assigns[:resource].nil? && !no_timestamps
-  - if resource.respond_to?(:created_at)
-    - stats.push(label: 'Created', value: format_datetime(resource.created_at))
-  - if resource.respond_to?(:updated_at) && resource.updated_at != resource.created_at
-    - stats.push(label: 'Updated', value: format_datetime(resource.updated_at))
+  if !local_assigns[:resource].nil? && !no_timestamps
+    if resource.respond_to?(:created_at)
+      stats.push(label: 'Created', value: format_datetime(resource.created_at))
+    end
 
-- all_data = []
+    if resource.respond_to?(:updated_at) && resource.updated_at != resource.created_at
+      stats.push(label: 'Updated', value: format_datetime(resource.updated_at))
+    end
+  end
 
-- if data
-  - data.each do |item|
-    - if item.is_a?(Hash)
-      - if item[:value].present?
-        - all_data.push(item)
-    - elsif item.is_a?(Symbol)
-      - value = resource.send(item)
-      - if !value.blank? || value.class.to_s == 'FalseClass'
-        - all_data.push(item)
-    - else
-      - raise "invalid data type: #{item.class.to_s}"
+  all_data = []
 
-:ruby
+  data&.each do |item|
+    if item.is_a?(Hash)
+      if item[:value].present?
+        all_data.push(item)
+      end
+    elsif item.is_a?(Symbol)
+      value = resource.send(item)
+
+      if value.present? || value.class.to_s == 'FalseClass'
+        all_data.push(item)
+      end
+    else
+      raise "invalid data type: #{item.class}"
+    end
+  end
+
   if all_data.count == 0
     columns = [stats]
   elsif all_data.count <= 5

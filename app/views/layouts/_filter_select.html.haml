@@ -1,4 +1,4 @@
-- data_style = 'btn ' + (search.default_value?(filter.searchable_name) ? 'btn-success' : 'btn-warning')
+- data_style = "btn #{(search.default_value?(filter.searchable_name) ? 'btn-success' : 'btn-warning')}"
 
 = f.input filter.searchable_name,
           collection: filter.input_options,
