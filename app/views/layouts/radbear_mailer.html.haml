@@ -20,7 +20,11 @@
     .email-header
       .email-row
         .email-col-12.logo-col
-          = link_to image_tag(logo_url, alt: site_name, title: site_name), website
+          - if @override_logo
+            = link_to image_tag(@override_logo, alt: site_name, title: site_name), website
+          - else
+            = link_to image_tag(logo_url, alt: site_name, title: site_name), website
+
           - unless logo_includes_name
             %span.logo_text
               = site_name
@@ -63,7 +67,7 @@
             - if company_phone_number.present?
               .footer-item= link_to company_phone_number, "tel:#{company_phone_number}"
             .footer-item= link_to website, website
-            .footer-item= link_to admin_email, "mailto:#{admin_email}"
+            .footer-item= link_to @footer_email || admin_email, "mailto:#{@footer_email || admin_email}"
       - if @optional && @recipient && @recipient.is_a?(User)
         .email-row
           .email-col-12.text-align-center
