@@ -8,21 +8,35 @@ class EmailAddressValidator < ActiveModel::Validator
     fields.each do |field|
       next if record.send(field).blank?
 
-      attrs = record.send(field)
+      email_value = record.send(field)
+
+      # TODO: downcase emails when in an array as well
+
+      unless email_value.is_a?(Array)
+        email_value.downcase!
+        record.send("#{field}=", email_value)
+      end
+
       if multiples
-        attrs.split(',').each do |attr|
-          attr.instance_of?(Array) ? attr.each { |email| check_email(email, field, record) } : check_email(attr.strip, field, record)
+        email_value.split(',').each do |attr|
+          if attr.instance_of?(Array)
+            attr.each { |email| check_email(email, field, record) }
+          else
+            check_email(attr.strip, field, record)
+          end
         end
       else
-        check_email(attrs, field, record)
+        check_email(email_value, field, record)
       end
     end
   end
 
-  def check_email(email, field, record)
-    return if email =~ URI::MailTo::EMAIL_REGEXP && email !~ /[A-Z]/
+  private
 
-    record.errors.add(field, 'is not written in a valid format. Email cannot have capital letters, '\
-                              'domain must be less than 62 characters and does not allow special characters.')
-  end
+    def check_email(email, field, record)
+      return if email =~ URI::MailTo::EMAIL_REGEXP && email !~ /[A-Z]/
+
+      record.errors.add(field, 'is not written in a valid format. Email cannot have capital letters, '\
+                                'domain must be less than 62 characters and does not allow special characters.')
+    end
 end
