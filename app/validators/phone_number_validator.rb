@@ -11,26 +11,12 @@ class PhoneNumberValidator < ActiveModel::Validator
         next
       end
 
-      next unless RadicalTwilio.twilio_enabled?
       next if record.running_global_validity
-
-      # twilio phone number validations that check whether valid mobile # cost half a penny per request
       next unless record.send("#{field[:field]}_changed?")
 
       mobile = field[:type] && field[:type] == :mobile
-
-      begin
-        response = get_phone_number(phone_value, mobile)
-
-        if mobile && response.carrier['type'] != 'mobile'
-          record.errors.add(field[:field], 'does not appear to be a valid mobile phone number')
-        end
-
-        response.phone_number
-      rescue Twilio::REST::RestError, NoMethodError => e
-        Rails.logger.info "twilio lookup error: #{e}"
-        record.errors.add(field[:field], 'does not appear to be a valid phone number')
-      end
+      error_message = RadicalTwilio.new.validate_phone_number(phone_value, mobile)
+      record.errors.add(field[:field], error_message) if error_message.present?
     end
   end
 
@@ -56,22 +42,5 @@ class PhoneNumberValidator < ActiveModel::Validator
       end
 
       record.send(field)
-    end
-
-    def get_phone_number(attribute, mobile)
-      converted_phone_number = attribute.gsub(/[^0-9a-z\\s]/i, '')
-      mobile ? lookup_number(converted_phone_number, 'carrier') : lookup_number(converted_phone_number)
-    end
-
-    def lookup_number(number, type = nil)
-      lookup_client = Twilio::REST::Client.new(ENV.fetch('TWILIO_ACCOUNT_SID'), ENV.fetch('TWILIO_AUTH_TOKEN'))
-
-      RadicalRetry.perform_request(retry_count: 2) do
-        if type
-          lookup_client.lookups.phone_numbers(number).fetch(type: [type])
-        else
-          lookup_client.lookups.phone_numbers(number).fetch
-        end
-      end
     end
 end
