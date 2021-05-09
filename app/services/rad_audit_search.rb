@@ -21,12 +21,7 @@ class RadAuditSearch < RadCommon::Search
          options: RadCommon::AppInfo.new.audited_models },
        { input_label: 'User',
          column: :user_id,
-         options:
-             [['Default', [current_user, { scope_value: :system_generated }]],
-              ['Users', users],
-              ['Clients', client_users],
-              ['Inactive', inactive_users]],
-         blank_value_label: 'All Users', grouped: true },
+         options: user_array },
        { input_label: 'Action',
          column: :action,
          options: %w[create update destroy] },
@@ -44,15 +39,7 @@ class RadAuditSearch < RadCommon::Search
        { label: 'Changes' }]
     end
 
-    def users
-      Pundit.policy_scope!(current_user, User).active.internal.by_name.where.not(id: current_user.id)
-    end
-
-    def client_users
-      Pundit.policy_scope!(current_user, User).active.external.by_name
-    end
-
-    def inactive_users
-      Pundit.policy_scope!(current_user, User).inactive.by_name
+    def user_array
+      Pundit.policy_scope!(current_user, User).by_name.pluck("first_name || ' ' || last_name", :id)
     end
 end
