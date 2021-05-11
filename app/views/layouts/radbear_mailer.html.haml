@@ -3,7 +3,6 @@
   logo_includes_name = RadCommon.app_logo_includes_name
   protocol = Rails.env.production? ? 'https' : 'http'
   logo_url = "#{protocol}://#{RadCommon::AppInfo.new.host_name}/app_logo.png"
-  site_name = company.name
   website = company.website
   company_name = company.name
   company_full_address = company.full_address
@@ -21,13 +20,13 @@
       .email-row
         .email-col-12.logo-col
           - if @override_logo
-            = link_to image_tag(@override_logo, alt: site_name, title: site_name), website
+            = link_to image_tag(@override_logo, alt: company_name, title: company_name), website
           - else
-            = link_to image_tag(logo_url, alt: site_name, title: site_name), website
+            = link_to image_tag(logo_url, alt: company_name, title: company_name), website
 
           - unless logo_includes_name
             %span.logo_text
-              = site_name
+              = company_name
     .email-body
       - if @recipient
         .greeting-row
@@ -68,10 +67,3 @@
               .footer-item= link_to company_phone_number, "tel:#{company_phone_number}"
             .footer-item= link_to website, website
             .footer-item= link_to @footer_email || admin_email, "mailto:#{@footer_email || admin_email}"
-      - if @optional && @recipient && @recipient.is_a?(User)
-        .email-row
-          .email-col-12.text-align-center
-            .footer
-              .footer-item
-                To unsubscribe from these optional email messages, please
-                = link_to 'update your profile.', edit_user_registration_url
