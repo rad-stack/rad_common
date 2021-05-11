@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
-  s.add_dependency 'bootstrap'
+  s.add_dependency 'bootstrap', '~> 4.6.0'
   s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
   s.add_dependency 'bootstrap-select-rails', '~> 1.13.8'
   s.add_dependency 'devise'

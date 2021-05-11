@@ -18,14 +18,12 @@ class TwilioLogSearch < RadCommon::Search
          type: RadCommon::DateFilter },
        { input_label: 'From User',
          column: :from_user_id,
-         options: [['Active', User.active.by_name],
-                   ['Inactive', User.inactive.by_name]],
-         grouped: true },
+         options: user_array,
+         blank_value_label: 'All Users' },
        { input_label: 'To User',
          column: :to_user_id,
-         options: [['Active', User.active.by_name],
-                   ['Inactive', User.inactive.by_name]],
-         grouped: true }]
+         options: user_array,
+         blank_value_label: 'All Users' }]
     end
 
     def sort_columns_def
@@ -37,6 +35,10 @@ class TwilioLogSearch < RadCommon::Search
        { column: 'message' },
        { column: 'media_url' },
        { column: 'success' }]
+    end
+
+    def user_array
+      Pundit.policy_scope!(current_user, User).by_name.pluck("first_name || ' ' || last_name", :id)
     end
 
     def failure_reasons

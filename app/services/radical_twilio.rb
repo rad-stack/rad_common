@@ -31,6 +31,24 @@ class RadicalTwilio
     ENV.fetch('TWILIO_MMS_PHONE_NUMBER')
   end
 
+  def validate_phone_number(phone_number, mobile)
+    return unless RadicalTwilio.twilio_enabled?
+
+    # twilio phone number validations that check whether valid mobile # cost half a penny per request
+
+    begin
+      response = get_phone_number(phone_number, mobile)
+      return 'does not appear to be a valid mobile phone number' if mobile && response.carrier['type'] != 'mobile'
+
+      response.phone_number
+    rescue Twilio::REST::RestError, NoMethodError => e
+      Rails.logger.info "twilio lookup error: #{e}"
+      return 'does not appear to be a valid phone number'
+    end
+
+    nil
+  end
+
   private
 
     def client
@@ -41,5 +59,22 @@ class RadicalTwilio
       return "#{message} - Reply STOP to unsubscribe" unless %w[. ! ?].include?(message[-1])
 
       "#{message} Reply STOP to unsubscribe."
+    end
+
+    def get_phone_number(attribute, mobile)
+      converted_phone_number = attribute.gsub(/[^0-9a-z\\s]/i, '')
+      mobile ? lookup_number(converted_phone_number, 'carrier') : lookup_number(converted_phone_number)
+    end
+
+    def lookup_number(number, type = nil)
+      lookup_client = Twilio::REST::Client.new(ENV.fetch('TWILIO_ACCOUNT_SID'), ENV.fetch('TWILIO_AUTH_TOKEN'))
+
+      RadicalRetry.perform_request(retry_count: 2) do
+        if type
+          lookup_client.lookups.phone_numbers(number).fetch(type: [type])
+        else
+          lookup_client.lookups.phone_numbers(number).fetch
+        end
+      end
     end
 end

@@ -22,6 +22,16 @@ RSpec.describe PhoneNumberValidator do
     phone_number.delete('(').delete(')').delete('-').delete(' ')
   end
 
+  it 'formats phone numbers before validating' do
+    numbers = ['1233211234', '123-321-1234', '123 321 1234', ' 123 321 1234 ']
+
+    numbers.each do |phone_number|
+      model = TestPhoneModel.new
+      model.phone_number = phone_number
+      expect(model).to be_valid
+    end
+  end
+
   it 'can not be valid' do
     invalid_numbers = %w([232332 1234 -])
 
