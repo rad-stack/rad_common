@@ -99,7 +99,6 @@ RSpec.describe 'Attorneys', type: :system do
       page.accept_confirm { click_button 'Merge All' }
       expect(page).to have_content('(2)')
       expect(page).to have_content(record_1.first_name)
-      expect(page).not_to have_content(record_2.first_name)
     end
 
     it 'shows fix duplicates', js: true do

@@ -33,9 +33,17 @@ class DuplicatesController < ApplicationController
     authorize @record, :merge_duplicates?
 
     if params[:merge_data]
-      MergeDuplicatesJob.perform_later(params[:merge_data].keys, @record.class.to_s, @record.id, current_user.id)
+      status, message = @record.merge_duplicates(params[:merge_data].keys, current_user)
 
-      flash[:success] = "The duplicates are processing, we'll email you when complete."
+      flash[status] = message
+
+      if status == :error
+        notify_user "Unable to process duplicates for #{@record.class} #{@record.id}", message
+      else
+        subject = "The duplicates for #{@record.class} '#{@record}' were successfully resolved."
+        notify_user subject, subject
+      end
+
       redirect_to index_path
     else
       flash[:error] = 'Missing parameters'
@@ -59,13 +67,7 @@ class DuplicatesController < ApplicationController
     end
 
     message = 'The record was marked as not a duplicate.'
-
-    email_options = { email_action: { message: 'Click here to view the details.',
-                                      button_text: 'View',
-                                      button_url: url_for(@record) } }
-
-    # TODO: remove this once done monitoring
-    RadbearMailer.simple_message('gary@radicalbear.com', message, message, email_options).deliver_later
+    notify_user message, message
 
     flash[:success] = message
     redirect_to index_path
@@ -116,5 +118,18 @@ class DuplicatesController < ApplicationController
 
     def model
       Object.const_get params[:model]
+    end
+
+    def notify_user(subject, message)
+      RadbearMailer.simple_message(current_user, subject, message, email_options).deliver_later
+
+      # TODO: remove this once done monitoring
+      RadbearMailer.simple_message('gary@radicalbear.com', subject, message, email_options).deliver_later
+    end
+
+    def email_options
+      { email_action: { message: 'Click here to view the details.',
+                        button_text: 'View',
+                        button_url: url_for(@record) } }
     end
 end

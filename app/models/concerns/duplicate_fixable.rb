@@ -161,6 +161,22 @@ module DuplicateFixable
     RadCommon::AppInfo.new.duplicate_model_config(self.class.name)
   end
 
+  def merge_duplicates(duplicate_keys, user)
+    error = nil
+
+    duplicate_keys.each do |key|
+      error = fix_duplicate(key, user)
+      break if error
+    end
+
+    if error.present?
+      [:error, "Unable to process duplicates: #{error}"]
+    else
+      process_duplicates
+      [:success, "The duplicates for #{self.class} '#{self}' were successfully resolved."]
+    end
+  end
+
   private
 
     def model_klass
@@ -335,5 +351,30 @@ module DuplicateFixable
       else
         JSON.parse(record.duplicate.duplicates_not)
       end
+    end
+
+    def fix_duplicate(key, user)
+      duplicate_record = model_klass.find_by(id: key)
+
+      if duplicate_record.blank?
+        return 'Invalid record data, perhaps something has changed or another user has resolved these duplicates.'
+      end
+
+      return 'The records are the same record.' if duplicate_record.id == id
+
+      unless Pundit.policy!(user, duplicate_record).destroy?
+        return 'You do not have authorization to merge these duplicates.'
+      end
+
+      status, message = duplicate_record.can_merge_duplicate?(self)
+      return message unless status
+
+      duplicate_record.clean_up_duplicate(self)
+      duplicate_record.reload
+
+      return nil if duplicate_record.destroy
+
+      'Could not remove the unused duplicate record '\
+          "id #{duplicate_record.id}: #{duplicate_record.errors.full_messages.join(', ')}"
     end
 end
