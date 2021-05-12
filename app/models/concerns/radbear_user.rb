@@ -131,7 +131,7 @@ module RadbearUser
   end
 
   def other_audits_created
-    audits_created.where.not(auditable_id: id, auditable_type: 'User')
+    audits_created.where.not(auditable_id: id).where.not(auditable_type: 'User')
   end
 
   def display_style
