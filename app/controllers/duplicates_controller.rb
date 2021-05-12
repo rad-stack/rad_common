@@ -56,7 +56,7 @@ class DuplicatesController < ApplicationController
     authorize @record, :not_duplicate?
     other_record = model.find_by(id: params[:master_record])
 
-    if other_record # else it's no longer there, moot point
+    if other_record.present?
       if policy(other_record).destroy?
         @record.not_duplicate(other_record)
       else
@@ -64,9 +64,13 @@ class DuplicatesController < ApplicationController
         redirect_to index_path
         return
       end
+    else
+      flash[:error] = "This record doesn't exist, perhaps it was deleted."
+      redirect_to index_path
+      return
     end
 
-    message = 'The record was marked as not a duplicate.'
+    message = "The #{other_record.class} with id of #{other_record.id} '#{other_record}' was marked as not a duplicate."
     notify_user message, message
 
     flash[:success] = message
