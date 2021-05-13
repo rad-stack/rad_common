@@ -146,7 +146,6 @@ class RadbearMailer < ActionMailer::Base
       end
 
       @include_yield = true
-      @optional = false
     end
 
     def parse_recipients_array(recipients)
