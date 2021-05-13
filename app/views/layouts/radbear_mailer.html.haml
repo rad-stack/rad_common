@@ -1,5 +1,5 @@
 :ruby
-  company = Company.main
+  company = @override_company.presence || Company.main
   logo_includes_name = RadCommon.app_logo_includes_name
   protocol = Rails.env.production? ? 'https' : 'http'
   logo_url = "#{protocol}://#{RadCommon::AppInfo.new.host_name}/app_logo.png"
