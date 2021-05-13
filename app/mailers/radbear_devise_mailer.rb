@@ -103,7 +103,6 @@ class RadbearDeviseMailer < Devise::Mailer
       end
 
       @include_yield = false
-      @optional = false
     end
 
     def app_name
