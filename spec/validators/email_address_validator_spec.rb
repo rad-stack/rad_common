@@ -92,7 +92,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
     # Do not commit any changes to git
 
     context 'with valid email' do
-      let(:email) { 'support@invest.ally.com' }
+      let(:email) { 'support@invest.ally.com' } # just grabbed any ole email address from the web
 
       xit 'validates' do
         model = TestEmailModel.new(email)
@@ -102,7 +102,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
 
     context 'with invalid email' do
       let(:email) { 'support@invest.ally.xyz' }
-      let(:error_message) {'Email by other name does not appear to be a valid email address' }
+      let(:error_message) { 'Email by other name does not appear to be a valid email address' }
 
       xit 'invalidates' do
         model = TestEmailModel.new(email)
