@@ -24,6 +24,7 @@ module RadCommon
     require 'premailer/rails'
     require 'pundit'
     require 'rails_email_validator'
+    require 'sendgrid-ruby'
     require 'sentry-raven'
     require 'sidekiq'
     require 'sidekiq-failures'

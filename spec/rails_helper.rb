@@ -125,6 +125,7 @@ RSpec.configure do |config|
     Timecop.safe_mode = true
 
     allow(RadicalTwilio).to receive(:twilio_enabled?).and_return(false)
+    allow(RadicalSendGrid).to receive(:send_grid_enabled?).and_return(false)
 
     allow(Company).to receive(:main).and_return(create(:company))
 
