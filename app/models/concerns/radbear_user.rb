@@ -65,6 +65,7 @@ module RadbearUser
     validate :password_excludes_name
 
     validates_with PhoneNumberValidator, fields: [{ field: :mobile_phone, type: :mobile }]
+    validates_with EmailAddressValidator, fields: %i[email], on: :update
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
