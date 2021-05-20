@@ -8,10 +8,8 @@ class RadicalSendGrid
 
     response = RadicalRetry.perform_request(retry_count: 2) do
       client._('validations/email').post(request_body: "{\"email\":\"#{email}\"}")
+      raise RadicalSendGridError, response.body unless response.status_code == '200'
     end
-
-    # TODO: handle this better, can wait for it to crash first
-    raise response.body unless response.status_code == '200'
 
     if response.parsed_body[:result][:verdict] == 'Invalid'
       Rails.logger.info "SendGrid email validation result: #{response.body}"
