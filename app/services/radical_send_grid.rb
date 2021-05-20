@@ -14,6 +14,8 @@ class RadicalSendGrid
     raise response.body unless response.status_code == '200'
 
     if response.parsed_body[:result][:verdict] == 'Invalid'
+      Rails.logger.info "SendGrid email validation result: #{response.body}"
+
       # TODO: maybe check Risky verdicts as well
       return 'does not appear to be a valid email address'
     end
