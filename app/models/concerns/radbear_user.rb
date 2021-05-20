@@ -65,7 +65,7 @@ module RadbearUser
     validate :password_excludes_name
 
     validates_with PhoneNumberValidator, fields: [{ field: :mobile_phone, type: :mobile }]
-    validates_with EmailAddressValidator, fields: %i[email], on: :update
+    validates_with EmailAddressValidator, fields: %i[email], on: :update, if: :fully_validate_email?
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
@@ -183,6 +183,10 @@ module RadbearUser
     def check_defaults
       status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
       self.user_status = status if new_record? && !user_status
+    end
+
+    def fully_validate_email?
+      user_status&.validate_email?
     end
 
     def validate_email_address
