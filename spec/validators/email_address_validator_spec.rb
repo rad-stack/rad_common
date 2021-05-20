@@ -1,37 +1,7 @@
 require 'rails_helper'
 
-class TestEmailModel
-  include ActiveModel::Model
-  attr_accessor :email_by_other_name, :running_global_validity
-
-  def initialize(email_by_other_name)
-    @email_by_other_name = email_by_other_name
-  end
-
-  def []=(attribute, value)
-    public_send("#{attribute}=", value)
-  end
-
-  validates_with EmailAddressValidator, fields: %i[email_by_other_name]
-end
-
-class TestEmailArrayModel
-  include ActiveModel::Model
-  attr_accessor :email
-
-  def initialize(email)
-    @email = email
-  end
-
-  def []=(attribute, value)
-    public_send("#{attribute}=", value)
-  end
-
-  validates_with EmailAddressValidator, fields: [:email]
-end
-
 RSpec.describe EmailAddressValidator, type: :validator do
-  subject(:result) { TestEmailModel.new(email) }
+  subject(:result) { build :division, invoice_email: email }
 
   context 'when the email is nil' do
     let(:email) { nil }
@@ -74,10 +44,11 @@ RSpec.describe EmailAddressValidator, type: :validator do
                        'foob@example.com, barf@example.com, xanz@example.com']
 
       invalid_items.each do |item|
-        model = TestEmailModel.new(item)
+        model = build(:division, invoice_email: item)
+
         expect(model).to be_invalid
-        expect(model.errors.details.first[0]).to eq :email_by_other_name
-        expect(model.errors.full_messages.to_s).to include 'Email by other name is not written in a valid format. '\
+        expect(model.errors.details.first[0]).to eq :invoice_email
+        expect(model.errors.full_messages.to_s).to include 'Invoice email is not written in a valid format. '\
                                                            'Email cannot have capital letters, domain must be less '\
                                                            'than 62 characters and does not allow special characters.'
       end
@@ -85,6 +56,10 @@ RSpec.describe EmailAddressValidator, type: :validator do
   end
 
   describe 'send grid', :vcr do
+    let(:good_email) { 'support@invest.ally.com' } # just grabbed any ole email address from the web
+    let(:bad_email) { 'support@invest.ally.xyz' }
+    let!(:division) { build :division, invoice_email: email }
+
     before { allow(RadicalSendGrid).to receive(:send_grid_enabled?).and_return(true) }
 
     # These tests need to be disabled because only live credentials can be used
@@ -92,22 +67,31 @@ RSpec.describe EmailAddressValidator, type: :validator do
     # Do not commit any changes to git
 
     context 'with valid email' do
-      let(:email) { 'support@invest.ally.com' } # just grabbed any ole email address from the web
+      let(:email) { good_email }
 
-      xit 'validates' do
-        model = TestEmailModel.new(email)
-        expect(model.valid?).to eq(true)
+      xit 'is valid' do
+        expect(division.valid?).to eq(true)
       end
     end
 
     context 'with invalid email' do
-      let(:email) { 'support@invest.ally.xyz' }
-      let(:error_message) { 'Email by other name does not appear to be a valid email address' }
+      let(:email) { bad_email }
+      let(:error_message) { 'Invoice email does not appear to be a valid email address' }
 
-      xit 'invalidates' do
-        model = TestEmailModel.new(email)
-        expect(model.valid?).to eq(false)
-        expect(model.errors.full_messages.first).to eq(error_message)
+      xit 'is invalid' do
+        expect(division.valid?).to eq(false)
+        expect(division.errors.full_messages.first).to eq(error_message)
+      end
+
+      context 'when email not changed' do
+        before do
+          division.save! validate: false
+          division.additional_info = "bad email grandfathered in, that's fine bro, let it go"
+        end
+
+        xit 'is valid' do
+          expect(division.valid?).to eq(true)
+        end
       end
     end
   end
