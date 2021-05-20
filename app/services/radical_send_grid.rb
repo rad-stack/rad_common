@@ -7,8 +7,10 @@ class RadicalSendGrid
     return unless RadicalSendGrid.send_grid_enabled?
 
     response = RadicalRetry.perform_request(retry_count: 2) do
-      client._('validations/email').post(request_body: "{\"email\":\"#{email}\"}")
-      raise RadicalSendGridError, response.body unless response.status_code == '200'
+      inner_response = client._('validations/email').post(request_body: "{\"email\":\"#{email}\"}")
+      raise RadicalSendGridError, inner_response.body unless inner_response.status_code == '200'
+
+      inner_response
     end
 
     if response.parsed_body[:result][:verdict] == 'Invalid'
