@@ -105,6 +105,9 @@ Naming/VariableNumber:
 Rails:
   Enabled: true
 
+Rails/EnvironmentVariableAccess:
+  Enabled: false
+
 # allows the use of 'puts' instead of the logger on the seeds file only, and requires the logger for the
 # rest of the project
 Rails/Output:
