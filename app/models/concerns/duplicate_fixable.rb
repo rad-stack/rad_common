@@ -6,7 +6,7 @@ module DuplicateFixable
 
     scope :duplicates_to_process, lambda {
       left_outer_joins(:duplicate)
-        .where("duplicates.updated_at IS NULL OR #{table_name}.updated_at > duplicates.updated_at")
+        .where("#{table_name}.updated_at >= duplicates.processed_at")
         .order(:id)
     }
 
@@ -130,9 +130,9 @@ module DuplicateFixable
 
   def create_or_update_metadata!(attributes)
     if duplicate.blank?
-      Duplicate.create! attributes.merge(duplicatable: self)
+      Duplicate.create! attributes.merge(processed_at: Time.current, duplicatable: self)
     else
-      duplicate.update! attributes
+      duplicate.update! attributes.merge(processed_at: Time.current)
     end
   end
 

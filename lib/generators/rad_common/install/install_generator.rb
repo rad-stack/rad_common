@@ -320,6 +320,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20210428131743_unique_duplicates.rb',
                         'unique_duplicates.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20210522104137_duplicates_processed.rb',
+                        'duplicates_processed.rb'
       end
 
       def self.next_migration_number(path)
