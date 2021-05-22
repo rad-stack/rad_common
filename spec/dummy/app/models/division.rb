@@ -15,6 +15,7 @@ class Division < ApplicationRecord
   scope :sorted, -> { order(:name) }
 
   validates :name, uniqueness: { message: 'has already been taken for a pending division' }, if: -> { status_pending? }
+  validates_with EmailAddressValidator, fields: %i[invoice_email]
 
   audited
 

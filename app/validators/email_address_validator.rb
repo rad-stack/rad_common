@@ -2,41 +2,40 @@ class EmailAddressValidator < ActiveModel::Validator
   def validate(record)
     return if record.blank?
 
-    fields = options[:fields]
-    multiples = options[:multiples]
-
-    fields.each do |field|
+    options[:fields].each do |field|
       next if record.send(field).blank?
 
-      email_value = record.send(field)
+      email_value = record.send(field).downcase
+      email_value.downcase!
+      record.send("#{field}=", email_value)
 
-      # TODO: downcase emails when in an array as well
-
-      unless email_value.is_a?(Array)
-        email_value.downcase!
-        record.send("#{field}=", email_value)
+      unless valid_email?(email_value)
+        record.errors.add(field, 'is not written in a valid format. Email cannot have capital letters, '\
+                                 'domain must be less than 62 characters and does not allow special characters.')
+        next
       end
 
-      if multiples
-        email_value.split(',').each do |attr|
-          if attr.instance_of?(Array)
-            attr.each { |email| check_email(email, field, record) }
-          else
-            check_email(attr.strip, field, record)
-          end
-        end
-      else
-        check_email(email_value, field, record)
-      end
+      next unless check_send_grid?(record, field)
+
+      error_message = RadicalSendGrid.new.validate_email(email_value)
+      record.errors.add(field, error_message) if error_message.present?
     end
   end
 
   private
 
-    def check_email(email, field, record)
-      return if email =~ URI::MailTo::EMAIL_REGEXP && email !~ /[A-Z]/
+    def valid_email?(email)
+      email =~ URI::MailTo::EMAIL_REGEXP && email !~ /[A-Z]/
+    end
 
-      record.errors.add(field, 'is not written in a valid format. Email cannot have capital letters, '\
-                                'domain must be less than 62 characters and does not allow special characters.')
+    def check_send_grid?(record, field)
+      return true if always_check_send_grid?
+      return false if record.running_global_validity
+
+      record.send("#{field}_changed?")
+    end
+
+    def always_check_send_grid?
+      ENV['SENDGRID_ALWAYS_VALIDATE'].present? && ENV['SENDGRID_ALWAYS_VALIDATE'] == 'true'
     end
 end

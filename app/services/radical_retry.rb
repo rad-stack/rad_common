@@ -6,7 +6,7 @@ class RadicalRetry
   RESCUABLE_ERRORS = [Net::OpenTimeout, OpenURI::HTTPError, HTTPClient::ConnectTimeoutError, Errno::EPIPE, SocketError,
                       OpenSSL::SSL::SSLError, Errno::ENOENT, Errno::ECONNRESET, Net::ReadTimeout, Errno::ECONNREFUSED,
                       ActiveStorage::FileNotFoundError, HTTPClient::ReceiveTimeoutError,
-                      HTTPClient::SendTimeoutError].freeze
+                      HTTPClient::SendTimeoutError, RadicalSendGridError].freeze
 
   class << self
     def perform_request(no_delay: false, retry_count: 5, additional_errors: [], &block)

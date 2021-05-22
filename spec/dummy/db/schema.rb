@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_28_131743) do
+ActiveRecord::Schema.define(version: 2021_05_20_102551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(version: 2021_04_28_131743) do
     t.decimal "hourly_rate", precision: 8, scale: 2, default: "0.0", null: false
     t.string "additional_info"
     t.date "date_established"
+    t.string "invoice_email"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
   end
