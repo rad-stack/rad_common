@@ -15,6 +15,11 @@ namespace :duplicates do
 
           record.process_duplicates
         end
+
+        if session.timing_out?
+          puts 'timing out'
+          break
+        end
       end
     end
   end

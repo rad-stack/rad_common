@@ -20,7 +20,7 @@ class RakeSession
     @counter += 1
     now = Time.current
 
-    if @counter == 1 || (@counter % status_frequency == 0)
+    if @counter == 1 || (@counter % status_frequency).zero?
       elapsed = distance_of_time_in_words(@start_time, now, include_seconds: true)
       minutes = ((now - @start_time) / 60).ceil
       per_hour = ((@counter / minutes) * 60).ceil
@@ -47,6 +47,10 @@ class RakeSession
       end
     end
 
+    timing_out?(now)
+  end
+
+  def timing_out?(now = Time.current)
     (now - @start_time) > (time_limit - 3.minutes)
   end
 end
