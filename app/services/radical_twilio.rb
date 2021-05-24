@@ -1,4 +1,6 @@
 class RadicalTwilio
+  OPT_OUT_MESSAGE = 'To no longer receive text messages, text STOP'.freeze
+
   def send_sms(to:, message:)
     client.messages.create(from: from_number, to: to, body: full_body(message))
   end
@@ -56,9 +58,9 @@ class RadicalTwilio
     end
 
     def full_body(message)
-      return "#{message} - Reply STOP to unsubscribe" unless %w[. ! ?].include?(message[-1])
+      return "#{message} - #{OPT_OUT_MESSAGE}" unless %w[. ! ?].include?(message[-1])
 
-      "#{message} Reply STOP to unsubscribe."
+      "#{message} #{OPT_OUT_MESSAGE}."
     end
 
     def get_phone_number(attribute, mobile)
