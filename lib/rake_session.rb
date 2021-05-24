@@ -2,9 +2,10 @@ class RakeSession
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::DateHelper
 
-  attr_accessor :time_limit, :status_frequency
+  attr_accessor :time_limit, :status_frequency, :task
 
-  def initialize(time_limit, status_frequency)
+  def initialize(task, time_limit, status_frequency)
+    self.task = task
     self.time_limit = time_limit
     self.status_frequency = status_frequency
   end
@@ -38,12 +39,12 @@ class RakeSession
         end
 
         unless Rails.env.test?
-          puts "#{label} #{pluralize(@counter, 'items')} #{count_label}in "\
+          puts "#{@task.name}: #{label} #{pluralize(@counter, 'items')} #{count_label}in "\
                "#{pluralize(minutes, 'minute')}, #{per_hour} per hour, #{per_day} per day, elapsed: "\
                "#{elapsed}#{finished_label}"
         end
       else
-        puts "#{label}, elapsed: #{elapsed}" unless Rails.env.test?
+        puts "#{@task.name}: #{label}, elapsed: #{elapsed}" unless Rails.env.test?
       end
     end
 
@@ -51,6 +52,12 @@ class RakeSession
   end
 
   def timing_out?(now = Time.current)
-    (now - @start_time) > (time_limit - 3.minutes)
+    result = (now - @start_time) > (time_limit - 3.minutes)
+    puts "#{@task.name}: timing out" if result
+    result
+  end
+
+  def finished
+    puts "#{@task.name}: finished in #{distance_of_time_in_words(@start_time, Time.current, include_seconds: true)}"
   end
 end
