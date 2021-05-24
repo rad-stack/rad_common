@@ -8,6 +8,8 @@ class RakeSession
     self.task = task
     self.time_limit = time_limit
     self.status_frequency = status_frequency
+
+    reset_status
   end
 
   def reset_status
