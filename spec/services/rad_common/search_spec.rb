@@ -199,6 +199,7 @@ RSpec.describe RadCommon::Search, type: :service do
 
     let(:query) { User }
     let!(:user_1) { create :user }
+    let(:filters) { [{ column: :id, type: RadCommon::EqualsFilter, data_type: :integer }] }
 
     let(:params) do
       ActionController::Parameters.new(search: { id_equals: user_1.id })
