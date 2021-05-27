@@ -18,7 +18,7 @@ module RadCommon
     def validate_params
       valid = true
       @filters.each do |filter|
-        valid = filter.validate_params(@search.search_params) if filter.respond_to? :validate_params
+        valid = false if filter.respond_to?(:validate_params) && !filter.validate_params(@search.search_params)
       end
 
       valid

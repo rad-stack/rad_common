@@ -2,7 +2,7 @@ module RadCommon
   ##
   # This is used to generate dropdown filter containing options to be filtered on
   class SearchFilter
-    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value
+    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value, :errors
 
     ##
     # @param [Symbol optional] column the database column that is being filtered
@@ -33,7 +33,8 @@ module RadCommon
     #               ['Inactive', User.inactive.by_name]] }]
     # @example Using scope values
     #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
-    def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, multiple: false)
+    def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil,
+                   default_value: nil, blank_value_label: nil, scope: nil, multiple: false, required: false)
       if input_label.blank? && !options.respond_to?(:table_name)
         raise 'Input label is required when options are not active record objects'
       end
@@ -53,6 +54,8 @@ module RadCommon
       @multiple = multiple
       @default_value = default_value
       @grouped = grouped
+      @required = required
+      @errors = []
     end
 
     # @return [String] the name of the view to be used to render the filter input
@@ -130,6 +133,15 @@ module RadCommon
 
     def selected_value(search)
       search.selected_value(searchable_name) || default_value
+    end
+
+    def validate_params(params)
+      if @required && filter_value(params).blank?
+        @errors = ["#{input_label} is required"]
+        false
+      else
+        true
+      end
     end
 
     private
