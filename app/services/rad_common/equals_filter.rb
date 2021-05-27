@@ -7,6 +7,8 @@ module RadCommon
     ##
     # @param [String] column the database column that is being filtered
     # @param [Symbol] data_type controls what the input type is based on data type of column
+    # @param [Symbol] scope the name of an active record scope to be used for the filter on the corresponding model
+    # @param [String optional] input_label by default the input label for the field is determined by the column name
     def initialize(column:, data_type:, scope: nil, input_label: nil)
       raise 'data_type must be either :integer or :string' if supported_data_types.exclude?(data_type)
 

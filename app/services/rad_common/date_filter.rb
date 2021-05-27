@@ -14,6 +14,7 @@ module RadCommon
     #   in a custom fashion and we skip applying the filter.
     # @param [Date optional] default_start_value default start at value for the date filter
     # @param [Date optional] default_end_value default end at value for the date filter
+    # @param [Symbol] scope the name of an active record scope to be used for the filter on the corresponding model
     #
     # @example
     #   { column: :created_at, type: RadCommon::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
