@@ -33,7 +33,7 @@ module RadCommon
     end
 
     def model_name
-      @input_label || column.humanize
+      @input_label || column.to_s.humanize
     end
 
     def apply_filter(results, params)
