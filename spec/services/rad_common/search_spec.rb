@@ -212,7 +212,10 @@ RSpec.describe RadCommon::Search, type: :service do
     end
 
     context 'with a scope' do
-      let(:filters) { [{ column: :permission, type: RadCommon::EqualsFilter, data_type: :string, scope: :by_permission }] }
+      let(:filters) { [{ column: :permission,
+                         type: RadCommon::EqualsFilter,
+                         data_type: :string,
+                         scope: :by_permission }] }
 
       let(:params) do
         ActionController::Parameters.new(search: { permission_equals: 'create_division' })
