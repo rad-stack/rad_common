@@ -199,7 +199,6 @@ RSpec.describe RadCommon::Search, type: :service do
 
     let(:query) { User }
     let!(:user_1) { create :user }
-    let(:filters) { [{ column: :id, type: RadCommon::EqualsFilter, data_type: :integer }] }
 
     let(:params) do
       ActionController::Parameters.new(search: { id_equals: user_1.id })
@@ -209,6 +208,19 @@ RSpec.describe RadCommon::Search, type: :service do
 
     it 'shows correct results' do
       expect(search.results.count).to eq 1
+    end
+
+    context 'with a scope' do
+      let(:filters) { [{ column: :permission, type: RadCommon::EqualsFilter, data_type: :string, scope: :by_permission }] }
+
+      let(:params) do
+        ActionController::Parameters.new(search: { permission_equals: 'create_division' })
+      end
+
+      it 'shows correct results' do
+        User.first.security_roles.first.update!(create_division: true)
+        expect(search.results.count).to eq 1
+      end
     end
   end
 
