@@ -1,1 +1,3 @@
-= f.input filter.equals_input, input_html: { value: search.search_params[filter.equals_input] }, as: filter.data_type
+= f.input filter.equals_input, label: filter.input_label,
+  input_html: { value: search.search_params[filter.equals_input] },
+  as: filter.data_type, required: false

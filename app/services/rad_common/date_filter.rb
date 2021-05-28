@@ -14,11 +14,12 @@ module RadCommon
     #   in a custom fashion and we skip applying the filter.
     # @param [Date optional] default_start_value default start at value for the date filter
     # @param [Date optional] default_end_value default end at value for the date filter
+    # @param [Symbol] scope the name of an active record scope to be used for the filter on the corresponding model
     #
     # @example
     #   { column: :created_at, type: RadCommon::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
     def initialize(column:, start_input_label: nil, end_input_label: nil, custom: false,
-                   default_start_value: nil, default_end_value: nil)
+                   default_start_value: nil, default_end_value: nil, scope: nil)
       @column = column
       @start_input_label = start_input_label
       @end_input_label = end_input_label
@@ -26,6 +27,7 @@ module RadCommon
       @default_end_value = default_end_value
       @custom = custom
       @errors = []
+      @scope = scope
     end
 
     def filter_view
@@ -57,12 +59,15 @@ module RadCommon
 
       start_at = start_at_value(params)
       end_at = end_at_value(params)
-
       start_at = start_at.beginning_of_day if start_at && datetime_column?(results)
       end_at = end_at.end_of_day if end_at && datetime_column?(results)
 
-      results = results.where("#{query_column(results)} >= ?", start_at) if start_at.present?
-      results = results.where("#{query_column(results)} <= ?", end_at) if end_at.present?
+      if @scope
+        results = results.send(@scope, start_at, end_at) if start_at.present? && end_at.present?
+      else
+        results = results.where("#{query_column(results)} >= ?", start_at) if start_at.present?
+        results = results.where("#{query_column(results)} <= ?", end_at) if end_at.present?
+      end
       results
     end
 

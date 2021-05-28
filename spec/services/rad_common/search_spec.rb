@@ -47,6 +47,26 @@ RSpec.describe RadCommon::Search, type: :service do
       end
     end
 
+    context 'when using a date filter scope' do
+      let(:query) { Attorney }
+      let(:attorney_1) { create :attorney, created_at: 2.days.ago }
+      let(:attorney_2) { create :attorney, created_at: 3.days.from_now }
+      let!(:attorney_3) { create :attorney, created_at: DateTime.current.end_of_day }
+      let!(:attorney_4) { create :attorney, created_at: 2.days.ago }
+      let(:filters) { [{ column: :created_at, type: RadCommon::DateFilter, scope: :created_between }] }
+      let(:params) do
+        ActionController::Parameters.new(search: { created_at_start: 3.days.ago.strftime('%Y-%m-%d'),
+                                                   created_at_end: DateTime.current.strftime('%Y-%m-%d') })
+      end
+
+      it 'filters results' do
+        expect(search).to include attorney_1
+        expect(search).to include attorney_3
+        expect(search).to include attorney_4
+        expect(search).not_to include attorney_2
+      end
+    end
+
     context 'when using a joins date filter' do
       let(:query) { SystemMessage.joins(:user) }
       let!(:message_1) { create :system_message, :email, user: create(:user, created_at: 1.day.ago) }
@@ -209,6 +229,24 @@ RSpec.describe RadCommon::Search, type: :service do
 
     it 'shows correct results' do
       expect(search.results.count).to eq 1
+    end
+
+    context 'with a scope' do
+      let(:filters) do
+        [{ column: :permission,
+           type: RadCommon::EqualsFilter,
+           data_type: :string,
+           scope: :by_permission }]
+      end
+
+      let(:params) do
+        ActionController::Parameters.new(search: { permission_equals: 'create_division' })
+      end
+
+      it 'shows correct results' do
+        User.first.security_roles.first.update!(create_division: true)
+        expect(search.results.count).to eq 1
+      end
     end
   end
 
