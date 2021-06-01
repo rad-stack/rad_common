@@ -77,6 +77,7 @@ Metrics/BlockLength:
     - 'spec/rails_helper.rb'
     - 'config/initializers/rad_common.rb'
     - 'spec/dummy/config/initializers/rad_common.rb'
+    - 'db/seeds.rb'
 
 # The guiding principle of classes is SRP, SRP can't be accurately measured by LoC
 Metrics/ClassLength:
