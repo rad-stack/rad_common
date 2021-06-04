@@ -171,30 +171,30 @@ class CardPresenter
 
     actions += external_actions
 
-    if action_name == 'edit' || action_name == 'update' || action_name == 'show'
-      if !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass).new?
-        actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"),
-                                           new_url,
-                                           class: 'btn btn-success btn-sm',
-                                           id: "new_#{downcased_object_class}_link"))
-      end
+    if (action_name == 'edit' || action_name == 'update' || action_name == 'show') &&
+       !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass).new?
+
+      actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"),
+                                         new_url,
+                                         class: 'btn btn-success btn-sm',
+                                         id: "new_#{downcased_object_class}_link"))
     end
 
-    if !no_index_button && %w[show edit update new create].include?(action_name)
-      if current_user && Pundit.policy!(current_user, check_policy_klass).index?
-        actions.push(@view_context.link_to(@view_context.icon(:list, "View #{object_label_plural}"),
-                                           index_path,
-                                           class: 'btn btn-secondary btn-sm'))
-      end
+    if !no_index_button && %w[show edit update new create].include?(action_name) && current_user &&
+       Pundit.policy!(current_user, check_policy_klass).index?
+
+      actions.push(@view_context.link_to(@view_context.icon(:list, "View #{object_label_plural}"),
+                                         index_path,
+                                         class: 'btn btn-secondary btn-sm'))
     end
 
-    if action_name == 'index'
-      if !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass).new?
-        actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"),
-                                           new_url,
-                                           class: 'btn btn-success btn-sm',
-                                           id: "new_#{downcased_object_class}_link"))
-      end
+    if action_name == 'index' && !no_new_button && current_user &&
+       Pundit.policy!(current_user, check_policy_klass).new?
+
+      actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"),
+                                         new_url,
+                                         class: 'btn btn-success btn-sm',
+                                         id: "new_#{downcased_object_class}_link"))
     end
 
     actions + additional_external_actions

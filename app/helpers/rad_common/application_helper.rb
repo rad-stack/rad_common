@@ -143,6 +143,10 @@ module RadCommon
       end
     end
 
+    def verify_sign_up
+      raise RadicallyIntermittentException if RadCommon.disable_sign_up
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)

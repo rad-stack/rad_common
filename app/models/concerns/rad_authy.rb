@@ -14,21 +14,22 @@ module RadAuthy
   private
 
     def validate_authy
-      if authy_enabled
-        if RadCommon.authy_user_opt_in && mobile_phone.blank?
-          errors.add(:mobile_phone, 'is required two factor authentication')
-          return
-        end
-
-        if authy_id.present? && mobile_phone.present?
-          # ok
-        elsif authy_id.blank? && mobile_phone.blank?
-          # ok
-        else
-          errors.add(:base, 'user is not valid for two factor authentication')
-        end
-      else
+      unless authy_enabled
         errors.add(:base, 'user is not valid for two factor authentication') if authy_id.present?
+        return
+      end
+
+      if RadCommon.authy_user_opt_in && mobile_phone.blank?
+        errors.add(:mobile_phone, 'is required two factor authentication')
+        return
+      end
+
+      if authy_id.present? && mobile_phone.present?
+        # ok
+      elsif authy_id.blank? && mobile_phone.blank?
+        # ok
+      else
+        errors.add(:base, 'user is not valid for two factor authentication')
       end
     end
 
@@ -60,12 +61,10 @@ module RadAuthy
 
       if response.ok?
         self.authy_id = response.id
+      elsif response.respond_to?(:message)
+        errors.add(:base, "Could not register authy user: #{response.message}")
       else
-        if response.respond_to?(:message)
-          errors.add(:base, "Could not register authy user: #{response.message}")
-        else
-          errors.add(:base, "Could not register authy user: #{response.errors}")
-        end
+        errors.add(:base, "Could not register authy user: #{response.errors}")
       end
     end
 end

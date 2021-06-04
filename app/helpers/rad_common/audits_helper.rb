@@ -48,7 +48,7 @@ module RadCommon
     def audits_title(audits, show_search, resource)
       return "Audits (#{audits.total_count})" if show_search
 
-      "Audits for #{audit_model_link(nil, resource)}".html_safe + " (#{audits.total_count})"
+      safe_join(['Audits for ', audit_model_link(nil, resource), " (#{audits.total_count})"])
     end
 
     def audit_model_link(audit, record)
