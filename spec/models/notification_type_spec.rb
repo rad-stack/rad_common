@@ -8,7 +8,7 @@ RSpec.describe NotificationType, type: :model do
 
   before { notification_type.payload = notification_payload }
 
-  describe 'notify_user_ids_opted with absolute_user' do
+  describe 'notify_user_ids_opted with absolute_users' do
     subject(:result) { notification_type.send(:notify_user_ids_opted, notification_method) }
 
     it { is_expected.to eq [user.id] }
@@ -22,7 +22,7 @@ RSpec.describe NotificationType, type: :model do
     context 'with inactive user' do
       before { user.update! user_status: UserStatus.default_inactive_status }
 
-      it { expect { result }.to raise_error 'absolute user must be active' }
+      it { expect { result }.to raise_error 'absolute users must be active' }
     end
 
     context 'when email is turned off' do
