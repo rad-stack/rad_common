@@ -1,7 +1,7 @@
 :ruby
   show_roles = true if local_assigns[:show_roles].nil?
   show_actions = true if local_assigns[:show_actions].nil?
-  show_actions = show_actions && show_actions?(User)
+  show_actions &&= show_actions?(User)
   sort_columns = false if local_assigns[:sort_columns].nil?
   page_param_name = :page if local_assigns[:page_param_name].nil?
 
