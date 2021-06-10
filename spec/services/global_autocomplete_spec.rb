@@ -11,6 +11,16 @@ RSpec.describe GlobalAutocomplete, type: :service do
   let(:params) { ActionController::Parameters.new }
   let(:auto_complete) { described_class.new(params, search_scopes, user) }
 
+  describe '#intialize' do
+    let(:params) { ActionController::Parameters.new(term: division.name, global_search_scope: 'foo') }
+
+    context 'with invalid scope' do
+      it 'raises an exception' do
+        expect(&method(:auto_complete)).to raise_exception
+      end
+    end
+  end
+
   describe '#global_autocomplete_result' do
     context 'when searching users' do
       before { allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true) }
