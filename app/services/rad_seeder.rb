@@ -29,9 +29,6 @@ class RadSeeder
     def seed_users
       return unless (Rails.env.development? || Company.staging?) && User.count.zero?
 
-      # TODO: is this needed?
-      # User.skip_callback(:save, :after, :notify_user_approved, raise: false)
-
       display_log 'seeding users'
 
       seeded_user_config.each do |seeded_user|
