@@ -38,6 +38,8 @@ class RadSeeder
                        last_name: seeded_user[:last_name],
                        security_roles: user_security_roles(seeded_user) }
 
+        attributes = attributes.merge(mobile_phone: seeded_user[:mobile_phone]) if seeded_user[:mobile_phone].present?
+
         if seeded_user[:trait].present?
           FactoryBot.create seeded_user[:factory], seeded_user[:trait], attributes
         else
