@@ -1,0 +1,32 @@
+[
+  {
+    "factory": "admin",
+    "email": "admin@example.com",
+    "first_name": "Test",
+    "last_name": "Admin",
+    "security_role": "Admin"
+  },
+  {
+    "factory": "user",
+    "email": "user@example.com",
+    "first_name": "Test",
+    "last_name": "User",
+    "security_role": "User"
+  },
+  {
+    "factory": "user",
+    "trait": "external",
+    "email": "admin@abc.com",
+    "first_name": "Portal",
+    "last_name": "Admin",
+    "security_role": "Portal Admin"
+  },
+  {
+    "factory": "user",
+    "trait": "external",
+    "email": "user@abc.com",
+    "first_name": "Portal",
+    "last_name": "User",
+    "security_role": "Portal User"
+  }
+]
