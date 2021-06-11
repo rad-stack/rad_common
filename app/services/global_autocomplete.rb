@@ -8,6 +8,7 @@ class GlobalAutocomplete
     @params = params
     @search_scopes = search_scopes
     @current_scope = selected_scope
+    validate_global_search_scope
     @user = user
   end
 
@@ -104,6 +105,12 @@ class GlobalAutocomplete
 
     def scope_name
       params[:global_search_scope].presence || search_scopes.first[:name]
+    end
+
+    def validate_global_search_scope
+      return if params[:global_search_scope].blank?
+
+      raise "Invalid global scope #{params[:global_search_scope]}" if selected_scope.blank?
     end
 
     def selected_scope

@@ -153,8 +153,8 @@ RSpec.describe GlobalAutocomplete, type: :service do
     context 'when invalid global_search_scope param' do
       let(:params) { ActionController::Parameters.new(term: term, global_search_scope: 'foobar') }
 
-      it 'returns empty array' do
-        expect(auto_complete.send(:autocomplete_result, scope)).to eq([])
+      it 'raises an exception' do
+        expect(&method(:auto_complete)).to raise_exception
       end
     end
 
