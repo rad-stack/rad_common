@@ -113,21 +113,21 @@ class NotificationType < ApplicationRecord
   end
 
   def auth_mode_name
-    security_roles? ? 'Security Roles' : 'Absolute User'
+    security_roles? ? 'Security Roles' : 'Absolute Users'
   end
 
   def security_roles?
     auth_mode == :security_roles
   end
 
-  def absolute_user?
-    auth_mode == :absolute_user
+  def absolute_users?
+    auth_mode == :absolute_users
   end
 
   private
 
     def validate_auth
-      errors.add(:base, 'invalid with security roles') if absolute_user? && security_roles.present?
+      errors.add(:base, 'invalid with security roles') if absolute_users? && security_roles.present?
       errors.add(:base, 'invalid without security roles') if security_roles? && security_roles.blank?
     end
 
@@ -184,10 +184,8 @@ class NotificationType < ApplicationRecord
       if security_roles?
         users = permitted_users
       else
-        user = User.find(absolute_user_id)
-        raise 'absolute user must be active' unless user.active
-
-        users = User.where(id: user.id)
+        users = User.where(id: absolute_user_ids)
+        raise 'absolute users must be active' unless users.size == users.active.size
       end
 
       user_ids = users.where
