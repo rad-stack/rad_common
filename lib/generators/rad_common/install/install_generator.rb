@@ -23,7 +23,7 @@ module RadCommon
         # misc
         template '../../../../../spec/dummy/Procfile', 'Procfile'
         template '../../../../../spec/dummy/.env.example', '.env.example'
-        template '../../../../../spec/dummy/package.json', 'packages.json'
+        template '../../../../../spec/dummy/package.json', 'package.json'
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
