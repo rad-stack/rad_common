@@ -20,11 +20,10 @@ module RadCommon
         search_and_replace 'before { login_as(admin, scope: :user) }',
                            'before { login_as admin, scope: :user }'
 
-        # procfile
+        # misc
         template '../../../../../spec/dummy/Procfile', 'Procfile'
-
-        # .env.example
         template '../../../../../spec/dummy/.env.example', '.env.example'
+        template '../../../../../spec/dummy/packages.json', 'packages.json'
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'

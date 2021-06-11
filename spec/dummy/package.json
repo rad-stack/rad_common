@@ -14,6 +14,9 @@
     "ssri": "^8.0.1",
     "postcss": "^8.2.10",
     "dns-packet": "^5.2.2",
-    "ws": "^7.4.6"
+    "ws": "^7.4.6",
+    "glob-parent": "^5.1.2",
+    "normalize-url": "^4.5.1",
+    "trim-newlines": "^3.0.1"
   }
 }
