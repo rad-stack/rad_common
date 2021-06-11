@@ -14,11 +14,15 @@ class RadicalTwilio
   end
 
   def self.twilio_enabled?
-    if ENV['TWILIO_ACCOUNT_SID'].blank? && ENV['TWILIO_AUTH_TOKEN'].blank? && ENV['TWILIO_PHONE_NUMBER'].blank?
+    if ENV['TWILIO_ACCOUNT_SID'].blank? && ENV['TWILIO_AUTH_TOKEN'].blank? &&
+       Rails.application.credentials.twilio[:phone_number].blank?
+
       return false
     end
 
-    if ENV['TWILIO_ACCOUNT_SID'].present? && ENV['TWILIO_AUTH_TOKEN'].present? && ENV['TWILIO_PHONE_NUMBER'].present?
+    if ENV['TWILIO_ACCOUNT_SID'].present? && ENV['TWILIO_AUTH_TOKEN'].present? &&
+       Rails.application.credentials.twilio[:phone_number].present?
+
       return true
     end
 
@@ -26,7 +30,7 @@ class RadicalTwilio
   end
 
   def from_number
-    ENV.fetch('TWILIO_PHONE_NUMBER')
+    Rails.application.credentials.twilio[:phone_number]
   end
 
   def from_number_mms
