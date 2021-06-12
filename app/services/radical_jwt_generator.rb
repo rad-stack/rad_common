@@ -18,7 +18,7 @@ class RadicalJwtGenerator
     end
 
     def secret
-      ENV.fetch('RADICAL_JWT_SECRET')
+      Rails.application.credentials.jwt_secret
     end
 
     def expires_at

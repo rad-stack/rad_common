@@ -2,7 +2,7 @@ module RadCommon
   module UsersHelper
     def user_show_data(user)
       items = %i[email mobile_phone user_status timezone sign_in_count invitation_accepted_at invited_by]
-      items.push(:authy_id) if ENV['AUTHY_API_KEY'].present?
+      items.push(:authy_id) if Rails.application.credentials.authy_api_key.present?
       items += %i[current_sign_in_ip current_sign_in_at confirmed_at confirmation_sent_at unconfirmed_email]
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
 

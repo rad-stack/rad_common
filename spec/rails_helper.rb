@@ -50,7 +50,7 @@ VCR.configure do |c|
     ENV.fetch('TEST_PHONE_NUMBER').gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
   end
 
-  c.filter_sensitive_data('<AUTHY_API_KEY>') { ENV.fetch('AUTHY_API_KEY') }
+  c.filter_sensitive_data('<AUTHY_API_KEY>') { Rails.application.credentials.authy_api_key }
 end
 
 RSpec.configure do |c|

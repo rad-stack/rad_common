@@ -34,7 +34,9 @@ module RadAuthy
     end
 
     def maybe_update_authy
-      return unless ENV['AUTHY_API_KEY'].present? && (authy_enabled_changed? || mobile_phone_changed?)
+      unless Rails.application.credentials.authy_api_key.present? && (authy_enabled_changed? || mobile_phone_changed?)
+        return
+      end
 
       # delete the authy user if it exists
       if authy_id.present?

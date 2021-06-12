@@ -6,7 +6,7 @@ module Hashable
   end
 
   def self.hashids
-    Hashids.new(ENV.fetch('HASH_KEY'), 6, ENV.fetch('HASH_ALPHABET'))
+    Hashids.new(Rails.application.credentials.hash_key, 6, Rails.application.credentials.hash_alphabet)
   end
 
   class_methods do

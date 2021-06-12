@@ -1,6 +1,6 @@
 class RadicalSendGrid
   def self.send_grid_enabled?
-    ENV['SENDGRID_API_KEY'].present?
+    Rails.application.credentials.sendgrid[:api_key].present?
   end
 
   def validate_email(email)
@@ -26,6 +26,6 @@ class RadicalSendGrid
   private
 
     def client
-      SendGrid::API.new(api_key: ENV.fetch('SENDGRID_API_KEY')).client
+      SendGrid::API.new(api_key: Rails.application.credentials.sendgrid[:api_key]).client
     end
 end
