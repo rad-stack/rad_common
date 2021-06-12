@@ -108,7 +108,7 @@ Rails.application.configure do
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
-  Rails.application.routes.default_url_options[:host] = RadCommon::AppInfo.new.host_name
+  Rails.application.routes.default_url_options[:host] = Rails.configuration.rad_common[:host_name]
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true

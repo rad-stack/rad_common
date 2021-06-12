@@ -1,0 +1,30 @@
+default: &default
+  host_name: localhost:3000
+
+  # Enables/Disables user avatars being uploaded and displayed in the application
+  use_avatar: true
+
+  # Does not allow users to manually sign up
+  disable_sign_up: false
+
+  # Allows users to be marked as external/client users, adjusts user filtering and seeds to account for this
+  external_users: true
+
+  # When two-factor authentication is enabled, allow users to opt in or out voluntarily
+  authy_user_opt_in: true
+
+  # Only includes company name in email header if app logo does not include name
+  app_logo_includes_name: true
+
+  # Set to namespace for portal users. This is needed to control authentication.
+  portal_namespace:
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+  host_name: <%= ENV['HOST_NAME'] %>

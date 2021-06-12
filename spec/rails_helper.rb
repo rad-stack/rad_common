@@ -39,15 +39,15 @@ VCR.configure do |c|
   c.hook_into :webmock
   c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com'
 
-  c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { ENV.fetch('TEST_MOBILE_PHONE') }
-  c.filter_sensitive_data('<TEST_PHONE_NUMBER>') { ENV.fetch('TEST_PHONE_NUMBER') }
+  c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { Rails.application.credentials.test_mobile_phone }
+  c.filter_sensitive_data('<TEST_PHONE_NUMBER>') { Rails.application.credentials.test_phone_number }
 
   c.filter_sensitive_data('<TEST_MOBILE_PHONE_STRIPPED>') do
-    ENV.fetch('TEST_MOBILE_PHONE').gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
+    Rails.application.credentials.test_mobile_phone.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
   end
 
   c.filter_sensitive_data('<TEST_PHONE_NUMBER_STRIPPED>') do
-    ENV.fetch('TEST_PHONE_NUMBER').gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
+    Rails.application.credentials.test_phone_number.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
   end
 
   c.filter_sensitive_data('<AUTHY_API_KEY>') { Rails.application.credentials.authy_api_key }

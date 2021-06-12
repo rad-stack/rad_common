@@ -10,7 +10,7 @@ end
 
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 
-if ENV.fetch('STAGING') == 'true'
+if Rails.configuration.rad_common[:staging]
   class ChangeStagingEmailSubject
     def self.delivering_email(mail)
       mail.subject = "[STAGING] #{mail.subject}"
@@ -29,8 +29,6 @@ end
 Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
 end
-
-Rails.configuration.app_admin_email = ENV.fetch('APP_ADMIN_EMAIL')
 
 AuthTrail.geocode = false
 

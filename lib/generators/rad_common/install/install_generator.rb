@@ -22,7 +22,6 @@ module RadCommon
 
         # misc
         template '../../../../../spec/dummy/Procfile', 'Procfile'
-        template '../../../../../spec/dummy/.env.example', '.env.example'
         template '../../../../../spec/dummy/package.json', 'package.json'
 
         # code style config
@@ -31,7 +30,6 @@ module RadCommon
         copy_file '../../../../../.rubocop.yml', '.rubocop.yml'
 
         # initializers
-        template 'rad_common.rb', 'config/initializers/rad_common.rb'
         template '../../../../../spec/dummy/config/initializers/raven.rb', 'config/initializers/raven.rb'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 

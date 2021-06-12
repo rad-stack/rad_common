@@ -75,8 +75,6 @@ Metrics/BlockLength:
     - 'spec/dummy/config/routes.rb'
     - 'spec/factories/**/*.rb'
     - 'spec/rails_helper.rb'
-    - 'config/initializers/rad_common.rb'
-    - 'spec/dummy/config/initializers/rad_common.rb'
     - 'db/seeds.rb'
 
 # The guiding principle of classes is SRP, SRP can't be accurately measured by LoC
@@ -160,10 +158,6 @@ Style/ParenthesesAroundCondition:
 # Fail is an alias of raise. Avoid aliases, it's more cognitive load for no gain.
 Style/SignalException:
   EnforcedStyle: only_raise
-
-Style/ClassVars:
-  Exclude:
-    - 'lib/rad_common.rb'
 
 RSpec/ExampleLength:
   Enabled: false

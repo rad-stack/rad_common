@@ -1,7 +1,7 @@
 .card
   = render 'layouts/card_header'
   .card-body
-    - if RadCommon.external_users
+    - if Rails.configuration.rad_common[:external_users]
       = render 'layouts/show_data_columns', data: [:external], resource: @security_role
     .row
       .col-lg-6

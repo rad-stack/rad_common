@@ -51,7 +51,7 @@ module RadSecurityRole
       seed_admin
       seed_user
 
-      return true unless RadCommon.external_users
+      return true unless Rails.configuration.rad_common[:external_users]
 
       seed_portal_admin
       seed_portal_user

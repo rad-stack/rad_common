@@ -5,7 +5,7 @@ FactoryBot.define do
     transient do
       phone_number do
         if RadicalTwilio.twilio_enabled?
-          ENV.fetch('TEST_PHONE_NUMBER')
+          Rails.application.credentials.test_phone_number
         else
           Faker::PhoneNumber.phone_number
         end
@@ -15,7 +15,7 @@ FactoryBot.define do
     trait :mobile do
       phone_number do
         if RadicalTwilio.twilio_enabled?
-          ENV.fetch('TEST_MOBILE_PHONE')
+          Rails.application.credentials.test_mobile_phone
         else
           Faker::PhoneNumber.cell_phone
         end

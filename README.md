@@ -10,7 +10,7 @@ This is a common set of features and tools tailored for a standard business web 
 ### User Maintenance
 * RadbearUser concern
 * UsersController
-  * This can be overridden in each application but if all you need is to add additional permitted parameters, you can just add them to the additional_user_params array in the initializer
+  * This can be overridden in each application but if all you need is to add additional permitted parameters, you can just add them to the additional_user_params array in the configuration
 * User Views
 
 ### Date & Time Picker

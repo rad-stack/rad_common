@@ -57,7 +57,7 @@ class SystemUsage
     def calc_usage_items
       @usage_items = []
 
-      RadCommon.system_usage_models.each do |item|
+      Rails.configuration.rad_common[:system_usage_models].each do |item|
         case item.class.to_s
         when 'String'
           klass = item.constantize

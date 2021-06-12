@@ -21,7 +21,7 @@ module RadCommon
     end
 
     def avatar_image(user, size)
-      if RadCommon.use_avatar && user.avatar.attached?
+      if Rails.configuration.rad_common[:use_avatar] && user.avatar.attached?
         image_tag(user.avatar.variant(resize: '50x50'))
       else
         image_tag(gravatar_for(user, size))
@@ -144,7 +144,7 @@ module RadCommon
     end
 
     def verify_sign_up
-      raise RadicallyIntermittentException if RadCommon.disable_sign_up
+      raise RadicallyIntermittentException if Rails.configuration.rad_common[:disable_sign_up]
     end
 
     private

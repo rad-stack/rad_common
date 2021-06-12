@@ -46,7 +46,7 @@ Rails.application.configure do
   # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
 
-  Rails.application.routes.default_url_options[:host] = RadCommon::AppInfo.new.host_name
+  Rails.application.routes.default_url_options[:host] = Rails.configuration.rad_common[:host_name]
 
   config.active_job.queue_adapter = :sidekiq
   require 'sidekiq/testing'
