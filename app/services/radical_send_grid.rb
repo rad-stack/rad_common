@@ -1,6 +1,6 @@
 class RadicalSendGrid
   def self.send_grid_enabled?
-    Rails.application.credentials.sendgrid[:api_key].present?
+    Rails.application.credentials.sendgrid&[:api_key].present?
   end
 
   def validate_email(email)

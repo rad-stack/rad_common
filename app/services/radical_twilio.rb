@@ -14,6 +14,8 @@ class RadicalTwilio
   end
 
   def self.twilio_enabled?
+    return false if Rails.application.credentials.twilio.blank?
+
     if Rails.application.credentials.twilio[:account_sid].blank? &&
        Rails.application.credentials.twilio[:auth_token].blank? &&
        Rails.application.credentials.twilio[:phone_number].blank?
