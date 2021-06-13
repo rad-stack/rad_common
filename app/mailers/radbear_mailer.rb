@@ -145,6 +145,8 @@ class RadbearMailer < ActionMailer::Base
         raise 'This mailer requires app_logo.png to be in both places.'
       end
 
+      raise 'Missing admin email in credentials' if Rails.application.credentials[:admin_email].blank?
+
       @include_yield = true
     end
 
