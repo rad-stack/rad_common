@@ -57,19 +57,15 @@ RSpec.describe EmailAddressValidator, type: :validator do
 
   describe 'send grid', :vcr do
     let(:good_email) { 'support@invest.ally.com' } # just grabbed any ole email address from the web
-    let(:bad_email) { 'support@invest.ally.xyz' }
+    let(:bad_email) { 'support@radicalbear.co' }
     let!(:division) { build :division, invoice_email: email }
 
-    before { allow(RadicalSendGrid).to receive(:send_grid_enabled?).and_return(true) }
-
-    # These tests need to be disabled because only live credentials can be used
-    # To run the tests locally, uncomment the sendgrid credentials in .env.test and run these
-    # Do not commit any changes to git
+    before { allow_any_instance_of(RadicalSendGrid).to receive(:send_grid_enabled?).and_return true }
 
     context 'with valid email' do
       let(:email) { good_email }
 
-      xit 'is valid' do
+      it 'is valid' do
         expect(division.valid?).to eq(true)
       end
     end
@@ -78,7 +74,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
       let(:email) { bad_email }
       let(:error_message) { 'Invoice email does not appear to be a valid email address' }
 
-      xit 'is invalid' do
+      it 'is invalid' do
         expect(division.valid?).to eq(false)
         expect(division.errors.full_messages.first).to eq(error_message)
       end
@@ -89,7 +85,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
           division.additional_info = "bad email grandfathered in, that's fine bro, let it go"
         end
 
-        xit 'is valid' do
+        it 'is valid' do
           expect(division.valid?).to eq(true)
         end
       end

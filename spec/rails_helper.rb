@@ -51,6 +51,8 @@ VCR.configure do |c|
   end
 
   c.filter_sensitive_data('<AUTHY_API_KEY>') { Rails.application.credentials.authy_api_key }
+
+  c.filter_sensitive_data('<SENDGRID_API_KEY>') { Rails.application.credentials.sendgrid[:api_key] }
 end
 
 RSpec.configure do |c|
@@ -124,8 +126,8 @@ RSpec.configure do |config|
 
     Timecop.safe_mode = true
 
-    allow(RadicalTwilio).to receive(:twilio_enabled?).and_return(false)
-    allow(RadicalSendGrid).to receive(:send_grid_enabled?).and_return(false)
+    allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return false
+    allow_any_instance_of(RadicalSendGrid).to receive(:send_grid_enabled?).and_return false
 
     allow(Company).to receive(:main).and_return(create(:company))
 

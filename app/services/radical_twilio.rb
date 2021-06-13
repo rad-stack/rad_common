@@ -13,19 +13,19 @@ class RadicalTwilio
     client.calls.create(from: from_number, to: to, url: URI.encode(url))
   end
 
-  def self.twilio_enabled?
-    return false if Rails.application.credentials.twilio.blank?
+  def twilio_enabled?
+    return false if credentials_root.blank?
 
-    if Rails.application.credentials.twilio[:account_sid].blank? &&
-       Rails.application.credentials.twilio[:auth_token].blank? &&
-       Rails.application.credentials.twilio[:phone_number].blank?
+    if credentials_root[:account_sid].blank? &&
+       credentials_root[:auth_token].blank? &&
+       credentials_root[:phone_number].blank?
 
       return false
     end
 
-    if Rails.application.credentials.twilio[:account_sid].present? &&
-       Rails.application.credentials.twilio[:auth_token].present? &&
-       Rails.application.credentials.twilio[:phone_number].present?
+    if credentials_root[:account_sid].present? &&
+       credentials_root[:auth_token].present? &&
+       credentials_root[:phone_number].present?
 
       return true
     end
@@ -34,15 +34,15 @@ class RadicalTwilio
   end
 
   def from_number
-    Rails.application.credentials.twilio[:phone_number]
+    credentials_root[:phone_number]
   end
 
   def from_number_mms
-    Rails.application.credentials.twilio[:mms_phone_number]
+    credentials_root[:mms_phone_number]
   end
 
   def validate_phone_number(phone_number, mobile)
-    return unless RadicalTwilio.twilio_enabled?
+    return unless twilio_enabled?
 
     # twilio phone number validations that check whether valid mobile # cost half a penny per request
 
@@ -61,9 +61,16 @@ class RadicalTwilio
 
   private
 
+    def credentials_root
+      test_with_live_credentials? ? Rails.application.credentials.twilio[:live] : Rails.application.credentials.twilio
+    end
+
+    def test_with_live_credentials?
+      false
+    end
+
     def client
-      Twilio::REST::Client.new(Rails.application.credentials.twilio[:account_sid],
-                               Rails.application.credentials.twilio[:auth_token])
+      Twilio::REST::Client.new(credentials_root[:account_sid], credentials_root[:auth_token])
     end
 
     def full_body(message)
@@ -78,8 +85,7 @@ class RadicalTwilio
     end
 
     def lookup_number(number, type = nil)
-      lookup_client = Twilio::REST::Client.new(Rails.application.credentials.twilio[:account_sid],
-                                               Rails.application.credentials.twilio[:auth_token])
+      lookup_client = Twilio::REST::Client.new(credentials_root[:account_sid], credentials_root[:auth_token])
 
       RadicalRetry.perform_request(retry_count: 2) do
         if type
