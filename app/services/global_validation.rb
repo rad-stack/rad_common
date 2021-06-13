@@ -126,6 +126,7 @@ class GlobalValidation
     end
 
     def took_too_long?
-      @run_stats.sum { |item| item[:run_seconds] } > Rails.configuration.rad_common[:global_validity_timeout_hours].hours
+      @run_stats.sum { |item| item[:run_seconds] } >
+        Rails.configuration.rad_common[:global_validity_timeout_hours].hours
     end
 end
