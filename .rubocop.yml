@@ -75,7 +75,6 @@ Metrics/BlockLength:
     - 'spec/dummy/config/routes.rb'
     - 'spec/factories/**/*.rb'
     - 'spec/rails_helper.rb'
-    - 'db/seeds.rb'
 
 # The guiding principle of classes is SRP, SRP can't be accurately measured by LoC
 Metrics/ClassLength:
@@ -90,8 +89,6 @@ Metrics/MethodLength:
 
 Metrics/ParameterLists:
   Max: 6
-  Exclude:
-    - 'db/seeds.rb'
 
 # This is unnecessary. Calling the argument `other` in all cases makes no sense
 Naming/BinaryOperatorParameterName:
@@ -104,12 +101,10 @@ Naming/VariableNumber:
 Rails:
   Enabled: true
 
-# allows the use of 'puts' instead of the logger on the seeds file only, and requires the logger for the
-# rest of the project
 Rails/Output:
   Enabled: true
   Exclude:
-    - 'db/seeds.rb'
+    - 'app/services/rad_seeder.rb'
 
 # This cop checks for the use of methods which skip validations which are listed in guides.rubyonrails.org/active_record_validations.html#skipping-validations
 Rails/SkipsModelValidations:

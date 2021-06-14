@@ -301,7 +301,9 @@ describe User, type: :model do
 
     it 'returns a failure message if authy doesnt update' do
       if Rails.configuration.rad_common.authy_enabled
-        allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: false, message: 'mocked message'))
+        result = double(:response, ok?: false, message: 'mocked message')
+
+        allow(Authy::API).to receive(:register_user).and_return(result)
 
         user.authy_enabled = true
         user.mobile_phone = new_phone_number
@@ -311,11 +313,9 @@ describe User, type: :model do
     end
 
     it 'deletes authy user if mobile phone wiped out' do
-      if Rails.configuration.rad_common.authy_enabled
-        unless mobile_phone_required?
-          user.update!(authy_enabled: false, mobile_phone: nil)
-          expect(user.reload.authy_id).to be_blank
-        end
+      if Rails.configuration.rad_common.authy_enabled && !mobile_phone_required?
+        user.update!(authy_enabled: false, mobile_phone: nil)
+        expect(user.reload.authy_id).to be_blank
       end
     end
 
