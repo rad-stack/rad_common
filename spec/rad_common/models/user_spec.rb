@@ -290,46 +290,58 @@ describe User, type: :model do
     let(:role_2) { admin_role }
 
     it 'creates and updates the user on authy' do
-      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+      if Rails.configuration.rad_common.authy_enabled
+        allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
 
-      expect(user.authy_id).to be_nil
-      user.update!(authy_enabled: true)
-      expect(user.authy_id).to eq authy_id
+        expect(user.authy_id).to be_nil
+        user.update!(authy_enabled: true)
+        expect(user.authy_id).to eq authy_id
+      end
     end
 
     it 'returns a failure message if authy doesnt update' do
-      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: false, message: 'mocked message'))
+      if Rails.configuration.rad_common.authy_enabled
+        allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: false, message: 'mocked message'))
 
-      user.authy_enabled = true
-      user.mobile_phone = new_phone_number
-      user.save
-      expect(user.errors.full_messages.to_s).to include('Could not register authy user')
+        user.authy_enabled = true
+        user.mobile_phone = new_phone_number
+        user.save
+        expect(user.errors.full_messages.to_s).to include('Could not register authy user')
+      end
     end
 
     it 'deletes authy user if mobile phone wiped out' do
-      unless mobile_phone_required?
-        user.update!(authy_enabled: false, mobile_phone: nil)
-        expect(user.reload.authy_id).to be_blank
+      if Rails.configuration.rad_common.authy_enabled
+        unless mobile_phone_required?
+          user.update!(authy_enabled: false, mobile_phone: nil)
+          expect(user.reload.authy_id).to be_blank
+        end
       end
     end
 
     it "doesn't allow invalid email", :vcr do
-      user = build :user, mobile_phone: phone_number, email: 'foo@', authy_enabled: true
-      user.save
-      expect(user.errors.full_messages.to_s).to include('Could not register authy user')
+      if Rails.configuration.rad_common.authy_enabled
+        user = build :user, mobile_phone: phone_number, email: 'foo@', authy_enabled: true
+        user.save
+        expect(user.errors.full_messages.to_s).to include('Could not register authy user')
+      end
     end
 
     it 'updates updated_at datetime when security roles are added' do
-      updated_at = user.updated_at
-      user.update!(security_roles: [role_1, role_2])
-      expect(user.updated_at).not_to eq(updated_at)
+      if Rails.configuration.rad_common.authy_enabled
+        updated_at = user.updated_at
+        user.update!(security_roles: [role_1, role_2])
+        expect(user.updated_at).not_to eq(updated_at)
+      end
     end
 
     it 'updates updated_at datetime when security roles are removed' do
-      user = create :user
-      updated_at = user.updated_at
-      user.update!(security_roles: [role_2])
-      expect(user.updated_at).not_to eq(updated_at)
+      if Rails.configuration.rad_common.authy_enabled
+        user = create :user
+        updated_at = user.updated_at
+        user.update!(security_roles: [role_2])
+        expect(user.updated_at).not_to eq(updated_at)
+      end
     end
   end
 

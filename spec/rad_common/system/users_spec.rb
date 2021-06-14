@@ -400,44 +400,52 @@ describe 'Users', type: :system do
     let(:authy_id) { '1234567' }
 
     before do
-      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
-      user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :mobile))
+      if Rails.configuration.rad_common.authy_enabled
+        allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+        user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :mobile))
+      end
     end
 
     it 'allows user to login with authentication token', :vcr do
-      allow(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
+      if Rails.configuration.rad_common.authy_enabled
+        allow(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
 
-      visit new_user_session_path
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      expect(page).to have_content 'Remember this device for 7 days'
-      fill_in 'authy-token', with: '7721070'
-      click_button 'Verify and Sign in'
-      expect(page).to have_content 'Signed in successfully'
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content 'Remember this device for 7 days'
+        fill_in 'authy-token', with: '7721070'
+        click_button 'Verify and Sign in'
+        expect(page).to have_content 'Signed in successfully'
+      end
     end
 
     it 'does not allow user to login with invalid authy token', :vcr do
-      visit new_user_session_path
+      if Rails.configuration.rad_common.authy_enabled
+        visit new_user_session_path
 
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      fill_in 'authy-token', with: 'Not the authy token'
-      click_button 'Verify and Sign in'
-      expect(page).to have_content('The entered token is invalid')
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        fill_in 'authy-token', with: 'Not the authy token'
+        click_button 'Verify and Sign in'
+        expect(page).to have_content('The entered token is invalid')
+      end
     end
 
     it 'updates authy when updating an accounts mobile phone' do
-      allow(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
-      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+      if Rails.configuration.rad_common.authy_enabled
+        allow(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
+        allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
 
-      login_as(user, scope: :user)
-      visit edit_user_registration_path
-      fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
-      fill_in 'user_current_password', with: password
-      click_button 'Save'
-      expect(page).to have_content('Your account has been updated successfully.')
+        login_as(user, scope: :user)
+        visit edit_user_registration_path
+        fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
+        fill_in 'user_current_password', with: password
+        click_button 'Save'
+        expect(page).to have_content('Your account has been updated successfully.')
+      end
     end
   end
 end

@@ -14,6 +14,9 @@ default: &default
   # Allows users to be marked as external/client users, adjusts user filtering and seeds to account for this
   external_users: true
 
+  # Enable two-factor authentication
+  authy_enabled: true
+
   # When two-factor authentication is enabled, allow users to opt in or out voluntarily
   authy_user_opt_in: true
 
