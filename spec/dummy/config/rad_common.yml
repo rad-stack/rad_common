@@ -1,9 +1,6 @@
 default: &default
   app_name: <%= ENV['APP_NAME'].presence || 'Demo Foo' %>
-
   portal_app_name: <%= ENV['PORTAL_APP_NAME'].presence || 'Foo Portal' %>
-
-  host_name: localhost:3000
 
   # Enables/Disables user avatars being uploaded and displayed in the application
   use_avatar: true
@@ -120,13 +117,11 @@ default: &default
 development:
   <<: *default
 
+  host_name: localhost:3000
+  portal_host_name: portal.localhost:3000
+
 test:
   <<: *default
 
-staging:
-  <<: *default
-  host_name: <%= ENV['HOST_NAME'] %>
-
-production:
-  <<: *default
-  host_name: <%= ENV['HOST_NAME'] %>
+  host_name: localhost:3000
+  portal_host_name: portal.localhost:3000

@@ -14,14 +14,6 @@ Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
 
 Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css rad_common/radbear_mailer_reset.css]
 
-Rails.application.config.rad_common[:portal_host_name] = if !Rails.configuration.rad_common[:external_users]
-                                                           Rails.configuration.rad_common[:host_name]
-                                                         elsif Rails.env.production? || Rails.env.staging?
-                                                           ENV['PORTAL_HOST_NAME']
-                                                         else
-                                                           'portal.localhost:3000'
-                                                         end
-
 Rails.application.routes.default_url_options[:host] = Rails.configuration.rad_common[:host_name]
 
 raise 'Missing admin_email in credentials' if Rails.application.credentials.admin_email.blank?
