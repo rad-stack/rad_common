@@ -123,6 +123,10 @@ development:
 test:
   <<: *default
 
+staging:
+  <<: *default
+  host_name: <%= ENV['HOST_NAME'] %>
+
 production:
   <<: *default
   host_name: <%= ENV['HOST_NAME'] %>
