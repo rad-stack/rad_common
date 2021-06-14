@@ -27,6 +27,9 @@ Rails.application.config.rad_common[:staging] = Rails.env.production? && ENV['ST
 
 Rails.application.routes.default_url_options[:host] = Rails.configuration.rad_common[:host_name]
 
+raise 'Missing admin_email in credentials' if Rails.application.credentials.admin_email.blank?
+raise 'Missing from_email in credentials' if Rails.application.credentials.from_email.blank?
+
 if Rails.configuration.rad_common[:staging]
   class ChangeStagingEmailSubject
     def self.delivering_email(mail)

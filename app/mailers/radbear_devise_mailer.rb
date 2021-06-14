@@ -5,7 +5,7 @@ class RadbearDeviseMailer < Devise::Mailer
   layout 'radbear_mailer'
 
   before_action :set_defaults
-  default reply_to: Rails.application.credentials[:admin_email]
+  default reply_to: Rails.application.credentials.admin_email
 
   def confirmation_instructions(record, token, opts = {})
     @token = token
@@ -101,8 +101,6 @@ class RadbearDeviseMailer < Devise::Mailer
       unless File.exist?('app/assets/images/app_logo.png') == File.exist?('public/app_logo.png')
         raise 'This mailer requires app_logo.png to be in both places.'
       end
-
-      raise 'Missing admin email in credentials' if Rails.application.credentials[:admin_email].blank?
 
       @include_yield = false
     end
