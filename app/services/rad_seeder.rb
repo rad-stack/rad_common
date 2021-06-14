@@ -27,7 +27,7 @@ class RadSeeder
     end
 
     def seed_users
-      return unless (Rails.env.development? || Rails.configuration.rad_common[:staging]) && User.count.zero?
+      return if User.count.positive?
 
       display_log 'seeding users'
 

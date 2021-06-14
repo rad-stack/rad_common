@@ -1,4 +1,4 @@
-if Rails.env.production?
+if Rails.env.production? || Rails.env.staging?
   url = "#{ENV.fetch('REDIS_URL')}/#{ENV.fetch('REDIS_DB')}"
 
   Sidekiq.configure_server do |config|

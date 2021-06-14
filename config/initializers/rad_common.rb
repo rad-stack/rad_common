@@ -16,21 +16,18 @@ Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css r
 
 Rails.application.config.rad_common[:portal_host_name] = if !Rails.configuration.rad_common[:external_users]
                                                            Rails.configuration.rad_common[:host_name]
-                                                         elsif Rails.env.production?
+                                                         elsif Rails.env.production? || Rails.env.staging?
                                                            ENV['PORTAL_HOST_NAME']
                                                          else
                                                            'portal.localhost:3000'
                                                          end
-
-Rails.application.config.rad_common[:staging] = Rails.env.production? && ENV['STAGING'].present? &&
-                                                ENV['STAGING'] == 'true'
 
 Rails.application.routes.default_url_options[:host] = Rails.configuration.rad_common[:host_name]
 
 raise 'Missing admin_email in credentials' if Rails.application.credentials.admin_email.blank?
 raise 'Missing from_email in credentials' if Rails.application.credentials.from_email.blank?
 
-if Rails.configuration.rad_common[:staging]
+if Rails.env.staging?
   class ChangeStagingEmailSubject
     def self.delivering_email(mail)
       mail.subject = "[STAGING] #{mail.subject}"
