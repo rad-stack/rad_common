@@ -29,7 +29,8 @@ module RadCommon
         copy_file '../../../../../.hound.yml', '.hound.yml'
         copy_file '../../../../../.rubocop.yml', '.rubocop.yml'
 
-        # initializers
+        # config
+        template '../../../../../spec/dummy/config/rad_common.yml', 'config/rad_common.yml'
         template '../../../../../spec/dummy/config/initializers/raven.rb', 'config/initializers/raven.rb'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
