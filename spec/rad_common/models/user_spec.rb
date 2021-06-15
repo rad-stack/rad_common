@@ -280,13 +280,29 @@ describe User, type: :model do
     it { is_expected.to eq 'Password Changed' }
   end
 
+  describe 'security roles' do
+    let(:admin_role) { create :security_role, :admin }
+    let(:role_1) { create :security_role }
+    let(:role_2) { admin_role }
+
+    it 'updates updated_at datetime when security roles are added' do
+      updated_at = user.updated_at
+      user.update!(security_roles: [role_1, role_2])
+      expect(user.updated_at).not_to eq(updated_at)
+    end
+
+    it 'updates updated_at datetime when security roles are removed' do
+      user = create :user
+      updated_at = user.updated_at
+      user.update!(security_roles: [role_2])
+      expect(user.updated_at).not_to eq(updated_at)
+    end
+  end
+
   describe 'authy' do
     let(:user) { create :user, mobile_phone: phone_number }
     let(:phone_number) { create :phone_number, :mobile }
     let(:new_phone_number) { create :phone_number, :mobile }
-    let(:admin_role) { create :security_role, :admin }
-    let(:role_1) { create :security_role }
-    let(:role_2) { admin_role }
 
     it 'creates and updates the user on authy', :vcr do
       if Rails.configuration.rad_common.authy_enabled
@@ -321,23 +337,6 @@ describe User, type: :model do
         user = build :user, mobile_phone: phone_number, email: 'foo@', authy_enabled: true
         user.save
         expect(user.errors.full_messages.to_s).to include('Could not register authy user')
-      end
-    end
-
-    it 'updates updated_at datetime when security roles are added' do
-      if Rails.configuration.rad_common.authy_enabled
-        updated_at = user.updated_at
-        user.update!(security_roles: [role_1, role_2])
-        expect(user.updated_at).not_to eq(updated_at)
-      end
-    end
-
-    it 'updates updated_at datetime when security roles are removed' do
-      if Rails.configuration.rad_common.authy_enabled
-        user = create :user
-        updated_at = user.updated_at
-        user.update!(security_roles: [role_2])
-        expect(user.updated_at).not_to eq(updated_at)
       end
     end
   end
