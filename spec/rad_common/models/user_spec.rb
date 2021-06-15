@@ -284,18 +284,15 @@ describe User, type: :model do
     let(:user) { create :user, mobile_phone: phone_number }
     let(:phone_number) { create :phone_number, :mobile }
     let(:new_phone_number) { create :phone_number, :mobile }
-    let(:authy_id) { '1234567' }
     let(:admin_role) { create :security_role, :admin }
     let(:role_1) { create :security_role }
     let(:role_2) { admin_role }
 
-    it 'creates and updates the user on authy' do
+    it 'creates and updates the user on authy', :vcr do
       if Rails.configuration.rad_common.authy_enabled
-        allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
-
         expect(user.authy_id).to be_nil
         user.update!(authy_enabled: true)
-        expect(user.authy_id).to eq authy_id
+        expect(user.authy_id).not_to be_nil
       end
     end
 
