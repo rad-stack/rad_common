@@ -19,6 +19,10 @@ Rails.application.routes.default_url_options[:host] = Rails.configuration.rad_co
 raise 'Missing admin_email in credentials' if Rails.application.credentials.admin_email.blank?
 raise 'Missing from_email in credentials' if Rails.application.credentials.from_email.blank?
 
+if Rails.configuration.rad_common.authy_enabled && Rails.application.credentials.authy_api_key.blank?
+  raise 'Missing authy_api_key in credentials with authy_enabled = true'
+end
+
 if Rails.env.staging?
   class ChangeStagingEmailSubject
     def self.delivering_email(mail)
