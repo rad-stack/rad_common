@@ -164,6 +164,10 @@ Style/SignalException:
 RSpec/ExampleLength:
   Enabled: false
 
+RSpec/FactoryBot/CreateList:
+  Exclude:
+    - 'spec/dummy/app/services/seeder.rb'
+
 RSpec/MultipleExpectations:
   Enabled: false
 

@@ -4,6 +4,7 @@ class Seeder < RadSeeder
 
     if Division.count.zero?
       display_log 'seeding divisions'
+
       30.times { FactoryBot.create :division, owner: users.sample }
     end
 
