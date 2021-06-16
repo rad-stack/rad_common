@@ -14,7 +14,7 @@ module RadCommon
     def message_send_to_options
       options = options_for_enum(SystemMessage, :send_to)
 
-      unless Rails.configuration.rad_common[:external_users]
+      unless Rails.configuration.rad_common.external_users
         options.reject! { |option| option.include?('client_users') }
       end
 

@@ -145,7 +145,7 @@ module RadbearUser
   end
 
   def portal?
-    external? && Rails.configuration.rad_common[:portal_namespace].present?
+    external? && Rails.configuration.rad_common.portal_namespace.present?
   end
 
   def read_notifications!

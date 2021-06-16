@@ -89,9 +89,9 @@ class RadbearDeviseMailer < Devise::Mailer
 
   def default_url_options
     if @resource.internal?
-      { host: Rails.configuration.rad_common[:host_name] }
+      { host: Rails.configuration.rad_common.host_name }
     else
-      { host: Rails.configuration.rad_common[:portal_host_name] }
+      { host: Rails.configuration.rad_common.portal_host_name }
     end
   end
 
@@ -106,6 +106,6 @@ class RadbearDeviseMailer < Devise::Mailer
     end
 
     def app_name
-      @resource.internal? ? Rails.configuration.rad_common[:app_name] : Rails.configuration.rad_common[:portal_app_name]
+      @resource.internal? ? Rails.configuration.rad_common.app_name : Rails.configuration.rad_common.portal_app_name
     end
 end

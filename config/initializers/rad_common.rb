@@ -14,7 +14,7 @@ Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
 
 Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css rad_common/radbear_mailer_reset.css]
 
-Rails.application.routes.default_url_options[:host] = Rails.configuration.rad_common[:host_name]
+Rails.application.routes.default_url_options[:host] = Rails.configuration.rad_common.host_name
 
 raise 'Missing admin_email in credentials' if Rails.application.credentials.admin_email.blank?
 raise 'Missing from_email in credentials' if Rails.application.credentials.from_email.blank?

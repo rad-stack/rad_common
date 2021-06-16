@@ -22,7 +22,7 @@
           %th Status
           - if show_roles
             %th Roles
-          - if Rails.configuration.rad_common[:external_users]
+          - if Rails.configuration.rad_common.external_users
             %th Client?
         - if show_actions
           %th.text-center Actions
@@ -39,7 +39,7 @@
               - user.security_roles.each do |security_role|
                 = secured_link(security_role)
                 %p
-          - if Rails.configuration.rad_common[:external_users]
+          - if Rails.configuration.rad_common.external_users
             %td= format_boolean(user.external?)
           - if show_actions
             %td

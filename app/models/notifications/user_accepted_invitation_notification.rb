@@ -7,7 +7,7 @@ module Notifications
     private
 
       def app_name
-        payload.internal? ? Rails.configuration.rad_common[:app_name] : Rails.configuration.rad_common[:portal_app_name]
+        payload.internal? ? Rails.configuration.rad_common.app_name : Rails.configuration.rad_common.portal_app_name
       end
   end
 end
