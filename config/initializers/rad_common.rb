@@ -23,6 +23,12 @@ if Rails.configuration.rad_common.authy_enabled && Rails.application.credentials
   raise 'Missing authy_api_key in credentials with authy_enabled = true'
 end
 
+if Rails.application.credentials.aws.blank? || Rails.application.credentials.aws[:s_3].blank?
+  # this can be fixed in Rails 6.1 to not have to always have them present
+  # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
+  raise 'Missing AWS S3 credentials'
+end
+
 if Rails.env.staging?
   class ChangeStagingEmailSubject
     def self.delivering_email(mail)
