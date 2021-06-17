@@ -25,7 +25,7 @@ module RadCommon
         template '../../../../../spec/dummy/package.json', 'package.json'
         template '../../../../../spec/dummy/db/seeds.rb', 'db/seeds.rb'
         template '../../../../../spec/dummy/app/services/seeder.rb', 'app/services/seeder.rb'
-        template 'gitignore.txt', '.gitignore'
+        copy_file '../gitignore.txt', '.gitignore'
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
