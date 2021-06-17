@@ -36,10 +36,10 @@ class RadSeeder
                        user_status: user_status,
                        first_name: seeded_user[:first_name],
                        last_name: seeded_user[:last_name],
-                       security_roles: user_security_roles(seeded_user) }
+                       security_roles: user_security_roles(seeded_user),
+                       authy_enabled: Rails.configuration.rad_common.authy_enabled }
 
         attributes = attributes.merge(mobile_phone: seeded_user[:mobile_phone]) if seeded_user[:mobile_phone].present?
-        attributes.merge(authy_enabled: Rails.configuration.rad_common.authy_enabled)
 
         if seeded_user[:trait].present?
           FactoryBot.create seeded_user[:factory], seeded_user[:trait], attributes
