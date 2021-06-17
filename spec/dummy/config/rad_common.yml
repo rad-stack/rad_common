@@ -14,9 +14,6 @@ default: &default
   # Enable two-factor authentication
   authy_enabled: true
 
-  # When two-factor authentication is enabled, allow users to opt in or out voluntarily
-  authy_user_opt_in: true
-
   # Only includes company name in email header if app logo does not include name
   app_logo_includes_name: true
 

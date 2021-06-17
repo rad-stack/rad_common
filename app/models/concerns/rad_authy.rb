@@ -19,11 +19,6 @@ module RadAuthy
         return
       end
 
-      if Rails.configuration.rad_common.authy_user_opt_in && mobile_phone.blank?
-        errors.add(:mobile_phone, 'is required two factor authentication')
-        return
-      end
-
       if authy_id.present? && mobile_phone.present?
         # ok
       elsif authy_id.blank? && mobile_phone.blank?
