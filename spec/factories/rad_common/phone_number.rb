@@ -25,7 +25,7 @@ FactoryBot.define do
     trait :fax do
       phone_number do
         if RadicalTwilio.new.twilio_enabled?
-          ENV.fetch('TEST_FAX_NUMBER')
+          Rails.application.credentials.test_fax_number
         else
           Faker::PhoneNumber.phone_number
         end

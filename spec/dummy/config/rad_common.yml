@@ -1,6 +1,6 @@
 default: &default
-  app_name: <%= ENV['APP_NAME'].presence || 'Demo Foo' %>
-  portal_app_name: <%= ENV['PORTAL_APP_NAME'].presence || 'Foo Portal' %>
+  app_name: Demo Foo
+  portal_app_name: Foo Portal
 
   # Enables/Disables user avatars being uploaded and displayed in the application
   use_avatar: true
