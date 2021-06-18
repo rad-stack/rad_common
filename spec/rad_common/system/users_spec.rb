@@ -42,17 +42,17 @@ describe 'Users', type: :system do
 
     describe 'index' do
       before do
-        external_user.update! user_status: user.user_status if RadCommon.external_users
+        external_user.update! user_status: user.user_status if Rails.configuration.rad_common.external_users
       end
 
       it 'shows users' do
         visit users_path(search: { user_status_id: user.user_status_id })
         expect(page).to have_content user.to_s
-        expect(page).to have_content external_user.to_s if RadCommon.external_users
+        expect(page).to have_content external_user.to_s if Rails.configuration.rad_common.external_users
       end
 
       it 'filters by user type' do
-        if RadCommon.external_users
+        if Rails.configuration.rad_common.external_users
           external_user.update!(user_status: user.user_status)
           visit users_path(search: { user_status_id: user.user_status_id, external: 'external' })
           expect(page).not_to have_content user.email
@@ -77,7 +77,7 @@ describe 'Users', type: :system do
       end
 
       it 'shows client user' do
-        if RadCommon.external_users
+        if Rails.configuration.rad_common.external_users
           visit user_path(external_user)
           expect(page).to have_content admin.first_name
         end
@@ -113,13 +113,13 @@ describe 'Users', type: :system do
 
   describe 'client user' do
     before do
-      login_as(external_user, scope: :user) if RadCommon.external_users
+      login_as(external_user, scope: :user) if Rails.configuration.rad_common.external_users
     end
 
     describe 'show' do
       it 'does not allow' do
-        if RadCommon.external_users
-          if RadCommon.portal_namespace.present?
+        if Rails.configuration.rad_common.external_users
+          if Rails.configuration.rad_common.portal_namespace.present?
             expect { visit user_path(user) }.to raise_error ActionController::RoutingError
           else
             visit user_path(user)
@@ -132,8 +132,8 @@ describe 'Users', type: :system do
 
     describe 'index' do
       it 'does not allow' do
-        if RadCommon.external_users
-          if RadCommon.portal_namespace.present?
+        if Rails.configuration.rad_common.external_users
+          if Rails.configuration.rad_common.portal_namespace.present?
             expect { visit users_path }.to raise_error ActionController::RoutingError
           else
             visit users_path
@@ -147,7 +147,7 @@ describe 'Users', type: :system do
 
   describe 'sign up' do
     it 'signs up', :vcr do
-      unless RadCommon.disable_sign_up
+      unless Rails.configuration.rad_common.disable_sign_up
         visit new_user_registration_path
 
         fill_in 'First name', with: Faker::Name.first_name
@@ -163,7 +163,7 @@ describe 'Users', type: :system do
     end
 
     it "can't sign up with invalid email address" do
-      unless RadCommon.disable_sign_up
+      unless Rails.configuration.rad_common.disable_sign_up
         visit new_user_registration_path
 
         fill_in 'First name', with: Faker::Name.first_name
@@ -400,44 +400,52 @@ describe 'Users', type: :system do
     let(:authy_id) { '1234567' }
 
     before do
-      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
-      user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :mobile))
+      if Rails.configuration.rad_common.authy_enabled
+        allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+        user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :mobile))
+      end
     end
 
     it 'allows user to login with authentication token', :vcr do
-      allow(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
+      if Rails.configuration.rad_common.authy_enabled
+        allow(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
 
-      visit new_user_session_path
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      expect(page).to have_content 'Remember this device for 7 days'
-      fill_in 'authy-token', with: '7721070'
-      click_button 'Verify and Sign in'
-      expect(page).to have_content 'Signed in successfully'
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content 'Remember this device for 7 days'
+        fill_in 'authy-token', with: '7721070'
+        click_button 'Verify and Sign in'
+        expect(page).to have_content 'Signed in successfully'
+      end
     end
 
     it 'does not allow user to login with invalid authy token', :vcr do
-      visit new_user_session_path
+      if Rails.configuration.rad_common.authy_enabled
+        visit new_user_session_path
 
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      fill_in 'authy-token', with: 'Not the authy token'
-      click_button 'Verify and Sign in'
-      expect(page).to have_content('The entered token is invalid')
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        fill_in 'authy-token', with: 'Not the authy token'
+        click_button 'Verify and Sign in'
+        expect(page).to have_content('The entered token is invalid')
+      end
     end
 
     it 'updates authy when updating an accounts mobile phone' do
-      allow(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
-      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+      if Rails.configuration.rad_common.authy_enabled
+        allow(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
+        allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
 
-      login_as(user, scope: :user)
-      visit edit_user_registration_path
-      fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
-      fill_in 'user_current_password', with: password
-      click_button 'Save'
-      expect(page).to have_content('Your account has been updated successfully.')
+        login_as(user, scope: :user)
+        visit edit_user_registration_path
+        fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
+        fill_in 'user_current_password', with: password
+        click_button 'Save'
+        expect(page).to have_content('Your account has been updated successfully.')
+      end
     end
   end
 end

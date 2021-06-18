@@ -10,7 +10,7 @@ This is a common set of features and tools tailored for a standard business web 
 ### User Maintenance
 * RadbearUser concern
 * UsersController
-  * This can be overridden in each application but if all you need is to add additional permitted parameters, you can just add them to the additional_user_params array in the initializer
+  * This can be overridden in each application but if all you need is to add additional permitted parameters, you can just add them to the additional_user_params array in the configuration
 * User Views
 
 ### Date & Time Picker
@@ -118,7 +118,7 @@ With the current version of rspec-rails we are not able to generate system ('fea
 ## Development
 
 ### Configuring
-Add a .env file in `spec/dummy` containing the `AUTHY_API_KEY` that can be obtained by creating an authy app or from another developer
+Get `spec/dummy/config/credentials/test.key` from another developer
 
 ### Running
 `bundle exec rails s`

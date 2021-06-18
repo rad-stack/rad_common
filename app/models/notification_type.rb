@@ -168,12 +168,12 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_sms!
-      return unless sms_enabled? && sms_content && RadicalTwilio.twilio_enabled?
+      return unless sms_enabled? && sms_content && RadicalTwilio.new.twilio_enabled?
 
       id_list = notify_user_ids_opted(:sms)
 
       id_list.each do |user_id|
-        UserSMSSenderJob.perform_later "Message from #{RadCommon::AppInfo.new.app_name}: #{sms_content}",
+        UserSMSSenderJob.perform_later "Message from #{Rails.configuration.rad_common.app_name}: #{sms_content}",
                                        user_id,
                                        user_id,
                                        nil

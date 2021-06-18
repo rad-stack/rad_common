@@ -7,7 +7,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
   let!(:search_user) { create(:user, first_name: 'Alex', last_name: 'Smith') }
   let!(:another_search_user) { create(:user, first_name: 'John', last_name: 'Smith') }
   let!(:division) { create :division }
-  let(:search_scopes) { RadCommon.global_search_scopes }
+  let(:search_scopes) { Rails.configuration.rad_common.global_search_scopes }
   let(:params) { ActionController::Parameters.new }
   let(:auto_complete) { described_class.new(params, search_scopes, user) }
 
@@ -154,7 +154,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       let(:params) { ActionController::Parameters.new(term: term, global_search_scope: 'foobar') }
 
       it 'raises an exception' do
-        expect(&method(:auto_complete)).to raise_exception
+        expect(&method(:auto_complete)).to raise_exception 'Invalid global scope foobar'
       end
     end
 

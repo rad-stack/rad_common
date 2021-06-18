@@ -19,11 +19,6 @@ module RadAuthy
         return
       end
 
-      if RadCommon.authy_user_opt_in && mobile_phone.blank?
-        errors.add(:mobile_phone, 'is required two factor authentication')
-        return
-      end
-
       if authy_id.present? && mobile_phone.present?
         # ok
       elsif authy_id.blank? && mobile_phone.blank?
@@ -34,7 +29,9 @@ module RadAuthy
     end
 
     def maybe_update_authy
-      return unless ENV['AUTHY_API_KEY'].present? && (authy_enabled_changed? || mobile_phone_changed?)
+      unless Rails.application.credentials.authy_api_key.present? && (authy_enabled_changed? || mobile_phone_changed?)
+        return
+      end
 
       # delete the authy user if it exists
       if authy_id.present?

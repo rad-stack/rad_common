@@ -39,6 +39,7 @@ module RadbearUser
 
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
     scope :by_name, -> { order(:first_name, :last_name) }
+    scope :by_id, -> { order(:id) }
     scope :by_last, -> { order(:last_name, :first_name) }
     scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
     scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
@@ -144,7 +145,7 @@ module RadbearUser
   end
 
   def portal?
-    external? && RadCommon.portal_namespace.present?
+    external? && Rails.configuration.rad_common.portal_namespace.present?
   end
 
   def read_notifications!
@@ -201,7 +202,7 @@ module RadbearUser
     end
 
     def validate_sms_mobile_phone
-      return if !RadicalTwilio.twilio_enabled? || mobile_phone.present?
+      return if !RadicalTwilio.new.twilio_enabled? || mobile_phone.present?
       return if notification_settings.enabled.where(sms: true).count.zero?
 
       errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')

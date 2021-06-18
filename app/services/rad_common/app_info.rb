@@ -1,17 +1,5 @@
 module RadCommon
   class AppInfo
-    def app_name
-      return ENV['APP_NAME'] if ENV['APP_NAME'].present?
-
-      I18n.t(:app_name)
-    end
-
-    def portal_app_name
-      return ENV['PORTAL_APP_NAME'] if ENV['PORTAL_APP_NAME'].present?
-
-      I18n.t(:portal_app_name)
-    end
-
     def application_tables
       (ActiveRecord::Base.connection.tables - exclude_tables).sort
     end
@@ -27,23 +15,8 @@ module RadCommon
       end
     end
 
-    def host_name
-      review_app? ? "#{ENV.fetch('HEROKU_APP_NAME')}.herokuapp.com" : ENV.fetch('HOST_NAME')
-    end
-
-    def portal_host_name
-      raise 'portal_host_name not yet implemented for review apps' if review_app?
-      return host_name unless RadCommon.external_users
-
-      ENV.fetch('PORTAL_HOST_NAME')
-    end
-
-    def review_app?
-      ENV['REVIEW_APP'].present? && ENV['REVIEW_APP'] == 'true'
-    end
-
     def duplicate_models
-      RadCommon.duplicates[:models].pluck(:name)
+      Rails.configuration.rad_common.duplicates[:models].pluck(:name)
     end
 
     def duplicates_enabled?(model_name)
@@ -51,7 +24,7 @@ module RadCommon
     end
 
     def duplicate_model_config(model_name)
-      RadCommon.duplicates[:models].select { |item| item[:name] == model_name }.first
+      Rails.configuration.rad_common.duplicates[:models].select { |item| item[:name] == model_name }.first
     end
 
     private

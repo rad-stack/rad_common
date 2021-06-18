@@ -18,5 +18,6 @@ spec/dummy/public/packs
 spec/dummy/public/packs-test
 spec/dummy/node_modules
 spec/dummy/yarn-error.log
-spec/dummyyarn-debug.log*
-spec/dummy.yarn-integrity
+spec/dummy/yarn-debug.log*
+spec/dummy/.yarn-integrity
+spec/dummy/config/credentials/test.key

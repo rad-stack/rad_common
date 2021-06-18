@@ -5,7 +5,7 @@ class RadbearDeviseMailer < Devise::Mailer
   layout 'radbear_mailer'
 
   before_action :set_defaults
-  default reply_to: Rails.application.config.app_admin_email
+  default reply_to: Rails.application.credentials.admin_email
 
   def confirmation_instructions(record, token, opts = {})
     @token = token
@@ -89,9 +89,9 @@ class RadbearDeviseMailer < Devise::Mailer
 
   def default_url_options
     if @resource.internal?
-      { host: RadCommon::AppInfo.new.host_name }
+      { host: Rails.configuration.rad_common.host_name }
     else
-      { host: RadCommon::AppInfo.new.portal_host_name }
+      { host: Rails.configuration.rad_common.portal_host_name }
     end
   end
 
@@ -106,6 +106,6 @@ class RadbearDeviseMailer < Devise::Mailer
     end
 
     def app_name
-      @resource.internal? ? RadCommon::AppInfo.new.app_name : RadCommon::AppInfo.new.portal_app_name
+      @resource.internal? ? Rails.configuration.rad_common.app_name : Rails.configuration.rad_common.portal_app_name
     end
 end

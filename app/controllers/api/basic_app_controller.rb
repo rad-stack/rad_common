@@ -17,7 +17,7 @@ module Api
       def valid_token?
         return false if token.blank?
 
-        secret = ENV.fetch('RADICAL_JWT_SECRET')
+        secret = Rails.application.credentials.jwt_secret
 
         begin
           JWT.decode token, secret, true

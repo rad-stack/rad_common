@@ -36,6 +36,8 @@ class EmailAddressValidator < ActiveModel::Validator
     end
 
     def always_check_send_grid?
-      ENV['SENDGRID_ALWAYS_VALIDATE'].present? && ENV['SENDGRID_ALWAYS_VALIDATE'] == 'true'
+      Rails.application.credentials.sendgrid.present? &&
+        Rails.application.credentials.sendgrid[:always_validate].present? &&
+        Rails.application.credentials.sendgrid[:always_validate] == 'true'
     end
 end

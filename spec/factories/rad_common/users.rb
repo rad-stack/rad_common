@@ -11,6 +11,7 @@ FactoryBot.define do
     do_not_notify_approved { true }
     security_roles { [create(:security_role)] }
     authy_enabled { false }
+    timezone { 'Eastern Time (US & Canada)' }
 
     trait :external do
       sequence(:email) { |n| "example#{n}@abc.com" }

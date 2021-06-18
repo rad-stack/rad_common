@@ -194,7 +194,7 @@ describe User, type: :model do
     end
 
     it 'allows unauthorized email addresses for inactive users' do
-      if RadCommon.external_users
+      if Rails.configuration.rad_common.external_users
         addresses = %w[user@example.com user@radicalbear.com]
 
         addresses.each do |address|
@@ -205,7 +205,7 @@ describe User, type: :model do
     end
 
     it 'allows valid email addresses' do
-      if RadCommon.external_users
+      if Rails.configuration.rad_common.external_users
         addresses = %w[joe@aclientcompany.com bob@aclientcompany.com sally@aclientcompany.com]
 
         addresses.each do |address|
@@ -280,44 +280,10 @@ describe User, type: :model do
     it { is_expected.to eq 'Password Changed' }
   end
 
-  describe 'authy' do
-    let(:user) { create :user, mobile_phone: phone_number }
-    let(:phone_number) { create :phone_number, :mobile }
-    let(:new_phone_number) { create :phone_number, :mobile }
-    let(:authy_id) { '1234567' }
+  describe 'security roles' do
     let(:admin_role) { create :security_role, :admin }
     let(:role_1) { create :security_role }
     let(:role_2) { admin_role }
-
-    it 'creates and updates the user on authy' do
-      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
-
-      expect(user.authy_id).to be_nil
-      user.update!(authy_enabled: true)
-      expect(user.authy_id).to eq authy_id
-    end
-
-    it 'returns a failure message if authy doesnt update' do
-      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: false, message: 'mocked message'))
-
-      user.authy_enabled = true
-      user.mobile_phone = new_phone_number
-      user.save
-      expect(user.errors.full_messages.to_s).to include('Could not register authy user')
-    end
-
-    it 'deletes authy user if mobile phone wiped out' do
-      unless mobile_phone_required?
-        user.update!(authy_enabled: false, mobile_phone: nil)
-        expect(user.reload.authy_id).to be_blank
-      end
-    end
-
-    it "doesn't allow invalid email", :vcr do
-      user = build :user, mobile_phone: phone_number, email: 'foo@', authy_enabled: true
-      user.save
-      expect(user.errors.full_messages.to_s).to include('Could not register authy user')
-    end
 
     it 'updates updated_at datetime when security roles are added' do
       updated_at = user.updated_at
@@ -330,6 +296,48 @@ describe User, type: :model do
       updated_at = user.updated_at
       user.update!(security_roles: [role_2])
       expect(user.updated_at).not_to eq(updated_at)
+    end
+  end
+
+  describe 'authy' do
+    let(:user) { create :user, mobile_phone: phone_number }
+    let(:phone_number) { create :phone_number, :mobile }
+    let(:new_phone_number) { create :phone_number, :mobile }
+
+    it 'creates and updates the user on authy', :vcr do
+      if Rails.configuration.rad_common.authy_enabled
+        expect(user.authy_id).to be_nil
+        user.update!(authy_enabled: true)
+        expect(user.authy_id).not_to be_nil
+      end
+    end
+
+    it 'returns a failure message if authy doesnt update' do
+      if Rails.configuration.rad_common.authy_enabled
+        result = double(:response, ok?: false, message: 'mocked message')
+
+        allow(Authy::API).to receive(:register_user).and_return(result)
+
+        user.authy_enabled = true
+        user.mobile_phone = new_phone_number
+        user.save
+        expect(user.errors.full_messages.to_s).to include('Could not register authy user')
+      end
+    end
+
+    it 'deletes authy user if mobile phone wiped out' do
+      if Rails.configuration.rad_common.authy_enabled && !mobile_phone_required?
+        user.update!(authy_enabled: false, mobile_phone: nil)
+        expect(user.reload.authy_id).to be_blank
+      end
+    end
+
+    it "doesn't allow invalid email", :vcr do
+      if Rails.configuration.rad_common.authy_enabled
+        user = build :user, mobile_phone: phone_number, email: 'foo@', authy_enabled: true
+        user.save
+        expect(user.errors.full_messages.to_s).to include('Could not register authy user')
+      end
     end
   end
 

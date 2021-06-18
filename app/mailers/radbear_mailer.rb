@@ -5,8 +5,8 @@ class RadbearMailer < ActionMailer::Base
   layout 'radbear_mailer'
   before_action :set_defaults
 
-  default from: Devise.mailer_sender
-  default reply_to: Rails.application.config.app_admin_email
+  default from: Rails.application.credentials.from_email
+  default reply_to: Rails.application.credentials.admin_email
 
   def new_user_signed_up(recipients, user)
     auto_approve = user.auto_approve?
@@ -32,7 +32,7 @@ class RadbearMailer < ActionMailer::Base
                       button_url: root_url }
 
     @recipient = user
-    @message = "Your account was approved and you can begin using #{RadCommon::AppInfo.new.app_name}."
+    @message = "Your account was approved and you can begin using #{Rails.configuration.rad_common.app_name}."
     mail to: @recipient.formatted_email, subject: 'Your Account Was Approved'
   end
 
@@ -49,8 +49,8 @@ class RadbearMailer < ActionMailer::Base
     @recipient = User.where(id: recipients)
     to_address = @recipient.map(&:formatted_email)
 
-    @message = "#{user} was approved by #{approved_by_name} on #{RadCommon::AppInfo.new.app_name}."
-    mail(to: to_address, subject: "User Was Approved on #{RadCommon::AppInfo.new.app_name}")
+    @message = "#{user} was approved by #{approved_by_name} on #{Rails.configuration.rad_common.app_name}."
+    mail(to: to_address, subject: "User Was Approved on #{Rails.configuration.rad_common.app_name}")
   end
 
   def simple_message(recipient, subject, message, options = {})
@@ -82,7 +82,7 @@ class RadbearMailer < ActionMailer::Base
     @problems = problems
     @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
-    mail(to: to_address, subject: "Invalid data in #{RadCommon::AppInfo.new.app_name}")
+    mail(to: to_address, subject: "Invalid data in #{Rails.configuration.rad_common.app_name}")
   end
 
   def global_validity_on_demand(recipient, problems)
@@ -91,7 +91,7 @@ class RadbearMailer < ActionMailer::Base
     @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
     mail to: recipient.formatted_email,
-         subject: "Invalid data in #{RadCommon::AppInfo.new.app_name}",
+         subject: "Invalid data in #{Rails.configuration.rad_common.app_name}",
          template_name: 'global_validity'
   end
 
@@ -103,7 +103,7 @@ class RadbearMailer < ActionMailer::Base
     total_time = Time.at((@run_stats.sum { |item| item[:run_seconds] })).utc.strftime('%H:%M:%S')
     @message = "The Global Validity task took #{total_time} to complete, which is beyond the configured timeout."
 
-    mail(to: to_address, subject: "Global Validity in #{RadCommon::AppInfo.new.app_name} Ran Long")
+    mail(to: to_address, subject: "Global Validity in #{Rails.configuration.rad_common.app_name} Ran Long")
   end
 
   def email_report(user, csv, report_name, options = {})
@@ -133,9 +133,9 @@ class RadbearMailer < ActionMailer::Base
     # this won't work for links called using the route helpers outside of the mailer context
     # this won't detect when to use the portal host unless @recipient is a User
 
-    return { host: RadCommon::AppInfo.new.portal_host_name } if @recipient.is_a?(User) && @recipient.external?
+    return { host: Rails.configuration.rad_common.portal_host_name } if @recipient.is_a?(User) && @recipient.external?
 
-    { host: RadCommon::AppInfo.new.host_name }
+    { host: Rails.configuration.rad_common.host_name }
   end
 
   private
@@ -155,6 +155,6 @@ class RadbearMailer < ActionMailer::Base
     end
 
     def app_name(user)
-      user.internal? ? RadCommon::AppInfo.new.app_name : RadCommon::AppInfo.new.portal_app_name
+      user.internal? ? Rails.configuration.rad_common.app_name : Rails.configuration.rad_common.portal_app_name
     end
 end

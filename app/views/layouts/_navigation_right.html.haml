@@ -7,7 +7,7 @@
         = current_user
         - if unread_count.positive?
           %span.badge.alert-danger= unread_count
-        - if RadCommon.use_avatar && current_user.avatar.attached?
+        - if Rails.configuration.rad_common.use_avatar && current_user.avatar.attached?
           = image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
       %ul.dropdown-menu.dropdown-menu-right
         %li= link_to 'My Account', edit_user_registration_path, class: 'dropdown-item'
@@ -22,5 +22,5 @@
         %li= link_to 'Sign Out', destroy_user_session_path, method: 'delete', class: 'dropdown-item'
   - else
     %li= link_to 'Sign In', new_user_session_path, class: 'nav-link'
-    - unless RadCommon.disable_sign_up
+    - unless Rails.configuration.rad_common.disable_sign_up
       %li= link_to 'Sign Up', new_user_registration_path, class: 'nav-link'

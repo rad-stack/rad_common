@@ -7,13 +7,13 @@ module RadCommon
 
     def message_type_options
       options = options_for_enum(SystemMessage, :message_type)
-      options.reject! { |option| option.include?('sms') } unless RadicalTwilio.twilio_enabled?
+      options.reject! { |option| option.include?('sms') } unless RadicalTwilio.new.twilio_enabled?
       options
     end
 
     def message_send_to_options
       options = options_for_enum(SystemMessage, :send_to)
-      options.reject! { |option| option.include?('client_users') } unless RadCommon.external_users
+      options.reject! { |option| option.include?('client_users') } unless Rails.configuration.rad_common.external_users
       options
     end
 

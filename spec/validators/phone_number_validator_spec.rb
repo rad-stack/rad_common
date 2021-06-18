@@ -70,25 +70,24 @@ RSpec.describe PhoneNumberValidator do
   describe 'twilio', :vcr do
     let(:mobile_phone) { create :phone_number, :mobile }
 
-    before { allow(RadicalTwilio).to receive(:twilio_enabled?).and_return(true) }
+    before do
+      allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return true
+      allow_any_instance_of(RadicalTwilio).to receive(:test_with_live_credentials?).and_return true
+    end
 
-    # These tests need to be disabled because only live credentials can be used
-    # To run the tests locally, switch the account to live creds in .env.test and run these
-    # Do not commit any changes to git
-
-    xit 'validates with mobile phone number' do
+    it 'validates with mobile phone number' do
       model = TestPhoneModel.new
       model.mobile_phone = mobile_phone
       expect(model.valid?).to eq(true)
     end
 
-    xit 'validates a non-mobile phone number' do
+    it 'validates a non-mobile phone number' do
       model = TestPhoneModel.new
       model.phone_number = phone_number
       expect(model.valid?).to eq(true)
     end
 
-    xit 'invalidates mobile number with a non-mobile number' do
+    it 'invalidates mobile number with a non-mobile number' do
       model = TestPhoneModel.new
       model.mobile_phone = phone_number
       expect(model.valid?).to eq(false)

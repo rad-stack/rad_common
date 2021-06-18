@@ -22,16 +22,18 @@ module RadCommon
 
         # misc
         template '../../../../../spec/dummy/Procfile', 'Procfile'
-        template '../../../../../spec/dummy/.env.example', '.env.example'
         template '../../../../../spec/dummy/package.json', 'package.json'
+        template '../../../../../spec/dummy/db/seeds.rb', 'db/seeds.rb'
+        template '../../../../../spec/dummy/app/services/seeder.rb', 'app/services/seeder.rb'
+        copy_file '../gitignore.txt', '.gitignore'
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
         copy_file '../../../../../.hound.yml', '.hound.yml'
         copy_file '../../../../../.rubocop.yml', '.rubocop.yml'
 
-        # initializers
-        template 'rad_common.rb', 'config/initializers/rad_common.rb'
+        # config
+        copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         template '../../../../../spec/dummy/config/initializers/raven.rb', 'config/initializers/raven.rb'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
