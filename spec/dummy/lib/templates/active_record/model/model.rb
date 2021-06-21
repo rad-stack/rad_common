@@ -1,6 +1,7 @@
 <% module_namespacing do -%>
 class <%= class_name %> < <%= parent_class_name.classify %>
   # alias_attribute :to_s, :name
+  strip_attributes
   audited
 
 <% attributes.select(&:reference?).each do |attribute| -%>
