@@ -1,12 +1,10 @@
 class RadicalTwilio
-  OPT_OUT_MESSAGE = 'To no longer receive text messages, text STOP'.freeze
-
   def send_sms(to:, message:)
-    client.messages.create(from: from_number, to: to, body: full_body(message))
+    client.messages.create(from: from_number, to: to, body: message)
   end
 
   def send_mms(to:, message:, media_url:)
-    client.messages.create(from: from_number_mms, to: to, body: full_body(message), media_url: media_url)
+    client.messages.create(from: from_number_mms, to: to, body: message, media_url: media_url)
   end
 
   def send_robocall(to:, url:)
@@ -71,12 +69,6 @@ class RadicalTwilio
 
     def client
       Twilio::REST::Client.new(credentials_root[:account_sid], credentials_root[:auth_token])
-    end
-
-    def full_body(message)
-      return "#{message} - #{OPT_OUT_MESSAGE}" unless %w[. ! ?].include?(message[-1])
-
-      "#{message} #{OPT_OUT_MESSAGE}."
     end
 
     def get_phone_number(attribute, mobile)

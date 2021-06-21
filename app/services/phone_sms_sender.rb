@@ -1,45 +1,86 @@
 class PhoneSMSSender
-  attr_accessor :message, :from_user_id, :mobile_phone, :exception, :from_number
+  OPT_OUT_MESSAGE = 'To no longer receive text messages, text STOP'.freeze
 
-  def initialize(message, from_user_id, mobile_phone)
-    self.message = message
+  attr_accessor :message, :from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio, :opt_out_message_sent,
+                :exception
+
+  def initialize(message, from_user_id, to_mobile_phone, media_url)
+    raise "The message from user #{from_user_id} failed: the message is blank." if message.blank?
+    raise 'The message failed: the mobile phone number is blank.' if to_mobile_phone.blank?
+
     self.from_user_id = from_user_id
-    self.mobile_phone = mobile_phone
-
-    raise 'The message failed: the mobile phone number is blank.' if mobile_phone.blank?
-    raise "The message to #{mobile_phone} failed: the message is blank." if message.blank?
+    self.to_mobile_phone = to_mobile_phone
+    self.media_url = media_url
+    self.twilio = RadicalTwilio.new
+    self.message = augment_message(message)
   end
 
   def send!
-    twilio = RadicalTwilio.new
-    self.from_number = twilio.from_number
-    RadicalRetry.perform_request { twilio.send_sms to: to_number, message: message }
+    RadicalRetry.perform_request do
+      if mms?
+        twilio.send_mms to: to_number, message: message, media_url: media_url
+      else
+        twilio.send_sms to: to_number, message: message
+      end
+    end
 
     log_event true
     true
   rescue Twilio::REST::RestError => e
     self.exception = e
-    raise e.to_s unless blacklisted?
+    raise e.message unless blacklisted?
 
     log_event false
+    handle_blacklist
     false
+  end
+
+  def from_number
+    mms? ? twilio.from_number_mms : twilio.from_number
   end
 
   private
 
+    def handle_blacklist
+      # override as needed
+    end
+
+    def mms?
+      media_url.present?
+    end
+
+    def augment_message(message)
+      if opt_out_message_already_sent?
+        self.opt_out_message_sent = false
+        return message
+      end
+
+      self.opt_out_message_sent = true
+      return "#{message} - #{OPT_OUT_MESSAGE}" unless %w[. ! ?].include?(message[-1])
+
+      "#{message} #{OPT_OUT_MESSAGE}."
+    end
+
     def to_number
-      "+1#{mobile_phone.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')}"
+      "+1#{to_mobile_phone.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')}"
     end
 
     def blacklisted?
       exception.message.include?('violates a blacklist rule')
     end
 
+    def opt_out_message_already_sent?
+      TwilioLog.opt_out_message_sent?(to_number)
+    end
+
     def log_event(success)
-      TwilioLog.create! from_number: from_number,
-                        to_number: to_number,
+      TwilioLog.create! to_number: to_number,
+                        from_number: from_number,
+                        to_user: to_user,
                         from_user_id: from_user_id,
                         message: message,
-                        success: success
+                        media_url: media_url,
+                        success: success,
+                        opt_out_message_sent: opt_out_message_sent
     end
 end
