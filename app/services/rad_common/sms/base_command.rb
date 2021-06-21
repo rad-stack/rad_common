@@ -1,5 +1,5 @@
 module RadCommon
-  module SMS
+  module Sms
     class BaseCommand
       include Utilities
       include PatientUtilities

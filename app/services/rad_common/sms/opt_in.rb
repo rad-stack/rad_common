@@ -1,5 +1,5 @@
 module RadCommon
-  module SMS
+  module Sms
     class OptIn < BaseCommand
       def initialize(incoming_message:, phone_number:)
         super(incoming_message: incoming_message, phone_number: phone_number)
