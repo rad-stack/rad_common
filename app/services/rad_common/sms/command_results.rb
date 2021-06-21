@@ -1,5 +1,5 @@
 module RadCommon
-  module Sms
+  module SMS
     class CommandResults
       attr_reader :sms_reply, :incoming_message, :command_matched, :reply, :data
       alias command_matched? command_matched

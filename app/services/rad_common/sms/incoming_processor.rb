@@ -1,5 +1,5 @@
 module RadCommon
-  module Sms
+  module SMS
     class IncomingProcessor
       include Utilities
 
