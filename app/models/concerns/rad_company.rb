@@ -15,6 +15,7 @@ module RadCompany
     validate :validate_only_one, on: :create
     validate :validate_domains
 
+    strip_attributes
     audited
   end
 
