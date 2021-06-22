@@ -15,9 +15,9 @@ module RadCommon
 
       private
 
-      def command_name
-        self.class.name.demodulize.titleize
-      end
+        def command_name
+          self.class.name.demodulize.titleize
+        end
     end
   end
 end

@@ -1,8 +1,8 @@
 module RadCommon
   module SMS
     class OptIn < BaseCommand
-      def initialize(incoming_message:, phone_number:)
-        super(incoming_message: incoming_message, phone_number: phone_number)
+      def initialize(incoming_message:, phone_number:, sms_users:)
+        super(incoming_message: incoming_message, phone_number: phone_number, sms_users: sms_users)
       end
 
       def process
@@ -17,8 +17,7 @@ module RadCommon
         end
 
         CommandResults.new(sms_reply: translate_reply(:communication_sms_opt_in),
-                           incoming_message: @incoming_message,
-                           notify: false)
+                           incoming_message: @incoming_message)
       end
 
       def self.codes
