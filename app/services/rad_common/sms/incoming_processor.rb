@@ -2,6 +2,7 @@ module RadCommon
   module SMS
     class IncomingProcessor
       attr_reader :matched_processor
+
       include Utilities
 
       COMMAND_PROCESSORS = [OptOut, OptIn].freeze
@@ -45,15 +46,6 @@ module RadCommon
 
         def after_process
           send_reply
-        end
-
-        def send_reply
-
-        end
-
-        def cleanup_command(command)
-          command = command.gsub(/["']/, '').upcase.strip
-          command.gsub('REFILL', 'REFILL ')
         end
     end
   end
