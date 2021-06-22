@@ -1,13 +1,12 @@
 module RadCommon
   module SMS
     class OptOut < BaseCommand
-      def initialize(incoming_message:, phone_number:)
-        super(incoming_message: incoming_message, phone_number: phone_number)
+      def initialize(incoming_message:, phone_number:, sms_users:)
+        super(incoming_message: incoming_message, phone_number: phone_number, sms_users: sms_users)
       end
 
       def process
-        patients = Patient.where(phone_number: @phone_number, communication_method_id: communication_method.id)
-        patients.each { |patient| patient.sms_opt_out(@incoming_message) }
+        @sms_users.each { |user| user.sms_opt_out(@incoming_message) }
         CommandResults.new(reply: false)
       end
 

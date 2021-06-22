@@ -3,7 +3,8 @@ module RadCommon
     class BaseCommand
       include Utilities
 
-      def initialize(incoming_message:, phone_number:)
+      def initialize(incoming_message:, phone_number:, sms_users:)
+        @sms_users = sms_users
         @incoming_message = incoming_message
         @phone_number = phone_number
       end
