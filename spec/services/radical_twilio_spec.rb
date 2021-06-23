@@ -1,25 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe RadicalTwilio, type: :service do
-  describe 'full_body' do
-    subject { described_class.new.send(:full_body, message) }
+  let(:twilio_format) { '+19049995555' }
+  let(:human_format) { '(904) 999-5555' }
 
-    context 'with full question' do
-      let(:message) { 'Hey man, can I borrow your surfboard?' }
-
-      it { is_expected.to eq 'Hey man, can I borrow your surfboard? To no longer receive text messages, text STOP.' }
+  describe 'twilio_to_human_format' do
+    it 'converts twilio format to human format' do
+      expect(described_class.twilio_to_human_format(twilio_format)).to eq(human_format)
     end
+  end
 
-    context 'with full sentence' do
-      let(:message) { 'Your surfboard is lame.' }
-
-      it { is_expected.to eq 'Your surfboard is lame. To no longer receive text messages, text STOP.' }
-    end
-
-    context 'without full sentence' do
-      let(:message) { "I'm taking your surfboard" }
-
-      it { is_expected.to eq "I'm taking your surfboard - To no longer receive text messages, text STOP" }
+  describe 'human_to_twilio_format' do
+    it 'converts human format to human format' do
+      expect(described_class.human_to_twilio_format(human_format)).to eq(twilio_format)
     end
   end
 end

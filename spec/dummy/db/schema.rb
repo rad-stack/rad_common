@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_22_104137) do
+ActiveRecord::Schema.define(version: 2021_06_21_112203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -248,7 +248,13 @@ ActiveRecord::Schema.define(version: 2021_05_22_104137) do
     t.boolean "success", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "opt_out_message_sent", default: false, null: false
+    t.index ["created_at"], name: "index_twilio_logs_on_created_at"
+    t.index ["from_number"], name: "index_twilio_logs_on_from_number"
     t.index ["from_user_id"], name: "index_twilio_logs_on_from_user_id"
+    t.index ["opt_out_message_sent"], name: "index_twilio_logs_on_opt_out_message_sent"
+    t.index ["success"], name: "index_twilio_logs_on_success"
+    t.index ["to_number"], name: "index_twilio_logs_on_to_number"
     t.index ["to_user_id"], name: "index_twilio_logs_on_to_user_id"
   end
 

@@ -324,6 +324,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20210522104137_duplicates_processed.rb',
                         'duplicates_processed.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20210621112203_opt_out_message_sent.rb',
+                        'opt_out_message_sent.rb'
       end
 
       def self.next_migration_number(path)
