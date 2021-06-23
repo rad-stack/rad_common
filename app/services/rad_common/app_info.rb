@@ -5,7 +5,7 @@ module RadCommon
     end
 
     def application_models
-      application_tables.map { |model| model.classify }.sort
+      application_tables.map(&:classify).sort
     end
 
     def audited_models

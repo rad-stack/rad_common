@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :twilio_log do
-    to_number { "+1#{Faker::PhoneNumber.phone_number.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')}" }
-    from_number { "+1#{Faker::PhoneNumber.phone_number.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')}" }
+    to_number { RadicalTwilio.to_twilio_format(Faker::PhoneNumber.phone_number) }
+    from_number { RadicalTwilio.to_twilio_format(Faker::PhoneNumber.phone_number) }
     association :from_user, factory: :user
     association :to_user, factory: :user
     message { Faker::TvShows::GameOfThrones.quote }
