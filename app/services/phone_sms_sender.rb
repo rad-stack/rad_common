@@ -62,7 +62,7 @@ class PhoneSMSSender
     end
 
     def to_number
-      RadicalTwilio.to_twilio_format(to_mobile_phone)
+      RadicalTwilio.human_to_twilio_format(to_mobile_phone)
     end
 
     def blacklisted?

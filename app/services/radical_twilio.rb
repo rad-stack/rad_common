@@ -57,11 +57,11 @@ class RadicalTwilio
     nil
   end
 
-  def self.to_twilio_format(phone_number)
+  def self.human_to_twilio_format(phone_number)
     "+1#{phone_number.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')}"
   end
 
-  def self.from_twilio_format(phone_number)
+  def self.twilio_to_human_format(phone_number)
     "(#{phone_number[2, 3]}) #{phone_number[5, 3]}-#{phone_number[8, 4]}"
   end
 
