@@ -62,7 +62,7 @@ class PhoneSMSSender
     end
 
     def to_number
-      "+1#{to_mobile_phone.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')}"
+      RadicalTwilio.human_to_twilio_format(to_mobile_phone)
     end
 
     def blacklisted?

@@ -53,7 +53,9 @@ RSpec.describe PhoneSMSSender, type: :service do
       it { is_expected.to eq "I'm taking your surfboard - To no longer receive text messages, text STOP" }
 
       context 'when opt out message already sent' do
-        before { create :twilio_log, opt_out_message_sent: true, to_number: sms_sender.send(:to_number) }
+        before do
+          create :twilio_log, opt_out_message_sent: true, to_number: RadicalTwilio.human_to_twilio_format(mobile_phone)
+        end
 
         it { is_expected.to eq "I'm taking your surfboard" }
       end
