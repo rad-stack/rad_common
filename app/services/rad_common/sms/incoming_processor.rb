@@ -44,7 +44,7 @@ module RadCommon
         end
 
         def locale
-          raise 'must be implemented in child class'
+          'en'
         end
 
         def command_processors
