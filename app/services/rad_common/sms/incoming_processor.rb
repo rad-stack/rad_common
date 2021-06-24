@@ -12,7 +12,7 @@ module RadCommon
         @phone_number = Utilities.format_twilio_number(params[:From])
         @command_results = nil
         @sms_reply = nil
-        @reply_command = @incoming_message
+        @reply_command = cleanup_command(@incoming_message)
         @matched_processor = nil
       end
 
@@ -53,6 +53,10 @@ module RadCommon
 
         def after_process
           send_reply
+        end
+
+        def cleanup_command(command)
+          command.gsub(/["']/, '').upcase.strip
         end
     end
   end
