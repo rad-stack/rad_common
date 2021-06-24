@@ -1,8 +1,8 @@
 <% module_namespacing do -%>
 class <%= class_name %> < <%= parent_class_name.classify %>
   # alias_attribute :to_s, :name
-  strip_attributes
   audited
+  strip_attributes
 
 <% attributes.select(&:reference?).each do |attribute| -%>
   belongs_to :<%= attribute.name %><%= ', polymorphic: true' if attribute.polymorphic? %><%= ', required: true' if attribute.required? %>
