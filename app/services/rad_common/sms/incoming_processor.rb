@@ -12,7 +12,7 @@ module RadCommon
         @phone_number = Utilities.format_twilio_number(params[:From])
         @command_results = nil
         @sms_reply = nil
-        @reply_command = cleanup_command(@incoming_message)
+        @reply_command = @incoming_message
         @matched_processor = nil
       end
 
@@ -29,7 +29,10 @@ module RadCommon
         def process_sms
           @matched_processor = command_processors.find { |processor| processor.matches?(@reply_command) }
           if @matched_processor
-            processor = @matched_processor.new(incoming_message: @reply_command, phone_number: @phone_number, sms_users: sms_users)
+            processor = @matched_processor.new(incoming_message: @reply_command,
+                                               phone_number: @phone_number,
+                                               sms_users: sms_users,
+                                               locale: locale)
             return processor.process
           end
 
@@ -38,6 +41,10 @@ module RadCommon
 
         def sms_users
           @sms_users ||= []
+        end
+
+        def locale
+          raise 'must be implemented in child class'
         end
 
         def command_processors

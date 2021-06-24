@@ -1,8 +1,8 @@
 module RadCommon
   module SMS
     class OptOut < BaseCommand
-      def initialize(incoming_message:, phone_number:, sms_users:)
-        super(incoming_message: incoming_message, phone_number: phone_number, sms_users: sms_users)
+      def initialize(incoming_message:, phone_number:, sms_users:, locale:)
+        super(incoming_message: incoming_message, phone_number: phone_number, sms_users: sms_users, locale: locale)
       end
 
       def process

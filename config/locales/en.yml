@@ -1,4 +1,5 @@
 en:
+  communication_sms_opt_in: 'Your communication preferences have been changed, we will start sending you text message notifications.'
   activerecord:
     attributes:
       system_message:
