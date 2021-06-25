@@ -17,6 +17,7 @@ class Division < ApplicationRecord
   validates :name, uniqueness: { message: 'has already been taken for a pending division' }, if: -> { status_pending? }
   validates_with EmailAddressValidator, fields: %i[invoice_email]
 
+  strip_attributes
   audited
 
   after_update :notify_owner

@@ -17,6 +17,7 @@ module RadSecurityRole
 
     validate :validate_standard_permissions
 
+    strip_attributes
     audited
   end
 
