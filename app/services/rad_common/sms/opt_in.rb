@@ -6,7 +6,7 @@ module RadCommon
       end
 
       def process
-        sms_users.each { |user| user.sms_opt_in(@incoming_message) }
+        @sms_users.each { |user| user.sms_opt_in(@incoming_message) }
 
         CommandResults.new(sms_reply: translate_reply(:communication_sms_opt_in),
                            incoming_message: @incoming_message)
