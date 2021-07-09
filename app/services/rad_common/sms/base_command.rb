@@ -18,10 +18,11 @@ module RadCommon
           self.class.name.demodulize.titleize
         end
 
-        def translate_reply(sms_reply_key)
+        def translate_reply(sms_reply_key, params = {})
           raise 'Locale not set' if @locale.blank?
 
-          I18n.t(sms_reply_key, locale: @locale)
+          params.merge!(locale: @locale)
+          I18n.t(sms_reply_key, params)
         end
     end
   end
