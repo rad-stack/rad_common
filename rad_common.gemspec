@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
+  s.add_dependency 'active_storage_validations'
   s.add_dependency 'audited', '~> 4.9'
 
   # this dependency can be removed once task 32743 is resolved, it's a dep of boostrap
