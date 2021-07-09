@@ -19,7 +19,7 @@ RSpec.describe 'Divisions', type: :system do
     end
 
     describe 'single attachment validation' do
-      let(:file) { 'spec/fixtures/test.pdf' } # TODO: this didn't work when it was radlogo.jpeg
+      let(:file) { 'spec/fixtures/test.pdf' }
 
       before do
         visit new_division_path
@@ -31,7 +31,7 @@ RSpec.describe 'Divisions', type: :system do
 
       context 'when invalid due to content type' do
         it 'validates' do
-          expect(page).to have_content 'Icon has an invalid content type, must be PNG'
+          expect(page).to have_content 'Icon has an invalid content type of application/pdf, must be PNG'
           expect(division.icon.attached?).to be false
         end
       end
