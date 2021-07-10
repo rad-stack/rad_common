@@ -27,6 +27,7 @@ describe DuplicateFixable, type: :model do
         { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
       end
 
+      # TODO: this fails intermittently
       it { is_expected.to eq 46 }
     end
   end

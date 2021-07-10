@@ -2,6 +2,7 @@
 class <%= class_name %> < <%= parent_class_name.classify %>
   # alias_attribute :to_s, :name
   audited
+  strip_attributes
 
 <% attributes.select(&:reference?).each do |attribute| -%>
   belongs_to :<%= attribute.name %><%= ', polymorphic: true' if attribute.polymorphic? %><%= ', required: true' if attribute.required? %>

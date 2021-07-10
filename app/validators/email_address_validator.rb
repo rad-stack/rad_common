@@ -38,6 +38,6 @@ class EmailAddressValidator < ActiveModel::Validator
     def always_check_send_grid?
       Rails.application.credentials.sendgrid.present? &&
         Rails.application.credentials.sendgrid[:always_validate].present? &&
-        Rails.application.credentials.sendgrid[:always_validate] == 'true'
+        Rails.application.credentials.sendgrid[:always_validate] == true
     end
 end

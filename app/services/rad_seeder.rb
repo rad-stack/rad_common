@@ -7,9 +7,9 @@ class RadSeeder
     SecurityRole.seed_items if SecurityRole.count.zero?
     UserStatus.seed_items if UserStatus.count.zero?
 
+    seed_company
     seed_notification_types
     seed_users
-    seed_company
 
     @users = User.all
   end

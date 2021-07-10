@@ -4,6 +4,8 @@ class UserStatus < ApplicationRecord
 
   alias_attribute :to_s, :name
 
+  strip_attributes
+
   def self.default_pending_status
     UserStatus.find_by(name: 'Pending')
   end

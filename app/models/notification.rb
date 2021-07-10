@@ -5,4 +5,6 @@ class Notification < ApplicationRecord
 
   scope :unread, -> { where(unread: true) }
   scope :recent_first, -> { order(id: :desc) }
+
+  strip_attributes
 end

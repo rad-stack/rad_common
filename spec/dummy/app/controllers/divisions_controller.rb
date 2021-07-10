@@ -22,9 +22,7 @@ class DivisionsController < ApplicationController
     authorize @division
 
     if @division.save
-      if validate_active_storage_attachment(@division, 'icon', params['division']['icon'], ['image/png'], false, 50_000)
-        redirect_to @division, notice: 'Division was successfully created.'
-      end
+      redirect_to @division, notice: 'Division was successfully created.'
     else
       render :new
     end
@@ -32,9 +30,7 @@ class DivisionsController < ApplicationController
 
   def update
     if @division.update(permitted_params)
-      if validate_multiple_attachments(@division, :division, division_attachments_and_types)
-        redirect_to @division, notice: 'Division was successfully updated.'
-      end
+      redirect_to @division, notice: 'Division was successfully updated.'
     else
       render :edit
     end
@@ -65,12 +61,7 @@ class DivisionsController < ApplicationController
     end
 
     def permitted_params
-      params.require(:division).permit(:name, :code, :notify, :timezone, :owner_id, :hourly_rate, :division_status)
-    end
-
-    def division_attachments_and_types
-      [{ attr: :logo, types: ['image/png'] },
-       { attr: :avatar, types: ['image/jpeg'] },
-       { attr: :attachment, types: %w[image/jpeg text/plain application/pdf] }]
+      params.require(:division).permit(:name, :code, :notify, :timezone, :owner_id, :hourly_rate, :division_status,
+                                       :icon, :logo, :avatar, :attachment)
     end
 end
