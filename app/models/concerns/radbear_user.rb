@@ -65,6 +65,10 @@ module RadbearUser
     validate :validate_sms_mobile_phone, on: :update
     validate :password_excludes_name
 
+    validates :avatar,
+              content_type: { in: %w[image/png image/jpeg image/jpg],
+                              message: 'has an invalid content type of %<content_type>s, must be %<authorized_types>s' }
+
     validates_with PhoneNumberValidator, fields: [{ field: :mobile_phone, type: :mobile }]
     validates_with EmailAddressValidator, fields: %i[email], on: :update, if: :fully_validate_email?
 
