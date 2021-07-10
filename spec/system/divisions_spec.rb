@@ -19,18 +19,19 @@ RSpec.describe 'Divisions', type: :system do
     end
 
     describe 'single attachment validation' do
-      let(:file) { 'spec/fixtures/radlogo.jpeg' }
+      let(:file) { 'spec/fixtures/test.pdf' }
 
       before do
-        allow_any_instance_of(Division).to receive(:save).and_return true
         visit new_division_path
+        fill_in 'Name', with: 'Foo'
+        fill_in 'Code', with: 'BAR'
         page.attach_file('Icon', file)
         click_on 'Save'
       end
 
       context 'when invalid due to content type' do
         it 'validates' do
-          expect(page).to have_content 'File could not be saved. File type of image/jpeg must be one of image/png'
+          expect(page).to have_content 'Icon has an invalid content type of application/pdf, must be PNG'
           expect(division.icon.attached?).to be false
         end
       end
@@ -39,7 +40,7 @@ RSpec.describe 'Divisions', type: :system do
         let(:file) { 'spec/fixtures/large_logo.png' }
 
         it 'validates' do
-          expect(page).to have_content 'File could not be saved. File size must be less than 48.8 KB.'
+          expect(page).to have_content 'Icon must be less than 50 KB'
           expect(division.icon.attached?).to be false
         end
       end
@@ -50,37 +51,6 @@ RSpec.describe 'Divisions', type: :system do
     it 'renders the edit template' do
       visit edit_division_path(division)
       expect(page).to have_content('Editing Division')
-    end
-
-    describe 'multiple attachment validation' do
-      let(:file_2) { 'spec/fixtures/radlogo.jpeg' }
-
-      before do
-        visit edit_division_path(division)
-        page.attach_file('Avatar', file_1)
-        page.attach_file('Logo', file_2)
-        click_on 'Save'
-      end
-
-      context 'when both invalid' do
-        let(:file_1) { 'spec/fixtures/radlogo.png' }
-
-        it 'validates' do
-          expect(page).to have_content 'Logo, Avatar could not be saved due to invalid content types'
-          expect(division.logo.attached?).to be false
-          expect(division.avatar.attached?).to be false
-        end
-      end
-
-      context 'when one invalid' do
-        let(:file_1) { 'spec/fixtures/radlogo.jpeg' }
-
-        it 'validates' do
-          expect(page).to have_content 'Logo could not be saved due to invalid content types'
-          expect(division.logo.attached?).to be false
-          expect(division.avatar.attached?).to be true
-        end
-      end
     end
 
     it 'displays error for owner field when blank', js: true do

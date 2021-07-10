@@ -5,6 +5,7 @@ module RadCommon
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
 
+    require 'active_storage_validations'
     require 'audited'
     require 'authtrail'
     require 'devise'
