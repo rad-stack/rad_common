@@ -17,8 +17,8 @@ class Division < ApplicationRecord
 
   validates :icon,
             size: { less_than: 50.kilobytes, message: 'must be less than 50 KB' },
-            content_type: { in: %w[image/png image/jpg],
-                            message: 'has an invalid content type of %<content_type>s, must be %<authorized_types>s' }
+            content_type: { in: RadCommon::VALID_IMAGE_TYPES,
+                            message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
 
   validates_with EmailAddressValidator, fields: %i[invoice_email]
 
