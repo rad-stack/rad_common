@@ -3,6 +3,9 @@ require 'rad_common/engine'
 module RadCommon
   VALID_IMAGE_TYPES = %w[image/png image/jpeg image/jpg].freeze
 
+  VALID_AUDIO_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/wave audio/x-wav audio/aiff audio/x-aifc audio/x-aiff
+                         audio/x-gsm audio/ulaw].freeze
+
   VALID_ATTACHMENT_TYPES = %w[application/msword
                               application/pdf
                               application/vnd.ms-excel
