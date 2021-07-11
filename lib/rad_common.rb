@@ -3,6 +3,8 @@ require 'rad_common/engine'
 module RadCommon
   VALID_IMAGE_TYPES = %w[image/png image/jpeg image/jpg].freeze
 
+  VALID_VIDEO_TYPES = %w[video/x-msvideo video/mp4 video/mpeg video/3gpp video/quicktime].freeze
+
   VALID_AUDIO_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/wave audio/x-wav audio/aiff audio/x-aifc audio/x-aiff
                          audio/x-gsm audio/ulaw].freeze
 
