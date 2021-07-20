@@ -68,7 +68,7 @@ RSpec.describe 'Divisions', type: :system do
   describe 'index' do
     it 'displays the divisions' do
       division
-      visit divisions_path
+      visit divisions_path(search: { division_status: 1 })
       expect(page).to have_content(division.to_s)
     end
 
