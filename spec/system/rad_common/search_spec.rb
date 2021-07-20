@@ -65,6 +65,16 @@ RSpec.describe 'Search', type: :system do
       click_button 'Apply Filters'
       expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-warning]')
     end
+
+    it 'shows required field error' do
+      visit divisions_path
+      click_button 'Apply Filters'
+      expect(page).to have_content 'Status is required'
+
+      select 'Active', from: 'search_division_status'
+      click_button 'Apply Filters'
+      expect(page).not_to have_content 'Status is required'
+    end
   end
 
   describe 'date filter' do
@@ -100,7 +110,7 @@ RSpec.describe 'Search', type: :system do
     end
 
     it 'does save valid date to users.filter_defaults' do
-      visit divisions_path(search: { created_at_start: '2019-12-01', created_at_end: '2019-12-02' })
+      visit divisions_path(search: { created_at_start: '2019-12-01', created_at_end: '2019-12-02', division_status: 1 })
       visit '/'
       visit divisions_path
       expect(page.body).to include '2019-12-01'
