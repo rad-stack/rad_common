@@ -20,8 +20,12 @@ class CompaniesController < ApplicationController
       authorize @company
     end
 
+    def base_params
+      %i[name phone_number website email address_1 address_2 city state zipcode validity_checked_at
+         valid_user_domains_entry timezone]
+    end
+
     def permitted_params
-      params.require(:company).permit(:name, :phone_number, :website, :email, :address_1, :address_2, :city, :state,
-                                      :zipcode, :validity_checked_at, :valid_user_domains_entry, :timezone)
+      params.require(:company).permit(base_params + Rails.configuration.rad_common.additional_company_params)
     end
 end
