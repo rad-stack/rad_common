@@ -1,7 +1,13 @@
 .card
-  = render 'layouts/card_header', no_new_button: true, no_delete_button: true, no_index_button: true
+  = render 'layouts/card_header',
+           title: safe_join(["Editing Company: ", link_to(@company.name.blank? ? 'Missing' : @company.name, '/rad_common/company')]),
+           no_new_button: true,
+           no_delete_button: true,
+           no_index_button: true,
+           no_show_link: true
+
   .card-body
-    = simple_form_for(@company) do |f|
+    = simple_form_for(@company, url: '/rad_common/company/update', method: :put) do |f|
       = f.error_notification
 
       .form-inputs
