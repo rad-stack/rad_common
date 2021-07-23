@@ -1,6 +1,6 @@
 .card
   = render 'layouts/card_header',
-           title: safe_join(["Editing Company: ", link_to(@company.name.blank? ? 'Missing' : @company.name, '/rad_common/company')]),
+           title: edit_company_title(@company),
            no_new_button: true,
            no_delete_button: true,
            no_index_button: true,
