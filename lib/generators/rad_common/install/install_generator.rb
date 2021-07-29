@@ -327,6 +327,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20210621112203_opt_out_message_sent.rb',
                         'opt_out_message_sent.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20210729135942_authy_always_enabled.rb',
+                        'authy_always_enabled.rb'
       end
 
       def self.next_migration_number(path)
