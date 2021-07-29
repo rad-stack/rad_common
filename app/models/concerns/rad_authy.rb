@@ -14,7 +14,7 @@ module RadAuthy
   private
 
     def validate_authy
-      unless authy_enabled
+      unless authy_enabled?
         errors.add(:base, 'user is not valid for two factor authentication') if authy_id.present?
         return
       end

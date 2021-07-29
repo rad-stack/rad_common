@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_21_112203) do
+ActiveRecord::Schema.define(version: 2021_07_29_135942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -302,7 +302,7 @@ ActiveRecord::Schema.define(version: 2021_06_21_112203) do
     t.integer "user_status_id", null: false
     t.string "authy_id"
     t.datetime "last_sign_in_with_authy"
-    t.boolean "authy_enabled", default: false, null: false
+    t.boolean "authy_enabled", default: true, null: false
     t.string "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"

@@ -146,7 +146,9 @@ describe 'Users', type: :system do
   end
 
   describe 'sign up' do
-    it 'signs up', :vcr do
+    before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
+
+    it 'signs up' do
       unless Rails.configuration.rad_common.disable_sign_up
         visit new_user_registration_path
 
