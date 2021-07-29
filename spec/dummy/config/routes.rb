@@ -16,7 +16,6 @@ Rails.application.routes.draw do
   end
 
   resources :user_security_roles, only: :show
-  resources :companies, only: %i[show edit update]
   resources :divisions
   resources :attorneys
 

@@ -5,8 +5,13 @@ RadCommon::Engine.routes.draw do
   post :email_error, to: 'rad_common/sendgrid#email_error'
 
   delete 'attachments/:id(.:format)', to: 'rad_common/attachments#destroy', as: :attachment
+
   get 'attachments/:class_name/:id(.:format)/:variant(.:format)', to: 'rad_common/attachments#download_variant'
   get 'attachments/:id(.:format)', to: 'rad_common/attachments#download'
+
+  get 'company', to: 'companies#show'
+  get 'company/edit', to: 'companies#edit'
+  put 'company/update', to: 'companies#update'
 
   resources :audits, only: :index
   resources :system_messages, only: %i[new create show]

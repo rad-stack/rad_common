@@ -1,6 +1,5 @@
 - if current_user.admin?
 
-  - company = Company.main
   - no_divider = false if local_assigns[:no_divider].nil?
 
   - unless no_divider
@@ -8,7 +7,7 @@
 
   %li= link_to 'Audit Search', '/rad_common/audits', class: 'dropdown-item'
   %li= link_to 'Background Jobs', '/sidekiq', target: '_blank', rel: :noopener, class: 'dropdown-item'
-  %li= link_to 'Company Info', edit_company_path(company), class: 'dropdown-item'
+  %li= link_to 'Company Info', '/rad_common/company/edit', class: 'dropdown-item'
   %li= link_to 'Notification Types', '/rad_common/notification_types', class: 'dropdown-item'
   %li= link_to 'Security Roles', security_roles_path, class: 'dropdown-item'
 
