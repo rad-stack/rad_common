@@ -311,7 +311,7 @@ describe 'Users', type: :system do
 
       let(:message) do
         'If your email address exists in our database, you will receive an email with instructions for how to '\
-        'confirm your email address in a few minutes.'
+          'confirm your email address in a few minutes.'
       end
 
       it "doesn't say whether the email exists" do
@@ -349,7 +349,7 @@ describe 'Users', type: :system do
     describe 'resetting password' do
       let(:message) do
         'If your email address exists in our database, you will receive a password recovery link at your email '\
-        'address in a few minutes.'
+          'address in a few minutes.'
       end
 
       it "doesn't say whether the email exists" do

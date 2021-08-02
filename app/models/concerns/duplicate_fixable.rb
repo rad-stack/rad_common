@@ -375,6 +375,6 @@ module DuplicateFixable
       return nil if duplicate_record.destroy
 
       'Could not remove the unused duplicate record '\
-          "id #{duplicate_record.id}: #{duplicate_record.errors.full_messages.join(', ')}"
+        "id #{duplicate_record.id}: #{duplicate_record.errors.full_messages.join(', ')}"
     end
 end

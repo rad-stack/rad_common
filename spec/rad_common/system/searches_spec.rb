@@ -11,7 +11,7 @@ describe 'Searches', type: :system do
 
     let(:prompt) do
       'Are you sure you want to do a super (combined) search? This query may take a long time, selecting a normal '\
-      'query is preferred to get your results quickly and not bog down the system'
+        'query is preferred to get your results quickly and not bog down the system'
     end
 
     before { create(:user, last_name: term) }

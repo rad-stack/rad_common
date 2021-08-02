@@ -20,7 +20,7 @@ describe RadCommon::AuditsHelper do
 
       let(:result) do
         "Changed <strong>Notify</strong> to <strong>true</strong>\n"\
-        "Changed <strong>Hourly Rate</strong> from <strong>0.0</strong> to <strong>100.0</strong>\n"
+          "Changed <strong>Hourly Rate</strong> from <strong>0.0</strong> to <strong>100.0</strong>\n"
       end
 
       it { is_expected.to eq result }
@@ -29,7 +29,7 @@ describe RadCommon::AuditsHelper do
     context 'when user' do
       let(:result) do
         "Changed <strong>Notify</strong> to <strong>true</strong>\n"\
-        "Changed <strong>Hourly Rate</strong> from <strong>XXX</strong> to <strong>XXX</strong>\n"
+          "Changed <strong>Hourly Rate</strong> from <strong>XXX</strong> to <strong>XXX</strong>\n"
       end
 
       it { is_expected.to eq result }

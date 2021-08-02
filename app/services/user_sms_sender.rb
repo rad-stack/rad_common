@@ -18,11 +18,11 @@ class UserSMSSender < PhoneSMSSender
 
     def error_body
       'The system tried to send you an SMS message but your mobile phone number that we have on '\
-      "file #{to_mobile_phone}, failed, most likely due to being previously opted out. We have removed "\
-      'the mobile phone number from our system to prevent this issue in future communications. If you would like '\
-      'to continue to receive text messages, you can add back your mobile number to your user profile, and send the '\
-      "message 'YES' to #{from_number}. Please reply to this email with any questions or concerns that you "\
-      'might have.'
+        "file #{to_mobile_phone}, failed, most likely due to being previously opted out. We have removed "\
+        'the mobile phone number from our system to prevent this issue in future communications. If you would like '\
+        'to continue to receive text messages, you can add back your mobile number to your user profile, and send the '\
+        "message 'YES' to #{from_number}. Please reply to this email with any questions or concerns that you "\
+        'might have.'
     end
 
     def email_action

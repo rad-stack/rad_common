@@ -32,9 +32,9 @@ module RadbearUser
 
     scope :admins, lambda {
       active.where('users.id IN ('\
-                 'SELECT user_id FROM user_security_roles '\
-                 'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id '\
-                 'WHERE security_roles.admin = TRUE)')
+                   'SELECT user_id FROM user_security_roles '\
+                   'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id '\
+                   'WHERE security_roles.admin = TRUE)')
     }
 
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
