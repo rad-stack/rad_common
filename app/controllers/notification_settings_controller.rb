@@ -16,6 +16,7 @@ class NotificationSettingsController < ApplicationController
     notification_setting = NotificationSetting.find_or_initialize_by(notification_type: notification_type,
                                                                      user_id: permitted_params[:user_id])
 
+    notification_setting.check_defaults
     notification_setting.enabled = permitted_params[:enabled]
     notification_setting.email = permitted_params[:email] if notification_type.email_enabled?
     notification_setting.feed = permitted_params[:feed] if notification_type.feed_enabled?
