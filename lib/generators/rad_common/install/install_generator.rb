@@ -34,7 +34,6 @@ module RadCommon
 
         # config
         copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
-        template '../../../../../spec/dummy/config/initializers/sentry.rb', 'config/initializers/sentry.rb'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
