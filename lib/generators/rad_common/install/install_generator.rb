@@ -330,6 +330,9 @@ module RadCommon
 
         apply_migration '../../../../../spec/dummy/db/migrate/20210729135942_authy_always_enabled.rb',
                         'authy_always_enabled.rb'
+
+        apply_migration '../../../../../spec/dummy/db/migrate/20210805105809_fix_notification_defaults.rb',
+                        'fix_notification_defaults.rb'
       end
 
       def self.next_migration_number(path)

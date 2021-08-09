@@ -21,11 +21,35 @@ class NotificationSetting < ApplicationRecord
     settings = []
 
     types.each do |notification_type|
-      settings.push NotificationSetting.find_or_initialize_by(notification_type: notification_type,
-                                                              user_id: user.id)
+      setting = NotificationSetting.find_or_initialize_by(notification_type: notification_type,
+                                                          user_id: user.id)
+
+      setting.check_defaults
+      settings.push setting
     end
 
     settings
+  end
+
+  def check_defaults
+    return if notification_type.blank? || email? || sms? || feed?
+
+    if notification_type.email_enabled?
+      self.email = true
+      return
+    end
+
+    if notification_type.sms_enabled?
+      self.sms = true
+      return
+    end
+
+    if notification_type.feed_enabled?
+      self.feed = true
+      return
+    end
+
+    raise 'notification type has no methods'
   end
 
   private

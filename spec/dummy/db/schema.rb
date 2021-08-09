@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_29_135942) do
+ActiveRecord::Schema.define(version: 2021_08_05_105809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -169,7 +169,7 @@ ActiveRecord::Schema.define(version: 2021_07_29_135942) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "notification_type_id", null: false
-    t.boolean "email", default: true, null: false
+    t.boolean "email", default: false, null: false
     t.boolean "feed", default: false, null: false
     t.boolean "sms", default: false, null: false
     t.index ["notification_type_id", "user_id"], name: "index_notification_settings_on_notification_type_id_and_user_id", unique: true
