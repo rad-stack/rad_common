@@ -21,7 +21,7 @@ module RadbearController
     def set_sentry_user_context
       return unless current_user
 
-      Sentry.set_user(id: current_user.id)
+      Sentry.set_user(id: current_user.id, email: current_user.email, name: current_user.to_s)
     end
 
     def user_time_zone(&block)
