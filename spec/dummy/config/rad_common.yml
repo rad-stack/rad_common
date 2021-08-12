@@ -3,6 +3,7 @@ default: &default
   portal_app_name: Foo Portal
   use_avatar: true
   disable_sign_up: false
+  secure_sentry: true
   external_users: true
   app_logo_includes_name: true
   portal_namespace:
