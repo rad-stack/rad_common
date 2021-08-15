@@ -12,6 +12,7 @@ class PhoneNumberValidator < ActiveModel::Validator
       end
 
       next if record.running_global_validity
+      next unless record.send("#{field[:field]}_changed?")
 
       mobile = field[:type] && field[:type] == :mobile
       error_message = RadicalTwilio.new.validate_phone_number(phone_value, mobile)
