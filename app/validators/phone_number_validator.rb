@@ -11,8 +11,7 @@ class PhoneNumberValidator < ActiveModel::Validator
         next
       end
 
-      next if record.running_global_validity
-      next unless record.send("#{field[:field]}_changed?")
+      next unless check_twilio?(record, field)
 
       mobile = field[:type] && field[:type] == :mobile
       error_message = RadicalTwilio.new.validate_phone_number(phone_value, mobile)
@@ -42,5 +41,11 @@ class PhoneNumberValidator < ActiveModel::Validator
       end
 
       record.send(field)
+    end
+
+    def check_twilio?(record, field)
+      return false if record.running_global_validity
+
+      record.send("#{field[:field]}_changed?")
     end
 end
