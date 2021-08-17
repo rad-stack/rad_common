@@ -45,7 +45,11 @@ class PhoneNumberValidator < ActiveModel::Validator
 
     def check_twilio?(record, field)
       return false if record.running_global_validity
+      return true if record.send("#{field[:field]}_changed?")
 
-      record.send("#{field[:field]}_changed?")
+      # this is a hack to make this work properly for SP, see Task 34650
+      return false unless record.respond_to?(:communication_method_id)
+
+      record.communication_method_id_changed?
     end
 end
