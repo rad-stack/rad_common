@@ -13,6 +13,10 @@ class RadicalEnum
     translation enum_value
   end
 
+  def translation(enum_value)
+    I18n.t(translation_key(enum_value), default: enum_value.to_s.titleize)
+  end
+
   def options
     retrieve_options false
   end
@@ -29,10 +33,6 @@ class RadicalEnum
 
     def enum_values
       enum_class.send(enums_name)
-    end
-
-    def translation(enum_value)
-      I18n.t(translation_key(enum_value), default: enum_value.to_s.titleize)
     end
 
     def translation_key(enum_value)

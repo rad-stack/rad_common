@@ -88,6 +88,10 @@ module RadCommon
       RadicalEnum.new(klass, enum_name).options
     end
 
+    def enum_translation(klass, enum_name, value)
+      RadicalEnum.new(klass, enum_name).translation(value)
+    end
+
     def bootstrap_flash
       flash_messages = []
 
