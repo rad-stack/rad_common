@@ -95,22 +95,29 @@ module RadCommon
         # Skip empty messages, e.g. for devise messages set to nothing in a locale file.
         next if message.blank?
 
-        type = type.to_sym
-        type = :success if type == :notice
-        type = :danger  if type == :alert
-        type = :danger  if type == :error
+        type = bootstrap_flash_type(type)
         next unless ALERT_TYPES.include?(type)
 
-        tag_options = { class: "alert in alert-#{type}" }
-        close_button = tag.button(raw('&times;'), type: 'button', class: 'close', 'data-dismiss' => 'alert')
-
         Array(message).each do |msg|
-          text = tag.div(close_button + msg, tag_options)
-          flash_messages << text if msg
+          flash_messages << tag.div(bootstrap_flash_close_button + msg, { class: "alert in alert-#{type}" }) if msg
         end
       end
 
-      flash_messages.join.html_safe
+      safe_join flash_messages
+    end
+
+    def bootstrap_flash_type(type)
+      type = type.to_sym
+
+      type = :success if type == :notice
+      type = :danger  if type == :alert
+      type = :danger  if type == :error
+
+      type
+    end
+
+    def bootstrap_flash_close_button
+      tag.button(sanitize('&times;'), type: 'button', class: 'close', 'data-dismiss': 'alert')
     end
 
     def base_errors(form)
