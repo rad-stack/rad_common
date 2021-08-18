@@ -40,9 +40,11 @@ class RadicalEnum
     end
 
     def retrieve_options(db_values)
-      enum_values.map { |enum_value, db_value|
+      items = enum_values.map do |enum_value, db_value|
         value = db_values ? db_value : enum_value
         [translation(enum_value), value]
-      }.reject { |item, _enum_value| item.blank? }
+      end
+
+      items.reject { |item, _enum_value| item.blank? }
     end
 end
