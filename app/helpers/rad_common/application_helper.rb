@@ -80,55 +80,48 @@ module RadCommon
       Regexp.new regex_str
     end
 
-    def enum_to_translated_option(klass, enum, enum_value, default = enum_value.to_s.titleize)
-      return if enum_value.blank?
-
-      enums = enum.to_s.pluralize
-      key = "activerecord.attributes.#{klass.to_s.underscore.gsub('/', '_')}.#{enums}.#{enum_value}"
-      I18n.t(key, default: default)
+    def enum_to_translated_option(record, enum_name)
+      RadicalEnum.new(record.class, enum_name).translated_option(record)
     end
 
-    def options_for_enum(klass, enum)
-      retrieve_options_for_enum(klass, enum, false)
+    def options_for_enum(klass, enum_name)
+      RadicalEnum.new(klass, enum_name).options
     end
 
-    def db_options_for_enum(klass, enum)
-      retrieve_options_for_enum(klass, enum, true)
+    def enum_translation(klass, enum_name, value)
+      RadicalEnum.new(klass, enum_name).translation(value)
     end
 
-    def retrieve_options_for_enum(klass, enum, db_values)
-      enums = enum.to_s.pluralize
-      enum_values = klass.send(enums)
-      enum_values.map { |enum_value, db_value|
-        translated = enum_to_translated_option(klass, enums, enum_value)
-        value = db_values ? db_value : enum_value
-        [translated, value]
-      }.reject { |translated, _enum_value| translated.blank? }
-    end
-
-    def bootstrap_flash(options = {})
+    def bootstrap_flash
       flash_messages = []
+
       flash.each do |type, message|
         # Skip empty messages, e.g. for devise messages set to nothing in a locale file.
         next if message.blank?
 
-        type = type.to_sym
-        type = :success if type == :notice
-        type = :danger  if type == :alert
-        type = :danger  if type == :error
+        type = bootstrap_flash_type(type)
         next unless ALERT_TYPES.include?(type)
 
-        tag_class = options.extract!(:class)[:class]
-        tag_options = { class: "alert in alert-#{type} #{tag_class}" }.merge(options)
-        close_button = tag.button(raw('&times;'), type: 'button', class: 'close', 'data-dismiss' => 'alert')
-
         Array(message).each do |msg|
-          text = tag.div(close_button + msg, tag_options)
-          flash_messages << text if msg
+          flash_messages << tag.div(bootstrap_flash_close_button + msg, { class: "alert in alert-#{type}" }) if msg
         end
       end
 
-      flash_messages.join.html_safe
+      safe_join flash_messages
+    end
+
+    def bootstrap_flash_type(type)
+      type = type.to_sym
+
+      type = :success if type == :notice
+      type = :danger  if type == :alert
+      type = :danger  if type == :error
+
+      type
+    end
+
+    def bootstrap_flash_close_button
+      tag.button(sanitize('&times;'), type: 'button', class: 'close', 'data-dismiss': 'alert')
     end
 
     def base_errors(form)

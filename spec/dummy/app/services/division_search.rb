@@ -18,7 +18,7 @@ class DivisionSearch < RadCommon::Search
                  ['Inactive', User.inactive.by_name]],
        grouped: true },
      { input_label: 'Status', column: :division_status,
-       options: ApplicationController.helpers.db_options_for_enum(Division, :division_status),
+       options: RadicalEnum.new(Division, :division_status).db_options,
        required: true },
      { column: :name, type: RadCommon::LikeFilter },
      { column: :created_at, type: RadCommon::DateFilter,

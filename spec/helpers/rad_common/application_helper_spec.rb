@@ -50,15 +50,17 @@ describe RadCommon::ApplicationHelper do
 
   describe 'enum_to_translated_option' do
     it 'translates the value' do
-      expect(enum_to_translated_option(Division, :division_status, division.division_status)).to eq 'Active'
+      expect(enum_to_translated_option(division, :division_status)).to eq 'Active'
     end
 
     it 'handles nil' do
-      expect(enum_to_translated_option(Division, :division_status, nil)).to be_nil
+      division.division_status = nil
+      expect(enum_to_translated_option(division, :division_status)).to be_nil
     end
 
     it 'handles blank' do
-      expect(enum_to_translated_option(Division, :division_status, '')).to be_nil
+      division.division_status = ''
+      expect(enum_to_translated_option(division, :division_status)).to be_nil
     end
   end
 
@@ -66,14 +68,6 @@ describe RadCommon::ApplicationHelper do
     subject { options_for_enum(Division, :division_status) }
 
     let(:options) { [%w[Pending status_pending], %w[Active status_active], %w[Inactive status_inactive]] }
-
-    it { is_expected.to eq options }
-  end
-
-  describe 'db_options_for_enum' do
-    subject { db_options_for_enum(Division, :division_status) }
-
-    let(:options) { [['Pending', 0], ['Active', 1], ['Inactive', 2]] }
 
     it { is_expected.to eq options }
   end
