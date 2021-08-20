@@ -6,6 +6,7 @@ default: &default
   secure_sentry: true
   external_users: true
   app_logo_includes_name: true
+  domain_name: example.com
   portal_namespace:
 
   system_usage_models:
