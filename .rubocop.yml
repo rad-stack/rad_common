@@ -140,6 +140,12 @@ Style/Documentation:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
+Style/StringLiterals:
+  Enabled: true
+  Exclude:
+    - 'spec/dummy/config/boot.rb'
+    - 'spec/dummy/config/environment.rb'
+
 # https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/HashEachMethods
 Style/HashEachMethods:
   Enabled: true
