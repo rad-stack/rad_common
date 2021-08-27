@@ -65,6 +65,10 @@ class SystemMessage < ApplicationRecord
     end
   end
 
+  def from_reply_to
+    Rails.application.credentials.from_email
+  end
+
   private
 
     def erase_other
