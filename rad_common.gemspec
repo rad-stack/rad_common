@@ -47,7 +47,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'premailer-rails', '~> 1.10.2'
   s.add_dependency 'puma', '~> 4.3.5'
   s.add_dependency 'pundit'
-  s.add_dependency 'rails', '~> 6.0.3.1'
+  s.add_dependency 'rails', '~> 6.1.4'
   s.add_dependency 'rails_email_validator'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
