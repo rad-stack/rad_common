@@ -34,6 +34,7 @@ module RadCommon
 
         # config
         copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
