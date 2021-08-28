@@ -27,6 +27,7 @@ AllCops:
     - 'spec/dummy/config/initializers/simple_form_bootstrap.rb'
     - 'spec/dummy/config/initializers/simple_form_components.rb'
     - 'spec/dummy/config.ru'
+    - 'config/config.ru'
 
 # Want to use even indentation for the various methods within a class, and
 # also want to be able to indent private methods without errors
@@ -144,7 +145,9 @@ Style/StringLiterals:
   Enabled: true
   Exclude:
     - 'spec/dummy/config/boot.rb'
+    - 'config/boot.rb'
     - 'spec/dummy/config/environment.rb'
+    - 'config/environment.rb'
 
 # https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/HashEachMethods
 Style/HashEachMethods:
