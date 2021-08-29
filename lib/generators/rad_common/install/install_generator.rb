@@ -133,7 +133,7 @@ module RadCommon
                   'config.force_ssl = true'
 
         create_file 'db/seeds.rb' do <<-'RUBY'
-    Seeder.new.seed!
+Seeder.new.seed!
         RUBY
         end
 
