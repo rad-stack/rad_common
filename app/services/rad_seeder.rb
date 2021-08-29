@@ -54,11 +54,19 @@ class RadSeeder
     def seed_company
       return if Company.count.positive?
 
-      FactoryBot.create :company, email: seeded_user_config.first[:email]
+      FactoryBot.create :company, email: seeded_user_config.first[:email], valid_user_domains: valid_user_domains
     end
 
     def seeded_user_config
       Rails.application.credentials.seeded_users
+    end
+
+    def valid_user_domains
+      Rails.env.production? || Rails.env.staging? ? seeded_user_domains : ['example.com']
+    end
+
+    def seeded_user_domains
+      seeded_user_config.pluck(:email).map { |item| item.split('@').last }.uniq.sort
     end
 
     def user_security_roles(seeded_user)
