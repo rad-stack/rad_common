@@ -27,7 +27,7 @@ AllCops:
     - 'spec/dummy/config/initializers/simple_form_bootstrap.rb'
     - 'spec/dummy/config/initializers/simple_form_components.rb'
     - 'spec/dummy/config.ru'
-    - 'config/config.ru'
+    - 'config.ru'
     - 'lib/generators/rad_common/install/install_generator.rb'
 
 # Want to use even indentation for the various methods within a class, and
