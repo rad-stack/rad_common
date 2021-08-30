@@ -22,4 +22,9 @@ module TestHelpers
       false
     end
   end
+
+  def fill_time(id, time)
+    formatted = time.strftime('%m/%e/%Y %I:%M %p')
+    fill_in id, with: formatted
+  end
 end
