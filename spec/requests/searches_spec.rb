@@ -7,21 +7,6 @@ describe 'Searches', type: :request do
 
   before { login_as user, scope: :user }
 
-  context 'when scope search' do
-    context 'with user_name_with_no_where scope' do
-      let(:search_scope) { 'user_name_with_no_where' }
-      let(:search_path) { "/rad_common/global_search?term=#{search_term}&global_search_scope=#{search_scope}" }
-
-      xit 'can search with a compound data scope with no where scope' do
-        # TODO: Task 34788
-        # remove this test on apps that do not have the 'user_name_with_no_where' scope
-        get search_path
-        expect(search_results[0]['value']).to eq user.to_s
-        expect(search_results[0]['id']).to eq user.id
-      end
-    end
-  end
-
   context 'when super search' do
     let(:search_path) { "/rad_common/global_search?term=#{search_term}&super_search=1" }
     let!(:division) { create :division, name: search_term }

@@ -61,12 +61,6 @@ default: &default
         - email
       query_where: email ilike :search
     -
-      name: user_name_with_no_where
-      model: User
-      description: Search user by name
-      columns: []
-      query_order: last_name ASC, first_name ASC, created_at DESC
-    -
       name: division_name
       model: Division
       description: Search division by name

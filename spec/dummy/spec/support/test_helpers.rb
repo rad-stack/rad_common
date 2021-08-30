@@ -27,4 +27,18 @@ module TestHelpers
     formatted = time.strftime('%m/%e/%Y %I:%M %p')
     fill_in id, with: formatted
   end
+
+  def element_should_not_be_found(selector)
+    page.find(selector)
+    false
+  rescue Capybara::ElementNotFound
+    true
+  end
+
+  def element_should_be_found(selector)
+    page.find(selector)
+    true
+  rescue Capybara::ElementNotFound
+    false
+  end
 end
