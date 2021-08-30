@@ -166,7 +166,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     context 'when super_search_exclude' do
       it 'excludes scopes with super_search_exclude marked true' do
         scopes = search_scopes.dup
-        scopes[3][:super_search_exclude] = true
+        scopes[2][:super_search_exclude] = true
         auto_complete = described_class.new(params, scopes, user)
         result = auto_complete.global_super_search_result
         expect(result.count).to eq(1)
