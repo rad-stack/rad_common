@@ -1,4 +1,8 @@
 module TestHelpers
+  def test_photo
+    Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/test_photo.png'), 'image/png')
+  end
+
   def bootstrap_select(value, attrs)
     click_bootstrap_select(attrs)
     find('ul.inner li a span', text: value).click
