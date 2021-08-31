@@ -42,6 +42,7 @@ class RadSeeder
                        authy_enabled: Rails.configuration.rad_common.authy_enabled }
 
         attributes = attributes.merge(mobile_phone: seeded_user[:mobile_phone]) if seeded_user[:mobile_phone].present?
+        attributes = attributes.merge(timezone: seeded_user[:timezone]) if seeded_user[:timezone].present?
 
         if seeded_user[:trait].present?
           FactoryBot.create seeded_user[:factory], seeded_user[:trait], attributes
@@ -54,11 +55,15 @@ class RadSeeder
     def seed_company
       return if Company.count.positive?
 
-      FactoryBot.create :company, email: seeded_user_config.first[:email]
+      FactoryBot.create :company, email: seeded_user_config.first[:email], valid_user_domains: seeded_user_domains
     end
 
     def seeded_user_config
       Rails.application.credentials.seeded_users
+    end
+
+    def seeded_user_domains
+      seeded_user_config.pluck(:email).map { |item| item.split('@').last }.uniq.sort
     end
 
     def user_security_roles(seeded_user)

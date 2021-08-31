@@ -19,7 +19,7 @@ class GlobalAutocomplete
   end
 
   def global_super_search_result
-    raise 'exluded_ids not applicable for super search' if params[:excluded_ids].present?
+    raise 'excluded_ids not applicable for super search' if params[:excluded_ids].present?
 
     scopes = search_scopes.select { |scope| scope_with_where?(scope) }
 

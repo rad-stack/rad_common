@@ -341,6 +341,15 @@ describe User, type: :model do
     end
   end
 
+  describe 'avatar' do
+    let(:user) { create :user, :with_avatar }
+
+    it 'uploads' do
+      expect(user).to be_persisted
+      expect(user.avatar.attached?).to be true
+    end
+  end
+
   def assert_password_with_name(first_name, last_name, password, valid)
     user = FactoryBot.build(:user, first_name: first_name,
                                    last_name: last_name,
