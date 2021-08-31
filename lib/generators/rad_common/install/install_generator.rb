@@ -23,7 +23,6 @@ module RadCommon
         # misc
         template '../../../../../spec/dummy/Procfile', 'Procfile'
         template '../../../../../spec/dummy/package.json', 'package.json'
-        template '../../../../../spec/dummy/db/seeds.rb', 'db/seeds.rb'
         template '../../../../../spec/dummy/app/services/seeder.rb', 'app/services/seeder.rb'
         copy_file '../gitignore.txt', '.gitignore'
 
@@ -34,6 +33,7 @@ module RadCommon
 
         # config
         copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
@@ -94,6 +94,7 @@ module RadCommon
         directory '../../../../../spec/rad_common/', 'spec/rad_common/'
         directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/'
         copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
+        copy_file '../../../../../spec/dummy/spec/support/test_helpers.rb', 'spec/support/test_helpers.rb'
 
         # templates
 
@@ -131,6 +132,11 @@ module RadCommon
         gsub_file 'config/environments/production.rb',
                   '#config.force_ssl = true',
                   'config.force_ssl = true'
+
+        create_file 'db/seeds.rb' do <<-'RUBY'
+Seeder.new.seed!
+        RUBY
+        end
 
         inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
     # added by rad_common

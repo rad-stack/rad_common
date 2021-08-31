@@ -19,6 +19,10 @@ FactoryBot.define do
       security_roles { [create(:security_role, :external)] }
     end
 
+    trait :with_avatar do
+      avatar { test_photo }
+    end
+
     factory :admin do
       security_roles { [create(:security_role, :admin)] }
     end
