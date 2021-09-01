@@ -232,3 +232,8 @@ td.fa.security-group-td { border-style: none; }
 }
 
 /* custom bootstrap styles */
+
+/* default placeholder for secondary btn is too light */
+form.simple_form.search button.btn-secondary.bs-placeholder {
+  color: #999 !important;
+}
