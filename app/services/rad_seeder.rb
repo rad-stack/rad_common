@@ -63,7 +63,15 @@ class RadSeeder
     end
 
     def seeded_user_domains
-      seeded_user_config.pluck(:email).map { |item| item.split('@').last }.uniq.sort
+      internal_user_emails.map { |item| item.split('@').last }.uniq.sort
+    end
+
+    def internal_user_emails
+      seeded_user_config.map do |item|
+        next if item[:trait] == 'external'
+
+        item[:email]
+      end.compact
     end
 
     def user_security_roles(seeded_user)
