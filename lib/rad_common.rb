@@ -22,6 +22,9 @@ module RadCommon
                               application/x-secure-download
                               application/x-zip-compressed
                               application/zip
+                              application/vnd.apple.pages
+                              application/vnd.apple.keynote
+                              application/vnd.apple.numbers
                               image/bmp
                               image/gif
                               image/jpeg
