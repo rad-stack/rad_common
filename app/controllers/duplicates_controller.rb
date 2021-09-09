@@ -126,9 +126,6 @@ class DuplicatesController < ApplicationController
 
     def notify_user(subject, message)
       RadbearMailer.simple_message(current_user, subject, message, email_options).deliver_later
-
-      # TODO: remove this once done monitoring
-      RadbearMailer.simple_message('gary@radicalbear.com', subject, message, email_options).deliver_later
     end
 
     def email_options
