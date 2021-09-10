@@ -182,6 +182,14 @@ module RadbearUser
     end
   end
 
+  def test_email!
+    RadbearMailer.simple_message(self, 'Test Email', 'This is a test.').deliver_later
+  end
+
+  def test_sms!(from_user)
+    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil
+  end
+
   private
 
     def check_defaults

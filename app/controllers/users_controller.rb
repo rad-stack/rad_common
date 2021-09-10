@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm reset_authy]
+  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm reset_authy test_email test_sms]
 
   def index
     authorize User
@@ -113,6 +113,18 @@ class UsersController < ApplicationController
   def reset_authy
     @user.reset_authy!
     flash[:success] = 'User was successfully reset.'
+    redirect_to @user
+  end
+
+  def test_email
+    @user.test_email!
+    flash[:success] = 'A test email was sent to the user.'
+    redirect_to @user
+  end
+
+  def test_sms
+    @user.test_sms! current_user
+    flash[:success] = 'A test SMS was sent to the user.'
     redirect_to @user
   end
 

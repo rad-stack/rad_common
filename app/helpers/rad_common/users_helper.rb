@@ -21,7 +21,11 @@ module RadCommon
     end
 
     def user_actions(user)
-      [user_confirm_action(user), user_reset_authy_action(user)]
+      [user_confirm_action(user),
+       user_resend_action(user),
+       user_reset_authy_action(user),
+       user_test_email_action(user),
+       user_test_sms_action(user)]
     end
 
     def user_confirm_action(user)
@@ -33,6 +37,16 @@ module RadCommon
                                                                       class: 'btn btn-warning btn-sm'
     end
 
+    def user_resend_action(user)
+      return unless policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
+
+      link_to 'Resend Invitation',
+              resend_invitation_user_path(user),
+              method: :put,
+              class: 'btn btn-sm btn-success btn-block',
+              data: { confirm: 'Are you sure?' }
+    end
+
     def user_reset_authy_action(user)
       return unless Rails.configuration.rad_common.authy_enabled && policy(user).update? && user.authy_enabled?
 
@@ -42,6 +56,26 @@ module RadCommon
       link_to icon(:refresh, 'Reset Two Factor'), reset_authy_user_path(user), method: :put,
                                                                                data: { confirm: confirm },
                                                                                class: 'btn btn-warning btn-sm'
+    end
+
+    def user_test_email_action(user)
+      return unless policy(user).test_email?
+
+      link_to icon(:envelope, 'Send Test Email'),
+              "/rad_common/users/#{user.id}/test_email",
+              method: :put,
+              class: 'btn btn-secondary btn-sm',
+              data: { confirm: 'Are you sure?' }
+    end
+
+    def user_test_sms_action(user)
+      return unless RadicalTwilio.new.twilio_enabled? && user.mobile_phone.present? && policy(user).test_sms?
+
+      link_to icon(:comments, 'Send Test SMS'),
+              "/rad_common/users/#{user.id}/test_sms",
+              method: :put,
+              class: 'btn btn-secondary btn-sm',
+              data: { confirm: 'Are you sure?' }
     end
 
     def export_users_button(user_search)

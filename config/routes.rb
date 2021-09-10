@@ -13,6 +13,13 @@ RadCommon::Engine.routes.draw do
   get 'company/edit', to: 'companies#edit'
   put 'company/update', to: 'companies#update'
 
+  resources :users, only: [] do
+    member do
+      put :test_email
+      put :test_sms
+    end
+  end
+
   resources :audits, only: :index
   resources :system_messages, only: %i[new create show]
   resources :system_usages, only: %i[index]
