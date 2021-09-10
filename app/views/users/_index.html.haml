@@ -55,12 +55,5 @@
                           data: { confirm: 'Are you sure?' },
                           class: 'btn btn-danger btn-sm btn-block btn-block'
 
-              - if policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
-                = link_to 'Resend Invitation',
-                          resend_invitation_user_path(user),
-                          method: :put,
-                          class: 'btn btn-sm btn-success btn-block',
-                          data: { confirm: 'Are you sure?' }
-
     - if users.respond_to?(:current_page)
       = paginate users, param_name: page_param_name, theme: 'twitter-bootstrap-4'
