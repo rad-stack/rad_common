@@ -77,7 +77,7 @@ describe 'Invitations', type: :system do
         click_button 'Send'
         expect(page).to have_content "We invited '#{first_name} #{last_name}'"
 
-        visit users_path
+        visit user_path(User.last)
         click_link 'Resend Invitation'
         expect(page).to have_content 'We resent the invitation to the user.'
       end
