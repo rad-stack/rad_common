@@ -43,7 +43,7 @@ module RadCommon
       link_to 'Resend Invitation',
               resend_invitation_user_path(user),
               method: :put,
-              class: 'btn btn-sm btn-success btn-block',
+              class: 'btn btn-sm btn-success',
               data: { confirm: 'Are you sure?' }
     end
 
