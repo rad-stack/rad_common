@@ -29,15 +29,8 @@ class EmailAddressValidator < ActiveModel::Validator
     end
 
     def check_send_grid?(record, field)
-      return true if always_check_send_grid?
       return false if record.running_global_validity
 
       record.send("#{field}_changed?")
-    end
-
-    def always_check_send_grid?
-      Rails.application.credentials.sendgrid.present? &&
-        Rails.application.credentials.sendgrid[:always_validate].present? &&
-        Rails.application.credentials.sendgrid[:always_validate] == true
     end
 end
