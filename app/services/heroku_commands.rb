@@ -58,6 +58,9 @@ class HerokuCommands
         write_log 'Changing passwords'
         change_user_passwords
 
+        write_log 'Changing Active Storage service to local'
+        ActiveStorage::Blob.update_all service_name: 'local'
+
         write_log 'Clearing certain production data'
         remove_user_avatars
         remove_accounting_keys
