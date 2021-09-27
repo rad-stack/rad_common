@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'momentjs-rails', '~> 2.9', '>= 2.9.0'
 
   # security update required higher version
-  s.add_dependency 'nokogiri', '~> 1.11.4'
+  s.add_dependency 'nokogiri', '>= 1.11.4', '< 1.13.0'
 
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
