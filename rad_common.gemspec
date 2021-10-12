@@ -45,7 +45,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
-  s.add_dependency 'puma', '~> 4.3.5'
+  s.add_dependency 'puma', '>= 4.3.5', '< 5.6.0'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1.4'
   s.add_dependency 'rails_email_validator'
