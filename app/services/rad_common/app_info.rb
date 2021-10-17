@@ -4,6 +4,10 @@ module RadCommon
       (ActiveRecord::Base.connection.tables - exclude_tables).sort
     end
 
+    def rad_common_tables
+      %w[duplicates notification_security_roles notification_settings notifications system_messages user_security_roles]
+    end
+
     def application_models
       application_tables.map(&:classify).sort
     end
