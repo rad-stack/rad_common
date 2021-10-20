@@ -29,7 +29,7 @@ module RadCommon
     end
 
     def user_confirm_action(user)
-      return unless policy(user).update? && !user.confirmed?
+      return unless Devise.mappings[:user].confirmable? && policy(user).update? && !user.confirmed?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
       link_to icon(:check, 'Confirm Email'), confirm_user_path(user), method: :put,

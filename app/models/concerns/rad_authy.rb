@@ -14,6 +14,8 @@ module RadAuthy
   private
 
     def validate_authy
+      return unless Rails.configuration.rad_common.authy_enabled
+
       unless authy_enabled?
         errors.add(:base, 'user is not valid for two factor authentication') if authy_id.present?
         return
@@ -29,9 +31,7 @@ module RadAuthy
     end
 
     def maybe_update_authy
-      unless Rails.application.credentials.authy_api_key.present? && (authy_enabled_changed? || mobile_phone_changed?)
-        return
-      end
+      return unless Rails.configuration.rad_common.authy_enabled && (authy_enabled_changed? || mobile_phone_changed?)
 
       # delete the authy user if it exists
       if authy_id.present?
