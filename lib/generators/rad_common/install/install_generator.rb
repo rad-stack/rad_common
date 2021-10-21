@@ -23,6 +23,7 @@ module RadCommon
         # misc
         template '../../../../../spec/dummy/Procfile', 'Procfile'
         template '../../../../../spec/dummy/package.json', 'package.json'
+        copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         template '../../../../../spec/dummy/app/services/seeder.rb', 'app/services/seeder.rb'
         copy_file '../gitignore.txt', '.gitignore'
 
