@@ -252,7 +252,7 @@ Seeder.new.seed!
       protected
 
         def apply_migration(source)
-          filename = source.split('_').drop(1).join('_').delete('.rb')
+          filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
           if self.class.migration_exists?('db/migrate', filename)
             say_status('skipped', "Migration #{filename}.rb already exists")
