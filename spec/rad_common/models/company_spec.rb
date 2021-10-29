@@ -5,12 +5,12 @@ describe Company, type: :model do
 
   describe 'valid user domains' do
     it 'allows valid user domains' do
-      company.update! valid_user_domains_entry: 'foo.bar, me.too'
+      company.update! valid_user_domains: %w[foo.bar me.too]
       expect(company.valid_user_domains).to eq %w[foo.bar me.too]
     end
 
     it 'strips blank user domains' do
-      company.update! valid_user_domains_entry: 'foo.bar, me.too, '
+      company.update! valid_user_domains: [' foo.bar', 'me.too ']
       expect(company.valid_user_domains).to eq %w[foo.bar me.too]
     end
   end

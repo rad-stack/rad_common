@@ -99,6 +99,11 @@ $ ->
   humanize = (string) ->
     string[0].toUpperCase() + string.substring(1).replace(/([a-z])(?=[A-Z])/g, "$1 ")
 
+  $(".array-add-btn").click ->
+    clone = $(this).closest(".form-group").find("input").last().clone()
+    clone.val("")
+    $(clone).insertBefore($(this))
+
 checkClientUser = ->
   if $('#user_external').is(':checked')
     $('.internal').hide()
