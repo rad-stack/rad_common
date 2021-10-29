@@ -26,7 +26,8 @@ class RadAuditSearch < RadCommon::Search
          column: :action,
          options: %w[create update destroy] },
        { column: :remote_address, type: RadCommon::LikeFilter },
-       { column: :auditable_id, type: RadCommon::EqualsFilter, data_type: :integer }]
+       { column: :auditable_id, type: RadCommon::EqualsFilter, data_type: :integer },
+       { column: :audited_changes, type: RadCommon::LikeFilter }]
     end
 
     def sort_columns_def
@@ -36,6 +37,7 @@ class RadAuditSearch < RadCommon::Search
        { label: 'User' },
        { label: 'Action' },
        { label: 'Remote Address', column: 'remote_address' },
+       { label: 'Audit ID', column: 'audits.id' },
        { label: 'Changes' }]
     end
 
