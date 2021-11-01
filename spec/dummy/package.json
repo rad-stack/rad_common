@@ -10,6 +10,7 @@
     "ws": "^7.4.6"
   },
   "devDependencies": {
+    "webpack": "^4.41.2",
     "webpack-dev-server": "^3.10.1"
   },
   "resolutions": {
