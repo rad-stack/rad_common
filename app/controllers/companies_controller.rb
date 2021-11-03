@@ -21,8 +21,8 @@ class CompaniesController < ApplicationController
     end
 
     def base_params
-      %i[name phone_number website email address_1 address_2 city state zipcode validity_checked_at
-         valid_user_domains_entry timezone]
+      [:name, :phone_number, :website, :email, :address_1, :address_2, :city, :state, :zipcode, :validity_checked_at,
+       :timezone, { valid_user_domains: [] }]
     end
 
     def permitted_params

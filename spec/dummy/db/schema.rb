@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_27_121950) do
+ActiveRecord::Schema.define(version: 2021_10_29_155622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -105,7 +105,7 @@ ActiveRecord::Schema.define(version: 2021_08_27_121950) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "validity_checked_at"
-    t.text "valid_user_domains", default: [], array: true
+    t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
   end
 

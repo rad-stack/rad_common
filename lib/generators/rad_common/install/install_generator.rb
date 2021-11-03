@@ -185,160 +185,59 @@ Seeder.new.seed!
         RUBY
         end
 
-        apply_migration '../../../../../spec/dummy/db/migrate/20140302111111_add_radbear_user_fields.rb',
-                        'add_radbear_user_fields'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20140827111111_add_name_index_to_users.rb',
-                        'add_name_index_to_users'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20140903124700_expand_facebook_access_token.rb',
-                        'expand_facebook_access_token'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20141029233028_add_company_table.rb',
-                        'add_company_table'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20141110200841_add_logo_stuff_to_company.rb',
-                        'add_logo_stuff_to_company'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20150221211338_add_optional_emails.rb',
-                        'add_optional_emails'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20150810232946_add_user_global_search_default.rb',
-                        'add_user_global_search_default'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20150916175409_remove_twitter.rb',
-                        'remove_twitter'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20160929174209_add_string_limits.rb',
-                        'add_string_limits'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20170702133404_company_validity_check.rb',
-                        'company_validity_check'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20170811123959_security_groups.rb',
-                        'security_groups'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20171122123931_user_statuses.rb',
-                        'user_statuses'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20171230132438_super_search_default.rb',
-                        'super_search_default'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20180314163722_devise_authy_add_to_users.rb',
-                        'devise_authy_add_to_users'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20180411144821_convert_to_roles.rb',
-                        'convert_to_roles'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20180509112357_remove_optional_emails.rb',
-                        'remove_optional_emails'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20180526160907_require_user_names.rb',
-                        'require_user_names'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20180609150231_company_valid_domains.rb',
-                        'company_valid_domains'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20180925214758_remove_rad_common_unused_fields.rb',
-                        'remove_rad_common_unused_fields'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20190130182443_remove_logo_settings.rb',
-                        'remove_logo_settings'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20190225194928_devise_invitable_add_to_users.rb',
-                        'devise_invitable_add_to_users'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20190318115634_user_notifications.rb',
-                        'user_notifications'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20190429211944_remove_super_search_from_users.rb',
-                        'remove_super_search_from_users'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20190524132649_refactor_notifications.rb',
-                        'refactor_notifications'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20190810122656_create_system_messages.rb',
-                        'create_system_messages'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20190829220515_add_message_type_to_system_messages.rb',
-                        'add_message_type_to_system_messages'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20190911120012_timezones.rb', 'timezones'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20190919163914_remove_super_admin.rb',
-                        'remove_super_admin'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20190929125052_notification_auth_mode.rb',
-                        'notification_auth_mode'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20191112111902_devise_lockable.rb',
-                        'devise_lockable'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20200128185735_make_message_not_required.rb',
-                        'make_message_not_required'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20200203163827_convert_rich_text.rb',
-                        'convert_rich_text'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20200227134827_create_rad_common_notifications.rb',
-                        'create_rad_common_notifications'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20200306204548_notifications_sti.rb',
-                        'notifications_sti'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20200311113900_fix_notification_names.rb',
-                        'fix_notification_names'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20200325152933_devise_security_updates.rb',
-                        'devise_security_updates'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20200408180735_ran_long_notification.rb',
-                        'ran_long_notification'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20200526144750_convert_filter_defaults_to_json.rb',
-                        'convert_filter_defaults_to_json.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20200530154123_filter_defaults_for_all.rb',
-                        'filter_defaults_for_all.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20200810143832_create_login_activities.rb',
-                        'create_login_activities.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20200903192242_rename_security_roles.rb',
-                        'rename_security_roles.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20210104154427_remove_current_phone.rb',
-                        'remove_current_phone.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20210111201627_create_twilio_logs.rb',
-                        'create_twilio_logs.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20210119145517_external_security_roles.rb',
-                        'external_security_roles.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20210126120121_require_twilio_user.rb',
-                        'require_twilio_user.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20210204112040_system_message_role.rb',
-                        'system_message_role.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20210419153508_create_duplicates.rb',
-                        'create_duplicates.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20210428131743_unique_duplicates.rb',
-                        'unique_duplicates.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20210522104137_duplicates_processed.rb',
-                        'duplicates_processed.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20210621112203_opt_out_message_sent.rb',
-                        'opt_out_message_sent.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20210729135942_authy_always_enabled.rb',
-                        'authy_always_enabled.rb'
-
-        apply_migration '../../../../../spec/dummy/db/migrate/20210805105809_fix_notification_defaults.rb',
-                        'fix_notification_defaults.rb'
+        apply_migration '20140302111111_add_radbear_user_fields.rb'
+        apply_migration '20140827111111_add_name_index_to_users.rb'
+        apply_migration '20140903124700_expand_facebook_access_token.rb'
+        apply_migration '20141029233028_add_company_table.rb'
+        apply_migration '20141110200841_add_logo_stuff_to_company.rb'
+        apply_migration '20150221211338_add_optional_emails.rb'
+        apply_migration '20150810232946_add_user_global_search_default.rb'
+        apply_migration '20150916175409_remove_twitter.rb'
+        apply_migration '20160929174209_add_string_limits.rb'
+        apply_migration '20170702133404_company_validity_check.rb'
+        apply_migration '20170811123959_security_groups.rb'
+        apply_migration '20171122123931_user_statuses.rb'
+        apply_migration '20171230132438_super_search_default.rb'
+        apply_migration '20180314163722_devise_authy_add_to_users.rb'
+        apply_migration '20180411144821_convert_to_roles.rb'
+        apply_migration '20180509112357_remove_optional_emails.rb'
+        apply_migration '20180526160907_require_user_names.rb'
+        apply_migration '20180609150231_company_valid_domains.rb'
+        apply_migration '20180925214758_remove_rad_common_unused_fields.rb'
+        apply_migration '20190130182443_remove_logo_settings.rb'
+        apply_migration '20190225194928_devise_invitable_add_to_users.rb'
+        apply_migration '20190318115634_user_notifications.rb'
+        apply_migration '20190429211944_remove_super_search_from_users.rb'
+        apply_migration '20190524132649_refactor_notifications.rb'
+        apply_migration '20190810122656_create_system_messages.rb'
+        apply_migration '20190829220515_add_message_type_to_system_messages.rb'
+        apply_migration '20190911120012_timezones.rb'
+        apply_migration '20190919163914_remove_super_admin.rb'
+        apply_migration '20190929125052_notification_auth_mode.rb'
+        apply_migration '20191112111902_devise_lockable.rb'
+        apply_migration '20200128185735_make_message_not_required.rb'
+        apply_migration '20200203163827_convert_rich_text.rb'
+        apply_migration '20200227134827_create_rad_common_notifications.rb'
+        apply_migration '20200306204548_notifications_sti.rb'
+        apply_migration '20200311113900_fix_notification_names.rb'
+        apply_migration '20200325152933_devise_security_updates.rb'
+        apply_migration '20200408180735_ran_long_notification.rb'
+        apply_migration '20200526144750_convert_filter_defaults_to_json.rb'
+        apply_migration '20200530154123_filter_defaults_for_all.rb'
+        apply_migration '20200810143832_create_login_activities.rb'
+        apply_migration '20200903192242_rename_security_roles.rb'
+        apply_migration '20210104154427_remove_current_phone.rb'
+        apply_migration '20210111201627_create_twilio_logs.rb'
+        apply_migration '20210119145517_external_security_roles.rb'
+        apply_migration '20210126120121_require_twilio_user.rb'
+        apply_migration '20210204112040_system_message_role.rb'
+        apply_migration '20210419153508_create_duplicates.rb'
+        apply_migration '20210428131743_unique_duplicates.rb'
+        apply_migration '20210522104137_duplicates_processed.rb'
+        apply_migration '20210621112203_opt_out_message_sent.rb'
+        apply_migration '20210729135942_authy_always_enabled.rb'
+        apply_migration '20210805105809_fix_notification_defaults.rb'
+        apply_migration '20211029155622_fix_array_type.rb'
       end
 
       def self.next_migration_number(path)
@@ -352,11 +251,14 @@ Seeder.new.seed!
 
       protected
 
-        def apply_migration(source, filename)
+        def apply_migration(source)
+          filename = source.split('_').drop(1).join('_').gsub('.rb', '')
+
           if self.class.migration_exists?('db/migrate', filename)
             say_status('skipped', "Migration #{filename}.rb already exists")
           else
-            migration_template source, "db/migrate/#{filename}.rb"
+            migration_template "../../../../../spec/dummy/db/migrate/#{source}",
+                               "db/migrate/#{filename}.rb"
           end
         end
 
