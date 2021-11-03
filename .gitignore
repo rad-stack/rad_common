@@ -20,4 +20,6 @@ spec/dummy/node_modules
 spec/dummy/yarn-error.log
 spec/dummy/yarn-debug.log*
 spec/dummy/.yarn-integrity
+
 spec/dummy/config/credentials/test.key
+spec/dummy/config/credentials/development.key
