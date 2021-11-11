@@ -2,15 +2,16 @@ module HasAddress
   extend ActiveSupport::Concern
 
   def full_address
-    [address_line_1, address_line_2].compact.join(', ').presence
+    "#{address_line_1}, #{address_line_2}"
   end
 
   def address_line_1
-    [address_1, address_2].compact.join(', ').presence
+    line = address_1
+    line = "#{line}, #{address_2}" if address_2.present?
+    line
   end
 
   def address_line_2
-    city_state = [city, state].compact.join(', ').presence
-    [city_state, zipcode].compact.join(' ').presence
+    "#{city}, #{state} #{zipcode}"
   end
 end

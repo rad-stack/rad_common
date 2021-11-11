@@ -18,7 +18,7 @@ module RadCommon
     def validate_params
       valid = true
       @filters.each do |filter|
-        valid = false if filter.respond_to?(:validate_params) && !filter.validate_params(@search.search_params)
+        valid = filter.validate_params(@search.search_params) if filter.respond_to? :validate_params
       end
 
       valid
@@ -50,9 +50,7 @@ module RadCommon
       def build_search_filters(filters)
         filters.map do |filter|
           if filter.has_key? :type
-            filter_type = filter[:type]
-            filter.delete(:type)
-            filter_type.send(:new, filter)
+            filter[:type].send(:new, filter)
           else
             SearchFilter.new(filter)
           end
@@ -65,7 +63,7 @@ module RadCommon
 
       def check_policy(query)
         if @current_user.portal?
-          [Rails.configuration.rad_common.portal_namespace, query]
+          [RadCommon.portal_namespace, query]
         else
           query
         end

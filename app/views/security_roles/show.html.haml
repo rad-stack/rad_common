@@ -1,8 +1,6 @@
 .card
   = render 'layouts/card_header'
   .card-body
-    - if Rails.configuration.rad_common.external_users
-      = render 'layouts/show_data_columns', data: [:external], resource: @security_role
     .row
       .col-lg-6
         %h3 Permissions
@@ -16,16 +14,14 @@
               %td
                 = link_to name, permission_security_roles_path(permission_name: permission)
                 = permission_tooltip_content(permission)
-              %td{ class: @security_role.send(permission) ? 'fa fa-check green-check' : 'fa fa-times red-x' }
+              %td{class: @security_role.send(permission) ? 'fa fa-check green-check' : 'fa fa-times red-x'}
       .col-lg-6
-        - users = @security_role.users.active.by_name
+        -users = @security_role.users.active.by_name
         %h3 Users in Role (#{users.count})
         %table.table.table-striped.table-bordered
           %tr
             %th Name
-            %th Last Active
 
-          - users.each do |user|
+          -users.each do |user|
             %tr
               %td= secured_link(user)
-              %td= format_date(user.last_activity_at)

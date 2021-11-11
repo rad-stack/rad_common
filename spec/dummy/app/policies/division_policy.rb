@@ -16,7 +16,6 @@ class DivisionPolicy < ApplicationPolicy
   end
 
   alias index? show?
-  alias audit? destroy?
 
   class Scope < Scope
     def resolve

@@ -1,151 +1,154 @@
 class HerokuCommands
   class << self
-    def backup(app_name)
+    def app_option(app_name = '')
+      app_name.blank? ? '' : "--app #{app_name}"
+    end
+
+    def backup_dump_file(app_name = '')
+      if app_name.blank?
+        "#{dump_folder}/#{Date.current}.backup"
+      else
+        "#{dump_folder}/#{app_name}_#{Date.current}.backup"
+      end
+    end
+
+    def clone_dump_file
+      'latest.dump'
+    end
+
+    def dump_folder
+      "#{Rails.root}/heroku_backups"
+    end
+
+    def local_host
+      'localhost'
+    end
+
+    def local_user
+      `whoami`.strip!
+    end
+
+    def dbname
+      YAML.load_file('config/database.yml')['development']['database']
+    end
+
+    def backup(app_name = '')
       check_production do
         FileUtils.mkdir_p dump_folder
 
-        Bundler.with_unbundled_env do
+        Bundler.with_clean_env do
           url_output = `heroku pg:backups public-url #{app_option(app_name)}`
-          backup_url = "\"#{url_output.strip}\""
+          backup_url = '"' + url_output.strip + '"'
 
-          write_log backup_url
-          write_log 'Downloading last backup file:'
-          write_log `curl -o #{backup_dump_file(app_name)} #{backup_url}`
+          puts backup_url
+          puts 'Downloading last backup file:'
+          puts `curl -o #{backup_dump_file} #{backup_url}`
         end
       end
     end
 
     def restore_from_backup(file_name)
-      write_log 'Dropping existing database schema'
-      write_log `psql -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public" -h #{local_host} -U #{local_user} -d #{dbname}`
-      write_log 'Restoring dump file to local'
-      write_log `pg_restore --verbose --clean --no-acl --no-owner -h #{local_host} -U #{local_user} -d #{dbname} #{file_name}`
+      puts 'Dropping existing database schema'
+      puts `psql -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public" -h #{local_host} -U #{local_user} -d #{dbname}`
+      puts 'Restoring dump file to local'
+      puts `pg_restore --verbose --clean --no-acl --no-owner -h #{local_host} -U #{local_user} -d #{dbname} #{file_name}`
     end
 
     def dump(file_name = '')
       dump_file_name = file_name.presence || 'your_data.dump'
-      write_log 'Dumping your local database'
-      write_log `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
+      puts 'Dumping your local database'
+      puts `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
     end
 
-    def clone(app_name, backup_id)
+    def clone(app_name = '', specific_company_id: nil, keep_dump_file: nil)
       check_production do
-        write_log 'Running backup on Heroku...'
+        puts 'Running backup on Heroku...'
+        Bundler.with_clean_env do
+          capture_output = `heroku pg:backups capture #{app_option(app_name)}`
+          url_output     = `heroku pg:backups public-url #{app_option(app_name)}`
+          backup_url     = '"' + url_output.strip + '"'
 
-        Bundler.with_unbundled_env do
-          `heroku pg:backups capture #{app_option(app_name)}`
-
-          url_output = if backup_id.present?
-                         `heroku pg:backups public-url #{backup_id} #{app_option(app_name)}`
-                       else
-                         `heroku pg:backups public-url #{app_option(app_name)}`
-                       end
-
-          backup_url = "\"#{url_output.strip}\""
-
-          write_log 'Downloading dump file:'
-          write_log `curl -o #{clone_dump_file} #{backup_url}`
+          puts 'Downloading dump file:'
+          puts `curl -o #{clone_dump_file} #{backup_url}`
         end
 
         restore_from_backup(clone_dump_file)
 
-        write_log 'Deleting temporary dump file'
-        write_log `rm #{clone_dump_file}`
+        puts 'Deleting temporary dump file'
+        puts `rm #{clone_dump_file}`
 
-        write_log 'Migrating database'
-        write_log `skip_on_db_migrate=1 rake db:migrate`
+        puts 'Migrating database'
+        puts `skip_on_db_migrate=1 rake db:migrate`
 
-        write_log 'Changing passwords'
+        puts 'Changing passwords'
         change_user_passwords
 
-        write_log 'Changing Active Storage service to local'
-        ActiveStorage::Blob.update_all service_name: 'local'
-
-        write_log 'Clearing certain production data'
+        puts 'Clearing certain production data'
         remove_user_avatars
         remove_accounting_keys
-        User.update_all authy_enabled: false, authy_id: nil
+        User.update_all authy_enabled: false
+
+        remove_unspecified_companies(specific_company_id) if specific_company_id.present?
+
+        dump if keep_dump_file.present?
       end
     end
 
     private
 
-      def app_option(app_name)
-        "--app #{app_name}"
-      end
-
-      def backup_dump_file(app_name)
-        "#{dump_folder}/#{app_name}_#{Date.current}.backup"
-      end
-
-      def clone_dump_file
-        'latest.dump'
-      end
-
-      def dump_folder
-        "#{Rails.root}/heroku_backups"
-      end
-
-      def local_host
-        'localhost'
-      end
-
-      def local_user
-        `whoami`.strip!
-      end
-
-      def dbname
-        YAML.load_file('config/database.yml')['development']['database']
-      end
-
       def check_production
-        if Rails.env.production?
-          write_log 'This is not available in the production environment.'
-        else
+        if !Rails.env.production?
           yield
+        else
+          puts 'This is not available in the production environment.'
         end
       end
 
       def change_user_passwords
-        User.skip_callback :update, :after, :send_password_change_notification
-
         User.order(:id).find_each do |user|
           user.password = 'password'
           user.password_confirmation = 'password'
 
           unless user.save(validate: false)
-            write_log "could not change password for user #{user.id}: #{user.errors.full_messages.join(' ')}"
+            puts "could not change password for user #{user.id}: #{user.errors.full_messages.join(' ')}"
           end
         end
       end
 
       def remove_user_avatars
-        return unless User.new.respond_to?(:avatar)
-
-        User.joins(:avatar_attachment).order(:id).each do |user|
-          user.avatar.purge_later
+        if User.new.respond_to?(:avatar)
+          User.joins(:avatar_attachment).order(:id).each do |user|
+            user.avatar.purge_later
+          end
         end
       end
 
       def remove_accounting_keys
-        company = Company.main
-        return unless company.respond_to?(:quickbooks_access_token)
+        Company.find_each do |company|
+          if company.respond_to?(:quickbooks_access_token)
+            # TODO: pull this out of the generic gem and move to the Groundswell project with some type of call back that can be project specific
+            # same with avatars & logos above, those should only run for RBMT projects
 
-        # TODO: pull this out of the generic gem and move to the Groundswell
-        # TODO: project with some type of call back that can be project specific
+            company.quickbooks_company_id = nil
+            company.quickbooks_token = nil
+            company.quickbooks_refresh_token = nil
+            company.refresh_token_by = nil
+            company.stripe_publishable_key = nil
+            company.stripe_secret_key = nil
 
-        company.quickbooks_company_id = nil
-        company.quickbooks_token = nil
-        company.quickbooks_refresh_token = nil
-        company.refresh_token_by = nil
-        company.stripe_publishable_key = nil
-        company.stripe_secret_key = nil
-
-        company.save!(validate: false)
+            company.save!(validate: false)
+          end
+        end
       end
 
-      def write_log(message)
-        puts message
+      def remove_unspecified_companies(specific_company_id)
+        # TODO: this should only be applicable for RBMT projects
+
+        puts 'Removing other company info'
+        Company.where.not(id: specific_company_id).each do |company|
+          puts "Destroying company: #{company.name}"
+          company.destroy_company!
+        end
       end
   end
 end

@@ -1,16 +1,10 @@
 require 'rails_helper'
-require 'rake_session'
-
-class TestRakeTask
-  def name
-    'foo'
-  end
-end
+require 'rake_session.rb'
 
 RSpec.describe RakeSession, type: :lib do
   let(:time_limit) { 1.minute }
   let(:status_frequency) { 1 }
-  let(:session) { described_class.new(TestRakeTask.new, time_limit, status_frequency) }
+  let(:session) { described_class.new(time_limit, status_frequency) }
 
   before { session.reset_status }
 

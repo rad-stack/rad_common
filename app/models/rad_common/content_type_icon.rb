@@ -1,7 +1,6 @@
 module RadCommon
   class ContentTypeIcon
     attr_accessor :content_type
-
     alias_attribute :to_s, :icon
 
     def initialize(content_type)

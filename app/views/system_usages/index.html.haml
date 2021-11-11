@@ -1,45 +1,14 @@
 .card
-  = render 'layouts/card_header', action_name: 'custom',
-                                  title: @system_usage.title,
-                                  icon: 'fa-area-chart'
-
+  = render 'layouts/card_header', action_name: 'custom', title: "System Usage for #{@company.name}", icon: 'fa-area-chart'
   .card-body
-    .row.button-row
-      .col-lg-12
-        .btn-group
-          %a.btn.dropdown-toggle.btn-success{ 'data-toggle': 'dropdown', href: '#' }
-            = @system_usage.date_mode
-          %ul.dropdown-menu
-            - SystemUsage.date_mode_options.each do |item|
-              %li
-                :ruby
-                  path_string = "/rad_common/system_usages?date_mode=#{item}&date_range_"\
-                                "count=#{@system_usage.date_range_count}"
-
-                = link_to item,
-                          path_string,
-                          class: 'dropdown-item'
-
-        .btn-group
-          %a.nav-link.dropdown-toggle.btn-success{ 'data-toggle': 'dropdown', href: '#' }
-            #{@system_usage.date_range_count} Columns
-          %ul.dropdown-menu
-            - SystemUsage.date_range_count_options.each do |item|
-              %li
-                = link_to "#{item} Columns",
-                          "/rad_common/system_usages?date_mode=#{@system_usage.date_mode}&date_range_count=#{item}",
-                          class: 'dropdown-item'
-
     %table.table.table-striped.table-bordered
       %tr
         %th Item
-        - @system_usage.date_column_ranges.each do |item|
-          %th= item[:label]
-        %th Total
+        -@usage_headers.each_with_index do |header|
+          %th= header[:label]
 
-      - @system_usage.usage_items.each_with_index do |_item, item_index|
+      - @usage_items.each_with_index do |item, item_index|
         %tr
-          %td= @system_usage.usage_data[item_index].first[:name]
-          - @system_usage.date_column_ranges.each_with_index do |_header, header_index|
-            %td= @system_usage.usage_data[item_index][header_index][:value]
-          %td= @system_usage.total item_index
+          %td= item
+          -@usage_headers.each_with_index do |header, header_index|
+            %td= @usage_data[item_index][header_index]

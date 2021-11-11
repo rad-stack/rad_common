@@ -1,34 +1,15 @@
 module RadCommon
-  ##
-  # This is a common search pattern to be used within the UI to help filter, display, and sorts results to be displayed within the UI
   class Search
     attr_reader :params, :current_user
 
-    ##
-    # @param [ActiveRecord_Relation] query The base query to start the search off with
-    # @param [Array] filters An array of filters to be displayed at the top of the search. {SearchFilter}, {DateFilter}, or {LikeFilter}
-    # @param [Array optional] sort_columns An array of columns to sort the query by. See {Sorting} for more details.
-    # @param [User] current_user the current user running the query
-    # @param [Hash] params the url params from the current url
-    # @param [String optional] search_name an identifying named used for storing user defaults. Only required when user defaults enabled and not using a custom search class
-    # @param [Boolean optional] turns on sticky filters (aka FilterDefaulting) so that user filter selections are remembered
-    def initialize(query:, filters:, sort_columns: nil, current_user:, params:, search_name: nil, sticky_filters: false)
-      if sticky_filters && search_name.nil? && self.class.to_s == 'RadCommon::Search'
-        raise 'search_name is required when not using a custom search class'
-      end
-
+    def initialize(query:, filters:, sort_columns: nil, current_user:, params:)
       @results = query
       @current_user = current_user
       @params = params
-      @search_name = search_name
       @filtering = Filtering.new(filters: filters, search: self)
-      @defaulting = FilterDefaulting.new(current_user: current_user, search: self, enabled: sticky_filters)
-      @defaulting.apply_defaults
+      defaulting = FilterDefaulting.new(current_user: current_user, search: self)
+      defaulting.apply_defaults
       @sorting = Sorting.new(sort_columns: sort_columns, search: self)
-    end
-
-    def search_name
-      @search_name || self.class.to_s
     end
 
     def results
@@ -37,10 +18,6 @@ module RadCommon
 
     def valid?
       @filtering.validate_params
-    end
-
-    def invalid?
-      !valid?
     end
 
     def errors
@@ -81,22 +58,9 @@ module RadCommon
     end
 
     def default_value?(column)
-      filter = @filtering.filter(column)
-
-      return blank?(column) unless filter.default_value
-
       val = selected_value(column)
-      return true if val.nil?
-      return false if blank?(column)
-
+      filter = @filtering.filter(column)
       val && filter.default_value && val.to_s == filter.default_value.to_s
-    end
-
-    def skip_default?(name)
-      filter = @filtering.filter(name)
-      return false unless filter.respond_to?(:skip_default?)
-
-      filter.skip_default?
     end
 
     def selected_value(column)
@@ -114,23 +78,16 @@ module RadCommon
     private
 
       def retrieve_results
-        if valid?
-          @defaulting.update_defaults
-          @results = @filtering.apply_filtering(@results)
-          @results = @sorting.apply_sorting(@results)
-        else
-          @results = @results.none
-        end
+        @results = @filtering.apply_filtering(@results)
+        @results = @sorting.apply_sorting(@results)
       end
 
       def searchable_columns
-        filters.map(&:searchable_name).flatten
+        filters.map(&:searchable_name)
       end
 
       def permitted_searchable_columns
-        # we need to make sure any params that are an array value ( multiple select ) go to the bottom for
-        # permit to work
-
+        # we need to make sure any params that are an array value ( multiple select ) go to the bottom for permit to work
         columns = filters.sort_by { |f| f.respond_to?(:multiple) && f.multiple ? 1 : 0 }
         columns.map { |f|
           if f.respond_to?(:multiple) && f.multiple

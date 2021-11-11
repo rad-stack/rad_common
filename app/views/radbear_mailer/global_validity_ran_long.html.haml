@@ -2,7 +2,7 @@
   .email-col-12
     .email-info-box
       %table.info-table
-        - @run_stats.each do |item|
+        -@run_stats.each do |item|
           %tr
             %th= Time.at(item[:run_seconds]).utc.strftime('%H:%M:%S')
             %td= item[:item_name]

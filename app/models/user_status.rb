@@ -4,8 +4,6 @@ class UserStatus < ApplicationRecord
 
   alias_attribute :to_s, :name
 
-  strip_attributes
-
   def self.default_pending_status
     UserStatus.find_by(name: 'Pending')
   end
@@ -25,10 +23,9 @@ class UserStatus < ApplicationRecord
   end
 
   def button_style
-    case name
-    when 'Active'
+    if name == 'Active'
       'btn-success'
-    when 'Pending'
+    elsif name == 'Pending'
       'btn-warning'
     else
       'btn-danger'

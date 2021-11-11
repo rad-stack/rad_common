@@ -4,7 +4,7 @@ module RadCommon
 
     include ActiveStorageDownloader
 
-    skip_before_action :authenticate_user!, except: :destroy
+    before_action :authenticate_user!, only: :destroy
     before_action :set_variant, only: :download_variant
 
     def download
@@ -13,6 +13,7 @@ module RadCommon
       # TODO: refactor this with Hashable
       ids = Hashable.hashids.decode(params[:id])
       attachment_id = ids[0]
+      #
 
       attachment = ActiveStorage::Attachment.find_by(id: attachment_id)
 
@@ -56,9 +57,8 @@ module RadCommon
       def set_variant
         klass = params[:class_name].classify.constantize
         record = klass.find_decoded(params[:id])
-
         begin
-          @variant = RadicalRetry.perform_request(retry_count: 2) { record.send(params[:variant]).processed }
+          @variant = record.send(params[:variant]).processed
         rescue NoMethodError
           @variant = nil
         end

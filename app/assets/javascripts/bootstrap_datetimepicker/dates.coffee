@@ -96,7 +96,7 @@ class DateTimePicker
     format = 'YYYY-MM-DD'
     view = 'M/D/YYYY'
     # Update Values
-    sel = $("input.date:not([data-html-5='true'])")
+    sel = $("input.date")
     this.do_default_input_changes( sel, format, view)
 
     # Time
@@ -114,7 +114,7 @@ class DateTimePicker
     this.do_default_input_changes( sel, format, view)
 
   disableHtml5 : ->
-    $('input[type="date"]:not([data-html-5=\'true\'])').attr('type','text')
+    $('input[type="date"]').attr('type','text')
     $('input[type="time"]').attr('type','text')
     $('input[type="datetime-local"]').attr('type','text')
 

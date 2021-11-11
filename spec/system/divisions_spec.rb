@@ -19,28 +19,27 @@ RSpec.describe 'Divisions', type: :system do
     end
 
     describe 'single attachment validation' do
-      let(:file) { 'spec/fixtures/test.pdf' }
+      let(:file) { 'spec/fixtures/radlogo.jpeg' }
 
       before do
+        allow_any_instance_of(Division).to receive(:save).and_return true
         visit new_division_path
-        fill_in 'Name', with: 'Foo'
-        fill_in 'Code', with: 'BAR'
         page.attach_file('Icon', file)
         click_on 'Save'
       end
 
-      context 'when invalid due to content type' do
+      context 'invalid due to content type' do
         it 'validates' do
-          expect(page).to have_content 'Icon has an invalid content type of application/pdf, must be PNG'
+          expect(page).to have_content 'File could not be saved. File type must be one of image/png'
           expect(division.icon.attached?).to be false
         end
       end
 
-      context 'when invalid due to file size' do
+      context 'invalid due to file size' do
         let(:file) { 'spec/fixtures/large_logo.png' }
 
         it 'validates' do
-          expect(page).to have_content 'Icon must be less than 50 KB'
+          expect(page).to have_content 'File could not be saved. File size must be less than 48.8 KB.'
           expect(division.icon.attached?).to be false
         end
       end
@@ -53,9 +52,40 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('Editing Division')
     end
 
+    describe 'multiple attachment validation' do
+      let(:file2) { 'spec/fixtures/radlogo.jpeg' }
+
+      before do
+        visit edit_division_path(division)
+        page.attach_file('Avatar', file1)
+        page.attach_file('Logo', file2)
+        click_on 'Save'
+      end
+
+      context 'both invalid' do
+        let(:file1) { 'spec/fixtures/radlogo.png' }
+
+        it 'validates' do
+          expect(page).to have_content 'Logo, Avatar could not be saved due to invalid content types'
+          expect(division.logo.attached?).to be false
+          expect(division.avatar.attached?).to be false
+        end
+      end
+
+      context 'one invalid' do
+        let(:file1) { 'spec/fixtures/radlogo.jpeg' }
+
+        it 'validates' do
+          expect(page).to have_content 'Logo could not be saved due to invalid content types'
+          expect(division.logo.attached?).to be false
+          expect(division.avatar.attached?).to be true
+        end
+      end
+    end
+
     it 'displays error for owner field when blank', js: true do
       visit edit_division_path(division)
-      fill_in 'owner_name_search', with: ''
+      fill_in 'owner_name', with: ''
       click_button 'Save'
 
       if ENV['CI']
@@ -68,25 +98,8 @@ RSpec.describe 'Divisions', type: :system do
   describe 'index' do
     it 'displays the divisions' do
       division
-      visit divisions_path(search: { division_status: 1 })
-      expect(page).to have_content(division.to_s)
-    end
-
-    it 'handles date filter errors' do
       visit divisions_path
-
-      fill_in 'search_created_at_start', with: '01/32/2020'
-      click_button 'Apply Filters'
-      expect(page).to have_content('Invalid date entered')
-    end
-
-    context 'with hidden filter' do
-      it 'shows header' do
-        visit divisions_path(search: { show_header: true })
-        expect(page.body).to have_content 'Showing header'
-        visit divisions_path
-        expect(page.body).not_to have_content 'Showing header'
-      end
+      expect(page).to have_content(division.to_s)
     end
   end
 
@@ -106,12 +119,11 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).not_to have_content 'Additional info'
     end
 
-    context 'with attachments' do
+    context 'attachments' do
       let(:prompt) { 'Are you sure? Attachment cannot be recovered.' }
-      let(:file) { File.open Rails.root.join('app/assets/images/app_logo.png') }
 
       before do
-        division.logo.attach(io: file, filename: 'logo.png')
+        division.logo.attach(io: File.open(Rails.root.join('app', 'assets', 'images', 'app_logo.png')), filename: 'logo.png')
         visit division_path(division)
       end
 

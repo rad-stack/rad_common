@@ -1,5 +1,3 @@
-require 'csv'
-
 class UsersCSV
   def self.generate(users)
     CSV.generate do |csv|

@@ -3,6 +3,7 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
+
   # ==> Devise Authy Authentication Extension
   # How long should the user's device be remembered for.
   config.authy_remember_device = 7.days
@@ -15,8 +16,7 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = 'b44d476c51f0a085ee6b2e6df013e26a4ea03b2a142407db7d46227f174a784672fb9a4ac687b2da4227eda99210'\
-  #                     'f8ed0ffd07d863b11d26353ba8277bda2f47'
+  # config.secret_key = 'b44d476c51f0a085ee6b2e6df013e26a4ea03b2a142407db7d46227f174a784672fb9a4ac687b2da4227eda99210f8ed0ffd07d863b11d26353ba8277bda2f47'
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -26,7 +26,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = Rails.application.credentials.from_email
+  config.mailer_sender = 'Dummy App <noreply@example.com>'
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
@@ -122,14 +122,13 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 11
 
   # Set up a pepper to generate the hashed password.
-  # config.pepper = '54105bde064dea6243d2383b0fc91f9160f50dabc2a1bd02e0cf91268fb9f85c81ffac9c3ba5d9aa43bb58b7e'\
-  #                 '685c5c0eb47c5d4cba79d39bb87e4ef8c4dcb26'
+  # config.pepper = '54105bde064dea6243d2383b0fc91f9160f50dabc2a1bd02e0cf91268fb9f85c81ffac9c3ba5d9aa43bb58b7e685c5c0eb47c5d4cba79d39bb87e4ef8c4dcb26'
 
   # Send a notification to the original email when the user's email is changed.
-  config.send_email_changed_notification = true
+  # config.send_email_changed_notification = false
 
   # Send a notification email when the user's password is changed.
-  config.send_password_change_notification = true
+  # config.send_password_change_notification = false
 
   # ==> Configuration for :invitable
   # The period the generated invitation token is valid.
@@ -234,7 +233,7 @@ Devise.setup do |config|
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
-  config.timeout_in = 3.hours
+  config.timeout_in = 2.hours
 
   # ==> Configuration for :lockable
   # Defines which strategy will be used to lock an account.

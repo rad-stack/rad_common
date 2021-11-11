@@ -1,11 +1,33 @@
 class DivisionsController < ApplicationController
-  before_action :set_division, only: %i[show edit update destroy]
+  before_action :authenticate_user!
+  before_action :set_division, only: %i[show edit update destroy audit]
 
   def index
     authorize Division
+    skip_policy_scope
 
-    @division_search = DivisionSearch.new(params, current_user)
-    @divisions = policy_scope(@division_search.results).page(params[:page])
+    filters = [{ input_label: 'Owner', column: :owner_id, default_value: current_user.id,
+                 options: [['Active', User.active.by_name],
+                           ['Inactive', User.inactive.by_name]],
+                 grouped: true },
+               { input_label: 'Status', column: :division_status,
+                 options: ApplicationController.helpers.db_options_for_enum(Division, :division_status) },
+               { column: :name, type: RadCommon::LikeFilter },
+               { column: :created_at, type: RadCommon::DateFilter,
+                 start_input_label: 'Division Created At Start',
+                 end_input_label: 'Division Created At End' }]
+
+    @division_search = RadCommon::Search.new(query: Division.sorted,
+                                             filters: filters,
+                                             current_user: current_user,
+                                             params: params)
+
+    if @division_search.valid?
+      @divisions = @division_search.results.page(params[:page])
+    else
+      @divisions = Division.none.page(params[:page])
+      flash[:error] = @division_search.error_messages
+    end
   end
 
   def show; end
@@ -22,7 +44,9 @@ class DivisionsController < ApplicationController
     authorize @division
 
     if @division.save
-      redirect_to @division, notice: 'Division was successfully created.'
+      if validate_active_storage_attachment(@division, 'icon', params['division']['icon'], ['image/png'], false, 50_000)
+        redirect_to @division, notice: 'Division was successfully created.'
+      end
     else
       render :new
     end
@@ -30,7 +54,9 @@ class DivisionsController < ApplicationController
 
   def update
     if @division.update(permitted_params)
-      redirect_to @division, notice: 'Division was successfully updated.'
+      if validate_multiple_attachments(@division, :division, division_attachments_and_types)
+        redirect_to @division, notice: 'Division was successfully updated.'
+      end
     else
       render :edit
     end
@@ -45,8 +71,7 @@ class DivisionsController < ApplicationController
       flash[:error] = @division.errors.full_messages.join(', ')
     end
 
-    if destroyed && (URI(request.referer).path == division_path(@division)) ||
-       (URI(request.referer).path == edit_division_path(@division))
+    if destroyed && (URI(request.referer).path == division_path(@division)) || (URI(request.referer).path == edit_division_path(@division))
       redirect_to divisions_path
     else
       redirect_back(fallback_location: divisions_path)
@@ -61,7 +86,12 @@ class DivisionsController < ApplicationController
     end
 
     def permitted_params
-      params.require(:division).permit(:name, :code, :notify, :timezone, :owner_id, :hourly_rate, :division_status,
-                                       :icon, :logo)
+      params.require(:division).permit(:name, :code, :notify, :timezone, :owner_id, :hourly_rate, :division_status)
+    end
+
+    def division_attachments_and_types
+      [{ attr: :logo, types: ['image/png'] },
+       { attr: :avatar, types: ['image/jpeg'] },
+       { attr: :attachment, types: %w[image/jpeg text/plain application/pdf] }]
     end
 end

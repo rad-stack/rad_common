@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Notification Types', type: :request do
+RSpec.describe 'NotificationTypes', type: :request do
   let(:user) { create :admin }
   let(:another_role) { create :security_role }
   let(:notification_type) { create :new_user_signed_up_notification }

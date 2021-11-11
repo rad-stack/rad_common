@@ -6,6 +6,8 @@ RSpec.describe 'Notification Settings', type: :request do
   before { login_as user, scope: :user }
 
   describe 'POST create' do
+    subject { post '/rad_common/notification_settings', params: { notification_setting: attributes } }
+
     let(:attributes) do
       { notification_type_id: notification_type.id,
         enabled: false,
@@ -15,48 +17,42 @@ RSpec.describe 'Notification Settings', type: :request do
         user_id: target_user.id }
     end
 
-    context 'when admin' do
+    context 'admin' do
       let(:user) { create :admin }
 
-      context 'with their settings' do
+      context 'their settings' do
         let(:target_user) { user }
 
-        context 'when valid' do
+        context 'valid' do
           it 'creates' do
-            expect {
-              post '/rad_common/notification_settings', params: { notification_setting: attributes }
-            }.to change(NotificationSetting, :count).by(1)
+            expect { subject }.to change(NotificationSetting, :count).by(1)
           end
 
           it 'responds with success json' do
-            post '/rad_common/notification_settings', params: { notification_setting: attributes }
+            subject
             expect(response.body).to include('The setting was successfully saved.')
           end
         end
 
-        context 'when invalid' do
+        context 'invalid' do
           let(:attributes) { { notification_type_id: nil, enabled: false, user_id: target_user.id } }
 
           it 'fails' do
-            expect {
-              post '/rad_common/notification_settings', params: { notification_setting: attributes }
-            }.to change(NotificationSetting, :count).by(0)
+            expect { subject }.to change(NotificationSetting, :count).by(0)
           end
         end
       end
 
-      context "with another's settings" do
+      context "another's settings" do
         let(:target_user) { create :user }
 
         it 'creates' do
-          expect {
-            post '/rad_common/notification_settings', params: { notification_setting: attributes }
-          }.to change(NotificationSetting, :count).by(1)
+          expect { subject }.to change(NotificationSetting, :count).by(1)
         end
       end
     end
 
-    context 'when user' do
+    context 'user' do
       let(:security_role) { create :security_role }
       let(:user) { create :user, security_roles: [security_role] }
 
@@ -64,24 +60,22 @@ RSpec.describe 'Notification Settings', type: :request do
         NotificationSecurityRole.create! notification_type_id: notification_type.id, security_role: security_role
       end
 
-      context 'with their settings' do
+      context 'their settings' do
         let(:target_user) { user }
 
         it 'creates' do
           user
-          expect {
-            post '/rad_common/notification_settings', params: { notification_setting: attributes }
-          }.to change(NotificationSetting, :count).by(1)
+          expect { subject }.to change(NotificationSetting, :count).by(1)
         end
       end
 
-      context "with another's settings" do
+      context "another's settings" do
         let(:target_user) { create :user }
 
         before { user.update! security_roles: [] }
 
         it 'denies access' do
-          post '/rad_common/notification_settings', params: { notification_setting: attributes }
+          subject
           expect(response.code).to eq '403'
         end
       end

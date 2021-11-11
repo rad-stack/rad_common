@@ -1,11 +1,7 @@
 require 'rails_helper'
 
 describe RadCommon::SecurityRoleHelper do
-  let(:security_fields) do
-    [{ label: 'Update Notes', permission: 'update_note' },
-     { label: 'Manage Role Assignments', permission: 'manage_role_assignment' }]
-  end
-
+  let(:security_fields) { [{ label: 'Update Notes', permission: 'update_note' }, { label: 'Manage Role Assignments', permission: 'manage_role_assignment' }] }
   let(:update) { { label: 'Update Notes', permission: 'update_note' } }
   let(:manage) { { label: 'Manage Role Assignments', permission: 'manage_role_assignment' } }
   let(:test_hash) { [{ label: 'Test', permission: 'test' }, { label: 'Test2', permission: 'test_2' }] }
@@ -36,6 +32,7 @@ describe RadCommon::SecurityRoleHelper do
           { label: 'Administration', permission: 'admin' },
           { label: 'Create Divisions', permission: 'create_division' },
           { label: 'Delete Divisions', permission: 'delete_division' },
+          { label: 'View Audits', permission: 'read_audit' },
           { label: 'View Divisions', permission: 'read_division' },
           { label: 'View Users', permission: 'read_user' },
           { label: 'Update Divisions', permission: 'update_division' }

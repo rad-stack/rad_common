@@ -1,5 +1,6 @@
 class SecurityRolesController < ApplicationController
-  before_action :set_security_role, only: %i[show edit update destroy]
+  before_action :authenticate_user!
+  before_action :set_security_role, only: %i[show edit update destroy audit]
 
   def index
     authorize SecurityRole
@@ -43,8 +44,7 @@ class SecurityRolesController < ApplicationController
       flash[:error] = @security_role.errors.full_messages.join(', ')
     end
 
-    if destroyed && (URI(request.referer).path == security_role_path(@security_role)) ||
-       (URI(request.referer).path == edit_security_role_path(@security_role))
+    if destroyed && (URI(request.referer).path == security_role_path(@security_role)) || (URI(request.referer).path == edit_security_role_path(@security_role))
       redirect_to security_roles_path
     else
       redirect_back(fallback_location: security_roles_path)
@@ -66,6 +66,6 @@ class SecurityRolesController < ApplicationController
     end
 
     def permitted_params
-      params.require(:security_role).permit(%i[name external] + SecurityRole.permission_fields.map(&:to_sym))
+      params.require(:security_role).permit([:name] + SecurityRole.permission_fields.map(&:to_sym))
     end
 end

@@ -1,2 +1,0 @@
-class UserSecurityRolePolicy < ApplicationPolicy
-end

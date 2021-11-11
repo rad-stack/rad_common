@@ -44,9 +44,7 @@ describe RadbearMailer, type: :mailer do
     end
 
     context 'with a problem without a link' do
-      let(:notification_setting) do
-        create :notification_setting, notification_type: create(:global_validity_notification)
-      end
+      let(:notification_setting) { create :notification_setting, notification_type: create(:global_validity_notification) }
 
       before { described_class.global_validity([user], [[notification_setting, 'foo bar']]).deliver_now }
 
@@ -73,17 +71,17 @@ describe RadbearMailer, type: :mailer do
     describe 'to' do
       subject { last_email.to }
 
-      context 'when to an email address' do
+      context 'to an email address' do
         it { is_expected.to eq [email] }
       end
 
-      context 'when to a user' do
+      context 'to a user' do
         let(:recipient) { user }
 
         it { is_expected.to eq [email] }
       end
 
-      context 'when to multiple users' do
+      context 'to multiple users' do
         let(:recipient) { [user.id, another_user.id] }
 
         it { is_expected.to include user.email }
@@ -94,12 +92,6 @@ describe RadbearMailer, type: :mailer do
 
           it { is_expected.to include user.email }
           it { is_expected.to include 'string_email@example.com' }
-        end
-
-        context 'with just one user id' do
-          let(:recipient) { [user.id] }
-
-          it { is_expected.to eq [user.email] }
         end
       end
     end
@@ -119,5 +111,9 @@ describe RadbearMailer, type: :mailer do
       expect(last_email.to_s).to include('Attached is the')
       expect(last_email.attachments.first.content_type).to eq('text/csv')
     end
+  end
+
+  describe 'new_user_signed_up' do
+    pending 'shows portal app name for external users'
   end
 end

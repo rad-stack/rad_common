@@ -1,4 +1,5 @@
 class NotificationTypesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_notification_type, only: %i[edit update]
 
   def index

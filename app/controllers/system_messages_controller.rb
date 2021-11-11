@@ -1,4 +1,5 @@
 class SystemMessagesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_system_message, only: %i[show]
 
   def show; end
@@ -10,7 +11,7 @@ class SystemMessagesController < ApplicationController
 
   def create
     @system_message = SystemMessage.new(permitted_params)
-    @system_message.user = current_user
+    @system_message.user = true_user
     authorize @system_message
 
     if @system_message.save
@@ -29,7 +30,6 @@ class SystemMessagesController < ApplicationController
     end
 
     def permitted_params
-      params.require(:system_message).permit(:send_to, :security_role_id, :message_type, :sms_message_body,
-                                             :email_message_body)
+      params.require(:system_message).permit(:send_to, :message_type, :sms_message_body, :email_message_body)
     end
 end

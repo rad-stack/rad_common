@@ -17,14 +17,14 @@ class DatabaseUseChecker
     end
 
     def tables
-      RadCommon::AppInfo.new.application_tables - RadCommon::AppInfo.new.rad_common_tables
+      RadCommon::AppInfo.new.application_tables
     end
 
     def zero_or_one_records?(table_name)
       num_records = record_count(table_name)
 
-      puts "Table #{table_name}\n  No Records" if num_records.zero?
-      num_records == 1 || num_records.zero?
+      puts "Table #{table_name}\n  No Records" if num_records == 0
+      num_records == 1 || num_records == 0
     end
 
     def record_count(table_name)

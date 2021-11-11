@@ -1,0 +1,40 @@
+-if @firebase_logs
+
+  -can_clear = policy(Company.main).update?
+
+  -@firebase_logs.each do |log|
+    .card
+      -if can_clear
+        -actions = []
+        -actions.push(link_to("Delete All", firebase_log_path(log.first, type: 'all'), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))
+        -actions.push(link_to("Delete Non Errors", firebase_log_path(log.first, type: 'non_errors'), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger btn-sm"))
+      = render 'layouts/card_header', action_name: 'custom', title: log.first.titleize, icon: 'fa-list', additional_actions: actions
+      .card-body
+        - if @limited_log_categories.include?(log.first)
+          .alert.alert-warning
+            This is a limited log result. More logs exist on Firebase
+        %table.table.table-striped.table-bordered
+          %tr
+            %th Timestamp
+            %th Key
+            %th Error
+            %th Log
+
+          -rows = log.last.to_a.map {|item| {key: item.first, timestamp: item.last["timestamp"], error: item.last["error"], log: item.last}}
+
+          -rows.sort_by {|item| item[:timestamp]}.reverse.each do |row|
+            -row[:log].delete("error")
+            -row[:log].delete("timestamp")
+
+            %tr
+              %td
+                -if row[:timestamp]
+                  = format_datetime(DateTime.parse(row[:timestamp]))
+              %td= row[:key]
+              %td
+                -error = row[:error]
+                -if error
+                  .alert.alert-danger= error
+              %td= row[:log]
+-else
+  %p There are no Firebase logs yet

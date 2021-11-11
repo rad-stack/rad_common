@@ -16,7 +16,9 @@
           .col-lg-6= f.input :last_name, required: true
         .row
           .col-lg-6= f.input :mobile_phone
-          - if Rails.configuration.rad_common.use_avatar
+          -if RadCommon.authy_user_opt_in
+            .col-lg-3= f.input :authy_enabled, label: 'Enable Two-Factor Authentication?'
+          -if RadCommon.use_avatar
             .col-lg-3= f.input :avatar
         .row
           .col-lg-6= f.input :timezone, as: :time_zone, priority: timezone_us_filter

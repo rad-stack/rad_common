@@ -7,7 +7,7 @@ describe 'Users', type: :system do
   let(:external_user) { create :user, :external }
 
   describe 'user' do
-    before { login_as user, scope: :user }
+    before { login_as(user, scope: :user) }
 
     describe 'index' do
       it 'shows users' do
@@ -31,33 +31,25 @@ describe 'Users', type: :system do
   end
 
   describe 'admin' do
-    let!(:notification_type) do
-      Notifications::NewUserSignedUpNotification.create! security_roles: [user.security_roles.first]
-    end
-
+    let!(:notification_type) { Notifications::NewUserSignedUpNotification.create! security_roles: [user.security_roles.first] }
     let(:notification_setting) { NotificationSetting.find_by(user: user, notification_type: notification_type) }
     let(:external_user) { create :user, :external }
 
     before { login_as admin, scope: :user }
 
     describe 'index' do
-      before do
-        external_user.update! user_status: user.user_status if Rails.configuration.rad_common.external_users
-      end
-
       it 'shows users' do
-        visit users_path(search: { user_status_id: user.user_status_id })
+        external_user.update! user_status: user.user_status
+        visit users_path(status: user.user_status_id)
         expect(page).to have_content user.to_s
-        expect(page).to have_content external_user.to_s if Rails.configuration.rad_common.external_users
+        expect(page).to have_content external_user.to_s
       end
 
       it 'filters by user type' do
-        if Rails.configuration.rad_common.external_users
-          external_user.update!(user_status: user.user_status)
-          visit users_path(search: { user_status_id: user.user_status_id, external: 'external' })
-          expect(page).not_to have_content user.email
-          expect(page).to have_content external_user.email
-        end
+        external_user.update!(user_status: user.user_status)
+        visit users_path(status: user.user_status_id, external: true)
+        expect(page).not_to have_content user.email
+        expect(page).to have_content external_user.email
       end
     end
 
@@ -77,7 +69,7 @@ describe 'Users', type: :system do
       end
 
       it 'shows client user' do
-        if Rails.configuration.rad_common.external_users
+        if RadCommon.external_users
           visit user_path(external_user)
           expect(page).to have_content admin.first_name
         end
@@ -90,7 +82,7 @@ describe 'Users', type: :system do
       it 'allows updating notification settings', :js do
         expect(page).to have_content 'Notification Settings'
         uncheck 'Enabled'
-        sleep 2
+        wait_for_ajax
         expect(notification_setting.enabled).to be false
       end
     end
@@ -102,26 +94,22 @@ describe 'Users', type: :system do
       end
 
       it 'can manually confirm a user', :js do
-        if Devise.mappings[:user].confirmable?
-          page.accept_confirm do
-            click_link 'Confirm Email'
-          end
-
-          expect(page).to have_content 'User was successfully confirmed'
+        accept_confirm do
+          click_link 'Confirm Email'
         end
+
+        expect(page.html).to include 'User was successfully confirmed'
       end
     end
   end
 
   describe 'client user' do
-    before do
-      login_as(external_user, scope: :user) if Rails.configuration.rad_common.external_users
-    end
+    before { login_as external_user, scope: :user }
 
     describe 'show' do
       it 'does not allow' do
-        if Rails.configuration.rad_common.external_users
-          if Rails.configuration.rad_common.portal_namespace.present?
+        if RadCommon.external_users
+          if RadCommon.portal_namespace.present?
             expect { visit user_path(user) }.to raise_error ActionController::RoutingError
           else
             visit user_path(user)
@@ -134,8 +122,8 @@ describe 'Users', type: :system do
 
     describe 'index' do
       it 'does not allow' do
-        if Rails.configuration.rad_common.external_users
-          if Rails.configuration.rad_common.portal_namespace.present?
+        if RadCommon.external_users
+          if RadCommon.portal_namespace.present?
             expect { visit users_path }.to raise_error ActionController::RoutingError
           else
             visit users_path
@@ -148,26 +136,24 @@ describe 'Users', type: :system do
   end
 
   describe 'sign up' do
-    before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
-
-    it 'signs up' do
-      unless Rails.configuration.rad_common.disable_sign_up
+    it 'signs up', :vcr do
+      unless RadCommon.disable_sign_up
         visit new_user_registration_path
 
         fill_in 'First name', with: Faker::Name.first_name
         fill_in 'Last name', with: Faker::Name.last_name
         fill_in 'Mobile phone', with: '(345) 222-1111'
-        fill_in 'Email', with: "#{Faker::Internet.user_name}@example.com"
+        fill_in 'Email', with: Faker::Internet.user_name + '@example.com'
         fill_in 'user_password', with: password
         fill_in 'user_password_confirmation', with: password
 
         click_button 'Sign Up'
-        expect(page).to have_content 'message with a confirmation link has been sent'
+        expect(page.html).to include('message with a confirmation link has been sent')
       end
     end
 
     it "can't sign up with invalid email address" do
-      unless Rails.configuration.rad_common.disable_sign_up
+      unless RadCommon.disable_sign_up
         visit new_user_registration_path
 
         fill_in 'First name', with: Faker::Name.first_name
@@ -178,7 +164,7 @@ describe 'Users', type: :system do
 
         click_button 'Sign Up'
 
-        expect(page).to have_content 'Email is invalid'
+        expect(page.html).to include('is not authorized')
       end
     end
   end
@@ -193,7 +179,7 @@ describe 'Users', type: :system do
       fill_in 'user_password', with: password
 
       click_button 'Sign In'
-      expect(page).to have_content 'Your account has not been approved by your administrator yet.'
+      expect(page.html).to include('Your account has not been approved by your administrator yet.')
     end
 
     it 'signs in' do
@@ -203,12 +189,12 @@ describe 'Users', type: :system do
       fill_in 'user_password', with: password
 
       click_button 'Sign In'
-      expect(page).to have_content 'Signed in successfully.'
+      expect(page.html).to include('Signed in successfully.')
     end
 
     it 'does not allow with invalid email' do
       visit new_user_session_path
-      fill_in 'user_email', with: "foo#{user.email}"
+      fill_in 'user_email', with: 'foo' + user.email
       fill_in 'user_password', with: password
       click_button 'Sign In'
       expect(page).to have_content 'Invalid Email or password'
@@ -256,7 +242,7 @@ describe 'Users', type: :system do
       end
     end
 
-    it 'sign in times out after 3 hours' do
+    it 'sign in times out after 2 hours' do
       if Devise.mappings[:user].timeoutable?
         visit new_user_session_path
         fill_in 'user_email', with: user.email
@@ -264,10 +250,10 @@ describe 'Users', type: :system do
         click_button 'Sign In'
         expect(page).to have_content('Signed in successfully')
 
-        Timecop.travel(185.minutes.from_now) do
-          visit users_path
-          expect(page).to have_content('Your session expired. Please sign in again to continue.')
-        end
+        Timecop.travel(125.minutes.from_now)
+        visit users_path
+        expect(page).to have_content('Your session expired. Please sign in again to continue.')
+        Timecop.return
       end
     end
   end
@@ -311,52 +297,36 @@ describe 'Users', type: :system do
     describe 'confirming' do
       let(:user) { create(:user, confirmed_at: nil) }
 
-      let(:message) do
-        'If your email address exists in our database, you will receive an email with instructions for how to '\
-          'confirm your email address in a few minutes.'
-      end
+      it 'should not say whether the email exists' do
+        visit new_user_session_path
 
-      it "doesn't say whether the email exists" do
-        if Devise.mappings[:user].confirmable?
-          visit new_user_session_path
+        click_link "Didn't Receive Confirmation Instructions?"
+        fill_in 'Email', with: user.email
+        click_button 'Resend Confirmation Instructions'
 
-          click_link "Didn't Receive Confirmation Instructions?"
-          fill_in 'Email', with: user.email
-          click_button 'Resend Confirmation Instructions'
-
-          expect(page).not_to have_content 'not found'
-          expect(page).to have_content message
-          expect(page).to have_current_path(new_user_session_path)
-        end
+        expect(page).not_to have_content 'not found'
+        expect(page).to have_content 'If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes.'
+        expect(current_path).to eq(new_user_session_path)
       end
     end
 
     describe 'unlock' do
       let(:user) { create(:user, confirmed_at: nil) }
 
-      let(:message) do
-        'If your account exists, you will receive an email with instructions for how to unlock it in a few minutes.'
-      end
-
-      it "doesn't say whether the email exists" do
+      it 'should not say whether the email exists' do
         visit new_user_session_path
         click_link "Didn't Receive Unlock Instructions?"
 
         fill_in 'Email', with: user.email
         click_button 'Resend Unlock Instructions'
 
-        expect(page).not_to have_content 'not found'
-        expect(page).to have_content message
+        expect(page).to_not have_content 'not found'
+        expect(page).to have_content "If your account exists, you will receive an email with instructions for how to unlock it in a few minutes."
       end
     end
 
     describe 'resetting password' do
-      let(:message) do
-        'If your email address exists in our database, you will receive a password recovery link at your email '\
-          'address in a few minutes.'
-      end
-
-      it "doesn't say whether the email exists" do
+      it 'should not say whether the email exists' do
         visit new_user_session_path
         click_link 'Forgot Your Password?'
 
@@ -364,7 +334,7 @@ describe 'Users', type: :system do
         click_button 'Send Me Reset Password Instructions'
 
         expect(page).not_to have_content 'not found'
-        expect(page).to have_content message
+        expect(page).to have_content 'If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes.'
       end
     end
   end
@@ -377,13 +347,13 @@ describe 'Users', type: :system do
     describe 'update' do
       it 'updates Twilio when updating an accounts mobile phone', vcr: true do
         visit edit_user_registration_path
-        fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
+        fill_in 'user_mobile_phone', with: '(345) 222-1111'
         fill_in 'user_current_password', with: password
         click_button 'Save'
         expect(page).to have_content('Your account has been updated successfully.')
       end
 
-      context 'with a different user' do
+      context 'a different user' do
         let(:another_user) { create :admin }
 
         it 'updates last_activity_at' do
@@ -406,52 +376,44 @@ describe 'Users', type: :system do
     let(:authy_id) { '1234567' }
 
     before do
-      if Rails.configuration.rad_common.authy_enabled
-        allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
-        user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :mobile))
-      end
+      expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+      user.update!(authy_enabled: true, mobile_phone: '(904) 226-4901')
     end
 
     it 'allows user to login with authentication token', :vcr do
-      if Rails.configuration.rad_common.authy_enabled
-        allow(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
+      expect(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
 
-        visit new_user_session_path
-        fill_in 'user_email', with: user.email
-        fill_in 'user_password', with: password
-        click_button 'Sign In'
-        expect(page).to have_content 'Remember this device for 7 days'
-        fill_in 'authy-token', with: '7721070'
-        click_button 'Verify and Sign in'
-        expect(page).to have_content 'Signed in successfully'
-      end
+      visit new_user_session_path
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: password
+      click_button 'Sign In'
+      expect(page).to have_content 'Remember this device for 7 days'
+      fill_in 'authy-token', with: '7721070'
+      click_button 'Verify and Sign in'
+      expect(page).to have_content 'Signed in successfully'
     end
 
     it 'does not allow user to login with invalid authy token', :vcr do
-      if Rails.configuration.rad_common.authy_enabled
-        visit new_user_session_path
+      visit new_user_session_path
 
-        fill_in 'user_email', with: user.email
-        fill_in 'user_password', with: password
-        click_button 'Sign In'
-        fill_in 'authy-token', with: 'Not the authy token'
-        click_button 'Verify and Sign in'
-        expect(page).to have_content('The entered token is invalid')
-      end
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: password
+      click_button 'Sign In'
+      fill_in 'authy-token', with: 'Not the authy token'
+      click_button 'Verify and Sign in'
+      expect(page).to have_content('The entered token is invalid')
     end
 
     it 'updates authy when updating an accounts mobile phone' do
-      if Rails.configuration.rad_common.authy_enabled
-        allow(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
-        allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+      expect(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
+      expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
 
-        login_as(user, scope: :user)
-        visit edit_user_registration_path
-        fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
-        fill_in 'user_current_password', with: password
-        click_button 'Save'
-        expect(page).to have_content('Your account has been updated successfully.')
-      end
+      login_as(user, scope: :user)
+      visit edit_user_registration_path
+      fill_in 'user_mobile_phone', with: '(345) 222-1111'
+      fill_in 'user_current_password', with: password
+      click_button 'Save'
+      expect(page).to have_content('Your account has been updated successfully.')
     end
   end
 end

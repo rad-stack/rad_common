@@ -2,96 +2,49 @@ require 'rails_helper'
 
 class TestPhoneModel
   include ActiveModel::Model
-  attr_accessor :running_global_validity, :phone_number, :mobile_phone
+  attr_accessor :phone_number
 
-  validates_with PhoneNumberValidator, fields: [{ field: :phone_number }, { field: :mobile_phone, type: :mobile }]
-
-  def phone_number_changed?
-    true
+  def initialize(phone_number)
+    @phone_number = phone_number
   end
 
-  def mobile_phone_changed?
-    true
+  def []=(attribute, value)
+    public_send("#{attribute}=", value)
   end
+
+  validates_with PhoneNumberValidator, fields: [:phone_number]
 end
 
 RSpec.describe PhoneNumberValidator do
-  let(:phone_number) { create :phone_number }
-
-  let(:phone_number_stripped) do
-    phone_number.delete('(').delete(')').delete('-').delete(' ')
-  end
-
-  it 'formats phone numbers before validating' do
-    numbers = ['1233211234', '123-321-1234', '123 321 1234', ' 123 321 1234 ']
-
-    numbers.each do |phone_number|
-      model = TestPhoneModel.new
-      model.phone_number = phone_number
-      expect(model).to be_valid
-    end
-  end
-
   it 'can not be valid' do
-    invalid_numbers = %w([232332 1234 -])
+    invalid_numbers = ['232332', '211-333-1111', '(432)-111-2222', '905.444.2111', '905 444 2111']
 
     invalid_numbers.each do |phone_number|
-      model = TestPhoneModel.new
-      model.phone_number = phone_number
+      model = TestPhoneModel.new(phone_number)
       expect(model).to be_invalid
       expect(model.errors.full_messages.to_s).to include 'number invalid, format must be'
     end
   end
 
   it 'can be valid' do
-    model = TestPhoneModel.new
-    model.phone_number = phone_number
+    model = TestPhoneModel.new('(211) 333-1111')
     expect(model).to be_valid
   end
 
   it 'converts a 10 digit number to a valid format' do
-    model = TestPhoneModel.new
-    model.phone_number = phone_number_stripped
+    number = '2813308004'
+    model = TestPhoneModel.new(number)
     expect(model).to be_valid
-    expect(model.phone_number).to eq(phone_number)
+    expect(model.phone_number).to eq('(281) 330-8004')
   end
 
   it 'identifies valid but fake numbers' do
     invalid_numbers = ['(999) 999-9999', '(000) 226-1245']
 
     invalid_numbers.each do |phone_number|
-      model = TestPhoneModel.new
-      model.phone_number = phone_number
+      model = TestPhoneModel.new(phone_number)
       expect(model).to be_invalid
       expect(model.errors.full_messages.to_s).to include 'number invalid, format must be'
-    end
-  end
-
-  describe 'twilio', :vcr do
-    let(:mobile_phone) { create :phone_number, :mobile }
-
-    before do
-      allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return true
-      allow_any_instance_of(RadicalTwilio).to receive(:test_with_live_credentials?).and_return true
-    end
-
-    it 'validates with mobile phone number' do
-      model = TestPhoneModel.new
-      model.mobile_phone = mobile_phone
-      expect(model.valid?).to eq(true)
-    end
-
-    it 'validates a non-mobile phone number' do
-      model = TestPhoneModel.new
-      model.phone_number = phone_number
-      expect(model.valid?).to eq(true)
-    end
-
-    it 'invalidates mobile number with a non-mobile number' do
-      model = TestPhoneModel.new
-      model.mobile_phone = phone_number
-      expect(model.valid?).to eq(false)
-      expect(model.errors.full_messages.first).to eq('Mobile phone does not appear to be a valid mobile phone number')
     end
   end
 end

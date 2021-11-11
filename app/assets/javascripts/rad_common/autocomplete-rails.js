@@ -123,9 +123,6 @@
               params[field] = jQuery(selector).val();
             });
           }
-          if(jQuery(e).data('excluded-ids')) {
-              params['excluded_ids'] = jQuery(e).data('excluded-ids');
-          }
           jQuery.getJSON( jQuery(e).attr('data-autocomplete'), params, function() {
             if(arguments[0].length == 0) {
               arguments[0] = []

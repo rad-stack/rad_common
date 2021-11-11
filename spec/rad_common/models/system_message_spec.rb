@@ -5,34 +5,36 @@ RSpec.describe SystemMessage, type: :model do
   let(:message) { 'foo bar yo' }
 
   describe '#send!' do
-    context 'with email message' do
+    context 'email message' do
       subject { mail.body.encoded }
 
       let(:system_message) { create :system_message, :email, user: user, email_message_body: message }
-      let(:mail) { ActionMailer::Base.deliveries.last }
 
       before do
         ActionMailer::Base.deliveries = []
         system_message.send!
       end
 
+      let(:mail) { ActionMailer::Base.deliveries.last }
+
       it { is_expected.to include message }
     end
 
-    context 'with sms message' do
+    context 'sms message' do
       subject { mail&.body&.encoded }
 
       let(:system_message) { create :system_message, :sms, user: user, sms_message_body: message }
-      let(:mail) { ActionMailer::Base.deliveries.last }
 
       before do
-        User.update_all(mobile_phone: create(:phone_number, :mobile))
-        allow_any_instance_of(RadicalTwilio).to receive(:send_sms).and_return true
+        User.update_all(mobile_phone: '(555) - 555 - 5555')
+        allow(RadicalTwilio).to receive(:send_sms).and_return true
         ActionMailer::Base.deliveries = []
-        system_message.send! if RadicalTwilio.new.twilio_enabled?
+        system_message.send!
       end
 
-      context 'when all users receive message' do
+      let(:mail) { ActionMailer::Base.deliveries.last }
+
+      context 'all users receive message' do
         it { is_expected.to be_nil }
       end
     end

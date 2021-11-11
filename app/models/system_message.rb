@@ -1,6 +1,5 @@
 class SystemMessage < ApplicationRecord
   belongs_to :user
-  belongs_to :security_role, optional: true
 
   enum send_to: { internal_users: 0, client_users: 1, all_users: 2, preview: 3 }
   enum message_type: { email: 0, sms: 1 }
@@ -34,16 +33,12 @@ class SystemMessage < ApplicationRecord
   end
 
   def recipients
-    users = if security_role.present?
-              security_role.users.active
-            else
-              User.active
-            end
+    return [user] if preview?
 
-    users = users.where(id: user.id) if preview?
+    users = User.active
+
     users = users.internal if internal_users?
     users = users.external if client_users?
-    users = users.with_mobile_phone if sms?
 
     users
   end
@@ -53,20 +48,13 @@ class SystemMessage < ApplicationRecord
   end
 
   def send!
-    recipients.each do |recipient|
-      if email?
-        RadbearMailer.simple_message(recipient,
-                                     "Important Message From #{Rails.configuration.rad_common.app_name}",
-                                     email_message_body,
-                                     do_not_format: true).deliver_later
-      else
-        UserSMSSenderJob.perform_later(sms_message_body, user.id, recipient.id, nil)
+    if email?
+      recipients.each do |user|
+        RadbearMailer.simple_message(user, "Important Message From #{I18n.t(:app_name)}", email_message_body, do_not_format: true).deliver_later
       end
+    else
+      SystemSMSJob.perform_later(sms_message_body, recipients.map(&:id), user)
     end
-  end
-
-  def from_reply_to
-    Rails.application.credentials.from_email
   end
 
   private

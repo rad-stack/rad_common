@@ -1,5 +1,5 @@
-- can_create = policy(NotificationSetting.new).new?
-- can_type = policy(NotificationType.new).update?
+-can_create = policy(NotificationSetting.new).new?
+-can_type = policy(NotificationType.new).update?
 
 .card-body
   %table.table.table-striped.table-bordered
@@ -10,51 +10,41 @@
         %p Email/SMS/Feed
 
     - settings.each do |notification_setting|
-      - setting_id_string = notification_setting.notification_type.description.parameterize.underscore
       %tr
         %td
-          - if can_type
-            = link_to notification_setting.notification_type,
-                      "/rad_common/notification_types/#{notification_setting.notification_type_id}/edit"
-          - else
+          -if can_type
+            = link_to notification_setting.notification_type, "/rad_common/notification_types/#{notification_setting.notification_type_id}/edit"
+          -else
             = notification_setting.notification_type
         %td
-          - if can_create && policy(notification_setting).create?
-            = simple_form_for notification_setting,
-                              url: '/rad_common/notification_settings',
-                              method: :post,
-                              html: { class: 'dynamic-updater' } do |f|
-
+          -if can_create && policy(notification_setting).create?
+            = simple_form_for notification_setting, url: '/rad_common/notification_settings', method: :post, html: { class: 'dynamic-updater' } do |f|
               = f.error_notification
               .row
                 .col-lg
-                  = f.input :enabled,
-                            tooltip: 'Turn this notification on or off.',
-                            input_html: { class: 'ays-ignore',
-                                          id: "notification_setting_enabled_#{setting_id_string}" }
+                  = f.input :enabled, tooltip: 'Turn this notification on or off.', input_html: { class: 'ays-ignore', id: "notification_setting_enabled_#{notification_setting.notification_type.description.parameterize.underscore}" }
               .row
                 .col-lg-12
                   .form-inline#notification-settings
                     = f.input :email, tooltip: 'Enable email notifications.',
                                       input_html: { class: 'ays-ignore',
-                                                    id: "notification_setting_email_#{setting_id_string}" },
+                                                    id: "notification_setting_email_#{notification_setting.notification_type.description.parameterize.underscore}" },
                                       disabled: !notification_setting.notification_type.email_enabled?
 
-                    - if RadicalTwilio.new.twilio_enabled?
+                    - if RadicalTwilio.twilio_enabled?
                       = f.input :sms, tooltip: 'Enable SMS (text message) notifications.',
                                       input_html: { class: 'ays-ignore',
-                                                    id: "notification_setting_sms_#{setting_id_string}" },
+                                                    id: "notification_setting_sms_#{notification_setting.notification_type.description.parameterize.underscore}" },
                                       disabled: !notification_setting.notification_type.sms_enabled?
 
-                    = f.input :feed,
-                              tooltip: 'Show a red badge on the top right navigation when a notification occurs.',
-                              input_html: { class: 'ays-ignore',
-                                            id: "notification_setting_feed_#{setting_id_string}" },
-                              disabled: !notification_setting.notification_type.feed_enabled?
+                    = f.input :feed, tooltip: 'Show a red badge on the top right navigation when a notification occurs.',
+                                     input_html: { class: 'ays-ignore',
+                                                   id: "notification_setting_feed_#{notification_setting.notification_type.description.parameterize.underscore}" },
+                                     disabled: !notification_setting.notification_type.feed_enabled?
 
               = f.association :notification_type, as: :hidden
               = f.input :user_id, as: :hidden
-          - else
+          -else
             = format_boolean(notification_setting.enabled)
             %p
             = format_boolean(notification_setting.email)

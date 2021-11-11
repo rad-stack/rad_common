@@ -1,14 +1,10 @@
 class SystemUsagesController < ApplicationController
+  before_action :authenticate_user!
+
   def index
-    authorize SystemUsage, :index?
+    @company = Company.main
+    authorize @company, :update?
     skip_policy_scope
-
-    @system_usage = SystemUsage.new(permitted_params, current_user)
+    @usage_headers, @usage_items, @usage_data = @company.usage_stats
   end
-
-  private
-
-    def permitted_params
-      params.permit(:date_mode, :date_range_count)
-    end
 end

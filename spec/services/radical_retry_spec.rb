@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe RadicalRetry, type: :service do
   describe '#perform_request' do
-    context 'when request fails' do
+    context 'request fails' do
       let(:request_block) { raise OpenURI::HTTPError.new('foo', 'bar') }
 
       it 'retries the request' do
@@ -32,16 +32,15 @@ RSpec.describe RadicalRetry, type: :service do
         end
 
         it 'rescues the error if included in additional_erorrs' do
-          args = { no_delay: true, retry_count: 2, additional_errors: [ActiveStorage::IntegrityError] }
           expect(described_class).to receive(:exponential_pause)
           expect {
-            described_class.perform_request(args) { request_block }
+            described_class.perform_request(no_delay: true, retry_count: 2, additional_errors: [ActiveStorage::IntegrityError]) { request_block }
           }.to raise_error(RadicallyIntermittentException)
         end
       end
     end
 
-    context 'when request succeeds' do
+    context 'request succeeds' do
       let(:request_block) { 'Success' }
 
       it 'executes the block if there are no failures' do

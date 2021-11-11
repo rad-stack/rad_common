@@ -1,2 +1,0 @@
-class GlobalValidationPolicy < ApplicationPolicy
-end

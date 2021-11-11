@@ -16,12 +16,8 @@ module RadCommon
       Rails.application.routes.url_helpers.respond_to? "#{record.class.table_name.singularize}_path"
     end
 
-    def current_instance_variable
-      instance_variable_get("@#{controller_name.classify.underscore}")
-    end
-
     def avatar_image(user, size)
-      if Rails.configuration.rad_common.use_avatar && user.avatar.attached?
+      if RadCommon.use_avatar && user.avatar.attached?
         image_tag(user.avatar.variant(resize: '50x50'))
       else
         image_tag(gravatar_for(user, size))
@@ -62,66 +58,73 @@ module RadCommon
 
     def format_boolean(value)
       if value
-        tag.div(nil, class: 'fa fa-check')
+        content_tag(:div, nil, class: 'fa fa-check')
       else
-        tag.div(nil, class: 'fa fa-circle-o')
+        content_tag(:div, nil, class: 'fa fa-circle-o')
       end
     end
 
     def icon_tag(icon, text)
-      tag.i('', class: "mr-2 #{icon}") + text
+      content_tag(:i, '', class: "mr-2 #{icon}") + text
     end
 
     def timezone_us_filter
       regex_str = ActiveSupport::TimeZone.us_zones.map(&:name).join('|')
       regex_str.gsub!('(', '\\(')
       regex_str.gsub!(')', '\\)')
-      regex_str = "(#{regex_str})"
+      regex_str = '(' + regex_str + ')'
       Regexp.new regex_str
     end
 
-    def enum_to_translated_option(record, enum_name)
-      RadicalEnum.new(record.class, enum_name).translated_option(record)
+    def enum_to_translated_option(klass, enum, enum_value, default = enum_value.to_s.titleize)
+      return if enum_value.blank?
+
+      enums = enum.to_s.pluralize
+      key = "activerecord.attributes.#{klass.to_s.underscore.gsub('/', '_')}.#{enums}.#{enum_value}"
+      I18n.t(key, default: default)
     end
 
-    def options_for_enum(klass, enum_name)
-      RadicalEnum.new(klass, enum_name).options
+    def options_for_enum(klass, enum)
+      retrieve_options_for_enum(klass, enum, false)
     end
 
-    def enum_translation(klass, enum_name, value)
-      RadicalEnum.new(klass, enum_name).translation(value)
+    def db_options_for_enum(klass, enum)
+      retrieve_options_for_enum(klass, enum, true)
     end
 
-    def bootstrap_flash
+    def retrieve_options_for_enum(klass, enum, db_values)
+      enums = enum.to_s.pluralize
+      enum_values = klass.send(enums)
+      enum_values.map { |enum_value, _db_value|
+        translated = enum_to_translated_option(klass, enums, enum_value)
+        value = db_values ? _db_value : enum_value
+        [translated, value]
+      }.reject { |translated, _enum_value| translated.blank? }
+    end
+
+    def bootstrap_flash(options = {})
       flash_messages = []
-
       flash.each do |type, message|
         # Skip empty messages, e.g. for devise messages set to nothing in a locale file.
         next if message.blank?
 
-        type = bootstrap_flash_type(type)
+        type = type.to_sym
+        type = :success if type == :notice
+        type = :danger  if type == :alert
+        type = :danger  if type == :error
         next unless ALERT_TYPES.include?(type)
 
+        tag_class = options.extract!(:class)[:class]
+        tag_options = { class: "alert in alert-#{type} #{tag_class}" }.merge(options)
+        close_button = content_tag(:button, raw('&times;'), type: 'button', class: 'close', 'data-dismiss' => 'alert')
+
         Array(message).each do |msg|
-          flash_messages << tag.div(bootstrap_flash_close_button + msg, { class: "alert in alert-#{type}" }) if msg
+          text = content_tag(:div, close_button + msg, tag_options)
+          flash_messages << text if msg
         end
       end
 
-      safe_join flash_messages
-    end
-
-    def bootstrap_flash_type(type)
-      type = type.to_sym
-
-      type = :success if type == :notice
-      type = :danger  if type == :alert
-      type = :danger  if type == :error
-
-      type
-    end
-
-    def bootstrap_flash_close_button
-      tag.button(sanitize('&times;'), type: 'button', class: 'close', 'data-dismiss': 'alert')
+      flash_messages.join.html_safe
     end
 
     def base_errors(form)
@@ -131,13 +134,9 @@ module RadCommon
     def icon(icon, text = nil, options = {})
       text_class = text.present? ? 'mr-2' : nil
       capture do
-        concat tag.i('', class: "fa fa-#{icon} #{text_class} #{options[:class]}".strip)
+        concat content_tag(:i, '', class: "fa fa-#{icon} #{text_class} #{options[:class]}".strip)
         concat text
       end
-    end
-
-    def verify_sign_up
-      raise RadicallyIntermittentException if Rails.configuration.rad_common.disable_sign_up
     end
 
     private

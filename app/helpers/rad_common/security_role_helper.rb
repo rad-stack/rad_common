@@ -32,17 +32,8 @@ module RadCommon
       end
     end
 
-    def security_role_collection(mode)
-      roles = SecurityRole
-
-      case mode
-      when :internal
-        roles = roles.internal
-      when :external
-        roles = roles.external
-      end
-
-      roles.by_name.map { |role| [role.name, role.id] }
+    def security_role_collection
+      SecurityRole.by_name.map { |role| [role.name, role.id] }
     end
 
     def permission_tooltip(permission)
@@ -52,10 +43,9 @@ module RadCommon
     def permission_tooltip_content(permission)
       return if permission_tooltip(permission).blank?
 
-      tag.i('',
-            class: 'fa fa-question-circle custom-tooltip tooltip-pad mr-2',
-            'data-toggle': 'tooltip',
-            title: permission_tooltip(permission))
+      content_tag :i, '', class: 'fa fa-question-circle custom-tooltip tooltip-pad mr-2',
+                          'data-toggle': 'tooltip',
+                          title: permission_tooltip(permission)
     end
   end
 end

@@ -2,11 +2,11 @@ module RadCommon
   module UsersHelper
     def user_show_data(user)
       items = %i[email mobile_phone user_status timezone sign_in_count invitation_accepted_at invited_by]
-      items.push(:authy_id) if Rails.configuration.rad_common.authy_enabled
-      items += %i[current_sign_in_ip current_sign_in_at confirmed_at confirmation_sent_at unconfirmed_email]
+      items.push(:authy_id) if ENV['AUTHY_API_KEY'].present?
+      items += %i[current_sign_in_ip current_sign_in_at confirmed_at]
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
 
-      if Rails.configuration.rad_common.use_avatar && user.avatar.attached?
+      if RadCommon.use_avatar && user.avatar.attached?
         items.push(label: 'Avatar',
                    value: render('layouts/attachment', record: user, attachment_name: 'avatar', new_tab: true))
       end
@@ -21,67 +21,27 @@ module RadCommon
     end
 
     def user_actions(user)
-      [user_confirm_action(user),
-       user_resend_action(user),
-       user_reset_authy_action(user),
-       user_test_email_action(user),
-       user_test_sms_action(user)]
+      [user_confirm_action(user), user_reset_authy_action(user)]
     end
 
     def user_confirm_action(user)
-      return unless Devise.mappings[:user].confirmable? && policy(user).update? && !user.confirmed?
+      return unless policy(user).update? && !user.confirmed?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
-      link_to icon(:check, 'Confirm Email'), confirm_user_path(user), method: :put,
-                                                                      data: { confirm: confirm },
-                                                                      class: 'btn btn-warning btn-sm'
-    end
-
-    def user_resend_action(user)
-      return unless policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
-
-      link_to 'Resend Invitation',
-              resend_invitation_user_path(user),
-              method: :put,
-              class: 'btn btn-sm btn-success',
-              data: { confirm: 'Are you sure?' }
+      link_to icon(:check, 'Confirm Email'), confirm_user_path(@user), method: :put,
+                                                                       data: { confirm: confirm },
+                                                                       class: 'btn btn-warning btn-sm'
     end
 
     def user_reset_authy_action(user)
-      return unless Rails.configuration.rad_common.authy_enabled && policy(user).update? && user.authy_enabled?
+      return unless policy(user).update? && user.authy_enabled?
 
       confirm = "This will reset the user's two factor authentication configuration if they are having problems. "\
                 'Are you sure?'
 
-      link_to icon(:refresh, 'Reset Two Factor'), reset_authy_user_path(user), method: :put,
-                                                                               data: { confirm: confirm },
-                                                                               class: 'btn btn-warning btn-sm'
-    end
-
-    def user_test_email_action(user)
-      return unless policy(user).test_email?
-
-      link_to icon(:envelope, 'Send Test Email'),
-              "/rad_common/users/#{user.id}/test_email",
-              method: :put,
-              class: 'btn btn-secondary btn-sm',
-              data: { confirm: 'Are you sure?' }
-    end
-
-    def user_test_sms_action(user)
-      return unless RadicalTwilio.new.twilio_enabled? && user.mobile_phone.present? && policy(user).test_sms?
-
-      link_to icon(:comments, 'Send Test SMS'),
-              "/rad_common/users/#{user.id}/test_sms",
-              method: :put,
-              class: 'btn btn-secondary btn-sm',
-              data: { confirm: 'Are you sure?' }
-    end
-
-    def export_users_button(user_search)
-      link_to 'Export to File',
-              users_path(search: user_search.search_params, format: :csv),
-              class: 'btn btn-sm btn-secondary'
+      link_to icon(:refresh, 'Reset Two Factor'), reset_authy_user_path(@user), method: :put,
+                                                                                data: { confirm: confirm },
+                                                                                class: 'btn btn-warning btn-sm'
     end
   end
 end
