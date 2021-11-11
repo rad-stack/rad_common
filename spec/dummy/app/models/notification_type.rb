@@ -38,19 +38,6 @@ class NotificationType < ApplicationRecord
     description
   end
 
-  def lab_id
-    @lab_id ||=
-      if absolute_user?
-        User.find_by(id: absolute_user_id)&.current_lab_id
-      elsif subject_record&.respond_to? :lab
-        subject_record.lab.id
-      elsif subject_record&.respond_to? :lab_id
-        subject_record.lab_id
-      else
-        Lab.default.id
-      end
-  end
-
   def mailer_message
     return description if subject_record.blank?
 
@@ -171,7 +158,6 @@ class NotificationType < ApplicationRecord
 
       all_ids.each do |user_id|
         Notification.create! user_id: user_id,
-                             lab_id: lab_id,
                              notification_type: self,
                              content: feed_content,
                              record: subject_record,
