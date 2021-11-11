@@ -218,3 +218,4 @@ Rails/HttpPositionalArguments:
 Rails/ApplicationController:
   Exclude:
     - 'app/controllers/api/basic_app_controller.rb'
+
