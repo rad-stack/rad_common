@@ -1,0 +1,83 @@
+# Whether to ignore frontmatter at the beginning of HAML documents for
+# frameworks such as Jekyll/Middleman
+skip_frontmatter: false
+
+exclude:
+  - 'lib/templates/**/*'
+  - 'spec/dummy/lib/templates/**/*'
+
+linters:
+  AltText:
+    enabled: false
+
+  ClassAttributeWithStaticValue:
+    enabled: true
+
+  ClassesBeforeIds:
+    enabled: true
+
+  ConsecutiveComments:
+    enabled: true
+
+  ConsecutiveSilentScripts:
+    enabled: true
+    max_consecutive: 2
+
+  EmptyScript:
+    enabled: true
+
+  HtmlAttributes:
+    enabled: true
+
+  ImplicitDiv:
+    enabled: true
+
+  InstanceVariables:
+    enabled: false
+
+  LeadingCommentSpace:
+    enabled: true
+
+  LineLength:
+    exclude:
+      - 'app/views/devise/**/*.html.haml'
+      - 'spec/dummy/app/views/devise/**/*.html.haml'
+    enabled: true
+    max: 120
+
+  MultilinePipe:
+    enabled: true
+
+  MultilineScript:
+    enabled: true
+
+  ObjectReferenceAttributes:
+    enabled: true
+
+  RuboCop:
+    enabled: true
+
+  RubyComments:
+    enabled: true
+
+  SpaceBeforeScript:
+    enabled: true
+
+  SpaceInsideHashAttributes:
+    enabled: true
+    style: space
+
+  TagName:
+    enabled: true
+
+  TrailingWhitespace:
+    enabled: true
+
+  UnnecessaryInterpolation:
+    enabled: true
+
+  UnnecessaryStringOutput:
+    enabled: true
+
+  ViewLength:
+    enabled: false
