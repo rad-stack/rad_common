@@ -21,7 +21,7 @@ PATH
       pg
       premailer-rails (~> 1.10.2)
       pundit
-      rails (~> 6.0.2.2)
+      rails
       rails_email_validator
       sentry-raven (~> 3.0.0)
       sidekiq (~> 5.2.2)

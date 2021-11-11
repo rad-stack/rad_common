@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
   s.add_dependency 'pundit'
-  s.add_dependency 'rails', '~> 6.0.2.2'
+  s.add_dependency 'rails'
   s.add_dependency 'rails_email_validator'
   s.add_dependency 'sentry-raven', '~> 3.0.0'
   s.add_dependency 'sidekiq', '~> 5.2.2'
