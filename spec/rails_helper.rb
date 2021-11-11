@@ -14,7 +14,6 @@ require 'rspec/rails'
 
 require 'capybara/rails'
 require 'factory_bot_rails'
-require 'firebase'
 require 'pundit/rspec'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in

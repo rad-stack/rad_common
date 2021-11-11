@@ -20,15 +20,6 @@ class Division < ApplicationRecord
 
   after_update :notify_owner
 
-  def firebase_sync
-    data = { name: name }
-
-    response = RadicalRetry.perform_request { firebase_client.update(firebase_reference, data) }
-    return if response.success?
-
-    raise RadicallyIntermittentException, response.raw_body
-  end
-
   def logo_variant
     logo.variant(resize: '290x218>').processed
   end

@@ -30,8 +30,6 @@ Rails.application.routes.draw do
     get :audit, on: :member
   end
 
-  resources :firebase_logs, only: %i[index destroy]
-
   authenticate :user, ->(u) { u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end
