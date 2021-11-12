@@ -27,7 +27,7 @@ PATH
       premailer-rails (~> 1.10.2)
       puma (~> 5.5.2)
       pundit
-      rails (~> 6.1.4)
+      rails (~> 6.1)
       rails_email_validator
       sendgrid-ruby
       sentry-rails
