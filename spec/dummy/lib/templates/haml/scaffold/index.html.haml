@@ -1,4 +1,4 @@
--show_actions = show_actions?(<%= class_name %>)
+- show_actions = show_actions?(<%= class_name %>)
 
 .card
   = render 'layouts/card_header'
@@ -11,7 +11,7 @@
     <% for attribute in attributes -%>
     %th <%= attribute.human_name %>
     <% end -%>
-    -if show_actions
+    - if show_actions
           %th.actions Actions
 
       - @<%= plural_table_name %>.each do |<%= singular_table_name %>|
@@ -20,11 +20,17 @@
     <% for attribute in attributes -%>
       %td= <%= singular_table_name %>.<%= attribute.name %>
     <% end -%>
-      -if show_actions
+      - if show_actions
             %td
-              -if policy(<%= singular_table_name %>).update?
-                = link_to icon(:pencil, 'Edit'), edit_<%= singular_table_name %>_path(<%= singular_table_name %>), class: 'btn btn-sm btn-secondary btn-block'
-              -if policy(<%= singular_table_name %>).destroy?
-                = link_to icon(:times, 'Delete'), <%= singular_table_name %>, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm btn-block'
+              - if policy(<%= singular_table_name %>).update?
+                = link_to icon(:pencil, 'Edit'),
+                          edit_<%= singular_table_name %>_path(<%= singular_table_name %>),
+                          class: 'btn btn-sm btn-secondary btn-block'
+              - if policy(<%= singular_table_name %>).destroy?
+                = link_to icon(:times, 'Delete'),
+                          <%= singular_table_name %>,
+                          method: :delete,
+                          data: { confirm: 'Are you sure?' },
+                          class: 'btn btn-danger btn-sm btn-block'
 
     = paginate @<%= plural_table_name %>, theme: 'twitter-bootstrap-4'

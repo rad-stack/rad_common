@@ -1,4 +1,4 @@
 .card
   = render 'layouts/card_header'
   .card-body
-    = render 'layouts/show_data_columns', data: [<%= attributes_names.map { |name| ":#{name}" }.join(', ') %>], resource: @<%= singular_table_name %>
+    = render 'layouts/show_data_columns', data: %i[<%= attributes_names.map { |name| "#{name}" }.join(' ') %>], resource: @<%= singular_table_name %>

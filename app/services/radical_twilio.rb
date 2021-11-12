@@ -1,47 +1,98 @@
 class RadicalTwilio
-  def self.send_sms(from:, to:, message:)
-    client.messages.create(from: from, to: to, body: message)
+  def send_sms(to:, message:)
+    client.messages.create(from: from_number, to: to, body: message)
   end
 
-  def self.send_robocall(from:, to:, url:)
-    client.calls.create(from: from, to: to, url: URI.encode(url))
+  def send_mms(to:, message:, media_url:)
+    client.messages.create(from: from_number_mms, to: to, body: message, media_url: media_url)
   end
 
-  def self.client
-    Twilio::REST::Client.new(ENV.fetch('TWILIO_ACCOUNT_SID'), ENV.fetch('TWILIO_AUTH_TOKEN'))
+  def send_robocall(to:, url:)
+    client.calls.create(from: from_number, to: to, url: URI.encode(url))
   end
 
-  def self.twilio_enabled?
-    ENV['TWILIO_ACCOUNT_SID'].present? && ENV['TWILIO_AUTH_TOKEN'].present? && ENV['TWILIO_PHONE_NUMBERS'].present?
-  end
+  def twilio_enabled?
+    return false if credentials_root.blank?
 
-  def self.twilio_phone_numbers
-    ENV['TWILIO_PHONE_NUMBERS']&.split(',')
-  end
+    if credentials_root[:account_sid].blank? &&
+       credentials_root[:auth_token].blank? &&
+       credentials_root[:phone_number].blank?
 
-  def self.next_phone_number
-    return if twilio_phone_numbers.blank?
-    return twilio_phone_numbers.first if twilio_phone_numbers.count == 1
-
-    company = Company.main
-    if Rails.env.development?
-      ENV['TWILIO_TEST_FROM_PHONE_NUMBER']
-    else
-      num_of_nums = twilio_phone_numbers.length
-
-      return nil if num_of_nums.zero?
-
-      return twilio_phone_numbers[0] if num_of_nums == 1
-
-      next_number = twilio_phone_numbers[company.current_phone]
-
-      if company.current_phone < (num_of_nums - 1)
-        company.update(current_phone: (company.current_phone + 1))
-      else
-        company.update(current_phone: 0)
-      end
-
-      next_number
+      return false
     end
+
+    if credentials_root[:account_sid].present? &&
+       credentials_root[:auth_token].present? &&
+       credentials_root[:phone_number].present?
+
+      return true
+    end
+
+    raise 'inconsistent twilio config'
   end
+
+  def from_number
+    credentials_root[:phone_number]
+  end
+
+  def from_number_mms
+    credentials_root[:mms_phone_number]
+  end
+
+  def validate_phone_number(phone_number, mobile)
+    return unless twilio_enabled?
+
+    # twilio phone number validations that check whether valid mobile # cost half a penny per request
+
+    begin
+      response = get_phone_number(phone_number, mobile)
+      return 'does not appear to be a valid mobile phone number' if mobile && response.carrier['type'] != 'mobile'
+
+      response.phone_number
+    rescue Twilio::REST::RestError, NoMethodError => e
+      Rails.logger.info "twilio lookup error: #{e}"
+      return 'does not appear to be a valid phone number'
+    end
+
+    nil
+  end
+
+  def self.human_to_twilio_format(phone_number)
+    "+1#{phone_number.gsub('(', '').gsub(')', '').gsub('-', '').gsub(' ', '')}"
+  end
+
+  def self.twilio_to_human_format(phone_number)
+    "(#{phone_number[2, 3]}) #{phone_number[5, 3]}-#{phone_number[8, 4]}"
+  end
+
+  private
+
+    def credentials_root
+      test_with_live_credentials? ? Rails.application.credentials.twilio[:live] : Rails.application.credentials.twilio
+    end
+
+    def test_with_live_credentials?
+      false
+    end
+
+    def client
+      Twilio::REST::Client.new(credentials_root[:account_sid], credentials_root[:auth_token])
+    end
+
+    def get_phone_number(attribute, mobile)
+      converted_phone_number = attribute.gsub(/[^0-9a-z\\s]/i, '')
+      mobile ? lookup_number(converted_phone_number, 'carrier') : lookup_number(converted_phone_number)
+    end
+
+    def lookup_number(number, type = nil)
+      lookup_client = Twilio::REST::Client.new(credentials_root[:account_sid], credentials_root[:auth_token])
+
+      RadicalRetry.perform_request(retry_count: 2) do
+        if type
+          lookup_client.lookups.phone_numbers(number).fetch(type: [type])
+        else
+          lookup_client.lookups.phone_numbers(number).fetch
+        end
+      end
+    end
 end

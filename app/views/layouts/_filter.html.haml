@@ -1,9 +1,11 @@
+- if search.search_params? && search.invalid?
+  - flash.now[:error] = search.error_messages
 = simple_form_for :search, url: path, method: :get do |f|
-  -search.filters.each_slice(5) do |filters|
+  - search.filters.each_slice(5) do |filters|
     .row
-      -col_class = filters.count > 2 ? 'col-lg' : 'col-lg-4'
+      - col_class = filters.count > 2 ? 'col-lg' : 'col-lg-4'
       - filters.each do |filter|
-        %div{ class: col_class }
+        %div{ class: "#{col_class} #{filter_col_class(filter)}" }
           = render "layouts/filter_#{filter.filter_view}", filter: filter, search: search, f: f
 
   .form-actions
@@ -11,7 +13,7 @@
       %i.fa.fa-filter
       Apply Filters
     \
-    = link_to path + '?clear_filters=true', class: 'btn btn-danger' do
+    = link_to "#{path}?clear_filters=true", class: 'btn btn-danger' do
       %i.fa.fa-times
       Clear Filters
     %br

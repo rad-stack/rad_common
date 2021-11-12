@@ -5,7 +5,7 @@ class RadbearDeviseMailer < Devise::Mailer
   layout 'radbear_mailer'
 
   before_action :set_defaults
-  default reply_to: Rails.application.config.app_admin_email
+  default reply_to: Rails.application.credentials.admin_email
 
   def confirmation_instructions(record, token, opts = {})
     @token = token
@@ -66,11 +66,32 @@ class RadbearDeviseMailer < Devise::Mailer
     super
   end
 
+  def email_changed(record, opts = {})
+    initialize_from_record(record)
+
+    @recipient = @resource
+    @message = "The email address for your #{app_name} account was recently changed. If you made this change, please "\
+               "disregard this message. If you didn't make this change, please let us know immediately."
+
+    super
+  end
+
+  def password_change(record, opts = {})
+    initialize_from_record(record)
+
+    @recipient = @resource
+    @message = "The password for your #{app_name} account was recently changed. If you made this change, you don't "\
+               "need to do anything more. If you didn't make this change, please let us know, and reset your password "\
+               'immediately.'
+
+    super
+  end
+
   def default_url_options
     if @resource.internal?
-      { host: RadCommon::AppInfo.new.host_name }
+      { host: Rails.configuration.rad_common.host_name }
     else
-      { host: RadCommon::AppInfo.new.portal_host_name }
+      { host: Rails.configuration.rad_common.portal_host_name }
     end
   end
 
@@ -82,10 +103,9 @@ class RadbearDeviseMailer < Devise::Mailer
       end
 
       @include_yield = false
-      @optional = false
     end
 
     def app_name
-      @resource.internal? ? I18n.t(:app_name) : I18n.t(:portal_app_name)
+      @resource.internal? ? Rails.configuration.rad_common.app_name : Rails.configuration.rad_common.portal_app_name
     end
 end

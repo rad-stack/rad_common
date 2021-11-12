@@ -1,6 +1,4 @@
 class NotificationSettingsController < ApplicationController
-  before_action :authenticate_user!
-
   def index
     authorize NotificationSetting
     skip_policy_scope
@@ -18,10 +16,14 @@ class NotificationSettingsController < ApplicationController
     notification_setting = NotificationSetting.find_or_initialize_by(notification_type: notification_type,
                                                                      user_id: permitted_params[:user_id])
 
+    notification_setting.check_defaults
     notification_setting.enabled = permitted_params[:enabled]
     notification_setting.email = permitted_params[:email] if notification_type.email_enabled?
     notification_setting.feed = permitted_params[:feed] if notification_type.feed_enabled?
-    notification_setting.sms = permitted_params[:sms] if RadicalTwilio.twilio_enabled? && notification_type.sms_enabled?
+
+    if RadicalTwilio.new.twilio_enabled? && notification_type.sms_enabled?
+      notification_setting.sms = permitted_params[:sms]
+    end
 
     authorize notification_setting
 

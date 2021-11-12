@@ -16,31 +16,47 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
+  s.add_dependency 'active_storage_validations'
   s.add_dependency 'audited', '~> 4.9'
+
+  # this dependency can be removed once task 32743 is resolved, it's a dep of boostrap
+  s.add_dependency 'autoprefixer-rails', '9.8.5'
+
+  s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
-  s.add_dependency 'bootstrap', '~> 4.3.1'
-  s.add_dependency 'bootstrap-select-rails', '~> 1.13.8'
+  s.add_dependency 'bootstrap', '~> 4.6.0'
   s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
+  s.add_dependency 'bootstrap-select-rails', '~> 1.13.8'
   s.add_dependency 'devise'
   s.add_dependency 'devise-authy'
-  s.add_dependency 'devise-security'
   s.add_dependency 'devise_invitable'
+  s.add_dependency 'devise-security'
   s.add_dependency 'faker'
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'haml-rails', '~> 2.0'
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing', '~> 1.9'
-  s.add_dependency 'kaminari', '>= 0.13.0'
+  s.add_dependency 'kaminari', '~> 1.2.1'
+  s.add_dependency 'mini_racer'
   s.add_dependency 'momentjs-rails', '~> 2.9', '>= 2.9.0'
+
+  # security update required higher version
+  s.add_dependency 'nokogiri', '~> 1.12.5'
+
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
+  s.add_dependency 'puma', '~> 5.5.2'
   s.add_dependency 'pundit'
-  s.add_dependency 'rails'
+  s.add_dependency 'rails', '~> 6.1.3.2'
   s.add_dependency 'rails_email_validator'
-  s.add_dependency 'sentry-raven', '~> 3.0.0'
+  s.add_dependency 'sendgrid-ruby'
+  s.add_dependency 'sentry-rails'
+  s.add_dependency 'sentry-ruby'
   s.add_dependency 'sidekiq', '~> 5.2.2'
   s.add_dependency 'sidekiq-failures'
   s.add_dependency 'simple_form', '~> 5.0.1'
+  s.add_dependency 'strip_attributes'
+  s.add_dependency 'text'
   s.add_dependency 'twilio-ruby', '~> 5.31.0'
   s.add_dependency 'webpacker'
 
@@ -48,42 +64,16 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'coffee-rails', '~> 5.0'
   s.add_development_dependency 'factory_bot_rails'
+  s.add_development_dependency 'haml_lint'
   s.add_development_dependency 'listen', '~> 3.0.5'
-  s.add_development_dependency 'puma', '~> 3.7'
-  #s.add_development_dependency 'rad-style'
   s.add_development_dependency 'rspec-rails'
-  s.add_development_dependency 'rubocop'
+
+  # keep up to date with latest rubocop supported by hound
+  # http://help.houndci.com/en/articles/2461415-supported-linters
+  s.add_development_dependency 'rubocop', '1.5.2'
+
   s.add_development_dependency 'rubocop-rails'
   s.add_development_dependency 'rubocop-rspec'
   s.add_development_dependency 'vcr'
   s.add_development_dependency 'webmock'
 end
-
-# rad_common (0.1.0)
-# audited (~> 4.9)
-# aws-sdk-s3
-# bootstrap (~> 4.3.1)
-# bootstrap-select-rails (~> 1.13.8)
-# bootstrap4-kaminari-views (~> 1.0.1)
-# devise
-# devise-authy
-# devise-security
-# devise_invitable
-# faker
-# font-awesome-rails
-# haml-rails (~> 2.0)
-# hashids
-# image_processing (~> 1.9)
-# kaminari (>= 0.13.0)
-# momentjs-rails (~> 2.9, >= 2.9.0)
-# pg
-# premailer-rails (~> 1.10.2)
-# pundit
-# rails (~> 6.0.2.2)
-# rails_email_validator
-# sentry-raven (~> 3.0.0)
-# sidekiq (~> 5.2.2)
-# sidekiq-failures
-# simple_form (~> 5.0.1)
-# twilio-ruby (~> 5.31.0)
-# webpacker

@@ -2,27 +2,35 @@ class EmailAddressValidator < ActiveModel::Validator
   def validate(record)
     return if record.blank?
 
-    fields = options[:fields]
-    multiples = options[:multiples]
-
-    fields.each do |field|
+    options[:fields].each do |field|
       next if record.send(field).blank?
 
-      attrs = record.send(field)
-      if multiples
-        attrs.split(',').each do |attr|
-          attr.class == Array ? attr.each { |email| check_email(email, field, record) } : check_email(attr.strip, field, record)
-        end
-      else
-        check_email(attrs, field, record)
+      email_value = record.send(field).downcase
+      email_value.downcase!
+      record.send("#{field}=", email_value)
+
+      unless valid_email?(email_value)
+        record.errors.add(field, 'is not written in a valid format. Email cannot have capital letters, '\
+                                 'domain must be less than 62 characters and does not allow special characters.')
+        next
       end
+
+      next unless check_send_grid?(record, field)
+
+      error_message = RadicalSendGrid.new.validate_email(email_value)
+      record.errors.add(field, error_message) if error_message.present?
     end
   end
 
-  def check_email(email, field, record)
-    return if email =~ URI::MailTo::EMAIL_REGEXP && email !~ /[A-Z]/
+  private
 
-    record.errors.add(field, 'is not written in a valid format. Email cannot have capital letters, '\
-                              'domain must be less than 62 characters and does not allow special characters.')
-  end
+    def valid_email?(email)
+      email =~ URI::MailTo::EMAIL_REGEXP && email !~ /[A-Z]/
+    end
+
+    def check_send_grid?(record, field)
+      return false if record.running_global_validity
+
+      record.send("#{field}_changed?")
+    end
 end

@@ -6,8 +6,7 @@ module Hashable
   end
 
   def self.hashids
-    salt = ENV.fetch('HASH_KEY')
-    Hashids.new(salt, 6, 'abcdefghijklmnopqrstuvwxyz')
+    Hashids.new(Rails.application.credentials.hash_key, 6, Rails.application.credentials.hash_alphabet)
   end
 
   class_methods do

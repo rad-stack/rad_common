@@ -1,9 +1,9 @@
 en:
-  app_name: Demo Foo
-  portal_app_name: Foo Portal
   activerecord:
     attributes:
       user:
+        external: 'Client user?'
+      security_role:
         external: 'Client user?'
       division:
         additional_info: Additional data

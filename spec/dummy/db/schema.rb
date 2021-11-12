@@ -2,17 +2,18 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_08_180735) do
+ActiveRecord::Schema.define(version: 2021_10_29_155622) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -43,7 +44,30 @@ ActiveRecord::Schema.define(version: 2020_04_08_180735) do
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
     t.datetime "created_at", null: false
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "attorneys", force: :cascade do |t|
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "middle_name"
+    t.string "company_name", null: false
+    t.string "phone_number", null: false
+    t.string "email", null: false
+    t.string "address_1", null: false
+    t.string "address_2"
+    t.string "city", null: false
+    t.string "state", null: false
+    t.string "zipcode", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -81,7 +105,7 @@ ActiveRecord::Schema.define(version: 2020_04_08_180735) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "validity_checked_at"
-    t.text "valid_user_domains", default: [], array: true
+    t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
   end
 
@@ -96,8 +120,46 @@ ActiveRecord::Schema.define(version: 2020_04_08_180735) do
     t.string "timezone"
     t.decimal "hourly_rate", precision: 8, scale: 2, default: "0.0", null: false
     t.string "additional_info"
+    t.date "date_established"
+    t.string "invoice_email"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
+  end
+
+  create_table "duplicates", force: :cascade do |t|
+    t.string "duplicatable_type", null: false
+    t.bigint "duplicatable_id", null: false
+    t.text "duplicates_info"
+    t.text "duplicates_not"
+    t.integer "score"
+    t.integer "sort", default: 500, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "processed_at", null: false
+    t.index ["duplicatable_type", "duplicatable_id"], name: "index_duplicates_on_duplicatable_type_and_duplicatable_id", unique: true
+  end
+
+  create_table "login_activities", force: :cascade do |t|
+    t.string "scope"
+    t.string "strategy"
+    t.string "identity"
+    t.boolean "success"
+    t.string "failure_reason"
+    t.string "user_type"
+    t.bigint "user_id"
+    t.string "context"
+    t.string "ip"
+    t.text "user_agent"
+    t.text "referrer"
+    t.string "city"
+    t.string "region"
+    t.string "country"
+    t.float "latitude"
+    t.float "longitude"
+    t.datetime "created_at"
+    t.index ["identity"], name: "index_login_activities_on_identity"
+    t.index ["ip"], name: "index_login_activities_on_ip"
+    t.index ["user_type", "user_id"], name: "index_login_activities_on_user_type_and_user_id"
   end
 
   create_table "notification_security_roles", force: :cascade do |t|
@@ -114,7 +176,7 @@ ActiveRecord::Schema.define(version: 2020_04_08_180735) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "notification_type_id", null: false
-    t.boolean "email", default: true, null: false
+    t.boolean "email", default: false, null: false
     t.boolean "feed", default: false, null: false
     t.boolean "sms", default: false, null: false
     t.index ["notification_type_id", "user_id"], name: "index_notification_settings_on_notification_type_id_and_user_id", unique: true
@@ -154,24 +216,14 @@ ActiveRecord::Schema.define(version: 2020_04_08_180735) do
     t.string "name", null: false
     t.boolean "admin", default: false, null: false
     t.boolean "read_user", default: false, null: false
-    t.boolean "read_audit", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "create_division", default: false, null: false
     t.boolean "read_division", default: false, null: false
     t.boolean "update_division", default: false, null: false
     t.boolean "delete_division", default: false, null: false
+    t.boolean "external", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
-  end
-
-  create_table "security_roles_users", id: :serial, force: :cascade do |t|
-    t.integer "security_role_id", null: false
-    t.integer "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["security_role_id", "user_id"], name: "index_security_roles_users_on_security_role_id_and_user_id", unique: true
-    t.index ["security_role_id"], name: "index_security_roles_users_on_security_role_id"
-    t.index ["user_id"], name: "index_security_roles_users_on_user_id"
   end
 
   create_table "statuses", force: :cascade do |t|
@@ -188,7 +240,39 @@ ActiveRecord::Schema.define(version: 2020_04_08_180735) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "message_type", null: false
+    t.integer "security_role_id"
+    t.index ["security_role_id"], name: "index_system_messages_on_security_role_id"
     t.index ["user_id"], name: "index_system_messages_on_user_id"
+  end
+
+  create_table "twilio_logs", force: :cascade do |t|
+    t.string "from_number", null: false
+    t.string "to_number", null: false
+    t.integer "from_user_id", null: false
+    t.integer "to_user_id"
+    t.string "message", null: false
+    t.string "media_url"
+    t.boolean "success", default: true, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "opt_out_message_sent", default: false, null: false
+    t.index ["created_at"], name: "index_twilio_logs_on_created_at"
+    t.index ["from_number"], name: "index_twilio_logs_on_from_number"
+    t.index ["from_user_id"], name: "index_twilio_logs_on_from_user_id"
+    t.index ["opt_out_message_sent"], name: "index_twilio_logs_on_opt_out_message_sent"
+    t.index ["success"], name: "index_twilio_logs_on_success"
+    t.index ["to_number"], name: "index_twilio_logs_on_to_number"
+    t.index ["to_user_id"], name: "index_twilio_logs_on_to_user_id"
+  end
+
+  create_table "user_security_roles", id: :serial, force: :cascade do |t|
+    t.integer "security_role_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["security_role_id", "user_id"], name: "index_user_security_roles_on_security_role_id_and_user_id", unique: true
+    t.index ["security_role_id"], name: "index_user_security_roles_on_security_role_id"
+    t.index ["user_id"], name: "index_user_security_roles_on_user_id"
   end
 
   create_table "user_statuses", id: :serial, force: :cascade do |t|
@@ -225,8 +309,7 @@ ActiveRecord::Schema.define(version: 2020_04_08_180735) do
     t.integer "user_status_id", null: false
     t.string "authy_id"
     t.datetime "last_sign_in_with_authy"
-    t.boolean "authy_enabled", default: false, null: false
-    t.string "firebase_id"
+    t.boolean "authy_enabled", default: true, null: false
     t.string "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
@@ -241,6 +324,7 @@ ActiveRecord::Schema.define(version: 2020_04_08_180735) do
     t.datetime "password_changed_at"
     t.datetime "last_activity_at"
     t.datetime "expired_at"
+    t.jsonb "filter_defaults"
     t.index ["authy_id"], name: "index_users_on_authy_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -257,6 +341,7 @@ ActiveRecord::Schema.define(version: 2020_04_08_180735) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audits", "users"
   add_foreign_key "divisions", "users", column: "owner_id"
   add_foreign_key "notification_security_roles", "notification_types"
@@ -265,9 +350,12 @@ ActiveRecord::Schema.define(version: 2020_04_08_180735) do
   add_foreign_key "notification_settings", "users"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
-  add_foreign_key "security_roles_users", "security_roles"
-  add_foreign_key "security_roles_users", "users"
+  add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
+  add_foreign_key "twilio_logs", "users", column: "from_user_id"
+  add_foreign_key "twilio_logs", "users", column: "to_user_id"
+  add_foreign_key "user_security_roles", "security_roles"
+  add_foreign_key "user_security_roles", "users"
   add_foreign_key "users", "user_statuses"
   add_foreign_key "users", "users", column: "invited_by_id"
 end

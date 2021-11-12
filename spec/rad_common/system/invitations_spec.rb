@@ -8,8 +8,10 @@ describe 'Invitations', type: :system do
   let(:external_domain) { 'abc.com' }
   let(:first_name) { Faker::Name.first_name }
   let(:last_name) { Faker::Name.last_name }
-  let(:valid_email) { Faker::Internet.user_name + '@' + email_domain }
-  let(:external_email) { Faker::Internet.user_name + '@' + external_domain }
+  let(:valid_email) { "#{Faker::Internet.user_name}@#{email_domain}" }
+  let(:external_email) { "#{Faker::Internet.user_name}@#{external_domain}" }
+
+  before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
 
   describe 'user' do
     before { login_as user, scope: :user }
@@ -23,11 +25,11 @@ describe 'Invitations', type: :system do
   end
 
   describe 'admin' do
-    before { login_as(admin, scope: :user) }
+    before { login_as admin, scope: :user }
 
     describe 'new' do
-      context 'valid' do
-        it 'invites a user', :vcr do
+      context 'when valid' do
+        it 'invites a user' do
           visit new_user_invitation_path
           fill_in 'Email', with: valid_email
           fill_in 'First name', with: first_name
@@ -37,22 +39,22 @@ describe 'Invitations', type: :system do
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
         end
 
-        it 'invites an external user', :vcr do
-          if RadCommon.external_users
+        it 'invites an external user' do
+          if Rails.configuration.rad_common.external_users
             visit new_user_invitation_path
             fill_in 'Email', with: external_email
             fill_in 'First name', with: first_name
             fill_in 'Last name', with: last_name
             fill_in 'Mobile phone', with: '(999) 231-1111'
-            check 'Client user?'
+            check 'user_external'
             click_button 'Send'
             expect(page).to have_content "We invited '#{first_name} #{last_name}'"
           end
         end
       end
 
-      context 'invalid' do
-        it 'because of invalid email', :vcr do
+      context 'when invalid' do
+        it 'because of invalid email' do
           visit new_user_invitation_path
           bad_email = 'j@g.com'
           fill_in 'Email', with: bad_email
@@ -66,7 +68,7 @@ describe 'Invitations', type: :system do
     end
 
     describe 'resend' do
-      it 'resends invitation', :vcr do
+      it 'resends invitation' do
         visit new_user_invitation_path
         fill_in 'Email', with: valid_email
         fill_in 'First name', with: first_name
@@ -75,7 +77,7 @@ describe 'Invitations', type: :system do
         click_button 'Send'
         expect(page).to have_content "We invited '#{first_name} #{last_name}'"
 
-        visit users_path
+        visit user_path(User.last)
         click_link 'Resend Invitation'
         expect(page).to have_content 'We resent the invitation to the user.'
       end
@@ -83,42 +85,41 @@ describe 'Invitations', type: :system do
   end
 
   describe 'accept' do
-    before do
-      @invitee = User.invite!(email: Faker::Internet.user_name + '@' + email_domain,
-                              first_name: Faker::Name.first_name,
-                              last_name: Faker::Name.last_name,
-                              mobile_phone: '(999) 231-1111')
+    let!(:invitee) do
+      User.invite!(email: "#{Faker::Internet.user_name}@#{email_domain}",
+                   first_name: Faker::Name.first_name,
+                   last_name: Faker::Name.last_name,
+                   mobile_phone: create(:phone_number, :mobile))
     end
 
-    it 'does not allow invitee to reset password after invite expires', :vcr do
-      @invitee = User.find(@invitee.id)
-      expect(@invitee.errors.count).to eq(0)
-      @invitee.invitation_created_at = 3.weeks.ago
-      @invitee.invitation_sent_at = 3.weeks.ago
-      @invitee.save!
+    it 'does not allow invitee to reset password after invite expires' do
+      expect(invitee.errors.count).to eq(0)
+      invitee.invitation_created_at = 3.weeks.ago
+      invitee.invitation_sent_at = 3.weeks.ago
+      invitee.save!
 
       visit new_user_password_path
-      fill_in 'Email', with: @invitee.email
+      fill_in 'Email', with: invitee.email
       click_button 'Send Me Reset Password Instructions'
       expect(page).to have_content 'If your email address exists in our database, you will receive a password'
     end
 
-    it 'notifies admin when invitee accepts', :vcr do
+    it 'notifies admin when invitee accepts' do
       ActionMailer::Base.deliveries = []
       create :user_accepts_invitation_notification, security_roles: [admin.security_roles.first]
 
-      @invitee.accept_invitation!
+      invitee.accept_invitation!
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.subject).to include 'Accepted'
       expect(mail.to).to include admin.email
     end
 
-    it "doesn't let unaccepted invitee reset password", :vcr do
+    it "doesn't let unaccepted invitee reset password" do
       ActionMailer::Base.deliveries = []
 
       visit new_user_password_path
-      fill_in 'Email', with: @invitee.email
+      fill_in 'Email', with: invitee.email
       click_button 'Send Me Reset Password Instructions'
       expect(page).to have_content 'If your email address exists in our database, you will receive a password'
 

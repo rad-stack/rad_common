@@ -1,0 +1,2 @@
+class SystemUsagePolicy < ApplicationPolicy
+end

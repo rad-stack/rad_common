@@ -1,0 +1,2 @@
+class AttorneyPolicy < ApplicationPolicy
+end

@@ -1,5 +1,5 @@
 .card
-  -actions = [link_to('Right Button', root_path, class: 'btn btn-secondary btn-sm')]
+  - actions = [link_to('Right Button', root_path, class: 'btn btn-secondary btn-sm')]
   = render 'layouts/card_header', additional_external_actions: actions
   .card-body
     = render 'layouts/show_data_columns', data: division_show_data(@division), resource: @division

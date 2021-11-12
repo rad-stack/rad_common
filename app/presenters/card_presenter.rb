@@ -18,28 +18,8 @@ class CardPresenter
     local_assigns[:controller_name] || _h.controller_name
   end
 
-  def object_class
-    controller_name.classify.titleize
-  end
-
-  def object_label
-    if controller_alias
-      controller_alias.classify.titleize
-    else
-      object_class
-    end
-  end
-
   def downcased_object_class
     controller_name.classify.downcase
-  end
-
-  def titleized_controller_name
-    if controller_alias
-      controller_alias.titleize
-    else
-      controller_name.titleize
-    end
   end
 
   def instance
@@ -64,10 +44,6 @@ class CardPresenter
 
   def title_class
     local_assigns[:title_class] || ''
-  end
-
-  def controller_alias
-    local_assigns[:controller_alias]
   end
 
   def icon
@@ -127,7 +103,7 @@ class CardPresenter
   end
 
   def instance_variable_name
-    '@' + (local_assigns[:instance_variable_name] || controller_name.classify.underscore)
+    "@#{local_assigns[:instance_variable_name] || controller_name.classify.underscore}"
   end
 
   def delete_confirmation
@@ -158,8 +134,8 @@ class CardPresenter
     return @output_title = "#{object_label}: #{instance_label}" if action_name == 'show'
 
     if action_name == 'index'
-      the_var = controller.instance_variable_get('@' + controller_name)
-      return "#{titleized_controller_name} (#{the_var.respond_to?(:total_count) ? the_var.total_count : the_var.count})"
+      the_var = controller.instance_variable_get("@#{controller_name}")
+      return "#{object_label_plural} (#{the_var.respond_to?(:total_count) ? the_var.total_count : the_var.count})"
     end
 
     if action_name == 'edit' || action_name == 'update'
@@ -168,7 +144,7 @@ class CardPresenter
       if no_show_link
         the_title += " #{instance_label}"
       else
-        the_title += ' ' + @view_context.link_to(instance_label, instance)
+        the_title += " #{@view_context.link_to(instance_label, instance)}"
         the_title = the_title.html_safe
       end
 
@@ -181,21 +157,11 @@ class CardPresenter
   def output_actions
     actions = []
 
-    if action_name == 'show'
-      if !no_edit_button && current_user && Pundit.policy!(current_user, check_policy_klass).update? && Pundit.policy!(current_user, check_policy_instance).update?
-        actions.push(@view_context.link_to(@view_context.icon(:pencil, 'Edit'), edit_url, class: 'btn btn-secondary btn-sm'))
-      end
-    end
-
+    actions.push(edit_action) if include_edit_action?
     actions += additional_actions
-
-    if !no_delete_button && instance && instance.id && current_user && Pundit.policy!(current_user, check_policy_klass).destroy? && Pundit.policy!(current_user, check_policy_instance).destroy?
-      if delete_button_content
-        actions.push(delete_button_content)
-      else
-        actions.push(@view_context.link_to(@view_context.icon(:times, 'Delete'), instance, method: :delete, data: { confirm: delete_confirmation }, class: 'btn btn-danger btn-sm'))
-      end
-    end
+    actions.push(duplicate_action) if include_duplicate_action?
+    actions.push(duplicates_action) if include_duplicates_action?
+    actions.push(delete_action) if include_delete_action?
 
     actions
   end
@@ -205,27 +171,33 @@ class CardPresenter
 
     actions += external_actions
 
-    if action_name == 'edit' || action_name == 'update' || action_name == 'show'
-      if !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass).new?
-        actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"), new_url, class: 'btn btn-success btn-sm', id: "new_#{downcased_object_class}_link"))
-      end
+    if (action_name == 'edit' || action_name == 'update' || action_name == 'show') &&
+       !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass).new?
+
+      actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"),
+                                         new_url,
+                                         class: 'btn btn-success btn-sm',
+                                         id: "new_#{downcased_object_class}_link"))
     end
 
-    if !no_index_button && %w[show edit update new create].include?(action_name)
-      if current_user && Pundit.policy!(current_user, check_policy_klass).index?
-        actions.push(@view_context.link_to(@view_context.icon(:list, 'View ' + titleized_controller_name), index_path, class: 'btn btn-secondary btn-sm'))
-      end
+    if !no_index_button && %w[show edit update new create].include?(action_name) && current_user &&
+       Pundit.policy!(current_user, check_policy_klass).index?
+
+      actions.push(@view_context.link_to(@view_context.icon(:list, "View #{object_label_plural}"),
+                                         index_path,
+                                         class: 'btn btn-secondary btn-sm'))
     end
 
-    if action_name == 'index'
-      if !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass).new?
-        actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"), new_url, class: 'btn btn-success btn-sm', id: "new_#{downcased_object_class}_link"))
-      end
+    if action_name == 'index' && !no_new_button && current_user &&
+       Pundit.policy!(current_user, check_policy_klass).new?
+
+      actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"),
+                                         new_url,
+                                         class: 'btn btn-success btn-sm',
+                                         id: "new_#{downcased_object_class}_link"))
     end
 
-    actions += additional_external_actions
-
-    actions
+    actions + additional_external_actions
   end
 
   def output_back_button?
@@ -234,9 +206,17 @@ class CardPresenter
 
   private
 
+    def object_label_plural
+      object_label.pluralize
+    end
+
+    def object_label
+      klass.model_name.human.titleize
+    end
+
     def check_policy_klass
       if current_user.portal?
-        [RadCommon.portal_namespace, klass.new]
+        [Rails.configuration.rad_common.portal_namespace, klass.new]
       else
         klass.new
       end
@@ -244,9 +224,65 @@ class CardPresenter
 
     def check_policy_instance
       if current_user.portal?
-        [RadCommon.portal_namespace, instance]
+        [Rails.configuration.rad_common.portal_namespace, instance]
       else
         instance
       end
+    end
+
+    def include_edit_action?
+      action_name == 'show' &&
+        !no_edit_button &&
+        instance&.persisted? &&
+        current_user &&
+        Pundit.policy!(current_user, check_policy_klass).update? &&
+        Pundit.policy!(current_user, check_policy_instance).update?
+    end
+
+    def edit_action
+      @view_context.link_to(@view_context.icon(:pencil, 'Edit'), edit_url, class: 'btn btn-secondary btn-sm')
+    end
+
+    def include_duplicate_action?
+      action_name == 'show' &&
+        RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
+        instance.duplicate.present? &&
+        instance.duplicate.score.present?
+    end
+
+    def duplicate_action
+      @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
+                            "/rad_common/duplicates?model=#{instance.class}&id=#{instance.id}",
+                            class: 'btn btn-warning btn-sm')
+    end
+
+    def include_duplicates_action?
+      action_name == 'index' &&
+        RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
+        Pundit.policy!(current_user, klass.new).index_duplicates? &&
+        klass.high_duplicates.size.positive?
+    end
+
+    def duplicates_action
+      @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
+                            "/rad_common/duplicates?model=#{klass}",
+                            class: 'btn btn-warning btn-sm')
+    end
+
+    def include_delete_action?
+      action_name != 'index' &&
+        !no_delete_button &&
+        instance&.persisted? &&
+        current_user &&
+        Pundit.policy!(current_user, check_policy_klass).destroy? &&
+        Pundit.policy!(current_user, check_policy_instance).destroy?
+    end
+
+    def delete_action
+      delete_button_content || @view_context.link_to(@view_context.icon(:times, 'Delete'),
+                                                     instance,
+                                                     method: :delete,
+                                                     data: { confirm: delete_confirmation },
+                                                     class: 'btn btn-danger btn-sm')
     end
 end

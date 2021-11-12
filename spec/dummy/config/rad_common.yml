@@ -1,0 +1,92 @@
+default: &default
+  app_name: Demo Foo
+  portal_app_name: Foo Portal
+  use_avatar: true
+  disable_sign_up: false
+  secure_sentry: true
+  external_users: true
+  app_logo_includes_name: true
+  portal_namespace:
+
+  system_usage_models:
+    -
+      - Division
+      - status_pending
+      - Pending Divisions
+    -
+      - Division
+      - status_active
+      - Active Divisions'
+    -
+      - Division
+      - status_inactive
+      - Inactive Divisions
+    - User
+
+  duplicates:
+    models:
+      -
+        name: Attorney
+
+  restricted_audit_attributes:
+    -
+      model: Division
+      attribute: hourly_rate
+
+  additional_user_params: []
+  additional_company_params: []
+
+  global_validity_days: 3
+  global_validity_timeout_hours: 3
+  global_validity_exclude: []
+  global_validity_include: []
+  global_validity_supress: []
+
+  global_search_scopes:
+    -
+      name: user_name
+      model: User
+      description: Search user by name
+      columns:
+        - email
+      methods:
+        - user_status
+      query_where: last_name || ', ' || first_name ilike :search
+      query_order: last_name ASC, first_name ASC, created_at DESC
+    -
+      name: user_email
+      model: User
+      description: Search user by email
+      columns:
+        - email
+      query_where: email ilike :search
+    -
+      name: division_name
+      model: Division
+      description: Search division by name
+      columns:
+        - name
+      query_where: name ilike :search
+      query_order: name
+    -
+      name: user_by_division_name
+      model: User
+      description: Search user by division name
+      columns: []
+      joins: JOIN divisions on divisions.owner_id = users.id
+      query_where: divisions.name ilike :search
+      super_search_exclude: true
+
+development:
+  <<: *default
+
+  host_name: localhost:3000
+  portal_host_name: portal.localhost:3000
+  authy_enabled: false
+
+test:
+  <<: *default
+
+  host_name: localhost:3000
+  portal_host_name: portal.localhost:3000
+  authy_enabled: true

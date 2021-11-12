@@ -1,11 +1,11 @@
-if Rails.env.production?
-  url = "#{ENV.fetch('REDIS_URL')}/#{ENV.fetch('REDIS_DB')}"
+if Rails.env.production? || Rails.env.staging?
+  url = "#{ENV.fetch('REDIS_URL')}/#{ENV['REDIS_DB'].presence || 0}"
 
   Sidekiq.configure_server do |config|
-    config.redis = { url: url, network_timeout: 5 }
+    config.redis = { url: url, network_timeout: 10 }
   end
 
   Sidekiq.configure_client do |config|
-    config.redis = { url: url, network_timeout: 5 }
+    config.redis = { url: url, network_timeout: 10 }
   end
 end

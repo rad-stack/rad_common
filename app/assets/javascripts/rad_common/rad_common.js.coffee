@@ -2,6 +2,9 @@
 #= require rad_common/dynamic_updater
 
 $ ->
+  $("#merge-all").click ->
+    $(".merge_data").prop("checked", true)
+
   $(".global-search-autocomplete").bind "autocompleteselect", (event, ui) ->
     select_global_search_item($(this), event, ui)
 
@@ -13,6 +16,13 @@ $ ->
     if code is 13
       e.preventDefault()
       false
+
+  if $("#other-duplicates-table").length
+    columnWidths = []
+    $("#other-duplicates-table th").each ->
+      columnWidths.push( $(this).width() )
+    $("#current-duplicate-table th").each ( index ) ->
+      $(this).width(columnWidths[index])
 
   $('.global-search-autocomplete').each( (index, object) ->
     instance = $(object).autocomplete().autocomplete("instance")
@@ -31,7 +41,7 @@ $ ->
 
       if item.scope_description != undefined && $('.super_search').val() == '1'
         tr = $("<tr>")
-        tr.append("<td class='search-scope-model-name'>" + humanize(item.model_name) + "</td>")
+        tr.append("<td class='search-scope-model-name'>" + item.human_name + "</td>")
       tr.appendTo(table)
       table.appendTo(ul)
       table
@@ -89,11 +99,18 @@ $ ->
   humanize = (string) ->
     string[0].toUpperCase() + string.substring(1).replace(/([a-z])(?=[A-Z])/g, "$1 ")
 
+  $(".array-add-btn").click ->
+    clone = $(this).closest(".form-group").find("input").last().clone()
+    clone.val("")
+    $(clone).insertBefore($(this))
+
 checkClientUser = ->
   if $('#user_external').is(':checked')
     $('.internal').hide()
+    $('.external').show()
   else
     $('.internal').show()
+    $('.external').hide()
 
 checkMessageType = ->
   if $('#system_message_message_type').val() == 'email'

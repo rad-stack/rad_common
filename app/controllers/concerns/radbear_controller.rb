@@ -4,7 +4,7 @@ module RadbearController
 
   included do
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
-    before_action :set_raven_user_context
+    before_action :set_sentry_user_context
     around_action :user_time_zone, if: :current_user
     after_action :verify_authorized, unless: :devise_controller?
     after_action :verify_policy_scoped, only: :index
@@ -12,7 +12,7 @@ module RadbearController
     rescue_from Pundit::NotAuthorizedError do
       # the application.rb config in the docs to do the same thing doesn't work
       # https://github.com/varvet/pundit#rescuing-a-denied-authorization-in-rails
-      render file: Rails.root.join('public/403.html'), formats: [:html], status: 403, layout: false
+      render file: Rails.root.join('public/403.html'), formats: [:html], status: :forbidden, layout: false
     end
   end
 
@@ -92,10 +92,10 @@ module RadbearController
 
   protected
 
-    def set_raven_user_context
+    def set_sentry_user_context
       return unless current_user
 
-      Raven.context.user = { user_id: current_user.id }
+      Sentry.set_user(id: current_user.id, email: current_user.email, name: current_user.to_s)
     end
 
     def user_time_zone(&block)

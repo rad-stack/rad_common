@@ -1,33 +1,19 @@
 require 'rails_helper'
 
 describe RadCommon::ApplicationHelper do
+  let(:me) { create :user }
   let(:date) { Time.current }
   let(:division) { create :division }
   let(:timestamp) { '2018-06-15 06:43 AM' }
 
-  before do
-    @user = create :user
-
-    def helper.current_user
-      @user.reload
-    end
-  end
-
   describe '#show_actions?' do
     let(:model_class) { Division }
 
-    context 'user can update resource' do
-      before { @user.security_roles.update_all update_division: true }
-
-      it 'returns true' do
-        expect(helper.show_actions?(model_class)).to eq(true)
-      end
-    end
-
-    context 'user can delete resource' do
+    context 'when user can update resource' do
       before do
-        @user.security_roles.update_all update_division: false
-        @user.security_roles.update_all delete_division: true
+        me.security_roles.update_all update_division: true
+        me.reload
+        allow(controller).to receive(:current_user).and_return(me)
       end
 
       it 'returns true' do
@@ -35,10 +21,25 @@ describe RadCommon::ApplicationHelper do
       end
     end
 
-    context 'user can neither update or delete resource' do
+    context 'when user can delete resource' do
       before do
-        @user.security_roles.update_all update_division: false
-        @user.security_roles.update_all delete_division: false
+        me.security_roles.update_all update_division: false
+        me.security_roles.update_all delete_division: true
+        me.reload
+        allow(controller).to receive(:current_user).and_return(me)
+      end
+
+      it 'returns true' do
+        expect(helper.show_actions?(model_class)).to eq(true)
+      end
+    end
+
+    context 'when user can neither update or delete resource' do
+      before do
+        me.security_roles.update_all update_division: false
+        me.security_roles.update_all delete_division: false
+        me.reload
+        allow(controller).to receive(:current_user).and_return(me)
       end
 
       it 'returns false' do
@@ -49,15 +50,17 @@ describe RadCommon::ApplicationHelper do
 
   describe 'enum_to_translated_option' do
     it 'translates the value' do
-      expect(enum_to_translated_option(Division, :division_status, division.division_status)).to eq 'Active'
+      expect(enum_to_translated_option(division, :division_status)).to eq 'Active'
     end
 
     it 'handles nil' do
-      expect(enum_to_translated_option(Division, :division_status, nil)).to be_nil
+      division.division_status = nil
+      expect(enum_to_translated_option(division, :division_status)).to be_nil
     end
 
     it 'handles blank' do
-      expect(enum_to_translated_option(Division, :division_status, '')).to be_nil
+      division.division_status = ''
+      expect(enum_to_translated_option(division, :division_status)).to be_nil
     end
   end
 
@@ -69,16 +72,8 @@ describe RadCommon::ApplicationHelper do
     it { is_expected.to eq options }
   end
 
-  describe 'db_options_for_enum' do
-    subject { db_options_for_enum(Division, :division_status) }
-
-    let(:options) { [['Pending', 0], ['Active', 1], ['Inactive', 2]] }
-
-    it { is_expected.to eq options }
-  end
-
   describe '#gravatar_for' do
-    context 'string size' do
+    context 'with string size' do
       let(:size) { '60' }
       let(:resource) { build(:user) }
 
@@ -88,7 +83,7 @@ describe RadCommon::ApplicationHelper do
       end
     end
 
-    context 'integer size' do
+    context 'with integer size' do
       let(:size) { 100 }
       let(:resource) { build(:user) }
 
@@ -98,7 +93,7 @@ describe RadCommon::ApplicationHelper do
       end
     end
 
-    context 'symbol size' do
+    context 'with symbol size' do
       let(:resource) { build(:user) }
 
       it 'returns a url with a non string size' do
@@ -113,7 +108,7 @@ describe RadCommon::ApplicationHelper do
     let(:size) { 80 }
     let(:filename) { 'avatar.png' }
 
-    context 'user does not have avatar' do
+    context 'when user does not have avatar' do
       let(:resource) { build(:user, avatar: nil) }
 
       it 'returns an image tag with the user gravatar' do
@@ -123,10 +118,12 @@ describe RadCommon::ApplicationHelper do
   end
 
   describe '#secured_link' do
-    context 'resource' do
+    before { allow(controller).to receive(:current_user).and_return(me) }
+
+    context 'with resource' do
       let(:resource) { build(:user) }
 
-      context 'user is authorized' do
+      context 'when user is authorized' do
         before { allow_any_instance_of(UserPolicy).to receive(:show?).and_return(true) }
 
         it 'renders a link' do
@@ -143,7 +140,7 @@ describe RadCommon::ApplicationHelper do
         end
       end
 
-      context 'user is unauthorized' do
+      context 'when user is unauthorized' do
         before { allow_any_instance_of(UserPolicy).to receive(:show?).and_return(false) }
 
         it 'returns the resource name' do
@@ -152,7 +149,7 @@ describe RadCommon::ApplicationHelper do
       end
     end
 
-    context 'no resource' do
+    context 'without resource' do
       let(:resource) { nil }
 
       it 'returns nil' do
@@ -194,7 +191,8 @@ describe RadCommon::ApplicationHelper do
 
     context 'with zone option' do
       it 'formats the date' do
-        expect(helper.format_datetime(date, include_zone: true)).to eq(date.in_time_zone.strftime('%-m/%-d/%Y %l:%M %p %Z'))
+        result = date.in_time_zone.strftime('%-m/%-d/%Y %l:%M %p %Z')
+        expect(helper.format_datetime(date, include_zone: true)).to eq(result)
       end
     end
   end
