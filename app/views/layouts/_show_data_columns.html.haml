@@ -1,67 +1,80 @@
--no_timestamps = false if local_assigns[:no_timestamps].nil?
--force_single_column = false if local_assigns[:force_single_column].nil?
+:ruby
+  no_timestamps = false if local_assigns[:no_timestamps].nil?
+  force_single_column = false if local_assigns[:force_single_column].nil?
+  stats = []
 
--stats = []
--if !local_assigns[:resource].nil? && !no_timestamps
-  -if resource.respond_to?(:created_at)
-    -stats.push({label: "Created", value: format_datetime(resource.created_at)})
-  -if resource.respond_to?(:updated_at) && resource.updated_at != resource.created_at
-    -stats.push({label: "Updated", value: format_datetime(resource.updated_at)})
+  if !local_assigns[:resource].nil? && !no_timestamps
+    if resource.respond_to?(:created_at)
+      stats.push(label: 'Created', value: format_datetime(resource.created_at))
+    end
 
--all_data = []
--if data
-  -data.each do |item|
-    -if item.is_a?(Hash)
-      -if item[:value].present?
-        -all_data.push(item)
-    -elsif item.is_a?(Symbol)
-      -value = resource.send(item)
-      -if !value.blank? || value.class.to_s == "FalseClass"
-        -all_data.push(item)
-    -else
-      - raise "invalid data type: #{item.class.to_s}"
+    if resource.respond_to?(:updated_at) && resource.updated_at != resource.created_at
+      stats.push(label: 'Updated', value: format_datetime(resource.updated_at))
+    end
+  end
 
--if all_data.count == 0
-  -columns = [stats]
--elsif all_data.count <= 5
-  -columns = [all_data, stats]
--elsif force_single_column
-  -columns = [all_data + stats]
--else
-  -all_data = all_data + stats
-  -columns = all_data.each_slice((all_data.count / 2.to_f).ceil).to_a
+  all_data = []
+
+  data&.each do |item|
+    case item
+    when Hash
+      if item[:value].present?
+        all_data.push(item)
+      end
+    when Symbol
+      value = resource.send(item)
+
+      if value.present? || value.class.to_s == 'FalseClass'
+        all_data.push(item)
+      end
+    else
+      raise "invalid data type: #{item.class}"
+    end
+  end
+
+  if all_data.count.zero?
+    columns = [stats]
+  elsif all_data.count <= 5
+    columns = [all_data, stats]
+  elsif force_single_column
+    columns = [all_data + stats]
+  else
+    all_data += stats
+    columns = all_data.each_slice((all_data.count / 2.to_f).ceil).to_a
+  end
 
 .row
-  -columns.each do |column|
-    .col-lg-6
+  - columns.each do |column|
+    %div{ class: force_single_column ? 'col-lg-12' : 'col-lg-6' }
       %dl.dl-horizontal
-        -column.each do |item|
-          -if item.is_a?(Hash)
-            -if item[:label]
+        - column.each do |item|
+          - case item
+          - when Hash
+            - if item[:label]
               %dt= item[:label]
               %dd= item[:value]
-            -else
+            - else
               %dt= item[:value]
               %dd
-          -elsif item.is_a?(Symbol)
-            -value = resource.send(item)
-            -translation = I18n.t "activerecord.attributes.#{resource.class.to_s.underscore}.#{item.to_s}"
-            -if translation.include?('translation missing')
+          - when Symbol
+            :ruby
+              value = resource.send(item)
+              translation = I18n.t "activerecord.attributes.#{resource.class.to_s.underscore}.#{item}"
+            - if translation.include?('translation missing')
               %dt= item.to_s.titlecase
-            -else
+            - else
               %dt= translation
             %dd
-              -if value.class.to_s == "ActiveSupport::TimeWithZone"
+              - case value.class.to_s
+              - when 'ActiveSupport::TimeWithZone'
                 = format_datetime(value)
-              -elsif value.class.to_s == "Date"
+              - when 'Date'
                 = format_date(value)
-              -elsif value.class.to_s == "Time"
+              - when 'Time'
                 = format_time(value)
-              -elsif value.class.to_s == "TrueClass"
+              - when 'TrueClass', 'FalseClass'
                 = format_boolean(value)
-              -elsif value.class.to_s == "FalseClass"
-                = format_boolean(value)
-              -elsif value.class.to_s == "Array"
-                = value.join(", ")
-              -else
+              - when 'Array'
+                = value.join(', ')
+              - else
                 = value

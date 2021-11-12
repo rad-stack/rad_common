@@ -13,13 +13,13 @@ describe CardPresenter do
       allow(view_context).to receive(:controller_name).and_return(controller_name)
     end
 
-    context 'a standard contoller name' do
+    context 'with a standard contoller name' do
       it 'returns the controller name' do
         expect(card_presenter.controller_name).to eq(controller_name)
       end
     end
 
-    context 'a supplied controller name' do
+    context 'with a supplied controller name' do
       let(:special_controller_name) { 'admin_users' }
       let(:local_assigns) { { controller_name: special_controller_name } }
 
@@ -36,13 +36,13 @@ describe CardPresenter do
       allow(view_context).to receive(:controller_name).and_return(controller_name)
     end
 
-    context 'no new_url param' do
+    context 'without new_url param' do
       it 'creates the new url from the controller name' do
         expect(card_presenter.new_url).to eq("/#{controller_name}/new")
       end
     end
 
-    context 'new_url param' do
+    context 'with new_url param' do
       let(:new_url) { '/something_else/new' }
       let(:local_assigns) { { new_url: new_url } }
 
@@ -61,13 +61,13 @@ describe CardPresenter do
       allow(view_context).to receive(:params).and_return(id: id)
     end
 
-    context 'no edit_url param' do
+    context 'without edit_url param' do
       it 'creates the edit url from the controller name' do
         expect(card_presenter.edit_url).to eq("/#{controller_name}/#{id}/edit")
       end
     end
 
-    context 'edit_url param' do
+    context 'with edit_url param' do
       let(:edit_url) { "/different_controller/#{id}/edit" }
       let(:local_assigns) { { edit_url: edit_url  } }
 
@@ -78,8 +78,11 @@ describe CardPresenter do
   end
 
   describe '#klass' do
+    let(:controller_name) { 'a_controller' }
+
     before do
-      allow(view_context).to receive_message_chain(:controller_name, :classify).and_return('Class')
+      allow(view_context).to receive(:controller_name).and_return(controller_name)
+      allow(controller_name).to receive(:classify).and_return('Class')
     end
 
     it 'returns something if not custom' do
@@ -94,9 +97,17 @@ describe CardPresenter do
   end
 
   describe '#instance' do
+    let(:controller) { 'controller' }
+    let(:controller_name) { 'a_controller' }
+    let(:klass) { 'Class' }
+
     before do
-      allow(view_context).to receive_message_chain(:controller, :instance_variable_get).and_return('something')
-      allow(view_context).to receive_message_chain(:controller_name, :classify, :underscore).and_return('whatever')
+      allow(view_context).to receive(:controller).and_return(controller)
+      allow(controller).to receive(:instance_variable_get).and_return('something')
+
+      allow(view_context).to receive(:controller_name).and_return(controller_name)
+      allow(controller_name).to receive(:classify).and_return(klass)
+      allow(klass).to receive(:underscore).and_return('whatever')
     end
 
     it 'returns something if not custom' do
@@ -113,7 +124,7 @@ describe CardPresenter do
   describe '#instance_label' do
     let(:to_s) { 'Foo' }
 
-    context 'custom' do
+    context 'with custom' do
       before do
         allow(card_presenter).to receive(:custom?).and_return(true)
       end
@@ -123,7 +134,7 @@ describe CardPresenter do
       end
     end
 
-    context 'not custom' do
+    context 'without custom' do
       before do
         allow(card_presenter).to receive(:custom?).and_return(false)
       end
@@ -151,19 +162,19 @@ describe CardPresenter do
     let(:local_assigns) { {} }
 
     it 'returns params action' do
-      expect(card_presenter).to receive(:params).and_return({})
+      allow(card_presenter).to receive(:params).and_return({})
       card_presenter.action_name
     end
   end
 
   describe '#delete_confirmation' do
-    context 'not specified' do
+    context 'when not specified' do
       it "defaults to 'Are You Sure?'" do
         expect(card_presenter.delete_confirmation).to eq('Are you sure?')
       end
     end
 
-    context 'specified' do
+    context 'when specified' do
       let(:confirmation_text) { 'Test Value' }
       let(:local_assigns) { { delete_confirmation: confirmation_text } }
 

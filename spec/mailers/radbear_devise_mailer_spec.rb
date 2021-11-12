@@ -34,6 +34,4 @@ describe RadbearDeviseMailer, type: :mailer do
       expect(email.body.encoded).to include 'Here are your confirmation instructions.'
     end
   end
-
-  pending 'uses portal host name in links' # see RadbearDeviseMailer.default_url_options
 end

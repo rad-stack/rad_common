@@ -1,30 +1,29 @@
 module RadCommon
   module AuditsHelper
-    def audit_model_instance
-      @auditable_object || instance_variable_get("@#{controller_name.classify.underscore}")
-    end
-
-    def show_auditing
+    def show_auditing?
       return false if current_user.external?
-      return false if audit_model_instance.blank?
+      return false if current_instance_variable.blank?
 
-      audit_model_instance.class.name != 'ActiveStorage::Attachment' &&
-        audit_model_instance.respond_to?(:audits) &&
-        audit_model_instance.persisted? &&
-        policy(audit_model_instance).audit? &&
-        params[:action] != 'audit' &&
-        params[:action] != 'audit_by'
+      current_instance_variable.class.name != 'ActiveStorage::Attachment' &&
+        current_instance_variable.respond_to?(:audits) &&
+        current_instance_variable.persisted? &&
+        policy(current_instance_variable).audit?
     end
 
-    def show_audit_history_link
-      "/#{controller_name}/#{audit_model_instance.id}/audit"
+    def audit_history_link
+      "/rad_common/audits/?auditable_type=#{current_instance_variable.class}&auditable"\
+        "_id=#{current_instance_variable.id}"
+    end
+
+    def user_audit_history_link(user)
+      "/rad_common/audits/?#{{ search: { user_id: user.id } }.to_query}"
     end
 
     def display_audited_changes(audit)
       audit_text = formatted_audited_changes(audit)
 
       if audit_text.present? && audit.comment.present?
-        audit_text + "\n" + audit.comment
+        "#{audit_text}\n#{audit.comment}"
       elsif audit_text.present?
         audit_text
       elsif audit.comment.present?
@@ -46,39 +45,23 @@ module RadCommon
       action.gsub('destroy', 'delete')
     end
 
-    def audit_title(by_user)
-      title = by_user ? 'Updates by ' : 'Updates for '
-      title = (title + audit_model_link(nil, @model_object)).html_safe if @model_object
-      title += 'System' if by_user && @model_object.blank?
-      title = (title + @deleted) if @deleted
-      title + " (#{@audits.total_count})"
+    def audits_title(audits, show_search, resource)
+      return "Audits (#{audits.total_count})" if show_search
+
+      safe_join(['Audits for ', audit_model_link(nil, resource), " (#{audits.total_count})"])
     end
 
     def audit_model_link(audit, record)
-      label = if record.nil?
-                "#{audit.auditable_type} (#{audit.auditable_id})"
-              elsif record.respond_to?(:to_s)
-                record.class.to_s + ' - ' + record.to_s
+      label = if record.respond_to?(:to_s)
+                "#{record.class} - #{record}"
               else
-                label = "#{audit.auditable_type} (#{audit.auditable_id})"
+                "#{audit.auditable_type} (#{audit.auditable_id})"
               end
 
-      if (audit.nil? && record.nil?) || record.class.name == 'Rate' || record.class.name == 'DraftInvoice'
-        # TODO: ignore this some other way rather than by hardcoding name
-        label
-      else
-        if record.nil?
-          label
-        elsif show_route_exists_for?(record) && policy(record).show?
-          link_to label, record
-        else
-          label
-        end
-      end
-    end
+      return label if audit.nil? && record.nil?
+      return link_to(label, record) if record.present? && show_route_exists_for?(record) && policy(record).show?
 
-    def audit_models_to_search
-      RadCommon::AppInfo.new.audited_models
+      label
     end
 
     private
@@ -90,12 +73,12 @@ module RadCommon
         return '' if changes.blank?
 
         audit_text = ''
-        any_restricted = RadCommon.restricted_audit_attributes.count.positive?
+        any_restricted = Rails.configuration.rad_common.restricted_audit_attributes.count.positive?
 
         changes.each do |change|
           changed_attribute = change.first
 
-          if change[1].class.name == 'Array'
+          if change[1].instance_of?(Array)
             from_value = change[1][0]
             to_value = change[1][1]
           else
@@ -133,7 +116,7 @@ module RadCommon
 
           audit_text += "from <strong>#{from_value}</strong> " if from_value
           audit_text += 'to ' unless audit.action == 'destroy' && audit.associated.present?
-          audit_text += "<strong>#{to_value}</strong>" + "\n"
+          audit_text += "<strong>#{to_value}</strong>\n"
         end
 
         audit_text
@@ -159,10 +142,13 @@ module RadCommon
       def restricted_audit_attribute?(audit, changed_attribute, current_user)
         return false if current_user.admin?
 
-        restricted_attributes = RadCommon.restricted_audit_attributes
+        restricted_attributes = Rails.configuration.rad_common.restricted_audit_attributes
         return if restricted_attributes.count.zero?
 
-        matches = restricted_attributes.select { |item| item[:model] == audit.auditable_type && item[:attribute] == changed_attribute }
+        matches = restricted_attributes.select do |item|
+          item[:model] == audit.auditable_type && item[:attribute] == changed_attribute
+        end
+
         matches.count.positive?
       end
   end

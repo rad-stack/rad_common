@@ -4,8 +4,12 @@ FactoryBot.define do
 
     trait :admin do |item|
       item.after(:build) do |role|
-        SecurityRole.permission_fields.each { |i| role.send(i + '=', true) }
+        SecurityRole.permission_fields.each { |i| role.send("#{i}=", true) }
       end
+    end
+
+    trait :external do
+      external { true }
     end
   end
 end

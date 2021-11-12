@@ -8,26 +8,19 @@ Rails.application.routes.draw do
       put :resend_invitation
       put :confirm
       put :reset_authy
-      get :audit
-      get :audit_by
     end
-
-    get :audit_search, on: :collection
   end
 
   resources :security_roles do
-    get :audit, on: :member
     get :permission, on: :collection
   end
 
-  resources :security_roles_users, only: :show
+  resources :user_security_roles, only: :show
+  resources :divisions
+  resources :attorneys
 
-  resources :companies, only: %i[show edit update] do
-    get :audit, on: :member
-  end
-
-  resources :divisions do
-    get :audit, on: :member
+  namespace :api, defaults: { format: :json } do
+    resources :divisions, only: :show
   end
 
   authenticate :user, ->(u) { u.admin? } do

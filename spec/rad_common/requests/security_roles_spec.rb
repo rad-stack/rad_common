@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Security roles', type: :request do
+RSpec.describe 'Security Roles', type: :request do
   let(:user) { create :admin }
   let(:security_role) { create :security_role }
   let(:valid_attributes) { { name: 'foo' } }
@@ -32,9 +32,7 @@ RSpec.describe 'Security roles', type: :request do
 
   describe 'PUT update' do
     describe 'with valid params' do
-      let(:new_attributes) do
-        { name: 'bar' }
-      end
+      let(:new_attributes) { { name: 'bar' } }
 
       it 'updates the requested security_role' do
         put "/security_roles/#{security_role.id}", params: { security_role: new_attributes }
@@ -60,7 +58,7 @@ RSpec.describe 'Security roles', type: :request do
     it 'destroys the requested security_role' do
       security_role
       expect {
-        delete :"/security_roles/#{security_role.id}", headers: { HTTP_REFERER: security_role_path(security_role) }
+        delete "/security_roles/#{security_role.id}", headers: { HTTP_REFERER: security_role_path(security_role) }
       }.to change(SecurityRole, :count).by(-1)
     end
 

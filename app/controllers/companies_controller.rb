@@ -1,8 +1,5 @@
 class CompaniesController < ApplicationController
-  include RadCommonCompaniesController
-
-  before_action :authenticate_user!
-  before_action :set_company, only: %i[show edit update global_validity_check audit]
+  before_action :set_company, only: %i[show edit update]
 
   def show; end
 
@@ -10,7 +7,7 @@ class CompaniesController < ApplicationController
 
   def update
     if @company.update(permitted_params)
-      redirect_to company_path(@company), notice: 'Settings were successfully updated.'
+      redirect_to '/rad_common/company', notice: 'Settings were successfully updated.'
     else
       render :edit
     end
@@ -23,8 +20,12 @@ class CompaniesController < ApplicationController
       authorize @company
     end
 
+    def base_params
+      [:name, :phone_number, :website, :email, :address_1, :address_2, :city, :state, :zipcode, :validity_checked_at,
+       :timezone, { valid_user_domains: [] }]
+    end
+
     def permitted_params
-      params.require(:company).permit(:name, :phone_number, :website, :email, :address_1, :address_2, :city, :state,
-                                      :zipcode, :validity_checked_at, :valid_user_domains_entry, :timezone)
+      params.require(:company).permit(base_params + Rails.configuration.rad_common.additional_company_params)
     end
 end

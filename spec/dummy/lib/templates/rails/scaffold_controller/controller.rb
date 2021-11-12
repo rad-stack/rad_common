@@ -4,13 +4,12 @@ require_dependency "<%= namespaced_file_path %>/application_controller"
 <% end -%>
 <% module_namespacing do -%>
 class <%= controller_class_name %>Controller < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_<%= singular_table_name %>, only: %i[show edit update destroy audit]
+  before_action :set_<%= singular_table_name %>, only: %i[show edit update destroy]
 
   def index
     authorize <%= class_name %>
     # TODO: change 'all' to a scope for ordering the records
-    @<%= plural_table_name %> = <%= orm_class.all(class_name) %>.page(params[:page])
+    @<%= plural_table_name %> = policy_scope(<%= orm_class.all(class_name) %>).page(params[:page])
   end
 
   def show; end

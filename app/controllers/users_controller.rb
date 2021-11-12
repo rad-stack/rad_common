@@ -1,37 +1,27 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_user, only: %i[show edit update destroy audit audit_by resend_invitation confirm reset_authy]
+  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm reset_authy test_email test_sms]
 
   def index
     authorize User
 
-    @pending = policy_scope(User).pending.recent_first.page(params[:pending_page]).per(3)
+    @pending = policy_scope(User).includes(:user_status, :security_roles)
+                                 .pending
+                                 .recent_first
+                                 .page(params[:pending_page]).per(3)
 
-    @status = if params[:status].present?
-                if params[:status] == 'All'
-                  nil
-                else
-                  UserStatus.find(params[:status])
-                end
-              else
-                UserStatus.default_active_status
-              end
-
-    @users = policy_scope(User).recent_first
-    @users = @users.where(user_status: @status) if @status
-    @users = @users.where(external: params[:external]) if params[:external].present?
-
-    @params = params.permit(:status, :external)
-
-    @user_statuses = UserStatus.not_pending.by_id
+    @user_search = UserSearch.new(params, current_user)
+    @users = policy_scope(@user_search.results)
 
     respond_to do |format|
-      format.html { @users = @users.page(params[:page]) }
+      format.html do
+        @users = @users.page(params[:page])
+      end
+
       format.csv do
         csv = UsersCSV.generate(@users)
         RadbearMailer.email_report(current_user, csv, 'User Export').deliver_later
         flash[:success] = "Your export file is generating. You'll receive an email when it finishes."
-        redirect_to users_path(@params)
+        redirect_back fallback_location: users_path
       end
     end
   end
@@ -69,16 +59,39 @@ class UsersController < ApplicationController
 
     if @user == current_user
       flash[:error] = "Can't delete yourself."
-    elsif @user.audits_created(nil).any?
+      redirect_back(fallback_location: users_path)
+      return
+    end
+
+    if @user.other_audits_created.count.positive?
       flash[:error] = "User has audit history, can't delete"
-    elsif @user.destroy
+      redirect_back(fallback_location: users_path)
+      return
+    elsif @user.audits_created.count.positive?
+      @user.audits_created.delete_all
+    end
+
+    duplicates = if duplicates_enabled?
+                   @user.duplicates
+                 else
+                   []
+                 end
+
+    if @user.destroy
       flash[:success] = 'User deleted.'
       destroyed = true
     else
       flash[:error] = @user.errors.full_messages.join(', ')
     end
 
-    if destroyed && (URI(request.referer).path == user_path(@user)) || (URI(request.referer).path == edit_user_path(@user))
+    if destroyed
+      duplicates.each do |item|
+        item[:record].process_duplicates
+      end
+    end
+
+    if destroyed && (URI(request.referer).path == user_path(@user)) ||
+       (URI(request.referer).path == edit_user_path(@user))
       redirect_to users_path
     else
       redirect_back(fallback_location: users_path)
@@ -103,6 +116,18 @@ class UsersController < ApplicationController
     redirect_to @user
   end
 
+  def test_email
+    @user.test_email!
+    flash[:success] = 'A test email was sent to the user.'
+    redirect_to @user
+  end
+
+  def test_sms
+    @user.test_sms! current_user
+    flash[:success] = 'A test SMS was sent to the user.'
+    redirect_to @user
+  end
+
   private
 
     def set_user
@@ -110,10 +135,16 @@ class UsersController < ApplicationController
       authorize @user
     end
 
-    def permitted_params
-      base_params = %i[user_status_id first_name last_name mobile_phone last_activity_at
-                       password password_confirmation external timezone avatar]
+    def base_params
+      %i[user_status_id first_name last_name mobile_phone last_activity_at password password_confirmation external
+         timezone avatar]
+    end
 
-      params.require(:user).permit(base_params + RadCommon.additional_user_params)
+    def permitted_params
+      params.require(:user).permit(base_params + Rails.configuration.rad_common.additional_user_params)
+    end
+
+    def duplicates_enabled?
+      RadCommon::AppInfo.new.duplicates_enabled?('User')
     end
 end

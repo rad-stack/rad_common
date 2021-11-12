@@ -1,69 +1,69 @@
--company = Company.main
--logo_includes_name = RadCommon.app_logo_includes_name
--protocol = Rails.env.production? ? "https" : "http"
--logo_url = "#{protocol}://#{RadCommon::AppInfo.new.host_name}/app_logo.png"
-
--site_name = company.name
--website = company.website
--company_name = company.name
--company_full_address = company.full_address
--company_phone_number = company.phone_number
--admin_email = company.email
--has_avatar = RadCommon.use_avatar && @sender && @sender.avatar.attached?
+:ruby
+  company = @override_company.presence || Company.main
+  logo_includes_name = Rails.configuration.rad_common.app_logo_includes_name
+  protocol = Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
+  logo_url = "#{protocol}://#{Rails.configuration.rad_common.host_name}/app_logo.png"
+  website = company.website
+  company_name = company.name
+  company_full_address = company.full_address
+  company_phone_number = company.phone_number
+  admin_email = company.email
+  has_avatar = Rails.configuration.rad_common.use_avatar && @sender && @sender.avatar.attached?
 
 !!!
 %head
-  = stylesheet_link_tag "rad_common/radbear_mailer_reset", media: "all"
-  = stylesheet_link_tag "rad_common/radbear_mailer", media: "all"
+  = stylesheet_link_tag 'rad_common/radbear_mailer_reset', media: 'all'
+  = stylesheet_link_tag 'rad_common/radbear_mailer', media: 'all'
 %body
   .email-container
     .email-header
       .email-row
         .email-col-12.logo-col
-          = link_to image_tag(logo_url, alt: site_name, title: site_name), website
-          -unless logo_includes_name
+          - if @override_logo
+            = link_to image_tag(@override_logo, alt: company_name, title: company_name), website
+          - else
+            = link_to image_tag(logo_url, alt: company_name, title: company_name), website
+
+          - unless logo_includes_name
             %span.logo_text
-              = site_name
+              = company_name
     .email-body
-      -if @recipient
+      - if @recipient
         .greeting-row
           .greeting
             .text
-              -if @recipient.respond_to?(:greeting)
-                = "#{@recipient.greeting},"
-              -elsif @recipient.is_a?(String)
-                = "Hello #{@recipient},"
-              -elsif @recipient.respond_to?(:count)
-                = 'Hello all,'
-              -else
+              - if @recipient.respond_to?(:greeting)
+                #{@recipient.greeting},
+              - elsif @recipient.is_a?(String)
+                Hello #{@recipient},
+              - elsif @recipient.respond_to?(:count)
+                Hello all,
+              - else
                 - raise "please set up greeting method in #{@recipient.class} before using this mailer"
       .email-row
         .email-col-12
           %br
-          -if has_avatar
+          - if has_avatar
             = image_tag(@sender.avatar.variant(resize: '25x25'), alt: @sender.to_s, title: @sender.to_s)
           = @message
 
-      -if @include_yield
+      - if @include_yield
         = yield
 
-      -if @email_action
-        = render "layouts/email_action", message: @email_action[:message], button_text: @email_action[:button_text], button_url: @email_action[:button_url]
+      - if @email_action
+        = render 'layouts/email_action',
+                 message: @email_action[:message],
+                 button_text: @email_action[:button_text],
+                 button_url: @email_action[:button_url]
+
     .email-header
       .email-row
         .email-col-12.text-align-center
           .footer
             .footer-item= company_name
-            -unless company_full_address.blank?
+            - if company_full_address.present?
               .footer-item= company_full_address
-            -unless company_phone_number.blank?
+            - if company_phone_number.present?
               .footer-item= link_to company_phone_number, "tel:#{company_phone_number}"
             .footer-item= link_to website, website
-            .footer-item= link_to admin_email, "mailto:#{admin_email}"
-      -if @optional && @recipient && @recipient.is_a?(User)
-        .email-row
-          .email-col-12.text-align-center
-            .footer
-              .footer-item
-                To unsubscribe from these optional email messages, please
-                = link_to "update your profile.", edit_user_registration_url
+            .footer-item= link_to @footer_email || admin_email, "mailto:#{@footer_email || admin_email}"

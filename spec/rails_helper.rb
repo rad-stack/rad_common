@@ -35,9 +35,24 @@ Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 require 'vcr'
 
 VCR.configure do |c|
-  c.cassette_library_dir = Rails.root.join('spec', 'vcr')
+  c.cassette_library_dir = Rails.root.join('spec/vcr')
   c.hook_into :webmock
   c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com'
+
+  c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { Rails.application.credentials.test_mobile_phone }
+  c.filter_sensitive_data('<TEST_PHONE_NUMBER>') { Rails.application.credentials.test_phone_number }
+
+  c.filter_sensitive_data('<TEST_MOBILE_PHONE_STRIPPED>') do
+    Rails.application.credentials.test_mobile_phone.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
+  end
+
+  c.filter_sensitive_data('<TEST_PHONE_NUMBER_STRIPPED>') do
+    Rails.application.credentials.test_phone_number.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
+  end
+
+  c.filter_sensitive_data('<AUTHY_API_KEY>') { Rails.application.credentials.authy_api_key }
+
+  c.filter_sensitive_data('<SENDGRID_API_KEY>') { Rails.application.credentials.sendgrid[:api_key] }
 end
 
 RSpec.configure do |c|
@@ -53,10 +68,12 @@ end
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
+  include TestHelpers
+
   config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.file_fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -107,6 +124,11 @@ RSpec.configure do |config|
     (ActiveJob::Base.descendants << ActiveJob::Base).each(&:disable_test_adapter)
     # TODO: end of workaround
 
+    Timecop.safe_mode = true
+
+    allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return false
+    allow_any_instance_of(RadicalSendGrid).to receive(:send_grid_enabled?).and_return false
+
     allow(Company).to receive(:main).and_return(create(:company))
 
     allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))
@@ -117,7 +139,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :system, js: true) do
-    errors = page.driver.browser.manage.logs.get(:browser)
+    errors = page.driver.browser.manage.logs.get(:browser).reject { |e| e.level == 'WARNING' }
     expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
   end
 
@@ -125,7 +147,6 @@ RSpec.configure do |config|
     Warden.test_reset!
   end
 
-  config.include Devise::Test::ControllerHelpers, type: :controller
   include Warden::Test::Helpers
   config.include Capybara::DSL
 

@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 describe User, type: :model do
-  let(:user) { create :user }
+  let(:security_role) { create :security_role }
+  let(:user) { create :user, security_roles: [security_role] }
   let(:active_status) { create :user_status, :active }
   let(:inactive_status) { create :user_status, :inactive }
 
@@ -9,10 +10,63 @@ describe User, type: :model do
     { first_name: 'Example',
       last_name: 'User',
       authy_enabled: false,
-      mobile_phone: '(999) 231-1111',
+      mobile_phone: create(:phone_number, :mobile),
       email: 'user@example.com',
       password: 'cOmpl3x_p@55w0rd',
       password_confirmation: 'cOmpl3x_p@55w0rd' }
+  end
+
+  describe 'notify_user_approved' do
+    let(:notification_type) { create :user_was_approved_notification }
+    let(:admin) { create :admin }
+    let(:user) { create :user, security_roles: [security_role], user_status: inactive_status }
+    let(:first_mail) { ActionMailer::Base.deliveries.first }
+    let(:last_mail) { ActionMailer::Base.deliveries.last }
+
+    before do
+      create :notification_security_role,
+             notification_type: notification_type,
+             security_role: admin.security_roles.first
+
+      ActionMailer::Base.deliveries = []
+      user.update! user_status: active_status, do_not_notify_approved: false
+    end
+
+    it 'notifies' do
+      expect(first_mail.subject).to include 'Your Account Was Approved'
+      expect(last_mail.subject).to include 'User Was Approved'
+    end
+  end
+
+  describe 'auditing of associations' do
+    let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
+
+    context 'with create' do
+      before do
+        user.update!(security_roles: [])
+        user.update!(security_roles: [security_role])
+      end
+
+      it 'audits' do
+        expect(audit.auditable_type).to eq 'UserSecurityRole'
+        expect(audit.associated).to eq user
+        expect(audit.action).to eq 'create'
+      end
+    end
+
+    context 'with destroy' do
+      before do
+        user.update!(security_roles: [])
+        user.update!(security_roles: [security_role])
+        user.update!(security_roles: [])
+      end
+
+      it 'audits' do
+        expect(audit.auditable_type).to eq 'UserSecurityRole'
+        expect(audit.associated).to eq user
+        expect(audit.action).to eq 'destroy'
+      end
+    end
   end
 
   describe 'password validations' do
@@ -38,6 +92,7 @@ describe User, type: :model do
 
     it 'rejects passwords that contain name' do
       assert_password_with_name 'John', 'Smith', 'John1!', false
+      assert_password_with_name 'John ', 'Smith', 'John1!', false
       assert_password_with_name 'John', 'Smith', 'JOHN1!', false
       assert_password_with_name 'John', 'Smith', 'Smith1!', false
       assert_password_with_name 'John', 'Smith', 'SMITH1!', false
@@ -48,11 +103,20 @@ describe User, type: :model do
 
     it 'rejects simple passwords' do
       if Devise.mappings[:user].secure_validatable?
-        expect(FactoryBot.build(:user, password: 'password', password_confirmation: 'password')).not_to be_valid
-        expect(FactoryBot.build(:user, password: 'Password', password_confirmation: 'Password')).not_to be_valid
-        expect(FactoryBot.build(:user, password: 'Password55757', password_confirmation: 'Password55757')).not_to be_valid
-        expect(FactoryBot.build(:user, password: 'Password!!!', password_confirmation: 'Password!!!')).not_to be_valid
-        expect(FactoryBot.build(:user, password: 'Password!!!4646', password_confirmation: 'Password!!!4646')).to be_valid
+        expect(FactoryBot.build(:user, password: 'password',
+                                       password_confirmation: 'password')).not_to be_valid
+
+        expect(FactoryBot.build(:user, password: 'Password',
+                                       password_confirmation: 'Password')).not_to be_valid
+
+        expect(FactoryBot.build(:user, password: 'Password55757',
+                                       password_confirmation: 'Password55757')).not_to be_valid
+
+        expect(FactoryBot.build(:user, password: 'Password!!!',
+                                       password_confirmation: 'Password!!!')).not_to be_valid
+
+        expect(FactoryBot.build(:user, password: 'Password!!!4646',
+                                       password_confirmation: 'Password!!!4646')).to be_valid
       end
     end
 
@@ -73,6 +137,8 @@ describe User, type: :model do
   end
 
   describe 'validate email address' do
+    before { Company.main.update! valid_user_domains: %w[example.com radicalbear.com] }
+
     it 'rejects unauthorized email addresses' do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo. user@foo.com user@foo.com]
 
@@ -84,7 +150,7 @@ describe User, type: :model do
     end
 
     it 'rejects invalid email addresses' do
-      addresses = ['foo @example.com', '.b ar@example.com']
+      addresses = ['foo @example.com', '.b ar@example.com', 'com@none']
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
@@ -94,7 +160,7 @@ describe User, type: :model do
     end
 
     it 'allows valid email addresses' do
-      addresses = %w[joe@example.com bob@example.com sally@example.com]
+      addresses = %w[joe@example.com bob@example.com sally@example.com brah@radicalbear.com]
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
@@ -108,16 +174,28 @@ describe User, type: :model do
       { first_name: 'Example',
         last_name: 'User',
         authy_enabled: false,
-        mobile_phone: '(999) 231-1111',
+        mobile_phone: create(:phone_number, :mobile),
         password: 'cH@ngem3',
         password_confirmation: 'cH@ngem3',
         user_status: active_status,
         external: true }
     end
 
-    it 'allows invalid email addresses for inactive users' do
-      if RadCommon.external_users
-        addresses = %w[user@bar.com user@foo.com]
+    before { Company.main.update! valid_user_domains: %w[example.com radicalbear.com] }
+
+    it 'rejects unauthorized email addresses' do
+      addresses = %w[user@example.com user@radicalbear.com]
+
+      addresses.each do |address|
+        user = described_class.new(attributes.merge(email: address))
+        expect(user).not_to be_valid
+        expect(user.errors.full_messages.to_s).to include 'Email is not authorized for this application'
+      end
+    end
+
+    it 'allows unauthorized email addresses for inactive users' do
+      if Rails.configuration.rad_common.external_users
+        addresses = %w[user@example.com user@radicalbear.com]
 
         addresses.each do |address|
           user = described_class.new(attributes.merge(email: address, user_status: inactive_status))
@@ -127,7 +205,7 @@ describe User, type: :model do
     end
 
     it 'allows valid email addresses' do
-      if RadCommon.external_users
+      if Rails.configuration.rad_common.external_users
         addresses = %w[joe@aclientcompany.com bob@aclientcompany.com sally@aclientcompany.com]
 
         addresses.each do |address|
@@ -166,9 +244,7 @@ describe User, type: :model do
     it 'has a password that expires after 90 days' do
       if Devise.mappings[:user].password_expirable?
         expect(user.need_change_password?).to eq(false)
-        Timecop.travel(91.days.from_now)
-        expect(user.need_change_password?).to eq(true)
-        Timecop.return
+        Timecop.travel(91.days.from_now) { expect(user.need_change_password?).to eq(true) }
       end
     end
   end
@@ -178,62 +254,99 @@ describe User, type: :model do
       if Devise.mappings[:user].expirable?
         user.update!(last_activity_at: Time.current)
         expect(user.expired?).to eq(false)
-        Timecop.travel(91.days.from_now)
-        expect(user.expired?).to eq(true)
-        Timecop.return
+
+        Timecop.travel(91.days.from_now) { expect(user.expired?).to eq(true) }
       end
     end
   end
 
-  describe 'authy' do
-    let(:user) { create :user, mobile_phone: phone_number }
-    let(:phone_number) { '(123) 456-7111' }
-    let(:new_phone_number) { '(456) 789-0123' }
-    let(:authy_id) { '1234567' }
+  describe 'Email Changed' do
+    subject { ActionMailer::Base.deliveries[ActionMailer::Base.deliveries.length - 2].subject }
+
+    let!(:user) { create :user }
+
+    before { user.update!(email: 'foobar@example.com') }
+
+    it { is_expected.to eq('Email Changed') }
+  end
+
+  describe 'Password Changed' do
+    subject { ActionMailer::Base.deliveries.last.subject }
+
+    let!(:user) { create :user }
+
+    before { user.update!(password: 'NewPassword2!', password_confirmation: 'NewPassword2!') }
+
+    it { is_expected.to eq 'Password Changed' }
+  end
+
+  describe 'security roles' do
     let(:admin_role) { create :security_role, :admin }
-    let(:role1) { create :security_role }
-    let(:role2) { admin_role }
-
-    it 'creates and updates the user on authy' do
-      expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
-
-      expect(user.authy_id).to be_nil
-      user.update!(authy_enabled: true)
-      expect(user.authy_id).to eq authy_id
-    end
-
-    it 'returns a failure message if authy doesnt update' do
-      expect(Authy::API).to receive(:register_user).and_return(double(:response, ok?: false, message: 'mocked message'))
-
-      user.authy_enabled = true
-      user.mobile_phone = new_phone_number
-      user.save
-      expect(user.errors.full_messages.to_s).to include('Could not register authy user')
-    end
-
-    it 'deletes authy user if mobile phone wiped out' do
-      # this test is not applicable for projects that require mobile phone presence
-      user.update!(authy_enabled: false, mobile_phone: nil)
-      expect(user.reload.authy_id).to be_blank
-    end
-
-    it "doesn't allow invalid email", :vcr do
-      user = build :user, mobile_phone: phone_number, email: 'foo@', authy_enabled: true
-      user.save
-      expect(user.errors.full_messages.to_s).to include('Could not register authy user')
-    end
+    let(:role_1) { create :security_role }
+    let(:role_2) { admin_role }
 
     it 'updates updated_at datetime when security roles are added' do
       updated_at = user.updated_at
-      user.update!(security_roles: [role1, role2])
+      user.update!(security_roles: [role_1, role_2])
       expect(user.updated_at).not_to eq(updated_at)
     end
 
     it 'updates updated_at datetime when security roles are removed' do
       user = create :user
       updated_at = user.updated_at
-      user.update!(security_roles: [role2])
+      user.update!(security_roles: [role_2])
       expect(user.updated_at).not_to eq(updated_at)
+    end
+  end
+
+  describe 'authy' do
+    let(:user) { create :user, mobile_phone: phone_number }
+    let(:phone_number) { create :phone_number, :mobile }
+    let(:new_phone_number) { create :phone_number, :mobile }
+
+    it 'creates and updates the user on authy', :vcr do
+      if Rails.configuration.rad_common.authy_enabled
+        expect(user.authy_id).to be_nil
+        user.update!(authy_enabled: true)
+        expect(user.authy_id).not_to be_nil
+      end
+    end
+
+    it 'returns a failure message if authy doesnt update' do
+      if Rails.configuration.rad_common.authy_enabled
+        result = double(:response, ok?: false, message: 'mocked message')
+
+        allow(Authy::API).to receive(:register_user).and_return(result)
+
+        user.authy_enabled = true
+        user.mobile_phone = new_phone_number
+        user.save
+        expect(user.errors.full_messages.to_s).to include('Could not register authy user')
+      end
+    end
+
+    it 'deletes authy user if mobile phone wiped out' do
+      if Rails.configuration.rad_common.authy_enabled && !mobile_phone_required?
+        user.update!(authy_enabled: false, mobile_phone: nil)
+        expect(user.reload.authy_id).to be_blank
+      end
+    end
+
+    it "doesn't allow invalid email", :vcr do
+      if Rails.configuration.rad_common.authy_enabled
+        user = build :user, mobile_phone: phone_number, email: 'foo@', authy_enabled: true
+        user.save
+        expect(user.errors.full_messages.to_s).to include('Could not register authy user')
+      end
+    end
+  end
+
+  describe 'avatar' do
+    let(:user) { create :user, :with_avatar }
+
+    it 'uploads' do
+      expect(user).to be_persisted
+      expect(user.avatar.attached?).to be true
     end
   end
 
@@ -250,5 +363,13 @@ describe User, type: :model do
     else
       expect(user.errors.full_messages.to_s).to include 'Password cannot contain your name'
     end
+  end
+
+  def mobile_phone_required?
+    User.validators
+        .collect { |validation| validation if validation.instance_of?(ActiveRecord::Validations::PresenceValidator) }
+        .compact
+        .collect(&:attributes)
+        .flatten.include? :mobile_phone
   end
 end

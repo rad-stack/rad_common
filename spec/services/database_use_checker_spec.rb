@@ -4,11 +4,9 @@ describe DatabaseUseChecker do
   describe '.generate_report' do
     let(:tables) { ['users'] }
 
-    before do
-      expect(described_class).to receive(:tables).and_return(tables)
-    end
+    before { allow(described_class).to receive(:tables).and_return(tables) }
 
-    context 'table has more than 1 record' do
+    context 'when table has more than 1 record' do
       before do
         create_list(:user, 2)
       end
@@ -19,7 +17,7 @@ describe DatabaseUseChecker do
       end
     end
 
-    context 'table has one record' do
+    context 'when table has one record' do
       before do
         create(:user)
       end
@@ -30,7 +28,7 @@ describe DatabaseUseChecker do
       end
     end
 
-    context 'table has no records' do
+    context 'when table has no records' do
       it 'skips table report and prints to console' do
         expect(described_class).not_to receive(:table_report)
         expect { described_class.generate_report }.to output("Table #{tables.first}\n  No Records\n").to_stdout
@@ -40,7 +38,7 @@ describe DatabaseUseChecker do
 
   describe '.tables' do
     it 'returns an array of strings' do
-      expect(described_class.tables.all? { |model| model.class == String }).to eq true
+      expect(described_class.tables.all? { |model| model.instance_of?(String) }).to eq true
     end
   end
 
@@ -53,15 +51,16 @@ describe DatabaseUseChecker do
       allow(ActiveRecord::Base.connection).to receive_message_chain(:execute, :values, :flatten).and_return(values)
     end
 
-    context 'all values are blank' do
+    context 'when all values are blank' do
       let(:values) { ['', nil] }
+      let(:result) { "Table #{table_name}\n  Blank: #{table_name}##{column_name}\n" }
 
       it 'prints to the console' do
-        expect { described_class.table_report(table_name) }.to output("Table #{table_name}\n  Blank: #{table_name}##{column_name}\n").to_stdout
+        expect { described_class.table_report(table_name) }.to output(result).to_stdout
       end
     end
 
-    context 'all values are not blank' do
+    context 'when all values are not blank' do
       let(:values) { ['foo', nil, '', 'bar'] }
 
       it 'does not print column info to the console' do
@@ -69,11 +68,12 @@ describe DatabaseUseChecker do
       end
     end
 
-    context 'all values are the same' do
+    context 'when all values are the same' do
       let(:values) { ['foobar'] }
+      let(:result) { "Table #{table_name}\n  Identical Values: #{table_name}##{column_name}\n" }
 
       it 'prints column info to the console' do
-        expect { described_class.table_report(table_name) }.to output("Table #{table_name}\n  Identical Values: #{table_name}##{column_name}\n").to_stdout
+        expect { described_class.table_report(table_name) }.to output(result).to_stdout
       end
 
       it 'prints the table name' do
@@ -83,7 +83,7 @@ describe DatabaseUseChecker do
       end
     end
 
-    context 'all values are not the same' do
+    context 'when all values are not the same' do
       let(:values) { %w[foo bar] }
 
       it 'does not print anything to console' do

@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :user do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
-    mobile_phone { '(999) 231-1111' }
+    mobile_phone { create :phone_number, :mobile }
     sequence(:email) { |n| "example#{n}@example.com" }
     password { Rails.env.development? ? 'password' : 'cOmpl3x_p@55w0rd' }
     password_confirmation { Rails.env.development? ? 'password' : 'cOmpl3x_p@55w0rd' }
@@ -11,9 +11,16 @@ FactoryBot.define do
     do_not_notify_approved { true }
     security_roles { [create(:security_role)] }
     authy_enabled { false }
+    timezone { 'Eastern Time (US & Canada)' }
 
     trait :external do
+      sequence(:email) { |n| "example#{n}@abc.com" }
       external { true }
+      security_roles { [create(:security_role, :external)] }
+    end
+
+    trait :with_avatar do
+      avatar { test_photo }
     end
 
     factory :admin do

@@ -9,18 +9,8 @@ module RadCommon
        :validity_checked_at]
     end
 
-    def company_actions
-      company = Company.main
-
-      return unless RadCommon.global_validity_enable_interactive
-      return unless policy(company).global_validity_check?
-
-      confirm = 'This is an exhaustive effort that could cause performance problems on the database. Are you sure?'
-      path = "/rad_common/companies/#{company.id}/global_validity_check"
-
-      [link_to('Global Validity Check', path, class: 'btn btn-secondary btn-sm',
-                                              method: :post,
-                                              data: { confirm: confirm })]
+    def edit_company_title(company)
+      safe_join(['Editing Company: ', link_to(company.name.presence || 'Missing', '/rad_common/company')])
     end
   end
 end

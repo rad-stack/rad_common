@@ -10,7 +10,7 @@ This is a common set of features and tools tailored for a standard business web 
 ### User Maintenance
 * RadbearUser concern
 * UsersController
-  * This can be overridden in each application but if all you need is to add additional permitted parameters, you can just add them to the additional_user_params array in the initializer
+  * This can be overridden in each application but if all you need is to add additional permitted parameters, you can just add them to the additional_user_params array in the configuration
 * User Views
 
 ### Date & Time Picker
@@ -20,6 +20,13 @@ Add the following to your Javascript manifest file (`application.js`):
 //= require moment
 //= require bootstrap-datetimepicker
 //= require bootstrap_datetimepicker/dates
+```
+
+When using jquery are you sure the below MUST always be added after the bootstrap-datetimepicker in the application.js
+```
+
+//= require rad_common/jquery.are_you_sure
+//= require rad_common/are_you_sure_datepickers
 ```
 
 Also, modify your `application.css`:
@@ -55,6 +62,11 @@ Set a `data-default` option:
 - Example: `f.input :some_date, as: :date, html5: true, input_html: { 'data-default' => '2017-01-01' }`
 - Example: `time_field_tag 'some_time', nil, { class: 'time', 'data-default' => '13:04'`
 
+##### If you want try the experimental built in browser date picker add the html-5 data attribute
+```
+= f.input :start_date, as: :date, html5: true, input_html: { data: { "html-5" => true } }
+```
+
 ## Usage
 
 ### Server
@@ -80,24 +92,24 @@ Provides rake tasks which backup the current heroku postgresql database and copy
 
 Save a local backup from Heroku:
 ```
-rake heroku:local_backup[ground-swell-staging]
+rails heroku:local_backup[ground-swell-staging]
 ```
 
 Clone your database from Heroku:
 ```
-rake heroku:clone_local[ground-swell-staging]
+rails heroku:clone_local[ground-swell-staging]
 ```
 
 ##### Local
 
 Restore from a local backup:
 ```
-rake local:restore_from_backup['latest.dump']
+rails local:restore_from_backup[latest.dump]
 ```
 
 Dump your local database to an archive:
 ```
-rake local:dump['your_data.dump']
+rails local:dump[your_data.dump]
 ```
 
 ## Generating tests
@@ -106,8 +118,7 @@ With the current version of rspec-rails we are not able to generate system ('fea
 ## Development
 
 ### Configuring
-Add a .env file in `spec/dummy` containing the `AUTHY_API_KEY` that can be obtained by creating an authy app or from another developer
-Add a .env.test file in `spec/dummy` containing `FIREBASE_DATA_URL` and `FIREBASE_SECRET_KEY` that can be obtained from the codeship build environment variables or from another developer
+Get `spec/dummy/config/credentials/test.key` from another developer
 
 ### Running
 `bundle exec rails s`

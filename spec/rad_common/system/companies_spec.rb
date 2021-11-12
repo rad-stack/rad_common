@@ -8,25 +8,15 @@ RSpec.describe 'Companies', type: :system do
 
   describe 'edit' do
     it 'renders the edit template' do
-      visit edit_company_path(company)
+      visit '/rad_common/company/edit'
       expect(page).to have_content('Editing Company')
     end
   end
 
   describe 'show' do
     it 'shows the company' do
-      visit company_path(company)
+      visit '/rad_common/company'
       expect(page).to have_content(company.to_s)
-    end
-  end
-
-  describe 'global validity' do
-    it 'runs' do
-      if RadCommon.global_validity_enable_interactive
-        visit company_path(company)
-        click_on 'Global Validity Check'
-        expect(page).to have_content("We're checking the validity of all of your company's data.")
-      end
     end
   end
 end

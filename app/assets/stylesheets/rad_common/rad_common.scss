@@ -120,7 +120,6 @@ trix-editor {
 
 .search-column-value {
   float: right;
-  text-transform: capitalize;
   color: #7A7A7A;
 }
 
@@ -232,3 +231,8 @@ td.fa.security-group-td { border-style: none; }
 }
 
 /* custom bootstrap styles */
+
+/* default placeholder for secondary btn is too light */
+form.simple_form.search button.btn-secondary.bs-placeholder {
+  color: #999 !important;
+}

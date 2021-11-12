@@ -21,11 +21,35 @@ class NotificationSetting < ApplicationRecord
     settings = []
 
     types.each do |notification_type|
-      settings.push NotificationSetting.find_or_initialize_by(notification_type: notification_type,
-                                                              user_id: user.id)
+      setting = NotificationSetting.find_or_initialize_by(notification_type: notification_type,
+                                                          user_id: user.id)
+
+      setting.check_defaults
+      settings.push setting
     end
 
     settings
+  end
+
+  def check_defaults
+    return if notification_type.blank? || email? || sms? || feed?
+
+    if notification_type.email_enabled?
+      self.email = true
+      return
+    end
+
+    if notification_type.sms_enabled?
+      self.sms = true
+      return
+    end
+
+    if notification_type.feed_enabled?
+      self.feed = true
+      return
+    end
+
+    raise 'notification type has no methods'
   end
 
   private
@@ -36,21 +60,13 @@ class NotificationSetting < ApplicationRecord
       errors.add(:enabled, 'requires one of email/sms/feed be turned on') if !email? && !sms? && !feed?
       return if notification_type.blank?
 
-      if !notification_type.email_enabled? && email?
-        errors.add(:email, 'is not enabled for this notification type')
-      end
-
-      if !notification_type.sms_enabled? && sms?
-        errors.add(:sms, 'is not enabled for this notification type')
-      end
-
-      if !notification_type.feed_enabled? && feed?
-        errors.add(:feed, 'is not enabled for this notification type')
-      end
+      errors.add(:email, 'is not enabled for this notification type') if !notification_type.email_enabled? && email?
+      errors.add(:sms, 'is not enabled for this notification type') if !notification_type.sms_enabled? && sms?
+      errors.add(:feed, 'is not enabled for this notification type') if !notification_type.feed_enabled? && feed?
     end
 
     def validate_sms_possible_app
-      return if RadicalTwilio.twilio_enabled? || !sms?
+      return if RadicalTwilio.new.twilio_enabled? || !sms?
 
       errors.add(:sms, 'is not available for this application')
     end

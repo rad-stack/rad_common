@@ -1,6 +1,4 @@
 class SearchController < ApplicationController
-  before_action :authenticate_user!
-
   def global_search
     # authorization is checked within the global_autocomplete_result
     skip_authorization
@@ -33,7 +31,7 @@ class SearchController < ApplicationController
 
       if the_object
         if current_user.portal?
-          redirect_to [RadCommon.portal_namespace, the_object]
+          redirect_to [Rails.configuration.rad_common.portal_namespace, the_object]
         else
           redirect_to the_object
         end
