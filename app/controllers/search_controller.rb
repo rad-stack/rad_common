@@ -31,7 +31,7 @@ class SearchController < ApplicationController
 
       if the_object
         if current_user.portal?
-          redirect_to [Rails.configuration.rad_common.portal_namespace, the_object]
+          redirect_to [Rails.configuration.rad_common.portal_namespace.to_sym, the_object]
         else
           redirect_to the_object
         end
