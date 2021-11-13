@@ -6,7 +6,7 @@ default: &default
   secure_sentry: true
   external_users: true
   app_logo_includes_name: true
-  portal_namespace:
+  portal: false
 
   system_usage_models:
     -

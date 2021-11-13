@@ -121,7 +121,7 @@ describe 'Users', type: :system do
     describe 'show' do
       it 'does not allow' do
         if Rails.configuration.rad_common.external_users
-          if Rails.configuration.rad_common.portal_namespace.present?
+          if Rails.configuration.rad_common.portal
             expect { visit user_path(user) }.to raise_error ActionController::RoutingError
           else
             visit user_path(user)
@@ -135,7 +135,7 @@ describe 'Users', type: :system do
     describe 'index' do
       it 'does not allow' do
         if Rails.configuration.rad_common.external_users
-          if Rails.configuration.rad_common.portal_namespace.present?
+          if Rails.configuration.rad_common.portal
             expect { visit users_path }.to raise_error ActionController::RoutingError
           else
             visit users_path
