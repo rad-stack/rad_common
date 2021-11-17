@@ -20,7 +20,7 @@ PATH
       hashids
       image_processing (~> 1.9)
       kaminari (~> 1.2.1)
-      mini_racer
+      mini_racer (~> 0.4.0)
       momentjs-rails (~> 2.9, >= 2.9.0)
       nokogiri (~> 1.12.5)
       pg
