@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe UserPolicy, type: :policy do
-  describe 'permissions' do
+  describe 'impersonate permissions', impersonate_specs: true do
     subject { described_class }
 
     let(:admin) { create :admin }

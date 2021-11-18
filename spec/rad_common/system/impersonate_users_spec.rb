@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'User Impersonation', type: :system do
+describe 'User Impersonation', type: :system, impersonate_specs: true do
   let!(:signed_in_user) { create :admin }
   let!(:impersonated_user) { create :admin }
   let!(:edited_user) { create :user }
