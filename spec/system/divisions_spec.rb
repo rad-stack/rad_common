@@ -18,6 +18,12 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('must exist')
     end
 
+    it 'shows placeholder on autocomplete field' do
+      visit new_division_path
+      expect(find_field('owner_name_search').value).to eq('')
+      expect(find_field('owner_name_search')['placeholder']).to eq('Start typing to search for Owner')
+    end
+
     describe 'single attachment validation' do
       let(:file) { 'spec/fixtures/test.pdf' }
 
@@ -48,13 +54,13 @@ RSpec.describe 'Divisions', type: :system do
   end
 
   describe 'edit' do
+    before { visit edit_division_path(division) }
+
     it 'renders the edit template' do
-      visit edit_division_path(division)
       expect(page).to have_content('Editing Division')
     end
 
     it 'displays error for owner field when blank', js: true do
-      visit edit_division_path(division)
       fill_in 'owner_name_search', with: ''
       click_button 'Save'
 
@@ -62,6 +68,11 @@ RSpec.describe 'Divisions', type: :system do
         # TODO: fix this so it works locally
         expect(page).to have_content 'Owner must exist and Owner can\'t be blank'
       end
+    end
+
+    it 'displays existing value on autocomplete field' do
+      expect(find_field('owner_name_search').value).to eq(division.owner.to_s)
+      expect(find_field('owner_name_search')['placeholder']).to eq(division.owner.to_s)
     end
   end
 
