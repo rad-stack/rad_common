@@ -20,6 +20,13 @@ RadCommon::Engine.routes.draw do
     end
   end
 
+  resources :impersonations, only: [] do
+    collection do
+      post :start
+      delete :stop
+    end
+  end
+
   resources :audits, only: :index
   resources :system_messages, only: %i[new create show]
   resources :system_usages, only: %i[index]

@@ -25,6 +25,7 @@ PATH
       nokogiri (~> 1.12.5)
       pg
       premailer-rails (~> 1.10.2)
+      pretender
       puma (~> 5.5.2)
       pundit
       rails (~> 6.1.4)
@@ -257,7 +258,7 @@ GEM
       activerecord
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
-    libv8-node (15.14.0.1)
+    libv8-node (15.14.0.1-x86_64-darwin-20)
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -296,6 +297,8 @@ GEM
     premailer-rails (1.10.3)
       actionmailer (>= 3)
       premailer (~> 1.7, >= 1.7.9)
+    pretender (0.3.4)
+      actionpack (>= 4.2)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)

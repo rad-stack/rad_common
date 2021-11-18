@@ -14,6 +14,8 @@ module RadbearController
       # https://github.com/varvet/pundit#rescuing-a-denied-authorization-in-rails
       render file: Rails.root.join('public/403.html'), formats: [:html], status: :forbidden, layout: false
     end
+
+    impersonates :user
   end
 
   protected

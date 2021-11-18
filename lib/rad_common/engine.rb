@@ -23,6 +23,7 @@ module RadCommon
     require 'nokogiri'
     require 'pg'
     require 'premailer/rails'
+    require 'pretender'
     require 'pundit'
     require 'rails_email_validator'
     require 'sendgrid-ruby'

@@ -7,6 +7,7 @@ default: &default
   external_users: true
   app_logo_includes_name: true
   portal_namespace:
+  impersonate: true
 
   system_usage_models:
     -
