@@ -11,7 +11,7 @@
                             RadCommon::Engine.routes.url_helpers.attachment_path(record.send(attachment_name).id),
                             method: :delete,
                             data: { confirm: 'Are you sure? Attachment cannot be recovered.' },
-                            class: 'btn btn-danger'
+                            class: 'btn btn-danger ml-5'
                   end
 
   .attachment-wrapper
@@ -23,7 +23,7 @@
         attachment_label =
           label_override.presence || image_tag(attachment, class: 'img-fluid rounded', id: 'attachment_layout')
 
-      = link_to(attachment_label, link, target: target, class: 'mr-5')
+      = link_to(attachment_label, link, target: target, class: 'text-wrap')
       = delete_link
     - else
       :ruby
@@ -35,6 +35,6 @@
                   url_for(attachment),
                   target: '_blank',
                   rel: :noopener,
-                  class: 'btn btn-secondary mr-5 attachment-link'
+                  class: 'btn btn-secondary attachment-link text-wrap'
 
         = delete_link
