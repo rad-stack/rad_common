@@ -25,7 +25,27 @@ module RadCommon
        user_resend_action(user),
        user_reset_authy_action(user),
        user_test_email_action(user),
-       user_test_sms_action(user)]
+       user_test_sms_action(user),
+       impersonate_action(user)]
+    end
+
+    def impersonate_action(user)
+      return unless policy(user).impersonate?
+
+      link_to icon(:user, 'Sign In As'),
+              "/rad_common/impersonations/start?id=#{user.id}",
+              method: :post,
+              data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to '\
+                               'your original user.' },
+              class: 'btn btn-warning btn-sm'
+    end
+
+    def impersonating?
+      current_user != true_user
+    end
+
+    def impersonate_style
+      impersonating? ? 'text-danger' : ''
     end
 
     def user_confirm_action(user)

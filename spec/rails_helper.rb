@@ -138,6 +138,8 @@ RSpec.configure do |config|
     allow_any_instance_of(Division).to receive(:notify_owner).and_return(nil)
   end
 
+  config.filter_run_excluding(impersonate_specs: true) unless Rails.configuration.rad_common.impersonate
+
   config.after(:each, type: :system, js: true) do
     errors = page.driver.browser.manage.logs.get(:browser).reject { |e| e.level == 'WARNING' }
     expect(errors.presence).to be_nil, errors.map(&:message).join(', ')

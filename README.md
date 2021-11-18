@@ -136,7 +136,7 @@ This project contains a "dummy" app to run test against, see /spec/dummy. To pre
 
 To run the test suite, run the following command:
 
-`bundle exec rspec --exclude-pattern 'spec/dummy/lib/**/*_spec.rb'`
+`bundle exec rspec`
 
 ### Point Projects to Local Source Instead of Github
 
