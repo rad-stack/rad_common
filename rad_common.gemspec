@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing', '~> 1.9'
   s.add_dependency 'kaminari', '~> 1.2.1'
-  s.add_dependency 'mini_racer'
+  s.add_dependency 'mini_racer', '~> 0.4.0' # see task 35349
   s.add_dependency 'momentjs-rails', '~> 2.9', '>= 2.9.0'
 
   # security update required higher version
@@ -46,6 +46,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
   s.add_dependency 'puma', '~> 5.5.2'
+  s.add_dependency 'pretender'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1'
   s.add_dependency 'rails_email_validator'

@@ -1,11 +1,14 @@
 - excluded_ids = local_assigns.has_key?(:excluded_ids) ? local_assigns[:excluded_ids] : nil
 - a_element = local_assigns[:association_element]
+- tooltip = local_assigns[:tooltip]
 
 .form-group.string.optional
   %label.string.optional.col-form-label
+    = search_label
     - if defined?(show_required_star) && show_required_star == true
       %span{ title: 'required' }*
-    = search_label
+    - if tooltip.present?
+      = icon_tooltip(:span, tooltip)
 
   %input.form-control.input-medium.ui-autocomplete-input.field-autocomplete{ value: initial_value,
                                                                              name: search_input_name,
