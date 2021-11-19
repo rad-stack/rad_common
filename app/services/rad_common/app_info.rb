@@ -5,7 +5,7 @@ module RadCommon
     end
 
     def rad_common_tables
-      %w[duplicates notification_security_roles notification_settings notifications system_messages user_security_roles]
+      %w[duplicates notification_security_roles notification_settings notifications notification_types user_statuses system_messages user_security_roles]
     end
 
     def application_models

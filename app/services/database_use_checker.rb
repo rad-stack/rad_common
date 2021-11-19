@@ -23,6 +23,7 @@ class DatabaseUseChecker
     def zero_or_one_records?(table_name)
       num_records = record_count(table_name)
 
+      puts ''
       puts "Table #{table_name}\n  No Records" if num_records.zero?
       num_records == 1 || num_records.zero?
     end
@@ -33,17 +34,13 @@ class DatabaseUseChecker
     end
 
     def table_report(table_name)
-      puts "Table #{table_name}" if table_has_columns_eligible_for_deletion?(table_name)
+      puts "Table #{table_name} "\
+           "(last created #{last_created(table_name)}, "\
+           "last updated #{last_updated(table_name)}, "\
+           "record count: #{record_count(table_name)})"
 
       table_columns(table_name).each do |column|
         review_column(table_name, column)
-      end
-    end
-
-    def table_has_columns_eligible_for_deletion?(table_name)
-      table_columns(table_name).any? do |column|
-        values = column_values(table_name, column)
-        values.all?(&:blank?) || values.size == 1
       end
     end
 
@@ -61,8 +58,24 @@ class DatabaseUseChecker
       end
     end
 
+    def last_created(table_name)
+      return 'n/a' unless ActiveRecord::Base.connection.column_exists?(table_name, :created_at)
+
+      format_date ActiveRecord::Base.connection.execute("SELECT MAX(created_at) FROM #{table_name}").values.first.first
+    end
+
+    def last_updated(table_name)
+      return 'n/a' unless ActiveRecord::Base.connection.column_exists?(table_name, :updated_at)
+
+      format_date ActiveRecord::Base.connection.execute("SELECT MAX(updated_at) FROM #{table_name}").values.first.first
+    end
+
     def column_values(table_name, column)
       ActiveRecord::Base.connection.execute("SELECT DISTINCT \"#{column}\" FROM #{table_name}").values.flatten
+    end
+
+    def format_date(value)
+      ApplicationController.helpers.format_date(value)
     end
   end
 end
