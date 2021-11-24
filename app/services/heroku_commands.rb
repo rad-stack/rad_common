@@ -33,7 +33,7 @@ class HerokuCommands
         write_log 'Running backup on Heroku...'
 
         Bundler.with_unbundled_env do
-          `heroku pg:backups capture #{app_option(app_name)}`
+          `heroku pg:backups capture #{app_option(app_name)}` if backup_id.blank?
 
           url_output = if backup_id.present?
                          `heroku pg:backups public-url #{backup_id} #{app_option(app_name)}`
