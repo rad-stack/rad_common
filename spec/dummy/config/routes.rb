@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   mount RadCommon::Engine => '/rad_common'
 
-  devise_for :users, path: 'auth', controllers: { confirmations: 'users/confirmations', invitations: 'users/invitations' }
+  devise_for :users,
+             path: 'auth',
+             controllers: { confirmations: 'users/confirmations', invitations: 'users/invitations' }
 
   resources :security_roles do
     get :permission, on: :collection
