@@ -1,20 +1,13 @@
 Rails.application.routes.draw do
   mount RadCommon::Engine => '/rad_common'
 
-  devise_for :users, controllers: { confirmations: 'users/confirmations', invitations: 'users/invitations' }
-
-  resources :users, only: %i[index show edit update destroy] do
-    member do
-      put :resend_invitation
-      put :confirm
-      put :reset_authy
-    end
-  end
+  devise_for :users, path: 'auth', controllers: { confirmations: 'users/confirmations', invitations: 'users/invitations' }
 
   resources :security_roles do
     get :permission, on: :collection
   end
 
+  resources :users
   resources :user_security_roles, only: :show
   resources :divisions
   resources :attorneys

@@ -12,7 +12,7 @@ RSpec.describe 'User Confirmations', type: :request do
 
     it 'sends a new user sign up email to the site admins' do
       if Devise.mappings[:user].confirmable?
-        get '/users/confirmation', params: { confirmation_token: new_user.confirmation_token }
+        get user_confirmation_path, params: { confirmation_token: new_user.confirmation_token }
         expect(ActionMailer::Base.deliveries.last.body.encoded).to include('Review their user registration information'\
                                                                            ' and approve them if desired.')
       end

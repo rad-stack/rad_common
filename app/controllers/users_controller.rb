@@ -28,7 +28,24 @@ class UsersController < ApplicationController
 
   def show; end
 
+  def new
+    @user = User.new
+    authorize @user
+  end
+
   def edit; end
+
+  def create
+    @user = User.new(permitted_params)
+
+    authorize @user
+
+    if @user.save
+      redirect_to @user, notice: 'User was successfully created.'
+    else
+      render :new
+    end
+  end
 
   def update
     if params[:user][:password].blank? && params[:user][:password_confirmation].blank?
@@ -136,7 +153,7 @@ class UsersController < ApplicationController
     end
 
     def base_params
-      %i[user_status_id first_name last_name mobile_phone last_activity_at password password_confirmation external
+      %i[email user_status_id first_name last_name mobile_phone last_activity_at password password_confirmation external
          timezone avatar]
     end
 

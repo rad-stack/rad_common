@@ -15,9 +15,23 @@ module RadCommon
     end
 
     def users_actions
-      return unless policy(User.new).new?
+      [invite_user_action, new_user_action]
+    end
 
-      [link_to(icon('plus-square', 'Invite User'), new_user_invitation_path, class: 'btn btn-success btn-sm')]
+    def invite_user_action
+      return unless policy(User.new).new? && !Rails.configuration.rad_common.disable_invite
+
+      link_to(icon('plus-square', 'Invite User'), new_user_invitation_path, class: 'btn btn-success btn-sm')
+    end
+
+    def new_user_action
+      return unless policy(User.new).new? && manually_create_users?
+
+      link_to(icon('plus-square', 'New User'), new_user_path, class: 'btn btn-success btn-sm')
+    end
+
+    def manually_create_users?
+      Rails.configuration.rad_common.disable_invite && Rails.configuration.rad_common.disable_sign_up
     end
 
     def user_actions(user)
@@ -52,16 +66,18 @@ module RadCommon
       return unless Devise.mappings[:user].confirmable? && policy(user).update? && !user.confirmed?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
-      link_to icon(:check, 'Confirm Email'), confirm_user_path(user), method: :put,
-                                                                      data: { confirm: confirm },
-                                                                      class: 'btn btn-warning btn-sm'
+      link_to icon(:check, 'Confirm Email'),
+              "/rad_common/users/#{user.id}/confirm",
+              method: :put,
+              data: { confirm: confirm },
+              class: 'btn btn-warning btn-sm'
     end
 
     def user_resend_action(user)
       return unless policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
 
       link_to 'Resend Invitation',
-              resend_invitation_user_path(user),
+              "/rad_common/users/#{user.id}/resend_invitation",
               method: :put,
               class: 'btn btn-sm btn-success',
               data: { confirm: 'Are you sure?' }
@@ -73,9 +89,11 @@ module RadCommon
       confirm = "This will reset the user's two factor authentication configuration if they are having problems. "\
                 'Are you sure?'
 
-      link_to icon(:refresh, 'Reset Two Factor'), reset_authy_user_path(user), method: :put,
-                                                                               data: { confirm: confirm },
-                                                                               class: 'btn btn-warning btn-sm'
+      link_to icon(:refresh, 'Reset Two Factor'),
+              "/rad_common/users/#{user.id}/reset_authy",
+              method: :put,
+              data: { confirm: confirm },
+              class: 'btn btn-warning btn-sm'
     end
 
     def user_test_email_action(user)

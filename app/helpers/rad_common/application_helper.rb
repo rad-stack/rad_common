@@ -140,6 +140,16 @@ module RadCommon
       raise RadicallyIntermittentException if Rails.configuration.rad_common.disable_sign_up
     end
 
+    def verify_invite
+      raise RadicallyIntermittentException if Rails.configuration.rad_common.disable_invite
+    end
+
+    def verify_manually_create_users
+      return if Rails.configuration.rad_common.disable_sign_up && Rails.configuration.rad_common.disable_invite
+
+      raise RadicallyIntermittentException
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)

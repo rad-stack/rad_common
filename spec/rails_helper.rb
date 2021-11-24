@@ -139,6 +139,7 @@ RSpec.configure do |config|
   end
 
   config.filter_run_excluding(impersonate_specs: true) unless Rails.configuration.rad_common.impersonate
+  config.filter_run_excluding(invite_specs: true) if Rails.configuration.rad_common.disable_invite
 
   config.after(:each, type: :system, js: true) do
     errors = page.driver.browser.manage.logs.get(:browser).reject { |e| e.level == 'WARNING' }
