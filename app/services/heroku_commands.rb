@@ -30,10 +30,12 @@ class HerokuCommands
 
     def clone(app_name, backup_id)
       check_production do
-        write_log 'Running backup on Heroku...'
 
         Bundler.with_unbundled_env do
-          `heroku pg:backups capture #{app_option(app_name)}` if backup_id.blank?
+          if backup_id.blank?
+            write_log 'Running backup on Heroku...'
+            `heroku pg:backups capture #{app_option(app_name)}`
+          end
 
           url_output = if backup_id.present?
                          `heroku pg:backups public-url #{backup_id} #{app_option(app_name)}`
