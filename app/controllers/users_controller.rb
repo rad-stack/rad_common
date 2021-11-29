@@ -38,7 +38,7 @@ class UsersController < ApplicationController
 
     ActiveRecord::Base.transaction do
       @user.assign_attributes(permitted_params)
-      @user.approved_by = current_user
+      @user.approved_by = true_user
       @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
 
       authorize @user
