@@ -3,7 +3,7 @@
 - tooltip = local_assigns[:tooltip]
 
 .form-group.string.optional
-  %label.string.optional.col-form-label
+  %label.string.optional.col-form-label{ class: defined?(label_class) ? label_class : '' }
     = search_label
     - if defined?(show_required_star) && show_required_star == true
       %span{ title: 'required' }*
