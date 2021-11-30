@@ -10,7 +10,7 @@ class SystemMessagesController < ApplicationController
 
   def create
     @system_message = SystemMessage.new(permitted_params)
-    @system_message.user = current_user
+    @system_message.user = true_user
     authorize @system_message
 
     if @system_message.save
