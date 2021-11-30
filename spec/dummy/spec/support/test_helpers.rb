@@ -41,4 +41,8 @@ module TestHelpers
   rescue Capybara::ElementNotFound
     false
   end
+
+  def wait_for_ajax
+    sleep 2
+  end
 end
