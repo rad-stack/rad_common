@@ -8,7 +8,7 @@ module ActiveStorageDownloader
     def serve_active_storage_file(attachment, filename)
       # TODO: refactor this to use single method for production and development, may need to wait until Rails 6
       if Rails.env.production? || Rails.env.staging?
-        serve_file attachment.service_url,
+        serve_file attachment.url,
                    attachment.blob.filename.extension_with_delimiter,
                    attachment.blob.content_type,
                    filename
