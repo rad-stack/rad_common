@@ -77,6 +77,7 @@ Metrics/BlockLength:
     - 'spec/dummy/config/routes.rb'
     - 'spec/factories/**/*.rb'
     - 'spec/rails_helper.rb'
+    - 'lib/generators/rad_common/install/rails_helper.rb'
 
 # The guiding principle of classes is SRP, SRP can't be accurately measured by LoC
 Metrics/ClassLength:
@@ -114,6 +115,12 @@ Rails/Output:
   Enabled: true
   Exclude:
     - 'app/services/rad_seeder.rb'
+    - 'lib/generators/rad_common/install/rails_helper.rb'
+
+Rails/Exit:
+  Enabled: true
+  Exclude:
+    - 'lib/generators/rad_common/install/rails_helper.rb'
 
 # This cop checks for the use of methods which skip validations which are listed in guides.rubyonrails.org/active_record_validations.html#skipping-validations
 Rails/SkipsModelValidations:

@@ -1,4 +1,5 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 
 require 'simplecov'
@@ -65,10 +66,14 @@ RSpec.configure do |c|
   end
 end
 
-# Checks for pending migrations before tests are run.
-# If you are not using ActiveRecord, you can remove this line.
-ActiveRecord::Migration.maintain_test_schema!
-
+# Checks for pending migrations and applies them before tests are run.
+# If you are not using ActiveRecord, you can remove these lines.
+begin
+  ActiveRecord::Migration.maintain_test_schema!
+rescue ActiveRecord::PendingMigrationError => e
+  puts e.to_s.strip
+  exit 1
+end
 RSpec.configure do |config|
   include TestHelpers
 
