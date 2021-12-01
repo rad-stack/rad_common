@@ -52,7 +52,7 @@ module RadCommon
     end
 
     def audit_model_link(audit, record)
-      label = if record.respond_to?(:to_s)
+      label = if record.present? && record.respond_to?(:to_s)
                 "#{record.class} - #{record}"
               else
                 "#{audit.auditable_type} (#{audit.auditable_id})"

@@ -26,6 +26,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         template '../../../../../spec/dummy/app/services/seeder.rb', 'app/services/seeder.rb'
         copy_file '../gitignore.txt', '.gitignore'
+        copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
@@ -223,7 +224,6 @@ Seeder.new.seed!
         apply_migration '20200325152933_devise_security_updates.rb'
         apply_migration '20200408180735_ran_long_notification.rb'
         apply_migration '20200526144750_convert_filter_defaults_to_json.rb'
-        apply_migration '20200530154123_filter_defaults_for_all.rb'
         apply_migration '20200810143832_create_login_activities.rb'
         apply_migration '20200903192242_rename_security_roles.rb'
         apply_migration '20210104154427_remove_current_phone.rb'

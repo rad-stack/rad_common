@@ -90,7 +90,7 @@ describe 'Users', type: :system do
       it 'allows updating notification settings', :js do
         expect(page).to have_content 'Notification Settings'
         uncheck 'Enabled'
-        sleep 2
+        wait_for_ajax
         expect(notification_setting.enabled).to be false
       end
     end

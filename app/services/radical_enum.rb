@@ -17,6 +17,10 @@ class RadicalEnum
     I18n.t(translation_key(enum_value), default: enum_value.to_s.titleize)
   end
 
+  def raw_translation(raw_value)
+    db_options.to_h.invert[raw_value]
+  end
+
   def options
     retrieve_options false
   end

@@ -19,7 +19,7 @@ RSpec.describe 'NotificationSettings', type: :system do
         visit '/rad_common/notification_settings'
         expect(NotificationSetting.count).to eq 0
         page.check('notification_setting[feed]')
-        sleep 2
+        wait_for_ajax
         expect(NotificationSetting.count).to eq 1
       end
 

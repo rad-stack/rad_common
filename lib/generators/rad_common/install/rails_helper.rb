@@ -5,10 +5,9 @@ ENV['RAILS_ENV'] ||= 'test'
 require 'simplecov'
 SimpleCov.start 'rails' do
   add_filter 'lib/templates'
-  add_filter 'install_generator.rb'
 end
 
-require File.expand_path('dummy/config/environment.rb', __dir__)
+require File.expand_path('../config/environment', __dir__)
 
 # Prevent database truncation if the environment is production
 abort('The Rails environment is running in production mode!') if Rails.env.production?
@@ -18,7 +17,6 @@ require 'rspec/rails'
 require 'capybara/rails'
 require 'selenium/webdriver'
 require 'pundit/rspec'
-require 'factory_bot_rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -34,37 +32,6 @@ require 'factory_bot_rails'
 # require only the support files necessary.
 #
 Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
-
-require 'vcr'
-
-VCR.configure do |c|
-  c.cassette_library_dir = Rails.root.join('spec/vcr')
-  c.hook_into :webmock
-  c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com'
-
-  c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { Rails.application.credentials.test_mobile_phone }
-  c.filter_sensitive_data('<TEST_PHONE_NUMBER>') { Rails.application.credentials.test_phone_number }
-
-  c.filter_sensitive_data('<TEST_MOBILE_PHONE_STRIPPED>') do
-    Rails.application.credentials.test_mobile_phone.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
-  end
-
-  c.filter_sensitive_data('<TEST_PHONE_NUMBER_STRIPPED>') do
-    Rails.application.credentials.test_phone_number.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
-  end
-
-  c.filter_sensitive_data('<AUTHY_API_KEY>') { Rails.application.credentials.authy_api_key }
-
-  c.filter_sensitive_data('<SENDGRID_API_KEY>') { Rails.application.credentials.sendgrid[:api_key] }
-end
-
-RSpec.configure do |c|
-  c.around(:each, :vcr) do |example|
-    name = example.metadata[:full_description].split(/\s+/, 2).join('/').underscore.gsub(%r{[^\w/]+}, '_')
-    options = example.metadata.slice(:record, :match_requests_on).except(:example_group)
-    VCR.use_cassette(name, options) { example.call }
-  end
-end
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
@@ -139,19 +106,15 @@ RSpec.configure do |config|
     Timecop.safe_mode = true
 
     allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return false
-    allow_any_instance_of(RadicalSendGrid).to receive(:send_grid_enabled?).and_return false
 
     allow(Company).to receive(:main).and_return(create(:company))
 
     allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))
     allow(UserStatus).to receive(:default_active_status).and_return(create(:user_status, :active, name: 'Active'))
     allow(UserStatus).to receive(:default_inactive_status).and_return(create(:user_status, :inactive, name: 'Inactive'))
-
-    allow_any_instance_of(Division).to receive(:notify_owner).and_return(nil)
   end
 
   config.filter_run_excluding(impersonate_specs: true) unless Rails.configuration.rad_common.impersonate
-  config.filter_run_excluding(invite_specs: true) if Rails.configuration.rad_common.disable_invite
 
   config.after(:each, type: :system, js: true) do
     errors = page.driver.browser.manage.logs.get(:browser)
