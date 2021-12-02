@@ -21,6 +21,17 @@ class RadicalConfig
     ENV[item.to_s.upcase]
   end
 
+  def self.boolean_config_item!(item)
+    value = boolean_override_variable(item) || Rails.configuration.rad_common[item]
+    raise "required config item #{item} is missing" if value.nil?
+
+    value
+  end
+
+  def self.boolean_override_variable(item)
+    ENV[item.to_s.upcase].present? && ENV[item.to_s.upcase].downcase == 'true'
+  end
+
   def self.jwt_secret!
     secret_config_item! :jwt_secret
   end
@@ -75,7 +86,7 @@ class RadicalConfig
   end
 
   def self.avatar?
-    config_item! :use_avatar
+    boolean_config_item! :use_avatar
   end
 
   def self.aws_s_3_access_key_id!
