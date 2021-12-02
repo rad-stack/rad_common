@@ -9,6 +9,6 @@ local:
 amazon:
   service: S3
   access_key_id: <%= RadicalConfig.aws_s_3_access_key_id! %>
-  secret_access_key: <%= RadicalConfig.aws_s_3_secret_access_key %>
-  region: <%= RadicalConfig.aws_s_3_region %>
-  bucket: <%= RadicalConfig.aws_s_3_bucket %>
+  secret_access_key: <%= RadicalConfig.aws_s_3_secret_access_key! %>
+  region: <%= RadicalConfig.aws_s_3_region! %>
+  bucket: <%= RadicalConfig.aws_s_3_bucket! %>
