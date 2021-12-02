@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_29_155622) do
+ActiveRecord::Schema.define(version: 2021_12_02_111615) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -86,7 +86,7 @@ ActiveRecord::Schema.define(version: 2021_10_29_155622) do
     t.string "request_uuid"
     t.datetime "created_at"
     t.index ["associated_id", "associated_type"], name: "associated_index"
-    t.index ["auditable_id", "auditable_type"], name: "auditable_index"
+    t.index ["auditable_id", "auditable_type", "version"], name: "auditable_index"
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
