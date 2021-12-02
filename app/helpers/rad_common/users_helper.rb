@@ -6,7 +6,7 @@ module RadCommon
       items += %i[current_sign_in_ip current_sign_in_at confirmed_at confirmation_sent_at unconfirmed_email]
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
 
-      if Rails.configuration.rad_common.use_avatar && user.avatar.attached?
+      if RadicalConfig.avatar? && user.avatar.attached?
         items.push(label: 'Avatar',
                    value: render('layouts/attachment', record: user, attachment_name: 'avatar', new_tab: true))
       end

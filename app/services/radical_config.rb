@@ -82,4 +82,8 @@ class RadicalConfig
     # TODO: this seems weird just for the vcr thing
     secret_config_item :authy_api_key
   end
+
+  def self.avatar?
+    config_item! :use_avatar
+  end
 end
