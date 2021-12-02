@@ -90,16 +90,32 @@ class RadicalConfig
   end
 
   def self.aws_s_3_access_key_id!
-    value = Rails.application.credentials.aws[:s_3][:access_key_id]
-    raise "required secret config item aws_s_3_access_key_id is missing" if value.blank?
+    value = override_variable(:s3_access_key_id) || Rails.application.credentials.aws[:s_3][:access_key_id]
+    raise 'required secret config item aws_s_3_access_key_id is missing' if value.blank?
 
     value
   end
 
-  # TODO:
-  # secret_access_key: <%= Rails.application.credentials.aws[:s_3][:secret_access_key] %>
-  #   region: <%= Rails.application.credentials.aws[:s_3][:region] %>
-  # bucket: <%= Rails.application.credentials.aws[:s_3][:bucket] %>
+  def self.aws_s_3_secret_access_key!
+    value = override_variable(:s3_secret_access_key) || Rails.application.credentials.aws[:s_3][:secret_access_key]
+    raise 'required secret config item aws_s_3_secret_access_key is missing' if value.blank?
+
+    value
+  end
+
+  def self.aws_s_3_region!
+    value = override_variable(:s3_region) || Rails.application.credentials.aws[:s_3][:region]
+    raise 'required secret config item aws_s_3_region is missing' if value.blank?
+
+    value
+  end
+
+  def self.aws_s_3_bucket!
+    value = override_variable(:s3_bucket) || Rails.application.credentials.aws[:s_3][:bucket]
+    raise 'required secret config item aws_s_3_bucket is missing' if value.blank?
+
+    value
+  end
 
   def self.check_aws!
     return unless Rails.application.credentials.aws.blank? || Rails.application.credentials.aws[:s_3].blank?
