@@ -1,13 +1,4 @@
 class RadicalConfig
-  def self.check_aws!
-    return unless Rails.application.credentials.aws.blank? || Rails.application.credentials.aws[:s_3].blank?
-
-    # this can be fixed in Rails 6.1 to not have to always have them present
-    # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
-
-    raise 'Missing AWS S3 credentials'
-  end
-
   def self.secret_config_item!(item)
     value = Rails.application.credentials[item]
     raise "required secret config item #{item} is missing" if value.blank?
@@ -85,5 +76,26 @@ class RadicalConfig
 
   def self.avatar?
     config_item! :use_avatar
+  end
+
+  def self.aws_s_3_access_key_id!
+    value = Rails.application.credentials.aws[:s_3][:access_key_id]
+    raise "required secret config item aws_s_3_access_key_id is missing" if value.blank?
+
+    value
+  end
+
+  # TODO:
+  # secret_access_key: <%= Rails.application.credentials.aws[:s_3][:secret_access_key] %>
+  #   region: <%= Rails.application.credentials.aws[:s_3][:region] %>
+  # bucket: <%= Rails.application.credentials.aws[:s_3][:bucket] %>
+
+  def self.check_aws!
+    return unless Rails.application.credentials.aws.blank? || Rails.application.credentials.aws[:s_3].blank?
+
+    # this can be fixed in Rails 6.1 to not have to always have them present
+    # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
+
+    raise 'Missing AWS S3 credentials'
   end
 end
