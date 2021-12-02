@@ -406,14 +406,14 @@ describe 'Users', type: :system do
     let(:authy_id) { '1234567' }
 
     before do
-      if Rails.configuration.rad_common.authy_enabled
+      if RadicalConfig.authy_enabled?
         allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
         user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :mobile))
       end
     end
 
     it 'allows user to login with authentication token', :vcr do
-      if Rails.configuration.rad_common.authy_enabled
+      if RadicalConfig.authy_enabled?
         allow(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
 
         visit new_user_session_path
@@ -428,7 +428,7 @@ describe 'Users', type: :system do
     end
 
     it 'does not allow user to login with invalid authy token', :vcr do
-      if Rails.configuration.rad_common.authy_enabled
+      if RadicalConfig.authy_enabled?
         visit new_user_session_path
 
         fill_in 'user_email', with: user.email
@@ -441,7 +441,7 @@ describe 'Users', type: :system do
     end
 
     it 'updates authy when updating an accounts mobile phone' do
-      if Rails.configuration.rad_common.authy_enabled
+      if RadicalConfig.authy_enabled?
         allow(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
         allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
 

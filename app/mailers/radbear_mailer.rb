@@ -5,8 +5,8 @@ class RadbearMailer < ActionMailer::Base
   layout 'radbear_mailer'
   before_action :set_defaults
 
-  default from: Rails.application.credentials.from_email
-  default reply_to: Rails.application.credentials.admin_email
+  default from: RadicalConfig.from_email!
+  default reply_to: RadicalConfig.admin_email!
 
   def new_user_signed_up(recipients, user)
     auto_approve = user.auto_approve?
@@ -133,9 +133,9 @@ class RadbearMailer < ActionMailer::Base
     # this won't work for links called using the route helpers outside of the mailer context
     # this won't detect when to use the portal host unless @recipient is a User
 
-    return { host: Rails.configuration.rad_common.portal_host_name } if @recipient.is_a?(User) && @recipient.external?
+    return { host: RadicalConfig.portal_host_name! } if @recipient.is_a?(User) && @recipient.external?
 
-    { host: Rails.configuration.rad_common.host_name }
+    { host: RadicalConfig.host_name! }
   end
 
   private

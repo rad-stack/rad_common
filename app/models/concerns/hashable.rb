@@ -6,7 +6,7 @@ module Hashable
   end
 
   def self.hashids
-    Hashids.new(Rails.application.credentials.hash_key, 6, Rails.application.credentials.hash_alphabet)
+    Hashids.new(RadicalConfig.hash_key!, 6, RadicalConfig.hash_alphabet!)
   end
 
   class_methods do

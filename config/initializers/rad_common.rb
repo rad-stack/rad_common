@@ -11,23 +11,11 @@ end
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 
 Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
-
 Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css rad_common/radbear_mailer_reset.css]
 
-Rails.application.routes.default_url_options[:host] = Rails.configuration.rad_common.host_name
+RadicalConfig.check_aws!
 
-raise 'Missing admin_email in credentials' if Rails.application.credentials.admin_email.blank?
-raise 'Missing from_email in credentials' if Rails.application.credentials.from_email.blank?
-
-if Rails.configuration.rad_common.authy_enabled && Rails.application.credentials.authy_api_key.blank?
-  raise 'Missing authy_api_key in credentials with authy_enabled = true'
-end
-
-if Rails.application.credentials.aws.blank? || Rails.application.credentials.aws[:s_3].blank?
-  # this can be fixed in Rails 6.1 to not have to always have them present
-  # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
-  raise 'Missing AWS S3 credentials'
-end
+Rails.application.routes.default_url_options[:host] = RadicalConfig.host_name!
 
 if Rails.env.staging?
   class ChangeStagingEmailSubject

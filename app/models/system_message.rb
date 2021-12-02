@@ -66,7 +66,7 @@ class SystemMessage < ApplicationRecord
   end
 
   def from_reply_to
-    Rails.application.credentials.from_email
+    RadicalConfig.from_email!
   end
 
   private

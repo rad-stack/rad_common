@@ -15,7 +15,7 @@ class EmailAddressValidator < ActiveModel::Validator
         next
       end
 
-      next unless check_send_grid?(record, field)
+      next unless check_sendgrid?(record, field)
 
       error_message = RadicalSendGrid.new.validate_email(email_value)
       record.errors.add(field, error_message) if error_message.present?
@@ -28,7 +28,7 @@ class EmailAddressValidator < ActiveModel::Validator
       email =~ URI::MailTo::EMAIL_REGEXP && email !~ /[A-Z]/
     end
 
-    def check_send_grid?(record, field)
+    def check_sendgrid?(record, field)
       return false if record.running_global_validity
 
       record.send("#{field}_changed?")
