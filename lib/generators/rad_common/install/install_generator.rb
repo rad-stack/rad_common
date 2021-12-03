@@ -24,7 +24,6 @@ module RadCommon
         template '../../../../../spec/dummy/Procfile', 'Procfile'
         template '../../../../../spec/dummy/package.json', 'package.json'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
-        template '../../../../../spec/dummy/app/services/seeder.rb', 'app/services/seeder.rb'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
 
@@ -121,6 +120,11 @@ module RadCommon
         gsub_file 'config/environments/production.rb',
                   '#config.force_ssl = true',
                   'config.force_ssl = true'
+
+        create_file 'db/seeds.rb' do <<-'RUBY'
+Seeder.new.seed!
+        RUBY
+        end
 
         inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
     # added by rad_common
