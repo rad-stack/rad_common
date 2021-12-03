@@ -150,6 +150,7 @@ RSpec.configure do |config|
     allow_any_instance_of(Division).to receive(:notify_owner).and_return(nil)
   end
 
+  config.filter_run_excluding(authy_specs: true) unless RadicalConfig.authy_enabled?
   config.filter_run_excluding(impersonate_specs: true) unless Rails.configuration.rad_common.impersonate
 
   config.after(:each, type: :system, js: true) do

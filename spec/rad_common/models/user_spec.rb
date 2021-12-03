@@ -299,45 +299,37 @@ describe User, type: :model do
     end
   end
 
-  describe 'authy' do
+  describe 'authy', authy_specs: true do
     let(:user) { create :user, mobile_phone: phone_number }
     let(:phone_number) { create :phone_number, :mobile }
     let(:new_phone_number) { create :phone_number, :mobile }
 
     it 'creates and updates the user on authy', :vcr do
-      if RadicalConfig.authy_enabled?
-        expect(user.authy_id).to be_nil
-        user.update!(authy_enabled: true)
-        expect(user.authy_id).not_to be_nil
-      end
+      expect(user.authy_id).to be_nil
+      user.update!(authy_enabled: true)
+      expect(user.authy_id).not_to be_nil
     end
 
     it 'returns a failure message if authy doesnt update' do
-      if RadicalConfig.authy_enabled?
-        result = double(:response, ok?: false, message: 'mocked message')
+      result = double(:response, ok?: false, message: 'mocked message')
 
-        allow(Authy::API).to receive(:register_user).and_return(result)
+      allow(Authy::API).to receive(:register_user).and_return(result)
 
-        user.authy_enabled = true
-        user.mobile_phone = new_phone_number
-        user.save
-        expect(user.errors.full_messages.to_s).to include('Could not register authy user')
-      end
+      user.authy_enabled = true
+      user.mobile_phone = new_phone_number
+      user.save
+      expect(user.errors.full_messages.to_s).to include('Could not register authy user')
     end
 
     it 'deletes authy user if mobile phone wiped out' do
-      if RadicalConfig.authy_enabled? && !mobile_phone_required?
-        user.update!(authy_enabled: false, mobile_phone: nil)
-        expect(user.reload.authy_id).to be_blank
-      end
+      user.update!(authy_enabled: false, mobile_phone: nil)
+      expect(user.reload.authy_id).to be_blank
     end
 
     it "doesn't allow invalid email", :vcr do
-      if RadicalConfig.authy_enabled?
-        user = build :user, mobile_phone: phone_number, email: 'foo@', authy_enabled: true
-        user.save
-        expect(user.errors.full_messages.to_s).to include('Could not register authy user')
-      end
+      user = build :user, mobile_phone: phone_number, email: 'foo@', authy_enabled: true
+      user.save
+      expect(user.errors.full_messages.to_s).to include('Could not register authy user')
     end
   end
 
