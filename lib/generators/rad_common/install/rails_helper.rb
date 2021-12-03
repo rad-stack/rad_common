@@ -114,6 +114,7 @@ RSpec.configure do |config|
     allow(UserStatus).to receive(:default_inactive_status).and_return(create(:user_status, :inactive, name: 'Inactive'))
   end
 
+  config.filter_run_excluding(authy_specs: true) unless RadicalConfig.authy_enabled?
   config.filter_run_excluding(impersonate_specs: true) unless Rails.configuration.rad_common.impersonate
 
   config.after(:each, type: :system, js: true) do
