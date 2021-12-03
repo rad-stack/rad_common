@@ -45,19 +45,6 @@ module RadCommon
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
                  'config/locales/devise.authy.en.yml'
 
-        # controllers
-        template '../../../../../spec/dummy/app/controllers/application_controller.rb',
-                 'app/controllers/application_controller.rb'
-
-        # models
-        template '../../../../../spec/dummy/app/models/user.rb', 'app/models/user.rb'
-        template '../../../../../spec/dummy/app/models/company.rb', 'app/models/company.rb'
-        template '../../../../../spec/dummy/app/models/security_role.rb', 'app/models/security_role.rb'
-
-        # policies
-        template '../../../../../spec/dummy/app/policies/application_policy.rb',
-                 'app/policies/application_policy.rb'
-
         # views
         template '../../../../../spec/dummy/app/views/devise/confirmations/new.html.haml',
                  'app/views/devise/confirmations/new.html.haml'
