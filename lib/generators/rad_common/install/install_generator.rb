@@ -122,11 +122,6 @@ module RadCommon
                   '#config.force_ssl = true',
                   'config.force_ssl = true'
 
-        create_file 'db/seeds.rb' do <<-'RUBY'
-Seeder.new.seed!
-        RUBY
-        end
-
         inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
     # added by rad_common
     config.generators do |g|
