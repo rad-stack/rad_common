@@ -1,128 +1,140 @@
 class RadicalConfig
-  def self.secret_config_item!(item)
-    value = Rails.application.credentials[item]
-    raise "required secret config item #{item} is missing" if value.blank?
+  class << self
+    def admin_email!
+      secret_config_item! :admin_email
+    end
 
-    value
-  end
+    def from_email!
+      secret_config_item! :from_email
+    end
 
-  def self.secret_config_item(item)
-    Rails.application.credentials[item]
-  end
+    def sendgrid_username!
+      secret_nested_config_item! %i[sendgrid username], :sendgrid_username
+    end
 
-  def self.config_item!(item)
-    value = override_variable(item) || Rails.configuration.rad_common[item]
-    raise "required config item #{item} is missing" if value.blank?
+    def sendgrid_password!
+      secret_nested_config_item! %i[sendgrid password], :sendgrid_password
+    end
 
-    value
-  end
+    def sendgrid_api?
+      sendgrid_api_key.present?
+    end
 
-  def self.override_variable(item)
-    ENV[item.to_s.upcase]
-  end
+    def sendgrid_api_key!
+      secret_nested_config_item! %i[sendgrid api_key], :sendgrid_api_key
+    end
 
-  def self.boolean_config_item!(item)
-    value = boolean_override_variable(item) || Rails.configuration.rad_common[item]
-    raise "required config item #{item} is missing" if value.nil?
+    def sendgrid_api_key
+      secret_nested_config_item %i[sendgrid api_key], :sendgrid_api_key
+    end
 
-    value
-  end
+    def hash_key!
+      secret_config_item! :hash_key
+    end
 
-  def self.boolean_override_variable(item)
-    ENV[item.to_s.upcase].present? && ENV[item.to_s.upcase].downcase == 'true'
-  end
+    def hash_alphabet!
+      secret_config_item! :hash_alphabet
+    end
 
-  def self.jwt_secret!
-    secret_config_item! :jwt_secret
-  end
+    def jwt_secret!
+      secret_config_item! :jwt_secret
+    end
 
-  def self.admin_email!
-    secret_config_item! :admin_email
-  end
+    def host_name!
+      config_item! :host_name
+    end
 
-  def self.from_email!
-    secret_config_item! :from_email
-  end
+    def portal_host_name!
+      config_item! :portal_host_name
+    end
 
-  def self.hash_key!
-    secret_config_item! :hash_key
-  end
+    def avatar?
+      boolean_config_item! :use_avatar
+    end
 
-  def self.hash_alphabet!
-    secret_config_item! :hash_alphabet
-  end
+    def authy_enabled?
+      boolean_config_item! :authy_enabled
+    end
 
-  def self.sendgrid_api?
-    # TODO: refactor
-    Rails.application.credentials.sendgrid.present? && Rails.application.credentials.sendgrid[:api_key].present?
-  end
+    def authy_api_key!
+      return unless authy_enabled?
 
-  def self.sendgrid_api_key!
-    # TODO: raise if blank
-    Rails.application.credentials.sendgrid[:api_key]
-  end
+      secret_config_item! :authy_api_key
+    end
 
-  def self.host_name!
-    config_item! :host_name
-  end
+    def authy_api_key
+      secret_config_item :authy_api_key
+    end
 
-  def self.portal_host_name!
-    config_item! :portal_host_name
-  end
+    def aws_s_3_access_key_id!
+      secret_nested_config_item! %i[aws s_3 access_key_id], :s3_access_key_id
+    end
 
-  def self.authy_enabled?
-    Rails.configuration.rad_common.authy_enabled
-  end
+    def aws_s_3_secret_access_key!
+      secret_nested_config_item! %i[aws s_3 secret_access_key], :s3_secret_access_key
+    end
 
-  def self.authy_api_key!
-    return unless authy_enabled?
+    def aws_s_3_region!
+      secret_nested_config_item! %i[aws s_3 region], :s3_region
+    end
 
-    secret_config_item! :authy_api_key
-  end
+    def aws_s_3_bucket!
+      secret_nested_config_item! %i[aws s_3 bucket], :s3_bucket
+    end
 
-  def self.authy_api_key
-    # TODO: this seems weird just for the vcr thing
-    secret_config_item :authy_api_key
-  end
+    def secret_config_item!(item)
+      value = secret_config_item(item)
+      raise "required secret config item #{item} is missing" if value.blank?
 
-  def self.avatar?
-    boolean_config_item! :use_avatar
-  end
+      value
+    end
 
-  def self.aws_s_3_access_key_id!
-    value = override_variable(:s3_access_key_id) || Rails.application.credentials.aws[:s_3][:access_key_id]
-    raise 'required secret config item aws_s_3_access_key_id is missing' if value.blank?
+    def secret_config_item(item)
+      Rails.application.credentials[item]
+    end
 
-    value
-  end
+    def config_item!(item)
+      value = override_variable(item) || Rails.configuration.rad_common[item]
+      raise "required config item #{item} is missing" if value.blank?
 
-  def self.aws_s_3_secret_access_key!
-    value = override_variable(:s3_secret_access_key) || Rails.application.credentials.aws[:s_3][:secret_access_key]
-    raise 'required secret config item aws_s_3_secret_access_key is missing' if value.blank?
+      value
+    end
 
-    value
-  end
+    def boolean_config_item!(item)
+      value = boolean_override_variable(item) || Rails.configuration.rad_common[item]
+      raise "required config item #{item} is missing" if value.nil?
 
-  def self.aws_s_3_region!
-    value = override_variable(:s3_region) || Rails.application.credentials.aws[:s_3][:region]
-    raise 'required secret config item aws_s_3_region is missing' if value.blank?
+      value
+    end
 
-    value
-  end
+    def check_aws!
+      return unless Rails.application.credentials.aws.blank? || Rails.application.credentials.aws[:s_3].blank?
 
-  def self.aws_s_3_bucket!
-    value = override_variable(:s3_bucket) || Rails.application.credentials.aws[:s_3][:bucket]
-    raise 'required secret config item aws_s_3_bucket is missing' if value.blank?
+      # this can be fixed in Rails 6.1 to not have to always have them present
+      # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
 
-    value
-  end
+      raise 'Missing AWS S3 credentials'
+    end
 
-  def self.check_aws!
-    return unless Rails.application.credentials.aws.blank? || Rails.application.credentials.aws[:s_3].blank?
+    private
 
-    # this can be fixed in Rails 6.1 to not have to always have them present
-    # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
+      def secret_nested_config_item!(nested_keys, flat_key)
+        value = secret_nested_config_item(nested_keys, flat_key)
+        raise "required secret config item #{nested_keys} is missing" if value.blank?
 
-    raise 'Missing AWS S3 credentials'
+        value
+      end
+
+      def secret_nested_config_item(nested_keys, flat_key)
+        override_variable(flat_key) || Rails.application.credentials.dig(*nested_keys)
+      end
+
+      def override_variable(item)
+        ENV[item.to_s.upcase]
+      end
+
+      def boolean_override_variable(item)
+        ENV[item.to_s.upcase].present? && ENV[item.to_s.upcase].downcase == 'true'
+      end
   end
 end

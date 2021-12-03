@@ -127,7 +127,7 @@ Rails.application.configure do
     enable_starttls_auto: true,
     domain: 'sendgrid.com',
     authentication: 'plain',
-    user_name: Rails.application.credentials.sendgrid[:username],
-    password: Rails.application.credentials.sendgrid[:password]
+    user_name: RadicalConfig.sendgrid_username!,
+    password: RadicalConfig.sendgrid_password!
   }
 end
