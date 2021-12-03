@@ -322,8 +322,10 @@ describe User, type: :model do
     end
 
     it 'deletes authy user if mobile phone wiped out' do
-      user.update!(authy_enabled: false, mobile_phone: nil)
-      expect(user.reload.authy_id).to be_blank
+      unless mobile_phone_required?
+        user.update!(authy_enabled: false, mobile_phone: nil)
+        expect(user.reload.authy_id).to be_blank
+      end
     end
 
     it "doesn't allow invalid email", :vcr do
