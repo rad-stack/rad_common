@@ -18,11 +18,11 @@ RadicalConfig.check_aws!
 Rails.application.routes.default_url_options[:host] = RadicalConfig.host_name!
 
 if Rails.env.staging? || Rails.env.production?
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.default charset: 'utf-8'
+  Rails.application.config.action_mailer.delivery_method = :smtp
+  Rails.application.config.action_mailer.perform_deliveries = true
+  Rails.application.config.action_mailer.default charset: 'utf-8'
 
-  config.action_mailer.smtp_settings = {
+  Rails.application.config.action_mailer.smtp_settings = {
     address: 'smtp.sendgrid.net',
     port: 587,
     enable_starttls_auto: true,
