@@ -52,7 +52,6 @@ if RadicalConfig.authy_enabled?
   Authy.api_uri = 'https://api.authy.com/'
 end
 
-
 Audited.current_user_method = :true_user
 
 Rails.configuration.to_prepare do
