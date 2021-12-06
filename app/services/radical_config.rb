@@ -141,7 +141,9 @@ class RadicalConfig
     end
 
     def boolean_config_item!(item)
-      value = boolean_override_variable(item) || Rails.configuration.rad_common[item]
+      return boolean_override_variable(item) if boolean_override_variable_present?(item)
+
+      value = Rails.configuration.rad_common[item]
       raise "required config item #{item} is missing" if value.nil?
 
       value
