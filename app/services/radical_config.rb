@@ -130,7 +130,7 @@ class RadicalConfig
     end
 
     def secret_config_item(item)
-      Rails.application.credentials[item]
+      override_variable(item) || Rails.application.credentials[item]
     end
 
     def config_item!(item)
