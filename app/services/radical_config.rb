@@ -8,6 +8,38 @@ class RadicalConfig
       secret_config_item! :from_email
     end
 
+    def smtp_username!
+      secret_config_item! :smtp_username
+    end
+
+    def smtp_password!
+      secret_config_item! :smtp_password
+    end
+
+    def smtp_address!
+      override_variable(:smtp_address) || 'smtp.sendgrid.net'
+    end
+
+    def smtp_port!
+      override_variable(:smtp_port) || 587
+    end
+
+    def smtp_enable_starttls_auto!
+      if boolean_override_variable_present?(:smtp_enable_starttls_auto)
+        return boolean_override_variable(:smtp_enable_starttls_auto)
+      end
+
+      true
+    end
+
+    def smtp_domain!
+      override_variable(:smtp_domain) || 'sendgrid.com'
+    end
+
+    def smtp_authentication!
+      override_variable(:smtp_authentication) || 'plain'
+    end
+
     def sendgrid_username!
       secret_nested_config_item! %i[sendgrid username], :sendgrid_username
     end
@@ -134,7 +166,11 @@ class RadicalConfig
       end
 
       def boolean_override_variable(item)
-        ENV[item.to_s.upcase].present? && ENV[item.to_s.upcase].downcase == 'true'
+        boolean_override_variable_present?(item) && ENV[item.to_s.upcase].downcase == 'true'
+      end
+
+      def boolean_override_variable_present?(item)
+        ENV[item.to_s.upcase].present?
       end
   end
 end

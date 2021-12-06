@@ -23,13 +23,13 @@ if Rails.env.staging? || Rails.env.production?
   Rails.application.config.action_mailer.default charset: 'utf-8'
 
   Rails.application.config.action_mailer.smtp_settings = {
-    address: 'smtp.sendgrid.net',
-    port: 587,
-    enable_starttls_auto: true,
-    domain: 'sendgrid.com',
-    authentication: 'plain',
-    user_name: RadicalConfig.sendgrid_username!,
-    password: RadicalConfig.sendgrid_password!
+    address: RadicalConfig.smtp_address!,
+    port: RadicalConfig.smtp_port!,
+    enable_starttls_auto: RadicalConfig.smtp_enable_starttls_auto!,
+    domain: RadicalConfig.smtp_domain!,
+    authentication: RadicalConfig.smtp_authentication!,
+    user_name: RadicalConfig.smtp_username!,
+    password: RadicalConfig.smtp_password!
   }
 end
 
