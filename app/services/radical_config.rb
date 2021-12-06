@@ -9,13 +9,17 @@ class RadicalConfig
     end
 
     def smtp_username!
-      return secret_config_item(:sendgrid_username) if secret_config_item(:sendgrid_username).present?
+      if secret_nested_config_item(%i[sendgrid username], :sendgrid_username).present?
+        return secret_nested_config_item(%i[sendgrid username], :sendgrid_username)
+      end
 
       secret_config_item! :smtp_username
     end
 
     def smtp_password!
-      return secret_config_item(:sendgrid_password) if secret_config_item(:sendgrid_password).present?
+      if secret_nested_config_item(%i[sendgrid password], :sendgrid_password).present?
+        return secret_nested_config_item(%i[sendgrid password], :sendgrid_password)
+      end
 
       secret_config_item! :smtp_password
     end
