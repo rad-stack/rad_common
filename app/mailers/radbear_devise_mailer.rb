@@ -5,7 +5,7 @@ class RadbearDeviseMailer < Devise::Mailer
   layout 'radbear_mailer'
 
   before_action :set_defaults
-  default reply_to: Rails.application.credentials.admin_email
+  default reply_to: RadicalConfig.admin_email!
 
   def confirmation_instructions(record, token, opts = {})
     @token = token
@@ -89,9 +89,9 @@ class RadbearDeviseMailer < Devise::Mailer
 
   def default_url_options
     if @resource.internal?
-      { host: Rails.configuration.rad_common.host_name }
+      { host: RadicalConfig.host_name! }
     else
-      { host: Rails.configuration.rad_common.portal_host_name }
+      { host: RadicalConfig.portal_host_name! }
     end
   end
 
