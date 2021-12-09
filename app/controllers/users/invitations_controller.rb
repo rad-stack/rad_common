@@ -22,16 +22,10 @@ module Users
           flash[:error] = "Could not add user: #{user.errors.full_messages.join(', ')}"
         end
       else
-        if resource.errors.any?
-          flash[:error] = "Could not add user: #{resource.errors.full_messages.join(', ')}"
-        end
+        flash[:error] = "Could not add user: #{resource.errors.full_messages.join(', ')}" if resource.errors.any?
 
         respond_with_navigational(resource) { render :new }
       end
-    end
-
-    def invite_params
-      devise_parameter_sanitizer.sanitize(:invite).merge({ invitation_created_at: DateTime.current })
     end
   end
 end
