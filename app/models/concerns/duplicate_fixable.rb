@@ -6,7 +6,7 @@ module DuplicateFixable
 
     scope :duplicates_to_process, lambda {
       left_outer_joins(:duplicate)
-        .where("#{table_name}.updated_at >= duplicates.processed_at")
+        .where("duplicates.processed_at IS NULL OR (#{table_name}.updated_at >= duplicates.processed_at)")
         .order(:id)
     }
 
