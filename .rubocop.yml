@@ -100,6 +100,8 @@ Naming/BinaryOperatorParameterName:
 
 Naming/VariableNumber:
   EnforcedStyle: snake_case
+  Exclude:
+    - 'lib/tasks/temp.rake'
 
 # Gives access to all the default 'enabled' rails-specific cops
 Rails:

@@ -5,7 +5,7 @@ module RadCommonRoutes
                  path: 'auth',
                  controllers: { confirmations: 'users/confirmations', invitations: 'users/invitations' }
 
-      resources :users, only: %i[index show edit update destroy] do
+      resources :users do
         member do
           put :resend_invitation
           put :confirm
