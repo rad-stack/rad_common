@@ -19,7 +19,7 @@ describe 'AuditHistory', type: :system do
   end
 
   it 'shows attachment created' do
-    Rails.configuration.rad_common.use_avatar = true
+    allow(RadicalConfig).to receive(:avatar?).and_return(true)
 
     visit edit_user_registration_path
     fill_in 'Current password', with: 'cOmpl3x_p@55w0rd'

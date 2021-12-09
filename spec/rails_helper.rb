@@ -53,7 +53,7 @@ VCR.configure do |c|
     Rails.application.credentials.test_phone_number.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
   end
 
-  c.filter_sensitive_data('<AUTHY_API_KEY>') { Rails.application.credentials.authy_api_key }
+  c.filter_sensitive_data('<AUTHY_API_KEY>') { RadicalConfig.authy_api_key }
 
   c.filter_sensitive_data('<SENDGRID_API_KEY>') { Rails.application.credentials.sendgrid[:api_key] }
 end
@@ -139,7 +139,7 @@ RSpec.configure do |config|
     Timecop.safe_mode = true
 
     allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return false
-    allow_any_instance_of(RadicalSendGrid).to receive(:send_grid_enabled?).and_return false
+    allow_any_instance_of(RadicalSendGrid).to receive(:sendgrid_enabled?).and_return false
 
     allow(Company).to receive(:main).and_return(create(:company))
 
@@ -150,6 +150,7 @@ RSpec.configure do |config|
     allow_any_instance_of(Division).to receive(:notify_owner).and_return(nil)
   end
 
+  config.filter_run_excluding(authy_specs: true) unless RadicalConfig.authy_enabled?
   config.filter_run_excluding(impersonate_specs: true) unless Rails.configuration.rad_common.impersonate
   config.filter_run_excluding(invite_specs: true) if Rails.configuration.rad_common.disable_invite
 

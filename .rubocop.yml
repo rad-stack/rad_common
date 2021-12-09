@@ -77,6 +77,7 @@ Metrics/BlockLength:
     - 'spec/dummy/config/routes.rb'
     - 'spec/factories/**/*.rb'
     - 'spec/rails_helper.rb'
+    - 'lib/tasks/temp.rake'
     - 'lib/generators/rad_common/install/rails_helper.rb'
 
 # The guiding principle of classes is SRP, SRP can't be accurately measured by LoC
@@ -127,6 +128,8 @@ Rails/SkipsModelValidations:
   Enabled: true
   Exclude:
     - 'spec/**/*_spec.rb'
+    - 'app/services/seeder.rb'
+    - 'lib/tasks/temp.rake'
 
 # Check for uses of braces around single-line blocks, and also for multi-line blocks with an
 # attached method like: {...}.where

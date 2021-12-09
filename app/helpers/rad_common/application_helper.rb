@@ -21,7 +21,7 @@ module RadCommon
     end
 
     def avatar_image(user, size)
-      if Rails.configuration.rad_common.use_avatar && user.avatar.attached?
+      if RadicalConfig.avatar? && user.avatar.attached?
         image_tag(user.avatar.variant(resize: '50x50'))
       else
         image_tag(gravatar_for(user, size))

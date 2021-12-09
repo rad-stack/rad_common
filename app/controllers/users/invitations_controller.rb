@@ -22,6 +22,8 @@ module Users
           flash[:error] = "Could not add user: #{user.errors.full_messages.join(', ')}"
         end
       else
+        flash[:error] = "Could not add user: #{resource.errors.full_messages.join(', ')}" if resource.errors.any?
+
         respond_with_navigational(resource) { render :new }
       end
     end

@@ -2,13 +2,13 @@
   company = @override_company.presence || Company.main
   logo_includes_name = Rails.configuration.rad_common.app_logo_includes_name
   protocol = Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
-  logo_url = "#{protocol}://#{Rails.configuration.rad_common.host_name}/app_logo.png"
+  logo_url = "#{protocol}://#{RadicalConfig.host_name!}/app_logo.png"
   website = company.website
   company_name = company.name
   company_full_address = company.full_address
   company_phone_number = company.phone_number
   admin_email = company.email
-  has_avatar = Rails.configuration.rad_common.use_avatar && @sender && @sender.avatar.attached?
+  has_avatar = RadicalConfig.avatar? && @sender && @sender.avatar.attached?
 
 !!!
 %head

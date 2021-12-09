@@ -11,22 +11,26 @@ end
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 
 Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
-
 Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css rad_common/radbear_mailer_reset.css]
 
-Rails.application.routes.default_url_options[:host] = Rails.configuration.rad_common.host_name
+RadicalConfig.check_aws!
 
-raise 'Missing admin_email in credentials' if Rails.application.credentials.admin_email.blank?
-raise 'Missing from_email in credentials' if Rails.application.credentials.from_email.blank?
+Rails.application.routes.default_url_options[:host] = RadicalConfig.host_name!
 
-if Rails.configuration.rad_common.authy_enabled && Rails.application.credentials.authy_api_key.blank?
-  raise 'Missing authy_api_key in credentials with authy_enabled = true'
-end
+if Rails.env.staging? || Rails.env.production?
+  Rails.application.config.action_mailer.delivery_method = :smtp
+  Rails.application.config.action_mailer.perform_deliveries = true
+  Rails.application.config.action_mailer.default charset: 'utf-8'
 
-if Rails.application.credentials.aws.blank? || Rails.application.credentials.aws[:s_3].blank?
-  # this can be fixed in Rails 6.1 to not have to always have them present
-  # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
-  raise 'Missing AWS S3 credentials'
+  Rails.application.config.action_mailer.smtp_settings = {
+    address: RadicalConfig.smtp_address!,
+    port: RadicalConfig.smtp_port!,
+    enable_starttls_auto: RadicalConfig.smtp_enable_starttls_auto!,
+    domain: RadicalConfig.smtp_domain!,
+    authentication: RadicalConfig.smtp_authentication!,
+    user_name: RadicalConfig.smtp_username!,
+    password: RadicalConfig.smtp_password!
+  }
 end
 
 if Rails.env.staging?
@@ -41,6 +45,11 @@ end
 
 Devise.setup do |config|
   config.mailer = 'RadbearDeviseMailer'
+end
+
+if RadicalConfig.authy_enabled?
+  Authy.api_key = RadicalConfig.authy_api_key!
+  Authy.api_uri = 'https://api.authy.com/'
 end
 
 Audited.current_user_method = :true_user

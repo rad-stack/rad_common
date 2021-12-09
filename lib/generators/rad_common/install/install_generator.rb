@@ -24,7 +24,6 @@ module RadCommon
         template '../../../../../spec/dummy/Procfile', 'Procfile'
         template '../../../../../spec/dummy/package.json', 'package.json'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
-        template '../../../../../spec/dummy/app/services/seeder.rb', 'app/services/seeder.rb'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
 
@@ -44,19 +43,6 @@ module RadCommon
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
                  'config/locales/devise.authy.en.yml'
-
-        # controllers
-        template '../../../../../spec/dummy/app/controllers/application_controller.rb',
-                 'app/controllers/application_controller.rb'
-
-        # models
-        template '../../../../../spec/dummy/app/models/user.rb', 'app/models/user.rb'
-        template '../../../../../spec/dummy/app/models/company.rb', 'app/models/company.rb'
-        template '../../../../../spec/dummy/app/models/security_role.rb', 'app/models/security_role.rb'
-
-        # policies
-        template '../../../../../spec/dummy/app/policies/application_policy.rb',
-                 'app/policies/application_policy.rb'
 
         # views
         template '../../../../../spec/dummy/app/views/devise/confirmations/new.html.haml',
@@ -155,7 +141,7 @@ Seeder.new.seed!
         RUBY
         end
 
-        inject_into_file 'config/routes.rb', after: 'Application.routes.draw do' do <<-'RUBY'
+        inject_into_file 'config/routes.rb', after: 'Rails.application.routes.draw do' do <<-'RUBY'
 
   mount RadCommon::Engine => '/rad_common'
 
@@ -238,6 +224,7 @@ Seeder.new.seed!
         apply_migration '20210729135942_authy_always_enabled.rb'
         apply_migration '20210805105809_fix_notification_defaults.rb'
         apply_migration '20211029155622_fix_array_type.rb'
+        apply_migration '20211202111615_fix_audits_index.rb'
       end
 
       def self.next_migration_number(path)

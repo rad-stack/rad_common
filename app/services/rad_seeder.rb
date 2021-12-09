@@ -39,7 +39,7 @@ class RadSeeder
                        first_name: seeded_user[:first_name],
                        last_name: seeded_user[:last_name],
                        security_roles: user_security_roles(seeded_user),
-                       authy_enabled: Rails.configuration.rad_common.authy_enabled }
+                       authy_enabled: RadicalConfig.authy_enabled? }
 
         attributes = attributes.merge(mobile_phone: seeded_user[:mobile_phone]) if seeded_user[:mobile_phone].present?
         attributes = attributes.merge(timezone: seeded_user[:timezone]) if seeded_user[:timezone].present?
