@@ -141,7 +141,7 @@ Seeder.new.seed!
         RUBY
         end
 
-        inject_into_file 'config/routes.rb', after: 'Application.routes.draw do' do <<-'RUBY'
+        inject_into_file 'config/routes.rb', after: 'Rails.application.routes.draw do' do <<-'RUBY'
 
   mount RadCommon::Engine => '/rad_common'
 
