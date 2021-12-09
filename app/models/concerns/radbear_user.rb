@@ -220,6 +220,7 @@ module RadbearUser
     end
 
     def password_excludes_name
+      return if new_record? && invited_by_id.present?
       return unless password.present? && first_name.present? && last_name.present?
       return unless password.downcase.include?(first_name.downcase) || password.downcase.include?(last_name.downcase)
 
