@@ -153,7 +153,7 @@ RSpec.configure do |config|
   config.filter_run_excluding(authy_specs: true) unless RadicalConfig.authy_enabled?
   config.filter_run_excluding(impersonate_specs: true) unless Rails.configuration.rad_common.impersonate
   config.filter_run_excluding(invite_specs: true) if Rails.configuration.rad_common.disable_invite
-  config.filter_run_excluding(devise_paranoid_specs: true) if Devise.paranoid
+  config.filter_run_excluding(devise_paranoid_specs: true) unless Devise.paranoid
 
   config.after(:each, type: :system, js: true) do
     errors = page.driver.browser.manage.logs.get(:browser)

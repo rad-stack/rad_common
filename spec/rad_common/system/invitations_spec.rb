@@ -11,6 +11,14 @@ describe 'Invitations', type: :system, invite_specs: true do
   let(:valid_email) { "#{Faker::Internet.user_name}@#{email_domain}" }
   let(:external_email) { "#{Faker::Internet.user_name}@#{external_domain}" }
 
+  let(:invite_message) do
+    if Devise.paranoid
+      'If your email address exists in our database, you will receive a password'
+    else
+      'not found'
+    end
+  end
+
   before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
 
   describe 'user' do
@@ -127,7 +135,7 @@ describe 'Invitations', type: :system, invite_specs: true do
       visit new_user_password_path
       fill_in 'Email', with: invitee.email
       click_button 'Send Me Reset Password Instructions'
-      expect(page).to have_content 'If your email address exists in our database, you will receive a password'
+      expect(page).to have_content invite_message
     end
 
     it 'notifies admin when invitee accepts' do
@@ -147,7 +155,7 @@ describe 'Invitations', type: :system, invite_specs: true do
       visit new_user_password_path
       fill_in 'Email', with: invitee.email
       click_button 'Send Me Reset Password Instructions'
-      expect(page).to have_content 'If your email address exists in our database, you will receive a password'
+      expect(page).to have_content invite_message
 
       expect(ActionMailer::Base.deliveries.count).to eq 0
     end
