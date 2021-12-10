@@ -300,7 +300,7 @@ describe 'Users', type: :system do
     end
   end
 
-  describe 'devise paranoid setting' do
+  describe 'devise paranoid setting', devise_paranoid_specs: true do
     it 'wrong password - does not specify if email or password is wrong' do
       visit new_user_session_path
       fill_in 'user_email', with: user.email
