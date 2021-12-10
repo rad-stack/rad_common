@@ -42,20 +42,20 @@ VCR.configure do |c|
   c.hook_into :webmock
   c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com'
 
-  c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { Rails.application.credentials.test_mobile_phone }
-  c.filter_sensitive_data('<TEST_PHONE_NUMBER>') { Rails.application.credentials.test_phone_number }
+  c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { RadicalConfig.test_mobile_phone! }
+  c.filter_sensitive_data('<TEST_PHONE_NUMBER>') { RadicalConfig.test_phone_number! }
 
   c.filter_sensitive_data('<TEST_MOBILE_PHONE_STRIPPED>') do
-    Rails.application.credentials.test_mobile_phone.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
+    RadicalConfig.test_mobile_phone!.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
   end
 
   c.filter_sensitive_data('<TEST_PHONE_NUMBER_STRIPPED>') do
-    Rails.application.credentials.test_phone_number.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
+    RadicalConfig.test_phone_number!.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
   end
 
   c.filter_sensitive_data('<AUTHY_API_KEY>') { RadicalConfig.authy_api_key }
 
-  c.filter_sensitive_data('<SENDGRID_API_KEY>') { Rails.application.credentials.sendgrid[:api_key] }
+  c.filter_sensitive_data('<SENDGRID_API_KEY>') { RadicalConfig.sendgrid_api_key! }
 end
 
 RSpec.configure do |c|

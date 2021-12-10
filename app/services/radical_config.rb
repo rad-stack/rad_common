@@ -80,6 +80,24 @@ class RadicalConfig
       secret_config_item! :jwt_secret
     end
 
+    def test_phone_number!
+      secret_config_item! :test_phone_number
+    end
+
+    def test_mobile_phone!
+      secret_config_item! :test_mobile_phone
+    end
+
+    def test_fax_number!
+      secret_config_item! :test_fax_number
+    end
+
+    def seeded_users!
+      raise 'missing seeded_users config' if Rails.application.credentials.seeded_users.blank?
+
+      Rails.application.credentials.seeded_users
+    end
+
     def host_name!
       config_item! :host_name
     end
