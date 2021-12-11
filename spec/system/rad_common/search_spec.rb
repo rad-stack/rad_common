@@ -50,7 +50,7 @@ RSpec.describe 'Search', type: :system do
     it 'select should have success style when default value is selected' do
       select 'All Statuses', from: 'search_division_status'
       click_button 'Apply Filters'
-      expect(find_field('search_division_status')['data-style']).to eq 'btn btn-secondary'
+      expect(find_field('search_division_status')['data-style']).to eq 'btn btn-light'
     end
 
     it 'select should have warning style when a value is selected other than default' do
@@ -60,7 +60,7 @@ RSpec.describe 'Search', type: :system do
     end
 
     it 'select should have warning style when a value a blank value is selected on filter without default', js: true do
-      expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-secondary]')
+      expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-light]')
       bootstrap_select 'All Owners', from: 'search_owner_id'
       click_button 'Apply Filters'
       expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-warning]')
