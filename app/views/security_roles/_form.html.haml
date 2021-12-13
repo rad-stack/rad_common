@@ -7,7 +7,7 @@
       .col-lg-6
         .row
           .col-lg-12= f.input :name
-        - if Rails.configuration.rad_common.external_users
+        - if RadicalConfig.external_users?
           .row
             .col-lg-12= f.input :external
       .col-lg-6

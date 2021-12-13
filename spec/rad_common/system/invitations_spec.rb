@@ -48,7 +48,7 @@ describe 'Invitations', type: :system, invite_specs: true do
         end
 
         it 'invites an external user' do
-          if Rails.configuration.rad_common.external_users
+          if RadicalConfig.external_users?
             visit new_user_invitation_path
             fill_in 'Email', with: external_email
             fill_in 'First name', with: first_name

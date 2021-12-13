@@ -21,7 +21,7 @@
             %p
               You can add more valid domains in
               = link_to 'Company Settings', '/rad_common/company/edit'
-          - if Rails.configuration.rad_common.external_users
+          - if RadicalConfig.external_users?
             .col-lg-4
               = f.input :external, tooltip: 'Invite your clients to access the client portal'
         .row

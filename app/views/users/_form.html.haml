@@ -14,7 +14,7 @@
     .row
       - if @user.respond_to?(:last_activity_at) && !@user.new_record?
         .col-lg-2= f.input :last_activity_at, as: :date, html5: true
-      - if Rails.configuration.rad_common.external_users
+      - if RadicalConfig.external_users?
         .col-lg-2= f.input :external
     .row
       -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
@@ -30,7 +30,7 @@
                                    item_wrapper_class: 'col-lg-3 security-role-checkboxes',
                                    collection: security_role_collection(:internal),
                                    checked: @user.security_roles.ids
-    - if Rails.configuration.rad_common.external_users && security_role_collection(:external).any?
+    - if RadicalConfig.external_users? && security_role_collection(:external).any?
       .row.external
         .col-lg-12
           = f.input :security_roles, as: :check_boxes,

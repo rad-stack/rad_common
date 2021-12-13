@@ -42,17 +42,17 @@ describe 'Users', type: :system do
 
     describe 'index' do
       before do
-        external_user.update! user_status: user.user_status if Rails.configuration.rad_common.external_users
+        external_user.update! user_status: user.user_status if RadicalConfig.external_users?
       end
 
       it 'shows users' do
         visit users_path(search: { user_status_id: user.user_status_id })
         expect(page).to have_content user.to_s
-        expect(page).to have_content external_user.to_s if Rails.configuration.rad_common.external_users
+        expect(page).to have_content external_user.to_s if RadicalConfig.external_users?
       end
 
       it 'filters by user type' do
-        if Rails.configuration.rad_common.external_users
+        if RadicalConfig.external_users?
           external_user.update!(user_status: user.user_status)
           visit users_path(search: { user_status_id: user.user_status_id, external: 'external' })
           expect(page).not_to have_content user.email
@@ -77,7 +77,7 @@ describe 'Users', type: :system do
       end
 
       it 'shows client user' do
-        if Rails.configuration.rad_common.external_users
+        if RadicalConfig.external_users?
           visit user_path(external_user)
           expect(page).to have_content admin.first_name
         end
@@ -115,12 +115,12 @@ describe 'Users', type: :system do
 
   describe 'client user' do
     before do
-      login_as(external_user, scope: :user) if Rails.configuration.rad_common.external_users
+      login_as(external_user, scope: :user) if RadicalConfig.external_users?
     end
 
     describe 'show' do
       it 'does not allow' do
-        if Rails.configuration.rad_common.external_users
+        if RadicalConfig.external_users?
           expect { visit user_path(user) }.to raise_error ActionController::RoutingError
         end
       end
@@ -128,7 +128,7 @@ describe 'Users', type: :system do
 
     describe 'index' do
       it 'does not allow' do
-        if Rails.configuration.rad_common.external_users
+        if RadicalConfig.external_users?
           expect { visit users_path }.to raise_error ActionController::RoutingError
         end
       end

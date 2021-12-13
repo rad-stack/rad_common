@@ -194,7 +194,7 @@ describe User, type: :model do
     end
 
     it 'allows unauthorized email addresses for inactive users' do
-      if Rails.configuration.rad_common.external_users
+      if RadicalConfig.external_users?
         addresses = %w[user@example.com user@radicalbear.com]
 
         addresses.each do |address|
@@ -205,7 +205,7 @@ describe User, type: :model do
     end
 
     it 'allows valid email addresses' do
-      if Rails.configuration.rad_common.external_users
+      if RadicalConfig.external_users?
         addresses = %w[joe@aclientcompany.com bob@aclientcompany.com sally@aclientcompany.com]
 
         addresses.each do |address|

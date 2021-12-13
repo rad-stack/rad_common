@@ -72,7 +72,18 @@ RSpec.describe PhoneNumberValidator do
 
     before do
       allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return true
-      allow_any_instance_of(RadicalTwilio).to receive(:test_with_live_credentials?).and_return true
+
+      allow(RadicalConfig).to receive(:twilio_phone_number!)
+        .and_return RadicalConfig.secret_config_item!(:twilio_alt_phone_number)
+
+      allow(RadicalConfig).to receive(:twilio_mms_phone_number!)
+        .and_return RadicalConfig.secret_config_item!(:twilio_alt_mms_phone_number)
+
+      allow(RadicalConfig).to receive(:twilio_account_sid!)
+        .and_return RadicalConfig.secret_config_item!(:twilio_alt_account_sid)
+
+      allow(RadicalConfig).to receive(:twilio_auth_token!)
+        .and_return RadicalConfig.secret_config_item!(:twilio_alt_auth_token)
     end
 
     it 'validates with mobile phone number' do
