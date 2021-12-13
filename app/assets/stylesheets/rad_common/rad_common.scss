@@ -237,9 +237,7 @@ form.simple_form.search button.btn-secondary.bs-placeholder {
   color: #999 !important;
 }
 
-/* border color is needs to be darker in search */
-.simple_form.search {
-  .btn-light {
-    border-color: #ced4da;
-  }
+/* border color is needs to be darker for this type of dropdown */
+.selectpicker + .btn-light {
+    border-color: #ced4da !important;
 }
