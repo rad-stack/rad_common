@@ -20,7 +20,7 @@ module RadCommon
     end
 
     def duplicate_models
-      Rails.configuration.rad_common.duplicates[:models].pluck(:name)
+      RadicalConfig.duplicates!.pluck(:name)
     end
 
     def duplicates_enabled?(model_name)
@@ -28,7 +28,7 @@ module RadCommon
     end
 
     def duplicate_model_config(model_name)
-      Rails.configuration.rad_common.duplicates[:models].select { |item| item[:name] == model_name }.first
+      RadicalConfig.duplicates!.select { |item| item[:name] == model_name }.first
     end
 
     private

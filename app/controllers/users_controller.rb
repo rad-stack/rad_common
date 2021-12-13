@@ -158,7 +158,7 @@ class UsersController < ApplicationController
     end
 
     def permitted_params
-      params.require(:user).permit(base_params + Rails.configuration.rad_common.additional_user_params)
+      params.require(:user).permit(base_params + RadicalConfig.additional_user_params!)
     end
 
     def duplicates_enabled?

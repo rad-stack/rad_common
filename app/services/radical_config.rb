@@ -194,6 +194,50 @@ class RadicalConfig
       secret_config_item! :s3_bucket
     end
 
+    def additional_company_params!
+      array_config_item! :additional_company_params
+    end
+
+    def additional_user_params!
+      array_config_item! :additional_user_params
+    end
+
+    def restricted_audit_attributes!
+      array_config_item! :restricted_audit_attributes
+    end
+
+    def global_search_scopes!
+      array_config_item! :global_search_scopes
+    end
+
+    def system_usage_models!
+      array_config_item! :system_usage_models
+    end
+
+    def global_validity_days!
+      config_item! :global_validity_days
+    end
+
+    def global_validity_timeout_hours!
+      config_item! :global_validity_timeout_hours
+    end
+
+    def global_validity_include!
+      array_config_item! :global_validity_include
+    end
+
+    def global_validity_exclude!
+      array_config_item! :global_validity_exclude
+    end
+
+    def global_validity_supress!
+      array_config_item! :global_validity_supress
+    end
+
+    def duplicates!
+      array_config_item! :duplicates
+    end
+
     def secret_config_item!(item)
       value = secret_config_item(item)
       raise "required secret config item #{item} is missing" if value.blank?
@@ -215,6 +259,14 @@ class RadicalConfig
     def boolean_config_item!(item)
       return boolean_override_variable(item) if boolean_override_variable_present?(item)
 
+      raw_config_item! item
+    end
+
+    def array_config_item!(item)
+      raw_config_item! item
+    end
+
+    def raw_config_item!(item)
       value = Rails.configuration.rad_common[item]
       raise "required config item #{item} is missing" if value.nil?
 

@@ -26,9 +26,8 @@ default: &default
     - User
 
   duplicates:
-    models:
-      -
-        name: Attorney
+    -
+      name: Attorney
 
   restricted_audit_attributes:
     -

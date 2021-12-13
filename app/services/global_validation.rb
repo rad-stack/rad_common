@@ -33,7 +33,7 @@ class GlobalValidation
     end
 
     if @override_model.blank?
-      specific_queries = Rails.configuration.rad_common.global_validity_include
+      specific_queries = RadicalConfig.global_validity_include!
 
       specific_queries.each do |query|
         start_time = Time.current
@@ -69,13 +69,13 @@ class GlobalValidation
       company = Company.main
 
       company.validity_checked_at.blank? ||
-        company.validity_checked_at <= Rails.configuration.rad_common.global_validity_days.days.ago
+        company.validity_checked_at <= RadicalConfig.global_validity_days!.days.ago
     end
 
     def exclude_models
       return [] if @override_model.present?
 
-      Rails.configuration.rad_common.global_validity_exclude + ['TwilioLog']
+      RadicalConfig.global_validity_exclude! + ['TwilioLog']
     end
 
     def check_model(model)
@@ -108,7 +108,7 @@ class GlobalValidation
 
       messages = record.errors.full_messages
 
-      supressions = Rails.configuration.rad_common.global_validity_supress || []
+      supressions = RadicalConfig.global_validity_supress!
       supression = supressions.select { |item| item[:class] == record.class.to_s }.first
 
       messages -= supression[:messages] if supression
@@ -126,7 +126,6 @@ class GlobalValidation
     end
 
     def took_too_long?
-      @run_stats.sum { |item| item[:run_seconds] } >
-        Rails.configuration.rad_common.global_validity_timeout_hours.hours
+      @run_stats.sum { |item| item[:run_seconds] } > RadicalConfig.global_validity_timeout_hours!.hours
     end
 end

@@ -62,8 +62,8 @@ describe GlobalValidation, type: :service do
 
     describe '.run' do
       before do
-        Rails.configuration.rad_common.global_validity_supress = [{ class: 'SomeSuppression',
-                                                                    messages: ['Anything'] }]
+        allow(RadicalConfig).to receive(:global_validity_supress!).and_return([{ class: 'SomeSuppression',
+                                                                                messages: ['Anything'] }])
       end
 
       it 'sends an email to admins when data is invalid' do
@@ -84,8 +84,8 @@ describe GlobalValidation, type: :service do
         let(:specific_query) { -> { SecurityRole.where(id: admin_security_role.id) } }
 
         before do
-          Rails.configuration.rad_common.global_validity_exclude = ['SecurityRole']
-          Rails.configuration.rad_common.global_validity_include = [specific_query]
+          allow(RadicalConfig).to receive(:global_validity_exclude!).and_return ['SecurityRole']
+          allow(RadicalConfig).to receive(:global_validity_include!).and_return [specific_query]
         end
 
         it 'sends an email to current user when data is invalid' do
