@@ -19,7 +19,7 @@ module RadCommon
     end
 
     def invite_user_action
-      return unless policy(User.new).new? && !Rails.configuration.rad_common.disable_invite
+      return unless policy(User.new).new? && !RadicalConfig.disable_invite?
 
       link_to(icon('plus-square', 'Invite User'), new_user_invitation_path, class: 'btn btn-success btn-sm')
     end
@@ -31,7 +31,7 @@ module RadCommon
     end
 
     def manually_create_users?
-      Rails.configuration.rad_common.disable_invite && Rails.configuration.rad_common.disable_sign_up
+      RadicalConfig.disable_invite? && RadicalConfig.disable_sign_up?
     end
 
     def user_actions(user)

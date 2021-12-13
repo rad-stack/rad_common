@@ -115,8 +115,8 @@ RSpec.configure do |config|
   end
 
   config.filter_run_excluding(authy_specs: true) unless RadicalConfig.authy_enabled?
-  config.filter_run_excluding(impersonate_specs: true) unless Rails.configuration.rad_common.impersonate
-  config.filter_run_excluding(invite_specs: true) if Rails.configuration.rad_common.disable_invite
+  config.filter_run_excluding(impersonate_specs: true) unless RadicalConfig.impersonate?
+  config.filter_run_excluding(invite_specs: true) if RadicalConfig.disable_invite?
   config.filter_run_excluding(devise_paranoid_specs: true) unless Devise.paranoid
 
   config.after(:each, type: :system, js: true) do

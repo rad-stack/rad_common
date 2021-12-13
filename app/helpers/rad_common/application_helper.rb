@@ -137,15 +137,15 @@ module RadCommon
     end
 
     def verify_sign_up
-      raise RadicallyIntermittentException if Rails.configuration.rad_common.disable_sign_up
+      raise RadicallyIntermittentException if RadicalConfig.disable_sign_up?
     end
 
     def verify_invite
-      raise RadicallyIntermittentException if Rails.configuration.rad_common.disable_invite
+      raise RadicallyIntermittentException if RadicalConfig.disable_invite?
     end
 
     def verify_manually_create_users
-      return if Rails.configuration.rad_common.disable_sign_up && Rails.configuration.rad_common.disable_invite
+      return if RadicalConfig.disable_sign_up? && RadicalConfig.disable_invite?
 
       raise RadicallyIntermittentException
     end

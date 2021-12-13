@@ -120,17 +120,13 @@ describe 'Users', type: :system do
 
     describe 'show' do
       it 'does not allow' do
-        if RadicalConfig.external_users?
-          expect { visit user_path(user) }.to raise_error ActionController::RoutingError
-        end
+        expect { visit user_path(user) }.to raise_error ActionController::RoutingError if RadicalConfig.external_users?
       end
     end
 
     describe 'index' do
       it 'does not allow' do
-        if RadicalConfig.external_users?
-          expect { visit users_path }.to raise_error ActionController::RoutingError
-        end
+        expect { visit users_path }.to raise_error ActionController::RoutingError if RadicalConfig.external_users?
       end
     end
   end
@@ -139,7 +135,7 @@ describe 'Users', type: :system do
     before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
 
     it 'signs up' do
-      unless Rails.configuration.rad_common.disable_sign_up
+      unless RadicalConfig.disable_sign_up?
         visit new_user_registration_path
 
         fill_in 'First name', with: Faker::Name.first_name
@@ -155,7 +151,7 @@ describe 'Users', type: :system do
     end
 
     it "can't sign up with invalid email address" do
-      unless Rails.configuration.rad_common.disable_sign_up
+      unless RadicalConfig.disable_sign_up?
         visit new_user_registration_path
 
         fill_in 'First name', with: Faker::Name.first_name

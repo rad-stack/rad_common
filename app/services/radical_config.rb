@@ -116,12 +116,28 @@ class RadicalConfig
       Rails.application.credentials.seeded_users
     end
 
+    def app_name!
+      config_item! :app_name
+    end
+
+    def portal_app_name!
+      config_item! :portal_app_name
+    end
+
     def host_name!
       config_item! :host_name
     end
 
     def portal_host_name!
       config_item! :portal_host_name
+    end
+
+    def portal?
+      boolean_config_item! :portal
+    end
+
+    def impersonate?
+      boolean_config_item! :impersonate
     end
 
     def avatar?
@@ -136,6 +152,22 @@ class RadicalConfig
       boolean_config_item! :external_users
     end
 
+    def disable_sign_up?
+      boolean_config_item! :disable_sign_up
+    end
+
+    def disable_invite?
+      boolean_config_item! :disable_invite
+    end
+
+    def app_logo_includes_name?
+      boolean_config_item! :app_logo_includes_name
+    end
+
+    def secure_sentry?
+      boolean_config_item! :secure_sentry
+    end
+
     def authy_api_key!
       return unless authy_enabled?
 
@@ -146,19 +178,19 @@ class RadicalConfig
       secret_config_item :authy_api_key
     end
 
-    def aws_s_3_access_key_id!
+    def s3_access_key_id!
       secret_config_item! :s3_access_key_id
     end
 
-    def aws_s_3_secret_access_key!
+    def s3_secret_access_key!
       secret_config_item! :s3_secret_access_key
     end
 
-    def aws_s_3_region!
+    def s3_region!
       secret_config_item! :s3_region
     end
 
-    def aws_s_3_bucket!
+    def s3_bucket!
       secret_config_item! :s3_bucket
     end
 
