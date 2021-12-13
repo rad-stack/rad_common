@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-describe SystemUsage, type: :model do
+describe SystemUsageSearch, type: :service do
   let(:user) { create :admin }
-  let(:params) { { date_mode: 'Weekly', date_range_count: 4 } }
+  let(:params) { { search: { date_mode: 'Weekly', date_range_count: 4 } } }
   let(:system_usage) { described_class.new(params, user) }
 
   describe 'date_column_ranges' do

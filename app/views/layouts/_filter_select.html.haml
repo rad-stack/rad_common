@@ -4,7 +4,7 @@
           collection: filter.input_options,
           label: filter.input_label,
           selected: filter.selected_value(search),
-          include_blank: filter.blank_value_label,
+          include_blank: filter.include_blank ? filter.blank_value_label : false,
           as: filter.input_type,
           group_method: :last,
           required: false,
