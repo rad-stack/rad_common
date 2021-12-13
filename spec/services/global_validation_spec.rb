@@ -62,8 +62,8 @@ describe GlobalValidation, type: :service do
 
     describe '.run' do
       before do
-        allow(RadicalConfig).to receive(:global_validity_supress!).and_return([{ class: 'SomeSuppression',
-                                                                                messages: ['Anything'] }])
+        allow(RadicalConfig).to receive(:global_validity_supress!)
+          .and_return([{ class: 'SomeSuppression', messages: ['Anything'] }])
       end
 
       it 'sends an email to admins when data is invalid' do
