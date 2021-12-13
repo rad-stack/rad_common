@@ -236,3 +236,8 @@ td.fa.security-group-td { border-style: none; }
 form.simple_form.search button.btn-secondary.bs-placeholder {
   color: #999 !important;
 }
+
+/* border color needs to be darker for this type of dropdown */
+.selectpicker + .btn-light {
+    border-color: #ced4da !important;
+}
