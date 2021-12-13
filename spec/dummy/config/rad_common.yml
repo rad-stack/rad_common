@@ -17,7 +17,7 @@ default: &default
     -
       - Division
       - status_active
-      - Active Divisions'
+      - Active Divisions
     -
       - Division
       - status_inactive
