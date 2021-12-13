@@ -236,3 +236,10 @@ td.fa.security-group-td { border-style: none; }
 form.simple_form.search button.btn-secondary.bs-placeholder {
   color: #999 !important;
 }
+
+/* border color is needs to be darker in search */
+.simple_form.search {
+  .btn-light {
+    border-color: #ced4da;
+  }
+}
