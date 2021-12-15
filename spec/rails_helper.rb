@@ -53,7 +53,7 @@ VCR.configure do |c|
     RadicalConfig.test_phone_number!.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
   end
 
-  c.filter_sensitive_data('<AUTHY_API_KEY>') { RadicalConfig.authy_api_key }
+  c.filter_sensitive_data('<AUTHY_API_KEY>') { RadicalConfig.authy_api_key! }
 
   c.filter_sensitive_data('<SENDGRID_API_KEY>') { RadicalConfig.sendgrid_api_key! }
 end
