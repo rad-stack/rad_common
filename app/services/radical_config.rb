@@ -250,10 +250,14 @@ class RadicalConfig
     end
 
     def config_item!(item)
-      value = override_variable(item) || Rails.configuration.rad_common[item]
+      value = config_item(item)
       raise "required config item #{item} is missing" if value.blank?
 
       value
+    end
+
+    def config_item(item)
+      override_variable(item) || Rails.configuration.rad_common[item]
     end
 
     def boolean_config_item!(item)
