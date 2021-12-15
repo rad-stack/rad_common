@@ -21,7 +21,7 @@ describe 'AuditHistory', type: :system do
   it 'shows attachment created' do
     allow(RadicalConfig).to receive(:avatar?).and_return(true)
 
-    visit '/users/edit'
+    visit edit_user_registration_path
     fill_in 'Current password', with: 'cOmpl3x_p@55w0rd'
     page.attach_file('Avatar', 'spec/fixtures/test_photo.png')
     click_on 'Save'

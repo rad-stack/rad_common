@@ -31,8 +31,6 @@ class RadSeeder
 
       display_log 'seeding users'
 
-      raise 'missing seeded_users config' if seeded_user_config.blank?
-
       seeded_user_config.each do |seeded_user|
         attributes = { email: seeded_user[:email],
                        user_status: user_status,
@@ -59,7 +57,7 @@ class RadSeeder
     end
 
     def seeded_user_config
-      Rails.application.credentials.seeded_users
+      RadicalConfig.seeded_users!
     end
 
     def seeded_user_domains

@@ -11,7 +11,7 @@ class UserSMSSender < PhoneSMSSender
       to_user.update! mobile_phone: nil
 
       RadbearMailer.simple_message(to_user,
-                                   "SMS Message from #{Rails.configuration.rad_common.app_name} Failed",
+                                   "SMS Message from #{RadicalConfig.app_name!} Failed",
                                    error_body,
                                    email_action: email_action).deliver_later
     end

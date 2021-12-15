@@ -12,31 +12,15 @@ class RadicalTwilio
   end
 
   def twilio_enabled?
-    return false if credentials_root.blank?
-
-    if credentials_root[:account_sid].blank? &&
-       credentials_root[:auth_token].blank? &&
-       credentials_root[:phone_number].blank?
-
-      return false
-    end
-
-    if credentials_root[:account_sid].present? &&
-       credentials_root[:auth_token].present? &&
-       credentials_root[:phone_number].present?
-
-      return true
-    end
-
-    raise 'inconsistent twilio config'
+    RadicalConfig.twilio_enabled?
   end
 
   def from_number
-    credentials_root[:phone_number]
+    RadicalConfig.twilio_phone_number!
   end
 
   def from_number_mms
-    credentials_root[:mms_phone_number]
+    RadicalConfig.twilio_mms_phone_number!
   end
 
   def validate_phone_number(phone_number, mobile)
@@ -67,16 +51,8 @@ class RadicalTwilio
 
   private
 
-    def credentials_root
-      test_with_live_credentials? ? Rails.application.credentials.twilio[:live] : Rails.application.credentials.twilio
-    end
-
-    def test_with_live_credentials?
-      false
-    end
-
     def client
-      Twilio::REST::Client.new(credentials_root[:account_sid], credentials_root[:auth_token])
+      Twilio::REST::Client.new(RadicalConfig.twilio_account_sid!, RadicalConfig.twilio_auth_token!)
     end
 
     def get_phone_number(attribute, mobile)
@@ -85,7 +61,7 @@ class RadicalTwilio
     end
 
     def lookup_number(number, type = nil)
-      lookup_client = Twilio::REST::Client.new(credentials_root[:account_sid], credentials_root[:auth_token])
+      lookup_client = Twilio::REST::Client.new(RadicalConfig.twilio_account_sid!, RadicalConfig.twilio_auth_token!)
 
       RadicalRetry.perform_request(retry_count: 2) do
         if type

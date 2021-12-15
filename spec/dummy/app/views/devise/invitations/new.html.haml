@@ -1,3 +1,5 @@
+- verify_invite
+
 .card
   = render 'layouts/card_header', action_name: 'custom', title: t('devise.invitations.new.header'), icon: 'fa-plus'
   .card-body
@@ -19,7 +21,7 @@
             %p
               You can add more valid domains in
               = link_to 'Company Settings', '/rad_common/company/edit'
-          - if Rails.configuration.rad_common.external_users
+          - if RadicalConfig.external_users?
             .col-lg-4
               = f.input :external, tooltip: 'Invite your clients to access the client portal'
         .row

@@ -60,7 +60,7 @@ class SystemUsageSearch < RadCommon::Search
 
   def usage_items
     @usage_items ||=
-      Rails.configuration.rad_common.system_usage_models.map { |item|
+      RadicalConfig.system_usage_models!.map { |item|
         case item.class.to_s
         when 'String'
           klass = item.constantize

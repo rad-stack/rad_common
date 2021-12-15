@@ -1,6 +1,6 @@
 :ruby
   company = @override_company.presence || Company.main
-  logo_includes_name = Rails.configuration.rad_common.app_logo_includes_name
+  logo_includes_name = RadicalConfig.app_logo_includes_name?
   protocol = Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
   logo_url = "#{protocol}://#{RadicalConfig.host_name!}/app_logo.png"
   website = company.website

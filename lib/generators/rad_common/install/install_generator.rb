@@ -144,30 +144,7 @@ Seeder.new.seed!
         inject_into_file 'config/routes.rb', after: 'Rails.application.routes.draw do' do <<-'RUBY'
 
   mount RadCommon::Engine => '/rad_common'
-
-  devise_for :users, controllers: { confirmations: 'users/confirmations', invitations: 'users/invitations' }
-
-  resources :users, only: %i[index show edit update destroy] do
-    member do
-      put :resend_invitation
-      put :confirm
-    end
-  end
-
-  resources :security_roles do
-    get :audit, on: :member
-    get :permission, on: :collection
-  end
-
-  resources :companies, only: %i[show edit update] do
-    get :audit, on: :member
-  end
-
-  authenticate :user, ->(u) { u.admin? } do
-    mount Sidekiq::Web => '/sidekiq'
-  end
-
-  root to: 'pages#home'
+  extend RadCommonRoutes
 
         RUBY
         end

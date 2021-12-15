@@ -3,6 +3,7 @@ default: &default
   portal_app_name: Foo Portal
   use_avatar: true
   disable_sign_up: false
+  disable_invite: false
   secure_sentry: true
   external_users: true
   app_logo_includes_name: true
@@ -25,9 +26,8 @@ default: &default
     - User
 
   duplicates:
-    models:
-      -
-        name: Attorney
+    -
+      name: Attorney
 
   restricted_audit_attributes:
     -

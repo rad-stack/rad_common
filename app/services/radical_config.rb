@@ -9,18 +9,10 @@ class RadicalConfig
     end
 
     def smtp_username!
-      if secret_nested_config_item(%i[sendgrid username], :sendgrid_username).present?
-        return secret_nested_config_item(%i[sendgrid username], :sendgrid_username)
-      end
-
       secret_config_item! :smtp_username
     end
 
     def smtp_password!
-      if secret_nested_config_item(%i[sendgrid password], :sendgrid_password).present?
-        return secret_nested_config_item(%i[sendgrid password], :sendgrid_password)
-      end
-
       secret_config_item! :smtp_password
     end
 
@@ -48,24 +40,16 @@ class RadicalConfig
       override_variable(:smtp_authentication) || 'plain'
     end
 
-    def sendgrid_username!
-      secret_nested_config_item! %i[sendgrid username], :sendgrid_username
-    end
-
-    def sendgrid_password!
-      secret_nested_config_item! %i[sendgrid password], :sendgrid_password
-    end
-
     def sendgrid_api?
       sendgrid_api_key.present?
     end
 
     def sendgrid_api_key!
-      secret_nested_config_item! %i[sendgrid api_key], :sendgrid_api_key
+      secret_config_item! :sendgrid_api_key
     end
 
     def sendgrid_api_key
-      secret_nested_config_item %i[sendgrid api_key], :sendgrid_api_key
+      secret_config_item :sendgrid_api_key
     end
 
     def hash_key!
@@ -80,6 +64,66 @@ class RadicalConfig
       secret_config_item! :jwt_secret
     end
 
+    def test_phone_number!
+      secret_config_item! :test_phone_number
+    end
+
+    def test_mobile_phone!
+      secret_config_item! :test_mobile_phone
+    end
+
+    def test_fax_number!
+      secret_config_item! :test_fax_number
+    end
+
+    def twilio_enabled?
+      if secret_config_item(:account_sid).blank? &&
+         secret_config_item(:auth_token).blank? &&
+         secret_config_item(:phone_number).blank?
+
+        return false
+      end
+
+      if secret_config_item(:account_sid).present? &&
+         secret_config_item(:auth_token).present? &&
+         secret_config_item(:phone_number).present?
+
+        return true
+      end
+
+      raise 'inconsistent twilio config'
+    end
+
+    def twilio_phone_number!
+      secret_config_item! :twilio_phone_number
+    end
+
+    def twilio_mms_phone_number!
+      secret_config_item! :twilio_mms_phone_number
+    end
+
+    def twilio_account_sid!
+      secret_config_item! :twilio_account_sid
+    end
+
+    def twilio_auth_token!
+      secret_config_item! :twilio_auth_token
+    end
+
+    def seeded_users!
+      raise 'missing seeded_users config' if Rails.application.credentials.seeded_users.blank?
+
+      Rails.application.credentials.seeded_users
+    end
+
+    def app_name!
+      config_item! :app_name
+    end
+
+    def portal_app_name!
+      config_item! :portal_app_name
+    end
+
     def host_name!
       config_item! :host_name
     end
@@ -88,12 +132,40 @@ class RadicalConfig
       config_item! :portal_host_name
     end
 
+    def portal?
+      boolean_config_item! :portal
+    end
+
+    def impersonate?
+      boolean_config_item! :impersonate
+    end
+
     def avatar?
       boolean_config_item! :use_avatar
     end
 
     def authy_enabled?
       boolean_config_item! :authy_enabled
+    end
+
+    def external_users?
+      boolean_config_item! :external_users
+    end
+
+    def disable_sign_up?
+      boolean_config_item! :disable_sign_up
+    end
+
+    def disable_invite?
+      boolean_config_item! :disable_invite
+    end
+
+    def app_logo_includes_name?
+      boolean_config_item! :app_logo_includes_name
+    end
+
+    def secure_sentry?
+      boolean_config_item! :secure_sentry
     end
 
     def authy_api_key!
@@ -106,20 +178,64 @@ class RadicalConfig
       secret_config_item :authy_api_key
     end
 
-    def aws_s_3_access_key_id!
-      secret_nested_config_item! %i[aws s_3 access_key_id], :s3_access_key_id
+    def s3_access_key_id!
+      secret_config_item! :s3_access_key_id
     end
 
-    def aws_s_3_secret_access_key!
-      secret_nested_config_item! %i[aws s_3 secret_access_key], :s3_secret_access_key
+    def s3_secret_access_key!
+      secret_config_item! :s3_secret_access_key
     end
 
-    def aws_s_3_region!
-      secret_nested_config_item! %i[aws s_3 region], :s3_region
+    def s3_region!
+      secret_config_item! :s3_region
     end
 
-    def aws_s_3_bucket!
-      secret_nested_config_item! %i[aws s_3 bucket], :s3_bucket
+    def s3_bucket!
+      secret_config_item! :s3_bucket
+    end
+
+    def additional_company_params!
+      array_config_item! :additional_company_params
+    end
+
+    def additional_user_params!
+      array_config_item! :additional_user_params
+    end
+
+    def restricted_audit_attributes!
+      array_config_item! :restricted_audit_attributes
+    end
+
+    def global_search_scopes!
+      array_config_item! :global_search_scopes
+    end
+
+    def system_usage_models!
+      array_config_item! :system_usage_models
+    end
+
+    def global_validity_days!
+      config_item! :global_validity_days
+    end
+
+    def global_validity_timeout_hours!
+      config_item! :global_validity_timeout_hours
+    end
+
+    def global_validity_include!
+      array_config_item! :global_validity_include
+    end
+
+    def global_validity_exclude!
+      array_config_item! :global_validity_exclude
+    end
+
+    def global_validity_supress!
+      array_config_item! :global_validity_supress
+    end
+
+    def duplicates!
+      array_config_item! :duplicates
     end
 
     def secret_config_item!(item)
@@ -143,6 +259,14 @@ class RadicalConfig
     def boolean_config_item!(item)
       return boolean_override_variable(item) if boolean_override_variable_present?(item)
 
+      raw_config_item! item
+    end
+
+    def array_config_item!(item)
+      raw_config_item! item
+    end
+
+    def raw_config_item!(item)
       value = Rails.configuration.rad_common[item]
       raise "required config item #{item} is missing" if value.nil?
 
@@ -150,7 +274,12 @@ class RadicalConfig
     end
 
     def check_aws!
-      return unless Rails.application.credentials.aws.blank? || Rails.application.credentials.aws[:s_3].blank?
+      if secret_config_item(:s3_region).present? &&
+         secret_config_item(:s3_access_key_id).present? &&
+         secret_config_item(:s3_secret_access_key).present? &&
+         secret_config_item(:s3_bucket).present?
+        return
+      end
 
       # this can be fixed in Rails 6.1 to not have to always have them present
       # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
@@ -159,17 +288,6 @@ class RadicalConfig
     end
 
     private
-
-      def secret_nested_config_item!(nested_keys, flat_key)
-        value = secret_nested_config_item(nested_keys, flat_key)
-        raise "required secret config item #{nested_keys} is missing" if value.blank?
-
-        value
-      end
-
-      def secret_nested_config_item(nested_keys, flat_key)
-        override_variable(flat_key) || Rails.application.credentials.dig(*nested_keys)
-      end
 
       def override_variable(item)
         ENV[item.to_s.upcase]

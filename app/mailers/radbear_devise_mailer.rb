@@ -106,6 +106,6 @@ class RadbearDeviseMailer < Devise::Mailer
     end
 
     def app_name
-      @resource.internal? ? Rails.configuration.rad_common.app_name : Rails.configuration.rad_common.portal_app_name
+      @resource.internal? ? RadicalConfig.app_name! : RadicalConfig.portal_app_name!
     end
 end

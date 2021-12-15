@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Invitations', type: :system do
+describe 'Invitations', type: :system, invite_specs: true do
   let(:company) { Company.main }
   let(:admin) { create :admin }
   let(:user) { create :user }
@@ -10,6 +10,14 @@ describe 'Invitations', type: :system do
   let(:last_name) { Faker::Name.last_name }
   let(:valid_email) { "#{Faker::Internet.user_name}@#{email_domain}" }
   let(:external_email) { "#{Faker::Internet.user_name}@#{external_domain}" }
+
+  let(:invite_message) do
+    if Devise.paranoid
+      'If your email address exists in our database, you will receive a password'
+    else
+      'not found'
+    end
+  end
 
   before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
 
@@ -40,7 +48,7 @@ describe 'Invitations', type: :system do
         end
 
         it 'invites an external user' do
-          if Rails.configuration.rad_common.external_users
+          if RadicalConfig.external_users?
             visit new_user_invitation_path
             fill_in 'Email', with: external_email
             fill_in 'First name', with: first_name
@@ -127,7 +135,7 @@ describe 'Invitations', type: :system do
       visit new_user_password_path
       fill_in 'Email', with: invitee.email
       click_button 'Send Me Reset Password Instructions'
-      expect(page).to have_content 'If your email address exists in our database, you will receive a password'
+      expect(page).to have_content invite_message
     end
 
     it 'notifies admin when invitee accepts' do
@@ -147,7 +155,7 @@ describe 'Invitations', type: :system do
       visit new_user_password_path
       fill_in 'Email', with: invitee.email
       click_button 'Send Me Reset Password Instructions'
-      expect(page).to have_content 'If your email address exists in our database, you will receive a password'
+      expect(page).to have_content invite_message
 
       expect(ActionMailer::Base.deliveries.count).to eq 0
     end
