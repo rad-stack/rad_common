@@ -11,17 +11,17 @@ label, legend {
 
 /* Prevent button icons from wrapping while allowing everything else to wrap */
 .btn {
-	display: inline-flex;
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
   overflow-wrap: break-word;
-    align-items: center;
-	justify-content: center;
 }
 
 /* Improve Table display so it does not overflow external borders in viewport */
 table {
-    overflow-x: auto;
-    display: block;
-    font-size: 98%;
+  display: block;
+  font-size: 98%;
+  overflow-x: auto;
 }
 
 /* this limits the actions column width so that the action buttons don't look super long */
