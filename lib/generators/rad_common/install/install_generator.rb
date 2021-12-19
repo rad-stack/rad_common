@@ -41,6 +41,12 @@ module RadCommon
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
                  'config/initializers/devise_security.rb'
 
+        copy_file '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb',
+                 'config/initializers/simple_form_bootstrap.rb'
+
+        copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
+                  'config/initializers/simple_form_components.rb'
+
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
                  'config/locales/devise.authy.en.yml'
