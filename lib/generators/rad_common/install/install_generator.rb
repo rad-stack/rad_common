@@ -45,6 +45,8 @@ module RadCommon
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
                  'config/locales/devise.authy.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/devise.en.yml', 'config/locales/devise.en.yml'
+        copy_file '../../../../../spec/dummy/config/locales/simple_form.en.yml',
+                  'config/locales/simple_form.en.yml'
 
         # models
         copy_file '../../../../../spec/dummy/app/models/application_record.rb',
