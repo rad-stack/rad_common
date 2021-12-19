@@ -43,6 +43,11 @@ module RadCommon
         # locales
         template '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
                  'config/locales/devise.authy.en.yml'
+        copy_file '../../../../../spec/dummy/config/locales/devise.en.yml', 'config/locales/devise.en.yml'
+
+        # models
+        copy_file '../../../../../spec/dummy/app/models/application_record.rb',
+                  'app/models/application_record.rb'
 
         # views
         template '../../../../../spec/dummy/app/views/devise/confirmations/new.html.haml',
