@@ -26,6 +26,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
+        copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
