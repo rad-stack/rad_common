@@ -5,8 +5,6 @@ class SecurityGroups < ActiveRecord::Migration[5.0]
     create_table :security_groups do |t|
       t.string :name, null: false
       t.boolean :admin, null: false, default: false
-      t.boolean :read_user, null: false, default: false
-      t.boolean :read_audit, null: false, default: false
 
       t.timestamps
     end
