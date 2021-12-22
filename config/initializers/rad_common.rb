@@ -22,7 +22,7 @@ if Rails.env.staging? || Rails.env.production?
   Rails.application.config.action_mailer.perform_deliveries = true
   Rails.application.config.action_mailer.default charset: 'utf-8'
 
-  Rails.applicationconfig.action_mailer.postmark_settings = {
+  Rails.application.config.action_mailer.postmark_settings = {
     api_token: Rails.application.credentials[:postmark_api_token]
   }
 end
