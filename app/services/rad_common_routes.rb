@@ -31,7 +31,7 @@ module RadCommonRoutes
         mount Sidekiq::Web => '/sidekiq'
       end
 
-      root to: 'pages#home'
+      root to: 'dashboard#show'
     end
   end
 end
