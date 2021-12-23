@@ -1,6 +1,6 @@
 module RadCommon
   class SendgridController < ApplicationController
-    # TODO: skip_before_action :authenticate_user!
+    skip_before_action :authenticate_user!
 
     def email_error
       skip_authorization
