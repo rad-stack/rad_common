@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
-  s.add_dependency 'puma', '~> 5.5.2'
+  s.add_dependency 'puma', '~> 4.3'
   s.add_dependency 'pretender'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1.4'
@@ -56,7 +56,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'simple_form', '~> 5.0.1'
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
-  s.add_dependency 'twilio-ruby', '~> 5.31.0'
+  s.add_dependency 'twilio-ruby', '~> 5.33.0'
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'

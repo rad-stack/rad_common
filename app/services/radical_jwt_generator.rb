@@ -1,3 +1,5 @@
+require 'jwt'
+
 class RadicalJwtGenerator
   JWT_ALGORITHM = 'HS256'.freeze
 
