@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe User, type: :model do
+RSpec.describe User, type: :model do
   let(:security_role) { create :security_role }
   let(:user) { create :user, security_roles: [security_role] }
   let(:active_status) { create :user_status, :active }

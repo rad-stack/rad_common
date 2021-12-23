@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Company, type: :model do
+RSpec.describe Company, type: :model do
   let(:company) { described_class.main }
 
   describe 'valid user domains' do

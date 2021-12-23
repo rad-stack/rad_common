@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe UserSecurityRole, type: :model do
+RSpec.describe UserSecurityRole, type: :model do
   describe 'validate' do
     let(:user) { create :user }
     let(:security_role) { create :security_role }

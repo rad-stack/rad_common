@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Searches', type: :request do
+RSpec.describe 'Searches', type: :request do
   let(:user) { create :admin }
   let(:search_term) { user.last_name }
   let(:search_results) { JSON.parse(response.body) }
