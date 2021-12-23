@@ -134,7 +134,7 @@ describe 'Users', type: :system do
   describe 'sign up' do
     before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
 
-    it 'signs up' do
+    it 'signs up', :js do
       unless RadicalConfig.disable_sign_up?
         visit new_user_registration_path
 
