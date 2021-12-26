@@ -21,7 +21,7 @@
           .col-lg-12.email-message
             = f.input :email_message_body, placeholder: 'Enter a message to be emailed to active users in the system.',
                                            label: 'Message',
-                                           as: :rich_text_area
+                                           as: :text
 
           .col-lg-12.sms-message
             %h6.text-danger Please note: only users with a mobile phone # on file will receive the message.
