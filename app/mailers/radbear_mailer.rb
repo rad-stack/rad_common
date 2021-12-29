@@ -72,6 +72,8 @@ class RadbearMailer < ActionMailer::Base
     @message = options[:do_not_format] ? message : simple_format(message)
     @email_action = options[:email_action] if options[:email_action]
 
+    maybe_attach options
+
     mail(to: to_address, subject: subject)
   end
 
@@ -152,6 +154,15 @@ class RadbearMailer < ActionMailer::Base
       string_emails, user_ids = recipients.partition { |email| email.to_i.zero? }
       users_emails = User.where(id: user_ids).pluck(:email)
       users_emails + string_emails
+    end
+
+    def maybe_attach(options)
+      return unless options[:attachment].present?
+
+      attachment = options[:attachment][:record].send(options[:attachment][:method])
+      return unless attachment.attached?
+
+      attachments[attachment.filename.to_s] = { mime_type: attachment.content_type, content: attachment.blob.download }
     end
 
     def app_name(user)

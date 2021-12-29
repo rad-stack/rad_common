@@ -8,7 +8,7 @@ describe RadbearMailer, type: :mailer do
   let(:another_email) { another_user.email }
   let(:last_email) { ActionMailer::Base.deliveries.last }
 
-  before { ActionMailer::Base.deliveries = [] }
+  before { ActionMailer::Base.deliveries.clear }
 
   describe '#global_validity' do
     context 'with one user' do
@@ -61,8 +61,14 @@ describe RadbearMailer, type: :mailer do
 
   describe '#simple_message' do
     let(:recipient) { email }
+    let(:division) { create :division, :with_logo }
 
-    before { described_class.simple_message(recipient, 'foo', 'bar').deliver_now }
+    before do
+      described_class.simple_message(recipient,
+                                     'foo',
+                                     'bar',
+                                     attachment: { record: division, method: :logo }).deliver_now
+    end
 
     describe 'subject' do
       subject { last_email.subject }
@@ -102,6 +108,12 @@ describe RadbearMailer, type: :mailer do
           it { is_expected.to eq [user.email] }
         end
       end
+    end
+
+    describe 'attachment' do
+      subject { last_email.attachments.count }
+
+      it { is_expected.to eq 1 }
     end
   end
 
