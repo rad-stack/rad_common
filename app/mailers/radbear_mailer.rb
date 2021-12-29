@@ -157,7 +157,7 @@ class RadbearMailer < ActionMailer::Base
     end
 
     def maybe_attach(options)
-      return unless options[:attachment].present?
+      return if options[:attachment].blank?
 
       attachment = options[:attachment][:record].send(options[:attachment][:method])
       return unless attachment.attached?
