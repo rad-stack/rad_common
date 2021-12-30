@@ -1,12 +1,14 @@
 %table.table.table-striped.table-bordered
   %tr
     %th Name
+    %th External
     - if show_actions
       %th.actions Actions
 
   - security_roles.each do |security_role|
     %tr
       %td= secured_link security_role
+      %td= format_boolean security_role.external
       - if show_actions
         %td
           - if policy(security_role).update?
