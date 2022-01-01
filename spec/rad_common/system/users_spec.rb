@@ -51,13 +51,11 @@ describe 'Users', type: :system do
         expect(page).to have_content external_user.to_s if RadicalConfig.external_users?
       end
 
-      it 'filters by user type' do
-        if RadicalConfig.external_users?
-          external_user.update!(user_status: user.user_status)
-          visit users_path(search: { user_status_id: user.user_status_id, external: 'external' })
-          expect(page).not_to have_content user.email
-          expect(page).to have_content external_user.email
-        end
+      it 'filters by user type', external_user_specs: true do
+        external_user.update!(user_status: user.user_status)
+        visit users_path(search: { user_status_id: user.user_status_id, external: 'external' })
+        expect(page).not_to have_content user.email
+        expect(page).to have_content external_user.email
       end
     end
 
@@ -76,11 +74,9 @@ describe 'Users', type: :system do
         expect(page).to have_content user.to_s
       end
 
-      it 'shows client user' do
-        if RadicalConfig.external_users?
-          visit user_path(external_user)
-          expect(page).to have_content admin.first_name
-        end
+      it 'shows client user', external_user_specs: true do
+        visit user_path(external_user)
+        expect(page).to have_content admin.first_name
       end
 
       it 'shows field names in title case' do
@@ -113,57 +109,53 @@ describe 'Users', type: :system do
     end
   end
 
-  describe 'client user' do
+  describe 'client user', external_user_specs: true do
     before do
-      login_as(external_user, scope: :user) if RadicalConfig.external_users?
+      login_as(external_user, scope: :user)
     end
 
     describe 'show' do
       it 'does not allow' do
-        expect { visit user_path(user) }.to raise_error ActionController::RoutingError if RadicalConfig.external_users?
+        expect { visit user_path(user) }.to raise_error ActionController::RoutingError
       end
     end
 
     describe 'index' do
       it 'does not allow' do
-        expect { visit users_path }.to raise_error ActionController::RoutingError if RadicalConfig.external_users?
+        expect { visit users_path }.to raise_error ActionController::RoutingError
       end
     end
   end
 
-  describe 'sign up' do
+  describe 'sign up', sign_up_specs: true do
     before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
 
     it 'signs up' do
-      unless RadicalConfig.disable_sign_up?
-        visit new_user_registration_path
+      visit new_user_registration_path
 
-        fill_in 'First name', with: Faker::Name.first_name
-        fill_in 'Last name', with: Faker::Name.last_name
-        fill_in 'Mobile phone', with: '(345) 222-1111'
-        fill_in 'Email', with: "#{Faker::Internet.user_name}@example.com"
-        fill_in 'user_password', with: password
-        fill_in 'user_password_confirmation', with: password
+      fill_in 'First name', with: Faker::Name.first_name
+      fill_in 'Last name', with: Faker::Name.last_name
+      fill_in 'Mobile phone', with: '(345) 222-1111'
+      fill_in 'Email', with: "#{Faker::Internet.user_name}@example.com"
+      fill_in 'user_password', with: password
+      fill_in 'user_password_confirmation', with: password
 
-        click_button 'Sign Up'
-        expect(page).to have_content 'message with a confirmation link has been sent'
-      end
+      click_button 'Sign Up'
+      expect(page).to have_content 'message with a confirmation link has been sent'
     end
 
     it "can't sign up with invalid email address" do
-      unless RadicalConfig.disable_sign_up?
-        visit new_user_registration_path
+      visit new_user_registration_path
 
-        fill_in 'First name', with: Faker::Name.first_name
-        fill_in 'Last name', with: Faker::Name.last_name
-        fill_in 'Email', with: 'test_user@'
-        fill_in 'user_password', with: password
-        fill_in 'user_password_confirmation', with: password
+      fill_in 'First name', with: Faker::Name.first_name
+      fill_in 'Last name', with: Faker::Name.last_name
+      fill_in 'Email', with: 'test_user@'
+      fill_in 'user_password', with: password
+      fill_in 'user_password_confirmation', with: password
 
-        click_button 'Sign Up'
+      click_button 'Sign Up'
 
-        expect(page).to have_content 'Email is invalid'
-      end
+      expect(page).to have_content 'Email is invalid'
     end
   end
 

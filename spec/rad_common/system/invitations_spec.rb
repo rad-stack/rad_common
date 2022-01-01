@@ -47,17 +47,15 @@ describe 'Invitations', type: :system, invite_specs: true do
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
         end
 
-        it 'invites an external user' do
-          if RadicalConfig.external_users?
-            visit new_user_invitation_path
-            fill_in 'Email', with: external_email
-            fill_in 'First name', with: first_name
-            fill_in 'Last name', with: last_name
-            fill_in 'Mobile phone', with: '(999) 231-1111'
-            check 'user_external'
-            click_button 'Send'
-            expect(page).to have_content "We invited '#{first_name} #{last_name}'"
-          end
+        it 'invites an external user', external_user_specs: true do
+          visit new_user_invitation_path
+          fill_in 'Email', with: external_email
+          fill_in 'First name', with: first_name
+          fill_in 'Last name', with: last_name
+          fill_in 'Mobile phone', with: '(999) 231-1111'
+          check 'user_external'
+          click_button 'Send'
+          expect(page).to have_content "We invited '#{first_name} #{last_name}'"
         end
       end
 

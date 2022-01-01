@@ -193,25 +193,21 @@ describe User, type: :model do
       end
     end
 
-    it 'allows unauthorized email addresses for inactive users' do
-      if RadicalConfig.external_users?
-        addresses = %w[user@example.com user@radicalbear.com]
+    it 'allows unauthorized email addresses for inactive users', external_user_specs: true do
+      addresses = %w[user@example.com user@radicalbear.com]
 
-        addresses.each do |address|
-          user = described_class.new(attributes.merge(email: address, user_status: inactive_status))
-          expect(user).to be_valid
-        end
+      addresses.each do |address|
+        user = described_class.new(attributes.merge(email: address, user_status: inactive_status))
+        expect(user).to be_valid
       end
     end
 
-    it 'allows valid email addresses' do
-      if RadicalConfig.external_users?
-        addresses = %w[joe@aclientcompany.com bob@aclientcompany.com sally@aclientcompany.com]
+    it 'allows valid email addresses', external_user_specs: true do
+      addresses = %w[joe@aclientcompany.com bob@aclientcompany.com sally@aclientcompany.com]
 
-        addresses.each do |address|
-          user = described_class.new(attributes.merge(email: address))
-          expect(user).to be_valid
-        end
+      addresses.each do |address|
+        user = described_class.new(attributes.merge(email: address))
+        expect(user).to be_valid
       end
     end
   end
@@ -322,7 +318,7 @@ describe User, type: :model do
     end
 
     it 'deletes authy user if mobile phone wiped out' do
-      unless mobile_phone_required?
+      unless RadCommon::AppInfo.new.user_requires_mobile_phone?
         user.update!(authy_enabled: false, mobile_phone: nil)
         expect(user.reload.authy_id).to be_blank
       end
@@ -357,13 +353,5 @@ describe User, type: :model do
     else
       expect(user.errors.full_messages.to_s).to include 'Password cannot contain your name'
     end
-  end
-
-  def mobile_phone_required?
-    User.validators
-        .collect { |validation| validation if validation.instance_of?(ActiveRecord::Validations::PresenceValidator) }
-        .compact
-        .collect(&:attributes)
-        .flatten.include? :mobile_phone
   end
 end

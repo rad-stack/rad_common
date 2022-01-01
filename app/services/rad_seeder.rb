@@ -60,15 +60,13 @@ class RadSeeder
     end
 
     def seeded_user_mobile_phone(seeded_user)
-      if Rails.env.development? && user_requires_mobile_phone? && seeded_user[:mobile_phone].blank?
+      if Rails.env.development? &&
+         RadCommon::AppInfo.new.user_requires_mobile_phone? &&
+         seeded_user[:mobile_phone].blank?
         return FactoryBot.create(:phone_number, :mobile)
       end
 
       seeded_user[:mobile_phone]
-    end
-
-    def user_requires_mobile_phone?
-      !User.column_for_attribute(:mobile_phone).null
     end
 
     def seeded_user_domains
