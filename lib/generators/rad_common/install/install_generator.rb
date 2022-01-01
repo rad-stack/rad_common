@@ -48,8 +48,10 @@ module RadCommon
                   'config/initializers/simple_form_components.rb'
 
         # locales
-        template '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
+        copy_file '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
                  'config/locales/devise.authy.en.yml'
+        copy_file '../../../../../spec/dummy/config/locales/devise_invitable.en.yml',
+                  'config/locales/devise_invitable.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/devise.en.yml', 'config/locales/devise.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/simple_form.en.yml',
                   'config/locales/simple_form.en.yml'

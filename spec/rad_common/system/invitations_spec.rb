@@ -63,8 +63,8 @@ describe 'Invitations', type: :system, invite_specs: true do
         xit 'because of blank email' do
           # TODO: waiting on bug fix in devise-security, see Task 35144
           visit new_user_invitation_path
-          fill_in 'user_first_name', with: first_name
-          fill_in 'user_last_name', with: last_name
+          fill_in 'First name', with: first_name
+          fill_in 'Last name', with: last_name
           click_button 'Send an invitation'
           expect(page).to have_content "Email can't be blank"
         end
@@ -84,15 +84,16 @@ describe 'Invitations', type: :system, invite_specs: true do
           fill_in 'First name', with: first_name
           fill_in 'Last name', with: last_name
           fill_in 'Mobile phone', with: '(999) 231-1111'
-          click_button 'Send'
+          click_button 'Send an invitation'
           expect(page).to have_content ' is not authorized for this application'
         end
 
         it 'because of a single letter in name that conflicts with password in name validation' do
           visit new_user_invitation_path
-          fill_in 'user_first_name', with: 'f'
-          fill_in 'user_last_name', with: 'b'
-          fill_in 'user_email', with: valid_email
+          fill_in 'Email', with: valid_email
+          fill_in 'First name', with: 'f'
+          fill_in 'Last name', with: 'b'
+          fill_in 'Mobile phone', with: '(999) 231-1111'
           click_button 'Send an invitation'
           expect(page).to have_content "We invited 'f b'"
         end
