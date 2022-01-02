@@ -9,6 +9,10 @@ namespace :heroku do
 
     HerokuCommands.clone args[:heroku_app], args[:backup_id]
   end
+
+  task :reseed_staging, [:heroku_app] => :environment do |_t, args|
+    HerokuCommands.reseed_staging args[:heroku_app]
+  end
 end
 
 namespace :local do
