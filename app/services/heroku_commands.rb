@@ -69,7 +69,7 @@ class HerokuCommands
       end
     end
 
-    def reseed_staging(app_name)
+    def reset_staging(app_name)
       Bundler.with_unbundled_env do
         unless heroku_rails_environment(app_name) == 'staging'
           write_log 'This is only available in the staging environment.'
