@@ -31,6 +31,10 @@ module RadCommon
       RadicalConfig.duplicates!.select { |item| item[:name] == model_name }.first
     end
 
+    def user_requires_mobile_phone?
+      !User.column_for_attribute(:mobile_phone).null
+    end
+
     private
 
       def exclude_tables

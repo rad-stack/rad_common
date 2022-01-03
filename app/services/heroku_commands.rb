@@ -30,7 +30,6 @@ class HerokuCommands
 
     def clone(app_name, backup_id)
       check_production do
-
         Bundler.with_unbundled_env do
           if backup_id.blank?
             write_log 'Running backup on Heroku...'
@@ -70,10 +69,29 @@ class HerokuCommands
       end
     end
 
+    def reset_staging(app_name)
+      Bundler.with_unbundled_env do
+        unless heroku_rails_environment(app_name) == 'staging'
+          write_log 'This is only available in the staging environment.'
+          return
+        end
+
+        write_log `heroku pg:reset DATABASE_URL #{app_option(app_name)} --confirm #{app_name}`
+        write_log `heroku run rails db:schema:load #{app_option(app_name)}`
+        write_log `heroku run rails db:seed #{app_option(app_name)}`
+
+        write_log 'Done.'
+      end
+    end
+
     private
 
       def app_option(app_name)
         "--app #{app_name}"
+      end
+
+      def heroku_rails_environment(app_name)
+        `heroku config:get RAILS_ENV #{app_option(app_name)}`.strip
       end
 
       def backup_dump_file(app_name)
