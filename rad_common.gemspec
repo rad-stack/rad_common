@@ -18,10 +18,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'active_storage_validations'
   s.add_dependency 'audited', '~> 4.9'
-
-  # this dependency can be removed once task 32743 is resolved, it's a dep of boostrap
-  s.add_dependency 'autoprefixer-rails', '9.8.5'
-
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap', '~> 4.6.0'
