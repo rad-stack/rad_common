@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Invitations', type: :system, invite_specs: true do
+RSpec.describe 'Invitations', type: :system, invite_specs: true do
   let(:company) { Company.main }
   let(:admin) { create :admin }
   let(:user) { create :user }

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Searches', type: :system do
+RSpec.describe 'Searches', type: :system do
   let(:admin) { create :admin }
   let(:search_results) { JSON.parse(response.body) }
 

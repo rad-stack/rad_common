@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Audits', type: :system do
+RSpec.describe 'Audits', type: :system do
   describe 'index' do
     let(:user) { create :admin }
     let(:new_name) { Faker::Company.name }
