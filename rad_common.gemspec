@@ -52,6 +52,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
   s.add_dependency 'twilio-ruby', '~> 5.33.0'
+  s.add_dependency 'webpacker'
+
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'coffee-rails', '~> 5.0'
