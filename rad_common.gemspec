@@ -36,7 +36,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'mini_racer', '~> 0.4.0' # see task 35349
   s.add_dependency 'momentjs-rails', '~> 2.9', '>= 2.9.0', '<= 2.20.1' # see task 35669
   s.add_dependency 'nokogiri', '~> 1.12.5'
-
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
   s.add_dependency 'puma', '~> 5.5.2'
@@ -52,7 +51,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'simple_form', '~> 5.0.1'
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
-  s.add_dependency 'twilio-ruby', '~> 5.31.0'
+  s.add_dependency 'twilio-ruby', '~> 5.33.0'
   s.add_dependency 'webpacker'
 
   s.add_development_dependency 'active_record_doctor'
