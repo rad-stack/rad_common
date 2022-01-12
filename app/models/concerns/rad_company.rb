@@ -36,7 +36,7 @@ module RadCompany
     def clean_domain_spaces
       return if valid_user_domains.empty?
 
-      self.valid_user_domains = valid_user_domains.map(&:strip)
+      self.valid_user_domains = valid_user_domains.map(&:strip).compact_blank
     end
 
     def validate_only_one
