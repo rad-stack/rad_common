@@ -4,6 +4,8 @@ require 'csv'
 describe RadbearMailer, type: :mailer do
   let(:user) { create :user }
   let(:another_user) { create :user }
+  let(:comma_user) { create :user, first_name: 'Foo,' }
+  let(:comma_email) { comma_user.email }
   let(:email) { user.email }
   let(:another_email) { another_user.email }
   let(:last_email) { ActionMailer::Base.deliveries.last }
@@ -84,6 +86,12 @@ describe RadbearMailer, type: :mailer do
       end
 
       context 'when to a user' do
+        let(:recipient) { comma_user }
+
+        it { is_expected.to eq [comma_email] }
+      end
+
+      context 'when user has comma in name' do
         let(:recipient) { user }
 
         it { is_expected.to eq [email] }
