@@ -5,6 +5,7 @@
 !/tmp/.keep
 .byebug_history
 /.idea
+.vscode/
 /coverage/
 .DS_Store
 .env
