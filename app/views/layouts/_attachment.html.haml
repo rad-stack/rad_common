@@ -2,6 +2,7 @@
   :ruby
     attachment = record.send(attachment_name)
     label_override = defined?(override_label) && override_label.present? ? override_label : nil
+    filename_label = defined?(show_filename) && show_filename ? " #{attachment.filename}" : nil
     no_delete = (defined?(no_delete_button) && no_delete_button) || !policy(record).update?
 
     delete_link = if no_delete
@@ -28,7 +29,7 @@
     - else
       :ruby
         attachment_label =
-          label_override.presence || tag.i('', class: "fa #{RadCommon::ContentTypeIcon.new(attachment.content_type)}")
+          label_override.presence || tag.i('', class: "fa #{RadCommon::ContentTypeIcon.new(attachment.content_type)}") + filename_label
 
       .attachment-button-box
         = link_to attachment_label,
