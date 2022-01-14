@@ -13,6 +13,7 @@ module RadCommon
         'application/msword' => 'fa-file-word-o',
         'application/pdf' => 'fa-file-pdf-o',
         'application/vnd.ms-excel.sheet.macroenabled.12' => 'fa-file-excel-o',
+        'application/vnd.ms-excel' => 'fa-file-excel-o',
         'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'fa-tv',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fa-table',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'fa-file-text-o',
