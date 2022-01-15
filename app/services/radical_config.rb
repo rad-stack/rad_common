@@ -128,6 +128,10 @@ class RadicalConfig
       config_item! :host_name
     end
 
+    def start_route!
+      "/#{config_item!(:start_route)}"
+    end
+
     def portal_host_name!
       config_item! :portal_host_name
     end

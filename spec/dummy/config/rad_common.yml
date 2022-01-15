@@ -9,6 +9,7 @@ default: &default
   app_logo_includes_name: true
   portal: false
   impersonate: true
+  start_route: divisions
 
   system_usage_models:
     -
