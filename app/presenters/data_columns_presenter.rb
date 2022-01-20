@@ -106,6 +106,10 @@ class DataColumnsPresenter
     when Symbol
       value = resource.send(item)
 
+      if resource.defined_enums.has_key?(item.to_s)
+        return RadicalEnum.new(resource.class, item.to_s).translated_option(resource)
+      end
+
       case value.class.to_s
       when 'ActiveSupport::TimeWithZone'
         @view_context.format_datetime(value)
