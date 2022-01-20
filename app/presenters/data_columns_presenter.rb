@@ -1,39 +1,10 @@
 class DataColumnsPresenter
-  attr_reader :local_assigns, :all_data, :columns
+  attr_reader :local_assigns, :columns
 
   def initialize(view_context, local_assigns = nil)
     @view_context = view_context
     @local_assigns = local_assigns
-
-    @all_data = []
-
-    data&.each do |item|
-      case item
-      when Hash
-        if item[:value].present?
-          @all_data.push(item)
-        end
-      when Symbol
-        value = resource.send(item)
-
-        if value.present? || value.class.to_s == 'FalseClass'
-          @all_data.push(item)
-        end
-      else
-        raise "invalid data type: #{item.class}"
-      end
-    end
-
-    if @all_data.count.zero?
-      @columns = [stats]
-    elsif @all_data.count <= 5
-      @columns = [@all_data, stats]
-    elsif force_single_column
-      @columns = [@all_data + stats]
-    else
-      @all_data += stats
-      @columns = @all_data.each_slice((@all_data.count / 2.to_f).ceil).to_a
-    end
+    @columns = calc_columns
   end
 
   def _h
@@ -79,11 +50,7 @@ class DataColumnsPresenter
   def item_label(item)
     case item
     when Hash
-      if item[:label]
-        item[:label]
-      else
-        item[:value]
-      end
+      item[:label].presence || item[:value]
     when Symbol
       translation = I18n.t "activerecord.attributes.#{resource.class.to_s.underscore}.#{item}"
 
@@ -98,12 +65,52 @@ class DataColumnsPresenter
   def item_value(item)
     case item
     when Hash
-      if item[:label]
-        item[:value]
-      else
-        nil
-      end
+      hash_item_value(item)
     when Symbol
+      symbol_item_value(item)
+    end
+  end
+
+  private
+
+    def calc_columns
+      items = add_data_items
+
+      if items.count.zero?
+        [stats]
+      elsif items.count <= 5
+        [items, stats]
+      elsif force_single_column
+        [items + stats]
+      else
+        items += stats
+        items.each_slice((items.count / 2.to_f).ceil).to_a
+      end
+    end
+
+    def add_data_items
+      items = []
+
+      data&.each do |item|
+        case item
+        when Hash
+          items.push(item) if item[:value].present?
+        when Symbol
+          value = resource.send(item)
+          items.push(item) if value.present? || value.class.to_s == 'FalseClass'
+        else
+          raise "invalid data type: #{item.class}"
+        end
+      end
+
+      items
+    end
+
+    def hash_item_value(item)
+      item[:value] if item[:label].present?
+    end
+
+    def symbol_item_value(item)
       value = resource.send(item)
 
       if resource.defined_enums.has_key?(item.to_s)
@@ -125,5 +132,4 @@ class DataColumnsPresenter
         value
       end
     end
-  end
 end
