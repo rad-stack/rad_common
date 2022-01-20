@@ -212,6 +212,15 @@ td.fa.security-group-td { border-style: none; }
   }
 }
 
+.grouped-dates {
+  background: #f8f9fa;
+  border: solid 1px #ccc;
+  border-radius: 4px;
+  padding: 3px;
+  margin-right: 0;
+  margin-left: 0;
+}
+
 /* Mobile styles*/
 @media (max-width: 992px) {
   .content .global-search-group {
