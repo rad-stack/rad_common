@@ -77,16 +77,16 @@ class RadicalConfig
     end
 
     def twilio_enabled?
-      if secret_config_item(:account_sid).blank? &&
-         secret_config_item(:auth_token).blank? &&
-         secret_config_item(:phone_number).blank?
+      if secret_config_item(:twilio_account_sid).blank? &&
+         secret_config_item(:twilio_auth_token).blank? &&
+         secret_config_item(:twilio_phone_number).blank?
 
         return false
       end
 
-      if secret_config_item(:account_sid).present? &&
-         secret_config_item(:auth_token).present? &&
-         secret_config_item(:phone_number).present?
+      if secret_config_item(:twilio_account_sid).present? &&
+         secret_config_item(:twilio_auth_token).present? &&
+         secret_config_item(:twilio_phone_number).present?
 
         return true
       end
