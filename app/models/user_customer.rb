@@ -1,8 +1,8 @@
-class UserClient < ApplicationRecord
+class UserCustomer < ApplicationRecord
   belongs_to :user
-  belongs_to :client
+  belongs_to :customer
 
-  scope :by_name, -> { joins(:client).order('clients.name') }
+  scope :by_name, -> { joins(:customer).order('customers.name') }
 
   validate :validate_user
   validate :validate_email_domain
@@ -13,7 +13,7 @@ class UserClient < ApplicationRecord
   audited associated_with: :user
 
   def to_s
-    "#{client} - #{user}"
+    "#{customer} - #{user}"
   end
 
   def touch_user
@@ -29,14 +29,14 @@ class UserClient < ApplicationRecord
     end
 
     def validate_email_domain
-      return if user.blank? || client.blank? || !user.user_status.validate_email
+      return if user.blank? || customer.blank? || !user.user_status.validate_email
 
       components = user.email.split('@')
       raise "invalid email: #{user.email}" unless components.count == 2
 
-      domains = client.valid_user_domains
+      domains = customer.valid_user_domains
       return if domains.include?(components[1])
 
-      errors.add(:client, "is not valid for this email user's address, please contact the system administrator")
+      errors.add(:customer, "is not valid for this email user's address, please contact the system administrator")
     end
 end

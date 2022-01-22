@@ -9,7 +9,7 @@ class UsersCSV
   end
 
   def self.headers
-    ['Name', 'Email', 'Signed In', 'Created', 'Status', 'Roles', 'Client User?']
+    ['Name', 'Email', 'Signed In', 'Created', 'Status', 'Roles', 'External User?']
   end
 
   class << self

@@ -122,10 +122,10 @@ module RadCommon
               class: 'btn btn-sm btn-secondary'
     end
 
-    def user_client_actions(user)
-      return unless policy(UserClient.new).new?
+    def user_customer_actions(user)
+      return unless policy(UserCustomer.new).new?
 
-      [link_to(icon(:plus, 'Add Client'), [:new, user, :user_client], class: 'btn btn-sm btn-success')]
+      [link_to(icon(:plus, 'Add Customer'), [:new, user, :user_customer], class: 'btn btn-sm btn-success')]
     end
   end
 end

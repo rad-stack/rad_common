@@ -1,0 +1,14 @@
+.card
+  = render 'layouts/card_header', title: "Adding Customer to #{@user}", no_new_button: true, no_index_button: true
+  .card-body
+    = simple_form_for(@user_customer) do |f|
+      = f.error_notification
+      .form-inputs
+        .row
+          .col-lg-12
+            = f.association :customer, collection: policy_scope(Customer).active.by_name,
+                                       input_html: { class: 'selectpicker', 'data-live-search' => true }
+
+            = f.input :user_id, as: :hidden
+      .form-actions
+        = f.button :submit, 'Save', class: 'btn btn-primary'

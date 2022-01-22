@@ -140,7 +140,7 @@ module RadCommon
       { clock: 'fa-clock',
         dollar: 'fa-usd',
         ar_aging: 'fa-hourglass-end',
-        clients: 'fa-address-book',
+        customers: 'fa-address-book',
         projects: 'fa-briefcase',
         users: 'fa-users',
         file_text: 'fa-file-text',

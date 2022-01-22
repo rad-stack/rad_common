@@ -13,8 +13,8 @@ module RadbearUser
     has_many :user_security_roles, dependent: :destroy
     has_many :security_roles, through: :user_security_roles, dependent: :destroy
     has_many :login_activities, as: :user, dependent: :destroy
-    has_many :user_clients, dependent: :destroy
-    has_many :clients, through: :user_clients
+    has_many :user_customers, dependent: :destroy
+    has_many :customers, through: :user_customers
 
     has_many :twilio_logs_from, class_name: 'TwilioLog',
                                 foreign_key: 'from_user_id',

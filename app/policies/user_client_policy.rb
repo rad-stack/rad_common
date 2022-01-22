@@ -1,2 +1,0 @@
-class UserClientPolicy < ApplicationPolicy
-end

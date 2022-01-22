@@ -1,6 +1,6 @@
-class Client < ApplicationRecord
-  has_many :user_clients, dependent: :restrict_with_error
-  has_many :users, through: :user_clients
+class Customer < ApplicationRecord
+  has_many :user_customers, dependent: :restrict_with_error
+  has_many :users, through: :user_customers
 
   alias_attribute :to_s, :name
 

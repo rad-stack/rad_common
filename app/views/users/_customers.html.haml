@@ -1,0 +1,22 @@
+- if @user.external?
+  - if @user_customers.count.zero?
+    .alert.alert-danger Add at least one customer to this user to give them access to their data
+  .card
+    - can_update = policy(@user).update?
+
+    = render 'layouts/card_header', action_name: 'custom', title: "Customers (#{@user_customers.count})",
+                                    icon: icon_hash(:customers), additional_actions: user_customer_actions(@user)
+    .card-body
+      %table.table.table-striped.table-bordered
+        %tr
+          %th Name
+          - if can_update
+            %th.actions Actions
+        - @user_customers.each do |record|
+          %tr
+            %td= secured_link record.customer
+            - if can_update
+              %td
+                - if policy(record).destroy?
+                  = link_to icon(:times, 'Delete'), record, method: :delete, data: { confirm: 'Are you sure?' },
+                                                                 class: 'btn btn-danger btn-sm btn-block'
