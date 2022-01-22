@@ -26,6 +26,8 @@ class Seeder < RadSeeder
       Attorney.all.each(&:process_duplicates)
     end
 
+    3.times { FactoryBot.create :client } if Client.count.zero?
+
     return unless TwilioLog.count.zero?
 
     display_log 'seeding twilio logs'

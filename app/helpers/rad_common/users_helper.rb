@@ -121,5 +121,11 @@ module RadCommon
               users_path(search: user_search.search_params, format: :csv),
               class: 'btn btn-sm btn-secondary'
     end
+
+    def user_client_actions(user)
+      return unless policy(UserClient.new).new?
+
+      [link_to(icon(:plus, 'Add Client'), [:new, user, :user_client], class: 'btn btn-sm btn-success')]
+    end
   end
 end

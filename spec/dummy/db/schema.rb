@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_02_111615) do
+ActiveRecord::Schema.define(version: 2022_01_21_140559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -90,6 +90,14 @@ ActiveRecord::Schema.define(version: 2021_12_02_111615) do
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "clients", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "valid_user_domains", default: [], null: false, array: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_clients_on_name"
   end
 
   create_table "companies", id: :serial, force: :cascade do |t|
@@ -264,6 +272,14 @@ ActiveRecord::Schema.define(version: 2021_12_02_111615) do
     t.index ["to_user_id"], name: "index_twilio_logs_on_to_user_id"
   end
 
+  create_table "user_clients", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "client_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "client_id"], name: "index_user_clients_on_user_id_and_client_id", unique: true
+  end
+
   create_table "user_security_roles", id: :serial, force: :cascade do |t|
     t.integer "security_role_id", null: false
     t.integer "user_id", null: false
@@ -353,6 +369,8 @@ ActiveRecord::Schema.define(version: 2021_12_02_111615) do
   add_foreign_key "system_messages", "users"
   add_foreign_key "twilio_logs", "users", column: "from_user_id"
   add_foreign_key "twilio_logs", "users", column: "to_user_id"
+  add_foreign_key "user_clients", "clients"
+  add_foreign_key "user_clients", "users"
   add_foreign_key "user_security_roles", "security_roles"
   add_foreign_key "user_security_roles", "users"
   add_foreign_key "users", "user_statuses"

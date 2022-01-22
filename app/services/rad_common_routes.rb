@@ -18,13 +18,17 @@ module RadCommonRoutes
             put :confirm
             put :reset_authy
           end
+
+          resources :user_clients, only: :new
         end
 
         resources :security_roles do
           get :permission, on: :collection
         end
 
+        resources :clients
         resources :user_security_roles, only: :show
+        resources :user_clients, only: %i[create destroy]
       end
 
       authenticate :user, ->(u) { u.admin? } do
