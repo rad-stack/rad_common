@@ -147,8 +147,7 @@ module RadCommon
         divisions: 'fa-sitemap',
         new_note: 'fa-pencil-square-o',
         message: 'fa-envelope',
-        tasks: 'fa-tasks'
-      }[key]
+        tasks: 'fa-tasks' }[key]
     end
 
     def verify_sign_up
