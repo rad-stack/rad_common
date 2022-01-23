@@ -30,5 +30,20 @@ FactoryBot.define do
     factory :pending do
       association :user_status, factory: %i[user_status pending]
     end
+
+    factory :customer_user do |f|
+      transient do
+        customer { nil }
+      end
+
+      sequence(:email) { |n| "customer_user_#{n}@abc.com" }
+      security_roles { [] }
+      external { true }
+
+      f.after(:create) do |user, evaluator|
+        this_customer = evaluator.customer.presence || create(:customer)
+        UserCustomer.create! user: user, customer_id: this_customer.id
+      end
+    end
   end
 end
