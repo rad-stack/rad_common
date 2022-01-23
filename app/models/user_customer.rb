@@ -3,6 +3,11 @@ class UserCustomer < ApplicationRecord
 
   SKIP_SCHEMA_VALIDATION_COLUMNS = [:customer_id].freeze
 
+  scope :by_name, lambda {
+    table_name = RadCommon::AppInfo.new.customer_table_name
+    joins("INNER JOIN #{table_name} ON user_customers.customer_id = #{table_name}.id").order("#{table_name}.name")
+  }
+
   validates :customer_id, presence: true
   validate :validate_user
   validate :validate_email_domain
@@ -20,12 +25,6 @@ class UserCustomer < ApplicationRecord
     user.touch
   end
 
-  def self.by_name
-    # TODO: try converting to a scope
-    table_name = RadCommon::AppInfo.new.customer_table_name
-    joins("INNER JOIN #{table_name} ON user_customers.customer_id = #{table_name}.id").order("#{table_name}.name")
-  end
-
   def customer
     return if customer_id.blank?
 
@@ -33,11 +32,7 @@ class UserCustomer < ApplicationRecord
   end
 
   def customer=(customer_record)
-    self.customer_id = if customer_record.present?
-                         customer_record.id
-                       else
-                         nil
-                       end
+    self.customer_id = customer_record.present? ? customer_record.id : nil
   end
 
   private
