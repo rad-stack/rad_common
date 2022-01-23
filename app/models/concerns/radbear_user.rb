@@ -13,10 +13,7 @@ module RadbearUser
     has_many :user_security_roles, dependent: :destroy
     has_many :security_roles, through: :user_security_roles, dependent: :destroy
     has_many :login_activities, as: :user, dependent: :destroy
-
-    # TODO: try adding these back here
-    # has_many :user_customers, dependent: :destroy
-    # has_many :customers, through: :user_customers
+    has_many :user_customers, dependent: :destroy
 
     has_many :twilio_logs_from, class_name: 'TwilioLog',
                                 foreign_key: 'from_user_id',
@@ -98,6 +95,13 @@ module RadbearUser
 
   def internal?
     !external?
+  end
+
+  def customers
+    # TODO: try converting to a scope
+    # TODO: if not, what will happen with dependent destroy?
+
+    RadCommon::AppInfo.new.customer_model_class.where(id: user_customers.pluck(:customer_id))
   end
 
   def permission?(permission)

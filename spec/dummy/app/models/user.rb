@@ -6,10 +6,6 @@ class User < ApplicationRecord
   include RadbearUser
   include RadAuthy
 
-  # TODO: try moving these to the concern
-  has_many :user_customers, dependent: :destroy
-  has_many :customers, through: :user_customers
-
   has_many :divisions, foreign_key: 'owner_id', dependent: :restrict_with_error
 
   audited except: USER_AUDIT_COLUMNS_DISABLED

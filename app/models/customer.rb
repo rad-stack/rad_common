@@ -1,6 +1,7 @@
 class Customer < ApplicationRecord
-  has_many :user_customers, dependent: :restrict_with_error
-  has_many :users, through: :user_customers
+  include RadCustomer
+
+  # TODO: try moving more into the concern after refactoring other projects
 
   alias_attribute :to_s, :name
 
