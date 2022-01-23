@@ -6,5 +6,6 @@ module RadCustomer
     has_many :users, through: :user_customers
 
     scope :active, -> { where(active: true) }
+    scope :inactive, -> { where(active: false) }
   end
 end
