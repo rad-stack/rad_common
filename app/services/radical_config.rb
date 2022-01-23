@@ -156,6 +156,10 @@ class RadicalConfig
       boolean_config_item! :external_users
     end
 
+    def validate_external_email_domain?
+      boolean_config_item! :validate_external_email_domain
+    end
+
     def disable_sign_up?
       boolean_config_item! :disable_sign_up
     end

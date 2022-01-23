@@ -44,6 +44,7 @@ class UserCustomer < ApplicationRecord
     end
 
     def validate_email_domain
+      return unless RadicalConfig.validate_external_email_domain?
       return if user.blank? || customer.blank? || !user.user_status.validate_email
 
       components = user.email.split('@')
