@@ -98,9 +98,7 @@ module RadbearUser
   end
 
   def customers
-    # TODO: try converting to a scope
-    # TODO: if not, what will happen with dependent destroy?
-
+    # TODO: try converting to a scope, if not, what will happen with dependent destroy?
     RadCommon::AppInfo.new.customer_model_class.where(id: user_customers.pluck(:customer_id))
   end
 
