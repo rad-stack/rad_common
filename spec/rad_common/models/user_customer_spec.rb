@@ -2,10 +2,10 @@ require 'rails_helper'
 
 describe UserCustomer, type: :model do
   let(:customer) { create :customer }
+  let(:user_customer) { build :user_customer, user: user, customer: customer }
 
   describe '#destroy' do
     let(:user) { create :user }
-    let(:user_customer) { build :user_customer, user: user, customer: customer }
 
     before { customer.update! valid_user_domains: %w[radbear.net] }
 
@@ -31,8 +31,6 @@ describe UserCustomer, type: :model do
   end
 
   describe 'validate' do
-    let(:user_customer) { build :user_customer, user: user }
-
     context 'with internal user' do
       let(:user) { create :user }
 

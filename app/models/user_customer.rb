@@ -1,9 +1,9 @@
 class UserCustomer < ApplicationRecord
   belongs_to :user
-  belongs_to :customer
 
-  scope :by_name, -> { joins(:customer).order('customers.name') }
+  SKIP_SCHEMA_VALIDATION_COLUMNS = [:customer_id].freeze
 
+  validates :customer_id, presence: true
   validate :validate_user
   validate :validate_email_domain
 
@@ -18,6 +18,26 @@ class UserCustomer < ApplicationRecord
 
   def touch_user
     user.touch
+  end
+
+  def self.by_name
+    # TODO: try converting to a scope
+    table_name = RadCommon::AppInfo.new.customer_table_name
+    joins("INNER JOIN #{table_name} ON user_customers.customer_id = #{table_name}.id").order("#{table_name}.name")
+  end
+
+  def customer
+    return if customer_id.blank?
+
+    RadCommon::AppInfo.new.customer_model_class.find(customer_id)
+  end
+
+  def customer=(customer_record)
+    self.customer_id = if customer_record.present?
+                         customer_record.id
+                       else
+                         nil
+                       end
   end
 
   private

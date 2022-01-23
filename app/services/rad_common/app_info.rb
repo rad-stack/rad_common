@@ -5,7 +5,8 @@ module RadCommon
     end
 
     def rad_common_tables
-      %w[duplicates notification_security_roles notification_settings notifications notification_types user_statuses system_messages user_security_roles]
+      %w[duplicates notification_security_roles notification_settings notifications notification_types user_statuses
+         system_messages user_security_roles]
     end
 
     def application_models
@@ -33,6 +34,20 @@ module RadCommon
 
     def user_requires_mobile_phone?
       !User.column_for_attribute(:mobile_phone).null
+    end
+
+    def customer_table_name
+      User.connection.foreign_keys(:user_customers).each do |item|
+        next unless item.column == 'customer_id'
+
+        return item.to_table
+      end
+
+      raise "can't find customer table name"
+    end
+
+    def customer_model_class
+      customer_table_name.classify.constantize
     end
 
     private
