@@ -2,7 +2,7 @@ class SystemMessage < ApplicationRecord
   belongs_to :user
   belongs_to :security_role, optional: true
 
-  enum send_to: { internal_users: 0, client_users: 1, all_users: 2, preview: 3 }
+  enum send_to: { internal_users: 0, external_users: 1, all_users: 2, preview: 3 }
   enum message_type: { email: 0, sms: 1 }
 
   scope :recent_first, -> { order(id: :desc) }
@@ -42,7 +42,7 @@ class SystemMessage < ApplicationRecord
 
     users = users.where(id: user.id) if preview?
     users = users.internal if internal_users?
-    users = users.external if client_users?
+    users = users.external if external_users?
     users = users.with_mobile_phone if sms?
 
     users

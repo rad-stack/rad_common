@@ -2,9 +2,9 @@ en:
   activerecord:
     attributes:
       user:
-        external: 'Client user?'
+        external: 'External user?'
       security_role:
-        external: 'Client user?'
+        external: 'External user?'
       division:
         additional_info: Additional data
         division_statuses:

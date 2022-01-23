@@ -76,7 +76,7 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content user.to_s
       end
 
-      it 'shows client user', external_user_specs: true do
+      it 'shows external user', external_user_specs: true do
         visit user_path(external_user)
         expect(page).to have_content admin.first_name
       end
@@ -111,7 +111,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'client user', external_user_specs: true do
+  describe 'external user', external_user_specs: true do
     before do
       login_as(external_user, scope: :user)
     end
