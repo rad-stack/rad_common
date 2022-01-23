@@ -111,6 +111,7 @@ ActiveRecord::Schema.define(version: 2022_01_21_140559) do
 
   create_table "customers", force: :cascade do |t|
     t.string "name", null: false
+    t.boolean "active", default: true, null: false
     t.text "valid_user_domains", default: [], null: false, array: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

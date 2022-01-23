@@ -5,7 +5,7 @@ class Customer < ApplicationRecord
 
   alias_attribute :to_s, :name
 
-  scope :active, -> { all } # TODO: impelement active
+  scope :active, -> { where(active: true) }
   scope :by_name, -> { order(:name) }
 
   SKIP_SCHEMA_VALIDATION_COLUMNS = [:valid_user_domains].freeze
