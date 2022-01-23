@@ -194,7 +194,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'allows valid email addresses', external_user_specs: true do
-      addresses = %w[joe@acustomercompany.com bob@acustomercompany.com sally@acustomercompany.com]
+      addresses = %w[joe@abc.com bob@abc.com sally@abc.com]
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
