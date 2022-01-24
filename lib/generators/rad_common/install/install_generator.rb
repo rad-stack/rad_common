@@ -41,6 +41,9 @@ module RadCommon
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
                  'config/initializers/devise_security.rb'
 
+        copy_file '../../../../../spec/dummy/config/initializers/simple_form.rb',
+                  'config/initializers/simple_form.rb'
+
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb',
                  'config/initializers/simple_form_bootstrap.rb'
 
