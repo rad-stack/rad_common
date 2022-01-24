@@ -117,6 +117,11 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).not_to have_content 'Additional info'
     end
 
+    it 'shows translated enum value' do
+      expect(page).to have_content 'Active'
+      expect(page).not_to have_content 'status_active'
+    end
+
     context 'with attachments' do
       let(:prompt) { 'Are you sure? Attachment cannot be recovered.' }
       let(:file) { File.open Rails.root.join('app/assets/images/app_logo.png') }

@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Users', type: :system do
+  include ActionView::Helpers::DateHelper
+
   let(:user) { create :user }
   let(:admin) { create :admin }
   let(:password) { 'cOmpl3x_p@55w0rd' }
@@ -74,7 +76,7 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content user.to_s
       end
 
-      it 'shows client user', external_user_specs: true do
+      it 'shows external user', external_user_specs: true do
         visit user_path(external_user)
         expect(page).to have_content admin.first_name
       end
@@ -109,7 +111,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'client user', external_user_specs: true do
+  describe 'external user', external_user_specs: true do
     before do
       login_as(external_user, scope: :user)
     end
@@ -381,6 +383,10 @@ RSpec.describe 'Users', type: :system do
   describe 'two factor authentication', authy_specs: true do
     let(:authy_id) { '1234567' }
 
+    let(:remember_message) do
+      "Remember this device for #{distance_of_time_in_words(Devise.authy_remember_device)}"
+    end
+
     before do
       allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
       user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :mobile))
@@ -393,7 +399,7 @@ RSpec.describe 'Users', type: :system do
       fill_in 'user_email', with: user.email
       fill_in 'user_password', with: password
       click_button 'Sign In'
-      expect(page).to have_content 'Remember this device for 7 days'
+      expect(page).to have_content remember_message
       fill_in 'authy-token', with: '7721070'
       click_button 'Verify and Sign in'
       expect(page).to have_content 'Signed in successfully'

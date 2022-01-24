@@ -32,7 +32,7 @@ class UserSearch < RadCommon::Search
                { label: 'Status', column: 'user_statuses.name' },
                { label: 'Roles' }]
 
-      items.push(label: 'Client?', column: 'users.external') if RadicalConfig.external_users?
+      items.push(label: 'External?', column: 'users.external') if RadicalConfig.external_users?
 
       items
     end

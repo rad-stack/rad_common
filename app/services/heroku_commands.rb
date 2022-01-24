@@ -151,9 +151,6 @@ class HerokuCommands
         company = Company.main
         return unless company.respond_to?(:quickbooks_access_token)
 
-        # TODO: pull this out of the generic gem and move to the Groundswell
-        # TODO: project with some type of call back that can be project specific
-
         company.quickbooks_company_id = nil
         company.quickbooks_token = nil
         company.quickbooks_refresh_token = nil
