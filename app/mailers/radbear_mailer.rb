@@ -58,7 +58,7 @@ class RadbearMailer < ActionMailer::Base
 
     if recipient.respond_to?(:email)
       @recipient = recipient
-      to_address = "#{recipient} <#{recipient.email}>"
+      to_address = "#{escape_name(recipient.to_s)} <#{recipient.email}>"
     elsif recipient.is_a?(String)
       @recipient = recipient
       to_address = recipient
@@ -167,5 +167,9 @@ class RadbearMailer < ActionMailer::Base
 
     def app_name(user)
       user.internal? ? RadicalConfig.app_name! : RadicalConfig.portal_app_name!
+    end
+
+    def escape_name(recipient_name)
+      recipient_name.gsub(',', ' ')
     end
 end
