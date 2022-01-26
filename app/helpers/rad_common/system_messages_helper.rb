@@ -13,14 +13,12 @@ module RadCommon
 
     def message_send_to_options
       options = options_for_enum(SystemMessage, :send_to)
-      options.reject! { |option| option.include?('client_users') } unless RadicalConfig.external_users?
+      options.reject! { |option| option.include?('external_users') } unless RadicalConfig.external_users?
       options
     end
 
     def system_message_show_data(system_message)
-      [{ label: 'Message', value: system_message.html_message },
-       { label: 'Message Type', value: enum_to_translated_option(system_message, :message_type) },
-       :security_role]
+      [{ label: 'Message', value: system_message.html_message }, :message_type, :security_role]
     end
   end
 end

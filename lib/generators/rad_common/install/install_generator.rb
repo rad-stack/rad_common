@@ -27,6 +27,7 @@ module RadCommon
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
+        copy_file '../../../../../.ruby-version', '.ruby-version'
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
@@ -40,6 +41,9 @@ module RadCommon
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
                  'config/initializers/devise_security.rb'
+
+        copy_file '../../../../../spec/dummy/config/initializers/simple_form.rb',
+                  'config/initializers/simple_form.rb'
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb',
                  'config/initializers/simple_form_bootstrap.rb'

@@ -103,20 +103,11 @@ RSpec.describe User, type: :model do
 
     it 'rejects simple passwords' do
       if Devise.mappings[:user].secure_validatable?
-        expect(FactoryBot.build(:user, password: 'password',
-                                       password_confirmation: 'password')).not_to be_valid
-
-        expect(FactoryBot.build(:user, password: 'Password',
-                                       password_confirmation: 'Password')).not_to be_valid
-
-        expect(FactoryBot.build(:user, password: 'Password55757',
-                                       password_confirmation: 'Password55757')).not_to be_valid
-
-        expect(FactoryBot.build(:user, password: 'Password!!!',
-                                       password_confirmation: 'Password!!!')).not_to be_valid
-
-        expect(FactoryBot.build(:user, password: 'Password!!!4646',
-                                       password_confirmation: 'Password!!!4646')).to be_valid
+        expect(build(:user, password: 'password', password_confirmation: 'password')).not_to be_valid
+        expect(build(:user, password: 'Password', password_confirmation: 'Password')).not_to be_valid
+        expect(build(:user, password: 'Password55757', password_confirmation: 'Password55757')).not_to be_valid
+        expect(build(:user, password: 'Password!!!', password_confirmation: 'Password!!!')).not_to be_valid
+        expect(build(:user, password: 'Password!!!4646', password_confirmation: 'Password!!!4646')).to be_valid
       end
     end
 
@@ -203,7 +194,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'allows valid email addresses', external_user_specs: true do
-      addresses = %w[joe@aclientcompany.com bob@aclientcompany.com sally@aclientcompany.com]
+      addresses = %w[joe@abc.com bob@abc.com sally@abc.com]
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
@@ -341,10 +332,11 @@ RSpec.describe User, type: :model do
   end
 
   def assert_password_with_name(first_name, last_name, password, valid)
-    user = FactoryBot.build(:user, first_name: first_name,
-                                   last_name: last_name,
-                                   password: password,
-                                   password_confirmation: password)
+    user = build(:user,
+                 first_name: first_name,
+                 last_name: last_name,
+                 password: password,
+                 password_confirmation: password)
 
     user.valid?
 
