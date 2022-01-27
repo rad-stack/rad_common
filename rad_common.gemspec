@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
-  s.add_dependency 'sidekiq', '~> 5.2.2'
+  s.add_dependency 'sidekiq', '>= 5.2.2', '< 6.5.0'
   s.add_dependency 'sidekiq-failures'
   s.add_dependency 'simple_form', '~> 5.0'
   s.add_dependency 'strip_attributes'

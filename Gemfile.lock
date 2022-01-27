@@ -32,7 +32,7 @@ PATH
       sendgrid-ruby
       sentry-rails
       sentry-ruby
-      sidekiq (~> 5.2.2)
+      sidekiq (>= 5.2.2, < 6.5.0)
       sidekiq-failures
       simple_form (~> 5.0)
       strip_attributes
@@ -332,8 +332,6 @@ GEM
       activesupport (>= 3.0.0)
     racc (1.6.0)
     rack (2.2.3)
-    rack-protection (2.1.0)
-      rack
     rack-proxy (0.7.2)
       rack
     rack-test (1.1.0)
@@ -371,7 +369,7 @@ GEM
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    redis (4.1.4)
+    redis (4.5.1)
     regexp_parser (2.2.0)
     responders (3.0.1)
       actionpack (>= 5.0)
@@ -443,11 +441,10 @@ GEM
     sentry-ruby-core (5.0.1)
       concurrent-ruby
     sexp_processor (4.16.0)
-    sidekiq (5.2.9)
-      connection_pool (~> 2.2, >= 2.2.2)
+    sidekiq (6.4.0)
+      connection_pool (>= 2.2.2)
       rack (~> 2.0)
-      rack-protection (>= 1.5.0)
-      redis (>= 3.3.5, < 4.2)
+      redis (>= 4.2.0)
     sidekiq-failures (1.0.1)
       sidekiq (>= 4.0.0)
     simple_form (5.1.0)
