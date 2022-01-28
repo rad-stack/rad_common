@@ -18,12 +18,6 @@ class UserStatus < ApplicationRecord
     UserStatus.find_by(name: 'Inactive')
   end
 
-  def self.seed_items
-    UserStatus.create!(name: 'Pending', active: false, validate_email: true)
-    UserStatus.create!(name: 'Active', active: true, validate_email: true)
-    UserStatus.create!(name: 'Inactive', active: false, validate_email: false)
-  end
-
   def button_style
     case name
     when 'Active'
