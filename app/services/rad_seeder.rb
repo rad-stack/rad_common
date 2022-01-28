@@ -4,9 +4,8 @@ class RadSeeder
   def seed!
     display_log 'seeding base tables'
 
-    SecurityRole.seed_items if SecurityRole.count.zero?
-    UserStatus.seed_items if UserStatus.count.zero?
-
+    seed_security_roles
+    seed_user_statuses
     seed_company
     seed_notification_types
     seed_users
@@ -23,7 +22,11 @@ class RadSeeder
     def seed_notification_types
       return if NotificationType.count.positive?
 
-      NotificationType.seed_items
+      Notifications::NewUserSignedUpNotification.create! security_roles: [SecurityRole.admin_role]
+      Notifications::UserWasApprovedNotification.create! security_roles: [SecurityRole.admin_role]
+      Notifications::UserAcceptedInvitationNotification.create! security_roles: [SecurityRole.admin_role]
+      Notifications::InvalidDataWasFoundNotification.create! security_roles: [SecurityRole.admin_role]
+      Notifications::GlobalValidityRanLongNotification.create! security_roles: [SecurityRole.admin_role]
     end
 
     def seed_users
@@ -47,6 +50,70 @@ class RadSeeder
           FactoryBot.create seeded_user[:factory], attributes
         end
       end
+    end
+
+    def seed_security_roles
+      return if SecurityRole.count.positive?
+
+      seed_admin
+      seed_user
+
+      return true unless RadicalConfig.external_users?
+
+      seed_portal_admin
+      seed_portal_user
+    end
+
+    def seed_admin(role_name = 'Admin')
+      role = get_role(role_name)
+      seed_all role
+      role.save!
+
+      NotificationType.all.find_each do |notification_type|
+        role.notification_security_roles.create! notification_type: notification_type
+      end
+
+      true
+    end
+
+    def seed_all(role)
+      SecurityRole.permission_fields.each { |item| role.send("#{item}=", true) }
+    end
+
+    def seed_user
+      role = get_role('User')
+      role.save!
+    end
+
+    def seed_portal_admin
+      role = get_role('Portal Admin')
+      role.external = true
+      role.save!
+    end
+
+    def seed_portal_user
+      role = get_role('Portal User')
+      role.external = true
+      role.save!
+    end
+
+    def get_role(name)
+      role = SecurityRole.find_or_initialize_by(name: name)
+
+      # init all perms to false
+      SecurityRole.permission_fields.each do |field|
+        role.send("#{field}=", false)
+      end
+
+      role
+    end
+
+    def seed_user_statuses
+      return if UserStatus.count.positive?
+
+      UserStatus.create! name: 'Pending', active: false, validate_email: true
+      UserStatus.create! name: 'Active', active: true, validate_email: true
+      UserStatus.create! name: 'Inactive', active: false, validate_email: false
     end
 
     def seed_company
@@ -74,11 +141,11 @@ class RadSeeder
     end
 
     def internal_user_emails
-      seeded_user_config.map do |item|
+      seeded_user_config.map { |item|
         next if item[:trait] == 'external'
 
         item[:email]
-      end.compact
+      }.compact
     end
 
     def user_security_roles(seeded_user)
