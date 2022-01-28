@@ -63,40 +63,6 @@ module RadCommon
         copy_file '../../../../../spec/dummy/app/models/application_record.rb',
                   'app/models/application_record.rb'
 
-        # views
-        template '../../../../../spec/dummy/app/views/devise/confirmations/new.html.haml',
-                 'app/views/devise/confirmations/new.html.haml'
-
-        template '../../../../../spec/dummy/app/views/devise/passwords/edit.html.haml',
-                 'app/views/devise/passwords/edit.html.haml'
-
-        template '../../../../../spec/dummy/app/views/devise/passwords/new.html.haml',
-                 'app/views/devise/passwords/new.html.haml'
-
-        template '../../../../../spec/dummy/app/views/devise/registrations/edit.html.haml',
-                 'app/views/devise/registrations/edit.html.haml'
-
-        template '../../../../../spec/dummy/app/views/devise/registrations/new.html.haml',
-                 'app/views/devise/registrations/new.html.haml'
-
-        template '../../../../../spec/dummy/app/views/devise/sessions/new.html.haml',
-                 'app/views/devise/sessions/new.html.haml'
-
-        template '../../../../../spec/dummy/app/views/devise/shared/_links.html.haml',
-                 'app/views/devise/shared/_links.html.haml'
-
-        template '../../../../../spec/dummy/app/views/devise/unlocks/new.html.haml',
-                 'app/views/devise/unlocks/new.html.haml'
-
-        template '../../../../../spec/dummy/app/views/devise/invitations/new.html.haml',
-                 'app/views/devise/invitations/new.html.haml'
-
-        template '../../../../../spec/dummy/app/views/devise/password_expired/show.html.haml',
-                 'app/views/devise/password_expired/show.html.haml'
-
-        template '../../../../../spec/dummy/app/views/devise/invitations/edit.html.haml',
-                 'app/views/devise/invitations/edit.html.haml'
-
         # specs
         directory '../../../../../spec/rad_common/', 'spec/rad_common/'
         directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/'
