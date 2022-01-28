@@ -48,7 +48,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sentry-ruby'
   s.add_dependency 'sidekiq', '~> 5.2.2'
   s.add_dependency 'sidekiq-failures'
-  s.add_dependency 'simple_form', '~> 5.0.1'
+  s.add_dependency 'simple_form', '~> 5.0'
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
   s.add_dependency 'twilio-ruby', '~> 5.63'

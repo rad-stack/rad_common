@@ -92,14 +92,6 @@ class NotificationType < ApplicationRecord
     users
   end
 
-  def self.seed_items
-    Notifications::NewUserSignedUpNotification.create! security_roles: [SecurityRole.admin_role]
-    Notifications::UserWasApprovedNotification.create! security_roles: [SecurityRole.admin_role]
-    Notifications::UserAcceptedInvitationNotification.create! security_roles: [SecurityRole.admin_role]
-    Notifications::InvalidDataWasFoundNotification.create! security_roles: [SecurityRole.admin_role]
-    Notifications::GlobalValidityRanLongNotification.create! security_roles: [SecurityRole.admin_role]
-  end
-
   def self.main
     NotificationType.find_by!(type: name)
   end
