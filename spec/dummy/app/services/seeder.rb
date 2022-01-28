@@ -41,9 +41,9 @@ class Seeder < RadSeeder
   private
 
     def seed_notification_types
-      return if NotificationType.count.positive?
-
       super
+      return if NotificationType.find_by(type: 'Notifications::DivisionUpdatedNotification').present?
+
       Notifications::DivisionUpdatedNotification.create!
     end
 end
