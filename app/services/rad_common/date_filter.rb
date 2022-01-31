@@ -7,24 +7,24 @@ module RadCommon
     ##
     # @param [Symbol] column the database column that is being filtered
     # @param [String optional] start_input_label by default the start input label for the input is determined
-    #   by the column name but you can override that by specifying it here
+    #   by the column name but you can override that by specifying it here. You can also hide label by specifying false
     # @param [String optional] end_input_label by default the end input label for the input is determined
-    #   by the column name but you can override that by specifying it here
+    #   by the column name but you can override that by specifying it here. You can also hide label by specifying false
     # @param [Boolean optional] custom when true we assume the actual filtering is being taken care of
     #   in a custom fashion and we skip applying the filter.
     # @param [Date optional] default_start_value default start at value for the date filter
     # @param [Date optional] default_end_value default end at value for the date filter
     # @param [Symbol] scope the name of an active record scope to be used for the filter on the corresponding model
+    # @param [String optional] group_label The label displayed when we want to show dates grouped together
     #
     # @example
     #   { column: :created_at, type: RadCommon::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
     def initialize(column:, start_input_label: nil, end_input_label: nil, custom: false,
-                   default_start_value: nil, default_end_value: nil, end_label_class: nil, group_label: nil, scope: nil)
+                   default_start_value: nil, default_end_value: nil, group_label: nil, scope: nil)
       @column = column
       @start_input_label = start_input_label
       @end_input_label = end_input_label
       @group_label = group_label
-      @end_label_class = end_label_class
       @default_start_value = default_start_value
       @default_end_value = default_end_value
       @custom = custom
@@ -49,15 +49,35 @@ module RadCommon
     end
 
     def end_label_class
-      @end_label_class || 'normal'
+      return 'invisible' if hide_end_input_label?
+
+      'normal'
+    end
+
+    def start_label_class
+      return 'invisible' if hide_end_input_label?
+
+      'normal'
     end
 
     def start_input_label
+      return 'hidden' if hide_start_input_label?
+
       @start_input_label || "#{column.to_s.titleize} Start"
     end
 
     def end_input_label
+      return 'hidden' if hide_end_input_label?
+
       @end_input_label || "#{column.to_s.titleize} End"
+    end
+
+    def hide_end_input_label?
+      @end_input_label == false
+    end
+
+    def hide_start_input_label?
+      @start_input_label == false
     end
 
     def apply_filter(results, params)
