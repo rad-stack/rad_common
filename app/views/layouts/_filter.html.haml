@@ -10,14 +10,15 @@
       - filters.each do |filter|
         %div{ class: "#{col_class} #{filter_col_class(filter)}" }
           = render "layouts/filter_#{filter.filter_view}", filter: filter, search: search, f: f
-
   .form-actions
     = f.button :button, class: 'btn btn-success' do
       %i.fa.fa-filter
       Apply Filters
     \
-    = link_to clear_filters_path(path, params[:page_size]), class: 'btn btn-danger' do
+    = link_to "#{path}?clear_filters=true", class: 'btn btn-danger' do
       %i.fa.fa-times
       Clear Filters
     %br
     %br
+    - if defined? paged_results
+      = render 'layouts/paging', paged_results: paged_results, f: f, search: search

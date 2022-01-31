@@ -1,9 +1,9 @@
 module RadCommon
   module SearchHelper
-    def clear_filters_path(path, page_size)
-      path += '?clear_filters=true'
-      path += "&page_size=#{page_size}" if page_size.present?
-      path
+    def page_size_options
+      %w[10 25 50 100].map do |page_size|
+        ["#{page_size} per page", page_size]
+      end
     end
   end
 end
