@@ -55,7 +55,7 @@ module RadCommon
     end
 
     def start_label_class
-      return 'invisible' if hide_end_input_label?
+      return 'invisible' if hide_start_input_label?
 
       'normal'
     end
