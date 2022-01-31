@@ -2,6 +2,7 @@ class HerokuCommands
   class << self
     def backup(app_name)
       check_production do
+        check_valid_app(app_name)
         FileUtils.mkdir_p dump_folder
 
         Bundler.with_unbundled_env do
@@ -31,6 +32,7 @@ class HerokuCommands
     def clone(app_name, backup_id)
       check_production do
         Bundler.with_unbundled_env do
+          check_valid_app(app_name)
           if backup_id.blank?
             write_log 'Running backup on Heroku...'
             `heroku pg:backups capture #{app_option(app_name)}`
@@ -71,6 +73,7 @@ class HerokuCommands
 
     def reset_staging(app_name)
       Bundler.with_unbundled_env do
+        check_valid_app(app_name)
         unless heroku_rails_environment(app_name) == 'staging'
           write_log 'This is only available in the staging environment.'
           return
@@ -163,6 +166,11 @@ class HerokuCommands
 
       def write_log(message)
         puts message
+      end
+
+      def check_valid_app(app_name)
+        _output, error = Open3.capture3("heroku apps:info #{app_option(app_name)}")
+        raise error if error.present?
       end
   end
 end
