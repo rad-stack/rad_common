@@ -11,6 +11,7 @@ default: &default
   portal: false
   impersonate: true
   start_route: attorneys
+  customer_table_name: customers
 
   system_usage_models:
     -

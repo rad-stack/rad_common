@@ -132,6 +132,10 @@ class RadicalConfig
       "/#{config_item!(:start_route)}"
     end
 
+    def customer_table_name!
+      config_item! :customer_table_name
+    end
+
     def portal_host_name!
       config_item! :portal_host_name
     end

@@ -36,18 +36,8 @@ module RadCommon
       !User.column_for_attribute(:mobile_phone).null
     end
 
-    def customer_table_name
-      User.connection.foreign_keys(:user_customers).each do |item|
-        next unless item.column == 'customer_id'
-
-        return item.to_table
-      end
-
-      raise "can't find customer table name"
-    end
-
     def customer_model_class
-      customer_table_name.classify.constantize
+      RadicalConfig.customer_table_name!.classify.constantize
     end
 
     private

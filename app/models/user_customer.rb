@@ -4,7 +4,7 @@ class UserCustomer < ApplicationRecord
   SKIP_SCHEMA_VALIDATION_COLUMNS = [:customer_id].freeze
 
   scope :by_name, lambda {
-    table_name = RadCommon::AppInfo.new.customer_table_name
+    table_name = RadicalConfig.customer_table_name!
     joins("INNER JOIN #{table_name} ON user_customers.customer_id = #{table_name}.id").order("#{table_name}.name")
   }
 
