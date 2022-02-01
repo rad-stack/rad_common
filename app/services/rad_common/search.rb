@@ -75,6 +75,10 @@ module RadCommon
       search_params? ? params.require(:search).permit(permitted_searchable_columns) : {}
     end
 
+    def page_size_param
+      params.dig(:search, :page_size)&.to_i || 25
+    end
+
     def blank?(column)
       val = selected_value(column)
       val.is_a?(Array) ? val.all?(&:blank?) : val.blank?
