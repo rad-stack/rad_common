@@ -5,6 +5,9 @@ $ ->
   $("#merge-all").click ->
     $(".merge_data").prop("checked", true)
 
+  $('#search_page_size').change ->
+    $(this).closest('form').submit();
+
   $(".global-search-autocomplete").bind "autocompleteselect", (event, ui) ->
     select_global_search_item($(this), event, ui)
 
