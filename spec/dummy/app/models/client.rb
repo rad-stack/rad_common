@@ -1,5 +1,5 @@
-class Customer < ApplicationRecord
-  include RadCustomer
+class Client < ApplicationRecord
+  include RadClient
 
   alias_attribute :to_s, :name
 

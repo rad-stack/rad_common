@@ -31,18 +31,18 @@ FactoryBot.define do
       association :user_status, factory: %i[user_status pending]
     end
 
-    factory :customer_user do |f|
+    factory :client_user do |f|
       transient do
-        customer { nil }
+        client { nil }
       end
 
-      sequence(:email) { |n| "customer_user_#{n}@abc.com" }
+      sequence(:email) { |n| "client_user_#{n}@abc.com" }
       security_roles { [] }
       external { true }
 
       f.after(:create) do |user, evaluator|
-        this_customer = evaluator.customer.presence || create(:customer)
-        UserCustomer.create! user: user, customer_id: this_customer.id
+        this_client = evaluator.client.presence || create(:client)
+        UserClient.create! user: user, client_id: this_client.id
       end
     end
   end

@@ -36,8 +36,8 @@ module RadCommon
       !User.column_for_attribute(:mobile_phone).null
     end
 
-    def customer_model_class
-      RadicalConfig.customer_table_name!.classify.constantize
+    def client_model_class
+      RadicalConfig.client_table_name!.classify.constantize
     end
 
     private

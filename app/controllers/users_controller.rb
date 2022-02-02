@@ -27,7 +27,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user_customers = @user.user_customers.by_name
+    @user_clients = @user.user_clients.by_name
   end
 
   def new

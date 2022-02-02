@@ -1,13 +1,13 @@
 .card
-  = render 'layouts/card_header', title: "Adding Customer to #{@user}", no_new_button: true, no_index_button: true
+  = render 'layouts/card_header', title: "Adding Client to #{@user}", no_new_button: true, no_index_button: true
   .card-body
-    = simple_form_for(@user_customer) do |f|
+    = simple_form_for(@user_client) do |f|
       = f.error_notification
       .form-inputs
         .row
           .col-lg-12
-            = f.input :customer_id,
-                      collection: policy_scope(RadCommon::AppInfo.new.customer_model_class).active.by_name,
+            = f.input :client_id,
+                      collection: policy_scope(RadCommon::AppInfo.new.client_model_class).active.by_name,
                       input_html: { class: 'selectpicker', 'data-live-search' => true }
 
             = f.input :user_id, as: :hidden

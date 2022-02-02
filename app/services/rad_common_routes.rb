@@ -19,16 +19,16 @@ module RadCommonRoutes
             put :reset_authy
           end
 
-          resources :user_customers, only: :new
+          resources :user_clients, only: :new
         end
 
         resources :security_roles do
           get :permission, on: :collection
         end
 
-        resources :customers
+        resources :clients
         resources :user_security_roles, only: :show
-        resources :user_customers, only: %i[create destroy]
+        resources :user_clients, only: %i[create destroy]
       end
 
       authenticate :user, ->(u) { u.admin? } do

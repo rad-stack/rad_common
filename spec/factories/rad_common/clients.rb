@@ -1,6 +1,6 @@
 FactoryBot.define do
-  factory :customer do
-    sequence(:name) { |n| "Customer #{n}" }
+  factory :client do
+    sequence(:name) { |n| "Client #{n}" }
     valid_user_domains { ['abc.com'] }
   end
 end
