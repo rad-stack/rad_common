@@ -89,6 +89,10 @@ module RadbearUser
     active_for_authentication?
   end
 
+  def active?
+    active
+  end
+
   def formatted_email
     "\"#{self}\" <#{email}>"
   end
