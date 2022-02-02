@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_02_111615) do
+ActiveRecord::Schema.define(version: 2022_02_02_173640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -107,6 +107,15 @@ ActiveRecord::Schema.define(version: 2021_12_02_111615) do
     t.datetime "validity_checked_at"
     t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
+  end
+
+  create_table "customers", force: :cascade do |t|
+    t.string "name", null: false
+    t.boolean "active", default: true, null: false
+    t.text "valid_user_domains", default: [], null: false, array: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_customers_on_name"
   end
 
   create_table "divisions", id: :serial, force: :cascade do |t|
@@ -264,6 +273,14 @@ ActiveRecord::Schema.define(version: 2021_12_02_111615) do
     t.index ["to_user_id"], name: "index_twilio_logs_on_to_user_id"
   end
 
+  create_table "user_customers", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "customer_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "customer_id"], name: "index_user_customers_on_user_id_and_customer_id", unique: true
+  end
+
   create_table "user_security_roles", id: :serial, force: :cascade do |t|
     t.integer "security_role_id", null: false
     t.integer "user_id", null: false
@@ -324,6 +341,7 @@ ActiveRecord::Schema.define(version: 2021_12_02_111615) do
     t.datetime "last_activity_at"
     t.datetime "expired_at"
     t.jsonb "filter_defaults"
+    t.boolean "authy_sms", default: true, null: false
     t.index ["authy_id"], name: "index_users_on_authy_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -353,6 +371,8 @@ ActiveRecord::Schema.define(version: 2021_12_02_111615) do
   add_foreign_key "system_messages", "users"
   add_foreign_key "twilio_logs", "users", column: "from_user_id"
   add_foreign_key "twilio_logs", "users", column: "to_user_id"
+  add_foreign_key "user_customers", "customers"
+  add_foreign_key "user_customers", "users"
   add_foreign_key "user_security_roles", "security_roles"
   add_foreign_key "user_security_roles", "users"
   add_foreign_key "users", "user_statuses"
