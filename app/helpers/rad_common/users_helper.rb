@@ -125,7 +125,9 @@ module RadCommon
     def user_client_actions(user)
       return unless policy(UserClient.new).new?
 
-      [link_to(icon(:plus, 'Add Client'), [:new, user, :user_client], class: 'btn btn-sm btn-success')]
+      [link_to(icon(:plus, "Add #{RadCommon::AppInfo.new.client_model_label}"),
+               [:new, user, :user_client],
+               class: 'btn btn-sm btn-success')]
     end
   end
 end

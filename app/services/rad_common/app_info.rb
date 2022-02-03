@@ -36,6 +36,10 @@ module RadCommon
       !User.column_for_attribute(:mobile_phone).null
     end
 
+    def client_model_label
+      RadicalConfig.client_table_name!.classify.titleize
+    end
+
     def client_model_class
       RadicalConfig.client_table_name!.classify.constantize
     end

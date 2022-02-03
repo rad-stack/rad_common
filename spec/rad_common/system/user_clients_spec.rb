@@ -9,7 +9,7 @@ RSpec.describe 'UserClients', type: :system do
   describe 'new' do
     it 'renders the new template' do
       visit new_user_user_client_path(user)
-      expect(page).to have_content("Adding Client to #{user}")
+      expect(page).to have_content(" to #{user}")
     end
   end
 end
