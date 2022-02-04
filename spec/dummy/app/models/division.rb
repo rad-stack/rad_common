@@ -20,7 +20,8 @@ class Division < ApplicationRecord
             content_type: { in: RadCommon::VALID_IMAGE_TYPES,
                             message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
 
-  validates_with EmailAddressValidator, fields: %i[invoice_email]
+  validates_with EmailAddressValidator, fields: [:invoice_email]
+  validates_with InternalUserValidator, fields: [:owner]
 
   strip_attributes
   audited
