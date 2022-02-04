@@ -187,7 +187,7 @@ Seeder.new.seed!
         apply_migration '20210805105809_fix_notification_defaults.rb'
         apply_migration '20211029155622_fix_array_type.rb'
         apply_migration '20211202111615_fix_audits_index.rb'
-        apply_migration '20220121140559_create_client_users.rb'
+        apply_migration '20220121140559_create_user_clients.rb'
       end
 
       def self.next_migration_number(path)
