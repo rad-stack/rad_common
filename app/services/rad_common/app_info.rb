@@ -40,6 +40,10 @@ module RadCommon
       RadicalConfig.client_table_name!.classify.titleize
     end
 
+    def client_model_class_name
+      RadicalConfig.client_table_name!.classify
+    end
+
     def client_model_class
       RadicalConfig.client_table_name!.classify.constantize
     end

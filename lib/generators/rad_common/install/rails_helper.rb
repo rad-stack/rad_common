@@ -4,6 +4,7 @@ ENV['RAILS_ENV'] ||= 'test'
 
 require 'simplecov'
 SimpleCov.start 'rails' do
+  add_filter 'app/services/seeder.rb'
   add_filter 'lib/templates'
 end
 
