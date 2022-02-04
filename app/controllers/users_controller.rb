@@ -27,7 +27,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    return unless RadicalConfig.client_users?
+    return unless RadicalConfig.user_clients?
 
     @user_clients = @user.user_clients.by_name
   end
