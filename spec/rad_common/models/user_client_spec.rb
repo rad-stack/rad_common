@@ -24,8 +24,13 @@ describe UserClient, type: :model, user_client_specs: true do
       addresses.each do |address|
         user = create :user, :external, email: address
         user_client = described_class.new(user: user, client: client)
-        expect(user_client).not_to be_valid
-        expect(user_client.errors.full_messages.to_s).to include 'Client is not valid for this email user'
+
+        if RadicalConfig.validate_external_email_domain?
+          expect(user_client).not_to be_valid
+          expect(user_client.errors.full_messages.to_s).to include 'Client is not valid for this email user'
+        else
+          expect(user_client).to be_valid
+        end
       end
     end
   end
