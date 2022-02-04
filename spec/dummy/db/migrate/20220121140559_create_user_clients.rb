@@ -1,15 +1,15 @@
 class CreateUserClients < ActiveRecord::Migration[6.1]
   def change
-    return unless RadicalConfig.user_clients?
+    if RadicalConfig.user_clients?
+      create_table :clients do |t|
+        t.string :name, null: false
+        t.boolean :active, null: false, default: true
+        t.text :valid_user_domains, default: [], null: false, array: true
 
-    create_table :clients do |t|
-      t.string :name, null: false
-      t.boolean :active, null: false, default: true
-      t.text :valid_user_domains, default: [], null: false, array: true
+        t.index :name
 
-      t.index :name
-
-      t.timestamps
+        t.timestamps
+      end
     end
 
     create_table :user_clients do |t|
@@ -22,6 +22,9 @@ class CreateUserClients < ActiveRecord::Migration[6.1]
     end
 
     add_foreign_key :user_clients, :users
-    add_foreign_key :user_clients, :clients
+
+    if RadicalConfig.user_clients?
+      add_foreign_key :user_clients, :clients
+    end
   end
 end
