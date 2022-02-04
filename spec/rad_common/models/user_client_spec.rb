@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe UserClient, type: :model do
+describe UserClient, type: :model, client_user_specs: true do
   let(:client) { create :client }
   let(:user_client) { build :user_client, user: user, client: client }
 

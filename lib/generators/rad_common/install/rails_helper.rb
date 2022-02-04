@@ -119,6 +119,7 @@ RSpec.configure do |config|
   config.filter_run_excluding(invite_specs: true) if RadicalConfig.disable_invite?
   config.filter_run_excluding(sign_up_specs: true) if RadicalConfig.disable_sign_up?
   config.filter_run_excluding(external_user_specs: true) unless RadicalConfig.external_users?
+  config.filter_run_excluding(client_user_specs: true) unless RadicalConfig.client_users?
   config.filter_run_excluding(devise_paranoid_specs: true) unless Devise.paranoid
 
   config.after(:each, type: :system, js: true) do
