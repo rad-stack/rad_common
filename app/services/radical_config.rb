@@ -176,6 +176,10 @@ class RadicalConfig
       boolean_config_item! :app_logo_includes_name
     end
 
+    def client_users?
+      boolean_config_item! :client_users
+    end
+
     def secure_sentry?
       boolean_config_item! :secure_sentry
     end
