@@ -1,5 +1,7 @@
-class CreateClientUsers < ActiveRecord::Migration[6.1]
+class CreateUserClients < ActiveRecord::Migration[6.1]
   def change
+    return unless RadicalConfig.user_clients?
+
     create_table :clients do |t|
       t.string :name, null: false
       t.boolean :active, null: false, default: true
