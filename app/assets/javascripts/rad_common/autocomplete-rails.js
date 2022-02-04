@@ -126,16 +126,30 @@
           if(jQuery(e).data('excluded-ids')) {
               params['excluded_ids'] = jQuery(e).data('excluded-ids');
           }
+          const allowNewModel = jQuery(e).data('allow-new-model');
           jQuery.getJSON( jQuery(e).attr('data-autocomplete'), params, function() {
+            if (allowNewModel) {
+              arguments[0].unshift({ id: '', label: `Create "${request.term}" ${allowNewModel}` });
+            }
             if(arguments[0].length == 0) {
               arguments[0] = []
-              arguments[0][0] = { id: "", label: "no existing match" }
+              if (!allowNewModel) {
+                arguments[0][0] = { id: '', label: 'no existing match' };
+              }
             }
+            let newOptionExists = false;
             jQuery(arguments[0]).each(function(i, el) {
               var obj = {};
               obj[el.id] = el;
+              // Check if record already exists in suggestions
+              if (el.label === request.term) {
+                newOptionExists = true;
+              }
               jQuery(e).data(obj);
             });
+            if (allowNewModel && newOptionExists) {
+              arguments[0].shift(); // Remove create option if record exists in suggestions
+            }
             response.apply(null, arguments);
           });
         },
@@ -187,7 +201,11 @@
             terms.push( "" );
             this.value = terms.join( e.delimiter );
           } else {
-            this.value = terms.join("").replace(/<(?:.|\n)*?>/gm, '');
+            // If allowing new model and the selected item has no id, we do not want to maniupulate
+            // the text as the entered term will be used as the value and supplied to a find_or_create
+            if (ui.item.id !== '' || !this.dataset.allowNewModel) {
+              this.value = terms.join("").replace(/<(?:.|\n)*?>/gm, '');
+            }
             if (jQuery(this).attr('data-id-element')) {
               jQuery(jQuery(this).attr('data-id-element')).val(ui.item.id);
               idElement = $(this).attr('data-id-element')
