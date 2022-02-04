@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_21_140559) do
+ActiveRecord::Schema.define(version: 2022_02_02_173640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -341,6 +341,7 @@ ActiveRecord::Schema.define(version: 2022_01_21_140559) do
     t.datetime "last_activity_at"
     t.datetime "expired_at"
     t.jsonb "filter_defaults"
+    t.boolean "authy_sms", default: true, null: false
     t.index ["authy_id"], name: "index_users_on_authy_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
