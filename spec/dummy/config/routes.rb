@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   extend RadCommonRoutes
 
   resources :attorneys
+  resources :clients
   resources :divisions
 
   namespace :api, defaults: { format: :json } do

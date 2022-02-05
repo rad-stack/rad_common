@@ -14,6 +14,7 @@ module RadbearUser
     has_many :security_roles, through: :user_security_roles, dependent: :destroy
     has_many :login_activities, as: :user, dependent: :destroy
     has_many :user_clients, dependent: :destroy
+    has_many :clients, through: :user_clients, source: :client
 
     has_many :twilio_logs_from, class_name: 'TwilioLog',
                                 foreign_key: 'from_user_id',
@@ -99,10 +100,6 @@ module RadbearUser
 
   def internal?
     !external?
-  end
-
-  def clients
-    RadCommon::AppInfo.new.client_model_class.where(id: user_clients.pluck(:client_id))
   end
 
   def permission?(permission)

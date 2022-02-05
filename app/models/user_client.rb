@@ -1,5 +1,6 @@
 class UserClient < ApplicationRecord
   belongs_to :user
+  belongs_to :client, class_name: RadCommon::AppInfo.new.client_model_class_name
 
   SKIP_SCHEMA_VALIDATION_COLUMNS = [:client_id].freeze
 
@@ -25,16 +26,6 @@ class UserClient < ApplicationRecord
 
   def touch_user
     user.touch
-  end
-
-  def client
-    return if client_id.blank?
-
-    RadCommon::AppInfo.new.client_model_class.find(client_id)
-  end
-
-  def client=(client_record)
-    self.client_id = client_record.present? ? client_record.id : nil
   end
 
   private

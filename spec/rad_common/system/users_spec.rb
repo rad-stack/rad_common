@@ -7,6 +7,7 @@ RSpec.describe 'Users', type: :system do
   let(:admin) { create :admin }
   let(:password) { 'cOmpl3x_p@55w0rd' }
   let(:external_user) { create :user, :external }
+  let(:client_user) { create :client_user }
 
   describe 'user' do
     before { login_as user, scope: :user }
@@ -78,7 +79,12 @@ RSpec.describe 'Users', type: :system do
 
       it 'shows external user', external_user_specs: true do
         visit user_path(external_user)
-        expect(page).to have_content admin.first_name
+        expect(page).to have_content external_user.first_name
+      end
+
+      it 'shows external user with client', user_client_specs: true do
+        visit user_path(client_user)
+        expect(page).to have_content client_user.first_name
       end
 
       it 'shows field names in title case' do
