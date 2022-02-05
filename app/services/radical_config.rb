@@ -133,7 +133,7 @@ class RadicalConfig
     end
 
     def client_table_name!
-      config_item! :client_table_name
+      config_item(:client_table_name) || 'clients'
     end
 
     def client_table_sort!
