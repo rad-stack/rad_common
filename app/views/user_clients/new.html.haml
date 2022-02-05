@@ -10,10 +10,8 @@
       .form-inputs
         .row
           .col-lg-12
-            - sort_order = RadicalConfig.client_table_sort!
-
             = f.input :client_id,
-                      collection: policy_scope(RadCommon::AppInfo.new.client_model_class).active.order(sort_order),
+                      collection: policy_scope(RadCommon::AppInfo.new.client_model_class).active.sorted,
                       input_html: { class: 'selectpicker', 'data-live-search' => true },
                       label: RadCommon::AppInfo.new.client_model_label
 

@@ -3,7 +3,7 @@ class Client < ApplicationRecord
 
   alias_attribute :to_s, :name
 
-  scope :by_name, -> { order(:name) }
+  scope :sorted, -> { order(:name) }
 
   SKIP_SCHEMA_VALIDATION_COLUMNS = [:valid_user_domains].freeze
 
