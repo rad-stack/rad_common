@@ -5,7 +5,7 @@ class Seeder < RadSeeder
     if Division.count.zero?
       display_log 'seeding divisions'
 
-      30.times { FactoryBot.create :division, owner: users.sample }
+      30.times { FactoryBot.create :division, owner: users.internal.sample }
     end
 
     if Attorney.count.zero?
