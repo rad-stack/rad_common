@@ -26,7 +26,6 @@ module RadCommonRoutes
           get :permission, on: :collection
         end
 
-        resources :clients
         resources :user_security_roles, only: :show
         resources :user_clients, only: %i[create destroy]
       end
