@@ -136,6 +136,10 @@ class RadicalConfig
       config_item! :client_table_name
     end
 
+    def client_table_sort!
+      config_item! :client_table_sort
+    end
+
     def portal_host_name!
       config_item! :portal_host_name
     end

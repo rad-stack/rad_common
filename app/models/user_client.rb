@@ -3,9 +3,11 @@ class UserClient < ApplicationRecord
 
   SKIP_SCHEMA_VALIDATION_COLUMNS = [:client_id].freeze
 
-  scope :by_name, lambda {
+  scope :sorted, lambda {
     table_name = RadicalConfig.client_table_name!
-    joins("INNER JOIN #{table_name} ON user_clients.client_id = #{table_name}.id").order("#{table_name}.name")
+
+    joins("INNER JOIN #{table_name} ON user_clients.client_id = #{table_name}.id")
+      .order("#{table_name}.#{RadicalConfig.client_table_sort!}")
   }
 
   validates :client_id, presence: true

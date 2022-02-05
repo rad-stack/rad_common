@@ -29,7 +29,7 @@ class UsersController < ApplicationController
   def show
     return unless RadicalConfig.user_clients?
 
-    @user_clients = @user.user_clients.by_name
+    @user_clients = @user.user_clients.sorted
   end
 
   def new

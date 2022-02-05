@@ -13,6 +13,7 @@ default: &default
   start_route: attorneys
   user_clients: true
   client_table_name: clients
+  client_table_sort: name
 
   system_usage_models:
     -
