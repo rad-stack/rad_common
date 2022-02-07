@@ -17,6 +17,7 @@
         - else
           %th Name
           %th Email
+          %th Mobile Phone
           %th Signed In
           %th Created
           %th Status
@@ -31,6 +32,9 @@
         %tr{ class: user.display_style }
           %td= secured_link(user)
           %td= link_to user.email, user
+          %td
+            - if user.mobile_phone.present?
+              = link_to user.mobile_phone, user
           %td= format_datetime(user.current_sign_in_at)
           %td= format_date(user.created_at)
           %td= user.user_status

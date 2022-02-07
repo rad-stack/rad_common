@@ -15,6 +15,7 @@ class UserSearch < RadCommon::Search
       items = [{ column: 'first_name', type: RadCommon::LikeFilter, input_label: 'First Name' },
                { column: 'last_name', type: RadCommon::LikeFilter, input_label: 'Last Name' },
                { column: 'email', type: RadCommon::LikeFilter, input_label: 'Email' },
+               { column: 'mobile_phone', type: RadCommon::LikeFilter, input_label: 'Mobile Phone' },
                { input_label: 'Status',
                  column: :user_status_id,
                  options: UserStatus.not_pending.by_id,
@@ -30,6 +31,7 @@ class UserSearch < RadCommon::Search
     def sort_columns_def
       items = [{ label: 'Name', column: 'first_name, last_name' },
                { column: 'email' },
+               { column: 'mobile_phone' },
                { label: 'Signed In', column: 'current_sign_in_at' },
                { label: 'Created', column: 'users.created_at', direction: 'desc', default: true },
                { label: 'Status', column: 'user_statuses.name' },
