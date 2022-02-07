@@ -1,6 +1,8 @@
-- excluded_ids = local_assigns.has_key?(:excluded_ids) ? local_assigns[:excluded_ids] : nil
-- a_element = local_assigns[:association_element]
-- tooltip = local_assigns[:tooltip]
+:ruby
+  excluded_ids = local_assigns.key?(:excluded_ids) ? local_assigns[:excluded_ids] : nil
+  allow_new = local_assigns[:allow_new] ? search_label : nil
+  a_element = local_assigns[:association_element]
+  tooltip = local_assigns[:tooltip]
 
 .form-group.string.optional
   %label.string.optional.col-form-label{ class: defined?(label_class) ? label_class : '' }
@@ -20,4 +22,5 @@
                                                                             'data-excluded-ids': excluded_ids,
                                                                             'data-id-element': id_element,
                                                                             'data-association-element': a_element,
-                                                                            'data-autocomplete': search_path }
+                                                                            'data-autocomplete': search_path,
+                                                                            'data-allow-new-model': allow_new }

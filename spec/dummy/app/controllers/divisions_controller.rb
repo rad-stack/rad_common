@@ -62,6 +62,6 @@ class DivisionsController < ApplicationController
 
     def permitted_params
       params.require(:division).permit(:name, :code, :notify, :timezone, :owner_id, :hourly_rate, :division_status,
-                                       :icon, :logo)
+                                       :icon, :logo, :category_id, :category_name)
     end
 end

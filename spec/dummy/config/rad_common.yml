@@ -78,6 +78,16 @@ default: &default
       joins: JOIN divisions on divisions.owner_id = users.id
       query_where: divisions.name ilike :search
       super_search_exclude: true
+    -
+      name: category_name
+      model: Category
+      description: Search category by name
+      query_where: name ilike :search
+      query_order: name
+      super_search_exclude: true
+      hide_global_nav: true
+      columns:
+        - name
 
 development:
   <<: *default
