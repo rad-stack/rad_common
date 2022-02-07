@@ -59,7 +59,6 @@ module RadbearUser
     }
 
     scope :not_inactive, -> { where.not(user_status_id: UserStatus.default_inactive_status.id) }
-    scope :in_timezone, ->(timezone) { joins(:account).where(accounts: { timezone: timezone }) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
 
