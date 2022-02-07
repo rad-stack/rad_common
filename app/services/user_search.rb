@@ -12,7 +12,10 @@ class UserSearch < RadCommon::Search
   private
 
     def filters_def
-      items = [{ input_label: 'Status',
+      items = [{ column: 'first_name', type: RadCommon::LikeFilter, input_label: 'First Name' },
+               { column: 'last_name', type: RadCommon::LikeFilter, input_label: 'Last Name' },
+               { column: 'email', type: RadCommon::LikeFilter, input_label: 'Email' },
+               { input_label: 'Status',
                  column: :user_status_id,
                  options: UserStatus.not_pending.by_id,
                  default_value: UserStatus.default_active_status.id }]
