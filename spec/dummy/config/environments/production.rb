@@ -56,11 +56,12 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   config.cache_store = :redis_cache_store, {
-    url: ENV.fetch('REDIS_URL'),
+    url: "#{ENV.fetch('REDIS_URL')}/#{ENV['REDIS_DB'].presence || 0}",
     reconnect_attempts: 1,
     error_handler: lambda { |method:, returning:, exception:|
       Sentry.capture_exception exception, level: 'warning', tags: { method: method, returning: returning }
-    }
+    },
+    ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
   }
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
