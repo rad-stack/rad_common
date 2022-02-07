@@ -8,8 +8,6 @@ module RadCompany
 
     scope :by_id, -> { order(:id) }
 
-    SKIP_SCHEMA_VALIDATION_COLUMNS = [:valid_user_domains].freeze
-
     validates_with EmailAddressValidator, fields: %i[email]
     validates_with PhoneNumberValidator
     validate :validate_only_one, on: :create
@@ -34,7 +32,7 @@ module RadCompany
   private
 
     def clean_domain_spaces
-      return if valid_user_domains.empty?
+      return if valid_user_domains.blank?
 
       self.valid_user_domains = valid_user_domains.map(&:strip).compact_blank
     end
@@ -44,6 +42,8 @@ module RadCompany
     end
 
     def validate_domains
+      return if valid_user_domains.nil?
+
       errors.add(:valid_user_domains, 'needs at least one domain') if valid_user_domains.count.zero?
     end
 end
