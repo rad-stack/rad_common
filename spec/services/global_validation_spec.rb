@@ -22,7 +22,7 @@ describe GlobalValidation, type: :service do
 
     let(:models) do
       %w[Attorney Category Client Company Division Duplicate Notification NotificationSecurityRole NotificationSetting
-         NotificationType SecurityRole Status SystemMessage User UserSecurityRole UserStatus]
+         NotificationType SecurityRole Status SystemMessage User UserClient UserSecurityRole UserStatus]
     end
 
     it { is_expected.to eq models }
