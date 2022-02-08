@@ -51,6 +51,17 @@ describe 'SchemaValidations', type: :module do
     end
   end
 
+  describe 'array columns' do
+    let(:company) { Company.main }
+
+    it 'allows empty array' do
+      company.update(valid_user_domains: [])
+      expect(company.errors.full_messages).not_to include("Valid user domains can't be blank")
+      company.update(valid_user_domains: nil)
+      expect(company.errors.full_messages).to include("Valid user domains can't be blank")
+    end
+  end
+
   describe 'unique index validations' do
     subject { user_status.errors.full_messages }
 

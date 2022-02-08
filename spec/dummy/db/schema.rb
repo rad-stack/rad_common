@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_02_173640) do
+ActiveRecord::Schema.define(version: 2022_02_05_122716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -92,6 +92,13 @@ ActiveRecord::Schema.define(version: 2022_02_02_173640) do
     t.index ["user_id", "user_type"], name: "user_index"
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_categories_on_name", unique: true
+  end
+
   create_table "clients", force: :cascade do |t|
     t.string "name", null: false
     t.boolean "active", default: true, null: false
@@ -131,6 +138,8 @@ ActiveRecord::Schema.define(version: 2022_02_02_173640) do
     t.string "additional_info"
     t.date "date_established"
     t.string "invoice_email"
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_divisions_on_category_id"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
   end
@@ -360,6 +369,7 @@ ActiveRecord::Schema.define(version: 2022_02_02_173640) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audits", "users"
+  add_foreign_key "divisions", "categories"
   add_foreign_key "divisions", "users", column: "owner_id"
   add_foreign_key "notification_security_roles", "notification_types"
   add_foreign_key "notification_security_roles", "security_roles"

@@ -74,6 +74,44 @@ RSpec.describe 'Divisions', type: :system do
       expect(find_field('owner_name_search').value).to eq(division.owner.to_s)
       expect(find_field('owner_name_search')['placeholder']).to eq(division.owner.to_s)
     end
+
+    context 'with category' do
+      let(:last_category) { Category.order(:created_at).last }
+      let(:existing_category) { create(:category, name: 'Existing Category') }
+
+      before do
+        existing_category
+        visit edit_division_path(division)
+      end
+
+      it 'allows for entering new categories' do
+        fill_in 'division[category_name]', with: 'New Category'
+        expect { click_on 'Save' }.to change(Category, :count).by(1)
+        expect(last_category.name).to eq('New Category')
+        expect(division.reload.category).to eq(last_category)
+      end
+
+      it 'allows selecting create new category', js: true do
+        fill_in 'division[category_name]', with: 'Does Not Exist'
+        find('.search-label').click
+        expect { click_on 'Save' }.to change(Category, :count).by(1)
+        expect(last_category.name).to eq('Does Not Exist')
+        expect(division.reload.category).to eq(last_category)
+      end
+
+      it 'finds and assigns existing categories' do
+        fill_in 'division[category_name]', with: 'Existing Category'
+        expect { click_on 'Save' }.not_to change(Category, :count)
+        expect(division.reload.category).to eq(existing_category)
+      end
+
+      it 'allows selecting autocomplete category', js: true do
+        fill_in 'division[category_name]', with: 'Existin'
+        find('.search-column-value').click
+        expect { click_on 'Save' }.not_to change(Category, :count)
+        expect(division.reload.category).to eq(existing_category)
+      end
+    end
   end
 
   describe 'index' do

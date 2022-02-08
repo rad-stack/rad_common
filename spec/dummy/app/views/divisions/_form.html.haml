@@ -19,5 +19,14 @@
                                             required: true,
                                             f: f
 
+    = render 'layouts/simple_autocomplete', search_path: '/rad_common/global_search?global_search_scope=category_name',
+                                            initial_value: @division.category&.name.presence || @division.category_name,
+                                            base_object: :division,
+                                            association: :category,
+                                            required: false,
+                                            allow_new: true,
+                                            search_placeholder: 'Search for a category or add a new one',
+                                            f: f
+
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'
