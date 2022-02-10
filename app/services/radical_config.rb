@@ -223,7 +223,10 @@ class RadicalConfig
     end
 
     def global_search_scopes!
-      array_config_item! :global_search_scopes
+      items = array_config_item!(:global_search_scopes)
+      raise 'global_search_scopes contain duplicate name(s)' unless items.pluck(:name).uniq.size == items.size
+
+      items
     end
 
     def system_usage_models!
