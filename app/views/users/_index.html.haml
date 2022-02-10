@@ -44,20 +44,15 @@
                 = secured_link(security_role)
                 %p
           - if RadicalConfig.external_users?
-            %td= format_boolean(user.external?)
+            %td
+              - if RadicalConfig.user_clients?
+                = link_to "#{pluralize(user.user_clients.size, RadCommon::AppInfo.new.client_model_label)}", user
+              - else
+                = format_boolean(user.external?)
           - if show_actions
             %td
-              - if policy(user).update?
-                = link_to icon(:pencil, 'Edit'),
-                          edit_user_path(user),
-                          class: 'btn btn-secondary btn-sm btn-block btn-block'
-
-              - if policy(user).destroy?
-                = link_to icon(:times, 'Delete'),
-                          user,
-                          method: :delete,
-                          data: { confirm: 'Are you sure?' },
-                          class: 'btn btn-danger btn-sm btn-block btn-block'
+              - user_index_actions(user).each do |action|
+                = action
 
     - if users.respond_to?(:current_page)
       = paginate users, param_name: page_param_name, theme: 'twitter-bootstrap-4'

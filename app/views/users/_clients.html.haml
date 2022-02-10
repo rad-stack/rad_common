@@ -21,5 +21,8 @@
             - if can_update
               %td
                 - if policy(record).destroy?
-                  = link_to icon(:times, 'Delete'), record, method: :delete, data: { confirm: 'Are you sure?' },
-                                                                 class: 'btn btn-danger btn-sm btn-block'
+                  = link_to icon(:times, 'Delete'),
+                            record,
+                            method: :delete,
+                            data: { confirm: 'Are you sure?' },
+                            class: 'btn btn-danger btn-sm btn-block'

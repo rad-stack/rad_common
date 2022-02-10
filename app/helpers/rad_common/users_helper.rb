@@ -43,6 +43,26 @@ module RadCommon
        impersonate_action(user)]
     end
 
+    def user_index_actions(user)
+      items = []
+
+      items.push(add_user_client_action(user, true))
+
+      if policy(user).update?
+        items.push(link_to(icon(:pencil, 'Edit'), edit_user_path(user), class: 'btn btn-secondary btn-sm btn-block'))
+      end
+
+      if policy(user).destroy?
+        items.push(link_to(icon(:times, 'Delete'),
+                           user,
+                           method: :delete,
+                           data: { confirm: 'Are you sure?' },
+                           class: 'btn btn-danger btn-sm btn-block'))
+      end
+
+      items
+    end
+
     def impersonate_action(user)
       return unless policy(user).impersonate?
 
@@ -123,11 +143,17 @@ module RadCommon
     end
 
     def user_client_actions(user)
-      return unless policy(UserClient.new).new?
+      [add_user_client_action(user, false)]
+    end
 
-      [link_to(icon(:plus, "Add #{RadCommon::AppInfo.new.client_model_label}"),
-               [:new, user, :user_client],
-               class: 'btn btn-sm btn-success')]
+    def add_user_client_action(user, index_page)
+      return unless RadicalConfig.user_clients? && user.external? && policy(UserClient.new).new?
+
+      link_class = index_page ? 'btn btn-sm btn-success btn-block' : 'btn btn-sm btn-success'
+
+      link_to(icon(:plus, "Add #{RadCommon::AppInfo.new.client_model_label}"),
+              [:new, user, :user_client],
+              class: link_class)
     end
   end
 end
