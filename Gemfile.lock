@@ -25,7 +25,7 @@ PATH
       pg
       premailer-rails (~> 1.10.2)
       pretender
-      puma (~> 5.5.2)
+      puma (>= 5.5.2, < 5.7.0)
       pundit
       rails (~> 6.1.4)
       rails_email_validator
@@ -326,7 +326,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (4.0.6)
-    puma (5.5.2)
+    puma (5.6.2)
       nio4r (~> 2.0)
     pundit (2.1.1)
       activesupport (>= 3.0.0)
