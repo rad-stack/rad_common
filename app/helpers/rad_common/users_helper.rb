@@ -151,7 +151,7 @@ module RadCommon
 
       link_class = index_page ? 'btn btn-sm btn-success btn-block' : 'btn btn-sm btn-success'
 
-      link_to(icon(:plus, "Add #{RadCommon::AppInfo.new.client_model_label}"),
+      link_to(icon(:plus, "Add #{RadCommon::AppInfo.new.client_model_label} to User"),
               [:new, user, :user_client],
               class: link_class)
     end

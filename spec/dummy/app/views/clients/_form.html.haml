@@ -1,0 +1,9 @@
+= simple_form_for(@client) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :name
+    = f.input :active
+
+  .form-actions
+    = f.button :submit, 'Save', class: 'btn btn-primary'

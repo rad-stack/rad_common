@@ -7,6 +7,8 @@
     .navbar-collapse.collapse.navbar-responsive-collapse#navbar-supported-content
       - if user_signed_in?
         %ul.nav.navbar-nav.navbar-left
+          - if policy(Client).index?
+            %li= link_to 'Clients', clients_path, class: 'nav-link'
           - if policy(Division).index?
             %li= link_to 'Divisions', divisions_path(search: { show_header: 'true' }), class: 'nav-link'
           - if policy(Attorney).index?

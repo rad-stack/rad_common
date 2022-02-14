@@ -1,0 +1,32 @@
+- show_actions = show_actions?(Client)
+
+.card
+  = render 'layouts/card_header'
+  .card-body
+    = paginate @clients, theme: 'twitter-bootstrap-4'
+
+    %table.table.table-striped.table-bordered
+      %tr
+        %th Name
+        %th Active
+        - if show_actions
+          %th.actions Actions
+
+      - @clients.each do |client|
+        %tr
+          %td= secured_link client
+          %td= format_boolean client.active
+          - if show_actions
+            %td
+              - if policy(client).update?
+                = link_to icon(:pencil, 'Edit'),
+                          edit_client_path(client),
+                          class: 'btn btn-sm btn-secondary btn-block'
+              - if policy(client).destroy?
+                = link_to icon(:times, 'Delete'),
+                          client,
+                          method: :delete,
+                          data: { confirm: 'Are you sure?' },
+                          class: 'btn btn-danger btn-sm btn-block'
+
+    = paginate @clients, theme: 'twitter-bootstrap-4'
