@@ -6,10 +6,12 @@ default: &default
   disable_invite: false
   secure_sentry: true
   external_users: true
+  validate_external_email_domain: true
   app_logo_includes_name: true
   portal: false
   impersonate: true
   start_route: attorneys
+  user_clients: true
 
   system_usage_models:
     -

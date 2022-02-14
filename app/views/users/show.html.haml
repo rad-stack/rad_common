@@ -2,4 +2,6 @@
   = render 'layouts/card_header', no_new_button: !manually_create_users?, additional_actions: user_actions(@user)
   .card-body
     = render 'layouts/show_data_columns', data: user_show_data(@user), resource: @user
+
 = render 'users/security'
+= render 'users/clients'

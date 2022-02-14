@@ -132,6 +132,10 @@ class RadicalConfig
       "/#{config_item!(:start_route)}"
     end
 
+    def client_table_name!
+      config_item(:client_table_name) || 'clients'
+    end
+
     def portal_host_name!
       config_item! :portal_host_name
     end
@@ -156,6 +160,10 @@ class RadicalConfig
       boolean_config_item! :external_users
     end
 
+    def validate_external_email_domain?
+      boolean_config_item! :validate_external_email_domain
+    end
+
     def disable_sign_up?
       boolean_config_item! :disable_sign_up
     end
@@ -166,6 +174,10 @@ class RadicalConfig
 
     def app_logo_includes_name?
       boolean_config_item! :app_logo_includes_name
+    end
+
+    def user_clients?
+      boolean_config_item! :user_clients
     end
 
     def secure_sentry?
