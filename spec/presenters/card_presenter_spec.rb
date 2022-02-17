@@ -1,5 +1,4 @@
-require 'spec_helper'
-require_relative '../../app/presenters/card_presenter'
+require 'rails_helper'
 
 describe CardPresenter do
   let(:view_context) { double(:view_context) }
