@@ -17,13 +17,6 @@ label, legend {
   overflow-wrap: break-word;
 }
 
-/* Improve Table display so it does not overflow external borders in viewport */
-table {
-  display: block;
-  font-size: 98%;
-  overflow-x: auto;
-}
-
 /* this limits the actions column width so that the action buttons don't look super long */
 th.actions {
   width: 200px;
