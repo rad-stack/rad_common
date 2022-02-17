@@ -1,5 +1,4 @@
-require 'spec_helper'
-require_relative '../../app/presenters/card_presenter'
+require 'rails_helper'
 
 describe CardPresenter do
   let(:view_context) { double(:view_context) }
@@ -122,7 +121,7 @@ describe CardPresenter do
   end
 
   describe '#instance_label' do
-    let(:to_s) { 'Foo' }
+    let(:label) { 'Foo' }
 
     context 'with custom' do
       before do
@@ -140,8 +139,8 @@ describe CardPresenter do
       end
 
       it 'defaults to return #to_s' do
-        allow(card_presenter).to receive(:instance).and_return(double(:instance, to_s: to_s))
-        expect(card_presenter.instance_label).to eq(to_s)
+        allow(card_presenter).to receive(:instance).and_return(double(:instance, to_s: label))
+        expect(card_presenter.instance_label).to eq(label)
       end
     end
   end

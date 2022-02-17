@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'nokogiri', '~> 1.12.5'
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
-  s.add_dependency 'puma', '~> 5.5.2'
+  s.add_dependency 'puma', '~> 5.6'
   s.add_dependency 'pretender'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1.4'
