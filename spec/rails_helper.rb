@@ -6,6 +6,12 @@ require 'simplecov'
 SimpleCov.start 'rails' do
   add_filter 'lib/templates'
   add_filter 'install_generator.rb'
+
+  add_group 'Services', 'app/services'
+  add_group 'Policies', 'app/policies'
+
+  groups.delete('Libraries')
+  groups.delete('Channels')
 end
 
 require File.expand_path('dummy/config/environment.rb', __dir__)
