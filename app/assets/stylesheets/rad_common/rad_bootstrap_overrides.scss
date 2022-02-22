@@ -9,10 +9,12 @@ label, legend {
   font-weight: 500;
 }
 
-/* to prevent button icons from wrapping*/
-.btn
-{
-  white-space: nowrap;
+/* Prevent button icons from wrapping while allowing everything else to wrap */
+.btn {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  overflow-wrap: break-word;
 }
 
 /* this limits the actions column width so that the action buttons don't look super long */
