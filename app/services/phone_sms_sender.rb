@@ -66,7 +66,8 @@ class PhoneSMSSender
     end
 
     def blacklisted?
-      exception.message.include?('violates a blacklist rule')
+      # https://www.twilio.com/docs/api/errors/21610
+      exception.message.include?('21610')
     end
 
     def opt_out_message_already_sent?
