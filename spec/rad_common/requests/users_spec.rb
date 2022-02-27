@@ -4,12 +4,43 @@ RSpec.describe 'Users', type: :request do
   let(:admin) { create :admin }
   let(:user) { create :user }
   let(:another) { create :user }
-  let(:valid_attributes) { { first_name: Faker::Name.first_name, last_name: Faker::Name.last_name } }
   let(:invalid_attributes) { { first_name: nil } }
 
   before { login_as admin, scope: :user }
 
+  describe 'POST create' do
+    before do
+      allow(RadicalConfig).to receive(:disable_sign_up?).and_return true
+      allow(RadicalConfig).to receive(:disable_invite?).and_return true
+    end
+
+    describe 'with valid params' do
+      let(:valid_attributes) do
+        { first_name: Faker::Name.first_name,
+          last_name: Faker::Name.last_name,
+          password: 'cOmpl3x_p@55w0rd',
+          email: 'example000@example.com' }
+      end
+
+      it 'creates the user and redirects' do
+        post '/users', params: { user: valid_attributes }
+        new_user = User.last
+        expect(new_user.first_name).to eq(valid_attributes[:first_name])
+        expect(response).to redirect_to(new_user)
+      end
+    end
+
+    describe 'with invalid params' do
+      it 're-renders the new template' do
+        post '/users', params: { user: invalid_attributes }
+        expect(response.body).to include 'Please review the problems below'
+      end
+    end
+  end
+
   describe 'PUT update' do
+    let(:valid_attributes) { { first_name: Faker::Name.first_name, last_name: Faker::Name.last_name } }
+
     describe 'with valid params' do
       let(:new_name) { 'Gary' }
 

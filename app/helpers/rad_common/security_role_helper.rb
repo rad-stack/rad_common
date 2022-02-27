@@ -8,7 +8,7 @@ module RadCommon
     end
 
     def humanized_permission_field(field)
-      field.titleize.pluralize.gsub('Admins', 'Administration').gsub('Read', 'View')
+      field.titleize
     end
 
     def normalize_names(fields)
