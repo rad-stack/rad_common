@@ -15,21 +15,10 @@ module RadCommon
       security_role_hash = {}
 
       fields.each do |field|
-        name = normalize_name(field[:label])
-        security_role_hash[name] = field[:permission]
+        security_role_hash[field[:label]] = field[:permission]
       end
 
       security_role_hash.sort
-    end
-
-    def normalize_name(label)
-      if label.include? 'Manage '
-        label.sub 'Manage', 'Manage (View, Edit, Create, Delete)'
-      elsif label.include? 'Update'
-        label.sub 'Update', 'Edit'
-      else
-        label
-      end
     end
 
     def security_role_collection(mode)

@@ -42,20 +42,6 @@ describe RadCommon::SecurityRoleHelper do
   end
 
   describe '#normalize_names' do
-    it 'formats "Update" to "Edit"' do
-      expect(security_fields).to include(update)
-      formatted_hash = normalize_names(security_fields)
-      expect(formatted_hash).to include(edit_formatted)
-      expect(formatted_hash).not_to include(update)
-    end
-
-    it 'formats "Manage" to "Manage (View, Edit, Create, Delete)"' do
-      expect(security_fields).not_to include(manage_formatted)
-      expect(security_fields).to include(manage)
-      formatted_hash = normalize_names(security_fields)
-      expect(formatted_hash).to include(manage_formatted)
-    end
-
     it 'does format but does not change unspecified fields' do
       formatted_hash = normalize_names(test_hash)
       expect(formatted_hash).to include(test_hash_formatted)
