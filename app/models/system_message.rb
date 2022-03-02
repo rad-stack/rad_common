@@ -60,7 +60,7 @@ class SystemMessage < ApplicationRecord
                                      email_message_body,
                                      do_not_format: true).deliver_later
       else
-        UserSMSSenderJob.perform_later(sms_message_body, user.id, recipient.id, nil. false)
+        UserSMSSenderJob.perform_later(sms_message_body, user.id, recipient.id, nil, false)
       end
     end
   end
