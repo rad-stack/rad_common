@@ -22,7 +22,7 @@
             %th Signed In
             %th Created
           %th Status
-          - if show_roles
+          - if show_roles && show_actions
             %th Roles
           - if RadicalConfig.external_users?
             %th External?
@@ -49,7 +49,7 @@
             %td= format_datetime(user.current_sign_in_at)
             %td= format_date(user.created_at)
           %td= user.user_status
-          - if show_roles
+          - if show_roles && show_actions
             %td
               - user.security_roles.each do |security_role|
                 = secured_link(security_role)

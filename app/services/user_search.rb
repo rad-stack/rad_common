@@ -38,7 +38,10 @@ class UserSearch < RadCommon::Search
                   { label: 'Created', column: 'users.created_at', direction: 'desc', default: true }]
       end
 
-      items += [{ label: 'Status', column: 'user_statuses.name' }, { label: 'Roles' }]
+      items.push({ label: 'Status', column: 'user_statuses.name' })
+      items.push({ label: 'Roles' }) if can_update?
+
+
       items.push(label: 'External?', column: 'users.external') if RadicalConfig.external_users?
 
       items
