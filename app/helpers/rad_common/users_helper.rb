@@ -136,12 +136,12 @@ module RadCommon
               data: { confirm: 'Are you sure?' }
     end
 
-    def users_actions
+    def export_users_button
       return unless policy(User.new).export?
 
-      [link_to(icon(:file, 'Export to File'),
-               export_users_path(params.permit!.to_h.merge(format: :csv)),
-               class: 'btn btn-secondary btn-sm')]
+      link_to(icon(:file, 'Export to File'),
+              export_users_path(params.permit!.to_h.merge(format: :csv)),
+              class: 'btn btn-secondary btn-sm')
     end
 
     def user_client_actions(user)

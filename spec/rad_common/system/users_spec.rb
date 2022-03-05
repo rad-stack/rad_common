@@ -15,7 +15,7 @@ RSpec.describe 'Users', type: :system do
     describe 'index' do
       it 'shows users' do
         visit users_path
-        expect(page).to have_content 'Access Denied'
+        expect(page).to have_content user.to_s
       end
     end
 
