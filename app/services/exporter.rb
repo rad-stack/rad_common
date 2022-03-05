@@ -1,3 +1,5 @@
+require 'csv'
+
 class Exporter
   include RadCommon::ApplicationHelper
   attr_reader :records, :current_record
