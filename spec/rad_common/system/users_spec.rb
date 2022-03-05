@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe 'Users', type: :system do
   include ActionView::Helpers::DateHelper
 
-  let(:user) { create :user }
+  let(:user_status) { UserStatus.default_active_status }
+  let(:user) { create :user, user_status: user_status }
   let(:admin) { create :admin }
   let(:password) { 'cOmpl3x_p@55w0rd' }
   let(:external_user) { create :user, :external }
@@ -15,6 +16,7 @@ RSpec.describe 'Users', type: :system do
     describe 'index' do
       it 'shows users' do
         visit users_path
+        expect(page).to have_content 'Users (1)'
         expect(page).to have_content user.to_s
       end
     end
