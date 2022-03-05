@@ -1,14 +1,13 @@
 require 'rails_helper'
 require 'csv'
 
-RSpec.describe UsersCSV, type: :service do
+RSpec.describe UserExport, type: :service do
   describe '.generate' do
     let(:user) { create :user, external: false, current_sign_in_at: Time.current }
-    let(:csv) { described_class.generate([user]) }
+    let(:exporter) { described_class.new(records: [user]) }
+    let(:csv) { exporter.generate }
 
-    before do
-      described_class.headers.each { |heading| expect(csv).to include(heading) }
-    end
+    before { exporter.send(:headers).each { |heading| expect(csv).to include(heading) } }
 
     it 'generates a CSV' do
       expect(csv).to include(user.to_s)

@@ -18,8 +18,9 @@
           %th Name
           %th Email
           %th Mobile Phone
-          %th Signed In
-          %th Created
+          - if show_actions
+            %th Signed In
+            %th Created
           %th Status
           - if show_roles
             %th Roles
@@ -29,14 +30,24 @@
           %th.text-center Actions
 
       - users.each do |user|
+        - can_show = policy(user).show?
+
         %tr{ class: user.display_style }
           %td= secured_link(user)
-          %td= link_to user.email, user
+          %td
+            - if can_show
+              = link_to user.email, user
+            - else
+              = user.email
           %td
             - if user.mobile_phone.present?
-              = link_to user.mobile_phone, user
-          %td= format_datetime(user.current_sign_in_at)
-          %td= format_date(user.created_at)
+              - if can_show
+                = link_to user.mobile_phone, user
+              - else
+                = user.mobile_phone
+          - if show_actions
+            %td= format_datetime(user.current_sign_in_at)
+            %td= format_date(user.created_at)
           %td= user.user_status
           - if show_roles
             %td
@@ -46,7 +57,12 @@
           - if RadicalConfig.external_users?
             %td
               - if RadicalConfig.user_clients?
-                = link_to pluralize(user.user_clients.size, RadCommon::AppInfo.new.client_model_label), user
+                - clients_label = pluralize(user.user_clients.size, RadCommon::AppInfo.new.client_model_label)
+
+                - if can_show
+                  = link_to clients_label, user
+                - else
+                  = clients_label
               - else
                 = format_boolean(user.external?)
           - if show_actions

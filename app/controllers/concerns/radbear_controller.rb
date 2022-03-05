@@ -43,4 +43,12 @@ module RadbearController
     def user_time_zone(&block)
       Time.use_zone(current_user.timezone, &block)
     end
+
+    def search_params
+      params.except(:commit, :format, :action, :controller, 'utf8').permit!
+    end
+
+    def report_generating_message
+      'Your report is generating. An email will be sent when it is ready.'
+    end
 end

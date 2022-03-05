@@ -1,13 +1,15 @@
-.card
-  = render 'layouts/card_header', action_name: 'custom',
-                                  title: "Pending Users (#{@pending.total_count})",
-                                  icon: 'fa-list',
-                                  additional_external_actions: users_actions
+- if policy(User.new).update?
+  .card
+    = render 'layouts/card_header', action_name: 'custom',
+                                    title: "Pending Users (#{@pending.total_count})",
+                                    icon: 'fa-list',
+                                    additional_external_actions: users_actions
 
-  .card-body
-    = render 'users/index', users: @pending, page_param_name: :pending_page
+    .card-body
+      = render 'users/index', users: @pending, page_param_name: :pending_page
+
 .card
-  = render 'layouts/card_header', no_new_button: true, additional_actions: [export_users_button(@user_search)]
+  = render 'layouts/card_header', no_new_button: true, additional_actions: users_actions
   .card-body
     = render 'layouts/filter', search: @user_search, path: users_path
     = render 'users/index', users: @users, sort_columns: true
