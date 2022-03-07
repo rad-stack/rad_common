@@ -49,6 +49,6 @@ class AssociationInputPresenter
     end
 
     def collection
-      Pundit.policy_scope(current_user, record.association(association).klass).sorted
+      Pundit.policy_scope!(current_user, record.association(association).klass).sorted
     end
 end
