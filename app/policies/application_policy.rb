@@ -38,6 +38,10 @@ class ApplicationPolicy
     user.permission?(:admin)
   end
 
+  def global_search?
+    index?
+  end
+
   alias not_duplicate? destroy?
   alias reset_duplicates? destroy?
   alias merge_duplicates? destroy?
