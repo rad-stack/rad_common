@@ -192,7 +192,7 @@ module RadbearUser
   end
 
   def test_sms!(from_user)
-    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil
+    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false
   end
 
   private

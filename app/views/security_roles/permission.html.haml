@@ -1,4 +1,4 @@
-- permission_human_name = normalize_name(humanized_permission_field(@permission_name))
+- permission_human_name = humanized_permission_field(@permission_name)
 
 .card
   = render 'layouts/card_header', action_name: 'custom', title: "Permission: #{permission_human_name}", icon: 'fa-file'

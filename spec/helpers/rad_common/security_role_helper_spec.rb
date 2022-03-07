@@ -32,30 +32,16 @@ describe RadCommon::SecurityRoleHelper do
   describe '#humanized_permission_fields' do
     it 'returns human-readable permission fields' do
       expect(helper.humanized_permission_fields).to eq(
-        [{ label: 'Administration', permission: 'admin' },
-         { label: 'Create Divisions', permission: 'create_division' },
-         { label: 'Delete Divisions', permission: 'delete_division' },
-         { label: 'View Divisions', permission: 'read_division' },
-         { label: 'Update Divisions', permission: 'update_division' }]
+        [{ label: 'Admin', permission: 'admin' },
+         { label: 'Create Division', permission: 'create_division' },
+         { label: 'Delete Division', permission: 'delete_division' },
+         { label: 'Read Division', permission: 'read_division' },
+         { label: 'Update Division', permission: 'update_division' }]
       )
     end
   end
 
   describe '#normalize_names' do
-    it 'formats "Update" to "Edit"' do
-      expect(security_fields).to include(update)
-      formatted_hash = normalize_names(security_fields)
-      expect(formatted_hash).to include(edit_formatted)
-      expect(formatted_hash).not_to include(update)
-    end
-
-    it 'formats "Manage" to "Manage (View, Edit, Create, Delete)"' do
-      expect(security_fields).not_to include(manage_formatted)
-      expect(security_fields).to include(manage)
-      formatted_hash = normalize_names(security_fields)
-      expect(formatted_hash).to include(manage_formatted)
-    end
-
     it 'does format but does not change unspecified fields' do
       formatted_hash = normalize_names(test_hash)
       expect(formatted_hash).to include(test_hash_formatted)

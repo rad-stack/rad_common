@@ -62,6 +62,20 @@ RSpec.describe 'Users', type: :system do
       end
     end
 
+    describe 'new' do
+      let(:security_role) { create :security_role }
+
+      before do
+        allow(RadicalConfig).to receive(:disable_sign_up?).and_return true
+        allow(RadicalConfig).to receive(:disable_invite?).and_return true
+      end
+
+      it 'renders the new template' do
+        visit new_user_path
+        expect(page).to have_content('New User')
+      end
+    end
+
     it 'updates the user' do
       visit edit_user_path(admin)
       new = 'foo'

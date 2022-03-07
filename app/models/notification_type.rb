@@ -168,7 +168,8 @@ class NotificationType < ApplicationRecord
         UserSMSSenderJob.perform_later "Message from #{RadicalConfig.app_name!}: #{sms_content}",
                                        user_id,
                                        user_id,
-                                       nil
+                                       nil,
+                                       false
       end
     end
 

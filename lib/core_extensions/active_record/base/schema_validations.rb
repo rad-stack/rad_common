@@ -8,12 +8,12 @@ module CoreExtensions
 
         module ClassMethods
           def validators
-            new.load_schema_validations if database_exists? && table_exists? && !schema_validations_loaded
+            new.load_schema_validations if database_exists? && table_exists? && requires_schema_validation_load?
             super
           end
 
           def validators_on(*args)
-            new.load_schema_validations unless schema_validations_loaded
+            new.load_schema_validations if requires_schema_validation_load?
             super
           end
 
@@ -23,6 +23,10 @@ module CoreExtensions
             false
           else
             true
+          end
+
+          def requires_schema_validation_load?
+            defined?(schema_validations_loaded) && !schema_validations_loaded
           end
         end
       end

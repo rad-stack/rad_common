@@ -1,6 +1,6 @@
 module RadbearController
   extend ActiveSupport::Concern
-  include Pundit
+  include Pundit::Authorization
 
   included do
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
@@ -37,7 +37,13 @@ module RadbearController
     def set_sentry_user_context
       return unless current_user
 
-      Sentry.set_user(id: current_user.id, email: current_user.email, name: current_user.to_s)
+      Sentry.set_user(id: true_user.id, email: true_user.email, name: sentry_user_name)
+    end
+
+    def sentry_user_name
+      return true_user.to_s if true_user == current_user
+
+      "#{true_user} impersonating #{current_user}"
     end
 
     def user_time_zone(&block)
