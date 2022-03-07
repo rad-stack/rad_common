@@ -4,7 +4,7 @@ class PhoneSMSSender
   attr_accessor :message, :from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio, :opt_out_message_sent,
                 :exception
 
-  def initialize(message, from_user_id, to_mobile_phone, media_url)
+  def initialize(message, from_user_id, to_mobile_phone, media_url, force_opt_out)
     raise "The message from user #{from_user_id} failed: the message is blank." if message.blank?
     raise 'The message failed: the mobile phone number is blank.' if to_mobile_phone.blank?
 
@@ -12,7 +12,7 @@ class PhoneSMSSender
     self.to_mobile_phone = to_mobile_phone
     self.media_url = media_url
     self.twilio = RadicalTwilio.new
-    self.message = augment_message(message)
+    self.message = augment_message(message, force_opt_out)
   end
 
   def send!
@@ -49,8 +49,8 @@ class PhoneSMSSender
       media_url.present?
     end
 
-    def augment_message(message)
-      if opt_out_message_already_sent?
+    def augment_message(message, force_opt_out)
+      if !force_opt_out && opt_out_message_already_sent?
         self.opt_out_message_sent = false
         return message
       end
@@ -66,7 +66,8 @@ class PhoneSMSSender
     end
 
     def blacklisted?
-      exception.message.include?('violates a blacklist rule')
+      # https://www.twilio.com/docs/api/errors/21610
+      exception.message.include?('21610')
     end
 
     def opt_out_message_already_sent?

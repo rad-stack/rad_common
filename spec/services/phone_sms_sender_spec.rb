@@ -4,7 +4,7 @@ RSpec.describe PhoneSMSSender, type: :service do
   let(:from_user) { create :user }
   let(:mobile_phone) { '(618) 722-2169' }
   let(:message) { 'test message' }
-  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil) }
+  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false) }
 
   describe 'send', :vcr do
     subject(:result) { sms_sender.send! }
@@ -33,7 +33,9 @@ RSpec.describe PhoneSMSSender, type: :service do
   end
 
   describe 'augment_message' do
-    subject { sms_sender.send(:augment_message, message) }
+    subject { sms_sender.send(:augment_message, message, force_opt_out) }
+
+    let(:force_opt_out) { false }
 
     context 'with full question' do
       let(:message) { 'Hey man, can I borrow your surfboard?' }
@@ -61,6 +63,12 @@ RSpec.describe PhoneSMSSender, type: :service do
         end
 
         it { is_expected.to eq "I'm taking your surfboard" }
+
+        context 'with force opt out option' do
+          let(:force_opt_out) { true }
+
+          it { is_expected.to eq "I'm taking your surfboard - To no longer receive text messages, text STOP" }
+        end
       end
     end
   end

@@ -1,8 +1,8 @@
 class UserSMSSender < PhoneSMSSender
-  def initialize(message, from_user_id, to_user_id, media_url)
+  def initialize(message, from_user_id, to_user_id, media_url, force_opt_out)
     self.to_user = User.find(to_user_id)
 
-    super message, from_user_id, to_user.mobile_phone, media_url
+    super message, from_user_id, to_user.mobile_phone, media_url, force_opt_out
   end
 
   private

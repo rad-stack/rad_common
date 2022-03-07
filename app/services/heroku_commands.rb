@@ -132,7 +132,7 @@ class HerokuCommands
       def change_user_passwords
         User.skip_callback :update, :after, :send_password_change_notification
 
-        User.order(:id).find_each do |user|
+        User.active.order(:id).find_each do |user|
           user.password = 'password'
           user.password_confirmation = 'password'
 
