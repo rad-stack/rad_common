@@ -38,6 +38,10 @@ class ApplicationPolicy
     user.permission?(:admin)
   end
 
+  def export?
+    user.permission?(:admin)
+  end
+
   def global_search?
     index?
   end
