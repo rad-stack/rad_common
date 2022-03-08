@@ -43,7 +43,7 @@ class GlobalAutocomplete
   private
 
     def autocomplete_result(scope)
-      return [] unless scope && Pundit.policy!(user, GlobalAutocomplete.check_policy_klass(user, klass)).index?
+      return [] unless scope && Pundit.policy!(user, GlobalAutocomplete.check_policy_klass(user, klass)).global_search?
 
       self.current_scope = scope
       order = scope[:query_order] || 'created_at DESC'
