@@ -1,4 +1,8 @@
 class UserPolicy < ApplicationPolicy
+  def index?
+    user.internal?
+  end
+
   alias resend_invitation? create?
   alias confirm? update?
   alias reset_authy? update?

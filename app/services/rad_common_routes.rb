@@ -13,6 +13,8 @@ module RadCommonRoutes
 
       authenticate :user, ->(u) { u.internal? } do
         resources :users do
+          get :export, on: :collection
+
           member do
             put :resend_invitation
             put :confirm

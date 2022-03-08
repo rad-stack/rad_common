@@ -21,6 +21,8 @@
                   = link_to attorneys_path, class: 'dropdown-item' do
                     Attorneys
                     = duplicates_badge Attorney
+          - if policy(User).index?
+            %li= link_to 'Users', users_path, class: 'nav-link'
           - if current_user.admin?
             %li.nav-item.dropdown
               %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#' }
