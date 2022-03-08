@@ -32,7 +32,7 @@ PATH
       sendgrid-ruby
       sentry-rails
       sentry-ruby
-      sidekiq (~> 6.4.0)
+      sidekiq (~> 6.4.1)
       sidekiq-failures
       simple_form (~> 5.0)
       strip_attributes
