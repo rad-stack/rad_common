@@ -83,11 +83,12 @@ RSpec.describe 'Users', type: :request do
     end
 
     it 'can not delete if user created audits' do
+      another
       Audited::Audit.as_user(another) { user.update!(first_name: 'Foo') }
 
       delete "/users/#{another.id}", headers: { HTTP_REFERER: users_path }
       follow_redirect!
-      expect(response.body).to include 'User has audit history'
+      expect(flash[:error]).to include 'User has audit history'
     end
   end
 end
