@@ -14,10 +14,21 @@ RSpec.describe 'Users', type: :system do
     before { login_as user, scope: :user }
 
     describe 'index' do
-      it 'shows users' do
-        visit users_path
+      before { visit users_path }
+
+      it 'shows users and limited info' do
         expect(page).to have_content 'Users (1)'
         expect(page).to have_content user.to_s
+        expect(page).not_to have_content user.security_roles.first.name
+        expect(page).not_to have_content 'Created'
+      end
+    end
+
+    describe 'show' do
+      before { visit user_path(user) }
+
+      it 'denies access' do
+        expect(page).to have_content 'Access Denied'
       end
     end
 
@@ -50,9 +61,12 @@ RSpec.describe 'Users', type: :system do
         external_user.update! user_status: user.user_status if RadicalConfig.external_users?
       end
 
-      it 'shows users' do
-        visit users_path(search: { user_status_id: user.user_status_id })
+      it 'shows users and all info' do
+        visit users_path
+        expect(page).to have_content 'Users (2)'
         expect(page).to have_content user.to_s
+        expect(page).to have_content user.security_roles.first.name
+        expect(page).to have_content 'Created'
         expect(page).to have_content external_user.to_s if RadicalConfig.external_users?
       end
 
