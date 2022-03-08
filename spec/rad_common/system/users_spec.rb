@@ -4,6 +4,7 @@ RSpec.describe 'Users', type: :system do
   include ActionView::Helpers::DateHelper
 
   let(:user_status) { UserStatus.default_active_status }
+  let(:pending_status) { UserStatus.default_pending_status }
   let(:user) { create :user, user_status: user_status }
   let(:admin) { create :admin }
   let(:password) { 'cOmpl3x_p@55w0rd' }
@@ -14,6 +15,8 @@ RSpec.describe 'Users', type: :system do
     before { login_as user, scope: :user }
 
     describe 'index' do
+      let!(:pending_user) { create :user, user_status: pending_status }
+
       before { visit users_path }
 
       it 'shows users and limited info' do
@@ -21,6 +24,12 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content user.to_s
         expect(page).not_to have_content user.security_roles.first.name
         expect(page).not_to have_content 'Created'
+        expect(page).not_to have_content 'Export to File'
+      end
+
+      it "doesn't show pending users" do
+        visit users_path
+        expect(page).not_to have_content pending_user.to_s
       end
     end
 
@@ -57,9 +66,9 @@ RSpec.describe 'Users', type: :system do
     before { login_as admin, scope: :user }
 
     describe 'index' do
-      before do
-        external_user.update! user_status: user.user_status if RadicalConfig.external_users?
-      end
+      let!(:pending_user) { create :user, user_status: pending_status }
+
+      before { external_user.update! user_status: user.user_status if RadicalConfig.external_users? }
 
       it 'shows users and all info' do
         visit users_path
@@ -67,7 +76,13 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content user.to_s
         expect(page).to have_content user.security_roles.first.name
         expect(page).to have_content 'Created'
+        expect(page).to have_content 'Export to File'
         expect(page).to have_content external_user.to_s if RadicalConfig.external_users?
+      end
+
+      it 'shows pending users' do
+        visit users_path
+        expect(page).to have_content pending_user.to_s
       end
 
       it 'filters by user type', external_user_specs: true do
@@ -199,7 +214,7 @@ RSpec.describe 'Users', type: :system do
 
   describe 'sign in' do
     it 'can not sign in without active user status' do
-      user.update!(user_status: UserStatus.default_pending_status)
+      user.update!(user_status: pending_status)
 
       visit new_user_session_path
 
