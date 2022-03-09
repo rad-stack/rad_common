@@ -20,3 +20,5 @@ import "regenerator-runtime/runtime";
 
 require("trix");
 require("@rails/actiontext");
+import {RadCommon} from "rad_common_js/src/radCommon";
+RadCommon.setup();
