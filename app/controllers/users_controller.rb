@@ -4,24 +4,25 @@ class UsersController < ApplicationController
   def index
     authorize User
 
-    @pending = policy_scope(User).includes(:user_status, :security_roles)
-                                 .pending
-                                 .recent_first
-                                 .page(params[:pending_page]).per(3)
+    if policy(User.new).update?
+      @pending = policy_scope(User).includes(:user_status, :security_roles)
+                                   .pending
+                                   .recent_first
+                                   .page(params[:pending_page]).per(3)
+    end
 
     @user_search = UserSearch.new(params, current_user)
-    @users = policy_scope(@user_search.results)
+    @users = policy_scope(@user_search.results).page(params[:page])
+  end
+
+  def export
+    authorize User
 
     respond_to do |format|
-      format.html do
-        @users = @users.page(params[:page])
-      end
-
       format.csv do
-        csv = UsersCSV.generate(@users)
-        RadbearMailer.email_report(current_user, csv, 'User Export').deliver_later
-        flash[:success] = "Your export file is generating. You'll receive an email when it finishes."
-        redirect_back fallback_location: users_path
+        UserExportJob.perform_later(search_params.to_h, current_user.id)
+        flash[:success] = report_generating_message
+        redirect_to users_path(search_params.to_h)
       end
     end
   end

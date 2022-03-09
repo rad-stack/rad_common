@@ -12,12 +12,15 @@ RSpec.describe 'Users', type: :request do
     before do
       allow(RadicalConfig).to receive(:disable_sign_up?).and_return true
       allow(RadicalConfig).to receive(:disable_invite?).and_return true
+
+      allow_any_instance_of(User).to receive(:authy_enabled?).and_return false
     end
 
     describe 'with valid params' do
       let(:valid_attributes) do
         { first_name: Faker::Name.first_name,
           last_name: Faker::Name.last_name,
+          mobile_phone: create(:phone_number, :mobile),
           password: 'cOmpl3x_p@55w0rd',
           email: 'example000@example.com' }
       end
@@ -80,11 +83,12 @@ RSpec.describe 'Users', type: :request do
     end
 
     it 'can not delete if user created audits' do
+      another
       Audited::Audit.as_user(another) { user.update!(first_name: 'Foo') }
 
       delete "/users/#{another.id}", headers: { HTTP_REFERER: users_path }
       follow_redirect!
-      expect(response.body).to include 'User has audit history'
+      expect(flash[:error]).to include 'User has audit history'
     end
   end
 end

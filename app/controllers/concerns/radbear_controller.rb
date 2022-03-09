@@ -37,10 +37,24 @@ module RadbearController
     def set_sentry_user_context
       return unless current_user
 
-      Sentry.set_user(id: current_user.id, email: current_user.email, name: current_user.to_s)
+      Sentry.set_user(id: true_user.id, email: true_user.email, name: sentry_user_name)
+    end
+
+    def sentry_user_name
+      return true_user.to_s if true_user == current_user
+
+      "#{true_user} impersonating #{current_user}"
     end
 
     def user_time_zone(&block)
       Time.use_zone(current_user.timezone, &block)
+    end
+
+    def search_params
+      params.except(:commit, :format, :action, :controller, 'utf8').permit!
+    end
+
+    def report_generating_message
+      'Your report is generating. An email will be sent when it is ready.'
     end
 end

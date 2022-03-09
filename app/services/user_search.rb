@@ -29,16 +29,25 @@ class UserSearch < RadCommon::Search
     end
 
     def sort_columns_def
-      items = [{ label: 'Name', column: 'first_name, last_name' },
+      items = [{ label: 'Name', column: 'first_name, last_name', default: !can_update? },
                { column: 'email' },
-               { column: 'mobile_phone' },
-               { label: 'Signed In', column: 'current_sign_in_at' },
-               { label: 'Created', column: 'users.created_at', direction: 'desc', default: true },
-               { label: 'Status', column: 'user_statuses.name' },
-               { label: 'Roles' }]
+               { column: 'mobile_phone' }]
+
+      if can_update?
+        items += [{ label: 'Signed In', column: 'current_sign_in_at' },
+                  { label: 'Created', column: 'users.created_at', direction: 'desc', default: true }]
+      end
+
+      items.push({ label: 'Status', column: 'user_statuses.name' })
+      items.push({ label: 'Roles' }) if can_update?
+
 
       items.push(label: 'External?', column: 'users.external') if RadicalConfig.external_users?
 
       items
+    end
+
+    def can_update?
+      Pundit.policy!(current_user, User.new).update?
     end
 end
