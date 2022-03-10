@@ -18,9 +18,9 @@ class AssociationInputPresenter
 
   def search_options
     {
-      search_path: local_assigns[:search_path],
+      search_path: "/rad_common/global_search?global_search_scope=#{local_assigns[:search_scope]}",
       initial_value: initial_value,
-      base_object: local_assigns[:base_object],
+      base_object: base_object,
       association: association,
       required: local_assigns[:required].presence || false,
       f: form
@@ -46,6 +46,10 @@ class AssociationInputPresenter
 
     def record
       form.object
+    end
+
+    def base_object
+      local_assigns[:base_object].presence || record.class.table_name.singularize
     end
 
     def collection
