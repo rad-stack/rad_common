@@ -1,19 +1,20 @@
 class RadicalRetry
   # do not add Timeout::Error, I think this is what is used in the rake session stuff and might conflict, dunno
-  # do not add Twilio::REST::TwilioError, else the SMS sender error handling won't work
   # if we find we need to add the above, we can allow passing an exception to exclude to perform_request
 
   RESCUABLE_ERRORS = [Net::OpenTimeout, OpenURI::HTTPError, HTTPClient::ConnectTimeoutError, Errno::EPIPE, SocketError,
                       OpenSSL::SSL::SSLError, Errno::ENOENT, Errno::ECONNRESET, Net::ReadTimeout, Errno::ECONNREFUSED,
                       ActiveStorage::FileNotFoundError, HTTPClient::ReceiveTimeoutError,
-                      HTTPClient::SendTimeoutError, RadicalSendGridError, EOFError].freeze
+                      HTTPClient::SendTimeoutError, RadicalSendGridError, EOFError, Twilio::REST::TwilioError].freeze
 
   class << self
-    def perform_request(no_delay: false, retry_count: 5, additional_errors: [], &block)
+    def perform_request(no_delay: false, retry_count: 5, additional_errors: [], raise_original: false, &block)
       retries ||= retry_count
       block.call
     rescue *(RESCUABLE_ERRORS + additional_errors) => e
-      raise RadicallyIntermittentException, e unless (retries -= 1).positive?
+      unless (retries -= 1).positive?
+        raise_original ? raise(e) : raise(RadicallyIntermittentException, e)
+      end
 
       exponential_pause(retries, no_delay)
       retry

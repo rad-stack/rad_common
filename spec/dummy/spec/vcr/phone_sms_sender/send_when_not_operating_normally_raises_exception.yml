@@ -5,10 +5,10 @@ http_interactions:
     uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
     body:
       encoding: UTF-8
-      string: Body=test+message&From=%2B15005550006&To=%2B15005550009
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.31.6 (ruby/x86_64-darwin19 2.7.2-p137)
+      - twilio-ruby/5.65.0 (ruby/x86_64-darwin21 2.7.5-p203)
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -22,10 +22,10 @@ http_interactions:
   response:
     status:
       code: 400
-      message: BAD REQUEST
+      message: Bad Request
     headers:
       Date:
-      - Thu, 03 Dec 2020 16:28:11 GMT
+      - Wed, 09 Mar 2022 14:02:20 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -33,9 +33,11 @@ http_interactions:
       Connection:
       - keep-alive
       Twilio-Request-Id:
-      - RQ26b377936631403894cc3c56df48ed3c
+      - RQde4c7a88fb07b163b7c12eff67a23731
       Twilio-Request-Duration:
-      - '0.043'
+      - '0.056'
+      Twilio-Concurrent-Requests:
+      - '1'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -62,5 +64,265 @@ http_interactions:
       string: '{"code": 21614, "message": "To number: +15005550009, is not a mobile
         number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
         400}'
-  recorded_at: Thu, 03 Dec 2020 16:28:11 GMT
+  recorded_at: Wed, 09 Mar 2022 14:02:19 GMT
+- request:
+    method: post
+    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    body:
+      encoding: UTF-8
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&To=%2B15005550009
+    headers:
+      User-Agent:
+      - twilio-ruby/5.65.0 (ruby/x86_64-darwin21 2.7.5-p203)
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - application/json
+      Authorization:
+      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Wed, 09 Mar 2022 14:02:36 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '149'
+      Connection:
+      - keep-alive
+      Twilio-Request-Id:
+      - RQ37ac5c641ddf69901c7a4836843fe1b1
+      Twilio-Request-Duration:
+      - '0.051'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag
+      Access-Control-Allow-Credentials:
+      - 'true'
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+    body:
+      encoding: UTF-8
+      string: '{"code": 21614, "message": "To number: +15005550009, is not a mobile
+        number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
+        400}'
+  recorded_at: Wed, 09 Mar 2022 14:02:36 GMT
+- request:
+    method: post
+    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    body:
+      encoding: UTF-8
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&To=%2B15005550009
+    headers:
+      User-Agent:
+      - twilio-ruby/5.65.0 (ruby/x86_64-darwin21 2.7.5-p203)
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - application/json
+      Authorization:
+      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Wed, 09 Mar 2022 14:02:44 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '149'
+      Connection:
+      - keep-alive
+      Twilio-Request-Id:
+      - RQe4a5a4b2ecd9134bfe62a2f5ad7b1216
+      Twilio-Request-Duration:
+      - '0.051'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag
+      Access-Control-Allow-Credentials:
+      - 'true'
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+    body:
+      encoding: UTF-8
+      string: '{"code": 21614, "message": "To number: +15005550009, is not a mobile
+        number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
+        400}'
+  recorded_at: Wed, 09 Mar 2022 14:02:44 GMT
+- request:
+    method: post
+    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    body:
+      encoding: UTF-8
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&To=%2B15005550009
+    headers:
+      User-Agent:
+      - twilio-ruby/5.65.0 (ruby/x86_64-darwin21 2.7.5-p203)
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - application/json
+      Authorization:
+      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Wed, 09 Mar 2022 14:02:48 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '149'
+      Connection:
+      - keep-alive
+      Twilio-Request-Id:
+      - RQ2824259c72312323afbebae67186aa64
+      Twilio-Request-Duration:
+      - '0.041'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag
+      Access-Control-Allow-Credentials:
+      - 'true'
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+    body:
+      encoding: UTF-8
+      string: '{"code": 21614, "message": "To number: +15005550009, is not a mobile
+        number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
+        400}'
+  recorded_at: Wed, 09 Mar 2022 14:02:48 GMT
+- request:
+    method: post
+    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    body:
+      encoding: UTF-8
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&To=%2B15005550009
+    headers:
+      User-Agent:
+      - twilio-ruby/5.65.0 (ruby/x86_64-darwin21 2.7.5-p203)
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - application/json
+      Authorization:
+      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Wed, 09 Mar 2022 14:02:51 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '149'
+      Connection:
+      - keep-alive
+      Twilio-Request-Id:
+      - RQ4ed433c9c383a8f98a417a30655ccbd4
+      Twilio-Request-Duration:
+      - '0.043'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag
+      Access-Control-Allow-Credentials:
+      - 'true'
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+    body:
+      encoding: UTF-8
+      string: '{"code": 21614, "message": "To number: +15005550009, is not a mobile
+        number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
+        400}'
+  recorded_at: Wed, 09 Mar 2022 14:02:50 GMT
 recorded_with: VCR 6.0.0
