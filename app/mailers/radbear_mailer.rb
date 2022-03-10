@@ -49,6 +49,7 @@ class RadbearMailer < ActionMailer::Base
 
     mail to: recipient.formatted_email,
          subject: "Invalid data in #{RadicalConfig.app_name!}",
+         template_path: 'notification_mailer',
          template_name: 'global_validity'
   end
 
