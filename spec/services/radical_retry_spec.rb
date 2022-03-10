@@ -49,5 +49,32 @@ RSpec.describe RadicalRetry, type: :service do
         expect(response).to eq(request_block)
       end
     end
+
+    context 'with raise_original flag' do
+      let(:request_block) { raise Twilio::REST::TwilioError }
+      let(:args) { { no_delay: true, retry_count: 2, raise_original: raise_original } }
+
+      context 'when true' do
+        let(:raise_original) { true }
+
+        it 'raises original error' do
+          expect(described_class).to receive(:exponential_pause)
+          expect {
+            described_class.perform_request(args) { request_block }
+          }.to raise_error(Twilio::REST::TwilioError)
+        end
+      end
+
+      context 'when false' do
+        let(:raise_original) { false }
+
+        it 'raises RadicallyIntermittentException' do
+          expect(described_class).to receive(:exponential_pause)
+          expect {
+            described_class.perform_request(args) { request_block }
+          }.to raise_error(RadicallyIntermittentException)
+        end
+      end
+    end
   end
 end
