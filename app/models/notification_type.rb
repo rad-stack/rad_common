@@ -136,6 +136,8 @@ class NotificationType < ApplicationRecord
                                      mailer_options.merge(notification_settings_link: true)).deliver_later
       else
         mailer = mailer_class.constantize
+        raise 'all notification mailers must subclass NotificationMailer' unless mailer.superclass == NotificationMailer
+
         mailer.send(mailer_method, id_list, payload).deliver_later
       end
     end

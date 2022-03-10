@@ -18,7 +18,7 @@ class RadbearMailer < ActionMailer::Base
                       button_text: auto_approve ? 'Review' : 'Review & Approve',
                       button_url: edit_user_url(user) }
 
-    @notification_settings_link = true
+    enable_settings_link
     @recipient = User.where(id: recipients)
     to_address = @recipient.map(&:formatted_email)
 
@@ -47,7 +47,7 @@ class RadbearMailer < ActionMailer::Base
 
     approved_by_name = (approver ? approver.to_s : 'an admin')
 
-    @notification_settings_link = true
+    enable_settings_link
     @recipient = User.where(id: recipients)
     to_address = @recipient.map(&:formatted_email)
 
@@ -73,7 +73,7 @@ class RadbearMailer < ActionMailer::Base
 
     @message = options[:do_not_format] ? message : simple_format(message)
     @email_action = options[:email_action] if options[:email_action]
-    @notification_settings_link = options[:notification_settings_link]
+    enable_settings_link if options[:notification_settings_link]
 
     maybe_attach options
 
@@ -81,7 +81,7 @@ class RadbearMailer < ActionMailer::Base
   end
 
   def global_validity(recipients, problems)
-    @notification_settings_link = true
+    enable_settings_link
     @recipient = User.where(id: recipients)
     to_address = @recipient.map(&:formatted_email)
 
@@ -102,7 +102,7 @@ class RadbearMailer < ActionMailer::Base
   end
 
   def global_validity_ran_long(recipients, run_stats)
-    @notification_settings_link = true
+    enable_settings_link
     @recipient = User.where(id: recipients)
     to_address = @recipient.map(&:formatted_email)
 
@@ -176,5 +176,9 @@ class RadbearMailer < ActionMailer::Base
 
     def escape_name(recipient_name)
       recipient_name.gsub(',', ' ')
+    end
+
+    def enable_settings_link
+      @notification_settings_link = true
     end
 end
