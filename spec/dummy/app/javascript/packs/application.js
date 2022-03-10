@@ -17,6 +17,7 @@
 
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import('rad_common_js/src/stylesheets');
 
 require("trix");
 require("@rails/actiontext");
