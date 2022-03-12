@@ -130,14 +130,17 @@ class NotificationType < ApplicationRecord
       return if id_list.count.zero?
 
       if mailer_class == 'RadbearMailer' && mailer_method == 'simple_message'
-
         RadbearMailer.simple_message(id_list,
                                      mailer_subject,
                                      mailer_message,
-                                     mailer_options).deliver_later
-
+                                     mailer_options.merge(notification_settings_link: true)).deliver_later
       else
         mailer = mailer_class.constantize
+
+        unless mailer == NotificationMailer || mailer.superclass == NotificationMailer
+          raise 'all notification mailers must subclass NotificationMailer'
+        end
+
         mailer.send(mailer_method, id_list, payload).deliver_later
       end
     end

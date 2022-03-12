@@ -59,6 +59,12 @@
     .email-header
       .email-row
         .email-col-12.text-align-center
+          - if @notification_settings_link
+            .footer
+              .footer-item
+                Click
+                = link_to 'here', "#{protocol}://#{RadicalConfig.host_name!}/rad_common/notification_settings"
+                to opt out or change your notification settings.
           .footer
             .footer-item= company_name
             - if company_full_address.present?
