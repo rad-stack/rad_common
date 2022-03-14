@@ -8,5 +8,8 @@ scss:
 sass-lint:
   enabled: false
 eslint:
-  enabled: true
+  enabled: false
   config_file: .eslintrc
+  version: 7.7.0
+jshint:
+  enabled: false
