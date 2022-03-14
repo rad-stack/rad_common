@@ -22,7 +22,6 @@ module RadCommon
 
         # misc
         template '../../../../../spec/dummy/Procfile', 'Procfile'
-        template '../../../../../spec/dummy/package.json', 'package.json'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
