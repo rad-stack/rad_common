@@ -1,5 +1,9 @@
 module Notifications
   class UserWasApprovedNotification < ::NotificationType
+    def mailer_class
+      'NotificationMailer'
+    end
+
     def mailer_method
       'user_was_approved'
     end

@@ -16,7 +16,7 @@ class PhoneSMSSender
   end
 
   def send!
-    RadicalRetry.perform_request do
+    RadicalRetry.perform_request(raise_original: true) do
       if mms?
         twilio.send_mms to: to_number, message: message, media_url: media_url
       else

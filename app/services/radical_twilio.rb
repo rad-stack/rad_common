@@ -63,7 +63,7 @@ class RadicalTwilio
     def lookup_number(number, type = nil)
       lookup_client = Twilio::REST::Client.new(RadicalConfig.twilio_account_sid!, RadicalConfig.twilio_auth_token!)
 
-      RadicalRetry.perform_request(retry_count: 2) do
+      RadicalRetry.perform_request(retry_count: 2, raise_original: true) do
         if type
           lookup_client.lookups.phone_numbers(number).fetch(type: [type])
         else
