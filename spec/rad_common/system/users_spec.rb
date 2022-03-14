@@ -66,13 +66,14 @@ RSpec.describe 'Users', type: :system do
     before { login_as admin, scope: :user }
 
     describe 'index' do
+      let(:result_label) { RadicalConfig.external_users? ? 'Users (2)' : 'Users (1)' }
       let!(:pending_user) { create :user, user_status: pending_status }
 
       before { external_user.update! user_status: user.user_status if RadicalConfig.external_users? }
 
       it 'shows users and all info' do
         visit users_path
-        expect(page).to have_content 'Users (2)'
+        expect(page).to have_content result_label
         expect(page).to have_content user.to_s
         expect(page).to have_content user.security_roles.first.name
         expect(page).to have_content 'Created'
