@@ -2,12 +2,10 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@rails/actiontext": "^6.0.2-1",
     "@rails/webpacker": "4.2.2",
     "dns-packet": "^5.2.2",
     "postcss": "^8.2.10",
-    "trix": "^1.0.0",
-    "rad_common_js": "1.8.3",
+    "rad_common_js": "1.9.0",
     "ws": "^7.4.6",
     "jquery": "^3.6.0",
     "jquery-ujs": "^1.2.3"
