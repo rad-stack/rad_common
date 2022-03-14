@@ -71,7 +71,7 @@ module RadbearUser
                                        message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
 
     validates_with PhoneNumberValidator, fields: [{ field: :mobile_phone, type: :mobile }]
-    validates_with EmailAddressValidator, fields: %i[email], on: :update, if: :fully_validate_email?
+    validates_with EmailAddressValidator, fields: %i[email], if: :fully_validate_email?
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create

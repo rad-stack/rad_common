@@ -25,7 +25,7 @@ class EmailAddressValidator < ActiveModel::Validator
   private
 
     def valid_email?(email)
-      email =~ URI::MailTo::EMAIL_REGEXP && email !~ /[A-Z]/
+      EmailAddress.valid?(email)
     end
 
     def check_sendgrid?(record, field)

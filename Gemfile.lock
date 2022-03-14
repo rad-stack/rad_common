@@ -11,8 +11,9 @@ PATH
       bootstrap4-kaminari-views (~> 1.0.1)
       devise
       devise-authy
-      devise-security (= 0.16.0)
+      devise-security
       devise_invitable
+      email_address
       faker
       font-awesome-rails
       haml-rails (~> 2.0)
@@ -28,7 +29,6 @@ PATH
       puma (~> 5.6)
       pundit
       rails (~> 6.1.4)
-      rails_email_validator
       sendgrid-ruby
       sentry-rails
       sentry-ruby
@@ -180,13 +180,15 @@ GEM
     devise-authy (2.3.0)
       authy (~> 3.0)
       devise (>= 4.0.0)
-    devise-security (0.16.0)
-      devise (>= 4.3.0, < 5.0)
+    devise-security (0.17.0)
+      devise (>= 4.3.0)
     devise_invitable (2.0.6)
       actionmailer (>= 5.0)
       devise (>= 4.6)
     diff-lcs (1.5.0)
     docile (1.4.0)
+    email_address (0.2.2)
+      simpleidn
     erubi (1.10.0)
     erubis (2.7.0)
     execjs (2.8.1)
@@ -274,7 +276,7 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
-    libv8-node (15.14.0.1)
+    libv8-node (15.14.0.1-x86_64-darwin-21)
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -349,8 +351,6 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.4.2)
       loofah (~> 2.3)
-    rails_email_validator (0.1.4)
-      activemodel (>= 3.0.0)
     railties (6.1.5)
       actionpack (= 6.1.5)
       activesupport (= 6.1.5)
@@ -449,6 +449,8 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
+    simpleidn (0.2.1)
+      unf (~> 0.1.4)
     sprockets (4.0.3)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -470,6 +472,9 @@ GEM
       nokogiri (>= 1.6, < 2.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.8)
     unicode-display_width (1.8.0)
     vcr (6.1.0)
     warden (1.2.9)

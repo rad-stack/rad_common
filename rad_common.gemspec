@@ -26,7 +26,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise'
   s.add_dependency 'devise-authy'
   s.add_dependency 'devise_invitable'
-  s.add_dependency 'devise-security', '0.16.0' # locked, see Task 35711
+  s.add_dependency 'devise-security'
+  s.add_dependency 'email_address'
   s.add_dependency 'faker'
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'haml-rails', '~> 2.0'
@@ -42,7 +43,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'pretender'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1.4'
-  s.add_dependency 'rails_email_validator'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'

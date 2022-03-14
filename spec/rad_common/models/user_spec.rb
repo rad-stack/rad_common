@@ -146,7 +146,10 @@ RSpec.describe User, type: :model do
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
         expect(user).not_to be_valid
-        expect(user.errors.full_messages.to_s).to include 'Email is invalid'
+        expect(user.errors.full_messages.to_s).to include(
+          'Email is not written in a valid format. Email cannot have capital letters, '\
+          'domain must be less than 62 characters and does not allow special characters.'
+        )
       end
     end
 

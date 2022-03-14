@@ -60,6 +60,8 @@ end
 
 AuthTrail.geocode = false
 
+EmailAddress::Config.configure(host_validation: :syntax)
+
 module Kaminari
   # monkey patch to fix paging on engine routes
   # https://github.com/radicalbear/rad_common/pull/211/files
