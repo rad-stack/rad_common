@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'image_processing', '~> 1.9'
   s.add_dependency 'kaminari', '~> 1.2.1'
   s.add_dependency 'mini_racer', '~> 0.4.0' # see task 35349
-  s.add_dependency 'momentjs-rails', '~> 2.9', '>= 2.9.0', '<= 2.20.1' # see task 35669
+  s.add_dependency 'momentjs-rails'
   s.add_dependency 'nokogiri'
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
