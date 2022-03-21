@@ -103,7 +103,7 @@ module RadbearUser
   end
 
   def permission?(permission)
-    security_roles.select { |x| x[permission] }.length.positive?
+    security_roles.any? { |x| x[permission] }
   end
 
   def permission_or_pending?(permission)
