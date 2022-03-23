@@ -35,7 +35,34 @@ module RadCommon
     end
 
     def permission_tooltip(permission)
-      t "permission_tooltips.#{permission}", default: ''
+      t "permission_tooltips.#{permission}", default: permission_tooltip_default(permission)
+    end
+
+    def permission_tooltip_default(permission)
+      if permission.start_with?('create_')
+        suffix = permission.gsub('create_', '').titleize.pluralize.downcase
+        "Create new #{suffix}"
+      elsif permission.start_with?('read_')
+        suffix = permission.gsub('read_', '').titleize.pluralize.downcase
+        "Read #{suffix}"
+      elsif permission.start_with?('update_')
+        suffix = permission.gsub('update_', '').titleize.pluralize.downcase
+        "Update existing #{suffix}"
+      elsif permission.start_with?('edit_')
+        suffix = permission.gsub('edit_', '').titleize.pluralize.downcase
+        "Update existing #{suffix}"
+      elsif permission.start_with?('destroy_')
+        suffix = permission.gsub('destroy_', '').titleize.pluralize.downcase
+        "Delete #{suffix}"
+      elsif permission.start_with?('delete_')
+        suffix = permission.gsub('delete_', '').titleize.pluralize.downcase
+        "Delete #{suffix}"
+      elsif permission.start_with?('manage_')
+        suffix = permission.gsub('manage_', '').titleize.pluralize.downcase
+        "Manage (create/read/update/delete) #{suffix}"
+      else
+        ''
+      end
     end
 
     def permission_tooltip_content(permission)
