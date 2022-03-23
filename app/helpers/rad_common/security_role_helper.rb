@@ -18,7 +18,7 @@ module RadCommon
         security_role_hash[field[:label]] = field[:permission]
       end
 
-      security_role_hash.sort
+      security_role_hash
     end
 
     def security_role_collection(mode)
@@ -59,7 +59,7 @@ module RadCommon
         "Delete #{suffix}"
       elsif permission.start_with?('manage_')
         suffix = permission.gsub('manage_', '').titleize.pluralize.downcase
-        "Manage (create/read/update/delete) #{suffix}"
+        "Manage (read/create/update/delete) #{suffix}"
       else
         ''
       end

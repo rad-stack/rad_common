@@ -61,7 +61,7 @@ describe RadCommon::SecurityRoleHelper do
     context 'with default manage tooltip' do
       let(:permission) { 'manage_division' }
 
-      it { is_expected.to eq 'Manage (create/read/update/delete) divisions' }
+      it { is_expected.to eq 'Manage (read/create/update/delete) divisions' }
     end
 
     context 'with default non-crud tooltip' do
