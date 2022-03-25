@@ -19,6 +19,17 @@ module RadSecurityRole
     audited
   end
 
+  def permission_categories
+    categories = permission_attributes.map do |item|
+      { category_name: permission_category_name(item.first),
+        permission_name: item.first.titleize,
+        permission: item.first,
+        value: send(item.first) }
+    end
+
+    categories.group_by { |item| item[:category_name] }
+  end
+
   def permission_attributes
     filtered_attributes = attributes.dup
 
@@ -62,5 +73,17 @@ module RadSecurityRole
           break
         end
       end
+    end
+
+    def permission_category_name(permission_name)
+      return 'Admin' if permission_name == 'admin'
+
+      categories = RadCommon::AppInfo.new.application_models.map { |item| item.underscore }
+
+      categories.each do |category|
+        return category.titleize if permission_name.end_with?(category)
+      end
+
+      'Other'
     end
 end

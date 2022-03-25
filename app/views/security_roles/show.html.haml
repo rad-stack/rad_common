@@ -8,15 +8,18 @@
         %h3 Permissions
         %table.table.table-striped.table-bordered
           %tr
-            %th Name
-            %th Allowed
-
-          - normalize_names(humanized_permission_fields).each do |name, permission|
+            %th Category
+            %th Permissions
+          - @permission_categories.each do |permission_category|
             %tr
+              %td= permission_category.first
               %td
-                = link_to name, permission_security_roles_path(permission_name: permission)
-                = permission_tooltip_content(permission)
-              %td{ class: @security_role.send(permission) ? 'fa fa-check green-check' : 'fa fa-times red-x' }
+                - permission_category.last.each do |permission|
+                  .row.col-lg-12
+                    %div{ class: permission[:value] ? 'fa fa-check green-check' : 'fa fa-times red-x' }
+                    = link_to permission[:permission_name], permission_security_roles_path(permission_name: permission[:permission])
+                    = permission_tooltip_content(permission[:permission])
+
       .col-lg-6
         - users = @security_role.users.active.by_name
         %h3 Users in Role (#{users.count})

@@ -6,7 +6,9 @@ class SecurityRolesController < ApplicationController
     @security_roles = policy_scope(SecurityRole.by_name).page(params[:page])
   end
 
-  def show; end
+  def show
+    @permission_categories = @security_role.permission_categories
+  end
 
   def new
     @security_role = SecurityRole.new
