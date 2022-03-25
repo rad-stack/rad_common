@@ -1,24 +1,31 @@
 class SecurityRolesController < ApplicationController
   before_action :set_security_role, only: %i[show edit update destroy]
-  before_action :set_permissions, only: %i[show new create edit update]
 
   def index
     authorize SecurityRole
     @security_roles = policy_scope(SecurityRole.by_name).page(params[:page])
   end
 
-  def show; end
+  def show
+    set_permissions
+  end
 
   def new
     @security_role = SecurityRole.new
     authorize @security_role
+
+    set_permissions
   end
 
-  def edit; end
+  def edit
+    set_permissions
+  end
 
   def create
     @security_role = SecurityRole.new(permitted_params)
     authorize @security_role
+
+    set_permissions
 
     if @security_role.save
       redirect_to @security_role, notice: 'Security role was successfully created.'
@@ -28,6 +35,8 @@ class SecurityRolesController < ApplicationController
   end
 
   def update
+    set_permissions
+
     if @security_role.update(permitted_params)
       redirect_to @security_role, notice: 'Security role was successfully updated.'
     else
