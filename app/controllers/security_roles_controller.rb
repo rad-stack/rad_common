@@ -1,14 +1,13 @@
 class SecurityRolesController < ApplicationController
   before_action :set_security_role, only: %i[show edit update destroy]
+  before_action :set_permissions, only: %i[show new create edit update]
 
   def index
     authorize SecurityRole
     @security_roles = policy_scope(SecurityRole.by_name).page(params[:page])
   end
 
-  def show
-    @permission_categories = @security_role.permission_categories
-  end
+  def show; end
 
   def new
     @security_role = SecurityRole.new
@@ -65,6 +64,10 @@ class SecurityRolesController < ApplicationController
     def set_security_role
       @security_role = SecurityRole.find(params[:id])
       authorize @security_role
+    end
+
+    def set_permissions
+      @permission_categories = @security_role.permission_categories
     end
 
     def permitted_params
