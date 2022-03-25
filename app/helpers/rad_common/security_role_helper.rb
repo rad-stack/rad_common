@@ -18,7 +18,7 @@ module RadCommon
         security_role_hash[field[:label]] = field[:permission]
       end
 
-      security_role_hash
+      security_role_hash.sort
     end
 
     def security_role_collection(mode)
