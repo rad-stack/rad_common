@@ -37,13 +37,4 @@ class RadPermission
         ''
       end
     end
-
-    def permission_tooltip_content
-      return if permission_tooltip(name).blank?
-
-      tag.i('',
-            class: 'fa fa-question-circle custom-tooltip tooltip-pad mr-2',
-            'data-toggle': 'tooltip',
-            title: permission_tooltip(name))
-    end
 end
