@@ -78,12 +78,14 @@ module RadSecurityRole
     def permission_category_name(permission_name)
       return 'Admin' if permission_name == 'admin'
 
-      categories = RadCommon::AppInfo.new.application_models.map { |item| item.underscore }
-
-      categories.each do |category|
+      model_category_names.each do |category|
         return category.titleize if permission_name.end_with?(category)
       end
 
       'Other'
+    end
+
+    def model_category_names
+      @model_category_names ||= RadCommon::AppInfo.new.application_models.map(&:underscore)
     end
 end
