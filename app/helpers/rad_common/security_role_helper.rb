@@ -42,7 +42,7 @@ module RadCommon
       return if permission_tooltip(permission).blank?
 
       tag.i('',
-            class: 'fa fa-question-circle custom-tooltip tooltip-pad mr-2',
+            class: 'fa fa-question-circle custom-tooltip tooltip-pad mr-2 align-self-center',
             'data-toggle': 'tooltip',
             title: permission_tooltip(permission))
     end
