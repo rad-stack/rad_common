@@ -22,7 +22,7 @@ class SystemUsageSearch < RadCommon::Search
         date_column_ranges.each do |header|
           case item.class.to_s
           when 'String'
-            name = item.pluralize
+            name = item.titleize.pluralize
             klass = item.constantize
             result = Pundit.policy_scope!(current_user, klass)
           when 'Array'
