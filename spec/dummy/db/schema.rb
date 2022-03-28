@@ -240,7 +240,7 @@ ActiveRecord::Schema.define(version: 2022_03_28_202539) do
     t.boolean "update_division", default: false, null: false
     t.boolean "delete_division", default: false, null: false
     t.boolean "external", default: false, null: false
-    t.boolean "manage_users", default: false, null: false
+    t.boolean "manage_user", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 

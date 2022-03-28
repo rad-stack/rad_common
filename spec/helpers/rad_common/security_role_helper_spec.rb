@@ -35,6 +35,7 @@ describe RadCommon::SecurityRoleHelper do
         [{ label: 'Admin', permission: 'admin' },
          { label: 'Create Division', permission: 'create_division' },
          { label: 'Delete Division', permission: 'delete_division' },
+         { label: 'Manage User', permission: 'manage_user' },
          { label: 'Read Division', permission: 'read_division' },
          { label: 'Update Division', permission: 'update_division' }]
       )

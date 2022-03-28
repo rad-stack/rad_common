@@ -4,7 +4,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def create?
-    user.permission?(:manage_users)
+    user.permission?(:manage_user)
   end
 
   alias show? create?
