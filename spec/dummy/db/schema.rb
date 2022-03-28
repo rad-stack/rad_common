@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_05_122716) do
+ActiveRecord::Schema.define(version: 2022_03_28_202539) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -240,6 +240,7 @@ ActiveRecord::Schema.define(version: 2022_02_05_122716) do
     t.boolean "update_division", default: false, null: false
     t.boolean "delete_division", default: false, null: false
     t.boolean "external", default: false, null: false
+    t.boolean "manage_users", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 

@@ -190,6 +190,7 @@ Seeder.new.seed!
         apply_migration '20211202111615_fix_audits_index.rb'
         apply_migration '20220121140559_create_user_clients.rb'
         apply_migration '20220202173640_authy_no_sms.rb'
+        apply_migration '20220328202539_manage_users_perm.rb'
       end
 
       def self.next_migration_number(path)
