@@ -20,11 +20,14 @@ module RadSecurityRole
   end
 
   def permission_categories
-    categories = permission_attributes.map do |item|
-      { category_name: permission_category_name(item.first),
-        permission_name: item.first.titleize,
-        permission: item.first,
-        value: send(item.first) }
+    categories = SecurityRole.permission_fields.map do |item|
+      permission = RadPermission.new(item)
+
+      { category_name: permission_category_name(item),
+        permission_label: permission.label,
+        permission: permission.name,
+        tooltip: permission.tooltip,
+        value: send(item) }
     end
 
     categories.group_by { |item| item[:category_name] }

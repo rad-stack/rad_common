@@ -5,8 +5,24 @@ class RadPermission
     @name = name
   end
 
+  def label
+    name.titleize
+  end
+
+  def tooltip?
+    tooltip.present?
+  end
+
   def tooltip
     I18n.t "permission_tooltips.#{name}", default: permission_tooltip_default
+  end
+
+  def security_roles
+    SecurityRole.where("#{name} = TRUE").by_name
+  end
+
+  def users
+    User.by_permission(name).by_name
   end
 
   private

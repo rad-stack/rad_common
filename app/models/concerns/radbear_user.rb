@@ -114,6 +114,20 @@ module RadbearUser
     end
   end
 
+  def permission_categories
+    categories = SecurityRole.permission_fields.map do |item|
+      permission = RadPermission.new(item)
+
+      { category_name: permission_category_name(item),
+        permission_label: permission.label,
+        permission: permission.name,
+        tooltip: permission.tooltip,
+        value: permission?(item) }
+    end
+
+    categories.group_by { |item| item[:category_name] }
+  end
+
   def all_permissions
     permissions = []
 
@@ -249,5 +263,19 @@ module RadbearUser
 
     def notify_user_accepted
       Notifications::UserAcceptedInvitationNotification.main.notify!(self)
+    end
+
+    def permission_category_name(permission_name)
+      return 'Admin' if permission_name == 'admin'
+
+      model_category_names.each do |category|
+        return category.titleize if permission_name.end_with?(category)
+      end
+
+      'Other'
+    end
+
+    def model_category_names
+      @model_category_names ||= RadCommon::AppInfo.new.application_models.map(&:underscore)
     end
 end

@@ -3,36 +3,16 @@
   .card-body
     - if RadicalConfig.external_users?
       = render 'layouts/show_data_columns', data: [:external], resource: @security_role
-    .row
-      .col-lg-6
-        %h3 Permissions
 
-        %table.table.table-striped.table-bordered
-          %tr
-            %th Category
-            %th Permissions
-          - @permission_categories.each do |permission_category|
-            %tr
-              %td= permission_category.first
-              %td
-                - permission_category.last.each do |permission|
-                  .row.col-lg-12
-                    = link_to permission[:permission_name],
-                              permission_security_roles_path(permission_name: permission[:permission])
+.row
+  .col-lg-6
+    = render 'security_roles/permissions', permission_categories: @permission_categories
 
-                    = permission_tooltip_content(permission[:permission])
-
-                    - if permission_tooltip(permission[:permission]).blank?
-                      &nbsp
-
-                    - if permission[:value]
-                      .fa.fa-check.green-check.align-self-center
-                    - else
-                      .fa.fa-times.red-x.align-self-center
-
-      .col-lg-6
-        - users = @security_role.users.active.by_name
-        %h3 Users in Role (#{users.count})
+  .col-lg-6
+    .card
+      - users = @security_role.users.active.by_name
+      = render 'layouts/card_header', action_name: 'custom', title: "Users in Role (#{users.count})", icon: 'fa-list'
+      .card-body
         %table.table.table-striped.table-bordered
           %tr
             %th Name

@@ -1,26 +1,5 @@
 module RadCommon
   module SecurityRoleHelper
-    def humanized_permission_fields
-      SecurityRole.permission_fields.each_with_object([]) do |field, permissions|
-        label = humanized_permission_field(field)
-        permissions.push(label: label, permission: field)
-      end
-    end
-
-    def humanized_permission_field(field)
-      field.titleize
-    end
-
-    def normalize_names(fields)
-      security_role_hash = {}
-
-      fields.each do |field|
-        security_role_hash[field[:label]] = field[:permission]
-      end
-
-      security_role_hash.sort
-    end
-
     def security_role_collection(mode)
       roles = SecurityRole
 
@@ -34,17 +13,14 @@ module RadCommon
       roles.by_name.map { |role| [role.name, role.id] }
     end
 
-    def permission_tooltip(permission)
-      RadPermission.new(permission).tooltip
-    end
-
     def permission_tooltip_content(permission)
-      return if permission_tooltip(permission).blank?
+      tooltip = RadPermission.new(permission).tooltip
+      return if tooltip.blank?
 
       tag.i('',
             class: 'fa fa-question-circle custom-tooltip tooltip-pad mr-2 align-self-center',
             'data-toggle': 'tooltip',
-            title: permission_tooltip(permission))
+            title: tooltip)
     end
   end
 end
