@@ -23,7 +23,7 @@
                 - permission_category.last.each do |permission|
                   = f.input permission[:permission],
                             label: permission[:permission_name],
-                            tooltip: RadPermission.new(permission[:permission]).tooltip
+                            tooltip: permission[:tooltip]
 
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'
