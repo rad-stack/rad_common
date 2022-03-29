@@ -12,29 +12,19 @@ class RadPermission
   private
 
     def permission_tooltip_default
-      if name.start_with?('create_')
-        suffix = name.gsub('create_', '').titleize.pluralize.downcase
-        "Create new #{suffix}"
-      elsif name.start_with?('read_')
-        suffix = name.gsub('read_', '').titleize.pluralize.downcase
-        "Read #{suffix}"
-      elsif name.start_with?('update_')
-        suffix = name.gsub('update_', '').titleize.pluralize.downcase
-        "Update existing #{suffix}"
-      elsif name.start_with?('edit_')
-        suffix = name.gsub('edit_', '').titleize.pluralize.downcase
-        "Update existing #{suffix}"
-      elsif name.start_with?('destroy_')
-        suffix = name.gsub('destroy_', '').titleize.pluralize.downcase
-        "Delete #{suffix}"
-      elsif name.start_with?('delete_')
-        suffix = name.gsub('delete_', '').titleize.pluralize.downcase
-        "Delete #{suffix}"
-      elsif name.start_with?('manage_')
-        suffix = name.gsub('manage_', '').titleize.pluralize.downcase
-        "Manage (read/create/update/delete) #{suffix}"
-      else
-        ''
+      [['create', 'Create new'],
+       %w[read Read],
+       ['update', 'Update existing'],
+       ['edit', 'Update existing'],
+       %w[destroy Delete],
+       %w[delete Delete],
+       ['manage', 'Manage (read/create/update/delete)']].each do |item|
+        if name.start_with?("#{item.first}_")
+          suffix = name.gsub("#{item.first}_", '').titleize.pluralize.downcase
+          return "#{item.last} #{suffix}"
+        end
       end
+
+      ''
     end
 end
