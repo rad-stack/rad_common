@@ -77,7 +77,7 @@ class RadSeeder
     end
 
     def seed_all(role)
-      SecurityRole.permission_fields.each { |item| role.send("#{item}=", true) }
+      RadPermission.all.each { |item| role.send("#{item}=", true) }
     end
 
     def seed_user
@@ -101,7 +101,7 @@ class RadSeeder
       role = SecurityRole.find_or_initialize_by(name: name)
 
       # init all perms to false
-      SecurityRole.permission_fields.each do |field|
+      RadPermission.all.each do |field|
         role.send("#{field}=", false)
       end
 

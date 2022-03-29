@@ -25,6 +25,56 @@ class RadPermission
     User.by_permission(name).by_name
   end
 
+  class << self
+    def all
+      (SecurityRole.attribute_names - %w[id name created_at updated_at external]).sort
+    end
+
+    def security_role_categories(security_role)
+      # would be good to refactor this with user_categories
+
+      categories = all.map do |item|
+        permission = RadPermission.new(item)
+
+        { category_name: permission_category_name(RadCommon::AppInfo.new.application_models.map(&:underscore), item),
+          permission_label: permission.label,
+          permission: permission.name,
+          tooltip: permission.tooltip,
+          value: security_role.send(item) }
+      end
+
+      categories.group_by { |item| item[:category_name] }
+    end
+
+    def user_categories(user)
+      # would be good to refactor this with security_role_categories
+
+      categories = all.map do |item|
+        permission = RadPermission.new(item)
+
+        { category_name: permission_category_name(RadCommon::AppInfo.new.application_models.map(&:underscore), item),
+          permission_label: permission.label,
+          permission: permission.name,
+          tooltip: permission.tooltip,
+          value: user.permission?(item) }
+      end
+
+      categories.group_by { |item| item[:category_name] }
+    end
+
+    private
+
+      def permission_category_name(model_category_names, permission_name)
+        return 'Admin' if permission_name == 'admin'
+
+        model_category_names.each do |category|
+          return category.titleize if permission_name.end_with?(category)
+        end
+
+        'Other'
+      end
+  end
+
   private
 
     def permission_tooltip_default

@@ -75,10 +75,10 @@ class SecurityRolesController < ApplicationController
     end
 
     def set_permissions
-      @permission_categories = @security_role.permission_categories
+      @permission_categories = RadPermission.security_role_categories(@security_role)
     end
 
     def permitted_params
-      params.require(:security_role).permit(%i[name external] + SecurityRole.permission_fields.map(&:to_sym))
+      params.require(:security_role).permit(%i[name external] + RadPermission.all.map(&:to_sym))
     end
 end

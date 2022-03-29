@@ -19,20 +19,6 @@ module RadSecurityRole
     audited
   end
 
-  def permission_categories
-    categories = SecurityRole.permission_fields.map do |item|
-      permission = RadPermission.new(item)
-
-      { category_name: permission_category_name(item),
-        permission_label: permission.label,
-        permission: permission.name,
-        tooltip: permission.tooltip,
-        value: send(item) }
-    end
-
-    categories.group_by { |item| item[:category_name] }
-  end
-
   module ClassMethods
     def resolve_roles(role_ids)
       if role_ids
@@ -49,10 +35,6 @@ module RadSecurityRole
 
       role
     end
-
-    def permission_fields
-      (SecurityRole.attribute_names - %w[id name created_at updated_at external]).sort
-    end
   end
 
   private
@@ -60,25 +42,11 @@ module RadSecurityRole
     def validate_standard_permissions
       return unless admin?
 
-      SecurityRole.permission_fields.each do |field|
+      RadPermission.all.each do |field|
         unless public_send(field)
           errors.add(:admin, 'requires all permissions to be true')
           break
         end
       end
-    end
-
-    def permission_category_name(permission_name)
-      return 'Admin' if permission_name == 'admin'
-
-      model_category_names.each do |category|
-        return category.titleize if permission_name.end_with?(category)
-      end
-
-      'Other'
-    end
-
-    def model_category_names
-      @model_category_names ||= RadCommon::AppInfo.new.application_models.map(&:underscore)
     end
 end
