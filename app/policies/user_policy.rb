@@ -3,6 +3,13 @@ class UserPolicy < ApplicationPolicy
     user.internal?
   end
 
+  def create?
+    user.permission?(:manage_user)
+  end
+
+  alias show? create?
+  alias update? create?
+  alias destroy? create?
   alias resend_invitation? create?
   alias confirm? update?
   alias reset_authy? update?
