@@ -14,7 +14,7 @@
                 = link_to permission[:permission_label],
                           permission_security_roles_path(permission_name: permission[:permission])
 
-                = permission_tooltip_content(permission[:permission])
+                = permission_tooltip_content(permission[:tooltip])
 
                 - if permission[:tooltip].blank?
                   &nbsp

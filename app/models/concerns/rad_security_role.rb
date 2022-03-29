@@ -33,16 +33,6 @@ module RadSecurityRole
     categories.group_by { |item| item[:category_name] }
   end
 
-  def permission_attributes
-    filtered_attributes = attributes.dup
-
-    filtered_attributes.each do |key, _value|
-      filtered_attributes.delete(key) unless SecurityRole.permission_fields.include?(key)
-    end
-
-    filtered_attributes
-  end
-
   module ClassMethods
     def resolve_roles(role_ids)
       if role_ids

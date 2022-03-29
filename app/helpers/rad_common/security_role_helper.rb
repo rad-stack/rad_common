@@ -13,8 +13,7 @@ module RadCommon
       roles.by_name.map { |role| [role.name, role.id] }
     end
 
-    def permission_tooltip_content(permission)
-      tooltip = RadPermission.new(permission).tooltip
+    def permission_tooltip_content(tooltip)
       return if tooltip.blank?
 
       tag.i('',
