@@ -6,18 +6,26 @@ class SecurityRolesController < ApplicationController
     @security_roles = policy_scope(SecurityRole.by_name).page(params[:page])
   end
 
-  def show; end
+  def show
+    set_permissions
+  end
 
   def new
     @security_role = SecurityRole.new
     authorize @security_role
+
+    set_permissions
   end
 
-  def edit; end
+  def edit
+    set_permissions
+  end
 
   def create
     @security_role = SecurityRole.new(permitted_params)
     authorize @security_role
+
+    set_permissions
 
     if @security_role.save
       redirect_to @security_role, notice: 'Security role was successfully created.'
@@ -27,6 +35,8 @@ class SecurityRolesController < ApplicationController
   end
 
   def update
+    set_permissions
+
     if @security_role.update(permitted_params)
       redirect_to @security_role, notice: 'Security role was successfully updated.'
     else
@@ -53,9 +63,8 @@ class SecurityRolesController < ApplicationController
 
   def permission
     authorize SecurityRole
-    @permission_name = params[:permission_name]
-    @security_roles = SecurityRole.where("#{@permission_name} = TRUE").by_name
-    @users = User.by_permission(@permission_name).by_name
+
+    @permission = RadPermission.new(params[:permission_name])
   end
 
   private
@@ -65,7 +74,11 @@ class SecurityRolesController < ApplicationController
       authorize @security_role
     end
 
+    def set_permissions
+      @permission_categories = RadPermission.security_role_categories(@security_role)
+    end
+
     def permitted_params
-      params.require(:security_role).permit(%i[name external] + SecurityRole.permission_fields.map(&:to_sym))
+      params.require(:security_role).permit(%i[name external] + RadPermission.all.map(&:to_sym))
     end
 end

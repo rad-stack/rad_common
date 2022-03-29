@@ -28,6 +28,7 @@ class UsersController < ApplicationController
   end
 
   def show
+    @permission_categories = RadPermission.user_categories(@user)
     return unless RadicalConfig.user_clients?
 
     @user_clients = @user.user_clients.sorted

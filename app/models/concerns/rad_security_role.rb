@@ -19,16 +19,6 @@ module RadSecurityRole
     audited
   end
 
-  def permission_attributes
-    filtered_attributes = attributes.dup
-
-    filtered_attributes.each do |key, _value|
-      filtered_attributes.delete(key) unless SecurityRole.permission_fields.include?(key)
-    end
-
-    filtered_attributes
-  end
-
   module ClassMethods
     def resolve_roles(role_ids)
       if role_ids
@@ -45,10 +35,6 @@ module RadSecurityRole
 
       role
     end
-
-    def permission_fields
-      (SecurityRole.attribute_names - %w[id name created_at updated_at external]).sort
-    end
   end
 
   private
@@ -56,7 +42,7 @@ module RadSecurityRole
     def validate_standard_permissions
       return unless admin?
 
-      SecurityRole.permission_fields.each do |field|
+      RadPermission.all.each do |field|
         unless public_send(field)
           errors.add(:admin, 'requires all permissions to be true')
           break

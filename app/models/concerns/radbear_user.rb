@@ -114,16 +114,6 @@ module RadbearUser
     end
   end
 
-  def all_permissions
-    permissions = []
-
-    security_roles.each do |role|
-      permissions += role.permission_attributes.to_a.select { |item| item[1] }.to_h.keys
-    end
-
-    permissions
-  end
-
   def admin?
     permission?(:admin)
   end
