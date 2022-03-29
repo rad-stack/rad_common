@@ -1,3 +1,10 @@
-const { environment } = require('@rails/webpacker')
+const { environment } = require('@rails/webpacker');
 
-module.exports = environment
+environment.config.merge({
+    externals: {
+        jquery: 'jQuery',
+        moment: 'moment'
+    }
+});
+
+module.exports = environment;

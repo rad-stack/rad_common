@@ -2,16 +2,15 @@ const OFF = 0, WARN = 1, ERROR = 2;
 
 module.exports = exports = {
   "env": {
-    "es6": true
-  },
-  "ecmaFeatures": {
-    "modules": true
+    "es6": true,
+    "node": true,
+    "browser": true
   },
   "extends": "eslint:recommended",
   "rules": {
     'block-spacing': ERROR,
     'brace-style': ERROR,
-    'camelcase': ERROR,
+    'camelcase': OFF,
     'comma-spacing': ERROR,
     'comma-style': ERROR,
     'implicit-arrow-linebreak': ERROR,
@@ -25,13 +24,13 @@ module.exports = exports = {
     ],
     'max-depth': ERROR,
     'max-len': [
-      ERROR,
+      WARN,
       {
         'ignorePattern': '^import|^export|function|class'
       }
     ],
     'max-lines': ERROR,
-    'max-statements': ERROR,
+    'max-statements': OFF,
     'max-statements-per-line': ERROR,
     'multiline-ternary': [ERROR, 'always-multiline'],
     'new-cap': [ ERROR, { 'capIsNewExceptions': [ 'A' ] } ],
@@ -65,6 +64,7 @@ module.exports = exports = {
     'no-useless-computed-key': ERROR,
     'no-useless-constructor': ERROR,
     'no-useless-rename': ERROR,
+    'no-useless-escape': WARN,
     'no-var': ERROR,
     'object-shorthand': ERROR,
     'prefer-arrow-callback': ERROR,
@@ -108,17 +108,19 @@ module.exports = exports = {
     'no-unused-vars': [
       ERROR,
       {
-        'varsIgnorePattern': '^_'
+        'argsIgnorePattern': '^_.*'
       }
     ],
     'no-useless-call': ERROR,
-    'no-useless-concat': ERROR,
+    'no-useless-concat': WARN,
     'no-useless-return': ERROR,
     'require-await': WARN,
     'wrap-iife': ERROR,
     'vars-on-top': ERROR,
   },
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "allowImportExportEverywhere": true
   }
 };

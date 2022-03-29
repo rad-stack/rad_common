@@ -4,17 +4,26 @@
 
   .form-inputs
     .row
-      .col-lg-6
-        .row
-          .col-lg-12= f.input :name
-        - if RadicalConfig.external_users?
-          .row
-            .col-lg-12= f.input :external
-      .col-lg-6
-        .row
-          .col-lg-12
-            - normalize_names(humanized_permission_fields).each do |name, permission|
-              = f.input permission.to_sym, label: name, tooltip: permission_tooltip(permission)
+      .col-lg-6= f.input :name
+      - if RadicalConfig.external_users?
+        .col-lg-6= f.input :external
+
+    .row
+      .col-lg-12
+        %h3 Permissions
+
+        %table.table.table-striped.table-bordered
+          %tr
+            %th Category
+            %th Permissions
+          - @permission_categories.each do |permission_category|
+            %tr
+              %td= permission_category.first
+              %td
+                - permission_category.last.each do |permission|
+                  = f.input permission[:permission],
+                            label: permission[:permission_name],
+                            tooltip: permission[:tooltip]
 
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'

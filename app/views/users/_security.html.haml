@@ -5,27 +5,15 @@
     column_class = show_notifications ? 'col-lg-4' : 'col-lg-6'
 
   - if policy(SecurityRole).index?
-    - all_perms = @user.all_permissions
     %div{ class: column_class }
       .card
         = render 'layouts/card_header', action_name: 'custom', title: 'Security Roles', icon: 'fa-list'
         .card-body
           = render 'security_roles/index', security_roles: @user.security_roles.by_name, show_actions: false
-    %div{ class: column_class }
-      .card
-        = render 'layouts/card_header', action_name: 'custom', title: 'Permissions', icon: 'fa-list'
-        .card-body
-          %table.table.table-striped.table-bordered
-            %tr
-              %th Name
-              %th Allowed
 
-            - normalize_names(humanized_permission_fields).each do |name, permission|
-              %tr
-                %td
-                  = link_to name, permission_security_roles_path(permission_name: permission)
-                  = permission_tooltip_content(permission)
-                %td{ class: all_perms.include?(permission) ? 'fa fa-check green-check' : 'fa fa-times red-x' }
+    %div{ class: column_class }
+      = render 'security_roles/permissions', permission_categories: @permission_categories
+
   - if show_notifications
     %div{ class: column_class }
       .card

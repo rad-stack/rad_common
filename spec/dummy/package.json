@@ -2,12 +2,13 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@rails/actiontext": "^6.0.2-1",
     "@rails/webpacker": "4.2.2",
     "dns-packet": "^5.2.2",
     "postcss": "^8.2.10",
-    "trix": "^1.0.0",
-    "ws": "^7.4.6"
+    "rad_common_js": "1.9.4",
+    "ws": "^7.4.6",
+    "jquery": "^3.6.0",
+    "jquery-ujs": "^1.2.3"
   },
   "devDependencies": {
     "webpack": "^4.41.2",
@@ -16,7 +17,6 @@
   "resolutions": {
     "serialize-javascript": "^3.1.0",
     "ssri": "^8.0.1",
-    "postcss": "^8.2.10",
     "dns-packet": "^5.2.2",
     "ws": "^7.4.6",
     "glob-parent": "^5.1.2",
@@ -29,7 +29,6 @@
     "node-forge": "^1.0.0",
     "follow-redirects": "^1.14.8",
     "json-schema": "^0.4.0",
-    "node-sass": "^7.0.0",
     "url-parse": "^1.5.8"
   }
 }
