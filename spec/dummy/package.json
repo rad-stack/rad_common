@@ -4,7 +4,6 @@
   "dependencies": {
     "@rails/actiontext": "^6.0.2-1",
     "@rails/webpacker": "5.4.3",
-    "follow-redirects": "^1.14.8",
     "jquery": "^3.6.0",
     "jquery-ujs": "^1.2.3",
     "node-forge": "^1.0.0",
