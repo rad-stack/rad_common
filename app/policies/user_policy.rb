@@ -7,6 +7,12 @@ class UserPolicy < ApplicationPolicy
     user.permission?(:manage_user)
   end
 
+  def update_security_roles?
+    return true if user.permission?(:admin)
+
+    record != user
+  end
+
   alias show? create?
   alias update? create?
   alias destroy? create?

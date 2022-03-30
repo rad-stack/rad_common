@@ -4,13 +4,26 @@ RSpec.describe 'Users', type: :request do
   let(:user) { create :user }
   let(:another) { create :user }
   let(:invalid_attributes) { { first_name: nil } }
+  let(:new_name) { 'Obscure First Name' }
+  let(:security_role) { create :security_role }
+  let(:new_attributes) { { first_name: new_name, security_roles: [security_role.id.to_s] } }
 
   before { login_as signed_in_user, scope: :user }
 
   context 'when non-admin' do
     let(:signed_in_user) { create :user }
+    let(:user) { signed_in_user }
 
-    pending 'user can edit themselves but not their security roles'
+    before { signed_in_user.security_roles.first.update! manage_user: true }
+
+    describe 'PUT update' do
+      it 'can update themselves but not their security roles' do
+        put "/users/#{user.id}", params: { user: new_attributes }
+        user.reload
+        expect(user.first_name).to eq(new_name)
+        expect(user.security_role_ids).not_to include security_role.id
+      end
+    end
   end
 
   context 'when admin' do
@@ -53,14 +66,11 @@ RSpec.describe 'Users', type: :request do
       let(:valid_attributes) { { first_name: Faker::Name.first_name, last_name: Faker::Name.last_name } }
 
       describe 'with valid params' do
-        let(:new_name) { 'Gary' }
-
-        let(:new_attributes) { { first_name: new_name } }
-
         it 'updates the requested user' do
           put "/users/#{user.id}", params: { user: new_attributes }
           user.reload
           expect(user.first_name).to eq(new_name)
+          expect(user.security_role_ids).to include security_role.id
         end
 
         it 'redirects to the user' do

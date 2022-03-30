@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[show edit update destroy resend_invitation confirm reset_authy test_email test_sms]
+  before_action :remove_blank_passwords, only: :update
 
   def index
     authorize User
@@ -54,15 +55,13 @@ class UsersController < ApplicationController
   end
 
   def update
-    if params[:user][:password].blank? && params[:user][:password_confirmation].blank?
-      params[:user].delete(:password)
-      params[:user].delete(:password_confirmation)
-    end
-
     ActiveRecord::Base.transaction do
       @user.assign_attributes(permitted_params)
       @user.approved_by = true_user
-      @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
+
+      if policy(@user).update_security_roles?
+        @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
+      end
 
       authorize @user
 
@@ -156,6 +155,13 @@ class UsersController < ApplicationController
     def set_user
       @user = User.find(params[:id])
       authorize @user
+    end
+
+    def remove_blank_passwords
+      return unless params[:user][:password].blank? && params[:user][:password_confirmation].blank?
+
+      params[:user].delete(:password)
+      params[:user].delete(:password_confirmation)
     end
 
     def base_params
