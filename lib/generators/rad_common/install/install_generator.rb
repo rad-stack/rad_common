@@ -22,7 +22,9 @@ module RadCommon
 
         # misc
         template '../../../../../spec/dummy/Procfile', 'Procfile'
+        copy_file '../../../../../spec/dummy/package.json', 'package.json'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+        copy_file '../../../../../spec/dummy/config/webpack/environment.js', 'config/webpack/environment.js'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
