@@ -6,7 +6,6 @@
     "@rails/webpacker": "5.4.3",
     "jquery": "^3.6.0",
     "jquery-ujs": "^1.2.3",
-    "node-forge": "^1.0.0",
     "rad_common_js": "^1.9.4"
   },
   "devDependencies": {
