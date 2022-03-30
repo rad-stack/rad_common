@@ -7,8 +7,7 @@
     "jquery": "^3.6.0",
     "jquery-ujs": "^1.2.3",
     "node-forge": "^1.0.0",
-    "rad_common_js": "1.9.4",
-    "ws": "^7.4.6"
+    "rad_common_js": "^1.9.4"
   },
   "devDependencies": {
     "webpack": "^4.41.2",
