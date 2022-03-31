@@ -1,8 +1,7 @@
 # Instructions to Migrate Projects to webpacker
 
 1. remove `jquery-ui-rails` from Gemfile
-2. run `bundle update`
-3. run `rails g rad_common:install` and replace all, check/fix changes
+2. run `bundle update && rails g rad_common:install`, check/fix changes
 4. remove the following files from `app/assets/javascripts`
 ```
 bootstrap.js
@@ -10,6 +9,7 @@ tooltip.js
 ```
 5. remove legacy references from `app/assets/javascripts/application.js`
 ```
+//= require bootstrap
 //= require bootstrap-datetimepicker
 //= require bootstrap_datetimepicker/dates
 //= require jquery-ui/autocomplete
@@ -19,7 +19,7 @@ tooltip.js
 //= require rad_common/rad_common
 //= require rad_common/readmore
 //= require tooltip
-//= require bootstrap
+
 ```
 5. add the following to `app/javascript/packs/application.js`
 ```
