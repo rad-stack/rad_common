@@ -34,4 +34,7 @@ import { RadCommon } from 'rad_common_js/src/radCommon';
 RadCommon.setup();
 ```
 6. run `yarn install`
-7. convert all js files from coffee to js using [http://js2.coffee/](http://js2.coffee/)
+7. convert all js files from coffee to js using [https://decaffeinate-project.org/](https://decaffeinate-project.org/) and move to `app/javascript/src`
+```
+decaffeinate app/assets/javascripts/
+```
