@@ -50,3 +50,4 @@ RadCommon.setup();
 ```
 decaffeinate app/assets/javascripts/
 ```
+9. for the coffee scripts handled in the previous step, remove the references from `application.js`
