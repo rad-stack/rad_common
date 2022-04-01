@@ -1,6 +1,6 @@
 # Instructions to Migrate Projects to webpacker
 
-1. remove `jquery-ui-rails` from Gemfile
+1. remove `jquery-ui-rails` and `coffee-rails` from Gemfile
 2. run `bundle update && rails g rad_common:install`, check/fix changes
 4. remove the following files from `app/assets/javascripts` and `app/assets/stylesheets`
 ```
