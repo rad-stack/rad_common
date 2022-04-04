@@ -28,7 +28,7 @@ bootstrap_and_overrides.scss
  *= require bootstrap-select
  *= require jquery-ui/autocomplete
  *= require rad_common/rad_common
- *= require rad_common/devise_auth
+ *= require rad_common/devise_authy
  *= require bootstrap-datetimepicker
  *= require bootstrap_datetimepicker/dates
 ```
