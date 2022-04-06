@@ -16,9 +16,9 @@
         %table.table.table-striped.table-bordered
           %tr
             %th Name
-            %th Last Active
+            %th Signed In
 
           - users.each do |user|
             %tr
               %td= secured_link(user)
-              %td= format_date(user.last_activity_at)
+              %td= format_date(user.current_sign_in_at)
