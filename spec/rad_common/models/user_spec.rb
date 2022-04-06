@@ -288,6 +288,7 @@ RSpec.describe User, type: :model do
 
   describe 'authy', authy_specs: true do
     let(:user) { create :user, mobile_phone: phone_number }
+    let(:external_user) { create :user, :external, mobile_phone: phone_number }
     let(:phone_number) { create :phone_number, :mobile }
     let(:new_phone_number) { create :phone_number, :mobile }
 
@@ -309,10 +310,8 @@ RSpec.describe User, type: :model do
     end
 
     it 'deletes authy user if mobile phone wiped out' do
-      unless RadCommon::AppInfo.new.user_requires_mobile_phone?
-        user.update!(authy_enabled: false, mobile_phone: nil)
-        expect(user.reload.authy_id).to be_blank
-      end
+      external_user.update!(authy_enabled: false, mobile_phone: nil)
+      expect(external_user.reload.authy_id).to be_blank
     end
 
     it "doesn't allow invalid email", :vcr do

@@ -29,7 +29,7 @@ RSpec.describe UserSMSSender, type: :service do
 
       context 'when failure' do
         context 'when blacklisted' do
-          let(:user) { create :user, mobile_phone: '(500) 555-0004' }
+          let(:user) { create :user, :external, mobile_phone: '(500) 555-0004' }
 
           it { is_expected.not_to be_nil }
 

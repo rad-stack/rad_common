@@ -65,6 +65,7 @@ module RadbearUser
 
     validate :validate_email_address
     validate :validate_sms_mobile_phone, on: :update
+    validate :validate_authy_mobile_phone
     validate :password_excludes_name
     validate :validate_authy
 
@@ -220,6 +221,13 @@ module RadbearUser
       return if notification_settings.enabled.where(sms: true).count.zero?
 
       errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
+    end
+
+    def validate_authy_mobile_phone
+      return if !RadicalConfig.authy_enabled? || mobile_phone.present?
+      return if external? && RadicalConfig.authy_internal_only?
+
+      errors.add(:mobile_phone, 'is required for two factor authentication')
     end
 
     def password_excludes_name

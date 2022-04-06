@@ -32,10 +32,6 @@ module RadCommon
       RadicalConfig.duplicates!.select { |item| item[:name] == model_name }.first
     end
 
-    def user_requires_mobile_phone?
-      !User.column_for_attribute(:mobile_phone).null
-    end
-
     def client_model_label
       RadicalConfig.client_table_name!.classify.titleize
     end
