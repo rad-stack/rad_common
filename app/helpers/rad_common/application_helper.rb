@@ -164,6 +164,14 @@ module RadCommon
       raise RadicallyIntermittentException
     end
 
+    def export_button(model_name)
+      return unless policy(model_name.constantize.new).export?
+
+      link_to(icon(:file, 'Export to File'),
+              send("export_#{model_name.tableize}_path", params.permit!.to_h.merge(format: :csv)),
+              class: 'btn btn-secondary btn-sm')
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
