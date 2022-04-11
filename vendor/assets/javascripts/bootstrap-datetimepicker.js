@@ -4,7 +4,7 @@
  * Licensed under MIT (https://github.com/tempusdominus/bootstrap-3/blob/master/LICENSE)
  */
 
-if (typeof jQuery === 'undefined') {
+if (typeof jQuery === 'undefined') { 
   throw new Error('Tempus Dominus Bootstrap4\'s requires jQuery. jQuery must be included before Tempus Dominus Bootstrap4\'s JavaScript.');
 }
 
