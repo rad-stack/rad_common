@@ -5,14 +5,14 @@ http_interactions:
     uri: https://api.authy.com//protected/json/users/new
     body:
       encoding: UTF-8
-      string: user%5Bemail%5D=example26%40example.com&user%5Bcountry_code%5D=1&user%5Bcellphone%5D=%28485%29+565-8600&send_install_link_via_sms=true
+      string: user%5Bemail%5D=example200%40example.com&user%5Bcountry_code%5D=1&user%5Bcellphone%5D=%28904%29+226-4901&send_install_link_via_sms=true
     headers:
       User-Agent:
-      - DeviseAuthy/2.3.0 - AuthyRuby/3.0.0 (x86_64-darwin20, Ruby 2.7.3)
+      - DeviseAuthy/2.3.0 - AuthyRuby/3.0.0 (x86_64-darwin20, Ruby 2.7.5)
       Accept:
       - "*/*"
       Date:
-      - Tue, 15 Jun 2021 12:32:06 GMT
+      - Tue, 12 Apr 2022 13:51:16 GMT
       X-Authy-Api-Key:
       - "<AUTHY_API_KEY>"
       Content-Type:
@@ -25,11 +25,11 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Tue, 15 Jun 2021 12:32:07 GMT
+      - Tue, 12 Apr 2022 13:51:16 GMT
       Content-Type:
       - application/json;charset=utf-8
       Content-Length:
-      - '79'
+      - '78'
       Connection:
       - keep-alive
       X-Content-Type-Options:
@@ -38,6 +38,6 @@ http_interactions:
       - max-age=31536000; includeSubdomains
     body:
       encoding: UTF-8
-      string: '{"message":"User created successfully.","user":{"id":412542000},"success":true}'
-  recorded_at: Tue, 15 Jun 2021 12:32:07 GMT
-recorded_with: VCR 6.0.0
+      string: '{"message":"User created successfully.","user":{"id":54773011},"success":true}'
+  recorded_at: Tue, 12 Apr 2022 13:51:16 GMT
+recorded_with: VCR 6.1.0
