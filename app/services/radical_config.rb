@@ -64,8 +64,16 @@ class RadicalConfig
       secret_config_item! :jwt_secret
     end
 
+    def test_phone_number
+      secret_config_item :test_phone_number
+    end
+
     def test_phone_number!
       secret_config_item! :test_phone_number
+    end
+
+    def test_mobile_phone
+      secret_config_item :test_mobile_phone
     end
 
     def test_mobile_phone!

@@ -9,6 +9,12 @@ class RadPermission
     name.titleize
   end
 
+  def short_label(category_name)
+    return label if label == category_name
+
+    label.gsub(category_name, '').strip
+  end
+
   def tooltip?
     tooltip.present?
   end
@@ -33,11 +39,14 @@ class RadPermission
     def security_role_categories(security_role)
       # would be good to refactor this with user_categories
 
+      items = RadCommon::AppInfo.new.application_models.map(&:underscore)
+
       categories = all.map do |item|
         permission = RadPermission.new(item)
+        category_name = permission_category_name(items, item)
 
-        { category_name: permission_category_name(RadCommon::AppInfo.new.application_models.map(&:underscore), item),
-          permission_label: permission.label,
+        { category_name: category_name,
+          permission_label: permission.short_label(category_name),
           permission: permission.name,
           tooltip: permission.tooltip,
           value: security_role.send(item) }
@@ -49,11 +58,14 @@ class RadPermission
     def user_categories(user)
       # would be good to refactor this with security_role_categories
 
+      items = RadCommon::AppInfo.new.application_models.map(&:underscore)
+
       categories = all.map do |item|
         permission = RadPermission.new(item)
+        category_name = permission_category_name(items, item)
 
-        { category_name: permission_category_name(RadCommon::AppInfo.new.application_models.map(&:underscore), item),
-          permission_label: permission.label,
+        { category_name: category_name,
+          permission_label: permission.short_label(category_name),
           permission: permission.name,
           tooltip: permission.tooltip,
           value: user.permission?(item) }
