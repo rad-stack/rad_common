@@ -1,6 +1,22 @@
 require 'rails_helper'
 
 RSpec.describe RadPermission, type: :model do
+  describe 'label' do
+    subject { described_class.new(permission).label }
+
+    let(:permission) { 'read_division' }
+
+    it { is_expected.to eq 'Read Division' }
+  end
+
+  describe 'short_label' do
+    subject { described_class.new(permission).short_label('Division') }
+
+    let(:permission) { 'read_division' }
+
+    it { is_expected.to eq 'Read' }
+  end
+
   describe 'tooltip' do
     subject { described_class.new(permission).tooltip }
 
