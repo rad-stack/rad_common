@@ -18,7 +18,6 @@ module RadCommon
     require 'hashids'
     require 'kaminari'
     require 'bootstrap4-kaminari-views'
-    require 'mini_racer'
     require 'momentjs-rails'
     require 'nokogiri'
     require 'pg'
