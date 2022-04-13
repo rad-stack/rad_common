@@ -65,7 +65,9 @@ module RadbearUser
 
     validate :validate_email_address
     validate :validate_sms_mobile_phone, on: :update
+    validate :validate_authy_mobile_phone
     validate :password_excludes_name
+    validate :validate_authy
 
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
                                        message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
@@ -75,6 +77,7 @@ module RadbearUser
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
+    before_validation :maybe_update_authy
     after_save :notify_user_approved
 
     after_invitation_accepted :notify_user_accepted
@@ -186,6 +189,11 @@ module RadbearUser
     UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false
   end
 
+  def reset_authy!
+    update! authy_enabled: false, authy_id: nil
+    update! authy_enabled: true
+  end
+
   private
 
     def check_defaults
@@ -215,6 +223,13 @@ module RadbearUser
       errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
     end
 
+    def validate_authy_mobile_phone
+      return if !RadicalConfig.authy_enabled? || mobile_phone.present?
+      return if external? && RadicalConfig.authy_internal_only?
+
+      errors.add(:mobile_phone, 'is required for two factor authentication')
+    end
+
     def password_excludes_name
       return if new_record? && invited_by_id.present?
       return unless password.present? && first_name.present? && last_name.present?
@@ -223,8 +238,60 @@ module RadbearUser
       errors.add(:password, 'cannot contain your name')
     end
 
+    def validate_authy
+      return unless RadicalConfig.authy_enabled?
+
+      unless authy_enabled?
+        errors.add(:base, 'user is not valid for two factor authentication') if authy_id.present?
+        return
+      end
+
+      if authy_id.present? && mobile_phone.present?
+        # ok
+      elsif authy_id.blank? && mobile_phone.blank?
+        # ok
+      else
+        errors.add(:base, 'user is not valid for two factor authentication')
+      end
+    end
+
     def set_timezone
       self.timezone = Company.main.timezone if new_record? && timezone.blank?
+    end
+
+    def maybe_update_authy
+      return unless RadicalConfig.authy_enabled? && (authy_enabled_changed? || mobile_phone_changed?)
+
+      # delete the authy user if it exists
+      if authy_id.present?
+        response = Authy::API.user_status(id: authy_id)
+
+        if response.ok?
+          response = Authy::API.delete_user(id: authy_id)
+
+          if response.ok?
+            self.authy_id = nil
+          else
+            errors.add(:base, "Could not remove authy user: #{response.message}")
+            return
+          end
+        else
+          self.authy_id = nil
+        end
+      end
+
+      return unless authy_enabled? && mobile_phone.present? && email.present?
+
+      # create the authy user if applicable
+      response = Authy::API.register_user(email: email, country_code: '1', cellphone: mobile_phone)
+
+      if response.ok?
+        self.authy_id = response.id
+      elsif response.respond_to?(:message)
+        errors.add(:base, "Could not register authy user: #{response.message}")
+      else
+        errors.add(:base, "Could not register authy user: #{response.errors}")
+      end
     end
 
     def notify_user_approved

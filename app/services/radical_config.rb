@@ -164,6 +164,10 @@ class RadicalConfig
       boolean_config_item! :authy_enabled
     end
 
+    def authy_internal_only?
+      boolean_config_item! :authy_internal_only
+    end
+
     def external_users?
       boolean_config_item! :external_users
     end

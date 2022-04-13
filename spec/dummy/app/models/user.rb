@@ -4,7 +4,6 @@ class User < ApplicationRecord
          :authy_authenticatable
 
   include RadbearUser
-  include RadAuthy
 
   has_many :divisions, foreign_key: 'owner_id', dependent: :restrict_with_error
 

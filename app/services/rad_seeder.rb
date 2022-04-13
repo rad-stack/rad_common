@@ -127,9 +127,7 @@ class RadSeeder
     end
 
     def seeded_user_mobile_phone(seeded_user)
-      if (Rails.env.development? || Rails.env.test?) &&
-         RadCommon::AppInfo.new.user_requires_mobile_phone? &&
-         seeded_user[:mobile_phone].blank?
+      if (Rails.env.development? || Rails.env.test?) && seeded_user[:mobile_phone].blank?
         return FactoryBot.create(:phone_number, :mobile)
       end
 
