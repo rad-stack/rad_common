@@ -4,8 +4,6 @@
   "dependencies": {
     "@rails/actiontext": "^6.0.2-1",
     "@rails/webpacker": "5.4.3",
-    "jquery": "^3.6.0",
-    "jquery-ujs": "^1.2.3",
     "rad_common_js": "^1.9.4"
   },
   "devDependencies": {
