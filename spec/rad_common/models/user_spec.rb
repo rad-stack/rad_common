@@ -292,6 +292,8 @@ RSpec.describe User, type: :model do
     let(:phone_number) { create :phone_number, :mobile }
     let(:new_phone_number) { create :phone_number, :mobile }
 
+    before { allow(RadicalConfig).to receive(:authy_internal_only?).and_return true }
+
     it 'creates and updates the user on authy', :vcr do
       expect(user.authy_id).to be_nil
       user.update!(authy_enabled: true)
