@@ -8,8 +8,5 @@ import 'rad_common_js/src/css/rad_common/jquery-ui-overrides.scss';
 import 'rad_common_js/src/css/bootstrap_and_overrides.scss';
 import 'rad_common_js/src/css/main.css.scss';
 
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
-
 import {RadCommon} from 'rad_common_js/src/radCommon';
 RadCommon.setup();
