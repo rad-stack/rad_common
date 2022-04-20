@@ -21,4 +21,10 @@ class Exporter
       end
     end
   end
+
+  private
+
+    def format_boolean(value)
+      value ? 'yes' : 'no'
+    end
 end
