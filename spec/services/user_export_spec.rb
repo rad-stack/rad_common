@@ -4,7 +4,7 @@ require 'csv'
 RSpec.describe UserExport, type: :service do
   describe '.generate' do
     let(:user) { create :user, external: false, current_sign_in_at: Time.current }
-    let(:exporter) { described_class.new(records: [user]) }
+    let(:exporter) { described_class.new(records: [user], current_user: user) }
     let(:csv) { exporter.generate }
 
     before { exporter.send(:headers).each { |heading| expect(csv).to include(heading) } }
