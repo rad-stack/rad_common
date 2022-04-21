@@ -52,9 +52,9 @@ module RadCommon
           if filter.has_key? :type
             filter_type = filter[:type]
             filter.delete(:type)
-            filter_type.send(:new, filter)
+            filter_type.send(:new, **filter)
           else
-            SearchFilter.new(filter)
+            SearchFilter.new(**filter)
           end
         end
       end
