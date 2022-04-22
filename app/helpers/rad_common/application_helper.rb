@@ -68,6 +68,10 @@ module RadCommon
       end
     end
 
+    def formatted_decimal_hours(total_minutes)
+      (total_minutes / 60.0).round(2)
+    end
+
     def icon_tag(icon, text)
       tag.i('', class: "mr-2 #{icon}") + text
     end
