@@ -2,10 +2,11 @@ require 'csv'
 
 class Exporter
   include RadCommon::ApplicationHelper
-  attr_reader :records, :current_record
+  attr_reader :records, :current_record, :current_user
 
-  def initialize(records:)
+  def initialize(records:, current_user:)
     @records = records
+    @current_user = current_user
     @current_record = nil
   end
 
@@ -20,4 +21,10 @@ class Exporter
       end
     end
   end
+
+  private
+
+    def format_boolean(value)
+      value ? 'yes' : 'no'
+    end
 end
