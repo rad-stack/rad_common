@@ -107,7 +107,7 @@ module RadCommon
         next unless ALERT_TYPES.include?(type)
 
         Array(message).each do |msg|
-          flash_messages << tag.div(bootstrap_flash_close_button + msg, { class: "alert in alert-#{type}" }) if msg
+          flash_messages << tag.div(bootstrap_flash_close_button + msg, class: "alert in alert-#{type}") if msg
         end
       end
 

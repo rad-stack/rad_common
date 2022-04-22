@@ -35,7 +35,7 @@ RSpec.describe RadicalRetry, type: :service do
           args = { no_delay: true, retry_count: 2, additional_errors: [ActiveStorage::IntegrityError] }
           expect(described_class).to receive(:exponential_pause)
           expect {
-            described_class.perform_request(args) { request_block }
+            described_class.perform_request(**args) { request_block }
           }.to raise_error(RadicallyIntermittentException)
         end
       end
@@ -60,7 +60,7 @@ RSpec.describe RadicalRetry, type: :service do
         it 'raises original error' do
           expect(described_class).to receive(:exponential_pause)
           expect {
-            described_class.perform_request(args) { request_block }
+            described_class.perform_request(**args) { request_block }
           }.to raise_error(Twilio::REST::TwilioError)
         end
       end
@@ -71,7 +71,7 @@ RSpec.describe RadicalRetry, type: :service do
         it 'raises RadicallyIntermittentException' do
           expect(described_class).to receive(:exponential_pause)
           expect {
-            described_class.perform_request(args) { request_block }
+            described_class.perform_request(**args) { request_block }
           }.to raise_error(RadicallyIntermittentException)
         end
       end
