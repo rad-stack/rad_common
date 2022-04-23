@@ -195,6 +195,7 @@ Seeder.new.seed!
         apply_migration '20220202173640_authy_no_sms.rb'
         apply_migration '20220328202539_manage_users_perm.rb'
         apply_migration '20220405182602_optional_mobile_phone.rb'
+        apply_migration '20220423173413_inactive_notifications.rb'
       end
 
       def self.next_migration_number(path)

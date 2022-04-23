@@ -97,6 +97,8 @@ class NotificationType < ApplicationRecord
   end
 
   def notify!(payload)
+    return unless active?
+
     @payload = payload
 
     notify_email!

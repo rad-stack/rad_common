@@ -10,6 +10,7 @@ class NotificationTypesController < ApplicationController
   def edit; end
 
   def update
+    @notification_type.active = params[type_param_name][:active]
     @notification_type.security_roles = resolve_roles(params[type_param_name][:security_roles])
 
     if @notification_type.save
