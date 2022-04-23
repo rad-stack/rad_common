@@ -8,7 +8,10 @@ RSpec.describe 'Notification Types', type: :request do
   before { login_as user, scope: :user }
 
   describe 'PUT update' do
-    let(:valid_attributes) { { security_roles: [user.security_roles.first.id.to_s, another_role.id.to_s] } }
+    let(:valid_attributes) do
+      { active: true, security_roles: [user.security_roles.first.id.to_s, another_role.id.to_s] }
+    end
+
     let(:invalid_attributes) { { security_roles: [] } }
 
     describe 'with valid params' do
