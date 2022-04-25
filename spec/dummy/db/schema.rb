@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_05_182602) do
+ActiveRecord::Schema.define(version: 2022_04_23_173413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -204,6 +204,7 @@ ActiveRecord::Schema.define(version: 2022_04_05_182602) do
     t.string "type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "active", default: true, null: false
     t.index ["type"], name: "index_notification_types_on_type", unique: true
   end
 

@@ -11,11 +11,15 @@
       .form-inputs
         .row
           .col-lg-12
-            = f.input :security_roles, as: :check_boxes,
-                                       item_wrapper_class: 'col-lg-3 security-role-checkboxes',
-                                       collection: security_role_collection(:all),
-                                       checked: @notification_type.security_roles.ids,
-                                       label: 'Security Roles to Notify'
+            = f.input :active
+        - unless @notification_type.absolute_users?
+          .row
+            .col-lg-12
+              = f.input :security_roles, as: :check_boxes,
+                                         item_wrapper_class: 'col-lg-3 security-role-checkboxes',
+                                         collection: security_role_collection(:all),
+                                         checked: @notification_type.security_roles.ids,
+                                         label: 'Security Roles to Notify'
 
       .form-actions
         = f.button :submit, 'Save', class: 'btn btn-primary'

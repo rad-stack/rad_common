@@ -6,6 +6,7 @@
         %th Name
         %th Auth Mode
         %th Roles to Notify
+        %th Active
         %th.actions Actions
       - @notification_types.each do |notification_type|
         %tr
@@ -17,6 +18,7 @@
             - notification_type.security_roles.each do |security_role|
               = secured_link(security_role)
               %p
+          %td= format_boolean notification_type.active?
           %td
             = link_to icon(:pencil, 'Edit'),
                       "/rad_common/notification_types/#{notification_type.id}/edit",
