@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
   s.add_dependency 'active_storage_validations'
-  s.add_dependency 'audited', '~> 4.9'
+  s.add_dependency 'audited'
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap', '~> 4.6.0'
@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'puma', '~> 5.6'
   s.add_dependency 'pretender'
   s.add_dependency 'pundit'
-  s.add_dependency 'rails', '~> 6.1.4'
+  s.add_dependency 'rails', '~> 7.0.2'
   s.add_dependency 'rails_email_validator'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
