@@ -23,6 +23,7 @@ if Rails.env.staging? || Rails.env.production?
   Rails.application.config.action_mailer.delivery_method = :smtp
   Rails.application.config.action_mailer.perform_deliveries = true
   Rails.application.config.action_mailer.default charset: 'utf-8'
+  Rails.application.config.action_mailer.asset_host = "https://#{RadicalConfig.host_name!}"
 
   Rails.application.config.action_mailer.smtp_settings = {
     address: RadicalConfig.smtp_address!,
@@ -33,6 +34,8 @@ if Rails.env.staging? || Rails.env.production?
     user_name: RadicalConfig.smtp_username!,
     password: RadicalConfig.smtp_password!
   }
+else
+  Rails.application.config.action_mailer.asset_host = 'http://localhost:3000'
 end
 
 if Rails.env.staging?

@@ -98,10 +98,6 @@ class RadbearDeviseMailer < Devise::Mailer
   private
 
     def set_defaults
-      unless File.exist?('app/assets/images/app_logo.png') == File.exist?('public/app_logo.png')
-        raise 'This mailer requires app_logo.png to be in both places.'
-      end
-
       @include_yield = false
     end
 
