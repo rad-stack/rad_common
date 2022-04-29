@@ -1,6 +1,8 @@
 require('trix');
 require('@rails/actiontext');
 
+import 'trix/dist/trix.css';
+import 'rad_common_js/src/css/actiontext.scss';
 import 'bootstrap-select/dist/css/bootstrap-select.min.css';
 import 'jquery-ui/themes/base/all.css';
 import 'tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css';
