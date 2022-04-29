@@ -2,7 +2,6 @@
   company = @override_company.presence || Company.main
   logo_includes_name = RadicalConfig.app_logo_includes_name?
   protocol = Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
-  logo_url = "#{protocol}://#{RadicalConfig.host_name!}/app_logo.png"
   website = company.website
   company_name = company.name
   company_full_address = company.full_address
@@ -22,7 +21,7 @@
           - if @override_logo
             = link_to image_tag(@override_logo, alt: company_name, title: company_name), website
           - else
-            = link_to image_tag(logo_url, alt: company_name, title: company_name), website
+            = link_to image_tag('app_logo.png', alt: company_name, title: company_name), website
 
           - unless logo_includes_name
             %span.logo_text
