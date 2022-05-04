@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_23_173413) do
+ActiveRecord::Schema.define(version: 2022_05_04_114538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -305,7 +305,7 @@ ActiveRecord::Schema.define(version: 2022_04_23_173413) do
   create_table "user_statuses", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "active", default: false, null: false
-    t.boolean "validate_email", default: true, null: false
+    t.boolean "validate_email_phone", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_user_statuses_on_name", unique: true
