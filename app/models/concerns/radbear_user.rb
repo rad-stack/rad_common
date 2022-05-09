@@ -72,8 +72,10 @@ module RadbearUser
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
                                        message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
 
-    validates_with PhoneNumberValidator, fields: [{ field: :mobile_phone, type: :mobile }]
-    validates_with EmailAddressValidator, fields: %i[email], on: :update, if: :fully_validate_email?
+    validates_with PhoneNumberValidator, fields: [{ field: :mobile_phone, type: :mobile }],
+                                         if: :fully_validate_email_phone?
+
+    validates_with EmailAddressValidator, fields: %i[email], on: :update, if: :fully_validate_email_phone?
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
@@ -201,12 +203,12 @@ module RadbearUser
       self.user_status = status if new_record? && !user_status
     end
 
-    def fully_validate_email?
-      user_status&.validate_email?
+    def fully_validate_email_phone?
+      user_status&.validate_email_phone?
     end
 
     def validate_email_address
-      return if email.blank? || user_status_id.nil? || !user_status.validate_email || Company.main.blank?
+      return if email.blank? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
 
       domains = Company.main.valid_user_domains
       components = email.split('@')
