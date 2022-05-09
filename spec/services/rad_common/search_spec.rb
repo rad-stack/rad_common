@@ -304,7 +304,7 @@ RSpec.describe RadCommon::Search, type: :service do
       end
 
       it 'returns false and displays error message' do
-        expect(valid).to eq false
+        expect(valid).to be false
         expect(search.error_messages).to eq 'Invalid date entered for confirmed_at'
       end
     end
@@ -316,7 +316,7 @@ RSpec.describe RadCommon::Search, type: :service do
       end
 
       it 'returns false and displays error message' do
-        expect(valid).to eq false
+        expect(valid).to be false
         expect(search.error_messages).to eq 'Start at date must before end date'
       end
     end
@@ -347,7 +347,7 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:filters) { [{ input_label: 'Type', name: :external, scope_values: %i[internal external] }] }
       let(:params) { ActionController::Parameters.new }
 
-      it 'has both scope  optins' do
+      it 'has both scope options' do
         expect(search.first.input_options.map(&:first)).to eq %w[Internal External]
       end
     end

@@ -1,3 +1,3 @@
-Dir[Rails.root.join('../factories/**/*.rb')].sort.each { |f| require f }
+Dir[Rails.root.join('../factories/**/*.rb')].each { |f| require f }
 
 Seeder.new.seed!

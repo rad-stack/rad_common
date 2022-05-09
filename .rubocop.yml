@@ -4,7 +4,7 @@ require:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.0.4
   TargetRailsVersion: 6.0.3.4
   Exclude:
     - 'db/schema.rb'
@@ -70,6 +70,7 @@ Metrics/ModuleLength:
 # Checks to see if the length of a block exceeds 25 lines
 Metrics/BlockLength:
   Exclude:
+    - 'rad_common.gemspec'
     - 'spec/**/*_spec.rb'
     - 'config/routes.rb'
     - 'config/environments/**/*.rb'

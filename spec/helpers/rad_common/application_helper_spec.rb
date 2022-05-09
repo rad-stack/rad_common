@@ -17,7 +17,7 @@ describe RadCommon::ApplicationHelper do
       end
 
       it 'returns true' do
-        expect(helper.show_actions?(model_class)).to eq(true)
+        expect(helper.show_actions?(model_class)).to be(true)
       end
     end
 
@@ -30,7 +30,7 @@ describe RadCommon::ApplicationHelper do
       end
 
       it 'returns true' do
-        expect(helper.show_actions?(model_class)).to eq(true)
+        expect(helper.show_actions?(model_class)).to be(true)
       end
     end
 
@@ -43,7 +43,7 @@ describe RadCommon::ApplicationHelper do
       end
 
       it 'returns false' do
-        expect(helper.show_actions?(model_class)).to eq(false)
+        expect(helper.show_actions?(model_class)).to be(false)
       end
     end
   end
@@ -173,7 +173,7 @@ describe RadCommon::ApplicationHelper do
   describe '#format_datetime' do
     context 'with nil' do
       it 'returns nil' do
-        expect(helper.format_datetime(nil)).to eq(nil)
+        expect(helper.format_datetime(nil)).to be_nil
       end
     end
 
@@ -205,7 +205,7 @@ describe RadCommon::ApplicationHelper do
 
     it 'returns nil for invalid key' do
       string = icon_hash(:invalid)
-      expect(string).to eq(nil)
+      expect(string).to be_nil
     end
   end
 end

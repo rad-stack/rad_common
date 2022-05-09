@@ -419,13 +419,13 @@ RSpec.describe 'Users', type: :system do
         it 'updates last_activity_at' do
           if Devise.mappings[:user].expirable?
             another_user.update!(last_activity_at: 91.days.ago)
-            expect(another_user.expired?).to eq(true)
+            expect(another_user.expired?).to be(true)
             visit edit_user_path(another_user)
             fill_in :user_last_activity_at, with: Date.current
             click_button 'Save'
             expect(page).to have_content('User updated')
             expect(another_user.reload.last_activity_at.to_date).to eq(Date.current)
-            expect(another_user.expired?).to eq(false)
+            expect(another_user.expired?).to be(false)
           end
         end
       end
