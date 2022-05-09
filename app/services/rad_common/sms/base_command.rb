@@ -22,7 +22,7 @@ module RadCommon
           raise 'Locale not set' if @locale.blank?
 
           params.merge!(locale: @locale)
-          I18n.t(sms_reply_key, params)
+          I18n.t(sms_reply_key, **params)
         end
     end
   end
