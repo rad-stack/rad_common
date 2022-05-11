@@ -8,7 +8,7 @@ class RadicalTwilio
   end
 
   def send_robocall(to:, url:)
-    client.calls.create(from: from_number, to: to, url: URI.encode(url))
+    client.calls.create(from: from_number, to: to, url: URI::Parser.new.escape(url))
   end
 
   def twilio_enabled?
