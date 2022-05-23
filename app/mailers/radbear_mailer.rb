@@ -39,7 +39,7 @@ class RadbearMailer < ActionMailer::Base
 
     maybe_attach options
 
-    mail(to: to_address, subject: subject)
+    mail(to: to_address, subject: subject, cc: options[:cc], bcc: options[:bcc])
   end
 
   def global_validity_on_demand(recipient, problems)
