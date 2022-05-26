@@ -9,8 +9,6 @@
     "rad_common_js": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.5.4",
-    "eslint": "^4.19.1",
     "webpack": "^4.41.2",
     "webpack-dev-server": "^3.10.1"
   },

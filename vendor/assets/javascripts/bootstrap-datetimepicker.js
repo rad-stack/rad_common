@@ -1579,7 +1579,6 @@ var DateTimePicker = function ($, moment) {
 //noinspection JSUnusedGlobalSymbols
 /* global DateTimePicker */
 var TempusDominusBootstrap4 = function ($) {
-    // eslint-disable-line no-unused-vars
     // ReSharper disable once InconsistentNaming
     var JQUERY_NO_CONFLICT = $.fn[DateTimePicker.NAME],
         verticalModes = ['top', 'bottom', 'auto'],
