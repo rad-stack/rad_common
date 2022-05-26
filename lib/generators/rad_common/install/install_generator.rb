@@ -34,7 +34,6 @@ module RadCommon
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
         copy_file '../../../../../.hound.yml', '.hound.yml'
         copy_file '../../../../../.rubocop.yml', '.rubocop.yml'
-        copy_file '../../../../../.eslintrc.js', '.eslintrc.js'
 
         # config
         copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
