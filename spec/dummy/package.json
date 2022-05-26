@@ -27,6 +27,8 @@
     "node-forge": "^1.0.0",
     "follow-redirects": "^1.14.8",
     "json-schema": "^0.4.0",
-    "url-parse": "^1.5.8"
+    "url-parse": "^1.5.8",
+    "async": "^2.6.4",
+    "eventsource": "^2.0.2"
   }
 }
