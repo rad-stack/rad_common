@@ -166,8 +166,8 @@ module DuplicateFixable
 
     ActiveRecord::Base.transaction do
       duplicate_keys.each do |key|
-          error = fix_duplicate(key, user)
-          break if error
+        error = fix_duplicate(key, user)
+        break if error
       end
     end
 
