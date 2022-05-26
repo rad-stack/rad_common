@@ -4,6 +4,8 @@ module RadCompany
   included do
     include HasAddress
 
+    belongs_to :state
+
     alias_attribute :to_s, :name
 
     scope :by_id, -> { order(:id) }

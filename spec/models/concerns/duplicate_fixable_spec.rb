@@ -5,13 +5,15 @@ describe DuplicateFixable, type: :model do
   let(:email) { Faker::Internet.email }
   let(:first_name) { 'John' }
   let(:last_name) { 'Smith' }
+  let(:state_1) { State.find_by(code: 'XX') || create(:state, code: 'XX') }
+  let(:state_2) { State.find_by(code: 'YY') || create(:state, code: 'YY') }
 
   let!(:attorney_1) do
     create :attorney, attorney_1_attributes.merge(company_name: 'ABC',
                                                   address_1: 'Xxxx',
                                                   address_2: nil,
                                                   city: 'Xxxx',
-                                                  state: 'XX',
+                                                  state: state_1,
                                                   zipcode: '11111')
   end
 
@@ -20,7 +22,7 @@ describe DuplicateFixable, type: :model do
                                                   address_1: 'Yyyy',
                                                   address_2: nil,
                                                   city: 'Yyyy',
-                                                  state: 'YY',
+                                                  state: state_2,
                                                   zipcode: '22222')
   end
 
@@ -41,7 +43,7 @@ describe DuplicateFixable, type: :model do
         { phone_number: phone_number, email: email, first_name: 'Yyyy', last_name: 'Ssss' }
       end
 
-      it { is_expected.to eq 32 }
+      it { is_expected.to eq 28 }
     end
 
     context 'when matching on standard plus additional items' do
@@ -53,7 +55,7 @@ describe DuplicateFixable, type: :model do
         { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
       end
 
-      it { is_expected.to eq 46 }
+      it { is_expected.to eq 42 }
     end
   end
 

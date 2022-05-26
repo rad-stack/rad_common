@@ -18,22 +18,24 @@ RSpec.describe Company, type: :model do
   describe '#full_address' do
     subject { company.full_address }
 
+    let(:state) { State.first || association(:state) }
+
     before do
       company.update! address_1: 'Address 1',
                       address_2: 'Address 2',
                       city: 'City',
-                      state: 'State',
+                      state: state,
                       zipcode: 'Zipcode'
     end
 
     context 'with address 2' do
-      it { is_expected.to eq 'Address 1, Address 2, City, State Zipcode' }
+      it { is_expected.to eq "Address 1, Address 2, City, #{state} Zipcode" }
     end
 
     context 'without address 2' do
       before { company.update! address_2: nil }
 
-      it { is_expected.to eq 'Address 1, City, State Zipcode' }
+      it { is_expected.to eq "Address 1, City, #{state} Zipcode" }
     end
   end
 

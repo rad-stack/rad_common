@@ -11,7 +11,7 @@ RSpec.describe 'Attorneys', type: :request do
       company_name: Faker::Company.name,
       address_1: Faker::Address.street_address,
       city: Faker::Address.city,
-      state: Faker::Address.state_abbr,
+      state_id: (State.first || create(:state)).id,
       zipcode: Faker::Address.zip_code[0..4],
       phone_number: create(:phone_number),
       email: Faker::Internet.email }

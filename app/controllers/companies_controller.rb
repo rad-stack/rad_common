@@ -21,7 +21,7 @@ class CompaniesController < ApplicationController
     end
 
     def base_params
-      [:name, :phone_number, :website, :email, :address_1, :address_2, :city, :state, :zipcode, :validity_checked_at,
+      [:name, :phone_number, :website, :email, :address_1, :address_2, :city, :state_id, :zipcode, :validity_checked_at,
        :timezone, { valid_user_domains: [] }]
     end
 

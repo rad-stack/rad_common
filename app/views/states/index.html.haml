@@ -1,0 +1,28 @@
+- show_actions = show_actions?(State)
+
+.card
+  = render 'layouts/card_header'
+  .card-body
+    %table.table.table-striped.table-bordered
+      %tr
+        %th Code
+        %th Name
+        - if show_actions
+          %th.actions Actions
+
+      - @states.each do |state|
+        %tr
+          %td= link_to state.code, state
+          %td= link_to state.name, state
+          - if show_actions
+            %td
+              - if policy(state).update?
+                = link_to icon(:pencil, 'Edit'),
+                          edit_state_path(state),
+                          class: 'btn btn-sm btn-secondary btn-block'
+              - if policy(state).destroy?
+                = link_to icon(:times, 'Delete'),
+                          state,
+                          method: :delete,
+                          data: { confirm: 'Are you sure?' },
+                          class: 'btn btn-danger btn-sm btn-block'

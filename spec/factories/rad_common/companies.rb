@@ -3,7 +3,7 @@ FactoryBot.define do
     name { Faker::Company.name }
     address_1 { Faker::Address.street_address }
     city { Faker::Address.city }
-    state { Faker::Address.state_abbr }
+    state { State.first || association(:state) }
     zipcode { Faker::Address.zip }
     phone_number { create :phone_number }
     website { Faker::Internet.url }

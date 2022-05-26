@@ -1,6 +1,8 @@
 class Attorney < ApplicationRecord
   include DuplicateFixable
 
+  belongs_to :state
+
   scope :by_name, -> { order(:first_name, :last_name) }
   scope :created_between, lambda { |start_date, end_date|
     where('created_at >= ? and created_at <= ?', start_date, end_date)

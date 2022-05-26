@@ -278,7 +278,7 @@ module DuplicateFixable
 
       if model_klass.use_address?
         items += [{ name: 'city', weight: 10 },
-                  { name: 'state', weight: 10 },
+                  { name: 'state', type: :association, weight: 10 },
                   { name: 'zipcode', weight: 10 },
                   { name: 'address_1', weight: duplicate_other_weight },
                   { name: 'address_2', weight: duplicate_other_weight }]

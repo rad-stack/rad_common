@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_04_114538) do
+ActiveRecord::Schema.define(version: 2022_05_22_172537) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -64,10 +64,11 @@ ActiveRecord::Schema.define(version: 2022_05_04_114538) do
     t.string "address_1", null: false
     t.string "address_2"
     t.string "city", null: false
-    t.string "state", null: false
     t.string "zipcode", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "state_id", null: false
+    t.index ["state_id"], name: "index_attorneys_on_state_id"
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -116,13 +117,14 @@ ActiveRecord::Schema.define(version: 2022_05_04_114538) do
     t.string "address_1", limit: 255, null: false
     t.string "address_2", limit: 255
     t.string "city", limit: 255, null: false
-    t.string "state", limit: 255, null: false
     t.string "zipcode", limit: 255, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "validity_checked_at"
     t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
+    t.integer "state_id", null: false
+    t.index ["state_id"], name: "index_companies_on_state_id"
   end
 
   create_table "divisions", id: :serial, force: :cascade do |t|
@@ -243,6 +245,15 @@ ActiveRecord::Schema.define(version: 2022_05_04_114538) do
     t.boolean "external", default: false, null: false
     t.boolean "manage_user", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
+  end
+
+  create_table "states", force: :cascade do |t|
+    t.string "code", null: false
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["code"], name: "index_states_on_code", unique: true
+    t.index ["name"], name: "index_states_on_name", unique: true
   end
 
   create_table "statuses", force: :cascade do |t|
@@ -370,7 +381,9 @@ ActiveRecord::Schema.define(version: 2022_05_04_114538) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "attorneys", "states"
   add_foreign_key "audits", "users"
+  add_foreign_key "companies", "states"
   add_foreign_key "divisions", "categories"
   add_foreign_key "divisions", "users", column: "owner_id"
   add_foreign_key "notification_security_roles", "notification_types"

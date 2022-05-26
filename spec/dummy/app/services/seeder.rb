@@ -19,7 +19,7 @@ class Seeder < RadSeeder
                          last_name: 'Bro',
                          company_name: 'Bruh, Bro and Brah',
                          city: 'Atlanta',
-                         state: 'GA',
+                         state: State.all.sample,
                          email: 'bruh_bro@example.com').save!(validate: false)
       end
 
