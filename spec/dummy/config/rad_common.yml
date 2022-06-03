@@ -77,7 +77,6 @@ default: &default
       name: user_by_division_name
       model: User
       description: Search user by division name
-      columns: []
       joins: JOIN divisions on divisions.owner_id = users.id
       query_where: divisions.name ilike :search
       super_search_exclude: true
