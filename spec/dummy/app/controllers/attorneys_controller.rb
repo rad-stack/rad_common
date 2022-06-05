@@ -43,8 +43,8 @@ class AttorneysController < ApplicationController
       flash[:error] = @attorney.errors.full_messages.join(', ')
     end
 
-    if destroyed &&
-       (URI(request.referer).path == attorney_path(@attorney)) ||
+    if (destroyed &&
+       (URI(request.referer).path == attorney_path(@attorney))) ||
        (URI(request.referer).path == edit_attorney_path(@attorney))
       redirect_to attorneys_path
     else

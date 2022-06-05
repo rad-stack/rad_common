@@ -89,19 +89,19 @@ RSpec.describe PhoneNumberValidator do
     it 'validates with mobile phone number' do
       model = TestPhoneModel.new
       model.mobile_phone = mobile_phone
-      expect(model.valid?).to eq(true)
+      expect(model.valid?).to be(true)
     end
 
     it 'validates a non-mobile phone number' do
       model = TestPhoneModel.new
       model.phone_number = phone_number
-      expect(model.valid?).to eq(true)
+      expect(model.valid?).to be(true)
     end
 
     it 'invalidates mobile number with a non-mobile number' do
       model = TestPhoneModel.new
       model.mobile_phone = phone_number
-      expect(model.valid?).to eq(false)
+      expect(model.valid?).to be(false)
       expect(model.errors.full_messages.first).to eq('Mobile phone does not appear to be a valid mobile phone number')
     end
   end

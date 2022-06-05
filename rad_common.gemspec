@@ -1,18 +1,18 @@
 $LOAD_PATH.push File.expand_path('lib', __dir__)
 
-# Maintain your gem's version:
 require 'rad_common/version'
 
-# Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = 'rad_common'
-  s.version     = RadCommon::VERSION
-  s.authors     = ['Gary Foster']
-  s.email       = ['gary@radicalbear.com']
-  s.homepage    = 'http://www.radicalbear.com'
-  s.summary     = 'A library of common functions for a rad bear app'
+  s.name = 'rad_common'
+  s.version = RadCommon::VERSION
+  s.authors = ['Gary Foster']
+  s.email = ['gary@radicalbear.com']
+  s.homepage = 'https://www.radicalbear.com/'
+  s.summary = 'A library of common functions for a rad bear app'
   s.description = 'A library of common functions for a standard business web app, developed by Radical Bear'
-  s.license     = 'MIT'
+  s.license = 'MIT'
+  s.metadata['rubygems_mfa_required'] = 'true'
+  s.required_ruby_version = '>= 3.0.4'
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
@@ -38,8 +38,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'nokogiri'
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails', '~> 1.10.2'
-  s.add_dependency 'puma', '~> 5.6'
   s.add_dependency 'pretender'
+  s.add_dependency 'puma', '~> 5.6'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1.4'
   s.add_dependency 'rails_email_validator'
