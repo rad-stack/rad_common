@@ -62,7 +62,8 @@ RSpec.describe 'Search', type: :system do
     end
 
     unless ENV['CI']  # TODO: this fails on codeship
-      it 'select should have warning style when a value a blank value is selected on filter without default', js: true do
+      it 'select should have warning style when a value a blank value is selected on filter without default',
+         js: true do
         expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-light]')
         bootstrap_select 'All Owners', from: 'search_owner_id'
         click_button 'Apply Filters'

@@ -11,7 +11,7 @@ RSpec.describe 'AreYouSure', type: :system do
       fill_in 'Name', with: 'test'
       visit current_path
 
-      expect(confirm_present?).to eq true
+      expect(confirm_present?).to be true
     end
   end
 
@@ -22,7 +22,7 @@ RSpec.describe 'AreYouSure', type: :system do
       find('body').click
       visit current_path
 
-      expect(confirm_present?).to eq false
+      expect(confirm_present?).to be false
     end
   end
 
@@ -32,7 +32,7 @@ RSpec.describe 'AreYouSure', type: :system do
       find('body').click
       visit '/'
 
-      expect(confirm_present?).to eq false
+      expect(confirm_present?).to be false
     end
   end
 end

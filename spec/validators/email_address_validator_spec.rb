@@ -66,7 +66,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
       let(:email) { good_email }
 
       it 'is valid' do
-        expect(division.valid?).to eq(true)
+        expect(division.valid?).to be(true)
       end
     end
 
@@ -75,7 +75,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
       let(:error_message) { 'Invoice email does not appear to be a valid email address' }
 
       it 'is invalid' do
-        expect(division.valid?).to eq(false)
+        expect(division.valid?).to be(false)
         expect(division.errors.full_messages.first).to eq(error_message)
       end
 
@@ -86,7 +86,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
         end
 
         it 'is valid' do
-          expect(division.valid?).to eq(true)
+          expect(division.valid?).to be(true)
         end
       end
     end

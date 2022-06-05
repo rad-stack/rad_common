@@ -15,12 +15,12 @@ describe RadCommon::TooltipHelper do
 
     it 'displays nothing if title is nil' do
       tooltip = icon_tooltip(html_tag, nil)
-      expect(tooltip).to eq(nil)
+      expect(tooltip).to be_nil
     end
 
     it 'displays nothing if title is empty string' do
       tooltip = icon_tooltip(html_tag, '')
-      expect(tooltip).to eq(nil)
+      expect(tooltip).to be_nil
     end
 
     it 'defaults tooltip placement to top' do
@@ -42,12 +42,12 @@ describe RadCommon::TooltipHelper do
 
     it 'displays nothing if title is nil' do
       tooltip = tooltip(html_tag, nil)
-      expect(tooltip).to eq(nil)
+      expect(tooltip).to be_nil
     end
 
     it 'displays nothing if title is empty string' do
       tooltip = tooltip(html_tag, '')
-      expect(tooltip).to eq(nil)
+      expect(tooltip).to be_nil
     end
   end
 end
