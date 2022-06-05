@@ -164,9 +164,11 @@ module DuplicateFixable
   def merge_duplicates(duplicate_keys, user)
     error = nil
 
-    duplicate_keys.each do |key|
-      error = fix_duplicate(key, user)
-      break if error
+    ActiveRecord::Base.transaction do
+      duplicate_keys.each do |key|
+        error = fix_duplicate(key, user)
+        break if error
+      end
     end
 
     if error.present?

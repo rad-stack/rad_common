@@ -165,6 +165,6 @@ class GlobalAutocomplete
     end
 
     def scope_with_where?(scope)
-      scope[:columns].any? || scope[:query_where].present?
+      (scope[:columns].present? && scope[:columns].any?) || scope[:query_where].present?
     end
 end

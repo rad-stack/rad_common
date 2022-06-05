@@ -52,7 +52,7 @@ class RadPermission
           value: security_role.send(item) }
       end
 
-      categories.group_by { |item| item[:category_name] }
+      categories.group_by { |item| item[:category_name] }.sort_by(&:first)
     end
 
     def user_categories(user)
