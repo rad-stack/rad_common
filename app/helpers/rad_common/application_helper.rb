@@ -64,7 +64,7 @@ module RadCommon
       if value
         tag.div(nil, class: 'fa fa-check')
       else
-        tag.div(nil, class: 'fa fa-circle-o')
+        tag.div(nil, class: 'fa fa-regular fa-circle')
       end
     end
 
@@ -142,16 +142,16 @@ module RadCommon
 
     def icon_hash(key)
       { clock: 'fa-clock',
-        dollar: 'fa-usd',
+        dollar: 'fa-dollar-sign',
         ar_aging: 'fa-hourglass-end',
         customers: 'fa-address-book',
         projects: 'fa-briefcase',
         users: 'fa-users',
         file_text: 'fa-file-text',
         divisions: 'fa-sitemap',
-        new_note: 'fa-pencil-square-o',
+        new_note: 'fa-square-pen',
         message: 'fa-envelope',
-        tasks: 'fa-tasks' }[key]
+        tasks: 'bars-progress' }[key]
     end
 
     def verify_sign_up

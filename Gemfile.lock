@@ -14,7 +14,6 @@ PATH
       devise-security (= 0.16.0)
       devise_invitable
       faker
-      font-awesome-rails
       haml-rails (~> 2.0)
       hashids
       image_processing (~> 1.9)
@@ -205,8 +204,6 @@ GEM
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (2.0.3)
     ffi (1.15.5)
-    font-awesome-rails (4.7.0.8)
-      railties (>= 3.2, < 8.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
     haml (5.2.2)

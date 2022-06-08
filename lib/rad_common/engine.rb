@@ -13,7 +13,6 @@ module RadCommon
     require 'devise-security'
     require 'devise_invitable'
     require 'faker'
-    require 'font-awesome-rails'
     require 'haml-rails'
     require 'hashids'
     require 'kaminari'

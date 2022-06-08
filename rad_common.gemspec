@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise_invitable'
   s.add_dependency 'devise-security', '0.16.0' # locked, see Task 35711
   s.add_dependency 'faker'
-  s.add_dependency 'font-awesome-rails'
   s.add_dependency 'haml-rails', '~> 2.0'
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing', '~> 1.9'

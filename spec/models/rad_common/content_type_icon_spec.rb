@@ -7,7 +7,7 @@ RSpec.describe RadCommon::ContentTypeIcon, type: :model do
     context 'when content is a known type' do
       let(:content_type) { 'application/msword' }
 
-      it { is_expected.to eq('fa-file-word-o') }
+      it { is_expected.to eq('fa-file-word') }
     end
 
     context 'when content is not a known type' do

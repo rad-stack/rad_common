@@ -200,7 +200,7 @@ describe RadCommon::ApplicationHelper do
   describe '#icon_hash' do
     it 'returns an icon string' do
       string = icon_hash(:dollar)
-      expect(string).to include('fa-usd')
+      expect(string).to include('fa-dollar-sign')
     end
 
     it 'returns nil for invalid key' do
