@@ -5,6 +5,7 @@ PATH
       active_storage_validations
       audited (~> 4.9)
       authtrail
+      authy (< 3.0.0)
       aws-sdk-s3
       bootstrap (~> 4.6.0)
       bootstrap-select-rails (~> 1.13.8)
@@ -120,7 +121,7 @@ GEM
       activerecord (>= 5.2)
       railties (>= 5.2)
       warden
-    authy (3.0.1)
+    authy (2.7.5)
       httpclient (>= 2.5.3.3)
     autoprefixer-rails (10.4.7.0)
       execjs (~> 2)
@@ -179,8 +180,8 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    devise-authy (2.3.1)
-      authy (~> 3.0)
+    devise-authy (2.2.1)
+      authy (>= 2.7.5)
       devise (>= 4.0.0)
     devise-security (0.16.0)
       devise (>= 4.3.0, < 5.0)
