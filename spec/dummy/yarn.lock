@@ -5679,10 +5679,10 @@ querystringify@^2.1.1:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"
   integrity sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==
 
-rad_common_js@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/rad_common_js/-/rad_common_js-2.0.0.tgz#eaabbfcceff5b86472d3a22a7db8bf9039eacbcc"
-  integrity sha512-XL5Iy5wYG4AB7+3CNAMK2okHOy/nLg9LWFXcsOXBGLednF6H/ra9j9PS2Vi9rPRlxAh+afRgewuC3tqAP+F9rg==
+rad_common_js@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/rad_common_js/-/rad_common_js-2.0.2.tgz#ff3303151e4e9b5a5fbf10c8b1f1d13453c264ae"
+  integrity sha512-3sBxpIlGXsnnhf4mK7L5dryEq5b9S4Ucf+0vlI90gnDj6NaBslbOm1U0PZ0UpFGEczxDh50n9OlBZvC77dj09A==
   dependencies:
     "@rails/actiontext" "^6.0.2-1"
     "@rails/webpacker" "5.4.3"
