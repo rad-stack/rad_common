@@ -151,7 +151,7 @@ module RadCommon
         divisions: 'fa-sitemap',
         new_note: 'fa-square-pen',
         message: 'fa-envelope',
-        tasks: 'bars-progress' }[key]
+        tasks: 'fa-bars-progress' }[key]
     end
 
     def verify_sign_up

@@ -236,7 +236,7 @@ Seeder.new.seed!
           search_and_replace 'fa-circle-o', 'fa-circle'
           search_and_replace 'fa-usd', 'fa-dollar-sign'
           search_and_replace 'fa-pencil-square-o', 'fa-square-pen'
-          search_and_replace 'fa-tasks', 'bars-progress'
+          search_and_replace 'fa-tasks', 'fa-bars-progress'
           search_and_replace 'fa-file-word-o', 'fa-file-word'
           search_and_replace 'fa-file-pdf-o', 'fa-file-pdf'
           search_and_replace 'fa-file-excel-o', 'fa-file-excel'
