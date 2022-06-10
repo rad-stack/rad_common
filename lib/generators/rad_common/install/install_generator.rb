@@ -6,19 +6,9 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
-        search_and_replace 'Time.zone.today', 'Date.current'
-        search_and_replace 'DateTime.now', 'Time.current'
-        search_and_replace 'Time.now', 'Time.current'
-        search_and_replace 'Time.zone.now', 'Time.current'
-        search_and_replace 'Date.today', 'Date.current'
-        search_and_replace 'Date.tomorrow', 'Time.zone.tomorrow'
-        search_and_replace 'Date.yesterday', 'Time.zone.yesterday'
+        standardize_date_methods
 
-        search_and_replace 'before { login_as(user, scope: :user) }',
-                           'before { login_as user, scope: :user }'
-
-        search_and_replace 'before { login_as(admin, scope: :user) }',
-                           'before { login_as admin, scope: :user }'
+        update_font_awesome_icons
 
         # misc
         template '../../../../../spec/dummy/Procfile', 'Procfile'
@@ -224,6 +214,39 @@ Seeder.new.seed!
           system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
           system "find . -type f -name \"*.haml\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
           system "find . -type f -name \"*.rake\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+        end
+
+        def standardize_date_methods
+          search_and_replace 'Time.zone.today', 'Date.current'
+          search_and_replace 'DateTime.now', 'Time.current'
+          search_and_replace 'Time.now', 'Time.current'
+          search_and_replace 'Time.zone.now', 'Time.current'
+          search_and_replace 'Date.today', 'Date.current'
+          search_and_replace 'Date.tomorrow', 'Time.zone.tomorrow'
+          search_and_replace 'Date.yesterday', 'Time.zone.yesterday'
+
+          search_and_replace 'before { login_as(user, scope: :user) }',
+                             'before { login_as user, scope: :user }'
+
+          search_and_replace 'before { login_as(admin, scope: :user) }',
+                             'before { login_as admin, scope: :user }'
+        end
+
+        def update_font_awesome_icons
+          search_and_replace 'fa-circle-o', 'fa-circle'
+          search_and_replace 'fa-usd', 'fa-dollar-sign'
+          search_and_replace 'fa-pencil-square-o', 'fa-square-pen'
+          search_and_replace 'fa-tasks', 'bars-progress'
+          search_and_replace 'fa-file-word-o', 'fa-file-word'
+          search_and_replace 'fa-file-pdf-o', 'fa-file-pdf'
+          search_and_replace 'fa-file-excel-o', 'fa-file-excel'
+          search_and_replace 'fa-file-text-o', 'fa-file-lines'
+          search_and_replace 'fa-file-archive-o', 'fa-file-zipper'
+          search_and_replace 'fa-file-o', 'fa-file'
+          search_and_replace 'fa-file-video-o', 'fa-file-video'
+          search_and_replace 'fa-search', 'fa-magnifying-glass'
+          search_and_replace 'fa-sign-in', 'fa-right-to-bracket'
+          search_and_replace 'fa-question-circle', 'fa-circle-question'
         end
     end
   end
