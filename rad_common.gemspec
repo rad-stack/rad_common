@@ -20,9 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'audited', '~> 4.9'
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
-  s.add_dependency 'bootstrap', '~> 4.6.0'
   s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
-  s.add_dependency 'bootstrap-select-rails', '~> 1.13.8'
   s.add_dependency 'devise'
   s.add_dependency 'devise-authy'
   s.add_dependency 'devise_invitable'
@@ -48,6 +46,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1.4'
   s.add_dependency 'rails_email_validator'
+  s.add_dependency 'sassc' # TODO: Remove when removing sprockets
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'

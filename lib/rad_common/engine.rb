@@ -34,8 +34,6 @@ module RadCommon
     require 'strip_attributes'
     require 'text'
     require 'twilio-ruby'
-    require 'bootstrap'
-    require 'bootstrap-select-rails'
     require 'webpacker'
   end
 end
