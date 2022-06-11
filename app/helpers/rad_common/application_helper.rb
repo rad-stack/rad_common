@@ -140,20 +140,6 @@ module RadCommon
       end
     end
 
-    def icon_hash(key)
-      { clock: 'fa-clock',
-        dollar: 'fa-dollar-sign',
-        ar_aging: 'fa-hourglass-end',
-        customers: 'fa-address-book',
-        projects: 'fa-briefcase',
-        users: 'fa-users',
-        file_text: 'fa-file-text',
-        divisions: 'fa-sitemap',
-        new_note: 'fa-square-pen',
-        message: 'fa-envelope',
-        tasks: 'fa-bars-progress' }[key]
-    end
-
     def verify_sign_up
       raise RadicallyIntermittentException if RadicalConfig.disable_sign_up?
     end

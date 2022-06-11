@@ -247,6 +247,7 @@ Seeder.new.seed!
           search_and_replace 'fa-search', 'fa-magnifying-glass'
           search_and_replace 'fa-sign-in', 'fa-right-to-bracket'
           search_and_replace 'fa-question-circle', 'fa-circle-question'
+          search_and_replace 'plus-square', 'square-plus'
         end
     end
   end
