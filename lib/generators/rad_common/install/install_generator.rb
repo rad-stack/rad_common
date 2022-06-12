@@ -233,21 +233,29 @@ Seeder.new.seed!
         end
 
         def update_font_awesome_icons
-          search_and_replace 'fa-circle-o', 'fa-circle'
-          search_and_replace 'fa-usd', 'fa-dollar-sign'
-          search_and_replace 'fa-pencil-square-o', 'fa-square-pen'
-          search_and_replace 'fa-tasks', 'fa-bars-progress'
-          search_and_replace 'fa-file-word-o', 'fa-file-word'
-          search_and_replace 'fa-file-pdf-o', 'fa-file-pdf'
-          search_and_replace 'fa-file-excel-o', 'fa-file-excel'
-          search_and_replace 'fa-file-text-o', 'fa-file-lines'
-          search_and_replace 'fa-file-archive-o', 'fa-file-zipper'
-          search_and_replace 'fa-file-o', 'fa-file'
-          search_and_replace 'fa-file-video-o', 'fa-file-video'
-          search_and_replace 'fa-search', 'fa-magnifying-glass'
-          search_and_replace 'fa-sign-in', 'fa-right-to-bracket'
-          search_and_replace 'fa-question-circle', 'fa-circle-question'
-          search_and_replace 'plus-square', 'square-plus'
+          fix_font_awesome 'circle-o', 'circle'
+          fix_font_awesome 'usd', 'dollar-sign'
+          fix_font_awesome 'pencil-square-o', 'square-pen'
+          fix_font_awesome 'tasks', 'bars-progress'
+          fix_font_awesome 'file-word-o', 'file-word'
+          fix_font_awesome 'file-pdf-o', 'file-pdf'
+          fix_font_awesome 'file-excel-o', 'file-excel'
+          fix_font_awesome 'file-text-o', 'file-lines'
+          fix_font_awesome 'file-archive-o', 'file-zipper'
+          fix_font_awesome 'file-o', 'file'
+          fix_font_awesome 'file-video-o', 'file-video'
+          fix_font_awesome 'search', 'magnifying-glass'
+          fix_font_awesome 'sign-in', 'right-to-bracket'
+          fix_font_awesome 'question-circle', 'circle-question'
+          fix_font_awesome 'plus-square', 'square-plus'
+        end
+
+        def fix_font_awesome(old, new)
+          search_and_replace "fa-#{old}", "fa-#{new}"
+          search_and_replace "icon(:#{old}", "icon(:#{new}"
+          search_and_replace "icon :#{old}", "icon :#{new}"
+          search_and_replace "icon('#{old}'", "icon('#{new}'"
+          search_and_replace "icon '#{old}'", "icon '#{new}'"
         end
     end
   end
