@@ -17,7 +17,6 @@ module RadCommon
     require 'hashids'
     require 'kaminari'
     require 'bootstrap4-kaminari-views'
-    require 'momentjs-rails'
     require 'nokogiri'
     require 'pg'
     require 'premailer/rails'
@@ -33,8 +32,6 @@ module RadCommon
     require 'strip_attributes'
     require 'text'
     require 'twilio-ruby'
-    require 'bootstrap'
-    require 'bootstrap-select-rails'
     require 'webpacker'
   end
 end
