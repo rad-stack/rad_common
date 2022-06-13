@@ -1,10 +1,15 @@
-- active_tab = local_assigns[:active_tab].presence || tabs.first[:name]
+:ruby
+  active_tab = local_assigns[:active_tab].presence || tabs.first[:name]
+  links = true if local_assigns[:links].blank?
+  title = local_assigns[:title]
 
+- if title.present?
+  %h3.text-center= title
 %ul.nav.nav-tabs.justify-content-center.mb-2{ role: 'tablist' }
-  - tabs.each do |tab|
+  - tabs.compact.each do |tab|
     - name = tab[:name]
     %li.nav-item
-      %a.nav-link{ class: active_tab == name ? 'active' : '',
+      %a.nav-link{ class: (links && current_page?(tab[:value])) || (!links && (active_tab == name)) ? 'active' : '',
                    id: "nav-#{name.parameterize}-tab",
                    href: links ? tab[:value] : "#nav-#{name.parameterize}",
                    'aria-controls' => links ? nil : "nav-#{name.parameterize}",
@@ -14,8 +19,8 @@
         = tab[:icon].present? ? icon(tab[:icon], tab[:name]) : tab[:name]
 - unless links
   .tab-content
-    - tabs.each do |tab|
-      .tab-pane.fade{ class: active_tab == tab[:name] ? 'active show' : '',
+    - tabs.compact.each do |tab|
+      .tab-pane.fade{ class: (links && current_page?(tab[:value])) || active_tab == tab[:name] ? 'active show' : '',
                       id: "nav-#{tab[:name].parameterize}",
                       'aria-labelledby' => "nav-#{tab[:name].parameterize}-tab",
                       role: 'tabpanel' }
