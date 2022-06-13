@@ -1,5 +1,6 @@
 require('trix');
 require('@rails/actiontext');
+require("@rails/ujs").start()
 
 import 'trix/dist/trix.css';
 import 'rad_common_js/src/css/actiontext.scss';
