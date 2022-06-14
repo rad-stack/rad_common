@@ -210,10 +210,13 @@ Seeder.new.seed!
           end
         end
 
-        def search_and_replace(search, replace)
+        def search_and_replace(search, replace, js: false)
           system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
           system "find . -type f -name \"*.haml\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
           system "find . -type f -name \"*.rake\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          return unless js
+
+          system "find . -type f -name \"*.js\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
         end
 
         def standardize_date_methods
@@ -233,36 +236,20 @@ Seeder.new.seed!
         end
 
         def update_font_awesome_icons
-          fix_font_awesome 'circle-o', 'circle'
-          fix_font_awesome 'usd', 'dollar-sign'
-          fix_font_awesome 'pencil-square-o', 'square-pen'
-          fix_font_awesome 'tasks', 'bars-progress'
-          fix_font_awesome 'file-word-o', 'file-word'
-          fix_font_awesome 'file-pdf-o', 'file-pdf'
-          fix_font_awesome 'file-excel-o', 'file-excel'
-          fix_font_awesome 'file-text-o', 'file-lines'
-          fix_font_awesome 'file-archive-o', 'file-zipper'
-          fix_font_awesome 'file-o', 'file'
-          fix_font_awesome 'file-video-o', 'file-video'
-          fix_font_awesome 'search', 'magnifying-glass'
-          fix_font_awesome 'sign-in', 'right-to-bracket'
-          fix_font_awesome 'question-circle', 'circle-question'
-          fix_font_awesome 'plus-square', 'square-plus'
-          fix_font_awesome 'check-square-o', 'square-check'
-          fix_font_awesome 'smile-o', 'face-smile'
-          fix_font_awesome 'hand-o-left', 'hand-point-left'
-          fix_font_awesome 'check-circle-o', 'circle-check'
-          fix_font_awesome 'times-circle-o', 'circle-xmark'
-        end
-
-        def fix_font_awesome(old, new)
-          search_and_replace "fa-#{old}", "fa-#{new}"
-
-          search_and_replace "icon(:#{old}", "icon(:#{new}"
-          search_and_replace "icon :#{old}", "icon :#{new}"
-
-          search_and_replace "icon('#{old}'", "icon('#{new}'"
-          search_and_replace "icon '#{old}'", "icon '#{new}'"
+          search_and_replace 'circle-o', 'circle'
+          search_and_replace 'pencil-square-o', 'square-pen'
+          search_and_replace 'file-word-o', 'file-word'
+          search_and_replace 'file-pdf-o', 'file-pdf'
+          search_and_replace 'file-excel-o', 'file-excel'
+          search_and_replace 'file-text-o', 'file-lines'
+          search_and_replace 'file-archive-o', 'file-zipper'
+          search_and_replace 'file-o', 'file'
+          search_and_replace 'file-video-o', 'file-video'
+          search_and_replace 'check-square-o', 'square-check'
+          search_and_replace 'smile-o', 'face-smile'
+          search_and_replace 'check-circle-o', 'circle-check'
+          search_and_replace 'times-circle-o', 'circle-xmark'
+          search_and_replace 'clock-o', 'clock'
         end
     end
   end
