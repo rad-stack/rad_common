@@ -266,9 +266,9 @@ Seeder.new.seed!
         end
 
         def new_icon_value(item)
-          return ":#{new}" unless item.include?('-')
+          return ":#{item}" unless item.include?('-')
 
-          "'#{new}'"
+          "'#{item}'"
         end
     end
   end
