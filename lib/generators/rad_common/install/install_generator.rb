@@ -268,7 +268,7 @@ Seeder.new.seed!
         def new_icon_value(item)
           return ":#{item}" unless item.include?('-')
 
-          "/'#{item}/'"
+          "\x27#{item}\x27"
         end
     end
   end
