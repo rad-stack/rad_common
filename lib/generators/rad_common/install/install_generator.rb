@@ -236,20 +236,20 @@ Seeder.new.seed!
         end
 
         def update_font_awesome_icons
-          search_and_replace 'circle-o', 'circle'
-          search_and_replace 'pencil-square-o', 'square-pen'
-          search_and_replace 'file-word-o', 'file-word'
-          search_and_replace 'file-pdf-o', 'file-pdf'
-          search_and_replace 'file-excel-o', 'file-excel'
-          search_and_replace 'file-text-o', 'file-lines'
-          search_and_replace 'file-archive-o', 'file-zipper'
-          search_and_replace 'file-o', 'file'
-          search_and_replace 'file-video-o', 'file-video'
-          search_and_replace 'check-square-o', 'square-check'
-          search_and_replace 'smile-o', 'face-smile'
-          search_and_replace 'check-circle-o', 'circle-check'
-          search_and_replace 'times-circle-o', 'circle-xmark'
-          search_and_replace 'clock-o', 'clock'
+          search_and_replace 'circle-o', 'circle', js: true
+          search_and_replace 'pencil-square-o', 'square-pen', js: true
+          search_and_replace 'file-word-o', 'file-word', js: true
+          search_and_replace 'file-pdf-o', 'file-pdf', js: true
+          search_and_replace 'file-excel-o', 'file-excel', js: true
+          search_and_replace 'file-text-o', 'file-lines', js: true
+          search_and_replace 'file-archive-o', 'file-zipper', js: true
+          search_and_replace 'file-o', 'file', js: true
+          search_and_replace 'file-video-o', 'file-video', js: true
+          search_and_replace 'check-square-o', 'square-check', js: true
+          search_and_replace 'smile-o', 'face-smile', js: true
+          search_and_replace 'check-circle-o', 'circle-check', js: true
+          search_and_replace 'times-circle-o', 'circle-xmark', js: true
+          search_and_replace 'clock-o', 'clock', js: true
         end
     end
   end
