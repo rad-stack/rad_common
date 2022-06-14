@@ -258,17 +258,11 @@ Seeder.new.seed!
         def fix_font_awesome(old, new)
           search_and_replace "fa-#{old}", "fa-#{new}"
 
-          search_and_replace "icon(:#{old}", "icon(#{new_icon_value(new)}"
-          search_and_replace "icon :#{old}", "icon #{new_icon_value(new)}"
+          search_and_replace "icon(:#{old}", "icon(:#{new}"
+          search_and_replace "icon :#{old}", "icon :#{new}"
 
           search_and_replace "icon('#{old}'", "icon('#{new}'"
           search_and_replace "icon '#{old}'", "icon '#{new}'"
-        end
-
-        def new_icon_value(item)
-          return ":#{item}" unless item.include?('-')
-
-          "\x27#{item}\x27"
         end
     end
   end
