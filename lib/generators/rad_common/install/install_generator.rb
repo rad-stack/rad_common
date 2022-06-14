@@ -248,6 +248,11 @@ Seeder.new.seed!
           fix_font_awesome 'sign-in', 'right-to-bracket'
           fix_font_awesome 'question-circle', 'circle-question'
           fix_font_awesome 'plus-square', 'square-plus'
+          fix_font_awesome 'check-square-o', 'square-check'
+          fix_font_awesome 'smile-o', 'face-smile'
+          fix_font_awesome 'hand-o-left', 'hand-point-left'
+          fix_font_awesome 'check-circle-o', 'circle-check'
+          fix_font_awesome 'times-circle-o', 'circle-xmark'
         end
 
         def fix_font_awesome(old, new)
