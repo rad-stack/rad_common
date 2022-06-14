@@ -28,6 +28,7 @@ PATH
       pundit
       rails (~> 6.1.4)
       rails_email_validator
+      sassc
       sendgrid-ruby
       sentry-rails
       sentry-ruby
@@ -385,6 +386,8 @@ GEM
     ruby_parser (3.19.1)
       sexp_processor (~> 4.16)
     rubyzip (2.3.2)
+    sassc (2.4.0)
+      ffi (~> 1.9)
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
