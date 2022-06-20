@@ -250,6 +250,8 @@ Seeder.new.seed!
           search_and_replace 'check-circle-o', 'circle-check', js: true
           search_and_replace 'times-circle-o', 'circle-xmark', js: true
           search_and_replace 'clock-o', 'clock', js: true
+          search_and_replace 'files-o', 'copy', js: true
+          search_and_replace 'bar-chart-o', 'chart-column', js: true
         end
     end
   end
