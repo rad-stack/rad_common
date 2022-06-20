@@ -6,19 +6,9 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
-        search_and_replace 'Time.zone.today', 'Date.current'
-        search_and_replace 'DateTime.now', 'Time.current'
-        search_and_replace 'Time.now', 'Time.current'
-        search_and_replace 'Time.zone.now', 'Time.current'
-        search_and_replace 'Date.today', 'Date.current'
-        search_and_replace 'Date.tomorrow', 'Time.zone.tomorrow'
-        search_and_replace 'Date.yesterday', 'Time.zone.yesterday'
+        standardize_date_methods
 
-        search_and_replace 'before { login_as(user, scope: :user) }',
-                           'before { login_as user, scope: :user }'
-
-        search_and_replace 'before { login_as(admin, scope: :user) }',
-                           'before { login_as admin, scope: :user }'
+        update_font_awesome_icons
 
         # misc
         template '../../../../../spec/dummy/Procfile', 'Procfile'
@@ -220,10 +210,48 @@ Seeder.new.seed!
           end
         end
 
-        def search_and_replace(search, replace)
+        def search_and_replace(search, replace, js: false)
           system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
           system "find . -type f -name \"*.haml\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
           system "find . -type f -name \"*.rake\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          return unless js
+
+          system "find . -type f -name \"*.js\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+        end
+
+        def standardize_date_methods
+          search_and_replace 'Time.zone.today', 'Date.current'
+          search_and_replace 'DateTime.now', 'Time.current'
+          search_and_replace 'Time.now', 'Time.current'
+          search_and_replace 'Time.zone.now', 'Time.current'
+          search_and_replace 'Date.today', 'Date.current'
+          search_and_replace 'Date.tomorrow', 'Time.zone.tomorrow'
+          search_and_replace 'Date.yesterday', 'Time.zone.yesterday'
+
+          search_and_replace 'before { login_as(user, scope: :user) }',
+                             'before { login_as user, scope: :user }'
+
+          search_and_replace 'before { login_as(admin, scope: :user) }',
+                             'before { login_as admin, scope: :user }'
+        end
+
+        def update_font_awesome_icons
+          search_and_replace 'circle-o', 'circle', js: true
+          search_and_replace 'pencil-square-o', 'square-pen', js: true
+          search_and_replace 'file-word-o', 'file-word', js: true
+          search_and_replace 'file-pdf-o', 'file-pdf', js: true
+          search_and_replace 'file-excel-o', 'file-excel', js: true
+          search_and_replace 'file-text-o', 'file-lines', js: true
+          search_and_replace 'file-archive-o', 'file-zipper', js: true
+          search_and_replace 'file-o', 'file', js: true
+          search_and_replace 'file-video-o', 'file-video', js: true
+          search_and_replace 'check-square-o', 'square-check', js: true
+          search_and_replace 'smile-o', 'face-smile', js: true
+          search_and_replace 'check-circle-o', 'circle-check', js: true
+          search_and_replace 'times-circle-o', 'circle-xmark', js: true
+          search_and_replace 'clock-o', 'clock', js: true
+          search_and_replace 'files-o', 'copy', js: true
+          search_and_replace 'bar-chart-o', 'chart-column', js: true
         end
     end
   end

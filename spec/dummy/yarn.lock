@@ -913,6 +913,11 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
+"@fortawesome/fontawesome-free@^6.1.1":
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-6.1.1.tgz#bf5d45611ab74890be386712a0e5d998c65ee2a1"
+  integrity sha512-J/3yg2AIXc9wznaVqpHVX3Wa5jwKovVF0AMYSnbmcXTiL3PpRPfF58pzWucCwEiCJBp+hCNRLWClTomD8SseKg==
+
 "@gar/promisify@^1.0.1":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
@@ -1000,6 +1005,11 @@
   integrity sha512-jp2UKh1QChjOGsApYO3HHuBH1yfv4mqOcKuB70fsT79O/CJWEACVnjKIdaqO+B9BJTKihaxyyepvL7kLfUFiDw==
   dependencies:
     spark-md5 "^3.0.0"
+
+"@rails/ujs@^6.0.5":
+  version "6.0.5"
+  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.0.5.tgz#53e63a02271a7494a7925a30ed0a3672ec177337"
+  integrity sha512-6nEyc+7jhVQGx84sO7yalQq1G+ZgJa72/5q9Avsm4yIZqVymvLEftK90+B0XZhvJzbiNnbDIFC4Wx5mgHo7lTw==
 
 "@rails/webpacker@5.4.3":
   version "5.4.3"
@@ -5674,12 +5684,13 @@ querystringify@^2.1.1:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"
   integrity sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==
 
-rad_common_js@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/rad_common_js/-/rad_common_js-2.0.0.tgz#eaabbfcceff5b86472d3a22a7db8bf9039eacbcc"
-  integrity sha512-XL5Iy5wYG4AB7+3CNAMK2okHOy/nLg9LWFXcsOXBGLednF6H/ra9j9PS2Vi9rPRlxAh+afRgewuC3tqAP+F9rg==
+rad_common_js@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/rad_common_js/-/rad_common_js-2.0.3.tgz#0ad682ed27b1fd3169311e619a898c8248ba2926"
+  integrity sha512-zYy7DFGGU9/wK1hgf1lNLXwsYpUd5hjxB7QB42PK/9JCtspu2XBBMizuforj9Bb5d4+iicICQBXeoWLT6N9Yjg==
   dependencies:
     "@rails/actiontext" "^6.0.2-1"
+    "@rails/ujs" "^6.0.5"
     "@rails/webpacker" "5.4.3"
     bootstrap "^4.0.0"
     bootstrap-select "^1.13.18"
