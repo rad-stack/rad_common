@@ -252,6 +252,7 @@ Seeder.new.seed!
           search_and_replace 'clock-o', 'clock', js: true
           search_and_replace 'files-o', 'copy', js: true
           search_and_replace 'bar-chart-o', 'chart-column', js: true
+          search_and_replace 'commenting-o', 'commenting', js: true
         end
     end
   end
