@@ -125,6 +125,17 @@ Get `spec/dummy/config/credentials/test.key` from another developer
 
 `bundle exec rails c`
 
+### Webpacker/Yarn updates
+If changes are made to these items, you may need to compile both dev and test like the following:
+```
+cd spec/dummy
+
+bundle exec yarn install
+bundle exec rails webpacker:compile
+
+RAILS_ENV=test bundle exec rails webpacker:compile
+```
+
 ### Test Suite
 
 To generate items related to the dummy app, first cd into the /spec/dummy directory, then you can run `rails generate` commands.
