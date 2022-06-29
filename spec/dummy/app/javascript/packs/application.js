@@ -14,4 +14,4 @@ import '@fortawesome/fontawesome-free/css/all';
 import { RadCommon } from 'rad_common_js/src/radCommon';
 RadCommon.setup();
 
-import '../src/app_specific.js'
+import './app_specific.js'
