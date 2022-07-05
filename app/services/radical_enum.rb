@@ -4,6 +4,9 @@ class RadicalEnum
   def initialize(enum_class, enum_name)
     self.enum_class = enum_class
     self.enum_name = enum_name
+    return if enum_exists?
+
+    raise "enum #{enum_name} on #{enum_class} doesn't exist"
   end
 
   def translated_option(record)
@@ -30,6 +33,10 @@ class RadicalEnum
   end
 
   private
+
+    def enum_exists?
+      enum_class.respond_to?(enums_name)
+    end
 
     def enums_name
       enum_name.to_s.pluralize
