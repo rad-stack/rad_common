@@ -325,9 +325,9 @@ class RadicalConfig
 
       def check_aws!
         if secret_config_item(:s3_region).present? &&
-          secret_config_item(:s3_access_key_id).present? &&
-          secret_config_item(:s3_secret_access_key).present? &&
-          secret_config_item(:s3_bucket).present?
+           secret_config_item(:s3_access_key_id).present? &&
+           secret_config_item(:s3_secret_access_key).present? &&
+           secret_config_item(:s3_bucket).present?
           return
         end
 
