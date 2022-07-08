@@ -8,8 +8,6 @@ module RadCommon
       def create_initializer_file
         standardize_date_methods
 
-        update_font_awesome_icons
-
         # misc
         template '../../../../../spec/dummy/Procfile', 'Procfile'
         copy_file '../../../../../spec/dummy/package.json', 'package.json'
@@ -233,26 +231,6 @@ Seeder.new.seed!
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
-        end
-
-        def update_font_awesome_icons
-          search_and_replace 'circle-o', 'circle', js: true
-          search_and_replace 'pencil-square-o', 'square-pen', js: true
-          search_and_replace 'file-word-o', 'file-word', js: true
-          search_and_replace 'file-pdf-o', 'file-pdf', js: true
-          search_and_replace 'file-excel-o', 'file-excel', js: true
-          search_and_replace 'file-text-o', 'file-lines', js: true
-          search_and_replace 'file-archive-o', 'file-zipper', js: true
-          search_and_replace 'file-o', 'file', js: true
-          search_and_replace 'file-video-o', 'file-video', js: true
-          search_and_replace 'check-square-o', 'square-check', js: true
-          search_and_replace 'smile-o', 'face-smile', js: true
-          search_and_replace 'check-circle-o', 'circle-check', js: true
-          search_and_replace 'times-circle-o', 'circle-xmark', js: true
-          search_and_replace 'clock-o', 'clock', js: true
-          search_and_replace 'files-o', 'copy', js: true
-          search_and_replace 'bar-chart-o', 'chart-column', js: true
-          search_and_replace 'commenting-o', 'commenting', js: true
         end
     end
   end
