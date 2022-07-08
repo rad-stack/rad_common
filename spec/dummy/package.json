@@ -28,6 +28,7 @@
     "json-schema": "^0.4.0",
     "url-parse": "^1.5.8",
     "async": "^2.6.4",
-    "eventsource": "^2.0.2"
+    "eventsource": "^2.0.2",
+    "moment": "^2.29.4"
   }
 }
