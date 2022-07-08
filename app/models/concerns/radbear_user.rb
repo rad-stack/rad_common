@@ -75,7 +75,7 @@ module RadbearUser
     validates_with PhoneNumberValidator, fields: [{ field: :mobile_phone, type: :mobile }],
                                          if: :fully_validate_email_phone?
 
-    validates_with EmailAddressValidator, fields: %i[email], on: :update, if: :fully_validate_email_phone?
+    validates_with EmailAddressValidator, fields: %i[email], if: :fully_validate_email_phone?
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
