@@ -316,21 +316,32 @@ class RadicalConfig
       value
     end
 
-    def check_aws!
-      if secret_config_item(:s3_region).present? &&
-         secret_config_item(:s3_access_key_id).present? &&
-         secret_config_item(:s3_secret_access_key).present? &&
-         secret_config_item(:s3_bucket).present?
-        return
-      end
-
-      # this can be fixed in Rails 6.1 to not have to always have them present
-      # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
-
-      raise 'Missing AWS S3 credentials'
+    def check_validity!
+      check_aws!
+      check_authy!
     end
 
     private
+
+      def check_aws!
+        if secret_config_item(:s3_region).present? &&
+          secret_config_item(:s3_access_key_id).present? &&
+          secret_config_item(:s3_secret_access_key).present? &&
+          secret_config_item(:s3_bucket).present?
+          return
+        end
+
+        # this can be fixed in Rails 6.1 to not have to always have them present
+        # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
+
+        raise 'Missing AWS S3 credentials'
+      end
+
+      def check_authy!
+        return unless authy_enabled? && !twilio_enabled?
+
+        raise 'Twilio must be enabled to provide mobile phone # validation when authy is enabled'
+      end
 
       def override_variable(item)
         ENV[item.to_s.upcase]
