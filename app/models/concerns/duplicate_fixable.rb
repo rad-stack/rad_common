@@ -77,6 +77,17 @@ module DuplicateFixable
     def applicable_duplicate_items
       additional_duplicate_items.select { |item| new.respond_to?(item[:name]) }
     end
+
+    def notify_high_duplicates
+      all_records = all.size
+      return unless all_records.positive?
+
+      duplicate_records = high_duplicates.count
+      percentage = (duplicate_records / (all_records * 1.0))
+      return unless percentage > 0.05 # TODO: check all projects to see if this threshhold is reasonable
+
+      raise 'boom'
+    end
   end
 
   def process_duplicates
