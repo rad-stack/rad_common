@@ -1,4 +1,4 @@
-require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record"\
+require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record" \
         '/base/schema_validations'
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
@@ -57,9 +57,10 @@ end
 
 # https://swell.radicalbear.com/tasks/37444
 # https://github.com/collectiveidea/audited/issues/631
-Rails.configuration.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess,
-  ActiveSupport::TimeWithZone, ActiveSupport::TimeZone, Date, Time, String, Integer, NilClass, Float, FalseClass,
-  Hash, Array, DateTime, TrueClass, BigDecimal]
+Rails.configuration.active_record.yaml_column_permitted_classes = [
+  ActiveSupport::HashWithIndifferentAccess, ActiveSupport::TimeWithZone, ActiveSupport::TimeZone, Date, Time, String,
+  Integer, NilClass, Float, FalseClass, Hash, Array, DateTime, TrueClass, BigDecimal
+]
 
 Audited.current_user_method = :true_user
 
