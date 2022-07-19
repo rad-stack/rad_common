@@ -55,6 +55,12 @@ if RadicalConfig.authy_enabled?
   Authy.api_uri = 'https://api.authy.com/'
 end
 
+# https://swell.radicalbear.com/tasks/37444
+# https://github.com/collectiveidea/audited/issues/631
+Rails.configuration.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess,
+  ActiveSupport::TimeWithZone, ActiveSupport::TimeZone, Date, Time, String, Integer, NilClass, Float, FalseClass,
+  Hash, Array, DateTime, TrueClass, BigDecimal]
+
 Audited.current_user_method = :true_user
 
 Rails.configuration.to_prepare do

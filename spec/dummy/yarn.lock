@@ -5684,10 +5684,10 @@ querystringify@^2.1.1:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"
   integrity sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==
 
-rad_common_js@^2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/rad_common_js/-/rad_common_js-2.0.6.tgz#d5f09e1ccde768d7694c6279038bcd18e89a58e6"
-  integrity sha512-BfElFHoVWkOSABzcC7PGKzMBrmet/ZH6hFKOE16FhZKo5dKr3BVIDsfnMzZoIwIOgKiZMcyvnT140Mz3rLIlSg==
+rad_common_js@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/rad_common_js/-/rad_common_js-2.0.9.tgz#2875c865dbbe462e5987af24337231453a72fec9"
+  integrity sha512-X0P4nt//H0PrtLMjL2TKbCEkn9k416Nw3YHbQpOuDbC1ryQYAs0ByPLGQZqBJGG5apIyQknFxLORIul+6QrU+w==
   dependencies:
     "@rails/actiontext" "^6.0.2-1"
     "@rails/ujs" "^6.0.5"

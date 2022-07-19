@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
   s.add_dependency 'active_storage_validations'
-  s.add_dependency 'audited', '~> 4.9'
+  s.add_dependency 'audited'
   s.add_dependency 'authtrail'
 
   # TODO: remove this override when we replace authy with twilio verify, see Task 37169
