@@ -31,6 +31,10 @@ module RadCommon
     #      options: [['...', [user, { scope_value: :unassigned }]],
     #               ['Active', User.active.by_name],
     #               ['Inactive', User.inactive.by_name]] }]
+    # @example Grouped options with scope values with params
+    # [{ column: :user_search_id, input_label: 'Users', grouped: true,
+    #    options: [['Active', [scope_label: 'Some Active User', scope_value: { for_project_user: 1 }]],
+    #              ['Inactive', [scope_label: 'Some Inactive User', scope_value: { for_project_user: 2 }]]] }]
     # @example Using scope values
     #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
     def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil,
