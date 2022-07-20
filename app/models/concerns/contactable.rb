@@ -64,7 +64,7 @@ module Contactable
                                 secondary_line: address_2,
                                 city: city,
                                 state: state,
-                                zip_code: zipcode }, 'Contactable').call
+                                zip_code: zipcode }).call
 
       return unless result
 

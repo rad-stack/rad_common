@@ -1,9 +1,8 @@
 class LobAddress
-  attr_reader :lob_args, :log_message
+  attr_reader :lob_args
 
-  def initialize(lob_args, log_message)
+  def initialize(lob_args)
     @lob_args = parse_lob_args(lob_args)
-    @log_message = log_message
   end
 
   def call

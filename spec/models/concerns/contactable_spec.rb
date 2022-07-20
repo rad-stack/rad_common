@@ -25,7 +25,9 @@ RSpec.describe Contactable do
     end
 
     before do
-      # TODO: maybe refactor this to actually call Lob
+      allow(RadicalConfig).to receive(:lob_key!).and_return 'foo'
+      allow(RadicalConfig).to receive(:lob_key).and_return 'foo'
+
       us_verifier = double('us_verifier')
       lob_client = double(Lob::Client, us_verifications: us_verifier)
       allow(Lob::Client).to receive(:new).and_return(lob_client)
