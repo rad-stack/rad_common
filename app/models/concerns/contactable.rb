@@ -3,7 +3,7 @@ module Contactable
 
   included do
     validates :zipcode, numericality: true, length: { is: 5 }, allow_nil: true
-    validates :state, length: { is: 2 }
+    validates :state, length: { is: 2 }, allow_nil: true
 
     before_validation :maybe_standardize_address
   end
