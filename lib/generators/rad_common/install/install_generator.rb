@@ -184,7 +184,7 @@ Seeder.new.seed!
         apply_migration '20220405182602_optional_mobile_phone.rb'
         apply_migration '20220423173413_inactive_notifications.rb'
         apply_migration '20220504114538_rename_validate_email.rb'
-        apply_migration '20220719162541_address_validation.rb'
+        apply_migration '20220719162246_address_validation.rb'
       end
 
       def self.next_migration_number(path)
