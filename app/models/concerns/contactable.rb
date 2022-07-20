@@ -2,7 +2,7 @@ module Contactable
   extend ActiveSupport::Concern
 
   included do
-    validates :zipcode, numericality: true, length: { is: 5 }
+    validates :zipcode, numericality: true, length: { is: 5 }, allow_nil: true
     validates :state, length: { is: 2 }
 
     before_validation :maybe_standardize_address
