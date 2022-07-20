@@ -156,7 +156,9 @@ module RadCommon
 
       def transform_group_options(group_options)
         group_options.map do |option|
-          if scope_value_option?(option)
+          if scope_label_option?(option)
+            [option[:scope_label].to_s, option[:scope_value].to_s]
+          elsif scope_value_option?(option)
             [option[:scope_value].to_s.titleize, option[:scope_value].to_s]
           else
             [option.to_s, option.id]
@@ -198,11 +200,29 @@ module RadCommon
         values = grouped_scope_values
         return false if values.blank?
 
+        return values.map(&:to_s).include?(value.to_s) if group_scope_hash?
+
         values.include?(value.to_sym)
+      end
+
+      def group_scope_hash?
+        return false if grouped_scope_values.blank?
+
+        grouped_scope_values.first.is_a? Hash
+      end
+
+      def group_scope_params(value)
+        params = grouped_scope_values.select{ |h| h.to_s == value}.first
+
+        { scope: params.keys.first, scope_args: params.values.first }
       end
 
       def scope_value_option?(option)
         option.is_a?(Hash) && option.keys.include?(:scope_value)
+      end
+
+      def scope_label_option?(option)
+        option.is_a?(Hash) && option.keys.include?(:scope_label)
       end
 
       def all_group_values
@@ -249,6 +269,11 @@ module RadCommon
       end
 
       def apply_scope_grouped_value(results, scope_name)
+        if group_scope_hash?
+          scope_params = group_scope_params(scope_name)
+          return results.send(scope_params[:scope], scope_params[:scope_args])
+        end
+
         results.send(scope_name)
       end
 
