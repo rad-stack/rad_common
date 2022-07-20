@@ -216,7 +216,7 @@ module RadCommon
       end
 
       def group_scope_params(value)
-        params = grouped_scope_values.select{ |h| h.to_s == value}.first
+        params = grouped_scope_values.select { |h| h.to_s == value }.first
 
         { scope: params.keys.first, scope_args: params.values.first }
       end
