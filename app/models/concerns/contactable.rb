@@ -24,7 +24,7 @@ module Contactable
   end
 
   def street_addresses
-    [address_1, address_2].reject(&:blank?).join(' ').to_s
+    [address_1, address_2].reject(&:blank?).join(', ').to_s
   end
 
   def city_state_zip
