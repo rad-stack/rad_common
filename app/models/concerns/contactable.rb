@@ -28,22 +28,12 @@ module Contactable
   end
 
   def city_state_zip
-    "#{city}, #{state} #{zipcode}"
+    city_state = [city, state].compact.join(', ').presence
+    [city_state, zipcode].compact.join(' ').presence
   end
 
   def full_address
-    [address_line_1, address_line_2].compact.join(', ').presence
-  end
-
-  def address_line_1
-    # TODO: refactor with street_addresses
-    [address_1, address_2].compact.join(', ').presence
-  end
-
-  def address_line_2
-    # TODO: refactor with city_state_zip
-    city_state = [city, state].compact.join(', ').presence
-    [city_state, zipcode].compact.join(' ').presence
+    [street_addresses, city_state_zip].compact.join(', ').presence
   end
 
   private
