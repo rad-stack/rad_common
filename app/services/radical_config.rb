@@ -52,6 +52,18 @@ class RadicalConfig
       secret_config_item :sendgrid_api_key
     end
 
+    def lob_enabled?
+      lob_key.present?
+    end
+
+    def lob_key!
+      secret_config_item! :lob_key
+    end
+
+    def lob_key
+      secret_config_item :lob_key
+    end
+
     def hash_key!
       secret_config_item! :hash_key
     end

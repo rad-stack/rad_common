@@ -1,4 +1,5 @@
 class Attorney < ApplicationRecord
+  include Contactable
   include DuplicateFixable
 
   scope :by_name, -> { order(:first_name, :last_name) }

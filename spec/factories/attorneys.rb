@@ -10,5 +10,6 @@ FactoryBot.define do
     zipcode { Faker::Address.zip_code[0..4] }
     phone_number { create :phone_number }
     email { Faker::Internet.email }
+    bypass_address_validation { true }
   end
 end
