@@ -1,0 +1,123 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.lob.com/v1/us_verifications
+    body:
+      encoding: UTF-8
+      string: primary_line=4000+Central+Florida+Boulevard&secondary_line&city=OrLando&state=fl&zip_code=32816
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Lob/v1 RubyBindings/5.4.6
+      Lob-Version:
+      - ''
+      Content-Length:
+      - '95'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - api.lob.com
+      Authorization:
+      - Basic bGl2ZV8yOGUxY2VkMTYwNGZiYzFiZjY3ZDk3YjNhNjBjYTMwNjNhNjo=
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json; charset=utf-8
+      Set-Cookie:
+      - AWSALBTG=vXxIkLUmlQhbqnesiO063ZlgLeicl99kUNgM+MaBAE45kVqEUsn2qAnhoiilh9oG5fBY3yKZbx0Zk3I3znE6eg5dpcsfDd0vSLZ2vHWONMQSWDPOSLoVFbp+N3T/3zvIV1Cjt3OktSXfuDxEjxLBj6hvRHXBXvrRNEN3sISGSJH1;
+        Expires=Thu, 28 Jul 2022 12:50:10 GMT; Path=/
+      - AWSALBTGCORS=vXxIkLUmlQhbqnesiO063ZlgLeicl99kUNgM+MaBAE45kVqEUsn2qAnhoiilh9oG5fBY3yKZbx0Zk3I3znE6eg5dpcsfDd0vSLZ2vHWONMQSWDPOSLoVFbp+N3T/3zvIV1Cjt3OktSXfuDxEjxLBj6hvRHXBXvrRNEN3sISGSJH1;
+        Expires=Thu, 28 Jul 2022 12:50:10 GMT; Path=/; SameSite=None; Secure
+      X-Rate-Limit-Remaining:
+      - '299'
+      X-Rate-Limit-Limit:
+      - '300'
+      X-Rate-Limit-Reset:
+      - '1658407815'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - WWW-Authenticate,Server-Authorization
+      Cache-Control:
+      - no-cache
+      Accept-Ranges:
+      - bytes
+      Date:
+      - Thu, 21 Jul 2022 12:50:10 GMT
+      Vary:
+      - origin,accept-encoding
+      Strict-Transport-Security:
+      - max-age=300
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+            "id": "us_ver_388a76d1bdda45ac839e",
+            "recipient": "",
+            "primary_line": "4000 CENTRAL FLORIDA BLVD",
+            "secondary_line": "",
+            "urbanization": "",
+            "last_line": "ORLANDO FL 32816-8005",
+            "deliverability": "deliverable",
+            "valid_address": true,
+            "components": {
+                "primary_number": "4000",
+                "street_predirection": "",
+                "street_name": "CENTRAL FLORIDA",
+                "street_suffix": "BLVD",
+                "street_postdirection": "",
+                "secondary_designator": "",
+                "secondary_number": "",
+                "pmb_designator": "",
+                "pmb_number": "",
+                "extra_secondary_designator": "",
+                "extra_secondary_number": "",
+                "city": "ORLANDO",
+                "state": "FL",
+                "zip_code": "32816",
+                "zip_code_plus_4": "8005",
+                "zip_code_type": "unique",
+                "delivery_point_barcode": "328168005007",
+                "address_type": "commercial",
+                "record_type": "street",
+                "default_building_address": false,
+                "county": "ORANGE",
+                "county_fips": "12095",
+                "carrier_route": "C000",
+                "carrier_route_type": "city_delivery",
+                "latitude": 28.592364,
+                "longitude": -81.208607
+            },
+            "deliverability_analysis": {
+                "dpv_confirmation": "Y",
+                "dpv_cmra": "",
+                "dpv_vacant": "",
+                "dpv_active": "",
+                "dpv_footnotes": [
+                    "AA",
+                    "U1"
+                ],
+                "ews_match": false,
+                "lacs_indicator": "",
+                "lacs_return_code": "",
+                "suite_return_code": ""
+            },
+            "lob_confidence_score": {
+                "score": 66.67,
+                "level": "medium"
+            },
+            "object": "us_verification"
+        }
+  recorded_at: Thu, 21 Jul 2022 12:50:10 GMT
+recorded_with: VCR 6.1.0

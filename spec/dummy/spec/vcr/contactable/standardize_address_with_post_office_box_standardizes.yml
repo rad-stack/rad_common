@@ -1,0 +1,123 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.lob.com/v1/us_verifications
+    body:
+      encoding: UTF-8
+      string: primary_line=Post+Office+Box+39&secondary_line&city=OrLando&state=fl&zip_code=32816
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Lob/v1 RubyBindings/5.4.6
+      Lob-Version:
+      - ''
+      Content-Length:
+      - '83'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - api.lob.com
+      Authorization:
+      - Basic bGl2ZV8yOGUxY2VkMTYwNGZiYzFiZjY3ZDk3YjNhNjBjYTMwNjNhNjo=
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json; charset=utf-8
+      Set-Cookie:
+      - AWSALBTG=VKRJ0oks+YEQcwsYnSn6nromk66xftH3HfSgww8wP2iqNw9F2VRP4w15RgLukICCM6XLsLj1tT1NC0gujOYpde9yrFl7UcDsKL9eT6j1yhJ74PnfeISnxZMA+4rLAul+hZVZsREIk0gGAMbyEDB9SysQuTZoND/CMWaftxyg+RNO;
+        Expires=Thu, 28 Jul 2022 12:50:10 GMT; Path=/
+      - AWSALBTGCORS=VKRJ0oks+YEQcwsYnSn6nromk66xftH3HfSgww8wP2iqNw9F2VRP4w15RgLukICCM6XLsLj1tT1NC0gujOYpde9yrFl7UcDsKL9eT6j1yhJ74PnfeISnxZMA+4rLAul+hZVZsREIk0gGAMbyEDB9SysQuTZoND/CMWaftxyg+RNO;
+        Expires=Thu, 28 Jul 2022 12:50:10 GMT; Path=/; SameSite=None; Secure
+      X-Rate-Limit-Remaining:
+      - '298'
+      X-Rate-Limit-Limit:
+      - '300'
+      X-Rate-Limit-Reset:
+      - '1658407816'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - WWW-Authenticate,Server-Authorization
+      Cache-Control:
+      - no-cache
+      Accept-Ranges:
+      - bytes
+      Date:
+      - Thu, 21 Jul 2022 12:50:11 GMT
+      Vary:
+      - origin,accept-encoding
+      Strict-Transport-Security:
+      - max-age=300
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+            "id": "us_ver_dab8fee6c87e4d4a960d",
+            "recipient": "",
+            "primary_line": "PO BOX 39",
+            "secondary_line": "",
+            "urbanization": "",
+            "last_line": "ORLANDO FL 32815-1039",
+            "deliverability": "deliverable",
+            "valid_address": true,
+            "components": {
+                "primary_number": "39",
+                "street_predirection": "",
+                "street_name": "PO BOX",
+                "street_suffix": "",
+                "street_postdirection": "",
+                "secondary_designator": "",
+                "secondary_number": "",
+                "pmb_designator": "",
+                "pmb_number": "",
+                "extra_secondary_designator": "",
+                "extra_secondary_number": "",
+                "city": "ORLANDO",
+                "state": "FL",
+                "zip_code": "32815",
+                "zip_code_plus_4": "1039",
+                "zip_code_type": "po_box",
+                "delivery_point_barcode": "328151039396",
+                "address_type": "residential",
+                "record_type": "po_box",
+                "default_building_address": false,
+                "county": "BREVARD",
+                "county_fips": "12009",
+                "carrier_route": "B001",
+                "carrier_route_type": "po_box",
+                "latitude": null,
+                "longitude": null
+            },
+            "deliverability_analysis": {
+                "dpv_confirmation": "Y",
+                "dpv_cmra": "N",
+                "dpv_vacant": "Y",
+                "dpv_active": "N",
+                "dpv_footnotes": [
+                    "AA",
+                    "BB"
+                ],
+                "ews_match": false,
+                "lacs_indicator": "",
+                "lacs_return_code": "",
+                "suite_return_code": ""
+            },
+            "lob_confidence_score": {
+                "score": null,
+                "level": ""
+            },
+            "object": "us_verification"
+        }
+  recorded_at: Thu, 21 Jul 2022 12:50:10 GMT
+recorded_with: VCR 6.1.0
