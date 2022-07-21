@@ -33,16 +33,16 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Set-Cookie:
-      - AWSALBTG=H+yyt6q5JrkpyhQxOt61Z67lvOa8qTYsIixgogdfz7+AdPODIbRA7XHiHrU8FmQJloA7wMC4zUaQK64yr3jIBhxrVOq+E3n2eZm1rsMCgjM28WPyKy3HxIVpELH0dc3jWZjj9rYysig1RDoMkAdH+yu+uz3tPYJTusrAjOMHptNq;
-        Expires=Thu, 28 Jul 2022 14:03:46 GMT; Path=/
-      - AWSALBTGCORS=H+yyt6q5JrkpyhQxOt61Z67lvOa8qTYsIixgogdfz7+AdPODIbRA7XHiHrU8FmQJloA7wMC4zUaQK64yr3jIBhxrVOq+E3n2eZm1rsMCgjM28WPyKy3HxIVpELH0dc3jWZjj9rYysig1RDoMkAdH+yu+uz3tPYJTusrAjOMHptNq;
-        Expires=Thu, 28 Jul 2022 14:03:46 GMT; Path=/; SameSite=None; Secure
+      - AWSALBTG=PQR9ZysCqMcN5uvJHEoAofLSvQXfhtsNMpPkutFdF2Gq8K5Rjq5KLBsPvYTVVFLAXcKz/DUgTACbVKobyRdhTI4pIUzE1L9AyEfJlzxFJAFk2yCRhb9MvuYMxJ5TZIKoawmLCEsGXg9c5bOiNAssxycu1s+4Lq2SA3FIVDIwZGoK;
+        Expires=Thu, 28 Jul 2022 14:23:28 GMT; Path=/
+      - AWSALBTGCORS=PQR9ZysCqMcN5uvJHEoAofLSvQXfhtsNMpPkutFdF2Gq8K5Rjq5KLBsPvYTVVFLAXcKz/DUgTACbVKobyRdhTI4pIUzE1L9AyEfJlzxFJAFk2yCRhb9MvuYMxJ5TZIKoawmLCEsGXg9c5bOiNAssxycu1s+4Lq2SA3FIVDIwZGoK;
+        Expires=Thu, 28 Jul 2022 14:23:28 GMT; Path=/; SameSite=None; Secure
       X-Rate-Limit-Remaining:
       - '299'
       X-Rate-Limit-Limit:
       - '300'
       X-Rate-Limit-Reset:
-      - '1658412231'
+      - '1658413413'
       Access-Control-Allow-Credentials:
       - 'true'
       Access-Control-Expose-Headers:
@@ -52,7 +52,7 @@ http_interactions:
       Accept-Ranges:
       - bytes
       Date:
-      - Thu, 21 Jul 2022 14:03:46 GMT
+      - Thu, 21 Jul 2022 14:23:28 GMT
       Vary:
       - origin,accept-encoding
       Strict-Transport-Security:
@@ -63,7 +63,7 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         {
-            "id": "us_ver_e416aba1c28046799bcb",
+            "id": "us_ver_829ccdf1be8d41968e5e",
             "recipient": "",
             "primary_line": "4000 CENTRAL FLORIDA BLVD",
             "secondary_line": "",
@@ -119,5 +119,5 @@ http_interactions:
             },
             "object": "us_verification"
         }
-  recorded_at: Thu, 21 Jul 2022 14:03:46 GMT
+  recorded_at: Thu, 21 Jul 2022 14:23:28 GMT
 recorded_with: VCR 6.1.0

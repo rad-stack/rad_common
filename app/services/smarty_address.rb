@@ -6,8 +6,7 @@ class SmartyAddress
   end
 
   def call
-    unformatted_result = JSON.parse(api_result).presence || {}
-    SmartyResult.new(unformatted_result)
+    SmartyResult.new(api_result)
   end
 
   private
@@ -31,13 +30,13 @@ class SmartyAddress
           lookup.city = address_args[:city]
           lookup.state = address_args[:state]
           lookup.zipcode = address_args[:zip_code]
-          lookup.candidates = 1 # TODO: investigate this
+          lookup.candidates = 1
 
           log_request_made
 
           RadicalRetry.perform_request(additional_errors: [SmartyStreets::SmartyError]) {
             client.send_lookup(lookup)
-          }.to_json
+          }
         end
     end
 
