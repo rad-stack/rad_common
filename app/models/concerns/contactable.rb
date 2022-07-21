@@ -16,16 +16,20 @@ module Contactable
   end
 
   def street_addresses
-    [address_1, address_2].reject(&:blank?).join(', ').to_s
+    [address_1, address_2].compact_blank.join(', ').to_s
   end
 
   def city_state_zip
-    city_state = [city, state].compact.join(', ').presence
-    [city_state, zipcode].compact.join(' ').presence
+    city_state = [city, state].compact_blank.join(', ').presence
+    [city_state, zipcode].compact_blank.join(' ').presence
   end
 
   def full_address
-    [street_addresses, city_state_zip].compact.join(', ').presence
+    [street_addresses, city_state_zip].compact_blank.join(', ').presence
+  end
+
+  def full_address_no_commas
+    [address_1, address_2, city, state, zipcode].compact_blank.join(' ').to_s
   end
 
   private
