@@ -64,6 +64,10 @@ class RadicalConfig
       secret_config_item! :smarty_auth_id
     end
 
+    def smarty_auth_token
+      secret_config_item :smarty_auth_token
+    end
+
     def smarty_auth_token!
       secret_config_item! :smarty_auth_token
     end
@@ -347,6 +351,7 @@ class RadicalConfig
     def check_validity!
       check_aws!
       check_authy!
+      check_smarty!
     end
 
     private
@@ -369,6 +374,13 @@ class RadicalConfig
         return unless authy_enabled? && !twilio_enabled?
 
         raise 'Twilio must be enabled to provide mobile phone # validation when authy is enabled'
+      end
+
+      def check_smarty!
+        return if smarty_auth_id.present? && smarty_auth_token.present?
+        return if smarty_auth_id.blank? && smarty_auth_token.blank?
+
+        raise 'include all or none of smarty_auth_id and smarty_auth_token'
       end
 
       def override_variable(item)
