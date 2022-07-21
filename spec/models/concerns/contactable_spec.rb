@@ -13,7 +13,7 @@ RSpec.describe Contactable do
     end
 
     describe 'with smarty' do
-      before { allow_any_instance_of(Contactable).to receive(:address_api_class_name).and_return('SmartyAddress') }
+      before { allow_any_instance_of(described_class).to receive(:address_api_class_name).and_return('SmartyAddress') }
 
       context 'with standard address' do
         let(:address_1) { '4000 Central Florida Boulevard' }
@@ -98,7 +98,7 @@ RSpec.describe Contactable do
     end
 
     describe 'with lob' do
-      before { allow_any_instance_of(Contactable).to receive(:address_api_class_name).and_return('LobAddress') }
+      before { allow_any_instance_of(described_class).to receive(:address_api_class_name).and_return('LobAddress') }
 
       context 'with standard address' do
         let(:address_1) { '4000 Central Florida Boulevard' }
