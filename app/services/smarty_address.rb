@@ -25,12 +25,14 @@ class SmartyAddress
       @api_result ||=
         Rails.cache.fetch(cache_key, expires_in: 1.day) do
           lookup = SmartyStreets::USStreet::Lookup.new
+
           lookup.street = address_args[:primary_line]
           lookup.secondary = address_args[:secondary_line]
           lookup.city = address_args[:city]
           lookup.state = address_args[:state]
           lookup.zipcode = address_args[:zip_code]
           lookup.candidates = 1
+          lookup.match = SmartyStreets::USStreet::MatchType::STRICT
 
           log_request_made
 

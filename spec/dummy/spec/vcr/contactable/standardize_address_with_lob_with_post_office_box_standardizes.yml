@@ -33,16 +33,16 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Set-Cookie:
-      - AWSALBTG=rp6m1sNWub0OInwr/UQvhvg7eJcQKY3XVTlqUkO5NTAx/kf1PiL0v5TpTvOwhJMj7DTfjoQEw3B6P0PeyypQJ5l0oIU2SIVoE41vEHINzhJc5SfCZemGfWhdIh6zuIwFg7KCjHrlN0aiVWkxW0xPcw7WwqGscMqa6rxyNORzpuct;
-        Expires=Thu, 28 Jul 2022 14:23:29 GMT; Path=/
-      - AWSALBTGCORS=rp6m1sNWub0OInwr/UQvhvg7eJcQKY3XVTlqUkO5NTAx/kf1PiL0v5TpTvOwhJMj7DTfjoQEw3B6P0PeyypQJ5l0oIU2SIVoE41vEHINzhJc5SfCZemGfWhdIh6zuIwFg7KCjHrlN0aiVWkxW0xPcw7WwqGscMqa6rxyNORzpuct;
-        Expires=Thu, 28 Jul 2022 14:23:29 GMT; Path=/; SameSite=None; Secure
+      - AWSALBTG=HZ84bz8unTfvvgVBnf18OaH2oTUWOBgla2wt4gHIn8lZrZZX1AucrNCN2UGbypbjyMtUJFnmYSrkLbkh1ZjXvHLM1Kg1YqcMIH3qoWg+bNJmzYNO6uHiv2rG7RmK3H2tqVfj2gaCvENL8yB5KWl0JpZSJfSfqM+4nHAzSPTtj+Hb;
+        Expires=Thu, 28 Jul 2022 14:37:51 GMT; Path=/
+      - AWSALBTGCORS=HZ84bz8unTfvvgVBnf18OaH2oTUWOBgla2wt4gHIn8lZrZZX1AucrNCN2UGbypbjyMtUJFnmYSrkLbkh1ZjXvHLM1Kg1YqcMIH3qoWg+bNJmzYNO6uHiv2rG7RmK3H2tqVfj2gaCvENL8yB5KWl0JpZSJfSfqM+4nHAzSPTtj+Hb;
+        Expires=Thu, 28 Jul 2022 14:37:51 GMT; Path=/; SameSite=None; Secure
       X-Rate-Limit-Remaining:
       - '298'
       X-Rate-Limit-Limit:
       - '300'
       X-Rate-Limit-Reset:
-      - '1658413413'
+      - '1658414275'
       Access-Control-Allow-Credentials:
       - 'true'
       Access-Control-Expose-Headers:
@@ -52,7 +52,7 @@ http_interactions:
       Accept-Ranges:
       - bytes
       Date:
-      - Thu, 21 Jul 2022 14:23:29 GMT
+      - Thu, 21 Jul 2022 14:37:51 GMT
       Vary:
       - origin,accept-encoding
       Strict-Transport-Security:
@@ -63,7 +63,7 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         {
-            "id": "us_ver_6356d5bfdaa84d5c91e1",
+            "id": "us_ver_c2400e72f96d493fa5a9",
             "recipient": "",
             "primary_line": "PO BOX 39",
             "secondary_line": "",
@@ -119,5 +119,5 @@ http_interactions:
             },
             "object": "us_verification"
         }
-  recorded_at: Thu, 21 Jul 2022 14:23:29 GMT
+  recorded_at: Thu, 21 Jul 2022 14:37:51 GMT
 recorded_with: VCR 6.1.0
