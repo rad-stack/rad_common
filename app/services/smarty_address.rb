@@ -1,28 +1,29 @@
 class SmartyAddress
-  attr_reader :lob_args
+  attr_reader :address_args
 
-  def initialize(lob_args)
-    @lob_args = parse_lob_args(lob_args)
+  def initialize(address_args)
+    @address_args = parse_address_args(address_args)
   end
 
   def call
-    unformatted_result = JSON.parse(lob_result).presence || {}
+    unformatted_result = JSON.parse(api_result).presence || {}
     SmartyResult.new(unformatted_result)
   end
 
   private
 
-    def parse_lob_args(lob_args)
-      if lob_args[:zip_code].present?
-        numeric_code = lob_args[:zip_code].scan(/\d+/).join
+    def parse_address_args(address_args)
+      if address_args[:zip_code].present?
+        numeric_code = address_args[:zip_code].scan(/\d+/).join
         numeric_code = '' if numeric_code.length < 5
-        lob_args = lob_args.merge(zip_code: numeric_code)
+        address_args = address_args.merge(zip_code: numeric_code)
       end
-      lob_args
+
+      address_args
     end
 
-    def lob_result
-      @lob_result ||=
+    def api_result
+      @api_result ||=
         Rails.cache.fetch(cache_key, expires_in: 1.day) do
           auth_id = RadicalConfig.smarty_auth_id!
           auth_token = RadicalConfig.smarty_auth_token!
@@ -39,34 +40,31 @@ class SmartyAddress
           lookup = SmartyStreets::USStreet::Lookup.new
           # lookup.input_id = '24601'  # Optional ID from your system
           # lookup.addressee = 'John Doe'
-          lookup.street = lob_args[:primary_line]
+          lookup.street = address_args[:primary_line]
           # lookup.street2 = 'closet under the stairs'
-          lookup.secondary = lob_args[:secondary_line]
+          lookup.secondary = address_args[:secondary_line]
           # lookup.urbanization = ''  # Only applies to Puerto Rico addresses
-          lookup.city = lob_args[:city]
-          lookup.state = lob_args[:state]
-          lookup.zipcode = lob_args[:zip_code]
+          lookup.city = address_args[:city]
+          lookup.state = address_args[:state]
+          lookup.zipcode = address_args[:zip_code]
           lookup.candidates = 1 # TODO:
           # lookup.match = Lookup.INVALID # "invalid" is the most permissive match,
           # this will always return at least one result even if the address is invalid.
           # Refer to the documentation for additional Match Strategy options.
 
-          log_lob_request_made
-
-          # x = client.send_lookup(lookup)
+          log_request_made
 
           RadicalRetry.perform_request(additional_errors: [SmartyStreets::SmartyError]) {
-            # lob.us_verifications.verify(lob_args.symbolize_keys)
             client.send_lookup(lookup)
           }.to_json
         end
     end
 
     def cache_key
-      lob_args.sort.map(&:last).join.parameterize
+      address_args.sort.map(&:last).join.parameterize
     end
 
-    def log_lob_request_made
-      Company.main.increment! :lob_requests_made
+    def log_request_made
+      Company.main.increment! :address_requests_made
     end
 end
