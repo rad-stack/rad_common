@@ -21,7 +21,7 @@ module Contactable
 
   def maybe_standardize_address
     return if running_global_validity || bypass_address_validation?
-    return unless lob_enabled? && address? && any_address_changes?
+    return unless address_api_enabled? && address? && any_address_changes?
 
     standardize_address
   end
@@ -49,10 +49,6 @@ module Contactable
       address_1_changed? || address_2_changed? || city_changed? || zipcode_changed? || state_changed?
     end
 
-    def lob_enabled?
-      RadicalConfig.lob_enabled?
-    end
-
     def apply_standardized_address(result)
       self.address_1 = result.address_line_1
       self.address_2 = result.address_line_2
@@ -63,14 +59,24 @@ module Contactable
     end
 
     def standardize_address
-      result = LobAddress.new({ primary_line: address_1,
-                                secondary_line: address_2,
-                                city: city,
-                                state: state,
-                                zip_code: zipcode }).call
+      result = address_api_class_name.constantize.new({ primary_line: address_1,
+                                                        secondary_line: address_2,
+                                                        city: city,
+                                                        state: state,
+                                                        zip_code: zipcode }).call
 
       return unless result
 
       result.deliverable? ? apply_standardized_address(result) : self.address_problems = result.deliverability
+    end
+
+    def address_api_class_name
+      return 'SmartyAddress' if RadicalConfig.smarty_enabled?
+
+      'LobAddress'
+    end
+
+    def address_api_enabled?
+      RadicalConfig.smarty_enabled? || RadicalConfig.lob_enabled?
     end
 end

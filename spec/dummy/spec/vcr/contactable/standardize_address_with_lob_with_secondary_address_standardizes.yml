@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.lob.com/v1/us_verifications
     body:
       encoding: UTF-8
-      string: primary_line=4000+Central+Florida+Boulevard&secondary_line&city=OrLando&state=fl&zip_code=32816
+      string: primary_line=4000+Central+Florida+Boulevard&secondary_line=Suite+1000&city=OrLando&state=fl&zip_code=32816
     headers:
       Accept:
       - "*/*"
@@ -14,7 +14,7 @@ http_interactions:
       Lob-Version:
       - ''
       Content-Length:
-      - '95'
+      - '106'
       Content-Type:
       - application/x-www-form-urlencoded
       Accept-Encoding:
@@ -33,16 +33,16 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Set-Cookie:
-      - AWSALBTG=vXxIkLUmlQhbqnesiO063ZlgLeicl99kUNgM+MaBAE45kVqEUsn2qAnhoiilh9oG5fBY3yKZbx0Zk3I3znE6eg5dpcsfDd0vSLZ2vHWONMQSWDPOSLoVFbp+N3T/3zvIV1Cjt3OktSXfuDxEjxLBj6hvRHXBXvrRNEN3sISGSJH1;
-        Expires=Thu, 28 Jul 2022 12:50:10 GMT; Path=/
-      - AWSALBTGCORS=vXxIkLUmlQhbqnesiO063ZlgLeicl99kUNgM+MaBAE45kVqEUsn2qAnhoiilh9oG5fBY3yKZbx0Zk3I3znE6eg5dpcsfDd0vSLZ2vHWONMQSWDPOSLoVFbp+N3T/3zvIV1Cjt3OktSXfuDxEjxLBj6hvRHXBXvrRNEN3sISGSJH1;
-        Expires=Thu, 28 Jul 2022 12:50:10 GMT; Path=/; SameSite=None; Secure
+      - AWSALBTG=MqDOouy53yLzPyyON+UQewazyG33B5yMSW7ijnGRyePeF4e4BATp70TBOPfv/DPeYDc3prYiRSZbrlmQObOjae4TrvhVgX7y2iRgGTgxTaF1XDQm9JVIbtjNlVaSQA0ly3khs860RX7SFAs4xmkQZNxc/vQKabzsI2cpI3EzQ3Nj;
+        Expires=Thu, 28 Jul 2022 14:03:46 GMT; Path=/
+      - AWSALBTGCORS=MqDOouy53yLzPyyON+UQewazyG33B5yMSW7ijnGRyePeF4e4BATp70TBOPfv/DPeYDc3prYiRSZbrlmQObOjae4TrvhVgX7y2iRgGTgxTaF1XDQm9JVIbtjNlVaSQA0ly3khs860RX7SFAs4xmkQZNxc/vQKabzsI2cpI3EzQ3Nj;
+        Expires=Thu, 28 Jul 2022 14:03:46 GMT; Path=/; SameSite=None; Secure
       X-Rate-Limit-Remaining:
-      - '299'
+      - '297'
       X-Rate-Limit-Limit:
       - '300'
       X-Rate-Limit-Reset:
-      - '1658407815'
+      - '1658412230'
       Access-Control-Allow-Credentials:
       - 'true'
       Access-Control-Expose-Headers:
@@ -52,7 +52,7 @@ http_interactions:
       Accept-Ranges:
       - bytes
       Date:
-      - Thu, 21 Jul 2022 12:50:10 GMT
+      - Thu, 21 Jul 2022 14:03:47 GMT
       Vary:
       - origin,accept-encoding
       Strict-Transport-Security:
@@ -63,9 +63,9 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         {
-            "id": "us_ver_388a76d1bdda45ac839e",
+            "id": "us_ver_94448d095db94cfc9c54",
             "recipient": "",
-            "primary_line": "4000 CENTRAL FLORIDA BLVD",
+            "primary_line": "4000 CENTRAL FLORIDA BLVD STE 1000",
             "secondary_line": "",
             "urbanization": "",
             "last_line": "ORLANDO FL 32816-8005",
@@ -77,8 +77,8 @@ http_interactions:
                 "street_name": "CENTRAL FLORIDA",
                 "street_suffix": "BLVD",
                 "street_postdirection": "",
-                "secondary_designator": "",
-                "secondary_number": "",
+                "secondary_designator": "STE",
+                "secondary_number": "1000",
                 "pmb_designator": "",
                 "pmb_number": "",
                 "extra_secondary_designator": "",
@@ -114,10 +114,10 @@ http_interactions:
                 "suite_return_code": ""
             },
             "lob_confidence_score": {
-                "score": 66.67,
-                "level": "medium"
+                "score": null,
+                "level": ""
             },
             "object": "us_verification"
         }
-  recorded_at: Thu, 21 Jul 2022 12:50:10 GMT
+  recorded_at: Thu, 21 Jul 2022 14:03:47 GMT
 recorded_with: VCR 6.1.0

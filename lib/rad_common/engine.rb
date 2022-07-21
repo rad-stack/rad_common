@@ -30,6 +30,7 @@ module RadCommon
     require 'sidekiq'
     require 'sidekiq-failures'
     require 'simple_form'
+    require 'smartystreets_ruby_sdk'
     require 'strip_attributes'
     require 'text'
     require 'twilio-ruby'

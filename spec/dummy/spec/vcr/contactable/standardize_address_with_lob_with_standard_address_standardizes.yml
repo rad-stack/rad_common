@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.lob.com/v1/us_verifications
     body:
       encoding: UTF-8
-      string: primary_line=Post+Office+Box+39&secondary_line&city=OrLando&state=fl&zip_code=32816
+      string: primary_line=4000+Central+Florida+Boulevard&secondary_line&city=OrLando&state=fl&zip_code=32816
     headers:
       Accept:
       - "*/*"
@@ -14,7 +14,7 @@ http_interactions:
       Lob-Version:
       - ''
       Content-Length:
-      - '83'
+      - '95'
       Content-Type:
       - application/x-www-form-urlencoded
       Accept-Encoding:
@@ -33,16 +33,16 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Set-Cookie:
-      - AWSALBTG=VKRJ0oks+YEQcwsYnSn6nromk66xftH3HfSgww8wP2iqNw9F2VRP4w15RgLukICCM6XLsLj1tT1NC0gujOYpde9yrFl7UcDsKL9eT6j1yhJ74PnfeISnxZMA+4rLAul+hZVZsREIk0gGAMbyEDB9SysQuTZoND/CMWaftxyg+RNO;
-        Expires=Thu, 28 Jul 2022 12:50:10 GMT; Path=/
-      - AWSALBTGCORS=VKRJ0oks+YEQcwsYnSn6nromk66xftH3HfSgww8wP2iqNw9F2VRP4w15RgLukICCM6XLsLj1tT1NC0gujOYpde9yrFl7UcDsKL9eT6j1yhJ74PnfeISnxZMA+4rLAul+hZVZsREIk0gGAMbyEDB9SysQuTZoND/CMWaftxyg+RNO;
-        Expires=Thu, 28 Jul 2022 12:50:10 GMT; Path=/; SameSite=None; Secure
+      - AWSALBTG=H+yyt6q5JrkpyhQxOt61Z67lvOa8qTYsIixgogdfz7+AdPODIbRA7XHiHrU8FmQJloA7wMC4zUaQK64yr3jIBhxrVOq+E3n2eZm1rsMCgjM28WPyKy3HxIVpELH0dc3jWZjj9rYysig1RDoMkAdH+yu+uz3tPYJTusrAjOMHptNq;
+        Expires=Thu, 28 Jul 2022 14:03:46 GMT; Path=/
+      - AWSALBTGCORS=H+yyt6q5JrkpyhQxOt61Z67lvOa8qTYsIixgogdfz7+AdPODIbRA7XHiHrU8FmQJloA7wMC4zUaQK64yr3jIBhxrVOq+E3n2eZm1rsMCgjM28WPyKy3HxIVpELH0dc3jWZjj9rYysig1RDoMkAdH+yu+uz3tPYJTusrAjOMHptNq;
+        Expires=Thu, 28 Jul 2022 14:03:46 GMT; Path=/; SameSite=None; Secure
       X-Rate-Limit-Remaining:
-      - '298'
+      - '299'
       X-Rate-Limit-Limit:
       - '300'
       X-Rate-Limit-Reset:
-      - '1658407816'
+      - '1658412231'
       Access-Control-Allow-Credentials:
       - 'true'
       Access-Control-Expose-Headers:
@@ -52,7 +52,7 @@ http_interactions:
       Accept-Ranges:
       - bytes
       Date:
-      - Thu, 21 Jul 2022 12:50:11 GMT
+      - Thu, 21 Jul 2022 14:03:46 GMT
       Vary:
       - origin,accept-encoding
       Strict-Transport-Security:
@@ -63,19 +63,19 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         {
-            "id": "us_ver_dab8fee6c87e4d4a960d",
+            "id": "us_ver_e416aba1c28046799bcb",
             "recipient": "",
-            "primary_line": "PO BOX 39",
+            "primary_line": "4000 CENTRAL FLORIDA BLVD",
             "secondary_line": "",
             "urbanization": "",
-            "last_line": "ORLANDO FL 32815-1039",
+            "last_line": "ORLANDO FL 32816-8005",
             "deliverability": "deliverable",
             "valid_address": true,
             "components": {
-                "primary_number": "39",
+                "primary_number": "4000",
                 "street_predirection": "",
-                "street_name": "PO BOX",
-                "street_suffix": "",
+                "street_name": "CENTRAL FLORIDA",
+                "street_suffix": "BLVD",
                 "street_postdirection": "",
                 "secondary_designator": "",
                 "secondary_number": "",
@@ -85,28 +85,28 @@ http_interactions:
                 "extra_secondary_number": "",
                 "city": "ORLANDO",
                 "state": "FL",
-                "zip_code": "32815",
-                "zip_code_plus_4": "1039",
-                "zip_code_type": "po_box",
-                "delivery_point_barcode": "328151039396",
-                "address_type": "residential",
-                "record_type": "po_box",
+                "zip_code": "32816",
+                "zip_code_plus_4": "8005",
+                "zip_code_type": "unique",
+                "delivery_point_barcode": "328168005007",
+                "address_type": "commercial",
+                "record_type": "street",
                 "default_building_address": false,
-                "county": "BREVARD",
-                "county_fips": "12009",
-                "carrier_route": "B001",
-                "carrier_route_type": "po_box",
-                "latitude": null,
-                "longitude": null
+                "county": "ORANGE",
+                "county_fips": "12095",
+                "carrier_route": "C000",
+                "carrier_route_type": "city_delivery",
+                "latitude": 28.592364,
+                "longitude": -81.208607
             },
             "deliverability_analysis": {
                 "dpv_confirmation": "Y",
-                "dpv_cmra": "N",
-                "dpv_vacant": "Y",
-                "dpv_active": "N",
+                "dpv_cmra": "",
+                "dpv_vacant": "",
+                "dpv_active": "",
                 "dpv_footnotes": [
                     "AA",
-                    "BB"
+                    "U1"
                 ],
                 "ews_match": false,
                 "lacs_indicator": "",
@@ -114,10 +114,10 @@ http_interactions:
                 "suite_return_code": ""
             },
             "lob_confidence_score": {
-                "score": null,
-                "level": ""
+                "score": 66.67,
+                "level": "medium"
             },
             "object": "us_verification"
         }
-  recorded_at: Thu, 21 Jul 2022 12:50:10 GMT
+  recorded_at: Thu, 21 Jul 2022 14:03:46 GMT
 recorded_with: VCR 6.1.0
