@@ -38,7 +38,7 @@ module Contactable
       (address_1.present? && city.present? && state.present? && zipcode.present?)
     end
 
-    def address_2_if_defined?
+    def address_2_if_defined
       return unless defined?(:address_2)
 
       address_2
