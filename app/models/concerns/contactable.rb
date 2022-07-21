@@ -16,7 +16,7 @@ module Contactable
   end
 
   def street_addresses
-    [address_1, address_2].compact_blank.join(', ').to_s
+    [address_1, address_2_if_defined].compact_blank.join(', ').to_s
   end
 
   def city_state_zip
@@ -29,13 +29,19 @@ module Contactable
   end
 
   def full_address_no_commas
-    [address_1, address_2, city, state, zipcode].compact_blank.join(' ').to_s
+    [address_1, address_2_if_defined, city, state, zipcode].compact_blank.join(' ').to_s
   end
 
   private
 
     def address?
       (address_1.present? && city.present? && state.present? && zipcode.present?)
+    end
+
+    def address_2_if_defined?
+      return unless defined?(:address_2)
+
+      address_2
     end
 
     def any_address_changes?
