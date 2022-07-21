@@ -34,9 +34,7 @@ class SmartyAddress
 
           log_request_made
 
-          RadicalRetry.perform_request(additional_errors: [SmartyStreets::SmartyError]) {
-            client.send_lookup(lookup)
-          }
+          RadicalRetry.perform_request(additional_errors: [SmartyStreets::SmartyError]) { client.send_lookup(lookup) }
         end
     end
 

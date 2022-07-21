@@ -8,17 +8,6 @@ module Contactable
     before_validation :maybe_standardize_address
   end
 
-  def get_address(mode)
-    return unless address?
-
-    add_1 = address_1
-    components = [add_1]
-    components.push(address_2) if address_2.present? && mode > 1
-    components += [city, state, zipcode]
-
-    components.join(', ')
-  end
-
   def maybe_standardize_address
     return if running_global_validity || bypass_address_validation?
     return unless address_api_enabled? && address? && any_address_changes?
