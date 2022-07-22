@@ -5,6 +5,8 @@ module Contactable
     validates :zipcode, numericality: true, length: { is: 5 }, allow_nil: true
     validates :state, length: { is: 2 }, allow_nil: true
 
+    validate :validate_state
+
     before_validation :maybe_standardize_address
   end
 
@@ -38,6 +40,10 @@ module Contactable
   end
 
   private
+
+    def validate_state
+      errors.add(:state, "isn't a valid state") if state.present? && !StateOptions.valid?(state)
+    end
 
     def address?
       (address_1.present? && city.present? && state.present? && zipcode.present?)

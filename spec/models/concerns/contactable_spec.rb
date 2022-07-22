@@ -87,7 +87,7 @@ RSpec.describe Contactable do
         let(:address_1) { '4000 Bro Bruh' }
         let(:address_2) { nil }
         let(:city) { 'Mordor' }
-        let(:state) { 'fl' }
+        let(:state) { 'FL' }
         let(:zipcode) { '32816' }
 
         it 'sets address_problems and does not touch address' do
@@ -104,7 +104,7 @@ RSpec.describe Contactable do
         let(:address_1) { '4000 Central Florida Boulevard' }
         let(:address_2) { nil }
         let(:city) { 'OrLando' }
-        let(:state) { 'fl' }
+        let(:state) { 'FL' }
         let(:zipcode) { '32816' }
 
         it 'standardizes' do
@@ -155,7 +155,7 @@ RSpec.describe Contactable do
         let(:address_1) { '4000 Bro Bruh' }
         let(:address_2) { nil }
         let(:city) { 'Mordor' }
-        let(:state) { 'fl' }
+        let(:state) { 'FL' }
         let(:zipcode) { '32816' }
 
         it 'sets address_problems and does not touch address' do

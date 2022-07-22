@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.lob.com/v1/us_verifications
     body:
       encoding: UTF-8
-      string: primary_line=4000+Central+Florida+Boulevard&secondary_line&city=OrLando&state=fl&zip_code=32816
+      string: primary_line=4000+Central+Florida+Boulevard&secondary_line&city=OrLando&state=FL&zip_code=32816
     headers:
       Accept:
       - "*/*"
@@ -33,16 +33,16 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Set-Cookie:
-      - AWSALBTG=44uvQt2rkFYB3dWkDiub32zZaN5tcy06XD3wR1iLFnb/3Nz+cm7bbVlWS7JftPQfvufNa1IjIivvq6aRH/LAEnFAPpxqY2XUTkKYgC3eqONlgni9QIxJJRoLb2zZFEeCqKfRPYu4MAIVdlH5sULBw7KzHnoYwxRr3bS/YG29b5M/;
-        Expires=Thu, 28 Jul 2022 14:37:51 GMT; Path=/
-      - AWSALBTGCORS=44uvQt2rkFYB3dWkDiub32zZaN5tcy06XD3wR1iLFnb/3Nz+cm7bbVlWS7JftPQfvufNa1IjIivvq6aRH/LAEnFAPpxqY2XUTkKYgC3eqONlgni9QIxJJRoLb2zZFEeCqKfRPYu4MAIVdlH5sULBw7KzHnoYwxRr3bS/YG29b5M/;
-        Expires=Thu, 28 Jul 2022 14:37:51 GMT; Path=/; SameSite=None; Secure
+      - AWSALBTG=zKEU6Fxx+pIMIcRT/swFJuZMiE0vRoWt4cenvVI5p+zsYZIoyUCDhSECfhQgL7no4Gxbqn5rsvm+fzSLEHI8Up9tKcEycK38R1giCjrqHdMuEchjha4DMfCjT/EhPu0sMi4gHvPpvL+E/TcTZa4aZMPtA61jcDKcgqaUz77C5gWA;
+        Expires=Fri, 29 Jul 2022 10:43:33 GMT; Path=/
+      - AWSALBTGCORS=zKEU6Fxx+pIMIcRT/swFJuZMiE0vRoWt4cenvVI5p+zsYZIoyUCDhSECfhQgL7no4Gxbqn5rsvm+fzSLEHI8Up9tKcEycK38R1giCjrqHdMuEchjha4DMfCjT/EhPu0sMi4gHvPpvL+E/TcTZa4aZMPtA61jcDKcgqaUz77C5gWA;
+        Expires=Fri, 29 Jul 2022 10:43:33 GMT; Path=/; SameSite=None; Secure
       X-Rate-Limit-Remaining:
       - '299'
       X-Rate-Limit-Limit:
       - '300'
       X-Rate-Limit-Reset:
-      - '1658414276'
+      - '1658486618'
       Access-Control-Allow-Credentials:
       - 'true'
       Access-Control-Expose-Headers:
@@ -52,7 +52,7 @@ http_interactions:
       Accept-Ranges:
       - bytes
       Date:
-      - Thu, 21 Jul 2022 14:37:51 GMT
+      - Fri, 22 Jul 2022 10:43:33 GMT
       Vary:
       - origin,accept-encoding
       Strict-Transport-Security:
@@ -63,7 +63,7 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         {
-            "id": "us_ver_b97f0bb27bd44bf09f8c",
+            "id": "us_ver_4e7d4f61d7a844a9a804",
             "recipient": "",
             "primary_line": "4000 CENTRAL FLORIDA BLVD",
             "secondary_line": "",
@@ -119,5 +119,5 @@ http_interactions:
             },
             "object": "us_verification"
         }
-  recorded_at: Thu, 21 Jul 2022 14:37:51 GMT
+  recorded_at: Fri, 22 Jul 2022 10:43:33 GMT
 recorded_with: VCR 6.1.0
