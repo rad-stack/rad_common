@@ -71,6 +71,7 @@ module Contactable
 
       if result.deliverable?
         apply_standardized_address(result)
+        self.address_problems = false
       else
         self.address_problems = true
       end
