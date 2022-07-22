@@ -13,7 +13,7 @@ class StateOptions
     end
 
     def sample
-      options.sample.first
+      options.sample.last
     end
 
     private
