@@ -16,6 +16,10 @@ class StateOptions
       options.sample.last
     end
 
+    def sample_name
+      options.sample.first
+    end
+
     private
 
       def active_states
