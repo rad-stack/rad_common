@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 2022_07_19_162541) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "bypass_address_validation", default: false, null: false
-    t.text "address_problems"
+    t.boolean "address_problems", default: false, null: false
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -127,7 +127,7 @@ ActiveRecord::Schema.define(version: 2022_07_19_162541) do
     t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
     t.boolean "bypass_address_validation", default: false, null: false
-    t.text "address_problems"
+    t.boolean "address_problems", default: false, null: false
     t.integer "address_requests_made", default: 0, null: false
   end
 

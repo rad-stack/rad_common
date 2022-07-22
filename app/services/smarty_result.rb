@@ -30,12 +30,8 @@ class SmartyResult
     components['zipcode']
   end
 
-  def deliverability
-    result.empty? ? 'undeliverable' : 'deliverable'
-  end
-
   def deliverable?
-    deliverability == 'deliverable'
+    result.any?
   end
 
   private

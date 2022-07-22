@@ -30,12 +30,8 @@ class LobResult
     components['zip_code']
   end
 
-  def deliverability
-    result['deliverability']
-  end
-
   def deliverable?
-    deliverability == 'deliverable'
+    result['valid_address']
   end
 
   private

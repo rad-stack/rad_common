@@ -28,7 +28,7 @@ RSpec.describe Contactable do
           expect(attorney.city).to eq('Orlando')
           expect(attorney.state).to eq('FL')
           expect(attorney.zipcode).to eq('32816')
-          expect(attorney.address_problems).to be_nil
+          expect(attorney.address_problems).to be false
         end
       end
 
@@ -45,7 +45,7 @@ RSpec.describe Contactable do
           expect(attorney.city).to eq('Jacksonville')
           expect(attorney.state).to eq('FL')
           expect(attorney.zipcode).to eq('32205')
-          expect(attorney.address_problems).to be_nil
+          expect(attorney.address_problems).to be false
         end
       end
 
@@ -62,7 +62,7 @@ RSpec.describe Contactable do
           expect(attorney.city).to eq('Orlando')
           expect(attorney.state).to eq('FL')
           expect(attorney.zipcode).to eq('32815')
-          expect(attorney.address_problems).to be_nil
+          expect(attorney.address_problems).to be false
         end
       end
 
@@ -79,7 +79,7 @@ RSpec.describe Contactable do
           expect(attorney.city).to eq('Orlando')
           expect(attorney.state).to eq('FL')
           expect(attorney.zipcode).to eq('32816')
-          expect(attorney.address_problems).to be_nil
+          expect(attorney.address_problems).to be false
         end
       end
 
@@ -91,7 +91,7 @@ RSpec.describe Contactable do
         let(:zipcode) { '32816' }
 
         it 'sets address_problems and does not touch address' do
-          expect(attorney.address_problems).to eq('undeliverable')
+          expect(attorney.address_problems).to be true
           expect(attorney.address_1).to eq(address_1)
         end
       end
@@ -113,7 +113,7 @@ RSpec.describe Contactable do
           expect(attorney.city).to eq('ORLANDO')
           expect(attorney.state).to eq('FL')
           expect(attorney.zipcode).to eq('32816')
-          expect(attorney.address_problems).to be_nil
+          expect(attorney.address_problems).to be false
         end
       end
 
@@ -130,7 +130,7 @@ RSpec.describe Contactable do
           expect(attorney.city).to eq('ORLANDO')
           expect(attorney.state).to eq('FL')
           expect(attorney.zipcode).to eq('32815')
-          expect(attorney.address_problems).to be_nil
+          expect(attorney.address_problems).to be false
         end
       end
 
@@ -147,7 +147,7 @@ RSpec.describe Contactable do
           expect(attorney.city).to eq('ORLANDO')
           expect(attorney.state).to eq('FL')
           expect(attorney.zipcode).to eq('32816')
-          expect(attorney.address_problems).to be_nil
+          expect(attorney.address_problems).to be false
         end
       end
 
@@ -159,7 +159,7 @@ RSpec.describe Contactable do
         let(:zipcode) { '32816' }
 
         it 'sets address_problems and does not touch address' do
-          expect(attorney.address_problems).to eq('undeliverable')
+          expect(attorney.address_problems).to be true
           expect(attorney.address_1).to eq(address_1)
         end
       end

@@ -35,8 +35,7 @@ module Contactable
   end
 
   def address_attributes
-    # TODO: handle address_2 on usages of this
-    { address_1: address_1, city: city, state: state.upcase, zipcode: zipcode, full: to_s }
+    { address_1: address_1, address_2: address_2, city: city, state: state.upcase, zipcode: zipcode, full: to_s }
   end
 
   private
@@ -59,7 +58,6 @@ module Contactable
       self.city = result.city
       self.state = result.state
       self.zipcode = result.zip_code
-      self.address_problems = nil
     end
 
     def standardize_address
@@ -71,7 +69,11 @@ module Contactable
 
       return unless result
 
-      result.deliverable? ? apply_standardized_address(result) : self.address_problems = result.deliverability
+      if result.deliverable?
+        apply_standardized_address(result)
+      else
+        self.address_problems = true
+      end
     end
 
     def address_api_class_name
