@@ -32,6 +32,11 @@ module Contactable
     [address_1, address_2, city, state, zipcode].compact_blank.join(' ').to_s
   end
 
+  def address_attributes
+    # TODO: handle address_2 on usages of this
+    { address_1: address_1, city: city, state: state.upcase, zipcode: zipcode, full: to_s }
+  end
+
   private
 
     def address?
