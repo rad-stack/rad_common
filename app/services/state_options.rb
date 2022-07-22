@@ -1,11 +1,11 @@
 class StateOptions
   class << self
     def options
-      active_states.map { |state, abbreviation| [abbreviation, state] }
+      active_states.map { |state, abbreviation| [state, abbreviation] }
     end
 
     def reverse_options
-      active_states.map { |state, abbreviation| [state, abbreviation] }
+      active_states.map { |state, abbreviation| [abbreviation, state] }
     end
 
     def valid?(state)
