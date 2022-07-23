@@ -29,7 +29,7 @@ class LobAddress
           log_request_made
 
           RadicalRetry.perform_request(additional_errors: [Lob::InvalidRequestError]) {
-            lob.us_verifications.verify(address_args.symbolize_keys)
+            lob.us_verifications.verify({ primary_line: address_args[:address_1], secondary_line: address_args[:address_2], city: address_args[:city], state: address_args[:state], zip_code: address_args[:zipcode] })
           }.to_json
         end
     end

@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Sat, 23 Jul 2022 09:54:28 GMT
+      - Sat, 23 Jul 2022 11:22:02 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -33,5 +33,5 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[]"
-  recorded_at: Sat, 23 Jul 2022 09:54:28 GMT
+  recorded_at: Sat, 23 Jul 2022 11:22:02 GMT
 recorded_with: VCR 6.1.0

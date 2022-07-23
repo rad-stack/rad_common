@@ -49,11 +49,14 @@ module Contactable
     end
 
     def apply_standardized_address(result)
+      self.address_changes = apply_changes(result)
+
       self.address_1 = result.address_1
       self.address_2 = result.address_2
       self.city = result.city
       self.state = result.state
       self.zipcode = result.zipcode
+
       self.address_problems = false
     end
 
@@ -71,6 +74,18 @@ module Contactable
       else
         self.address_problems = true
       end
+    end
+
+    def apply_changes(result)
+      changes_hash = {}
+
+      %w[address_1 address_2 city state zipcode].each do |field|
+        next if attributes[field]&.downcase == result.send(field)&.downcase
+
+        changes_hash = changes_hash.merge(field => attributes[field])
+      end
+
+      changes_hash
     end
 
     def address_api_class_name
