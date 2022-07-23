@@ -34,10 +34,6 @@ module Contactable
     [address_1, address_2, city, state, zipcode].compact_blank.join(' ').to_s
   end
 
-  def address_attributes
-    { address_1: address_1, address_2: address_2, city: city, state: state.upcase, zipcode: zipcode, full: to_s }
-  end
-
   private
 
     def validate_state
@@ -58,6 +54,7 @@ module Contactable
       self.city = result.city
       self.state = result.state
       self.zipcode = result.zip_code
+      self.address_problems = false
     end
 
     def standardize_address
@@ -71,7 +68,6 @@ module Contactable
 
       if result.deliverable?
         apply_standardized_address(result)
-        self.address_problems = false
       else
         self.address_problems = true
       end
