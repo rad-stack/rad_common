@@ -30,6 +30,7 @@ RSpec.describe Contactable do
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32816')
           expect(company.address_problems).to be false
+          expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard' })
         end
       end
 
@@ -47,6 +48,7 @@ RSpec.describe Contactable do
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32205')
           expect(company.address_problems).to be false
+          expect(company.address_changes).to eq({ 'address_1' => '1376 Macarthur Street' })
         end
       end
 
@@ -64,6 +66,7 @@ RSpec.describe Contactable do
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32815')
           expect(company.address_problems).to be false
+          expect(company.address_changes).to eq({ 'address_1' => 'Post Office Box 39', 'zipcode' => '32816' })
         end
       end
 
@@ -81,6 +84,8 @@ RSpec.describe Contactable do
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32816')
           expect(company.address_problems).to be false
+          expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard',
+                                                  'address_2' => 'Suite 1000' })
         end
       end
 
@@ -94,6 +99,7 @@ RSpec.describe Contactable do
         it 'sets address_problems and does not touch address' do
           expect(company.address_problems).to be true
           expect(company.address_1).to eq(address_1)
+          expect(company.address_changes).to be_nil
         end
       end
     end
@@ -124,6 +130,7 @@ RSpec.describe Contactable do
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32816')
           expect(company.address_problems).to be false
+          expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard' })
         end
       end
 
@@ -141,6 +148,7 @@ RSpec.describe Contactable do
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32815')
           expect(company.address_problems).to be false
+          expect(company.address_changes).to eq({ 'address_1' => 'Post Office Box 39', 'zipcode' => '32816' })
         end
       end
 
@@ -158,6 +166,8 @@ RSpec.describe Contactable do
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32816')
           expect(company.address_problems).to be false
+          expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard',
+                                                  'address_2' => 'Suite 1000' })
         end
       end
 
@@ -171,6 +181,7 @@ RSpec.describe Contactable do
         it 'sets address_problems and does not touch address' do
           expect(company.address_problems).to be true
           expect(company.address_1).to eq(address_1)
+          expect(company.address_changes).to be_nil
         end
       end
     end

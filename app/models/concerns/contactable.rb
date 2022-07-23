@@ -80,6 +80,7 @@ module Contactable
       changes_hash = {}
 
       %w[address_1 address_2 city state zipcode].each do |field|
+        next if attributes[field].blank? && result.send(field).blank?
         next if attributes[field]&.downcase == result.send(field)&.downcase
 
         changes_hash = changes_hash.merge(field => attributes[field])
