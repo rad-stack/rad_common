@@ -83,7 +83,7 @@ module Contactable
         next if attributes[field].blank? && result.send(field).blank?
         next if attributes[field]&.downcase == result.send(field)&.downcase
 
-        changes_hash = changes_hash.merge(field => attributes[field])
+        changes_hash[field] = attributes[field]
       end
 
       changes_hash

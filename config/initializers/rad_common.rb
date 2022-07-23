@@ -63,6 +63,7 @@ Rails.configuration.active_record.yaml_column_permitted_classes = [
 ]
 
 Audited.current_user_method = :true_user
+Audited.ignored_attributes += ['address_changes']
 
 Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record

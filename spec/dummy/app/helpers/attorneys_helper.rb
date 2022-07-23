@@ -1,5 +1,5 @@
 module AttorneysHelper
-  def attorney_show_data
-    %i[company_name address_1 address_2 city state zipcode phone_number email]
+  def attorney_show_data(attorney)
+    [:company_name] + address_show_data(attorney) + %i[phone_number email]
   end
 end
