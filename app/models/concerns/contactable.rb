@@ -49,20 +49,20 @@ module Contactable
     end
 
     def apply_standardized_address(result)
-      self.address_1 = result.address_line_1
-      self.address_2 = result.address_line_2
+      self.address_1 = result.address_1
+      self.address_2 = result.address_2
       self.city = result.city
       self.state = result.state
-      self.zipcode = result.zip_code
+      self.zipcode = result.zipcode
       self.address_problems = false
     end
 
     def standardize_address
-      result = address_api_class_name.constantize.new({ primary_line: address_1,
-                                                        secondary_line: address_2,
+      result = address_api_class_name.constantize.new({ address_1: address_1,
+                                                        address_2: address_2,
                                                         city: city,
                                                         state: state,
-                                                        zip_code: zipcode }).call
+                                                        zipcode: zipcode }).call
 
       return unless result
 

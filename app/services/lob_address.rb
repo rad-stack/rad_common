@@ -13,10 +13,10 @@ class LobAddress
   private
 
     def parse_address_args(address_args)
-      if address_args[:zip_code].present?
-        numeric_code = address_args[:zip_code].scan(/\d+/).join
+      if address_args[:zipcode].present?
+        numeric_code = address_args[:zipcode].scan(/\d+/).join
         numeric_code = '' if numeric_code.length < 5
-        address_args = address_args.merge(zip_code: numeric_code)
+        address_args = address_args.merge(zipcode: numeric_code)
       end
 
       address_args

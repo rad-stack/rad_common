@@ -12,10 +12,10 @@ class SmartyAddress
   private
 
     def parse_address_args(address_args)
-      if address_args[:zip_code].present?
-        numeric_code = address_args[:zip_code].scan(/\d+/).join
+      if address_args[:zipcode].present?
+        numeric_code = address_args[:zipcode].scan(/\d+/).join
         numeric_code = '' if numeric_code.length < 5
-        address_args = address_args.merge(zip_code: numeric_code)
+        address_args = address_args.merge(zipcode: numeric_code)
       end
 
       address_args
@@ -26,11 +26,11 @@ class SmartyAddress
         Rails.cache.fetch(cache_key, expires_in: 1.day) do
           lookup = SmartyStreets::USStreet::Lookup.new
 
-          lookup.street = address_args[:primary_line]
-          lookup.secondary = address_args[:secondary_line]
+          lookup.street = address_args[:address_1]
+          lookup.secondary = address_args[:address_2]
           lookup.city = address_args[:city]
           lookup.state = address_args[:state]
-          lookup.zipcode = address_args[:zip_code]
+          lookup.zipcode = address_args[:zipcode]
           lookup.candidates = 1
           lookup.match = SmartyStreets::USStreet::MatchType::STRICT
 

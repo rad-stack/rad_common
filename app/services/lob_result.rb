@@ -9,11 +9,11 @@ class LobResult
     result['components']
   end
 
-  def address_line_1
+  def address_1
     build_primary_lines(components).select(&:present?).join(' ')
   end
 
-  def address_line_2
+  def address_2
     secondary_line = [components['secondary_designator'], components['secondary_number']]
     secondary_line.select(&:present?).join(' ')
   end
@@ -26,7 +26,7 @@ class LobResult
     components['state']
   end
 
-  def zip_code
+  def zipcode
     components['zip_code']
   end
 
