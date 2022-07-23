@@ -4,7 +4,7 @@ RSpec.describe Contactable do
   describe 'standardize_address', :vcr do
     subject(:company) { Company.main }
 
-    describe 'with smarty' do
+    describe 'with smarty', smarty_specs: true do
       before do
         allow_any_instance_of(described_class).to receive(:address_api_class_name).and_return('SmartyAddress')
 
@@ -98,7 +98,7 @@ RSpec.describe Contactable do
       end
     end
 
-    describe 'with lob' do
+    describe 'with lob', lob_specs: true do
       before do
         allow_any_instance_of(described_class).to receive(:address_api_class_name).and_return('LobAddress')
 
