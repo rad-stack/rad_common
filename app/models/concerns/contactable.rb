@@ -34,6 +34,10 @@ module Contactable
     [address_1, address_2, city, state, zipcode].compact_blank.join(' ').to_s
   end
 
+  def clear_address_changes!
+    update_column :address_changes, nil
+  end
+
   private
 
     def validate_state

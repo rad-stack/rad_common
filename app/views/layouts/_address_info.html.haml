@@ -7,4 +7,4 @@
 - elsif record.address_changes.present?
   %span.badge.alert-warning
     = record.address_changes.values.reverse.join(', ')
-    - record.update_column :address_changes, nil
+    - record.clear_address_changes!
