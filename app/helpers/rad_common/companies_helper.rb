@@ -6,7 +6,8 @@ module RadCommon
          { label: 'Website', value: (link_to company.website, company.website, target: :_blank, rel: :noopener) },
          { label: 'Email', value: (mail_to company.email) },
          :timezone,
-         :validity_checked_at]
+         :validity_checked_at,
+         :address_requests_made]
     end
 
     def edit_company_title(company)

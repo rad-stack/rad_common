@@ -52,6 +52,10 @@ class RadicalConfig
       secret_config_item :sendgrid_api_key
     end
 
+    def address_api_enabled?
+      smarty_enabled? || lob_enabled?
+    end
+
     def smarty_enabled?
       smarty_auth_id.present?
     end

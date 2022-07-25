@@ -12,7 +12,7 @@ module Contactable
 
   def maybe_standardize_address
     return if running_global_validity || bypass_address_validation?
-    return unless address_api_enabled? && address? && any_address_changes?
+    return unless RadicalConfig.address_api_enabled? && address? && any_address_changes?
 
     standardize_address
   end
@@ -97,9 +97,5 @@ module Contactable
       return 'SmartyAddress' if RadicalConfig.smarty_enabled?
 
       'LobAddress'
-    end
-
-    def address_api_enabled?
-      RadicalConfig.smarty_enabled? || RadicalConfig.lob_enabled?
     end
 end
