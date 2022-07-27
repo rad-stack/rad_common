@@ -1,8 +1,9 @@
 class SmartyResult
   attr_reader :result
 
-  def initialize(result)
+  def initialize(result, zip4_provided)
     @result = result
+    @zip4_provided = zip4_provided
   end
 
   def components
@@ -27,7 +28,9 @@ class SmartyResult
   end
 
   def zipcode
-    components['zipcode']
+    return components['zipcode'] if components['plus4_code'].blank? || !zip4_provided?
+
+    "#{components['zipcode']}-#{components['plus4_code']}"
   end
 
   def deliverable?
@@ -48,5 +51,9 @@ class SmartyResult
           components['street_postdirection']
         ]
       end
+    end
+
+    def zip4_provided?
+      @zip4_provided
     end
 end

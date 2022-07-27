@@ -1,8 +1,9 @@
 class LobResult
   attr_reader :result
 
-  def initialize(result)
+  def initialize(result, zip4_provided)
     @result = result
+    @zip4_provided = zip4_provided
   end
 
   def components
@@ -27,7 +28,9 @@ class LobResult
   end
 
   def zipcode
-    components['zip_code']
+    return components['zip_code'] if components['zip_code_plus_4'].blank? || !zip4_provided?
+
+    "#{components['zip_code']}-#{components['zip_code_plus_4']}"
   end
 
   def deliverable?
@@ -48,5 +51,9 @@ class LobResult
           components['street_postdirection']
         ]
       end
+    end
+
+    def zip4_provided?
+      @zip4_provided
     end
 end

@@ -2,7 +2,7 @@ module Contactable
   extend ActiveSupport::Concern
 
   included do
-    validates :zipcode, numericality: true, length: { is: 5 }, allow_nil: true
+    validates :zipcode, format: /\A[0-9]{5}(?:-[0-9]{4})?\z/, allow_nil: true
     validates :state, length: { is: 2 }, allow_nil: true
 
     validate :validate_state

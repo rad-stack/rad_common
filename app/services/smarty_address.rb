@@ -6,7 +6,7 @@ class SmartyAddress
   end
 
   def call
-    SmartyResult.new(api_result)
+    SmartyResult.new(api_result, zip4_provided?)
   end
 
   private
@@ -19,6 +19,10 @@ class SmartyAddress
       end
 
       address_args
+    end
+
+    def zip4_provided?
+      address_args[:zipcode].present? && address_args[:zipcode].size == 9
     end
 
     def api_result

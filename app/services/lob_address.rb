@@ -7,7 +7,7 @@ class LobAddress
 
   def call
     unformatted_result = JSON.parse(api_result).presence || {}
-    LobResult.new(unformatted_result)
+    LobResult.new(unformatted_result, zip4_provided?)
   end
 
   private
@@ -20,6 +20,10 @@ class LobAddress
       end
 
       address_args
+    end
+
+    def zip4_provided?
+      address_args[:zipcode].present? && address_args[:zipcode].size == 9
     end
 
     def api_result

@@ -34,6 +34,30 @@ RSpec.describe Contactable do
         end
       end
 
+      context 'with zip+4' do
+        let(:address_1) { '8110 Mittie Ave' }
+        let(:address_2) { nil }
+        let(:city) { 'Panama City' }
+        let(:state) { 'FL' }
+        let(:zipcode) { '32404-0000' }
+
+        it 'standardizes' do
+          expect(company.zipcode).to eq('32404-5273')
+        end
+      end
+
+      context 'with invalid zip+4' do
+        let(:address_1) { '8110 Mittie Ave' }
+        let(:address_2) { nil }
+        let(:city) { 'Panama City' }
+        let(:state) { 'FL' }
+        let(:zipcode) { '32404-333' }
+
+        it 'standardizes' do
+          expect(company.zipcode).to eq('32404')
+        end
+      end
+
       context 'with mixed case address' do
         let(:address_1) { '1376 Macarthur Street' }
         let(:address_2) { nil }
@@ -131,6 +155,30 @@ RSpec.describe Contactable do
           expect(company.zipcode).to eq('32816')
           expect(company.address_problems).to be false
           expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard' })
+        end
+      end
+
+      context 'with zip+4' do
+        let(:address_1) { '8110 Mittie Ave' }
+        let(:address_2) { nil }
+        let(:city) { 'Panama City' }
+        let(:state) { 'FL' }
+        let(:zipcode) { '32404-0000' }
+
+        it 'standardizes' do
+          expect(company.zipcode).to eq('32404-5273')
+        end
+      end
+
+      context 'with invalid zip+4' do
+        let(:address_1) { '8110 Mittie Ave' }
+        let(:address_2) { nil }
+        let(:city) { 'Panama City' }
+        let(:state) { 'FL' }
+        let(:zipcode) { '32404-333' }
+
+        it 'standardizes' do
+          expect(company.zipcode).to eq('32404')
         end
       end
 
