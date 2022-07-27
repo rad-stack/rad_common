@@ -58,6 +58,19 @@ RSpec.describe Contactable do
         end
       end
 
+      context 'with enhanced matching' do
+        let(:address_1) { '6450 Autumn Berry Cirlce' }
+        let(:address_2) { nil }
+        let(:city) { 'Jacksonville' }
+        let(:state) { 'FL' }
+        let(:zipcode) { '32258' }
+
+        it 'standardizes' do
+          expect(company.address_1).to eq('6450 Autumn Berry Cir')
+          expect(company.address_problems).to be false
+        end
+      end
+
       context 'with mixed case address' do
         let(:address_1) { '1376 Macarthur Street' }
         let(:address_2) { nil }
@@ -179,6 +192,19 @@ RSpec.describe Contactable do
 
         it 'standardizes' do
           expect(company.zipcode).to eq('32404')
+        end
+      end
+
+      context 'with enhanced matching' do
+        let(:address_1) { '6450 Autumn Berry Cirlce' }
+        let(:address_2) { nil }
+        let(:city) { 'Jacksonville' }
+        let(:state) { 'FL' }
+        let(:zipcode) { '32258' }
+
+        it 'standardizes' do
+          expect(company.address_1).to eq('6450 AUTUMN BERRY CIR')
+          expect(company.address_problems).to be false
         end
       end
 

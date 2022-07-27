@@ -33,8 +33,8 @@ class SmartyResult
     "#{components['zipcode']}-#{components['plus4_code']}"
   end
 
-  def deliverable?
-    result.any?
+  def valid_address?
+    result.any? && (postal_match? || non_postal_match?)
   end
 
   private
@@ -51,6 +51,18 @@ class SmartyResult
           components['street_postdirection']
         ]
       end
+    end
+
+    def postal_match?
+      analysis['dpv_match_code'] == 'Y'
+    end
+
+    def non_postal_match?
+      analysis['dpv_match_code'] == 'N' && analysis['enhanced_match'] == 'non-postal-match'
+    end
+
+    def analysis
+      result.first['analysis']
     end
 
     def zip4_provided?

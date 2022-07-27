@@ -36,7 +36,7 @@ class SmartyAddress
           lookup.state = address_args[:state]
           lookup.zipcode = address_args[:zipcode]
           lookup.candidates = 1
-          lookup.match = SmartyStreets::USStreet::MatchType::STRICT
+          lookup.match = SmartyStreets::USStreet::MatchType::ENHANCED
 
           log_request_made
 

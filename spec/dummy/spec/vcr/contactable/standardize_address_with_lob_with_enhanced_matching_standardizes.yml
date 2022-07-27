@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.lob.com/v1/us_verifications
     body:
       encoding: UTF-8
-      string: primary_line=8110+Mittie+Ave&secondary_line&city=Panama+City&state=FL&zip_code=32404333
+      string: primary_line=6450+Autumn+Berry+Cirlce&secondary_line&city=Jacksonville&state=FL&zip_code=32258
     headers:
       Accept:
       - "*/*"
@@ -14,7 +14,7 @@ http_interactions:
       Lob-Version:
       - ''
       Content-Length:
-      - '87'
+      - '94'
       Content-Type:
       - application/x-www-form-urlencoded
       Accept-Encoding:
@@ -33,12 +33,12 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Set-Cookie:
-      - AWSALBTG=2mZGUPlWH9XFAjVD13DiphKAojM9jQ7+7hkCMk/t5gRgV5l7JwoZmwK/uT9fe9vSlsIlddxtteKThKNiduzpaGawdAVPpXFVb/0osRWsVn1ENEe9PieIMdc09s2Mq8Mw8ff3CXuR3x1Zldq/Q585e61rexNVZnuh7i8w/RaSeNxQ;
-        Expires=Wed, 03 Aug 2022 16:03:39 GMT; Path=/
-      - AWSALBTGCORS=2mZGUPlWH9XFAjVD13DiphKAojM9jQ7+7hkCMk/t5gRgV5l7JwoZmwK/uT9fe9vSlsIlddxtteKThKNiduzpaGawdAVPpXFVb/0osRWsVn1ENEe9PieIMdc09s2Mq8Mw8ff3CXuR3x1Zldq/Q585e61rexNVZnuh7i8w/RaSeNxQ;
-        Expires=Wed, 03 Aug 2022 16:03:39 GMT; Path=/; SameSite=None; Secure
+      - AWSALBTG=W5D7uyJDCdAJcWfExqb5woYQNy+in7RC1smnXG1Ke97aAUgx/8ynUqrAWaDSlci8M8lOeiPGbNxGA9x1skc7Jbs2qdv1q9A363tXeePSLOKfnfFpnYVxODw8ebzg4cNBdzut1YTRORk/SBpDzEVBJ4lldpD0K8kp81E4SpUx+wfW;
+        Expires=Wed, 03 Aug 2022 16:03:40 GMT; Path=/
+      - AWSALBTGCORS=W5D7uyJDCdAJcWfExqb5woYQNy+in7RC1smnXG1Ke97aAUgx/8ynUqrAWaDSlci8M8lOeiPGbNxGA9x1skc7Jbs2qdv1q9A363tXeePSLOKfnfFpnYVxODw8ebzg4cNBdzut1YTRORk/SBpDzEVBJ4lldpD0K8kp81E4SpUx+wfW;
+        Expires=Wed, 03 Aug 2022 16:03:40 GMT; Path=/; SameSite=None; Secure
       X-Rate-Limit-Remaining:
-      - '297'
+      - '296'
       X-Rate-Limit-Limit:
       - '300'
       X-Rate-Limit-Reset:
@@ -52,7 +52,7 @@ http_interactions:
       Accept-Ranges:
       - bytes
       Date:
-      - Wed, 27 Jul 2022 16:03:39 GMT
+      - Wed, 27 Jul 2022 16:03:40 GMT
       Vary:
       - origin,accept-encoding
       Strict-Transport-Security:
@@ -63,19 +63,19 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         {
-            "id": "us_ver_caad0fb9c1964f19a923",
+            "id": "us_ver_1565da72023d4c66856c",
             "recipient": "",
-            "primary_line": "8110 MITTIE AVE",
+            "primary_line": "6450 AUTUMN BERRY CIR",
             "secondary_line": "",
             "urbanization": "",
-            "last_line": "PANAMA CITY FL 32404-5273",
-            "deliverability": "deliverable",
+            "last_line": "JACKSONVILLE FL 32258",
+            "deliverability": "undeliverable",
             "valid_address": true,
             "components": {
-                "primary_number": "8110",
+                "primary_number": "6450",
                 "street_predirection": "",
-                "street_name": "MITTIE",
-                "street_suffix": "AVE",
+                "street_name": "AUTUMN BERRY",
+                "street_suffix": "CIR",
                 "street_postdirection": "",
                 "secondary_designator": "",
                 "secondary_number": "",
@@ -83,30 +83,30 @@ http_interactions:
                 "pmb_number": "",
                 "extra_secondary_designator": "",
                 "extra_secondary_number": "",
-                "city": "PANAMA CITY",
+                "city": "JACKSONVILLE",
                 "state": "FL",
-                "zip_code": "32404",
-                "zip_code_plus_4": "5273",
+                "zip_code": "32258",
+                "zip_code_plus_4": "",
                 "zip_code_type": "standard",
-                "delivery_point_barcode": "324045273109",
-                "address_type": "residential",
-                "record_type": "street",
+                "delivery_point_barcode": "",
+                "address_type": "",
+                "record_type": "",
                 "default_building_address": false,
-                "county": "BAY",
-                "county_fips": "12005",
-                "carrier_route": "R008",
+                "county": "DUVAL",
+                "county_fips": "12031",
+                "carrier_route": "R057",
                 "carrier_route_type": "rural_route",
-                "latitude": 30.296411,
-                "longitude": -85.575595
+                "latitude": 30.128139,
+                "longitude": -81.541622
             },
             "deliverability_analysis": {
-                "dpv_confirmation": "Y",
-                "dpv_cmra": "N",
-                "dpv_vacant": "N",
-                "dpv_active": "Y",
+                "dpv_confirmation": "N",
+                "dpv_cmra": "",
+                "dpv_vacant": "",
+                "dpv_active": "",
                 "dpv_footnotes": [
                     "AA",
-                    "BB"
+                    "M3"
                 ],
                 "ews_match": false,
                 "lacs_indicator": "",
@@ -114,10 +114,10 @@ http_interactions:
                 "suite_return_code": ""
             },
             "lob_confidence_score": {
-                "score": 100,
-                "level": "high"
+                "score": null,
+                "level": ""
             },
             "object": "us_verification"
         }
-  recorded_at: Wed, 27 Jul 2022 16:03:39 GMT
+  recorded_at: Wed, 27 Jul 2022 16:03:40 GMT
 recorded_with: VCR 6.1.0

@@ -33,7 +33,7 @@ class LobResult
     "#{components['zip_code']}-#{components['zip_code_plus_4']}"
   end
 
-  def deliverable?
+  def valid_address?
     result['valid_address']
   end
 

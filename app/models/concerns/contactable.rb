@@ -73,7 +73,7 @@ module Contactable
 
       return unless result
 
-      if result.deliverable?
+      if result.valid_address?
         apply_standardized_address(result)
       else
         self.address_problems = true
