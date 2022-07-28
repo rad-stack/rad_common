@@ -37,6 +37,10 @@ class LobResult
     result['valid_address']
   end
 
+  def address_problems
+    result['deliverability']
+  end
+
   private
 
     def build_primary_lines(components)

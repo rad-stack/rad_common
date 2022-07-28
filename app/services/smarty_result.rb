@@ -37,6 +37,10 @@ class SmartyResult
     result.any? && (postal_match? || non_postal_match?)
   end
 
+  def address_problems
+    'invalid address'
+  end
+
   private
 
     def build_primary_lines(components)

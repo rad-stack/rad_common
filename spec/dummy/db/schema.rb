@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 2022_07_19_162541) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "bypass_address_validation", default: false, null: false
-    t.boolean "address_problems", default: false, null: false
+    t.string "address_problems"
     t.jsonb "address_changes"
   end
 
@@ -128,7 +128,7 @@ ActiveRecord::Schema.define(version: 2022_07_19_162541) do
     t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
     t.boolean "bypass_address_validation", default: false, null: false
-    t.boolean "address_problems", default: false, null: false
+    t.string "address_problems"
     t.jsonb "address_changes"
     t.integer "address_requests_made", default: 0, null: false
   end
