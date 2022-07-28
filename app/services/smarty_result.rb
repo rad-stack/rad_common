@@ -38,6 +38,8 @@ class SmartyResult
   end
 
   def address_problems
+    return 'missing suite or unit #' if missing_secondary?
+
     'invalid address'
   end
 
@@ -63,6 +65,10 @@ class SmartyResult
 
     def non_postal_match?
       analysis['dpv_match_code'] == 'N' && analysis['enhanced_match'] == 'non-postal-match'
+    end
+
+    def missing_secondary?
+      analysis['dpv_match_code'] == 'D'
     end
 
     def analysis

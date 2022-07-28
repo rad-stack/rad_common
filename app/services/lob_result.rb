@@ -34,10 +34,12 @@ class LobResult
   end
 
   def valid_address?
-    result['valid_address']
+    result['valid_address'] && result['deliverability'] != 'deliverable_missing_unit'
   end
 
   def address_problems
+    return 'missing suite or unit #' if result['deliverability'] == 'deliverable_missing_unit'
+
     result['deliverability']
   end
 

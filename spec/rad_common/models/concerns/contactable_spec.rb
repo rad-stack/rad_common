@@ -139,6 +139,18 @@ RSpec.describe Contactable do
           expect(company.address_changes).to be_nil
         end
       end
+
+      context 'with missing secondary component' do
+        let(:address_1) { '3615 Dupont Avenue' }
+        let(:address_2) { nil }
+        let(:city) { 'Jacksonville' }
+        let(:state) { 'FL' }
+        let(:zipcode) { '32217' }
+
+        it 'sets address_problems and does not touch address' do
+          expect(company.address_problems).to eq 'missing suite or unit #'
+        end
+      end
     end
 
     describe 'with lob', lob_specs: true do
@@ -256,6 +268,18 @@ RSpec.describe Contactable do
           expect(company.address_problems).to eq 'undeliverable'
           expect(company.address_1).to eq(address_1)
           expect(company.address_changes).to be_nil
+        end
+      end
+
+      context 'with missing secondary component' do
+        let(:address_1) { '3615 Dupont Avenue' }
+        let(:address_2) { nil }
+        let(:city) { 'Jacksonville' }
+        let(:state) { 'FL' }
+        let(:zipcode) { '32217' }
+
+        it 'sets address_problems and does not touch address' do
+          expect(company.address_problems).to eq 'missing suite or unit #'
         end
       end
     end
