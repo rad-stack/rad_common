@@ -61,7 +61,7 @@ module Contactable
       self.state = result.state
       self.zipcode = result.zipcode
 
-      self.address_problems = false
+      self.address_problems = nil
     end
 
     def standardize_address
@@ -76,7 +76,7 @@ module Contactable
       if result.valid_address?
         apply_standardized_address(result)
       else
-        self.address_problems = true
+        self.address_problems = result.address_problems
       end
     end
 

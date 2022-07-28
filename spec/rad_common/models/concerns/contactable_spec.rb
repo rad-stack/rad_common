@@ -29,7 +29,7 @@ RSpec.describe Contactable do
           expect(company.city).to eq('Orlando')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32816')
-          expect(company.address_problems).to be false
+          expect(company.address_problems).to be nil
           expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard' })
         end
       end
@@ -67,7 +67,7 @@ RSpec.describe Contactable do
 
         it 'standardizes' do
           expect(company.address_1).to eq('6450 Autumn Berry Cir')
-          expect(company.address_problems).to be false
+          expect(company.address_problems).to be nil
         end
       end
 
@@ -84,7 +84,7 @@ RSpec.describe Contactable do
           expect(company.city).to eq('Jacksonville')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32205')
-          expect(company.address_problems).to be false
+          expect(company.address_problems).to be nil
           expect(company.address_changes).to eq({ 'address_1' => '1376 Macarthur Street' })
         end
       end
@@ -102,7 +102,7 @@ RSpec.describe Contactable do
           expect(company.city).to eq('Orlando')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32815')
-          expect(company.address_problems).to be false
+          expect(company.address_problems).to be nil
           expect(company.address_changes).to eq({ 'address_1' => 'Post Office Box 39', 'zipcode' => '32816' })
         end
       end
@@ -120,7 +120,7 @@ RSpec.describe Contactable do
           expect(company.city).to eq('Orlando')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32816')
-          expect(company.address_problems).to be false
+          expect(company.address_problems).to be nil
           expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard',
                                                   'address_2' => 'Suite 1000' })
         end
@@ -134,9 +134,21 @@ RSpec.describe Contactable do
         let(:zipcode) { '32816' }
 
         it 'sets address_problems and does not touch address' do
-          expect(company.address_problems).to be true
+          expect(company.address_problems).to eq 'invalid address'
           expect(company.address_1).to eq(address_1)
           expect(company.address_changes).to be_nil
+        end
+      end
+
+      context 'with missing secondary component' do
+        let(:address_1) { '3615 Dupont Avenue' }
+        let(:address_2) { nil }
+        let(:city) { 'Jacksonville' }
+        let(:state) { 'FL' }
+        let(:zipcode) { '32217' }
+
+        it 'sets address_problems and does not touch address' do
+          expect(company.address_problems).to eq 'missing suite or unit #'
         end
       end
     end
@@ -166,7 +178,7 @@ RSpec.describe Contactable do
           expect(company.city).to eq('ORLANDO')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32816')
-          expect(company.address_problems).to be false
+          expect(company.address_problems).to be nil
           expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard' })
         end
       end
@@ -204,7 +216,7 @@ RSpec.describe Contactable do
 
         it 'standardizes' do
           expect(company.address_1).to eq('6450 AUTUMN BERRY CIR')
-          expect(company.address_problems).to be false
+          expect(company.address_problems).to be nil
         end
       end
 
@@ -221,7 +233,7 @@ RSpec.describe Contactable do
           expect(company.city).to eq('ORLANDO')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32815')
-          expect(company.address_problems).to be false
+          expect(company.address_problems).to be nil
           expect(company.address_changes).to eq({ 'address_1' => 'Post Office Box 39', 'zipcode' => '32816' })
         end
       end
@@ -239,7 +251,7 @@ RSpec.describe Contactable do
           expect(company.city).to eq('ORLANDO')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32816')
-          expect(company.address_problems).to be false
+          expect(company.address_problems).to be nil
           expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard',
                                                   'address_2' => 'Suite 1000' })
         end
@@ -253,9 +265,21 @@ RSpec.describe Contactable do
         let(:zipcode) { '32816' }
 
         it 'sets address_problems and does not touch address' do
-          expect(company.address_problems).to be true
+          expect(company.address_problems).to eq 'undeliverable'
           expect(company.address_1).to eq(address_1)
           expect(company.address_changes).to be_nil
+        end
+      end
+
+      context 'with missing secondary component' do
+        let(:address_1) { '3615 Dupont Avenue' }
+        let(:address_2) { nil }
+        let(:city) { 'Jacksonville' }
+        let(:state) { 'FL' }
+        let(:zipcode) { '32217' }
+
+        it 'sets address_problems and does not touch address' do
+          expect(company.address_problems).to eq 'missing suite or unit #'
         end
       end
     end
