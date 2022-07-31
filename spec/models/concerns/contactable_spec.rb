@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Contactable do
   describe 'validations' do
     it 'validates zipcodes' do
-      %w[12345 12345-1234].each do |item|
+      %w[12345 12345-1234 00920].each do |item|
         check_zipcode item, true
       end
 

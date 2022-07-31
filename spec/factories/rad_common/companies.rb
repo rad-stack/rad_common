@@ -4,7 +4,7 @@ FactoryBot.define do
     address_1 { Faker::Address.street_address }
     city { Faker::Address.city }
     state { StateOptions.sample }
-    zipcode { Faker::Address.zip_code[0..4] }
+    zipcode { Faker::Address.zip }
     phone_number { create :phone_number }
     website { Faker::Internet.url }
     email { Faker::Internet.email }
