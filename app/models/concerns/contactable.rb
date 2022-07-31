@@ -3,7 +3,6 @@ module Contactable
 
   included do
     validates :zipcode, format: /\A[0-9]{5}(?:-[0-9]{4})?\z/, allow_nil: true
-    validates :state, length: { is: 2 }, allow_nil: true
 
     validate :validate_state
 
@@ -41,6 +40,8 @@ module Contactable
   private
 
     def validate_state
+      return if respond_to?(:city_id) # one project uses city/state models
+
       errors.add(:state, "isn't a valid state") if state.present? && !StateOptions.valid?(state)
     end
 
