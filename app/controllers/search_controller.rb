@@ -3,7 +3,7 @@ class SearchController < ApplicationController
     # authorization is checked within the global_autocomplete_result
     skip_authorization
 
-    global_autocomplete = GlobalAutocomplete.new(params, view_context.global_search_scopes, current_user)
+    global_autocomplete = GlobalAutocomplete.new(params, GlobalSearch.new(current_user).scopes, current_user)
 
     if params['super_search'].to_i == 1
       render json: global_autocomplete.global_super_search_result
