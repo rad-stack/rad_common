@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Contactable do
-  describe 'standardize_address', :vcr do
+  describe 'standardize_address', vcr: true, smarty_specs: true do
     subject(:company) { Company.main }
 
     before do
