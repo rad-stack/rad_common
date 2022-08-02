@@ -27,7 +27,6 @@ VCR.configure do |c|
     c.filter_sensitive_data('<SENDGRID_API_KEY>') { RadicalConfig.sendgrid_api_key! }
   end
 
-  c.filter_sensitive_data('<LOB_KEY>') { RadicalConfig.lob_key! } if RadicalConfig.lob_key.present?
   c.filter_sensitive_data('<SMARTY_AUTH_ID>') { RadicalConfig.smarty_auth_id! } if RadicalConfig.smarty_auth_id.present?
 
   if RadicalConfig.smarty_auth_token.present?

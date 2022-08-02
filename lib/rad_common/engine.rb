@@ -16,7 +16,6 @@ module RadCommon
     require 'haml-rails'
     require 'hashids'
     require 'kaminari'
-    require 'lob'
     require 'bootstrap4-kaminari-views'
     require 'nokogiri'
     require 'pg'

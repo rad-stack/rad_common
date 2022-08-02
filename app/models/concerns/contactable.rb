@@ -11,7 +11,7 @@ module Contactable
 
   def maybe_standardize_address
     return if running_global_validity || bypass_address_validation?
-    return unless RadicalConfig.address_api_enabled? && address? && any_address_changes?
+    return unless RadicalConfig.smarty_enabled? && address? && any_address_changes?
 
     standardize_address
   end
@@ -80,11 +80,11 @@ module Contactable
     end
 
     def standardize_address
-      result = address_api_class_name.constantize.new({ address_1: address_1,
-                                                        address_2: address_2,
-                                                        city: city,
-                                                        state: state,
-                                                        zipcode: zipcode }).call
+      result = SmartyAddress.new({ address_1: address_1,
+                                   address_2: address_2,
+                                   city: city,
+                                   state: state,
+                                   zipcode: zipcode }).call
 
       return unless result
 
@@ -106,12 +106,6 @@ module Contactable
       end
 
       changes_hash
-    end
-
-    def address_api_class_name
-      return 'SmartyAddress' if RadicalConfig.smarty_enabled?
-
-      'LobAddress'
     end
 
     def city_model_variant?

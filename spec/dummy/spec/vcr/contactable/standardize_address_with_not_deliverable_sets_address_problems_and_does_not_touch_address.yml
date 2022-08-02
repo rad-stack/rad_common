@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 27 Jul 2022 16:03:37 GMT
+      - Tue, 02 Aug 2022 13:12:02 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -34,5 +34,5 @@ http_interactions:
       encoding: ASCII-8BIT
       string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"4000 Bro Bruh","last_line":"Mordor
         FL","components":{"primary_number":"4000","street_name":"Bro Bruh","city_name":"Mordor","state_abbreviation":"FL"},"metadata":{"precision":"Unknown"},"analysis":{"dpv_footnotes":"A1","active":"Y","footnotes":"C#","enhanced_match":"none"}}]'
-  recorded_at: Wed, 27 Jul 2022 16:03:37 GMT
+  recorded_at: Tue, 02 Aug 2022 13:12:02 GMT
 recorded_with: VCR 6.1.0
