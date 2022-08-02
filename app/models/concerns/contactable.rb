@@ -40,7 +40,7 @@ module Contactable
   private
 
     def validate_state
-      return if respond_to?(:city_id) # one project uses city/state models
+      return if city_model_variant?
 
       errors.add(:state, "isn't a valid state") if state.present? && !StateOptions.valid?(state)
     end
@@ -58,8 +58,14 @@ module Contactable
 
       self.address_1 = result.address_1
       self.address_2 = result.address_2
-      self.city = result.city
-      self.state = result.state
+
+      if city_model_variant?
+        self.city = City.find_by!(state: state_record(result.state), name: result.city)
+      else
+        self.city = result.city
+        self.state = result.state
+      end
+
       self.zipcode = result.zipcode
 
       self.address_problems = nil
@@ -98,5 +104,18 @@ module Contactable
       return 'SmartyAddress' if RadicalConfig.smarty_enabled?
 
       'LobAddress'
+    end
+
+    def city_model_variant?
+      # one project uses city/state models
+
+      respond_to?(:city_id)
+    end
+
+    def state_record(state_code)
+      # only used for the city_model_variant on the one project
+
+      state_name = StateOptions.options.select { |item| item.last == state_code }.first.first
+      State.find_by!(name: state_name)
     end
 end
