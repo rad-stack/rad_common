@@ -25,11 +25,11 @@ RSpec.describe Contactable do
 
         it 'standardizes' do
           expect(company.address_1).to eq('4000 Central Florida Blvd')
-          expect(company.address_2).to be nil
+          expect(company.address_2).to be_nil
           expect(company.city).to eq('Orlando')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32816')
-          expect(company.address_problems).to be nil
+          expect(company.address_problems).to be_nil
           expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard' })
         end
       end
@@ -67,7 +67,7 @@ RSpec.describe Contactable do
 
         it 'standardizes' do
           expect(company.address_1).to eq('6450 Autumn Berry Cir')
-          expect(company.address_problems).to be nil
+          expect(company.address_problems).to be_nil
         end
       end
 
@@ -80,11 +80,11 @@ RSpec.describe Contactable do
 
         it 'standardizes' do
           expect(company.address_1).to eq('1376 MacArthur St')
-          expect(company.address_2).to be nil
+          expect(company.address_2).to be_nil
           expect(company.city).to eq('Jacksonville')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32205')
-          expect(company.address_problems).to be nil
+          expect(company.address_problems).to be_nil
           expect(company.address_changes).to eq({ 'address_1' => '1376 Macarthur Street' })
         end
       end
@@ -98,11 +98,11 @@ RSpec.describe Contactable do
 
         it 'standardizes' do
           expect(company.address_1).to eq('PO Box 39')
-          expect(company.address_2).to be nil
+          expect(company.address_2).to be_nil
           expect(company.city).to eq('Orlando')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32815')
-          expect(company.address_problems).to be nil
+          expect(company.address_problems).to be_nil
           expect(company.address_changes).to eq({ 'address_1' => 'Post Office Box 39', 'zipcode' => '32816' })
         end
       end
@@ -120,7 +120,7 @@ RSpec.describe Contactable do
           expect(company.city).to eq('Orlando')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32816')
-          expect(company.address_problems).to be nil
+          expect(company.address_problems).to be_nil
           expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard',
                                                   'address_2' => 'Suite 1000' })
         end
@@ -174,11 +174,11 @@ RSpec.describe Contactable do
 
         it 'standardizes' do
           expect(company.address_1).to eq('4000 CENTRAL FLORIDA BLVD')
-          expect(company.address_2).to be nil
+          expect(company.address_2).to be_nil
           expect(company.city).to eq('ORLANDO')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32816')
-          expect(company.address_problems).to be nil
+          expect(company.address_problems).to be_nil
           expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard' })
         end
       end
@@ -216,7 +216,7 @@ RSpec.describe Contactable do
 
         it 'standardizes' do
           expect(company.address_1).to eq('6450 AUTUMN BERRY CIR')
-          expect(company.address_problems).to be nil
+          expect(company.address_problems).to be_nil
         end
       end
 
@@ -229,11 +229,11 @@ RSpec.describe Contactable do
 
         it 'standardizes' do
           expect(company.address_1).to eq('PO BOX 39')
-          expect(company.address_2).to be nil
+          expect(company.address_2).to be_nil
           expect(company.city).to eq('ORLANDO')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32815')
-          expect(company.address_problems).to be nil
+          expect(company.address_problems).to be_nil
           expect(company.address_changes).to eq({ 'address_1' => 'Post Office Box 39', 'zipcode' => '32816' })
         end
       end
@@ -251,7 +251,7 @@ RSpec.describe Contactable do
           expect(company.city).to eq('ORLANDO')
           expect(company.state).to eq('FL')
           expect(company.zipcode).to eq('32816')
-          expect(company.address_problems).to be nil
+          expect(company.address_problems).to be_nil
           expect(company.address_changes).to eq({ 'address_1' => '4000 Central Florida Boulevard',
                                                   'address_2' => 'Suite 1000' })
         end
