@@ -180,7 +180,7 @@ class CardPresenter
                                          id: "new_#{downcased_object_class}_link"))
     end
 
-    if !no_index_button && %w[show edit update new create].include?(action_name) && current_user &&
+    if show_index_button? && %w[show edit update new create].include?(action_name) && current_user &&
        Pundit.policy!(current_user, check_policy_klass).index?
 
       actions.push(@view_context.link_to(@view_context.icon(:list, "View #{object_label_plural}"),
@@ -284,5 +284,16 @@ class CardPresenter
                                                      method: :delete,
                                                      data: { confirm: delete_confirmation },
                                                      class: 'btn btn-danger btn-sm')
+    end
+
+    def show_index_button?
+      return false if no_index_button
+      return false if no_records?
+
+      true
+    end
+
+    def no_records?
+      Pundit.policy_scope!(current_user, klass).count.zero?
     end
 end
