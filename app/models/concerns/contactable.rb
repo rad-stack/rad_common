@@ -50,7 +50,15 @@ module Contactable
     end
 
     def any_address_changes?
+      return city_model_variant_changes? if city_model_variant?
+
       address_1_changed? || address_2_changed? || city_changed? || zipcode_changed? || state_changed?
+    end
+
+    def city_model_variant_changes?
+      # one project uses city/state models
+
+      address_1_changed? || address_2_changed? || city_id_changed? || zipcode_changed?
     end
 
     def apply_standardized_address(result)
