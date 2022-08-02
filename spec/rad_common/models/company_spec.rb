@@ -22,18 +22,18 @@ RSpec.describe Company, type: :model do
       company.update! address_1: 'Address 1',
                       address_2: 'Address 2',
                       city: 'City',
-                      state: 'State',
-                      zipcode: 'Zipcode'
+                      state: 'HI',
+                      zipcode: '96818'
     end
 
     context 'with address 2' do
-      it { is_expected.to eq 'Address 1, Address 2, City, State Zipcode' }
+      it { is_expected.to eq 'Address 1, Address 2, City, HI 96818' }
     end
 
     context 'without address 2' do
       before { company.update! address_2: nil }
 
-      it { is_expected.to eq 'Address 1, City, State Zipcode' }
+      it { is_expected.to eq 'Address 1, City, HI 96818' }
     end
   end
 

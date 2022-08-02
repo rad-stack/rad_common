@@ -132,6 +132,7 @@ RSpec.configure do |config|
   config.filter_run_excluding(external_user_specs: true) unless RadicalConfig.external_users?
   config.filter_run_excluding(user_client_specs: true) unless RadicalConfig.user_clients?
   config.filter_run_excluding(devise_paranoid_specs: true) unless Devise.paranoid
+  config.filter_run_excluding(smarty_specs: true) unless RadicalConfig.smarty_enabled?
 
   config.after(:each, type: :system, js: true) do
     errors = page.driver.browser.manage.logs.get(:browser)

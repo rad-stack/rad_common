@@ -55,6 +55,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sidekiq', '~> 6.4.1'
   s.add_dependency 'sidekiq-failures'
   s.add_dependency 'simple_form', '~> 5.0'
+  s.add_dependency 'smartystreets_ruby_sdk'
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
   s.add_dependency 'twilio-ruby', '~> 5.63'
