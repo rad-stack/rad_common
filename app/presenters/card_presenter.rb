@@ -294,6 +294,6 @@ class CardPresenter
     end
 
     def no_records?
-      Pundit.policy_scope!(current_user, klass).count.zero?
+      current_user && Pundit.policy_scope!(current_user, klass).count.zero?
     end
 end
