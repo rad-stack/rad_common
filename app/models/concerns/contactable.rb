@@ -21,7 +21,6 @@ module Contactable
   end
 
   def city_state_zip
-    city_state = [city, state].compact_blank.join(', ').presence
     [city_state, zipcode].compact_blank.join(' ').presence
   end
 
@@ -59,6 +58,12 @@ module Contactable
       # one project uses city/state models
 
       address_1_changed? || address_2_changed? || city_id_changed? || zipcode_changed?
+    end
+
+    def city_state
+      return city.to_s if city_model_variant?
+
+      [city, state].compact_blank.join(', ').presence
     end
 
     def apply_standardized_address(result)
