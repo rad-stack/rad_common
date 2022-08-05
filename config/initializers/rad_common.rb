@@ -57,10 +57,7 @@ end
 
 # https://swell.radicalbear.com/tasks/37444
 # https://github.com/collectiveidea/audited/issues/631
-Rails.configuration.active_record.yaml_column_permitted_classes = [
-  ActiveSupport::HashWithIndifferentAccess, ActiveSupport::TimeWithZone, ActiveSupport::TimeZone, Date, Time, String,
-  Integer, NilClass, Float, FalseClass, Hash, Array, DateTime, TrueClass, BigDecimal
-]
+Rails.configuration.active_record.use_yaml_unsafe_load = true
 
 Audited.current_user_method = :true_user
 Audited.ignored_attributes += ['address_changes']
