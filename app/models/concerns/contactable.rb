@@ -68,7 +68,7 @@ module Contactable
       self.address_2 = result.address_2
 
       if city_model_variant?
-        self.city = City.find_by!(state: state_record(result.state), name: result.city)
+        self.city = City.find_or_create_by!(state: state_record(result.state), name: result.city)
       else
         self.city = result.city
         self.state = result.state
@@ -118,6 +118,9 @@ module Contactable
       # only used for the city_model_variant on the one project
 
       state_name = StateOptions.options.select { |item| item.last == state_code }.first.first
-      State.find_by!(name: state_name)
+      this_state = State.find_by(name: state_name)
+      raise "Couldn't find state: #{state_name}" if this_state.blank?
+
+      this_state
     end
 end
