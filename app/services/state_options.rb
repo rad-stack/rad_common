@@ -7,6 +7,7 @@ class StateOptions
     'California' => 'CA',
     'Colorado' => 'CO',
     'Connecticut' => 'CT',
+    'District of Columbia' => 'DC',
     'Delaware' => 'DE',
     'Florida' => 'FL',
     'Georgia' => 'GA',
