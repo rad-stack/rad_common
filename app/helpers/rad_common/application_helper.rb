@@ -38,6 +38,11 @@ module RadCommon
       Pundit.policy!(current_user, klass.new).update? || Pundit.policy!(current_user, klass.new).destroy?
     end
 
+    def address_show_data(record)
+      [{ label: 'Address', value: record.full_address },
+       { label: 'Address Info', value: render('layouts/address_info', record: record) }]
+    end
+
     def format_date(value)
       value.strftime('%-m/%-d/%Y') if value.present?
     end

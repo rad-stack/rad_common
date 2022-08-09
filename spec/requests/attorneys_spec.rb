@@ -12,12 +12,15 @@ RSpec.describe 'Attorneys', type: :request do
       address_1: Faker::Address.street_address,
       city: Faker::Address.city,
       state: Faker::Address.state_abbr,
-      zipcode: Faker::Address.zip_code[0..4],
+      zipcode: Faker::Address.zip,
       phone_number: create(:phone_number),
       email: Faker::Internet.email }
   end
 
-  before { login_as user, scope: :user }
+  before do
+    allow_any_instance_of(Attorney).to receive(:bypass_address_validation?).and_return(true)
+    login_as user, scope: :user
+  end
 
   describe 'POST create' do
     describe 'with valid params' do

@@ -6,9 +6,10 @@ FactoryBot.define do
     address_1 { Faker::Address.street_address }
     address_2 { Faker::Address.secondary_address if rand(1..4) == 1 }
     city { Faker::Address.city }
-    state { Faker::Address.state_abbr }
-    zipcode { Faker::Address.zip_code[0..4] }
+    state { StateOptions.sample }
+    zipcode { Faker::Address.zip }
     phone_number { create :phone_number }
     email { Faker::Internet.email }
+    bypass_address_validation { true }
   end
 end
