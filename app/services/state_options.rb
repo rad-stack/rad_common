@@ -88,6 +88,10 @@ class StateOptions
       options.sample.first
     end
 
+    def name_for_code(code)
+      options.select { |item| item.last == code }.first.first
+    end
+
     private
 
       def active_states
