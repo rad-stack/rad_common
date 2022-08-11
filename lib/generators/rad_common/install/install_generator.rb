@@ -25,6 +25,7 @@ module RadCommon
 
         # config
         copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        remove_dir 'config/environments/'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
@@ -58,6 +59,8 @@ module RadCommon
                   'app/models/application_record.rb'
 
         # specs
+        remove_dir 'spec/rad_common/'
+        remove_dir 'spec/factories/rad_common/'
         directory '../../../../../spec/rad_common/', 'spec/rad_common/'
         directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/'
         copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
