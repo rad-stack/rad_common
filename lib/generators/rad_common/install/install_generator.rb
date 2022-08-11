@@ -41,6 +41,7 @@ module RadCommon
                   'config/initializers/simple_form_components.rb'
 
         # bin
+        remove_dir 'bin/'
         directory '../../../../../spec/dummy/bin/', 'bin/'
 
         # locales
