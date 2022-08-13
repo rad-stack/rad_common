@@ -12,6 +12,7 @@ module RadCommon
     require 'devise-authy'
     require 'devise-security'
     require 'devise_invitable'
+    require 'factory_bot_rails'
     require 'faker'
     require 'haml-rails'
     require 'hashids'
