@@ -1,7 +1,13 @@
+require 'mail'
+
 class RadicalConfig
   class << self
     def admin_email!
       secret_config_item! :admin_email
+    end
+
+    def admin_email_address!
+      Mail::Address.new(admin_email!).address
     end
 
     def from_email!
@@ -372,7 +378,7 @@ class RadicalConfig
       end
 
       def override_variable(item)
-        ENV[item.to_s.upcase]
+        ENV.fetch(item.to_s.upcase, nil)
       end
 
       def boolean_override_variable(item)
