@@ -103,6 +103,7 @@ Naming/VariableNumber:
   EnforcedStyle: snake_case
   Exclude:
     - 'lib/tasks/temp.rake'
+  AllowedPatterns: [ 'html5' ]
 
 # Gives access to all the default 'enabled' rails-specific cops
 Rails:
@@ -135,6 +136,9 @@ Rails/SkipsModelValidations:
     - 'app/services/smarty_address.rb'
     - 'app/services/seeder.rb'
     - 'lib/tasks/temp.rake'
+
+Rails/I18nLocaleTexts:
+  Enabled: false
 
 # Check for uses of braces around single-line blocks, and also for multi-line blocks with an
 # attached method like: {...}.where

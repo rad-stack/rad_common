@@ -81,8 +81,8 @@ class RadbearDeviseMailer < Devise::Mailer
 
     @recipient = @resource
     @message = "The password for your #{app_name} account was recently changed. If you made this change, you don't " \
-               "need to do anything more. If you didn't make this change, please let us know, and reset your password " \
-               'immediately.'
+               "need to do anything more. If you didn't make this change, please let us know, and reset your " \
+               'password immediately.'
 
     super
   end
