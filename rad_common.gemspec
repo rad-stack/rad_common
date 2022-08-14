@@ -65,13 +65,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'factory_bot_rails'
   s.add_development_dependency 'haml_lint'
-  s.add_development_dependency 'listen', '~> 3.0.5'
+  s.add_development_dependency 'listen'
   s.add_development_dependency 'rspec-rails'
-
-  # keep up to date with latest rubocop supported by hound
-  # http://help.houndci.com/en/articles/2461415-supported-linters
-  s.add_development_dependency 'rubocop', '1.5.2'
-
+  s.add_development_dependency 'rubocop'
   s.add_development_dependency 'rubocop-rails'
   s.add_development_dependency 'rubocop-rspec'
   s.add_development_dependency 'vcr'
