@@ -342,7 +342,7 @@ RSpec.describe 'Users', type: :system do
       let(:user) { create(:user, confirmed_at: nil) }
 
       let(:message) do
-        'If your email address exists in our database, you will receive an email with instructions for how to '\
+        'If your email address exists in our database, you will receive an email with instructions for how to ' \
           'confirm your email address in a few minutes.'
       end
 
@@ -382,7 +382,7 @@ RSpec.describe 'Users', type: :system do
 
     describe 'resetting password' do
       let(:message) do
-        'If your email address exists in our database, you will receive a password recovery link at your email '\
+        'If your email address exists in our database, you will receive a password recovery link at your email ' \
           'address in a few minutes.'
       end
 

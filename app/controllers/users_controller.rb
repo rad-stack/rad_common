@@ -112,7 +112,7 @@ class UsersController < ApplicationController
       end
     end
 
-    if destroyed && (URI(request.referer).path == user_path(@user)) ||
+    if (destroyed && (URI(request.referer).path == user_path(@user))) ||
        (URI(request.referer).path == edit_user_path(@user))
       redirect_to users_path
     else
