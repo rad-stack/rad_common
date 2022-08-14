@@ -40,7 +40,7 @@ RSpec.describe 'Notification Settings', type: :request do
           it 'fails' do
             expect {
               post '/rad_common/notification_settings', params: { notification_setting: attributes }
-            }.to change(NotificationSetting, :count).by(0)
+            }.not_to change(NotificationSetting, :count)
           end
         end
       end

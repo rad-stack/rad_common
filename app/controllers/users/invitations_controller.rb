@@ -14,7 +14,7 @@ module Users
 
       if resource_invited
         if status
-          flash[:success] = "We invited '#{resource}' and sent them an email. You can update their settings as "\
+          flash[:success] = "We invited '#{resource}' and sent them an email. You can update their settings as " \
                             'needed here.'
 
           redirect_to edit_user_path(resource)
