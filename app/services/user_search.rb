@@ -41,7 +41,6 @@ class UserSearch < RadCommon::Search
       items.push({ label: 'Status', column: 'user_statuses.name' })
       items.push({ label: 'Roles' }) if can_update?
 
-
       items.push(label: 'External?', column: 'users.external') if RadicalConfig.external_users?
 
       items

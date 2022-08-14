@@ -8,7 +8,7 @@ class GlobalValidationsController < ApplicationController
 
     GlobalValidationJob.perform_later(current_user, single_model)
 
-    flash[:success] = "We're checking the validity of your company's data. You will get an email with "\
+    flash[:success] = "We're checking the validity of your company's data. You will get an email with " \
                       'the results. This may take a while.'
 
     redirect_to '/rad_common/global_validations/new'

@@ -10,14 +10,14 @@ RSpec.describe 'Attachments', type: :request do
   context 'with permanent attachment url' do
     it 'allows navigation' do
       get AttachmentUrlGenerator.permanent_attachment_url(division.logo)
-      expect(response.status).to eq 200
+      expect(response).to have_http_status :ok
     end
   end
 
   context 'with permanent attachment variant url' do
     it 'allows navigation' do
       get AttachmentUrlGenerator.permanent_attachment_variant_url(division, :logo_variant)
-      expect(response.status).to eq 200
+      expect(response).to have_http_status :ok
     end
   end
 

@@ -83,7 +83,7 @@ class NotificationType < ApplicationRecord
     users = User.active
 
     if security_roles?
-      where_clause = 'users.id IN (SELECT user_id FROM user_security_roles WHERE security_role_id IN '\
+      where_clause = 'users.id IN (SELECT user_id FROM user_security_roles WHERE security_role_id IN ' \
                      '(SELECT security_role_id FROM notification_security_roles WHERE notification_type_id = ?))'
 
       users = users.where(where_clause, id)
