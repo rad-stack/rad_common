@@ -26,7 +26,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
   s.add_dependency 'devise'
-  s.add_dependency 'sassc'
   s.add_dependency 'devise-authy'
   s.add_dependency 'devise_invitable'
   s.add_dependency 'devise-security', '0.16.0' # locked, see Task 35711
@@ -35,6 +34,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing', '~> 1.9'
   s.add_dependency 'kaminari', '~> 1.2.1'
+  s.add_dependency 'sassc'
 
   # TODO: remove these 3 once the mail gem is up to date, see Task 37200
   s.add_dependency 'net-imap'
@@ -65,13 +65,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'factory_bot_rails'
   s.add_development_dependency 'haml_lint'
-  s.add_development_dependency 'listen', '~> 3.0.5'
+  s.add_development_dependency 'listen'
   s.add_development_dependency 'rspec-rails'
-
-  # keep up to date with latest rubocop supported by hound
-  # http://help.houndci.com/en/articles/2461415-supported-linters
-  s.add_development_dependency 'rubocop', '1.5.2'
-
+  s.add_development_dependency 'rubocop'
   s.add_development_dependency 'rubocop-rails'
   s.add_development_dependency 'rubocop-rspec'
   s.add_development_dependency 'vcr'

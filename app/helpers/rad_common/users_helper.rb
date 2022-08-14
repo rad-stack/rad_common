@@ -69,7 +69,7 @@ module RadCommon
       link_to icon(:user, 'Sign In As'),
               "/rad_common/impersonations/start?id=#{user.id}",
               method: :post,
-              data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to '\
+              data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to ' \
                                'your original user.' },
               class: 'btn btn-warning btn-sm'
     end
@@ -106,7 +106,7 @@ module RadCommon
     def user_reset_authy_action(user)
       return unless RadicalConfig.authy_enabled? && policy(user).update? && user.authy_enabled?
 
-      confirm = "This will reset the user's two factor authentication configuration if they are having problems. "\
+      confirm = "This will reset the user's two factor authentication configuration if they are having problems. " \
                 'Are you sure?'
 
       link_to icon(:refresh, 'Reset Two Factor'),
