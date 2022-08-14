@@ -12,6 +12,7 @@ PATH
       devise-authy
       devise-security (= 0.16.0)
       devise_invitable
+      factory_bot_rails
       faker
       haml-rails (~> 2.0)
       hashids
@@ -476,7 +477,6 @@ DEPENDENCIES
   bootsnap
   capybara
   capybara-selenium
-  factory_bot_rails
   haml_lint
   listen
   parallel_tests

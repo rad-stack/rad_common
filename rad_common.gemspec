@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise-authy'
   s.add_dependency 'devise_invitable'
   s.add_dependency 'devise-security', '0.16.0' # locked, see Task 35711
+  s.add_dependency 'factory_bot_rails'
   s.add_dependency 'faker'
   s.add_dependency 'haml-rails', '~> 2.0'
   s.add_dependency 'hashids'
@@ -63,7 +64,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
-  s.add_development_dependency 'factory_bot_rails'
   s.add_development_dependency 'haml_lint'
   s.add_development_dependency 'listen'
   s.add_development_dependency 'rspec-rails'

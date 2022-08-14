@@ -101,6 +101,8 @@ module RadCommon
                   'config.force_ssl = true'
 
         create_file 'db/seeds.rb' do <<-'RUBY'
+require 'factory_bot_rails'
+
 Seeder.new.seed!
         RUBY
         end
