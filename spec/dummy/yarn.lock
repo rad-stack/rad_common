@@ -5689,16 +5689,17 @@ querystringify@^2.1.1:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"
   integrity sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==
 
-rad_common_js@^2.0.9:
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/rad_common_js/-/rad_common_js-2.0.9.tgz#2875c865dbbe462e5987af24337231453a72fec9"
-  integrity sha512-X0P4nt//H0PrtLMjL2TKbCEkn9k416Nw3YHbQpOuDbC1ryQYAs0ByPLGQZqBJGG5apIyQknFxLORIul+6QrU+w==
+rad_common_js@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/rad_common_js/-/rad_common_js-2.1.0.tgz#e28b9b1c1b875854eb09d5bec283e16c0ff5564a"
+  integrity sha512-AubgE+tdvw22M5khAv8sS8mcL2VJvr0AazyrRJmGAgzkQ2WZ5WTJs6PdBn919vsvk0oUY5KUozJktwPbPzCC9Q==
   dependencies:
     "@rails/actiontext" "^6.0.2-1"
     "@rails/ujs" "^6.0.5"
     "@rails/webpacker" "5.4.3"
     bootstrap "^4.0.0"
     bootstrap-select "^1.13.18"
+    chosen-js "^1.8.7"
     jquery "^3.3.1"
     jquery-ui "^1.12.1"
     jquery-ujs "^1.2.3"
