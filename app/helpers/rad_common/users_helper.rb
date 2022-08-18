@@ -40,7 +40,6 @@ module RadCommon
        user_reset_authy_action(user),
        user_test_email_action(user),
        user_test_sms_action(user),
-       reactivate_user_action(user),
        impersonate_action(user)]
     end
 
@@ -151,14 +150,15 @@ module RadCommon
               class: link_class)
     end
 
-    def reactivate_user_action(user)
+    def reactivate_user_warning(user)
       return unless Devise.mappings[:user].expirable? && policy(user).update? && user.expired?
 
-      link_to icon('arrows-rotate', 'Reactivate'),
-              "/rad_common/users/#{user.id}/reactivate",
-              method: :put,
-              data: { confirm: 'Are you sure?' },
-              class: 'btn btn-success btn-sm'
+      link = link_to 'click here',
+                     "/rad_common/users/#{user.id}/reactivate",
+                     method: :put,
+                     data: { confirm: 'Are you sure?' }
+      message = safe_join(["User's account has been expired due to inactivity, to re-activate the user, ", link, '.'])
+      content_tag(:p, message, class: 'alert alert-warning')
     end
   end
 end
