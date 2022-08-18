@@ -40,6 +40,7 @@ module RadCommon
        user_reset_authy_action(user),
        user_test_email_action(user),
        user_test_sms_action(user),
+       reactivate_user_action(user),
        impersonate_action(user)]
     end
 
@@ -148,6 +149,16 @@ module RadCommon
       link_to(icon(:plus, "Add #{RadCommon::AppInfo.new.client_model_label} to User"),
               [:new, user, :user_client],
               class: link_class)
+    end
+
+    def reactivate_user_action(user)
+      return unless Devise.mappings[:user].expirable? && policy(user).update? && user.expired?
+
+      link_to icon('arrows-rotate', 'Reactivate'),
+              "/rad_common/users/#{user.id}/reactivate",
+              method: :put,
+              data: { confirm: 'Are you sure?' },
+              class: 'btn btn-success btn-sm'
     end
   end
 end

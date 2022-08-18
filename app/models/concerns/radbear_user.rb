@@ -191,6 +191,10 @@ module RadbearUser
     UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false
   end
 
+  def reactivate
+    update(last_activity_at: nil)
+  end
+
   def reset_authy!
     update! authy_enabled: false, authy_id: nil
     update! authy_enabled: true

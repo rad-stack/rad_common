@@ -161,6 +161,35 @@ RSpec.describe 'Users', type: :system do
         end
       end
     end
+
+    describe 'reactivate', skip: !Devise.mappings[:user].expirable? do
+      let(:user) { create(:user, last_activity_at: last_activity_at) }
+
+      before do
+        visit user_path(user)
+      end
+
+      context 'when user is expired' do
+        let(:last_activity_at) { (Devise.expire_after + 1.day).ago }
+
+        it 'allows manual reactivation of the user', :js do
+          page.accept_confirm do
+            click_link 'Reactivate'
+          end
+
+          expect(page).to have_content 'User was successfully reactivated'
+          expect(user.reload.last_activity_at).to be_nil
+        end
+      end
+
+      context 'when user is not expired' do
+        let(:last_activity_at) { (Devise.expire_after - 1.day).ago }
+
+        it 'does not display reactivate option' do
+          expect(page).not_to have_content('Reactivate')
+        end
+      end
+    end
   end
 
   describe 'external user', external_user_specs: true do

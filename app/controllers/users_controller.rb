@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm reset_authy test_email test_sms]
+  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm
+                                    reset_authy test_email test_sms reactivate]
   before_action :remove_blank_passwords, only: :update
 
   def index
@@ -147,6 +148,16 @@ class UsersController < ApplicationController
   def test_sms
     @user.test_sms! current_user
     flash[:success] = 'A test SMS was sent to the user.'
+    redirect_to @user
+  end
+
+  def reactivate
+    if @user.reactivate
+      flash[:success] = 'User was successfully reactivated.'
+    else
+      flash[:error] = "User could not be reactivated: #{@user.errors.full_messages.to_sentence}"
+    end
+
     redirect_to @user
   end
 
