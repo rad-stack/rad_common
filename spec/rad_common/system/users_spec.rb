@@ -441,23 +441,6 @@ RSpec.describe 'Users', type: :system do
         click_button 'Save'
         expect(page).to have_content('Your account has been updated successfully.')
       end
-
-      context 'with a different user' do
-        let(:another_user) { create :admin }
-
-        it 'updates last_activity_at' do
-          if Devise.mappings[:user].expirable?
-            another_user.update!(last_activity_at: 91.days.ago)
-            expect(another_user.expired?).to be(true)
-            visit edit_user_path(another_user)
-            fill_in :user_last_activity_at, with: Date.current
-            click_button 'Save'
-            expect(page).to have_content('User updated')
-            expect(another_user.reload.last_activity_at.to_date).to eq(Date.current)
-            expect(another_user.expired?).to be(false)
-          end
-        end
-      end
     end
   end
 
