@@ -20,6 +20,8 @@ module RadCommonRoutes
             put :confirm
             put :reset_authy
             put :reactivate
+            put :test_email
+            put :test_sms
           end
 
           resources :user_clients, only: :new
