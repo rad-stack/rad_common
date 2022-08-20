@@ -149,5 +149,16 @@ module RadCommon
               [:new, user, :user_client],
               class: link_class)
     end
+
+    def reactivate_user_warning(user)
+      return unless Devise.mappings[:user].expirable? && policy(user).update? && user.expired?
+
+      link = link_to 'click here',
+                     "/rad_common/users/#{user.id}/reactivate",
+                     method: :put,
+                     data: { confirm: 'Are you sure?' }
+      message = safe_join(["User's account has been expired due to inactivity, to re-activate the user, ", link, '.'])
+      content_tag(:p, message, class: 'alert alert-warning')
+    end
   end
 end

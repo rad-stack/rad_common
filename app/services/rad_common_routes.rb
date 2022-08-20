@@ -19,6 +19,7 @@ module RadCommonRoutes
             put :resend_invitation
             put :confirm
             put :reset_authy
+            put :reactivate
           end
 
           resources :user_clients, only: :new

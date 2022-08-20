@@ -20,6 +20,7 @@ RadCommon::Engine.routes.draw do
       put :reset_authy
       put :test_email
       put :test_sms
+      put :reactivate
     end
   end
 

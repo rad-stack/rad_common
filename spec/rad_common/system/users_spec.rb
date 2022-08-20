@@ -161,6 +161,36 @@ RSpec.describe 'Users', type: :system do
         end
       end
     end
+
+    describe 'reactivate', skip: !Devise.mappings[:user].expirable? do
+      let(:user) { create(:user, last_activity_at: last_activity_at) }
+
+      before do
+        visit user_path(user)
+      end
+
+      context 'when user is expired' do
+        let(:last_activity_at) { (Devise.expire_after + 1.day).ago }
+
+        it 'allows manual reactivation of the user', :js do
+          expect(page).to have_content("User's account has been expired due to inactivity")
+          page.accept_confirm do
+            click_link 'click here'
+          end
+
+          expect(page).to have_content 'User was successfully reactivated'
+          expect(user.reload.last_activity_at).to be_nil
+        end
+      end
+
+      context 'when user is not expired' do
+        let(:last_activity_at) { (Devise.expire_after - 1.day).ago }
+
+        it 'does not display reactivate option' do
+          expect(page).not_to have_content("User's account has been expired due to inactivity")
+        end
+      end
+    end
   end
 
   describe 'external user', external_user_specs: true do
@@ -411,23 +441,6 @@ RSpec.describe 'Users', type: :system do
         fill_in 'user_current_password', with: password
         click_button 'Save'
         expect(page).to have_content('Your account has been updated successfully.')
-      end
-
-      context 'with a different user' do
-        let(:another_user) { create :admin }
-
-        it 'updates last_activity_at' do
-          if Devise.mappings[:user].expirable?
-            another_user.update!(last_activity_at: 91.days.ago)
-            expect(another_user.expired?).to be(true)
-            visit edit_user_path(another_user)
-            fill_in :user_last_activity_at, with: Date.current
-            click_button 'Save'
-            expect(page).to have_content('User updated')
-            expect(another_user.reload.last_activity_at.to_date).to eq(Date.current)
-            expect(another_user.expired?).to be(false)
-          end
-        end
       end
     end
   end
