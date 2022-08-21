@@ -1,4 +1,5 @@
 = reactivate_user_warning(@user)
+
 .card
   = render 'layouts/card_header', no_new_button: !manually_create_users?, additional_actions: user_actions(@user)
   .card-body
