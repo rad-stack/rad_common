@@ -162,7 +162,7 @@ RSpec.describe 'Users', type: :system do
       end
     end
 
-    describe 'reactivate', skip: !Devise.mappings[:user].expirable? do
+    describe 'reactivate', user_expirable_specs: true do
       let(:user) { create(:user, last_activity_at: last_activity_at) }
 
       before do
@@ -296,24 +296,22 @@ RSpec.describe 'Users', type: :system do
       end
     end
 
-    it 'cannot sign in when expired' do
-      if Devise.mappings[:user].expirable?
-        user.update!(last_activity_at: 98.days.ago)
-        user.reload
+    it 'cannot sign in when expired', user_expirable_specs: true do
+      user.update!(last_activity_at: 98.days.ago)
+      user.reload
 
-        visit new_user_session_path
-        fill_in 'user_email', with: user.email
-        fill_in 'user_password', with: password
-        click_button 'Sign In'
-        expect(page).to have_content('Your account has expired due to inactivity')
+      visit new_user_session_path
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: password
+      click_button 'Sign In'
+      expect(page).to have_content('Your account has expired due to inactivity')
 
-        user.update!(last_activity_at: Time.current)
+      user.update!(last_activity_at: Time.current)
 
-        fill_in 'user_email', with: user.email
-        fill_in 'user_password', with: password
-        click_button 'Sign In'
-        expect(page).to have_content('Signed in successfully')
-      end
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: password
+      click_button 'Sign In'
+      expect(page).to have_content('Signed in successfully')
     end
 
     it 'sign in times out after 3 hours' do
