@@ -151,14 +151,12 @@ RSpec.describe 'Users', type: :system do
         visit user_path(user)
       end
 
-      it 'can manually confirm a user', :js do
-        if Devise.mappings[:user].confirmable?
-          page.accept_confirm do
-            click_link 'Confirm Email'
-          end
-
-          expect(page).to have_content 'User was successfully confirmed'
+      it 'can manually confirm a user', js: true, user_confirmable_specs: true do
+        page.accept_confirm do
+          click_link 'Confirm Email'
         end
+
+        expect(page).to have_content 'User was successfully confirmed'
       end
     end
 
@@ -374,18 +372,16 @@ RSpec.describe 'Users', type: :system do
           'confirm your email address in a few minutes.'
       end
 
-      it "doesn't say whether the email exists" do
-        if Devise.mappings[:user].confirmable?
-          visit new_user_session_path
+      it "doesn't say whether the email exists", user_confirmable_specs: true do
+        visit new_user_session_path
 
-          click_link "Didn't Receive Confirmation Instructions?"
-          fill_in 'Email', with: user.email
-          click_button 'Resend Confirmation Instructions'
+        click_link "Didn't Receive Confirmation Instructions?"
+        fill_in 'Email', with: user.email
+        click_button 'Resend Confirmation Instructions'
 
-          expect(page).not_to have_content 'not found'
-          expect(page).to have_content message
-          expect(page).to have_current_path(new_user_session_path)
-        end
+        expect(page).not_to have_content 'not found'
+        expect(page).to have_content message
+        expect(page).to have_current_path(new_user_session_path)
       end
     end
 

@@ -303,6 +303,10 @@ class RadicalConfig
       array_config_item! :duplicates
     end
 
+    def user_confirmable?
+      Devise.mappings[:user].confirmable?
+    end
+
     def user_expirable?
       Devise.mappings[:user].expirable?
     end
