@@ -151,18 +151,16 @@ RSpec.describe 'Users', type: :system do
         visit user_path(user)
       end
 
-      it 'can manually confirm a user', :js do
-        if Devise.mappings[:user].confirmable?
-          page.accept_confirm do
-            click_link 'Confirm Email'
-          end
-
-          expect(page).to have_content 'User was successfully confirmed'
+      it 'can manually confirm a user', js: true, user_confirmable_specs: true do
+        page.accept_confirm do
+          click_link 'Confirm Email'
         end
+
+        expect(page).to have_content 'User was successfully confirmed'
       end
     end
 
-    describe 'reactivate', skip: !Devise.mappings[:user].expirable? do
+    describe 'reactivate', user_expirable_specs: true do
       let(:user) { create(:user, last_activity_at: last_activity_at) }
 
       before do
@@ -296,24 +294,22 @@ RSpec.describe 'Users', type: :system do
       end
     end
 
-    it 'cannot sign in when expired' do
-      if Devise.mappings[:user].expirable?
-        user.update!(last_activity_at: 98.days.ago)
-        user.reload
+    it 'cannot sign in when expired', user_expirable_specs: true do
+      user.update!(last_activity_at: 98.days.ago)
+      user.reload
 
-        visit new_user_session_path
-        fill_in 'user_email', with: user.email
-        fill_in 'user_password', with: password
-        click_button 'Sign In'
-        expect(page).to have_content('Your account has expired due to inactivity')
+      visit new_user_session_path
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: password
+      click_button 'Sign In'
+      expect(page).to have_content('Your account has expired due to inactivity')
 
-        user.update!(last_activity_at: Time.current)
+      user.update!(last_activity_at: Time.current)
 
-        fill_in 'user_email', with: user.email
-        fill_in 'user_password', with: password
-        click_button 'Sign In'
-        expect(page).to have_content('Signed in successfully')
-      end
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: password
+      click_button 'Sign In'
+      expect(page).to have_content('Signed in successfully')
     end
 
     it 'sign in times out after 3 hours' do
@@ -376,18 +372,16 @@ RSpec.describe 'Users', type: :system do
           'confirm your email address in a few minutes.'
       end
 
-      it "doesn't say whether the email exists" do
-        if Devise.mappings[:user].confirmable?
-          visit new_user_session_path
+      it "doesn't say whether the email exists", user_confirmable_specs: true do
+        visit new_user_session_path
 
-          click_link "Didn't Receive Confirmation Instructions?"
-          fill_in 'Email', with: user.email
-          click_button 'Resend Confirmation Instructions'
+        click_link "Didn't Receive Confirmation Instructions?"
+        fill_in 'Email', with: user.email
+        click_button 'Resend Confirmation Instructions'
 
-          expect(page).not_to have_content 'not found'
-          expect(page).to have_content message
-          expect(page).to have_current_path(new_user_session_path)
-        end
+        expect(page).not_to have_content 'not found'
+        expect(page).to have_content message
+        expect(page).to have_current_path(new_user_session_path)
       end
     end
 

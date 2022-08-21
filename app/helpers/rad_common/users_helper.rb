@@ -83,7 +83,7 @@ module RadCommon
     end
 
     def user_confirm_action(user)
-      return unless Devise.mappings[:user].confirmable? && policy(user).update? && !user.confirmed?
+      return unless RadicalConfig.user_confirmable? && policy(user).update? && !user.confirmed?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
       link_to icon(:check, 'Confirm Email'),
@@ -151,7 +151,7 @@ module RadCommon
     end
 
     def reactivate_user_warning(user)
-      return unless Devise.mappings[:user].expirable? && policy(user).update? && user.expired?
+      return unless RadicalConfig.user_expirable? && policy(user).update? && user.expired?
 
       link = link_to 'click here', reactivate_user_path(user), method: :put, data: { confirm: 'Are you sure?' }
       message = safe_join(["User's account has been expired due to inactivity, to re-activate the user, ", link, '.'])

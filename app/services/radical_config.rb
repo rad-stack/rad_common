@@ -303,6 +303,14 @@ class RadicalConfig
       array_config_item! :duplicates
     end
 
+    def user_confirmable?
+      Devise.mappings[:user].confirmable?
+    end
+
+    def user_expirable?
+      Devise.mappings[:user].expirable?
+    end
+
     def secret_config_item!(item)
       value = secret_config_item(item)
       raise "required secret config item #{item} is missing" if value.blank?

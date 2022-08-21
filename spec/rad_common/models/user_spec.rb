@@ -236,14 +236,12 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'exiprable' do
+  describe 'exiprable', user_expirable_specs: true do
     it 'expires after 90 days' do
-      if Devise.mappings[:user].expirable?
-        user.update!(last_activity_at: Time.current)
-        expect(user.expired?).to be(false)
+      user.update!(last_activity_at: Time.current)
+      expect(user.expired?).to be(false)
 
-        Timecop.travel(91.days.from_now) { expect(user.expired?).to be(true) }
-      end
+      Timecop.travel(91.days.from_now) { expect(user.expired?).to be(true) }
     end
   end
 
