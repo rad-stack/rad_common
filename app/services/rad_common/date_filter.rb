@@ -114,7 +114,7 @@ module RadCommon
       begin
         if start_at_value(params).present? && end_at_value(params).present? &&
            start_at_value(params) > end_at_value(params)
-          errors << 'Start at date must before end date'
+          errors << "#{start_input_label} must be before #{end_input_label}"
           return false
         end
       rescue ArgumentError
