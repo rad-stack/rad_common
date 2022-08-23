@@ -158,8 +158,6 @@ class HerokuCommands
         company.quickbooks_token = nil
         company.quickbooks_refresh_token = nil
         company.refresh_token_by = nil
-        company.stripe_publishable_key = nil
-        company.stripe_secret_key = nil
 
         company.save!(validate: false)
       end
