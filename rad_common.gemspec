@@ -50,6 +50,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1.4'
   s.add_dependency 'rails_email_validator'
+
+  # TODO: remove this once this warning has been fixed, see Task 37778
+  s.add_dependency 'redis', '4.7.1'
+
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
