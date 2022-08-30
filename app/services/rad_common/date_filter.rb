@@ -128,13 +128,13 @@ module RadCommon
     private
 
       def start_label_error
-        return @start_input_label if @start_input_label && @end_input_label
+        return start_input_label unless hide_start_input_label?
 
         'Start date'
       end
 
       def end_label_error
-        return @end_input_label if @start_input_label && @end_input_label
+        return end_input_label unless hide_end_input_label?
 
         'End date'
       end
