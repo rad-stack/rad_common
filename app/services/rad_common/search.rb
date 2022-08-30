@@ -44,11 +44,11 @@ module RadCommon
     end
 
     def errors
-      @filtering.errors
+      @filtering.errors.uniq
     end
 
     def error_messages
-      errors.join(',')
+      errors.join(', ')
     end
 
     def sort_columns
