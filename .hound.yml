@@ -9,3 +9,5 @@ sass-lint:
   enabled: false
 jshint:
   enabled: false
+eslint:
+  enabled: true
