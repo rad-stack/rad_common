@@ -114,7 +114,7 @@ module RadCommon
       begin
         if start_at_value(params).present? && end_at_value(params).present? &&
            start_at_value(params) > end_at_value(params)
-          errors << 'Start at date must before end date'
+          errors << "#{start_label_error} must be before #{end_label_error}"
           return false
         end
       rescue ArgumentError
@@ -126,6 +126,18 @@ module RadCommon
     end
 
     private
+
+      def start_label_error
+        return start_input_label unless hide_start_input_label?
+
+        'Start date'
+      end
+
+      def end_label_error
+        return end_input_label unless hide_end_input_label?
+
+        'End date'
+      end
 
       def datetime_column?(results)
         results.model.column_for_attribute(@column).type == :datetime

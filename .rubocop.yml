@@ -4,7 +4,7 @@ require:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.0.4
+  TargetRubyVersion: 3.1.2
   TargetRailsVersion: 6.0.3.4
   Exclude:
     - 'db/schema.rb'
@@ -146,6 +146,9 @@ Rails/I18nLocaleTexts:
 Style/BlockDelimiters:
   Enabled: true
   EnforcedStyle: braces_for_chaining
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: either
 
 # has_key? and has_value? are far more readable than key? and value? so this allows both
 # of those formats to be used

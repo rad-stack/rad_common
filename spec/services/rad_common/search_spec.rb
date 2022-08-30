@@ -317,7 +317,7 @@ RSpec.describe RadCommon::Search, type: :service do
 
       it 'returns false and displays error message' do
         expect(valid).to be false
-        expect(search.error_messages).to eq 'Start at date must before end date'
+        expect(search.error_messages).to eq 'Confirmed At Start must be before Confirmed At End'
       end
     end
   end
