@@ -125,7 +125,7 @@ module RadCommon
           create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 
-Seeder.new.seed
+Seeder.new.seed!
           RUBY
           end
         end
@@ -149,7 +149,7 @@ Seeder.new.seed
 
         def update_routes
           inject_into_file 'config/routes.rb', after: 'Rails.application.routes.draw do' do <<-'RUBY'
-  
+
   mount RadCommon::Engine => '/rad_common'
   extend RadCommonRoutes
 
