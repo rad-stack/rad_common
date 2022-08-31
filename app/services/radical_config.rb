@@ -210,6 +210,10 @@ class RadicalConfig
       boolean_config_item! :disable_invite
     end
 
+    def shared_database?
+      boolean_config_item! :shared_database
+    end
+
     def favicon_filename!
       override_variable(:favicon_filename) || 'favicon.ico'
     end

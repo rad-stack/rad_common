@@ -120,6 +120,8 @@ module RadCommon
       protected
 
         def install_seeder
+          return if RadicalConfig.shared_database?
+
           create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
   
