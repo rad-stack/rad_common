@@ -3,11 +3,7 @@ rubocop:
   config_file: .rubocop.yml
 haml:
   config_file: .haml-lint.yml
-scss:
-  enabled: false
-sass-lint:
-  enabled: false
-jshint:
-  enabled: false
 eslint:
+  enabled: true
+stylelint:
   enabled: true
