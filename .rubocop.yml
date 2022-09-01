@@ -4,7 +4,7 @@ require:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.0.4
+  TargetRubyVersion: 3.1.2
   TargetRailsVersion: 6.0.3.4
   Exclude:
     - 'db/schema.rb'
@@ -103,6 +103,7 @@ Naming/VariableNumber:
   EnforcedStyle: snake_case
   Exclude:
     - 'lib/tasks/temp.rake'
+  AllowedPatterns: [ 'html5' ]
 
 # Gives access to all the default 'enabled' rails-specific cops
 Rails:
@@ -136,12 +137,18 @@ Rails/SkipsModelValidations:
     - 'app/services/seeder.rb'
     - 'lib/tasks/temp.rake'
 
+Rails/I18nLocaleTexts:
+  Enabled: false
+
 # Check for uses of braces around single-line blocks, and also for multi-line blocks with an
 # attached method like: {...}.where
 # It will still preferentially choose do/end for multi-line blocks
 Style/BlockDelimiters:
   Enabled: true
   EnforcedStyle: braces_for_chaining
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: either
 
 # has_key? and has_value? are far more readable than key? and value? so this allows both
 # of those formats to be used

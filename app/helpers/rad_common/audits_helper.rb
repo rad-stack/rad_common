@@ -11,7 +11,7 @@ module RadCommon
     end
 
     def audit_history_link
-      "/rad_common/audits/?auditable_type=#{current_instance_variable.class}&auditable"\
+      "/rad_common/audits/?auditable_type=#{current_instance_variable.class}&auditable" \
         "_id=#{current_instance_variable.id}"
     end
 

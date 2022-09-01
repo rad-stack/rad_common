@@ -22,7 +22,7 @@ class DuplicatesController < ApplicationController
 
     @record.process_duplicates
 
-    flash[:error] = "Invalid #{model.to_s.downcase} data, perhaps something has changed or another user has "\
+    flash[:error] = "Invalid #{model.to_s.downcase} data, perhaps something has changed or another user has " \
                     'resolved these duplicates.'
 
     redirect_to root_path

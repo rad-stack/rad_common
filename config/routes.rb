@@ -13,16 +13,6 @@ RadCommon::Engine.routes.draw do
   get 'company/edit', to: 'companies#edit'
   put 'company/update', to: 'companies#update'
 
-  resources :users, only: [] do
-    member do
-      put :resend_invitation
-      put :confirm
-      put :reset_authy
-      put :test_email
-      put :test_sms
-    end
-  end
-
   resources :impersonations, only: [] do
     collection do
       post :start

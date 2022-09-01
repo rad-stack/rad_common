@@ -107,7 +107,7 @@ RSpec.describe 'Users', type: :request do
 
         expect {
           delete "/users/#{another.id}", headers: { HTTP_REFERER: users_path }
-        }.to change(User, :count).by(0)
+        }.not_to change(User, :count)
 
         follow_redirect!
         expect(flash[:error]).to include 'User has audit history'

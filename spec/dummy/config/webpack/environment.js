@@ -7,6 +7,7 @@ environment.plugins.append(
       $: "jquery",
       jQuery: "jquery",
       moment: "moment",
+      Raphael: 'raphael',
       Popper: ["popper.js", "default"]
     })
 );

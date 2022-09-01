@@ -23,6 +23,7 @@ require 'rspec/rails'
 require 'capybara/rails'
 require 'selenium/webdriver'
 require 'pundit/rspec'
+require 'factory_bot_rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -118,6 +119,8 @@ RSpec.configure do |config|
     allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))
     allow(UserStatus).to receive(:default_active_status).and_return(create(:user_status, :active, name: 'Active'))
     allow(UserStatus).to receive(:default_inactive_status).and_return(create(:user_status, :inactive, name: 'Inactive'))
+
+    AppSpecific.before_all
   end
 
   config.filter_run_excluding(authy_specs: true) unless RadicalConfig.authy_enabled?
@@ -128,6 +131,8 @@ RSpec.configure do |config|
   config.filter_run_excluding(user_client_specs: true) unless RadicalConfig.user_clients?
   config.filter_run_excluding(devise_paranoid_specs: true) unless Devise.paranoid
   config.filter_run_excluding(smarty_specs: true) unless RadicalConfig.smarty_enabled?
+  config.filter_run_excluding(user_confirmable_specs: true) unless RadicalConfig.user_confirmable?
+  config.filter_run_excluding(user_expirable_specs: true) unless RadicalConfig.user_expirable?
 
   config.after(:each, type: :system, js: true) do
     errors = page.driver.browser.manage.logs.get(:browser)

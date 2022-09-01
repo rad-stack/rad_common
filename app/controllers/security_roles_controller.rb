@@ -53,7 +53,7 @@ class SecurityRolesController < ApplicationController
       flash[:error] = @security_role.errors.full_messages.join(', ')
     end
 
-    if destroyed && (URI(request.referer).path == security_role_path(@security_role)) ||
+    if (destroyed && (URI(request.referer).path == security_role_path(@security_role))) ||
        (URI(request.referer).path == edit_security_role_path(@security_role))
       redirect_to security_roles_path
     else

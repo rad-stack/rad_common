@@ -1,7 +1,13 @@
+require 'mail'
+
 class RadicalConfig
   class << self
     def admin_email!
       secret_config_item! :admin_email
+    end
+
+    def admin_email_address!
+      Mail::Address.new(admin_email!).address
     end
 
     def from_email!
@@ -204,6 +210,10 @@ class RadicalConfig
       boolean_config_item! :disable_invite
     end
 
+    def shared_database?
+      boolean_config_item! :shared_database
+    end
+
     def favicon_filename!
       override_variable(:favicon_filename) || 'favicon.ico'
     end
@@ -297,6 +307,14 @@ class RadicalConfig
       array_config_item! :duplicates
     end
 
+    def user_confirmable?
+      Devise.mappings[:user].confirmable?
+    end
+
+    def user_expirable?
+      Devise.mappings[:user].expirable?
+    end
+
     def secret_config_item!(item)
       value = secret_config_item(item)
       raise "required secret config item #{item} is missing" if value.blank?
@@ -372,7 +390,7 @@ class RadicalConfig
       end
 
       def override_variable(item)
-        ENV[item.to_s.upcase]
+        ENV.fetch(item.to_s.upcase, nil)
       end
 
       def boolean_override_variable(item)
