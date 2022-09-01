@@ -9,6 +9,13 @@
       .form-inputs
         .row
           .col-lg-4
+            =f.input :initial_security_role_id,
+                     label: 'Role',
+                     collection: SecurityRole.allow_sign_up.by_name,
+                     include_blank: false
+
+        .row
+          .col-lg-4
             = f.input :email, required: true, autofocus: true, input_html: { autocomplete: 'email' }
           .col-lg-4
             = f.input :first_name, required: true

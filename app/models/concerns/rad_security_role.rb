@@ -10,6 +10,7 @@ module RadSecurityRole
     scope :by_name, -> { order(:name) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
+    scope :allow_sign_up, -> { where(allow_sign_up: true) }
 
     alias_attribute :to_s, :name
 

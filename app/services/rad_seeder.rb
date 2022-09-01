@@ -60,8 +60,7 @@ class RadSeeder
 
       return true unless RadicalConfig.external_users?
 
-      seed_portal_admin
-      seed_portal_user
+      seed_client_user
     end
 
     def seed_admin(role_name = 'Admin')
@@ -85,15 +84,10 @@ class RadSeeder
       role.save!
     end
 
-    def seed_portal_admin
-      role = get_role('Portal Admin')
+    def seed_client_user
+      role = get_role('Client User')
       role.external = true
-      role.save!
-    end
-
-    def seed_portal_user
-      role = get_role('Portal User')
-      role.external = true
+      role.allow_sign_up = true
       role.save!
     end
 
@@ -154,6 +148,10 @@ class RadSeeder
 
     def user_role
       role_by_name 'User'
+    end
+
+    def client_user_role
+      role_by_name 'Client User'
     end
 
     def admin_user
