@@ -22,6 +22,7 @@ module RadCommon
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
         copy_file '../../../../../.hound.yml', '.hound.yml'
         copy_file '../../../../../.eslintrc', '.eslintrc'
+        copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
         copy_file '../../../../../.rubocop.yml', '.rubocop.yml'
 
         # config
@@ -101,12 +102,14 @@ module RadCommon
                   '#config.force_ssl = true',
                   'config.force_ssl = true'
 
+unless RadicalConfig.shared_database?
         create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 
 Seeder.new.seed!
         RUBY
         end
+end
 
         inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
     # added by rad_common
@@ -205,6 +208,8 @@ Seeder.new.seed!
       protected
 
         def apply_migration(source)
+          return if RadicalConfig.shared_database?
+
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
           if self.class.migration_exists?('db/migrate', filename)

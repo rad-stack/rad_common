@@ -13,6 +13,7 @@ default: &default
   start_route: attorneys
   user_clients: true
   authy_internal_only: true
+  shared_database: false
 
   system_usage_models:
     -
