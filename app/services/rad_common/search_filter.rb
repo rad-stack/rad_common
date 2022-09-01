@@ -2,7 +2,8 @@ module RadCommon
   ##
   # This is used to generate dropdown filter containing options to be filtered on
   class SearchFilter
-    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value, :errors, :include_blank
+    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value, :errors, :include_blank,
+                :search_scope, :search_class
 
     ##
     # @param [Symbol optional] column the database column that is being filtered
@@ -35,7 +36,7 @@ module RadCommon
     #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
     def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil,
                    default_value: nil, blank_value_label: nil, scope: nil, multiple: false, required: false,
-                   include_blank: true)
+                   include_blank: true, search_scope: nil, search_class: nil)
       if input_label.blank? && !options.respond_to?(:table_name)
         raise 'Input label is required when options are not active record objects'
       end
@@ -57,6 +58,8 @@ module RadCommon
       @default_value = default_value
       @grouped = grouped
       @required = required
+      @search_scope = search_scope
+      @search_class = search_class
       @errors = []
     end
 
@@ -106,6 +109,12 @@ module RadCommon
       end
     end
 
+    def input_options_with_current_selection(search)
+      return input_options unless search_scope.present? && search_class.present?
+
+      input_options + search_class.where(id: selected_value(search)).to_a
+    end
+
     # @return the method that simple form should use to determine the label of the select option
     def label_method
       return :first if grouped_scope_values?
@@ -144,6 +153,16 @@ module RadCommon
       else
         true
       end
+    end
+
+    def search_scope_params
+      {
+        class: 'selectpicker-search',
+        'data-abs-ajax-data' => {
+          'global_search_scope' => search_scope,
+          'term' => '{{{q}}}'
+        }.to_json
+      }
     end
 
     private
