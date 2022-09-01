@@ -9,10 +9,10 @@
       .form-inputs
         .row
           .col-lg-4
-            = f.input :initial_security_role_id,
-                      label: 'Role',
-                      collection: SecurityRole.allow_sign_up.by_name,
-                      include_blank: false
+            - if sign_up_roles.size > 1
+              = f.input :initial_security_role_id, label: 'Role', collection: sign_up_roles,  include_blank: false
+            - else
+              = f.input :initial_security_role_id, as: :hidden, input_html: { value: sign_up_roles.first.id }
 
         .row
           .col-lg-4
@@ -28,8 +28,10 @@
             = f.input :password, required: true,
                                  hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
                                  input_html: { autocomplete: 'new-password' }
+
           .col-lg-4
             = f.input :password_confirmation, required: true, input_html: { autocomplete: 'new-password' }
       .form-actions
         = f.button :submit, 'Sign Up', class: 'btn btn-primary'
+
     = render 'users/shared/links'
