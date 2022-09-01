@@ -12,6 +12,6 @@ import 'rad_common_js/src/css/main.css.scss';
 import '@fortawesome/fontawesome-free/css/all';
 
 import { RadCommon } from 'rad_common_js/src/radCommon';
-RadCommon.setup({ datePickerEnabled: false });
+RadCommon.setup();
 
 import './app_specific.js'
