@@ -210,7 +210,10 @@ RSpec.describe 'Users', type: :system do
   end
 
   describe 'sign up', sign_up_specs: true do
-    before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
+    before do
+      create :security_role, :external
+      allow_any_instance_of(User).to receive(:authy_enabled?).and_return false
+    end
 
     it 'signs up' do
       visit new_user_registration_path
@@ -218,7 +221,7 @@ RSpec.describe 'Users', type: :system do
       fill_in 'First name', with: Faker::Name.first_name
       fill_in 'Last name', with: Faker::Name.last_name
       fill_in 'Mobile phone', with: '(345) 222-1111'
-      fill_in 'Email', with: "#{Faker::Internet.user_name}@example.com"
+      fill_in 'Email', with: "#{Faker::Internet.user_name}@abc.com"
       fill_in 'user_password', with: password
       fill_in 'user_password_confirmation', with: password
 

@@ -10,7 +10,7 @@
         .row
           .col-lg-4
             - if sign_up_roles.size > 1
-              = f.input :initial_security_role_id, label: 'Role', collection: sign_up_roles,  include_blank: false
+              = f.input :initial_security_role_id, label: 'Role', collection: sign_up_roles, include_blank: false
             - else
               = f.input :initial_security_role_id, as: :hidden, input_html: { value: sign_up_roles.first.id }
 
