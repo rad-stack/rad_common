@@ -56,17 +56,6 @@ RSpec.describe PhoneNumberValidator do
     expect(model.phone_number).to eq(phone_number)
   end
 
-  it 'identifies valid but fake numbers' do
-    invalid_numbers = ['(999) 999-9999', '(000) 226-1245']
-
-    invalid_numbers.each do |phone_number|
-      model = TestPhoneModel.new
-      model.phone_number = phone_number
-      expect(model).to be_invalid
-      expect(model.errors.full_messages.to_s).to include 'number invalid, format must be'
-    end
-  end
-
   describe 'twilio', :vcr do
     let(:mobile_phone) { create :phone_number, :mobile }
 

@@ -22,17 +22,11 @@ class PhoneNumberValidator < ActiveModel::Validator
   private
 
     def valid_phone_number?(phone_number)
-      valid_format(phone_number) && !fake_phone(phone_number)
+      valid_format(phone_number)
     end
 
     def valid_format(phone_number)
       /\A\(\d{3}\) \d{3}-\d{4}( ext \d{1,6}$)?\z/.match(phone_number)
-    end
-
-    def fake_phone(phone_number)
-      return true if ['(999) 999-9999', '(111) 111-1111', '(904) 123-1234'].include?(phone_number)
-
-      phone_number[1..3] == '000'
     end
 
     def fix_phone_number(record, field, phone_number)
