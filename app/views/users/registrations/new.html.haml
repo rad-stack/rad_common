@@ -9,10 +9,10 @@
       .form-inputs
         .row
           .col-lg-4
-            =f.input :initial_security_role_id,
-                     label: 'Role',
-                     collection: SecurityRole.allow_sign_up.by_name,
-                     include_blank: false
+            = f.input :initial_security_role_id,
+                      label: 'Role',
+                      collection: SecurityRole.allow_sign_up.by_name,
+                      include_blank: false
 
         .row
           .col-lg-4
