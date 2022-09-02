@@ -24,4 +24,24 @@ class RadicalSpecSupport
 
     require_relative 'vcr'
   end
+
+  def self.hooks(config, driver)
+    config.after(:each, type: :system, js: true) do
+      errors = page.driver.browser.manage.logs.get(:browser)
+      errors = errors.reject { |error| error.level == 'WARNING' }
+      expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
+    end
+
+    config.before(:example, type: :system) do
+      driven_by :rack_test
+    end
+
+    config.before(:each, type: :system, js: true) do
+      driven_by driver
+    end
+
+    config.after do
+      Warden.test_reset!
+    end
+  end
 end

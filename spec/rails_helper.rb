@@ -117,6 +117,8 @@ RSpec.configure do |config|
     SpecSupport.before_all { self }
   end
 
+  SpecSupport.hooks(config, chrome_driver)
+
   config.filter_run_excluding(authy_specs: true) unless RadicalConfig.authy_enabled?
   config.filter_run_excluding(impersonate_specs: true) unless RadicalConfig.impersonate?
   config.filter_run_excluding(invite_specs: true) if RadicalConfig.disable_invite?
@@ -127,24 +129,6 @@ RSpec.configure do |config|
   config.filter_run_excluding(smarty_specs: true) unless RadicalConfig.smarty_enabled?
   config.filter_run_excluding(user_confirmable_specs: true) unless RadicalConfig.user_confirmable?
   config.filter_run_excluding(user_expirable_specs: true) unless RadicalConfig.user_expirable?
-
-  config.after(:each, type: :system, js: true) do
-    errors = page.driver.browser.manage.logs.get(:browser)
-    errors = errors.reject { |error| error.level == 'WARNING' }
-    expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
-  end
-
-  config.before(:example, type: :system) do
-    driven_by :rack_test
-  end
-
-  config.before(:each, type: :system, js: true) do
-    driven_by chrome_driver
-  end
-
-  config.after do
-    Warden.test_reset!
-  end
 
   include Warden::Test::Helpers
   config.include Capybara::DSL
