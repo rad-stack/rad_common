@@ -120,7 +120,7 @@ RSpec.configure do |config|
     allow(UserStatus).to receive(:default_active_status).and_return(create(:user_status, :active, name: 'Active'))
     allow(UserStatus).to receive(:default_inactive_status).and_return(create(:user_status, :inactive, name: 'Inactive'))
 
-    AppSpecific.before_all
+    AppSpecific.before_all { self }
   end
 
   config.filter_run_excluding(authy_specs: true) unless RadicalConfig.authy_enabled?
