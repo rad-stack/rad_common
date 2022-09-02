@@ -1,16 +1,13 @@
 class RadicalSpecSupport
-  def self.before_all
-    rspec = yield
-    rspec.allow_any_instance_of(RadicalTwilio).to rspec.receive(:twilio_enabled?).and_return false
-
-    rspec.allow(Company).to rspec.receive(:main).and_return(rspec.create(:company))
-
-    rspec.allow(UserStatus).to rspec.receive(:default_pending_status)
-                                    .and_return(rspec.create(:user_status, :pending, name: 'Pending'))
-    rspec.allow(UserStatus).to rspec.receive(:default_active_status)
-                                    .and_return(rspec.create(:user_status, :active, name: 'Active'))
-    rspec.allow(UserStatus).to rspec.receive(:default_inactive_status)
-                                    .and_return(rspec.create(:user_status, :inactive, name: 'Inactive'))
+  def self.before_all(rspec)
+    rspec.instance_eval do
+      allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return false
+      allow(Company).to receive(:main).and_return(create(:company))
+      allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))
+      allow(UserStatus).to receive(:default_active_status).and_return(create(:user_status, :active, name: 'Active'))
+      allow(UserStatus).to receive(:default_inactive_status)
+                       .and_return(create(:user_status, :inactive, name: 'Inactive'))
+    end
   end
 
   def self.load_dependencies

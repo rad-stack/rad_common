@@ -114,7 +114,7 @@ RSpec.configure do |config|
 
     Timecop.safe_mode = true
 
-    SpecSupport.before_all { self }
+    SpecSupport.before_all(self)
   end
 
   SpecSupport.hooks(config, chrome_driver)
