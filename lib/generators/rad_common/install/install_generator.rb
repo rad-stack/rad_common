@@ -62,8 +62,6 @@ module RadCommon
         directory '../../../../../spec/rad_common/', 'spec/rad_common/'
         directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/'
         copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
-        copy_file '../../../../../spec/dummy/spec/support/test_helpers.rb', 'spec/support/test_helpers.rb'
-        copy_file '../../../../../spec/dummy/spec/support/vcr.rb', 'spec/support/vcr.rb'
 
         # templates
 

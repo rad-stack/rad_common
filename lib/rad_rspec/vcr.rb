@@ -34,6 +34,19 @@ VCR.configure do |c|
   if RadicalConfig.smarty_auth_token.present?
     c.filter_sensitive_data('<SMARTY_AUTH_TOKEN>') { RadicalConfig.smarty_auth_token! }
   end
+
+  if RadicalConfig.secret_config_item(:chrome_username).present?
+    c.filter_sensitive_data('chrome_api') do
+      "#{RadicalConfig.secret_config_item!(:chrome_username)}:" \
+        "#{RadicalConfig.secret_config_item!(:chrome_password)}@media.chromedata.com"
+    end
+  end
+
+  if RadicalConfig.secret_config_item(:github_access_token).present?
+    c.filter_sensitive_data('<GITHUB_ACCESS_TOKEN>') { RadicalConfig.secret_config_item!(:github_access_token) }
+  end
+
+  c.filter_sensitive_data('<S3_ACCESS_KEY_ID>') { RadicalConfig.s3_access_key_id! }
 end
 
 RSpec.configure do |c|
