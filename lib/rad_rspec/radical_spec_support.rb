@@ -15,6 +15,7 @@ class RadicalSpecSupport
 
   def self.load_dependencies
     require_relative 'test_helpers'
+    load_vcr
   end
 
   def self.load_vcr
