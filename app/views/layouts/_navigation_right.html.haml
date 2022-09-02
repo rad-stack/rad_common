@@ -1,6 +1,7 @@
 %ul.nav.navbar-nav.ml-auto
   - if user_signed_in?
     - unread_count = current_user.notifications.unread.count
+    - additional_item = local_assigns.key?(:additional_item) ? local_assigns[:additional_item] : nil
 
     %li.nav-item.dropdown
       %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#', class: impersonate_style }
@@ -14,6 +15,8 @@
           = image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
       %ul.dropdown-menu.dropdown-menu-right
         %li= link_to 'My Account', edit_user_registration_path, class: 'dropdown-item'
+        - if additional_item.present?
+          %li= link_to additional_item[:name], additional_item[:path], class: 'dropdown-item'
         - if current_user.internal? && policy(Notification).index?
           %li
             = link_to '/rad_common/notifications', class: 'dropdown-item' do
