@@ -40,6 +40,7 @@ require 'factory_bot_rails'
 # require only the support files necessary.
 #
 Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
+SpecSupport.load_dependencies
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
@@ -113,16 +114,7 @@ RSpec.configure do |config|
 
     Timecop.safe_mode = true
 
-    allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return false
-    allow_any_instance_of(RadicalSendGrid).to receive(:sendgrid_enabled?).and_return false
-
-    allow(Company).to receive(:main).and_return(create(:company))
-
-    allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))
-    allow(UserStatus).to receive(:default_active_status).and_return(create(:user_status, :active, name: 'Active'))
-    allow(UserStatus).to receive(:default_inactive_status).and_return(create(:user_status, :inactive, name: 'Inactive'))
-
-    allow_any_instance_of(Division).to receive(:notify_owner).and_return(nil)
+    SpecSupport.before_all { self }
   end
 
   config.filter_run_excluding(authy_specs: true) unless RadicalConfig.authy_enabled?
