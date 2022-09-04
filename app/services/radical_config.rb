@@ -210,6 +210,10 @@ class RadicalConfig
       boolean_config_item! :disable_invite
     end
 
+    def invite_external_users?
+      boolean_config_item! :invite_external_users
+    end
+
     def shared_database?
       boolean_config_item! :shared_database
     end
