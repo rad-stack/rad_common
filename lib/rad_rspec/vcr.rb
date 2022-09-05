@@ -5,7 +5,7 @@ VCR.configure do |c|
   c.hook_into :webmock
 
   # see Task 37353, need the example.com item for now
-  c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com'
+  c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com', 'www.example.com'
 
   if RadicalConfig.test_mobile_phone.present?
     c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { RadicalConfig.test_mobile_phone! }
