@@ -146,7 +146,7 @@ module RadCommon
     end
 
     def verify_sign_up
-      raise RadicallyIntermittentException if RadicalConfig.disable_sign_up? || sign_up_roles.size.zero?
+      raise RadicallyIntermittentException if RadicalConfig.disable_sign_up?
     end
 
     def sign_up_roles

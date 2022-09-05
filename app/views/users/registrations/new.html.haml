@@ -17,6 +17,8 @@
 
             - elsif sign_up_roles.size == 1
               = f.input :initial_security_role_id, as: :hidden, input_html: { value: sign_up_roles.first.id }
+            - else
+              = f.input :external, as: :hidden, input_html: { value: '1' }
 
         .row
           .col-lg-4
