@@ -11,6 +11,7 @@ module RadSecurityRole
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
     scope :allow_sign_up, -> { where(allow_sign_up: true) }
+    scope :allow_invite, -> { where(allow_invite: true) }
 
     alias_attribute :to_s, :name
 

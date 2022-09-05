@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_01_143808) do
+ActiveRecord::Schema.define(version: 2022_09_05_140634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -251,6 +251,7 @@ ActiveRecord::Schema.define(version: 2022_09_01_143808) do
     t.boolean "external", default: false, null: false
     t.boolean "manage_user", default: false, null: false
     t.boolean "allow_sign_up", default: false, null: false
+    t.boolean "allow_invite", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 

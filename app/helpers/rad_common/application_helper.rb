@@ -153,6 +153,10 @@ module RadCommon
       SecurityRole.allow_sign_up.by_name
     end
 
+    def invite_roles
+      SecurityRole.allow_invite.by_name
+    end
+
     def verify_invite
       raise RadicallyIntermittentException if RadicalConfig.disable_invite?
     end
