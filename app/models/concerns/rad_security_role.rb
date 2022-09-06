@@ -54,7 +54,7 @@ module RadSecurityRole
     end
 
     def validate_rules
-      errors.add(:allow_invite, 'is not applicable') if RadicalConfig.disable_invite?
-      errors.add(:allow_sign_up, 'is not applicable') if RadicalConfig.disable_sign_up?
+      errors.add(:allow_invite, 'is not applicable') if allow_invite? && RadicalConfig.disable_invite?
+      errors.add(:allow_sign_up, 'is not applicable') if allow_sign_up? && RadicalConfig.disable_sign_up?
     end
 end
