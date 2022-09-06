@@ -24,6 +24,8 @@ RSpec.describe User, type: :model do
     let(:last_mail) { ActionMailer::Base.deliveries.last }
 
     before do
+      allow_any_instance_of(described_class).to receive(:auto_approve?).and_return false
+
       create :notification_security_role,
              notification_type: notification_type,
              security_role: admin.security_roles.first
