@@ -87,7 +87,8 @@ class RadSeeder
     def seed_client_user
       role = get_role('Client User')
       role.external = true
-      role.allow_sign_up = true
+      role.allow_invite = !RadicalConfig.disable_invite?
+      role.allow_sign_up = !RadicalConfig.disable_sign_up?
       role.save!
     end
 

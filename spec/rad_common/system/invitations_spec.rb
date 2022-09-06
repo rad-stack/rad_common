@@ -57,6 +57,25 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
             check 'user_external'
             click_button 'Send'
             expect(page).to have_content "We invited '#{first_name} #{last_name}'"
+            expect(User.last.security_roles.size).to be_zero
+          end
+        end
+
+        it 'invites an external user and sets initial role', external_user_specs: true do
+          if RadicalConfig.invite_external_users?
+            create :security_role, :external, allow_invite: true
+            initial_role = create :security_role, :external, allow_invite: true
+
+            visit new_user_invitation_path
+            select initial_role.name, from: 'Initial security role'
+            fill_in 'Email', with: external_email
+            fill_in 'First name', with: first_name
+            fill_in 'Last name', with: last_name
+            fill_in 'Mobile phone', with: '(999) 231-1111'
+            check 'user_external'
+            click_button 'Send'
+            expect(page).to have_content "We invited '#{first_name} #{last_name}'"
+            expect(User.last.security_roles.first).to eq initial_role
           end
         end
       end

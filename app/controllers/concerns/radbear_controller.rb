@@ -21,17 +21,21 @@ module RadbearController
   protected
 
     def configure_devise_permitted_parameters
-      devise_parameter_sanitizer.permit(:sign_up, keys: devise_account_params + [:initial_security_role_id])
+      devise_parameter_sanitizer.permit(:sign_up, keys: devise_sign_up_params)
       devise_parameter_sanitizer.permit(:account_update, keys: devise_account_params)
       devise_parameter_sanitizer.permit(:invite, keys: devise_invite_params)
     end
 
+    def devise_sign_up_params
+      %i[first_name last_name mobile_phone initial_security_role_id external]
+    end
+
     def devise_account_params
-      %i[first_name last_name authy_enabled mobile_phone avatar timezone]
+      %i[first_name last_name mobile_phone avatar timezone]
     end
 
     def devise_invite_params
-      %i[first_name last_name external mobile_phone]
+      %i[first_name last_name external mobile_phone initial_security_role_id]
     end
 
     def set_sentry_user_context
