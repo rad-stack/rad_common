@@ -11,6 +11,7 @@ FactoryBot.define do
     trait :external do
       external { true }
       allow_sign_up { true }
+      allow_invite { true }
     end
   end
 end

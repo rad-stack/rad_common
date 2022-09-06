@@ -10,7 +10,7 @@
           .col-lg-4
             - if invite_roles.size > 1
               = f.input :initial_security_role_id,
-                        label: 'Initial Security Role',
+                        label: 'Initial security role',
                         collection: invite_roles,
                         include_blank: false
 

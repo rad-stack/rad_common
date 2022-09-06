@@ -16,6 +16,7 @@ module RadSecurityRole
     alias_attribute :to_s, :name
 
     validate :validate_standard_permissions
+    validate :validate_rules
 
     strip_attributes
     audited
@@ -50,5 +51,10 @@ module RadSecurityRole
           break
         end
       end
+    end
+
+    def validate_rules
+      errors.add(:allow_invite, 'is not applicable') if RadicalConfig.disable_invite?
+      errors.add(:allow_sign_up, 'is not applicable') if RadicalConfig.disable_sign_up?
     end
 end
