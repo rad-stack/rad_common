@@ -3,14 +3,16 @@ class RadicalSpecSupport
     rspec = yield
     rspec.allow_any_instance_of(RadicalTwilio).to rspec.receive(:twilio_enabled?).and_return false
 
-    rspec.allow(Company).to rspec.receive(:main).and_return(rspec.create(:company))
+    rspec.allow(Company).to rspec.receive(:main).and_return(Company.main || rspec.create(:company))
 
     rspec.allow(UserStatus).to rspec.receive(:default_pending_status)
-                                    .and_return(rspec.create(:user_status, :pending, name: 'Pending'))
+                                    .and_return UserStatus.default_pending_status || rspec.create(:user_status, :pending, name: 'Pending')
+
     rspec.allow(UserStatus).to rspec.receive(:default_active_status)
-                                    .and_return(rspec.create(:user_status, :active, name: 'Active'))
+                                    .and_return UserStatus.default_active_status || rspec.create(:user_status, :active, name: 'Active')
+
     rspec.allow(UserStatus).to rspec.receive(:default_inactive_status)
-                                    .and_return(rspec.create(:user_status, :inactive, name: 'Inactive'))
+                                    .and_return UserStatus.default_inactive_status || rspec.create(:user_status, :inactive, name: 'Inactive')
   end
 
   def self.load_dependencies

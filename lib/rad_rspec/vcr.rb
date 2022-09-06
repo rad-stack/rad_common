@@ -47,6 +47,10 @@ VCR.configure do |c|
   end
 
   c.filter_sensitive_data('<S3_ACCESS_KEY_ID>') { RadicalConfig.s3_access_key_id! }
+
+  if RadicalConfig.secret_config_item(:lob_key).present?
+    c.filter_sensitive_data('<LOB_KEY>') { RadicalConfig.secret_config_item!(:lob_key) }
+  end
 end
 
 RSpec.configure do |c|
