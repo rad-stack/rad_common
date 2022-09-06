@@ -103,7 +103,7 @@ Naming/VariableNumber:
   EnforcedStyle: snake_case
   Exclude:
     - 'lib/tasks/temp.rake'
-  AllowedPatterns: [ 'html5' ]
+  AllowedPatterns: ['html5']
 
 # Gives access to all the default 'enabled' rails-specific cops
 Rails:
