@@ -63,8 +63,8 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
 
         it 'invites an external user and sets initial role', external_user_specs: true do
           if RadicalConfig.invite_external_users?
-            create :security_role, :external
-            initial_role = create :security_role, :external
+            create :security_role, :external, allow_invite: true
+            initial_role = create :security_role, :external, allow_invite: true
 
             visit new_user_invitation_path
             select initial_role.name, from: 'Initial security role'
