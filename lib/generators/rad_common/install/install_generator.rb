@@ -12,8 +12,6 @@ module RadCommon
         template '../../../../../spec/dummy/Procfile', 'Procfile'
         copy_file '../../../../../spec/dummy/package.json', 'package.json'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
-        copy_file '../../../../../spec/dummy/config/webpack/environment.js', 'config/webpack/environment.js'
-        copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
@@ -28,7 +26,9 @@ module RadCommon
 
         # config
         copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
+        directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
