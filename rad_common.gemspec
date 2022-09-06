@@ -15,6 +15,8 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 3.0.4'
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
+  s.bindir = 'bin'
+  s.executables = %w[reset_db migrate_reset rc_update]
 
   s.add_dependency 'active_storage_validations'
   s.add_dependency 'audited'

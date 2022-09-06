@@ -59,7 +59,8 @@ class HerokuCommands
         write_log `skip_on_db_migrate=1 rake db:migrate`
 
         write_log 'Changing passwords'
-        change_user_passwords
+        new_password = User.new.send(:password_digest, 'password')
+        User.update_all(encrypted_password: new_password)
 
         write_log 'Changing Active Storage service to local'
         ActiveStorage::Blob.update_all service_name: 'local'
@@ -126,19 +127,6 @@ class HerokuCommands
           write_log 'This is not available in the production environment.'
         else
           yield
-        end
-      end
-
-      def change_user_passwords
-        User.skip_callback :update, :after, :send_password_change_notification
-
-        User.active.order(:id).find_each do |user|
-          user.password = 'password'
-          user.password_confirmation = 'password'
-
-          unless user.save(validate: false)
-            write_log "could not change password for user #{user.id}: #{user.errors.full_messages.join(' ')}"
-          end
         end
       end
 
