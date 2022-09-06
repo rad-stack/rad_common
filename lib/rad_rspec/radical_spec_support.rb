@@ -5,14 +5,23 @@ class RadicalSpecSupport
 
     rspec.allow(Company).to rspec.receive(:main).and_return(Company.main || rspec.create(:company))
 
-    rspec.allow(UserStatus).to rspec.receive(:default_pending_status)
-                                    .and_return UserStatus.default_pending_status || rspec.create(:user_status, :pending, name: 'Pending')
+    pending_status = UserStatus.default_pending_status
 
-    rspec.allow(UserStatus).to rspec.receive(:default_active_status)
-                                    .and_return UserStatus.default_active_status || rspec.create(:user_status, :active, name: 'Active')
+    rspec.allow(UserStatus).to rspec.receive(:default_pending_status).and_return pending_status || rspec.create(
+      :user_status, :pending, name: 'Pending'
+    )
 
-    rspec.allow(UserStatus).to rspec.receive(:default_inactive_status)
-                                    .and_return UserStatus.default_inactive_status || rspec.create(:user_status, :inactive, name: 'Inactive')
+    active_status = UserStatus.default_active_status
+
+    rspec.allow(UserStatus).to rspec.receive(:default_active_status).and_return active_status || rspec.create(
+      :user_status, :active, name: 'Active'
+    )
+
+    inactive_status = UserStatus.default_inactive_status
+
+    rspec.allow(UserStatus).to rspec.receive(:default_inactive_status).and_return inactive_status || rspec.create(
+      :user_status, :inactive, name: 'Inactive'
+    )
   end
 
   def self.load_dependencies
