@@ -57,6 +57,8 @@ Lint/StructNewOverride:
 # using this formula: http://c2.com/cgi/wiki?AbcMetric
 Metrics/AbcSize:
   Max: 30
+  Exclude:
+    - 'spec/support/spec_support.rb'
 
 Metrics/CyclomaticComplexity:
   Max: 8
