@@ -57,6 +57,8 @@ Lint/StructNewOverride:
 # using this formula: http://c2.com/cgi/wiki?AbcMetric
 Metrics/AbcSize:
   Max: 30
+  Exclude:
+    - 'spec/support/spec_support.rb'
 
 Metrics/CyclomaticComplexity:
   Max: 8
@@ -103,7 +105,7 @@ Naming/VariableNumber:
   EnforcedStyle: snake_case
   Exclude:
     - 'lib/tasks/temp.rake'
-  AllowedPatterns: [ 'html5' ]
+  AllowedPatterns: ['html5']
 
 # Gives access to all the default 'enabled' rails-specific cops
 Rails:
