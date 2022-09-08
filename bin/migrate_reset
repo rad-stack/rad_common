@@ -5,6 +5,7 @@ def system!(*args)
   system(*args) || abort("\n== Command #{args} failed ==")
 end
 
-FileUtils.chdir Dir.pwd do
+directory = Dir.pwd.include?('rad_common') ? "#{Dir.pwd}/spec/dummy" : Dir.pwd
+FileUtils.chdir directory do
   system!('bundle exec rails db:drop && bundle exec rails db:create && bundle exec rails db:migrate')
 end
