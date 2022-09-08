@@ -12,9 +12,9 @@
               = f.input :initial_security_role_id,
                         label: 'Initial security role',
                         collection: invite_roles,
-                        include_blank: false
+                        include_blank: true
 
-            - elsif invite_roles.size == 1
+            - else
               = f.input :initial_security_role_id, as: :hidden, input_html: { value: invite_roles.first.id }
         .row
           .col-lg-4
@@ -31,9 +31,6 @@
             %p
               You can add more valid domains in
               = link_to 'Company Settings', '/rad_common/company/edit'
-          - if RadicalConfig.external_users? && RadicalConfig.invite_external_users?
-            .col-lg-4
-              = f.input :external, tooltip: 'Invite your external users to access the site'
         .row
           .col-lg-4= f.input :mobile_phone
       .form-actions

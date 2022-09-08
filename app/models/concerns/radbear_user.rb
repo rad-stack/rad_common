@@ -206,6 +206,8 @@ module RadbearUser
       if security_roles.none? && initial_security_role_id.present?
         self.security_roles = [initial_security_role]
         self.external = initial_security_role.external?
+      elsif security_roles.any?
+        self.external = security_roles.first.external
       end
 
       status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status

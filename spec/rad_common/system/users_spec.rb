@@ -211,7 +211,7 @@ RSpec.describe 'Users', type: :system do
 
   describe 'sign up', sign_up_specs: true do
     before do
-      create :security_role, :external
+      create :security_role, :external, allow_sign_up: true
       allow_any_instance_of(User).to receive(:authy_enabled?).and_return false
     end
 
