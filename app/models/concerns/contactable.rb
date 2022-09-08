@@ -5,6 +5,7 @@ module Contactable
     validates :zipcode, format: /\A[0-9]{5}(?:-[0-9]{4})?\z/, allow_nil: true
 
     validate :validate_state
+    validate :validate_address_2
 
     before_validation :maybe_standardize_address
   end
@@ -42,6 +43,10 @@ module Contactable
       return if city_model_variant?
 
       errors.add(:state, "isn't a valid state") if state.present? && !StateOptions.valid?(state)
+    end
+
+    def validate_address_2
+      errors.add :address_2, 'must be blank when address 1 exists' if address_1.blank? && address_2.present?
     end
 
     def address?
