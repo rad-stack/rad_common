@@ -65,6 +65,7 @@ class RadSeeder
 
     def seed_admin(role_name = 'Admin')
       role = get_role(role_name)
+      role.allow_invite = !RadicalConfig.disable_invite?
       seed_all role
       role.save!
 
@@ -80,7 +81,11 @@ class RadSeeder
     end
 
     def seed_user
+      # don't seed this if there are no additional permissions than the 2 standard ones
+      return if RadPermission.only_standard?
+
       role = get_role('User')
+      role.allow_invite = !RadicalConfig.disable_invite?
       role.save!
     end
 
