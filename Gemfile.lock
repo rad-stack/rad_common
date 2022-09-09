@@ -480,6 +480,7 @@ DEPENDENCIES
   capybara-selenium
   haml_lint
   listen
+  nokogiri
   parallel_tests
   pry
   rad_common!
@@ -496,4 +497,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.3.15
+   2.3.22
