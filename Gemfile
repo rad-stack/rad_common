@@ -13,9 +13,6 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-# see task 37830
-gem 'nokogiri', force_ruby_platform: true
-
 group :test do
   gem 'capybara-selenium'
   gem 'parallel_tests'
