@@ -10,7 +10,7 @@ PATH
       bootstrap4-kaminari-views (~> 1.0.1)
       devise
       devise-authy
-      devise-security (= 0.16.0)
+      devise-security
       devise_invitable
       factory_bot_rails
       faker
@@ -176,8 +176,8 @@ GEM
     devise-authy (2.2.1)
       authy (>= 2.7.5)
       devise (>= 4.0.0)
-    devise-security (0.16.0)
-      devise (>= 4.3.0, < 5.0)
+    devise-security (0.17.0)
+      devise (>= 4.3.0)
     devise_invitable (2.0.6)
       actionmailer (>= 5.0)
       devise (>= 4.6)
@@ -496,4 +496,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.3.15
+   2.3.22
