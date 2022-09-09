@@ -28,7 +28,6 @@ PATH
       puma (~> 5.6)
       pundit
       rails (~> 6.1.4)
-      rails_email_validator
       redis (= 4.7.1)
       sassc
       sendgrid-ruby
@@ -328,8 +327,6 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.4.3)
       loofah (~> 2.3)
-    rails_email_validator (0.1.4)
-      activemodel (>= 3.0.0)
     railties (6.1.6.1)
       actionpack (= 6.1.6.1)
       activesupport (= 6.1.6.1)

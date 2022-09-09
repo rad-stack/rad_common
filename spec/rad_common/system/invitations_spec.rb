@@ -60,8 +60,7 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
       end
 
       context 'when invalid' do
-        xit 'because of blank email' do
-          # TODO: waiting on bug fix in devise-security, see Task 35144
+        it 'because of blank email' do
           visit new_user_invitation_path
           fill_in 'First name', with: first_name
           fill_in 'Last name', with: last_name
