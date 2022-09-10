@@ -169,7 +169,10 @@ class RadSeeder
     end
 
     def role_by_name(name)
-      SecurityRole.find_by!(name: name)
+      role = SecurityRole.find_by(name: name)
+      return role if role.present?
+
+      raise "Couldn't find security role named #{name}"
     end
 
     def random_user
