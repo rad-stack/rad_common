@@ -157,5 +157,9 @@ module RadCommon
       message = safe_join(["User's account has been expired due to inactivity, to re-activate the user, ", link, '.'])
       content_tag(:p, message, class: 'alert alert-warning')
     end
+
+    def require_mobile_phone?
+      RadicalConfig.authy_enabled? && !RadicalConfig.authy_internal_only?
+    end
   end
 end

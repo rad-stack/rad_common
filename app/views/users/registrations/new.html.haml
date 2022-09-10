@@ -26,7 +26,7 @@
             = f.input :last_name, required: true
         .row
           .col-lg-4
-            = f.input :mobile_phone
+            = f.input :mobile_phone, required: require_mobile_phone?
           .col-lg-4
             = f.input :password, required: true,
                                  hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
