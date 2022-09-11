@@ -10,7 +10,7 @@ class RadOnboarding
   end
 
   def onboarding_path
-    raise 'implement in sub class'
+    "/user_profiles/#{current_user.id}"
   end
 
   def onboarded_path
