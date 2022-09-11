@@ -41,8 +41,8 @@ RSpec.describe 'Users', type: :system do
       end
     end
 
-    describe 'profile' do
-      it 'updates profile' do
+    describe 'registration' do
+      it 'updates registration' do
         visit edit_user_registration_path
         expect(find_field('First name').value).to eq user.first_name
         new_name = Faker::Name.first_name
