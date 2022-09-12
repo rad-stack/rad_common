@@ -4,7 +4,6 @@ default: &default
   use_avatar: true
   disable_sign_up: false
   disable_invite: false
-  invite_external_users: true
   secure_sentry: true
   external_users: true
   validate_external_email_domain: true
