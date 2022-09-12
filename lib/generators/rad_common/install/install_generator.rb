@@ -9,7 +9,6 @@ module RadCommon
         standardize_date_methods
 
         # misc
-        template '../../../../../spec/dummy/Procfile', 'Procfile'
         copy_file '../../../../../spec/dummy/package.json', 'package.json'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../gitignore.txt', '.gitignore'
