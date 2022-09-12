@@ -10,9 +10,12 @@ FileUtils.chdir directory do
   puts "\n== Removing old logs and tempfiles =="
   system 'rm -rf log/ && rm -rf tmp/'
 
-  puts "== Updating Binstubs"
+  puts "== Updating the rad_common gem conservatively =="
+  system 'bundle update rad_common --conservative'
+
+  puts "== Updating Binstubs =="
   system 'bundle binstubs rad_common'
 
-  puts "== Running RC Generator"
+  puts "== Running RC Generator =="
   system 'bin/rails g rad_common:install'
 end
