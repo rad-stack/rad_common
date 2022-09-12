@@ -16,6 +16,7 @@ module RadCommon
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
         copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
+        directory '../../../../../.bundle', '.bundle'
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'

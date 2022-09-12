@@ -46,7 +46,7 @@ module Contactable
     end
 
     def validate_address_2
-      errors.add :address_2, 'must be blank when address 1 exists' if address_1.blank? && address_2.present?
+      errors.add :address_2, 'must be blank when address 1 is blank' if address_1.blank? && address_2.present?
     end
 
     def address?
