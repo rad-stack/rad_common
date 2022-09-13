@@ -10,4 +10,9 @@ class PagesController < ApplicationController
       redirect_to new_user_session_path
     end
   end
+
+  def contact_us
+    skip_authorization
+    @company = Company.main
+  end
 end
