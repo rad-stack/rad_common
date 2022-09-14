@@ -39,6 +39,8 @@ module RadCommonRoutes
         mount Sidekiq::Web => '/sidekiq'
       end
 
+      resources :user_profiles, only: %i[show edit update]
+
       get 'contact_us', to: 'pages#contact_us'
       root to: 'pages#home'
     end

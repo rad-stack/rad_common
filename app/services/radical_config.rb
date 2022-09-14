@@ -230,6 +230,10 @@ class RadicalConfig
       boolean_config_item! :user_clients
     end
 
+    def user_profiles?
+      boolean_config_item! :user_profiles
+    end
+
     def secure_sentry?
       boolean_config_item! :secure_sentry
     end

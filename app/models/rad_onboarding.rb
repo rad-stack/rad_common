@@ -9,22 +9,8 @@ class RadOnboarding
     @onboarded ||= current_user.admin? || !steps_remaining?
   end
 
-  def onboarding_path
-    "/user_profiles/#{current_user.id}"
-  end
-
   def onboarded_path
     raise 'implement in sub class'
-  end
-
-  def nav_link
-    { name: 'My Profile', path: onboarding_path }
-  end
-
-  def edit_profile_title(view_context)
-    return view_context.safe_join(['Editing ', view_context.link_to('My Profile', onboarding_path)]) if onboarded?
-
-    'Please Enter Your Profile'
   end
 
   def steps_remaining?

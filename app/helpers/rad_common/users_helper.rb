@@ -14,6 +14,10 @@ module RadCommon
       items
     end
 
+    def my_profile_nav?
+      UserProfilePolicy.new(current_user, current_user).show?
+    end
+
     def next_profile_action(user)
       onboarding = Onboarding.new(user)
 
@@ -46,10 +50,37 @@ module RadCommon
     def user_actions(user)
       [user_confirm_action(user),
        user_resend_action(user),
+       user_profile_action(user),
        user_reset_authy_action(user),
        user_test_email_action(user),
        user_test_sms_action(user),
        impersonate_action(user)]
+    end
+
+    def user_profile_action(user)
+      return unless UserProfilePolicy.new(current_user, user).show?
+
+      link_to icon(:user, 'Profile'), "/user_profiles/#{user.id}", class: 'btn btn-secondary btn-sm'
+    end
+
+    def profile_show_title(user)
+      return 'My Profile' if user == current_user
+
+      "Profile for #{user}"
+    end
+
+    def edit_profile_button(user)
+      link_to(icon(:pencil, 'Edit'), edit_user_profile_path(user), class: 'btn btn-secondary btn-sm')
+    end
+
+    def profile_edit_title(user)
+      unless user == current_user
+        return safe_join(['Editing Profile for ', link_to(user, user_profile_path(user))])
+      end
+
+      return safe_join(['Editing ', link_to('My Profile', user_profile_path(user))]) if Onboarding.new(user).onboarded?
+
+      'Please Enter Your Profile'
     end
 
     def user_index_actions(user)
@@ -75,7 +106,7 @@ module RadCommon
     def impersonate_action(user)
       return unless policy(user).impersonate?
 
-      link_to icon(:user, 'Sign In As'),
+      link_to icon('right-to-bracket', 'Sign In As'),
               "/rad_common/impersonations/start?id=#{user.id}",
               method: :post,
               data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to ' \

@@ -12,6 +12,7 @@ default: &default
   impersonate: true
   start_route: attorneys
   user_clients: true
+  user_profiles: false
   authy_internal_only: true
   shared_database: false
 
