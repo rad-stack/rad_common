@@ -70,14 +70,13 @@ module RadCommon
     end
 
     def edit_profile_button(user)
+      return unless UserProfilePolicy.new(current_user, user).edit?
+
       link_to(icon(:pencil, 'Edit'), edit_user_profile_path(user), class: 'btn btn-secondary btn-sm')
     end
 
     def profile_edit_title(user)
-      unless user == current_user
-        return safe_join(['Editing Profile for ', link_to(user, user_profile_path(user))])
-      end
-
+      return safe_join(['Editing Profile for ', link_to(user, user_profile_path(user))]) unless user == current_user
       return safe_join(['Editing ', link_to('My Profile', user_profile_path(user))]) if Onboarding.new(user).onboarded?
 
       'Please Enter Your Profile'
