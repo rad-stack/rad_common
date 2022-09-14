@@ -41,7 +41,7 @@ module RadCommonRoutes
 
       resources :user_profiles, only: %i[show edit update]
 
-      get 'contact_us', to: 'pages#contact_us'
+      get 'contact_us', to: 'contact_us#show'
       get 'terms', to: 'pages#terms'
 
       root to: 'pages#home'

@@ -11,11 +11,6 @@ class PagesController < ApplicationController
     end
   end
 
-  def contact_us
-    skip_authorization
-    @company = Company.main
-  end
-
   def terms
     skip_authorization
   end
