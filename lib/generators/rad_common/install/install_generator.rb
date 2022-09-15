@@ -22,7 +22,7 @@ module RadCommon
         copy_file '../../../../../.hound.yml', '.hound.yml'
         copy_file '../../../../../.eslintrc', '.eslintrc'
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
-        copy_file '../../../../../.rubocop.yml', '.rubocop.yml'
+        copy_file '../rubocop.txt', '.rubocop.yml'
 
         # config
         copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
