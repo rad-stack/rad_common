@@ -5,7 +5,7 @@ RSpec.describe 'Contact Us', type: :system do
 
   before { login_as user, scope: :user }
 
-  describe 'contact_us' do
+  describe 'show' do
     it 'shows the information' do
       visit contact_us_path
       expect(page).to have_content(Company.main.name)
