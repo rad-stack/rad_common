@@ -209,7 +209,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'sign up', sign_up_specs: true do
+  describe 'sign up', js: true, sign_up_specs: true do
     before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
 
     it 'signs up' do
@@ -221,6 +221,8 @@ RSpec.describe 'Users', type: :system do
       fill_in 'Email', with: "#{Faker::Internet.user_name}@example.com"
       fill_in 'user_password', with: password
       fill_in 'user_password_confirmation', with: password
+      expect(find_button('Sign Up', disabled: true).disabled?).to be(true)
+      check 'accept_terms'
 
       click_button 'Sign Up'
       expect(page).to have_content 'message with a confirmation link has been sent'
@@ -234,6 +236,7 @@ RSpec.describe 'Users', type: :system do
       fill_in 'Email', with: 'test_user@'
       fill_in 'user_password', with: password
       fill_in 'user_password_confirmation', with: password
+      check 'accept_terms'
 
       click_button 'Sign Up'
 

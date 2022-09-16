@@ -40,6 +40,8 @@ module RadCommonRoutes
       end
 
       get 'contact_us', to: 'pages#contact_us'
+      get 'terms', to: 'pages#terms'
+      
       root to: 'pages#home'
     end
   end
