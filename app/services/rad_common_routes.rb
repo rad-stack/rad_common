@@ -41,7 +41,8 @@ module RadCommonRoutes
 
       get 'contact_us', to: 'pages#contact_us'
       get 'terms', to: 'pages#terms'
-      
+      get 'privacy', to: 'pages#privacy'
+
       root to: 'pages#home'
     end
   end
