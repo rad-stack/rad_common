@@ -134,6 +134,13 @@ class RadSeeder
       seeded_user[:mobile_phone]
     end
 
+    def staging_safe_email
+      # this is helfpul when sendgrid email validaiton is enabled on staging, the faker emails would then fail
+      return seeded_user_config.first[:email] if Rails.env.staging?
+
+      Faker::Internet.email
+    end
+
     def seeded_user_domains
       internal_user_emails.map { |item| item.split('@').last }.uniq.sort
     end
