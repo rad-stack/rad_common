@@ -74,6 +74,8 @@ module RadCommon
     end
 
     def formatted_decimal_hours(total_minutes)
+      return if total_minutes.blank?
+
       (total_minutes / 60.0).round(2)
     end
 
