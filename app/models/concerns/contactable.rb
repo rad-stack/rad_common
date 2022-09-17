@@ -6,15 +6,20 @@ module Contactable
 
     validate :validate_state
     validate :validate_address_2
+    validate :validate_problems
 
     before_validation :maybe_standardize_address
   end
 
   def maybe_standardize_address
-    return if running_global_validity || bypass_address_validation?
-    return unless RadicalConfig.smarty_enabled? && address? && any_address_changes?
+    return if running_global_validity || bypass_address_validation? || !RadicalConfig.smarty_enabled?
+    return unless any_address_changes?
 
-    standardize_address
+    if address?
+      standardize_address
+    else
+      self.address_problems = nil
+    end
   end
 
   def street_addresses
@@ -47,6 +52,12 @@ module Contactable
 
     def validate_address_2
       errors.add :address_2, 'must be blank when address 1 is blank' if address_1.blank? && address_2.present?
+    end
+
+    def validate_problems
+      return unless address_problems.present? && !address?
+
+      errors.add :address_problems, 'must be blank when address is blank'
     end
 
     def address?
