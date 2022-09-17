@@ -148,5 +148,20 @@ RSpec.describe Contactable do
         expect(company.address_problems).to eq 'missing suite or unit #'
       end
     end
+
+    context 'with invalid secondary component' do
+      let(:address_1) { '1921 East 24th Street' }
+      let(:address_2) { 'Apt #1' }
+      let(:city) { 'Oakland' }
+      let(:state) { 'CA' }
+      let(:zipcode) { '94600' }
+
+      it 'confirms address by ignoring secondary component' do
+        expect(company.address_1).to eq('1921 E 24th St')
+        expect(company.address_2).to eq('Apt 1')
+        expect(company.address_problems).to be_nil
+        expect(company.address_problems).to be_nil
+      end
+    end
   end
 end

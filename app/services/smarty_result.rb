@@ -64,6 +64,8 @@ class SmartyResult
     end
 
     def non_postal_match?
+      return true if analysis['dpv_match_code'] == 'S'
+
       analysis['dpv_match_code'] == 'N' && analysis['enhanced_match'] == 'non-postal-match'
     end
 

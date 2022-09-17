@@ -24,6 +24,10 @@ module RadCommon
       RadicalConfig.duplicates!.pluck(:name)
     end
 
+    def contactable_models
+      application_models.select { |item| item.constantize.new.respond_to?(:maybe_standardize_address) }
+    end
+
     def duplicates_enabled?(model_name)
       duplicate_model_config(model_name).present?
     end

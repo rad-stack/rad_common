@@ -1,0 +1,17 @@
+.card
+  = render 'layouts/card_header', action_name: 'custom', title: "Address Problems (#{@records.count})", icon: 'fa-list'
+  .card-body
+    %table.table.table-striped.table-bordered
+      %tr
+        %th Record Type
+        %th Record Link
+        %th Address
+        %th Problems
+
+      - @records.each do |record|
+        - link = record.is_a?(Company) ? '/rad_common/company/edit' : record
+        %tr
+          %td= link_to record.class, link
+          %td= link_to record, link
+          %td= link_to record.full_address, link
+          %td= link_to record.address_problems, link
