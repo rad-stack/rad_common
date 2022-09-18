@@ -105,6 +105,8 @@ describe RadCommon::AuditsHelper do
 
       let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
 
+      before { user.update! user_status: UserStatus.default_pending_status }
+
       context 'when create' do
         before do
           user.update!(security_roles: [])

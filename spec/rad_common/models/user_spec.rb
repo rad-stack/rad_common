@@ -43,6 +43,8 @@ RSpec.describe User, type: :model do
   describe 'auditing of associations' do
     let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
 
+    before { user.update! user_status: UserStatus.default_pending_status }
+
     context 'with create' do
       before do
         user.update!(security_roles: [])

@@ -160,7 +160,8 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
       User.invite!(email: "#{Faker::Internet.user_name}@#{email_domain}",
                    first_name: Faker::Name.first_name,
                    last_name: Faker::Name.last_name,
-                   mobile_phone: create(:phone_number, :mobile))
+                   mobile_phone: create(:phone_number, :mobile),
+                   initial_security_role_id: internal_role.id)
     end
 
     it 'does not allow invitee to reset password after invite expires' do
