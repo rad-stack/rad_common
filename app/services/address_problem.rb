@@ -14,7 +14,7 @@ class AddressProblem
   private
 
     def queries
-      model_names.map { |item| item.constantize.where.not(address_problems: nil) }
+      model_names.map { |item| item.constantize.where.not(address_metadata: nil) }
     end
 
     def model_names

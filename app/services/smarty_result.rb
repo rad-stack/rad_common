@@ -34,13 +34,13 @@ class SmartyResult
   end
 
   def valid_address?
-    result.any? && (postal_match? || non_postal_match? || ignoring_secondary?)
+    result.any? && (postal_match? || non_postal_match? || missing_secondary? || ignoring_secondary?)
   end
 
   def address_problems
     return if postal_match?
     return 'missing suite or unit #' if missing_secondary?
-    return 'verified by ignoring secondary address (address 2)' if ignoring_secondary?
+    return 'verified by ignoring invalid suite or unit #' if ignoring_secondary?
     return 'non-postal match using enhanced address matching' if non_postal_match?
 
     nil

@@ -149,7 +149,7 @@ RSpec.describe Contactable do
       let(:zipcode) { '32217' }
 
       it 'sets address_problems and does not touch address' do
-        expect(company.valid?).to be false
+        expect(company.valid?).to be true
         expect(company.address_problems).to eq 'missing suite or unit #'
       end
     end
@@ -165,7 +165,7 @@ RSpec.describe Contactable do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('1921 E 24th St')
         expect(company.address_2).to eq('Apt 1')
-        expect(company.address_problems).to eq 'verified by ignoring secondary address (address 2)'
+        expect(company.address_problems).to eq 'verified by ignoring invalid suite or unit #'
       end
     end
   end
