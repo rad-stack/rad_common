@@ -6,19 +6,17 @@ module Contactable
 
     validate :validate_state
     validate :validate_address_2
-    validate :validate_problems
+    validate :validate_metadata
+    validate :validate_address, if: :run_smarty?
 
-    before_validation :maybe_standardize_address
+    before_validation :maybe_standardize_address, if: :run_smarty?
   end
 
   def maybe_standardize_address
-    return if running_global_validity || bypass_address_validation? || !RadicalConfig.smarty_enabled?
-    return unless any_address_changes?
-
     if address?
       standardize_address
     else
-      self.address_problems = nil
+      self.address_metadata = nil
     end
   end
 
@@ -39,10 +37,40 @@ module Contactable
   end
 
   def clear_address_changes!
-    update_column :address_changes, nil
+    return if address_metadata.blank?
+
+    update_column :address_metadata, address_metadata.except('changes')
+  end
+
+  def bypass_address_validation?
+    address_metadata.present? && address_metadata['bypass_address_validation']
+  end
+
+  def bypass_address_validation=(value)
+    self.address_metadata ||= {}
+    self.address_metadata['bypass_address_validation'] = value
+  end
+
+  def address_problems
+    return if address_metadata.blank?
+
+    address_metadata['problems']
+  end
+
+  def address_changes
+    return if address_metadata.blank?
+    return if address_metadata['changes'].blank?
+
+    address_metadata['changes'].values.join(', ')
   end
 
   private
+
+    def run_smarty?
+      return false if running_global_validity || !RadicalConfig.smarty_enabled? || bypass_address_validation?
+
+      any_address_changes?
+    end
 
     def validate_state
       return if city_model_variant?
@@ -54,10 +82,20 @@ module Contactable
       errors.add :address_2, 'must be blank when address 1 is blank' if address_1.blank? && address_2.present?
     end
 
-    def validate_problems
-      return unless address_problems.present? && !address?
+    def validate_metadata
+      return unless address_metadata.present? && !address?
 
-      errors.add :address_problems, 'must be blank when address is blank'
+      errors.add :address_metadata, 'must be blank when address is blank'
+    end
+
+    def validate_address
+      errors.add(:address_1, 'is not a valid address') unless valid_address?
+    end
+
+    def valid_address?
+      return true if address_metadata.blank?
+
+      address_metadata['valid']
     end
 
     def address?
@@ -83,7 +121,7 @@ module Contactable
     end
 
     def apply_standardized_address(result)
-      self.address_changes = apply_changes(result)
+      apply_changes result
 
       self.address_1 = result.address_1
       self.address_2 = result.address_2
@@ -97,7 +135,9 @@ module Contactable
 
       self.zipcode = result.zipcode
 
-      self.address_problems = nil
+      self.address_metadata ||= {}
+      self.address_metadata['problems'] = result.address_problems
+      self.address_metadata['valid'] = true
     end
 
     def standardize_address
@@ -112,7 +152,9 @@ module Contactable
       if result.valid_address?
         apply_standardized_address(result)
       else
-        self.address_problems = result.address_problems
+        self.address_metadata ||= {}
+        self.address_metadata['valid'] = false
+        self.address_metadata['problems'] = result.address_problems if result.address_problems.present?
       end
     end
 
@@ -126,7 +168,8 @@ module Contactable
         changes_hash[field] = attributes[field]
       end
 
-      changes_hash
+      self.address_metadata ||= {}
+      self.address_metadata['changes'] = changes_hash
     end
 
     def city_model_variant?
