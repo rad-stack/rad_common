@@ -5,8 +5,6 @@
   - unless no_divider
     %li.dropdown-divider
 
-  - if AddressProblem.enabled?
-    %li= link_to 'Address Problems', '/rad_common/address_problems', class: 'dropdown-item'
   %li= link_to 'Audit Search', '/rad_common/audits', class: 'dropdown-item'
   %li= link_to 'Background Jobs', '/sidekiq', target: '_blank', rel: :noopener, class: 'dropdown-item'
   %li= link_to 'Company Info', '/rad_common/company/edit', class: 'dropdown-item'
