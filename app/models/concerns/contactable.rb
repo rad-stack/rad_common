@@ -9,12 +9,12 @@ module Contactable
     validate :validate_metadata
     validate :validate_address, if: :run_smarty?
 
-    before_validation :maybe_standardize_address, if: :run_smarty?
+    before_validation :maybe_standardize_address
   end
 
   def maybe_standardize_address
     if address?
-      standardize_address
+      standardize_address if run_smarty?
     else
       self.address_metadata = nil
     end
