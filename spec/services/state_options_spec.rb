@@ -1,15 +1,14 @@
 require 'rails_helper'
 
 describe StateOptions, type: :service do
-
   describe '.full_name' do
-    subject { described_class.full_name(abbreviation) }
+    subject(:full_name) { described_class.full_name(abbreviation) }
 
     context 'when a valid state abbreviation is provided' do
       let(:abbreviation) { 'FL' }
 
       it 'returns the full name of the state' do
-        expect(subject).to eq 'Florida'
+        expect(full_name).to eq 'Florida'
       end
     end
 
@@ -17,7 +16,7 @@ describe StateOptions, type: :service do
       let(:abbreviation) { 'F1' }
 
       it 'returns nil' do
-        expect(subject).to be_nil
+        expect(full_name).to be_nil
       end
     end
   end
