@@ -74,6 +74,12 @@ class StateOptions
       options.sample.first
     end
 
+    def full_name(abbreviation)
+      return unless valid?(abbreviation)
+
+      active_states.invert[abbreviation]
+    end
+
     private
 
       def active_states
