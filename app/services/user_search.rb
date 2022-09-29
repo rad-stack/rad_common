@@ -2,7 +2,8 @@ class UserSearch < RadCommon::Search
   def initialize(params, current_user)
     @current_user = current_user
 
-    super(query: User.joins(:user_status).includes(:user_status, :security_roles),
+    # TODO: why don't I need to add distinct when joining a many table?
+    super(query: User.joins(:user_status).left_joins(:clients).includes(:user_status, :security_roles),
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
@@ -22,7 +23,12 @@ class UserSearch < RadCommon::Search
                  default_value: UserStatus.default_active_status.id }]
 
       if RadicalConfig.external_users? && current_user.internal?
-        items.push({ input_label: 'Type', name: :external, scope_values: %i[internal external] })
+        items.push(input_label: 'Type', name: :external, scope_values: %i[internal external])
+      end
+
+      if RadicalConfig.user_clients?
+        # TODO: this won't perform well when many clients exist
+        items.push(input_label: RadCommon::AppInfo.new.client_model_label, column: 'clients.id', options: clients)
       end
 
       items
@@ -48,5 +54,10 @@ class UserSearch < RadCommon::Search
 
     def can_update?
       Pundit.policy!(current_user, User.new).update?
+    end
+
+    def clients
+      Pundit.policy_scope!(current_user, RadCommon::AppInfo.new.client_model_class)
+            .where('id IN (SELECT client_id FROM user_clients)')
     end
 end
