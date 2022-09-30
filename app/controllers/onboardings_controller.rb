@@ -8,7 +8,7 @@ class OnboardingsController < ApplicationController
     if @onboarding.onboarded?
       redirect_to @onboarding.onboarded_path
     else
-      redirect_to user_profile_path(current_user)
+      redirect_to @onboarding.next_step.path
     end
   end
 
