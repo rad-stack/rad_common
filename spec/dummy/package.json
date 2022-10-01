@@ -8,10 +8,10 @@
     "rad_common_js": "https://github.com/radicalbear/rad_common_js"
   },
   "devDependencies": {
-    "eslint": "^6.3.0",
-    "stylelint": "^13.13.1",
     "webpack": "^4.41.2",
-    "webpack-dev-server": "^3.10.1"
+    "webpack-dev-server": "^3.10.1",
+    "eslint": "^6.3.0",
+    "stylelint": "^13.13.1"
   },
   "resolutions": {
     "serialize-javascript": "^3.1.0",
