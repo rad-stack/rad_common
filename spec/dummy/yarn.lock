@@ -6742,9 +6742,9 @@ quick-lru@^4.0.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-4.0.1.tgz#5b8878f113a58217848c6482026c73e1ba57727f"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
 
-"rad_common_js@https://github.com/radicalbear/rad_common_js":
+"rad_common_js@https://github.com/radicalbear/rad_common_js#d409dac1d57a36e5a4d5c0e896ac1d558b6b8754":
   version "2.1.5"
-  resolved "https://github.com/radicalbear/rad_common_js#95e92768e513886a72b9fb074bacc195a626d05d"
+  resolved "https://github.com/radicalbear/rad_common_js#d409dac1d57a36e5a4d5c0e896ac1d558b6b8754"
   dependencies:
     "@rails/actiontext" "^6.0.2-1"
     "@rails/ujs" "^6.0.5"
@@ -6756,6 +6756,7 @@ quick-lru@^4.0.1:
     jquery-ui "^1.12.1"
     jquery-ujs "^1.2.3"
     jquery.are-you-sure "^1.9.0"
+    moment "^2.29.4"
     popper.js "^1.16.1"
     postcss "^8.2.10"
     readmore-js "^2.2.1"
