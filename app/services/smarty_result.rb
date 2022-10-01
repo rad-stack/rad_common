@@ -11,26 +11,26 @@ class SmartyResult
   end
 
   def address_1
-    build_primary_lines(components).select(&:present?).join(' ')
+    build_primary_lines(components).select(&:present?).join(' ').presence
   end
 
   def address_2
     secondary_line = [components['secondary_designator'], components['secondary_number']]
-    secondary_line.select(&:present?).join(' ')
+    secondary_line.select(&:present?).join(' ').presence
   end
 
   def city
-    components['city_name']
+    components['city_name'].presence
   end
 
   def state
-    components['state_abbreviation']
+    components['state_abbreviation'].presence
   end
 
   def zipcode
-    return components['zipcode'] if components['plus4_code'].blank? || !zip4_provided?
+    return components['zipcode'].presence if components['plus4_code'].blank? || !zip4_provided?
 
-    "#{components['zipcode']}-#{components['plus4_code']}"
+    "#{components['zipcode']}-#{components['plus4_code']}".presence
   end
 
   def valid_address?
