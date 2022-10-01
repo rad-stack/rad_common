@@ -39,7 +39,7 @@ module RadCommonRoutes
         mount Sidekiq::Web => '/sidekiq'
       end
 
-      resources :user_profiles, only: %i[show edit update]
+      resources :user_profiles, only: %i[show edit update] if RadicalConfig.user_profiles?
 
       get 'contact_us', to: 'pages#contact_us'
       get 'terms', to: 'pages#terms'
