@@ -145,8 +145,12 @@ module DuplicateFixable
     # override as needed in models
   end
 
-  def duplicate_name_weight
-    duplicate_model_config[:name_weight].presence || 10
+  def duplicate_first_name_weight
+    duplicate_model_config[:first_name_weight].presence || 10
+  end
+
+  def duplicate_last_name_weight
+    duplicate_model_config[:last_name_weight].presence || 10
   end
 
   def duplicate_other_weight
@@ -266,8 +270,8 @@ module DuplicateFixable
       items = []
 
       if model_klass.use_first_last_name?
-        items += [{ name: 'first_name', weight: duplicate_name_weight },
-                  { name: 'last_name', weight: duplicate_name_weight }]
+        items += [{ name: 'first_name', weight: duplicate_first_name_weight },
+                  { name: 'last_name', weight: duplicate_last_name_weight }]
       end
 
       items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
