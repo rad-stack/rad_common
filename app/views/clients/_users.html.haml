@@ -3,6 +3,6 @@
 
   - if users.any?
     .card
-      = render 'layouts/card_header', action_name: 'custom', title: 'Users', icon: icon_hash(:users)
+      = render 'layouts/card_header', action_name: 'custom', title: 'Users', icon: 'fa-users'
       .card-body
         = render 'users/index', users: users, show_roles: false

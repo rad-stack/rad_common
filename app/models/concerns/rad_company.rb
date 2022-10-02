@@ -2,7 +2,7 @@ module RadCompany
   extend ActiveSupport::Concern
 
   included do
-    include HasAddress
+    include Contactable
 
     belongs_to :state
 

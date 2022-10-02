@@ -145,8 +145,12 @@ module DuplicateFixable
     # override as needed in models
   end
 
-  def duplicate_name_weight
-    duplicate_model_config[:name_weight].presence || 10
+  def duplicate_first_name_weight
+    duplicate_model_config[:first_name_weight].presence || 10
+  end
+
+  def duplicate_last_name_weight
+    duplicate_model_config[:last_name_weight].presence || 10
   end
 
   def duplicate_other_weight
@@ -164,9 +168,11 @@ module DuplicateFixable
   def merge_duplicates(duplicate_keys, user)
     error = nil
 
-    duplicate_keys.each do |key|
-      error = fix_duplicate(key, user)
-      break if error
+    ActiveRecord::Base.transaction do
+      duplicate_keys.each do |key|
+        error = fix_duplicate(key, user)
+        break if error
+      end
     end
 
     if error.present?
@@ -215,7 +221,7 @@ module DuplicateFixable
     def birth_date_matches
       return [] unless model_klass.use_birth_date? && model_klass.use_first_last_name?
 
-      query_string = 'id <> ? AND birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR '\
+      query_string = 'id <> ? AND birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR ' \
                      'levenshtein(upper(last_name), ?) <= 1)'
 
       model_klass.where(query_string,
@@ -264,8 +270,8 @@ module DuplicateFixable
       items = []
 
       if model_klass.use_first_last_name?
-        items += [{ name: 'first_name', weight: duplicate_name_weight },
-                  { name: 'last_name', weight: duplicate_name_weight }]
+        items += [{ name: 'first_name', weight: duplicate_first_name_weight },
+                  { name: 'last_name', weight: duplicate_last_name_weight }]
       end
 
       items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
@@ -375,7 +381,7 @@ module DuplicateFixable
 
       return nil if duplicate_record.destroy
 
-      'Could not remove the unused duplicate record '\
+      'Could not remove the unused duplicate record ' \
         "id #{duplicate_record.id}: #{duplicate_record.errors.full_messages.join(', ')}"
     end
 end

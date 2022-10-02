@@ -6,9 +6,7 @@
     %meta{ name: 'viewport', content: 'width=device-width, initial-scale=1.0' }
     %title= content_for?(:title) ? yield(:title) : RadicalConfig.app_name!
     = csrf_meta_tags
-    = stylesheet_link_tag 'application', media: 'all'
     = favicon_link_tag RadicalConfig.favicon_filename!, rel: 'shortcut icon'
-    = javascript_include_tag 'application'
     = javascript_pack_tag 'application'
     = stylesheet_pack_tag 'application'
 

@@ -12,7 +12,7 @@ RSpec.describe RadCommon::DateFilter, type: :service do
       let(:column) { :created_at }
 
       it 'detects datetime correctly' do
-        expect(date_filter).to eq true
+        expect(date_filter).to be true
       end
     end
 
@@ -20,7 +20,7 @@ RSpec.describe RadCommon::DateFilter, type: :service do
       let(:column) { :date_established }
 
       it 'detects datetime correctly' do
-        expect(date_filter).to eq false
+        expect(date_filter).to be false
       end
     end
   end

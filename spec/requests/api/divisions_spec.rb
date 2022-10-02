@@ -10,7 +10,7 @@ describe 'Users API', type: :request do
 
       it 'shows a division' do
         get "/api/divisions/#{division.id}", headers: headers
-        expect(response.status).to eq 200
+        expect(response).to have_http_status :ok
         expect(JSON.parse(response.body)['name']).to eq division.name
       end
     end
@@ -20,7 +20,7 @@ describe 'Users API', type: :request do
 
       it 'fails with expired date' do
         get "/api/divisions/#{division.id}", headers: headers
-        expect(response.status).to eq 403
+        expect(response).to have_http_status :forbidden
       end
     end
   end

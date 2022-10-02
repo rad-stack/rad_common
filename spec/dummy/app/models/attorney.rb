@@ -1,4 +1,5 @@
 class Attorney < ApplicationRecord
+  include Contactable
   include DuplicateFixable
 
   belongs_to :state

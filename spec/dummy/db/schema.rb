@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_22_172537) do
+ActiveRecord::Schema.define(version: 2022_09_18_194026) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 2022_05_22_172537) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "state_id", null: false
+    t.jsonb "address_metadata"
     t.index ["state_id"], name: "index_attorneys_on_state_id"
   end
 
@@ -106,6 +107,7 @@ ActiveRecord::Schema.define(version: 2022_05_22_172537) do
     t.text "valid_user_domains", default: [], null: false, array: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "email", null: false
     t.index ["name"], name: "index_clients_on_name"
   end
 
@@ -124,6 +126,8 @@ ActiveRecord::Schema.define(version: 2022_05_22_172537) do
     t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
     t.integer "state_id", null: false
+    t.integer "address_requests_made", default: 0, null: false
+    t.jsonb "address_metadata"
     t.index ["state_id"], name: "index_companies_on_state_id"
   end
 

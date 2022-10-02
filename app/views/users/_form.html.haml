@@ -12,8 +12,6 @@
       .col-lg-6= f.association :user_status, collection: UserStatus.by_id
       .col-lg-6= f.input :timezone, as: :time_zone, priority: timezone_us_filter
     .row
-      - if @user.respond_to?(:last_activity_at) && !@user.new_record?
-        .col-lg-2= f.input :last_activity_at, as: :date, html5: true
       - if RadicalConfig.external_users?
         .col-lg-2= f.input :external
       - if RadicalConfig.authy_enabled?

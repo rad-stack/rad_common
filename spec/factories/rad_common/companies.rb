@@ -10,5 +10,6 @@ FactoryBot.define do
     email { Faker::Internet.email }
     valid_user_domains { ['example.com'] }
     timezone { 'Eastern Time (US & Canada)' }
+    bypass_address_validation { true }
   end
 end

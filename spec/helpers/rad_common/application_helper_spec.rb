@@ -17,7 +17,7 @@ describe RadCommon::ApplicationHelper do
       end
 
       it 'returns true' do
-        expect(helper.show_actions?(model_class)).to eq(true)
+        expect(helper.show_actions?(model_class)).to be(true)
       end
     end
 
@@ -30,7 +30,7 @@ describe RadCommon::ApplicationHelper do
       end
 
       it 'returns true' do
-        expect(helper.show_actions?(model_class)).to eq(true)
+        expect(helper.show_actions?(model_class)).to be(true)
       end
     end
 
@@ -43,12 +43,14 @@ describe RadCommon::ApplicationHelper do
       end
 
       it 'returns false' do
-        expect(helper.show_actions?(model_class)).to eq(false)
+        expect(helper.show_actions?(model_class)).to be(false)
       end
     end
   end
 
   describe 'enum_to_translated_option' do
+    let(:error_message) { "enum division_status_xxx on Division doesn't exist" }
+
     it 'translates the value' do
       expect(enum_to_translated_option(division, :division_status)).to eq 'Active'
     end
@@ -62,14 +64,23 @@ describe RadCommon::ApplicationHelper do
       division.division_status = ''
       expect(enum_to_translated_option(division, :division_status)).to be_nil
     end
+
+    it 'raises error when missing enum' do
+      expect { enum_to_translated_option(division, :division_status_xxx) }.to raise_error(error_message)
+    end
   end
 
   describe 'options_for_enum' do
     subject { options_for_enum(Division, :division_status) }
 
     let(:options) { [%w[Pending status_pending], %w[Active status_active], %w[Inactive status_inactive]] }
+    let(:error_message) { "enum division_status_xxx on Division doesn't exist" }
 
     it { is_expected.to eq options }
+
+    it 'raises error when missing enum' do
+      expect { options_for_enum(Division, :division_status_xxx) }.to raise_error(error_message)
+    end
   end
 
   describe '#gravatar_for' do
@@ -173,7 +184,7 @@ describe RadCommon::ApplicationHelper do
   describe '#format_datetime' do
     context 'with nil' do
       it 'returns nil' do
-        expect(helper.format_datetime(nil)).to eq(nil)
+        expect(helper.format_datetime(nil)).to be_nil
       end
     end
 
@@ -194,18 +205,6 @@ describe RadCommon::ApplicationHelper do
         result = date.in_time_zone.strftime('%-m/%-d/%Y %l:%M %p %Z')
         expect(helper.format_datetime(date, include_zone: true)).to eq(result)
       end
-    end
-  end
-
-  describe '#icon_hash' do
-    it 'returns an icon string' do
-      string = icon_hash(:dollar)
-      expect(string).to include('fa-usd')
-    end
-
-    it 'returns nil for invalid key' do
-      string = icon_hash(:invalid)
-      expect(string).to eq(nil)
     end
   end
 end

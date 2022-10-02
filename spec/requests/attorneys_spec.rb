@@ -17,7 +17,10 @@ RSpec.describe 'Attorneys', type: :request do
       email: Faker::Internet.email }
   end
 
-  before { login_as user, scope: :user }
+  before do
+    allow_any_instance_of(Attorney).to receive(:bypass_address_validation?).and_return(true)
+    login_as user, scope: :user
+  end
 
   describe 'POST create' do
     describe 'with valid params' do

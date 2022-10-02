@@ -38,7 +38,7 @@ describe DatabaseUseChecker do
 
   describe '.tables' do
     it 'returns an array of strings' do
-      expect(described_class.tables.all? { |model| model.instance_of?(String) }).to eq true
+      expect(described_class.tables.all? { |model| model.instance_of?(String) }).to be true
     end
   end
 end

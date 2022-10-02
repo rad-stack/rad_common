@@ -33,9 +33,9 @@ module RadbearUser
     scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
 
     scope :admins, lambda {
-      active.where('users.id IN ('\
-                   'SELECT user_id FROM user_security_roles '\
-                   'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id '\
+      active.where('users.id IN (' \
+                   'SELECT user_id FROM user_security_roles ' \
+                   'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
                    'WHERE security_roles.admin = TRUE)')
     }
 
@@ -75,7 +75,7 @@ module RadbearUser
     validates_with PhoneNumberValidator, fields: [{ field: :mobile_phone, type: :mobile }],
                                          if: :fully_validate_email_phone?
 
-    validates_with EmailAddressValidator, fields: %i[email], on: :update, if: :fully_validate_email_phone?
+    validates_with EmailAddressValidator, fields: %i[email], if: :fully_validate_email_phone?
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
@@ -189,6 +189,10 @@ module RadbearUser
 
   def test_sms!(from_user)
     UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false
+  end
+
+  def reactivate
+    update(last_activity_at: nil)
   end
 
   def reset_authy!

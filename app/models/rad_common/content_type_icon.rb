@@ -10,18 +10,18 @@ module RadCommon
 
     def icon
       types = {
-        'application/msword' => 'fa-file-word-o',
-        'application/pdf' => 'fa-file-pdf-o',
-        'application/vnd.ms-excel.sheet.macroenabled.12' => 'fa-file-excel-o',
-        'application/vnd.ms-excel' => 'fa-file-excel-o',
+        'application/msword' => 'fa-file-word',
+        'application/pdf' => 'fa-file-pdf',
+        'application/vnd.ms-excel.sheet.macroenabled.12' => 'fa-file-excel',
+        'application/vnd.ms-excel' => 'fa-file-excel',
         'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'fa-tv',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fa-table',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'fa-file-text-o',
-        'application/zip' => 'fa-file-archive-o',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'fa-file-lines',
+        'application/zip' => 'fa-file-zipper',
         'text/csv' => 'fa-table',
         'text/html' => 'fa-code',
-        'text/plain' => 'fa-file-o',
-        'video/quicktime' => 'fa-file-video-o'
+        'text/plain' => 'fa-file',
+        'video/quicktime' => 'fa-file-video'
       }
 
       types[content_type].presence || 'fa-paperclip'

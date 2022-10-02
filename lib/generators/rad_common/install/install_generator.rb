@@ -6,39 +6,29 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
-        search_and_replace 'Time.zone.today', 'Date.current'
-        search_and_replace 'DateTime.now', 'Time.current'
-        search_and_replace 'Time.now', 'Time.current'
-        search_and_replace 'Time.zone.now', 'Time.current'
-        search_and_replace 'Date.today', 'Date.current'
-        search_and_replace 'Date.tomorrow', 'Time.zone.tomorrow'
-        search_and_replace 'Date.yesterday', 'Time.zone.yesterday'
-
-        search_and_replace 'before { login_as(user, scope: :user) }',
-                           'before { login_as user, scope: :user }'
-
-        search_and_replace 'before { login_as(admin, scope: :user) }',
-                           'before { login_as admin, scope: :user }'
+        standardize_date_methods
 
         # misc
-        template '../../../../../spec/dummy/Procfile', 'Procfile'
         copy_file '../../../../../spec/dummy/package.json', 'package.json'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
-        copy_file '../../../../../spec/dummy/config/webpack/environment.js', 'config/webpack/environment.js'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
         copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
+        directory '../../../../../.bundle', '.bundle'
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
         copy_file '../../../../../.hound.yml', '.hound.yml'
-        copy_file '../../../../../.rubocop.yml', '.rubocop.yml'
-        copy_file '../../../../../.eslintrc.js', '.eslintrc.js'
+        copy_file '../../../../../.eslintrc', '.eslintrc'
+        copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
+        copy_file '../rubocop.txt', '.rubocop.yml'
 
         # config
         copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
+        directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
@@ -52,6 +42,9 @@ module RadCommon
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
                   'config/initializers/simple_form_components.rb'
+
+        # bin
+        directory '../../../../../spec/dummy/bin/', 'bin/'
 
         # locales
         copy_file '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
@@ -68,10 +61,8 @@ module RadCommon
 
         # specs
         directory '../../../../../spec/rad_common/', 'spec/rad_common/'
-        directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/'
+        directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/', exclude_pattern: /clients.rb/
         copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
-        copy_file '../../../../../spec/dummy/spec/support/test_helpers.rb', 'spec/support/test_helpers.rb'
-        copy_file '../../../../../spec/dummy/spec/support/vcr.rb', 'spec/support/vcr.rb'
 
         # templates
 
@@ -110,10 +101,14 @@ module RadCommon
                   '#config.force_ssl = true',
                   'config.force_ssl = true'
 
+unless RadicalConfig.shared_database?
         create_file 'db/seeds.rb' do <<-'RUBY'
+require 'factory_bot_rails'
+
 Seeder.new.seed!
         RUBY
         end
+end
 
         inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
     # added by rad_common
@@ -197,6 +192,8 @@ Seeder.new.seed!
         apply_migration '20220405182602_optional_mobile_phone.rb'
         apply_migration '20220423173413_inactive_notifications.rb'
         apply_migration '20220504114538_rename_validate_email.rb'
+        apply_migration '20220719162246_address_validation.rb'
+        apply_migration '20220918194026_refine_smarty.rb'
       end
 
       def self.next_migration_number(path)
@@ -211,6 +208,8 @@ Seeder.new.seed!
       protected
 
         def apply_migration(source)
+          return if RadicalConfig.shared_database?
+
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
           if self.class.migration_exists?('db/migrate', filename)
@@ -221,10 +220,29 @@ Seeder.new.seed!
           end
         end
 
-        def search_and_replace(search, replace)
+        def search_and_replace(search, replace, js: false)
           system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
           system "find . -type f -name \"*.haml\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
           system "find . -type f -name \"*.rake\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          return unless js
+
+          system "find . -type f -name \"*.js\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+        end
+
+        def standardize_date_methods
+          search_and_replace 'Time.zone.today', 'Date.current'
+          search_and_replace 'DateTime.now', 'Time.current'
+          search_and_replace 'Time.now', 'Time.current'
+          search_and_replace 'Time.zone.now', 'Time.current'
+          search_and_replace 'Date.today', 'Date.current'
+          search_and_replace 'Date.tomorrow', 'Time.zone.tomorrow'
+          search_and_replace 'Date.yesterday', 'Time.zone.yesterday'
+
+          search_and_replace 'before { login_as(user, scope: :user) }',
+                             'before { login_as user, scope: :user }'
+
+          search_and_replace 'before { login_as(admin, scope: :user) }',
+                             'before { login_as admin, scope: :user }'
         end
     end
   end
