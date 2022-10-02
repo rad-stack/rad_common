@@ -34,9 +34,9 @@ class DatabaseUseChecker
     end
 
     def table_report(table_name)
-      puts "Table #{table_name} "\
-           "(last created #{last_created(table_name)}, "\
-           "last updated #{last_updated(table_name)}, "\
+      puts "Table #{table_name} " \
+           "(last created #{last_created(table_name)}, " \
+           "last updated #{last_updated(table_name)}, " \
            "record count: #{record_count(table_name)})"
 
       table_columns(table_name).each do |column|

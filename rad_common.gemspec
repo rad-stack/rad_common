@@ -15,6 +15,8 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 3.0.4'
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
+  s.bindir = 'bin'
+  s.executables = %w[reset_db migrate_reset rc_update]
 
   s.add_dependency 'active_storage_validations'
   s.add_dependency 'audited'
@@ -48,8 +50,12 @@ Gem::Specification.new do |s|
   s.add_dependency 'pretender'
   s.add_dependency 'puma', '~> 5.6'
   s.add_dependency 'pundit'
-  s.add_dependency 'rails', '~> 6.1.4'
+  s.add_dependency 'rails', '~> 6.1.6.1' # TODO: change to '~> 6.1' once Task 37843 done
   s.add_dependency 'rails_email_validator'
+
+  # TODO: remove this once this warning has been fixed, see Task 37778
+  s.add_dependency 'redis', '4.7.1'
+
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'

@@ -210,6 +210,10 @@ class RadicalConfig
       boolean_config_item! :disable_invite
     end
 
+    def shared_database?
+      boolean_config_item! :shared_database
+    end
+
     def favicon_filename!
       override_variable(:favicon_filename) || 'favicon.ico'
     end
@@ -301,6 +305,14 @@ class RadicalConfig
 
     def duplicates!
       array_config_item! :duplicates
+    end
+
+    def user_confirmable?
+      Devise.mappings[:user].confirmable?
+    end
+
+    def user_expirable?
+      Devise.mappings[:user].expirable?
     end
 
     def secret_config_item!(item)

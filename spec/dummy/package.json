@@ -5,11 +5,13 @@
     "@fortawesome/fontawesome-free": "^6.1.1",
     "@rails/actiontext": "^6.0.2-1",
     "@rails/webpacker": "5.4.3",
-    "rad_common_js": "^2.0.9"
+    "rad_common_js": "https://github.com/radicalbear/rad_common_js#d409dac1d57a36e5a4d5c0e896ac1d558b6b8754"
   },
   "devDependencies": {
     "webpack": "^4.41.2",
-    "webpack-dev-server": "^3.10.1"
+    "webpack-dev-server": "^3.10.1",
+    "eslint": "^6.3.0",
+    "stylelint": "^13.13.1"
   },
   "resolutions": {
     "serialize-javascript": "^3.1.0",

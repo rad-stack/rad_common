@@ -83,11 +83,11 @@ module RadCommon
     end
 
     def user_confirm_action(user)
-      return unless Devise.mappings[:user].confirmable? && policy(user).update? && !user.confirmed?
+      return unless RadicalConfig.user_confirmable? && policy(user).update? && !user.confirmed?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
       link_to icon(:check, 'Confirm Email'),
-              "/rad_common/users/#{user.id}/confirm",
+              confirm_user_path(user),
               method: :put,
               data: { confirm: confirm },
               class: 'btn btn-warning btn-sm'
@@ -97,7 +97,7 @@ module RadCommon
       return unless policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
 
       link_to 'Resend Invitation',
-              "/rad_common/users/#{user.id}/resend_invitation",
+              resend_invitation_user_path(user),
               method: :put,
               class: 'btn btn-sm btn-success',
               data: { confirm: 'Are you sure?' }
@@ -110,7 +110,7 @@ module RadCommon
                 'Are you sure?'
 
       link_to icon(:refresh, 'Reset Two Factor'),
-              "/rad_common/users/#{user.id}/reset_authy",
+              reset_authy_user_path(user),
               method: :put,
               data: { confirm: confirm },
               class: 'btn btn-warning btn-sm'
@@ -120,7 +120,7 @@ module RadCommon
       return unless policy(user).test_email?
 
       link_to icon(:envelope, 'Send Test Email'),
-              "/rad_common/users/#{user.id}/test_email",
+              test_email_user_path(user),
               method: :put,
               class: 'btn btn-secondary btn-sm',
               data: { confirm: 'Are you sure?' }
@@ -130,7 +130,7 @@ module RadCommon
       return unless RadicalTwilio.new.twilio_enabled? && user.mobile_phone.present? && policy(user).test_sms?
 
       link_to icon(:comments, 'Send Test SMS'),
-              "/rad_common/users/#{user.id}/test_sms",
+              test_sms_user_path(user),
               method: :put,
               class: 'btn btn-secondary btn-sm',
               data: { confirm: 'Are you sure?' }
@@ -148,6 +148,14 @@ module RadCommon
       link_to(icon(:plus, "Add #{RadCommon::AppInfo.new.client_model_label} to User"),
               [:new, user, :user_client],
               class: link_class)
+    end
+
+    def reactivate_user_warning(user)
+      return unless RadicalConfig.user_expirable? && policy(user).update? && user.expired?
+
+      link = link_to 'click here', reactivate_user_path(user), method: :put, data: { confirm: 'Are you sure?' }
+      message = safe_join(["User's account has been expired due to inactivity, to re-activate the user, ", link, '.'])
+      content_tag(:p, message, class: 'alert alert-warning')
     end
   end
 end

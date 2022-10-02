@@ -39,8 +39,27 @@ module RadCommon
     end
 
     def address_show_data(record)
-      [{ label: 'Address', value: record.full_address },
-       { label: 'Address Info', value: render('layouts/address_info', record: record) }]
+      items = [{ label: 'Address', value: record.full_address }]
+
+      if record.bypass_address_validation?
+        items.push({ label: 'Address Info',
+                     value: content_tag(:span, 'address validation bypassed', class: 'badge alert-warning') })
+
+      end
+
+      if record.address_changes.present?
+        items.push({ label: 'Address Changed',
+                     value: content_tag(:span, record.address_changes, class: 'badge alert-warning') })
+
+        record.clear_address_changes!
+      end
+
+      if record.address_problems.present?
+        items.push({ label: 'Address Problems',
+                     value: content_tag(:span, record.address_problems, class: 'badge alert-danger') })
+      end
+
+      items
     end
 
     def format_date(value)
@@ -74,6 +93,8 @@ module RadCommon
     end
 
     def formatted_decimal_hours(total_minutes)
+      return if total_minutes.blank?
+
       (total_minutes / 60.0).round(2)
     end
 

@@ -3,7 +3,9 @@ require 'vcr'
 VCR.configure do |c|
   c.cassette_library_dir = Rails.root.join('spec/vcr')
   c.hook_into :webmock
-  c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com'
+
+  # see Task 37353, need the example.com item for now
+  c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com', 'www.example.com'
 
   if RadicalConfig.test_mobile_phone.present?
     c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { RadicalConfig.test_mobile_phone! }
@@ -31,6 +33,23 @@ VCR.configure do |c|
 
   if RadicalConfig.smarty_auth_token.present?
     c.filter_sensitive_data('<SMARTY_AUTH_TOKEN>') { RadicalConfig.smarty_auth_token! }
+  end
+
+  if RadicalConfig.secret_config_item(:chrome_username).present?
+    c.filter_sensitive_data('chrome_api') do
+      "#{RadicalConfig.secret_config_item!(:chrome_username)}:" \
+        "#{RadicalConfig.secret_config_item!(:chrome_password)}@media.chromedata.com"
+    end
+  end
+
+  if RadicalConfig.secret_config_item(:github_access_token).present?
+    c.filter_sensitive_data('<GITHUB_ACCESS_TOKEN>') { RadicalConfig.secret_config_item!(:github_access_token) }
+  end
+
+  c.filter_sensitive_data('<S3_ACCESS_KEY_ID>') { RadicalConfig.s3_access_key_id! }
+
+  if RadicalConfig.secret_config_item(:lob_key).present?
+    c.filter_sensitive_data('<LOB_KEY>') { RadicalConfig.secret_config_item!(:lob_key) }
   end
 end
 
