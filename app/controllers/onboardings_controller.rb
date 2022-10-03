@@ -8,7 +8,7 @@ class OnboardingsController < ApplicationController
     if @onboarding.onboarded?
       redirect_to @onboarding.onboarded_path
     else
-      redirect_to @onboarding.next_step.path
+      redirect_to @onboarding.onboarding_path
     end
   end
 

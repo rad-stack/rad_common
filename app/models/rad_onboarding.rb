@@ -9,6 +9,10 @@ class RadOnboarding
     @onboarded ||= current_user.admin? || !steps_remaining?
   end
 
+  def onboarding_path
+    @onboarding.next_step.path
+  end
+
   def onboarded_path
     raise 'implement in sub class'
   end
