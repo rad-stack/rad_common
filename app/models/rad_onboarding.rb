@@ -9,7 +9,7 @@ class RadOnboarding
     @onboarded ||= current_user.admin? || !steps_remaining?
   end
 
-  def onboarding_path
+  def onboarding_path(_current_user)
     @onboarding.next_step.path
   end
 
