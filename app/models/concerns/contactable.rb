@@ -2,9 +2,10 @@ module Contactable
   extend ActiveSupport::Concern
 
   included do
+    belongs_to :state
+
     validates :zipcode, format: /\A[0-9]{5}(?:-[0-9]{4})?\z/, allow_nil: true
 
-    validate :validate_state
     validate :validate_address_2
     validate :validate_metadata
     validate :validate_address, if: :run_smarty?
@@ -33,7 +34,7 @@ module Contactable
   end
 
   def full_address_no_commas
-    [address_1, address_2, city, state, zipcode].compact_blank.join(' ').to_s
+    [address_1, address_2, city, state.to_s, zipcode].compact_blank.join(' ').to_s
   end
 
   def clear_address_changes!
@@ -72,12 +73,6 @@ module Contactable
       any_address_changes?
     end
 
-    def validate_state
-      return if city_model_variant?
-
-      errors.add(:state, "isn't a valid state") if state.present? && !StateOptions.valid?(state)
-    end
-
     def validate_address_2
       errors.add :address_2, 'must be blank when address 1 is blank' if address_1.blank? && address_2.present?
     end
@@ -105,7 +100,7 @@ module Contactable
     def any_address_changes?
       return city_model_variant_changes? if city_model_variant?
 
-      address_1_changed? || address_2_changed? || city_changed? || zipcode_changed? || state_changed?
+      address_1_changed? || address_2_changed? || city_changed? || zipcode_changed? || state_id_changed?
     end
 
     def city_model_variant_changes?
@@ -117,7 +112,7 @@ module Contactable
     def city_state
       return city.to_s if city_model_variant?
 
-      [city, state].compact_blank.join(', ').presence
+      [city, state.to_s].compact_blank.join(', ').presence
     end
 
     def apply_standardized_address(result)
@@ -130,7 +125,7 @@ module Contactable
         self.city = City.find_or_create_by!(state: state_record(result.state), name: result.city)
       else
         self.city = result.city
-        self.state = result.state
+        self.state = state_record(result.state)
       end
 
       self.zipcode = result.zipcode
@@ -144,7 +139,7 @@ module Contactable
       result = SmartyAddress.new({ address_1: address_1,
                                    address_2: address_2,
                                    city: city,
-                                   state: state,
+                                   state: state.code,
                                    zipcode: zipcode }).call
 
       return unless result
@@ -161,7 +156,19 @@ module Contactable
     def apply_changes(result)
       changes_hash = {}
 
-      %w[address_1 address_2 city state zipcode].each do |field|
+      # TODO: see if this works with state model and clean up code
+      %w[address_1 address_2 city].each do |field|
+        next if attributes[field].blank? && result.send(field).blank?
+        next if attributes[field]&.downcase == result.send(field)&.downcase
+
+        changes_hash[field] = attributes[field]
+      end
+
+      if (state.present? || result.state.present?) && state.code != result.state&.upcase
+        changes_hash['state'] = state.code
+      end
+
+      %w[zipcode].each do |field|
         next if attributes[field].blank? && result.send(field).blank?
         next if attributes[field]&.downcase == result.send(field)&.downcase
 
@@ -179,11 +186,8 @@ module Contactable
     end
 
     def state_record(state_code)
-      # only used for the city_model_variant on the one project
-
-      state_name = StateOptions.options.select { |item| item.last == state_code }.first.first
-      this_state = State.find_by(name: state_name)
-      raise "Couldn't find state: #{state_name}" if this_state.blank?
+      this_state = State.find_by(code: state_code)
+      raise "Couldn't find state: #{state_code}" if this_state.blank?
 
       this_state
     end

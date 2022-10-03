@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 22 Sep 2022 09:31:31 GMT
+      - Sun, 02 Oct 2022 20:37:17 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -35,5 +35,5 @@ http_interactions:
       string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"6450 Autumn
         Berry Cir","last_line":"Jacksonville FL 32258-8417","components":{"primary_number":"6450","street_name":"Autumn
         Berry","street_suffix":"Cir","city_name":"Jacksonville","default_city_name":"Jacksonville","state_abbreviation":"FL","zipcode":"32258","plus4_code":"8417"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12031","county_name":"Duval","carrier_route":"R057","latitude":30.128640,"longitude":-81.542180,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"N","dpv_footnotes":"AAM3","active":"Y","enhanced_match":"non-postal-match"}}]'
-  recorded_at: Thu, 22 Sep 2022 09:31:31 GMT
+  recorded_at: Sun, 02 Oct 2022 20:37:16 GMT
 recorded_with: VCR 6.1.0

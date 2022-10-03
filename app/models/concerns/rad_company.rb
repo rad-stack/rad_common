@@ -4,8 +4,6 @@ module RadCompany
   included do
     include Contactable
 
-    belongs_to :state
-
     alias_attribute :to_s, :name
 
     scope :by_id, -> { order(:id) }

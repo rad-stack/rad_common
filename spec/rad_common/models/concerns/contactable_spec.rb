@@ -4,6 +4,9 @@ RSpec.describe Contactable do
   describe 'standardize_address', vcr: true, smarty_specs: true do
     subject(:company) { Company.main }
 
+    let(:florida) { create :state, code: 'FL', name: 'Florida' }
+    let(:california) { create :state, code: 'CA', name: 'California' }
+
     before do
       company.update bypass_address_validation: false,
                      address_1: address_1,
@@ -17,7 +20,7 @@ RSpec.describe Contactable do
       let(:address_1) { '4000 Central Florida Boulevard' }
       let(:address_2) { nil }
       let(:city) { 'OrLando' }
-      let(:state) { 'fl' }
+      let(:state) { florida }
       let(:zipcode) { '32816' }
 
       it 'standardizes' do
@@ -25,7 +28,7 @@ RSpec.describe Contactable do
         expect(company.address_1).to eq('4000 Central Florida Blvd')
         expect(company.address_2).to be_nil
         expect(company.city).to eq('Orlando')
-        expect(company.state).to eq('FL')
+        expect(company.state.code).to eq('FL')
         expect(company.zipcode).to eq('32816')
         expect(company.address_problems).to be_nil
         expect(company.address_changes).to eq('4000 Central Florida Boulevard')
@@ -36,7 +39,7 @@ RSpec.describe Contactable do
       let(:address_1) { '8110 Mittie Ave' }
       let(:address_2) { nil }
       let(:city) { 'Panama City' }
-      let(:state) { 'FL' }
+      let(:state) { florida }
       let(:zipcode) { '32404-0000' }
 
       it 'standardizes' do
@@ -49,7 +52,7 @@ RSpec.describe Contactable do
       let(:address_1) { '8110 Mittie Ave' }
       let(:address_2) { nil }
       let(:city) { 'Panama City' }
-      let(:state) { 'FL' }
+      let(:state) { florida }
       let(:zipcode) { '32404-333' }
 
       it 'standardizes' do
@@ -62,7 +65,7 @@ RSpec.describe Contactable do
       let(:address_1) { '6450 Autumn Berry Cirlce' }
       let(:address_2) { nil }
       let(:city) { 'Jacksonville' }
-      let(:state) { 'FL' }
+      let(:state) { florida }
       let(:zipcode) { '32258' }
 
       it 'standardizes' do
@@ -76,7 +79,7 @@ RSpec.describe Contactable do
       let(:address_1) { '1376 Macarthur Street' }
       let(:address_2) { nil }
       let(:city) { 'JacksonvillE' }
-      let(:state) { 'fL' }
+      let(:state) { florida }
       let(:zipcode) { '32205' }
 
       it 'standardizes' do
@@ -84,7 +87,7 @@ RSpec.describe Contactable do
         expect(company.address_1).to eq('1376 MacArthur St')
         expect(company.address_2).to be_nil
         expect(company.city).to eq('Jacksonville')
-        expect(company.state).to eq('FL')
+        expect(company.state.code).to eq('FL')
         expect(company.zipcode).to eq('32205')
         expect(company.address_problems).to be_nil
         expect(company.address_changes).to eq('1376 Macarthur Street')
@@ -95,7 +98,7 @@ RSpec.describe Contactable do
       let(:address_1) { 'Post Office Box 39' }
       let(:address_2) { nil }
       let(:city) { 'OrLando' }
-      let(:state) { 'fl' }
+      let(:state) { florida }
       let(:zipcode) { '32816' }
 
       it 'standardizes' do
@@ -103,7 +106,7 @@ RSpec.describe Contactable do
         expect(company.address_1).to eq('PO Box 39')
         expect(company.address_2).to be_nil
         expect(company.city).to eq('Orlando')
-        expect(company.state).to eq('FL')
+        expect(company.state.code).to eq('FL')
         expect(company.zipcode).to eq('32815')
         expect(company.address_problems).to be_nil
         expect(company.address_changes).to eq('Post Office Box 39, 32816')
@@ -114,7 +117,7 @@ RSpec.describe Contactable do
       let(:address_1) { '4000 Central Florida Boulevard' }
       let(:address_2) { 'Suite 1000' }
       let(:city) { 'OrLando' }
-      let(:state) { 'fl' }
+      let(:state) { florida }
       let(:zipcode) { '32816' }
 
       it 'standardizes' do
@@ -122,7 +125,7 @@ RSpec.describe Contactable do
         expect(company.address_1).to eq('4000 Central Florida Blvd')
         expect(company.address_2).to eq('Ste 1000')
         expect(company.city).to eq('Orlando')
-        expect(company.state).to eq('FL')
+        expect(company.state.code).to eq('FL')
         expect(company.zipcode).to eq('32816')
         expect(company.address_problems).to be_nil
         expect(company.address_changes).to eq('4000 Central Florida Boulevard, Suite 1000')
@@ -133,7 +136,7 @@ RSpec.describe Contactable do
       let(:address_1) { '4000 Bro Bruh' }
       let(:address_2) { nil }
       let(:city) { 'Mordor' }
-      let(:state) { 'FL' }
+      let(:state) { florida }
       let(:zipcode) { '32816' }
 
       it 'fails validation' do
@@ -145,7 +148,7 @@ RSpec.describe Contactable do
       let(:address_1) { '3615 Dupont Avenue' }
       let(:address_2) { nil }
       let(:city) { 'Jacksonville' }
-      let(:state) { 'FL' }
+      let(:state) { florida }
       let(:zipcode) { '32217' }
 
       it 'sets address_problems and does not touch address' do
@@ -158,7 +161,7 @@ RSpec.describe Contactable do
       let(:address_1) { '1921 East 24th Street' }
       let(:address_2) { 'Apt #1' }
       let(:city) { 'Oakland' }
-      let(:state) { 'CA' }
+      let(:state) { california }
       let(:zipcode) { '94600' }
 
       it 'confirms address by ignoring secondary component' do
