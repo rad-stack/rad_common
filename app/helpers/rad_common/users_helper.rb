@@ -180,7 +180,7 @@ module RadCommon
     end
 
     def add_user_client_action(user, index_page)
-      return unless RadicalConfig.user_clients? && user.external? && policy(UserClient.new).new?
+      return unless RadicalConfig.user_clients? && user.external? && policy(UserClient.new(user: user)).new?
 
       link_class = index_page ? 'btn btn-sm btn-success btn-block' : 'btn btn-sm btn-success'
 
