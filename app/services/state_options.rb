@@ -74,10 +74,18 @@ class StateOptions
       options.sample.first
     end
 
-    def full_name(abbreviation)
-      return unless valid?(abbreviation)
+    def name_for_code(code)
+      results = options.select { |item| item.last == code }
+      return if results.blank?
 
-      active_states.invert[abbreviation]
+      results.first.first
+    end
+
+    def code_for_name(name)
+      results = options.select { |item| item.first == name }
+      return if results.blank?
+
+      results.first.last
     end
 
     private

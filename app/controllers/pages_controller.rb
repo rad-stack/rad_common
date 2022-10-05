@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[home terms privacy]
+  skip_before_action :authenticate_user!, only: %i[home contact_us terms privacy]
 
   def home
     skip_authorization
