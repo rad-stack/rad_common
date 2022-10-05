@@ -196,6 +196,10 @@ module RadCommon
               class: 'btn btn-secondary btn-sm')
     end
 
+    def show_help_menu?(user)
+      !user_signed_in? || user.external?
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
