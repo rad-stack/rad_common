@@ -168,5 +168,19 @@ RSpec.describe Contactable do
         expect(company.address_problems).to eq 'verified by ignoring invalid suite or unit #'
       end
     end
+
+    context 'with canadian address' do
+      let(:address_1) { '12200 Boulevard Laurentien' }
+      let(:address_2) { nil }
+      let(:city) { 'Montreal' }
+      let(:state) { 'Quebec' }
+      let(:zipcode) { 'H4K 1M9' }
+
+      it 'standardizes' do
+        expect(company.valid?).to be true
+        expect(company.address_1).to eq('12200 Blvd Laurentien')
+        expect(company.address_problems).to be_nil
+      end
+    end
   end
 end
