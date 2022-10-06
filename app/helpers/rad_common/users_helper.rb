@@ -200,5 +200,9 @@ module RadCommon
     def require_mobile_phone?
       RadicalConfig.authy_enabled? && !RadicalConfig.authy_internal_only?
     end
+
+    def clients_to_add_to_user(user)
+      policy_scope(RadCommon::AppInfo.new.client_model_class).active.where.not(id: user.clients.pluck(:id)).sorted
+    end
   end
 end
