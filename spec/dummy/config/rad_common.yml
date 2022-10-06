@@ -10,9 +10,9 @@ default: &default
   app_logo_includes_name: true
   portal: false
   impersonate: true
-  start_route: attorneys
+  start_route: onboardings
   user_clients: true
-  user_profiles: false
+  user_profiles: true
   authy_internal_only: true
   shared_database: false
 
