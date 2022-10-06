@@ -84,8 +84,8 @@ module RadCommon
       value.strftime('%l:%M%P').strip if value.present?
     end
 
-    def rad_form_errors(f)
-      f.error_notification message: "Please review the problems below: #{f.object.errors.full_messages.to_sentence}"
+    def rad_form_errors(form)
+      form.error_notification message: "Please review the problems below: #{f.object.errors.full_messages.to_sentence}"
     end
 
     def format_boolean(value)
