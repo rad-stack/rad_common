@@ -85,7 +85,7 @@ module RadCommon
     end
 
     def rad_form_errors(f)
-      f.error_notification message: "Please review the problems below: #{f.object.errors.full_messages.join(', ')}"
+      f.error_notification message: "Please review the problems below: #{f.object.errors.full_messages.to_sentence}"
     end
 
     def format_boolean(value)
