@@ -75,11 +75,17 @@ class StateOptions
     end
 
     def name_for_code(code)
-      options.select { |item| item.last == code }.first.first
+      results = options.select { |item| item.last == code }
+      return if results.blank?
+
+      results.first.first
     end
 
     def code_for_name(name)
-      options.select { |item| item.first == name }.first.last
+      results = options.select { |item| item.first == name }
+      return if results.blank?
+
+      results.first.last
     end
 
     private
