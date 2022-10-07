@@ -5,6 +5,8 @@ RSpec.describe Contactable do
     subject(:company) { Company.main }
 
     before do
+      allow(RadicalConfig).to receive(:canadian_addresses?).and_return true
+
       company.update bypass_address_validation: false,
                      address_1: address_1,
                      address_2: address_2,
@@ -173,12 +175,12 @@ RSpec.describe Contactable do
       let(:address_1) { '12200 Boulevard Laurentien' }
       let(:address_2) { nil }
       let(:city) { 'Montreal' }
-      let(:state) { 'Quebec' }
+      let(:state) { 'QC' }
       let(:zipcode) { 'H4K 1M9' }
 
-      it 'standardizes' do
+      it "doesn't verify nor standardize" do
         expect(company.valid?).to be true
-        expect(company.address_1).to eq('12200 Blvd Laurentien')
+        expect(company.address_1).to eq('12200 Boulevard Laurentien')
         expect(company.address_problems).to be_nil
       end
     end

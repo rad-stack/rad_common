@@ -2,7 +2,7 @@ module Contactable
   extend ActiveSupport::Concern
 
   included do
-    validates :zipcode, format: /\A[0-9]{5}(?:-[0-9]{4})?\z/, allow_nil: true
+    validates :zipcode, format: /\A[0-9]{5}(?:-[0-9]{4})?\z/, allow_nil: true, unless: :canadian?
 
     validate :validate_state
     validate :validate_address_2
@@ -67,9 +67,17 @@ module Contactable
   private
 
     def run_smarty?
-      return false if running_global_validity || !RadicalConfig.smarty_enabled? || bypass_address_validation?
+      # we can and probably should enable this for Canadian addresses, just capping the effort for now
+
+      if running_global_validity || !RadicalConfig.smarty_enabled? || bypass_address_validation? || canadian?
+        return false
+      end
 
       any_address_changes?
+    end
+
+    def canadian?
+      state.present? && StateOptions.valid?(state) && StateOptions.canadian?(state)
     end
 
     def validate_state
