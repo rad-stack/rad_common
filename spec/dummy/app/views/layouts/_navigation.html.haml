@@ -7,6 +7,7 @@
     .navbar-collapse.collapse.navbar-responsive-collapse#navbar-supported-content
       - if user_signed_in?
         %ul.nav.navbar-nav.navbar-left
+          = render 'layouts/onboarding_navigation'
           - if policy(Client).index?
             %li= link_to 'Clients', clients_path, class: 'nav-link'
           - if policy(Division).index?

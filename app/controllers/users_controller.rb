@@ -37,7 +37,7 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user = User.new
+    @user = User.new(timezone: Company.main.timezone)
     authorize @user
   end
 
@@ -60,7 +60,7 @@ class UsersController < ApplicationController
       @user.assign_attributes(permitted_params)
       @user.approved_by = true_user
 
-      if policy(@user).update_security_roles?
+      if policy(@user).update_security_roles? && !params[:user][:security_roles].nil?
         @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
       end
 

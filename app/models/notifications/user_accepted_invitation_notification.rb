@@ -7,7 +7,7 @@ module Notifications
     private
 
       def app_name
-        payload.internal? ? RadicalConfig.app_name! : RadicalConfig.portal_app_name!
+        payload.portal? ? RadicalConfig.portal_app_name! : RadicalConfig.app_name!
       end
   end
 end

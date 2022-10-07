@@ -33,7 +33,11 @@ class RadPermission
 
   class << self
     def all
-      (SecurityRole.attribute_names - %w[id name created_at updated_at external]).sort
+      (SecurityRole.attribute_names - %w[id name created_at updated_at external allow_invite allow_sign_up]).sort
+    end
+
+    def only_standard?
+      all.size == 2
     end
 
     def security_role_categories(security_role)

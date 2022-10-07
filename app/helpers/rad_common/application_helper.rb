@@ -84,6 +84,11 @@ module RadCommon
       value.strftime('%l:%M%P').strip if value.present?
     end
 
+    def rad_form_errors(form)
+      message = "Please review the problems below: #{form.object.errors.full_messages.to_sentence}"
+      form.error_notification message: message
+    end
+
     def format_boolean(value)
       if value
         tag.div(nil, class: 'fa fa-check')
@@ -170,12 +175,20 @@ module RadCommon
       raise RadicallyIntermittentException if RadicalConfig.disable_sign_up?
     end
 
+    def sign_up_roles
+      SecurityRole.allow_sign_up.by_name
+    end
+
+    def invite_roles
+      SecurityRole.allow_invite.by_name
+    end
+
     def verify_invite
       raise RadicallyIntermittentException if RadicalConfig.disable_invite?
     end
 
     def verify_manually_create_users
-      return if RadicalConfig.disable_sign_up? && RadicalConfig.disable_invite?
+      return if RadicalConfig.manually_create_users?
 
       raise RadicallyIntermittentException
     end
@@ -186,6 +199,14 @@ module RadCommon
       link_to(icon(:file, 'Export to File'),
               send("export_#{model_name.tableize}_path", params.permit!.to_h.merge(format: :csv)),
               class: 'btn btn-secondary btn-sm')
+    end
+
+    def show_help_menu?(user)
+      !user_signed_in? || user.external?
+    end
+
+    def onboarded?
+      Onboarding.new(current_user).onboarded?
     end
 
     private

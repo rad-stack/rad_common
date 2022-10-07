@@ -10,6 +10,8 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
   let(:last_name) { Faker::Name.last_name }
   let(:valid_email) { "#{Faker::Internet.user_name}@#{email_domain}" }
   let(:external_email) { "#{Faker::Internet.user_name}@#{external_domain}" }
+  let!(:internal_role) { create :security_role, allow_invite: true }
+  let!(:external_role) { create :security_role, :external, allow_invite: true }
 
   let(:invite_message) do
     if Devise.paranoid
@@ -39,23 +41,49 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
       context 'when valid' do
         it 'invites a user' do
           visit new_user_invitation_path
+
+          select internal_role.name, from: 'Initial security role'
           fill_in 'Email', with: valid_email
           fill_in 'First name', with: first_name
           fill_in 'Last name', with: last_name
           fill_in 'Mobile phone', with: '(999) 231-1111'
           click_button 'Send'
+
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
+          expect(User.last.security_roles.first).to eq internal_role
+          expect(User.last.internal?).to be true
         end
 
         it 'invites an external user', external_user_specs: true do
           visit new_user_invitation_path
+
+          select external_role.name, from: 'Initial security role'
           fill_in 'Email', with: external_email
           fill_in 'First name', with: first_name
           fill_in 'Last name', with: last_name
           fill_in 'Mobile phone', with: '(999) 231-1111'
-          check 'user_external'
           click_button 'Send'
+
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
+          expect(User.last.security_roles.first).to eq external_role
+          expect(User.last.external?).to be true
+        end
+
+        it 'invites an external user and sets initial role', external_user_specs: true do
+          create :security_role, :external, allow_invite: true
+          initial_role = create :security_role, :external, allow_invite: true
+
+          visit new_user_invitation_path
+
+          select initial_role.name, from: 'Initial security role'
+          fill_in 'Email', with: external_email
+          fill_in 'First name', with: first_name
+          fill_in 'Last name', with: last_name
+          fill_in 'Mobile phone', with: '(999) 231-1111'
+          click_button 'Send'
+
+          expect(page).to have_content "We invited '#{first_name} #{last_name}'"
+          expect(User.last.security_roles.first).to eq initial_role
         end
       end
 
@@ -63,38 +91,46 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
         xit 'because of blank email' do
           # TODO: waiting on bug fix in devise-security, see Task 35144
           visit new_user_invitation_path
+
           fill_in 'First name', with: first_name
           fill_in 'Last name', with: last_name
           click_button 'Send an invitation'
+
           expect(page).to have_content "Email can't be blank"
         end
 
         it 'because of blank first and last name' do
           visit new_user_invitation_path
+
           fill_in 'user_email', with: external_email
           click_button 'Send an invitation'
+
           expect(page).to have_content "First name can't be blank"
           expect(page).to have_content "Last name can't be blank"
         end
 
         it 'because of invalid email' do
           visit new_user_invitation_path
+
           bad_email = 'j@g.com'
           fill_in 'Email', with: bad_email
           fill_in 'First name', with: first_name
           fill_in 'Last name', with: last_name
           fill_in 'Mobile phone', with: '(999) 231-1111'
           click_button 'Send an invitation'
+
           expect(page).to have_content ' is not authorized for this application'
         end
 
         it 'because of a single letter in name that conflicts with password in name validation' do
           visit new_user_invitation_path
+
           fill_in 'Email', with: valid_email
           fill_in 'First name', with: 'f'
           fill_in 'Last name', with: 'b'
           fill_in 'Mobile phone', with: '(999) 231-1111'
           click_button 'Send an invitation'
+
           expect(page).to have_content "We invited 'f b'"
         end
       end
@@ -103,11 +139,13 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
     describe 'resend' do
       it 'resends invitation' do
         visit new_user_invitation_path
+
         fill_in 'Email', with: valid_email
         fill_in 'First name', with: first_name
         fill_in 'Last name', with: last_name
         fill_in 'Mobile phone', with: '(999) 231-1111'
         click_button 'Send'
+
         expect(page).to have_content "We invited '#{first_name} #{last_name}'"
 
         visit user_path(User.last)
@@ -122,7 +160,8 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
       User.invite!(email: "#{Faker::Internet.user_name}@#{email_domain}",
                    first_name: Faker::Name.first_name,
                    last_name: Faker::Name.last_name,
-                   mobile_phone: create(:phone_number, :mobile))
+                   mobile_phone: create(:phone_number, :mobile),
+                   initial_security_role_id: internal_role.id)
     end
 
     it 'does not allow invitee to reset password after invite expires' do
