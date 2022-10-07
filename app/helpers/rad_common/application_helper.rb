@@ -85,7 +85,8 @@ module RadCommon
     end
 
     def rad_form_errors(form)
-      form.error_notification message: "Please review the problems below: #{f.object.errors.full_messages.to_sentence}"
+      message = "Please review the problems below: #{form.object.errors.full_messages.to_sentence}"
+      form.error_notification message: message
     end
 
     def format_boolean(value)
