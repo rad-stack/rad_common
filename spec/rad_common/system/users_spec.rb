@@ -41,8 +41,8 @@ RSpec.describe 'Users', type: :system do
       end
     end
 
-    describe 'profile' do
-      it 'updates profile' do
+    describe 'registration' do
+      it 'updates registration' do
         visit edit_user_registration_path
         expect(find_field('First name').value).to eq user.first_name
         new_name = Faker::Name.first_name
@@ -97,10 +97,7 @@ RSpec.describe 'Users', type: :system do
     describe 'new' do
       let(:security_role) { create :security_role }
 
-      before do
-        allow(RadicalConfig).to receive(:disable_sign_up?).and_return true
-        allow(RadicalConfig).to receive(:disable_invite?).and_return true
-      end
+      before { allow(RadicalConfig).to receive(:manually_create_users?).and_return true }
 
       it 'renders the new template' do
         visit new_user_path
@@ -210,7 +207,10 @@ RSpec.describe 'Users', type: :system do
   end
 
   describe 'sign up', js: true, sign_up_specs: true do
-    before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
+    before do
+      create :security_role, :external, allow_sign_up: true
+      allow_any_instance_of(User).to receive(:authy_enabled?).and_return false
+    end
 
     it 'signs up' do
       visit new_user_registration_path
@@ -218,7 +218,7 @@ RSpec.describe 'Users', type: :system do
       fill_in 'First name', with: Faker::Name.first_name
       fill_in 'Last name', with: Faker::Name.last_name
       fill_in 'Mobile phone', with: '(345) 222-1111'
-      fill_in 'Email', with: "#{Faker::Internet.user_name}@example.com"
+      fill_in 'Email', with: "#{Faker::Internet.user_name}@abc.com"
       fill_in 'user_password', with: password
       fill_in 'user_password_confirmation', with: password
       expect(find_button('Sign Up', disabled: true).disabled?).to be(true)

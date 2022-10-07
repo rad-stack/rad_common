@@ -8,6 +8,16 @@
       .form-inputs
         .row
           .col-lg-4
+            - if invite_roles.size > 1
+              = f.input :initial_security_role_id,
+                        label: 'Initial security role',
+                        collection: invite_roles,
+                        include_blank: true
+
+            - else
+              = f.input :initial_security_role_id, as: :hidden, input_html: { value: invite_roles.first.id }
+        .row
+          .col-lg-4
             = f.input :first_name, label: 'First name', required: true
           .col-lg-8
             = f.input :last_name, label: 'Last name', required: true
@@ -21,10 +31,7 @@
             %p
               You can add more valid domains in
               = link_to 'Company Settings', '/rad_common/company/edit'
-          - if RadicalConfig.external_users?
-            .col-lg-4
-              = f.input :external, tooltip: 'Invite your external users to access the portal'
         .row
-          .col-lg-4= f.input :mobile_phone
+          .col-lg-4= f.input :mobile_phone, required: require_mobile_phone?
       .form-actions
         = f.button :submit, t('devise.invitations.new.submit_button'), class: 'btn btn-primary'

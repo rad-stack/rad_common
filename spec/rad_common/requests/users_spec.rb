@@ -31,9 +31,7 @@ RSpec.describe 'Users', type: :request do
 
     describe 'POST create' do
       before do
-        allow(RadicalConfig).to receive(:disable_sign_up?).and_return true
-        allow(RadicalConfig).to receive(:disable_invite?).and_return true
-
+        allow(RadicalConfig).to receive(:manually_create_users?).and_return true
         allow_any_instance_of(User).to receive(:authy_enabled?).and_return false
       end
 

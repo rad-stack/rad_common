@@ -88,10 +88,10 @@ class RadbearDeviseMailer < Devise::Mailer
   end
 
   def default_url_options
-    if @resource.internal?
-      { host: RadicalConfig.host_name! }
-    else
+    if @resource.portal?
       { host: RadicalConfig.portal_host_name! }
+    else
+      { host: RadicalConfig.host_name! }
     end
   end
 
@@ -102,6 +102,6 @@ class RadbearDeviseMailer < Devise::Mailer
     end
 
     def app_name
-      @resource.internal? ? RadicalConfig.app_name! : RadicalConfig.portal_app_name!
+      @resource.portal? ? RadicalConfig.portal_app_name! : RadicalConfig.app_name!
     end
 end

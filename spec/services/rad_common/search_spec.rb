@@ -32,7 +32,11 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:user_1) { create :user, confirmed_at: 2.days.ago }
       let(:user_2) { create :user, confirmed_at: 3.days.from_now }
       let!(:user_3) { create :user, confirmed_at: DateTime.current.end_of_day }
-      let!(:user_4) { create :user, confirmed_at: 2.days.ago, security_roles: [] }
+
+      let!(:user_4) do
+        create :user, confirmed_at: 2.days.ago, security_roles: [], user_status: UserStatus.default_inactive_status
+      end
+
       let(:filters) { [{ column: :confirmed_at, type: RadCommon::DateFilter }] }
       let(:params) do
         ActionController::Parameters.new(search: { confirmed_at_start: 3.days.ago.strftime('%Y-%m-%d'),

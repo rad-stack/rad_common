@@ -193,6 +193,8 @@ end
         apply_migration '20220423173413_inactive_notifications.rb'
         apply_migration '20220504114538_rename_validate_email.rb'
         apply_migration '20220719162246_address_validation.rb'
+        apply_migration '20220901143808_sign_up_roles.rb'
+        apply_migration '20220905140634_allow_invite_role.rb'
         apply_migration '20220918194026_refine_smarty.rb'
       end
 
