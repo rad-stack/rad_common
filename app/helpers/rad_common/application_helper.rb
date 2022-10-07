@@ -209,10 +209,6 @@ module RadCommon
       Onboarding.new(current_user).onboarded?
     end
 
-    def onboarding
-      Onboarding.new(current_user)
-    end
-
     private
 
       def size_symbol_to_int(size_as_symbol)

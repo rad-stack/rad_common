@@ -1,4 +1,6 @@
 - unless onboarded?
+  - onboarding = Onboarding.new(current_user)
+
   %li.nav-item.dropdown
     %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#' }
       %span.badge.badge-warning
