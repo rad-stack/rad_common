@@ -1,10 +1,56 @@
 require 'rails_helper'
 
 RSpec.describe Contactable do
+  describe 'zipcode validation' do
+    subject { company.valid? }
+
+    let(:company) { Company.main }
+
+    before { company.zipcode = zipcode }
+
+    context 'with valid zipcode' do
+      let(:zipcode) { '96818' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'with extra spaces' do
+      let(:zipcode) { ' 96818' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'with invalid characters' do
+      let(:zipcode) { '9681A' }
+
+      it { is_expected.to be false }
+    end
+
+    context 'with not enough characters' do
+      let(:zipcode) { '9681' }
+
+      it { is_expected.to be false }
+    end
+
+    context 'with too many characters' do
+      let(:zipcode) { '968189' }
+
+      it { is_expected.to be false }
+    end
+
+    context 'with canadian' do
+      let(:zipcode) { 'H4K 1M9' }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe 'standardize_address', vcr: true, smarty_specs: true do
     subject(:company) { Company.main }
 
     before do
+      allow(RadicalConfig).to receive(:canadian_addresses?).and_return true
+
       company.update bypass_address_validation: false,
                      address_1: address_1,
                      address_2: address_2,
@@ -173,12 +219,12 @@ RSpec.describe Contactable do
       let(:address_1) { '12200 Boulevard Laurentien' }
       let(:address_2) { nil }
       let(:city) { 'Montreal' }
-      let(:state) { 'Quebec' }
+      let(:state) { 'QC' }
       let(:zipcode) { 'H4K 1M9' }
 
-      it 'standardizes' do
+      it "doesn't verify nor standardize" do
         expect(company.valid?).to be true
-        expect(company.address_1).to eq('12200 Blvd Laurentien')
+        expect(company.address_1).to eq('12200 Boulevard Laurentien')
         expect(company.address_problems).to be_nil
       end
     end
