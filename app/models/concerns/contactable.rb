@@ -73,8 +73,6 @@ module Contactable
     end
 
     def validate_state
-      return if city_model_variant?
-
       errors.add(:state, "isn't a valid state") if state.present? && !StateOptions.valid?(state)
     end
 
@@ -103,20 +101,10 @@ module Contactable
     end
 
     def any_address_changes?
-      return city_model_variant_changes? if city_model_variant?
-
       address_1_changed? || address_2_changed? || city_changed? || zipcode_changed? || state_changed?
     end
 
-    def city_model_variant_changes?
-      # one project uses city/state models
-
-      address_1_changed? || address_2_changed? || city_id_changed? || zipcode_changed?
-    end
-
     def city_state
-      return city.to_s if city_model_variant?
-
       [city, state].compact_blank.join(', ').presence
     end
 
@@ -125,14 +113,8 @@ module Contactable
 
       self.address_1 = result.address_1
       self.address_2 = result.address_2
-
-      if city_model_variant?
-        self.city = City.find_or_create_by!(state: state_record(result.state), name: result.city)
-      else
-        self.city = result.city
-        self.state = result.state
-      end
-
+      self.city = result.city
+      self.state = result.state
       self.zipcode = result.zipcode
 
       self.address_metadata ||= {}
@@ -170,21 +152,5 @@ module Contactable
 
       self.address_metadata ||= {}
       self.address_metadata['changes'] = changes_hash
-    end
-
-    def city_model_variant?
-      # one project uses city/state models
-
-      respond_to?(:city_id)
-    end
-
-    def state_record(state_code)
-      # only used for the city_model_variant on the one project
-
-      state_name = StateOptions.options.select { |item| item.last == state_code }.first.first
-      this_state = State.find_by(name: state_name)
-      raise "Couldn't find state: #{state_name}" if this_state.blank?
-
-      this_state
     end
 end
