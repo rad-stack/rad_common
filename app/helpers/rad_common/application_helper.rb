@@ -204,6 +204,14 @@ module RadCommon
       !user_signed_in? || user.external?
     end
 
+    def onboarded?
+      Onboarding.new(current_user).onboarded?
+    end
+
+    def onboarding
+      Onboarding.new(current_user)
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
