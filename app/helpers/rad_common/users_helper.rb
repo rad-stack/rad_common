@@ -18,15 +18,6 @@ module RadCommon
       UserProfilePolicy.new(current_user, current_user).show?
     end
 
-    def next_profile_action(user)
-      onboarding = Onboarding.new(user)
-
-      next_step = onboarding.next_step
-      return unless next_step
-
-      link_to(icon(:forward, next_step.label), next_step.path, class: 'btn btn-primary btn-lg')
-    end
-
     def users_actions
       [invite_user_action, new_user_action]
     end
