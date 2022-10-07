@@ -6,7 +6,10 @@ RSpec.describe Contactable do
 
     let(:company) { Company.main }
 
-    before { company.zipcode = zipcode }
+    before do
+      company.state = 'FL'
+      company.zipcode = zipcode
+    end
 
     context 'with valid zipcode' do
       let(:zipcode) { '96818' }
