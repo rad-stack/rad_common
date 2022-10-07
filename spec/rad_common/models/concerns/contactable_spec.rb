@@ -1,6 +1,50 @@
 require 'rails_helper'
 
 RSpec.describe Contactable do
+  describe 'zipcode validation' do
+    subject { company.valid? }
+
+    let(:company) { Company.main }
+
+    before { company.zipcode = zipcode }
+
+    context 'with valid zipcode' do
+      let(:zipcode) { '96818' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'with extra spaces' do
+      let(:zipcode) { ' 96818' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'with invalid characters' do
+      let(:zipcode) { '9681A' }
+
+      it { is_expected.to be false }
+    end
+
+    context 'with not enough characters' do
+      let(:zipcode) { '9681' }
+
+      it { is_expected.to be false }
+    end
+
+    context 'with too many characters' do
+      let(:zipcode) { '968189' }
+
+      it { is_expected.to be false }
+    end
+
+    context 'with canadian' do
+      let(:zipcode) { 'H4K 1M9' }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe 'standardize_address', vcr: true, smarty_specs: true do
     subject(:company) { Company.main }
 
