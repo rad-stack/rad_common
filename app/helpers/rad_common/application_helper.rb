@@ -187,7 +187,7 @@ module RadCommon
     end
 
     def verify_manually_create_users
-      return if RadicalConfig.disable_sign_up? && RadicalConfig.disable_invite?
+      return if RadicalConfig.manually_create_users?
 
       raise RadicallyIntermittentException
     end

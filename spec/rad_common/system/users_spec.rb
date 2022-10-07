@@ -97,10 +97,7 @@ RSpec.describe 'Users', type: :system do
     describe 'new' do
       let(:security_role) { create :security_role }
 
-      before do
-        allow(RadicalConfig).to receive(:disable_sign_up?).and_return true
-        allow(RadicalConfig).to receive(:disable_invite?).and_return true
-      end
+      before { allow(RadicalConfig).to receive(:manually_create_users?).and_return true }
 
       it 'renders the new template' do
         visit new_user_path

@@ -37,7 +37,7 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user = User.new
+    @user = User.new(timezone: Company.main.timezone)
     authorize @user
   end
 

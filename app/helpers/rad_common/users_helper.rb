@@ -38,13 +38,9 @@ module RadCommon
     end
 
     def new_user_action
-      return unless policy(User.new).new? && manually_create_users?
+      return unless policy(User.new).new? && RadicalConfig.manually_create_users?
 
       link_to(icon('plus-square', 'New User'), new_user_path, class: 'btn btn-success btn-sm')
-    end
-
-    def manually_create_users?
-      RadicalConfig.disable_invite? && RadicalConfig.disable_sign_up?
     end
 
     def user_actions(user)
