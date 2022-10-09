@@ -18,10 +18,16 @@ class RadOnboarding
   end
 
   def steps_remaining?
-    !current_user.profile_entered? || next_step.present?
+    !profile_entered? || next_step.present?
   end
 
   def next_step
     raise 'implement in sub class'
   end
+
+  private
+
+    def profile_entered?
+      !RadicalConfig.user_profiles? || current_user.profile_entered?
+    end
 end
