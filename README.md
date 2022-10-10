@@ -1,34 +1,6 @@
 # RadCommon
 This is a common set of features and tools tailored for a standard business web application.
 
-## Date & Time Picker Usage
-
-### To use the date picker:
-- Using simple form: use the date field 
-  - Example: `f.input :some_date, as: :date, html5: true`
-- Using rails helpers: use `date_field` and `date_field_tag` with a 'date' class
-  - Example: `date_field_tag "some_date", nil, class: 'date'`
-  - Example: `date_field "user" "birthday", class: 'date'`
-
-### To use the time picker:
-- Using simple form: use the time field with the html5 option turned on
-  - Example: `f.input :some_time, as: :time, html5: true`
-- Using rails helpers: use `time_field` and `time_field_tag` with a 'time' class
-  - Example: `time_field_tag "some_time", nil, class: 'time'`
-  - Example: `time_field "user" "favorite_time", class: 'time'`
-
-### To use the datetime picker:
-- Using simple form: use the datetime_local field
-  - Example: `f.input :some_datetime, as: :datetime_local`
-- Using rails helpers: use `datetime_local_field` and `datetime_local_field_tag` with a 'datetime_local' class
-  - Example: `datetime_local_field_tag "some_datetime", nil, class: 'datetime_local'`
-  - Example: `datetime_local_field "user" "birth_datetime", class: 'datetime_local'`
-
-### Setting a default date/time
-Set a `data-default` option:
-- Example: `f.input :some_date, as: :date, html5: true, input_html: { 'data-default' => '2017-01-01' }`
-- Example: `time_field_tag 'some_time', nil, { class: 'time', 'data-default' => '13:04'`
-
 ## Server
 To install rad_common, you must run the generator: 
 
