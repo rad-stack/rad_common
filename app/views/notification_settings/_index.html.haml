@@ -25,7 +25,7 @@
                               method: :post,
                               html: { class: 'dynamic-updater' } do |f|
 
-              = f.error_notification
+              = rad_form_errors f
               .row
                 .col-lg
                   = f.input :enabled,
