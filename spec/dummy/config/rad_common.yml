@@ -16,6 +16,7 @@ default: &default
   user_profiles: true
   authy_internal_only: true
   shared_database: false
+  show_help_menu: true
 
   system_usage_models:
     -

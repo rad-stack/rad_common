@@ -201,10 +201,6 @@ module RadCommon
               class: 'btn btn-secondary btn-sm')
     end
 
-    def show_help_menu?(user)
-      !user_signed_in? || user.external?
-    end
-
     def onboarded?
       Onboarding.new(current_user).onboarded?
     end
