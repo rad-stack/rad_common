@@ -6742,9 +6742,9 @@ quick-lru@^4.0.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-4.0.1.tgz#5b8878f113a58217848c6482026c73e1ba57727f"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
 
-"rad_common_js@https://github.com/radicalbear/rad_common_js#b475353521cd5b6da6532b48eb715ec86b14e242":
+"rad_common_js@https://github.com/radicalbear/rad_common_js#31d2e85af2a99137e0a9b3c1d0bdaf6f882ef482":
   version "2.1.5"
-  resolved "https://github.com/radicalbear/rad_common_js#b475353521cd5b6da6532b48eb715ec86b14e242"
+  resolved "https://github.com/radicalbear/rad_common_js#31d2e85af2a99137e0a9b3c1d0bdaf6f882ef482"
   dependencies:
     "@rails/actiontext" "^6.0.2-1"
     "@rails/ujs" "^6.0.5"
