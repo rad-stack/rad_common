@@ -66,6 +66,10 @@ Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
 end
 
+Rails.application.config.after_initialize do
+  ActionText::ContentHelper.allowed_attributes << 'style'
+end
+
 AuthTrail.geocode = false
 
 module Kaminari
