@@ -101,6 +101,9 @@ module RadCommon
                   '#config.force_ssl = true',
                   'config.force_ssl = true'
 
+        # rad_common_js
+        directory '../../../../../rad_common_js/', 'rad_common_js/'
+
 unless RadicalConfig.shared_database?
         create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
