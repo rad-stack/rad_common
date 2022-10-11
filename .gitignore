@@ -1,5 +1,6 @@
 log/*.log
 pkg/
+rad_common_js/node_modules
 spec/dummy/.env.development
 spec/dummy/.env.test
 spec/dummy/db/*.sqlite3

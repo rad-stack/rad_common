@@ -1,0 +1,11 @@
+/* RESET EMAIL CLIENT STYLES */
+img {
+  border: 0 none;
+  height: auto;
+  line-height: 100%;
+  outline: none;
+  text-decoration: none;
+}
+
+a img { border:0 none; }
+table, td { border-collapse:collapse; }

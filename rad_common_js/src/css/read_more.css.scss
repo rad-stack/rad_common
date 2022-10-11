@@ -1,0 +1,9 @@
+.read-more + [data-readmore-toggle], selector[data-readmore] {
+  display: block;
+  width: 100%;
+}
+
+.read-more[data-readmore] {
+  transition: height 75ms;
+  overflow: hidden;
+}
