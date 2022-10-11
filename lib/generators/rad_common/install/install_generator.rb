@@ -7,6 +7,8 @@ module RadCommon
 
       def create_initializer_file
         standardize_date_methods
+        # rad_common_js
+        directory '../../../../../rad_common_js/', 'rad_common_js/'
 
         # misc
         copy_file '../../../../../spec/dummy/package.json', 'package.json'
@@ -100,9 +102,6 @@ module RadCommon
         gsub_file 'config/environments/production.rb',
                   '#config.force_ssl = true',
                   'config.force_ssl = true'
-
-        # rad_common_js
-        directory '../../../../../rad_common_js/', 'rad_common_js/'
 
 unless RadicalConfig.shared_database?
         create_file 'db/seeds.rb' do <<-'RUBY'
