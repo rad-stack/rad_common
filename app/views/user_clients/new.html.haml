@@ -6,7 +6,7 @@
 
   .card-body
     = simple_form_for(@user_client) do |f|
-      = f.error_notification
+      = rad_form_errors f
       .form-inputs
         .row
           .col-lg-12

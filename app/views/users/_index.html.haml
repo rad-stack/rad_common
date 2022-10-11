@@ -1,6 +1,7 @@
 :ruby
   show_roles = true if local_assigns[:show_roles].nil?
   show_actions = true if local_assigns[:show_actions].nil?
+  hide_inactive = false if local_assigns[:hide_inactive].nil?
   show_actions &&= show_actions?(User)
   sort_columns = false if local_assigns[:sort_columns].nil?
   page_param_name = :page if local_assigns[:page_param_name].nil?
@@ -32,7 +33,7 @@
       - users.each do |user|
         - can_show = policy(user).show?
 
-        %tr{ class: user.display_style }
+        %tr{ class: user_row_class(user, hide_inactive), id: user_row_id(user, hide_inactive) }
           %td= secured_link(user)
           %td
             - if can_show

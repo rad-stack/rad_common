@@ -81,8 +81,7 @@ class RadSeeder
     end
 
     def seed_user
-      # don't seed this if there are no additional permissions than the 2 standard ones
-      return if RadPermission.only_standard?
+      return unless seeded_user_role?
 
       role = get_role('User')
       role.allow_invite = !RadicalConfig.disable_invite?
@@ -143,6 +142,10 @@ class RadSeeder
 
     def seeded_user_domains
       internal_user_emails.map { |item| item.split('@').last }.uniq.sort
+    end
+
+    def seeded_user_role?
+      seeded_user_config.pluck(:security_role).include?('User')
     end
 
     def internal_user_emails

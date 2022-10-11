@@ -191,5 +191,28 @@ module RadCommon
     def clients_to_add_to_user(user)
       policy_scope(RadCommon::AppInfo.new.client_model_class).active.where.not(id: user.clients.pluck(:id)).sorted
     end
+
+    def show_hide_users_button(users)
+      return if users.inactive.none?
+
+      tag.button 'Show/Hide Inactive',
+                 type: 'button',
+                 class: 'btn btn-sm btn-secondary',
+                 'data-target': '#users-collapse',
+                 'data-toggle': 'collapse'
+    end
+
+    def user_row_class(user, hide_inactive)
+      item = user.display_style
+      return item if !hide_inactive || user.active?
+
+      "#{item} collapse"
+    end
+
+    def user_row_id(user, hide_inactive)
+      return if !hide_inactive || user.active?
+
+      'users-collapse'
+    end
   end
 end

@@ -14,7 +14,9 @@
   - security_roles.each do |security_role|
     %tr
       %td= secured_link security_role
-      %td= security_role.users.size
+      %td
+        %p #{pluralize(security_role.users.active.count, 'Active User')}
+        %p #{pluralize(security_role.users.inactive.count, 'Inactive User')}
       - if RadicalConfig.external_users?
         %td= format_boolean security_role.external
       - unless RadicalConfig.disable_invite?
