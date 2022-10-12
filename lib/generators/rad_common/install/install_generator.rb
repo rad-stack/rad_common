@@ -9,20 +9,20 @@ module RadCommon
         standardize_date_methods
 
         # misc
-        template '../../../../../spec/dummy/Procfile', 'Procfile'
         copy_file '../../../../../spec/dummy/package.json', 'package.json'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
         copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
+        directory '../../../../../.bundle', '.bundle'
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
         copy_file '../../../../../.hound.yml', '.hound.yml'
         copy_file '../../../../../.eslintrc', '.eslintrc'
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
-        copy_file '../../../../../.rubocop.yml', '.rubocop.yml'
+        copy_file '../rubocop.txt', '.rubocop.yml'
 
         # config
         copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
@@ -193,6 +193,9 @@ end
         apply_migration '20220423173413_inactive_notifications.rb'
         apply_migration '20220504114538_rename_validate_email.rb'
         apply_migration '20220719162246_address_validation.rb'
+        apply_migration '20220901143808_sign_up_roles.rb'
+        apply_migration '20220905140634_allow_invite_role.rb'
+        apply_migration '20220918194026_refine_smarty.rb'
       end
 
       def self.next_migration_number(path)

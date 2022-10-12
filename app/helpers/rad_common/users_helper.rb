@@ -14,6 +14,10 @@ module RadCommon
       items
     end
 
+    def my_profile_nav?
+      UserProfilePolicy.new(current_user, current_user).show?
+    end
+
     def users_actions
       [invite_user_action, new_user_action]
     end
@@ -25,22 +29,44 @@ module RadCommon
     end
 
     def new_user_action
-      return unless policy(User.new).new? && manually_create_users?
+      return unless policy(User.new).new? && RadicalConfig.manually_create_users?
 
       link_to(icon('plus-square', 'New User'), new_user_path, class: 'btn btn-success btn-sm')
-    end
-
-    def manually_create_users?
-      RadicalConfig.disable_invite? && RadicalConfig.disable_sign_up?
     end
 
     def user_actions(user)
       [user_confirm_action(user),
        user_resend_action(user),
+       user_profile_action(user),
        user_reset_authy_action(user),
        user_test_email_action(user),
        user_test_sms_action(user),
        impersonate_action(user)]
+    end
+
+    def user_profile_action(user)
+      return unless UserProfilePolicy.new(current_user, user).show?
+
+      link_to icon(:user, 'Profile'), "/user_profiles/#{user.id}", class: 'btn btn-secondary btn-sm'
+    end
+
+    def profile_show_title(user)
+      return 'My Profile' if user == current_user
+
+      "Profile for #{user}"
+    end
+
+    def edit_profile_button(user)
+      return unless UserProfilePolicy.new(current_user, user).edit?
+
+      link_to(icon(:pencil, 'Edit'), edit_user_profile_path(user), class: 'btn btn-secondary btn-sm')
+    end
+
+    def profile_edit_title(user)
+      return safe_join(['Editing Profile for ', link_to(user, user_profile_path(user))]) unless user == current_user
+      return safe_join(['Editing ', link_to('My Profile', user_profile_path(user))]) if Onboarding.new(user).onboarded?
+
+      'Please Enter Your Profile'
     end
 
     def user_index_actions(user)
@@ -66,7 +92,7 @@ module RadCommon
     def impersonate_action(user)
       return unless policy(user).impersonate?
 
-      link_to icon(:user, 'Sign In As'),
+      link_to icon('right-to-bracket', 'Sign In As'),
               "/rad_common/impersonations/start?id=#{user.id}",
               method: :post,
               data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to ' \
@@ -141,7 +167,7 @@ module RadCommon
     end
 
     def add_user_client_action(user, index_page)
-      return unless RadicalConfig.user_clients? && user.external? && policy(UserClient.new).new?
+      return unless RadicalConfig.user_clients? && user.external? && policy(UserClient.new(user: user)).new?
 
       link_class = index_page ? 'btn btn-sm btn-success btn-block' : 'btn btn-sm btn-success'
 
@@ -156,6 +182,37 @@ module RadCommon
       link = link_to 'click here', reactivate_user_path(user), method: :put, data: { confirm: 'Are you sure?' }
       message = safe_join(["User's account has been expired due to inactivity, to re-activate the user, ", link, '.'])
       content_tag(:p, message, class: 'alert alert-warning')
+    end
+
+    def require_mobile_phone?
+      RadicalConfig.authy_enabled? && !RadicalConfig.authy_internal_only?
+    end
+
+    def clients_to_add_to_user(user)
+      policy_scope(RadCommon::AppInfo.new.client_model_class).active.where.not(id: user.clients.pluck(:id)).sorted
+    end
+
+    def show_hide_users_button(users)
+      return if users.inactive.none?
+
+      tag.button 'Show/Hide Inactive',
+                 type: 'button',
+                 class: 'btn btn-sm btn-secondary',
+                 'data-target': '#users-collapse',
+                 'data-toggle': 'collapse'
+    end
+
+    def user_row_class(user, hide_inactive)
+      item = user.display_style
+      return item if !hide_inactive || user.active?
+
+      "#{item} collapse"
+    end
+
+    def user_row_id(user, hide_inactive)
+      return if !hide_inactive || user.active?
+
+      'users-collapse'
     end
   end
 end

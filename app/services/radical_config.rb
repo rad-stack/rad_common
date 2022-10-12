@@ -210,6 +210,14 @@ class RadicalConfig
       boolean_config_item! :disable_invite
     end
 
+    def manually_create_users?
+      boolean_config_item! :manually_create_users
+    end
+
+    def show_help_menu?
+      boolean_config_item! :show_help_menu
+    end
+
     def shared_database?
       boolean_config_item! :shared_database
     end
@@ -228,6 +236,10 @@ class RadicalConfig
 
     def user_clients?
       boolean_config_item! :user_clients
+    end
+
+    def user_profiles?
+      boolean_config_item! :user_profiles
     end
 
     def secure_sentry?

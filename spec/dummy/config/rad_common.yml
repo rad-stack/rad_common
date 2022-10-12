@@ -4,16 +4,19 @@ default: &default
   use_avatar: true
   disable_sign_up: false
   disable_invite: false
+  manually_create_users: false
   secure_sentry: true
   external_users: true
   validate_external_email_domain: true
   app_logo_includes_name: true
   portal: false
   impersonate: true
-  start_route: attorneys
+  start_route: onboardings
   user_clients: true
+  user_profiles: true
   authy_internal_only: true
   shared_database: false
+  show_help_menu: true
 
   system_usage_models:
     -

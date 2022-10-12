@@ -1,0 +1,8 @@
+- if RadicalConfig.show_help_menu?
+  %li.nav-item.dropdown
+    %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#' }
+      Help
+    %ul.dropdown-menu.dropdown-menu-right
+      %li= link_to 'Contact', contact_us_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
+      %li= link_to 'Terms & Conditions', terms_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
+      %li= link_to 'Privacy Policy', privacy_path, target: :_blank, rel: :noopener, class: 'dropdown-item'

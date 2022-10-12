@@ -79,6 +79,7 @@ class SecurityRolesController < ApplicationController
     end
 
     def permitted_params
-      params.require(:security_role).permit(%i[name external] + RadPermission.all.map(&:to_sym))
+      params.require(:security_role).permit(%i[name external allow_invite allow_sign_up] +
+                                              RadPermission.all.map(&:to_sym))
     end
 end

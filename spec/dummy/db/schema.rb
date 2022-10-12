@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_19_162541) do
+ActiveRecord::Schema.define(version: 2022_10_06_095905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -68,9 +68,7 @@ ActiveRecord::Schema.define(version: 2022_07_19_162541) do
     t.string "zipcode", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "bypass_address_validation", default: false, null: false
-    t.string "address_problems"
-    t.jsonb "address_changes"
+    t.jsonb "address_metadata"
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -127,10 +125,8 @@ ActiveRecord::Schema.define(version: 2022_07_19_162541) do
     t.datetime "validity_checked_at"
     t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
-    t.boolean "bypass_address_validation", default: false, null: false
-    t.string "address_problems"
-    t.jsonb "address_changes"
     t.integer "address_requests_made", default: 0, null: false
+    t.jsonb "address_metadata"
   end
 
   create_table "divisions", id: :serial, force: :cascade do |t|
@@ -250,6 +246,8 @@ ActiveRecord::Schema.define(version: 2022_07_19_162541) do
     t.boolean "delete_division", default: false, null: false
     t.boolean "external", default: false, null: false
     t.boolean "manage_user", default: false, null: false
+    t.boolean "allow_sign_up", default: false, null: false
+    t.boolean "allow_invite", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 
@@ -361,6 +359,8 @@ ActiveRecord::Schema.define(version: 2022_07_19_162541) do
     t.datetime "expired_at"
     t.jsonb "filter_defaults"
     t.boolean "authy_sms", default: true, null: false
+    t.boolean "profile_entered", default: false, null: false
+    t.date "birth_date"
     t.index ["authy_id"], name: "index_users_on_authy_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true

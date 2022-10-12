@@ -78,7 +78,7 @@ RSpec.describe 'Notification Settings', type: :request do
       context "with another's settings" do
         let(:target_user) { create :user }
 
-        before { user.update! security_roles: [] }
+        before { user.user_security_roles.delete_all }
 
         it 'denies access' do
           post '/rad_common/notification_settings', params: { notification_setting: attributes }

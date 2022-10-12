@@ -11,36 +11,39 @@ class SmartyResult
   end
 
   def address_1
-    build_primary_lines(components).select(&:present?).join(' ')
+    build_primary_lines(components).select(&:present?).join(' ').presence
   end
 
   def address_2
     secondary_line = [components['secondary_designator'], components['secondary_number']]
-    secondary_line.select(&:present?).join(' ')
+    secondary_line.select(&:present?).join(' ').presence
   end
 
   def city
-    components['city_name']
+    components['city_name'].presence
   end
 
   def state
-    components['state_abbreviation']
+    components['state_abbreviation'].presence
   end
 
   def zipcode
-    return components['zipcode'] if components['plus4_code'].blank? || !zip4_provided?
+    return components['zipcode'].presence if components['plus4_code'].blank? || !zip4_provided?
 
-    "#{components['zipcode']}-#{components['plus4_code']}"
+    "#{components['zipcode']}-#{components['plus4_code']}".presence
   end
 
   def valid_address?
-    result.any? && (postal_match? || non_postal_match?)
+    result.any? && (postal_match? || non_postal_match? || missing_secondary? || ignoring_secondary?)
   end
 
   def address_problems
+    return if postal_match?
     return 'missing suite or unit #' if missing_secondary?
+    return 'verified by ignoring invalid suite or unit #' if ignoring_secondary?
+    return 'non-postal match using enhanced address matching' if non_postal_match?
 
-    'invalid address'
+    nil
   end
 
   private
@@ -61,6 +64,10 @@ class SmartyResult
 
     def postal_match?
       analysis['dpv_match_code'] == 'Y'
+    end
+
+    def ignoring_secondary?
+      analysis['dpv_match_code'] == 'S'
     end
 
     def non_postal_match?
