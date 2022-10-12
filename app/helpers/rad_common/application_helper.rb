@@ -85,6 +85,8 @@ module RadCommon
     end
 
     def rad_form_errors(form)
+      return form.error_notification if form.object.blank?
+
       message = "Please review the problems below: #{form.object.errors.full_messages.to_sentence}"
       form.error_notification message: message
     end
@@ -157,10 +159,6 @@ module RadCommon
 
     def bootstrap_flash_close_button
       tag.button(sanitize('&times;'), type: 'button', class: 'close', 'data-dismiss': 'alert')
-    end
-
-    def base_errors(form)
-      form.error :base, class: 'alert alert-danger' if form.object.errors[:base].present?
     end
 
     def icon(icon, text = nil, options = {})

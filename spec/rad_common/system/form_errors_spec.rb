@@ -8,6 +8,9 @@ RSpec.describe 'Form Errors', type: :system do
     user.update_column :authy_id, '100'
     user.update_column :authy_enabled, false
 
+    allow(RadicalConfig).to receive(:authy_enabled?).and_return true
+    allow(RadicalConfig).to receive(:test_mobile_phone!).and_return '(999) 999-9999'
+
     login_as admin, scope: :user
   end
 
