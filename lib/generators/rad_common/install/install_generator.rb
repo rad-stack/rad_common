@@ -8,6 +8,8 @@ module RadCommon
       def create_initializer_file
         standardize_date_methods
 
+        search_and_replace '= f.error_notification', '= rad_form_errors f'
+
         # misc
         copy_file '../../../../../spec/dummy/package.json', 'package.json'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'

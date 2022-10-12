@@ -1,6 +1,6 @@
 = simple_form_for(@user) do |f|
-  = f.error_notification
-  = base_errors(f)
+  = rad_form_errors f
+
   .form-inputs
     .row
       .col-lg-6= f.input :first_name
