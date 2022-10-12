@@ -145,7 +145,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'rejects invalid email addresses' do
-      addresses = ['foo @example.com', '.b ar@example.com', 'com@none']
+      addresses = ['foo @example.com', '.b ar@example.com', 'com-none']
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
