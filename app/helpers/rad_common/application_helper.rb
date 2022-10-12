@@ -159,10 +159,6 @@ module RadCommon
       tag.button(sanitize('&times;'), type: 'button', class: 'close', 'data-dismiss': 'alert')
     end
 
-    def base_errors(form)
-      form.error :base, class: 'alert alert-danger' if form.object.errors[:base].present?
-    end
-
     def icon(icon, text = nil, options = {})
       text_class = text.present? ? 'mr-2' : nil
       capture do
