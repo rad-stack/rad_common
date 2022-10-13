@@ -8,7 +8,7 @@ end
 directory = Dir.pwd.include?('rad_common') ? "#{Dir.pwd}/spec/dummy" : Dir.pwd
 FileUtils.chdir directory do
   puts "\n== Removing old logs and tempfiles =="
-  system 'rm -rf log/ && rm -rf tmp/'
+  system 'rm -rf log/ && rm -rf tmp/ && rm -rf storage/'
 
   puts "== Updating the rad_common gem conservatively =="
   system 'bundle update rad_common --conservative'
