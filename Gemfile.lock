@@ -10,7 +10,7 @@ PATH
       bootstrap4-kaminari-views (~> 1.0.1)
       devise
       devise-authy
-      devise-security (= 0.16.0)
+      devise-security
       devise_invitable
       factory_bot_rails
       faker
@@ -28,7 +28,6 @@ PATH
       puma (~> 5.6)
       pundit
       rails (~> 6.1.6.1)
-      rails_email_validator
       redis (= 4.7.1)
       sassc
       sendgrid-ruby
@@ -176,8 +175,8 @@ GEM
     devise-authy (2.2.1)
       authy (>= 2.7.5)
       devise (>= 4.0.0)
-    devise-security (0.16.0)
-      devise (>= 4.3.0, < 5.0)
+    devise-security (0.17.0)
+      devise (>= 4.3.0)
     devise_invitable (2.0.6)
       actionmailer (>= 5.0)
       devise (>= 4.6)
@@ -271,7 +270,7 @@ GEM
       parallel
     parser (3.1.2.1)
       ast (~> 2.4.1)
-    pg (1.4.3)
+    pg (1.4.4)
     premailer (1.18.0)
       addressable
       css_parser (>= 1.12.0)
@@ -315,8 +314,6 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.4.3)
       loofah (~> 2.3)
-    rails_email_validator (0.1.4)
-      activemodel (>= 3.0.0)
     railties (6.1.6.1)
       actionpack (= 6.1.6.1)
       activesupport (= 6.1.6.1)

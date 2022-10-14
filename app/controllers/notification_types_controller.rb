@@ -17,7 +17,6 @@ class NotificationTypesController < ApplicationController
       flash[:success] = 'Notification Type updated.'
       redirect_to '/rad_common/notification_types'
     else
-      flash[:error] = "Unable to update notification type: #{@notification_type.errors.full_messages.join(',')}"
       render :edit
     end
   end

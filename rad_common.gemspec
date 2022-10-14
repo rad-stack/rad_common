@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise'
   s.add_dependency 'devise-authy'
   s.add_dependency 'devise_invitable'
-  s.add_dependency 'devise-security', '0.16.0' # locked, see Task 35711
+  s.add_dependency 'devise-security'
   s.add_dependency 'factory_bot_rails'
   s.add_dependency 'faker'
   s.add_dependency 'haml-rails', '~> 2.0'
@@ -51,7 +51,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'puma', '~> 5.6'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1.6.1' # TODO: change to '~> 6.1' once Task 37843 done
-  s.add_dependency 'rails_email_validator'
 
   # TODO: remove this once this warning has been fixed, see Task 37778
   s.add_dependency 'redis', '4.7.1'
