@@ -80,7 +80,7 @@ class HerokuCommands
           return
         end
 
-        write_log `heroku pg:reset DATABASE_URL #{app_option(app_name)} --confirm #{app_name}`
+        write_log `heroku pg:reset DATABASE_URL --extensions 'pg_stat_statements,plpgsql,fuzzystrmatch'  #{app_option(app_name)} --confirm #{app_name}`
         write_log `heroku run rails db:schema:load #{app_option(app_name)}`
         write_log `heroku run rails db:seed #{app_option(app_name)}`
 
