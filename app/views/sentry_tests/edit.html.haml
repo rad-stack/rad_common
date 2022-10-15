@@ -2,7 +2,7 @@
   = render 'layouts/card_header', action_name: 'custom', title: 'Sentry Error Reporting Test', icon: 'fa-bug'
   .card-body
     = simple_form_for @user, url: "/rad_common/sentry_tests/#{@user.id}", method: :put do |f|
-      = f.error_notification
+      = rad_form_errors f
 
       .form-inputs
         = f.input :first_name, placeholder: 'Enter anything here'

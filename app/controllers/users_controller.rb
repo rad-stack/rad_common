@@ -70,7 +70,6 @@ class UsersController < ApplicationController
         flash[:success] = 'User updated.'
         redirect_to @user
       else
-        flash[:error] = "Unable to update user: #{@user.errors.full_messages.join(',')}"
         render :edit
         raise ActiveRecord::Rollback
       end

@@ -240,7 +240,7 @@ RSpec.describe 'Users', type: :system do
 
       click_button 'Sign Up'
 
-      expect(page).to have_content 'Email is invalid'
+      expect(page).to have_content 'Email is not written in a valid format'
     end
   end
 
