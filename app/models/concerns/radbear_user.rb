@@ -68,7 +68,6 @@ module RadbearUser
     validate :validate_authy_mobile_phone
     validate :password_excludes_name
     validate :validate_authy
-    validates :security_roles, presence: true, if: :active?
 
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
                                        message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }

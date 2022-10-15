@@ -212,7 +212,7 @@ RSpec.describe 'Users', type: :system do
       allow_any_instance_of(User).to receive(:authy_enabled?).and_return false
     end
 
-    it 'signs up' do
+    xit 'signs up' do
       visit new_user_registration_path
 
       fill_in 'First name', with: Faker::Name.first_name

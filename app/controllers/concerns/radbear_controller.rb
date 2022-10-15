@@ -27,7 +27,7 @@ module RadbearController
     end
 
     def devise_sign_up_params
-      %i[first_name last_name mobile_phone initial_security_role_id]
+      devise_account_params
     end
 
     def devise_account_params
@@ -35,7 +35,7 @@ module RadbearController
     end
 
     def devise_invite_params
-      %i[first_name last_name mobile_phone initial_security_role_id]
+      %i[first_name last_name mobile_phone initial_security_role_id external]
     end
 
     def set_sentry_user_context
