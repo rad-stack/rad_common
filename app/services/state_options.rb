@@ -64,14 +64,21 @@ class StateOptions
                 { code: 'QC', name: 'Quebec', country: 'CA' },
                 { code: 'SK', name: 'Saskatchewan', country: 'CA' },
                 { code: 'YT', name: 'Yukon', country: 'CA' }].freeze
+  COUNTRIES = { CA: 'Canada', US: 'United States' }.freeze
 
   class << self
     def options
-      active_states.map { |item| [item[:name], item[:code]] }
+      active_states.map { |item| map_item_for_select(item) }
+    end
+
+    def grouped_options
+      @grouped_options ||= active_states.group_by { |item| item[:country] }.map do |country_group|
+        [COUNTRIES[country_group.first.to_sym], country_group.last.map { |item| map_item_for_select(item) }]
+      end
     end
 
     def reverse_options
-      active_states.map { |item| [item[:code], item[:name]] }
+      active_states.map { |item| map_item_for_select(item).reverse }
     end
 
     def valid?(code)
@@ -110,6 +117,10 @@ class StateOptions
         return STATE_DATA if RadicalConfig.canadian_addresses?
 
         STATE_DATA.select { |item| item[:country] == 'US' }
+      end
+
+      def map_item_for_select(item)
+        [item[:name], item[:code]]
       end
   end
 end
