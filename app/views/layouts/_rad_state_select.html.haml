@@ -1,0 +1,8 @@
+- if RadicalConfig.canadian_addresses?
+  = f.input :state,
+            as: :grouped_select,
+            collection: StateOptions.grouped_options,
+            group_method: :last,
+            input_html: { class: 'selectpicker', 'data-live-search' => true }
+- else
+  = f.input :state, collection: StateOptions.options
