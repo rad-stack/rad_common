@@ -198,6 +198,7 @@ end
         apply_migration '20220901143808_sign_up_roles.rb'
         apply_migration '20220905140634_allow_invite_role.rb'
         apply_migration '20220918194026_refine_smarty.rb'
+        apply_migration '20221021113251_create_saved_search_filters.rb'
       end
 
       def self.next_migration_number(path)
