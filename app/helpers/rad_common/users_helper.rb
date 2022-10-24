@@ -204,13 +204,13 @@ module RadCommon
 
     def user_row_class(user, hide_inactive)
       item = user.display_style
-      return item if !hide_inactive || user.active?
+      return item if !hide_inactive || user.not_inactive?
 
       "#{item} collapse"
     end
 
     def user_row_id(user, hide_inactive)
-      return if !hide_inactive || user.active?
+      return if !hide_inactive || user.not_inactive?
 
       'users-collapse'
     end

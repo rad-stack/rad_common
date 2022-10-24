@@ -100,6 +100,10 @@ module RadbearUser
     active
   end
 
+  def not_inactive?
+    user_status != UserStatus.default_inactive_status
+  end
+
   def formatted_email
     "\"#{self}\" <#{email}>"
   end
