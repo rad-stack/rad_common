@@ -18,6 +18,7 @@ default: &default
   shared_database: false
   canadian_addresses: false
   show_help_menu: true
+  saved_search_filters_enabled: true
 
   system_usage_models:
     -

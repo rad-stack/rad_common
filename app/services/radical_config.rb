@@ -226,6 +226,10 @@ class RadicalConfig
       boolean_config_item! :canadian_addresses
     end
 
+    def saved_search_filters_enabled?
+      boolean_config_item! :saved_search_filters_enabled
+    end
+
     def favicon_filename!
       override_variable(:favicon_filename) || 'favicon.ico'
     end

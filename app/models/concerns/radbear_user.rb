@@ -15,6 +15,7 @@ module RadbearUser
     has_many :login_activities, as: :user, dependent: :destroy
     has_many :user_clients, dependent: :destroy
     has_many :clients, through: :user_clients, source: :client
+    has_many :saved_search_filters, dependent: :destroy
 
     has_many :twilio_logs_from, class_name: 'TwilioLog',
                                 foreign_key: 'from_user_id',
