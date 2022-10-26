@@ -212,6 +212,9 @@ RSpec/FactoryBot/CreateList:
   Exclude:
     - 'spec/dummy/app/services/seeder.rb'
 
+RSpec/FactoryBot/ConsistentParenthesesStyle:
+  EnforcedStyle: omit_parentheses
+
 RSpec/MultipleExpectations:
   Enabled: false
 
