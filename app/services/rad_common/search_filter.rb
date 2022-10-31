@@ -2,7 +2,8 @@ module RadCommon
   ##
   # This is used to generate dropdown filter containing options to be filtered on
   class SearchFilter
-    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value, :errors, :include_blank
+    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value, :errors, :include_blank,
+                :search_scope
 
     ##
     # @param [Symbol optional] column the database column that is being filtered
@@ -35,12 +36,12 @@ module RadCommon
     #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
     def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil,
                    default_value: nil, blank_value_label: nil, scope: nil, multiple: false, required: false,
-                   include_blank: true)
+                   include_blank: true, search_scope_name: nil)
       if input_label.blank? && !options.respond_to?(:table_name)
         raise 'Input label is required when options are not active record objects'
       end
 
-      raise 'options or scope_values' if options.nil? && scope_values.nil?
+      raise 'options, scope_values, or search_scope' if options.nil? && scope_values.nil? && search_scope_name.nil?
       raise 'name is only valid when scope_values are present' if name.present? && scope_values.blank?
       raise 'must have a column, name, or scope defined' if column.blank? && name.blank? && scope.blank?
 
@@ -57,6 +58,7 @@ module RadCommon
       @default_value = default_value
       @grouped = grouped
       @required = required
+      @search_scope = RadicalConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
       @errors = []
     end
 
@@ -102,12 +104,19 @@ module RadCommon
         scope_options += options.map { |option| [option.to_s, option.id] } if options.present?
         scope_options
       else
-        options
+        options.presence || []
       end
+    end
+
+    def input_options_with_current_selection(search)
+      return input_options if search_scope.blank?
+
+      input_options + search_scope[:model].constantize.where(id: selected_value(search)).to_a
     end
 
     # @return the method that simple form should use to determine the label of the select option
     def label_method
+      return if options.blank?
       return :first if grouped_scope_values?
       return :to_s if @grouped
 
@@ -144,6 +153,17 @@ module RadCommon
       else
         true
       end
+    end
+
+    def search_scope_params
+      {
+        class: 'selectpicker-search',
+        'data-abs-locale-search-placeholder' => search_scope[:description],
+        'data-abs-ajax-data' => {
+          'global_search_scope' => search_scope[:name],
+          'term' => '{{{q}}}'
+        }.to_json
+      }
     end
 
     private
