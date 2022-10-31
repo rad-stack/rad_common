@@ -1,5 +1,5 @@
 class HerokuCommands
-  IGNORED_HEROKU_ERRORS = ['free Heroku Dynos will']
+  IGNORED_HEROKU_ERRORS = ['free Heroku Dynos will'].freeze
 
   class << self
     def backup(app_name)
