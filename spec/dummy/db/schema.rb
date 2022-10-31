@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_06_095905) do
+ActiveRecord::Schema.define(version: 2022_10_21_113251) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -235,6 +235,17 @@ ActiveRecord::Schema.define(version: 2022_10_06_095905) do
     t.index ["password_archivable_type", "password_archivable_id"], name: "index_password_archivable"
   end
 
+  create_table "saved_search_filters", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "user_id", null: false
+    t.string "search_class", null: false
+    t.jsonb "search_filters", default: {}, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "name", "search_class"], name: "unique_saved_search_filters", unique: true
+    t.index ["user_id"], name: "index_saved_search_filters_on_user_id"
+  end
+
   create_table "security_roles", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "admin", default: false, null: false
@@ -387,6 +398,7 @@ ActiveRecord::Schema.define(version: 2022_10_06_095905) do
   add_foreign_key "notification_settings", "users"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
+  add_foreign_key "saved_search_filters", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
   add_foreign_key "twilio_logs", "users", column: "from_user_id"

@@ -1530,6 +1530,11 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
+ajax-bootstrap-select@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/ajax-bootstrap-select/-/ajax-bootstrap-select-1.4.5.tgz#2bce36ddbaf9e2cda8e331a2ddcb454216a58473"
+  integrity sha512-xDnoD1xq3bekqEVJsye1LcsxQ4jpdnyMJrTdsZqZySA7hc6R02D/23uVaE3P/2POyam1eRkC+c+ph59m9IJLgg==
+
 ajv-errors@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ajv-errors/-/ajv-errors-1.0.1.tgz#f35986aceb91afadec4102fbd85014950cefa64d"
@@ -6742,13 +6747,14 @@ quick-lru@^4.0.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-4.0.1.tgz#5b8878f113a58217848c6482026c73e1ba57727f"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
 
-"rad_common_js@https://github.com/radicalbear/rad_common_js#ad5928a5179542172f6e715d36d1c20bf0addc6c":
-  version "2.1.5"
-  resolved "https://github.com/radicalbear/rad_common_js#ad5928a5179542172f6e715d36d1c20bf0addc6c"
+"rad_common_js@https://github.com/radicalbear/rad_common_js#0a667bf0b987827e67fb336855e588b4c1baf7e1":
+  version "2.1.7"
+  resolved "https://github.com/radicalbear/rad_common_js#0a667bf0b987827e67fb336855e588b4c1baf7e1"
   dependencies:
     "@rails/actiontext" "^6.0.2-1"
     "@rails/ujs" "^6.0.5"
     "@rails/webpacker" "5.4.3"
+    ajax-bootstrap-select "^1.4.5"
     bootstrap "^4.0.0"
     bootstrap-select "^1.13.18"
     chosen-js "^1.8.7"

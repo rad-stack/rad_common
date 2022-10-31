@@ -31,6 +31,8 @@ module RadCommonRoutes
           get :permission, on: :collection
         end
 
+        resources :saved_search_filters, only: :destroy
+
         resources :user_security_roles, only: :show
         resources :user_clients, only: %i[create destroy]
       end

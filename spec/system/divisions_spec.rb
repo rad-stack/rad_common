@@ -137,6 +137,41 @@ RSpec.describe 'Divisions', type: :system do
         expect(page.body).not_to have_content 'Showing header'
       end
     end
+
+    context 'when saving search filters', js: true do
+      let(:applied_params) { -> { Rack::Utils.parse_query URI.parse(current_url).query } }
+      let(:last_filter) { SavedSearchFilter.last }
+
+      it 'allows saving and applying search filters' do
+        visit divisions_path
+        bootstrap_select user.to_s, from: 'search_owner_id'
+        click_on 'saved-search-filters-dropdown'
+        page.evaluate_script 'window.prompt = () => { document.getElementById("search_saved_name").value = "Test" }'
+        page.evaluate_script 'window.alert = (msg) => { return true; }'
+        expect { click_on('save_and_apply_filters') }.to change(SavedSearchFilter, :count).by(1)
+
+        expect(SavedSearchFilter.last.name).to eq('Test')
+        expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
+
+        click_on 'Clear Filters'
+        expect(applied_params.call['search[owner_id]']).to be_nil
+
+        click_on 'saved-search-filters-dropdown'
+        click_on "saved_filter_#{last_filter.id}"
+        expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
+        click_on 'saved-search-filters-dropdown'
+        expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('active')
+      end
+
+      it 'allows deleting saved filters' do
+        create(:saved_search_filter, user: user, search_class: 'DivisionSearch')
+        visit divisions_path
+        click_on 'saved-search-filters-dropdown'
+        page.accept_confirm { click_on "delete_saved_filter_#{last_filter.id}" }
+        wait_for_ajax
+        expect(SavedSearchFilter.count).to eq(0)
+      end
+    end
   end
 
   describe 'show' do
