@@ -11,15 +11,12 @@
           %td
             - permission_category.last.each do |permission|
               .row.col-lg-12
-                = link_to permission[:permission_label],
-                          permission_security_roles_path(permission_name: permission[:permission])
-
-                = permission_tooltip_content(permission[:tooltip])
-
-                - if permission[:tooltip].blank?
-                  &nbsp
-
                 - if permission[:value]
                   .fa.fa-check.green-check.align-self-center
                 - else
                   .fa.fa-times.red-x.align-self-center
+                &nbsp
+                = link_to permission[:permission_label],
+                          permission_security_roles_path(permission_name: permission[:permission])
+
+                = permission_tooltip_content(permission[:tooltip])
