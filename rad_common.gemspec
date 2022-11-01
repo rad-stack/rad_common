@@ -26,17 +26,17 @@ Gem::Specification.new do |s|
   s.add_dependency 'authy', '< 3.0.0'
 
   s.add_dependency 'aws-sdk-s3'
-  s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
+  s.add_dependency 'bootstrap4-kaminari-views'
   s.add_dependency 'devise'
   s.add_dependency 'devise-authy'
   s.add_dependency 'devise_invitable'
   s.add_dependency 'devise-security'
   s.add_dependency 'factory_bot_rails'
   s.add_dependency 'faker'
-  s.add_dependency 'haml-rails', '~> 2.0'
+  s.add_dependency 'haml-rails'
   s.add_dependency 'hashids'
-  s.add_dependency 'image_processing', '~> 1.9'
-  s.add_dependency 'kaminari', '~> 1.2.1'
+  s.add_dependency 'image_processing'
+  s.add_dependency 'kaminari'
   s.add_dependency 'sassc'
 
   # TODO: remove these 3 once the mail gem is up to date, see Task 37200
@@ -46,25 +46,22 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'nokogiri'
   s.add_dependency 'pg'
-  s.add_dependency 'premailer-rails', '~> 1.10.2'
+  s.add_dependency 'premailer-rails'
   s.add_dependency 'pretender'
-  s.add_dependency 'puma', '~> 5.6'
+  s.add_dependency 'puma', '~> 5.6' # TODO: update puma to version 6
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1.6.1' # TODO: change to '~> 6.1' once Task 37843 done
-
-  # TODO: remove this once this warning has been fixed, see Task 37778
-  s.add_dependency 'redis', '4.7.1'
 
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
-  s.add_dependency 'sidekiq', '~> 6.4.1'
+  s.add_dependency 'sidekiq', '< 7' # TODO: update sidekiq to version 7
   s.add_dependency 'sidekiq-failures'
-  s.add_dependency 'simple_form', '~> 5.0'
+  s.add_dependency 'simple_form'
   s.add_dependency 'smartystreets_ruby_sdk'
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
-  s.add_dependency 'twilio-ruby', '~> 5.63'
+  s.add_dependency 'twilio-ruby'
   s.add_dependency 'webpacker'
 
   s.add_development_dependency 'active_record_doctor'
