@@ -6,7 +6,9 @@ module RadUserProfileController
     before_action :set_onboarded, only: :update
   end
 
-  def show; end
+  def show
+    @onboarding = Onboarding.new(current_user)
+  end
 
   def edit; end
 
