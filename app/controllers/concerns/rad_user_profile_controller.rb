@@ -3,7 +3,6 @@ module RadUserProfileController
 
   included do
     before_action :set_user, only: %i[show edit update]
-    before_action :set_onboarded, only: :update
   end
 
   def show

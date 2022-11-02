@@ -1,6 +1,6 @@
 class UserProfilesController < ApplicationController
   include RadUserProfileController
-  
+
   private
 
     def permitted_params
