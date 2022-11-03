@@ -49,7 +49,7 @@ class SystemMessage < ApplicationRecord
   end
 
   def html_message
-    sms? ? sms_message_body.html_safe : email_message_body
+    sms? ? sms_message_body : email_message_body
   end
 
   def send!
