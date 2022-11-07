@@ -30,6 +30,7 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
         'data-abs-subtext' => options[:show_subtext],
         'data-abs-ajax-data' => {
           'global_search_scope' => options[:search_scope],
+          'excluded_ids' => options[:excluded_ids],
           'term' => '{{{q}}}'
         }.to_json
       }
@@ -52,9 +53,12 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
     end
 
     def global_autocomplete
-      @global_autocomplete ||=
-        GlobalAutocomplete.new({ limit: MAX_DROPDOWN_SIZE, global_search_scope: options[:search_scope] },
-                               GlobalSearch.new(current_user).scopes,
-                               current_user)
+      @global_autocomplete ||= GlobalAutocomplete.new(global_autocomplete_params,
+                                                      GlobalSearch.new(current_user).scopes,
+                                                      current_user)
+    end
+
+    def global_autocomplete_params
+      { limit: MAX_DROPDOWN_SIZE, global_search_scope: options[:search_scope], excluded_ids: options[:excluded_ids] }
     end
 end
