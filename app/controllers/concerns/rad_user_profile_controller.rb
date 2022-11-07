@@ -42,4 +42,12 @@ module RadUserProfileController
     def update_redirect
       redirect_to user_profile_path(@user), notice: 'Your profile was successfully updated.'
     end
+
+    def base_params
+      []
+    end
+
+    def permitted_params
+      params.require(:user).permit(base_params + RadicalConfig.additional_user_profile_params!)
+    end
 end
