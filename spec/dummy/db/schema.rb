@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(version: 2022_11_23_142522) do
     t.string "remote_address"
     t.string "request_uuid"
     t.datetime "created_at"
+    t.jsonb "new_audited_changes"
     t.index ["associated_id", "associated_type"], name: "associated_index"
     t.index ["auditable_id", "auditable_type", "version"], name: "auditable_index"
     t.index ["created_at"], name: "index_audits_on_created_at"

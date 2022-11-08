@@ -30,4 +30,21 @@ namespace :rad_common do
       DatabaseUseChecker.generate_report
     end
   end
+
+  # Temporary task - remove when all project audits are converted to json
+  task update_audits_json: :environment do
+    session = RakeSession.new(task, 6.hours, 10_000)
+    Timeout.timeout(session.time_limit) do
+      session.reset_status
+
+      records = Audited::Audit.where(new_audited_changes: nil)
+      count = records.count
+      records.select(:id, :audited_changes, :new_audited_changes).find_each(order: :desc) do |audit|
+        break if session.check_status('migrating audited changes from YAML to JSONB', count)
+
+        audit.update_column(:new_audited_changes, audit.audited_changes)
+      end
+      session.finished
+    end
+  end
 end

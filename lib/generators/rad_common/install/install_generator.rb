@@ -199,6 +199,7 @@ end
         apply_migration '20220905140634_allow_invite_role.rb'
         apply_migration '20220918194026_refine_smarty.rb'
         apply_migration '20221021113251_create_saved_search_filters.rb'
+        apply_migration '20221108110620_add_new_audited_changes_to_audits.rb'
         apply_migration '20221123142522_twilio_log_changes.rb'
       end
 
