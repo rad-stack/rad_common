@@ -18,10 +18,10 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('must exist')
     end
 
-    it 'shows placeholder on autocomplete field' do
+    it 'shows placeholder on autocomplete field', js: true do
       visit new_division_path
-      expect(find_field('owner_name_search').value).to eq('')
-      expect(find_field('owner_name_search')['placeholder']).to eq('Start typing to search for Owner')
+      click_bootstrap_select(from: 'division_owner_id')
+      expect(find("input[type='search']")['placeholder']).to eq('Start typing to search')
     end
 
     describe 'single attachment validation' do
@@ -60,19 +60,26 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('Editing Division')
     end
 
-    it 'displays error for owner field when blank', js: true do
-      fill_in 'owner_name_search', with: ''
-      click_button 'Save'
+    context 'with bootstrap select search field', js: true do
+      let(:other_user) { create :user }
 
-      if ENV['CI']
-        # TODO: fix this so it works locally
-        expect(page).to have_content 'Owner must exist and Owner can\'t be blank'
+      before do
+        other_user
+        stub_const('SearchableAssociationInput::MAX_DROPDOWN_SIZE', 1)
+        visit edit_division_path(division)
       end
-    end
 
-    it 'displays existing value on autocomplete field' do
-      expect(find_field('owner_name_search').value).to eq(division.owner.to_s)
-      expect(find_field('owner_name_search')['placeholder']).to eq(division.owner.to_s)
+      it 'allows searching' do
+        click_bootstrap_select(from: 'division_owner_id')
+        wait_for_ajax
+        find('.bs-searchbox input').fill_in(with: other_user.first_name)
+        expect(find('ul.inner li a span', text: other_user.to_s)).to be_present
+      end
+
+      it 'displays existing value' do
+        expect(find("[data-id='division_owner_id']").text).to eq(division.owner.to_s)
+        expect(find_field('division_owner_id', visible: false).value).to eq(division.owner.id.to_s)
+      end
     end
 
     context 'with category' do
