@@ -1,6 +1,5 @@
 :ruby
   excluded_ids = local_assigns.key?(:excluded_ids) ? local_assigns[:excluded_ids] : nil
-  allow_new = local_assigns[:allow_new] ? search_label : nil
   a_element = local_assigns[:association_element]
   tooltip = local_assigns[:tooltip]
 
@@ -22,5 +21,4 @@
                                                                             'data-excluded-ids': excluded_ids,
                                                                             'data-id-element': id_element,
                                                                             'data-association-element': a_element,
-                                                                            'data-autocomplete': search_path,
-                                                                            'data-allow-new-model': allow_new }
+                                                                            'data-autocomplete': search_path }

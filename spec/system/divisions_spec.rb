@@ -18,10 +18,20 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('must exist')
     end
 
-    it 'shows placeholder on autocomplete field', js: true do
-      visit new_division_path
-      click_bootstrap_select(from: 'division_owner_id')
-      expect(find("input[type='search']")['placeholder']).to eq('Start typing to search')
+    context 'with default placeholder' do
+      it 'shows placeholder on autocomplete field', js: true do
+        visit new_division_path
+        click_bootstrap_select(from: 'division_owner_id')
+        expect(find("input[type='search']")['placeholder']).to eq('Start typing to search')
+      end
+    end
+
+    context 'with custom placeholder' do
+      it 'shows placeholder on autocomplete field', js: true do
+        visit new_division_path
+        click_bootstrap_select(from: 'division_category_id')
+        expect(find("input[type='search']")['placeholder']).to eq('Search for a category')
+      end
     end
 
     describe 'single attachment validation' do
@@ -79,44 +89,6 @@ RSpec.describe 'Divisions', type: :system do
       it 'displays existing value' do
         expect(find("[data-id='division_owner_id']").text).to eq(division.owner.to_s)
         expect(find_field('division_owner_id', visible: false).value).to eq(division.owner.id.to_s)
-      end
-    end
-
-    context 'with category' do
-      let(:last_category) { Category.order(:created_at).last }
-      let(:existing_category) { create(:category, name: 'Existing Category') }
-
-      before do
-        existing_category
-        visit edit_division_path(division)
-      end
-
-      it 'allows for entering new categories' do
-        fill_in 'division[category_name]', with: 'New Category'
-        expect { click_on 'Save' }.to change(Category, :count).by(1)
-        expect(last_category.name).to eq('New Category')
-        expect(division.reload.category).to eq(last_category)
-      end
-
-      it 'allows selecting create new category', js: true do
-        fill_in 'division[category_name]', with: 'Does Not Exist'
-        find('.search-label').click
-        expect { click_on 'Save' }.to change(Category, :count).by(1)
-        expect(last_category.name).to eq('Does Not Exist')
-        expect(division.reload.category).to eq(last_category)
-      end
-
-      it 'finds and assigns existing categories' do
-        fill_in 'division[category_name]', with: 'Existing Category'
-        expect { click_on 'Save' }.not_to change(Category, :count)
-        expect(division.reload.category).to eq(existing_category)
-      end
-
-      it 'allows selecting autocomplete category', js: true do
-        fill_in 'division[category_name]', with: 'Existin'
-        find('.search-column-value').click
-        expect { click_on 'Save' }.not_to change(Category, :count)
-        expect(division.reload.category).to eq(existing_category)
       end
     end
   end
