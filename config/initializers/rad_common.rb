@@ -93,9 +93,8 @@ module Audited
 
     private
 
-      def set_legacy_audited
+      def set_new_audited_changes
         self.new_audited_changes = audited_changes
       end
   end
 end
-
