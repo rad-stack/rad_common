@@ -55,9 +55,9 @@ class RadbearDeviseMailer < Devise::Mailer
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "Someone has invited you to #{RadicalConfig.app_name!}, you can accept it through the link below. If you don't " \
-               "want to accept the invitation, please ignore this email. Your account won't be created until you " \
-               'access the link and set your password.'
+    @message = "Someone has invited you to #{RadicalConfig.app_name!}, you can accept it through the link " \
+               "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
+               'created until you access the link and set your password.'
 
     @email_action = { message: 'Click the link to accept the invitation.',
                       button_text: 'Accept',
@@ -70,8 +70,9 @@ class RadbearDeviseMailer < Devise::Mailer
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "The email address for your #{RadicalConfig.app_name!} account was recently changed. If you made this change, please " \
-               "disregard this message. If you didn't make this change, please let us know immediately."
+    @message = "The email address for your #{RadicalConfig.app_name!} account was recently changed. If you made " \
+               "this change, please disregard this message. If you didn't make this change, please let us know " \
+               'immediately.'
 
     super
   end
@@ -80,9 +81,9 @@ class RadbearDeviseMailer < Devise::Mailer
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "The password for your #{RadicalConfig.app_name!} account was recently changed. If you made this change, you don't " \
-               "need to do anything more. If you didn't make this change, please let us know, and reset your " \
-               'password immediately.'
+    @message = "The password for your #{RadicalConfig.app_name!} account was recently changed. If you made this " \
+               "change, you don't need to do anything more. If you didn't make this change, please let us know, " \
+               'and reset your password immediately.'
 
     super
   end
