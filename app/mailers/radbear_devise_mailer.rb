@@ -55,7 +55,7 @@ class RadbearDeviseMailer < Devise::Mailer
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "Someone has invited you to #{app_name}, you can accept it through the link below. If you don't " \
+    @message = "Someone has invited you to #{RadicalConfig.app_name!}, you can accept it through the link below. If you don't " \
                "want to accept the invitation, please ignore this email. Your account won't be created until you " \
                'access the link and set your password.'
 
@@ -70,7 +70,7 @@ class RadbearDeviseMailer < Devise::Mailer
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "The email address for your #{app_name} account was recently changed. If you made this change, please " \
+    @message = "The email address for your #{RadicalConfig.app_name!} account was recently changed. If you made this change, please " \
                "disregard this message. If you didn't make this change, please let us know immediately."
 
     super
@@ -80,7 +80,7 @@ class RadbearDeviseMailer < Devise::Mailer
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "The password for your #{app_name} account was recently changed. If you made this change, you don't " \
+    @message = "The password for your #{RadicalConfig.app_name!} account was recently changed. If you made this change, you don't " \
                "need to do anything more. If you didn't make this change, please let us know, and reset your " \
                'password immediately.'
 
@@ -88,20 +88,12 @@ class RadbearDeviseMailer < Devise::Mailer
   end
 
   def default_url_options
-    if @resource.portal?
-      { host: RadicalConfig.portal_host_name! }
-    else
-      { host: RadicalConfig.host_name! }
-    end
+    { host: RadicalConfig.host_name! }
   end
 
   private
 
     def set_defaults
       @include_yield = false
-    end
-
-    def app_name
-      @resource.portal? ? RadicalConfig.portal_app_name! : RadicalConfig.app_name!
     end
 end
