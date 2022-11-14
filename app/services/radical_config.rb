@@ -154,10 +154,6 @@ class RadicalConfig
       config_item! :app_name
     end
 
-    def portal_app_name!
-      config_item! :portal_app_name
-    end
-
     def host_name!
       config_item! :host_name
     end
@@ -168,14 +164,6 @@ class RadicalConfig
 
     def client_table_name!
       config_item(:client_table_name) || 'clients'
-    end
-
-    def portal_host_name!
-      config_item! :portal_host_name
-    end
-
-    def portal?
-      boolean_config_item! :portal
     end
 
     def impersonate?

@@ -32,20 +32,12 @@ class GlobalAutocomplete
     results.uniq { |result| [result[:model_name], result[:id]] }
   end
 
-  def self.check_policy_klass(user, klass)
-    if user.portal?
-      [:portal, klass]
-    else
-      klass
-    end
-  end
-
   def base_autocomplete_collection(scope)
-    return [] unless scope && Pundit.policy!(user, GlobalAutocomplete.check_policy_klass(user, klass)).global_search?
+    return [] unless scope && Pundit.policy!(user, klass).global_search?
 
     self.current_scope = scope
     order = scope[:query_order] || 'created_at DESC'
-    query = Pundit.policy_scope!(user, GlobalAutocomplete.check_policy_klass(user, klass))
+    query = Pundit.policy_scope!(user, klass)
     query = query.joins(joins) if joins
     query.order(order)
   end

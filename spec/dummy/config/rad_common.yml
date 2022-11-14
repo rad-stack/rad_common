@@ -1,6 +1,5 @@
 default: &default
   app_name: Demo Foo
-  portal_app_name: Foo Portal
   use_avatar: true
   disable_sign_up: false
   disable_invite: false
@@ -9,7 +8,6 @@ default: &default
   external_users: true
   validate_external_email_domain: true
   app_logo_includes_name: true
-  portal: false
   impersonate: true
   start_route: onboardings
   user_clients: true
@@ -102,12 +100,10 @@ development:
   <<: *default
 
   host_name: localhost:3000
-  portal_host_name: portal.localhost:3000
   authy_enabled: false
 
 test:
   <<: *default
 
   host_name: localhost:3000
-  portal_host_name: portal.localhost:3000
   authy_enabled: true
