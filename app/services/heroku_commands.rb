@@ -1,4 +1,6 @@
 class HerokuCommands
+  IGNORED_HEROKU_ERRORS = ['free Heroku Dynos will'].freeze
+
   class << self
     def backup(app_name)
       check_production do
@@ -156,7 +158,14 @@ class HerokuCommands
 
       def check_valid_app(app_name)
         _output, error = Open3.capture3("heroku apps:info #{app_option(app_name)}")
-        raise error if error.present?
+
+        raise error if valid_error?(error)
+      end
+
+      def valid_error?(error)
+        return false if error.blank?
+
+        IGNORED_HEROKU_ERRORS.select { |ignored_error| error.include?(ignored_error) }.blank?
       end
   end
 end
