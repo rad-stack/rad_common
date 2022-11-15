@@ -31,6 +31,9 @@
     "url-parse": "^1.5.8",
     "async": "^2.6.4",
     "eventsource": "^2.0.2",
-    "moment": "^2.29.4"
+    "moment": "^2.29.4",
+    "loader-utils": "^2.0.3",
+    "terser": "^5.14.2",
+    "jquery-ui": "^1.13.2"
   }
 }
