@@ -121,6 +121,18 @@ RSpec.describe Contactable do
       end
     end
 
+    context 'with enhanced matching and nil dpv_match_code' do
+      let(:address_1) { '331 Theater Rd' }
+      let(:address_2) { nil }
+      let(:city) { 'Onalaska' }
+      let(:state) { 'WI' }
+      let(:zipcode) { '54650' }
+
+      it 'is valid' do
+        expect(company.valid?).to be true
+      end
+    end
+
     context 'with mixed case address' do
       let(:address_1) { '1376 Macarthur Street' }
       let(:address_2) { nil }

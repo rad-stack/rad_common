@@ -71,7 +71,7 @@ class RadPermission
           value: user.permission?(item) }
       end
 
-      categories.group_by { |item| item[:category_name] }
+      categories.group_by { |item| item[:category_name] }.sort_by(&:first)
     end
 
     private

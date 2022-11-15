@@ -7,39 +7,38 @@ PATH
       authtrail
       authy (< 3.0.0)
       aws-sdk-s3
-      bootstrap4-kaminari-views (~> 1.0.1)
+      bootstrap4-kaminari-views
       devise
       devise-authy
       devise-security
       devise_invitable
       factory_bot_rails
       faker
-      haml-rails (~> 2.0)
+      haml-rails
       hashids
-      image_processing (~> 1.9)
-      kaminari (~> 1.2.1)
+      image_processing
+      kaminari
       net-imap
       net-pop
       net-smtp
       nokogiri
       pg
-      premailer-rails (~> 1.10.2)
+      premailer-rails
       pretender
       puma (~> 5.6)
       pundit
       rails (~> 6.1.6.1)
-      redis (= 4.7.1)
       sassc
       sendgrid-ruby
       sentry-rails
       sentry-ruby
-      sidekiq (~> 6.4.1)
+      sidekiq (< 7)
       sidekiq-failures
-      simple_form (~> 5.0)
+      simple_form
       smartystreets_ruby_sdk
       strip_attributes
       text
-      twilio-ruby (~> 5.63)
+      twilio-ruby
       webpacker
 
 GEM
@@ -197,7 +196,7 @@ GEM
     ffi (1.15.5)
     globalid (1.0.0)
       activesupport (>= 5.0)
-    haml (6.0.7)
+    haml (6.0.8)
       temple (>= 0.8.2)
       thor
       tilt
@@ -275,7 +274,7 @@ GEM
       addressable
       css_parser (>= 1.12.0)
       htmlentities (>= 4.0.0)
-    premailer-rails (1.10.3)
+    premailer-rails (1.11.1)
       actionmailer (>= 3)
       premailer (~> 1.7, >= 1.7.9)
     pretender (0.4.0)
@@ -385,10 +384,10 @@ GEM
       sentry-ruby (~> 5.5.0)
     sentry-ruby (5.5.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sidekiq (6.4.2)
-      connection_pool (>= 2.2.2)
+    sidekiq (6.5.7)
+      connection_pool (>= 2.2.5)
       rack (~> 2.0)
-      redis (>= 4.2.0)
+      redis (>= 4.5.0, < 5)
     sidekiq-failures (1.0.4)
       sidekiq (>= 4.0.0)
     simple_form (5.1.0)
@@ -417,7 +416,7 @@ GEM
     tilt (2.0.11)
     timecop (0.9.5)
     timeout (0.3.0)
-    twilio-ruby (5.73.0)
+    twilio-ruby (5.73.1)
       faraday (>= 0.9, < 3.0)
       jwt (>= 1.5, <= 2.5)
       nokogiri (>= 1.6, < 2.0)
@@ -448,7 +447,7 @@ GEM
       nokogiri (~> 1.8)
     yard (0.9.28)
       webrick (~> 1.7.0)
-    zeitwerk (2.6.1)
+    zeitwerk (2.6.3)
 
 PLATFORMS
   ruby

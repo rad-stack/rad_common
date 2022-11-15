@@ -46,6 +46,10 @@ class UsersController < ApplicationController
   def create
     @user = User.new(permitted_params)
 
+    if policy(@user).update_security_roles? && !params[:user][:security_roles].nil?
+      @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
+    end
+
     authorize @user
 
     if @user.save
