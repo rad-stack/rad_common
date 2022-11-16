@@ -154,10 +154,6 @@ module RadbearUser
     end
   end
 
-  def portal?
-    external? && RadicalConfig.portal?
-  end
-
   def read_notifications!
     notifications.unread.update_all unread: false
   end
