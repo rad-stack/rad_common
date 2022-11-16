@@ -261,8 +261,6 @@ module DuplicateFixable
         score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
       end
 
-      score = 5 if family_member_same_home?(duplicate_record)
-
       ((score / all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
     end
 
@@ -291,33 +289,6 @@ module DuplicateFixable
       end
 
       items
-    end
-
-    def family_member_same_home?(duplicate_record)
-      return false unless model_klass.use_address? && name_and_address_present?(self)
-      return false if duplicate_record.first_name.blank?
-
-      birth_date_compare(duplicate_record, 1) && birth_date_compare(self, 2) &&
-        first_name != duplicate_record.first_name &&
-        birth_date_compare(self, 2) != birth_date_compare(duplicate_record, 1) &&
-        same_last_name_and_address?(duplicate_record)
-    end
-
-    def birth_date_compare(record, fallback)
-      model_klass.use_birth_date? ? record.birth_date : fallback
-    end
-
-    def same_last_name_and_address?(duplicate_record)
-      last_name == duplicate_record.last_name &&
-        address_1 == duplicate_record.address_1 && city == duplicate_record.city &&
-        state == duplicate_record.state && zipcode == duplicate_record.zipcode
-    end
-
-    def name_and_address_present?(record)
-      return false unless model_klass.use_first_last_name?
-
-      record.first_name.present? && record.last_name.present? &&
-        record.address_1.present? && record.city.present? && record.state.present? && record.zipcode.present?
     end
 
     def duplicate_field_score(duplicate_record, attribute, weight)
