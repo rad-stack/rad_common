@@ -22,6 +22,7 @@ module RadCommon
     require 'premailer/rails'
     require 'pretender'
     require 'pundit'
+    require 'scout_apm'
     require 'sendgrid-ruby'
     require 'sentry-rails'
     require 'sentry-ruby'
