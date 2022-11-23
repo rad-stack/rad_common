@@ -8,6 +8,9 @@ class TwilioStatusesController < ApplicationController
     skip_authorization
     return if @twilio_log.blank? # TODO: log this or just ignore?
 
+    @twilio_log.update! twilio_status: params['MessageStatus']
+
+    # TODO: remove this
     puts "Twilio Status for #{@twilio_log.message_sid}: #{params['MessageStatus']}"
   end
 

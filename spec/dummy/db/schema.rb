@@ -293,6 +293,7 @@ ActiveRecord::Schema.define(version: 2022_11_23_142522) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "opt_out_message_sent", default: false, null: false
     t.string "message_sid"
+    t.integer "twilio_status"
     t.index ["created_at"], name: "index_twilio_logs_on_created_at"
     t.index ["from_number"], name: "index_twilio_logs_on_from_number"
     t.index ["from_user_id"], name: "index_twilio_logs_on_from_user_id"
