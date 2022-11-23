@@ -74,14 +74,14 @@ class PhoneSMSSender
       TwilioLog.opt_out_message_sent?(to_number)
     end
 
-    def log_event(success, message_sid)
+    def log_event(sent, message_sid)
       TwilioLog.create! to_number: to_number,
                         from_number: from_number,
                         to_user: to_user,
                         from_user_id: from_user_id,
                         message: message,
                         media_url: media_url,
-                        success: success,
+                        sent: sent,
                         message_sid: message_sid,
                         opt_out_message_sent: opt_out_message_sent
     end

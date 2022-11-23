@@ -19,6 +19,6 @@
           %td= twilio_log.media_url
           %td= twilio_log.message_sid
           %td= format_boolean twilio_log.opt_out_message_sent
-          %td= format_boolean twilio_log.success
+          %td= format_boolean twilio_log.sent
 
     = paginate @twilio_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
