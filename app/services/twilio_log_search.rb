@@ -34,6 +34,7 @@ class TwilioLogSearch < RadCommon::Search
        { label: 'To User' },
        { column: 'message' },
        { column: 'media_url' },
+       { column: 'message_sid' },
        { column: 'opt_out_message_sent' },
        { column: 'success' }]
     end
