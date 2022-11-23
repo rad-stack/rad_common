@@ -10,7 +10,7 @@ class TwilioLog < ApplicationRecord
                         receiving: 5,
                         delivered: 6,
                         undelivered: 7,
-                        failed: 8 }
+                        failed: 8 }, _prefix: true
 
   before_validation :check_success
 
@@ -18,10 +18,16 @@ class TwilioLog < ApplicationRecord
     TwilioLog.where(sent: true, opt_out_message_sent: true, to_number: to_number).limit(1).any?
   end
 
+  def status
+    return 'not sent' unless sent_to_twilio?
+
+    twilio_status
+  end
+
   private
 
     def check_success
-      return unless delivered?
+      return unless twilio_status_delivered?
 
       self.success = true
     end

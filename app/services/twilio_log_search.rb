@@ -36,7 +36,7 @@ class TwilioLogSearch < RadCommon::Search
        { column: 'media_url' },
        { column: 'message_sid' },
        { column: 'opt_out_message_sent' },
-       { column: 'sent' }]
+       { label: 'Status' }]
     end
 
     def user_array
