@@ -19,7 +19,7 @@ class TwilioLog < ApplicationRecord
   end
 
   def status
-    return 'not sent' unless sent_to_twilio?
+    return 'not sent' unless sent?
 
     twilio_status
   end
