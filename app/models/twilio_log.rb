@@ -20,8 +20,9 @@ class TwilioLog < ApplicationRecord
 
   def status
     return 'not sent' unless sent?
+    return if twilio_status.blank?
 
-    twilio_status
+    RadicalEnum.new(TwilioLog, :twilio_status).translated_option(self)
   end
 
   private
