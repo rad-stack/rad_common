@@ -11,7 +11,6 @@ module RadCommon
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
         # misc
-        binding.pry
         merge_package_json
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../gitignore.txt', '.gitignore'
@@ -218,7 +217,8 @@ end
           return copy_file dummy_file_path, 'package.json' unless File.exists? 'custom-dependencies.json'
 
           custom_dependencies = JSON.parse(File.read('custom-dependencies.json'))
-          package = JSON.parse(File.read(dummy_file_path))
+          package_source = File.expand_path(find_in_source_paths(dummy_file_path))
+          package = JSON.parse(File.read(package_source))
           dependencies = package['dependencies']
           dependencies = dependencies.merge(custom_dependencies)
           package['dependencies'] = dependencies
