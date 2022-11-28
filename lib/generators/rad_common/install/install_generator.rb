@@ -1,6 +1,7 @@
 module RadCommon
   module Generators
     class InstallGenerator < Rails::Generators::Base
+      require 'merge_package_json'
       include Rails::Generators::Migration
       source_root File.expand_path('templates', __dir__)
       desc 'Used to install the rad_common depencency files and create migrations.'
@@ -11,6 +12,7 @@ module RadCommon
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
         # misc
+        binding.pry
         MergePackageJson.merge
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../gitignore.txt', '.gitignore'
