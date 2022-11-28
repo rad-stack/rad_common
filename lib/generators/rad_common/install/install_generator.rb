@@ -1,7 +1,6 @@
 module RadCommon
   module Generators
     class InstallGenerator < Rails::Generators::Base
-      require './merge_package_json.rb'
       include Rails::Generators::Migration
       source_root File.expand_path('templates', __dir__)
       desc 'Used to install the rad_common depencency files and create migrations.'
@@ -13,7 +12,7 @@ module RadCommon
 
         # misc
         binding.pry
-        MergePackageJson.merge
+        merge_package_json
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
@@ -213,6 +212,24 @@ end
       end
 
       protected
+
+        def merge_package_json
+          binding.pry
+          if File.exists? 'custom-dependencies.json'
+            custom_dependencies = JSON.parse(File.read('custom-dependencies.json'))
+            package = JSON.parse(File.read('../../../../../spec/dummy/package.json'))
+
+            dependencies = package['dependencies']
+            dependencies = dependencies.merge(custom_dependencies)
+            package['dependencies'] = dependencies
+            binding.pry
+            File.write('package.json', JSON.pretty_generate(package))
+          else
+            binding.pry
+            copy_file '../../../../../spec/dummy/package.json', 'package.json'
+            binding.pry
+          end
+        end
 
         def apply_migration(source)
           return if RadicalConfig.shared_database?
