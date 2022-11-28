@@ -29,7 +29,6 @@ PATH
       pundit
       rails (~> 6.1.6.1)
       sassc
-      scout_apm
       sendgrid-ruby
       sentry-rails
       sentry-ruby
@@ -374,8 +373,6 @@ GEM
     rubyzip (2.3.2)
     sassc (2.4.0)
       ffi (~> 1.9)
-    scout_apm (5.3.2)
-      parser
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
