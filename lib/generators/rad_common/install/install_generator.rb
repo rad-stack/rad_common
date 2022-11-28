@@ -222,7 +222,7 @@ end
           dependencies = package['dependencies']
           dependencies = dependencies.merge(custom_dependencies)
           package['dependencies'] = dependencies
-          File.write('package.json', JSON.pretty_generate(package + "\n"))
+          File.write('package.json', JSON.pretty_generate(package) + "\n")
         end
 
         def apply_migration(source)
