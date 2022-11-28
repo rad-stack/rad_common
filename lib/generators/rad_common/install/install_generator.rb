@@ -1,7 +1,7 @@
 module RadCommon
   module Generators
     class InstallGenerator < Rails::Generators::Base
-      require 'merge_package_json'
+      require './merge_package_json.rb'
       include Rails::Generators::Migration
       source_root File.expand_path('templates', __dir__)
       desc 'Used to install the rad_common depencency files and create migrations.'
