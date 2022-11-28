@@ -32,6 +32,10 @@ class RadicalEnum
     retrieve_options true
   end
 
+  def random_value
+    options.sample.last
+  end
+
   private
 
     def enum_exists?
