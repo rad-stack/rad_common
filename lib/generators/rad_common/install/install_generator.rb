@@ -11,7 +11,7 @@ module RadCommon
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
         # misc
-        copy_file '../../../../../spec/dummy/package.json', 'package.json'
+        MergePackageJson.merge
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
