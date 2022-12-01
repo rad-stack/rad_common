@@ -45,6 +45,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'net-smtp'
 
   s.add_dependency 'nokogiri'
+
+  # this needs to match the ruby version to avoid warnings, see Task 40504
+  s.add_dependency 'parser', '~> 3.1.2.1'
+
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails'
   s.add_dependency 'pretender'

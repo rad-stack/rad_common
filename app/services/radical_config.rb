@@ -296,7 +296,10 @@ class RadicalConfig
     end
 
     def system_usage_models!
-      array_config_item! :system_usage_models
+      items = array_config_item!(:system_usage_models)
+      return items unless twilio_enabled?
+
+      items + ['TwilioLog']
     end
 
     def global_validity_days!

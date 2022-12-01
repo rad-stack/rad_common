@@ -11,7 +11,7 @@ module RadCommon
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
         # misc
-        copy_file '../../../../../spec/dummy/package.json', 'package.json'
+        merge_package_json
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
@@ -199,6 +199,7 @@ end
         apply_migration '20220905140634_allow_invite_role.rb'
         apply_migration '20220918194026_refine_smarty.rb'
         apply_migration '20221021113251_create_saved_search_filters.rb'
+        apply_migration '20221123142522_twilio_log_changes.rb'
       end
 
       def self.next_migration_number(path)
@@ -211,6 +212,19 @@ end
       end
 
       protected
+
+        def merge_package_json
+          dummy_file_path = '../../../../../spec/dummy/package.json'
+          return copy_file dummy_file_path, 'package.json' unless File.exists? 'custom-dependencies.json'
+
+          custom_dependencies = JSON.parse(File.read('custom-dependencies.json'))
+          package_source = File.expand_path(find_in_source_paths(dummy_file_path))
+          package = JSON.parse(File.read(package_source))
+          dependencies = package['dependencies']
+          dependencies = dependencies.merge(custom_dependencies)
+          package['dependencies'] = dependencies
+          File.write('package.json', JSON.pretty_generate(package) + "\n")
+        end
 
         def apply_migration(source)
           return if RadicalConfig.shared_database?
