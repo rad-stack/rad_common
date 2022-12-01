@@ -8,10 +8,6 @@ module RadCommon
 
     private
 
-      def recent_count
-        TwilioLog.last_day.count.to_f
-      end
-
       def failed_percentage
         (recent_undelivered_count / recent_count)
       end
@@ -24,6 +20,10 @@ module RadCommon
 
       def recent_undelivered_count
         TwilioLog.unsuccessful.last_day.count.to_f
+      end
+
+      def recent_count
+        TwilioLog.last_day.count.to_f
       end
   end
 end
