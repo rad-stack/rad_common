@@ -27,8 +27,9 @@
       = delete_link
     - else
       :ruby
+        default_label = tag.i('', class: "fa #{RadCommon::ContentTypeIcon.new(attachment.content_type)}") + filename_label
         attachment_label =
-          label_override.presence || tag.i('', class: "fa #{RadCommon::ContentTypeIcon.new(attachment.content_type)}") + filename_label
+          label_override.presence || default_label
 
       .attachment-button-box
         = link_to attachment_label,
