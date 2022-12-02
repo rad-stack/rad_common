@@ -15,8 +15,8 @@ module RadCommon
                                           filename_label: filename_label, no_delete: no_delete
     end
 
-    def render_attachments(attachment_name:, record:,
-                           override_label: nil, show_filename: nil, no_delete_button: nil)
+    def render_attachments_layouts(attachment_name:, record:,
+                                   override_label: nil, show_filename: nil, no_delete_button: nil)
       return unless record.persisted?
 
       attachments = record.send(attachment_name)
