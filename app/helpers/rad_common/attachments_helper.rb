@@ -31,7 +31,7 @@ module RadCommon
         label_override.presence || image_tag(attachment, class: 'img-fluid rounded', id: 'attachment_layout')
 
       safe_join([link_to(attachment_label, link, target: target, class: 'text-wrap'),
-       render_delete_attachment_link(attachment: attachment, no_delete: no_delete)])
+                 render_delete_attachment_link(attachment: attachment, no_delete: no_delete)])
     end
 
     def render_delete_attachment_link(attachment:, no_delete:)
@@ -63,11 +63,11 @@ module RadCommon
       attachments = record.send(attachment_name)
       return if attachments.blank?
 
-      safe_join(record.send(attachment_name).map { |attachment|
+      safe_join(record.send(attachment_name).map do |attachment|
         render_attachment_object(attachment: attachment, record: record, override_label: override_label,
                                  show_filename: show_filename, no_delete_button: no_delete_button,
                                  override_path: override_path, new_tab: new_tab)
-      })
+      end)
     end
   end
 end
