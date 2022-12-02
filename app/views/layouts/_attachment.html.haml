@@ -1,3 +1,1 @@
-- if record.persisted? && record.send(attachment_name).attached?
-  - attachment = record.send(attachment_name)
-  = render 'layouts/attachment_object', attachment: attachment, record: record
+= render_attachment_layout(attachment_name: attachment_name, record: record)
