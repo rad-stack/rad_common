@@ -30,8 +30,8 @@ module RadCommon
       attachment_label =
         label_override.presence || image_tag(attachment, class: 'img-fluid rounded', id: 'attachment_layout')
 
-      [link_to(attachment_label, link, target: target, class: 'text-wrap'),
-       render_delete_attachment_link(attachment: attachment, no_delete: no_delete)].join(' ').html_safe
+      safe_join([link_to(attachment_label, link, target: target, class: 'text-wrap'),
+       render_delete_attachment_link(attachment: attachment, no_delete: no_delete)])
     end
 
     def render_delete_attachment_link(attachment:, no_delete:)
@@ -47,12 +47,12 @@ module RadCommon
     def render_attachment_link(attachment:, no_delete:, label_override:, filename_label:)
       default_label = tag.i('', class: "fa #{RadCommon::ContentTypeIcon.new(attachment.content_type)}") + filename_label
       attachment_label = label_override.presence || default_label
-      [link_to(attachment_label,
-               url_for(attachment),
-               target: '_blank',
-               rel: :noopener,
-               class: 'btn btn-secondary attachment-link text-wrap'),
-       render_delete_attachment_link(attachment: attachment, no_delete: no_delete)].join(' ').html_safe
+      safe_join([link_to(attachment_label,
+                         url_for(attachment),
+                         target: '_blank',
+                         rel: :noopener,
+                         class: 'btn btn-secondary attachment-link text-wrap'),
+                 render_delete_attachment_link(attachment: attachment, no_delete: no_delete)])
     end
 
     def render_attachments_layout(attachment_name:, record:,
@@ -63,11 +63,11 @@ module RadCommon
       attachments = record.send(attachment_name)
       return if attachments.blank?
 
-      record.send(attachment_name).map { |attachment|
+      safe_join(record.send(attachment_name).map { |attachment|
         render_attachment_object(attachment: attachment, record: record, override_label: override_label,
                                  show_filename: show_filename, no_delete_button: no_delete_button,
                                  override_path: override_path, new_tab: new_tab)
-      }.join(' ').html_safe
+      })
     end
   end
 end
