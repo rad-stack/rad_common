@@ -1,1 +1,5 @@
 inherit_from: .shared_rubocop.yml
+
+Metrics/ParameterLists:
+  Exclude:
+    - 'app/helpers/rad_common/attachments_helper.rb'
