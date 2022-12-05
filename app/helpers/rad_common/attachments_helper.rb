@@ -23,7 +23,7 @@ module RadCommon
                                           override_path: override_path, new_tab: new_tab
 
       if attachment.content_type.include?('image')
-        content_tag(:div, class: 'attachment-wrapper') do
+        return content_tag(:div, class: 'attachment-wrapper') do
           render_attachment_image(attachment: attachment, override_path: override_path,
                                   new_tab: new_tab, label_override: label_override, no_delete: no_delete)
         end
