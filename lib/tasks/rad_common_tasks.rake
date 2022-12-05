@@ -1,5 +1,5 @@
 namespace :rad_common do
-  task :global_validity, [:override_model] => :environment do |task, args|
+  task :daily_rad_tasks, [:override_model] => :environment do |task, args|
     session = RakeSession.new(task, 24.hours, 1)
 
     Timeout.timeout(session.time_limit) do
@@ -8,6 +8,9 @@ namespace :rad_common do
       global_validity = GlobalValidation.new
       global_validity.override_model = args[:override_model]
       global_validity.run
+
+      checker = TwilioErrorThresholdChecker.new
+      Notifications::TwilioErrorThresholdPassedNotification.main.notify! if checker.passed_error_threshold?
 
       session.finished
     end
