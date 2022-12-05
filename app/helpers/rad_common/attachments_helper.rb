@@ -21,6 +21,18 @@ module RadCommon
       render 'layouts/attachment_object', attachment: attachment, label_override: label_override,
                                           filename_label: filename_label, no_delete: no_delete,
                                           override_path: override_path, new_tab: new_tab
+
+      if attachment.content_type.include?('image')
+        content_tag(:div, class: 'attachment-wrapper') do
+          render_attachment_image(attachment: attachment, override_path: override_path,
+                                  new_tab: new_tab, label_override: label_override, no_delete: no_delete)
+        end
+      end
+
+      content_tag(:div, class: 'attachment-button-box') do
+        render_attachment_link(attachment: attachment, label_override: label_override,
+                               no_delete: no_delete, filename_label: filename_label)
+      end
     end
 
     def render_attachment_image(attachment:, override_path:, new_tab:, label_override:, no_delete:)
