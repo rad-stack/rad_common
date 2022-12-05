@@ -23,7 +23,7 @@
           %td= secured_link division
           %td= division.code
           %td= secured_link(division.owner)
-          %td= render 'layouts/attachment', record: division, attachment_name: 'logo', new_tab: true
+          %td= render_attachment_layout record: division, attachment_name: 'logo', new_tab: true
           - if show_actions
             %td
               - if policy(division).update?

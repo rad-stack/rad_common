@@ -1,9 +1,0 @@
-- if attachment
-  .attachment-wrapper
-    - if attachment.content_type.include?('image')
-      = render_attachment_image(attachment: attachment, override_path: override_path,
-                                new_tab: new_tab, label_override: label_override, no_delete: no_delete)
-    - else
-      .attachment-button-box
-        = render_attachment_link(attachment: attachment, label_override: label_override,
-                                 no_delete: no_delete, filename_label: filename_label)

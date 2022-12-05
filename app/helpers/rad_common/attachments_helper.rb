@@ -18,9 +18,6 @@ module RadCommon
       label_override = override_label.presence
       filename_label = show_filename ? " #{attachment.filename}" : nil
       no_delete = no_delete_button || !policy(record).update?
-      render 'layouts/attachment_object', attachment: attachment, label_override: label_override,
-                                          filename_label: filename_label, no_delete: no_delete,
-                                          override_path: override_path, new_tab: new_tab
 
       if attachment.content_type.include?('image')
         return content_tag(:div, class: 'attachment-wrapper') do
