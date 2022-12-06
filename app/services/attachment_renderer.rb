@@ -50,11 +50,13 @@ class AttachmentRenderer
         end
       end
 
-      context.content_tag(:div, class: 'attachment-button-box') do
-        render_attachment_link attachment: attachment,
-                               label_override: label_override,
-                               no_delete: no_delete,
-                               filename_label: filename_label
+      context.content_tag(:div, class: 'attachment-wrapper') do
+        context.content_tag(:div, class: 'attachment-button-box') do
+          render_attachment_link attachment: attachment,
+                                 label_override: label_override,
+                                 no_delete: no_delete,
+                                 filename_label: filename_label
+        end
       end
     end
 
