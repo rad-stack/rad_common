@@ -19,7 +19,7 @@ module RadCommon
       end
 
       def recent_undelivered_count
-        TwilioLog.unsuccessful.last_day.count.to_f
+        TwilioLog.failure.last_day.count.to_f
       end
 
       def recent_count

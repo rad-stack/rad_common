@@ -3,7 +3,6 @@ class TwilioLog < ApplicationRecord
   belongs_to :to_user, class_name: 'User', optional: true
 
   scope :last_day, -> { where('created_at > ?', 24.hours.ago) }
-  scope :unsuccessful, -> { where(success: false) }
 
   enum twilio_status: { accepted: 0,
                         scheduled: 1,
