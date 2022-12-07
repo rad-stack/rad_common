@@ -1,7 +1,7 @@
 module Notifications
   class TwilioErrorThresholdExceededNotification < ::NotificationType
     def mailer_message
-      "Twilio Error Threshold has been exceeded. #{formatted_percent}% of messages have failed to deliver. " \
+      "Twilio Error Threshold has been exceeded. #{formatted_percent} of messages have failed to deliver. " \
         'Check twilio logs for more details'
     end
 
@@ -12,7 +12,7 @@ module Notifications
     private
 
       def formatted_percent
-        ActiveSupport::NumberHelper.number_to_percentage(payload * 100)
+        ActiveSupport::NumberHelper.number_to_percentage(payload * 100, strip_insignificant_zeros: true, precision: 2)
       end
   end
 end

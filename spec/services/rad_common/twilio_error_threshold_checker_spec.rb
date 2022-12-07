@@ -16,7 +16,7 @@ RSpec.describe RadCommon::TwilioErrorThresholdChecker, type: :service do
 
       it 'sends a notification' do
         expect(email.subject).to eq 'Twilio Error Threshold Exceeded'
-        expect(body).to include 'Twilio Error Threshold has been exceeded. 8.0% of messages have failed to deliver. ' \
+        expect(body).to include 'Twilio Error Threshold has been exceeded. 8% of messages have failed to deliver. ' \
                                 'Check twilio logs for more details'
       end
     end
