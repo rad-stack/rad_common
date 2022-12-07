@@ -200,7 +200,6 @@ end
         apply_migration '20220918194026_refine_smarty.rb'
         apply_migration '20221021113251_create_saved_search_filters.rb'
         apply_migration '20221123142522_twilio_log_changes.rb'
-        apply_migration '20221201192226_twilio_error_threshold_passed_notification.rb'
       end
 
       def self.next_migration_number(path)

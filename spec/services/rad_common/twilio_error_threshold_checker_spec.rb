@@ -2,11 +2,9 @@ require 'rails_helper'
 
 RSpec.describe RadCommon::TwilioErrorThresholdChecker, type: :service do
   describe 'check_threshold' do
-    let(:user) { create :admin }
+    let!(:user) { create :admin }
     let(:email) { ActionMailer::Base.deliveries.last }
     let(:body) { email.body.encoded }
-
-    before { create :twilio_error_threshold_passed_notification, security_roles: [user.security_roles.first] }
 
     context 'when threshold is passed' do
       before do

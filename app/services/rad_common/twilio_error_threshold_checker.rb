@@ -3,7 +3,10 @@ module RadCommon
     FAILURE_THRESHOLD_PERCENTAGE = 0.05
 
     def check_threshold
-      Notifications::TwilioErrorThresholdPassedNotification.main.notify!(failed_percentage) if passed_error_threshold?
+      return unless passed_error_threshold?
+
+      check_notification_type
+      Notifications::TwilioErrorThresholdPassedNotification.main.notify! failed_percentage
     end
 
     private
@@ -24,6 +27,12 @@ module RadCommon
 
       def recent_count
         TwilioLog.last_day.count.to_f
+      end
+
+      def check_notification_type
+        return if NotificationType.find_by(type: 'Notifications::TwilioErrorThresholdPassedNotification').present?
+
+        Notifications::TwilioErrorThresholdPassedNotification.create! security_roles: [SecurityRole.admin_role]
       end
   end
 end
