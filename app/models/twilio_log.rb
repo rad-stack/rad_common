@@ -15,6 +15,9 @@ class TwilioLog < ApplicationRecord
                         undelivered: 7,
                         failed: 8 }, _prefix: true
 
+  scope :failure, -> { where(success: false) }
+  scope :successful, -> { where(success: true) }
+
   before_validation :check_success
 
   def self.opt_out_message_sent?(to_number)
