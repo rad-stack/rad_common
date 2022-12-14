@@ -1,6 +1,6 @@
 module RadCommon
   class TwilioErrorThresholdChecker
-    FAILURE_THRESHOLD_PERCENTAGE = 0.05
+    FAILURE_THRESHOLD_PERCENTAGE = 0.2
 
     def check_threshold
       return unless exceeded_error_threshold?
