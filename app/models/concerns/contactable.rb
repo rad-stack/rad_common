@@ -126,7 +126,7 @@ module Contactable
       self.zipcode = result.zipcode
 
       self.address_metadata ||= {}
-      self.address_metadata['problems'] = result.address_problems
+      self.address_metadata['problems'] = result.address_problems if result.address_problems.present?
       self.address_metadata['valid'] = true
     end
 
@@ -159,6 +159,6 @@ module Contactable
       end
 
       self.address_metadata ||= {}
-      self.address_metadata['changes'] = changes_hash
+      self.address_metadata['changes'] = changes_hash if changes_hash.present?
     end
 end
