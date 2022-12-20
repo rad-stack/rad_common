@@ -19,6 +19,9 @@ module RadCommonRoutes
             put :resend_invitation
             put :confirm
             put :reset_authy
+            put :reactivate
+            put :test_email
+            put :test_sms
           end
 
           resources :user_clients, only: :new
@@ -28,6 +31,8 @@ module RadCommonRoutes
           get :permission, on: :collection
         end
 
+        resources :saved_search_filters, only: :destroy
+
         resources :user_security_roles, only: :show
         resources :user_clients, only: %i[create destroy]
       end
@@ -35,6 +40,13 @@ module RadCommonRoutes
       authenticate :user, ->(u) { u.admin? } do
         mount Sidekiq::Web => '/sidekiq'
       end
+
+      resources :user_profiles, only: %i[show edit update] if RadicalConfig.user_profiles?
+      resources :twilio_statuses, only: :create
+
+      get 'contact_us', to: 'pages#contact_us'
+      get 'terms', to: 'pages#terms'
+      get 'privacy', to: 'pages#privacy'
 
       root to: 'pages#home'
     end

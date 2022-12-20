@@ -1,6 +1,6 @@
 require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/app/services/radical_config.rb"
 
-require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record"\
+require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record" \
         '/base/schema_validations'
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
@@ -15,7 +15,7 @@ ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
 Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css rad_common/radbear_mailer_reset.css]
 
-RadicalConfig.check_aws!
+RadicalConfig.check_validity!
 
 Rails.application.routes.default_url_options[:host] = RadicalConfig.host_name!
 
@@ -57,10 +57,19 @@ if RadicalConfig.authy_enabled?
   Authy.api_uri = 'https://api.authy.com/'
 end
 
+# https://swell.radicalbear.com/tasks/37444
+# https://github.com/collectiveidea/audited/issues/631
+Rails.configuration.active_record.use_yaml_unsafe_load = true
+
 Audited.current_user_method = :true_user
+Audited.ignored_attributes += ['address_changes']
 
 Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
+end
+
+Rails.application.config.after_initialize do
+  ActionText::ContentHelper.allowed_attributes << 'style'
 end
 
 AuthTrail.geocode = false

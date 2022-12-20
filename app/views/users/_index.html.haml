@@ -1,6 +1,7 @@
 :ruby
   show_roles = true if local_assigns[:show_roles].nil?
   show_actions = true if local_assigns[:show_actions].nil?
+  hide_inactive = false if local_assigns[:hide_inactive].nil?
   show_actions &&= show_actions?(User)
   sort_columns = false if local_assigns[:sort_columns].nil?
   page_param_name = :page if local_assigns[:page_param_name].nil?
@@ -25,14 +26,14 @@
           - if show_roles && show_actions
             %th Roles
           - if RadicalConfig.external_users?
-            %th External?
+            %th #{RadCommon::AppInfo.new.client_model_label}s
         - if show_actions
           %th.text-center Actions
 
       - users.each do |user|
         - can_show = policy(user).show?
 
-        %tr{ class: user.display_style }
+        %tr{ class: user_row_class(user, hide_inactive), id: user_row_id(user, hide_inactive) }
           %td= secured_link(user)
           %td
             - if can_show
@@ -57,12 +58,8 @@
           - if RadicalConfig.external_users?
             %td
               - if RadicalConfig.user_clients?
-                - clients_label = pluralize(user.user_clients.size, RadCommon::AppInfo.new.client_model_label)
-
-                - if can_show
-                  = link_to clients_label, user
-                - else
-                  = clients_label
+                - user.clients.sorted.each do |client|
+                  %p= secured_link client
               - else
                 = format_boolean(user.external?)
           - if show_actions

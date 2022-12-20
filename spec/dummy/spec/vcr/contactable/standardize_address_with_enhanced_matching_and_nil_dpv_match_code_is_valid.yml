@@ -1,0 +1,39 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://us-street.api.smartystreets.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Onalaska&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=WI&street=331%20Theater%20Rd&street2&urbanization&zipcode=54650
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - smartystreets (sdk:ruby@5.14.14)
+      Host:
+      - us-street.api.smartystreets.com
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Tue, 08 Nov 2022 15:28:26 GMT
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"331 Theater
+        Rd","last_line":"Onalaska WI 54650","components":{"primary_number":"331","street_name":"Theater","street_suffix":"Rd","city_name":"Onalaska","default_city_name":"Onalaska","state_abbreviation":"WI","zipcode":"54650"},"metadata":{"zip_type":"Standard","county_fips":"55063","county_name":"La
+        Crosse","latitude":43.894940,"longitude":-91.224810,"precision":"Zip5","time_zone":"Central","utc_offset":-6,"dst":true},"analysis":{"dpv_footnotes":"A1","active":"Y","footnotes":"F#","lacslink_code":"00","lacslink_indicator":"N","enhanced_match":"non-postal-match"}}]'
+  recorded_at: Tue, 08 Nov 2022 15:28:26 GMT
+recorded_with: VCR 6.1.0

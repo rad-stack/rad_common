@@ -20,8 +20,11 @@ module RadCommon
     # @example
     #   { column: :created_at, type: RadCommon::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
     def initialize(column:, start_input_label: nil, end_input_label: nil, custom: false,
+                   start_required: true, end_required: true,
                    default_start_value: nil, default_end_value: nil, group_label: nil, scope: nil)
       @column = column
+      @start_required = start_required
+      @end_required = end_required
       @start_input_label = start_input_label
       @end_input_label = end_input_label
       @group_label = group_label
@@ -89,7 +92,9 @@ module RadCommon
       end_at = end_at.end_of_day if end_at && datetime_column?(results)
 
       if @scope
-        results = results.send(@scope, start_at, end_at) if start_at.present? && end_at.present?
+        if (!@start_required || start_at.present?) && (!@end_required || end_at.present?)
+          results = results.send(@scope, start_at, end_at)
+        end
       else
         results = results.where("#{query_column(results)} >= ?", start_at) if start_at.present?
         results = results.where("#{query_column(results)} <= ?", end_at) if end_at.present?
@@ -109,7 +114,7 @@ module RadCommon
       begin
         if start_at_value(params).present? && end_at_value(params).present? &&
            start_at_value(params) > end_at_value(params)
-          errors << 'Start at date must before end date'
+          errors << "#{start_label_error} must be before #{end_label_error}"
           return false
         end
       rescue ArgumentError
@@ -121,6 +126,18 @@ module RadCommon
     end
 
     private
+
+      def start_label_error
+        return start_input_label unless hide_start_input_label?
+
+        'Start date'
+      end
+
+      def end_label_error
+        return end_input_label unless hide_end_input_label?
+
+        'End date'
+      end
 
       def datetime_column?(results)
         results.model.column_for_attribute(@column).type == :datetime

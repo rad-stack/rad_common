@@ -60,6 +60,6 @@ class ClientsController < ApplicationController
     end
 
     def permitted_params
-      params.require(:client).permit(:name, :active)
+      params.require(:client).permit(:name, :email, :active, { valid_user_domains: [] })
     end
 end

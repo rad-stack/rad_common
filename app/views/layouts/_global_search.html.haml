@@ -1,5 +1,5 @@
 - if user_signed_in? && current_user
-  - search_scopes = global_search_scopes.reject { |item| item[:hide_global_nav] }
+  - search_scopes = GlobalSearch.new(current_user).filtered_scopes
 
   - if search_scopes.any?
     = form_tag('/rad_common/global_search_result', method: :get) do
@@ -9,7 +9,7 @@
             %span.input-group-text.global-search-dropdown
               .nav-item.dropdown
 
-                %span{ class: 'fa fa-search nav-link.dropdown-toggle search-options',
+                %span{ class: 'fa fa-magnifying-glass nav-link.dropdown-toggle search-options',
                        'aria-expanded': 'true',
                        'data-toggle': 'dropdown' }
 

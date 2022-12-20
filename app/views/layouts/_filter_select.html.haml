@@ -1,7 +1,8 @@
 - data_style = "btn #{search.default_value?(filter.searchable_name) ? 'btn-light' : 'btn-warning'}"
+- input_html = filter.search_scope.present? ? filter.search_scope_params : { class: 'selectpicker' }
 
 = f.input filter.searchable_name,
-          collection: filter.input_options,
+          collection: filter.input_options_with_current_selection(search),
           label: filter.input_label,
           selected: filter.selected_value(search),
           include_blank: filter.include_blank ? filter.blank_value_label : false,
@@ -9,7 +10,7 @@
           group_method: :last,
           required: false,
           label_method: filter.label_method,
-          input_html: { class: 'selectpicker',
-                        multiple: filter.multiple,
+          input_html: { multiple: filter.multiple,
                         'data-live-search': true,
-                        'data-style': data_style }
+                        'data-style': data_style }.merge(input_html)
+

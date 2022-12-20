@@ -33,7 +33,7 @@ class RadPermission
 
   class << self
     def all
-      (SecurityRole.attribute_names - %w[id name created_at updated_at external]).sort
+      (SecurityRole.attribute_names - %w[id name created_at updated_at external allow_invite allow_sign_up]).sort
     end
 
     def security_role_categories(security_role)
@@ -52,7 +52,7 @@ class RadPermission
           value: security_role.send(item) }
       end
 
-      categories.group_by { |item| item[:category_name] }
+      categories.group_by { |item| item[:category_name] }.sort_by(&:first)
     end
 
     def user_categories(user)
@@ -71,7 +71,7 @@ class RadPermission
           value: user.permission?(item) }
       end
 
-      categories.group_by { |item| item[:category_name] }
+      categories.group_by { |item| item[:category_name] }.sort_by(&:first)
     end
 
     private

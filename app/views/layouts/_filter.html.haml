@@ -1,4 +1,4 @@
-- if search.search_params? && search.invalid?
+- if (search.search_params? && search.invalid?) || search.saved_filter_errors.present?
   - flash.now[:error] = search.error_messages
 = simple_form_for :search, url: path, method: :get do |f|
   -# TODO: Set up permanent page size selection solution
@@ -14,11 +14,19 @@
     = f.button :button, class: 'btn btn-success' do
       %i.fa.fa-filter
       Apply Filters
+    - if RadicalConfig.saved_search_filters_enabled?
+      = render 'layouts/saved_filters_dropdown', search: search, f: f, path: path
     \
     = link_to "#{path}?clear_filters=true", class: 'btn btn-danger' do
       %i.fa.fa-times
       Clear Filters
+
+  - if RadicalConfig.saved_search_filters_enabled?
+    - if search.applied_saved_filter.present?
+      .text-muted.mt-1 Applied Filter: #{search.applied_saved_filter}
+    = f.hidden_field :saved_name
+  - else
     %br
-    %br
-    - if defined? paged_results
-      = render 'layouts/paging', paged_results: paged_results, f: f, search: search
+  %br
+  - if defined? paged_results
+    = render 'layouts/paging', paged_results: paged_results, f: f, search: search

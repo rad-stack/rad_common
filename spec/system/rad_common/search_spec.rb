@@ -62,11 +62,41 @@ RSpec.describe 'Search', type: :system do
     end
 
     unless ENV['CI']  # TODO: this fails on codeship
-      it 'select should have warning style when a value a blank value is selected on filter without default', js: true do
+      it 'select should have warning style when a value a blank value is selected on filter without default',
+         js: true do
         expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-light]')
         bootstrap_select 'All Owners', from: 'search_owner_id'
         click_button 'Apply Filters'
         expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-warning]')
+      end
+    end
+
+    context 'when ajax select', js: true do
+      let(:category) { create :category, name: 'Appliance' }
+      let(:other_category) { create :category, name: 'Applications' }
+      let!(:other_division) { create :division, category: other_category, owner: user }
+
+      before do
+        division.update!(category: category, owner: user)
+      end
+
+      it 'allows searching and selecting filter option' do
+        bootstrap_select 'Active', from: 'search_division_status'
+        click_button 'Apply Filters'
+
+        expect(page).to have_content(division.name)
+        expect(page).to have_content(other_division.name)
+
+        # Full Search
+        bootstrap_select category.name, from: 'search_category_id', search: category.name
+        click_button 'Apply Filters'
+        expect(page).to have_content(division.name)
+        expect(page).not_to have_content(other_division.name)
+
+        # Partial Search
+        bootstrap_select other_category.name, from: 'search_category_id', search: 'App'
+        click_button 'Apply Filters'
+        expect(page).to have_content(other_division.name)
       end
     end
 

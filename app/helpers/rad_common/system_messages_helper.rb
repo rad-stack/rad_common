@@ -1,7 +1,7 @@
 module RadCommon
   module SystemMessagesHelper
     def system_message_title(system_message)
-      "System Message Sent to #{enum_to_translated_option(system_message, :send_to)} "\
+      "System Message Sent to #{enum_to_translated_option(system_message, :send_to)} " \
         "on #{format_datetime(system_message.created_at)}"
     end
 
@@ -18,7 +18,7 @@ module RadCommon
     end
 
     def system_message_show_data(system_message)
-      [{ label: 'Message', value: system_message.html_message }, :message_type, :security_role]
+      [{ label: 'Message', value: system_message.html_message.body.to_s }, :message_type, :security_role]
     end
   end
 end

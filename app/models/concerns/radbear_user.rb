@@ -15,6 +15,7 @@ module RadbearUser
     has_many :login_activities, as: :user, dependent: :destroy
     has_many :user_clients, dependent: :destroy
     has_many :clients, through: :user_clients, source: :client
+    has_many :saved_search_filters, dependent: :destroy
 
     has_many :twilio_logs_from, class_name: 'TwilioLog',
                                 foreign_key: 'from_user_id',
@@ -28,14 +29,14 @@ module RadbearUser
 
     has_one_attached :avatar
 
-    attr_accessor :approved_by, :do_not_notify_approved
+    attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
     scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
 
     scope :admins, lambda {
-      active.where('users.id IN ('\
-                   'SELECT user_id FROM user_security_roles '\
-                   'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id '\
+      active.where('users.id IN (' \
+                   'SELECT user_id FROM user_security_roles ' \
+                   'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
                    'WHERE security_roles.admin = TRUE)')
     }
 
@@ -68,12 +69,15 @@ module RadbearUser
     validate :validate_authy_mobile_phone
     validate :password_excludes_name
     validate :validate_authy
+    validates :security_roles, presence: true, if: :active?
 
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
                                        message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
 
-    validates_with PhoneNumberValidator, fields: [{ field: :mobile_phone, type: :mobile }]
-    validates_with EmailAddressValidator, fields: %i[email], on: :update, if: :fully_validate_email?
+    validates_with PhoneNumberValidator, fields: [{ field: :mobile_phone, type: :mobile }],
+                                         if: :fully_validate_email_phone?
+
+    validates_with EmailAddressValidator, fields: %i[email], if: :fully_validate_email_phone?
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
@@ -95,6 +99,10 @@ module RadbearUser
 
   def active?
     active
+  end
+
+  def not_inactive?
+    user_status != UserStatus.default_inactive_status
   end
 
   def formatted_email
@@ -146,10 +154,6 @@ module RadbearUser
     end
   end
 
-  def portal?
-    external? && RadicalConfig.portal?
-  end
-
   def read_notifications!
     notifications.unread.update_all unread: false
   end
@@ -189,6 +193,10 @@ module RadbearUser
     UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false
   end
 
+  def reactivate
+    update(last_activity_at: nil)
+  end
+
   def reset_authy!
     update! authy_enabled: false, authy_id: nil
     update! authy_enabled: true
@@ -197,16 +205,27 @@ module RadbearUser
   private
 
     def check_defaults
+      if security_roles.none? && initial_security_role_id.present?
+        self.security_roles = [initial_security_role]
+        self.external = initial_security_role.external?
+      elsif security_roles.any?
+        self.external = security_roles.first.external
+      end
+
       status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
       self.user_status = status if new_record? && !user_status
     end
 
-    def fully_validate_email?
-      user_status&.validate_email?
+    def initial_security_role
+      SecurityRole.find(initial_security_role_id)
+    end
+
+    def fully_validate_email_phone?
+      user_status&.validate_email_phone?
     end
 
     def validate_email_address
-      return if email.blank? || user_status_id.nil? || !user_status.validate_email || Company.main.blank?
+      return if email.blank? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
 
       domains = Company.main.valid_user_domains
       components = email.split('@')

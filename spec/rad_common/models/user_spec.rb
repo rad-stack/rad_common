@@ -24,6 +24,8 @@ RSpec.describe User, type: :model do
     let(:last_mail) { ActionMailer::Base.deliveries.last }
 
     before do
+      allow_any_instance_of(described_class).to receive(:auto_approve?).and_return false
+
       create :notification_security_role,
              notification_type: notification_type,
              security_role: admin.security_roles.first
@@ -40,6 +42,8 @@ RSpec.describe User, type: :model do
 
   describe 'auditing of associations' do
     let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
+
+    before { user.update! user_status: UserStatus.default_pending_status }
 
     context 'with create' do
       before do
@@ -118,11 +122,11 @@ RSpec.describe User, type: :model do
         end
 
         13.times do |i|
-          expect(user.update(password: "Password#{i + 1}!", password_confirmation: "Password#{i + 1}!")).to eq false
+          expect(user.update(password: "Password#{i + 1}!", password_confirmation: "Password#{i + 1}!")).to be false
           expect(user.errors.full_messages.to_s).to include 'was used previously'
         end
 
-        expect(user.update(password: 'cOmpl3x_p@55w0rd', password_confirmation: 'cOmpl3x_p@55w0rd')).to eq true
+        expect(user.update(password: 'cOmpl3x_p@55w0rd', password_confirmation: 'cOmpl3x_p@55w0rd')).to be true
       end
     end
   end
@@ -141,12 +145,12 @@ RSpec.describe User, type: :model do
     end
 
     it 'rejects invalid email addresses' do
-      addresses = ['foo @example.com', '.b ar@example.com', 'com@none']
+      addresses = ['foo @example.com', '.b ar@example.com', 'com-none']
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
         expect(user).not_to be_valid
-        expect(user.errors.full_messages.to_s).to include 'Email is invalid'
+        expect(user.errors.full_messages.to_s).to include 'Email is not written in a valid format'
       end
     end
 
@@ -230,20 +234,18 @@ RSpec.describe User, type: :model do
   describe 'password expirable' do
     it 'has a password that expires after 90 days' do
       if Devise.mappings[:user].password_expirable?
-        expect(user.need_change_password?).to eq(false)
-        Timecop.travel(91.days.from_now) { expect(user.need_change_password?).to eq(true) }
+        expect(user.need_change_password?).to be(false)
+        Timecop.travel(91.days.from_now) { expect(user.need_change_password?).to be(true) }
       end
     end
   end
 
-  describe 'exiprable' do
+  describe 'exiprable', user_expirable_specs: true do
     it 'expires after 90 days' do
-      if Devise.mappings[:user].expirable?
-        user.update!(last_activity_at: Time.current)
-        expect(user.expired?).to eq(false)
+      user.update!(last_activity_at: Time.current)
+      expect(user.expired?).to be(false)
 
-        Timecop.travel(91.days.from_now) { expect(user.expired?).to eq(true) }
-      end
+      Timecop.travel(91.days.from_now) { expect(user.expired?).to be(true) }
     end
   end
 

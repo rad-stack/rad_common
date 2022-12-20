@@ -145,8 +145,12 @@ module DuplicateFixable
     # override as needed in models
   end
 
-  def duplicate_name_weight
-    duplicate_model_config[:name_weight].presence || 10
+  def duplicate_first_name_weight
+    duplicate_model_config[:first_name_weight].presence || 10
+  end
+
+  def duplicate_last_name_weight
+    duplicate_model_config[:last_name_weight].presence || 10
   end
 
   def duplicate_other_weight
@@ -164,9 +168,11 @@ module DuplicateFixable
   def merge_duplicates(duplicate_keys, user)
     error = nil
 
-    duplicate_keys.each do |key|
-      error = fix_duplicate(key, user)
-      break if error
+    ActiveRecord::Base.transaction do
+      duplicate_keys.each do |key|
+        error = fix_duplicate(key, user)
+        break if error
+      end
     end
 
     if error.present?
@@ -215,7 +221,7 @@ module DuplicateFixable
     def birth_date_matches
       return [] unless model_klass.use_birth_date? && model_klass.use_first_last_name?
 
-      query_string = 'id <> ? AND birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR '\
+      query_string = 'id <> ? AND birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR ' \
                      'levenshtein(upper(last_name), ?) <= 1)'
 
       model_klass.where(query_string,
@@ -255,8 +261,6 @@ module DuplicateFixable
         score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
       end
 
-      score = 5 if family_member_same_home?(duplicate_record)
-
       ((score / all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
     end
 
@@ -264,8 +268,8 @@ module DuplicateFixable
       items = []
 
       if model_klass.use_first_last_name?
-        items += [{ name: 'first_name', weight: duplicate_name_weight },
-                  { name: 'last_name', weight: duplicate_name_weight }]
+        items += [{ name: 'first_name', weight: duplicate_first_name_weight },
+                  { name: 'last_name', weight: duplicate_last_name_weight }]
       end
 
       items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
@@ -285,33 +289,6 @@ module DuplicateFixable
       end
 
       items
-    end
-
-    def family_member_same_home?(duplicate_record)
-      return false unless model_klass.use_address? && name_and_address_present?(self)
-      return false if duplicate_record.first_name.blank?
-
-      birth_date_compare(duplicate_record, 1) && birth_date_compare(self, 2) &&
-        first_name != duplicate_record.first_name &&
-        birth_date_compare(self, 2) != birth_date_compare(duplicate_record, 1) &&
-        same_last_name_and_address?(duplicate_record)
-    end
-
-    def birth_date_compare(record, fallback)
-      model_klass.use_birth_date? ? record.birth_date : fallback
-    end
-
-    def same_last_name_and_address?(duplicate_record)
-      last_name == duplicate_record.last_name &&
-        address_1 == duplicate_record.address_1 && city == duplicate_record.city &&
-        state == duplicate_record.state && zipcode == duplicate_record.zipcode
-    end
-
-    def name_and_address_present?(record)
-      return false unless model_klass.use_first_last_name?
-
-      record.first_name.present? && record.last_name.present? &&
-        record.address_1.present? && record.city.present? && record.state.present? && record.zipcode.present?
     end
 
     def duplicate_field_score(duplicate_record, attribute, weight)
@@ -375,7 +352,7 @@ module DuplicateFixable
 
       return nil if duplicate_record.destroy
 
-      'Could not remove the unused duplicate record '\
+      'Could not remove the unused duplicate record ' \
         "id #{duplicate_record.id}: #{duplicate_record.errors.full_messages.join(', ')}"
     end
 end

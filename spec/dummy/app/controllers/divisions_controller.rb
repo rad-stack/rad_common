@@ -45,7 +45,7 @@ class DivisionsController < ApplicationController
       flash[:error] = @division.errors.full_messages.join(', ')
     end
 
-    if destroyed && (URI(request.referer).path == division_path(@division)) ||
+    if (destroyed && (URI(request.referer).path == division_path(@division))) ||
        (URI(request.referer).path == edit_division_path(@division))
       redirect_to divisions_path
     else

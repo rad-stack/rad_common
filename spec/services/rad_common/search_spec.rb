@@ -32,7 +32,11 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:user_1) { create :user, confirmed_at: 2.days.ago }
       let(:user_2) { create :user, confirmed_at: 3.days.from_now }
       let!(:user_3) { create :user, confirmed_at: DateTime.current.end_of_day }
-      let!(:user_4) { create :user, confirmed_at: 2.days.ago, security_roles: [] }
+
+      let!(:user_4) do
+        create :user, confirmed_at: 2.days.ago, security_roles: [], user_status: UserStatus.default_inactive_status
+      end
+
       let(:filters) { [{ column: :confirmed_at, type: RadCommon::DateFilter }] }
       let(:params) do
         ActionController::Parameters.new(search: { confirmed_at_start: 3.days.ago.strftime('%Y-%m-%d'),
@@ -304,7 +308,7 @@ RSpec.describe RadCommon::Search, type: :service do
       end
 
       it 'returns false and displays error message' do
-        expect(valid).to eq false
+        expect(valid).to be false
         expect(search.error_messages).to eq 'Invalid date entered for confirmed_at'
       end
     end
@@ -316,8 +320,8 @@ RSpec.describe RadCommon::Search, type: :service do
       end
 
       it 'returns false and displays error message' do
-        expect(valid).to eq false
-        expect(search.error_messages).to eq 'Start at date must before end date'
+        expect(valid).to be false
+        expect(search.error_messages).to eq 'Confirmed At Start must be before Confirmed At End'
       end
     end
   end
@@ -347,7 +351,7 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:filters) { [{ input_label: 'Type', name: :external, scope_values: %i[internal external] }] }
       let(:params) { ActionController::Parameters.new }
 
-      it 'has both scope  optins' do
+      it 'has both scope options' do
         expect(search.first.input_options.map(&:first)).to eq %w[Internal External]
       end
     end

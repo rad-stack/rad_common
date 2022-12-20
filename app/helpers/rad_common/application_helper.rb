@@ -38,6 +38,30 @@ module RadCommon
       Pundit.policy!(current_user, klass.new).update? || Pundit.policy!(current_user, klass.new).destroy?
     end
 
+    def address_show_data(record)
+      items = [{ label: 'Address', value: record.full_address }]
+
+      if record.bypass_address_validation?
+        items.push({ label: 'Address Info',
+                     value: content_tag(:span, 'address validation bypassed', class: 'badge alert-warning') })
+
+      end
+
+      if record.address_changes.present?
+        items.push({ label: 'Address Changed',
+                     value: content_tag(:span, record.address_changes, class: 'badge alert-warning') })
+
+        record.clear_address_changes!
+      end
+
+      if record.address_problems.present?
+        items.push({ label: 'Address Problems',
+                     value: content_tag(:span, record.address_problems, class: 'badge alert-danger') })
+      end
+
+      items
+    end
+
     def format_date(value)
       value.strftime('%-m/%-d/%Y') if value.present?
     end
@@ -60,15 +84,24 @@ module RadCommon
       value.strftime('%l:%M%P').strip if value.present?
     end
 
+    def rad_form_errors(form)
+      return form.error_notification if form.object.blank?
+
+      message = "Please review the problems below: #{form.object.errors.full_messages.to_sentence}"
+      form.error_notification message: message
+    end
+
     def format_boolean(value)
       if value
         tag.div(nil, class: 'fa fa-check')
       else
-        tag.div(nil, class: 'fa fa-circle-o')
+        tag.div(nil, class: 'fa fa-regular fa-circle')
       end
     end
 
     def formatted_decimal_hours(total_minutes)
+      return if total_minutes.blank?
+
       (total_minutes / 60.0).round(2)
     end
 
@@ -128,10 +161,6 @@ module RadCommon
       tag.button(sanitize('&times;'), type: 'button', class: 'close', 'data-dismiss': 'alert')
     end
 
-    def base_errors(form)
-      form.error :base, class: 'alert alert-danger' if form.object.errors[:base].present?
-    end
-
     def icon(icon, text = nil, options = {})
       text_class = text.present? ? 'mr-2' : nil
       capture do
@@ -140,22 +169,16 @@ module RadCommon
       end
     end
 
-    def icon_hash(key)
-      { clock: 'fa-clock',
-        dollar: 'fa-usd',
-        ar_aging: 'fa-hourglass-end',
-        customers: 'fa-address-book',
-        projects: 'fa-briefcase',
-        users: 'fa-users',
-        file_text: 'fa-file-text',
-        divisions: 'fa-sitemap',
-        new_note: 'fa-pencil-square-o',
-        message: 'fa-envelope',
-        tasks: 'fa-tasks' }[key]
-    end
-
     def verify_sign_up
       raise RadicallyIntermittentException if RadicalConfig.disable_sign_up?
+    end
+
+    def sign_up_roles
+      SecurityRole.allow_sign_up.by_name
+    end
+
+    def invite_roles
+      SecurityRole.allow_invite.by_name
     end
 
     def verify_invite
@@ -163,7 +186,7 @@ module RadCommon
     end
 
     def verify_manually_create_users
-      return if RadicalConfig.disable_sign_up? && RadicalConfig.disable_invite?
+      return if RadicalConfig.manually_create_users?
 
       raise RadicallyIntermittentException
     end
@@ -174,6 +197,10 @@ module RadCommon
       link_to(icon(:file, 'Export to File'),
               send("export_#{model_name.tableize}_path", params.permit!.to_h.merge(format: :csv)),
               class: 'btn btn-secondary btn-sm')
+    end
+
+    def onboarded?
+      Onboarding.new(current_user).onboarded?
     end
 
     private

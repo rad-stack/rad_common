@@ -53,7 +53,7 @@ class SecurityRolesController < ApplicationController
       flash[:error] = @security_role.errors.full_messages.join(', ')
     end
 
-    if destroyed && (URI(request.referer).path == security_role_path(@security_role)) ||
+    if (destroyed && (URI(request.referer).path == security_role_path(@security_role))) ||
        (URI(request.referer).path == edit_security_role_path(@security_role))
       redirect_to security_roles_path
     else
@@ -79,6 +79,7 @@ class SecurityRolesController < ApplicationController
     end
 
     def permitted_params
-      params.require(:security_role).permit(%i[name external] + RadPermission.all.map(&:to_sym))
+      params.require(:security_role).permit(%i[name external allow_invite allow_sign_up] +
+                                              RadPermission.all.map(&:to_sym))
     end
 end

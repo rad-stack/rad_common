@@ -48,8 +48,8 @@ RSpec.describe EmailAddressValidator, type: :validator do
 
         expect(model).to be_invalid
         expect(model.errors.details.first[0]).to eq :invoice_email
-        expect(model.errors.full_messages.to_s).to include 'Invoice email is not written in a valid format. '\
-                                                           'Email cannot have capital letters, domain must be less '\
+        expect(model.errors.full_messages.to_s).to include 'Invoice email is not written in a valid format. ' \
+                                                           'Email cannot have capital letters, domain must be less ' \
                                                            'than 62 characters and does not allow special characters.'
       end
     end
@@ -66,7 +66,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
       let(:email) { good_email }
 
       it 'is valid' do
-        expect(division.valid?).to eq(true)
+        expect(division.valid?).to be(true)
       end
     end
 
@@ -75,7 +75,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
       let(:error_message) { 'Invoice email does not appear to be a valid email address' }
 
       it 'is invalid' do
-        expect(division.valid?).to eq(false)
+        expect(division.valid?).to be(false)
         expect(division.errors.full_messages.first).to eq(error_message)
       end
 
@@ -86,7 +86,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
         end
 
         it 'is valid' do
-          expect(division.valid?).to eq(true)
+          expect(division.valid?).to be(true)
         end
       end
     end

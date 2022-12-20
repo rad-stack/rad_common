@@ -1,14 +1,18 @@
 class RadicalTwilio
   def send_sms(to:, message:)
-    client.messages.create(from: from_number, to: to, body: message)
+    client.messages.create from: from_number, to: to, body: message, status_callback: status_callback_url
   end
 
   def send_mms(to:, message:, media_url:)
-    client.messages.create(from: from_number_mms, to: to, body: message, media_url: media_url)
+    client.messages.create from: from_number_mms,
+                           to: to,
+                           body: message,
+                           media_url: media_url,
+                           status_callback: status_callback_url
   end
 
   def send_robocall(to:, url:)
-    client.calls.create(from: from_number, to: to, url: URI.encode(url))
+    client.calls.create from: from_number, to: to, url: URI::Parser.new.escape(url)
   end
 
   def twilio_enabled?
@@ -70,5 +74,17 @@ class RadicalTwilio
           lookup_client.lookups.phone_numbers(number).fetch
         end
       end
+    end
+
+    def status_callback_url
+      "#{protocol}://#{host_name}/twilio_statuses"
+    end
+
+    def protocol
+      Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
+    end
+
+    def host_name
+      Rails.env.production? || Rails.env.staging? ? RadicalConfig.host_name! : 'example.com'
     end
 end

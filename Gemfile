@@ -15,6 +15,7 @@ gemspec
 
 group :test do
   gem 'capybara-selenium'
+  gem 'parallel_tests'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
   gem 'timecop'
@@ -23,8 +24,6 @@ end
 
 group :development, :test do
   gem 'bootsnap', require: false
-  gem 'jquery-rails'
-  gem 'jquery-ui-rails', '< 6.0'
   gem 'pry'
   gem 'yard'
 end

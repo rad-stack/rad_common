@@ -10,7 +10,7 @@ class EmailAddressValidator < ActiveModel::Validator
       record.send("#{field}=", email_value)
 
       unless valid_email?(email_value)
-        record.errors.add(field, 'is not written in a valid format. Email cannot have capital letters, '\
+        record.errors.add(field, 'is not written in a valid format. Email cannot have capital letters, ' \
                                  'domain must be less than 62 characters and does not allow special characters.')
         next
       end

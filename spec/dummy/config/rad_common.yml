@@ -1,18 +1,22 @@
 default: &default
   app_name: Demo Foo
-  portal_app_name: Foo Portal
   use_avatar: true
   disable_sign_up: false
   disable_invite: false
+  manually_create_users: false
   secure_sentry: true
   external_users: true
   validate_external_email_domain: true
   app_logo_includes_name: true
-  portal: false
   impersonate: true
-  start_route: attorneys
+  start_route: onboardings
   user_clients: true
+  user_profiles: true
   authy_internal_only: true
+  shared_database: false
+  canadian_addresses: false
+  show_help_menu: true
+  saved_search_filters_enabled: true
 
   system_usage_models:
     -
@@ -39,6 +43,7 @@ default: &default
       attribute: hourly_rate
 
   additional_user_params: []
+  additional_user_profile_params: []
   additional_company_params: []
 
   global_validity_days: 3
@@ -77,7 +82,6 @@ default: &default
       name: user_by_division_name
       model: User
       description: Search user by division name
-      columns: []
       joins: JOIN divisions on divisions.owner_id = users.id
       query_where: divisions.name ilike :search
       super_search_exclude: true
@@ -96,12 +100,10 @@ development:
   <<: *default
 
   host_name: localhost:3000
-  portal_host_name: portal.localhost:3000
   authy_enabled: false
 
 test:
   <<: *default
 
   host_name: localhost:3000
-  portal_host_name: portal.localhost:3000
   authy_enabled: true

@@ -1,7 +1,13 @@
+require 'mail'
+
 class RadicalConfig
   class << self
     def admin_email!
       secret_config_item! :admin_email
+    end
+
+    def admin_email_address!
+      Mail::Address.new(admin_email!).address
     end
 
     def from_email!
@@ -50,6 +56,26 @@ class RadicalConfig
 
     def sendgrid_api_key
       secret_config_item :sendgrid_api_key
+    end
+
+    def smarty_enabled?
+      smarty_auth_id.present?
+    end
+
+    def smarty_auth_id
+      secret_config_item :smarty_auth_id
+    end
+
+    def smarty_auth_id!
+      secret_config_item! :smarty_auth_id
+    end
+
+    def smarty_auth_token
+      secret_config_item :smarty_auth_token
+    end
+
+    def smarty_auth_token!
+      secret_config_item! :smarty_auth_token
     end
 
     def hash_key!
@@ -128,10 +154,6 @@ class RadicalConfig
       config_item! :app_name
     end
 
-    def portal_app_name!
-      config_item! :portal_app_name
-    end
-
     def host_name!
       config_item! :host_name
     end
@@ -142,14 +164,6 @@ class RadicalConfig
 
     def client_table_name!
       config_item(:client_table_name) || 'clients'
-    end
-
-    def portal_host_name!
-      config_item! :portal_host_name
-    end
-
-    def portal?
-      boolean_config_item! :portal
     end
 
     def impersonate?
@@ -184,12 +198,44 @@ class RadicalConfig
       boolean_config_item! :disable_invite
     end
 
+    def manually_create_users?
+      boolean_config_item! :manually_create_users
+    end
+
+    def show_help_menu?
+      boolean_config_item! :show_help_menu
+    end
+
+    def shared_database?
+      boolean_config_item! :shared_database
+    end
+
+    def canadian_addresses?
+      boolean_config_item! :canadian_addresses
+    end
+
+    def saved_search_filters_enabled?
+      boolean_config_item! :saved_search_filters_enabled
+    end
+
+    def favicon_filename!
+      override_variable(:favicon_filename) || 'favicon.ico'
+    end
+
+    def app_logo_filename!
+      override_variable(:app_logo_filename) || 'app_logo.png'
+    end
+
     def app_logo_includes_name?
       boolean_config_item! :app_logo_includes_name
     end
 
     def user_clients?
       boolean_config_item! :user_clients
+    end
+
+    def user_profiles?
+      boolean_config_item! :user_profiles
     end
 
     def secure_sentry?
@@ -230,6 +276,10 @@ class RadicalConfig
       array_config_item! :additional_user_params
     end
 
+    def additional_user_profile_params!
+      array_config_item! :additional_user_profile_params
+    end
+
     def restricted_audit_attributes!
       array_config_item! :restricted_audit_attributes
     end
@@ -242,7 +292,10 @@ class RadicalConfig
     end
 
     def system_usage_models!
-      array_config_item! :system_usage_models
+      items = array_config_item!(:system_usage_models)
+      return items unless twilio_enabled?
+
+      items + ['TwilioLog']
     end
 
     def global_validity_days!
@@ -267,6 +320,14 @@ class RadicalConfig
 
     def duplicates!
       array_config_item! :duplicates
+    end
+
+    def user_confirmable?
+      Devise.mappings[:user].confirmable?
+    end
+
+    def user_expirable?
+      Devise.mappings[:user].expirable?
     end
 
     def secret_config_item!(item)
@@ -308,24 +369,43 @@ class RadicalConfig
       value
     end
 
-    def check_aws!
-      if secret_config_item(:s3_region).present? &&
-         secret_config_item(:s3_access_key_id).present? &&
-         secret_config_item(:s3_secret_access_key).present? &&
-         secret_config_item(:s3_bucket).present?
-        return
-      end
-
-      # this can be fixed in Rails 6.1 to not have to always have them present
-      # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
-
-      raise 'Missing AWS S3 credentials'
+    def check_validity!
+      check_aws!
+      check_authy!
+      check_smarty!
     end
 
     private
 
+      def check_aws!
+        if secret_config_item(:s3_region).present? &&
+           secret_config_item(:s3_access_key_id).present? &&
+           secret_config_item(:s3_secret_access_key).present? &&
+           secret_config_item(:s3_bucket).present?
+          return
+        end
+
+        # this can be fixed in Rails 6.1 to not have to always have them present
+        # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
+
+        raise 'Missing AWS S3 credentials'
+      end
+
+      def check_authy!
+        return unless authy_enabled? && !twilio_enabled?
+
+        raise 'Twilio must be enabled to provide mobile phone # validation when authy is enabled'
+      end
+
+      def check_smarty!
+        return if smarty_auth_id.present? && smarty_auth_token.present?
+        return if smarty_auth_id.blank? && smarty_auth_token.blank?
+
+        raise 'include all or none of smarty_auth_id and smarty_auth_token'
+      end
+
       def override_variable(item)
-        ENV[item.to_s.upcase]
+        ENV.fetch(item.to_s.upcase, nil)
       end
 
       def boolean_override_variable(item)
