@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_28_190148) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_23_142522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -65,8 +65,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_28_190148) do
     t.string "city", null: false
     t.string "state", null: false
     t.string "zipcode", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.jsonb "address_metadata"
   end
 
@@ -103,8 +103,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_28_190148) do
     t.string "name", null: false
     t.boolean "active", default: true, null: false
     t.text "valid_user_domains", default: [], null: false, array: true
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "email", null: false
     t.index ["name"], name: "index_clients_on_name"
   end
@@ -239,8 +239,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_28_190148) do
     t.bigint "user_id", null: false
     t.string "search_class", null: false
     t.jsonb "search_filters", default: {}, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id", "name", "search_class"], name: "unique_saved_search_filters", unique: true
     t.index ["user_id"], name: "index_saved_search_filters_on_user_id"
   end
@@ -288,8 +288,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_28_190148) do
     t.string "message", null: false
     t.string "media_url"
     t.boolean "sent", default: true, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "opt_out_message_sent", default: false, null: false
     t.string "message_sid"
     t.integer "twilio_status"
@@ -324,9 +324,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_28_190148) do
   create_table "user_statuses", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "active", default: false, null: false
+    t.boolean "validate_email_phone", default: true, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.boolean "validate_email_phone", default: true, null: false
     t.index ["name"], name: "index_user_statuses_on_name", unique: true
   end
 
