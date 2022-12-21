@@ -6,7 +6,7 @@ RSpec.describe UserPolicy, type: :policy do
 
     let(:admin) { create :admin }
     let(:user) { create :user }
-    let(:client_user) { create(:user, :external) }
+    let(:client_user) { create :user, :external }
 
     permissions :impersonate? do
       context 'with admin' do
