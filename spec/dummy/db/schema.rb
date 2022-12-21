@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_23_142522) do
+ActiveRecord::Schema.define(version: 2022_12_21_134935) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -80,7 +80,6 @@ ActiveRecord::Schema.define(version: 2022_11_23_142522) do
     t.string "user_type"
     t.string "username"
     t.string "action"
-    t.text "legacy_audited_changes"
     t.integer "version", default: 0
     t.string "comment"
     t.string "remote_address"
