@@ -80,6 +80,7 @@ ActiveRecord::Schema.define(version: 2022_11_23_142522) do
     t.string "user_type"
     t.string "username"
     t.string "action"
+    t.text "legacy_audited_changes"
     t.integer "version", default: 0
     t.string "comment"
     t.string "remote_address"
