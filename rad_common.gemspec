@@ -54,7 +54,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'pretender'
   s.add_dependency 'puma', '~> 5.6' # TODO: update puma to version 6
   s.add_dependency 'pundit'
-  s.add_dependency 'rails', '~> 6.1.6.1' # TODO: change to '~> 6.1' once Task 37843 done
+  s.add_dependency 'rails', '~> 6.1'
 
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
