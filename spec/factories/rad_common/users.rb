@@ -41,7 +41,7 @@ FactoryBot.define do
       external { true }
 
       f.after(:create) do |user, evaluator|
-        this_client = evaluator.client.presence || create(:client)
+        this_client = evaluator.client.presence || (create :client)
         UserClient.create! user: user, client_id: this_client.id
       end
     end
