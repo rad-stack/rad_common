@@ -48,7 +48,7 @@ RSpec.describe Contactable do
     end
   end
 
-  describe 'standardize_address', vcr: true, smarty_specs: true do
+  describe 'standardize_address', smarty_specs: true, vcr: true do
     subject(:company) { Company.main }
 
     before do
