@@ -14,7 +14,7 @@ RSpec.describe 'Searches', type: :system do
         'query is preferred to get your results quickly and not bog down the system'
     end
 
-    before { create(:user, last_name: term) }
+    before { create :user, last_name: term }
 
     context 'when asking the user if they want to use' do
       it 'clears checkbox if dismissed', js: true do

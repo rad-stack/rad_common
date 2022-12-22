@@ -335,11 +335,11 @@ RSpec.describe User, type: :model do
   end
 
   def assert_password_with_name(first_name, last_name, password, valid)
-    user = build(:user,
+    user = build :user,
                  first_name: first_name,
                  last_name: last_name,
                  password: password,
-                 password_confirmation: password)
+                 password_confirmation: password
 
     user.valid?
 

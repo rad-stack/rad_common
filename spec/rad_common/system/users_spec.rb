@@ -158,7 +158,7 @@ RSpec.describe 'Users', type: :system do
     end
 
     describe 'reactivate', user_expirable_specs: true do
-      let(:user) { create(:user, last_activity_at: last_activity_at) }
+      let(:user) { create :user, last_activity_at: last_activity_at }
 
       before do
         visit user_path(user)
@@ -368,7 +368,7 @@ RSpec.describe 'Users', type: :system do
     end
 
     describe 'confirming' do
-      let(:user) { create(:user, confirmed_at: nil) }
+      let(:user) { create :user, confirmed_at: nil }
 
       let(:message) do
         'If your email address exists in our database, you will receive an email with instructions for how to ' \
@@ -389,7 +389,7 @@ RSpec.describe 'Users', type: :system do
     end
 
     describe 'unlock' do
-      let(:user) { create(:user, confirmed_at: nil) }
+      let(:user) { create :user, confirmed_at: nil }
 
       let(:message) do
         'If your account exists, you will receive an email with instructions for how to unlock it in a few minutes.'
