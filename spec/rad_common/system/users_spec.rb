@@ -210,6 +210,7 @@ RSpec.describe 'Users', type: :system do
     before do
       create :security_role, :external, allow_sign_up: true
       allow_any_instance_of(User).to receive(:authy_enabled?).and_return false
+      allow(RadicalConfig).to receive(:legal_docs?).and_return(true)
     end
 
     it 'signs up' do
