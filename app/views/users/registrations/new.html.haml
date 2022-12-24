@@ -36,11 +36,17 @@
             = f.input :password_confirmation, required: true, input_html: { autocomplete: 'new-password' }
         .row.mb-3
           .col-2
-            = check_box_tag :accept_terms, false, false
-            %label.pb-2{ for: 'accept_terms' }
-              I agree to the #{link_to('Terms & Conditions', terms_path, target: '_blank', rel: 'noopener')}
+            - if RadicalConfig.legal_docs?
+              = check_box_tag :accept_terms, false, false
+              %label.pb-2{ for: 'accept_terms' }
+                I agree to the #{link_to('Terms & Conditions', terms_path, target: '_blank', rel: 'noopener')}
+            - else
+              = hidden_field_tag :accept_terms, '1'
 
       .form-actions
-        = f.button :submit, 'Sign Up', class: 'btn btn-primary', disabled: true
+        - if RadicalConfig.legal_docs?
+          = f.button :submit, 'Sign Up', class: 'btn btn-primary', disabled: true
+        - else
+          = f.button :submit, 'Sign Up', class: 'btn btn-primary'
 
     = render 'users/shared/links'
