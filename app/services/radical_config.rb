@@ -218,6 +218,10 @@ class RadicalConfig
       boolean_config_item! :saved_search_filters_enabled
     end
 
+    def legal_docs?
+      boolean_config_item! :legal_docs
+    end
+
     def favicon_filename!
       override_variable(:favicon_filename) || 'favicon.ico'
     end
