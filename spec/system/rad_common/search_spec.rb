@@ -22,6 +22,15 @@ RSpec.describe 'Search', type: :system do
       click_button 'Apply Filters'
       expect(page).to have_selector("input[value='Foo']#search_name_like")
     end
+
+    context 'with name not matching column name' do
+      it 'queries specified column' do
+        visit '/rad_common/audits'
+        fill_in 'search_audited_changes_like', with: 'query'
+        click_on 'Apply Filters'
+        expect(current_url).to include('search[audited_changes_like]=query')
+      end
+    end
   end
 
   describe 'select filter' do
