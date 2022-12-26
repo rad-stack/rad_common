@@ -83,7 +83,7 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content user.security_roles.first.name
         expect(page).to have_content ApplicationController.helpers.format_date(user.created_at)
 
-        if Pundit.policy!(user, user).export?
+        if Pundit.policy!(admin, user).export?
           expect(page).to have_content 'Export to File'
         else
           expect(page).not_to have_content 'Export to File'
