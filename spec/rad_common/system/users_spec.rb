@@ -34,7 +34,12 @@ RSpec.describe 'Users', type: :system do
 
       it "doesn't show pending users" do
         visit users_path
-        expect(page).not_to have_content pending_user.to_s
+
+        if Pundit.policy!(user, User.new).update?
+          expect(page).to have_content pending_user.to_s
+        else
+          expect(page).not_to have_content pending_user.to_s
+        end
       end
     end
 
@@ -94,7 +99,12 @@ RSpec.describe 'Users', type: :system do
 
       it 'shows pending users' do
         visit users_path
-        expect(page).to have_content pending_user.to_s
+
+        if Pundit.policy!(admin, User.new).update?
+          expect(page).to have_content pending_user.to_s
+        else
+          expect(page).not_to have_content pending_user.to_s
+        end
       end
 
       it 'filters by user type', external_user_specs: true do
