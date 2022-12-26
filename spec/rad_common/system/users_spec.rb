@@ -24,7 +24,12 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content user.to_s
         expect(page).not_to have_content user.security_roles.first.name
         expect(page).not_to have_content ApplicationController.helpers.format_date(user.created_at)
-        expect(page).not_to have_content 'Export to File'
+
+        if Pundit.policy!(user, user).export?
+          expect(page).to have_content 'Export to File'
+        else
+          expect(page).not_to have_content 'Export to File'
+        end
       end
 
       it "doesn't show pending users" do
@@ -77,7 +82,13 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content user.to_s
         expect(page).to have_content user.security_roles.first.name
         expect(page).to have_content ApplicationController.helpers.format_date(user.created_at)
-        expect(page).to have_content 'Export to File'
+
+        if Pundit.policy!(user, user).export?
+          expect(page).to have_content 'Export to File'
+        else
+          expect(page).not_to have_content 'Export to File'
+        end
+
         expect(page).to have_content external_user.to_s if RadicalConfig.external_users?
       end
 
