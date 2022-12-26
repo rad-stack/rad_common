@@ -23,7 +23,7 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content 'Users (1)'
         expect(page).to have_content user.to_s
         expect(page).not_to have_content user.security_roles.first.name
-        expect(page).not_to have_content 'Created'
+        expect(page).not_to have_content ApplicationController.helpers.format_date(user.created_at)
         expect(page).not_to have_content 'Export to File'
       end
 
@@ -76,7 +76,7 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content result_label
         expect(page).to have_content user.to_s
         expect(page).to have_content user.security_roles.first.name
-        expect(page).to have_content 'Created'
+        expect(page).to have_content ApplicationController.helpers.format_date(user.created_at)
         expect(page).to have_content 'Export to File'
         expect(page).to have_content external_user.to_s if RadicalConfig.external_users?
       end
