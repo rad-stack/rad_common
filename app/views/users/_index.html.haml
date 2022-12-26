@@ -32,6 +32,7 @@
 
       - users.each do |user|
         - can_show = policy(user).show?
+        - show_actions_record = policy(user).update? || policy(user).destroy?
 
         %tr{ class: user_row_class(user, hide_inactive), id: user_row_id(user, hide_inactive) }
           %td= secured_link(user)
@@ -46,11 +47,11 @@
                 = link_to user.mobile_phone, user
               - else
                 = user.mobile_phone
-          - if show_actions
+          - if show_actions_record
             %td= format_datetime(user.current_sign_in_at)
             %td= format_date(user.created_at)
           %td= user.user_status
-          - if show_roles && show_actions
+          - if show_roles && show_actions_record
             %td
               - user.security_roles.each do |security_role|
                 = secured_link(security_role)
@@ -62,7 +63,7 @@
                   %p= secured_link client
               - else
                 = format_boolean(user.external?)
-          - if show_actions
+          - if show_actions_record
             %td
               - user_index_actions(user).each do |action|
                 = action
