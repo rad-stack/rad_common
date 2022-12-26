@@ -90,6 +90,10 @@ class RadicalConfig
       secret_config_item! :jwt_secret
     end
 
+    def jwt_enabled?
+      secret_config_item(:jwt_secret).present?
+    end
+
     def test_phone_number
       secret_config_item :test_phone_number
     end

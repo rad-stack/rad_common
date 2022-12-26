@@ -32,9 +32,9 @@ module RadCommonRoutes
         end
 
         resources :saved_search_filters, only: :destroy
-
         resources :user_security_roles, only: :show
         resources :user_clients, only: %i[create destroy]
+        resources :json_web_tokens, only: :new
       end
 
       authenticate :user, ->(u) { u.admin? } do

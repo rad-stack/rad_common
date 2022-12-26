@@ -17,6 +17,7 @@ PATH
       haml-rails
       hashids
       image_processing
+      jwt
       kaminari
       net-imap
       net-pop
