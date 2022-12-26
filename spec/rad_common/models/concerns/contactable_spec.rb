@@ -48,7 +48,7 @@ RSpec.describe Contactable do
     end
   end
 
-  describe 'standardize_address', vcr: true, smarty_specs: true do
+  describe 'standardize_address', smarty_specs: true, vcr: true do
     subject(:company) { Company.main }
 
     before do
@@ -118,6 +118,18 @@ RSpec.describe Contactable do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('6450 Autumn Berry Cir')
         expect(company.address_problems).to eq 'non-postal match using enhanced address matching'
+      end
+    end
+
+    context 'with enhanced matching and nil dpv_match_code' do
+      let(:address_1) { '331 Theater Rd' }
+      let(:address_2) { nil }
+      let(:city) { 'Onalaska' }
+      let(:state) { 'WI' }
+      let(:zipcode) { '54650' }
+
+      it 'is valid' do
+        expect(company.valid?).to be true
       end
     end
 

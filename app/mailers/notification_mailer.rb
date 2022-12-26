@@ -11,10 +11,10 @@ class NotificationMailer < RadbearMailer
                       button_text: auto_approve ? 'Review' : 'Review & Approve',
                       button_url: edit_user_url(user) }
 
-    @message = "#{user} has signed up on #{app_name(user)}"
+    @message = "#{user} has signed up on #{RadicalConfig.app_name!}"
     @message += auto_approve ? '.' : ' and is awaiting approval.'
 
-    send_notification_mail recipients, "New User on #{app_name(user)}"
+    send_notification_mail recipients, "New User on #{RadicalConfig.app_name!}"
   end
 
   def user_was_approved(recipients, user_and_approver)

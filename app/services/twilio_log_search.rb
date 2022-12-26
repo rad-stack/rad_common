@@ -23,7 +23,8 @@ class TwilioLogSearch < RadCommon::Search
        { input_label: 'To User',
          column: :to_user_id,
          options: user_array,
-         blank_value_label: 'All Users' }]
+         blank_value_label: 'All Users' },
+       { input_label: 'Status', name: :status, scope_values: %i[failure successful] }]
     end
 
     def sort_columns_def
@@ -33,9 +34,8 @@ class TwilioLogSearch < RadCommon::Search
        { label: 'From User' },
        { label: 'To User' },
        { column: 'message' },
-       { column: 'media_url' },
        { column: 'opt_out_message_sent' },
-       { column: 'success' }]
+       { label: 'Status' }]
     end
 
     def user_array

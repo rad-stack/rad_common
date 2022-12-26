@@ -15,17 +15,6 @@ describe RadbearDeviseMailer, type: :mailer do
 
       it { is_expected.to include 'Someone has invited you to Demo Foo' }
     end
-
-    context 'when external' do
-      let(:user) { create :user, :external }
-
-      before do
-        allow(RadicalConfig).to receive(:portal?).and_return true
-        user.invite!
-      end
-
-      it { is_expected.to include 'Someone has invited you to Foo Portal' }
-    end
   end
 
   describe 'confirmation_instructions' do

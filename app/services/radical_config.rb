@@ -154,10 +154,6 @@ class RadicalConfig
       config_item! :app_name
     end
 
-    def portal_app_name!
-      config_item! :portal_app_name
-    end
-
     def host_name!
       config_item! :host_name
     end
@@ -168,14 +164,6 @@ class RadicalConfig
 
     def client_table_name!
       config_item(:client_table_name) || 'clients'
-    end
-
-    def portal_host_name!
-      config_item! :portal_host_name
-    end
-
-    def portal?
-      boolean_config_item! :portal
     end
 
     def impersonate?
@@ -228,6 +216,10 @@ class RadicalConfig
 
     def saved_search_filters_enabled?
       boolean_config_item! :saved_search_filters_enabled
+    end
+
+    def legal_docs?
+      boolean_config_item! :legal_docs
     end
 
     def favicon_filename!
@@ -288,6 +280,10 @@ class RadicalConfig
       array_config_item! :additional_user_params
     end
 
+    def additional_user_profile_params!
+      array_config_item! :additional_user_profile_params
+    end
+
     def restricted_audit_attributes!
       array_config_item! :restricted_audit_attributes
     end
@@ -300,7 +296,10 @@ class RadicalConfig
     end
 
     def system_usage_models!
-      array_config_item! :system_usage_models
+      items = array_config_item!(:system_usage_models)
+      return items unless twilio_enabled?
+
+      items + ['TwilioLog']
     end
 
     def global_validity_days!

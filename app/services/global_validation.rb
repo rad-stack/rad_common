@@ -82,7 +82,10 @@ class GlobalValidation
       problems = []
       error_count = 0
 
-      model.safe_constantize.find_each do |record|
+      klass = model.safe_constantize
+      raise "unknown model #{model}" if klass.nil?
+
+      klass.find_each do |record|
         error_count += 1 if validate_record(record, problems)
       end
 

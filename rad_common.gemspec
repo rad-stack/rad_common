@@ -45,18 +45,21 @@ Gem::Specification.new do |s|
   s.add_dependency 'net-smtp'
 
   s.add_dependency 'nokogiri'
+
+  # this needs to match the ruby version to avoid warnings, see Task 40504
+  s.add_dependency 'parser', '~> 3.1.2.1'
+
   s.add_dependency 'pg'
   s.add_dependency 'premailer-rails'
   s.add_dependency 'pretender'
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
-  s.add_dependency 'rails', '~> 6.1.6.1' # TODO: change to '~> 6.1' once Task 37843 done
-
+  s.add_dependency 'rails', '~> 6.1'
+  s.add_dependency 'redis', '~> 4.8'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
   s.add_dependency 'sidekiq'
-  s.add_dependency 'sidekiq-failures'
   s.add_dependency 'simple_form'
   s.add_dependency 'smartystreets_ruby_sdk'
   s.add_dependency 'strip_attributes'

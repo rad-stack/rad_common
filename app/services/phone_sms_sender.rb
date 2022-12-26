@@ -16,7 +16,7 @@ class PhoneSMSSender
   end
 
   def send!
-    RadicalRetry.perform_request(raise_original: true) do
+    response = RadicalRetry.perform_request(raise_original: true) do
       if mms?
         twilio.send_mms to: to_number, message: message, media_url: media_url
       else
@@ -24,13 +24,13 @@ class PhoneSMSSender
       end
     end
 
-    log_event true
+    log_event true, response.sid
     true
   rescue Twilio::REST::RestError => e
     self.exception = e
     raise e.message unless blacklisted?
 
-    log_event false
+    log_event false, nil
     handle_blacklist
     false
   end
@@ -74,14 +74,15 @@ class PhoneSMSSender
       TwilioLog.opt_out_message_sent?(to_number)
     end
 
-    def log_event(success)
+    def log_event(sent, message_sid)
       TwilioLog.create! to_number: to_number,
                         from_number: from_number,
                         to_user: to_user,
                         from_user_id: from_user_id,
                         message: message,
                         media_url: media_url,
-                        success: success,
+                        sent: sent,
+                        message_sid: message_sid,
                         opt_out_message_sent: opt_out_message_sent
     end
 end

@@ -8,7 +8,7 @@ module RadCommon
 
       if RadicalConfig.avatar? && user.avatar.attached?
         items.push(label: 'Avatar',
-                   value: render('layouts/attachment', record: user, attachment_name: 'avatar', new_tab: true))
+                   value: render_one_attachment(record: user, attachment_name: 'avatar', new_tab: true))
       end
 
       items
