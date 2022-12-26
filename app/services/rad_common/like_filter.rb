@@ -2,13 +2,14 @@ module RadCommon
   ##
   # This is used to generate an input used for a SQL like filter
   class LikeFilter
-    attr_reader :column, :input_label
+    attr_reader :column, :input_label, :name
 
     ##
     # @param [String] column the database column that is being filtered
-    def initialize(column:, input_label: nil)
+    def initialize(column:, input_label: nil, name: nil)
       @column = column
       @input_label = input_label
+      @name = name.presence || column
     end
 
     def filter_view
@@ -20,7 +21,7 @@ module RadCommon
     end
 
     def like_input
-      "#{column}_like"
+      "#{name}_like"
     end
 
     def apply_filter(results, params)

@@ -17,6 +17,7 @@ default: &default
   canadian_addresses: false
   show_help_menu: true
   saved_search_filters_enabled: true
+  legal_docs: true
 
   system_usage_models:
     -

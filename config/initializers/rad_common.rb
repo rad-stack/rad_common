@@ -55,10 +55,6 @@ if RadicalConfig.authy_enabled?
   Authy.api_uri = 'https://api.authy.com/'
 end
 
-# https://swell.radicalbear.com/tasks/37444
-# https://github.com/collectiveidea/audited/issues/631
-Rails.configuration.active_record.use_yaml_unsafe_load = true
-
 Audited.current_user_method = :true_user
 Audited.ignored_attributes += ['address_changes']
 
