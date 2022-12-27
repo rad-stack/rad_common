@@ -69,8 +69,8 @@
               - else
                 = format_boolean(user.external?)
           - if show_actions
-            - if show_actions_record
-              %td
+            %td
+              - if show_actions_record
                 - user_index_actions(user).each do |action|
                   = action
 
