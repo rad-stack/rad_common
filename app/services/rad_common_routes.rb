@@ -37,6 +37,10 @@ module RadCommonRoutes
         resources :json_web_tokens, only: :new
       end
 
+      authenticate :user, ->(u) { u.external? } do
+        resources :users, only: %i[index show]
+      end
+
       authenticate :user, ->(u) { u.admin? } do
         mount Sidekiq::Web => '/sidekiq'
       end
