@@ -42,7 +42,10 @@ namespace :rad_common do
       records.select(:id, :audited_changes, :legacy_audited_changes).find_each(order: :desc) do |audit|
         break if session.check_status('migrating audited changes from YAML to JSONB', count)
 
-        audit.update_column(:audited_changes, ActiveRecord::Coders::YAMLColumn.new(Object).load(audit.legacy_audited_changes))
+        audit.update_column(
+          :audited_changes,
+          YAML.safe_load(audit.legacy_audited_changes, permitted_classes: [Date, BigDecimal, SalesConfigRates, Symbol])
+        )
       end
       session.finished
     end
