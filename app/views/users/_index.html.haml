@@ -47,15 +47,20 @@
                 = link_to user.mobile_phone, user
               - else
                 = user.mobile_phone
-          - if show_actions_record
-            %td= format_datetime(user.current_sign_in_at)
-            %td= format_date(user.created_at)
-          %td= user.user_status
-          - if show_roles && show_actions_record
+          - if show_actions
             %td
-              - user.security_roles.each do |security_role|
-                = secured_link(security_role)
-                %p
+              - if show_actions_record
+                = format_datetime(user.current_sign_in_at)
+            %td
+              - if show_actions_record
+                = format_date(user.created_at)
+          %td= user.user_status
+          - if show_roles && show_actions
+            %td
+              - if show_actions_record
+                - user.security_roles.each do |security_role|
+                  = secured_link(security_role)
+                  %p
           - if RadicalConfig.external_users?
             %td
               - if RadicalConfig.user_clients?
@@ -63,10 +68,11 @@
                   %p= secured_link client
               - else
                 = format_boolean(user.external?)
-          - if show_actions_record
-            %td
-              - user_index_actions(user).each do |action|
-                = action
+          - if show_actions
+            - if show_actions_record
+              %td
+                - user_index_actions(user).each do |action|
+                  = action
 
     - if users.respond_to?(:current_page)
       = paginate users, param_name: page_param_name, theme: 'twitter-bootstrap-4'
