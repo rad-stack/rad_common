@@ -44,7 +44,7 @@ namespace :rad_common do
 
         audit.update_column(
           :audited_changes,
-          YAML.safe_load(audit.legacy_audited_changes,
+          YAML.safe_load(audit.legacy_audited_changes, aliases: true,
                          permitted_classes: [ActiveSupport::HashWithIndifferentAccess,
                                              ActiveSupport::TimeWithZone, ActiveSupport::TimeZone, Date,
                                              Time, String, Integer, NilClass, Float, FalseClass,
