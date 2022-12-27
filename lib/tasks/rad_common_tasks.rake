@@ -44,7 +44,11 @@ namespace :rad_common do
 
         audit.update_column(
           :audited_changes,
-          YAML.safe_load(audit.legacy_audited_changes, permitted_classes: [Date, BigDecimal, SalesConfigRates, Symbol])
+          YAML.safe_load(audit.legacy_audited_changes,
+                         permitted_classes: [ActiveSupport::HashWithIndifferentAccess,
+                                             ActiveSupport::TimeWithZone, ActiveSupport::TimeZone, Date,
+                                             Time, String, Integer, NilClass, Float, FalseClass,
+                                             Hash, Array, DateTime, TrueClass, BigDecimal, SalesConfigRates])
         )
       end
       session.finished
