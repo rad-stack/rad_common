@@ -47,7 +47,7 @@ namespace :rad_common do
           YAML.safe_load(audit.legacy_audited_changes, aliases: true,
                          permitted_classes: [ActiveSupport::HashWithIndifferentAccess,
                                              ActiveSupport::TimeWithZone, ActiveSupport::TimeZone, Date,
-                                             Time, String, Integer, NilClass, Float, FalseClass,
+                                             Time, String, Integer, NilClass, Float, FalseClass, Symbol,
                                              Hash, Array, DateTime, TrueClass, BigDecimal, SalesConfigRates])
         )
       end
