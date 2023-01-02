@@ -18,6 +18,7 @@ module RadCommon
     end
 
     def update_defaults
+      return unless @current_user
       return unless @enabled || @search.search_params?
 
       update_user_filter_defaults
