@@ -7,6 +7,7 @@ module RadCommon
     end
 
     def apply_defaults
+      return unless @current_user
       return unless @enabled
 
       if clear_filters?
