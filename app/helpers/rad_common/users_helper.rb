@@ -8,10 +8,14 @@ module RadCommon
 
       if RadicalConfig.avatar? && user.avatar.attached?
         items.push(label: 'Avatar',
-                   value: render('layouts/attachment', record: user, attachment_name: 'avatar', new_tab: true))
+                   value: render_one_attachment(record: user, attachment_name: 'avatar', new_tab: true))
       end
 
       items
+    end
+
+    def my_profile_nav?
+      UserProfilePolicy.new(current_user, current_user).show?
     end
 
     def users_actions
@@ -25,22 +29,44 @@ module RadCommon
     end
 
     def new_user_action
-      return unless policy(User.new).new? && manually_create_users?
+      return unless policy(User.new).new? && RadicalConfig.manually_create_users?
 
       link_to(icon('plus-square', 'New User'), new_user_path, class: 'btn btn-success btn-sm')
-    end
-
-    def manually_create_users?
-      RadicalConfig.disable_invite? && RadicalConfig.disable_sign_up?
     end
 
     def user_actions(user)
       [user_confirm_action(user),
        user_resend_action(user),
+       user_profile_action(user),
        user_reset_authy_action(user),
        user_test_email_action(user),
        user_test_sms_action(user),
        impersonate_action(user)]
+    end
+
+    def user_profile_action(user)
+      return unless UserProfilePolicy.new(current_user, user).show?
+
+      link_to icon(:user, 'Profile'), "/user_profiles/#{user.id}", class: 'btn btn-secondary btn-sm'
+    end
+
+    def profile_show_title(user)
+      return 'My Profile' if user == current_user
+
+      "Profile for #{user}"
+    end
+
+    def edit_profile_button(user)
+      return unless UserProfilePolicy.new(current_user, user).edit?
+
+      link_to(icon(:pencil, 'Edit'), edit_user_profile_path(user), class: 'btn btn-secondary btn-sm')
+    end
+
+    def profile_edit_title(user)
+      return safe_join(['Editing Profile for ', link_to(user, user_profile_path(user))]) unless user == current_user
+      return safe_join(['Editing ', link_to('My Profile', user_profile_path(user))]) if Onboarding.new(user).onboarded?
+
+      'Please Enter Your Profile'
     end
 
     def user_index_actions(user)
@@ -66,10 +92,10 @@ module RadCommon
     def impersonate_action(user)
       return unless policy(user).impersonate?
 
-      link_to icon(:user, 'Sign In As'),
+      link_to icon('right-to-bracket', 'Sign In As'),
               "/rad_common/impersonations/start?id=#{user.id}",
               method: :post,
-              data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to '\
+              data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to ' \
                                'your original user.' },
               class: 'btn btn-warning btn-sm'
     end
@@ -83,11 +109,11 @@ module RadCommon
     end
 
     def user_confirm_action(user)
-      return unless Devise.mappings[:user].confirmable? && policy(user).update? && !user.confirmed?
+      return unless RadicalConfig.user_confirmable? && policy(user).update? && !user.confirmed?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
       link_to icon(:check, 'Confirm Email'),
-              "/rad_common/users/#{user.id}/confirm",
+              confirm_user_path(user),
               method: :put,
               data: { confirm: confirm },
               class: 'btn btn-warning btn-sm'
@@ -97,7 +123,7 @@ module RadCommon
       return unless policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
 
       link_to 'Resend Invitation',
-              "/rad_common/users/#{user.id}/resend_invitation",
+              resend_invitation_user_path(user),
               method: :put,
               class: 'btn btn-sm btn-success',
               data: { confirm: 'Are you sure?' }
@@ -106,11 +132,11 @@ module RadCommon
     def user_reset_authy_action(user)
       return unless RadicalConfig.authy_enabled? && policy(user).update? && user.authy_enabled?
 
-      confirm = "This will reset the user's two factor authentication configuration if they are having problems. "\
+      confirm = "This will reset the user's two factor authentication configuration if they are having problems. " \
                 'Are you sure?'
 
       link_to icon(:refresh, 'Reset Two Factor'),
-              "/rad_common/users/#{user.id}/reset_authy",
+              reset_authy_user_path(user),
               method: :put,
               data: { confirm: confirm },
               class: 'btn btn-warning btn-sm'
@@ -120,7 +146,7 @@ module RadCommon
       return unless policy(user).test_email?
 
       link_to icon(:envelope, 'Send Test Email'),
-              "/rad_common/users/#{user.id}/test_email",
+              test_email_user_path(user),
               method: :put,
               class: 'btn btn-secondary btn-sm',
               data: { confirm: 'Are you sure?' }
@@ -130,7 +156,7 @@ module RadCommon
       return unless RadicalTwilio.new.twilio_enabled? && user.mobile_phone.present? && policy(user).test_sms?
 
       link_to icon(:comments, 'Send Test SMS'),
-              "/rad_common/users/#{user.id}/test_sms",
+              test_sms_user_path(user),
               method: :put,
               class: 'btn btn-secondary btn-sm',
               data: { confirm: 'Are you sure?' }
@@ -141,13 +167,52 @@ module RadCommon
     end
 
     def add_user_client_action(user, index_page)
-      return unless RadicalConfig.user_clients? && user.external? && policy(UserClient.new).new?
+      return unless RadicalConfig.user_clients? && user.external? && policy(UserClient.new(user: user)).new?
 
       link_class = index_page ? 'btn btn-sm btn-success btn-block' : 'btn btn-sm btn-success'
 
       link_to(icon(:plus, "Add #{RadCommon::AppInfo.new.client_model_label} to User"),
               [:new, user, :user_client],
               class: link_class)
+    end
+
+    def reactivate_user_warning(user)
+      return unless RadicalConfig.user_expirable? && policy(user).update? && user.expired?
+
+      link = link_to 'click here', reactivate_user_path(user), method: :put, data: { confirm: 'Are you sure?' }
+      message = safe_join(["User's account has been expired due to inactivity, to re-activate the user, ", link, '.'])
+      content_tag(:p, message, class: 'alert alert-warning')
+    end
+
+    def require_mobile_phone?
+      RadicalConfig.authy_enabled? && !RadicalConfig.authy_internal_only?
+    end
+
+    def clients_to_add_to_user(user)
+      policy_scope(RadCommon::AppInfo.new.client_model_class).active.where.not(id: user.clients.pluck(:id)).sorted
+    end
+
+    def show_hide_users_button(users)
+      return if users.inactive.none?
+
+      tag.button 'Show/Hide Inactive',
+                 type: 'button',
+                 class: 'btn btn-sm btn-secondary',
+                 'data-target': '#users-collapse',
+                 'data-toggle': 'collapse'
+    end
+
+    def user_row_class(user, hide_inactive)
+      item = user.display_style
+      return item if !hide_inactive || user.not_inactive?
+
+      "#{item} collapse"
+    end
+
+    def user_row_id(user, hide_inactive)
+      return if !hide_inactive || user.not_inactive?
+
+      'users-collapse'
     end
   end
 end

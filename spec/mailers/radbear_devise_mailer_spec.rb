@@ -10,16 +10,10 @@ describe RadbearDeviseMailer, type: :mailer do
   describe 'invitation_instructions' do
     subject { email.body.encoded }
 
-    before { user.invite! }
-
     context 'when internal' do
+      before { user.invite! }
+
       it { is_expected.to include 'Someone has invited you to Demo Foo' }
-    end
-
-    context 'when external' do
-      let(:user) { create :user, :external }
-
-      it { is_expected.to include 'Someone has invited you to Foo Portal' }
     end
   end
 

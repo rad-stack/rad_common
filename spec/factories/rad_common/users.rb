@@ -37,11 +37,11 @@ FactoryBot.define do
       end
 
       sequence(:email) { |n| "client_user_#{n}@abc.com" }
-      security_roles { [] }
+      security_roles { [create(:security_role, :external)] }
       external { true }
 
       f.after(:create) do |user, evaluator|
-        this_client = evaluator.client.presence || create(:client)
+        this_client = evaluator.client.presence || (create :client)
         UserClient.create! user: user, client_id: this_client.id
       end
     end

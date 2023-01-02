@@ -2,7 +2,7 @@ class TwilioLogSearch < RadCommon::Search
   def initialize(params, current_user)
     @current_user = current_user
 
-    super(query: TwilioLog,
+    super(query: TwilioLog.includes(:from_user, :to_user),
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
@@ -12,7 +12,9 @@ class TwilioLogSearch < RadCommon::Search
   private
 
     def filters_def
-      [{ start_input_label: 'Start Date',
+      [{ column: 'message',
+         type: RadCommon::LikeFilter },
+       { start_input_label: 'Start Date',
          end_input_label: 'End Date',
          column: :created_at,
          type: RadCommon::DateFilter },
@@ -23,7 +25,8 @@ class TwilioLogSearch < RadCommon::Search
        { input_label: 'To User',
          column: :to_user_id,
          options: user_array,
-         blank_value_label: 'All Users' }]
+         blank_value_label: 'All Users' },
+       { input_label: 'Status', name: :status, scope_values: %i[failure successful] }]
     end
 
     def sort_columns_def
@@ -33,16 +36,11 @@ class TwilioLogSearch < RadCommon::Search
        { label: 'From User' },
        { label: 'To User' },
        { column: 'message' },
-       { column: 'media_url' },
        { column: 'opt_out_message_sent' },
-       { column: 'success' }]
+       { label: 'Status' }]
     end
 
     def user_array
       Pundit.policy_scope!(current_user, User).by_name.pluck(Arel.sql("first_name || ' ' || last_name"), :id)
-    end
-
-    def failure_reasons
-      Pundit.policy_scope!(current_user, LoginActivity).failure.select(:failure_reason).distinct.map(&:failure_reason)
     end
 end

@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm reset_authy test_email test_sms]
+  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm
+                                    reset_authy test_email test_sms reactivate]
   before_action :remove_blank_passwords, only: :update
 
   def index
@@ -36,7 +37,7 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user = User.new
+    @user = User.new(timezone: Company.main.timezone)
     authorize @user
   end
 
@@ -44,6 +45,10 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(permitted_params)
+
+    if policy(@user).update_security_roles? && !params[:user][:security_roles].nil?
+      @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
+    end
 
     authorize @user
 
@@ -59,7 +64,7 @@ class UsersController < ApplicationController
       @user.assign_attributes(permitted_params)
       @user.approved_by = true_user
 
-      if policy(@user).update_security_roles?
+      if policy(@user).update_security_roles? && !params[:user][:security_roles].nil?
         @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
       end
 
@@ -69,7 +74,6 @@ class UsersController < ApplicationController
         flash[:success] = 'User updated.'
         redirect_to @user
       else
-        flash[:error] = "Unable to update user: #{@user.errors.full_messages.join(',')}"
         render :edit
         raise ActiveRecord::Rollback
       end
@@ -112,7 +116,7 @@ class UsersController < ApplicationController
       end
     end
 
-    if destroyed && (URI(request.referer).path == user_path(@user)) ||
+    if (destroyed && (URI(request.referer).path == user_path(@user))) ||
        (URI(request.referer).path == edit_user_path(@user))
       redirect_to users_path
     else
@@ -147,6 +151,16 @@ class UsersController < ApplicationController
   def test_sms
     @user.test_sms! current_user
     flash[:success] = 'A test SMS was sent to the user.'
+    redirect_to @user
+  end
+
+  def reactivate
+    if @user.reactivate
+      flash[:success] = 'User was successfully reactivated.'
+    else
+      flash[:error] = "User could not be reactivated: #{@user.errors.full_messages.to_sentence}"
+    end
+
     redirect_to @user
   end
 

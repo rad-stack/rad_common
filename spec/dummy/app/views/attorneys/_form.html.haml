@@ -1,5 +1,5 @@
 = simple_form_for(@attorney) do |f|
-  = f.error_notification
+  = rad_form_errors f
 
   .form-inputs
     .row
@@ -20,7 +20,7 @@
       .col-lg-6
         = f.input :city
       .col-lg-3
-        = f.input :state
+        = f.input :state, as: :state
       .col-lg-3
         = f.input :zipcode
     .row

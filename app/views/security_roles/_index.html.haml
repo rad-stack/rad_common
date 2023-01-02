@@ -1,18 +1,28 @@
 %table.table.table-striped.table-bordered
   %tr
     %th Name
+    %th # of Users
     - if RadicalConfig.external_users?
       %th External
-    %th # of Users
+    - unless RadicalConfig.disable_invite?
+      %th Allow Invite
+    - unless RadicalConfig.disable_sign_up?
+      %th Allow Sign Up
     - if show_actions
       %th.actions Actions
 
   - security_roles.each do |security_role|
     %tr
       %td= secured_link security_role
+      %td
+        %p #{pluralize(security_role.users.active.count, 'Active User')}
+        %p #{pluralize(security_role.users.inactive.count, 'Inactive User')}
       - if RadicalConfig.external_users?
         %td= format_boolean security_role.external
-      %td= security_role.users.size
+      - unless RadicalConfig.disable_invite?
+        %td= format_boolean security_role.allow_invite
+      - unless RadicalConfig.disable_sign_up?
+        %td= format_boolean security_role.allow_sign_up
       - if show_actions
         %td
           - if policy(security_role).update?

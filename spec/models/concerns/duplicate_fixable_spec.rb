@@ -11,7 +11,7 @@ describe DuplicateFixable, type: :model do
                                                   address_1: 'Xxxx',
                                                   address_2: nil,
                                                   city: 'Xxxx',
-                                                  state: 'XX',
+                                                  state: 'FL',
                                                   zipcode: '11111')
   end
 
@@ -20,7 +20,7 @@ describe DuplicateFixable, type: :model do
                                                   address_1: 'Yyyy',
                                                   address_2: nil,
                                                   city: 'Yyyy',
-                                                  state: 'YY',
+                                                  state: 'CA',
                                                   zipcode: '22222')
   end
 

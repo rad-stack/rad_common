@@ -60,12 +60,12 @@ class RadSeeder
 
       return true unless RadicalConfig.external_users?
 
-      seed_portal_admin
-      seed_portal_user
+      seed_client_user
     end
 
     def seed_admin(role_name = 'Admin')
       role = get_role(role_name)
+      role.allow_invite = !RadicalConfig.disable_invite?
       seed_all role
       role.save!
 
@@ -81,19 +81,18 @@ class RadSeeder
     end
 
     def seed_user
+      return unless seeded_user_role?
+
       role = get_role('User')
+      role.allow_invite = !RadicalConfig.disable_invite?
       role.save!
     end
 
-    def seed_portal_admin
-      role = get_role('Portal Admin')
+    def seed_client_user
+      role = get_role('Client User')
       role.external = true
-      role.save!
-    end
-
-    def seed_portal_user
-      role = get_role('Portal User')
-      role.external = true
+      role.allow_invite = !RadicalConfig.disable_invite?
+      role.allow_sign_up = !RadicalConfig.disable_sign_up?
       role.save!
     end
 
@@ -134,8 +133,19 @@ class RadSeeder
       seeded_user[:mobile_phone]
     end
 
+    def staging_safe_email
+      # this is helfpul when sendgrid email validaiton is enabled on staging, the faker emails would then fail
+      return seeded_user_config.first[:email] if Rails.env.staging?
+
+      Faker::Internet.email
+    end
+
     def seeded_user_domains
       internal_user_emails.map { |item| item.split('@').last }.uniq.sort
+    end
+
+    def seeded_user_role?
+      seeded_user_config.pluck(:security_role).include?('User')
     end
 
     def internal_user_emails
@@ -156,6 +166,10 @@ class RadSeeder
       role_by_name 'User'
     end
 
+    def client_user_role
+      role_by_name 'Client User'
+    end
+
     def admin_user
       first_user_in_role 'Admin'
     end
@@ -165,7 +179,10 @@ class RadSeeder
     end
 
     def role_by_name(name)
-      SecurityRole.find_by!(name: name)
+      role = SecurityRole.find_by(name: name)
+      return role if role.present?
+
+      raise "Couldn't find security role named #{name}"
     end
 
     def random_user

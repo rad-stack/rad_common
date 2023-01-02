@@ -15,9 +15,14 @@
           %td= twilio_log.to_number
           %td= secured_link twilio_log.from_user
           %td= secured_link twilio_log.to_user
-          %td= twilio_log.message
-          %td= twilio_log.media_url
+          %td
+            = twilio_log.message
+            - if twilio_log.media_url.present?
+              = icon_tooltip('span', twilio_log.media_url, 'fa-image')
           %td= format_boolean twilio_log.opt_out_message_sent
-          %td= format_boolean twilio_log.success
+          %td
+            = twilio_log.status
+            - if twilio_log.message_sid.present?
+              = icon_tooltip('span', twilio_log.message_sid, 'fa-circle-info')
 
     = paginate @twilio_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine

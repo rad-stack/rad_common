@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_14_175052) do
+ActiveRecord::Schema.define(version: 2022_12_21_134935) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 2022_06_14_175052) do
     t.string "zipcode", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.jsonb "address_metadata"
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -79,12 +80,12 @@ ActiveRecord::Schema.define(version: 2022_06_14_175052) do
     t.string "user_type"
     t.string "username"
     t.string "action"
-    t.text "audited_changes"
     t.integer "version", default: 0
     t.string "comment"
     t.string "remote_address"
     t.string "request_uuid"
     t.datetime "created_at"
+    t.jsonb "audited_changes"
     t.index ["associated_id", "associated_type"], name: "associated_index"
     t.index ["auditable_id", "auditable_type", "version"], name: "auditable_index"
     t.index ["created_at"], name: "index_audits_on_created_at"
@@ -124,6 +125,8 @@ ActiveRecord::Schema.define(version: 2022_06_14_175052) do
     t.datetime "validity_checked_at"
     t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
+    t.integer "address_requests_made", default: 0, null: false
+    t.jsonb "address_metadata"
   end
 
   create_table "divisions", id: :serial, force: :cascade do |t|
@@ -232,6 +235,17 @@ ActiveRecord::Schema.define(version: 2022_06_14_175052) do
     t.index ["password_archivable_type", "password_archivable_id"], name: "index_password_archivable"
   end
 
+  create_table "saved_search_filters", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "user_id", null: false
+    t.string "search_class", null: false
+    t.jsonb "search_filters", default: {}, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "name", "search_class"], name: "unique_saved_search_filters", unique: true
+    t.index ["user_id"], name: "index_saved_search_filters_on_user_id"
+  end
+
   create_table "security_roles", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "admin", default: false, null: false
@@ -243,6 +257,8 @@ ActiveRecord::Schema.define(version: 2022_06_14_175052) do
     t.boolean "delete_division", default: false, null: false
     t.boolean "external", default: false, null: false
     t.boolean "manage_user", default: false, null: false
+    t.boolean "allow_sign_up", default: false, null: false
+    t.boolean "allow_invite", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 
@@ -272,15 +288,18 @@ ActiveRecord::Schema.define(version: 2022_06_14_175052) do
     t.integer "to_user_id"
     t.string "message", null: false
     t.string "media_url"
-    t.boolean "success", default: true, null: false
+    t.boolean "sent", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "opt_out_message_sent", default: false, null: false
+    t.string "message_sid"
+    t.integer "twilio_status"
+    t.boolean "success", default: false, null: false
     t.index ["created_at"], name: "index_twilio_logs_on_created_at"
     t.index ["from_number"], name: "index_twilio_logs_on_from_number"
     t.index ["from_user_id"], name: "index_twilio_logs_on_from_user_id"
     t.index ["opt_out_message_sent"], name: "index_twilio_logs_on_opt_out_message_sent"
-    t.index ["success"], name: "index_twilio_logs_on_success"
+    t.index ["sent"], name: "index_twilio_logs_on_sent"
     t.index ["to_number"], name: "index_twilio_logs_on_to_number"
     t.index ["to_user_id"], name: "index_twilio_logs_on_to_user_id"
   end
@@ -354,6 +373,8 @@ ActiveRecord::Schema.define(version: 2022_06_14_175052) do
     t.datetime "expired_at"
     t.jsonb "filter_defaults"
     t.boolean "authy_sms", default: true, null: false
+    t.boolean "profile_entered", default: false, null: false
+    t.date "birth_date"
     t.index ["authy_id"], name: "index_users_on_authy_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -380,6 +401,7 @@ ActiveRecord::Schema.define(version: 2022_06_14_175052) do
   add_foreign_key "notification_settings", "users"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
+  add_foreign_key "saved_search_filters", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
   add_foreign_key "twilio_logs", "users", column: "from_user_id"

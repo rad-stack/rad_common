@@ -78,10 +78,6 @@ class RadbearMailer < ActionMailer::Base
 
   def default_url_options
     # this won't work for links called using the route helpers outside of the mailer context
-    # this won't detect when to use the portal host unless @recipient is a User
-
-    return { host: RadicalConfig.portal_host_name! } if @recipient.is_a?(User) && @recipient.external?
-
     { host: RadicalConfig.host_name! }
   end
 
@@ -104,10 +100,6 @@ class RadbearMailer < ActionMailer::Base
       return unless attachment.attached?
 
       attachments[attachment.filename.to_s] = { mime_type: attachment.content_type, content: attachment.blob.download }
-    end
-
-    def app_name(user)
-      user.internal? ? RadicalConfig.app_name! : RadicalConfig.portal_app_name!
     end
 
     def escape_name(recipient_name)

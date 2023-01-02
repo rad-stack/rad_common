@@ -8,8 +8,9 @@
 %ul.nav.nav-tabs.justify-content-center.mb-2{ role: 'tablist' }
   - tabs.compact.each do |tab|
     - name = tab[:name]
+    - active = current_page?(tab[:value].split('?').first)
     %li.nav-item
-      %a.nav-link{ class: (links && current_page?(tab[:value])) || (!links && (active_tab == name)) ? 'active' : '',
+      %a.nav-link{ class: (links && active) || (!links && (active_tab == name)) ? 'active' : '',
                    id: "nav-#{name.parameterize}-tab",
                    href: links ? tab[:value] : "#nav-#{name.parameterize}",
                    'aria-controls' => links ? nil : "nav-#{name.parameterize}",

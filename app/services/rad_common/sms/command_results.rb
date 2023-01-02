@@ -15,7 +15,7 @@ module RadCommon
       private
 
         def reply_command_message(command)
-          "Patient successfully replied with valid command #{command}"
+          "User successfully replied with valid command #{command}"
         end
     end
   end

@@ -8,6 +8,6 @@
 
   .card-body
     = simple_form_for(@company, url: '/rad_common/company/update', method: :put) do |f|
-      = f.error_notification
+      = rad_form_errors f
 
       = render 'companies/form', f: f

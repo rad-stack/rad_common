@@ -24,6 +24,8 @@ RSpec.describe User, type: :model do
     let(:last_mail) { ActionMailer::Base.deliveries.last }
 
     before do
+      allow_any_instance_of(described_class).to receive(:auto_approve?).and_return false
+
       create :notification_security_role,
              notification_type: notification_type,
              security_role: admin.security_roles.first
@@ -40,6 +42,8 @@ RSpec.describe User, type: :model do
 
   describe 'auditing of associations' do
     let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
+
+    before { user.update! user_status: UserStatus.default_pending_status }
 
     context 'with create' do
       before do
@@ -141,12 +145,12 @@ RSpec.describe User, type: :model do
     end
 
     it 'rejects invalid email addresses' do
-      addresses = ['foo @example.com', '.b ar@example.com', 'com@none']
+      addresses = ['foo @example.com', '.b ar@example.com', 'com-none']
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
         expect(user).not_to be_valid
-        expect(user.errors.full_messages.to_s).to include 'Email is invalid'
+        expect(user.errors.full_messages.to_s).to include 'Email is not written in a valid format'
       end
     end
 
@@ -236,14 +240,12 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'exiprable' do
+  describe 'exiprable', user_expirable_specs: true do
     it 'expires after 90 days' do
-      if Devise.mappings[:user].expirable?
-        user.update!(last_activity_at: Time.current)
-        expect(user.expired?).to be(false)
+      user.update!(last_activity_at: Time.current)
+      expect(user.expired?).to be(false)
 
-        Timecop.travel(91.days.from_now) { expect(user.expired?).to be(true) }
-      end
+      Timecop.travel(91.days.from_now) { expect(user.expired?).to be(true) }
     end
   end
 
@@ -333,11 +335,11 @@ RSpec.describe User, type: :model do
   end
 
   def assert_password_with_name(first_name, last_name, password, valid)
-    user = build(:user,
+    user = build :user,
                  first_name: first_name,
                  last_name: last_name,
                  password: password,
-                 password_confirmation: password)
+                 password_confirmation: password
 
     user.valid?
 
