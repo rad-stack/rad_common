@@ -23,13 +23,23 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content 'Users (1)'
         expect(page).to have_content user.to_s
         expect(page).not_to have_content user.security_roles.first.name
-        expect(page).not_to have_content 'Created'
-        expect(page).not_to have_content 'Export to File'
+        expect(page).not_to have_content ApplicationController.helpers.format_date(user.created_at)
+
+        if Pundit.policy!(user, user).export?
+          expect(page).to have_content 'Export to File'
+        else
+          expect(page).not_to have_content 'Export to File'
+        end
       end
 
       it "doesn't show pending users" do
         visit users_path
-        expect(page).not_to have_content pending_user.to_s
+
+        if Pundit.policy!(user, User.new).update?
+          expect(page).to have_content pending_user.to_s
+        else
+          expect(page).not_to have_content pending_user.to_s
+        end
       end
     end
 
@@ -76,14 +86,25 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content result_label
         expect(page).to have_content user.to_s
         expect(page).to have_content user.security_roles.first.name
-        expect(page).to have_content 'Created'
-        expect(page).to have_content 'Export to File'
+        expect(page).to have_content ApplicationController.helpers.format_date(user.created_at)
+
+        if Pundit.policy!(admin, user).export?
+          expect(page).to have_content 'Export to File'
+        else
+          expect(page).not_to have_content 'Export to File'
+        end
+
         expect(page).to have_content external_user.to_s if RadicalConfig.external_users?
       end
 
       it 'shows pending users' do
         visit users_path
-        expect(page).to have_content pending_user.to_s
+
+        if Pundit.policy!(admin, User.new).update?
+          expect(page).to have_content pending_user.to_s
+        else
+          expect(page).not_to have_content pending_user.to_s
+        end
       end
 
       it 'filters by user type', external_user_specs: true do
@@ -195,13 +216,15 @@ RSpec.describe 'Users', type: :system do
 
     describe 'show' do
       it 'does not allow' do
-        expect { visit user_path(user) }.to raise_error ActionController::RoutingError
+        visit user_path(user)
+        expect(page.status_code).to eq 403
       end
     end
 
     describe 'index' do
       it 'does not allow' do
-        expect { visit users_path }.to raise_error ActionController::RoutingError
+        visit users_path
+        expect(page.status_code).to eq 403
       end
     end
   end
