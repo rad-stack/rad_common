@@ -18,5 +18,11 @@
           - if user_signed_in?
             = render 'layouts/global_search'
           = bootstrap_flash
-          = yield
+          - if RadicalConfig.wide_margins?
+            .row
+              .col-2
+              .col-8
+                = yield
+          - else
+            = yield
           = render 'layouts/footer'
