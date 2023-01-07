@@ -46,7 +46,7 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
           fill_in 'Email', with: valid_email
           fill_in 'First name', with: first_name
           fill_in 'Last name', with: last_name
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send'
 
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
@@ -61,7 +61,7 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
           fill_in 'Email', with: external_email
           fill_in 'First name', with: first_name
           fill_in 'Last name', with: last_name
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send'
 
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
@@ -79,7 +79,7 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
           fill_in 'Email', with: external_email
           fill_in 'First name', with: first_name
           fill_in 'Last name', with: last_name
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send'
 
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
@@ -115,7 +115,7 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
           fill_in 'Email', with: bad_email
           fill_in 'First name', with: first_name
           fill_in 'Last name', with: last_name
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send an invitation'
 
           expect(page).to have_content ' is not authorized for this application'
@@ -127,7 +127,7 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
           fill_in 'Email', with: valid_email
           fill_in 'First name', with: 'f'
           fill_in 'Last name', with: 'b'
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send an invitation'
 
           expect(page).to have_content "We invited 'f b'"
@@ -142,7 +142,7 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
         fill_in 'Email', with: valid_email
         fill_in 'First name', with: first_name
         fill_in 'Last name', with: last_name
-        fill_in 'Mobile phone', with: '(999) 231-1111'
+        fill_in 'Mobile Phone', with: '(999) 231-1111'
         click_button 'Send'
 
         expect(page).to have_content "We invited '#{first_name} #{last_name}'"

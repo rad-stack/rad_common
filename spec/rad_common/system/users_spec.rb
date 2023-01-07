@@ -54,10 +54,10 @@ RSpec.describe 'Users', type: :system do
     describe 'registration' do
       it 'updates registration' do
         visit edit_user_registration_path
-        expect(find_field('First name').value).to eq user.first_name
+        expect(find_field('First Name').value).to eq user.first_name
         new_name = Faker::Name.first_name
-        fill_in 'First name', with: new_name
-        fill_in 'Current password', with: password
+        fill_in 'First Name', with: new_name
+        fill_in 'Current Password', with: password
         click_button 'Save'
         user.reload
         expect(user.first_name).to eq new_name
@@ -129,7 +129,7 @@ RSpec.describe 'Users', type: :system do
     it 'updates the user' do
       visit edit_user_path(admin)
       new = 'foo'
-      fill_in 'First name', with: new
+      fill_in 'First Name', with: new
       click_button 'Save'
       expect(page).to have_content new
     end
@@ -239,9 +239,9 @@ RSpec.describe 'Users', type: :system do
     it 'signs up' do
       visit new_user_registration_path
 
-      fill_in 'First name', with: Faker::Name.first_name
-      fill_in 'Last name', with: Faker::Name.last_name
-      fill_in 'Mobile phone', with: '(345) 222-1111'
+      fill_in 'First Name', with: Faker::Name.first_name
+      fill_in 'Last Name', with: Faker::Name.last_name
+      fill_in 'Mobile Phone', with: '(345) 222-1111'
       fill_in 'Email', with: "#{Faker::Internet.user_name}@abc.com"
       fill_in 'user_password', with: password
       fill_in 'user_password_confirmation', with: password
@@ -255,8 +255,8 @@ RSpec.describe 'Users', type: :system do
     it "can't sign up with invalid email address" do
       visit new_user_registration_path
 
-      fill_in 'First name', with: Faker::Name.first_name
-      fill_in 'Last name', with: Faker::Name.last_name
+      fill_in 'First Name', with: Faker::Name.first_name
+      fill_in 'Last Name', with: Faker::Name.last_name
       fill_in 'Email', with: 'test_user@'
       fill_in 'user_password', with: password
       fill_in 'user_password_confirmation', with: password
@@ -368,14 +368,14 @@ RSpec.describe 'Users', type: :system do
       expect(user.security_roles.count).to eq 1
 
       visit edit_user_path(user)
-      fill_in 'Last name', with: ''
+      fill_in 'Last Name', with: ''
       check security_role.name
       click_button 'Save'
 
       user.reload
       expect(user.security_roles.count).to eq 1
 
-      fill_in 'Last name', with: 'Foo'
+      fill_in 'Last Name', with: 'Foo'
       click_button 'Save'
 
       user.reload
