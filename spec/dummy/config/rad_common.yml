@@ -18,6 +18,7 @@ default: &default
   show_help_menu: true
   saved_search_filters_enabled: true
   legal_docs: true
+  wide_margins: false
 
   system_usage_models:
     -
