@@ -10,6 +10,8 @@ en:
           sms: 'SMS'
       user:
         external: 'External User?'
+      security_role:
+        external: 'External User?'
   faker:
     phone_number:
       formats: ['(###) ###-####']
