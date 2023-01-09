@@ -2,7 +2,7 @@ en:
   activerecord:
     attributes:
       division:
-        additional_info: Additional data
+        additional_info: Additional Data
         division_statuses:
           status_active: Active
           status_pending: Pending
