@@ -9,7 +9,7 @@ en:
           email: 'Email'
           sms: 'SMS'
       user:
-        external: 'External user?'
+        external: 'External User?'
   faker:
     phone_number:
       formats: ['(###) ###-####']
