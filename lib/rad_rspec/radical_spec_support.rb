@@ -38,7 +38,7 @@ class RadicalSpecSupport
 
   def self.hooks(config, driver)
     config.after(:each, type: :system, js: true) do
-      errors = page.driver.browser.manage.logs.get(:browser)
+      errors = page.driver.browser.logs.get(:browser)
       errors = errors.reject { |error| error.level == 'WARNING' }
       expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
     end
