@@ -27,7 +27,7 @@ RSpec.describe 'NotificationSettings', type: :system do
         visit '/rad_common/notification_settings'
         page.uncheck('notification_setting[email]')
         expect(accept_alert).to eq 'The setting could not be saved: Enabled requires one of email/sms/feed be turned on'
-        page_errors = page.driver.browser.manage.logs.get(:browser).map(&:message)
+        page_errors = page.driver.browser.logs.get(:browser).map(&:message)
 
         expect(page_errors.first).to include 'Failed to load resource: the server responded with a status of 422 ' \
                                              '(Unprocessable Entity)'

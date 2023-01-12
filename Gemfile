@@ -19,7 +19,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
   gem 'timecop'
-  gem 'webdrivers', '~> 4.6.1'
+  gem 'webdrivers'
 end
 
 group :development, :test do
