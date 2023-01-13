@@ -5,6 +5,6 @@ class SendgridStatusesController < ApplicationController
   def create
     skip_authorization
 
-    RadbearMailer.simple_message(User.active.admin.first, 'Sendgrid Status', params.to_s).deliver_later
+    RadbearMailer.simple_message(User.active.admins.first, 'Sendgrid Status', params.to_s).deliver_later
   end
 end
