@@ -307,7 +307,7 @@ class RadicalConfig
       items = array_config_item!(:system_usage_models)
       return items unless twilio_enabled?
 
-      items + ['TwilioLog']
+      items + [['TwilioLog', 'successful', 'Successful Twilio Logs'], ['TwilioLog', 'failure', 'Failure Twilio Logs']]
     end
 
     def global_validity_days!
