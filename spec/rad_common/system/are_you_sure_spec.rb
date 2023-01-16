@@ -8,7 +8,7 @@ RSpec.describe 'AreYouSure', type: :system do
   describe 'normal form fields' do
     it 'warns', js: true do
       visit '/rad_common/company/edit'
-      fill_in 'Name', with: 'test'
+      fill_in 'company_name', with: 'test'
       visit current_path
 
       expect(confirm_present?).to be true
