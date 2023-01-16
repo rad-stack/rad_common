@@ -42,11 +42,11 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
         it 'invites a user' do
           visit new_user_invitation_path
 
-          select internal_role.name, from: 'Initial security role'
+          select internal_role.name, from: 'Initial Security Role'
           fill_in 'Email', with: valid_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send'
 
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
@@ -57,11 +57,11 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
         it 'invites an external user', external_user_specs: true do
           visit new_user_invitation_path
 
-          select external_role.name, from: 'Initial security role'
+          select external_role.name, from: 'Initial Security Role'
           fill_in 'Email', with: external_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send'
 
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
@@ -75,11 +75,11 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
 
           visit new_user_invitation_path
 
-          select initial_role.name, from: 'Initial security role'
+          select initial_role.name, from: 'Initial Security Role'
           fill_in 'Email', with: external_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send'
 
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
@@ -91,8 +91,8 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
         it 'because of blank email' do
           visit new_user_invitation_path
 
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
           click_button 'Send an invitation'
 
           expect(page).to have_content "Email can't be blank"
@@ -113,9 +113,9 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
 
           bad_email = 'j@g.com'
           fill_in 'Email', with: bad_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send an invitation'
 
           expect(page).to have_content ' is not authorized for this application'
@@ -125,9 +125,9 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
           visit new_user_invitation_path
 
           fill_in 'Email', with: valid_email
-          fill_in 'First name', with: 'f'
-          fill_in 'Last name', with: 'b'
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          fill_in 'First Name', with: 'f'
+          fill_in 'Last Name', with: 'b'
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send an invitation'
 
           expect(page).to have_content "We invited 'f b'"
@@ -140,9 +140,9 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
         visit new_user_invitation_path
 
         fill_in 'Email', with: valid_email
-        fill_in 'First name', with: first_name
-        fill_in 'Last name', with: last_name
-        fill_in 'Mobile phone', with: '(999) 231-1111'
+        fill_in 'First Name', with: first_name
+        fill_in 'Last Name', with: last_name
+        fill_in 'Mobile Phone', with: '(999) 231-1111'
         click_button 'Send'
 
         expect(page).to have_content "We invited '#{first_name} #{last_name}'"
