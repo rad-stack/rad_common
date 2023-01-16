@@ -165,8 +165,8 @@ RSpec.describe 'Divisions', type: :system do
     end
 
     it 'shows translated version of field name' do
-      expect(page).to have_content 'Additional data'
-      expect(page).not_to have_content 'Additional info'
+      expect(page).to have_content 'Additional Data'
+      expect(page).not_to have_content 'Additional Info'
     end
 
     it 'shows translated enum value' do
