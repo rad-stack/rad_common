@@ -6,6 +6,11 @@
           - @events.first.each_key do |item|
             %th= item
         - @events.each do |event|
+          - user = User.find_by(email: event[:email])
           %tr
             - event.each_key do |item|
-              %td= event[item]
+              %td
+                - if item == :email && user.present?
+                  = link_to event[item], user_url(user)
+                - else
+                  = event[item]
