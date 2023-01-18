@@ -1,0 +1,11 @@
+.email.row
+  .email-col-12
+    .email-info-box
+      %table.info-table
+        %tr
+          - @events.first.keys.each do |item|
+            %th= item
+        - @events.each do |event|
+          %tr
+            - event.keys.each do |item|
+              %td= event[item]

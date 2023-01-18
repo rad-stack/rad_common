@@ -5,23 +5,19 @@ class SendgridStatusesController < ApplicationController
   def create
     skip_authorization
 
-    Notifications::SendgridEmailNotification.main.notify! payload
+    Notifications::SendgridEmailStatusNotification.main.notify! payload
   end
 
   private
 
     def payload
-      sendgrid_alert_info.slice(payload_keys)
-    end
-
-    def sendgrid_alert_info
-      raise "unexpected format: #{params}" unless params['_json'].size == 1
-
-      params['_json'].first
-    end
-
-    def payload_keys
-      # TODO: remove unused keys
-      %w[email event bounce_classification sg_event_id sg_message_id type reason]
+      params['_json'].map do |item|
+        { email: item['email'],
+          event: item['event'],
+          type: item['type'],
+          bounce_classification: item['bounce_classification'],
+          reason: item['reason']
+        }
+      end
     end
 end
