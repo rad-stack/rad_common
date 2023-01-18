@@ -93,7 +93,14 @@ class NotificationType < ApplicationRecord
   end
 
   def self.main
-    NotificationType.find_by!(type: name)
+    item = NotificationType.find_by(type: name)
+    return item if item.present?
+
+    unless name.constantize.new.auth_mode == :security_roles
+      raise "missing notification type #{name} and can't be auto-seeded"
+    end
+
+    name.constantize.create! security_roles: [SecurityRole.admin_role]
   end
 
   def notify!(payload)
