@@ -3,9 +3,9 @@
     .email-info-box
       %table.info-table
         %tr
-          - @events.first.keys.each do |item|
+          - @events.first.each_key do |item|
             %th= item
         - @events.each do |event|
           %tr
-            - event.keys.each do |item|
+            - event.each_key do |item|
               %td= event[item]

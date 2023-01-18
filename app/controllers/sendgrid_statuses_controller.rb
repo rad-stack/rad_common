@@ -16,8 +16,7 @@ class SendgridStatusesController < ApplicationController
           event: item['event'],
           type: item['type'],
           bounce_classification: item['bounce_classification'],
-          reason: item['reason']
-        }
+          reason: item['reason'] }
       end
     end
 end
