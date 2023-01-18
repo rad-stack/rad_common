@@ -1,3 +1,4 @@
+- field_name = filter.input_label.presence || filter.name.to_s.titleize
 = f.input filter.like_input, label: filter.input_label, input_html: { value: search.search_params[filter.like_input] },
                              required: false,
-                             tooltip: "Search for keywords or phrases within the #{filter.input_label}"
+                             tooltip: "Search for keywords or phrases within the #{field_name}"
