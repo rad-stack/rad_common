@@ -16,11 +16,6 @@
   background-color: #FFFFFF;
 }
 
-.email-header
-{
-  background-color: #E5E5E5;
-}
-
 .logo-col
 {
   text-align: center;
@@ -82,6 +77,10 @@ img
   vertical-align: middle;
 }
 
+.email-gray-bg {
+  background-color: #E5E5E5;
+}
+
 .footer
 {
   margin-top: 5px;
@@ -119,7 +118,6 @@ img
 .email-info-box
 {
   padding:4px;
-  background-color: #E5E5E5;
   box-shadow: 2px 2px 5px #888888;
   border-radius: 4px;
 }
@@ -232,7 +230,6 @@ td
 
 tr.header-row
 {
-  background-color: #CCC;
   font-weight: bold;
   padding:4px;
 }
@@ -317,9 +314,6 @@ tr.even
   text-align: left;
   font-size: 20px;
   font-weight: bold;
-  border-bottom-style : solid;
-  border-bottom-width : 5px;
-  border-bottom-color: #E5E5E5;
   padding-bottom: 6px;
 }
 
