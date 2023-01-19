@@ -19,6 +19,7 @@ default: &default
   saved_search_filters_enabled: true
   legal_docs: true
   wide_margins: false
+  all_caps_nav: false
 
   system_usage_models:
     -
