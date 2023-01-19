@@ -5,7 +5,10 @@ RSpec.describe 'User Impersonation', impersonate_specs: true, type: :system do
   let!(:impersonated_user) { create :admin }
   let!(:edited_user) { create :user }
 
-  before { login_as signed_in_user }
+  before do
+    allow(RadicalConfig).to receive(:all_caps_nav?).and_return false
+    login_as signed_in_user
+  end
 
   context 'with an internal user' do
     it 'allows an admin to impersonate, but keeps audits as original user', :js do
