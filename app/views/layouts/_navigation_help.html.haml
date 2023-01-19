@@ -5,7 +5,10 @@
         = nav_label('Help')
       %ul.dropdown-menu.dropdown-menu-right
         %li= link_to nav_label('Contact'), contact_us_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
-        %li= link_to nav_label('Terms & Conditions'), terms_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
+
+        %li
+          = link_to nav_label('Terms & Conditions'), terms_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
+
         %li= link_to nav_label('Privacy Policy'), privacy_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
   - else
     %li= link_to nav_label('Help'), contact_us_path, class: 'nav-link'
