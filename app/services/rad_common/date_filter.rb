@@ -126,7 +126,7 @@ module RadCommon
     end
 
     def col_class
-      'd-none' if RadicalConfig.wide_margins?
+      'col-lg-6' if RadicalConfig.wide_margins?
     end
 
     private
