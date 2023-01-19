@@ -203,6 +203,12 @@ module RadCommon
       Onboarding.new(current_user).onboarded?
     end
 
+    def nav_label(label)
+      return label unless RadicalConfig.all_caps_nav?
+
+      label.upcase
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)

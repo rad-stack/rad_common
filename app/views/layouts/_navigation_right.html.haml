@@ -5,37 +5,37 @@
     %li.nav-item.dropdown
       %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#', class: impersonate_style }
         - if impersonating?
-          Signed In as #{current_user}
+          = nav_label("Signed In as #{current_user}")
         - else
-          = current_user
+          = nav_label(current_user.to_s)
         - if unread_count.positive?
           %span.badge.alert-danger= unread_count
         - if RadicalConfig.avatar? && current_user.avatar.attached?
           = image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
       %ul.dropdown-menu.dropdown-menu-right
-        %li= link_to 'My Account', edit_user_registration_path, class: 'dropdown-item'
+        %li= link_to nav_label('My Account'), edit_user_registration_path, class: 'dropdown-item'
         - if my_profile_nav?
-          %li= link_to 'My Profile', "/user_profiles/#{current_user.id}", class: 'dropdown-item'
+          %li= link_to nav_label('My Profile'), "/user_profiles/#{current_user.id}", class: 'dropdown-item'
         - if current_user.internal? && policy(Notification).index?
           %li
             = link_to '/rad_common/notifications', class: 'dropdown-item' do
-              Notifications
+              = nav_label('Notifications')
               - if unread_count.positive?
                 %span.badge.alert-danger= unread_count
         - if current_user.internal? && policy(NotificationSetting).index?
-          %li= link_to 'Notification Settings', '/rad_common/notification_settings', class: 'dropdown-item'
+          %li= link_to nav_label('Notification Settings'), '/rad_common/notification_settings', class: 'dropdown-item'
 
         - if impersonating?
           %li
-            = link_to "Sign Out from #{current_user}",
+            = link_to nav_label("Sign Out from #{current_user}"),
                       '/rad_common/impersonations/stop',
                       method: 'delete',
                       class: "dropdown-item #{impersonate_style}"
 
-        %li= link_to 'Sign Out', destroy_user_session_path, method: 'delete', class: 'dropdown-item'
+        %li= link_to nav_label('Sign Out'), destroy_user_session_path, method: 'delete', class: 'dropdown-item'
   - else
-    %li= link_to 'Sign In', new_user_session_path, class: 'nav-link'
+    %li= link_to nav_label('Sign In'), new_user_session_path, class: 'nav-link'
     - unless RadicalConfig.disable_sign_up?
-      %li= link_to 'Sign Up', new_user_registration_path, class: 'nav-link'
+      %li= link_to nav_label('Sign Up'), new_user_registration_path, class: 'nav-link'
 
   = render 'layouts/navigation_help'

@@ -230,6 +230,10 @@ class RadicalConfig
       boolean_config_item! :wide_margins
     end
 
+    def all_caps_nav?
+      boolean_config_item! :all_caps_nav
+    end
+
     def favicon_filename!
       override_variable(:favicon_filename) || 'favicon.ico'
     end

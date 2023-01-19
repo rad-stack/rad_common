@@ -2,10 +2,10 @@
   - if RadicalConfig.legal_docs?
     %li.nav-item.dropdown
       %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#' }
-        Help
+        = nav_label('Help')
       %ul.dropdown-menu.dropdown-menu-right
-        %li= link_to 'Contact', contact_us_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
-        %li= link_to 'Terms & Conditions', terms_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
-        %li= link_to 'Privacy Policy', privacy_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
+        %li= link_to nav_label('Contact'), contact_us_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
+        %li= link_to nav_label('Terms & Conditions'), terms_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
+        %li= link_to nav_label('Privacy Policy'), privacy_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
   - else
-    %li= link_to 'Help', contact_us_path, class: 'nav-link'
+    %li= link_to nav_label('Help'), contact_us_path, class: 'nav-link'
