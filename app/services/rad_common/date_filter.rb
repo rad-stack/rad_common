@@ -125,6 +125,10 @@ module RadCommon
       true
     end
 
+    def col_class
+      'col-lg-6'
+    end
+
     private
 
       def start_label_error
