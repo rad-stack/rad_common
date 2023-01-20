@@ -13,7 +13,6 @@ class SendgridStatusesController < ApplicationController
   private
 
     def check_multiple_emails
-      binding.pry
       return if params['_json'].pluck(:email).uniq.size == 1
 
       raise "multiple emails detected: #{payload}"
