@@ -1,0 +1,28 @@
+.row
+  .col-lg-6
+    .card
+      = render 'layouts/card_header', action_name: 'custom', title: "Contact #{@company}", icon: 'fa-phone'
+      .card-body
+        = render 'layouts/show_data_columns',
+                 resource: @company,
+                 data: contact_us_show_data(@company),
+                 no_timestamps: true,
+                 force_single_column: true
+  .col-lg-6
+    .card
+      = render 'layouts/card_header', action_name: 'custom', title: 'Send Us a Message', icon: 'fa-envelope'
+      .card-body
+        = simple_form_for(:contact_us, url: contact_us_path, html: { novalidate: false }) do |f|
+          = rad_form_errors f
+
+          .form-inputs
+            - if user_signed_in?
+              = f.input :your_email_address, required: true, input_html: { value: current_user.email }, disabled: true
+            - else
+              = f.input :your_email_address, required: true
+
+            = f.input :subject, required: true, input_html: { maxlength: 250 }
+            = f.input :message, required: true, as: :text, input_html: { rows: 4, maxlength: 1000 }
+
+          .form-actions
+            = f.button :submit, 'Save', class: 'btn btn-primary'

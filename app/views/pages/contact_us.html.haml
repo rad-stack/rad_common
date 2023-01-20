@@ -1,4 +1,0 @@
-.card
-  = render 'layouts/card_header', action_name: 'custom', title: "Contact #{@company}", icon: 'fa-phone'
-  .card-body
-    = render 'layouts/show_data_columns', resource: @company, data: contact_us_show_data(@company), no_timestamps: true
