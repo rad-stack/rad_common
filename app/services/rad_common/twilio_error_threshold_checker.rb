@@ -5,7 +5,6 @@ module RadCommon
     def check_threshold
       return unless exceeded_error_threshold?
 
-      check_notification_type
       Notifications::TwilioErrorThresholdExceededNotification.main.notify! failed_percentage
     end
 
@@ -27,12 +26,6 @@ module RadCommon
 
       def recent_count
         TwilioLog.last_day.count.to_f
-      end
-
-      def check_notification_type
-        return if NotificationType.find_by(type: 'Notifications::TwilioErrorThresholdExceededNotification').present?
-
-        Notifications::TwilioErrorThresholdExceededNotification.create! security_roles: [SecurityRole.admin_role]
       end
   end
 end

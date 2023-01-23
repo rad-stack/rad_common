@@ -46,10 +46,25 @@ class NotificationMailer < RadbearMailer
     send_notification_mail recipients, "Global Validity in #{RadicalConfig.app_name!} Ran Long"
   end
 
+  def sendgrid_status(recipients, events)
+    @events = events
+
+    @message = "An email that was sent has an issue reported by SendGrid. There #{@events.count == 1 ? 'is' : 'are'} " \
+               "#{pluralize(@events.count, 'status event')}."
+
+    send_notification_mail recipients, sendgrid_subject(events)
+  end
+
   private
 
     def send_notification_mail(recipients, subject)
       @recipient = User.where(id: recipients)
       mail to: @recipient.map(&:formatted_email), subject: subject
+    end
+
+    def sendgrid_subject(events)
+      emails = events.pluck(:email).to_sentence
+
+      "SendGrid Email Status for #{emails} in #{RadicalConfig.app_name!}"
     end
 end
