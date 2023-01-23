@@ -4,7 +4,7 @@ describe 'SendgridStatuses' do
   let(:deliveries) { ActionMailer::Base.deliveries }
 
   let(:params) do
-    { _json: [{ event: 'bounce', email: Faker::Internet.email }] }
+    { _json: [{ event: 'bounce', type: 'block', bounce_classification: 'Reputation', email: Faker::Internet.email }] }
   end
 
   before do

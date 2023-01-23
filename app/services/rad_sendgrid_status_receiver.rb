@@ -24,9 +24,9 @@ class RadSendgridStatusReceiver
     def payload
       content.map do |item|
         { email: item['email'].downcase,
-          event: item['event'].downcase,
-          type: item['type'].downcase,
-          bounce_classification: item['bounce_classification'].downcase,
+          event: item['event'],
+          type: item['type'],
+          bounce_classification: item['bounce_classification'],
           reason: item['reason'] }
       end
     end
