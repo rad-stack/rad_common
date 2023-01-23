@@ -3,8 +3,6 @@ class RadSendgridStatusReceiver
 
   def initialize(content)
     @content = content
-
-    raise "multiple emails detected: #{payload}" if valid? && email_count != 1
   end
 
   def process!
@@ -16,10 +14,6 @@ class RadSendgridStatusReceiver
   end
 
   private
-
-    def email_count
-      payload.pluck(:email).uniq.size
-    end
 
     def payload
       content.map do |item|
