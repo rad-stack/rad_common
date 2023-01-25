@@ -5,7 +5,7 @@ describe 'SendgridStatuses' do
 
   before do
     create :admin
-    ActionMailer::Base.deliveries.clear
+    deliveries.clear
   end
 
   context 'when raw items are present' do
