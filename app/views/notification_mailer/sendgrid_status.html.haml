@@ -5,7 +5,7 @@
         - if @user.present?
           %tr
             %th User:
-            %td= @user
+            %td= link_to @user, user_url(@user)
         %tr
           %th Email:
           %td= @email
