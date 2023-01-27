@@ -9,17 +9,25 @@ module Notifications
     end
 
     def feed_content
-      "SendGrid Email Status for #{emails}"
+      "SendGrid Email Status for #{feed_content_item}"
     end
 
     def subject_record
-      User.find_by(email: payload.first[:email])
+      user
     end
 
     private
 
-      def emails
-        payload.pluck(:email).to_sentence
+      def feed_content_item
+        user.presence || email
+      end
+
+      def user
+        User.find_by(email: email)
+      end
+
+      def email
+        payload[:email]
       end
   end
 end

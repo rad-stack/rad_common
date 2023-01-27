@@ -5,13 +5,29 @@ class SendgridStatusesController < ApplicationController
   def create
     skip_authorization
 
-    receiver = SendgridStatusReceiver.new(params['_json'])
+    if valid?
+      content.each do |item|
+        SendgridStatusReceiver.new(permitted_params(item)).process!
+      end
 
-    if receiver.valid?
-      receiver.process!
       head :ok
     else
       render json: { message: 'These are not the droids you are looking for.' }, status: :unprocessable_entity
     end
   end
+
+  private
+
+    def permitted_params(item)
+      # legacy support for post_id, remove this eventually, see Task 41177
+      item.permit(:email, :event, :record_id, :post_id, :host_name, :timestamp, :useragent, :url)
+    end
+
+    def content
+      params['_json']
+    end
+
+    def valid?
+      content.present?
+    end
 end
