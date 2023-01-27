@@ -13,7 +13,7 @@ describe SendgridStatusReceiver, type: :service do
     deliveries.clear
   end
 
-  it 'notifies'do
+  it 'notifies' do
     expect { service.process! }.to change(deliveries, :count).by(1)
   end
 end
