@@ -7,7 +7,6 @@ class RadSeeder
     seed_security_roles
     seed_user_statuses
     seed_company
-    seed_notification_types
     seed_users
 
     @users = User.all
@@ -17,16 +16,6 @@ class RadSeeder
 
     def display_log(message)
       puts message
-    end
-
-    def seed_notification_types
-      return if NotificationType.count.positive?
-
-      Notifications::NewUserSignedUpNotification.create! security_roles: [SecurityRole.admin_role]
-      Notifications::UserWasApprovedNotification.create! security_roles: [SecurityRole.admin_role]
-      Notifications::UserAcceptedInvitationNotification.create! security_roles: [SecurityRole.admin_role]
-      Notifications::InvalidDataWasFoundNotification.create! security_roles: [SecurityRole.admin_role]
-      Notifications::GlobalValidityRanLongNotification.create! security_roles: [SecurityRole.admin_role]
     end
 
     def seed_users
