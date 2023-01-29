@@ -2,16 +2,16 @@ require 'rails_helper'
 
 describe GlobalValidation, type: :service do
   let(:global_validity) { described_class.new }
-  let(:admin_security_role) { admin.security_roles.first }
+  let!(:admin_security_role) { admin.security_roles.first }
   let(:company) { Company.main }
-  let!(:admin) { create :admin }
+  let(:admin) { create :admin }
   let(:url) { "http://localhost:3000/security_roles/#{admin_security_role.id}" }
   let(:last_email) { ActionMailer::Base.deliveries.last }
   let(:email_body_text) { last_email.body.parts.first.body.raw_source }
   let(:email_body_html) { last_email.body.parts.second.body.raw_source }
 
   before do
-    create :global_validity_notification, security_roles: [admin_security_role]
+    Notifications::InvalidDataWasFoundNotification.main
     ActionMailer::Base.deliveries.clear
   end
 

@@ -17,18 +17,14 @@ RSpec.describe User, type: :model do
   end
 
   describe 'notify_user_approved' do
-    let(:notification_type) { create :user_was_approved_notification }
-    let(:admin) { create :admin }
+    let(:notification_type) { Notifications::UserWasApprovedNotification.main }
+    let!(:admin) { create :admin }
     let(:user) { create :user, security_roles: [security_role], user_status: inactive_status }
     let(:first_mail) { ActionMailer::Base.deliveries.first }
     let(:last_mail) { ActionMailer::Base.deliveries.last }
 
     before do
       allow_any_instance_of(described_class).to receive(:auto_approve?).and_return false
-
-      create :notification_security_role,
-             notification_type: notification_type,
-             security_role: admin.security_roles.first
 
       ActionMailer::Base.deliveries = []
       user.update! user_status: active_status, do_not_notify_approved: false
