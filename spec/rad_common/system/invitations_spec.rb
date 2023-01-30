@@ -177,7 +177,7 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
 
     it 'notifies admin when invitee accepts' do
       ActionMailer::Base.deliveries = []
-      create :user_accepts_invitation_notification, security_roles: [admin.security_roles.first]
+      admin
 
       invitee.accept_invitation!
 
