@@ -20,6 +20,10 @@ class RadSendgridStatusReceiver
     @content[:event].downcase
   end
 
+  def reason
+    @content[:reason]
+  end
+
   def record_id
     # legacy support for post_id, remove this eventually, see Task 41177
     @content[:record_id].presence || @content[:post_id]
