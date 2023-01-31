@@ -15,14 +15,13 @@ module SchemaValidations
 
     load_index_validations
     load_column_validations
-    load_association_validations
     klass.schema_validations_loaded = true
   end
 
   private
 
     def load_column_validations
-      klass.content_columns.each do |column|
+      klass.columns.each do |column|
         name = column.name.to_sym
         next if exempt_column?(name)
 
@@ -90,18 +89,6 @@ module SchemaValidations
       end
     end
 
-    def load_association_validations
-      klass.reflect_on_all_associations(:belongs_to).each do |association|
-        next if association.options[:optional] || exempt_column?(association.name)
-
-        foreign_key_method = association.respond_to?(:foreign_key) ? :foreign_key : :primary_key_name
-        column = klass.columns_hash[association.send(foreign_key_method).to_s]
-        next unless column
-
-        validate_logged :validates_presence_of, association.name
-      end
-    end
-
     def validate_logged(method, arg, opts = {})
       msg = "[schema_validations] #{self.class.name}.#{method} #{arg.inspect}"
       msg += ", #{opts.inspect[1...-1]}" if opts.any?
@@ -120,7 +107,14 @@ module SchemaValidations
     end
 
     def skip_columns
-      klass.const_defined?('SKIP_SCHEMA_VALIDATION_COLUMNS') ? klass::SKIP_SCHEMA_VALIDATION_COLUMNS : []
+      @skip_columns ||=
+        (klass.const_defined?('SKIP_SCHEMA_VALIDATION_COLUMNS') ? klass::SKIP_SCHEMA_VALIDATION_COLUMNS : []) +
+        fk_columns +
+        [klass.primary_key.to_sym]
+    end
+
+    def fk_columns
+      @fk_columns ||= klass.reflect_on_all_associations(:belongs_to).map(&:foreign_key).map(&:to_sym)
     end
 
     def skip_indexes
