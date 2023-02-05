@@ -203,6 +203,7 @@ end
         apply_migration '20221123142522_twilio_log_changes.rb'
         apply_migration '20221108114020_convert_audited_changes_text_to_json.rb'
         apply_migration '20221221134935_remove_legacy_audited_changes.rb'
+        apply_migration '20230204113054_active_record_doctor_issues.rb'
       end
 
       def self.next_migration_number(path)
