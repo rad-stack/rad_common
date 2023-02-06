@@ -103,11 +103,11 @@ RSpec.describe User, type: :model do
 
     it 'rejects simple passwords' do
       if Devise.mappings[:user].secure_validatable?
-        expect(build(:user, password: 'password', password_confirmation: 'password')).not_to be_valid
-        expect(build(:user, password: 'Password', password_confirmation: 'Password')).not_to be_valid
-        expect(build(:user, password: 'Password55757', password_confirmation: 'Password55757')).not_to be_valid
-        expect(build(:user, password: 'Password!!!', password_confirmation: 'Password!!!')).not_to be_valid
-        expect(build(:user, password: 'Password!!!4646', password_confirmation: 'Password!!!4646')).to be_valid
+        %w[password Password Password55757 Password!!!].each do |pass|
+          expect(build(:user, user_status: active_status, password: pass, password_confirmation: pass)).not_to be_valid
+        end
+        expect(build(:user, user_status: active_status, password: 'Password!!!4646',
+                            password_confirmation: 'Password!!!4646')).to be_valid
       end
     end
 
