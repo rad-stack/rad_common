@@ -96,5 +96,6 @@ class RadbearDeviseMailer < Devise::Mailer
 
     def set_defaults
       @include_yield = false
+      headers['X-SMTPAPI'] = { unique_args: { host_name: RadicalConfig.host_name! } }.to_json
     end
 end
