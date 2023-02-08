@@ -40,11 +40,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'kaminari'
   s.add_dependency 'sassc'
 
-  # TODO: remove these 3 once the mail gem is up to date, see Task 37200
-  s.add_dependency 'net-imap'
-  s.add_dependency 'net-pop'
-  s.add_dependency 'net-smtp'
-
   s.add_dependency 'nokogiri'
 
   # this needs to match the ruby version to avoid warnings, see Task 40504

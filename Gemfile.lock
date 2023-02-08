@@ -19,9 +19,6 @@ PATH
       image_processing
       jwt
       kaminari
-      net-imap
-      net-pop
-      net-smtp
       nokogiri
       parser (~> 3.1.2.1)
       pg
