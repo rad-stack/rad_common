@@ -300,7 +300,7 @@ RSpec.describe 'Users', type: :system do
     end
 
     it 'cannot sign in with expired password' do
-      if Devise.mappings[:user].password_expirable?
+      if RadicalConfig.password_expirable?
         current_password = password
         new_password = 'Passwords2!!!!!'
 

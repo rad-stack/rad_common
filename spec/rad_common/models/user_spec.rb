@@ -112,7 +112,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'accepts same password only after 12 changes' do
-      if Devise.mappings[:user].password_expirable?
+      if RadicalConfig.password_expirable?
         13.times do |i|
           user.update(password: "Password#{i + 1}!", password_confirmation: "Password#{i + 1}!")
         end
@@ -229,7 +229,7 @@ RSpec.describe User, type: :model do
 
   describe 'password expirable' do
     it 'has a password that expires after 90 days' do
-      if Devise.mappings[:user].password_expirable?
+      if RadicalConfig.password_expirable?
         expect(user.need_change_password?).to be(false)
         Timecop.travel(91.days.from_now) { expect(user.need_change_password?).to be(true) }
       end

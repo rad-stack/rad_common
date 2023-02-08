@@ -10,8 +10,7 @@
           = current_user
         - if unread_count.positive?
           %span.badge.alert-danger= unread_count
-        - if RadicalConfig.avatar? && current_user.avatar.attached?
-          = image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
+        = show_nav_avatar
       %ul.dropdown-menu.dropdown-menu-right
         %li= link_to 'My Account', edit_user_registration_path, class: 'dropdown-item'
         - if my_profile_nav?
