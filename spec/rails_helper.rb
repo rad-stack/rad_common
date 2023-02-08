@@ -132,6 +132,7 @@ RSpec.configure do |config|
   config.filter_run_excluding(smarty_specs: true) unless RadicalConfig.smarty_enabled?
   config.filter_run_excluding(user_confirmable_specs: true) unless RadicalConfig.user_confirmable?
   config.filter_run_excluding(user_expirable_specs: true) unless RadicalConfig.user_expirable?
+  config.filter_run_excluding(password_expirable_specs: true) unless RadicalConfig.password_expirable?
 
   include Warden::Test::Helpers
   config.include Capybara::DSL

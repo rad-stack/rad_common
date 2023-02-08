@@ -299,26 +299,24 @@ RSpec.describe 'Users', type: :system do
       expect(page).to have_content 'Invalid Email or password'
     end
 
-    it 'cannot sign in with expired password' do
-      if RadicalConfig.password_expirable?
-        current_password = password
-        new_password = 'Passwords2!!!!!'
+    it 'cannot sign in with expired password', password_expirable_specs: true do
+      current_password = password
+      new_password = 'Passwords2!!!!!'
 
-        user.update(password_changed_at: 98.days.ago)
-        user.reload
+      user.update(password_changed_at: 98.days.ago)
+      user.reload
 
-        visit new_user_session_path
-        fill_in 'user_email', with: user.email
-        fill_in 'user_password', with: current_password
-        click_button 'Sign In'
-        expect(page).to have_content('Your password is expired.')
+      visit new_user_session_path
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: current_password
+      click_button 'Sign In'
+      expect(page).to have_content('Your password is expired.')
 
-        fill_in 'user_password', with: new_password
-        fill_in 'user_password_confirmation', with: new_password
-        fill_in 'user_current_password', with: current_password
-        click_button 'Change My Password'
-        expect(page).to have_content 'Your new password is saved.'
-      end
+      fill_in 'user_password', with: new_password
+      fill_in 'user_password_confirmation', with: new_password
+      fill_in 'user_current_password', with: current_password
+      click_button 'Change My Password'
+      expect(page).to have_content 'Your new password is saved.'
     end
 
     it 'cannot sign in when expired', user_expirable_specs: true do
