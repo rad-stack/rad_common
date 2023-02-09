@@ -18,6 +18,17 @@ module RadCommon
       UserProfilePolicy.new(current_user, current_user).show?
     end
 
+    def show_nav_avatar
+      return unless RadicalConfig.avatar?
+
+      # there is a complicated bug that requires this - Task 35304
+      return if RadicalConfig.password_expirable? && current_user.password_expired?
+
+      return unless current_user.avatar.attached?
+
+      image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
+    end
+
     def users_actions
       [invite_user_action, new_user_action]
     end

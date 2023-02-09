@@ -342,6 +342,10 @@ class RadicalConfig
       Devise.mappings[:user].expirable?
     end
 
+    def password_expirable?
+      Devise.mappings[:user].password_expirable?
+    end
+
     def secret_config_item!(item)
       value = secret_config_item(item)
       raise "required secret config item #{item} is missing" if value.blank?
