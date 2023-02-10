@@ -5,7 +5,11 @@ class RadSendgridStatusReceiver
   end
 
   def process!
-    Notifications::SendgridEmailStatusNotification.main.notify! @content
+    if forward?
+      forward!
+    else
+      process_internal!
+    end
   end
 
   def email
@@ -51,8 +55,32 @@ class RadSendgridStatusReceiver
 
   private
 
+    def process_internal!
+      Notifications::SendgridEmailStatusNotification.main.notify! @content
+    end
+
     def check_events
       raise "unknown event type #{event}" unless all_events.include?(event)
+    end
+
+    def forward?
+      host_name.present? && host_name != RadicalConfig.host_name!
+    end
+
+    def forward!
+      RadicalRetry.perform_request do
+        response = HTTParty.post("https://#{host_name}/sendgrid_statuses",
+                                 body: forward_body,
+                                 headers: { 'content-type': 'application/json' })
+
+        unless response.code == 200
+          raise "SendGrid Forward Failed: Code: #{response.code}, Message: #{response.message}"
+        end
+      end
+    end
+
+    def forward_body
+      '_json' => [content]
     end
 
     def all_events
