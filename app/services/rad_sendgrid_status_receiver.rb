@@ -73,9 +73,7 @@ class RadSendgridStatusReceiver
                                  body: forward_body,
                                  headers: { 'content-type': 'application/json' })
 
-        unless response.code == 200
-          raise "SendGrid Forward Failed: Code: #{response.code}, Message: #{response.message}"
-        end
+        raise "forward failed, code: #{response.code}, message: #{response.message}" unless response.code == 200
       end
     end
 
