@@ -7,7 +7,7 @@ class SendgridStatusesController < ApplicationController
 
     if valid?
       content.each do |item|
-        SendgridStatusReceiver.new(permitted_params(item)).process!
+        SendgridStatusReceiverJob.perform_later permitted_params(item)
       end
 
       head :ok

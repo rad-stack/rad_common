@@ -6,6 +6,7 @@ require 'simplecov'
 SimpleCov.start 'rails' do
   add_filter 'lib/templates'
   add_filter 'install_generator.rb'
+  add_filter 'install/rails_helper.rb'
 
   add_group 'Services', 'app/services'
   add_group 'Policies', 'app/policies'
