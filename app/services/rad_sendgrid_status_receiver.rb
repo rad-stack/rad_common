@@ -1,4 +1,7 @@
 class RadSendgridStatusReceiver
+  SPAM_REPORT = 'spamreport'.freeze
+  SUPPRESSION_EVENTS = %w[dropped bounce spamreport].freeze
+
   def initialize(content)
     @content = content
     check_events
@@ -38,7 +41,7 @@ class RadSendgridStatusReceiver
   end
 
   def suppression?
-    suppression_events.include?(event)
+    SUPPRESSION_EVENTS.include?(event)
   end
 
   def timestamp
@@ -56,7 +59,7 @@ class RadSendgridStatusReceiver
   private
 
     def process_internal!
-      if suppression? && user&.stale?
+      if suppression? && user.present? && (spam_report? || user.stale?)
         user.update! user_status: UserStatus.default_inactive_status
         Rails.logger.info "sendgrid suppression received from stale user #{user.email}, deactivating"
       else
@@ -82,6 +85,10 @@ class RadSendgridStatusReceiver
       end
     end
 
+    def spam_report?
+      event == SPAM_REPORT
+    end
+
     def protocol
       Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
     end
@@ -91,10 +98,6 @@ class RadSendgridStatusReceiver
     end
 
     def all_events
-      suppression_events + %w[open click]
-    end
-
-    def suppression_events
-      ['dropped', 'bounce', 'spam report']
+      SUPPRESSION_EVENTS + %w[open click]
     end
 end
