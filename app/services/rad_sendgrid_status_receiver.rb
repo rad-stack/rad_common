@@ -69,16 +69,20 @@ class RadSendgridStatusReceiver
 
     def forward!
       RadicalRetry.perform_request do
-        response = HTTParty.post("https://#{host_name}/sendgrid_statuses",
+        response = HTTParty.post("#{protocol}://#{host_name}/sendgrid_statuses",
                                  body: forward_body,
-                                 headers: { 'content-type': 'application/json' })
+                                 headers: { 'Content-Type' => 'application/json' })
 
         raise "forward failed, code: #{response.code}, message: #{response.message}" unless response.code == 200
       end
     end
 
+    def protocol
+      Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
+    end
+
     def forward_body
-      { '_json' => [@content] }
+      { '_json' => [@content] }.to_json
     end
 
     def all_events
