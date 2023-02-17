@@ -78,7 +78,7 @@ class RadSendgridStatusReceiver
     end
 
     def forward_body
-      '_json' => [content]
+      { '_json' => [@content] }
     end
 
     def all_events
