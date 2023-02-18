@@ -101,6 +101,10 @@ module RadbearUser
     active
   end
 
+  def stale?
+    updated_at < 4.months.ago
+  end
+
   def not_inactive?
     user_status != UserStatus.default_inactive_status
   end
