@@ -2,7 +2,7 @@ require 'vcr'
 
 VCR.configure do |c|
   c.cassette_library_dir = Rails.root.join('spec/vcr')
-  c.hook_into :faraday
+  c.hook_into :webmock
 
   # see Task 37353, need the example.com item for now
   c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com', 'www.example.com'
