@@ -16,7 +16,6 @@ PATH
       faker
       haml-rails
       hashids
-      httparty
       image_processing
       jwt
       kaminari
@@ -214,9 +213,6 @@ GEM
     hashdiff (1.0.1)
     hashids (1.0.6)
     htmlentities (4.3.4)
-    httparty (0.21.0)
-      mini_mime (>= 1.0.0)
-      multi_xml (>= 0.5.2)
     httpclient (2.8.3)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
@@ -257,7 +253,6 @@ GEM
     mini_portile2 (2.8.1)
     minitest (5.17.0)
     msgpack (1.6.0)
-    multi_xml (0.6.0)
     net-imap (0.3.4)
       date
       net-protocol

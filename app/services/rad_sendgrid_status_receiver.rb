@@ -77,12 +77,16 @@ class RadSendgridStatusReceiver
 
     def forward!
       RadicalRetry.perform_request do
-        response = HTTParty.post("#{protocol}://#{host_name}/sendgrid_statuses",
-                                 body: forward_body,
-                                 headers: { 'Content-Type' => 'application/json' })
+        response = connection.post('/sendgrid_statuses') do |request|
+          request.body = forward_body
+        end
 
-        raise "forward failed, code: #{response.code}, message: #{response.message}" unless response.code == 200
+        raise "forward failed, code: #{response.status}, message: #{response.body}" unless response.status == 200
       end
+    end
+
+    def connection
+      @connection ||= Faraday.new url: "#{protocol}://#{host_name}", headers: { 'Content-Type' => 'application/json' }
     end
 
     def spam_report?
