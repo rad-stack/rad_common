@@ -5,10 +5,10 @@ http_interactions:
     uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
     body:
       encoding: UTF-8
-      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B16187222169
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&To=%2B16187222169
     headers:
       User-Agent:
-      - twilio-ruby/5.74.3 (darwin20 x86_64) Ruby/3.1.2
+      - twilio-ruby/5.66.1 (ruby/x86_64-darwin20 2.7.5-p203)
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -17,56 +17,58 @@ http_interactions:
       - application/json
       Authorization:
       - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 201
       message: Created
     headers:
-      date:
-      - Sun, 19 Feb 2023 13:13:02 GMT
-      content-type:
+      Date:
+      - Tue, 12 Apr 2022 13:52:12 GMT
+      Content-Type:
       - application/json; charset=utf-8
-      content-length:
+      Content-Length:
       - '823'
-      connection:
+      Connection:
       - keep-alive
-      twilio-request-id:
-      - RQd4d8d04c1e8c79548efbfec6924b5126
-      twilio-request-duration:
-      - '0.069'
-      access-control-allow-origin:
-      - "*"
-      access-control-allow-headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
-      access-control-allow-methods:
-      - GET, POST, DELETE, OPTIONS
-      access-control-expose-headers:
-      - ETag
-      access-control-allow-credentials:
-      - 'true'
-      x-powered-by:
-      - AT-5000
-      twilio-concurrent-requests:
+      Twilio-Concurrent-Requests:
       - '1'
-      x-shenanigans:
+      Twilio-Request-Id:
+      - RQ546c5118c716c077d444e5b222a6f502
+      Twilio-Request-Duration:
+      - '0.068'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag
+      Access-Control-Allow-Credentials:
+      - 'true'
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
       - none
-      x-home-region:
+      X-Home-Region:
       - us1
-      x-api-domain:
+      X-Api-Domain:
       - api.twilio.com
-      strict-transport-security:
+      Strict-Transport-Security:
       - max-age=31536000
     body:
       encoding: UTF-8
-      string: '{"body": "test message - To no longer receive text messages, text STOP",
-        "num_segments": "1", "direction": "outbound-api", "from": "15005550006", "date_updated":
-        "Sun, 19 Feb 2023 13:13:02 +0000", "price": null, "error_message": null, "uri":
-        "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages/SMd4d8d04c1e8c79548efbfec6924b5126.json",
-        "account_sid": "AC2540a6d0062cb347979e6b695b61ff0a", "num_media": "0", "to":
-        "+16187222169", "date_created": "Sun, 19 Feb 2023 13:13:02 +0000", "status":
-        "queued", "sid": "SMd4d8d04c1e8c79548efbfec6924b5126", "date_sent": null,
-        "messaging_service_sid": null, "error_code": null, "price_unit": "USD", "api_version":
-        "2010-04-01", "subresource_uris": {"media": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages/SMd4d8d04c1e8c79548efbfec6924b5126/Media.json"}}'
-  recorded_at: Sun, 19 Feb 2023 13:13:02 GMT
+      string: '{"sid": "SM57f5a46a4618432781131c5420cf3b1f", "date_created": "Tue,
+        12 Apr 2022 13:52:12 +0000", "date_updated": "Tue, 12 Apr 2022 13:52:12 +0000",
+        "date_sent": null, "account_sid": "AC2540a6d0062cb347979e6b695b61ff0a", "to":
+        "+16187222169", "from": "15005550006", "messaging_service_sid": null, "body":
+        "test message - To no longer receive text messages, text STOP", "status":
+        "queued", "num_segments": "1", "num_media": "0", "direction": "outbound-api",
+        "api_version": "2010-04-01", "price": null, "price_unit": "USD", "error_code":
+        null, "error_message": null, "uri": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages/SM57f5a46a4618432781131c5420cf3b1f.json",
+        "subresource_uris": {"media": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages/SM57f5a46a4618432781131c5420cf3b1f/Media.json"}}'
+  recorded_at: Tue, 12 Apr 2022 13:52:11 GMT
 recorded_with: VCR 6.1.0

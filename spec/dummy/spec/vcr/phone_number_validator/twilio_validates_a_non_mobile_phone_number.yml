@@ -8,57 +8,59 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - twilio-ruby/5.74.3 (darwin20 x86_64) Ruby/3.1.2
+      - twilio-ruby/5.66.1 (ruby/x86_64-darwin20 2.7.5-p203)
       Accept-Charset:
       - utf-8
       Accept:
       - application/json
       Authorization:
       - Basic QUM4MDNjYzQ4MWZmZTExYmFiMjY4ZmNmYjhmMjQ3ZGQ1OTo1MWQ0NDA3NzYzNzdiNzQ5MWFkNzBlNDc1MzI5MWQxYQ==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 200
       message: OK
     headers:
-      date:
-      - Sun, 19 Feb 2023 13:13:41 GMT
-      content-type:
+      Date:
+      - Tue, 12 Apr 2022 13:55:19 GMT
+      Content-Type:
       - application/json; charset=utf-8
-      content-length:
+      Content-Length:
       - '212'
-      connection:
+      Connection:
       - keep-alive
-      twilio-request-id:
-      - RQe3ee5a6047de160da1bf69df2feea56d
-      twilio-request-duration:
-      - '0.009'
-      access-control-allow-origin:
-      - "*"
-      access-control-allow-headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
-      access-control-allow-methods:
-      - GET, POST, DELETE, OPTIONS
-      access-control-expose-headers:
-      - ETag
-      access-control-allow-credentials:
-      - 'true'
-      x-powered-by:
-      - AT-5000
-      twilio-concurrent-requests:
+      Twilio-Concurrent-Requests:
       - '1'
-      x-shenanigans:
+      Twilio-Request-Id:
+      - RQ8f3fac5bb9a3a596b5a58fa747c7660f
+      Twilio-Request-Duration:
+      - '0.022'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag
+      Access-Control-Allow-Credentials:
+      - 'true'
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
       - none
-      x-home-region:
+      X-Home-Region:
       - us1
-      x-api-domain:
+      X-Api-Domain:
       - lookups.twilio.com
-      strict-transport-security:
+      Strict-Transport-Security:
       - max-age=31536000
     body:
       encoding: UTF-8
       string: '{"caller_name": null, "country_code": "US", "phone_number": "+1<TEST_PHONE_NUMBER_STRIPPED>",
         "national_format": "<TEST_PHONE_NUMBER>", "carrier": null, "add_ons": null,
         "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_PHONE_NUMBER_STRIPPED>"}'
-  recorded_at: Sun, 19 Feb 2023 13:13:41 GMT
+  recorded_at: Tue, 12 Apr 2022 13:55:19 GMT
 recorded_with: VCR 6.1.0
