@@ -8,6 +8,7 @@ module RadCommon
     require 'active_storage_validations'
     require 'audited'
     require 'authtrail'
+    require 'csv'
     require 'devise'
     require 'devise-authy'
     require 'devise-security'
