@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Attorneys', type: :system do
+RSpec.describe 'Attorneys' do
   let(:user) { create :admin }
   let(:attorney) { create :attorney }
 

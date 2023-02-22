@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe RadbearDeviseMailer, type: :mailer do
+describe RadbearDeviseMailer do
   let(:user) { create :user }
   let(:email) { ActionMailer::Base.deliveries.last }
   let(:token) { 'foo' }

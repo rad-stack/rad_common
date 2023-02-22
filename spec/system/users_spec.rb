@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Users', type: :system do
+describe 'Users' do
   let!(:internal_role) { create :security_role }
   let!(:external_role) { create :security_role, :external }
 
