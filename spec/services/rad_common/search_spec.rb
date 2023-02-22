@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe RadCommon::Search, type: :service do
-  let(:user) { create(:user) }
+  let(:user) { create :user }
 
   describe 'results' do
     subject(:search) do
@@ -122,8 +122,8 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:query) { Division }
       let(:filters) { [{ column: :owner_id, options: User.by_name, default_value: user.id }] }
       let(:user) { create :admin }
-      let!(:other_division) { create(:division, created_at: 2.days.ago) }
-      let!(:default_division) { create(:division, owner: user) }
+      let!(:other_division) { create :division, created_at: 2.days.ago }
+      let!(:default_division) { create :division, owner: user }
 
       context 'when in a blank query' do
         let(:params) { ActionController::Parameters.new }
@@ -399,8 +399,8 @@ RSpec.describe RadCommon::Search, type: :service do
     end
 
     let(:query) { Division }
-    let!(:user_1) { create(:user) }
-    let!(:user_2) { create(:user) }
+    let!(:user_1) { create :user }
+    let!(:user_2) { create :user }
     let(:filters) do
       [{ column: :owner_id, input_label: 'Users', options: User.all, default_value: user_1.id }]
     end
