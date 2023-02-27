@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RadPermission, type: :model do
+RSpec.describe RadPermission do
   describe 'label' do
     subject { described_class.new(permission).label }
 

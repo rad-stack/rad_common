@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Divisions', type: :system do
+RSpec.describe 'Divisions' do
   let(:user) { create :admin }
   let(:division) { create :division, owner: user }
 
@@ -143,7 +143,7 @@ RSpec.describe 'Divisions', type: :system do
       end
 
       it 'allows deleting saved filters' do
-        create(:saved_search_filter, user: user, search_class: 'DivisionSearch')
+        create :saved_search_filter, user: user, search_class: 'DivisionSearch'
         visit divisions_path
         click_on 'saved-search-filters-dropdown'
         page.accept_confirm { click_on "delete_saved_filter_#{last_filter.id}" }
@@ -176,7 +176,7 @@ RSpec.describe 'Divisions', type: :system do
 
     context 'with attachments' do
       let(:prompt) { 'Are you sure? Attachment cannot be recovered.' }
-      let(:file) { File.open Rails.root.join('app/assets/images/app_logo.png') }
+      let(:file) { Rails.root.join('app/assets/images/app_logo.png').open }
 
       before do
         division.logo.attach(io: file, filename: 'logo.png')

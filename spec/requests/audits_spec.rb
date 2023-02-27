@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Audits', type: :request do
+RSpec.describe 'Audits' do
   let(:division) { create :division }
 
   before { login_as user, scope: :user }

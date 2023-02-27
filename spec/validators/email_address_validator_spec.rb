@@ -44,7 +44,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
                        'foob@example.com, barf@example.com, xanz@example.com']
 
       invalid_items.each do |item|
-        model = build(:division, invoice_email: item)
+        model = build :division, invoice_email: item
 
         expect(model).to be_invalid
         expect(model.errors.details.first[0]).to eq :invoice_email

@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe 'Search', type: :system do
+RSpec.describe 'Search' do
   let(:user) { create :admin }
   let(:division) { create :division }
 
   before do
     create :admin, user_status: UserStatus.default_inactive_status
-    create_list(:user, 3)
+    create_list :user, 3
     login_as user, scope: :user
   end
 
@@ -70,7 +70,7 @@ RSpec.describe 'Search', type: :system do
       expect(find_field('search_division_status')['data-style']).to eq 'btn btn-warning'
     end
 
-    unless ENV['CI']  # TODO: this fails on codeship
+    unless ENV['CI'] # TODO: this fails on codeship
       it 'select should have warning style when a value a blank value is selected on filter without default',
          js: true do
         expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-light]')
