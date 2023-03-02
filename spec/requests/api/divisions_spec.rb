@@ -11,7 +11,7 @@ describe 'Users API' do
       it 'shows a division' do
         get "/api/divisions/#{division.id}", headers: headers
         expect(response).to have_http_status :ok
-        expect(JSON.parse(response.body)['name']).to eq division.name
+        expect(response.parsed_body['name']).to eq division.name
       end
     end
 
