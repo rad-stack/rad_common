@@ -35,6 +35,8 @@
     "loader-utils": "^2.0.3",
     "terser": "^5.14.2",
     "jquery-ui": "^1.13.2",
-    "json5": "^2.2.2"
+    "json5": "^2.2.2",
+    "decode-uri-component": "^0.2.1",
+    "dns-packet": "^5.4.0"
   }
 }
