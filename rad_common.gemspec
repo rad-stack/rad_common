@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap4-kaminari-views'
   s.add_dependency 'devise'
-  s.add_dependency 'devise-authy'
   s.add_dependency 'devise_invitable'
   s.add_dependency 'devise-security'
   s.add_dependency 'factory_bot_rails'
