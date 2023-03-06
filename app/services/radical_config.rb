@@ -148,6 +148,10 @@ class RadicalConfig
       secret_config_item! :twilio_auth_token
     end
 
+    def twilio_verify_sid!
+      secret_config_item! :twilio_verify_sid
+    end
+
     def seeded_users!
       raise 'missing seeded_users config' if Rails.application.credentials.seeded_users.blank?
 

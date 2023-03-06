@@ -15,6 +15,24 @@ class RadicalTwilio
     client.calls.create from: from_number, to: to, url: URI::Parser.new.escape(url)
   end
 
+  def verify_send(to)
+    response = client.verify
+                     .services(verify_service_sid)
+                     .verifications
+                     .create(to: RadicalTwilio.human_to_twilio_format(to), channel: 'sms')
+
+    puts response.sid # TODO: what to do with this?
+  end
+
+  def verify_check(to, token)
+    response = client.verify
+                     .services(verify_service_sid)
+                     .verification_checks
+                     .create(to: RadicalTwilio.human_to_twilio_format(to), code: token)
+
+    response.status == 'approved'
+  end
+
   def twilio_enabled?
     RadicalConfig.twilio_enabled?
   end
@@ -57,6 +75,10 @@ class RadicalTwilio
 
     def client
       Twilio::REST::Client.new(RadicalConfig.twilio_account_sid!, RadicalConfig.twilio_auth_token!)
+    end
+
+    def verify_service_sid
+      RadicalConfig.twilio_verify_sid!
     end
 
     def get_phone_number(attribute, mobile)

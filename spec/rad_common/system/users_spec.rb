@@ -472,12 +472,21 @@ RSpec.describe 'Users', type: :system do
     end
 
     before do
-      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+      allow(RadicalConfig).to receive(:twilio_account_sid!)
+                                .and_return RadicalConfig.secret_config_item!(:twilio_alt_account_sid)
+
+      allow(RadicalConfig).to receive(:twilio_auth_token!)
+                                .and_return RadicalConfig.secret_config_item!(:twilio_alt_auth_token)
+
+      allow(RadicalConfig).to receive(:twilio_verify_sid!)
+                                .and_return RadicalConfig.secret_config_item!(:twilio_alt_verify_sid)
+
       user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'allows user to login with authentication token', :vcr do
-      allow(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
+      allow_any_instance_of(Twilio::REST::Verify::V2::ServiceContext::VerificationCheckInstance)
+        .to receive(:status).and_return('approved')
 
       visit new_user_session_path
       fill_in 'user_email', with: user.email
@@ -490,26 +499,17 @@ RSpec.describe 'Users', type: :system do
     end
 
     it 'does not allow user to login with invalid authy token', :vcr do
+      allow_any_instance_of(Twilio::REST::Verify::V2::ServiceContext::VerificationCheckInstance)
+        .to receive(:status).and_return('foo bar') # TODO: what is the correct response?
+
       visit new_user_session_path
 
       fill_in 'user_email', with: user.email
       fill_in 'user_password', with: password
       click_button 'Sign In'
-      fill_in 'authy-token', with: 'Not the authy token'
+      fill_in 'authy-token', with: '123456'
       click_button 'Verify and Sign in'
       expect(page).to have_content('The entered token is invalid')
-    end
-
-    it 'updates authy when updating an accounts mobile phone' do
-      allow(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
-      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
-
-      login_as(user, scope: :user)
-      visit edit_user_registration_path
-      fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
-      fill_in 'user_current_password', with: password
-      click_button 'Save'
-      expect(page).to have_content('Your account has been updated successfully.')
     end
   end
 end

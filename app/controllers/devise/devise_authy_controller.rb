@@ -1,4 +1,5 @@
 class Devise::DeviseAuthyController < DeviseController
+  # TODO: remove unused code
   prepend_before_action :find_resource, :only => [
     :request_phone_call, :request_sms
   ]
@@ -31,13 +32,10 @@ class Devise::DeviseAuthyController < DeviseController
 
   # verify 2fa
   def POST_verify_authy
-    token = Authy::API.verify({
-      :id => @resource.authy_id,
-      :token => params[:token],
-      :force => true
-    })
+    # TODO: check to make sure mobile_phone exists?
+    response = RadicalTwilio.new.verify_check(@resource.mobile_phone, params[:token])
 
-    if token.ok?
+    if response
       remember_device(@resource.id) if params[:remember_device].to_i == 1
       remember_user
       record_authy_authentication

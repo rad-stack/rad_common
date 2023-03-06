@@ -21,10 +21,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'active_storage_validations'
   s.add_dependency 'audited'
   s.add_dependency 'authtrail'
-
-  # TODO: remove this override when we replace authy with twilio verify, see Task 37169
-  s.add_dependency 'authy', '< 3.0.0'
-
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap4-kaminari-views'
   s.add_dependency 'devise'

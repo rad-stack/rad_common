@@ -1,7 +1,6 @@
 require 'active_support/concern'
 require 'active_support/core_ext/integer/time'
 require 'devise'
-require 'authy'
 
 module Devise
   mattr_accessor :authy_remember_device, :authy_enable_onetouch, :authy_enable_qr_code
@@ -28,8 +27,6 @@ require 'devise-authy/rails'
 require 'devise-authy/models/authy_authenticatable'
 require 'devise-authy/models/authy_lockable'
 require 'devise-authy/version'
-
-Authy.user_agent = "DeviseAuthy/#{DeviseAuthy::VERSION} - #{Authy.user_agent}"
 
 Devise.add_module :authy_authenticatable, :model => 'devise-authy/models/authy_authenticatable', :controller => :devise_authy, :route => :authy
 Devise.add_module :authy_lockable,        :model => 'devise-authy/models/authy_lockable'

@@ -288,32 +288,9 @@ RSpec.describe User, type: :model do
 
     before { allow(RadicalConfig).to receive(:authy_internal_only?).and_return true }
 
-    it 'creates and updates the user on authy', :vcr do
-      expect(user.authy_id).to be_nil
-      user.update!(authy_enabled: true)
-      expect(user.authy_id).not_to be_nil
-    end
-
-    it 'returns a failure message if authy doesnt update' do
-      result = double(:response, ok?: false, message: 'mocked message')
-
-      allow(Authy::API).to receive(:register_user).and_return(result)
-
-      user.authy_enabled = true
-      user.mobile_phone = new_phone_number
-      user.save
-      expect(user.errors.full_messages.to_s).to include('Could not register authy user')
-    end
-
     it 'deletes authy user if mobile phone wiped out' do
       external_user.update!(authy_enabled: false, mobile_phone: nil)
       expect(external_user.reload.authy_id).to be_blank
-    end
-
-    it "doesn't allow invalid email", :vcr do
-      user = build :user, mobile_phone: phone_number, email: 'foo@', authy_enabled: true
-      user.save
-      expect(user.errors.full_messages.to_s).to include('Could not register authy user')
     end
   end
 

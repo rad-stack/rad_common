@@ -1,40 +1,142 @@
 ---
 http_interactions:
 - request:
-    method: get
-    uri: https://api.authy.com//protected/json/sms/1234567?force=true
+    method: post
+    uri: https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SID>/Verifications
     body:
       encoding: UTF-8
-      string: ''
+      string: Channel=sms&To=%2B1<TEST_MOBILE_PHONE_STRIPPED>
     headers:
       User-Agent:
-      - DeviseAuthy/2.3.0 - AuthyRuby/3.0.0 (x86_64-darwin20, Ruby 2.7.5)
+      - twilio-ruby/5.74.4 (darwin20 x86_64) Ruby/3.1.2
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
       Accept:
-      - "*/*"
-      Date:
-      - Tue, 12 Apr 2022 13:51:59 GMT
-      X-Authy-Api-Key:
-      - "<AUTHY_API_KEY>"
+      - application/json
+      Authorization:
+      - Basic QUM4MDNjYzQ4MWZmZTExYmFiMjY4ZmNmYjhmMjQ3ZGQ1OTo1MWQ0NDA3NzYzNzdiNzQ5MWFkNzBlNDc1MzI5MWQxYQ==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
-      code: 404
-      message: Not Found
+      code: 201
+      message: Created
     headers:
-      Server:
-      - nginx
       Date:
-      - Tue, 12 Apr 2022 13:51:59 GMT
+      - Mon, 06 Mar 2023 13:00:30 GMT
       Content-Type:
-      - application/json;charset=utf-8
+      - application/json; charset=utf-8
       Content-Length:
-      - '105'
+      - '960'
       Connection:
       - keep-alive
-      X-Content-Type-Options:
-      - nosniff
+      Twilio-Request-Id:
+      - RQb803aa0e8d45ebf193477a94427913b9
+      Twilio-Request-Duration:
+      - '0.125'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag
+      Access-Control-Allow-Credentials:
+      - 'true'
+      X-Powered-By:
+      - AT-5000
+      Twilio-Concurrent-Requests:
+      - '1'
+      X-Shenanigans:
+      - none
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - verify.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
     body:
       encoding: UTF-8
-      string: '{"message":"User not found.","success":false,"errors":{"message":"User
-        not found."},"error_code":"60026"}'
-  recorded_at: Tue, 12 Apr 2022 13:51:59 GMT
+      string: '{"status": "pending", "payee": null, "date_updated": "2023-03-06T13:00:30Z",
+        "send_code_attempts": [{"attempt_sid": "VL30a5b6aa9062f0fea349e5278ad7cc42",
+        "channel": "sms", "time": "2023-03-06T12:58:02.000Z"}, {"attempt_sid": "VL5c01786db2c8c097a281823e302c6f59",
+        "channel": "sms", "time": "2023-03-06T12:58:03.000Z"}, {"attempt_sid": "VLbfddb5718c5c7b3459289575aee314f2",
+        "channel": "sms", "time": "2023-03-06T13:00:29.000Z"}, {"attempt_sid": "VLb70178149e8023c10f58c9928a6cb227",
+        "channel": "sms", "time": "2023-03-06T13:00:30.775Z"}], "account_sid": "AC803cc481ffe11bab268fcfb8f247dd59",
+        "to": "+1<TEST_MOBILE_PHONE_STRIPPED>", "amount": null, "valid": false, "lookup":
+        {"carrier": null}, "url": "https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SID>/Verifications/VEa11e2812cd22ec07b71cc3e2ca48116e",
+        "sid": "VEa11e2812cd22ec07b71cc3e2ca48116e", "date_created": "2023-03-06T12:58:02Z",
+        "service_sid": "<TWILIO_ALT_VERIFY_SID>", "channel": "sms"}'
+  recorded_at: Mon, 06 Mar 2023 13:00:30 GMT
+- request:
+    method: post
+    uri: https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SID>/VerificationCheck
+    body:
+      encoding: UTF-8
+      string: Code=123456&To=%2B1<TEST_MOBILE_PHONE_STRIPPED>
+    headers:
+      User-Agent:
+      - twilio-ruby/5.74.4 (darwin20 x86_64) Ruby/3.1.2
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - application/json
+      Authorization:
+      - Basic QUM4MDNjYzQ4MWZmZTExYmFiMjY4ZmNmYjhmMjQ3ZGQ1OTo1MWQ0NDA3NzYzNzdiNzQ5MWFkNzBlNDc1MzI5MWQxYQ==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 06 Mar 2023 13:00:31 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '339'
+      Connection:
+      - keep-alive
+      Twilio-Request-Id:
+      - RQ7a88edb904d626344fb8c592c7923c7c
+      Twilio-Request-Duration:
+      - '0.025'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag
+      Access-Control-Allow-Credentials:
+      - 'true'
+      X-Powered-By:
+      - AT-5000
+      Twilio-Concurrent-Requests:
+      - '1'
+      X-Shenanigans:
+      - none
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - verify.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+    body:
+      encoding: UTF-8
+      string: '{"status": "pending", "payee": null, "date_updated": "2023-03-06T13:00:31Z",
+        "account_sid": "AC803cc481ffe11bab268fcfb8f247dd59", "to": "+1<TEST_MOBILE_PHONE_STRIPPED>",
+        "amount": null, "valid": false, "sid": "VEa11e2812cd22ec07b71cc3e2ca48116e",
+        "date_created": "2023-03-06T12:58:02Z", "service_sid": "<TWILIO_ALT_VERIFY_SID>",
+        "channel": "sms"}'
+  recorded_at: Mon, 06 Mar 2023 13:00:31 GMT
 recorded_with: VCR 6.1.0
