@@ -32,8 +32,7 @@ class RadSendgridStatusReceiver
   end
 
   def record_id
-    # legacy support for post_id, remove this eventually, see Task 41177
-    @content[:record_id].presence || @content[:post_id]
+    @content[:record_id]
   end
 
   def host_name

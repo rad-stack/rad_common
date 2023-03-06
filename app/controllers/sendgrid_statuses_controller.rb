@@ -19,8 +19,7 @@ class SendgridStatusesController < ApplicationController
   private
 
     def permitted_params(item)
-      # legacy support for post_id, remove this eventually, see Task 41177
-      item.permit(:email, :event, :reason, :record_id, :post_id, :host_name, :timestamp, :useragent, :url)
+      item.permit(:email, :event, :reason, :record_id, :host_name, :timestamp, :useragent, :url)
     end
 
     def content
