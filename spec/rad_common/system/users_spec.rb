@@ -490,7 +490,7 @@ RSpec.describe 'Users', type: :system do
       expect(page).to have_content 'Signed in successfully'
     end
 
-    xit 'does not allow user to login with invalid twilio verify token', :vcr do
+    it 'does not allow user to login with invalid twilio verify token', :vcr do
       visit new_user_session_path
 
       fill_in 'user_email', with: user.email

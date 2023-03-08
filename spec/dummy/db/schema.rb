@@ -375,6 +375,7 @@ ActiveRecord::Schema.define(version: 2023_02_22_162024) do
     t.boolean "twilio_verify_sms", default: true, null: false
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
+    t.string "twilio_totp_factor_sid"
     t.index ["authy_id"], name: "index_users_on_authy_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
