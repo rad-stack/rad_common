@@ -164,7 +164,8 @@ class UsersController < ApplicationController
     if current_user.twilio_totp_factor_sid.blank?
       new_verify = RadicalTwilio.setup_totp_service(current_user)
       if new_verify.status == 'unverified'
-        return render json: { qr_code: new_verify.binding['uri'], secret_code: new_verify.binding['secret'] }, status: :ok
+        return render json: { qr_code: new_verify.binding['uri'],
+                              secret_code: new_verify.binding['secret'] }, status: :ok
       end
     end
 

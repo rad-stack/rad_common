@@ -477,7 +477,7 @@ RSpec.describe 'Users', type: :system do
       user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
     end
 
-    xit 'allows user to login with authentication token', :vcr do
+    it 'allows user to login with authentication token', :vcr do
       allow(TwilioVerifyService).to receive(:verify_sms_token).and_return(double(status: 'approved'))
 
       visit new_user_session_path

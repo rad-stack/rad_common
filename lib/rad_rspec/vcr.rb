@@ -28,7 +28,9 @@ VCR.configure do |c|
   end
 
   if RadicalConfig.secret_config_item(:twilio_alt_verify_service_sid).present?
-    c.filter_sensitive_data('<TWILIO_ALT_VERIFY_SERVICE_SID>') { RadicalConfig.secret_config_item!(:twilio_alt_verify_service_sid) }
+    c.filter_sensitive_data('<TWILIO_ALT_VERIFY_SERVICE_SID>') do
+      RadicalConfig.secret_config_item!(:twilio_alt_verify_service_sid)
+    end
   end
 
   c.filter_sensitive_data('<SMARTY_AUTH_ID>') { RadicalConfig.smarty_auth_id! } if RadicalConfig.smarty_auth_id.present?
