@@ -25,7 +25,7 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Wed, 08 Mar 2023 18:59:22 GMT
+      - Wed, 08 Mar 2023 19:14:02 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -33,9 +33,9 @@ http_interactions:
       Connection:
       - keep-alive
       Twilio-Request-Id:
-      - RQe673d2a248437cd69022c779808fc936
+      - RQ999b437e38dd8d697d8efaedb97d7cbc
       Twilio-Request-Duration:
-      - '0.111'
+      - '0.124'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
@@ -61,12 +61,12 @@ http_interactions:
       - max-age=31536000
     body:
       encoding: UTF-8
-      string: '{"status": "pending", "payee": null, "date_updated": "2023-03-08T18:59:22Z",
-        "send_code_attempts": [{"attempt_sid": "VL7e2de506eecf0eda77666e2ea32ac681",
-        "channel": "sms", "time": "2023-03-08T18:59:22.156Z"}], "account_sid": "AC803cc481ffe11bab268fcfb8f247dd59",
+      string: '{"status": "pending", "payee": null, "date_updated": "2023-03-08T19:14:02Z",
+        "send_code_attempts": [{"attempt_sid": "VL4d3593b144a9394d33233e0ba0997805",
+        "channel": "sms", "time": "2023-03-08T19:14:02.071Z"}], "account_sid": "AC803cc481ffe11bab268fcfb8f247dd59",
         "to": "+1<TEST_MOBILE_PHONE_STRIPPED>", "amount": null, "valid": false, "lookup":
-        {"carrier": null}, "url": "https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications/VE9202df427ce4951d5b83185611217123",
-        "sid": "VE9202df427ce4951d5b83185611217123", "date_created": "2023-03-08T18:59:22Z",
+        {"carrier": null}, "url": "https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications/VE2c92ae893efed26957c4158a5c25b5ac",
+        "sid": "VE2c92ae893efed26957c4158a5c25b5ac", "date_created": "2023-03-08T19:14:02Z",
         "service_sid": "<TWILIO_ALT_VERIFY_SERVICE_SID>", "channel": "sms"}'
-  recorded_at: Wed, 08 Mar 2023 18:59:22 GMT
+  recorded_at: Wed, 08 Mar 2023 19:14:02 GMT
 recorded_with: VCR 6.1.0
