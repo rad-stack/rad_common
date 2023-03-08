@@ -3,7 +3,7 @@
   .row
     .col-lg-6
       = hidden_field_tag :"#{resource_name}_id", @resource.id
-      = text_field_tag :token, '', autocomplete: :off, id: 'authy-token', autofocus: true
+      = text_field_tag :token, '', autocomplete: :off, id: 'twilio-verify-token', autofocus: true
       = submit_tag I18n.t('submit_token', scope: 'devise'), class: 'btn btn-primary btn-lg'
 
       - if @resource.authy_sms?
@@ -11,4 +11,4 @@
 
   %label
     = check_box_tag :remember_device
-    %span Remember this device for #{distance_of_time_in_words(Devise.authy_remember_device)}
+    %span Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}

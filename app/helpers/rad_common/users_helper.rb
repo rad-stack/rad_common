@@ -141,7 +141,7 @@ module RadCommon
     end
 
     def user_reset_authy_action(user)
-      return unless RadicalConfig.authy_enabled? && policy(user).update? && user.authy_enabled?
+      return unless RadicalConfig.authy_enabled? && policy(user).update? && user.twilio_verify_enabled?
 
       confirm = "This will reset the user's two factor authentication configuration if they are having problems. " \
                 'Are you sure?'

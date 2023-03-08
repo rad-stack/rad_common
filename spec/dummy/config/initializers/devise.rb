@@ -5,7 +5,7 @@
 Devise.setup do |config|
   # ==> Devise Authy Authentication Extension
   # How long should the user's device be remembered for.
-  config.authy_remember_device = 7.days
+  config.twilio_verify_remember_device = 7.days
 
   # Should Authy OneTouch be enabled?
   # config.authy_enable_onetouch = false

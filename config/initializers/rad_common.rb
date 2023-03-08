@@ -50,11 +50,6 @@ Devise.setup do |config|
   config.mailer = 'RadbearDeviseMailer'
 end
 
-if RadicalConfig.authy_enabled?
-  Authy.api_key = RadicalConfig.authy_api_key!
-  Authy.api_uri = 'https://api.authy.com/'
-end
-
 Audited.current_user_method = :true_user
 Audited.ignored_attributes += ['address_changes']
 

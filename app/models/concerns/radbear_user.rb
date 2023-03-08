@@ -202,8 +202,8 @@ module RadbearUser
   end
 
   def reset_authy!
-    update! authy_enabled: false, authy_id: nil
-    update! authy_enabled: true
+    update! twilio_verify_enabled: false, authy_id: nil
+    update! twilio_verify_enabled: true
   end
 
   private
@@ -264,7 +264,7 @@ module RadbearUser
     def validate_authy
       return unless RadicalConfig.authy_enabled?
 
-      unless authy_enabled?
+      unless twilio_verify_enabled?
         errors.add(:base, 'user is not valid for two factor authentication') if authy_id.present?
         return
       end
@@ -283,38 +283,10 @@ module RadbearUser
     end
 
     def maybe_update_authy
-      return unless RadicalConfig.authy_enabled? && (authy_enabled_changed? || mobile_phone_changed?)
+      return unless RadicalConfig.authy_enabled? && (twilio_verify_enabled_changed? || mobile_phone_changed?)
+      return unless twilio_verify_enabled? && mobile_phone.present? && email.present?
 
-      # delete the authy user if it exists
-      if authy_id.present?
-        response = Authy::API.user_status(id: authy_id)
-
-        if response.ok?
-          response = Authy::API.delete_user(id: authy_id)
-
-          if response.ok?
-            self.authy_id = nil
-          else
-            errors.add(:base, "Could not remove authy user: #{response.message}")
-            return
-          end
-        else
-          self.authy_id = nil
-        end
-      end
-
-      return unless authy_enabled? && mobile_phone.present? && email.present?
-
-      # create the authy user if applicable
-      response = Authy::API.register_user(email: email, country_code: '1', cellphone: mobile_phone)
-
-      if response.ok?
-        self.authy_id = response.id
-      elsif response.respond_to?(:message)
-        errors.add(:base, "Could not register authy user: #{response.message}")
-      else
-        errors.add(:base, "Could not register authy user: #{response.errors}")
-      end
+      self.authy_id = 'foo'
     end
 
     def notify_user_approved

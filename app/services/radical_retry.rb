@@ -2,10 +2,10 @@ class RadicalRetry
   # do not add Timeout::Error, I think this is what is used in the rake session stuff and might conflict, dunno
   # if we find we need to add the above, we can allow passing an exception to exclude to perform_request
 
-  RESCUABLE_ERRORS = [Net::OpenTimeout, OpenURI::HTTPError, HTTPClient::ConnectTimeoutError, Errno::EPIPE, SocketError,
-                      OpenSSL::SSL::SSLError, Errno::ENOENT, Errno::ECONNRESET, Net::ReadTimeout, Errno::ECONNREFUSED,
-                      ActiveStorage::FileNotFoundError, HTTPClient::ReceiveTimeoutError,
-                      HTTPClient::SendTimeoutError, RadicalSendGridError, EOFError, Twilio::REST::TwilioError].freeze
+  RESCUABLE_ERRORS = [Net::OpenTimeout, OpenURI::HTTPError, Errno::EPIPE, SocketError, OpenSSL::SSL::SSLError,
+                      Errno::ENOENT, Errno::ECONNRESET, Net::ReadTimeout, Errno::ECONNREFUSED,
+                      ActiveStorage::FileNotFoundError, RadicalSendGridError, EOFError,
+                      Twilio::REST::TwilioError].freeze
 
   class << self
     def perform_request(no_delay: false, retry_count: 5, additional_errors: [], raise_original: false, &block)

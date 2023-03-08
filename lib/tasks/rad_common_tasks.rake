@@ -17,9 +17,9 @@ namespace :rad_common do
 
   task redo_authy: :environment do
     Timeout.timeout(1.hour) do
-      User.where(authy_enabled: true).find_each do |user|
-        user.update!(authy_enabled: false)
-        user.update!(authy_enabled: true)
+      User.where(twilio_verify_enabled: true).find_each do |user|
+        user.update!(twilio_verify_enabled: false)
+        user.update!(twilio_verify_enabled: true)
         sleep 2 # avoid DDOS throttling
       end
     end
