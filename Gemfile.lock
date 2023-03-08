@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/jayywolff/twilio-verify-devise.git
-  revision: 932689e611f742546995dbb067197ad98aacb2d4
+  revision: 100fe38b039916b679a2259fba39216be141cba4
   branch: authy-to-twilio-verify
   specs:
     devise-twilio-verify (1.0.0)
@@ -126,7 +126,7 @@ GEM
       railties (>= 5.2)
       warden
     aws-eventstream (1.2.0)
-    aws-partitions (1.719.0)
+    aws-partitions (1.722.0)
     aws-sdk-core (3.170.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -252,8 +252,8 @@ GEM
     mini_magick (4.12.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.1)
-    minitest (5.17.0)
-    msgpack (1.6.0)
+    minitest (5.18.0)
+    msgpack (1.6.1)
     net-imap (0.3.4)
       date
       net-protocol
@@ -293,7 +293,7 @@ GEM
     pundit (2.3.0)
       activesupport (>= 3.0.0)
     racc (1.6.2)
-    rack (2.2.6.2)
+    rack (2.2.6.3)
     rack-proxy (0.7.6)
       rack
     rack-test (2.0.2)
@@ -370,10 +370,10 @@ GEM
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
-    rubocop-rspec (2.18.1)
+    rubocop-rspec (2.19.0)
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
-    ruby-progressbar (1.12.0)
+    ruby-progressbar (1.13.0)
     ruby-vips (2.1.4)
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
@@ -406,7 +406,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
-    smartystreets_ruby_sdk (5.14.18)
+    smartystreets_ruby_sdk (5.14.19)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)

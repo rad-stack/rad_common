@@ -12,7 +12,7 @@ default: &default
   start_route: onboardings
   user_clients: true
   user_profiles: true
-  authy_internal_only: true
+  twilio_verify_internal_only: true
   shared_database: false
   canadian_addresses: false
   show_help_menu: true
@@ -102,10 +102,10 @@ development:
   <<: *default
 
   host_name: localhost:3000
-  authy_enabled: false
+  twilio_verify_enabled: false
 
 test:
   <<: *default
 
   host_name: localhost:3000
-  authy_enabled: true
+  twilio_verify_enabled: true

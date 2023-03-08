@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[show edit update destroy resend_invitation confirm
-                                    reset_authy test_email test_sms reactivate]
+                                    test_email test_sms reactivate]
   before_action :remove_blank_passwords, only: :update
 
   def index
@@ -136,12 +136,6 @@ class UsersController < ApplicationController
     redirect_to @user
   end
 
-  def reset_authy
-    @user.reset_authy!
-    flash[:success] = 'User was successfully reset.'
-    redirect_to @user
-  end
-
   def test_email
     @user.test_email!
     flash[:success] = 'A test email was sent to the user.'
@@ -164,6 +158,34 @@ class UsersController < ApplicationController
     redirect_to @user
   end
 
+  def setup_totp
+    authorize current_user
+
+    if current_user.twilio_totp_factor_sid.blank?
+      new_verify = RadicalTwilio.setup_totp_service(current_user)
+      if new_verify.status == 'unverified'
+        return render json: { qr_code: new_verify.binding['uri'], secret_code: new_verify.binding['secret'] }, status: :ok
+      end
+    end
+
+    render json: { message: 'Cannot setup authenticator app.' }, status: :unprocessable_entity
+  end
+
+  def register_totp
+    authorize current_user
+
+    if current_user.twilio_totp_factor_sid.present?
+      new_verify = RadicalTwilio.register_totp_service(current_user, params[:token])
+      if new_verify.status == 'verified'
+        render json: { message: 'Successfully registered 2FA.' }, status: :ok
+      else
+        render json: { message: 'Invalid token, please try again.' }, status: :unprocessable_entity
+      end
+    else
+      render json: { message: 'Cannot setup authenticator app.' }, status: :unprocessable_entity
+    end
+  end
+
   private
 
     def set_user
@@ -180,7 +202,7 @@ class UsersController < ApplicationController
 
     def base_params
       %i[email user_status_id first_name last_name mobile_phone last_activity_at password password_confirmation external
-         timezone avatar authy_sms]
+         timezone avatar twilio_verify_sms]
     end
 
     def permitted_params

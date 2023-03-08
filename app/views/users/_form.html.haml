@@ -13,9 +13,9 @@
       .col-lg-6= f.input :timezone, as: :time_zone, priority: timezone_us_filter
     .row
       - if RadicalConfig.external_users?
-        .col-lg-2= f.input :external
-      - if RadicalConfig.authy_enabled?
-        .col-lg-2= f.input :authy_sms, tooltip: 'Send SMS message with code for Authy Two Factor Authentication'
+        .col-lg-3= f.input :external
+      - if RadicalConfig.twilio_verify_enabled?
+        .col-lg-3= f.input :twilio_verify_sms, tooltip: 'Send SMS message with code for Two Factor Authentication'
     .row
       -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
       .col-lg-6= f.input :password, autocomplete: 'off', input_html: { autocomplete: 'new-password' }

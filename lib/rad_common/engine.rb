@@ -10,6 +10,7 @@ module RadCommon
     require 'authtrail'
     require 'csv'
     require 'devise'
+    require 'devise-twilio-verify'
     require 'devise-security'
     require 'devise_invitable'
     require 'faker'

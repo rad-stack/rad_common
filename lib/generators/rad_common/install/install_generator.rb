@@ -48,8 +48,8 @@ module RadCommon
         directory '../../../../../spec/dummy/bin/', 'bin/'
 
         # locales
-        copy_file '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
-                 'config/locales/devise.authy.en.yml'
+        copy_file '../../../../../spec/dummy/config/locales/devise.twilio_verify.en.yml',
+                  'config/locales/devise.twilio_verify.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/devise_invitable.en.yml',
                   'config/locales/devise_invitable.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/devise.en.yml', 'config/locales/devise.en.yml'

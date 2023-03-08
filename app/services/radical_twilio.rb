@@ -15,6 +15,26 @@ class RadicalTwilio
     client.calls.create from: from_number, to: to, url: URI::Parser.new.escape(url)
   end
 
+  def self.send_verify_sms(mobile_phone)
+    response = RadicalRetry.perform_request(retry_count: 2, raise_original: true) do
+      TwilioVerifyService.send_sms_token(mobile_phone)
+    end
+
+    response.status == 'pending'
+  end
+
+  def self.setup_totp_service(user)
+    RadicalRetry.perform_request(retry_count: 2, raise_original: true) do
+      TwilioVerifyService.setup_totp_service(user)
+    end
+  end
+
+  def self.register_totp_service(user, token)
+    RadicalRetry.perform_request(retry_count: 2, raise_original: true) do
+      TwilioVerifyService.register_totp_service(user, token)
+    end
+  end
+
   def twilio_enabled?
     RadicalConfig.twilio_enabled?
   end

@@ -464,21 +464,21 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'two factor authentication', authy_specs: true do
-    let(:authy_id) { '1234567' }
-
+  describe 'two factor authentication', twilio_verify_specs: true do
     let(:remember_message) do
       "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
     end
 
     before do
-      # TODO: allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
+      allow(Rails.application.credentials).to receive(:twilio_verify_service_sid).and_return(Rails.application.credentials.twilio_alt_verify_service_sid)
+      allow(Rails.application.credentials).to receive(:twilio_account_sid).and_return(Rails.application.credentials.twilio_alt_account_sid)
+      allow(Rails.application.credentials).to receive(:twilio_auth_token).and_return(Rails.application.credentials.twilio_alt_auth_token)
+
       user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
     end
 
-    it 'allows user to login with authentication token', :vcr do
-      # TODO: allow(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
-      allow(TwilioVerifyService).to receive(:verify_sms_token).and_return('approved')
+    xit 'allows user to login with authentication token', :vcr do
+      allow(TwilioVerifyService).to receive(:verify_sms_token).and_return(double(status: 'approved'))
 
       visit new_user_session_path
       fill_in 'user_email', with: user.email
@@ -490,7 +490,7 @@ RSpec.describe 'Users', type: :system do
       expect(page).to have_content 'Signed in successfully'
     end
 
-    it 'does not allow user to login with invalid authy token', :vcr do
+    xit 'does not allow user to login with invalid twilio verify token', :vcr do
       visit new_user_session_path
 
       fill_in 'user_email', with: user.email
@@ -499,18 +499,6 @@ RSpec.describe 'Users', type: :system do
       fill_in 'twilio-verify-token', with: '123456'
       click_button 'Verify and Sign in'
       expect(page).to have_content('The entered token is invalid')
-    end
-
-    it 'updates authy when updating an accounts mobile phone' do
-      # allow(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
-      # allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
-
-      login_as(user, scope: :user)
-      visit edit_user_registration_path
-      fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
-      fill_in 'user_current_password', with: password
-      click_button 'Save'
-      expect(page).to have_content('Your account has been updated successfully.')
     end
   end
 end

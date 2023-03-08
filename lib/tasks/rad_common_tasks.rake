@@ -15,16 +15,6 @@ namespace :rad_common do
     end
   end
 
-  task redo_authy: :environment do
-    Timeout.timeout(1.hour) do
-      User.where(twilio_verify_enabled: true).find_each do |user|
-        user.update!(twilio_verify_enabled: false)
-        user.update!(twilio_verify_enabled: true)
-        sleep 2 # avoid DDOS throttling
-      end
-    end
-  end
-
   task check_database_use: :environment do
     Timeout.timeout(30.minutes) do
       DatabaseUseChecker.generate_report

@@ -66,9 +66,8 @@ module RadbearUser
 
     validate :validate_email_address
     validate :validate_sms_mobile_phone, on: :update
-    validate :validate_authy_mobile_phone
+    validate :validate_2fa_mobile_phone
     validate :password_excludes_name
-    validate :validate_authy
     validates :security_roles, presence: true, if: :active?
 
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
@@ -81,7 +80,6 @@ module RadbearUser
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
-    before_validation :maybe_update_authy
     after_save :notify_user_approved
 
     after_invitation_accepted :notify_user_accepted
@@ -201,11 +199,6 @@ module RadbearUser
     update(last_activity_at: nil)
   end
 
-  def reset_authy!
-    update! twilio_verify_enabled: false, authy_id: nil
-    update! twilio_verify_enabled: true
-  end
-
   private
 
     def check_defaults
@@ -246,9 +239,9 @@ module RadbearUser
       errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
     end
 
-    def validate_authy_mobile_phone
-      return if !RadicalConfig.authy_enabled? || mobile_phone.present?
-      return if external? && RadicalConfig.authy_internal_only?
+    def validate_2fa_mobile_phone
+      return if !RadicalConfig.twilio_verify_enabled? || mobile_phone.present?
+      return if external? && RadicalConfig.twilio_verify_internal_only?
 
       errors.add(:mobile_phone, 'is required for two factor authentication')
     end
@@ -261,32 +254,8 @@ module RadbearUser
       errors.add(:password, 'cannot contain your name')
     end
 
-    def validate_authy
-      return unless RadicalConfig.authy_enabled?
-
-      unless twilio_verify_enabled?
-        errors.add(:base, 'user is not valid for two factor authentication') if authy_id.present?
-        return
-      end
-
-      if authy_id.present? && mobile_phone.present?
-        # ok
-      elsif authy_id.blank? && mobile_phone.blank?
-        # ok
-      else
-        errors.add(:base, 'user is not valid for two factor authentication')
-      end
-    end
-
     def set_timezone
       self.timezone = Company.main.timezone if new_record? && timezone.blank?
-    end
-
-    def maybe_update_authy
-      return unless RadicalConfig.authy_enabled? && (twilio_verify_enabled_changed? || mobile_phone_changed?)
-      return unless twilio_verify_enabled? && mobile_phone.present? && email.present?
-
-      self.authy_id = 'foo'
     end
 
     def notify_user_approved

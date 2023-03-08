@@ -1,4 +1,4 @@
-= verify_authy_form do
+= verify_twilio_verify_form do
   %legend= I18n.t('submit_token_title', scope: 'devise')
   .row
     .col-lg-6
@@ -6,8 +6,8 @@
       = text_field_tag :token, '', autocomplete: :off, id: 'twilio-verify-token', autofocus: true
       = submit_tag I18n.t('submit_token', scope: 'devise'), class: 'btn btn-primary btn-lg'
 
-      - if @resource.authy_sms?
-        = authy_request_sms_link
+      - if @resource.twilio_verify_sms?
+        = twilio_verify_request_sms_link
 
   %label
     = check_box_tag :remember_device

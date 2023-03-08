@@ -14,7 +14,7 @@ FactoryBot.define do
 
     trait :mobile do
       phone_number do
-        if RadicalTwilio.new.twilio_enabled? || RadicalConfig.authy_enabled?
+        if RadicalTwilio.new.twilio_enabled? || RadicalConfig.twilio_verify_enabled?
           RadicalConfig.test_mobile_phone!
         else
           Faker::PhoneNumber.cell_phone
