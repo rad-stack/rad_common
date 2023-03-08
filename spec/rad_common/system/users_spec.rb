@@ -470,9 +470,17 @@ RSpec.describe 'Users', type: :system do
     end
 
     before do
-      allow(Rails.application.credentials).to receive(:twilio_verify_service_sid).and_return(Rails.application.credentials.twilio_alt_verify_service_sid)
-      allow(Rails.application.credentials).to receive(:twilio_account_sid).and_return(Rails.application.credentials.twilio_alt_account_sid)
-      allow(Rails.application.credentials).to receive(:twilio_auth_token).and_return(Rails.application.credentials.twilio_alt_auth_token)
+      allow(Rails.application.credentials)
+        .to receive(:twilio_verify_service_sid)
+        .and_return(Rails.application.credentials.twilio_alt_verify_service_sid)
+
+      allow(Rails.application.credentials)
+        .to receive(:twilio_account_sid)
+        .and_return(Rails.application.credentials.twilio_alt_account_sid)
+
+      allow(Rails.application.credentials)
+        .to receive(:twilio_auth_token)
+        .and_return(Rails.application.credentials.twilio_alt_auth_token)
 
       user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
     end
