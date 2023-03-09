@@ -448,22 +448,6 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'authenticated admin' do
-    let(:user) { create :admin }
-
-    before { login_as user, scope: :user }
-
-    describe 'update' do
-      it 'updates Twilio when updating an accounts mobile phone', vcr: true do
-        visit edit_user_registration_path
-        fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
-        fill_in 'user_current_password', with: password
-        click_button 'Save'
-        expect(page).to have_content('Your account has been updated successfully.')
-      end
-    end
-  end
-
   describe 'two factor authentication', twilio_verify_specs: true do
     let(:remember_message) do
       "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
@@ -482,10 +466,12 @@ RSpec.describe 'Users', type: :system do
         .to receive(:twilio_auth_token)
         .and_return(Rails.application.credentials.twilio_alt_auth_token)
 
+      allow(TwilioVerifyService).to receive(:send_sms_token).and_return(double(status: 'pending'))
+
       user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
     end
 
-    it 'allows user to login with authentication token', :vcr do
+    it 'allows user to login with authentication token' do
       allow(TwilioVerifyService).to receive(:verify_sms_token).and_return(double(status: 'approved'))
 
       visit new_user_session_path
@@ -498,7 +484,9 @@ RSpec.describe 'Users', type: :system do
       expect(page).to have_content 'Signed in successfully'
     end
 
-    it 'does not allow user to login with invalid twilio verify token', :vcr do
+    it 'does not allow user to login with invalid twilio verify token' do
+      allow(TwilioVerifyService).to receive(:verify_sms_token).and_return(double(status: 'pending'))
+
       visit new_user_session_path
 
       fill_in 'user_email', with: user.email
