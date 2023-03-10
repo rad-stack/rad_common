@@ -199,6 +199,8 @@ module RadbearUser
     update(last_activity_at: nil)
   end
 
+  def twilio_totp_factor_sid; end # TODO: this should be a db attribute when we enable the TOTP feature
+
   private
 
     def check_defaults
