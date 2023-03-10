@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm
-                                    test_email test_sms reactivate]
+  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm test_email test_sms reactivate]
   before_action :remove_blank_passwords, only: :update
 
   def index

@@ -52,6 +52,7 @@ Rails/SkipsModelValidations:
     - 'spec/**/*_spec.rb'
     - 'app/models/concerns/contactable.rb'
     - 'app/services/smarty_address.rb'
+    - 'app/services/heroku_commands.rb'
     - 'app/services/seeder.rb'
     - 'lib/tasks/temp.rake'
 
