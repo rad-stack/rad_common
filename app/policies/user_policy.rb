@@ -21,8 +21,6 @@ class UserPolicy < ApplicationPolicy
   alias test_email? update?
   alias test_sms? update?
   alias reactivate? update?
-  alias setup_totp? update?
-  alias register_totp? update?
 
   def impersonate?
     return false unless user.permission?(:admin) && RadicalConfig.impersonate?

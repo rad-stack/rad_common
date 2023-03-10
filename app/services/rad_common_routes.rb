@@ -21,8 +21,6 @@ module RadCommonRoutes
             put :reactivate
             put :test_email
             put :test_sms
-            get :setup_totp
-            put :register_totp
           end
 
           resources :user_clients, only: :new

@@ -203,6 +203,7 @@ end
         apply_migration '20221108114020_convert_audited_changes_text_to_json.rb'
         apply_migration '20221221134935_remove_legacy_audited_changes.rb'
         apply_migration '20230222162024_migrate_authy_to_twilio_verify.rb'
+        apply_migration '20230310161506_more_twilio_verify.rb'
       end
 
       def self.next_migration_number(path)
