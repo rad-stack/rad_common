@@ -23,10 +23,14 @@ VCR.configure do |c|
     end
   end
 
-  c.filter_sensitive_data('<AUTHY_API_KEY>') { RadicalConfig.authy_api_key! } if RadicalConfig.authy_api_key.present?
-
   if RadicalConfig.sendgrid_api_key.present?
     c.filter_sensitive_data('<SENDGRID_API_KEY>') { RadicalConfig.sendgrid_api_key! }
+  end
+
+  if RadicalConfig.secret_config_item(:twilio_alt_verify_service_sid).present?
+    c.filter_sensitive_data('<TWILIO_ALT_VERIFY_SERVICE_SID>') do
+      RadicalConfig.secret_config_item!(:twilio_alt_verify_service_sid)
+    end
   end
 
   c.filter_sensitive_data('<SMARTY_AUTH_ID>') { RadicalConfig.smarty_auth_id! } if RadicalConfig.smarty_auth_id.present?

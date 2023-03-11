@@ -10,7 +10,7 @@ FactoryBot.define do
     association :user_status, factory: %i[user_status active]
     do_not_notify_approved { true }
     security_roles { [create(:security_role)] }
-    authy_enabled { false }
+    twilio_verify_enabled { false }
     timezone { 'Eastern Time (US & Canada)' }
 
     trait :external do

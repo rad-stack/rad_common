@@ -15,6 +15,14 @@ class RadicalTwilio
     client.calls.create from: from_number, to: to, url: URI::Parser.new.escape(url)
   end
 
+  def self.send_verify_sms(mobile_phone)
+    response = RadicalRetry.perform_request(retry_count: 2, raise_original: true) do
+      TwilioVerifyService.send_sms_token(mobile_phone)
+    end
+
+    response.status == 'pending'
+  end
+
   def twilio_enabled?
     RadicalConfig.twilio_enabled?
   end

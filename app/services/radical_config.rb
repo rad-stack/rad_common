@@ -148,6 +148,10 @@ class RadicalConfig
       secret_config_item! :twilio_auth_token
     end
 
+    def twilio_verify_service_sid!
+      secret_config_item! :twilio_verify_service_sid
+    end
+
     def seeded_users!
       raise 'missing seeded_users config' if Rails.application.credentials.seeded_users.blank?
 
@@ -178,12 +182,12 @@ class RadicalConfig
       boolean_config_item! :use_avatar
     end
 
-    def authy_enabled?
-      boolean_config_item! :authy_enabled
+    def twilio_verify_enabled?
+      boolean_config_item! :twilio_verify_enabled
     end
 
-    def authy_internal_only?
-      boolean_config_item! :authy_internal_only
+    def twilio_verify_internal_only?
+      boolean_config_item! :twilio_verify_internal_only
     end
 
     def external_users?
@@ -252,16 +256,6 @@ class RadicalConfig
 
     def secure_sentry?
       boolean_config_item! :secure_sentry
-    end
-
-    def authy_api_key!
-      return unless authy_enabled?
-
-      secret_config_item! :authy_api_key
-    end
-
-    def authy_api_key
-      secret_config_item :authy_api_key
     end
 
     def s3_access_key_id!
@@ -387,7 +381,7 @@ class RadicalConfig
 
     def check_validity!
       check_aws!
-      check_authy!
+      check_twilio_verify!
       check_smarty!
     end
 
@@ -407,10 +401,10 @@ class RadicalConfig
         raise 'Missing AWS S3 credentials'
       end
 
-      def check_authy!
-        return unless authy_enabled? && !twilio_enabled?
+      def check_twilio_verify!
+        return unless twilio_verify_enabled? && !twilio_enabled?
 
-        raise 'Twilio must be enabled to provide mobile phone # validation when authy is enabled'
+        raise 'Twilio must be enabled to provide mobile phone # validation when two factor authentication is enabled'
       end
 
       def check_smarty!

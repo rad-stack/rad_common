@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/jayywolff/twilio-verify-devise.git
+  revision: 100fe38b039916b679a2259fba39216be141cba4
+  branch: authy-to-twilio-verify
+  specs:
+    devise-twilio-verify (1.0.0)
+      devise (>= 4.0.0)
+      twilio-ruby (~> 5.74)
+
 PATH
   remote: .
   specs:
@@ -5,11 +14,9 @@ PATH
       active_storage_validations
       audited
       authtrail
-      authy (< 3.0.0)
       aws-sdk-s3
       bootstrap4-kaminari-views
       devise
-      devise-authy
       devise-security
       devise_invitable
       factory_bot_rails
@@ -118,8 +125,6 @@ GEM
       activerecord (>= 5.2)
       railties (>= 5.2)
       warden
-    authy (2.7.5)
-      httpclient (>= 2.5.3.3)
     aws-eventstream (1.2.0)
     aws-partitions (1.724.0)
     aws-sdk-core (3.170.0)
@@ -170,9 +175,6 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    devise-authy (2.2.1)
-      authy (>= 2.7.5)
-      devise (>= 4.0.0)
     devise-security (0.17.0)
       devise (>= 4.3.0)
     devise_invitable (2.0.7)
@@ -213,7 +215,6 @@ GEM
     hashdiff (1.0.1)
     hashids (1.0.6)
     htmlentities (4.3.4)
-    httpclient (2.8.3)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     image_processing (1.12.2)
@@ -464,6 +465,7 @@ DEPENDENCIES
   bootsnap
   capybara
   capybara-selenium
+  devise-twilio-verify!
   haml_lint
   listen
   parallel_tests

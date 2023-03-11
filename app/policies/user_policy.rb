@@ -18,7 +18,6 @@ class UserPolicy < ApplicationPolicy
   alias destroy? create?
   alias resend_invitation? create?
   alias confirm? update?
-  alias reset_authy? update?
   alias test_email? update?
   alias test_sms? update?
   alias reactivate? update?

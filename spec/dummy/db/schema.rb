@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_21_134935) do
+ActiveRecord::Schema.define(version: 2023_03_10_161506) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -354,9 +354,8 @@ ActiveRecord::Schema.define(version: 2022_12_21_134935) do
     t.string "timezone", limit: 255, null: false
     t.string "global_search_default", limit: 255
     t.integer "user_status_id", null: false
-    t.string "authy_id"
-    t.datetime "last_sign_in_with_authy"
-    t.boolean "authy_enabled", default: true, null: false
+    t.datetime "last_sign_in_with_twilio_verify"
+    t.boolean "twilio_verify_enabled", default: true, null: false
     t.string "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
@@ -372,10 +371,8 @@ ActiveRecord::Schema.define(version: 2022_12_21_134935) do
     t.datetime "last_activity_at"
     t.datetime "expired_at"
     t.jsonb "filter_defaults"
-    t.boolean "authy_sms", default: true, null: false
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
-    t.index ["authy_id"], name: "index_users_on_authy_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"

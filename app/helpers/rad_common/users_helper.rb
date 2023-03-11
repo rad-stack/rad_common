@@ -2,7 +2,6 @@ module RadCommon
   module UsersHelper
     def user_show_data(user)
       items = %i[email mobile_phone user_status timezone sign_in_count invitation_accepted_at invited_by]
-      items += %i[authy_id authy_sms] if RadicalConfig.authy_enabled?
       items += %i[current_sign_in_ip current_sign_in_at confirmed_at confirmation_sent_at unconfirmed_email]
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
 
@@ -49,7 +48,6 @@ module RadCommon
       [user_confirm_action(user),
        user_resend_action(user),
        user_profile_action(user),
-       user_reset_authy_action(user),
        user_test_email_action(user),
        user_test_sms_action(user),
        impersonate_action(user)]
@@ -140,19 +138,6 @@ module RadCommon
               data: { confirm: 'Are you sure?' }
     end
 
-    def user_reset_authy_action(user)
-      return unless RadicalConfig.authy_enabled? && policy(user).update? && user.authy_enabled?
-
-      confirm = "This will reset the user's two factor authentication configuration if they are having problems. " \
-                'Are you sure?'
-
-      link_to icon(:refresh, 'Reset Two Factor'),
-              reset_authy_user_path(user),
-              method: :put,
-              data: { confirm: confirm },
-              class: 'btn btn-warning btn-sm'
-    end
-
     def user_test_email_action(user)
       return unless policy(user).test_email?
 
@@ -196,7 +181,7 @@ module RadCommon
     end
 
     def require_mobile_phone?
-      RadicalConfig.authy_enabled? && !RadicalConfig.authy_internal_only?
+      RadicalConfig.twilio_verify_enabled? && !RadicalConfig.twilio_verify_internal_only?
     end
 
     def clients_to_add_to_user(user)

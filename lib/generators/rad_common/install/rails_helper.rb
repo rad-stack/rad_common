@@ -121,7 +121,7 @@ RSpec.configure do |config|
 
   SpecSupport.hooks(config, chrome_driver)
 
-  config.filter_run_excluding(authy_specs: true) unless RadicalConfig.authy_enabled?
+  config.filter_run_excluding(twilio_verify_specs: true) unless RadicalConfig.twilio_verify_enabled?
   config.filter_run_excluding(impersonate_specs: true) unless RadicalConfig.impersonate?
   config.filter_run_excluding(invite_specs: true) if RadicalConfig.disable_invite?
   config.filter_run_excluding(sign_up_specs: true) if RadicalConfig.disable_sign_up?

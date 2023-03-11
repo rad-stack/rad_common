@@ -2,12 +2,12 @@ module RadCommonRoutes
   def self.extended(router)
     router.instance_exec do
       devise_controllers = { confirmations: 'users/confirmations',
-                             devise_authy: 'users/devise_authy',
+                             devise_twilio_verify: 'users/devise_twilio_verify',
                              invitations: 'users/invitations' }
 
-      devise_paths = { verify_authy: '/verify-token',
-                       enable_authy: '/enable-two-factor',
-                       verify_authy_installation: '/verify-installation' }
+      devise_paths = { verify_twilio_verify: '/verify-token',
+                       enable_twilio_verify: '/enable-two-factor',
+                       verify_twilio_verify_installation: '/verify-installation' }
 
       devise_for :users, path: 'auth', controllers: devise_controllers, path_names: devise_paths
 
@@ -18,7 +18,6 @@ module RadCommonRoutes
           member do
             put :resend_invitation
             put :confirm
-            put :reset_authy
             put :reactivate
             put :test_email
             put :test_sms
