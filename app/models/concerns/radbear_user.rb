@@ -28,7 +28,7 @@ module RadbearUser
                               inverse_of: :to_user
 
     has_one_attached :avatar
-    
+
     enum language: { English: 'en', Spanish: 'es' }
 
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
