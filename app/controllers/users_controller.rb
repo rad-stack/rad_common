@@ -173,7 +173,7 @@ class UsersController < ApplicationController
 
     def base_params
       %i[email user_status_id first_name last_name mobile_phone last_activity_at password password_confirmation external
-         timezone avatar]
+         timezone avatar language]
     end
 
     def permitted_params
