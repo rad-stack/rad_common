@@ -10,7 +10,8 @@
       .col-lg-6= f.input :email, disabled: !@user.new_record?
     .row
       .col-lg-6= f.association :user_status, collection: UserStatus.by_id
-      .col-lg-3= f.input :language, collection: options_for_enum(User, :language)
+      - if RadicalConfig.switch_languages?
+        .col-lg-3= f.input :language, collection: options_for_enum(User, :language)
       .col-lg-3= f.input :timezone, as: :time_zone, priority: timezone_us_filter
     .row
       - if RadicalConfig.external_users?
