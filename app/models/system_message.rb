@@ -56,9 +56,9 @@ class SystemMessage < ApplicationRecord
     recipients.each do |recipient|
       if email?
         RadMailer.simple_message(recipient,
-                                     "Important Message From #{RadConfig.app_name!}",
-                                     email_message_body,
-                                     do_not_format: true).deliver_later
+                                 "Important Message From #{RadConfig.app_name!}",
+                                 email_message_body,
+                                 do_not_format: true).deliver_later
       else
         UserSMSSenderJob.perform_later(sms_message_body, user.id, recipient.id, nil, false)
       end
