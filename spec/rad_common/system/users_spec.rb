@@ -88,10 +88,10 @@ RSpec.describe 'Users', type: :system do
     before { login_as admin, scope: :user }
 
     describe 'index' do
-      let(:result_label) { RadicalConfig.external_users? ? 'Users (2)' : 'Users (1)' }
+      let(:result_label) { RadConfig.external_users? ? 'Users (2)' : 'Users (1)' }
       let!(:pending_user) { create :user, user_status: pending_status }
 
-      before { external_user.update! user_status: user.user_status if RadicalConfig.external_users? }
+      before { external_user.update! user_status: user.user_status if RadConfig.external_users? }
 
       it 'shows users and all info' do
         visit users_path
@@ -106,7 +106,7 @@ RSpec.describe 'Users', type: :system do
           expect(page).not_to have_content 'Export to File'
         end
 
-        expect(page).to have_content external_user.to_s if RadicalConfig.external_users?
+        expect(page).to have_content external_user.to_s if RadConfig.external_users?
       end
 
       it 'shows pending users' do
@@ -130,7 +130,7 @@ RSpec.describe 'Users', type: :system do
     describe 'new' do
       let(:security_role) { create :security_role }
 
-      before { allow(RadicalConfig).to receive(:manually_create_users?).and_return true }
+      before { allow(RadConfig).to receive(:manually_create_users?).and_return true }
 
       it 'renders the new template' do
         visit new_user_path
@@ -245,7 +245,7 @@ RSpec.describe 'Users', type: :system do
     before do
       create :security_role, :external, allow_sign_up: true
       allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return false
-      allow(RadicalConfig).to receive(:legal_docs?).and_return(true)
+      allow(RadConfig).to receive(:legal_docs?).and_return(true)
     end
 
     it 'signs up' do

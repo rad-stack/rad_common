@@ -69,7 +69,7 @@ module Contactable
     def run_smarty?
       # we can and probably should enable this for Canadian addresses, just capping the effort for now
 
-      if running_global_validity || !RadicalConfig.smarty_enabled? || bypass_address_validation? || canadian?
+      if running_global_validity || !RadConfig.smarty_enabled? || bypass_address_validation? || canadian?
         return false
       end
 

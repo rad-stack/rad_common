@@ -1,4 +1,4 @@
-class RadicalTwilio
+class RadTwilio
   def send_sms(to:, message:)
     client.messages.create from: from_number, to: to, body: message, status_callback: status_callback_url
   end
@@ -16,7 +16,7 @@ class RadicalTwilio
   end
 
   def self.send_verify_sms(mobile_phone)
-    response = RadicalRetry.perform_request(retry_count: 2, raise_original: true) do
+    response = RadRetry.perform_request(retry_count: 2, raise_original: true) do
       TwilioVerifyService.send_sms_token(mobile_phone)
     end
 
@@ -24,15 +24,15 @@ class RadicalTwilio
   end
 
   def twilio_enabled?
-    RadicalConfig.twilio_enabled?
+    RadConfig.twilio_enabled?
   end
 
   def from_number
-    RadicalConfig.twilio_phone_number!
+    RadConfig.twilio_phone_number!
   end
 
   def from_number_mms
-    RadicalConfig.twilio_mms_phone_number!
+    RadConfig.twilio_mms_phone_number!
   end
 
   def validate_phone_number(phone_number, mobile)
@@ -64,7 +64,7 @@ class RadicalTwilio
   private
 
     def client
-      Twilio::REST::Client.new(RadicalConfig.twilio_account_sid!, RadicalConfig.twilio_auth_token!)
+      Twilio::REST::Client.new(RadConfig.twilio_account_sid!, RadConfig.twilio_auth_token!)
     end
 
     def get_phone_number(attribute, mobile)
@@ -73,9 +73,9 @@ class RadicalTwilio
     end
 
     def lookup_number(number, type = nil)
-      lookup_client = Twilio::REST::Client.new(RadicalConfig.twilio_account_sid!, RadicalConfig.twilio_auth_token!)
+      lookup_client = Twilio::REST::Client.new(RadConfig.twilio_account_sid!, RadConfig.twilio_auth_token!)
 
-      RadicalRetry.perform_request(retry_count: 2, raise_original: true) do
+      RadRetry.perform_request(retry_count: 2, raise_original: true) do
         if type
           lookup_client.lookups.phone_numbers(number).fetch(type: [type])
         else
@@ -93,6 +93,6 @@ class RadicalTwilio
     end
 
     def host_name
-      Rails.env.production? || Rails.env.staging? ? RadicalConfig.host_name! : 'example.com'
+      Rails.env.production? || Rails.env.staging? ? RadConfig.host_name! : 'example.com'
     end
 end

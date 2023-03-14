@@ -55,8 +55,8 @@ class SystemMessage < ApplicationRecord
   def send!
     recipients.each do |recipient|
       if email?
-        RadbearMailer.simple_message(recipient,
-                                     "Important Message From #{RadicalConfig.app_name!}",
+        RadMailer.simple_message(recipient,
+                                     "Important Message From #{RadConfig.app_name!}",
                                      email_message_body,
                                      do_not_format: true).deliver_later
       else
@@ -66,7 +66,7 @@ class SystemMessage < ApplicationRecord
   end
 
   def from_reply_to
-    RadicalConfig.from_email!
+    RadConfig.from_email!
   end
 
   private

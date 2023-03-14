@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RadicallyIntermittentException, type: :lib do
+RSpec.describe RadIntermittentException, type: :lib do
   context 'with custom message' do
     it 'raises with custom message' do
       message = 'foo'

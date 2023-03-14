@@ -14,14 +14,14 @@
     = f.button :button, class: 'btn btn-success' do
       %i.fa.fa-filter
       Apply Filters
-    - if RadicalConfig.saved_search_filters_enabled?
+    - if RadConfig.saved_search_filters_enabled?
       = render 'layouts/saved_filters_dropdown', search: search, f: f, path: path
     \
     = link_to "#{path}?clear_filters=true", class: 'btn btn-danger' do
       %i.fa.fa-times
       Clear Filters
 
-  - if RadicalConfig.saved_search_filters_enabled?
+  - if RadConfig.saved_search_filters_enabled?
     - if search.applied_saved_filter.present?
       .text-muted.mt-1 Applied Filter: #{search.applied_saved_filter}
     = f.hidden_field :saved_name

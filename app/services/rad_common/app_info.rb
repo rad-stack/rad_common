@@ -21,7 +21,7 @@ module RadCommon
     end
 
     def duplicate_models
-      RadicalConfig.duplicates!.pluck(:name)
+      RadConfig.duplicates!.pluck(:name)
     end
 
     def duplicates_enabled?(model_name)
@@ -29,19 +29,19 @@ module RadCommon
     end
 
     def duplicate_model_config(model_name)
-      RadicalConfig.duplicates!.select { |item| item[:name] == model_name }.first
+      RadConfig.duplicates!.select { |item| item[:name] == model_name }.first
     end
 
     def client_model_label
-      RadicalConfig.client_table_name!.classify.titleize
+      RadConfig.client_table_name!.classify.titleize
     end
 
     def client_model_class_name
-      RadicalConfig.client_table_name!.classify
+      RadConfig.client_table_name!.classify
     end
 
     def client_model_class
-      RadicalConfig.client_table_name!.classify.constantize
+      RadConfig.client_table_name!.classify.constantize
     end
 
     private

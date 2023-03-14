@@ -1,4 +1,4 @@
-class RadicalEnum
+class RadEnum
   attr_accessor :enum_class, :enum_name
 
   def initialize(enum_class, enum_name)

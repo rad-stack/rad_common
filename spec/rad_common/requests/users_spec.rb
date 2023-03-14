@@ -31,7 +31,7 @@ RSpec.describe 'Users', type: :request do
 
     describe 'POST create' do
       before do
-        allow(RadicalConfig).to receive(:manually_create_users?).and_return true
+        allow(RadConfig).to receive(:manually_create_users?).and_return true
         allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return false
       end
 

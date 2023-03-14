@@ -1,6 +1,6 @@
 require 'mail'
 
-class RadicalConfig
+class RadConfig
   class << self
     def admin_email!
       secret_config_item! :admin_email

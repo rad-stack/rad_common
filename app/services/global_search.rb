@@ -10,7 +10,7 @@ class GlobalSearch
   end
 
   def scopes
-    raw_scopes = RadicalConfig.global_search_scopes!
+    raw_scopes = RadConfig.global_search_scopes!
 
     raw_scopes = raw_scopes.select do |item|
       Pundit.policy!(current_user, item[:model].constantize).global_search?

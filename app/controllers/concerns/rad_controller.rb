@@ -1,4 +1,4 @@
-module RadbearController
+module RadController
   extend ActiveSupport::Concern
   include Pundit::Authorization
 
@@ -64,7 +64,7 @@ module RadbearController
     end
 
     def switch_languages?
-      RadicalConfig.switch_languages?
+      RadConfig.switch_languages?
     end
 
     def switch_locale(&)

@@ -30,7 +30,7 @@ class UsersController < ApplicationController
 
   def show
     @permission_categories = RadPermission.user_categories(@user)
-    return unless RadicalConfig.user_clients?
+    return unless RadConfig.user_clients?
 
     @user_clients = @user.user_clients.sorted
   end
@@ -177,7 +177,7 @@ class UsersController < ApplicationController
     end
 
     def permitted_params
-      params.require(:user).permit(base_params + RadicalConfig.additional_user_params!)
+      params.require(:user).permit(base_params + RadConfig.additional_user_params!)
     end
 
     def duplicates_enabled?
