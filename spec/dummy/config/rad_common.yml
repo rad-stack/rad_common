@@ -12,7 +12,7 @@ default: &default
   start_route: onboardings
   user_clients: true
   user_profiles: true
-  twilio_verify_internal_only: true
+  twilio_verify_all_users: true
   shared_database: false
   canadian_addresses: false
   show_help_menu: true

@@ -181,7 +181,7 @@ module RadCommon
     end
 
     def require_mobile_phone?
-      RadicalConfig.twilio_verify_enabled? && !RadicalConfig.twilio_verify_internal_only?
+      RadicalConfig.twilio_verify_enabled? && RadicalConfig.twilio_verify_all_users?
     end
 
     def clients_to_add_to_user(user)
