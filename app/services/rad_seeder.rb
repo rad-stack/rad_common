@@ -30,8 +30,7 @@ class RadSeeder
                        last_name: seeded_user[:last_name],
                        mobile_phone: seeded_user_mobile_phone(seeded_user),
                        timezone: seeded_user[:timezone],
-                       security_roles: user_security_roles(seeded_user),
-                       twilio_verify_enabled: RadicalConfig.twilio_verify_enabled? }
+                       security_roles: user_security_roles(seeded_user) }
 
         if seeded_user[:trait].present?
           FactoryBot.create seeded_user[:factory], seeded_user[:trait], attributes

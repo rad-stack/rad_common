@@ -21,8 +21,6 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
     end
   end
 
-  before { allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return false }
-
   describe 'user' do
     before { login_as user, scope: :user }
 
