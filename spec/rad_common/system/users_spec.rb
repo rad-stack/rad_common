@@ -158,6 +158,22 @@ RSpec.describe 'Users', type: :system do
         user.reload
         expect(user.security_roles.count).to eq 2
       end
+
+      it 'requires mobile phone when twilio verify enabled' do
+        allow(RadicalConfig).to receive(:twilio_verify_all_users?).and_return(false)
+
+        visit edit_user_path(user)
+        fill_in 'Mobile Phone', with: ''
+        check 'Twilio Verify Enabled'
+        click_button 'Save'
+
+        expect(page).to have_content 'Mobile phone is required'
+
+        fill_in 'Mobile Phone', with: user.mobile_phone
+        click_button 'Save'
+
+        expect(page).to have_content 'User updated'
+      end
     end
 
     describe 'show' do
