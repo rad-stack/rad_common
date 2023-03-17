@@ -177,7 +177,13 @@ class UsersController < ApplicationController
     end
 
     def permitted_params
-      params.require(:user).permit(base_params + RadicalConfig.additional_user_params!)
+      params.require(:user).permit(base_params + twilio_verify_params + RadicalConfig.additional_user_params!)
+    end
+
+    def twilio_verify_params
+      return [:twilio_verify_enabled] if RadicalConfig.twilio_verify_enabled? && !RadicalConfig.twilio_verify_all_users?
+
+      []
     end
 
     def duplicates_enabled?

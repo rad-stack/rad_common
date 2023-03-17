@@ -30,10 +30,7 @@ RSpec.describe 'Users', type: :request do
     let(:signed_in_user) { create :admin }
 
     describe 'POST create' do
-      before do
-        allow(RadicalConfig).to receive(:manually_create_users?).and_return true
-        allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return false
-      end
+      before { allow(RadicalConfig).to receive(:manually_create_users?).and_return true }
 
       describe 'with valid params' do
         let(:valid_attributes) do
