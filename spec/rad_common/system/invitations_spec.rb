@@ -42,7 +42,7 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
         let(:all_users) { true }
 
         before do
-          allow(RadicalConfig).to receive(:twilio_verify_all_users?).and_return(all_users)
+          allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(all_users)
 
           if multiple_roles
             another_role
