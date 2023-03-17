@@ -164,7 +164,7 @@ RSpec.describe 'Users', type: :system do
 
         visit edit_user_path(user)
         fill_in 'Mobile Phone', with: ''
-        check 'Twilio Verify Enabled'
+        check 'Two Factor Auth'
         click_button 'Save'
 
         expect(page).to have_content 'Mobile phone is required'
