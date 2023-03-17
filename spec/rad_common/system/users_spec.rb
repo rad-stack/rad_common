@@ -311,6 +311,8 @@ RSpec.describe 'Users', type: :system do
   end
 
   describe 'sign in' do
+    before { allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false) }
+
     it 'can not sign in without active user status' do
       user.update!(user_status: pending_status)
 
