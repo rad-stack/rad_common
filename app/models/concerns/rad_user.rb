@@ -80,6 +80,7 @@ module RadUser
 
     validates_with EmailAddressValidator, fields: %i[email], if: :fully_validate_email_phone?
 
+    after_initialize :twilio_verify_default, if: :new_record?
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
     after_save :notify_user_approved
@@ -205,6 +206,15 @@ module RadUser
 
   private
 
+    def twilio_verify_default
+      unless RadConfig.twilio_verify_enabled?
+        self.twilio_verify_enabled = true
+        return
+      end
+
+      self.twilio_verify_enabled = RadConfig.twilio_verify_all_users?
+    end
+
     def check_defaults
       if security_roles.none? && initial_security_role_id.present?
         self.security_roles = [initial_security_role]
@@ -244,8 +254,7 @@ module RadUser
     end
 
     def validate_2fa_mobile_phone
-      return if !RadConfig.twilio_verify_enabled? || mobile_phone.present?
-      return if external? && RadConfig.twilio_verify_internal_only?
+      return if !RadConfig.twilio_verify_enabled? || mobile_phone.present? || !twilio_verify_enabled?
 
       errors.add(:mobile_phone, 'is required for two factor authentication')
     end

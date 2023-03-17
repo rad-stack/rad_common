@@ -190,8 +190,8 @@ class RadConfig
       boolean_config_item! :twilio_verify_enabled
     end
 
-    def twilio_verify_internal_only?
-      boolean_config_item! :twilio_verify_internal_only
+    def twilio_verify_all_users?
+      boolean_config_item! :twilio_verify_all_users
     end
 
     def external_users?
