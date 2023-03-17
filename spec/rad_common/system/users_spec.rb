@@ -126,12 +126,54 @@ RSpec.describe 'Users', type: :system do
       end
     end
 
-    it 'updates the user' do
-      visit edit_user_path(admin)
-      new = 'foo'
-      fill_in 'First Name', with: new
-      click_button 'Save'
-      expect(page).to have_content new
+    describe 'edit' do
+      it 'renders the edit template' do
+        visit edit_user_path(user)
+        expect(page).to have_content('Editing User')
+      end
+
+      it 'updates the user' do
+        visit edit_user_path(admin)
+        new = 'foo'
+        fill_in 'First Name', with: new
+        click_button 'Save'
+        expect(page).to have_content new
+      end
+
+      it "doesn't update roles if user isn't valid" do
+        security_role = create :security_role
+        expect(user.security_roles.count).to eq 1
+
+        visit edit_user_path(user)
+        fill_in 'Last Name', with: ''
+        check security_role.name
+        click_button 'Save'
+
+        user.reload
+        expect(user.security_roles.count).to eq 1
+
+        fill_in 'Last Name', with: 'Foo'
+        click_button 'Save'
+
+        user.reload
+        expect(user.security_roles.count).to eq 2
+      end
+
+      it 'requires mobile phone when twilio verify enabled' do
+        allow(RadicalConfig).to receive(:twilio_verify_all_users?).and_return(false)
+
+        visit edit_user_path(user)
+        fill_in 'Mobile Phone', with: ''
+        check 'Two Factor Auth'
+        click_button 'Save'
+
+        expect(page).to have_content 'Mobile phone is required'
+
+        fill_in 'Mobile Phone', with: user.mobile_phone
+        click_button 'Save'
+
+        expect(page).to have_content 'User updated'
+      end
     end
 
     describe 'show' do
@@ -232,7 +274,7 @@ RSpec.describe 'Users', type: :system do
   describe 'sign up', js: true, sign_up_specs: true do
     before do
       create :security_role, :external, allow_sign_up: true
-      allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return false
+      allow(RadicalConfig).to receive(:twilio_verify_all_users?).and_return(false)
       allow(RadicalConfig).to receive(:legal_docs?).and_return(true)
     end
 
@@ -350,34 +392,6 @@ RSpec.describe 'Users', type: :system do
           expect(page).to have_content('Your session expired. Please sign in again to continue.')
         end
       end
-    end
-  end
-
-  describe 'edit' do
-    before { login_as admin, scope: :user }
-
-    it 'renders the edit template' do
-      visit edit_user_path(user)
-      expect(page).to have_content('Editing User')
-    end
-
-    it "doesn't update roles if user isn't valid" do
-      security_role = create :security_role
-      expect(user.security_roles.count).to eq 1
-
-      visit edit_user_path(user)
-      fill_in 'Last Name', with: ''
-      check security_role.name
-      click_button 'Save'
-
-      user.reload
-      expect(user.security_roles.count).to eq 1
-
-      fill_in 'Last Name', with: 'Foo'
-      click_button 'Save'
-
-      user.reload
-      expect(user.security_roles.count).to eq 2
     end
   end
 

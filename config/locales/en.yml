@@ -12,6 +12,7 @@ en:
           sms: 'SMS'
       user:
         external: 'External User?'
+        twilio_verify_enabled: 'Two Factor Auth'
       security_role:
         external: 'External User?'
   faker:

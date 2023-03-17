@@ -9,7 +9,6 @@ RSpec.describe User, type: :model do
   let(:attributes) do
     { first_name: 'Example',
       last_name: 'User',
-      twilio_verify_enabled: false,
       mobile_phone: create(:phone_number, :mobile),
       email: 'user@example.com',
       password: 'cOmpl3x_p@55w0rd',
@@ -162,7 +161,6 @@ RSpec.describe User, type: :model do
     let(:attributes) do
       { first_name: 'Example',
         last_name: 'User',
-        twilio_verify_enabled: false,
         mobile_phone: create(:phone_number, :mobile),
         password: 'cH@ngem3',
         password_confirmation: 'cH@ngem3',
