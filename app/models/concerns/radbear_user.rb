@@ -202,6 +202,10 @@ module RadbearUser
     update(last_activity_at: nil)
   end
 
+  def locale
+    User.languages[language]
+  end
+
   def twilio_totp_factor_sid; end # TODO: this should be a db attribute when we enable the TOTP feature
 
   private
@@ -283,9 +287,5 @@ module RadbearUser
 
     def notify_user_accepted
       Notifications::UserAcceptedInvitationNotification.main.notify!(self)
-    end
-
-    def locale
-      User.languages[language]
     end
 end
