@@ -205,12 +205,7 @@ module RadbearUser
   private
 
     def twilio_verify_default
-      unless RadicalConfig.twilio_verify_enabled?
-        self.twilio_verify_enabled = true
-        return
-      end
-
-      self.twilio_verify_enabled = RadicalConfig.twilio_verify_all_users?
+      self.twilio_verify_enabled = RadicalConfig.twilio_verify_enabled? && RadicalConfig.twilio_verify_all_users?
     end
 
     def check_defaults
