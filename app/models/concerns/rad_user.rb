@@ -212,7 +212,7 @@ module RadUser
         return
       end
 
-      self.twilio_verify_enabled = RadConfig.twilio_verify_all_users?
+      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && RadConfig.twilio_verify_all_users?
     end
 
     def check_defaults
