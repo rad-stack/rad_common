@@ -66,12 +66,12 @@ RSpec.describe 'Users', type: :system do
       context 'when switching languages' do
         it 'updates registration' do
           visit edit_user_registration_path
-          expect(page).to have_content 'Contact'
+          expect(page).to have_content 'My Account'
           select 'Spanish', from: 'Language'
           fill_in 'Current Password', with: password
           click_button 'Save'
           expect(user.reload.language).to eq 'Spanish'
-          expect(page).to have_content 'Contacto'
+          expect(page).to have_content 'Mi Cuenta'
         end
       end
     end

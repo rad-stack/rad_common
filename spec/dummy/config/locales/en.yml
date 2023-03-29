@@ -9,4 +9,3 @@ en:
           status_inactive: Inactive
   permission_tooltips:
     admin: 'Ability to do everything in the system.'
-  contact: 'Contact'
