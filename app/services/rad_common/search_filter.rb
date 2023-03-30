@@ -179,7 +179,7 @@ module RadCommon
       def transform_group_options(group_options)
         group_options.map do |option|
           if scope_value_option?(option)
-            [option[:scope_value].to_s.titleize, option[:scope_value].to_s]
+            [option[:label].presence || option[:scope_value].to_s.titleize, option[:scope_value].to_s]
           else
             [option.to_s, option.id]
           end
