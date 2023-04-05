@@ -1,4 +1,4 @@
-module RadbearController
+module RadController
   extend ActiveSupport::Concern
   include Pundit::Authorization
 

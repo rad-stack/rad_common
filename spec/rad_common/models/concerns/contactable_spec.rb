@@ -52,7 +52,7 @@ RSpec.describe Contactable do
     subject(:company) { Company.main }
 
     before do
-      allow(RadicalConfig).to receive(:canadian_addresses?).and_return true
+      allow(RadConfig).to receive(:canadian_addresses?).and_return true
 
       company.update bypass_address_validation: false,
                      address_1: address_1,

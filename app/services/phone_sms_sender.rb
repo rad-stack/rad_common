@@ -11,12 +11,12 @@ class PhoneSMSSender
     self.from_user_id = from_user_id
     self.to_mobile_phone = to_mobile_phone
     self.media_url = media_url
-    self.twilio = RadicalTwilio.new
+    self.twilio = RadTwilio.new
     self.message = augment_message(message, force_opt_out)
   end
 
   def send!
-    response = RadicalRetry.perform_request(raise_original: true) do
+    response = RadRetry.perform_request(raise_original: true) do
       if mms?
         twilio.send_mms to: to_number, message: message, media_url: media_url
       else
@@ -62,7 +62,7 @@ class PhoneSMSSender
     end
 
     def to_number
-      RadicalTwilio.human_to_twilio_format(to_mobile_phone)
+      RadTwilio.human_to_twilio_format(to_mobile_phone)
     end
 
     def blacklisted?

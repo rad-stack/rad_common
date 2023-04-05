@@ -7,6 +7,7 @@ module RadCommon
 
       def create_initializer_file
         standardize_date_methods
+        fix_rad_naming
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
@@ -102,7 +103,7 @@ module RadCommon
                   '#config.force_ssl = true',
                   'config.force_ssl = true'
 
-unless RadicalConfig.shared_database?
+unless RadConfig.shared_database?
         create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 
@@ -204,6 +205,7 @@ end
         apply_migration '20221221134935_remove_legacy_audited_changes.rb'
         apply_migration '20230222162024_migrate_authy_to_twilio_verify.rb'
         apply_migration '20230310161506_more_twilio_verify.rb'
+        apply_migration '20230401113151_fix_sendgrid_notification.rb'
       end
 
       def self.next_migration_number(path)
@@ -231,7 +233,7 @@ end
         end
 
         def apply_migration(source)
-          return if RadicalConfig.shared_database?
+          return if RadConfig.shared_database?
 
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
@@ -266,6 +268,17 @@ end
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
+        end
+
+        def fix_rad_naming
+          # TODO: remove these when all apps are migrated, the search/replace process is time consuming
+          search_and_replace 'RadicalConfig', 'RadConfig'
+          search_and_replace 'radical_spec_support', 'rad_spec_support'
+          search_and_replace 'RadbearMailer', 'RadMailer'
+          search_and_replace 'RadicalSpecSupport', 'RadSpecSupport'
+          search_and_replace 'RadicalRetry', 'RadRetry'
+          search_and_replace 'RadbearController', 'RadController'
+          search_and_replace 'RadicallyIntermittentException', 'RadIntermittentException'
         end
     end
   end

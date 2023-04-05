@@ -1,4 +1,4 @@
 .card
-  = render 'layouts/card_header', no_new_button: !RadicalConfig.manually_create_users?
+  = render 'layouts/card_header', no_new_button: !RadConfig.manually_create_users?
   .card-body
     = render 'form'

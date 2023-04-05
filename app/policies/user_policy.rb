@@ -23,7 +23,7 @@ class UserPolicy < ApplicationPolicy
   alias reactivate? update?
 
   def impersonate?
-    return false unless user.permission?(:admin) && RadicalConfig.impersonate?
+    return false unless user.permission?(:admin) && RadConfig.impersonate?
 
     user != record
   end

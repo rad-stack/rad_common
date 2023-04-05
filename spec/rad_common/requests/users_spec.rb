@@ -30,7 +30,7 @@ RSpec.describe 'Users', type: :request do
     let(:signed_in_user) { create :admin }
 
     describe 'POST create' do
-      before { allow(RadicalConfig).to receive(:manually_create_users?).and_return true }
+      before { allow(RadConfig).to receive(:manually_create_users?).and_return true }
 
       describe 'with valid params' do
         let(:valid_attributes) do

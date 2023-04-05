@@ -26,6 +26,6 @@ class CompaniesController < ApplicationController
     end
 
     def permitted_params
-      params.require(:company).permit(base_params + RadicalConfig.additional_company_params!)
+      params.require(:company).permit(base_params + RadConfig.additional_company_params!)
     end
 end

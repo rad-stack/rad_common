@@ -1,18 +1,18 @@
 :ruby
   company = @override_company.presence || Company.main
-  logo_includes_name = RadicalConfig.app_logo_includes_name?
+  logo_includes_name = RadConfig.app_logo_includes_name?
   protocol = Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
   website = company.website
   company_name = company.name
   company_full_address = company.full_address
   company_phone_number = company.phone_number
   admin_email = company.email
-  has_avatar = RadicalConfig.avatar? && @sender && @sender.avatar.attached?
+  has_avatar = RadConfig.avatar? && @sender && @sender.avatar.attached?
 
 !!!
 %head
-  = stylesheet_link_tag 'rad_common/radbear_mailer_reset', media: 'all'
-  = stylesheet_link_tag 'rad_common/radbear_mailer', media: 'all'
+  = stylesheet_link_tag 'rad_common/rad_mailer_reset', media: 'all'
+  = stylesheet_link_tag 'rad_common/rad_mailer', media: 'all'
 %body
   .email-container
     .email-header
@@ -21,7 +21,7 @@
           - if @override_logo
             = link_to image_tag(@override_logo, alt: company_name, title: company_name), website
           - else
-            = link_to image_tag(RadicalConfig.app_logo_filename!, alt: company_name, title: company_name), website
+            = link_to image_tag(RadConfig.app_logo_filename!, alt: company_name, title: company_name), website
 
           - unless logo_includes_name
             %span.logo_text
@@ -62,7 +62,7 @@
             .footer
               .footer-item
                 Click
-                = link_to 'here', "#{protocol}://#{RadicalConfig.host_name!}/rad_common/notification_settings"
+                = link_to 'here', "#{protocol}://#{RadConfig.host_name!}/rad_common/notification_settings"
                 to opt out or change your notification settings.
           .footer
             .footer-item= company_name

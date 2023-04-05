@@ -1,4 +1,4 @@
-class NotificationMailer < RadbearMailer
+class NotificationMailer < RadMailer
   before_action :enable_settings_link
 
   def new_user_signed_up(recipients, user)
@@ -11,10 +11,10 @@ class NotificationMailer < RadbearMailer
                       button_text: auto_approve ? 'Review' : 'Review & Approve',
                       button_url: edit_user_url(user) }
 
-    @message = "#{user} has signed up on #{RadicalConfig.app_name!}"
+    @message = "#{user} has signed up on #{RadConfig.app_name!}"
     @message += auto_approve ? '.' : ' and is awaiting approval.'
 
-    send_notification_mail recipients, "New User on #{RadicalConfig.app_name!}"
+    send_notification_mail recipients, "New User on #{RadConfig.app_name!}"
   end
 
   def user_was_approved(recipients, user_and_approver)
@@ -27,15 +27,15 @@ class NotificationMailer < RadbearMailer
 
     approved_by_name = (approver ? approver.to_s : 'an admin')
 
-    @message = "#{user} was approved by #{approved_by_name} on #{RadicalConfig.app_name!}."
-    send_notification_mail recipients, "User Was Approved on #{RadicalConfig.app_name!}"
+    @message = "#{user} was approved by #{approved_by_name} on #{RadConfig.app_name!}."
+    send_notification_mail recipients, "User Was Approved on #{RadConfig.app_name!}"
   end
 
   def global_validity(recipients, problems)
     @problems = problems
     @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
-    send_notification_mail recipients, "Invalid data in #{RadicalConfig.app_name!}"
+    send_notification_mail recipients, "Invalid data in #{RadConfig.app_name!}"
   end
 
   def global_validity_ran_long(recipients, run_stats)
@@ -43,7 +43,7 @@ class NotificationMailer < RadbearMailer
     total_time = Time.at((@run_stats.sum { |item| item[:run_seconds] })).utc.strftime('%H:%M:%S')
     @message = "The Global Validity task took #{total_time} to complete, which is beyond the configured timeout."
 
-    send_notification_mail recipients, "Global Validity in #{RadicalConfig.app_name!} Ran Long"
+    send_notification_mail recipients, "Global Validity in #{RadConfig.app_name!} Ran Long"
   end
 
   def sendgrid_status(recipients, content)
@@ -53,7 +53,7 @@ class NotificationMailer < RadbearMailer
     @user = User.find_by(email: @email)
 
     send_notification_mail recipients,
-                           "SendGrid Email Status for #{@user.presence || @email} in #{RadicalConfig.app_name!}"
+                           "SendGrid Email Status for #{@user.presence || @email} in #{RadConfig.app_name!}"
   end
 
   private

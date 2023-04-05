@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RadicalTwilio, type: :service do
+RSpec.describe RadTwilio, type: :service do
   let(:twilio_format) { '+19049995555' }
   let(:human_format) { '(904) 999-5555' }
   let(:phone_number) { human_format }

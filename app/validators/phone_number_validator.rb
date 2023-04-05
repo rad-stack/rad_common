@@ -14,7 +14,7 @@ class PhoneNumberValidator < ActiveModel::Validator
       next unless check_twilio?(record, field)
 
       mobile = field[:type] && field[:type] == :mobile
-      error_message = RadicalTwilio.new.validate_phone_number(phone_value, mobile)
+      error_message = RadTwilio.new.validate_phone_number(phone_value, mobile)
       record.errors.add(field[:field], error_message) if error_message.present?
     end
   end

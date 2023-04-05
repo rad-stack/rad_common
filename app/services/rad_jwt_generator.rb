@@ -1,6 +1,6 @@
 require 'jwt'
 
-class RadicalJwtGenerator
+class RadJwtGenerator
   JWT_ALGORITHM = 'HS256'.freeze
 
   attr_accessor :valid_for_minutes
@@ -20,7 +20,7 @@ class RadicalJwtGenerator
     end
 
     def secret
-      RadicalConfig.jwt_secret!
+      RadConfig.jwt_secret!
     end
 
     def expires_at
