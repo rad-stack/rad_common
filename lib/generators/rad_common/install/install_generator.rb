@@ -271,9 +271,13 @@ end
         end
 
         def fix_rad_naming
+          # TODO: remove these when all apps are migrated, the search/replace process is time consuming
           search_and_replace 'RadicalConfig', 'RadConfig'
           search_and_replace 'radical_spec_support', 'rad_spec_support'
           search_and_replace 'RadbearMailer', 'RadMailer'
+          search_and_replace 'RadicalSpecSupport', 'RadSpecSupport'
+          search_and_replace 'RadicalRetry', 'RadRetry'
+          search_and_replace 'RadbearController', 'RadController'
         end
     end
   end
