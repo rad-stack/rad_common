@@ -102,7 +102,7 @@ module RadCommon
                   '#config.force_ssl = true',
                   'config.force_ssl = true'
 
-unless RadicalConfig.shared_database?
+unless RadConfig.shared_database?
         create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 
@@ -233,7 +233,7 @@ end
         end
 
         def apply_migration(source)
-          return if RadicalConfig.shared_database?
+          return if RadConfig.shared_database?
 
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 

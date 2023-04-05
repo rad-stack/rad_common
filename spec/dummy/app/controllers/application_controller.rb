@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  include RadbearController
+  include RadController
 
   before_action :authenticate_user!
 

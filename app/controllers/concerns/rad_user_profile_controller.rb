@@ -48,6 +48,6 @@ module RadUserProfileController
     end
 
     def permitted_params
-      params.require(:user).permit(base_params + RadicalConfig.additional_user_profile_params!)
+      params.require(:user).permit(base_params + RadConfig.additional_user_profile_params!)
     end
 end

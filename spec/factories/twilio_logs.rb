@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :twilio_log do
-    to_number { RadicalTwilio.human_to_twilio_format(Faker::PhoneNumber.phone_number) }
-    from_number { RadicalTwilio.human_to_twilio_format(Faker::PhoneNumber.phone_number) }
+    to_number { RadTwilio.human_to_twilio_format(Faker::PhoneNumber.phone_number) }
+    from_number { RadTwilio.human_to_twilio_format(Faker::PhoneNumber.phone_number) }
     association :from_user, factory: :user
     association :to_user, factory: :user
     message { Faker::TvShows::GameOfThrones.quote }
@@ -10,7 +10,7 @@ FactoryBot.define do
 
     after(:build) do |record|
       if record.twilio_status.blank? && record.sent?
-        record.twilio_status = RadicalEnum.new(TwilioLog, :twilio_status).random_value
+        record.twilio_status = RadEnum.new(TwilioLog, :twilio_status).random_value
       end
     end
   end

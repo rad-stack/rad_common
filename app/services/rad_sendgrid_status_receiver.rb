@@ -71,11 +71,11 @@ class RadSendgridStatusReceiver
     end
 
     def forward?
-      host_name.present? && host_name != RadicalConfig.host_name!
+      host_name.present? && host_name != RadConfig.host_name!
     end
 
     def forward!
-      RadicalRetry.perform_request do
+      RadRetry.perform_request do
         response = connection.post('/sendgrid_statuses') do |request|
           request.body = forward_body
         end

@@ -58,7 +58,7 @@ module RadCommon
       @default_value = default_value
       @grouped = grouped
       @required = required
-      @search_scope = RadicalConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
+      @search_scope = RadConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
       @show_search_subtext = show_search_subtext
       @errors = []
     end

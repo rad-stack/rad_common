@@ -21,7 +21,7 @@ module RadCommon
     end
 
     def avatar_image(user, size)
-      if RadicalConfig.avatar? && user.avatar.attached?
+      if RadConfig.avatar? && user.avatar.attached?
         image_tag(user.avatar.variant(resize: '50x50'))
       else
         image_tag(gravatar_for(user, size))
@@ -118,15 +118,15 @@ module RadCommon
     end
 
     def enum_to_translated_option(record, enum_name)
-      RadicalEnum.new(record.class, enum_name).translated_option(record)
+      RadEnum.new(record.class, enum_name).translated_option(record)
     end
 
     def options_for_enum(klass, enum_name)
-      RadicalEnum.new(klass, enum_name).options
+      RadEnum.new(klass, enum_name).options
     end
 
     def enum_translation(klass, enum_name, value)
-      RadicalEnum.new(klass, enum_name).translation(value)
+      RadEnum.new(klass, enum_name).translation(value)
     end
 
     def bootstrap_flash
@@ -170,7 +170,7 @@ module RadCommon
     end
 
     def verify_sign_up
-      raise RadicallyIntermittentException if RadicalConfig.disable_sign_up?
+      raise RadIntermittentException if RadConfig.disable_sign_up?
     end
 
     def sign_up_roles
@@ -182,13 +182,13 @@ module RadCommon
     end
 
     def verify_invite
-      raise RadicallyIntermittentException if RadicalConfig.disable_invite?
+      raise RadIntermittentException if RadConfig.disable_invite?
     end
 
     def verify_manually_create_users
-      return if RadicalConfig.manually_create_users?
+      return if RadConfig.manually_create_users?
 
-      raise RadicallyIntermittentException
+      raise RadIntermittentException
     end
 
     def export_button(model_name)

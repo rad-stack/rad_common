@@ -35,7 +35,7 @@ RSpec.describe Notifications::UserWasApprovedNotification, type: :model do
     end
 
     it 'emails' do
-      expect(mail.subject).to eq "User Was Approved on #{RadicalConfig.app_name!}"
+      expect(mail.subject).to eq "User Was Approved on #{RadConfig.app_name!}"
     end
   end
 end

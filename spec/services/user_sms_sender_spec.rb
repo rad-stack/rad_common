@@ -9,7 +9,7 @@ RSpec.describe UserSMSSender, type: :service do
   let(:last_email) { ActionMailer::Base.deliveries.last }
 
   before do
-    allow(RadicalRetry).to receive(:exponential_pause)
+    allow(RadRetry).to receive(:exponential_pause)
     allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false)
   end
 

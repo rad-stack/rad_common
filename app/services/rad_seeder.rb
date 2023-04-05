@@ -46,14 +46,14 @@ class RadSeeder
       seed_admin
       seed_user
 
-      return true unless RadicalConfig.external_users?
+      return true unless RadConfig.external_users?
 
       seed_client_user
     end
 
     def seed_admin(role_name = 'Admin')
       role = get_role(role_name)
-      role.allow_invite = !RadicalConfig.disable_invite?
+      role.allow_invite = !RadConfig.disable_invite?
       seed_all role
       role.save!
 
@@ -72,15 +72,15 @@ class RadSeeder
       return unless seeded_user_role?
 
       role = get_role('User')
-      role.allow_invite = !RadicalConfig.disable_invite?
+      role.allow_invite = !RadConfig.disable_invite?
       role.save!
     end
 
     def seed_client_user
       role = get_role('Client User')
       role.external = true
-      role.allow_invite = !RadicalConfig.disable_invite?
-      role.allow_sign_up = !RadicalConfig.disable_sign_up?
+      role.allow_invite = !RadConfig.disable_invite?
+      role.allow_sign_up = !RadConfig.disable_sign_up?
       role.save!
     end
 
@@ -110,7 +110,7 @@ class RadSeeder
     end
 
     def seeded_user_config
-      RadicalConfig.seeded_users!
+      RadConfig.seeded_users!
     end
 
     def seeded_user_mobile_phone(seeded_user)

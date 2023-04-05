@@ -1,11 +1,11 @@
-class RadbearDeviseMailer < Devise::Mailer
+class RadDeviseMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers
   helper RadCommon::ApplicationHelper
 
-  layout 'radbear_mailer'
+  layout 'rad_mailer'
 
   before_action :set_defaults
-  default reply_to: RadicalConfig.admin_email!
+  default reply_to: RadConfig.admin_email!
 
   def confirmation_instructions(record, token, opts = {})
     @token = token
@@ -55,7 +55,7 @@ class RadbearDeviseMailer < Devise::Mailer
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "Someone has invited you to #{RadicalConfig.app_name!}, you can accept it through the link " \
+    @message = "Someone has invited you to #{RadConfig.app_name!}, you can accept it through the link " \
                "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
                'created until you access the link and set your password.'
 
@@ -70,7 +70,7 @@ class RadbearDeviseMailer < Devise::Mailer
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "The email address for your #{RadicalConfig.app_name!} account was recently changed. If you made " \
+    @message = "The email address for your #{RadConfig.app_name!} account was recently changed. If you made " \
                "this change, please disregard this message. If you didn't make this change, please let us know " \
                'immediately.'
 
@@ -81,7 +81,7 @@ class RadbearDeviseMailer < Devise::Mailer
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "The password for your #{RadicalConfig.app_name!} account was recently changed. If you made this " \
+    @message = "The password for your #{RadConfig.app_name!} account was recently changed. If you made this " \
                "change, you don't need to do anything more. If you didn't make this change, please let us know, " \
                'and reset your password immediately.'
 
@@ -89,13 +89,13 @@ class RadbearDeviseMailer < Devise::Mailer
   end
 
   def default_url_options
-    { host: RadicalConfig.host_name! }
+    { host: RadConfig.host_name! }
   end
 
   private
 
     def set_defaults
       @include_yield = false
-      headers['X-SMTPAPI'] = { unique_args: { host_name: RadicalConfig.host_name! } }.to_json
+      headers['X-SMTPAPI'] = { unique_args: { host_name: RadConfig.host_name! } }.to_json
     end
 end

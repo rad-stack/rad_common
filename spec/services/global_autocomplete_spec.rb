@@ -7,7 +7,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
   let!(:search_user) { create :user, first_name: 'Alex', last_name: 'Smith' }
   let!(:another_search_user) { create :user, first_name: 'John', last_name: 'Smith' }
   let!(:division) { create :division }
-  let(:search_scopes) { RadicalConfig.global_search_scopes! }
+  let(:search_scopes) { RadConfig.global_search_scopes! }
   let(:params) { ActionController::Parameters.new }
   let(:auto_complete) { described_class.new(params, search_scopes, user) }
 

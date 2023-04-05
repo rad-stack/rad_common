@@ -1,4 +1,4 @@
-module RadbearController
+module RadController
   extend ActiveSupport::Concern
   include Pundit::Authorization
 
@@ -6,7 +6,6 @@ module RadbearController
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     before_action :set_sentry_user_context
     around_action :user_time_zone, if: :current_user
-    around_action :switch_locale, if: :switch_languages?
     after_action :verify_authorized, unless: :devise_controller?
     after_action :verify_policy_scoped, only: :index
 
@@ -32,7 +31,7 @@ module RadbearController
     end
 
     def devise_account_params
-      %i[first_name last_name mobile_phone avatar timezone language]
+      %i[first_name last_name mobile_phone avatar timezone]
     end
 
     def devise_invite_params
