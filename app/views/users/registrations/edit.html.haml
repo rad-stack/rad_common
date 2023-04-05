@@ -20,9 +20,6 @@
             .col-lg-3= f.input :avatar
         .row
           .col-lg-6= f.input :timezone, as: :time_zone, priority: timezone_us_filter
-        - if RadConfig.switch_languages?
-          .row
-            .col-lg-6= f.input :language, collection: options_for_enum(User, :language)
         .row
           .col-lg-6= f.input :password, label: 'New Password', hint: "leave it blank if you don't want to change it", required: false, input_html: { autocomplete: 'new-password' }
           .col-lg-6= f.input :password_confirmation, label: 'New Password Confirmation', required: false, input_html: { autocomplete: 'new-password' }

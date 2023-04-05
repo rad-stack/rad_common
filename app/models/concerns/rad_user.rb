@@ -29,8 +29,6 @@ module RadUser
 
     has_one_attached :avatar
 
-    enum language: { English: 'en', Spanish: 'es' }
-
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
     scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
@@ -200,10 +198,6 @@ module RadUser
 
   def reactivate
     update(last_activity_at: nil)
-  end
-
-  def locale
-    User.languages[language]
   end
 
   def twilio_totp_factor_sid; end # TODO: this should be a db attribute when we enable the TOTP feature

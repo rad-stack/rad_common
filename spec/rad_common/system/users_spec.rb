@@ -62,18 +62,6 @@ RSpec.describe 'Users', type: :system do
         user.reload
         expect(user.first_name).to eq new_name
       end
-
-      context 'when switching languages' do
-        it 'updates registration' do
-          visit edit_user_registration_path
-          expect(page).to have_content 'My Account'
-          select 'Spanish', from: 'Language'
-          fill_in 'Current Password', with: password
-          click_button 'Save'
-          expect(user.reload.language).to eq 'Spanish'
-          expect(page).to have_content 'Mi Cuenta'
-        end
-      end
     end
   end
 

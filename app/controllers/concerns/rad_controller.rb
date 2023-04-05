@@ -6,7 +6,6 @@ module RadController
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     before_action :set_sentry_user_context
     around_action :user_time_zone, if: :current_user
-    around_action :switch_locale, if: :switch_languages?
     after_action :verify_authorized, unless: :devise_controller?
     after_action :verify_policy_scoped, only: :index
 
@@ -32,7 +31,7 @@ module RadController
     end
 
     def devise_account_params
-      %i[first_name last_name mobile_phone avatar timezone language]
+      %i[first_name last_name mobile_phone avatar timezone]
     end
 
     def devise_invite_params
@@ -61,14 +60,5 @@ module RadController
 
     def report_generating_message
       'Your report is generating. An email will be sent when it is ready.'
-    end
-
-    def switch_languages?
-      RadConfig.switch_languages?
-    end
-
-    def switch_locale(&)
-      locale = current_user.try(:locale) || I18n.default_locale
-      I18n.with_locale(locale, &)
     end
 end

@@ -204,7 +204,6 @@ end
         apply_migration '20221221134935_remove_legacy_audited_changes.rb'
         apply_migration '20230222162024_migrate_authy_to_twilio_verify.rb'
         apply_migration '20230310161506_more_twilio_verify.rb'
-        apply_migration '20230313195243_add_language.rb'
       end
 
       def self.next_migration_number(path)
