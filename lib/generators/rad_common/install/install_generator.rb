@@ -278,6 +278,7 @@ end
           search_and_replace 'RadicalSpecSupport', 'RadSpecSupport'
           search_and_replace 'RadicalRetry', 'RadRetry'
           search_and_replace 'RadbearController', 'RadController'
+          search_and_replace 'RadicallyIntermittentException', 'RadIntermittentException'
         end
     end
   end
