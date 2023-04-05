@@ -7,6 +7,7 @@ module RadCommon
 
       def create_initializer_file
         standardize_date_methods
+        fix_rad_naming
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
@@ -267,6 +268,10 @@ end
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
+        end
+
+        def fix_rad_naming
+          search_and_replace 'RadicalConfig', 'RadConfig'
         end
     end
   end
