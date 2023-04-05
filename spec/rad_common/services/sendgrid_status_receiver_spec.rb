@@ -4,7 +4,10 @@ describe SendgridStatusReceiver, type: :service do
   let(:service) { described_class.new(content) }
   let(:deliveries) { ActionMailer::Base.deliveries }
   let(:user) { create :user }
+  let(:admin_role) { create :security_role, :admin }
+  let!(:admin) { create :admin, security_roles: [admin_role] }
   let(:event_type) { 'bounce' }
+  let(:last_email) { deliveries.last }
 
   let(:content) do
     { event: event_type,
@@ -14,10 +17,7 @@ describe SendgridStatusReceiver, type: :service do
       host_name: host_name }
   end
 
-  before do
-    create :admin
-    deliveries.clear
-  end
+  before { deliveries.clear }
 
   context 'when internal' do
     let(:host_name) { RadicalConfig.host_name! }
@@ -51,6 +51,21 @@ describe SendgridStatusReceiver, type: :service do
 
         expect(user.active?).to be false
         expect(deliveries.count).to eq 0
+      end
+    end
+
+    context 'when admin is the failure' do
+      let(:user) { admin }
+
+      it 'excludes the admin in the notification' do
+        # crashes when there are no admins to notify
+        expect { service.process! }.to raise_error('no users to notify')
+
+        # doesn't notify the failing user
+        create :admin, security_roles: [admin_role]
+        service.process!
+        expect(deliveries.count).to eq 1
+        expect(last_email.to).not_to include admin.email
       end
     end
   end
