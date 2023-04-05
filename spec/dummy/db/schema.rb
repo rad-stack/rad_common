@@ -373,6 +373,7 @@ ActiveRecord::Schema.define(version: 2023_04_01_113151) do
     t.jsonb "filter_defaults"
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
+    t.string "language", default: "en", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"
