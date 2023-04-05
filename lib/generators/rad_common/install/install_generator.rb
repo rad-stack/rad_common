@@ -273,6 +273,7 @@ end
         def fix_rad_naming
           search_and_replace 'RadicalConfig', 'RadConfig'
           search_and_replace 'radical_spec_support', 'rad_spec_support'
+          search_and_replace 'RadbearMailer', 'RadMailer'
         end
     end
   end
