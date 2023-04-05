@@ -20,7 +20,7 @@ describe SendgridStatusReceiver, type: :service do
   before { deliveries.clear }
 
   context 'when internal' do
-    let(:host_name) { RadicalConfig.host_name! }
+    let(:host_name) { RadConfig.host_name! }
 
     it 'notifies' do
       expect { service.process! }.to change(deliveries, :count).by(1)

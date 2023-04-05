@@ -121,17 +121,17 @@ RSpec.configure do |config|
 
   SpecSupport.hooks(config, chrome_driver)
 
-  config.filter_run_excluding(twilio_verify_specs: true) unless RadicalConfig.twilio_verify_enabled?
-  config.filter_run_excluding(impersonate_specs: true) unless RadicalConfig.impersonate?
-  config.filter_run_excluding(invite_specs: true) if RadicalConfig.disable_invite?
-  config.filter_run_excluding(sign_up_specs: true) if RadicalConfig.disable_sign_up?
-  config.filter_run_excluding(external_user_specs: true) unless RadicalConfig.external_users?
-  config.filter_run_excluding(user_client_specs: true) unless RadicalConfig.user_clients?
+  config.filter_run_excluding(twilio_verify_specs: true) unless RadConfig.twilio_verify_enabled?
+  config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
+  config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
+  config.filter_run_excluding(sign_up_specs: true) if RadConfig.disable_sign_up?
+  config.filter_run_excluding(external_user_specs: true) unless RadConfig.external_users?
+  config.filter_run_excluding(user_client_specs: true) unless RadConfig.user_clients?
   config.filter_run_excluding(devise_paranoid_specs: true) unless Devise.paranoid
-  config.filter_run_excluding(smarty_specs: true) unless RadicalConfig.smarty_enabled?
-  config.filter_run_excluding(user_confirmable_specs: true) unless RadicalConfig.user_confirmable?
-  config.filter_run_excluding(user_expirable_specs: true) unless RadicalConfig.user_expirable?
-  config.filter_run_excluding(password_expirable_specs: true) unless RadicalConfig.password_expirable?
+  config.filter_run_excluding(smarty_specs: true) unless RadConfig.smarty_enabled?
+  config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
+  config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
+  config.filter_run_excluding(password_expirable_specs: true) unless RadConfig.password_expirable?
 
   include Warden::Test::Helpers
   config.include Capybara::DSL

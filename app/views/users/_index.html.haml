@@ -25,7 +25,7 @@
           %th Status
           - if show_roles && show_actions
             %th Roles
-          - if RadicalConfig.external_users?
+          - if RadConfig.external_users?
             %th #{RadCommon::AppInfo.new.client_model_label}s
         - if show_actions
           %th.text-center Actions
@@ -61,9 +61,9 @@
                 - user.security_roles.each do |security_role|
                   = secured_link(security_role)
                   %p
-          - if RadicalConfig.external_users?
+          - if RadConfig.external_users?
             %td
-              - if RadicalConfig.user_clients?
+              - if RadConfig.user_clients?
                 - user.clients.sorted.each do |client|
                   %p= secured_link client
               - else

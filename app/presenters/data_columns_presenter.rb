@@ -114,7 +114,7 @@ class DataColumnsPresenter
       value = resource.send(item)
 
       if resource.defined_enums.has_key?(item.to_s)
-        return RadicalEnum.new(resource.class, item.to_s).translated_option(resource)
+        return RadEnum.new(resource.class, item.to_s).translated_option(resource)
       end
 
       case value.class.to_s
