@@ -279,6 +279,7 @@ end
           search_and_replace 'RadicalRetry', 'RadRetry'
           search_and_replace 'RadbearController', 'RadController'
           search_and_replace 'RadicallyIntermittentException', 'RadIntermittentException'
+          search_and_replace 'RadicalEnum', 'RadEnum'
         end
     end
   end
