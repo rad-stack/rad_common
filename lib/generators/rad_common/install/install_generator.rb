@@ -27,7 +27,10 @@ module RadCommon
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
 
         # config
-        copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        unless RadConfig.storage_config_override?
+          copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        end
+
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'

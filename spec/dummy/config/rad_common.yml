@@ -19,6 +19,7 @@ default: &default
   legal_docs: true
   wide_margins: false
   twilio_verify_all_users: true
+  storage_config_override: false
 
   system_usage_models:
     -
