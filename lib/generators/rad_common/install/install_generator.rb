@@ -280,6 +280,7 @@ end
           search_and_replace 'RadbearController', 'RadController'
           search_and_replace 'RadicallyIntermittentException', 'RadIntermittentException'
           search_and_replace 'RadicalEnum', 'RadEnum'
+          search_and_replace 'RadicalJwtGenerator', 'RadJwtGenerator'
         end
     end
   end
