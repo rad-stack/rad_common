@@ -9,7 +9,6 @@ RSpec.describe User, type: :model do
   let(:attributes) do
     { first_name: 'Example',
       last_name: 'User',
-      authy_enabled: false,
       mobile_phone: create(:phone_number, :mobile),
       email: 'user@example.com',
       password: 'cOmpl3x_p@55w0rd',
@@ -17,18 +16,14 @@ RSpec.describe User, type: :model do
   end
 
   describe 'notify_user_approved' do
-    let(:notification_type) { create :user_was_approved_notification }
-    let(:admin) { create :admin }
+    let(:notification_type) { Notifications::UserWasApprovedNotification.main }
     let(:user) { create :user, security_roles: [security_role], user_status: inactive_status }
     let(:first_mail) { ActionMailer::Base.deliveries.first }
     let(:last_mail) { ActionMailer::Base.deliveries.last }
 
     before do
+      create :admin
       allow_any_instance_of(described_class).to receive(:auto_approve?).and_return false
-
-      create :notification_security_role,
-             notification_type: notification_type,
-             security_role: admin.security_roles.first
 
       ActionMailer::Base.deliveries = []
       user.update! user_status: active_status, do_not_notify_approved: false
@@ -115,19 +110,17 @@ RSpec.describe User, type: :model do
       end
     end
 
-    it 'accepts same password only after 12 changes' do
-      if Devise.mappings[:user].password_expirable?
-        13.times do |i|
-          user.update(password: "Password#{i + 1}!", password_confirmation: "Password#{i + 1}!")
-        end
-
-        13.times do |i|
-          expect(user.update(password: "Password#{i + 1}!", password_confirmation: "Password#{i + 1}!")).to be false
-          expect(user.errors.full_messages.to_s).to include 'was used previously'
-        end
-
-        expect(user.update(password: 'cOmpl3x_p@55w0rd', password_confirmation: 'cOmpl3x_p@55w0rd')).to be true
+    it 'accepts same password only after 12 changes', password_expirable_specs: true do
+      13.times do |i|
+        user.update(password: "Password#{i + 1}!", password_confirmation: "Password#{i + 1}!")
       end
+
+      13.times do |i|
+        expect(user.update(password: "Password#{i + 1}!", password_confirmation: "Password#{i + 1}!")).to be false
+        expect(user.errors.full_messages.to_s).to include 'was used previously'
+      end
+
+      expect(user.update(password: 'cOmpl3x_p@55w0rd', password_confirmation: 'cOmpl3x_p@55w0rd')).to be true
     end
   end
 
@@ -168,7 +161,6 @@ RSpec.describe User, type: :model do
     let(:attributes) do
       { first_name: 'Example',
         last_name: 'User',
-        authy_enabled: false,
         mobile_phone: create(:phone_number, :mobile),
         password: 'cH@ngem3',
         password_confirmation: 'cH@ngem3',
@@ -231,12 +223,10 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'password expirable' do
+  describe 'password expirable', password_expirable_specs: true do
     it 'has a password that expires after 90 days' do
-      if Devise.mappings[:user].password_expirable?
-        expect(user.need_change_password?).to be(false)
-        Timecop.travel(91.days.from_now) { expect(user.need_change_password?).to be(true) }
-      end
+      expect(user.need_change_password?).to be(false)
+      Timecop.travel(91.days.from_now) { expect(user.need_change_password?).to be(true) }
     end
   end
 
@@ -285,43 +275,6 @@ RSpec.describe User, type: :model do
       updated_at = user.updated_at
       user.update!(security_roles: [role_2])
       expect(user.updated_at).not_to eq(updated_at)
-    end
-  end
-
-  describe 'authy', authy_specs: true do
-    let(:user) { create :user, mobile_phone: phone_number }
-    let(:external_user) { create :user, :external, mobile_phone: phone_number }
-    let(:phone_number) { create :phone_number, :mobile }
-    let(:new_phone_number) { create :phone_number, :mobile }
-
-    before { allow(RadicalConfig).to receive(:authy_internal_only?).and_return true }
-
-    it 'creates and updates the user on authy', :vcr do
-      expect(user.authy_id).to be_nil
-      user.update!(authy_enabled: true)
-      expect(user.authy_id).not_to be_nil
-    end
-
-    it 'returns a failure message if authy doesnt update' do
-      result = double(:response, ok?: false, message: 'mocked message')
-
-      allow(Authy::API).to receive(:register_user).and_return(result)
-
-      user.authy_enabled = true
-      user.mobile_phone = new_phone_number
-      user.save
-      expect(user.errors.full_messages.to_s).to include('Could not register authy user')
-    end
-
-    it 'deletes authy user if mobile phone wiped out' do
-      external_user.update!(authy_enabled: false, mobile_phone: nil)
-      expect(external_user.reload.authy_id).to be_blank
-    end
-
-    it "doesn't allow invalid email", :vcr do
-      user = build :user, mobile_phone: phone_number, email: 'foo@', authy_enabled: true
-      user.save
-      expect(user.errors.full_messages.to_s).to include('Could not register authy user')
     end
   end
 

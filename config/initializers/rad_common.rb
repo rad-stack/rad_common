@@ -11,26 +11,26 @@ end
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 
 Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
-Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css rad_common/radbear_mailer_reset.css]
+Rails.application.config.assets.precompile += %w[rad_common/rad_mailer.css rad_common/rad_mailer_reset.css]
 
-RadicalConfig.check_validity!
+RadConfig.check_validity!
 
-Rails.application.routes.default_url_options[:host] = RadicalConfig.host_name!
+Rails.application.routes.default_url_options[:host] = RadConfig.host_name!
 
 if Rails.env.staging? || Rails.env.production?
   Rails.application.config.action_mailer.delivery_method = :smtp
   Rails.application.config.action_mailer.perform_deliveries = true
   Rails.application.config.action_mailer.default charset: 'utf-8'
-  Rails.application.config.action_mailer.asset_host = "https://#{RadicalConfig.host_name!}"
+  Rails.application.config.action_mailer.asset_host = "https://#{RadConfig.host_name!}"
 
   Rails.application.config.action_mailer.smtp_settings = {
-    address: RadicalConfig.smtp_address!,
-    port: RadicalConfig.smtp_port!,
-    enable_starttls_auto: RadicalConfig.smtp_enable_starttls_auto!,
-    domain: RadicalConfig.smtp_domain!,
-    authentication: RadicalConfig.smtp_authentication!,
-    user_name: RadicalConfig.smtp_username!,
-    password: RadicalConfig.smtp_password!
+    address: RadConfig.smtp_address!,
+    port: RadConfig.smtp_port!,
+    enable_starttls_auto: RadConfig.smtp_enable_starttls_auto!,
+    domain: RadConfig.smtp_domain!,
+    authentication: RadConfig.smtp_authentication!,
+    user_name: RadConfig.smtp_username!,
+    password: RadConfig.smtp_password!
   }
 else
   Rails.application.config.action_mailer.asset_host = 'http://localhost:3000'
@@ -47,12 +47,7 @@ if Rails.env.staging?
 end
 
 Devise.setup do |config|
-  config.mailer = 'RadbearDeviseMailer'
-end
-
-if RadicalConfig.authy_enabled?
-  Authy.api_key = RadicalConfig.authy_api_key!
-  Authy.api_uri = 'https://api.authy.com/'
+  config.mailer = 'RadDeviseMailer'
 end
 
 Audited.current_user_method = :true_user

@@ -7,7 +7,6 @@ class RadSeeder
     seed_security_roles
     seed_user_statuses
     seed_company
-    seed_notification_types
     seed_users
 
     @users = User.all
@@ -17,16 +16,6 @@ class RadSeeder
 
     def display_log(message)
       puts message
-    end
-
-    def seed_notification_types
-      return if NotificationType.count.positive?
-
-      Notifications::NewUserSignedUpNotification.create! security_roles: [SecurityRole.admin_role]
-      Notifications::UserWasApprovedNotification.create! security_roles: [SecurityRole.admin_role]
-      Notifications::UserAcceptedInvitationNotification.create! security_roles: [SecurityRole.admin_role]
-      Notifications::InvalidDataWasFoundNotification.create! security_roles: [SecurityRole.admin_role]
-      Notifications::GlobalValidityRanLongNotification.create! security_roles: [SecurityRole.admin_role]
     end
 
     def seed_users
@@ -41,8 +30,7 @@ class RadSeeder
                        last_name: seeded_user[:last_name],
                        mobile_phone: seeded_user_mobile_phone(seeded_user),
                        timezone: seeded_user[:timezone],
-                       security_roles: user_security_roles(seeded_user),
-                       authy_enabled: RadicalConfig.authy_enabled? }
+                       security_roles: user_security_roles(seeded_user) }
 
         if seeded_user[:trait].present?
           FactoryBot.create seeded_user[:factory], seeded_user[:trait], attributes
@@ -58,14 +46,14 @@ class RadSeeder
       seed_admin
       seed_user
 
-      return true unless RadicalConfig.external_users?
+      return true unless RadConfig.external_users?
 
       seed_client_user
     end
 
     def seed_admin(role_name = 'Admin')
       role = get_role(role_name)
-      role.allow_invite = !RadicalConfig.disable_invite?
+      role.allow_invite = !RadConfig.disable_invite?
       seed_all role
       role.save!
 
@@ -84,15 +72,15 @@ class RadSeeder
       return unless seeded_user_role?
 
       role = get_role('User')
-      role.allow_invite = !RadicalConfig.disable_invite?
+      role.allow_invite = !RadConfig.disable_invite?
       role.save!
     end
 
     def seed_client_user
       role = get_role('Client User')
       role.external = true
-      role.allow_invite = !RadicalConfig.disable_invite?
-      role.allow_sign_up = !RadicalConfig.disable_sign_up?
+      role.allow_invite = !RadConfig.disable_invite?
+      role.allow_sign_up = !RadConfig.disable_sign_up?
       role.save!
     end
 
@@ -122,7 +110,7 @@ class RadSeeder
     end
 
     def seeded_user_config
-      RadicalConfig.seeded_users!
+      RadConfig.seeded_users!
     end
 
     def seeded_user_mobile_phone(seeded_user)

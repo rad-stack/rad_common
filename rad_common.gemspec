@@ -21,14 +21,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'active_storage_validations'
   s.add_dependency 'audited'
   s.add_dependency 'authtrail'
-
-  # TODO: remove this override when we replace authy with twilio verify, see Task 37169
-  s.add_dependency 'authy', '< 3.0.0'
-
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap4-kaminari-views'
   s.add_dependency 'devise'
-  s.add_dependency 'devise-authy'
   s.add_dependency 'devise_invitable'
   s.add_dependency 'devise-security'
   s.add_dependency 'factory_bot_rails'
@@ -39,11 +34,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'jwt'
   s.add_dependency 'kaminari'
   s.add_dependency 'sassc'
-
-  # TODO: remove these 3 once the mail gem is up to date, see Task 37200
-  s.add_dependency 'net-imap'
-  s.add_dependency 'net-pop'
-  s.add_dependency 'net-smtp'
 
   s.add_dependency 'nokogiri'
 

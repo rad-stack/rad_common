@@ -6,7 +6,7 @@ RSpec.describe PhoneSMSSender, type: :service do
   let(:message) { 'test message' }
   let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false) }
 
-  before { allow(RadicalRetry).to receive(:exponential_pause) }
+  before { allow(RadRetry).to receive(:exponential_pause) }
 
   describe 'send', :vcr do
     subject(:result) { sms_sender.send! }
@@ -61,7 +61,7 @@ RSpec.describe PhoneSMSSender, type: :service do
           create :twilio_log,
                  opt_out_message_sent: true,
                  sent: true,
-                 to_number: RadicalTwilio.human_to_twilio_format(mobile_phone)
+                 to_number: RadTwilio.human_to_twilio_format(mobile_phone)
         end
 
         it { is_expected.to eq "I'm taking your surfboard" }

@@ -4,7 +4,7 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
   delegate :current_user, to: :template
 
   def input(wrapper_options = nil)
-    options[:collection] = search_only? ? [object.public_send(reflection.name)].compact : searchable_collection
+    options[:collection] = search_only? ? [selected_search_option].compact : searchable_collection
     label_method, value_method = detect_collection_methods
     add_default_options
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
@@ -64,5 +64,10 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
 
     def global_autocomplete_params
       { limit: MAX_DROPDOWN_SIZE, global_search_scope: options[:search_scope], excluded_ids: options[:excluded_ids] }
+    end
+
+    def selected_search_option
+      selected = input_options[:selected]
+      object.present? ? object.public_send(reflection.name) : (selected.presence && records.find(selected))
     end
 end

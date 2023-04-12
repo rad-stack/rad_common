@@ -7,6 +7,7 @@ module RadCommon
 
       def create_initializer_file
         standardize_date_methods
+        fix_rad_naming
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
@@ -24,10 +25,12 @@ module RadCommon
         copy_file '../../../../../.hound.yml', '.hound.yml'
         copy_file '../../../../../.eslintrc', '.eslintrc'
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
-        copy_file '../rubocop.txt', '.rubocop.yml'
 
         # config
-        copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        unless RadConfig.storage_config_override?
+          copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        end
+
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
@@ -49,8 +52,8 @@ module RadCommon
         directory '../../../../../spec/dummy/bin/', 'bin/'
 
         # locales
-        copy_file '../../../../../spec/dummy/config/locales/devise.authy.en.yml',
-                 'config/locales/devise.authy.en.yml'
+        copy_file '../../../../../spec/dummy/config/locales/devise.twilio_verify.en.yml',
+                  'config/locales/devise.twilio_verify.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/devise_invitable.en.yml',
                   'config/locales/devise_invitable.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/devise.en.yml', 'config/locales/devise.en.yml'
@@ -103,7 +106,7 @@ module RadCommon
                   '#config.force_ssl = true',
                   'config.force_ssl = true'
 
-unless RadicalConfig.shared_database?
+unless RadConfig.shared_database?
         create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 
@@ -203,6 +206,9 @@ end
         apply_migration '20221123142522_twilio_log_changes.rb'
         apply_migration '20221108114020_convert_audited_changes_text_to_json.rb'
         apply_migration '20221221134935_remove_legacy_audited_changes.rb'
+        apply_migration '20230222162024_migrate_authy_to_twilio_verify.rb'
+        apply_migration '20230310161506_more_twilio_verify.rb'
+        apply_migration '20230401113151_fix_sendgrid_notification.rb'
       end
 
       def self.next_migration_number(path)
@@ -230,7 +236,7 @@ end
         end
 
         def apply_migration(source)
-          return if RadicalConfig.shared_database?
+          return if RadConfig.shared_database?
 
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
@@ -265,6 +271,20 @@ end
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
+        end
+
+        def fix_rad_naming
+          # TODO: remove these when all apps are migrated, the search/replace process is time consuming
+          search_and_replace 'RadicalConfig', 'RadConfig'
+          search_and_replace 'radical_spec_support', 'rad_spec_support'
+          search_and_replace 'RadbearMailer', 'RadMailer'
+          search_and_replace 'RadicalSpecSupport', 'RadSpecSupport'
+          search_and_replace 'RadicalRetry', 'RadRetry'
+          search_and_replace 'RadbearController', 'RadController'
+          search_and_replace 'RadicallyIntermittentException', 'RadIntermittentException'
+          search_and_replace 'RadicalEnum', 'RadEnum'
+          search_and_replace 'RadicalJwtGenerator', 'RadJwtGenerator'
+          search_and_replace 'RadicalTwilio', 'RadTwilio'
         end
     end
   end

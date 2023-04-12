@@ -1,0 +1,2 @@
+class SendgridStatusReceiver < RadSendgridStatusReceiver
+end

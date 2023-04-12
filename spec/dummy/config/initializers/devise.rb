@@ -3,12 +3,9 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
-  # ==> Devise Authy Authentication Extension
+  # ==> Devise Twilio Verify Extension
   # How long should the user's device be remembered for.
-  config.authy_remember_device = 7.days
-
-  # Should Authy OneTouch be enabled?
-  # config.authy_enable_onetouch = false
+  config.twilio_verify_remember_device = 7.days
 
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
@@ -26,7 +23,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = RadicalConfig.from_email!
+  config.mailer_sender = RadConfig.from_email!
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'

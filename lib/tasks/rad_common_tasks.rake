@@ -15,16 +15,6 @@ namespace :rad_common do
     end
   end
 
-  task redo_authy: :environment do
-    Timeout.timeout(1.hour) do
-      User.where(authy_enabled: true).find_each do |user|
-        user.update!(authy_enabled: false)
-        user.update!(authy_enabled: true)
-        sleep 2 # avoid DDOS throttling
-      end
-    end
-  end
-
   task check_database_use: :environment do
     Timeout.timeout(30.minutes) do
       DatabaseUseChecker.generate_report

@@ -14,8 +14,8 @@
                              hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
                              input_html: { autocomplete: 'new-password' }
 
-        = f.input :password_confirmation, label: 'Confirm your new password',
-                                          equired: true,
+        = f.input :password_confirmation, label: 'Confirm Your New Password',
+                                          required: true,
                                           input_html: { autocomplete: 'new-password' }
 
       .form-actions

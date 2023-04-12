@@ -11,7 +11,7 @@
           .col-lg-4
             - if sign_up_roles.size > 1
               = f.input :initial_security_role_id,
-                        label: 'Initial security role',
+                        label: 'Initial Security Role',
                         collection: sign_up_roles,
                         include_blank: false
 
@@ -36,7 +36,7 @@
             = f.input :password_confirmation, required: true, input_html: { autocomplete: 'new-password' }
         .row.mb-3
           .col-2
-            - if RadicalConfig.legal_docs?
+            - if RadConfig.legal_docs?
               = check_box_tag :accept_terms, false, false
               %label.pb-2{ for: 'accept_terms' }
                 I agree to the #{link_to('Terms & Conditions', terms_path, target: '_blank', rel: 'noopener')}
@@ -44,7 +44,7 @@
               = hidden_field_tag :accept_terms, '1'
 
       .form-actions
-        - if RadicalConfig.legal_docs?
+        - if RadConfig.legal_docs?
           = f.button :submit, 'Sign Up', class: 'btn btn-primary', disabled: true
         - else
           = f.button :submit, 'Sign Up', class: 'btn btn-primary'

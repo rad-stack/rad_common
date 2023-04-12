@@ -164,7 +164,7 @@ module RadCommon
 
       def maybe_save_filters
         filter_name = search_params[:saved_name]
-        return unless RadicalConfig.saved_search_filters_enabled? && filter_name.present?
+        return unless RadConfig.saved_search_filters_enabled? && filter_name.present?
 
         filter = SavedSearchFilter.find_or_initialize_by(name: filter_name,
                                                          user: current_user,

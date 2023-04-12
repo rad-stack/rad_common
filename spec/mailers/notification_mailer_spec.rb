@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe NotificationMailer, type: :mailer do
+describe NotificationMailer do
   let(:user) { create :user }
   let(:another_user) { create :user }
   let(:email) { user.email }
@@ -44,10 +44,13 @@ describe NotificationMailer, type: :mailer do
 
     context 'with a problem without a link' do
       let(:notification_setting) do
-        create :notification_setting, notification_type: create(:global_validity_notification)
+        create :notification_setting, notification_type: Notifications::InvalidDataWasFoundNotification.main
       end
 
-      before { described_class.global_validity([user], [[notification_setting, 'foo bar']]).deliver_now }
+      before do
+        create :admin
+        described_class.global_validity([user], [[notification_setting, 'foo bar']]).deliver_now
+      end
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'

@@ -11,7 +11,7 @@ This will then create the initializer in the /config/initializers directory with
 Emails are sent in the background so make sure you have a mailers queue running in sidekiq.
 
 ## Email Template
-To use the common email template in your Rails project, just have your mailer subclass RadbearMailer.
+To use the common email template in your Rails project, just have your mailer subclass RadMailer.
 
 ## Heroku Database Utilities
 
