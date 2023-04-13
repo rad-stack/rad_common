@@ -194,6 +194,10 @@ class RadConfig
       boolean_config_item! :twilio_verify_all_users
     end
 
+    def storage_config_override?
+      boolean_config_item! :storage_config_override
+    end
+
     def external_users?
       boolean_config_item! :external_users
     end
