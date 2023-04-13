@@ -64,7 +64,7 @@ module RadController
     end
 
     def switch_languages?
-      RadicalConfig.switch_languages?
+      RadConfig.switch_languages?
     end
 
     def switch_locale(&)
