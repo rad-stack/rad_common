@@ -68,7 +68,7 @@ module RadController
     end
 
     def switch_locale(&)
-      locale = current_user.try(:locale) || I18n.default_locale
+      locale = params[:locale] || current_user.try(:locale) || I18n.default_locale
       I18n.with_locale(locale, &)
     end
 end
