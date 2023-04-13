@@ -1,6 +1,6 @@
 require 'mail'
 
-class RadicalConfig
+class RadConfig
   class << self
     def admin_email!
       secret_config_item! :admin_email
@@ -182,16 +182,16 @@ class RadicalConfig
       boolean_config_item! :use_avatar
     end
 
-    def switch_languages?
-      boolean_config_item! :switch_languages
-    end
-
     def twilio_verify_enabled?
       boolean_config_item! :twilio_verify_enabled
     end
 
     def twilio_verify_all_users?
       boolean_config_item! :twilio_verify_all_users
+    end
+
+    def storage_config_override?
+      boolean_config_item! :storage_config_override
     end
 
     def external_users?

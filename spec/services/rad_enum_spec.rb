@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RadicalEnum, type: :service do
+RSpec.describe RadEnum, type: :service do
   describe 'db_options' do
     subject { described_class.new(Division, :division_status).db_options }
 

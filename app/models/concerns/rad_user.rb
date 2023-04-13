@@ -1,4 +1,4 @@
-module RadbearUser
+module RadUser
   extend ActiveSupport::Concern
 
   USER_AUDIT_COLUMNS_DISABLED = %i[password password_confirmation encrypted_password reset_password_token
@@ -28,8 +28,6 @@ module RadbearUser
                               inverse_of: :to_user
 
     has_one_attached :avatar
-
-    enum language: { English: 'en', Spanish: 'es' }
 
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
@@ -191,7 +189,7 @@ module RadbearUser
   end
 
   def test_email!
-    RadbearMailer.simple_message(self, 'Test Email', 'This is a test.').deliver_later
+    RadMailer.simple_message(self, 'Test Email', 'This is a test.').deliver_later
   end
 
   def test_sms!(from_user)
@@ -202,16 +200,12 @@ module RadbearUser
     update(last_activity_at: nil)
   end
 
-  def locale
-    User.languages[language]
-  end
-
   def twilio_totp_factor_sid; end # TODO: this should be a db attribute when we enable the TOTP feature
 
   private
 
     def twilio_verify_default
-      self.twilio_verify_enabled = RadicalConfig.twilio_verify_enabled? && RadicalConfig.twilio_verify_all_users?
+      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && RadConfig.twilio_verify_all_users?
     end
 
     def check_defaults
@@ -246,14 +240,14 @@ module RadbearUser
     end
 
     def validate_sms_mobile_phone
-      return if !RadicalTwilio.new.twilio_enabled? || mobile_phone.present?
+      return if !RadTwilio.new.twilio_enabled? || mobile_phone.present?
       return if notification_settings.enabled.where(sms: true).count.zero?
 
       errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
     end
 
     def validate_2fa_mobile_phone
-      return if !RadicalConfig.twilio_verify_enabled? || mobile_phone.present? || !twilio_verify_enabled?
+      return if !RadConfig.twilio_verify_enabled? || mobile_phone.present? || !twilio_verify_enabled?
 
       errors.add(:mobile_phone, 'is required for two factor authentication')
     end
@@ -276,7 +270,7 @@ module RadbearUser
       return unless saved_change_to_user_status_id? && user_status &&
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
-      RadbearMailer.your_account_approved(self).deliver_later
+      RadMailer.your_account_approved(self).deliver_later
       Notifications::UserWasApprovedNotification.main.notify!([self, approved_by]) unless do_not_notify_approved
     end
 

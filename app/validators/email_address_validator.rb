@@ -17,7 +17,7 @@ class EmailAddressValidator < ActiveModel::Validator
 
       next unless check_sendgrid?(record, field)
 
-      error_message = RadicalSendGrid.new.validate_email(email_value)
+      error_message = RadSendGrid.new.validate_email(email_value)
       record.errors.add(field, error_message) if error_message.present?
     end
   end

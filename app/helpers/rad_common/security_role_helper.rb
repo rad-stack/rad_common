@@ -2,8 +2,8 @@ module RadCommon
   module SecurityRoleHelper
     def security_role_show_data
       items = [:external]
-      items += [:allow_invite] unless RadicalConfig.disable_invite?
-      items += [:allow_sign_up] unless RadicalConfig.disable_sign_up?
+      items += [:allow_invite] unless RadConfig.disable_invite?
+      items += [:allow_sign_up] unless RadConfig.disable_sign_up?
       items
     end
 

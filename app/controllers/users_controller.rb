@@ -30,7 +30,7 @@ class UsersController < ApplicationController
 
   def show
     @permission_categories = RadPermission.user_categories(@user)
-    return unless RadicalConfig.user_clients?
+    return unless RadConfig.user_clients?
 
     @user_clients = @user.user_clients.sorted
   end
@@ -177,11 +177,11 @@ class UsersController < ApplicationController
     end
 
     def permitted_params
-      params.require(:user).permit(base_params + twilio_verify_params + RadicalConfig.additional_user_params!)
+      params.require(:user).permit(base_params + twilio_verify_params + RadConfig.additional_user_params!)
     end
 
     def twilio_verify_params
-      return [:twilio_verify_enabled] if RadicalConfig.twilio_verify_enabled? && !RadicalConfig.twilio_verify_all_users?
+      return [:twilio_verify_enabled] if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
 
       []
     end

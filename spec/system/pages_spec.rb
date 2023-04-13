@@ -9,7 +9,7 @@ RSpec.describe 'Pages' do
     it 'shows the information' do
       visit terms_path
       expect(page).to have_content('Terms and Conditions')
-      expect(page).to have_content(RadicalConfig.app_name!)
+      expect(page).to have_content(RadConfig.app_name!)
     end
   end
 
@@ -17,7 +17,7 @@ RSpec.describe 'Pages' do
     it 'shows the information' do
       visit privacy_path
       expect(page).to have_content('Privacy Policy')
-      expect(page).to have_content(RadicalConfig.app_name!)
+      expect(page).to have_content(RadConfig.app_name!)
     end
   end
 end

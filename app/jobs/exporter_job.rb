@@ -8,7 +8,7 @@ class ExporterJob < ApplicationJob
     records = search.results
     export = export_class.new(records: records, current_user: user).generate
 
-    RadbearMailer.email_report(user, export, report_name, report_options(params)).deliver_later
+    RadMailer.email_report(user, export, report_name, report_options(params)).deliver_later
   end
 
   def report_options(_params)

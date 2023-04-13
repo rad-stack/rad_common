@@ -28,6 +28,6 @@ class RadOnboarding
   private
 
     def profile_entered?
-      !RadicalConfig.user_profiles? || current_user.profile_entered?
+      !RadConfig.user_profiles? || current_user.profile_entered?
     end
 end

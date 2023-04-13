@@ -1,7 +1,6 @@
 default: &default
   app_name: Demo Foo
   use_avatar: true
-  switch_languages: true
   disable_sign_up: false
   disable_invite: false
   manually_create_users: false
@@ -20,6 +19,7 @@ default: &default
   legal_docs: true
   wide_margins: false
   twilio_verify_all_users: true
+  storage_config_override: false
 
   system_usage_models:
     -

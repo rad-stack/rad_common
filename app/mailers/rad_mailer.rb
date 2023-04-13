@@ -1,19 +1,19 @@
-class RadbearMailer < ActionMailer::Base
+class RadMailer < ActionMailer::Base
   include ActionView::Helpers::TextHelper
   include RadCommon::ApplicationHelper
 
-  layout 'radbear_mailer'
+  layout 'rad_mailer'
   before_action :set_defaults
 
-  default from: RadicalConfig.from_email!
-  default reply_to: RadicalConfig.admin_email!
+  default from: RadConfig.from_email!
+  default reply_to: RadConfig.admin_email!
 
   def your_account_approved(user)
     @email_action = { button_text: 'Get Started',
                       button_url: root_url }
 
     @recipient = user
-    @message = "Your account was approved and you can begin using #{RadicalConfig.app_name!}."
+    @message = "Your account was approved and you can begin using #{RadConfig.app_name!}."
     mail to: @recipient.formatted_email, subject: 'Your Account Was Approved'
   end
 
@@ -48,7 +48,7 @@ class RadbearMailer < ActionMailer::Base
     @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
     mail to: recipient.formatted_email,
-         subject: "Invalid data in #{RadicalConfig.app_name!}",
+         subject: "Invalid data in #{RadConfig.app_name!}",
          template_path: 'notification_mailer',
          template_name: 'global_validity'
   end
@@ -78,14 +78,14 @@ class RadbearMailer < ActionMailer::Base
 
   def default_url_options
     # this won't work for links called using the route helpers outside of the mailer context
-    { host: RadicalConfig.host_name! }
+    { host: RadConfig.host_name! }
   end
 
   private
 
     def set_defaults
       @include_yield = true
-      headers['X-SMTPAPI'] = { unique_args: { host_name: RadicalConfig.host_name! } }.to_json
+      headers['X-SMTPAPI'] = { unique_args: { host_name: RadConfig.host_name! } }.to_json
     end
 
     def parse_recipients_array(recipients)

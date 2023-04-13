@@ -12,8 +12,9 @@ module RadCommon
     # @param [ActiveRecord_Relation, Array] options the options to be displayed in the dropdown. See examples
     #   This is required when no scope values are specified.
     # @param [Boolean optional] grouped will the options be grouped
-    # @param [Array optional] scope_values An array of scopes active record scopes represented by symbols to be inserted
-    #   into the dropdown options.For example :closed_orders, :open_orders. This is required when no options are specified.
+    # @param [Array optional] scope_values An array of active record scope names as as selectable values represented
+    #   by symbols to be inserted into the dropdown options. For example :closed_orders, :open_orders.
+    #   This is required when no options are specified.
     # @param [String optional] joins any necessary sql joins so that the query can be performed
     # @param [String optional] input_label by default the input label for the dropdown is determined by the column name
     #   but you can override that by specifying it here
@@ -32,6 +33,13 @@ module RadCommon
     #      options: [['...', [user, { scope_value: :unassigned }]],
     #               ['Active', User.active.by_name],
     #               ['Inactive', User.inactive.by_name]] }]
+    # @example Using scope with grouped options
+    #   { input_label: 'Sales User',
+    #     scope: :for_sales_user,
+    #     options: [['Active', User.active.by_name],
+    #               ['Inactive', User.inactive.by_name]],
+    #     grouped: true,
+    #     blank_value_label: 'All Users' }
     # @example Using scope values
     #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
     def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil,
@@ -58,7 +66,7 @@ module RadCommon
       @default_value = default_value
       @grouped = grouped
       @required = required
-      @search_scope = RadicalConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
+      @search_scope = RadConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
       @show_search_subtext = show_search_subtext
       @errors = []
     end

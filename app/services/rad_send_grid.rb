@@ -1,14 +1,14 @@
-class RadicalSendGrid
+class RadSendGrid
   def sendgrid_enabled?
-    RadicalConfig.sendgrid_api?
+    RadConfig.sendgrid_api?
   end
 
   def validate_email(email)
     return unless sendgrid_enabled?
 
-    response = RadicalRetry.perform_request(retry_count: 2) do
+    response = RadRetry.perform_request(retry_count: 2) do
       inner_response = client._('validations/email').post(request_body: "{\"email\":\"#{email}\"}")
-      raise RadicalSendGridError, inner_response.body unless inner_response.status_code == '200'
+      raise RadSendGridError, inner_response.body unless inner_response.status_code == '200'
 
       inner_response
     end
@@ -26,6 +26,6 @@ class RadicalSendGrid
   private
 
     def client
-      SendGrid::API.new(api_key: RadicalConfig.sendgrid_api_key!).client
+      SendGrid::API.new(api_key: RadConfig.sendgrid_api_key!).client
     end
 end

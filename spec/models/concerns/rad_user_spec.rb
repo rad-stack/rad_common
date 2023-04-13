@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RadbearUser, type: :module do
+RSpec.describe RadUser, type: :module do
   describe 'permission?' do
     subject { user.permission?(:delete_division) }
 
