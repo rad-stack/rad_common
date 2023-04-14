@@ -1,6 +1,5 @@
 - verify_invite
-
-.card
+= render 'users/devise_layout' do
   = render 'layouts/card_header', action_name: 'custom', title: t('devise.invitations.new.header'), icon: 'fa-plus'
   .card-body
     = simple_form_for(resource, as: resource_name, url: invitation_path(resource_name), html: { method: :post }) do |f|
