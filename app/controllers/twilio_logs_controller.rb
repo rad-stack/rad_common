@@ -14,7 +14,7 @@ class TwilioLogsController < ApplicationController
     TwilioLog.create! to_number: params['To'],
                       from_number: params['From'],
                       to_user: nil,
-                      from_user_id: nil,
+                      from_user_id: User.first,
                       message: params['Body'],
                       media_url: nil,
                       message_sid: params['SmsMessageSid']
