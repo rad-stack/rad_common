@@ -8,7 +8,8 @@
     .card-body
       = render 'users/index', users: @pending, page_param_name: :pending_page
 
-= render 'layouts/index_page', search: @user_search, search_path: users_path do
+.card
+  = render 'layouts/mobile_filters', search: @user_search, search_path: users_path, additional_actions: [export_button('User')]
   = render 'layouts/card_header', no_new_button: true, additional_actions: [export_button('User')]
   .card-body
     = render 'layouts/filter', search: @user_search, path: users_path
