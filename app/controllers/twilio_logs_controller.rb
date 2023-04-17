@@ -11,14 +11,12 @@ class TwilioLogsController < ApplicationController
   def create
     skip_authorization
 
-    # TwilioLog.create! to_number: to_number,
-    #                   from_number: from_number,
-    #                   to_user: to_user,
-    #                   from_user_id: from_user_id,
-    #                   message: message,
-    #                   media_url: media_url,
-    #                   sent: sent,
-    #                   message_sid: message_sid,
-    #                   opt_out_message_sent: opt_out_message_sent
+    TwilioLog.create! to_number: params['To'],
+                      from_number: params['From'],
+                      to_user: nil,
+                      from_user_id: nil,
+                      message: params['Body'],
+                      media_url: nil,
+                      message_sid: params['SmsMessageSid']
   end
 end
