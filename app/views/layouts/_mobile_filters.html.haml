@@ -1,30 +1,21 @@
-.sticky-container
-  .sticky-top.filter-info.d-block.d-sm-none
-    .row
-      .col-lg-12.text-center
-        %h3
-          Tasks
-          = " : #{@tasks.to_a.count} Results"
-    .row
-      .col-lg-2
-        .mobile-filters
-          .row.filter-row
-            .col-12
-              .btn.btn-sm.btn-primary{"data-target" => "#exampleModal", "data-toggle" => "modal", :type => "button"}
-                %i.fa.fa-filter
-                Filter Results
-              .btn.btn-sm.btn-primary{"data-target" => "#exampleModal", "data-toggle" => "modal", :type => "button"}
-                %i.fa.fa-heart.fa-regular
-                Save
-  #exampleModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :role => "dialog", :tabindex => "-1"}
-    .modal-dialog{:role => "document"}
-      .modal-content
-        .modal-header
-          %h5#exampleModalLabel.modal-title Filter
-          %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
-            %span{"aria-hidden" => "true"} ×
-        .modal-body
-          = render 'layouts/filter', search: @task_search, path: tasks_path
-        .modal-footer
-          %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Close
-          %button.btn.btn-primary{:type => "button"} Save changes
+.sticky-top.filter-info.d-block.d-sm-none
+  .row
+    .col-lg-2
+      .mobile-filters
+        .row.filter-row
+          .col-12
+            .btn.btn-sm.btn-primary{"data-target" => "#filter-modal", "data-toggle" => "modal", :type => "button"}
+              %i.fa.fa-filter
+              Show Filters
+#filter-modal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      .modal-header
+        %h5#exampleModalLabel.modal-title Filter
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+      .modal-body
+        = render 'layouts/filter', search: search, path: search_path
+      .modal-footer
+        %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Close
+        %button.btn.btn-primary{:type => "button"} Save changes
