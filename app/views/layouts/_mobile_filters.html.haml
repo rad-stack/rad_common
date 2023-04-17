@@ -1,0 +1,18 @@
+.sticky-top.filter-info.d-block.d-sm-none
+  .row
+    .col-12.d-flex.align-items-center
+      %h4.mr-2= "#{search.results.table_name.humanize} (#{search.count})"
+      .btn.btn-sm.btn-primary.mr-2{"data-target" => "#filter-modal", "data-toggle" => "modal", :type => "button"}
+        %i.fa.fa-filter
+        Show Filters
+      - additional_actions.each do |action|
+        .mr-2= action
+#filter-modal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      .modal-header
+        %h5#exampleModalLabel.modal-title Filter
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+      .modal-body
+        = render 'layouts/filter', search: search, path: search_path

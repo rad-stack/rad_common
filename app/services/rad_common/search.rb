@@ -36,6 +36,10 @@ module RadCommon
       retrieve_results
     end
 
+    def count
+      results.count
+    end
+
     def valid?
       @filtering.validate_params
     end
