@@ -64,6 +64,8 @@ RSpec.describe 'Users', type: :system do
       end
 
       context 'when switching languages' do
+        before { allow(RadConfig).to receive(:switch_languages?).and_return true }
+
         it 'updates registration' do
           visit edit_user_registration_path
           expect(page).to have_content 'My Account'
