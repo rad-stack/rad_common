@@ -67,8 +67,7 @@ module RadUser
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
-    validate :validate_sms_mobile_phone, on: :update
-    validate :validate_2fa_mobile_phone
+    validate :validate_mobile_phone
     validate :password_excludes_name
     validates :security_roles, presence: true, if: :active?
 
@@ -245,17 +244,24 @@ module RadUser
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
 
-    def validate_sms_mobile_phone
-      return if !RadTwilio.new.twilio_enabled? || mobile_phone.present?
-      return if notification_settings.enabled.where(sms: true).count.zero?
+    def validate_mobile_phone
+      return if mobile_phone.present? || user_status.blank? || !user_status.validate_email_phone?
 
-      errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
+      if RadConfig.require_mobile_phone?
+        errors.add(:mobile_phone, "can't be blank")
+      elsif require_mobile_phone_sms?
+        errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
+      elsif require_mobile_phone_two_factor?
+        errors.add(:mobile_phone, 'is required for two factor authentication')
+      end
     end
 
-    def validate_2fa_mobile_phone
-      return if !RadConfig.twilio_verify_enabled? || mobile_phone.present? || !twilio_verify_enabled?
+    def require_mobile_phone_sms?
+      RadTwilio.new.twilio_enabled? && persisted? && notification_settings.enabled.where(sms: true).count.positive?
+    end
 
-      errors.add(:mobile_phone, 'is required for two factor authentication')
+    def require_mobile_phone_two_factor?
+      RadConfig.twilio_verify_enabled? && twilio_verify_enabled?
     end
 
     def password_excludes_name
