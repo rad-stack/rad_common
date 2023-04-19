@@ -5,9 +5,7 @@ class RadTwilioReply
     self.params = params
   end
 
-  def process!
-    return unless valid?
-  end
+  def process!; end
 
   def valid?
     params[:Body].present? && params[:From].present?

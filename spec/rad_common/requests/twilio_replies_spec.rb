@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'TwilioReplies' do
+RSpec.describe 'TwilioReplies', type: :request do
   let(:valid_attributes) do
     { 'ToCountry' => 'US',
       'ToState' => 'FL',
