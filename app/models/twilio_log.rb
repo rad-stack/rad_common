@@ -19,6 +19,11 @@ class TwilioLog < ApplicationRecord
   scope :failure, -> { where(success: false) }
   scope :successful, -> { where(success: true) }
 
+  validates :from_user_id, presence: true, if: :outgoing?
+  validates :message_sid, presence: true, if: :incoming?
+  validates :to_user_id, :media_url, :twilio_status, absence: true, if: :incoming?
+  validate :validate_incoming, if: :incoming?
+
   before_validation :check_success
 
   def self.opt_out_message_sent?(to_number)
@@ -38,5 +43,11 @@ class TwilioLog < ApplicationRecord
       return unless twilio_status_delivered?
 
       self.success = true
+    end
+
+    def validate_incoming
+      errors.add(:sent, 'must be true') unless sent?
+      errors.add(:success, 'must be true') unless success?
+      errors.add(:opt_out_message_sent, 'must be false') if opt_out_message_sent?
     end
 end

@@ -30,7 +30,8 @@ class TwilioLogSearch < RadCommon::Search
     end
 
     def sort_columns_def
-      [{ label: 'When', column: 'created_at', direction: 'desc', default: true },
+      [{ column: 'log_type' },
+       { label: 'When', column: 'created_at', direction: 'desc', default: true },
        { column: 'from_number' },
        { column: 'to_number' },
        { label: 'From User' },
