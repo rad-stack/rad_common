@@ -8,6 +8,7 @@ class TwilioRepliesController < ApplicationController
     twilio_reply = TwilioReply.new(params)
 
     if twilio_reply.valid?
+      twilio_reply.process!
       head :ok, content_type: 'text/html'
     else
       head :bad_request
