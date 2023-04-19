@@ -75,7 +75,8 @@ class PhoneSMSSender
     end
 
     def log_event(sent, message_sid)
-      TwilioLog.create! to_number: to_number,
+      TwilioLog.create! log_type: :outgoing,
+                        to_number: to_number,
                         from_number: from_number,
                         to_user: to_user,
                         from_user_id: from_user_id,
