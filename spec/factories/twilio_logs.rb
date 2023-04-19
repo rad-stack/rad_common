@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :twilio_log do
+    log_type { 'outgoing' }
     to_number { RadTwilio.human_to_twilio_format(Faker::PhoneNumber.phone_number) }
     from_number { RadTwilio.human_to_twilio_format(Faker::PhoneNumber.phone_number) }
     association :from_user, factory: :user

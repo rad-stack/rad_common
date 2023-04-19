@@ -32,7 +32,7 @@ RSpec.describe 'TwilioReplies', type: :request do
         expect(response).to have_http_status :ok
       end
 
-      xit 'creates a new TwilioLog' do
+      it 'creates a new TwilioLog' do
         expect {
           post '/twilio_replies', params: valid_attributes
         }.to change(TwilioLog, :count).by(1)
