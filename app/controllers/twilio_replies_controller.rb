@@ -4,7 +4,13 @@ class TwilioRepliesController < ApplicationController
 
   def create
     skip_authorization
-    TwilioReply.new(params)
-    head :ok, content_type: 'text/html'
+
+    twilio_reply = TwilioReply.new(params)
+
+    if twilio_reply.valid?
+      head :ok, content_type: 'text/html'
+    else
+      head :bad_request
+    end
   end
 end
