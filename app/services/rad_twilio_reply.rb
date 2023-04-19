@@ -6,6 +6,8 @@ class RadTwilioReply
   end
 
   def process!
+    raise 'invalid' unless valid?
+
     log_event
   end
 
