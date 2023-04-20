@@ -209,6 +209,7 @@ end
         apply_migration '20230310161506_more_twilio_verify.rb'
         apply_migration '20230313195243_add_language.rb'
         apply_migration '20230401113151_fix_sendgrid_notification.rb'
+        apply_migration '20230420102508_update_twilio_log_number_format.rb'
       end
 
       def self.next_migration_number(path)

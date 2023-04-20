@@ -71,11 +71,11 @@ class PhoneSMSSender
     end
 
     def opt_out_message_already_sent?
-      TwilioLog.opt_out_message_sent?(to_number)
+      TwilioLog.opt_out_message_sent?(to_mobile_phone)
     end
 
     def log_event(sent, message_sid)
-      TwilioLog.create! to_number: to_number,
+      TwilioLog.create! to_number: to_mobile_phone,
                         from_number: from_number,
                         to_user: to_user,
                         from_user_id: from_user_id,
