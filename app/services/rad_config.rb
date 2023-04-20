@@ -194,6 +194,10 @@ class RadConfig
       boolean_config_item! :twilio_verify_all_users
     end
 
+    def require_mobile_phone?
+      boolean_config_item! :require_mobile_phone
+    end
+
     def storage_config_override?
       boolean_config_item! :storage_config_override
     end

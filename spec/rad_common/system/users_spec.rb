@@ -175,6 +175,7 @@ RSpec.describe 'Users', type: :system do
 
       it 'requires mobile phone when twilio verify enabled' do
         allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false)
+        allow(RadConfig).to receive(:require_mobile_phone?).and_return(false)
 
         visit edit_user_path(user)
         fill_in 'Mobile Phone', with: ''
