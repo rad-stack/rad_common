@@ -26,6 +26,8 @@ class TwilioLog < ApplicationRecord
 
   before_validation :check_success
 
+  validates_with PhoneNumberValidator, fields: [{ field: :from_number }, { field: :to_number }], skip_twilio: true
+
   def self.opt_out_message_sent?(to_number)
     TwilioLog.where(sent: true, opt_out_message_sent: true, to_number: to_number).limit(1).any?
   end

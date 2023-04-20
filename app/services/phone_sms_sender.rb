@@ -71,7 +71,7 @@ class PhoneSMSSender
     end
 
     def opt_out_message_already_sent?
-      TwilioLog.opt_out_message_sent?(to_number)
+      TwilioLog.opt_out_message_sent?(to_mobile_phone)
     end
 
     def log_event(sent, message_sid)
