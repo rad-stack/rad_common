@@ -6,7 +6,7 @@
       = rad_form_errors f
       .form-inputs
         .row
-          .col-lg-4
+          .col-lg
             - if invite_roles.size > 1
               = f.input :initial_security_role_id,
                         label: 'Initial Security Role',
@@ -16,12 +16,13 @@
             - else
               = f.input :initial_security_role_id, as: :hidden, input_html: { value: invite_roles.first.id }
         .row
-          .col-lg-4
+          .col-lg
             = f.input :first_name, required: true
-          .col-lg-8
+        .row
+          .col-lg
             = f.input :last_name, required: true
         .row
-          .col-lg-4
+          .col-lg-8
             - resource.class.invite_key_fields.each do |field|
               = f.input field, required: true
           .col-lg-4
@@ -31,6 +32,7 @@
               You can add more valid domains in
               = link_to 'Company Settings', '/rad_common/company/edit'
         .row
-          .col-lg-4= f.input :mobile_phone, required: require_mobile_phone?
+          .col-lg
+            = f.input :mobile_phone, required: require_mobile_phone?
       .form-actions
         = f.button :submit, t('devise.invitations.new.submit_button'), class: 'btn btn-primary'
