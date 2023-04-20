@@ -1,4 +1,5 @@
 - verify_invite
+
 .card
   = render 'layouts/card_header', action_name: 'custom', title: t('devise.invitations.new.header'), icon: 'fa-plus'
   .card-body
@@ -18,7 +19,7 @@
         .row
           .col-lg-4
             = f.input :first_name, required: true
-          .col-lg-4
+          .col-lg-8
             = f.input :last_name, required: true
         .row
           .col-lg-4
@@ -31,7 +32,6 @@
               You can add more valid domains in
               = link_to 'Company Settings', '/rad_common/company/edit'
         .row
-          .col-lg-4
-            = f.input :mobile_phone, required: require_mobile_phone?
+          .col-lg-4= f.input :mobile_phone, required: require_mobile_phone?
       .form-actions
         = f.button :submit, t('devise.invitations.new.submit_button'), class: 'btn btn-primary'
