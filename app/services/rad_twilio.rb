@@ -58,6 +58,10 @@ class RadTwilio
   end
 
   def self.twilio_to_human_format(phone_number)
+    phone_number = phone_number.to_s unless phone_number.is_a?(String)
+    phone_number = "+#{phone_number}" if phone_number.size == 11 && phone_number.first != '+'
+    raise 'invalid twilio number format' unless phone_number.size == 12
+
     "(#{phone_number[2, 3]}) #{phone_number[5, 3]}-#{phone_number[8, 4]}"
   end
 
