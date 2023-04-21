@@ -12,12 +12,25 @@ class TwilioLogSearch < RadCommon::Search
   private
 
     def filters_def
-      [{ column: 'message',
-         type: RadCommon::LikeFilter },
+      [{ input_label: 'Log Type',
+         name: :log_type,
+         scope_values: TwilioLog.log_types.keys.index_by { |record|
+           RadEnum.new(TwilioLog, :log_type).translation(record)
+         }.transform_values(&:to_sym) },
        { start_input_label: 'Start Date',
          end_input_label: 'End Date',
          column: :created_at,
          type: RadCommon::DateFilter },
+       { input_label: 'From Number',
+         column: "REGEXP_REPLACE(from_number, '[^0-9%]+', '', 'g')",
+         type: RadCommon::LikeFilter,
+         input_transform: ->(value) { value.tr('^0-9', '') },
+         name: :from_number },
+       { input_label: 'To Number',
+         column: "REGEXP_REPLACE(to_number, '[^0-9%]+', '', 'g')",
+         type: RadCommon::LikeFilter,
+         input_transform: ->(value) { value.tr('^0-9', '') },
+         name: :to_number },
        { input_label: 'From User',
          column: :from_user_id,
          options: user_array,
@@ -26,6 +39,7 @@ class TwilioLogSearch < RadCommon::Search
          column: :to_user_id,
          options: user_array,
          blank_value_label: 'All Users' },
+       { column: 'message', type: RadCommon::LikeFilter },
        { input_label: 'Status', name: :status, scope_values: %i[failure successful] }]
     end
 
