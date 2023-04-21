@@ -7,10 +7,11 @@ RSpec.describe RadTwilio, type: :service do
   let(:human_format) { '(904) 999-5555' }
   let(:phone_number) { human_format }
   let(:robocall_url) { 'https://example.com' }
+  let(:robo_return) { 'Twilio::REST::Api::V2010::AccountContext::CallInstance' }
 
   describe 'send_robocall' do
     it 'runs without error', :vcr do
-      described_class.new.send_robocall to: phone_number, url: robocall_url
+      expect(described_class.new.send_robocall(to: phone_number, url: robocall_url).class.to_s).to eq robo_return
     end
   end
 
@@ -24,7 +25,9 @@ RSpec.describe RadTwilio, type: :service do
     end
 
     it 'raises error on invalid twilio format' do
-      expect { described_class.twilio_to_human_format(invalid_twilio_format) }.to raise_error('invalid twilio number format')
+      expect {
+        described_class.twilio_to_human_format(invalid_twilio_format)
+      }.to raise_error('invalid twilio number format')
     end
   end
 
