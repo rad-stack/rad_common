@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   s.bindir = 'bin'
-  s.executables = %w[reset_db migrate_reset rc_update]
+  s.executables = %w[reset_db migrate_reset rc_update rc_rspec rc_parallel_rspec]
 
   s.add_dependency 'active_storage_validations'
   s.add_dependency 'audited'
