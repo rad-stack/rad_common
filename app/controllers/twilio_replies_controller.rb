@@ -7,12 +7,10 @@ class TwilioRepliesController < ApplicationController
 
     twilio_reply = TwilioReply.new(params)
 
-    if twilio_reply.valid?
-      twilio_reply.process!
-      head :ok, content_type: 'text/html'
-    else
-      # curious what might occur here, can handle more gracefully when/if we receive some errors
-      raise "bad request: #{params}"
-    end
+    # curious what might occur here, can handle more gracefully when/if we receive some errors
+    raise "bad request: #{params}" unless twilio_reply.valid?
+
+    twilio_reply.process!
+    head :ok, content_type: 'text/html'
   end
 end
