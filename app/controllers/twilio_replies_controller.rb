@@ -11,8 +11,8 @@ class TwilioRepliesController < ApplicationController
       twilio_reply.process!
       head :ok, content_type: 'text/html'
     else
-      # TODO: log this or notify someone?
-      head :bad_request
+      # curious what might occur here, can handle more gracefully when/if we receive some errors
+      raise "bad request: #{params}"
     end
   end
 end
