@@ -1,6 +1,11 @@
 class TwilioLog < ApplicationRecord
   belongs_to :from_user, class_name: 'User', optional: true
   belongs_to :to_user, class_name: 'User', optional: true
+  has_one_attached :media_file
+
+  validates :media_file,
+            attached: true,
+            content_type: { in: RadCommon::VALID_IMAGE_TYPES, message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
 
   scope :last_day, -> { where('created_at > ?', 24.hours.ago) }
 
@@ -21,7 +26,7 @@ class TwilioLog < ApplicationRecord
 
   validates :from_user_id, presence: true, if: :outgoing?
   validates :message_sid, presence: true, if: :incoming?
-  validates :to_user_id, :media_url, :twilio_status, absence: true, if: :incoming?
+  validates :to_user_id, :twilio_status, absence: true, if: :incoming?
   validate :validate_incoming, if: :incoming?
 
   validates_with PhoneNumberValidator, fields: [{ field: :from_number }, { field: :to_number }], skip_twilio: true
