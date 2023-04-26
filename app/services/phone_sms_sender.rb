@@ -2,9 +2,9 @@ class PhoneSMSSender
   OPT_OUT_MESSAGE = 'To no longer receive text messages, text STOP'.freeze
 
   attr_accessor :message, :from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio, :opt_out_message_sent,
-                :exception
+                :exception, :twilio_log_attachments
 
-  def initialize(message, from_user_id, to_mobile_phone, media_url, force_opt_out)
+  def initialize(message, from_user_id, to_mobile_phone, media_url, force_opt_out, twilio_log_attachment_ids = nil)
     raise "The message from user #{from_user_id} failed: the message is blank." if message.blank?
     raise 'The message failed: the mobile phone number is blank.' if to_mobile_phone.blank?
 
@@ -13,12 +13,21 @@ class PhoneSMSSender
     self.media_url = media_url
     self.twilio = RadTwilio.new
     self.message = augment_message(message, force_opt_out)
+
+    return if twilio_log_attachment_ids.blank?
+
+    self.twilio_log_attachments = TwilioLogAttachment.where(id: twilio_log_attachment_ids)
   end
 
   def send!
     response = RadRetry.perform_request(raise_original: true) do
       if mms?
-        twilio.send_mms to: to_number, message: message, media_url: media_url
+        url = if twilio_log_attachments.present?
+                twilio_log_attachments.map { |log_attachment| log_attachment.attachment.url }
+              else
+                media_url
+              end
+        twilio.send_mms to: to_number, message: message, media_url: url
       else
         twilio.send_sms to: to_number, message: message
       end
@@ -46,7 +55,7 @@ class PhoneSMSSender
     end
 
     def mms?
-      media_url.present?
+      media_url.present? || twilio_log_attachments.present?
     end
 
     def augment_message(message, force_opt_out)
@@ -84,6 +93,7 @@ class PhoneSMSSender
                         media_url: media_url,
                         sent: sent,
                         message_sid: message_sid,
-                        opt_out_message_sent: opt_out_message_sent
+                        opt_out_message_sent: opt_out_message_sent,
+                        twilio_log_attachments: twilio_log_attachments.compact
     end
 end

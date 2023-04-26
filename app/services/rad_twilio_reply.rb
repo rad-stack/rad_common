@@ -18,15 +18,16 @@ class RadTwilioReply
   private
 
     def log_event
-      TwilioLog.create! log_type: :incoming,
-                        to_number: to_number,
-                        from_number: from_number,
-                        from_user_id: from_user_id,
-                        message: message,
-                        sent: true,
-                        message_sid: message_sid,
-                        success: true,
-                        opt_out_message_sent: false
+      log = TwilioLog.create! log_type: :incoming,
+                              to_number: to_number,
+                              from_number: from_number,
+                              from_user_id: from_user_id,
+                              message: message,
+                              sent: true,
+                              message_sid: message_sid,
+                              success: true,
+                              opt_out_message_sent: false
+      handle_attachments(log)
     end
 
     def from_number
@@ -53,5 +54,16 @@ class RadTwilioReply
 
     def message_sid
       params[:MessageSid]
+    end
+
+    def handle_attachments(twilio_log)
+      media_urls = params.slice(*params.keys.select { |value| value.match(/MediaUrl\d+/) }).values.compact
+      return if media_urls.none?
+
+      media_urls.each do |media_url|
+        log_attachment = TwilioLogAttachment.new(twilio_log: twilio_log, twilio_url: media_url)
+        log_attachment.attachment.attach(io: URI.parse(media_url).open, filename: File.basename(media_url))
+        log_attachment.save!
+      end
     end
 end
