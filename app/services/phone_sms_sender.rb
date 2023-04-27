@@ -94,6 +94,6 @@ class PhoneSMSSender
                         sent: sent,
                         message_sid: message_sid,
                         opt_out_message_sent: opt_out_message_sent,
-                        twilio_log_attachments: twilio_log_attachments
+                        twilio_log_attachments: twilio_log_attachments.presence || []
     end
 end
