@@ -49,7 +49,9 @@ class RadTwilioReply
     end
 
     def message
-      params[:Body]
+      return params[:Body] if params[:Body].present?
+
+      return 'File' if media_urls.present?
     end
 
     def message_sid
@@ -57,7 +59,6 @@ class RadTwilioReply
     end
 
     def handle_attachments(twilio_log)
-      media_urls = params.slice(*params.keys.select { |value| value.match(/MediaUrl\d+/) }).values.compact
       return if media_urls.none?
 
       media_urls.each do |media_url|
@@ -65,5 +66,9 @@ class RadTwilioReply
         log_attachment.attachment.attach(io: URI.parse(media_url).open, filename: File.basename(media_url))
         log_attachment.save!
       end
+    end
+
+    def media_urls
+      params.slice(*params.keys.select { |value| value.match(/MediaUrl\d+/) }).values.compact
     end
 end
