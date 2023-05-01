@@ -39,7 +39,7 @@ PATH
       sendgrid-ruby
       sentry-rails
       sentry-ruby
-      sidekiq (< 7)
+      sidekiq (< 8)
       simple_form
       smartystreets_ruby_sdk
       strip_attributes
