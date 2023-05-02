@@ -5,6 +5,7 @@ class PhoneSMSSender
                 :exception, :twilio_log_attachments
 
   def initialize(message, from_user_id, to_mobile_phone, media_url, force_opt_out, twilio_log_attachment_ids = nil)
+    message = 'File' if message.blank? && twilio_log_attachment_ids.present?
     raise "The message from user #{from_user_id} failed: the message is blank." if message.blank?
     raise 'The message failed: the mobile phone number is blank.' if to_mobile_phone.blank?
 
@@ -12,7 +13,6 @@ class PhoneSMSSender
     self.to_mobile_phone = to_mobile_phone
     self.media_url = media_url
     self.twilio = RadTwilio.new
-    message = 'File' if message.blank? && twilio_log_attachment_ids.present?
     self.message = augment_message(message, force_opt_out)
 
     return if twilio_log_attachment_ids.blank?
