@@ -12,7 +12,7 @@ class RadTwilioReply
   end
 
   def valid?
-    params[:Body].present? && params[:From].present? && params[:To].present? && params[:MessageSid].present?
+    message.present? && params[:From].present? && params[:To].present? && params[:MessageSid].present?
   end
 
   private
