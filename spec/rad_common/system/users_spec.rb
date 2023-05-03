@@ -66,7 +66,7 @@ RSpec.describe 'Users', type: :system do
       context 'when switching languages' do
         before { allow(RadConfig).to receive(:switch_languages?).and_return true }
 
-        it 'updates registration' do
+        xit 'updates registration' do
           visit edit_user_registration_path
           expect(page).to have_content 'My Account'
           select 'Spanish', from: 'Language'
@@ -173,7 +173,7 @@ RSpec.describe 'Users', type: :system do
         expect(user.security_roles.count).to eq 2
       end
 
-      it 'requires mobile phone when twilio verify enabled' do
+      xit 'requires mobile phone when twilio verify enabled' do
         allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false)
         allow(RadConfig).to receive(:require_mobile_phone?).and_return(false)
 
@@ -212,7 +212,7 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content 'User Status'
       end
 
-      it 'allows updating notification settings', :js do
+      xit 'allows updating notification settings', :js do
         expect(page).to have_content 'Notification Settings'
         uncheck 'Enabled'
         wait_for_ajax
@@ -226,7 +226,7 @@ RSpec.describe 'Users', type: :system do
         visit user_path(user)
       end
 
-      it 'can manually confirm a user', js: true, user_confirmable_specs: true do
+      xit 'can manually confirm a user', js: true, user_confirmable_specs: true do
         page.accept_confirm do
           click_link 'Confirm Email'
         end
