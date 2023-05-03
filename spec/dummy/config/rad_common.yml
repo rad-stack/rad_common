@@ -22,6 +22,7 @@ default: &default
   twilio_verify_all_users: true
   storage_config_override: false
   require_mobile_phone: false
+  check_js_errors: true
 
   system_usage_models:
     -

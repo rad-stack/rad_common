@@ -198,6 +198,10 @@ class RadConfig
       boolean_config_item! :require_mobile_phone
     end
 
+    def check_js_errors?
+      boolean_config_item! :check_js_errors
+    end
+
     def storage_config_override?
       boolean_config_item! :storage_config_override
     end

@@ -37,10 +37,12 @@ class RadSpecSupport
   end
 
   def self.hooks(config, driver)
-    config.after(:each, type: :system, js: true) do
-      errors = page.driver.browser.logs.get(:browser)
-      errors = errors.reject { |error| error.level == 'WARNING' }
-      expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
+    if RadConfig.check_js_errors?
+      config.after(:each, type: :system, js: true) do
+        errors = page.driver.browser.logs.get(:browser)
+        errors = errors.reject { |error| error.level == 'WARNING' }
+        expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
+      end
     end
 
     config.before(:example, type: :system) do
