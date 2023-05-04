@@ -50,7 +50,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
-  s.add_dependency 'sidekiq', '>= 7.1.0', '< 8.0'
+  s.add_dependency 'sidekiq', '~> 7.1'
   s.add_dependency 'simple_form'
   s.add_dependency 'smartystreets_ruby_sdk'
   s.add_dependency 'strip_attributes'
