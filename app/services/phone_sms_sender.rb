@@ -4,6 +4,8 @@ class PhoneSMSSender
   attr_accessor :message, :from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio, :opt_out_message_sent,
                 :exception, :twilio_log_attachments
 
+  delegate :from_number, to: :twilio
+
   def initialize(message, from_user_id, to_mobile_phone, media_url, force_opt_out, twilio_log_attachment_ids = nil)
     message = 'File' if message.blank? && twilio_log_attachment_ids.present?
     raise "The message from user #{from_user_id} failed: the message is blank." if message.blank?
@@ -43,10 +45,6 @@ class PhoneSMSSender
     log_event false, nil
     handle_blacklist
     false
-  end
-
-  def from_number
-    mms? ? twilio.from_number_mms : twilio.from_number
   end
 
   private
