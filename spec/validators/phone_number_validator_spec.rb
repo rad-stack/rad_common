@@ -65,9 +65,6 @@ RSpec.describe PhoneNumberValidator do
       allow(RadConfig).to receive(:twilio_phone_number!)
         .and_return RadConfig.secret_config_item!(:twilio_alt_phone_number)
 
-      allow(RadConfig).to receive(:twilio_mms_phone_number!)
-        .and_return RadConfig.secret_config_item!(:twilio_alt_mms_phone_number)
-
       allow(RadConfig).to receive(:twilio_account_sid!)
         .and_return RadConfig.secret_config_item!(:twilio_alt_account_sid)
 
