@@ -4,6 +4,8 @@ class PhoneSMSSender
   attr_accessor :message, :from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio, :opt_out_message_sent,
                 :exception
 
+  delegate :from_number, to: :twilio
+
   def initialize(message, from_user_id, to_mobile_phone, media_url, force_opt_out)
     raise "The message from user #{from_user_id} failed: the message is blank." if message.blank?
     raise 'The message failed: the mobile phone number is blank.' if to_mobile_phone.blank?
@@ -33,10 +35,6 @@ class PhoneSMSSender
     log_event false, nil
     handle_blacklist
     false
-  end
-
-  def from_number
-    mms? ? twilio.from_number_mms : twilio.from_number
   end
 
   private
