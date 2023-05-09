@@ -136,10 +136,6 @@ class RadConfig
       secret_config_item! :twilio_phone_number
     end
 
-    def twilio_mms_phone_number!
-      secret_config_item! :twilio_mms_phone_number
-    end
-
     def twilio_account_sid!
       secret_config_item! :twilio_account_sid
     end

@@ -4,7 +4,7 @@ class RadTwilio
   end
 
   def send_mms(to:, message:, media_url:)
-    client.messages.create from: from_number_mms,
+    client.messages.create from: from_number,
                            to: to,
                            body: message,
                            media_url: media_url,
@@ -29,10 +29,6 @@ class RadTwilio
 
   def from_number
     RadConfig.twilio_phone_number!
-  end
-
-  def from_number_mms
-    RadConfig.twilio_mms_phone_number!
   end
 
   def validate_phone_number(phone_number, mobile)
