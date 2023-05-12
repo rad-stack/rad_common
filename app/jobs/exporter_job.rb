@@ -1,7 +1,7 @@
 class ExporterJob < ApplicationJob
   queue_as :default
 
-  def perform(params, user_id, format = 'csv')
+  def perform(params, user_id, format: :csv)
     search_params = params.include?('search') ? ActionController::Parameters.new(search: params['search']) : {}
     user = User.find(user_id)
     search = search_class.new(search_params, user)
