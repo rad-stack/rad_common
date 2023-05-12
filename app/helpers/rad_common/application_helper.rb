@@ -191,11 +191,12 @@ module RadCommon
       raise RadIntermittentException
     end
 
-    def export_button(model_name)
+    def export_button(model_name, format: :csv)
       return unless policy(model_name.constantize.new).export?
 
-      link_to(icon(:file, 'Export to File'),
-              send("export_#{model_name.tableize}_path", params.permit!.to_h.merge(format: :csv)),
+      icon, text = format == :csv ? [:file, 'Export to File'] : ['file-pdf', 'Export to PDF']
+      link_to(icon(icon, text),
+              send("export_#{model_name.tableize}_path", params.permit!.to_h.merge(format: format)),
               class: 'btn btn-secondary btn-sm')
     end
 
