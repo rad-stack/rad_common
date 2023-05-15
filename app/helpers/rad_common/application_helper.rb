@@ -200,6 +200,12 @@ module RadCommon
               class: 'btn btn-secondary btn-sm')
     end
 
+    def export_buttons(model_name)
+      return unless policy(model_name.constantize.new).export?
+
+      [export_button(model_name, format: :csv), export_button(model_name, format: :pdf)]
+    end
+
     def onboarded?
       Onboarding.new(current_user).onboarded?
     end
