@@ -44,14 +44,12 @@ class Exporter
       pdf.text report_name, align: :center, style: :bold, size: 24
       pdf.move_down 10
 
-      # Define the table data
       data = records.map do |record|
         @current_record = record
         reset_attributes
         write_attributes
       end
 
-      # Combine the header and data, then draw the table
       pdf.table([headers] + data, header: true)
 
       pdf.render
