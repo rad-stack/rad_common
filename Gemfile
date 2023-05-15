@@ -19,6 +19,7 @@ gem 'devise-twilio-verify', git: 'https://github.com/jayywolff/twilio-verify-dev
 group :test do
   gem 'capybara-selenium'
   gem 'parallel_tests'
+  gem 'pdf-reader'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
   gem 'timecop'

@@ -1,10 +1,14 @@
 require 'csv'
+require 'prawn'
+require 'prawn/table'
 
 class Exporter
   include RadCommon::ApplicationHelper
   attr_reader :records, :current_record, :current_user, :format
 
-  def initialize(records:, current_user:, format: :csv)
+  DEFAULT_FORMAT = :csv
+
+  def initialize(records:, current_user:, format: DEFAULT_FORMAT)
     @records = records
     @current_user = current_user
     @current_record = nil
@@ -13,7 +17,7 @@ class Exporter
 
   def generate
     @records = process_records(@records)
-    format == :csv ? generate_csv : generate_pdf
+    format == DEFAULT_FORMAT ? generate_csv : generate_pdf
   end
 
   private

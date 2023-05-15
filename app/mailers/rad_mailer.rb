@@ -58,7 +58,7 @@ class RadMailer < ActionMailer::Base
   def email_report(user, file, report_name, options = {})
     start_date = options[:start_date]
     end_date   = options[:end_date]
-    format = options[:format]
+    export_format = options[:format].presence || Exporter::DEFAULT_FORMAT
 
     message_date_string = ''
     message_date_string += " for #{format_datetime(start_date, include_zone: true)}" if start_date.present?
@@ -74,8 +74,8 @@ class RadMailer < ActionMailer::Base
 
     @recipient = user
     @message = "Attached is the #{report_name}#{message_date_string}."
-    attachments["#{report_name}#{attachment_date_string}.#{format}"] = { mime_type: EXPORT_FORMATS[format],
-                                                                         content: file }
+    filename = "#{report_name}#{attachment_date_string}.#{export_format}"
+    attachments[filename] = { mime_type: EXPORT_FORMATS[export_format], content: file }
 
     mail to: @recipient.formatted_email, subject: "#{report_name}#{subject_date_string}"
   end

@@ -41,6 +41,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'parser', '~> 3.1.2.1'
 
   s.add_dependency 'pg'
+  s.add_dependency 'prawn'
+  s.add_dependency 'prawn-table'
   s.add_dependency 'premailer-rails'
   s.add_dependency 'pretender'
   s.add_dependency 'puma', '~> 5.6'

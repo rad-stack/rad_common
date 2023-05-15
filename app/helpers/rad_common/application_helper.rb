@@ -191,7 +191,7 @@ module RadCommon
       raise RadIntermittentException
     end
 
-    def export_button(model_name, format: :csv)
+    def export_button(model_name, format: Exporter::DEFAULT_FORMAT)
       return unless policy(model_name.constantize.new).export?
 
       icon, text = format == :csv ? [:file, 'Export to File'] : ['file-pdf', 'Export to PDF']
