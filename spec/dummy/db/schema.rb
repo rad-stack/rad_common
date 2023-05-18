@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_20_102508) do
+ActiveRecord::Schema.define(version: 2023_04_25_215920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -281,10 +281,18 @@ ActiveRecord::Schema.define(version: 2023_04_20_102508) do
     t.index ["user_id"], name: "index_system_messages_on_user_id"
   end
 
+  create_table "twilio_log_attachments", force: :cascade do |t|
+    t.bigint "twilio_log_id"
+    t.string "twilio_url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["twilio_log_id"], name: "index_twilio_log_attachments_on_twilio_log_id"
+  end
+
   create_table "twilio_logs", force: :cascade do |t|
     t.string "from_number", null: false
     t.string "to_number", null: false
-    t.integer "from_user_id", null: false
+    t.integer "from_user_id"
     t.integer "to_user_id"
     t.string "message", null: false
     t.string "media_url"
@@ -295,6 +303,7 @@ ActiveRecord::Schema.define(version: 2023_04_20_102508) do
     t.string "message_sid"
     t.integer "twilio_status"
     t.boolean "success", default: false, null: false
+    t.integer "log_type", null: false
     t.index ["created_at"], name: "index_twilio_logs_on_created_at"
     t.index ["from_number"], name: "index_twilio_logs_on_from_number"
     t.index ["from_user_id"], name: "index_twilio_logs_on_from_user_id"
@@ -402,6 +411,7 @@ ActiveRecord::Schema.define(version: 2023_04_20_102508) do
   add_foreign_key "saved_search_filters", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
+  add_foreign_key "twilio_log_attachments", "twilio_logs"
   add_foreign_key "twilio_logs", "users", column: "from_user_id"
   add_foreign_key "twilio_logs", "users", column: "to_user_id"
   add_foreign_key "user_clients", "clients"

@@ -46,6 +46,7 @@ module RadCommonRoutes
 
       resources :user_profiles, only: %i[show edit update] if RadConfig.user_profiles?
       resources :twilio_statuses, only: :create
+      resources :twilio_replies, only: :create
       resources :sendgrid_statuses, only: :create
 
       get 'contact_us', to: 'pages#contact_us'

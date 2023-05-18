@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :twilio_log do
+    log_type { 'outgoing' }
     to_number { Faker::PhoneNumber.cell_phone }
     from_number { Faker::PhoneNumber.cell_phone }
     association :from_user, factory: :user
@@ -9,7 +10,7 @@ FactoryBot.define do
     sent { rand(1..5) != 1 }
 
     after(:build) do |record|
-      if record.twilio_status.blank? && record.sent?
+      if record.twilio_status.blank? && record.sent? && record.outgoing?
         record.twilio_status = RadEnum.new(TwilioLog, :twilio_status).random_value
       end
     end
