@@ -51,7 +51,7 @@ class Exporter
         write_attributes.map { |cell| cell.encode('Windows-1252', invalid: :replace, undef: :replace, replace: '') }
       end
 
-      pdf.table([headers] + data, header: true)
+      pdf.table([headers] + data, header: true, width: pdf.bounds.width)
 
       pdf.render
     end
