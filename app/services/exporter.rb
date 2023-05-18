@@ -47,11 +47,16 @@ class Exporter
       data = records.map do |record|
         @current_record = record
         reset_attributes
-        write_attributes
+        # TODO: Consider adding global font that supports more UTF-8 characters
+        write_attributes.map { |cell| cell.encode('Windows-1252', invalid: :replace, undef: :replace, replace: '') }
       end
 
       pdf.table([headers] + data, header: true)
 
       pdf.render
+    end
+
+    def report_name
+      "#{records.klass.name} Export"
     end
 end
