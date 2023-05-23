@@ -15,7 +15,7 @@ class PhoneSMSSender
     self.to_mobile_phone = to_mobile_phone
     self.media_url = media_url
     self.twilio = RadTwilio.new
-    if twilio_log_attachment_ids.blank?
+    if twilio_log_attachment_ids.present?
       self.twilio_log_attachments = TwilioLogAttachment.where(id: twilio_log_attachment_ids)
     end
     self.message = augment_message(message, force_opt_out)

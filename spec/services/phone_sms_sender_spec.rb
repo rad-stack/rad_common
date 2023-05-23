@@ -4,7 +4,8 @@ RSpec.describe PhoneSMSSender, type: :service do
   let(:from_user) { create :user }
   let(:mobile_phone) { '(618) 722-2169' }
   let(:message) { 'test message' }
-  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false) }
+  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, twilio_log_attachment_ids) }
+  let(:twilio_log_attachment_ids) { [] }
 
   before { allow(RadRetry).to receive(:exponential_pause) }
 
@@ -30,6 +31,28 @@ RSpec.describe PhoneSMSSender, type: :service do
 
       it 'raises exception' do
         expect { result }.to raise_error RuntimeError
+      end
+    end
+  end
+
+  describe 'twilio_log_attachment' do
+    subject { sms_sender.send(:augment_message, message, false) }
+
+    let(:message) { 'Hey check out this document!' }
+    let(:twilio_log_attachment_ids) { [attachment.id] }
+    let(:attachment) do
+      twilio_log_attachment = TwilioLogAttachment.new
+      twilio_log_attachment.attachment.attach(io: file, filename: 'test.pdf')
+      twilio_log_attachment.save!
+      twilio_log_attachment
+    end
+    let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/test.pdf')) }
+    let(:perm_url) { AttachmentUrlGenerator.permanent_attachment_url(attachment) }
+
+
+    context 'with other file type besides image' do
+      it 'appends permanent url to message' do
+        expect(subject).to include perm_url
       end
     end
   end
