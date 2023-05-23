@@ -55,13 +55,11 @@ class PhoneSMSSender
     def image_files
       return [] if twilio_log_attachments.nil?
 
-
       twilio_log_attachments.images
     end
 
     def other_files
       return [] if twilio_log_attachments.nil?
-
 
       twilio_log_attachments.other_files
     end

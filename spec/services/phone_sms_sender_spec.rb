@@ -36,7 +36,7 @@ RSpec.describe PhoneSMSSender, type: :service do
   end
 
   describe 'twilio_log_attachment' do
-    subject { sms_sender.send(:augment_message, message, false) }
+    subject(:message_to_send) { sms_sender.send(:augment_message, message, false) }
 
     let(:message) { 'Hey check out this document!' }
     let(:twilio_log_attachment_ids) { [attachment.id] }
@@ -52,7 +52,7 @@ RSpec.describe PhoneSMSSender, type: :service do
 
     context 'with other file type besides image' do
       it 'appends permanent url to message' do
-        expect(subject).to include perm_url
+        expect(message_to_send).to include perm_url
       end
     end
   end
