@@ -39,21 +39,19 @@ RSpec.describe PhoneSMSSender, type: :service do
     subject(:message_to_send) { sms_sender.send(:augment_message, message, false) }
 
     let(:message) { 'Hey check out this document!' }
-    let(:twilio_log_attachment_ids) { [attachment.id] }
-    let(:attachment) do
+    let(:twilio_log_attachment_ids) { [twilio_log_attachment.id] }
+    let(:twilio_log_attachment) do
       twilio_log_attachment = TwilioLogAttachment.new
       twilio_log_attachment.attachment.attach(io: file, filename: 'test.pdf')
       twilio_log_attachment.save!
       twilio_log_attachment
     end
     let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/test.pdf')) }
-    let(:perm_url) { AttachmentUrlGenerator.permanent_attachment_url(attachment) }
+    let(:perm_url) { AttachmentUrlGenerator.permanent_attachment_url(twilio_log_attachment.attachment) }
 
 
     context 'with other file type besides image' do
       it 'appends permanent url to message' do
-        puts "logs...... #{twilio_log_attachment_ids}"
-        puts "attachment........ #{attachment.id}"
         expect(message_to_send).to include perm_url
       end
     end
