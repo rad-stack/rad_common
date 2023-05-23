@@ -49,7 +49,6 @@ RSpec.describe PhoneSMSSender, type: :service do
     let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/test.pdf')) }
     let(:perm_url) { AttachmentUrlGenerator.permanent_attachment_url(twilio_log_attachment.attachment) }
 
-
     context 'with other file type besides image' do
       it 'appends permanent url to message' do
         expect(message_to_send).to include perm_url
