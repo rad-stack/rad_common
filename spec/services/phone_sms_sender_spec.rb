@@ -52,6 +52,8 @@ RSpec.describe PhoneSMSSender, type: :service do
 
     context 'with other file type besides image' do
       it 'appends permanent url to message' do
+        puts "logs...... #{twilio_log_attachment_ids}"
+        puts "attachment........ #{attachment.id}"
         expect(message_to_send).to include perm_url
       end
     end
