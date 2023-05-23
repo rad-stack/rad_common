@@ -86,7 +86,7 @@ class PhoneSMSSender
     def maybe_add_attachment_urls(message)
       return message if other_files.empty?
 
-      urls = other_files.map(&:file).map { |file| AttachmentUrlGenerator.permanent_attachment_url(file) }.join(' ')
+      urls = other_files.map(&:attachment).map { |file| AttachmentUrlGenerator.permanent_attachment_url(file) }.join(' ')
       message = "#{message} #{urls}" if urls.present?
       message
     end
