@@ -122,7 +122,7 @@ class RadSeeder
     end
 
     def staging_safe_email
-      # this is helfpul when sendgrid email validaiton is enabled on staging, the faker emails would then fail
+      # this is helpful when sendgrid email validation is enabled on staging, the faker emails would then fail
       return seeded_user_config.first[:email] if Rails.env.staging?
 
       Faker::Internet.email
