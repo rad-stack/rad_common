@@ -205,6 +205,9 @@ RSpec/MessageSpies:
 RSpec/VerifiedDoubles:
   Enabled: false
 
+RSpec/IndexedLet:
+  Enabled: false
+
 Rails/HttpPositionalArguments:
   Exclude:
     # this just doesn't seem right for things like 'on: :member'
