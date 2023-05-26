@@ -181,7 +181,7 @@ Style/SignalException:
 RSpec/ExampleLength:
   Enabled: false
 
-RSpec/FactoryBot/ConsistentParenthesesStyle:
+FactoryBot/ConsistentParenthesesStyle:
   EnforcedStyle: omit_parentheses
 
 RSpec/MultipleExpectations:

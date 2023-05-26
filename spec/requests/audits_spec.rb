@@ -32,7 +32,7 @@ RSpec.describe 'Audits' do
         let(:allowed) { false }
 
         it 'denies access' do
-          expect(response.code).to eq '403'
+          expect(response).to have_http_status :forbidden
         end
       end
     end
