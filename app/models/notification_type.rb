@@ -140,9 +140,9 @@ class NotificationType < ApplicationRecord
 
       if mailer_class == 'RadMailer' && mailer_method == 'simple_message'
         RadMailer.simple_message(id_list,
-                                     mailer_subject,
-                                     mailer_message,
-                                     mailer_options.merge(notification_settings_link: true)).deliver_later
+                                 mailer_subject,
+                                 mailer_message,
+                                 mailer_options.merge(notification_settings_link: true)).deliver_later
       else
         mailer = mailer_class.constantize
 
