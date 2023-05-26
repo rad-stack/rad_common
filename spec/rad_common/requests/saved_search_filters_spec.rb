@@ -26,7 +26,7 @@ RSpec.describe 'Saved Search Filters', type: :request do
 
       it 'redirects to unauthorized' do
         delete "/saved_search_filters/#{saved_search_filter.id}", headers: { HTTP_REFERER: users_path }
-        expect(response.code).to eq('403')
+        expect(response).to have_http_status(:forbidden)
         expect(response.body).to include('Access Denied')
       end
     end

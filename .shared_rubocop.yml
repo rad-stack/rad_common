@@ -181,7 +181,7 @@ Style/SignalException:
 RSpec/ExampleLength:
   Enabled: false
 
-RSpec/FactoryBot/ConsistentParenthesesStyle:
+FactoryBot/ConsistentParenthesesStyle:
   EnforcedStyle: omit_parentheses
 
 RSpec/MultipleExpectations:
@@ -203,6 +203,9 @@ RSpec/MessageSpies:
   Enabled: false
 
 RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/IndexedLet:
   Enabled: false
 
 Rails/HttpPositionalArguments:

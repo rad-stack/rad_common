@@ -72,7 +72,7 @@ Style/SymbolArray:
     - 'spec/dummy/config/initializers/filter_parameter_logging.rb'
     - 'config/initializers/filter_parameter_logging.rb'
 
-RSpec/FactoryBot/CreateList:
+FactoryBot/CreateList:
   Exclude:
     - 'spec/dummy/app/services/seeder.rb'
 

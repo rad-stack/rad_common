@@ -10,6 +10,7 @@
 
       - @twilio_logs.each do |twilio_log|
         %tr{ class: twilio_log.success ? '' : 'alert-danger' }
+          %td= enum_to_translated_option(twilio_log, :log_type)
           %td= format_datetime twilio_log.created_at
           %td= twilio_log.from_number
           %td= twilio_log.to_number

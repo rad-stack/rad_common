@@ -85,7 +85,7 @@ RSpec.describe 'Notification Settings', type: :request do
 
         it 'denies access' do
           post '/rad_common/notification_settings', params: { notification_setting: attributes }
-          expect(response.code).to eq '403'
+          expect(response).to have_http_status :forbidden
         end
       end
     end
