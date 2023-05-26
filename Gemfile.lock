@@ -26,6 +26,7 @@ PATH
       image_processing
       jwt
       kaminari
+      matrix
       nokogiri
       parser (~> 3.1.2.1)
       pg

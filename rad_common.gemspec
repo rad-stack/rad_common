@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
   s.add_dependency 'kaminari'
-  s.add_dependency 'sassc'
+  s.add_dependency 'matrix'
 
   s.add_dependency 'nokogiri'
 
@@ -49,6 +49,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1'
   s.add_dependency 'redis', '~> 4.8'
+  s.add_dependency 'sassc'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
