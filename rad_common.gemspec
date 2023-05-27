@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
   s.add_dependency 'kaminari'
-  s.add_dependency 'sassc'
+  s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
 
   s.add_dependency 'nokogiri'
 
@@ -41,12 +41,15 @@ Gem::Specification.new do |s|
   s.add_dependency 'parser', '~> 3.1.2.1'
 
   s.add_dependency 'pg'
+  s.add_dependency 'prawn'
+  s.add_dependency 'prawn-table'
   s.add_dependency 'premailer-rails'
   s.add_dependency 'pretender'
   s.add_dependency 'puma', '~> 5.6'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1'
   s.add_dependency 'redis', '~> 4.8'
+  s.add_dependency 'sassc'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'

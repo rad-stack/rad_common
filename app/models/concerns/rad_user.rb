@@ -205,7 +205,8 @@ module RadUser
     User.languages[language]
   end
 
-  def twilio_totp_factor_sid; end # TODO: this should be a db attribute when we enable the TOTP feature
+  # TODO: this should be a db attribute when we enable the TOTP feature
+  def twilio_totp_factor_sid; end
 
   private
 
