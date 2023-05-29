@@ -206,5 +206,10 @@ describe RadCommon::ApplicationHelper do
         expect(helper.format_datetime(date, include_zone: true)).to eq(result)
       end
     end
+
+    it 'has the proper spacing' do
+      date = DateTime.parse('2023-05-29 9:38AM')
+      expect(helper.format_datetime(date)).to eq('5/29/2023 9:38 AM')
+    end
   end
 end

@@ -77,7 +77,7 @@ module RadCommon
       format_string += ':%S' if options[:include_seconds]
       format_string += ' %p'
       format_string += ' %Z' if options[:include_zone]
-      value.in_time_zone.strftime(format_string)
+      value.in_time_zone.strftime(format_string).gsub('  ', ' ')
     end
 
     def format_time(value)
