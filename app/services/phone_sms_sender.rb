@@ -15,18 +15,17 @@ class PhoneSMSSender
     self.to_mobile_phone = to_mobile_phone
     self.media_url = media_url
     self.twilio = RadTwilio.new
+    if twilio_log_attachment_ids.present?
+      self.twilio_log_attachments = TwilioLogAttachment.where(id: twilio_log_attachment_ids)
+    end
     self.message = augment_message(message, force_opt_out)
-
-    return if twilio_log_attachment_ids.blank?
-
-    self.twilio_log_attachments = TwilioLogAttachment.where(id: twilio_log_attachment_ids)
   end
 
   def send!
     response = RadRetry.perform_request(raise_original: true) do
       if mms?
-        url = if twilio_log_attachments.present?
-                twilio_log_attachments.map { |log_attachment| log_attachment.attachment.url }
+        url = if image_files.present?
+                image_files.map { |log_attachment| log_attachment.attachment.url }
               else
                 media_url
               end
@@ -53,11 +52,24 @@ class PhoneSMSSender
       # override as needed
     end
 
+    def image_files
+      return [] if twilio_log_attachments.nil?
+
+      twilio_log_attachments.images
+    end
+
+    def other_files
+      return [] if twilio_log_attachments.nil?
+
+      twilio_log_attachments.other_files
+    end
+
     def mms?
-      media_url.present? || twilio_log_attachments.present?
+      media_url.present? || image_files.present?
     end
 
     def augment_message(message, force_opt_out)
+      message = maybe_add_attachment_urls(message)
       if !force_opt_out && opt_out_message_already_sent?
         self.opt_out_message_sent = false
         return message
@@ -67,6 +79,16 @@ class PhoneSMSSender
       return "#{message} - #{OPT_OUT_MESSAGE}" unless %w[. ! ?].include?(message[-1])
 
       "#{message} #{OPT_OUT_MESSAGE}."
+    end
+
+    def maybe_add_attachment_urls(message)
+      return message if other_files.empty?
+
+      urls = other_files.map(&:attachment)
+                        .map { |file| AttachmentUrlGenerator.permanent_attachment_url(file) }
+                        .join(' ')
+      message = "#{message} #{urls}" if urls.present?
+      message
     end
 
     def to_number
