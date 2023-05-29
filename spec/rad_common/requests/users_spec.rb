@@ -108,5 +108,13 @@ RSpec.describe 'Users', type: :request do
         expect(flash[:error]).to include 'User has audit history'
       end
     end
+
+    describe 'export' do
+      it 'exports' do
+        get '/users/export', params: { format: :pdf }
+        expect(response).to have_http_status :redirect
+        expect(flash[:success]).to include 'Your report is generating'
+      end
+    end
   end
 end
