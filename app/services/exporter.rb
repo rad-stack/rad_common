@@ -1,6 +1,4 @@
 require 'csv'
-require 'prawn'
-require 'prawn/table'
 
 class Exporter
   include RadCommon::ApplicationHelper
