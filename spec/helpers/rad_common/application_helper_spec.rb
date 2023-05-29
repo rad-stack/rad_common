@@ -190,19 +190,19 @@ describe RadCommon::ApplicationHelper do
 
     context 'with no options' do
       it 'formats the date' do
-        expect(helper.format_datetime(date)).to eq(date.strftime('%-m/%-d/%Y %l:%M %p'))
+        expect(helper.format_datetime(date)).to eq(date.strftime('%-m/%-d/%Y %-l:%M %p'))
       end
     end
 
     context 'with seconds option' do
       it 'formats the date' do
-        expect(helper.format_datetime(date, include_seconds: true)).to eq(date.strftime('%-m/%-d/%Y %l:%M:%S %p'))
+        expect(helper.format_datetime(date, include_seconds: true)).to eq(date.strftime('%-m/%-d/%Y %-l:%M:%S %p'))
       end
     end
 
     context 'with zone option' do
       it 'formats the date' do
-        result = date.in_time_zone.strftime('%-m/%-d/%Y %l:%M %p %Z')
+        result = date.in_time_zone.strftime('%-m/%-d/%Y %-l:%M %p %Z')
         expect(helper.format_datetime(date, include_zone: true)).to eq(result)
       end
     end
