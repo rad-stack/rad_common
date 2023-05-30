@@ -73,7 +73,7 @@ module RadCommon
     def format_datetime(value, options = {})
       return nil if value.blank?
 
-      format_string = '%-m/%-d/%Y %l:%M'
+      format_string = '%-m/%-d/%Y %-l:%M'
       format_string += ':%S' if options[:include_seconds]
       format_string += ' %p'
       format_string += ' %Z' if options[:include_zone]
@@ -191,12 +191,21 @@ module RadCommon
       raise RadIntermittentException
     end
 
-    def export_button(model_name)
+    def export_button(model_name, format: Exporter::DEFAULT_FORMAT, override_path: nil)
       return unless policy(model_name.constantize.new).export?
 
-      link_to(icon(:file, 'Export to File'),
-              send("export_#{model_name.tableize}_path", params.permit!.to_h.merge(format: :csv)),
+      icon, text = format == :csv ? [:file, 'Export to File'] : ['file-pdf', 'Export to PDF']
+      export_path = override_path.presence || "export_#{model_name.tableize}_path"
+      link_to(icon(icon, text),
+              send(export_path, params.permit!.to_h.merge(format: format)),
               class: 'btn btn-secondary btn-sm')
+    end
+
+    def export_buttons(model_name, override_path: nil)
+      return [] unless policy(model_name.constantize.new).export?
+
+      [export_button(model_name, format: :csv, override_path: override_path),
+       export_button(model_name, format: :pdf, override_path: override_path)].compact
     end
 
     def onboarded?
