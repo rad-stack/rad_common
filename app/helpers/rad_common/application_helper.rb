@@ -202,10 +202,10 @@ module RadCommon
     end
 
     def export_buttons(model_name, override_path: nil)
-      return unless policy(model_name.constantize.new).export?
+      return [] unless policy(model_name.constantize.new).export?
 
       [export_button(model_name, format: :csv, override_path: override_path),
-       export_button(model_name, format: :pdf, override_path: override_path)]
+       export_button(model_name, format: :pdf, override_path: override_path)].compact
     end
 
     def onboarded?
