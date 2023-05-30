@@ -46,7 +46,9 @@ class Exporter
         @current_record = record
         reset_attributes
         # TODO: Consider adding global font that supports more UTF-8 characters
-        write_attributes.map { |cell| cell.to_s.encode('Windows-1252', invalid: :replace, undef: :replace, replace: '') }
+        write_attributes.map do |cell|
+          cell.to_s.encode('Windows-1252', invalid: :replace, undef: :replace, replace: '')
+        end
       end
 
       pdf.table([headers] + data, header: true, width: pdf.bounds.width)
