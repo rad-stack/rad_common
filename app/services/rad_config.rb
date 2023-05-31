@@ -298,6 +298,10 @@ class RadConfig
       array_config_item! :restricted_audit_attributes
     end
 
+    def twilio_verify_remember_device!
+      (config_item(:twilio_verify_remember_device_days).presence || 7).days
+    end
+
     def global_search_scopes!
       items = array_config_item!(:global_search_scopes)
       raise 'global_search_scopes contain duplicate name(s)' unless items.pluck(:name).uniq.size == items.size
