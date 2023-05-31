@@ -1,0 +1,13 @@
+- if model.use_first_last_name?
+  %th Last Name
+  %th First Name
+  - if model.use_birth_date?
+    %th Birth Date
+  - if model.use_address?
+    %th Address 1
+    %th Address 2
+    %th City
+    %th State
+    %th Zipcode
+  - model.applicable_duplicate_items.each do |item|
+    %th= item[:label]

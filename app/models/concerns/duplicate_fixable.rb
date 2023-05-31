@@ -80,15 +80,7 @@ module DuplicateFixable
   end
 
   def process_duplicates
-    contacts = []
-
-    all_matches.each do |match|
-      record = model_klass.find(match)
-      score = duplicate_record_score(record)
-      contacts.push(id: record.id, score: score)
-    end
-
-    contacts = contacts.sort_by { |item| item[:score] }.reverse.first(100)
+    contacts = duplicate_matches
 
     if contacts.any?
       raw_score = contacts.first[:score]
@@ -96,6 +88,14 @@ module DuplicateFixable
     else
       create_or_update_metadata! duplicates_info: nil, score: nil
     end
+  end
+
+  def find_duplicate
+    contacts = duplicate_matches
+
+    return if contacts.empty? || contacts.first[:score] < 1
+
+    contacts.first
   end
 
   def reset_duplicates
@@ -200,35 +200,50 @@ module DuplicateFixable
        additional_item_matches).uniq - no_matches(self)
     end
 
+    def duplicate_matches
+      contacts = []
+
+      all_matches.each do |match|
+        record = model_klass.find(match)
+        score = duplicate_record_score(record)
+        contacts.push(id: record.id, score: score)
+      end
+
+      contacts.sort_by { |item| item[:score] }.reverse.first(100)
+    end
+
     def name_matches
       return [] unless model_klass.use_first_last_name?
 
-      model_klass.where('id <> ? AND upper(first_name) = ? AND upper(last_name) = ?',
-                        id,
-                        first_name.upcase,
-                        last_name.upcase).pluck(:id)
+      query = model_klass.where('upper(first_name) = ? AND upper(last_name) = ?',
+                                first_name.upcase,
+                                last_name.upcase).pluck(:id)
+      query = query.where.not(id: id) if id.present?
+      query
     end
 
     def similar_name_matches
       return [] unless model_klass.use_first_last_name?
 
-      model_klass.where('id <> ? AND levenshtein(upper(first_name), ?) <= 1 AND levenshtein(upper(last_name), ?) <= 1',
-                        id,
-                        first_name.upcase,
-                        last_name.upcase).pluck(:id)
+      query = model_klass.where('levenshtein(upper(first_name), ?) <= 1 AND levenshtein(upper(last_name), ?) <= 1',
+                                first_name.upcase,
+                                last_name.upcase).pluck(:id)
+      query = query.where.not(id: id) if id.present?
+      query
     end
 
     def birth_date_matches
       return [] unless model_klass.use_birth_date? && model_klass.use_first_last_name?
 
-      query_string = 'id <> ? AND birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR ' \
+      query_string = 'birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR ' \
                      'levenshtein(upper(last_name), ?) <= 1)'
 
-      model_klass.where(query_string,
-                        id,
-                        birth_date,
-                        first_name.upcase,
-                        last_name.upcase).pluck(:id)
+      query = model_klass.where(query_string,
+                                birth_date,
+                                first_name.upcase,
+                                last_name.upcase).pluck(:id)
+      query = query.where.not(id: id) if id.present?
+      query
     end
 
     def additional_item_matches
@@ -240,15 +255,17 @@ module DuplicateFixable
 
         query = case item[:type]
                 when :association
-                  "id <> ? AND #{item[:name]} IS NOT NULL AND #{item[:name]} = ?"
+                  "#{item[:name]} IS NOT NULL AND #{item[:name]} = ?"
                 when :levenshtein
-                  "id <> ? AND levenshtein(upper(#{item[:name]}), ?) <= 1"
+                  "levenshtein(upper(#{item[:name]}), ?) <= 1"
                 else
-                  "id <> ? AND #{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?"
+                  "#{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?"
                 end
 
         check_value = item[:type] == :levenshtein ? item_value.upcase : item_value
-        items += model_klass.where(query, id, check_value).pluck(:id)
+        query = model_klass.where(query, check_value)
+        query = query.where.not(id: id) if id.present?
+        items += query.pluck(:id)
       end
 
       items
