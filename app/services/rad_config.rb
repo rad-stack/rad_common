@@ -157,7 +157,7 @@ class RadConfig
     end
 
     def twilio_verify_remember_device!
-      config_item! :twilio_verify_remember_device_days
+      config_item!(:twilio_verify_remember_device_days).days
     end
 
     def seeded_users!
