@@ -217,9 +217,9 @@ module DuplicateFixable
 
       query = model_klass.where('upper(first_name) = ? AND upper(last_name) = ?',
                                 first_name.upcase,
-                                last_name.upcase).pluck(:id)
+                                last_name.upcase)
       query = query.where.not(id: id) if id.present?
-      query
+      query.pluck(:id)
     end
 
     def similar_name_matches
