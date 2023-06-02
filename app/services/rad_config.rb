@@ -148,6 +148,18 @@ class RadConfig
       secret_config_item! :twilio_verify_service_sid
     end
 
+    def twilio_verify_enabled?
+      boolean_config_item! :twilio_verify_enabled
+    end
+
+    def twilio_verify_all_users?
+      boolean_config_item! :twilio_verify_all_users
+    end
+
+    def twilio_verify_remember_device!
+      config_item!(:twilio_verify_remember_device_days).days
+    end
+
     def seeded_users!
       raise 'missing seeded_users config' if Rails.application.credentials.seeded_users.blank?
 
@@ -180,14 +192,6 @@ class RadConfig
 
     def switch_languages?
       boolean_config_item! :switch_languages
-    end
-
-    def twilio_verify_enabled?
-      boolean_config_item! :twilio_verify_enabled
-    end
-
-    def twilio_verify_all_users?
-      boolean_config_item! :twilio_verify_all_users
     end
 
     def require_mobile_phone?

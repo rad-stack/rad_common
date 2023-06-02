@@ -20,6 +20,7 @@ default: &default
   legal_docs: true
   wide_margins: false
   twilio_verify_all_users: true
+  twilio_verify_remember_device_days: 7
   storage_config_override: false
   require_mobile_phone: false
 
