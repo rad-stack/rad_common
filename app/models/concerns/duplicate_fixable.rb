@@ -227,9 +227,9 @@ module DuplicateFixable
 
       query = model_klass.where('levenshtein(upper(first_name), ?) <= 1 AND levenshtein(upper(last_name), ?) <= 1',
                                 first_name.upcase,
-                                last_name.upcase).pluck(:id)
+                                last_name.upcase)
       query = query.where.not(id: id) if id.present?
-      query
+      query.pluck(:id)
     end
 
     def birth_date_matches
@@ -241,9 +241,9 @@ module DuplicateFixable
       query = model_klass.where(query_string,
                                 birth_date,
                                 first_name.upcase,
-                                last_name.upcase).pluck(:id)
+                                last_name.upcase)
       query = query.where.not(id: id) if id.present?
-      query
+      query.pluck(:id)
     end
 
     def additional_item_matches
