@@ -95,7 +95,7 @@ module DuplicateFixable
 
     return if contacts.empty? || contacts.first[:score] < 1
 
-    contacts.first
+    self.class.find(contacts.first[:id])
   end
 
   def reset_duplicates
