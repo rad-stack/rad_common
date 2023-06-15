@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :saved_search_filter do
-    association :user
+    user
     name { Faker::Company.bs }
     search_class { 'UserSearch' }
     search_filters { { 'email_like' => Faker::Internet.email } }

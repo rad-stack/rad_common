@@ -16,19 +16,14 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   s.bindir = 'bin'
-  s.executables = %w[reset_db migrate_reset rc_update]
+  s.executables = %w[reset_db migrate_reset rc_update rc_rspec rc_parallel_rspec]
 
   s.add_dependency 'active_storage_validations'
   s.add_dependency 'audited'
   s.add_dependency 'authtrail'
-
-  # TODO: remove this override when we replace authy with twilio verify, see Task 37169
-  s.add_dependency 'authy', '< 3.0.0'
-
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap4-kaminari-views'
   s.add_dependency 'devise'
-  s.add_dependency 'devise-authy'
   s.add_dependency 'devise_invitable'
   s.add_dependency 'devise-security'
   s.add_dependency 'factory_bot_rails'
@@ -36,13 +31,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml-rails'
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
+  s.add_dependency 'jwt'
   s.add_dependency 'kaminari'
-  s.add_dependency 'sassc'
-
-  # TODO: remove these 3 once the mail gem is up to date, see Task 37200
-  s.add_dependency 'net-imap'
-  s.add_dependency 'net-pop'
-  s.add_dependency 'net-smtp'
+  s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
 
   s.add_dependency 'nokogiri'
 
@@ -50,15 +41,19 @@ Gem::Specification.new do |s|
   s.add_dependency 'parser', '~> 3.1.2.1'
 
   s.add_dependency 'pg'
+  s.add_dependency 'prawn'
+  s.add_dependency 'prawn-table'
   s.add_dependency 'premailer-rails'
   s.add_dependency 'pretender'
-  s.add_dependency 'puma', '~> 5.6' # TODO: update puma to version 6
+  s.add_dependency 'puma', '~> 5.6'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 7.0.2'
+  s.add_dependency 'redis', '~> 4.8'
+  s.add_dependency 'sassc'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
-  s.add_dependency 'sidekiq', '< 7' # TODO: update sidekiq to version 7
+  s.add_dependency 'sidekiq', '~> 7.1'
   s.add_dependency 'simple_form'
   s.add_dependency 'smartystreets_ruby_sdk'
   s.add_dependency 'strip_attributes'

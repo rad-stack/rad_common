@@ -6,22 +6,24 @@
       .col-lg-6= f.input :first_name
       .col-lg-6= f.input :last_name
     .row
-      .col-lg-6= f.input :mobile_phone
+      .col-lg-6= f.input :mobile_phone, required: require_mobile_phone?
       .col-lg-6= f.input :email, disabled: !@user.new_record?
     .row
       .col-lg-6= f.association :user_status, collection: UserStatus.by_id
-      .col-lg-6= f.input :timezone, as: :time_zone, priority: timezone_us_filter
+      - if RadConfig.switch_languages?
+        .col-lg-3= f.input :language, collection: options_for_enum(User, :language)
+      .col-lg-3= f.input :timezone, as: :time_zone, priority: timezone_us_filter
     .row
-      - if RadicalConfig.external_users?
-        .col-lg-2= f.input :external
-      - if RadicalConfig.authy_enabled?
-        .col-lg-2= f.input :authy_sms, tooltip: 'Send SMS message with code for Authy Two Factor Authentication'
+      - if RadConfig.external_users?
+        .col-lg-3= f.input :external
+      - if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
+        .col-lg-3= f.input :twilio_verify_enabled
     .row
       -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
       .col-lg-6= f.input :password, autocomplete: 'off', input_html: { autocomplete: 'new-password' }
 
       .col-lg-6= f.input :password_confirmation
-    - if RadicalConfig.avatar?
+    - if RadConfig.avatar?
       .row
         .col-lg-3= f.input :avatar
 
@@ -33,13 +35,13 @@
                                      collection: security_role_collection(:internal),
                                      checked: @user.security_roles.ids
 
-    - if RadicalConfig.external_users? && security_role_collection(:external).any?
+    - if RadConfig.external_users? && security_role_collection(:external).any?
       .row.external
         .col-lg-12
           = f.input :security_roles, as: :check_boxes,
                                      item_wrapper_class: 'col-lg-3 security-role-checkboxes',
                                      collection: security_role_collection(:external),
                                      checked: @user.security_roles.ids
-
+    = render 'users/form_custom', f: f
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'

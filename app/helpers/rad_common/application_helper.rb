@@ -21,7 +21,7 @@ module RadCommon
     end
 
     def avatar_image(user, size)
-      if RadicalConfig.avatar? && user.avatar.attached?
+      if RadConfig.avatar? && user.avatar.attached?
         image_tag(user.avatar.variant(resize: '50x50'))
       else
         image_tag(gravatar_for(user, size))
@@ -73,7 +73,7 @@ module RadCommon
     def format_datetime(value, options = {})
       return nil if value.blank?
 
-      format_string = '%-m/%-d/%Y %l:%M'
+      format_string = '%-m/%-d/%Y %-l:%M'
       format_string += ':%S' if options[:include_seconds]
       format_string += ' %p'
       format_string += ' %Z' if options[:include_zone]
@@ -118,15 +118,15 @@ module RadCommon
     end
 
     def enum_to_translated_option(record, enum_name)
-      RadicalEnum.new(record.class, enum_name).translated_option(record)
+      RadEnum.new(record.class, enum_name).translated_option(record)
     end
 
     def options_for_enum(klass, enum_name)
-      RadicalEnum.new(klass, enum_name).options
+      RadEnum.new(klass, enum_name).options
     end
 
     def enum_translation(klass, enum_name, value)
-      RadicalEnum.new(klass, enum_name).translation(value)
+      RadEnum.new(klass, enum_name).translation(value)
     end
 
     def bootstrap_flash
@@ -170,7 +170,7 @@ module RadCommon
     end
 
     def verify_sign_up
-      raise RadicallyIntermittentException if RadicalConfig.disable_sign_up?
+      raise RadIntermittentException if RadConfig.disable_sign_up?
     end
 
     def sign_up_roles
@@ -182,21 +182,32 @@ module RadCommon
     end
 
     def verify_invite
-      raise RadicallyIntermittentException if RadicalConfig.disable_invite?
+      raise RadIntermittentException if RadConfig.disable_invite?
     end
 
     def verify_manually_create_users
-      return if RadicalConfig.manually_create_users?
+      return if RadConfig.manually_create_users?
 
-      raise RadicallyIntermittentException
+      raise RadIntermittentException
     end
 
-    def export_button(model_name)
+    def export_button(model_name, format: Exporter::DEFAULT_FORMAT, override_path: nil, additional_params: {})
       return unless policy(model_name.constantize.new).export?
 
-      link_to(icon(:file, 'Export to File'),
-              send("export_#{model_name.tableize}_path", params.permit!.to_h.merge(format: :csv)),
+      icon, text = format == :csv ? [:file, 'Export to File'] : ['file-pdf', 'Export to PDF']
+      export_path = override_path.presence || "export_#{model_name.tableize}_path"
+      link_to(icon(icon, text),
+              send(export_path, params.permit!.to_h.merge(format: format).deep_merge(additional_params)),
               class: 'btn btn-secondary btn-sm')
+    end
+
+    def export_buttons(model_name, override_path: nil, additional_params: {})
+      return [] unless policy(model_name.constantize.new).export?
+
+      [
+        export_button(model_name, format: :csv, override_path: override_path, additional_params: additional_params),
+        export_button(model_name, format: :pdf, override_path: override_path, additional_params: additional_params)
+      ].compact
     end
 
     def onboarded?

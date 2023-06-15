@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Audits', type: :system do
+describe 'Audits' do
   let(:admin) { create :admin }
 
   before { login_as admin, scope: :user }

@@ -1,9 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe 'Notification Settings', type: :request do
-  let(:notification_type) { create :new_user_signed_up_notification }
+  let(:notification_type) { Notifications::NewUserSignedUpNotification.main }
 
-  before { login_as user, scope: :user }
+  before do
+    create :admin
+    login_as user, scope: :user
+  end
 
   describe 'POST create' do
     let(:attributes) do
@@ -82,7 +85,7 @@ RSpec.describe 'Notification Settings', type: :request do
 
         it 'denies access' do
           post '/rad_common/notification_settings', params: { notification_setting: attributes }
-          expect(response.code).to eq '403'
+          expect(response).to have_http_status :forbidden
         end
       end
     end

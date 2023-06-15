@@ -44,7 +44,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
                        'foob@example.com, barf@example.com, xanz@example.com']
 
       invalid_items.each do |item|
-        model = build(:division, invoice_email: item)
+        model = build :division, invoice_email: item
 
         expect(model).to be_invalid
         expect(model.errors.details.first[0]).to eq :invoice_email
@@ -60,7 +60,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
     let(:bad_email) { 'support@radicalbear.co' }
     let!(:division) { build :division, invoice_email: email }
 
-    before { allow_any_instance_of(RadicalSendGrid).to receive(:sendgrid_enabled?).and_return true }
+    before { allow_any_instance_of(RadSendGrid).to receive(:sendgrid_enabled?).and_return true }
 
     context 'with valid email' do
       let(:email) { good_email }

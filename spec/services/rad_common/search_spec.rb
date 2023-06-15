@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe RadCommon::Search, type: :service do
-  let(:user) { create(:user) }
+  let(:user) { create :user }
 
   describe 'results' do
     subject(:search) do
@@ -15,8 +15,8 @@ RSpec.describe RadCommon::Search, type: :service do
     let!(:division) { create :division }
 
     context 'when using a like filter' do
-      let!(:role_1) { create(:security_role, name: 'foo') }
-      let!(:role_2) { create(:security_role, name: 'bar') }
+      let!(:role_1) { create :security_role, name: 'foo' }
+      let!(:role_2) { create :security_role, name: 'bar' }
       let(:query) { SecurityRole }
       let(:filters) { [{ column: :name, type: RadCommon::LikeFilter }] }
       let(:params) { ActionController::Parameters.new(search: { name_like: 'foo' }) }
@@ -24,6 +24,22 @@ RSpec.describe RadCommon::Search, type: :service do
       it 'filters results' do
         expect(search).to include role_1
         expect(search).not_to include role_2
+      end
+
+      context 'when input transform is provided' do
+        let!(:role_1) { create :security_role, name: '9045555555' }
+        let!(:role_2) { create :security_role, name: '1029323213' }
+        let(:filters) do
+          [{ column: :name,
+             type: RadCommon::LikeFilter,
+             input_transform: ->(value) { value.tr('^0-9', '') } }]
+        end
+        let(:params) { ActionController::Parameters.new(search: { name_like: '(904) - 5' }) }
+
+        it 'filters results' do
+          expect(search).to include role_1
+          expect(search).not_to include role_2
+        end
       end
     end
 
@@ -106,8 +122,8 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:query) { Division }
       let(:filters) { [{ column: :owner_id, options: User.by_name, default_value: user.id }] }
       let(:user) { create :admin }
-      let!(:other_division) { create(:division, created_at: 2.days.ago) }
-      let!(:default_division) { create(:division, owner: user) }
+      let!(:other_division) { create :division, created_at: 2.days.ago }
+      let!(:default_division) { create :division, owner: user }
 
       context 'when in a blank query' do
         let(:params) { ActionController::Parameters.new }
@@ -383,8 +399,8 @@ RSpec.describe RadCommon::Search, type: :service do
     end
 
     let(:query) { Division }
-    let!(:user_1) { create(:user) }
-    let!(:user_2) { create(:user) }
+    let!(:user_1) { create :user }
+    let!(:user_2) { create :user }
     let(:filters) do
       [{ column: :owner_id, input_label: 'Users', options: User.all, default_value: user_1.id }]
     end

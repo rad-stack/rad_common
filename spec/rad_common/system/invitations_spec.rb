@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Invitations', type: :system, invite_specs: true do
+RSpec.describe 'Invitations', invite_specs: true, type: :system do
   let(:company) { Company.main }
   let(:admin) { create :admin }
   let(:user) { create :user }
@@ -21,8 +21,6 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
     end
   end
 
-  before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
-
   describe 'user' do
     before { login_as user, scope: :user }
 
@@ -39,51 +37,68 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
 
     describe 'new' do
       context 'when valid' do
-        it 'invites a user' do
+        let(:another_role) { create :security_role, :external, allow_invite: true }
+        let(:multiple_roles) { false }
+        let(:all_users) { true }
+
+        before do
+          allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(all_users)
+
+          if multiple_roles
+            another_role
+            create :security_role, :external, allow_invite: true
+          end
+
           visit new_user_invitation_path
 
-          select internal_role.name, from: 'Initial security role'
-          fill_in 'Email', with: valid_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          select invite_role.name, from: 'Initial Security Role'
+          fill_in 'Email', with: invite_email
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send'
 
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
-          expect(User.last.security_roles.first).to eq internal_role
-          expect(User.last.internal?).to be true
+          expect(User.last.security_roles.first).to eq invite_role
         end
 
-        it 'invites an external user', external_user_specs: true do
-          visit new_user_invitation_path
+        context 'with internal user' do
+          let(:invite_role) { internal_role }
+          let(:invite_email) { valid_email }
 
-          select external_role.name, from: 'Initial security role'
-          fill_in 'Email', with: external_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
-          fill_in 'Mobile phone', with: '(999) 231-1111'
-          click_button 'Send'
-
-          expect(page).to have_content "We invited '#{first_name} #{last_name}'"
-          expect(User.last.security_roles.first).to eq external_role
-          expect(User.last.external?).to be true
+          it 'invites' do
+            expect(User.last.internal?).to be true
+            expect(User.last.twilio_verify_enabled?).to be true
+          end
         end
 
-        it 'invites an external user and sets initial role', external_user_specs: true do
-          create :security_role, :external, allow_invite: true
-          initial_role = create :security_role, :external, allow_invite: true
+        context 'with twilio verify off' do
+          let(:invite_role) { internal_role }
+          let(:invite_email) { valid_email }
+          let(:all_users) { false }
 
-          visit new_user_invitation_path
+          it 'invites' do
+            expect(User.last.twilio_verify_enabled?).to be false
+          end
+        end
 
-          select initial_role.name, from: 'Initial security role'
-          fill_in 'Email', with: external_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
-          fill_in 'Mobile phone', with: '(999) 231-1111'
-          click_button 'Send'
+        context 'with external user' do
+          let(:invite_role) { external_role }
+          let(:invite_email) { external_email }
 
-          expect(page).to have_content "We invited '#{first_name} #{last_name}'"
-          expect(User.last.security_roles.first).to eq initial_role
+          it 'invites', external_user_specs: true do
+            expect(User.last.external?).to be true
+          end
+        end
+
+        context 'with multiple external roles' do
+          let(:multiple_roles) { true }
+          let(:invite_role) { another_role }
+          let(:invite_email) { external_email }
+
+          it 'invites an external user and sets initial role', external_user_specs: true do
+            expect(SecurityRole.external.size).to eq 3
+          end
         end
       end
 
@@ -91,8 +106,8 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
         it 'because of blank email' do
           visit new_user_invitation_path
 
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
           click_button 'Send an invitation'
 
           expect(page).to have_content "Email can't be blank"
@@ -113,9 +128,9 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
 
           bad_email = 'j@g.com'
           fill_in 'Email', with: bad_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send an invitation'
 
           expect(page).to have_content ' is not authorized for this application'
@@ -125,9 +140,9 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
           visit new_user_invitation_path
 
           fill_in 'Email', with: valid_email
-          fill_in 'First name', with: 'f'
-          fill_in 'Last name', with: 'b'
-          fill_in 'Mobile phone', with: '(999) 231-1111'
+          fill_in 'First Name', with: 'f'
+          fill_in 'Last Name', with: 'b'
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send an invitation'
 
           expect(page).to have_content "We invited 'f b'"
@@ -140,9 +155,9 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
         visit new_user_invitation_path
 
         fill_in 'Email', with: valid_email
-        fill_in 'First name', with: first_name
-        fill_in 'Last name', with: last_name
-        fill_in 'Mobile phone', with: '(999) 231-1111'
+        fill_in 'First Name', with: first_name
+        fill_in 'Last Name', with: last_name
+        fill_in 'Mobile Phone', with: '(999) 231-1111'
         click_button 'Send'
 
         expect(page).to have_content "We invited '#{first_name} #{last_name}'"
@@ -177,7 +192,7 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
 
     it 'notifies admin when invitee accepts' do
       ActionMailer::Base.deliveries = []
-      create :user_accepts_invitation_notification, security_roles: [admin.security_roles.first]
+      admin
 
       invitee.accept_invitation!
 

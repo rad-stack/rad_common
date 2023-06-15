@@ -4,10 +4,10 @@ RSpec.describe GlobalAutocomplete, type: :service do
   include RadCommon::ApplicationHelper
 
   let!(:user) { create :user }
-  let!(:search_user) { create(:user, first_name: 'Alex', last_name: 'Smith') }
-  let!(:another_search_user) { create(:user, first_name: 'John', last_name: 'Smith') }
+  let!(:search_user) { create :user, first_name: 'Alex', last_name: 'Smith' }
+  let!(:another_search_user) { create :user, first_name: 'John', last_name: 'Smith' }
   let!(:division) { create :division }
-  let(:search_scopes) { RadicalConfig.global_search_scopes! }
+  let(:search_scopes) { RadConfig.global_search_scopes! }
   let(:params) { ActionController::Parameters.new }
   let(:auto_complete) { described_class.new(params, search_scopes, user) }
 
@@ -73,9 +73,9 @@ RSpec.describe GlobalAutocomplete, type: :service do
       let(:user) { create :admin }
       let(:term) { 'Testing' }
 
-      let!(:division_1) { create(:division, name: "#{term} 1") }
-      let!(:division_2) { create(:division, name: "#{term} 2") }
-      let!(:division_3) { create(:division, name: "#{term} 3") }
+      let!(:division_1) { create :division, name: "#{term} 1" }
+      let!(:division_2) { create :division, name: "#{term} 2" }
+      let!(:division_3) { create :division, name: "#{term} 3" }
 
       let(:params) do
         ActionController::Parameters.new(term: term,
@@ -93,7 +93,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
     context 'when scope has join' do
       let(:term) { 'My Division' }
-      let!(:division) { create(:division, name: term) }
+      let!(:division) { create :division, name: term }
       let(:params) { ActionController::Parameters.new(term: term, global_search_scope: 'user_by_division_name') }
       let(:result) { auto_complete.send(:autocomplete_result, scope) }
 

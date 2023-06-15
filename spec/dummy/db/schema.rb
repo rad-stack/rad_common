@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_23_142522) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_25_215920) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -79,12 +79,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_142522) do
     t.string "user_type"
     t.string "username"
     t.string "action"
-    t.text "audited_changes"
     t.integer "version", default: 0
     t.string "comment"
     t.string "remote_address"
     t.string "request_uuid"
     t.datetime "created_at", precision: nil
+    t.jsonb "audited_changes"
     t.index ["associated_id", "associated_type"], name: "associated_index"
     t.index ["auditable_id", "auditable_type", "version"], name: "auditable_index"
     t.index ["created_at"], name: "index_audits_on_created_at"
@@ -280,10 +280,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_142522) do
     t.index ["user_id"], name: "index_system_messages_on_user_id"
   end
 
+  create_table "twilio_log_attachments", force: :cascade do |t|
+    t.bigint "twilio_log_id"
+    t.string "twilio_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["twilio_log_id"], name: "index_twilio_log_attachments_on_twilio_log_id"
+  end
+
   create_table "twilio_logs", force: :cascade do |t|
     t.string "from_number", null: false
     t.string "to_number", null: false
-    t.integer "from_user_id", null: false
+    t.integer "from_user_id"
     t.integer "to_user_id"
     t.string "message", null: false
     t.string "media_url"
@@ -294,6 +302,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_142522) do
     t.string "message_sid"
     t.integer "twilio_status"
     t.boolean "success", default: false, null: false
+    t.integer "log_type", null: false
     t.index ["created_at"], name: "index_twilio_logs_on_created_at"
     t.index ["from_number"], name: "index_twilio_logs_on_from_number"
     t.index ["from_user_id"], name: "index_twilio_logs_on_from_user_id"
@@ -353,9 +362,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_142522) do
     t.string "timezone", limit: 255, null: false
     t.string "global_search_default", limit: 255
     t.integer "user_status_id", null: false
-    t.string "authy_id"
-    t.datetime "last_sign_in_with_authy", precision: nil
-    t.boolean "authy_enabled", default: true, null: false
+    t.datetime "last_sign_in_with_twilio_verify", precision: nil
+    t.boolean "twilio_verify_enabled", default: true, null: false
     t.string "invitation_token"
     t.datetime "invitation_created_at", precision: nil
     t.datetime "invitation_sent_at", precision: nil
@@ -371,10 +379,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_142522) do
     t.datetime "last_activity_at", precision: nil
     t.datetime "expired_at", precision: nil
     t.jsonb "filter_defaults"
-    t.boolean "authy_sms", default: true, null: false
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
-    t.index ["authy_id"], name: "index_users_on_authy_id"
+    t.string "language", default: "en", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"
@@ -403,6 +410,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_142522) do
   add_foreign_key "saved_search_filters", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
+  add_foreign_key "twilio_log_attachments", "twilio_logs"
   add_foreign_key "twilio_logs", "users", column: "from_user_id"
   add_foreign_key "twilio_logs", "users", column: "to_user_id"
   add_foreign_key "user_clients", "clients"

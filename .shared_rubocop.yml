@@ -17,18 +17,7 @@ AllCops:
     - 'config/initializers/simple_form_bootstrap.rb'
     - 'config/initializers/simple_form_components.rb'
     - 'spec/spec_helper.rb'
-    - 'spec/dummy/db/schema.rb'
-    - 'spec/dummy/db/migrate/*'
-    - 'spec/dummy/lib/templates/**/*'
-    - 'spec/dummy/node_modules/**/*'
-    - 'spec/dummy/bin/**/*'
-    - 'spec/dummy/config/puma.rb'
-    - 'spec/dummy/config/initializers/simple_form.rb'
-    - 'spec/dummy/config/initializers/simple_form_bootstrap.rb'
-    - 'spec/dummy/config/initializers/simple_form_components.rb'
-    - 'spec/dummy/config.ru'
     - 'config.ru'
-    - 'lib/generators/rad_common/install/install_generator.rb'
 
 # Want to use even indentation for the various methods within a class, and
 # also want to be able to indent private methods without errors
@@ -72,16 +61,12 @@ Metrics/ModuleLength:
 # Checks to see if the length of a block exceeds 25 lines
 Metrics/BlockLength:
   Exclude:
-    - 'rad_common.gemspec'
     - 'spec/**/*_spec.rb'
     - 'config/routes.rb'
     - 'config/environments/**/*.rb'
-    - 'spec/dummy/config/environments/**/*.rb'
-    - 'spec/dummy/config/routes.rb'
     - 'spec/factories/**/*.rb'
     - 'spec/rails_helper.rb'
     - 'lib/tasks/temp.rake'
-    - 'lib/generators/rad_common/install/rails_helper.rb'
 
 # The guiding principle of classes is SRP, SRP can't be accurately measured by LoC
 Metrics/ClassLength:
@@ -120,22 +105,15 @@ Rails/UnknownEnv:
 
 Rails/Output:
   Enabled: true
-  Exclude:
-    - 'app/services/rad_seeder.rb'
-    - 'lib/generators/rad_common/install/rails_helper.rb'
 
 Rails/Exit:
   Enabled: true
-  Exclude:
-    - 'lib/generators/rad_common/install/rails_helper.rb'
 
 # This cop checks for the use of methods which skip validations which are listed in guides.rubyonrails.org/active_record_validations.html#skipping-validations
 Rails/SkipsModelValidations:
   Enabled: true
   Exclude:
     - 'spec/**/*_spec.rb'
-    - 'app/models/concerns/contactable.rb'
-    - 'app/services/smarty_address.rb'
     - 'app/services/seeder.rb'
     - 'lib/tasks/temp.rake'
 
@@ -169,19 +147,14 @@ Style/FrozenStringLiteralComment:
 Style/StringLiterals:
   Enabled: true
   Exclude:
-    - 'spec/dummy/config/boot.rb'
     - 'config/boot.rb'
-    - 'spec/dummy/config/environment.rb'
     - 'config/environment.rb'
-    - 'spec/dummy/config/application.rb'
     - 'config/application.rb'
-    - 'spec/dummy/config/initializers/backtrace_silencers.rb'
     - 'config/initializers/backtrace_silencers.rb'
 
 Style/SymbolArray:
   Enabled: true
   Exclude:
-    - 'spec/dummy/config/initializers/filter_parameter_logging.rb'
     - 'config/initializers/filter_parameter_logging.rb'
 
 # https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/HashEachMethods
@@ -208,11 +181,7 @@ Style/SignalException:
 RSpec/ExampleLength:
   Enabled: false
 
-RSpec/FactoryBot/CreateList:
-  Exclude:
-    - 'spec/dummy/app/services/seeder.rb'
-
-RSpec/FactoryBot/ConsistentParenthesesStyle:
+FactoryBot/ConsistentParenthesesStyle:
   EnforcedStyle: omit_parentheses
 
 RSpec/MultipleExpectations:
@@ -236,12 +205,10 @@ RSpec/MessageSpies:
 RSpec/VerifiedDoubles:
   Enabled: false
 
+RSpec/IndexedLet:
+  Enabled: false
+
 Rails/HttpPositionalArguments:
   Exclude:
     # this just doesn't seem right for things like 'on: :member'
-    - 'spec/dummy/config/routes.rb'
     - 'config/routes.rb'
-
-Rails/ApplicationController:
-  Exclude:
-    - 'app/controllers/api/basic_app_controller.rb'

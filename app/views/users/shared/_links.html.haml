@@ -1,7 +1,7 @@
 - if controller_name != 'sessions'
   = link_to 'Sign In', new_user_session_path
   %br
-- if !RadicalConfig.disable_sign_up? && devise_mapping.registerable? && controller_name != 'registrations'
+- if !RadConfig.disable_sign_up? && devise_mapping.registerable? && controller_name != 'registrations'
   = link_to 'Sign Up', new_user_registration_path
   %br
 - if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations'

@@ -5,7 +5,7 @@
     "@fortawesome/fontawesome-free": "^6.1.1",
     "@rails/actiontext": "^6.0.2-1",
     "@rails/webpacker": "5.4.3",
-    "rad_common_js": "https://github.com/radicalbear/rad_common_js#dc418ddd5b47d9e63350498d5afda8b01fa815ac"
+    "rad_common_js": "https://github.com/radicalbear/rad_common_js#81e5aa833a332f2b7fc0eb013cb0fae5b8a544df"
   },
   "devDependencies": {
     "webpack": "^4.41.2",
@@ -34,6 +34,9 @@
     "moment": "^2.29.4",
     "loader-utils": "^2.0.3",
     "terser": "^5.14.2",
-    "jquery-ui": "^1.13.2"
+    "jquery-ui": "^1.13.2",
+    "json5": "^2.2.2",
+    "decode-uri-component": "^0.2.1",
+    "dns-packet": "^5.4.0"
   }
 }

@@ -86,7 +86,7 @@ describe RadCommon::ApplicationHelper do
   describe '#gravatar_for' do
     context 'with string size' do
       let(:size) { '60' }
-      let(:resource) { build(:user) }
+      let(:resource) { build :user }
 
       it 'returns a url with the correct size' do
         expect(avatar_image(resource, size)).to include('gravatar')
@@ -96,7 +96,7 @@ describe RadCommon::ApplicationHelper do
 
     context 'with integer size' do
       let(:size) { 100 }
-      let(:resource) { build(:user) }
+      let(:resource) { build :user }
 
       it 'returns a url with the correct size' do
         expect(avatar_image(resource, size)).to include('gravatar')
@@ -105,7 +105,7 @@ describe RadCommon::ApplicationHelper do
     end
 
     context 'with symbol size' do
-      let(:resource) { build(:user) }
+      let(:resource) { build :user }
 
       it 'returns a url with a non string size' do
         expect(avatar_image(resource, :small)).to include('25')
@@ -120,7 +120,7 @@ describe RadCommon::ApplicationHelper do
     let(:filename) { 'avatar.png' }
 
     context 'when user does not have avatar' do
-      let(:resource) { build(:user, avatar: nil) }
+      let(:resource) { build :user, avatar: nil }
 
       it 'returns an image tag with the user gravatar' do
         expect(avatar_image(resource, size)).to include('gravatar')
@@ -132,7 +132,7 @@ describe RadCommon::ApplicationHelper do
     before { allow(controller).to receive(:current_user).and_return(me) }
 
     context 'with resource' do
-      let(:resource) { build(:user) }
+      let(:resource) { build :user }
 
       context 'when user is authorized' do
         before { allow_any_instance_of(UserPolicy).to receive(:show?).and_return(true) }
@@ -190,21 +190,26 @@ describe RadCommon::ApplicationHelper do
 
     context 'with no options' do
       it 'formats the date' do
-        expect(helper.format_datetime(date)).to eq(date.strftime('%-m/%-d/%Y %l:%M %p'))
+        expect(helper.format_datetime(date)).to eq(date.strftime('%-m/%-d/%Y %-l:%M %p'))
       end
     end
 
     context 'with seconds option' do
       it 'formats the date' do
-        expect(helper.format_datetime(date, include_seconds: true)).to eq(date.strftime('%-m/%-d/%Y %l:%M:%S %p'))
+        expect(helper.format_datetime(date, include_seconds: true)).to eq(date.strftime('%-m/%-d/%Y %-l:%M:%S %p'))
       end
     end
 
     context 'with zone option' do
       it 'formats the date' do
-        result = date.in_time_zone.strftime('%-m/%-d/%Y %l:%M %p %Z')
+        result = date.in_time_zone.strftime('%-m/%-d/%Y %-l:%M %p %Z')
         expect(helper.format_datetime(date, include_zone: true)).to eq(result)
       end
+    end
+
+    it 'has the proper spacing' do
+      date = DateTime.parse('2023-05-29 9:38AM')
+      expect(helper.format_datetime(date)).to eq('5/29/2023 9:38 AM')
     end
   end
 end

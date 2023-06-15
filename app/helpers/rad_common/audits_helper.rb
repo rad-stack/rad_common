@@ -73,7 +73,7 @@ module RadCommon
         return '' if changes.blank?
 
         audit_text = ''
-        any_restricted = RadicalConfig.restricted_audit_attributes!.count.positive?
+        any_restricted = RadConfig.restricted_audit_attributes!.count.positive?
 
         changes.each do |change|
           changed_attribute = change.first
@@ -142,7 +142,7 @@ module RadCommon
       def restricted_audit_attribute?(audit, changed_attribute, current_user)
         return false if current_user.admin?
 
-        restricted_attributes = RadicalConfig.restricted_audit_attributes!
+        restricted_attributes = RadConfig.restricted_audit_attributes!
         return if restricted_attributes.count.zero?
 
         matches = restricted_attributes.select do |item|

@@ -70,7 +70,7 @@ class HerokuCommands
         write_log 'Clearing certain production data'
         remove_user_avatars
         remove_accounting_keys
-        User.update_all authy_enabled: false, authy_id: nil
+        User.update_all twilio_verify_enabled: false
       end
     end
 

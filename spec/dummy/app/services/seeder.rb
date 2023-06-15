@@ -39,13 +39,4 @@ class Seeder < RadSeeder
       FactoryBot.create :twilio_log, from_user: from_user, to_user: to_user
     end
   end
-
-  private
-
-    def seed_notification_types
-      super
-      return if NotificationType.find_by(type: 'Notifications::DivisionUpdatedNotification').present?
-
-      Notifications::DivisionUpdatedNotification.create!
-    end
 end

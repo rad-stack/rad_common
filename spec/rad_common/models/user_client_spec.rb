@@ -25,7 +25,7 @@ describe UserClient, type: :model, user_client_specs: true do
         user = create :user, :external, email: address
         user_client = described_class.new(user: user, client: client)
 
-        if RadicalConfig.validate_external_email_domain?
+        if RadConfig.validate_external_email_domain?
           expect(user_client).not_to be_valid
           expect(user_client.errors.full_messages.to_s).to include 'Client is not valid for this email user'
         else

@@ -1,6 +1,7 @@
 default: &default
   app_name: Demo Foo
   use_avatar: true
+  switch_languages: true
   disable_sign_up: false
   disable_invite: false
   manually_create_users: false
@@ -12,11 +13,16 @@ default: &default
   start_route: onboardings
   user_clients: true
   user_profiles: true
-  authy_internal_only: true
   shared_database: false
   canadian_addresses: false
   show_help_menu: true
   saved_search_filters_enabled: true
+  legal_docs: true
+  wide_margins: false
+  twilio_verify_all_users: true
+  twilio_verify_remember_device_days: 7
+  storage_config_override: false
+  require_mobile_phone: false
 
   system_usage_models:
     -
@@ -100,10 +106,10 @@ development:
   <<: *default
 
   host_name: localhost:3000
-  authy_enabled: false
+  twilio_verify_enabled: false
 
 test:
   <<: *default
 
   host_name: localhost:3000
-  authy_enabled: true
+  twilio_verify_enabled: true
