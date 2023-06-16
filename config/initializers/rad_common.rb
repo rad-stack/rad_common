@@ -1,4 +1,4 @@
-require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/app/services/radical_config.rb"
+require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/app/services/rad_config.rb"
 
 require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record" \
         '/base/schema_validations'
