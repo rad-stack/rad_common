@@ -48,7 +48,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1'
-  s.add_dependency 'redis', '~> 4.8'
+  s.add_dependency 'redis'
   s.add_dependency 'sassc'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
