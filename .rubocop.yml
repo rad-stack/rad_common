@@ -56,6 +56,18 @@ Rails/SkipsModelValidations:
     - 'app/services/seeder.rb'
     - 'lib/tasks/temp.rake'
 
+Rails/FilePath:
+  Exclude:
+    - 'spec/dummy/config/environments/development.rb'
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  Exclude:
+    - 'spec/dummy/config/environments/production.rb'
+
+Style/GlobalStdStream:
+  Exclude:
+    - 'spec/dummy/config/environments/production.rb'
+
 Style/StringLiterals:
   Exclude:
     - 'spec/dummy/config/boot.rb'
@@ -66,6 +78,8 @@ Style/StringLiterals:
     - 'config/application.rb'
     - 'spec/dummy/config/initializers/backtrace_silencers.rb'
     - 'config/initializers/backtrace_silencers.rb'
+    - 'spec/dummy/config/environments/development.rb'
+    - 'spec/dummy/config/environments/production.rb'
 
 Style/SymbolArray:
   Exclude:
