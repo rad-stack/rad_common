@@ -30,7 +30,7 @@ RSpec.describe 'NotificationSettings', type: :system do
         page_errors = page.driver.browser.logs.get(:browser).map(&:message)
 
         expect(page_errors.first).to include 'Failed to load resource: the server responded with a status of 422 ' \
-                                             '(Unprocessable Entity)'
+                                             '(Unprocessable Content)'
       end
     end
 

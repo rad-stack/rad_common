@@ -34,10 +34,10 @@ PATH
       prawn-table
       premailer-rails
       pretender
-      puma (~> 5.6)
+      puma
       pundit
-      rails (~> 7.0.2)
-      redis (~> 4.8)
+      rails
+      redis
       sassc
       sendgrid-ruby
       sentry-rails
@@ -148,7 +148,7 @@ GEM
     aws-sdk-kms (1.67.0)
       aws-sdk-core (~> 3, >= 3.174.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.125.0)
+    aws-sdk-s3 (1.126.0)
       aws-sdk-core (~> 3, >= 3.174.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
@@ -266,7 +266,7 @@ GEM
     mini_magick (4.12.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.2)
-    minitest (5.18.0)
+    minitest (5.18.1)
     msgpack (1.7.1)
     net-imap (0.3.6)
       date
@@ -314,7 +314,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (5.0.1)
-    puma (5.6.5)
+    puma (6.3.0)
       nio4r (~> 2.0)
     pundit (2.3.0)
       activesupport (>= 3.0.0)
@@ -356,7 +356,8 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    redis (4.8.1)
+    redis (5.0.6)
+      redis-client (>= 0.9.0)
     redis-client (0.14.1)
       connection_pool
     regexp_parser (2.8.1)
