@@ -80,6 +80,7 @@ Style/StringLiterals:
     - 'config/initializers/backtrace_silencers.rb'
     - 'spec/dummy/config/environments/development.rb'
     - 'spec/dummy/config/environments/production.rb'
+    - 'spec/dummy/config/environments/test.rb'
 
 Style/SymbolArray:
   Exclude:
