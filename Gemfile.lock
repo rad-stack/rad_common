@@ -34,7 +34,7 @@ PATH
       prawn-table
       premailer-rails
       pretender
-      puma (~> 5.6)
+      puma
       pundit
       rails
       redis
@@ -314,7 +314,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (5.0.1)
-    puma (5.6.5)
+    puma (6.3.0)
       nio4r (~> 2.0)
     pundit (2.3.0)
       activesupport (>= 3.0.0)
