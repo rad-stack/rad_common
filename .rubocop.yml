@@ -63,10 +63,12 @@ Rails/FilePath:
 Layout/SpaceInsideArrayLiteralBrackets:
   Exclude:
     - 'spec/dummy/config/environments/production.rb'
+    - 'spec/dummy/config/environments/staging.rb'
 
 Style/GlobalStdStream:
   Exclude:
     - 'spec/dummy/config/environments/production.rb'
+    - 'spec/dummy/config/environments/staging.rb'
 
 Style/StringLiterals:
   Exclude:
@@ -79,6 +81,7 @@ Style/StringLiterals:
     - 'spec/dummy/config/initializers/backtrace_silencers.rb'
     - 'config/initializers/backtrace_silencers.rb'
     - 'spec/dummy/config/environments/development.rb'
+    - 'spec/dummy/config/environments/staging.rb'
     - 'spec/dummy/config/environments/production.rb'
     - 'spec/dummy/config/environments/test.rb'
 

@@ -31,6 +31,7 @@ Layout/LineLength:
 Layout/SpaceInsideArrayLiteralBrackets:
   Exclude:
     - 'config/environments/production.rb'
+    - 'config/environments/staging.rb'
 
 # Must use a comparator for conditionals instead of an equals sign
 Lint/AssignmentInCondition:
@@ -160,6 +161,7 @@ Style/StringLiterals:
     - 'config/application.rb'
     - 'config/initializers/backtrace_silencers.rb'
     - 'config/environments/development.rb'
+    - 'config/environments/staging.rb'
     - 'config/environments/production.rb'
     - 'config/environments/test.rb'
 
@@ -192,6 +194,7 @@ Style/SignalException:
 Style/GlobalStdStream:
   Exclude:
     - 'config/environments/production.rb'
+    - 'config/environments/staging.rb'
 
 RSpec/ExampleLength:
   Enabled: false
