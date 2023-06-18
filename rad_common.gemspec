@@ -45,7 +45,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'prawn-table'
   s.add_dependency 'premailer-rails'
   s.add_dependency 'pretender'
-  s.add_dependency 'puma', '~> 5.6'
+  s.add_dependency 'puma'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 6.1'
   s.add_dependency 'redis'
