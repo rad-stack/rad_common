@@ -28,6 +28,11 @@ Layout/IndentationConsistency:
 Layout/LineLength:
   Max: 120
 
+Layout/SpaceInsideArrayLiteralBrackets:
+  Exclude:
+    - 'config/environments/production.rb'
+    - 'config/environments/staging.rb'
+
 # Must use a comparator for conditionals instead of an equals sign
 Lint/AssignmentInCondition:
   AllowSafeAssignment: false
@@ -120,6 +125,10 @@ Rails/SkipsModelValidations:
 Rails/I18nLocaleTexts:
   Enabled: false
 
+Rails/FilePath:
+  Exclude:
+    - 'config/environments/development.rb'
+
 # Check for uses of braces around single-line blocks, and also for multi-line blocks with an
 # attached method like: {...}.where
 # It will still preferentially choose do/end for multi-line blocks
@@ -151,6 +160,10 @@ Style/StringLiterals:
     - 'config/environment.rb'
     - 'config/application.rb'
     - 'config/initializers/backtrace_silencers.rb'
+    - 'config/environments/development.rb'
+    - 'config/environments/staging.rb'
+    - 'config/environments/production.rb'
+    - 'config/environments/test.rb'
 
 Style/SymbolArray:
   Enabled: true
@@ -177,6 +190,11 @@ Style/ParenthesesAroundCondition:
 # Fail is an alias of raise. Avoid aliases, it's more cognitive load for no gain.
 Style/SignalException:
   EnforcedStyle: only_raise
+
+Style/GlobalStdStream:
+  Exclude:
+    - 'config/environments/production.rb'
+    - 'config/environments/staging.rb'
 
 RSpec/ExampleLength:
   Enabled: false

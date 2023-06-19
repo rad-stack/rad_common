@@ -11,7 +11,7 @@ module Exportable
     end
 
     flash[:success] = report_generating_message
-    redirect_to action: :index, params: search_params.to_h
+    export_redirect
   end
 
   private
@@ -24,5 +24,11 @@ module Exportable
 
     def export_job
       "#{export_resource_class}ExportJob".constantize
+    end
+
+    def export_redirect
+      return redirect_to(params[:redirect_to]) if params[:redirect_to].present?
+
+      redirect_to action: :index, params: search_params.to_h
     end
 end
