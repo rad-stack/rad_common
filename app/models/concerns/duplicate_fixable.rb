@@ -90,6 +90,16 @@ module DuplicateFixable
     end
   end
 
+  def duplicate_fields
+    fields = []
+    dup_attrs = all_duplicate_attributes
+
+    fields << "#{first_name}, #{last_name}" if model_klass.use_first_last_name?
+    if model_klass.use_address?
+      fields << full_address
+    end
+  end
+
   def find_duplicate
     contacts = duplicate_matches
 
