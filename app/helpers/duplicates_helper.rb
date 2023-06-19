@@ -21,8 +21,8 @@ module DuplicatesHelper
 
     record = current_instance_variable
 
-    record.present? && record.persisted? && RadCommon::AppInfo.new.duplicates_enabled?(record.class.name) &&
-      policy(record).reset_duplicates?
+    record.present? && record.respond_to?(:persisted?) &&  record.persisted? &&
+      RadCommon::AppInfo.new.duplicates_enabled?(record.class.name) && policy(record).reset_duplicates?
   end
 
   def duplicates_badge(klass)
