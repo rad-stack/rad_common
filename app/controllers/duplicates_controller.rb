@@ -110,6 +110,7 @@ class DuplicatesController < ApplicationController
     @record = model.new(params[:record].permit!.to_h.except(:authenticity_token, :create_anyway))
     authorize @record, :create?
 
+    @record.valid?
     found_duplicate = @record.find_duplicate
     if found_duplicate
       render json: { duplicate: true, duplicate_data: found_duplicate.duplicate_fields,
