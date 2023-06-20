@@ -226,7 +226,7 @@ module DuplicateFixable
     end
 
     def name_matches
-      return [] unless model_klass.use_first_last_name?
+      return [] unless model_klass.use_first_last_name? && first_last_name_present?
 
       query = model_klass.where('upper(first_name) = ? AND upper(last_name) = ?',
                                 first_name.upcase,
@@ -236,7 +236,7 @@ module DuplicateFixable
     end
 
     def similar_name_matches
-      return [] unless model_klass.use_first_last_name?
+      return [] unless model_klass.use_first_last_name? && first_last_name_present?
 
       query = model_klass.where('levenshtein(upper(first_name), ?) <= 1 AND levenshtein(upper(last_name), ?) <= 1',
                                 first_name.upcase,
@@ -246,7 +246,7 @@ module DuplicateFixable
     end
 
     def birth_date_matches
-      return [] unless model_klass.use_birth_date? && model_klass.use_first_last_name?
+      return [] unless model_klass.use_birth_date? && model_klass.use_first_last_name? && first_last_name_present?
 
       query_string = 'birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR ' \
                      'levenshtein(upper(last_name), ?) <= 1)'
@@ -384,5 +384,9 @@ module DuplicateFixable
 
       'Could not remove the unused duplicate record ' \
         "id #{duplicate_record.id}: #{duplicate_record.errors.full_messages.join(', ')}"
+    end
+
+    def first_last_name_present?
+      first_name.present? && last_name.present?
     end
 end
