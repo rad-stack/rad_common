@@ -92,12 +92,15 @@ module DuplicateFixable
 
   def duplicate_fields
     fields = []
-    dup_attrs = all_duplicate_attributes
 
     fields << "#{first_name}, #{last_name}" if model_klass.use_first_last_name?
-    if model_klass.use_address?
-      fields << full_address
+    fields << full_address if model_klass.use_address? && respond_to?(:full_address)
+    fields << birth_date if model_klass.use_birth_date?
+    model_klass.applicable_duplicate_items.each do |item|
+      fields << send(item[:name])
     end
+
+    fields.compact
   end
 
   def find_duplicate
