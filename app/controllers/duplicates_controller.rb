@@ -114,7 +114,7 @@ class DuplicatesController < ApplicationController
     found_duplicate = @record.find_duplicate
     if found_duplicate
       render json: { duplicate: true, duplicate_data: found_duplicate.duplicate_fields,
-                     duplicate_path: 'test_path' }
+                     duplicate_path: "/#{model.table_name}/#{found_duplicate.id}" }
     else
       render json: { duplicate: false }
     end
