@@ -1,0 +1,13 @@
+.card.duplicate-card
+  .card-header
+    %strong Duplicate Found
+    = link_to 'Go To Duplicate', '#', class: 'btn btn-sm btn-primary dup_record_btn'
+  .card-body
+    %strong Details :
+    .duplicate-data
+  .card-header
+    .create_anyway
+      %label.text-danger Create anyway?
+      %input#create_anyway{ type: 'checkbox' }
+
+= render 'layouts/duplicate_toast', model: model
