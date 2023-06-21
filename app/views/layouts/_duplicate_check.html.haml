@@ -1,10 +1,9 @@
 - if record.new_record?
   .row
     .col-lg-12
-      .card.duplicate-card
+      .card.duplicate-card#duplicate-card
         .card-header
           %strong Duplicate Found
-          = link_to 'Go To Duplicate', '#', class: 'btn btn-sm btn-primary dup_record_btn'
         .card-body
           %strong Details :
           .duplicate-data
