@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 25 May 2023 14:35:33 GMT
+      - Wed, 21 Jun 2023 10:38:37 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -37,5 +37,5 @@ http_interactions:
         Coast","default_city_name":"Palm Coast","state_abbreviation":"FL","zipcode":"32137","plus4_code":"9406"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12035","county_name":"Flagler","carrier_route":"R070","latitude":29.5913,"longitude":-81.25356,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"N","dpv_footnotes":"AAM3","active":"Y","footnotes":"N#","enhanced_match":"non-postal-match,missing-secondary"}}]
 
         '
-  recorded_at: Thu, 25 May 2023 14:35:33 GMT
+  recorded_at: Wed, 21 Jun 2023 10:38:37 GMT
 recorded_with: VCR 6.1.0

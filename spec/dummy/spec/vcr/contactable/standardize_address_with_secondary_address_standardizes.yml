@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 25 May 2023 14:26:56 GMT
+      - Wed, 21 Jun 2023 10:38:39 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -37,5 +37,5 @@ http_interactions:
         Florida","street_suffix":"Blvd","secondary_number":"1000","secondary_designator":"Ste","city_name":"Orlando","default_city_name":"Orlando","state_abbreviation":"FL","zipcode":"32816","plus4_code":"8005","delivery_point":"00","delivery_point_check_digit":"7"},"metadata":{"record_type":"S","zip_type":"Unique","county_fips":"12095","county_name":"Orange","carrier_route":"C000","elot_sequence":"0001","elot_sort":"A","latitude":28.59608,"longitude":-81.20403,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AAU1","active":"Y","footnotes":"Q#N#","enhanced_match":"non-postal-match,unknown-secondary,ignored-input"}}]
 
         '
-  recorded_at: Thu, 25 May 2023 14:26:56 GMT
+  recorded_at: Wed, 21 Jun 2023 10:38:39 GMT
 recorded_with: VCR 6.1.0
