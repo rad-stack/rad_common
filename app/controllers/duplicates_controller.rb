@@ -111,10 +111,13 @@ class DuplicatesController < ApplicationController
     authorize @record, :create?
 
     @record.valid?
-    found_duplicate = @record.find_duplicate
-    if found_duplicate
-      render json: { duplicate: true, duplicate_data: found_duplicate.duplicate_fields,
-                     duplicate_path: "/#{model.table_name}/#{found_duplicate.id}" }
+    found_duplicates = @record.find_duplicates
+    if found_duplicates.present?
+
+      duplicates = found_duplicates.map do |dupe|
+        { duplicate_data: dupe.duplicate_fields, duplicates_path: "/#{model.table_name}/#{dupe.id}" }
+      end
+      render json: { duplicate: true, duplicates: duplicates }
     else
       render json: { duplicate: false }
     end

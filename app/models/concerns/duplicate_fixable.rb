@@ -103,12 +103,12 @@ module DuplicateFixable
     fields.compact
   end
 
-  def find_duplicate
+  def find_duplicates
     contacts = duplicate_matches
 
     return if contacts.empty? || contacts.first[:score] < 1
 
-    self.class.find(contacts.first[:id])
+    contacts.map { |contact| self.class.find(contact[:id]) }
   end
 
   def reset_duplicates
