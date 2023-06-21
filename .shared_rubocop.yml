@@ -16,6 +16,7 @@ AllCops:
     - 'config/initializers/simple_form.rb'
     - 'config/initializers/simple_form_bootstrap.rb'
     - 'config/initializers/simple_form_components.rb'
+    - 'config/initializers/new_framework_defaults*'
     - 'spec/spec_helper.rb'
     - 'config.ru'
 
@@ -160,6 +161,7 @@ Style/StringLiterals:
     - 'config/environment.rb'
     - 'config/application.rb'
     - 'config/initializers/backtrace_silencers.rb'
+    - 'config/initializers/assets.rb'
     - 'config/environments/development.rb'
     - 'config/environments/staging.rb'
     - 'config/environments/production.rb'
