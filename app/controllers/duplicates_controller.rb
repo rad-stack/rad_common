@@ -115,7 +115,7 @@ class DuplicatesController < ApplicationController
     if found_duplicates.present?
 
       duplicates = found_duplicates.map do |dupe|
-        { duplicate_data: dupe.duplicate_fields, duplicates_path: "/#{model.table_name}/#{dupe.id}" }
+        { duplicate_data: dupe.duplicate_fields, duplicate_path: "/#{model.table_name}/#{dupe.id}" }
       end
       render json: { duplicate: true, duplicates: duplicates }
     else
