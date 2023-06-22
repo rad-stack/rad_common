@@ -96,17 +96,21 @@ module DuplicateFixable
     fields['Name'] = "#{first_name}, #{last_name}" if model_klass.use_first_last_name?
     fields['Address'] = full_address if model_klass.use_address? && respond_to?(:full_address)
     fields['Birth Date'] = birth_date.presence if model_klass.use_birth_date?
-    model_klass.applicable_duplicate_items.each do |item|
-      fields[item[:name].to_s.titleize] = send(item[:name])
-    end
-
+    model_klass.applicable_duplicate_items.each { |item| fields[item[:label]] = duplicate_item_display(item) }
+    
     fields
   end
 
-  def find_duplicates
-    contacts = duplicate_matches
+  def duplicate_item_display(item)
+    return send(item[:name]) unless item[:type] == :association
 
-    return if contacts.empty? || contacts.first[:score] < self.class.score_lower_threshold
+    association = item[:name].to_s.gsub('_id', '')
+    send(association)&.to_s
+  end
+
+  def find_duplicates
+    contacts = duplicate_matches.reject { |contact| contact[:score] < self.class.score_lower_threshold }
+    return if contacts.empty?
 
     contacts.map { |contact| self.class.find(contact[:id]) }
   end
