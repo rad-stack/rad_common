@@ -106,7 +106,7 @@ module DuplicateFixable
   def find_duplicates
     contacts = duplicate_matches
 
-    return if contacts.empty? || contacts.first[:score] < 1
+    return if contacts.empty? || contacts.first[:score] < self.class.score_lower_threshold
 
     contacts.map { |contact| self.class.find(contact[:id]) }
   end
