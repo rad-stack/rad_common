@@ -95,7 +95,7 @@ module DuplicateFixable
 
     fields['Name'] = "#{first_name}, #{last_name}" if model_klass.use_first_last_name?
     fields['Address'] = full_address if model_klass.use_address? && respond_to?(:full_address)
-    fields['Birth Date'] << birth_date if model_klass.use_birth_date?
+    fields['Birth Date'] = birth_date.presence if model_klass.use_birth_date?
     model_klass.applicable_duplicate_items.each do |item|
       fields[item[:name].to_s.titleize] = send(item[:name])
     end
