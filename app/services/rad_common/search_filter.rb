@@ -257,19 +257,27 @@ module RadCommon
       def scope_value?(scope_name)
         return false if scope_name.blank?
         return true if grouped_scope_value?(scope_name)
+        return false if @scope_values.blank?
+        return false unless scope_name.is_a?(String) || scope_name.is_a?(Array)
 
-        if @scope_values.present? && scope_name.is_a?(String)
-          if @scope_values.is_a? Array
-            @scope_values.include?(scope_name.to_sym)
-          else
-            @scope_values.symbolize_keys.has_key?(scope_name.to_sym)
-          end
-        else
-          false
-        end
+
+        scopes = if @scope_values.is_a? Array
+                   [scope_name.to_sym]
+                 else
+                   @scope_values.symbolize_keys.keys
+                 end
+
+        return scopes.include?(scope_name.to_sym) if scope_name.is_a?(String)
+        return scope_name.any? { |name| scopes.include?(name.to_sym) } if scope_name.is_a?(Array)
       end
 
       def apply_scope_value(results, scope_name)
+        if scope_name.is_a?(Array)
+          scopes = scope_name.reject(&:blank?)
+          scopes.each { |scope| results = apply_scope_value(results, scope) }
+          return results
+        end
+
         if grouped_scope_values?
           apply_scope_grouped_value(results, scope_name)
         elsif @scope_values.is_a? Hash
