@@ -97,7 +97,7 @@ module DuplicateFixable
     fields['Address'] = full_address if model_klass.use_address? && respond_to?(:full_address)
     fields['Birth Date'] = birth_date.presence if model_klass.use_birth_date?
     model_klass.applicable_duplicate_items.each { |item| fields[item[:label]] = duplicate_item_display(item) }
-    
+
     fields
   end
 
