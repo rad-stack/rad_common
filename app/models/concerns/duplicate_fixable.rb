@@ -203,32 +203,36 @@ module DuplicateFixable
     def name_matches
       return [] unless model_klass.use_first_last_name?
 
-      model_klass.where('id <> ? AND upper(first_name) = ? AND upper(last_name) = ?',
-                        id,
-                        first_name.upcase,
-                        last_name.upcase).pluck(:id)
+      query = model_klass.where('upper(first_name) = ? AND upper(last_name) = ?',
+                                first_name.upcase,
+                                last_name.upcase)
+      query = query.where.not(id: id) if id.present?
+      query.pluck(:id)
     end
 
     def similar_name_matches
       return [] unless model_klass.use_first_last_name?
 
-      model_klass.where('id <> ? AND levenshtein(upper(first_name), ?) <= 1 AND levenshtein(upper(last_name), ?) <= 1',
-                        id,
-                        first_name.upcase,
-                        last_name.upcase).pluck(:id)
+      query = model_klass.where('levenshtein(upper(first_name), ?) <= 1 AND levenshtein(upper(last_name), ?) <= 1',
+                                first_name.upcase,
+                                last_name.upcase)
+      query = query.where.not(id: id) if id.present?
+      query.pluck(:id)
     end
 
     def birth_date_matches
       return [] unless model_klass.use_birth_date? && model_klass.use_first_last_name?
 
-      query_string = 'id <> ? AND birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR ' \
+      query_string = 'birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR ' \
                      'levenshtein(upper(last_name), ?) <= 1)'
 
-      model_klass.where(query_string,
-                        id,
-                        birth_date,
-                        first_name.upcase,
-                        last_name.upcase).pluck(:id)
+      query = model_klass.where(query_string,
+                                birth_date,
+                                first_name.upcase,
+                                last_name.upcase)
+
+      query = query.where.not(id: id) if id.present?
+      query.pluck(:id)
     end
 
     def additional_item_matches
@@ -240,15 +244,17 @@ module DuplicateFixable
 
         query = case item[:type]
                 when :association
-                  "id <> ? AND #{item[:name]} IS NOT NULL AND #{item[:name]} = ?"
+                  "#{item[:name]} IS NOT NULL AND #{item[:name]} = ?"
                 when :levenshtein
-                  "id <> ? AND levenshtein(upper(#{item[:name]}), ?) <= 1"
+                  "levenshtein(upper(#{item[:name]}), ?) <= 1"
                 else
-                  "id <> ? AND #{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?"
+                  "#{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?"
                 end
 
         check_value = item[:type] == :levenshtein ? item_value.upcase : item_value
-        items += model_klass.where(query, id, check_value).pluck(:id)
+        query = model_klass.where(query, check_value)
+        query = query.where.not(id: id) if id.present?
+        items += query.pluck(:id)
       end
 
       items
