@@ -8,7 +8,7 @@
           .duplicate-data
         .card-header
           .create_anyway
-            %label.text-danger Create anyway?
+            %label.text-danger#create-anyway-label Create anyway?
             %input#create-anyway{ type: 'checkbox' }
 
   = render 'layouts/duplicate_toast', model: record.class
