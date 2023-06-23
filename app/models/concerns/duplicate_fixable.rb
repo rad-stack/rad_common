@@ -80,15 +80,7 @@ module DuplicateFixable
   end
 
   def process_duplicates
-    contacts = []
-
-    all_matches.each do |match|
-      record = model_klass.find(match)
-      score = duplicate_record_score(record)
-      contacts.push(id: record.id, score: score)
-    end
-
-    contacts = contacts.sort_by { |item| item[:score] }.reverse.first(100)
+    contacts = duplicate_matches
 
     if contacts.any?
       raw_score = contacts.first[:score]
@@ -198,6 +190,18 @@ module DuplicateFixable
        similar_name_matches +
        birth_date_matches +
        additional_item_matches).uniq - no_matches(self)
+    end
+
+    def duplicate_matches
+      contacts = []
+
+      all_matches.each do |match|
+        record = model_klass.find(match)
+        score = duplicate_record_score(record)
+        contacts.push(id: record.id, score: score)
+      end
+
+      contacts.sort_by { |item| item[:score] }.reverse.first(100)
     end
 
     def name_matches
