@@ -260,7 +260,6 @@ module RadCommon
         return false if @scope_values.blank?
         return false unless scope_name.is_a?(String) || scope_name.is_a?(Array)
 
-
         scopes = if @scope_values.is_a? Array
                    [scope_name.to_sym]
                  else
