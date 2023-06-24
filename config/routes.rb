@@ -37,6 +37,7 @@ RadCommon::Engine.routes.draw do
       put :do_later
       put :reset
       patch :merge
+      post :check_duplicate
     end
   end
 end

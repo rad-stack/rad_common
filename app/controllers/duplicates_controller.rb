@@ -106,6 +106,23 @@ class DuplicatesController < ApplicationController
     redirect_to @record
   end
 
+  def check_duplicate
+    @record = model.new(params[:record].permit!.to_h.except(:authenticity_token, :create_anyway))
+    authorize @record, :create?
+
+    @record.valid?
+    found_duplicates = @record.find_duplicates
+    if found_duplicates.present?
+
+      duplicates = found_duplicates.map do |dupe|
+        { duplicate_data: dupe.duplicate_fields, duplicate_path: "/#{model.table_name}/#{dupe.id}" }
+      end
+      render json: { duplicate: true, duplicates: duplicates }
+    else
+      render json: { duplicate: false }
+    end
+  end
+
   private
 
     def index_path
