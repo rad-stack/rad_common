@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_25_215920) do
-
+ActiveRecord::Schema[7.0].define(version: 2023_04_25_215920) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -21,8 +20,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.text "body"
     t.string "record_type", null: false
     t.bigint "record_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
@@ -31,7 +30,7 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -42,8 +41,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "content_type"
     t.text "metadata"
     t.bigint "byte_size", null: false
-    t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.string "checksum"
+    t.datetime "created_at", precision: nil, null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
@@ -66,8 +65,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "city", null: false
     t.string "state", null: false
     t.string "zipcode", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.jsonb "address_metadata"
   end
 
@@ -84,7 +83,7 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "comment"
     t.string "remote_address"
     t.string "request_uuid"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.jsonb "audited_changes"
     t.index ["associated_id", "associated_type"], name: "associated_index"
     t.index ["auditable_id", "auditable_type", "version"], name: "auditable_index"
@@ -95,8 +94,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
 
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["name"], name: "index_categories_on_name", unique: true
   end
 
@@ -104,8 +103,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "name", null: false
     t.boolean "active", default: true, null: false
     t.text "valid_user_domains", default: [], null: false, array: true
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "email", null: false
     t.index ["name"], name: "index_clients_on_name"
   end
@@ -120,9 +119,9 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "city", limit: 255, null: false
     t.string "state", limit: 255, null: false
     t.string "zipcode", limit: 255, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "validity_checked_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "validity_checked_at", precision: nil
     t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
     t.integer "address_requests_made", default: 0, null: false
@@ -133,8 +132,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "name", null: false
     t.string "code", null: false
     t.integer "owner_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "division_status"
     t.boolean "notify", default: false, null: false
     t.string "timezone"
@@ -155,9 +154,9 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.text "duplicates_not"
     t.integer "score"
     t.integer "sort", default: 500, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "processed_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "processed_at", precision: nil, null: false
     t.index ["duplicatable_type", "duplicatable_id"], name: "index_duplicates_on_duplicatable_type_and_duplicatable_id", unique: true
   end
 
@@ -178,7 +177,7 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "country"
     t.float "latitude"
     t.float "longitude"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["identity"], name: "index_login_activities_on_identity"
     t.index ["ip"], name: "index_login_activities_on_ip"
     t.index ["user_type", "user_id"], name: "index_login_activities_on_user_type_and_user_id"
@@ -186,8 +185,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
 
   create_table "notification_security_roles", force: :cascade do |t|
     t.integer "security_role_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "notification_type_id", null: false
     t.index ["notification_type_id", "security_role_id"], name: "unique_notification_roles", unique: true
   end
@@ -195,8 +194,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
   create_table "notification_settings", force: :cascade do |t|
     t.integer "user_id", null: false
     t.boolean "enabled", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "notification_type_id", null: false
     t.boolean "email", default: false, null: false
     t.boolean "feed", default: false, null: false
@@ -206,8 +205,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
 
   create_table "notification_types", force: :cascade do |t|
     t.string "type", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "active", default: true, null: false
     t.index ["type"], name: "index_notification_types_on_type", unique: true
   end
@@ -219,8 +218,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.boolean "unread", default: true, null: false
     t.string "record_type"
     t.bigint "record_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["notification_type_id"], name: "index_notifications_on_notification_type_id"
     t.index ["record_type", "record_id"], name: "index_notifications_on_record_type_and_record_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
@@ -231,7 +230,7 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "password_archivable_type", null: false
     t.integer "password_archivable_id", null: false
     t.string "password_salt"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["password_archivable_type", "password_archivable_id"], name: "index_password_archivable"
   end
 
@@ -240,8 +239,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.bigint "user_id", null: false
     t.string "search_class", null: false
     t.jsonb "search_filters", default: {}, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id", "name", "search_class"], name: "unique_saved_search_filters", unique: true
     t.index ["user_id"], name: "index_saved_search_filters_on_user_id"
   end
@@ -249,8 +248,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
   create_table "security_roles", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "admin", default: false, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "create_division", default: false, null: false
     t.boolean "read_division", default: false, null: false
     t.boolean "update_division", default: false, null: false
@@ -264,8 +263,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
 
   create_table "statuses", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["name"], name: "index_statuses_on_name", unique: true
   end
 
@@ -273,8 +272,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.text "sms_message_body"
     t.integer "user_id", null: false
     t.integer "send_to", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "message_type", null: false
     t.integer "security_role_id"
     t.index ["security_role_id"], name: "index_system_messages_on_security_role_id"
@@ -284,8 +283,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
   create_table "twilio_log_attachments", force: :cascade do |t|
     t.bigint "twilio_log_id"
     t.string "twilio_url"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["twilio_log_id"], name: "index_twilio_log_attachments_on_twilio_log_id"
   end
 
@@ -297,8 +296,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "message", null: false
     t.string "media_url"
     t.boolean "sent", default: true, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "opt_out_message_sent", default: false, null: false
     t.string "message_sid"
     t.integer "twilio_status"
@@ -316,16 +315,16 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
   create_table "user_clients", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "client_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id", "client_id"], name: "index_user_clients_on_user_id_and_client_id", unique: true
   end
 
   create_table "user_security_roles", id: :serial, force: :cascade do |t|
     t.integer "security_role_id", null: false
     t.integer "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["security_role_id", "user_id"], name: "index_user_security_roles_on_security_role_id_and_user_id", unique: true
     t.index ["security_role_id"], name: "index_user_security_roles_on_security_role_id"
     t.index ["user_id"], name: "index_user_security_roles_on_user_id"
@@ -335,8 +334,8 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "name", null: false
     t.boolean "active", default: false, null: false
     t.boolean "validate_email_phone", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["name"], name: "index_user_statuses_on_name", unique: true
   end
 
@@ -344,18 +343,18 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "email", limit: 255, default: "", null: false
     t.string "encrypted_password", limit: 255, default: "", null: false
     t.string "reset_password_token", limit: 255
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip", limit: 255
     t.string "last_sign_in_ip", limit: 255
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "confirmation_token", limit: 255
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email", limit: 255
     t.string "first_name", limit: 255, null: false
     t.string "last_name", limit: 255, null: false
@@ -363,22 +362,22 @@ ActiveRecord::Schema.define(version: 2023_04_25_215920) do
     t.string "timezone", limit: 255, null: false
     t.string "global_search_default", limit: 255
     t.integer "user_status_id", null: false
-    t.datetime "last_sign_in_with_twilio_verify"
+    t.datetime "last_sign_in_with_twilio_verify", precision: nil
     t.boolean "twilio_verify_enabled", default: true, null: false
     t.string "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
+    t.datetime "invitation_created_at", precision: nil
+    t.datetime "invitation_sent_at", precision: nil
+    t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
     t.integer "invited_by_id"
     t.integer "invitations_count", default: 0
     t.boolean "external", default: false, null: false
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
-    t.datetime "locked_at"
-    t.datetime "password_changed_at"
-    t.datetime "last_activity_at"
-    t.datetime "expired_at"
+    t.datetime "locked_at", precision: nil
+    t.datetime "password_changed_at", precision: nil
+    t.datetime "last_activity_at", precision: nil
+    t.datetime "expired_at", precision: nil
     t.jsonb "filter_defaults"
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"

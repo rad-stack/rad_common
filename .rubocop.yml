@@ -21,6 +21,7 @@ AllCops:
     - 'spec/dummy/config/initializers/simple_form.rb'
     - 'spec/dummy/config/initializers/simple_form_bootstrap.rb'
     - 'spec/dummy/config/initializers/simple_form_components.rb'
+    - 'spec/dummy/config/initializers/new_framework_defaults_7_0.rb'
     - 'spec/dummy/config.ru'
     - 'config.ru'
     - 'lib/generators/rad_common/install/install_generator.rb'
