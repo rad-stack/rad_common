@@ -11,12 +11,22 @@ RSpec.describe 'Attorneys' do
       visit new_attorney_path
       expect(page).to have_content('New Attorney')
     end
+
+    it "doesn't show the reset duplicates link" do
+      visit new_attorney_path
+      expect(page).not_to have_content('Reset Duplicates')
+    end
   end
 
   describe 'edit' do
     it 'renders the edit template' do
       visit edit_attorney_path(attorney)
       expect(page).to have_content('Editing Attorney')
+    end
+
+    it 'shows the reset duplicates link' do
+      visit edit_attorney_path(attorney)
+      expect(page).to have_content('Reset Duplicates')
     end
   end
 

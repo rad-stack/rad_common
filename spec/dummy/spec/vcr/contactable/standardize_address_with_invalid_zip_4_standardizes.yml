@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 25 May 2023 14:26:55 GMT
+      - Wed, 21 Jun 2023 10:38:36 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -37,5 +37,5 @@ http_interactions:
         City","default_city_name":"Panama City","state_abbreviation":"FL","zipcode":"32404","plus4_code":"5273","delivery_point":"10","delivery_point_check_digit":"9"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12005","county_name":"Bay","carrier_route":"R008","elot_sequence":"0102","elot_sort":"A","latitude":30.29684,"longitude":-85.57602,"precision":"Zip9","time_zone":"Central","utc_offset":-6,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","enhanced_match":"postal-match"}}]
 
         '
-  recorded_at: Thu, 25 May 2023 14:26:55 GMT
+  recorded_at: Wed, 21 Jun 2023 10:38:36 GMT
 recorded_with: VCR 6.1.0
