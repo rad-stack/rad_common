@@ -12,7 +12,20 @@ module ReportsHelper
     )
   end
 
+  def format_report_boolean(value)
+    if pdf_report?
+      value ? 'Yes' : 'No'
+    else
+      format_boolean(value)
+    end
+  end
+
   def pdf_report?
     request.format.pdf?
+  end
+
+  def report_popover_content(others)
+    items = others.map { |other| "<li>#{other}</li>" }.join(' ')
+    "<ul>#{items}</ul>"
   end
 end
