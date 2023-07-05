@@ -69,4 +69,16 @@ class BaseReport
     def end_of_last_week
       Date.current.beginning_of_week.advance days: -1
     end
+
+    def beginning_of_last_quarter
+      end_of_last_quarter.beginning_of_quarter
+    end
+
+    def end_of_last_quarter
+      Date.current.beginning_of_quarter.advance days: -1
+    end
+
+    def end_of_last_month
+      Date.current.beginning_of_month.advance days: -1
+    end
 end
