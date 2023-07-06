@@ -37,7 +37,7 @@ class Exporter
 
     def generate_pdf
       pdf = Prawn::Document.new(page_layout: :landscape, page_size: 'A3', margin: [10, 10, 20, 20])
-      pdf.image Rails.root.join('app', 'assets', 'images', RadConfig.app_logo_filename!), position: :left, width: 150
+      pdf.image Rails.root.join('app', 'javascript', 'images', RadConfig.app_logo_filename!), position: :left, width: 150
       pdf.move_down 5
       pdf.text report_name, align: :center, style: :bold, size: 24
       pdf.move_down 10
