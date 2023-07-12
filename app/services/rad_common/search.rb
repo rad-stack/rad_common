@@ -73,7 +73,7 @@ module RadCommon
     end
 
     def search_params
-      search_params? ? params.require(:search).permit(permitted_searchable_columns + [:sort, :direction]) : {}
+      search_params? ? params.require(:search).permit(permitted_searchable_columns + %i[sort direction]) : {}
     end
 
     def page_size_param
