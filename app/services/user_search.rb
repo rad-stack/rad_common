@@ -21,7 +21,7 @@ class UserSearch < RadCommon::Search
                  options: UserStatus.not_pending.by_id,
                  default_value: UserStatus.default_active_status.id }]
 
-      if RadicalConfig.external_users? && current_user.internal?
+      if RadConfig.external_users? && current_user.internal?
         items.push({ input_label: 'Type', name: :external, scope_values: %i[internal external] })
       end
 
@@ -41,8 +41,10 @@ class UserSearch < RadCommon::Search
       items.push({ label: 'Status', column: 'user_statuses.name' })
       items.push({ label: 'Roles' }) if can_update?
 
-
-      items.push(label: 'External?', column: 'users.external') if RadicalConfig.external_users?
+      if RadConfig.external_users?
+        items.push(label: "#{RadCommon::AppInfo.new.client_model_label}s",
+                   column: RadConfig.user_clients? ? nil : 'users.external')
+      end
 
       items
     end

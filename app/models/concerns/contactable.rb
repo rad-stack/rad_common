@@ -2,18 +2,22 @@ module Contactable
   extend ActiveSupport::Concern
 
   included do
-    validates :zipcode, format: /\A[0-9]{5}(?:-[0-9]{4})?\z/, allow_nil: true
+    validates :zipcode, format: /\A[0-9]{5}(?:-[0-9]{4})?\z/, allow_nil: true, unless: :canadian?
 
     validate :validate_state
+    validate :validate_address_2
+    validate :validate_metadata
+    validate :validate_address, if: :run_smarty?
 
     before_validation :maybe_standardize_address
   end
 
   def maybe_standardize_address
-    return if running_global_validity || bypass_address_validation?
-    return unless RadicalConfig.smarty_enabled? && address? && any_address_changes?
-
-    standardize_address
+    if address?
+      standardize_address if run_smarty?
+    else
+      self.address_metadata = nil
+    end
   end
 
   def street_addresses
@@ -33,15 +37,68 @@ module Contactable
   end
 
   def clear_address_changes!
-    update_column :address_changes, nil
+    return if address_metadata.blank?
+
+    update_column :address_metadata, address_metadata.except('changes')
+  end
+
+  def bypass_address_validation?
+    address_metadata.present? && address_metadata['bypass_address_validation']
+  end
+
+  def bypass_address_validation=(value)
+    self.address_metadata ||= {}
+    self.address_metadata['bypass_address_validation'] = value
+  end
+
+  def address_problems
+    return if address_metadata.blank?
+
+    address_metadata['problems']
+  end
+
+  def address_changes
+    return if address_metadata.blank?
+    return if address_metadata['changes'].blank?
+
+    address_metadata['changes'].values.join(', ')
   end
 
   private
 
-    def validate_state
-      return if city_model_variant?
+    def run_smarty?
+      # we can and probably should enable this for Canadian addresses, just capping the effort for now
+      return false if running_global_validity || !RadConfig.smarty_enabled? || bypass_address_validation? || canadian?
 
+      any_address_changes?
+    end
+
+    def canadian?
+      state.present? && StateOptions.valid?(state) && StateOptions.canadian?(state)
+    end
+
+    def validate_state
       errors.add(:state, "isn't a valid state") if state.present? && !StateOptions.valid?(state)
+    end
+
+    def validate_address_2
+      errors.add :address_2, 'must be blank when address 1 is blank' if address_1.blank? && address_2.present?
+    end
+
+    def validate_metadata
+      return unless address_metadata.present? && !address?
+
+      errors.add :address_metadata, 'must be blank when address is blank'
+    end
+
+    def validate_address
+      errors.add(:address_1, 'is not a valid address') unless valid_address?
+    end
+
+    def valid_address?
+      return true if address_metadata.blank?
+
+      address_metadata['valid']
     end
 
     def address?
@@ -49,39 +106,25 @@ module Contactable
     end
 
     def any_address_changes?
-      return city_model_variant_changes? if city_model_variant?
-
       address_1_changed? || address_2_changed? || city_changed? || zipcode_changed? || state_changed?
     end
 
-    def city_model_variant_changes?
-      # one project uses city/state models
-
-      address_1_changed? || address_2_changed? || city_id_changed? || zipcode_changed?
-    end
-
     def city_state
-      return city.to_s if city_model_variant?
-
       [city, state].compact_blank.join(', ').presence
     end
 
     def apply_standardized_address(result)
-      self.address_changes = apply_changes(result)
+      apply_changes result
 
       self.address_1 = result.address_1
       self.address_2 = result.address_2
-
-      if city_model_variant?
-        self.city = City.find_or_create_by!(state: state_record(result.state), name: result.city)
-      else
-        self.city = result.city
-        self.state = result.state
-      end
-
+      self.city = result.city
+      self.state = result.state
       self.zipcode = result.zipcode
 
-      self.address_problems = nil
+      self.address_metadata ||= {}
+      self.address_metadata['problems'] = result.address_problems if result.address_problems.present?
+      self.address_metadata['valid'] = true
     end
 
     def standardize_address
@@ -96,7 +139,9 @@ module Contactable
       if result.valid_address?
         apply_standardized_address(result)
       else
-        self.address_problems = result.address_problems
+        self.address_metadata ||= {}
+        self.address_metadata['valid'] = false
+        self.address_metadata['problems'] = result.address_problems if result.address_problems.present?
       end
     end
 
@@ -110,22 +155,7 @@ module Contactable
         changes_hash[field] = attributes[field]
       end
 
-      changes_hash
-    end
-
-    def city_model_variant?
-      # one project uses city/state models
-
-      respond_to?(:city_id)
-    end
-
-    def state_record(state_code)
-      # only used for the city_model_variant on the one project
-
-      state_name = StateOptions.options.select { |item| item.last == state_code }.first.first
-      this_state = State.find_by(name: state_name)
-      raise "Couldn't find state: #{state_name}" if this_state.blank?
-
-      this_state
+      self.address_metadata ||= {}
+      self.address_metadata['changes'] = changes_hash if changes_hash.present?
     end
 end

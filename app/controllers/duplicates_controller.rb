@@ -22,7 +22,7 @@ class DuplicatesController < ApplicationController
 
     @record.process_duplicates
 
-    flash[:error] = "Invalid #{model.to_s.downcase} data, perhaps something has changed or another user has "\
+    flash[:error] = "Invalid #{model.to_s.downcase} data, perhaps something has changed or another user has " \
                     'resolved these duplicates.'
 
     redirect_to root_path
@@ -106,6 +106,23 @@ class DuplicatesController < ApplicationController
     redirect_to @record
   end
 
+  def check_duplicate
+    @record = model.new(params[:record].permit!.to_h.except(:authenticity_token, :create_anyway))
+    authorize @record, :create?
+
+    @record.valid?
+    found_duplicates = @record.find_duplicates
+    if found_duplicates.present?
+
+      duplicates = found_duplicates.map do |dupe|
+        { duplicate_data: dupe.duplicate_fields, duplicate_path: "/#{model.table_name}/#{dupe.id}" }
+      end
+      render json: { duplicate: true, duplicates: duplicates }
+    else
+      render json: { duplicate: false }
+    end
+  end
+
   private
 
     def index_path
@@ -125,7 +142,7 @@ class DuplicatesController < ApplicationController
     end
 
     def notify_user(subject, message)
-      RadbearMailer.simple_message(current_user, subject, message, email_options).deliver_later
+      RadMailer.simple_message(current_user, subject, message, email_options).deliver_later
     end
 
     def email_options

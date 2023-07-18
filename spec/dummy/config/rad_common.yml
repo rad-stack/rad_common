@@ -1,18 +1,28 @@
 default: &default
   app_name: Demo Foo
-  portal_app_name: Foo Portal
   use_avatar: true
+  switch_languages: true
   disable_sign_up: false
   disable_invite: false
+  manually_create_users: false
   secure_sentry: true
   external_users: true
   validate_external_email_domain: true
   app_logo_includes_name: true
-  portal: false
   impersonate: true
-  start_route: attorneys
+  start_route: onboardings
   user_clients: true
-  authy_internal_only: true
+  user_profiles: true
+  shared_database: false
+  canadian_addresses: false
+  show_help_menu: true
+  saved_search_filters_enabled: true
+  legal_docs: true
+  wide_margins: false
+  twilio_verify_all_users: true
+  twilio_verify_remember_device_days: 7
+  storage_config_override: false
+  require_mobile_phone: false
 
   system_usage_models:
     -
@@ -39,6 +49,7 @@ default: &default
       attribute: hourly_rate
 
   additional_user_params: []
+  additional_user_profile_params: []
   additional_company_params: []
 
   global_validity_days: 3
@@ -95,12 +106,10 @@ development:
   <<: *default
 
   host_name: localhost:3000
-  portal_host_name: portal.localhost:3000
-  authy_enabled: false
+  twilio_verify_enabled: false
 
 test:
   <<: *default
 
   host_name: localhost:3000
-  portal_host_name: portal.localhost:3000
-  authy_enabled: true
+  twilio_verify_enabled: true

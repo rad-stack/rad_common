@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe DuplicateFixable, type: :model do
+describe DuplicateFixable do
   let(:phone_number) { create :phone_number }
   let(:email) { Faker::Internet.email }
   let(:first_name) { 'John' }

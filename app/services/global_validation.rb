@@ -33,7 +33,7 @@ class GlobalValidation
     end
 
     if @override_model.blank?
-      specific_queries = RadicalConfig.global_validity_include!
+      specific_queries = RadConfig.global_validity_include!
 
       specific_queries.each do |query|
         start_time = Time.current
@@ -69,20 +69,23 @@ class GlobalValidation
       company = Company.main
 
       company.validity_checked_at.blank? ||
-        company.validity_checked_at <= RadicalConfig.global_validity_days!.days.ago
+        company.validity_checked_at <= RadConfig.global_validity_days!.days.ago
     end
 
     def exclude_models
       return [] if @override_model.present?
 
-      RadicalConfig.global_validity_exclude! + ['TwilioLog']
+      RadConfig.global_validity_exclude!
     end
 
     def check_model(model)
       problems = []
       error_count = 0
 
-      model.safe_constantize.find_each do |record|
+      klass = model.safe_constantize
+      raise "unknown model #{model}" if klass.nil?
+
+      klass.find_each do |record|
         error_count += 1 if validate_record(record, problems)
       end
 
@@ -108,7 +111,7 @@ class GlobalValidation
 
       messages = record.errors.full_messages
 
-      supressions = RadicalConfig.global_validity_supress!
+      supressions = RadConfig.global_validity_supress!
       supression = supressions.select { |item| item[:class] == record.class.to_s }.first
 
       messages -= supression[:messages] if supression
@@ -126,6 +129,6 @@ class GlobalValidation
     end
 
     def took_too_long?
-      @run_stats.sum { |item| item[:run_seconds] } > RadicalConfig.global_validity_timeout_hours!.hours
+      @run_stats.sum { |item| item[:run_seconds] } > RadConfig.global_validity_timeout_hours!.hours
     end
 end

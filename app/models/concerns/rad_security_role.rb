@@ -10,10 +10,13 @@ module RadSecurityRole
     scope :by_name, -> { order(:name) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
+    scope :allow_sign_up, -> { where(allow_sign_up: true) }
+    scope :allow_invite, -> { where(allow_invite: true) }
 
     alias_attribute :to_s, :name
 
     validate :validate_standard_permissions
+    validate :validate_rules
 
     strip_attributes
     audited
@@ -48,5 +51,10 @@ module RadSecurityRole
           break
         end
       end
+    end
+
+    def validate_rules
+      errors.add(:allow_invite, 'is not applicable') if allow_invite? && RadConfig.disable_invite?
+      errors.add(:allow_sign_up, 'is not applicable') if allow_sign_up? && RadConfig.disable_sign_up?
     end
 end

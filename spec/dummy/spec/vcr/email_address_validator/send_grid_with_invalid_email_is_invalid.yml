@@ -25,7 +25,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Tue, 12 Apr 2022 13:55:18 GMT
+      - Wed, 21 Jun 2023 10:40:51 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -33,11 +33,11 @@ http_interactions:
       Connection:
       - keep-alive
       X-Amzn-Requestid:
-      - 479773ee-7473-46f1-a413-f863a093cdf5
+      - f410aed6-78ce-4c0d-a4fc-c4e0a7b29eb7
       X-Amz-Apigw-Id:
-      - QeGvBFjBiYcFi8g=
+      - G3YEEGAXiYcF9mw=
       X-Amzn-Trace-Id:
-      - Root=1-625584c6-65b2ce803b9124641dc23533;Sampled=0
+      - Root=1-6492d3b3-1946e186110dea671e979b52;Sampled=0;lineage=1f2e372a:0
       Access-Control-Allow-Methods:
       - HEAD, GET, PUT, POST, DELETE, OPTIONS, PATCH
       Access-Control-Max-Age:
@@ -63,13 +63,13 @@ http_interactions:
       X-Ratelimit-Limit:
       - '7'
       X-Ratelimit-Reset:
-      - '1649771719'
+      - '1687344052'
       Twilio-Request-Id:
-      - RQ27hUGtisMXOghB8U1niY9l6hGaK
+      - RQ2RVnKNWaWe8MpRIXcWJaIYVIW2T
       Powered-By:
       - Mako
     body:
       encoding: UTF-8
       string: '{"result":{"email":"support@radicalbear.co","verdict":"Invalid","score":0,"local":"support","host":"radicalbear.co","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":false,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"67.190.197.70"}}'
-  recorded_at: Tue, 12 Apr 2022 13:55:18 GMT
+  recorded_at: Wed, 21 Jun 2023 10:40:51 GMT
 recorded_with: VCR 6.1.0

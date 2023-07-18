@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe NotificationType, type: :model do
   let(:user) { create :admin }
-  let(:security_role) { user.security_roles.first }
-  let(:notification_type) { create :global_validity_notification, security_roles: [security_role] }
+  let!(:security_role) { user.security_roles.first }
+  let(:notification_type) { Notifications::InvalidDataWasFoundNotification.main }
   let(:notification_method) { :email }
   let(:notification_payload) { [] }
 

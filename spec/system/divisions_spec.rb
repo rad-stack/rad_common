@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Divisions', type: :system do
+RSpec.describe 'Divisions' do
   let(:user) { create :admin }
   let(:division) { create :division, owner: user }
 
@@ -18,10 +18,20 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('must exist')
     end
 
-    it 'shows placeholder on autocomplete field' do
-      visit new_division_path
-      expect(find_field('owner_name_search').value).to eq('')
-      expect(find_field('owner_name_search')['placeholder']).to eq('Start typing to search for Owner')
+    context 'with default placeholder' do
+      it 'shows placeholder on autocomplete field', js: true do
+        visit new_division_path
+        click_bootstrap_select(from: 'division_owner_id')
+        expect(find("input[type='search']")['placeholder']).to eq('Start typing to search')
+      end
+    end
+
+    context 'with custom placeholder' do
+      it 'shows placeholder on autocomplete field', js: true do
+        visit new_division_path
+        click_bootstrap_select(from: 'division_category_id')
+        expect(find("input[type='search']")['placeholder']).to eq('Search for a category')
+      end
     end
 
     describe 'single attachment validation' do
@@ -60,56 +70,25 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('Editing Division')
     end
 
-    it 'displays error for owner field when blank', js: true do
-      fill_in 'owner_name_search', with: ''
-      click_button 'Save'
-
-      if ENV['CI']
-        # TODO: fix this so it works locally
-        expect(page).to have_content 'Owner must exist and Owner can\'t be blank'
-      end
-    end
-
-    it 'displays existing value on autocomplete field' do
-      expect(find_field('owner_name_search').value).to eq(division.owner.to_s)
-      expect(find_field('owner_name_search')['placeholder']).to eq(division.owner.to_s)
-    end
-
-    context 'with category' do
-      let(:last_category) { Category.order(:created_at).last }
-      let(:existing_category) { create(:category, name: 'Existing Category') }
+    context 'with bootstrap select search field', js: true do
+      let(:other_user) { create :user }
 
       before do
-        existing_category
+        other_user
+        stub_const('SearchableAssociationInput::MAX_DROPDOWN_SIZE', 1)
         visit edit_division_path(division)
       end
 
-      it 'allows for entering new categories' do
-        fill_in 'division[category_name]', with: 'New Category'
-        expect { click_on 'Save' }.to change(Category, :count).by(1)
-        expect(last_category.name).to eq('New Category')
-        expect(division.reload.category).to eq(last_category)
+      it 'allows searching' do
+        click_bootstrap_select(from: 'division_owner_id')
+        wait_for_ajax
+        find('.bs-searchbox input').fill_in(with: other_user.first_name)
+        expect(find('ul.inner li a span', text: other_user.to_s)).to be_present
       end
 
-      it 'allows selecting create new category', js: true do
-        fill_in 'division[category_name]', with: 'Does Not Exist'
-        find('.search-label').click
-        expect { click_on 'Save' }.to change(Category, :count).by(1)
-        expect(last_category.name).to eq('Does Not Exist')
-        expect(division.reload.category).to eq(last_category)
-      end
-
-      it 'finds and assigns existing categories' do
-        fill_in 'division[category_name]', with: 'Existing Category'
-        expect { click_on 'Save' }.not_to change(Category, :count)
-        expect(division.reload.category).to eq(existing_category)
-      end
-
-      it 'allows selecting autocomplete category', js: true do
-        fill_in 'division[category_name]', with: 'Existin'
-        find('.search-column-value').click
-        expect { click_on 'Save' }.not_to change(Category, :count)
-        expect(division.reload.category).to eq(existing_category)
+      it 'displays existing value' do
+        expect(find("[data-id='division_owner_id']").text).to eq(division.owner.to_s)
+        expect(find_field('division_owner_id', visible: false).value).to eq(division.owner.id.to_s)
       end
     end
   end
@@ -137,6 +116,41 @@ RSpec.describe 'Divisions', type: :system do
         expect(page.body).not_to have_content 'Showing header'
       end
     end
+
+    context 'when saving search filters', js: true do
+      let(:applied_params) { -> { Rack::Utils.parse_query URI.parse(current_url).query } }
+      let(:last_filter) { SavedSearchFilter.last }
+
+      it 'allows saving and applying search filters' do
+        visit divisions_path
+        bootstrap_select user.to_s, from: 'search_owner_id'
+        click_on 'saved-search-filters-dropdown'
+        page.evaluate_script 'window.prompt = () => { document.getElementById("search_saved_name").value = "Test" }'
+        page.evaluate_script 'window.alert = (msg) => { return true; }'
+        expect { click_on('save_and_apply_filters') }.to change(SavedSearchFilter, :count).by(1)
+
+        expect(SavedSearchFilter.last.name).to eq('Test')
+        expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
+
+        click_on 'Clear Filters'
+        expect(applied_params.call['search[owner_id]']).to be_nil
+
+        click_on 'saved-search-filters-dropdown'
+        click_on "saved_filter_#{last_filter.id}"
+        expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
+        click_on 'saved-search-filters-dropdown'
+        expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('active')
+      end
+
+      it 'allows deleting saved filters' do
+        create :saved_search_filter, user: user, search_class: 'DivisionSearch'
+        visit divisions_path
+        click_on 'saved-search-filters-dropdown'
+        page.accept_confirm { click_on "delete_saved_filter_#{last_filter.id}" }
+        wait_for_ajax
+        expect(SavedSearchFilter.count).to eq(0)
+      end
+    end
   end
 
   describe 'show' do
@@ -151,8 +165,8 @@ RSpec.describe 'Divisions', type: :system do
     end
 
     it 'shows translated version of field name' do
-      expect(page).to have_content 'Additional data'
-      expect(page).not_to have_content 'Additional info'
+      expect(page).to have_content 'Additional Data'
+      expect(page).not_to have_content 'Additional Info'
     end
 
     it 'shows translated enum value' do
@@ -162,7 +176,7 @@ RSpec.describe 'Divisions', type: :system do
 
     context 'with attachments' do
       let(:prompt) { 'Are you sure? Attachment cannot be recovered.' }
-      let(:file) { File.open Rails.root.join('app/assets/images/app_logo.png') }
+      let(:file) { Rails.root.join('app/assets/images/app_logo.png').open }
 
       before do
         division.logo.attach(io: file, filename: 'logo.png')

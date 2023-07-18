@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Attorneys', type: :request do
+RSpec.describe 'Attorneys' do
   let(:user) { create :admin }
   let(:attorney) { create :attorney }
   let(:invalid_attributes) { { first_name: Faker::Name.first_name, last_name: nil } }

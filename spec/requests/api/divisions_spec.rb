@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-describe 'Users API', type: :request do
+describe 'Users API' do
   let(:division) { create :division }
-  let(:headers) { { HTTP_AUTHORIZATION: RadicalJwtGenerator.new(valid_for_minutes).token } }
+  let(:headers) { { HTTP_AUTHORIZATION: RadJwtGenerator.new(valid_for_minutes).token } }
 
   describe 'show' do
     context 'when success' do
@@ -10,8 +10,8 @@ describe 'Users API', type: :request do
 
       it 'shows a division' do
         get "/api/divisions/#{division.id}", headers: headers
-        expect(response.status).to eq 200
-        expect(JSON.parse(response.body)['name']).to eq division.name
+        expect(response).to have_http_status :ok
+        expect(response.parsed_body['name']).to eq division.name
       end
     end
 
@@ -20,7 +20,7 @@ describe 'Users API', type: :request do
 
       it 'fails with expired date' do
         get "/api/divisions/#{division.id}", headers: headers
-        expect(response.status).to eq 403
+        expect(response).to have_http_status :forbidden
       end
     end
   end

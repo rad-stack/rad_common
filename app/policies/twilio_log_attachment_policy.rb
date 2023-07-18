@@ -1,0 +1,2 @@
+class TwilioLogAttachmentPolicy < TwilioLogPolicy
+end

@@ -10,18 +10,18 @@ class UserSMSSender < PhoneSMSSender
     def handle_blacklist
       to_user.update! mobile_phone: nil
 
-      RadbearMailer.simple_message(to_user,
-                                   "SMS Message from #{RadicalConfig.app_name!} Failed",
-                                   error_body,
-                                   email_action: email_action).deliver_later
+      RadMailer.simple_message(to_user,
+                               "SMS Message from #{RadConfig.app_name!} Failed",
+                               error_body,
+                               email_action: email_action).deliver_later
     end
 
     def error_body
-      'The system tried to send you an SMS message but your mobile phone number that we have on '\
-        "file #{to_mobile_phone}, failed, most likely due to being previously opted out. We have removed "\
-        'the mobile phone number from our system to prevent this issue in future communications. If you would like '\
-        'to continue to receive text messages, you can add back your mobile number to your user profile, and send the '\
-        "message 'YES' to #{from_number}. Please reply to this email with any questions or concerns that you "\
+      'The system tried to send you an SMS message but your mobile phone number that we have on ' \
+        "file #{to_mobile_phone}, failed, most likely due to being previously opted out. We have removed " \
+        'the mobile phone number from our system to prevent this issue in future communications. If you would like ' \
+        'to continue to receive text messages, you can add back your mobile number to your user profile, and send ' \
+        "the message 'YES' to #{from_number}. Please reply to this email with any questions or concerns that you " \
         'might have.'
     end
 

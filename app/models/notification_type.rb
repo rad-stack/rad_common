@@ -24,7 +24,7 @@ class NotificationType < ApplicationRecord
   end
 
   def mailer_class
-    'RadbearMailer'
+    'RadMailer'
   end
 
   def mailer_method
@@ -83,7 +83,7 @@ class NotificationType < ApplicationRecord
     users = User.active
 
     if security_roles?
-      where_clause = 'users.id IN (SELECT user_id FROM user_security_roles WHERE security_role_id IN '\
+      where_clause = 'users.id IN (SELECT user_id FROM user_security_roles WHERE security_role_id IN ' \
                      '(SELECT security_role_id FROM notification_security_roles WHERE notification_type_id = ?))'
 
       users = users.where(where_clause, id)
@@ -93,7 +93,14 @@ class NotificationType < ApplicationRecord
   end
 
   def self.main
-    NotificationType.find_by!(type: name)
+    item = NotificationType.find_by(type: name)
+    return item if item.present?
+
+    if name.constantize.new.auth_mode == :security_roles
+      name.constantize.create! security_roles: [SecurityRole.admin_role]
+    else
+      name.constantize.create!
+    end
   end
 
   def notify!(payload)
@@ -131,11 +138,11 @@ class NotificationType < ApplicationRecord
       id_list = notify_user_ids_opted(:email)
       return if id_list.count.zero?
 
-      if mailer_class == 'RadbearMailer' && mailer_method == 'simple_message'
-        RadbearMailer.simple_message(id_list,
-                                     mailer_subject,
-                                     mailer_message,
-                                     mailer_options.merge(notification_settings_link: true)).deliver_later
+      if mailer_class == 'RadMailer' && mailer_method == 'simple_message'
+        RadMailer.simple_message(id_list,
+                                 mailer_subject,
+                                 mailer_message,
+                                 mailer_options.merge(notification_settings_link: true)).deliver_later
       else
         mailer = mailer_class.constantize
 
@@ -165,12 +172,12 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_sms!
-      return unless sms_enabled? && sms_content && RadicalTwilio.new.twilio_enabled?
+      return unless sms_enabled? && sms_content && RadTwilio.new.twilio_enabled?
 
       id_list = notify_user_ids_opted(:sms)
 
       id_list.each do |user_id|
-        UserSMSSenderJob.perform_later "Message from #{RadicalConfig.app_name!}: #{sms_content}",
+        UserSMSSenderJob.perform_later "Message from #{RadConfig.app_name!}: #{sms_content}",
                                        user_id,
                                        user_id,
                                        nil,

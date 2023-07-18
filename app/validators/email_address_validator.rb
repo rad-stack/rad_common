@@ -10,14 +10,14 @@ class EmailAddressValidator < ActiveModel::Validator
       record.send("#{field}=", email_value)
 
       unless valid_email?(email_value)
-        record.errors.add(field, 'is not written in a valid format. Email cannot have capital letters, '\
+        record.errors.add(field, 'is not written in a valid format. Email cannot have capital letters, ' \
                                  'domain must be less than 62 characters and does not allow special characters.')
         next
       end
 
       next unless check_sendgrid?(record, field)
 
-      error_message = RadicalSendGrid.new.validate_email(email_value)
+      error_message = RadSendGrid.new.validate_email(email_value)
       record.errors.add(field, error_message) if error_message.present?
     end
   end

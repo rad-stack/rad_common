@@ -19,7 +19,7 @@ describe RadCommon::AuditsHelper do
       let(:security_role) { create :security_role, :admin }
 
       let(:result) do
-        "Changed <strong>Notify</strong> to <strong>true</strong>\n"\
+        "Changed <strong>Notify</strong> to <strong>true</strong>\n" \
           "Changed <strong>Hourly Rate</strong> from <strong>0.0</strong> to <strong>100.0</strong>\n"
       end
 
@@ -28,7 +28,7 @@ describe RadCommon::AuditsHelper do
 
     context 'when user' do
       let(:result) do
-        "Changed <strong>Notify</strong> to <strong>true</strong>\n"\
+        "Changed <strong>Notify</strong> to <strong>true</strong>\n" \
           "Changed <strong>Hourly Rate</strong> from <strong>XXX</strong> to <strong>XXX</strong>\n"
       end
 
@@ -40,7 +40,7 @@ describe RadCommon::AuditsHelper do
     subject { strip_tags(helper.display_audited_action(audit)) }
 
     let(:audit) { division.own_and_associated_audits.reorder(id: :desc).first }
-    let(:file) { File.open(Rails.root.join('app/assets/images/app_logo.png')) }
+    let(:file) { Rails.root.join('app/assets/images/app_logo.png').open }
 
     context 'when associated attachment' do
       context 'when create' do
@@ -104,6 +104,8 @@ describe RadCommon::AuditsHelper do
       subject { strip_tags(helper.display_audited_changes(audit)) }
 
       let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
+
+      before { user.update! user_status: UserStatus.default_pending_status }
 
       context 'when create' do
         before do

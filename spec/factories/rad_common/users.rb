@@ -7,10 +7,9 @@ FactoryBot.define do
     password { Rails.env.development? ? 'password' : 'cOmpl3x_p@55w0rd' }
     password_confirmation { Rails.env.development? ? 'password' : 'cOmpl3x_p@55w0rd' }
     confirmed_at { Time.current }
-    association :user_status, factory: %i[user_status active]
+    user_status factory: %i[user_status active]
     do_not_notify_approved { true }
     security_roles { [create(:security_role)] }
-    authy_enabled { false }
     timezone { 'Eastern Time (US & Canada)' }
 
     trait :external do
@@ -28,7 +27,7 @@ FactoryBot.define do
     end
 
     factory :pending do
-      association :user_status, factory: %i[user_status pending]
+      user_status factory: %i[user_status pending]
     end
 
     factory :client_user do |f|
@@ -37,11 +36,11 @@ FactoryBot.define do
       end
 
       sequence(:email) { |n| "client_user_#{n}@abc.com" }
-      security_roles { [] }
+      security_roles { [create(:security_role, :external)] }
       external { true }
 
       f.after(:create) do |user, evaluator|
-        this_client = evaluator.client.presence || create(:client)
+        this_client = evaluator.client.presence || (create :client)
         UserClient.create! user: user, client_id: this_client.id
       end
     end

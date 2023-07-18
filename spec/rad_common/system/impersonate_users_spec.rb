@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'User Impersonation', type: :system, impersonate_specs: true do
+RSpec.describe 'User Impersonation', impersonate_specs: true, type: :system do
   let!(:signed_in_user) { create :admin }
   let!(:impersonated_user) { create :admin }
   let!(:edited_user) { create :user }
@@ -15,7 +15,7 @@ RSpec.describe 'User Impersonation', type: :system, impersonate_specs: true do
       expect(page).to have_content "Signed In as #{impersonated_user}"
       visit edit_user_path(edited_user)
 
-      fill_in 'First name', with: 'Foo Bro'
+      fill_in 'First Name', with: 'Foo Bro'
       click_button 'Save'
       click_on 'Show History'
 

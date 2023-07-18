@@ -6,6 +6,7 @@ require 'simplecov'
 SimpleCov.start 'rails' do
   add_filter 'lib/templates'
   add_filter 'install_generator.rb'
+  add_filter 'install/rails_helper.rb'
 
   add_group 'Services', 'app/services'
   add_group 'Policies', 'app/policies'
@@ -40,6 +41,7 @@ require 'factory_bot_rails'
 # require only the support files necessary.
 #
 Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
+SpecSupport.load_dependencies
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
@@ -83,23 +85,26 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   Capybara.register_driver :headless_chrome do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: { args: %w[headless disable-popup-blocking disable-gpu window-size=1400,900], w3c: false }
-    )
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless')
+    options.add_argument('--window-size=1400,900')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-gpu')
 
     Capybara::Selenium::Driver.new app,
                                    browser: :chrome,
-                                   desired_capabilities: capabilities
+                                   capabilities: options
   end
 
   Capybara.register_driver :chrome do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: { args: %w[disable-popup-blocking disable-gpu window-size=1400,900], w3c: false }
-    )
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--window-size=1400,900')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-gpu')
 
     Capybara::Selenium::Driver.new app,
                                    browser: :chrome,
-                                   desired_capabilities: capabilities
+                                   capabilities: options
   end
 
   chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
@@ -113,44 +118,22 @@ RSpec.configure do |config|
 
     Timecop.safe_mode = true
 
-    allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return false
-    allow_any_instance_of(RadicalSendGrid).to receive(:sendgrid_enabled?).and_return false
-
-    allow(Company).to receive(:main).and_return(create(:company))
-
-    allow(UserStatus).to receive(:default_pending_status).and_return(create(:user_status, :pending, name: 'Pending'))
-    allow(UserStatus).to receive(:default_active_status).and_return(create(:user_status, :active, name: 'Active'))
-    allow(UserStatus).to receive(:default_inactive_status).and_return(create(:user_status, :inactive, name: 'Inactive'))
-
-    allow_any_instance_of(Division).to receive(:notify_owner).and_return(nil)
+    SpecSupport.before_all { self }
   end
 
-  config.filter_run_excluding(authy_specs: true) unless RadicalConfig.authy_enabled?
-  config.filter_run_excluding(impersonate_specs: true) unless RadicalConfig.impersonate?
-  config.filter_run_excluding(invite_specs: true) if RadicalConfig.disable_invite?
-  config.filter_run_excluding(sign_up_specs: true) if RadicalConfig.disable_sign_up?
-  config.filter_run_excluding(external_user_specs: true) unless RadicalConfig.external_users?
-  config.filter_run_excluding(user_client_specs: true) unless RadicalConfig.user_clients?
+  SpecSupport.hooks(config, chrome_driver)
+
+  config.filter_run_excluding(twilio_verify_specs: true) unless RadConfig.twilio_verify_enabled?
+  config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
+  config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
+  config.filter_run_excluding(sign_up_specs: true) if RadConfig.disable_sign_up?
+  config.filter_run_excluding(external_user_specs: true) unless RadConfig.external_users?
+  config.filter_run_excluding(user_client_specs: true) unless RadConfig.user_clients?
   config.filter_run_excluding(devise_paranoid_specs: true) unless Devise.paranoid
-  config.filter_run_excluding(smarty_specs: true) unless RadicalConfig.smarty_enabled?
-
-  config.after(:each, type: :system, js: true) do
-    errors = page.driver.browser.manage.logs.get(:browser)
-    errors = errors.reject { |error| error.level == 'WARNING' }
-    expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
-  end
-
-  config.before(:example, type: :system) do
-    driven_by :rack_test
-  end
-
-  config.before(:each, type: :system, js: true) do
-    driven_by chrome_driver
-  end
-
-  config.after do
-    Warden.test_reset!
-  end
+  config.filter_run_excluding(smarty_specs: true) unless RadConfig.smarty_enabled?
+  config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
+  config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
+  config.filter_run_excluding(password_expirable_specs: true) unless RadConfig.password_expirable?
 
   include Warden::Test::Helpers
   config.include Capybara::DSL

@@ -23,13 +23,23 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content 'Users (1)'
         expect(page).to have_content user.to_s
         expect(page).not_to have_content user.security_roles.first.name
-        expect(page).not_to have_content 'Created'
-        expect(page).not_to have_content 'Export to File'
+        expect(page).not_to have_content ApplicationController.helpers.format_date(user.created_at)
+
+        if Pundit.policy!(user, user).export?
+          expect(page).to have_content 'Export to File'
+        else
+          expect(page).not_to have_content 'Export to File'
+        end
       end
 
       it "doesn't show pending users" do
         visit users_path
-        expect(page).not_to have_content pending_user.to_s
+
+        if Pundit.policy!(user, User.new).update?
+          expect(page).to have_content pending_user.to_s
+        else
+          expect(page).not_to have_content pending_user.to_s
+        end
       end
     end
 
@@ -41,16 +51,30 @@ RSpec.describe 'Users', type: :system do
       end
     end
 
-    describe 'profile' do
-      it 'updates profile' do
+    describe 'registration' do
+      it 'updates registration' do
         visit edit_user_registration_path
-        expect(find_field('First name').value).to eq user.first_name
+        expect(find_field('First Name').value).to eq user.first_name
         new_name = Faker::Name.first_name
-        fill_in 'First name', with: new_name
-        fill_in 'Current password', with: password
+        fill_in 'First Name', with: new_name
+        fill_in 'Current Password', with: password
         click_button 'Save'
         user.reload
         expect(user.first_name).to eq new_name
+      end
+
+      context 'when switching languages' do
+        before { allow(RadConfig).to receive(:switch_languages?).and_return true }
+
+        it 'updates registration' do
+          visit edit_user_registration_path
+          expect(page).to have_content 'My Account'
+          select 'Spanish', from: 'Language'
+          fill_in 'Current Password', with: password
+          click_button 'Save'
+          expect(user.reload.language).to eq 'Spanish'
+          expect(page).to have_content 'Mi Cuenta'
+        end
       end
     end
   end
@@ -66,24 +90,35 @@ RSpec.describe 'Users', type: :system do
     before { login_as admin, scope: :user }
 
     describe 'index' do
-      let(:result_label) { RadicalConfig.external_users? ? 'Users (2)' : 'Users (1)' }
+      let(:result_label) { RadConfig.external_users? ? 'Users (2)' : 'Users (1)' }
       let!(:pending_user) { create :user, user_status: pending_status }
 
-      before { external_user.update! user_status: user.user_status if RadicalConfig.external_users? }
+      before { external_user.update! user_status: user.user_status if RadConfig.external_users? }
 
       it 'shows users and all info' do
         visit users_path
         expect(page).to have_content result_label
         expect(page).to have_content user.to_s
         expect(page).to have_content user.security_roles.first.name
-        expect(page).to have_content 'Created'
-        expect(page).to have_content 'Export to File'
-        expect(page).to have_content external_user.to_s if RadicalConfig.external_users?
+        expect(page).to have_content ApplicationController.helpers.format_date(user.created_at)
+
+        if Pundit.policy!(admin, user).export?
+          expect(page).to have_content 'Export to File'
+        else
+          expect(page).not_to have_content 'Export to File'
+        end
+
+        expect(page).to have_content external_user.to_s if RadConfig.external_users?
       end
 
       it 'shows pending users' do
         visit users_path
-        expect(page).to have_content pending_user.to_s
+
+        if Pundit.policy!(admin, User.new).update?
+          expect(page).to have_content pending_user.to_s
+        else
+          expect(page).not_to have_content pending_user.to_s
+        end
       end
 
       it 'filters by user type', external_user_specs: true do
@@ -97,10 +132,7 @@ RSpec.describe 'Users', type: :system do
     describe 'new' do
       let(:security_role) { create :security_role }
 
-      before do
-        allow(RadicalConfig).to receive(:disable_sign_up?).and_return true
-        allow(RadicalConfig).to receive(:disable_invite?).and_return true
-      end
+      before { allow(RadConfig).to receive(:manually_create_users?).and_return true }
 
       it 'renders the new template' do
         visit new_user_path
@@ -108,12 +140,55 @@ RSpec.describe 'Users', type: :system do
       end
     end
 
-    it 'updates the user' do
-      visit edit_user_path(admin)
-      new = 'foo'
-      fill_in 'First name', with: new
-      click_button 'Save'
-      expect(page).to have_content new
+    describe 'edit' do
+      it 'renders the edit template' do
+        visit edit_user_path(user)
+        expect(page).to have_content('Editing User')
+      end
+
+      it 'updates the user' do
+        visit edit_user_path(admin)
+        new = 'foo'
+        fill_in 'First Name', with: new
+        click_button 'Save'
+        expect(page).to have_content new
+      end
+
+      it "doesn't update roles if user isn't valid" do
+        security_role = create :security_role
+        expect(user.security_roles.count).to eq 1
+
+        visit edit_user_path(user)
+        fill_in 'Last Name', with: ''
+        check security_role.name
+        click_button 'Save'
+
+        user.reload
+        expect(user.security_roles.count).to eq 1
+
+        fill_in 'Last Name', with: 'Foo'
+        click_button 'Save'
+
+        user.reload
+        expect(user.security_roles.count).to eq 2
+      end
+
+      it 'requires mobile phone when twilio verify enabled' do
+        allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false)
+        allow(RadConfig).to receive(:require_mobile_phone?).and_return(false)
+
+        visit edit_user_path(user)
+        fill_in 'Mobile Phone', with: ''
+        check 'Two Factor Auth'
+        click_button 'Save'
+
+        expect(page).to have_content 'Mobile phone is required'
+
+        fill_in 'Mobile Phone', with: user.mobile_phone
+        click_button 'Save'
+
+        expect(page).to have_content 'User updated'
+      end
     end
 
     describe 'show' do
@@ -151,13 +226,41 @@ RSpec.describe 'Users', type: :system do
         visit user_path(user)
       end
 
-      it 'can manually confirm a user', :js do
-        if Devise.mappings[:user].confirmable?
+      it 'can manually confirm a user', js: true, user_confirmable_specs: true do
+        page.accept_confirm do
+          click_link 'Confirm Email'
+        end
+
+        expect(page).to have_content 'User was successfully confirmed'
+      end
+    end
+
+    describe 'reactivate', user_expirable_specs: true do
+      let(:user) { create :user, last_activity_at: last_activity_at }
+
+      before do
+        visit user_path(user)
+      end
+
+      context 'when user is expired' do
+        let(:last_activity_at) { (Devise.expire_after + 1.day).ago }
+
+        it 'allows manual reactivation of the user', :js do
+          expect(page).to have_content("User's account has been expired due to inactivity")
           page.accept_confirm do
-            click_link 'Confirm Email'
+            click_link 'click here'
           end
 
-          expect(page).to have_content 'User was successfully confirmed'
+          expect(page).to have_content 'User was successfully reactivated'
+          expect(user.reload.last_activity_at).to be_nil
+        end
+      end
+
+      context 'when user is not expired' do
+        let(:last_activity_at) { (Devise.expire_after - 1.day).ago }
+
+        it 'does not display reactivate option' do
+          expect(page).not_to have_content("User's account has been expired due to inactivity")
         end
       end
     end
@@ -170,29 +273,37 @@ RSpec.describe 'Users', type: :system do
 
     describe 'show' do
       it 'does not allow' do
-        expect { visit user_path(user) }.to raise_error ActionController::RoutingError
+        visit user_path(user)
+        expect(page.status_code).to eq 403
       end
     end
 
     describe 'index' do
       it 'does not allow' do
-        expect { visit users_path }.to raise_error ActionController::RoutingError
+        visit users_path
+        expect(page.status_code).to eq 403
       end
     end
   end
 
-  describe 'sign up', sign_up_specs: true do
-    before { allow_any_instance_of(User).to receive(:authy_enabled?).and_return false }
+  describe 'sign up', js: true, sign_up_specs: true do
+    before do
+      create :security_role, :external, allow_sign_up: true
+      allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false)
+      allow(RadConfig).to receive(:legal_docs?).and_return(true)
+    end
 
     it 'signs up' do
       visit new_user_registration_path
 
-      fill_in 'First name', with: Faker::Name.first_name
-      fill_in 'Last name', with: Faker::Name.last_name
-      fill_in 'Mobile phone', with: '(345) 222-1111'
-      fill_in 'Email', with: "#{Faker::Internet.user_name}@example.com"
+      fill_in 'First Name', with: Faker::Name.first_name
+      fill_in 'Last Name', with: Faker::Name.last_name
+      fill_in 'Mobile Phone', with: '(345) 222-1111'
+      fill_in 'Email', with: "#{Faker::Internet.user_name}@abc.com"
       fill_in 'user_password', with: password
       fill_in 'user_password_confirmation', with: password
+      expect(find_button('Sign Up', disabled: true).disabled?).to be(true)
+      check 'accept_terms'
 
       click_button 'Sign Up'
       expect(page).to have_content 'message with a confirmation link has been sent'
@@ -201,19 +312,22 @@ RSpec.describe 'Users', type: :system do
     it "can't sign up with invalid email address" do
       visit new_user_registration_path
 
-      fill_in 'First name', with: Faker::Name.first_name
-      fill_in 'Last name', with: Faker::Name.last_name
+      fill_in 'First Name', with: Faker::Name.first_name
+      fill_in 'Last Name', with: Faker::Name.last_name
       fill_in 'Email', with: 'test_user@'
       fill_in 'user_password', with: password
       fill_in 'user_password_confirmation', with: password
+      check 'accept_terms'
 
       click_button 'Sign Up'
 
-      expect(page).to have_content 'Email is invalid'
+      expect(page).to have_content 'Email is not written in a valid format'
     end
   end
 
   describe 'sign in' do
+    before { allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false) }
+
     it 'can not sign in without active user status' do
       user.update!(user_status: pending_status)
 
@@ -244,46 +358,42 @@ RSpec.describe 'Users', type: :system do
       expect(page).to have_content 'Invalid Email or password'
     end
 
-    it 'cannot sign in with expired password' do
-      if Devise.mappings[:user].password_expirable?
-        current_password = password
-        new_password = 'Passwords2!!!!!'
+    it 'cannot sign in with expired password', password_expirable_specs: true do
+      current_password = password
+      new_password = 'Passwords2!!!!!'
 
-        user.update(password_changed_at: 98.days.ago)
-        user.reload
+      user.update(password_changed_at: 98.days.ago)
+      user.reload
 
-        visit new_user_session_path
-        fill_in 'user_email', with: user.email
-        fill_in 'user_password', with: current_password
-        click_button 'Sign In'
-        expect(page).to have_content('Your password is expired.')
+      visit new_user_session_path
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: current_password
+      click_button 'Sign In'
+      expect(page).to have_content('Your password is expired.')
 
-        fill_in 'user_password', with: new_password
-        fill_in 'user_password_confirmation', with: new_password
-        fill_in 'user_current_password', with: current_password
-        click_button 'Change My Password'
-        expect(page).to have_content 'Your new password is saved.'
-      end
+      fill_in 'user_password', with: new_password
+      fill_in 'user_password_confirmation', with: new_password
+      fill_in 'user_current_password', with: current_password
+      click_button 'Change My Password'
+      expect(page).to have_content 'Your new password is saved.'
     end
 
-    it 'cannot sign in when expired' do
-      if Devise.mappings[:user].expirable?
-        user.update!(last_activity_at: 98.days.ago)
-        user.reload
+    it 'cannot sign in when expired', user_expirable_specs: true do
+      user.update!(last_activity_at: 98.days.ago)
+      user.reload
 
-        visit new_user_session_path
-        fill_in 'user_email', with: user.email
-        fill_in 'user_password', with: password
-        click_button 'Sign In'
-        expect(page).to have_content('Your account has expired due to inactivity')
+      visit new_user_session_path
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: password
+      click_button 'Sign In'
+      expect(page).to have_content('Your account has expired due to inactivity')
 
-        user.update!(last_activity_at: Time.current)
+      user.update!(last_activity_at: Time.current)
 
-        fill_in 'user_email', with: user.email
-        fill_in 'user_password', with: password
-        click_button 'Sign In'
-        expect(page).to have_content('Signed in successfully')
-      end
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: password
+      click_button 'Sign In'
+      expect(page).to have_content('Signed in successfully')
     end
 
     it 'sign in times out after 3 hours' do
@@ -302,34 +412,6 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'edit' do
-    before { login_as admin, scope: :user }
-
-    it 'renders the edit template' do
-      visit edit_user_path(user)
-      expect(page).to have_content('Editing User')
-    end
-
-    it "doesn't update roles if user isn't valid" do
-      security_role = create :security_role
-      expect(user.security_roles.count).to eq 1
-
-      visit edit_user_path(user)
-      fill_in 'Last name', with: ''
-      check security_role.name
-      click_button 'Save'
-
-      user.reload
-      expect(user.security_roles.count).to eq 1
-
-      fill_in 'Last name', with: 'Foo'
-      click_button 'Save'
-
-      user.reload
-      expect(user.security_roles.count).to eq 2
-    end
-  end
-
   describe 'devise paranoid setting', devise_paranoid_specs: true do
     it 'wrong password - does not specify if email or password is wrong' do
       visit new_user_session_path
@@ -339,30 +421,28 @@ RSpec.describe 'Users', type: :system do
     end
 
     describe 'confirming' do
-      let(:user) { create(:user, confirmed_at: nil) }
+      let(:user) { create :user, confirmed_at: nil }
 
       let(:message) do
-        'If your email address exists in our database, you will receive an email with instructions for how to '\
+        'If your email address exists in our database, you will receive an email with instructions for how to ' \
           'confirm your email address in a few minutes.'
       end
 
-      it "doesn't say whether the email exists" do
-        if Devise.mappings[:user].confirmable?
-          visit new_user_session_path
+      it "doesn't say whether the email exists", user_confirmable_specs: true do
+        visit new_user_session_path
 
-          click_link "Didn't Receive Confirmation Instructions?"
-          fill_in 'Email', with: user.email
-          click_button 'Resend Confirmation Instructions'
+        click_link "Didn't Receive Confirmation Instructions?"
+        fill_in 'Email', with: user.email
+        click_button 'Resend Confirmation Instructions'
 
-          expect(page).not_to have_content 'not found'
-          expect(page).to have_content message
-          expect(page).to have_current_path(new_user_session_path)
-        end
+        expect(page).not_to have_content 'not found'
+        expect(page).to have_content message
+        expect(page).to have_current_path(new_user_session_path)
       end
     end
 
     describe 'unlock' do
-      let(:user) { create(:user, confirmed_at: nil) }
+      let(:user) { create :user, confirmed_at: nil }
 
       let(:message) do
         'If your account exists, you will receive an email with instructions for how to unlock it in a few minutes.'
@@ -382,7 +462,7 @@ RSpec.describe 'Users', type: :system do
 
     describe 'resetting password' do
       let(:message) do
-        'If your email address exists in our database, you will receive a password recovery link at your email '\
+        'If your email address exists in our database, you will receive a password recovery link at your email ' \
           'address in a few minutes.'
       end
 
@@ -399,85 +479,53 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'authenticated admin' do
-    let(:user) { create :admin }
-
-    before { login_as user, scope: :user }
-
-    describe 'update' do
-      it 'updates Twilio when updating an accounts mobile phone', vcr: true do
-        visit edit_user_registration_path
-        fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
-        fill_in 'user_current_password', with: password
-        click_button 'Save'
-        expect(page).to have_content('Your account has been updated successfully.')
-      end
-
-      context 'with a different user' do
-        let(:another_user) { create :admin }
-
-        it 'updates last_activity_at' do
-          if Devise.mappings[:user].expirable?
-            another_user.update!(last_activity_at: 91.days.ago)
-            expect(another_user.expired?).to be(true)
-            visit edit_user_path(another_user)
-            fill_in :user_last_activity_at, with: Date.current
-            click_button 'Save'
-            expect(page).to have_content('User updated')
-            expect(another_user.reload.last_activity_at.to_date).to eq(Date.current)
-            expect(another_user.expired?).to be(false)
-          end
-        end
-      end
-    end
-  end
-
-  describe 'two factor authentication', authy_specs: true do
-    let(:authy_id) { '1234567' }
-
+  describe 'two factor authentication', twilio_verify_specs: true do
     let(:remember_message) do
-      "Remember this device for #{distance_of_time_in_words(Devise.authy_remember_device)}"
+      "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
     end
 
     before do
-      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
-      user.update!(authy_enabled: true, mobile_phone: create(:phone_number, :mobile))
+      allow(Rails.application.credentials)
+        .to receive(:twilio_verify_service_sid)
+        .and_return(Rails.application.credentials.twilio_alt_verify_service_sid)
+
+      allow(Rails.application.credentials)
+        .to receive(:twilio_account_sid)
+        .and_return(Rails.application.credentials.twilio_alt_account_sid)
+
+      allow(Rails.application.credentials)
+        .to receive(:twilio_auth_token)
+        .and_return(Rails.application.credentials.twilio_alt_auth_token)
+
+      allow(TwilioVerifyService).to receive(:send_sms_token).and_return(double(status: 'pending'))
+
+      user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
     end
 
-    it 'allows user to login with authentication token', :vcr do
-      allow(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
+    it 'allows user to login with authentication token' do
+      allow(TwilioVerifyService).to receive(:verify_sms_token).and_return(double(status: 'approved'))
 
       visit new_user_session_path
       fill_in 'user_email', with: user.email
       fill_in 'user_password', with: password
       click_button 'Sign In'
       expect(page).to have_content remember_message
-      fill_in 'authy-token', with: '7721070'
+      fill_in 'twilio-verify-token', with: '7721070'
       click_button 'Verify and Sign in'
       expect(page).to have_content 'Signed in successfully'
     end
 
-    it 'does not allow user to login with invalid authy token', :vcr do
+    it 'does not allow user to login with invalid twilio verify token' do
+      allow(TwilioVerifyService).to receive(:verify_sms_token).and_return(double(status: 'pending'))
+
       visit new_user_session_path
 
       fill_in 'user_email', with: user.email
       fill_in 'user_password', with: password
       click_button 'Sign In'
-      fill_in 'authy-token', with: 'Not the authy token'
+      fill_in 'twilio-verify-token', with: '123456'
       click_button 'Verify and Sign in'
       expect(page).to have_content('The entered token is invalid')
-    end
-
-    it 'updates authy when updating an accounts mobile phone' do
-      allow(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
-      allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
-
-      login_as(user, scope: :user)
-      visit edit_user_registration_path
-      fill_in 'user_mobile_phone', with: create(:phone_number, :mobile)
-      fill_in 'user_current_password', with: password
-      click_button 'Save'
-      expect(page).to have_content('Your account has been updated successfully.')
     end
   end
 end

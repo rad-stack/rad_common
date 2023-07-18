@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Notifications', type: :system do
   let(:user) { create :admin }
-  let(:notification_type) { create :new_user_signed_up_notification }
+  let(:notification_type) { Notifications::NewUserSignedUpNotification.main }
 
   before { login_as user, scope: :user }
 
