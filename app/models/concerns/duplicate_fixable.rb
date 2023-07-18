@@ -18,7 +18,7 @@ module DuplicateFixable
       joins(:duplicate).where('score IS NOT NULL AND score >= ? AND sort <= 500', score_upper_threshold)
     }
 
-    after_create :maybe_notify_duplicates
+    after_commit :maybe_notify_duplicates, on: :create
   end
 
   module ClassMethods

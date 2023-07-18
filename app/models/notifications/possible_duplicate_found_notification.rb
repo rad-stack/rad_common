@@ -10,6 +10,10 @@ module Notifications
       subject_record.audits.order(created_at: :desc).first&.user
     end
 
+    def auth_mode
+      :absolute_users
+    end
+
     def mailer_message
       "Possible duplicate (#{subject_record}) entered by #{created_by_user}"
     end
