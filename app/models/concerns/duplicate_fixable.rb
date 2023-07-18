@@ -209,7 +209,9 @@ module DuplicateFixable
     end
 
     def maybe_notify_duplicates
-      return if duplicate.score.blank?
+      process_duplicates
+
+      return if duplicate&.score.nil?
 
       Notifications::PossibleDuplicateFoundNotification.main.notify!(self)
     end
