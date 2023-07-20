@@ -16,6 +16,8 @@ namespace :duplicates do
           record.process_duplicates
         end
 
+        model_name.constantize.notify_high_duplicates
+
         break if session.timing_out?
       end
 
@@ -41,20 +43,6 @@ namespace :duplicates do
 
     Timeout.timeout(session.time_limit) do
       Duplicate.delete_all
-      session.finished
-    end
-  end
-end
-
-namespace :duplicates do
-  task notify_high: :environment do |task|
-    session = RakeSession.new(task, 5.minutes, 1)
-
-    Timeout.timeout(session.time_limit) do
-      RadCommon::AppInfo.new.duplicate_models.each do |model_name|
-        model_name.constantize.notify_high_duplicates
-      end
-
       session.finished
     end
   end

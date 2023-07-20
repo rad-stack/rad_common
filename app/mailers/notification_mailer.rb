@@ -56,6 +56,24 @@ class NotificationMailer < RadMailer
                            "SendGrid Email Status for #{@user.presence || @email} in #{RadConfig.app_name!}"
   end
 
+  def high_duplicates(recipients, payload)
+    model_name = payload[:model_name]
+
+    formatted_percent = ActiveSupport::NumberHelper.number_to_percentage(payload[:percentage] * 100,
+                                                                         strip_insignificant_zeros: true,
+                                                                         precision: 2)
+
+    @message = "The threshold for potential duplicate #{model_name.titleize} records has been exceeded with #{formatted_percent} of records to review."
+
+    # TODO: this url doesn't work
+
+    @email_action = { message: 'You can review the records here.',
+                      button_text: 'Review Records',
+                      button_url: "/rad_common/duplicates?model=#{model_name}" }
+
+    send_notification_mail recipients, "Too Many Potential Duplicate #{model_name.titleize} Records"
+  end
+
   private
 
     def send_notification_mail(recipients, subject)

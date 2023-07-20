@@ -84,9 +84,13 @@ module DuplicateFixable
 
       duplicate_records = high_duplicates.count
       percentage = (duplicate_records / (all_records * 1.0))
-      return unless percentage > 0.05 # TODO: check all projects to see if this threshhold is reasonable
+      return unless percentage > duplicate_notify_threshold
 
-      raise 'boom'
+      Notifications::HighDuplicatesNotification.main.notify!(percentage: percentage, model_name: to_s)
+    end
+
+    def duplicate_notify_threshold
+      new.duplicate_model_config[:notify_threshold].presence || 0.01
     end
   end
 
