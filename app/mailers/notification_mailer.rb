@@ -66,11 +66,9 @@ class NotificationMailer < RadMailer
     @message = "The threshold for potential duplicate #{model_name.titleize} records has been exceeded " \
                "with #{formatted_percent} of records to review."
 
-    # TODO: this url doesn't work
-
     @email_action = { message: 'You can review the records here.',
                       button_text: 'Review Records',
-                      button_url: "/rad_common/duplicates?model=#{model_name}" }
+                      button_url: duplicates_url(model: model_name) }
 
     send_notification_mail recipients, "Too Many Potential Duplicate #{model_name.titleize} Records"
   end
