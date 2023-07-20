@@ -63,7 +63,8 @@ class NotificationMailer < RadMailer
                                                                          strip_insignificant_zeros: true,
                                                                          precision: 2)
 
-    @message = "The threshold for potential duplicate #{model_name.titleize} records has been exceeded with #{formatted_percent} of records to review."
+    @message = "The threshold for potential duplicate #{model_name.titleize} records has been exceeded " \
+               "with #{formatted_percent} of records to review."
 
     # TODO: this url doesn't work
 
