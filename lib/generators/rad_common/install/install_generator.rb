@@ -212,7 +212,6 @@ end
         apply_migration '20230419121743_twilio_replies.rb'
         apply_migration '20230420102508_update_twilio_log_number_format.rb'
         apply_migration '20230425215920_create_twilio_log_attachments.rb'
-        apply_migration '20230718181431_add_duplicate_notification.rb'
       end
 
       def self.next_migration_number(path)

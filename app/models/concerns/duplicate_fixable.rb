@@ -17,8 +17,6 @@ module DuplicateFixable
     scope :high_duplicates, lambda {
       joins(:duplicate).where('score IS NOT NULL AND score >= ? AND sort <= 500', score_upper_threshold)
     }
-
-    after_commit :maybe_notify_duplicates, on: :create
   end
 
   module ClassMethods
@@ -206,13 +204,6 @@ module DuplicateFixable
 
     def model_klass
       self.class.to_s.constantize
-    end
-
-    def maybe_notify_duplicates
-      process_duplicates
-      return if reload.duplicates.blank?
-
-      Notifications::PossibleDuplicateFoundNotification.main.notify!(self)
     end
 
     def table_name
