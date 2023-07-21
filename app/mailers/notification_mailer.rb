@@ -59,12 +59,14 @@ class NotificationMailer < RadMailer
   def high_duplicates(recipients, payload)
     model_name = payload[:model_name]
 
+    threshold = number_to_percentage(payload[:threshold] * 100, strip_insignificant_zeros: true, precision: 2)
+
     formatted_percent = ActiveSupport::NumberHelper.number_to_percentage(payload[:percentage] * 100,
                                                                          strip_insignificant_zeros: true,
                                                                          precision: 2)
 
-    @message = "The threshold for potential duplicate #{model_name.titleize} records has been exceeded " \
-               "with #{formatted_percent} of records to review."
+    @message = "The threshold of #{threshold} for potential duplicate #{model_name.titleize} records has been " \
+               "exceeded with #{formatted_percent} of records to review."
 
     @email_action = { message: 'You can review the records here.',
                       button_text: 'Review Records',
