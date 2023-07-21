@@ -4,7 +4,11 @@ RSpec.describe 'Attorneys' do
   let(:user) { create :admin }
   let(:attorney) { create :attorney }
 
-  before { login_as user, scope: :user }
+  before do
+    login_as user, scope: :user
+    allow_any_instance_of(Notifications::PossibleDuplicateFoundNotification).to receive(:created_by_user)
+      .and_return(user)
+  end
 
   describe 'new' do
     it 'renders the new template' do
