@@ -25,22 +25,6 @@ namespace :duplicates do
 end
 
 namespace :duplicates do
-  task daily: :environment do |task|
-    session = RakeSession.new(task, 5.minutes, 1)
-
-    Timeout.timeout(session.time_limit) do
-      Duplicate.where.not(sort: 500).update_all sort: 500 if Date.current.wday == 1
-
-      RadCommon::AppInfo.new.duplicate_models.each do |model_name|
-        model_name.constantize.notify_high_duplicates
-      end
-
-      session.finished
-    end
-  end
-end
-
-namespace :duplicates do
   task reset_all: :environment do |task|
     session = RakeSession.new(task, 5.minutes, 1)
 
