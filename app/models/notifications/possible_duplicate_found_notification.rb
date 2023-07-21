@@ -5,11 +5,6 @@ module Notifications
 
       raise 'no created by user found'
     end
-
-    def created_by_user
-      subject_record.audits.where(action: 'create').first&.user
-    end
-
     def auth_mode
       :absolute_users
     end
@@ -21,5 +16,11 @@ module Notifications
     def description
       'Possible duplicate found'
     end
+
+    private
+
+      def created_by_user
+        subject_record.audits.where(action: 'create').first&.user
+      end
   end
 end
