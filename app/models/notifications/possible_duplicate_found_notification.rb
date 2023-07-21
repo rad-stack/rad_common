@@ -5,7 +5,7 @@ module Notifications
 
       raise 'no created by user found'
     end
-  
+
     def auth_mode
       :absolute_users
     end

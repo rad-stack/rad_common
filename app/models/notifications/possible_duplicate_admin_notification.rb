@@ -9,6 +9,7 @@ module Notifications
     end
 
     private
+
       def created_by_user
         subject_record.audits.where(action: 'create').first&.user
       end
