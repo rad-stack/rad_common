@@ -3,7 +3,7 @@ module Notifications
     def absolute_user_ids
       return [created_by_user.id] if created_by_user.present?
 
-      []
+      raise 'no created by user found'
     end
 
     def created_by_user
