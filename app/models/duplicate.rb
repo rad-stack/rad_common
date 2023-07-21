@@ -7,5 +7,6 @@ class Duplicate < ApplicationRecord
     return if duplicatable.reload.duplicates.blank?
 
     Notifications::PossibleDuplicateFoundNotification.main.notify!(duplicatable)
+    Notifications::PossibleDuplicateAdminNotification.main.notify!(duplicatable)
   end
 end
