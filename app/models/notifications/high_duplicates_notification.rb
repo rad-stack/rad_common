@@ -8,10 +8,12 @@ module Notifications
       'high_duplicates'
     end
 
+    def sms_enabled?
+      false
+    end
+
     def subject_record
       nil
     end
-
-    # TODO: check/fix all notification flavors
   end
 end
