@@ -28,6 +28,7 @@ describe DuplicateFixable do
     subject { attorney_1.duplicate.score }
 
     let(:create_by_user) { create :user }
+    let!(:admin) { create :admin }
 
     before do
       allow_any_instance_of(Notifications::PossibleDuplicateFoundNotification).to receive(:created_by_user)
@@ -48,8 +49,11 @@ describe DuplicateFixable do
       it { is_expected.to eq 32 }
 
       it 'sends notifications' do
-        expect(ActionMailer::Base.deliveries.last.subject).to eq 'Possible duplicate found'
-        expect(ActionMailer::Base.deliveries.last.to).to include create_by_user.email
+        expect(ActionMailer::Base.deliveries.first.subject).to eq 'Possible duplicate found'
+        expect(ActionMailer::Base.deliveries.first.to).to include create_by_user.email
+
+        expect(ActionMailer::Base.deliveries.second.subject).to eq 'Possible duplicate found'
+        expect(ActionMailer::Base.deliveries.second.to).to include admin.email
       end
     end
 
