@@ -7,7 +7,7 @@ module Notifications
     end
 
     def created_by_user
-      subject_record.audits.order(created_at: :desc).first&.user
+      subject_record.audits.where(action: 'create').first&.user
     end
 
     def auth_mode

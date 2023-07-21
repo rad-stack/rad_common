@@ -4,8 +4,8 @@ class Duplicate < ApplicationRecord
   after_commit :maybe_notify_duplicates, on: :create
 
   def maybe_notify_duplicates
-    return if duplicatable.duplicates.blank?
+    return if duplicatable.reload.duplicates.blank?
 
-    Notifications::PossibleDuplicateFoundNotification.main.notify!(self)
+    Notifications::PossibleDuplicateFoundNotification.main.notify!(duplicatable)
   end
 end
