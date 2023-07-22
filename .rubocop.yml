@@ -55,6 +55,7 @@ Rails/SkipsModelValidations:
     - 'app/services/smarty_address.rb'
     - 'app/services/heroku_commands.rb'
     - 'app/services/seeder.rb'
+    - 'lib/tasks/rad_common_tasks.rake'
     - 'lib/tasks/temp.rake'
 
 Rails/FilePath:
