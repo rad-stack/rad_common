@@ -82,6 +82,8 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  Webdrivers::Chromedriver.required_version = '114.0.5735.90'
+
   Capybara.register_driver :headless_chrome do |app|
     options = Selenium::WebDriver::Chrome::Options.new
     options.add_argument('--headless')
