@@ -27,14 +27,14 @@ describe DuplicateFixable do
   describe 'process_duplicates' do
     subject { attorney_1.duplicate.score }
 
-    let(:create_by_user) { create :user }
+    let(:created_by_user) { create :user }
     let!(:admin) { create :admin }
 
     before do
       allow_any_instance_of(Notifications::PossibleDuplicateFoundNotification).to receive(:created_by_user)
-        .and_return(create_by_user)
+                                                                                    .and_return(created_by_user)
       allow_any_instance_of(Notifications::PossibleDuplicateAdminNotification).to receive(:created_by_user)
-        .and_return(create_by_user)
+                                                                                    .and_return(created_by_user)
       attorney_1.process_duplicates
       attorney_1.reload
     end
@@ -49,14 +49,6 @@ describe DuplicateFixable do
       end
 
       it { is_expected.to eq 32 }
-
-      it 'sends notifications' do
-        expect(ActionMailer::Base.deliveries.first.subject).to eq 'Possible duplicate found'
-        expect(ActionMailer::Base.deliveries.first.to).to include create_by_user.email
-
-        expect(ActionMailer::Base.deliveries.second.subject).to eq 'Possible duplicate found'
-        expect(ActionMailer::Base.deliveries.second.to).to include admin.email
-      end
     end
 
     context 'when matching only on additional items 2' do
@@ -86,7 +78,7 @@ describe DuplicateFixable do
 
       it 'sends notifications' do
         expect(ActionMailer::Base.deliveries.first.subject).to eq 'Possible duplicate found'
-        expect(ActionMailer::Base.deliveries.first.to).to include create_by_user.email
+        expect(ActionMailer::Base.deliveries.first.to).to include created_by_user.email
 
         expect(ActionMailer::Base.deliveries.second.subject).to eq 'Possible duplicate found'
         expect(ActionMailer::Base.deliveries.second.to).to include admin.email
