@@ -32,9 +32,9 @@ describe DuplicateFixable do
 
     before do
       allow_any_instance_of(Notifications::PossibleDuplicateFoundNotification).to receive(:created_by_user)
-                                                                                    .and_return(created_by_user)
+        .and_return(created_by_user)
       allow_any_instance_of(Notifications::PossibleDuplicateAdminNotification).to receive(:created_by_user)
-                                                                                    .and_return(created_by_user)
+        .and_return(created_by_user)
       attorney_1.process_duplicates
       attorney_1.reload
     end
