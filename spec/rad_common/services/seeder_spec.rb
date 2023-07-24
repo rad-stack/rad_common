@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Seeder, type: :service do
-  let(:user) { create(:user) }
-  let(:admin) { create(:admin) }
+  let(:user) { create :user }
+  let(:admin) { create :admin }
 
   before do
     allow_any_instance_of(Notifications::PossibleDuplicateFoundNotification).to receive(:created_by_user)
