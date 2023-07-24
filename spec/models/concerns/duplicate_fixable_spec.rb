@@ -60,7 +60,7 @@ describe DuplicateFixable do
     end
 
     context 'when matching only on additional items 2' do
-      let!(:attorney_1) do
+      let(:attorney_1) do
         create :attorney, first_name: 'John',
                           last_name: 'Smith',
                           company_name: 'ABC',
@@ -71,7 +71,7 @@ describe DuplicateFixable do
                           zipcode: '11111'
       end
 
-      let!(:attorney_2) do
+      let(:attorney_2) do
         create :attorney, first_name: 'John',
                           last_name: 'Smith',
                           company_name: 'ABC',
