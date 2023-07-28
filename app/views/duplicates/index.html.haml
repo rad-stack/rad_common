@@ -144,8 +144,7 @@
               %td{ class: duplicate_class(@record.zipcode, record.zipcode) }
                 = record.zipcode
             - @model.applicable_duplicate_items.each do |item|
-              %td{ class: duplicate_class(@record.send(item[:name]), record.send(item[:name])) }
-                = show_duplicate_item item, record
+              %td{ class: duplicate_item_class(@record, record, item) }= show_duplicate_item item, record
             %td
               = format_date(record.created_at)
             - if show_actions
