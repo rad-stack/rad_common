@@ -42,6 +42,15 @@ default: &default
   duplicates:
     -
       name: Attorney
+      :additional_items:
+        - :name: :phone_numbers
+          :label: Phone Numbers
+          :type: :other
+          :weight: 20
+          :fields_to_match:
+            - phone_number
+            - phone_number_2
+            - mobile_phone
 
   restricted_audit_attributes:
     -

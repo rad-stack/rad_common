@@ -7,7 +7,9 @@ class Attorney < ApplicationRecord
     where('created_at >= ? and created_at <= ?', start_date, end_date)
   }
 
-  validates_with PhoneNumberValidator, fields: [{ field: :phone_number }]
+  validates_with PhoneNumberValidator, fields: [{ field: :phone_number },
+                                                { field: :phone_number_2 },
+                                                { field: :mobile_phone }]
   validates_with EmailAddressValidator, fields: %i[email]
 
   strip_attributes

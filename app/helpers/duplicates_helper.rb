@@ -32,6 +32,18 @@ module DuplicatesHelper
     model_string.pluralize(2)
   end
 
+  def duplicate_item_class(global_record, current_record, item)
+    if item[:fields_to_match].present?
+      global_field_values = item[:fields_to_match].map { |f| global_record.send(f) }.compact
+      current_field_values = item[:fields_to_match].map { |f| current_record.send(f) }.compact
+      return '' if global_field_values.empty?
+
+      return global_field_values.intersect?(current_field_values) ? 'table-success' : 'table-danger'
+    end
+
+    duplicate_class(global_record.send(item[:name]), current_record.send(item[:name]))
+  end
+
   def duplicate_class(global_field_value, current_field_value)
     if global_field_value.class.to_s == 'String' && current_field_value.class.to_s == 'String'
       global_field_value = global_field_value.downcase
@@ -53,6 +65,7 @@ module DuplicatesHelper
   end
 
   def show_duplicate_item(item, record)
+    return item[:fields_to_match].map { |f| record.send(f) }.compact.join(', ') if item[:fields_to_match].present?
     return secured_link(record.send(item[:name].to_s.gsub('_id', ''))) if item[:type] == :association
 
     record.send item[:name]
