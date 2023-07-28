@@ -33,7 +33,6 @@ module DuplicatesHelper
   end
 
   def duplicate_item_class(global_record, current_record, item)
-    global_field_value = global_record.send(item[:name])
     if item[:fields_to_match].present?
       global_field_values = item[:fields_to_match].map { |f| global_record.send(f) }.compact
       current_field_values = item[:fields_to_match].map { |f| current_record.send(f) }.compact
@@ -42,7 +41,7 @@ module DuplicatesHelper
       return global_field_values.intersect?(current_field_values) ? 'table-success' : 'table-danger'
     end
 
-    duplicate_class(global_field_value, current_record.send(item[:name]))
+    duplicate_class(global_record.send(item[:name]), current_record.send(item[:name]))
   end
 
   def duplicate_class(global_field_value, current_field_value)
