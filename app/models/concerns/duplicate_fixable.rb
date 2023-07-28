@@ -75,8 +75,10 @@ module DuplicateFixable
     end
 
     def applicable_duplicate_items
-      additional_duplicate_items.select { |item| new.respond_to?(item[:name]) }.reverse
-                                .uniq { |item| item[:name] }.reverse
+      items = additional_duplicate_items.select { |item| new.respond_to?(item[:name]) || item[:fields_to_match].present? }
+      fields_to_match = items.select { |item| item[:fields_to_match].present? }
+                             .pluck(:fields_to_match).flatten.uniq
+      items.reject { |item| fields_to_match.include?(item[:name].to_s) }
     end
 
     def notify_high_duplicates
@@ -285,36 +287,34 @@ module DuplicateFixable
       items = []
 
       model_klass.applicable_duplicate_items.each do |item|
-        item_value = send(item[:name])
-        next if item[:display_only] || item_value.blank?
+        if item[:fields_to_match].present?
+          item_values = item[:fields_to_match].map { |f| send(f) }.compact
+                                              .map { |f| "'#{f}'" }.join(', ')
+          sql = item[:fields_to_match].map { |field|
+            "#{field} IS NOT NULL AND #{field} <> '' AND #{field} IN (#{item_values})"
+          }.join(' OR ')
+          query = model_klass.where(sql)
+        else
+          item_value = send(item[:name])
+          next if item[:display_only] || item_value.blank?
 
-        check_value = nil
-        query = if item[:fields_to_match].present?
-                  check_value = []
-                  item[:fields_to_match].count.times { check_value << item_value }
-                  item[:fields_to_match].map { |f| "(#{equals_query(f)})" }.join(' OR ')
-                else
-                  check_value = item[:type] == :levenshtein ? item_value.upcase : item_value
-                  case item[:type]
+          query = case item[:type]
                   when :association
                     "#{item[:name]} IS NOT NULL AND #{item[:name]} = ?"
                   when :levenshtein
                     "levenshtein(upper(#{item[:name]}), ?) <= 1"
                   else
-                    equals_query(item[:name])
+                    "#{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?"
                   end
-                end
 
-        query = model_klass.where(query, *check_value)
+          check_value = item[:type] == :levenshtein ? item_value.upcase : item_value
+          query = model_klass.where(query, check_value)
+        end
         query = query.where.not(id: id) if id.present?
         items += query.pluck(:id)
       end
 
       items
-    end
-
-    def equals_query(column)
-      "#{column} IS NOT NULL AND #{column} <> '' AND #{column} = ?"
     end
 
     def duplicate_record_score(duplicate_record)
@@ -340,7 +340,7 @@ module DuplicateFixable
 
       model_klass.applicable_duplicate_items.each do |item|
         next if item[:display_only]
-        next unless respond_to?(item[:name])
+        next unless item[:fields_to_match].present? || respond_to?(item[:name])
 
         dupe_attr_info = { name: item[:name], weight: item[:weight] }
         dupe_attr_info[:fields_to_match] = item[:fields_to_match] if item[:fields_to_match].present?
@@ -359,13 +359,14 @@ module DuplicateFixable
     end
 
     def duplicate_field_score(duplicate_record, attribute, weight, fields_to_match)
-      return 0 if send(attribute).blank? || duplicate_record.send(attribute).blank?
-
       if fields_to_match.present?
+        field_values = fields_to_match.map { |f| send(f) }.compact
         return fields_to_match.sum do |field|
-                 calc_string_weight(send(attribute), duplicate_record.send(field), weight)
-               end
+          field_values.map { |val| calc_string_weight(val, duplicate_record.send(field), weight) }.max
+        end
       end
+
+      return 0 if send(attribute).blank? || duplicate_record.send(attribute).blank?
 
       if send(attribute).is_a?(String)
         return calc_string_weight(send(attribute), duplicate_record.send(attribute), weight)

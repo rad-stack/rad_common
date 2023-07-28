@@ -43,7 +43,7 @@ default: &default
     -
       name: Attorney
       :additional_items:
-        - :name: :phone_number
+        - :name: :phone_numbers
           :label: Phone Numbers
           :type: :other
           :weight: 20
