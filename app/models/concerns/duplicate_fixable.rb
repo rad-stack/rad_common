@@ -75,7 +75,8 @@ module DuplicateFixable
     end
 
     def applicable_duplicate_items
-      additional_duplicate_items.select { |item| new.respond_to?(item[:name]) }
+      additional_duplicate_items.select { |item| new.respond_to?(item[:name]) }.reverse
+                                .uniq { |item| item[:name] }.reverse
     end
 
     def notify_high_duplicates
@@ -287,17 +288,24 @@ module DuplicateFixable
         item_value = send(item[:name])
         next if item[:display_only] || item_value.blank?
 
-        query = case item[:type]
-                when :association
-                  "#{item[:name]} IS NOT NULL AND #{item[:name]} = ?"
-                when :levenshtein
-                  "levenshtein(upper(#{item[:name]}), ?) <= 1"
+        check_value = nil
+        query = if item[:fields_to_match].present?
+                  check_value = []
+                  item[:fields_to_match].count.times { check_value << item_value }
+                  item[:fields_to_match].map { |f| "(#{equals_query(f)})" }.join(' OR ')
                 else
-                  "#{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?"
+                  check_value = item[:type] == :levenshtein ? item_value.upcase : item_value
+                  case item[:type]
+                  when :association
+                    "#{item[:name]} IS NOT NULL AND #{item[:name]} = ?"
+                  when :levenshtein
+                    "levenshtein(upper(#{item[:name]}), ?) <= 1"
+                  else
+                    equals_query(item[:name])
+                  end
                 end
 
-        check_value = item[:type] == :levenshtein ? item_value.upcase : item_value
-        query = model_klass.where(query, check_value)
+        query = model_klass.where(query, *check_value)
         query = query.where.not(id: id) if id.present?
         items += query.pluck(:id)
       end
@@ -305,11 +313,15 @@ module DuplicateFixable
       items
     end
 
+    def equals_query(column)
+      "#{column} IS NOT NULL AND #{column} <> '' AND #{column} = ?"
+    end
+
     def duplicate_record_score(duplicate_record)
       score = 0
 
       all_duplicate_attributes.each do |attribute|
-        score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
+        score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight], attribute[:fields_to_match])
       end
 
       ((score / all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
@@ -327,8 +339,11 @@ module DuplicateFixable
 
       model_klass.applicable_duplicate_items.each do |item|
         next if item[:display_only]
+        next unless respond_to?(item[:name])
 
-        items.push(name: item[:name], weight: item[:weight]) if respond_to?(item[:name])
+        dupe_attr_info = { name: item[:name], weight: item[:weight] }
+        dupe_attr_info[:fields_to_match] = item[:fields_to_match] if item[:fields_to_match].present?
+        items.push(dupe_attr_info)
       end
 
       if model_klass.use_address?
@@ -342,8 +357,14 @@ module DuplicateFixable
       items
     end
 
-    def duplicate_field_score(duplicate_record, attribute, weight)
+    def duplicate_field_score(duplicate_record, attribute, weight, fields_to_match)
       return 0 if send(attribute).blank? || duplicate_record.send(attribute).blank?
+
+      if fields_to_match.present?
+        return fields_to_match.sum do |field|
+                 calc_string_weight(send(attribute), duplicate_record.send(field), weight)
+               end
+      end
 
       if send(attribute).is_a?(String)
         return calc_string_weight(send(attribute), duplicate_record.send(attribute), weight)
@@ -355,6 +376,8 @@ module DuplicateFixable
     end
 
     def calc_string_weight(attribute_1, attribute_2, weight)
+      return 0 unless attribute_2
+
       if attribute_1.upcase == attribute_2.upcase
         weight
       elsif Text::Levenshtein.distance(attribute_1.upcase, attribute_2.upcase) <= 2

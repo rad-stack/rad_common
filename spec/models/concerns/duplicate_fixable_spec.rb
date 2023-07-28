@@ -44,6 +44,20 @@ describe DuplicateFixable do
       it { is_expected.to eq 32 }
     end
 
+    context 'when matching only on additional items fields_to_match' do
+      let(:another_phone_number) { create :phone_number }
+      let(:attorney_1_attributes) do
+        { phone_number: phone_number, email: email, first_name: 'Xxxx', last_name: 'Tttt' }
+      end
+
+      let(:attorney_2_attributes) do
+        { phone_number: another_phone_number, phone_number_2: phone_number,
+          email: email, first_name: 'Yyyy', last_name: 'Ssss' }
+      end
+
+      it { is_expected.to eq 32 }
+    end
+
     context 'when matching on standard plus additional items' do
       let(:attorney_1_attributes) do
         { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
