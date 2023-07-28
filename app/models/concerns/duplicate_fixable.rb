@@ -78,6 +78,10 @@ module DuplicateFixable
       items = additional_duplicate_items.select do |item|
         new.respond_to?(item[:name]) || item[:fields_to_match].present?
       end
+      filter_out_existing_fields(items)
+    end
+
+    def filter_out_existing_fields(items)
       fields_to_match = items.select { |item| item[:fields_to_match].present? }
                              .pluck(:fields_to_match).flatten.uniq
       items.reject { |item| fields_to_match.include?(item[:name].to_s) }
@@ -361,7 +365,7 @@ module DuplicateFixable
     end
 
     def duplicate_field_score(duplicate_record, attribute, weight, fields_to_match)
-      return calc_fields_to_match_score(duplicate_record, fields_to_match) if fields_to_match.present?
+      return calc_fields_to_match_score(duplicate_record, fields_to_match, weight) if fields_to_match.present?
       return 0 if send(attribute).blank? || duplicate_record.send(attribute).blank?
 
       if send(attribute).is_a?(String)
@@ -373,7 +377,7 @@ module DuplicateFixable
       0
     end
 
-    def calc_fields_to_match_score(duplicate_record, fields_to_match)
+    def calc_fields_to_match_score(duplicate_record, fields_to_match, weight)
       field_values = fields_to_match.map { |f| send(f) }.compact
       fields_to_match.sum do |field|
         field_values.map { |val| calc_string_weight(val, duplicate_record.send(field), weight) }.max
