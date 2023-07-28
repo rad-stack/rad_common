@@ -321,7 +321,8 @@ module DuplicateFixable
       score = 0
 
       all_duplicate_attributes.each do |attribute|
-        score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight], attribute[:fields_to_match])
+        score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight],
+                                       attribute[:fields_to_match])
       end
 
       ((score / all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
