@@ -5,6 +5,12 @@ namespace :rad_common do
     Timeout.timeout(session.time_limit) do
       session.reset_status
 
+      Duplicate.where.not(sort: 500).update_all sort: 500 if Date.current.wday == 1
+
+      RadCommon::AppInfo.new.duplicate_models.each do |model_name|
+        model_name.constantize.notify_high_duplicates
+      end
+
       RadCommon::TwilioErrorThresholdChecker.new.check_threshold
 
       global_validity = GlobalValidation.new

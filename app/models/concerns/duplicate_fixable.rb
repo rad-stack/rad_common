@@ -77,6 +77,23 @@ module DuplicateFixable
     def applicable_duplicate_items
       additional_duplicate_items.select { |item| new.respond_to?(item[:name]) }
     end
+
+    def notify_high_duplicates
+      all_records = all.size
+      return unless all_records.positive?
+
+      duplicate_records = high_duplicates.count
+      percentage = (duplicate_records / (all_records * 1.0))
+      return unless percentage > duplicate_notify_threshold
+
+      Notifications::HighDuplicatesNotification.main.notify!(threshold: duplicate_notify_threshold,
+                                                             percentage: percentage,
+                                                             model_name: to_s)
+    end
+
+    def duplicate_notify_threshold
+      new.duplicate_model_config[:notify_threshold].presence || 0.01
+    end
   end
 
   def process_duplicates
