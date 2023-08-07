@@ -111,8 +111,6 @@ RSpec.configure do |config|
   chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
   Capybara.javascript_driver = chrome_driver
 
-  Webdrivers::Chromedriver.required_version = '114.0.5735.90'
-
   config.before do
     # TODO: workaround for this issue:
     # https://github.com/rails/rails/issues/37270
