@@ -202,6 +202,10 @@ class RadConfig
       boolean_config_item! :storage_config_override
     end
 
+    def use_wicked?
+      boolean_config_item! :use_wicked?
+    end
+
     def external_users?
       boolean_config_item! :external_users
     end
