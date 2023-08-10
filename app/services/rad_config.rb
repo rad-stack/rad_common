@@ -203,7 +203,7 @@ class RadConfig
     end
 
     def use_wicked?
-      boolean_config_item! :use_wicked?
+      boolean_config_item! :use_wicked
     end
 
     def external_users?
