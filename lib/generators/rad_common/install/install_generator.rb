@@ -27,7 +27,7 @@ module RadCommon
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
 
         # config
-        unless RadConfig.use_wicked?
+        unless RadConfig.storage_config_override?
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
@@ -48,8 +48,10 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
                   'config/initializers/simple_form_components.rb'
 
-        copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
-                  'config/initializers/simple_form_components.rb'
+        if RadConfig.use_wicked?
+          copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
+                    'config/initializers/wicked_pdf.rb'
+        end
 
         # bin
         directory '../../../../../spec/dummy/bin/', 'bin/'
