@@ -49,7 +49,7 @@ module RadCommon
                   'config/initializers/simple_form_components.rb'
 
         if RadConfig.use_wicked?
-          copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
+          copy_file '../../../../../spec/dummy/config/initializers/wicked_pdf.rb',
                     'config/initializers/wicked_pdf.rb'
         end
 
