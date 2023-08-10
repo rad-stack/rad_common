@@ -9,7 +9,7 @@
 # https://github.com/mileszs/wicked_pdf/blob/master/README.md
 return unless RadConfig.use_wicked?
 
-WickedPdf.config = {
+config = {
   layout: 'application_pdf',
   disposition: 'attachment',
   orientation: 'Portrait',
