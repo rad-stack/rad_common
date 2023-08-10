@@ -9,7 +9,16 @@
 # https://github.com/mileszs/wicked_pdf/blob/master/README.md
 return unless RadConfig.use_wicked?
 
-config = { layout: 'report_pdf' }
+WickedPdf.config = {
+  layout: 'application_pdf',
+  disposition: 'attachment',
+  orientation: 'Portrait',
+  page_size: 'Letter',
+  page_height: '11in',
+  page_width: '8.5in',
+  print_media_type: true,
+  no_background: true
+}
 if Rails.env.production? || Rails.env.staging?
   config[:exe_path] = Gem.bin_path('wkhtmltopdf-heroku', 'wkhtmltopdf-linux-amd64')
 end
