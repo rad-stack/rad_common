@@ -12,7 +12,7 @@ RSpec.describe 'Attorneys' do
       expect(page).to have_content('New Attorney')
     end
 
-    it "doesn't show the reset duplicates link" do
+    it "doesn't show the reset duplicates link", js: true do
       visit new_attorney_path
       expect(page).not_to have_content('Reset Duplicates')
     end
