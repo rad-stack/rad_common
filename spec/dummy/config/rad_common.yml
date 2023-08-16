@@ -42,8 +42,6 @@ default: &default
   duplicates:
     - :name: Attorney
     - :name: User
-      :notify_threshold: 0.05
-      :score_upper_threshold: 40
 
   restricted_audit_attributes:
     -
