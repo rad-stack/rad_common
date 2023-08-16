@@ -6,7 +6,7 @@ class Duplicate < ApplicationRecord
   def maybe_notify_duplicates
     return unless score && score >= duplicatable.class.score_upper_threshold
 
-    Notifications::PossibleDuplicateFoundNotification.main.notify!(duplicatable)
-    Notifications::PossibleDuplicateAdminNotification.main.notify!(duplicatable)
+    Notifications::DuplicateFoundUserNotification.main.notify! duplicatable
+    Notifications::DuplicateFoundAdminNotification.main.notify! duplicatable
   end
 end

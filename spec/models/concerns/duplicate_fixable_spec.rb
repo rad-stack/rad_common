@@ -31,10 +31,12 @@ describe DuplicateFixable do
     let!(:admin) { create :admin }
 
     before do
-      allow_any_instance_of(Notifications::PossibleDuplicateFoundNotification).to receive(:created_by_user)
+      allow_any_instance_of(Notifications::DuplicateFoundUserNotification).to receive(:created_by_user)
         .and_return(created_by_user)
-      allow_any_instance_of(Notifications::PossibleDuplicateAdminNotification).to receive(:created_by_user)
+
+      allow_any_instance_of(Notifications::DuplicateFoundAdminNotification).to receive(:created_by_user)
         .and_return(created_by_user)
+
       attorney_1.process_duplicates
       attorney_1.reload
     end
@@ -77,10 +79,12 @@ describe DuplicateFixable do
       it { is_expected.to eq 50 }
 
       it 'sends notifications' do
-        expect(ActionMailer::Base.deliveries.first.subject).to eq 'Possible duplicate found'
+        expect(ActionMailer::Base.deliveries.first.subject).to eq "Possible Duplicate (#{attorney_2}) Entered By You"
         expect(ActionMailer::Base.deliveries.first.to).to include created_by_user.email
 
-        expect(ActionMailer::Base.deliveries.second.subject).to eq 'Possible duplicate found'
+        expect(ActionMailer::Base.deliveries.second.subject)
+          .to eq "Possible Duplicate (#{attorney_2}) Entered By #{created_by_user}"
+
         expect(ActionMailer::Base.deliveries.second.to).to include admin.email
       end
     end
