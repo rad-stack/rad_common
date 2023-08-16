@@ -6,7 +6,8 @@ RSpec.describe 'Attorneys' do
 
   before do
     login_as user, scope: :user
-    allow_any_instance_of(Notifications::PossibleDuplicateFoundNotification).to receive(:created_by_user)
+
+    allow_any_instance_of(Notifications::DuplicateFoundAdminNotification).to receive(:created_by_user)
       .and_return(user)
   end
 
@@ -62,9 +63,8 @@ RSpec.describe 'Attorneys' do
     before do
       allow_any_instance_of(DuplicateFixable).to receive(:duplicate_record_score).and_return 60
       allow(Attorney).to receive(:allow_merge_all?).and_return(true)
-      allow_any_instance_of(Notifications::PossibleDuplicateFoundNotification).to receive(:created_by_user)
-        .and_return(user)
-      allow_any_instance_of(Notifications::PossibleDuplicateAdminNotification).to receive(:created_by_user)
+
+      allow_any_instance_of(Notifications::DuplicateFoundUserNotification).to receive(:created_by_user)
         .and_return(user)
 
       record_1.process_duplicates
