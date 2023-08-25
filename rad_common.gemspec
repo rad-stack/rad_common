@@ -71,5 +71,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'vcr'
   s.add_development_dependency 'webmock'
   s.add_development_dependency 'wkhtmltopdf-binary'
-  s.add_dependency_with_type('wkhtmltopdf-binary', :test)
 end
