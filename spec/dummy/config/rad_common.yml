@@ -23,7 +23,6 @@ default: &default
   twilio_verify_remember_device_days: 7
   storage_config_override: false
   require_mobile_phone: false
-  use_wicked: false
 
   system_usage_models:
     -
