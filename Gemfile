@@ -16,6 +16,10 @@ gemspec
 gem 'devise-twilio-verify', git: 'https://github.com/jayywolff/twilio-verify-devise.git',
                             branch: 'authy-to-twilio-verify'
 
+group :production do
+  gem 'wkhtmltopdf-heroku', '2.12.6.1.pre.jammy'
+end
+
 group :test do
   gem 'capybara-selenium'
   gem 'parallel_tests'
