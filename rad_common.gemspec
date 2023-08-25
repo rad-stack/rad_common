@@ -61,6 +61,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'webpacker'
   s.add_dependency 'wicked_pdf'
   s.add_dependency 'wkhtmltopdf-binary'
+  s.add_dependency 'wkhtmltopdf-heroku', '2.12.6.1.pre.jammy'
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'

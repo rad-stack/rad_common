@@ -50,6 +50,7 @@ PATH
       webpacker
       wicked_pdf
       wkhtmltopdf-binary
+      wkhtmltopdf-heroku (= 2.12.6.1.pre.jammy)
 
 GEM
   remote: https://rubygems.org/
