@@ -49,6 +49,7 @@ PATH
       twilio-ruby
       webpacker
       wicked_pdf
+      wkhtmltopdf-binary
 
 GEM
   remote: https://rubygems.org/
@@ -504,7 +505,6 @@ DEPENDENCIES
   vcr
   webdrivers
   webmock
-  wkhtmltopdf-binary
   wkhtmltopdf-heroku (= 2.12.6.1.pre.jammy)
 
 BUNDLED WITH

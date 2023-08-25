@@ -60,6 +60,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'twilio-ruby'
   s.add_dependency 'webpacker'
   s.add_dependency 'wicked_pdf'
+  s.add_dependency 'wkhtmltopdf-binary'
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
@@ -70,5 +71,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop-rspec'
   s.add_development_dependency 'vcr'
   s.add_development_dependency 'webmock'
-  s.add_development_dependency 'wkhtmltopdf-binary'
 end
