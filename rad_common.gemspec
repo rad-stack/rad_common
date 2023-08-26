@@ -71,5 +71,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop-rspec'
   s.add_development_dependency 'vcr'
   s.add_development_dependency 'webmock'
-  s.add_development_dependency 'wkhtmltopdf-binary'
 end
