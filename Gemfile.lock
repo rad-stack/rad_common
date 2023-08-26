@@ -506,7 +506,6 @@ DEPENDENCIES
   webdrivers
   webmock
   wkhtmltopdf-binary
-  wkhtmltopdf-heroku (= 2.12.6.1.pre.jammy)
 
 BUNDLED WITH
    2.4.12
