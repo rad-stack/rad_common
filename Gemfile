@@ -29,4 +29,5 @@ end
 group :development, :test do
   gem 'bootsnap', require: false
   gem 'pry'
+  gem 'wkhtmltopdf-binary'
 end
