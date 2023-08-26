@@ -475,6 +475,7 @@ GEM
     websocket-extensions (0.1.5)
     wicked_pdf (2.6.3)
       activesupport
+    wkhtmltopdf-binary (0.12.6.6)
     wkhtmltopdf-heroku (2.12.6.1.pre.jammy)
     xpath (3.2.0)
       nokogiri (~> 1.8)
@@ -504,6 +505,7 @@ DEPENDENCIES
   vcr
   webdrivers
   webmock
+  wkhtmltopdf-binary
 
 BUNDLED WITH
    2.4.12
