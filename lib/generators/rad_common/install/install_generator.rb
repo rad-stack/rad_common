@@ -48,9 +48,6 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
                   'config/initializers/simple_form_components.rb'
 
-        copy_file '../../../../../spec/dummy/config/initializers/wicked_pdf.rb',
-                  'config/initializers/wicked_pdf.rb'
-
         # bin
         directory '../../../../../spec/dummy/bin/', 'bin/'
 
