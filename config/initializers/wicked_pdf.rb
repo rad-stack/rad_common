@@ -9,9 +9,10 @@
 # https://github.com/mileszs/wicked_pdf/blob/master/README.md
 config = {
   layout: 'application_pdf',
-  disposition: 'attachment',
+  disposition: 'inline',
   orientation: 'Portrait',
   page_size: 'Letter',
+  formats: [:html],
   page_height: '11in',
   page_width: '8.5in'
 }
