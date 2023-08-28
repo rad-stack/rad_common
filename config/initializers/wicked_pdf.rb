@@ -16,8 +16,10 @@ config = {
   page_height: '11in',
   page_width: '8.5in'
 }
+
 if Rails.env.production? || Rails.env.staging?
   config[:exe_path] = Gem.bin_path('wkhtmltopdf-heroku', 'wkhtmltopdf-linux-amd64')
 end
+
 config = config.merge(WickedCustomConfigs::CONFIG) if defined?(WickedCustomConfigs)
 WickedPdf.config = config
