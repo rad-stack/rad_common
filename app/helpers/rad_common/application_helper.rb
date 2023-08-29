@@ -210,6 +210,10 @@ module RadCommon
       Onboarding.new(current_user).onboarded?
     end
 
+    def pdf_output?
+      request.format.pdf?
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
