@@ -6,7 +6,12 @@ class AttorneysController < ApplicationController
     @attorneys = policy_scope(Attorney).by_name.page(params[:page])
   end
 
-  def show; end
+  def show
+    respond_to do |format|
+      format.html
+      format.pdf { render pdf: @attorney.to_s }
+    end
+  end
 
   def new
     @attorney = Attorney.new

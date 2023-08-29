@@ -1,4 +1,5 @@
 .card
-  = render 'layouts/card_header'
+  - unless pdf_output?
+    = render 'layouts/card_header', additional_actions: attorney_actions(@attorney)
   .card-body
     = render 'layouts/show_data_columns', data: attorney_show_data(@attorney), resource: @attorney
