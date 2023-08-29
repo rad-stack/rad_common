@@ -211,6 +211,8 @@ module RadCommon
     end
 
     def pdf_output?
+      return true if request.nil?
+
       request.format.pdf?
     end
 
