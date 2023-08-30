@@ -22,4 +22,7 @@ FileUtils.chdir directory do
 
   puts "== Running RC Generator =="
   system 'bin/rails g rad_common:install'
+
+  puts '== Running Yarn Install =='
+  system 'yarn install'
 end

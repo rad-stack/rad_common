@@ -48,6 +48,8 @@ PATH
       text
       twilio-ruby
       webpacker
+      wicked_pdf (= 2.6.3)
+      wkhtmltopdf-heroku (= 2.12.6.1.pre.jammy)
 
 GEM
   remote: https://rubygems.org/
@@ -471,6 +473,10 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    wicked_pdf (2.6.3)
+      activesupport
+    wkhtmltopdf-binary (0.12.6.6)
+    wkhtmltopdf-heroku (2.12.6.1.pre.jammy)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.6.11)
@@ -499,6 +505,7 @@ DEPENDENCIES
   vcr
   webdrivers
   webmock
+  wkhtmltopdf-binary
 
 BUNDLED WITH
-   2.3.26
+   2.4.12
