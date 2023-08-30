@@ -233,7 +233,7 @@ class CardPresenter
 
     def duplicate_action
       @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                            "/rad_common/duplicates?model=#{instance.class}&id=#{instance.id}",
+                            @view_context.duplicates_path(model: instance.class, id: instance.id),
                             class: 'btn btn-warning btn-sm')
     end
 
@@ -246,7 +246,7 @@ class CardPresenter
 
     def duplicates_action
       @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                            "/rad_common/duplicates?model=#{klass}",
+                            @view_context.duplicates_path(model: klass),
                             class: 'btn btn-warning btn-sm')
     end
 

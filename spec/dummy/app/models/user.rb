@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   include RadDeviseHigh
   include RadUser
+  include DuplicateFixable
 
   has_many :divisions, foreign_key: 'owner_id', dependent: :restrict_with_error
 

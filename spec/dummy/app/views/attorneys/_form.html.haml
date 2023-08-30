@@ -30,4 +30,5 @@
         = f.input :email
 
   .form-actions
+    = render 'layouts/duplicate_check', record: @attorney
     = f.button :submit, 'Save', class: 'btn btn-primary'

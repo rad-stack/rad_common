@@ -13,14 +13,16 @@ class Seeder < RadSeeder
 
       display_log 'seeding duplicate attorneys'
 
-      2.times do
-        FactoryBot.build(:attorney,
-                         first_name: 'Bruh',
-                         last_name: 'Bro',
-                         company_name: 'Bruh, Bro and Brah',
-                         city: 'Atlanta',
-                         state: 'GA',
-                         email: 'bruh_bro@example.com').save!(validate: false)
+      Audited.audit_class.as_user(random_user) do
+        2.times do
+          FactoryBot.build(:attorney,
+                           first_name: 'Bruh',
+                           last_name: 'Bro',
+                           company_name: 'Bruh, Bro and Brah',
+                           city: 'Atlanta',
+                           state: 'GA',
+                           email: 'bruh_bro@example.com').save!(validate: false)
+        end
       end
 
       Attorney.all.each(&:process_duplicates)
@@ -33,7 +35,7 @@ class Seeder < RadSeeder
     display_log 'seeding twilio logs'
 
     30.times do
-      from_user = users.sample
+      from_user = random_user
       to_user = [1, 2].sample == 1 ? users.sample : nil
 
       FactoryBot.create :twilio_log, from_user: from_user, to_user: to_user

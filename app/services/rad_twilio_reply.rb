@@ -63,7 +63,9 @@ class RadTwilioReply
 
       media_urls.each do |media_url|
         log_attachment = TwilioLogAttachment.new(twilio_log: twilio_log, twilio_url: media_url)
-        log_attachment.attachment.attach(io: URI.parse(media_url).open, filename: File.basename(media_url))
+        file = URI.parse(media_url).open(http_basic_authentication: [RadConfig.twilio_account_sid!,
+                                                                     RadConfig.twilio_auth_token!])
+        log_attachment.attachment.attach(io: file, filename: File.basename(media_url))
         log_attachment.save!
       end
     end
