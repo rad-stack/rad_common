@@ -21,12 +21,7 @@ class BaseReportsController < ApplicationController
   private
 
     def print_report
-      render(
-        pdf: @report.title.parameterize.underscore,
-        disposition: 'inline',
-        formats: [:html],
-        orientation: @report.orientation
-      )
+      render pdf: @report.title.parameterize.underscore, orientation: @report.orientation
     end
 
     def authorize_report
