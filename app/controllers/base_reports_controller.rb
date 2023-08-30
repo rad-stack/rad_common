@@ -31,4 +31,8 @@ class BaseReportsController < ApplicationController
     def set_report
       raise 'Must implement #set_report in sub class'
     end
+
+    def pdf_output?
+      request.format.pdf?
+    end
 end
