@@ -13,15 +13,11 @@ module ReportsHelper
   end
 
   def format_report_boolean(value)
-    if pdf_report?
+    if pdf_output?
       value ? 'Yes' : 'No'
     else
       format_boolean(value)
     end
-  end
-
-  def pdf_report?
-    request.format.pdf?
   end
 
   def report_popover_content(others)
