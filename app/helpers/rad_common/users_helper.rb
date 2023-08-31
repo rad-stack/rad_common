@@ -214,5 +214,17 @@ module RadCommon
 
       'users-collapse'
     end
+
+    def user_grouped_collection(user)
+      users = policy_scope(User).active.by_name.where.not(id: current_user.id)
+
+      inactive = user if user && !user.active
+
+      grouped = [['Me', [current_user]]]
+      grouped.push(['Users', users]) if users.any?
+      grouped.push(['Inactive', [inactive]]) if inactive
+
+      grouped
+    end
   end
 end
