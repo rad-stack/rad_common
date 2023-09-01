@@ -215,8 +215,9 @@ module RadCommon
       'users-collapse'
     end
 
-    def user_grouped_collection(user)
+    def user_grouped_collection(user, scopes: [])
       users = policy_scope(User).active.by_name.where.not(id: current_user.id)
+      scopes.each { |scope| users = users.send(scope) }
 
       inactive = user if user && !user.active
 
