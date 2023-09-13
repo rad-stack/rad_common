@@ -23,7 +23,7 @@ class RadConfig
     end
 
     def smtp_address!
-      override_variable(:smtp_address) || 'smtp.sendgrid.net'
+      secret_config_item! :smtp_address
     end
 
     def smtp_port!
