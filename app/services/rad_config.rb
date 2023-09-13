@@ -238,6 +238,10 @@ class RadConfig
       boolean_config_item! :saved_search_filters_enabled
     end
 
+    def staging_to_number
+      config_item!(:staging_to_number)
+    end
+
     def legal_docs?
       boolean_config_item! :legal_docs
     end

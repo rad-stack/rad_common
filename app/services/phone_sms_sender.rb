@@ -92,6 +92,8 @@ class PhoneSMSSender
     end
 
     def to_number
+      return RadConfig.staging_to_number if Rails.env.staging?
+
       RadTwilio.human_to_twilio_format(to_mobile_phone)
     end
 
