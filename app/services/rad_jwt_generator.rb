@@ -9,8 +9,8 @@ class RadJwtGenerator
     @valid_for_minutes = valid_for_minutes
   end
 
-  def token
-    JWT.encode payload, secret, JWT_ALGORITHM
+  def token(additional_payload: {})
+    JWT.encode payload.merge(additional_payload), secret, JWT_ALGORITHM
   end
 
   private
