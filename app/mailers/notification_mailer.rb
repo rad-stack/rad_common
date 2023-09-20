@@ -79,8 +79,8 @@ class NotificationMailer < RadMailer
 
   private
 
-    def send_notification_mail(recipients, subject)
+    def send_notification_mail(recipients, subject, options = {})
       @recipient = User.where(id: recipients)
-      mail to: @recipient.map(&:formatted_email), subject: subject
+      mail to: @recipient.map(&:formatted_email), subject: subject, cc: options[:cc]
     end
 end
