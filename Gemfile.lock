@@ -220,11 +220,11 @@ GEM
       activesupport (>= 5.1)
       haml (>= 4.0.6)
       railties (>= 5.1)
-    haml_lint (0.50.0)
+    haml_lint (0.45.0)
       haml (>= 4.0, < 6.2)
       parallel (~> 1.10)
       rainbow
-      rubocop (>= 1.0)
+      rubocop (>= 0.50.0)
       sysexits (~> 1.1)
     hashdiff (1.0.1)
     hashery (2.1.2)
@@ -492,7 +492,7 @@ DEPENDENCIES
   capybara
   capybara-selenium
   devise-twilio-verify!
-  haml_lint
+  haml_lint (= 0.45.0)
   parallel_tests
   pdf-reader
   pry
