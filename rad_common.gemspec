@@ -59,14 +59,17 @@ Gem::Specification.new do |s|
   s.add_dependency 'text'
   s.add_dependency 'twilio-ruby'
   s.add_dependency 'webpacker'
+  s.add_dependency 'wicked_pdf', '2.6.3'
+  s.add_dependency 'wkhtmltopdf-heroku', '2.12.6.1.pre.jammy'
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
-  s.add_development_dependency 'haml_lint'
+  s.add_development_dependency 'haml_lint', '0.45.0'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'rubocop'
   s.add_development_dependency 'rubocop-rails'
   s.add_development_dependency 'rubocop-rspec'
   s.add_development_dependency 'vcr'
   s.add_development_dependency 'webmock'
+  s.add_development_dependency 'wkhtmltopdf-binary'
 end
