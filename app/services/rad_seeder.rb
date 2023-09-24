@@ -8,6 +8,7 @@ class RadSeeder
     seed_user_statuses
     seed_company
     seed_users
+    mute_staging_notifications if staging?
 
     @users = User.all
   end
@@ -40,6 +41,24 @@ class RadSeeder
       end
     end
 
+    def mute_staging_notifications
+      DEV_NOTIFICATION_TYPES.each do |notification_type_class|
+        notification_type = notification_type_class.constantize.main
+
+        notification_type.security_roles.each do |security_role|
+          security_role.users.active.each do |user|
+            next if developer_user?(user)
+
+            NotificationSetting.init_for_user(notification_type, user).update! enabled: false
+          end
+        end
+      end
+    end
+
+    def developer_user?(user)
+      user.email.include?('radicalbear.com')
+    end
+
     def seed_security_roles
       return if SecurityRole.count.positive?
 
@@ -56,10 +75,6 @@ class RadSeeder
       role.allow_invite = !RadConfig.disable_invite?
       seed_all role
       role.save!
-
-      NotificationType.all.find_each do |notification_type|
-        role.notification_security_roles.create! notification_type: notification_type
-      end
 
       true
     end
@@ -123,7 +138,7 @@ class RadSeeder
 
     def staging_safe_email
       # this is helpful when sendgrid email validation is enabled on staging, the faker emails would then fail
-      return seeded_user_config.first[:email] if Rails.env.staging?
+      return seeded_user_config.first[:email] if staging?
 
       Faker::Internet.email
     end
@@ -188,4 +203,18 @@ class RadSeeder
     def random_date(from_date, to_date)
       Faker::Date.unique.between(from: from_date, to: to_date)
     end
+
+    def production?
+      Rails.env.production?
+    end
+
+    def staging?
+      Rails.env.staging?
+    end
+
+    DEV_NOTIFICATION_TYPES = %w[Notifications::DuplicateFoundAdminNotification
+                                Notifications::GlobalValidityRanLongNotification
+                                Notifications::HighDuplicatesNotification
+                                Notifications::InvalidDataWasFoundNotification
+                                Notifications::TwilioErrorThresholdExceededNotification].freeze
 end
