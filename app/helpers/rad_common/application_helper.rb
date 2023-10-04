@@ -216,6 +216,12 @@ module RadCommon
       request.format.pdf?
     end
 
+    def created_by_show_item(record)
+      return if record.created_by.blank?
+
+      { label: 'Created By', value: secured_link(record.created_by) }
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
