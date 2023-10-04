@@ -83,7 +83,7 @@ describe DuplicateFixable do
         expect(ActionMailer::Base.deliveries.first.to).to include created_by.email
 
         expect(ActionMailer::Base.deliveries.second.subject)
-          .to eq "Possible Duplicate (#{attorney_2}) Entered By #{created_user}"
+          .to eq "Possible Duplicate (#{attorney_2}) Entered By #{created_by}"
 
         expect(ActionMailer::Base.deliveries.second.to).to include admin.email
       end
