@@ -16,7 +16,7 @@ describe 'Users' do
       visit edit_user_path(user)
     end
 
-    context 'when dynamically changing fields', js: true do
+    context 'when dynamically changing fields', :js do
       it 'shows internal roles and hides others' do
         find_field('user_external').set(false)
         expect(page).to have_content 'Security Roles'
@@ -38,16 +38,9 @@ describe 'Users' do
 
     before do
       allow(Rails.application.credentials)
-        .to receive(:twilio_verify_service_sid)
-        .and_return(Rails.application.credentials.twilio_alt_verify_service_sid)
-
-      allow(Rails.application.credentials)
-        .to receive(:twilio_account_sid)
-        .and_return(Rails.application.credentials.twilio_alt_account_sid)
-
-      allow(Rails.application.credentials)
-        .to receive(:twilio_auth_token)
-        .and_return(Rails.application.credentials.twilio_alt_auth_token)
+        .to receive_messages(twilio_verify_service_sid: Rails.application.credentials.twilio_alt_verify_service_sid,
+                             twilio_account_sid: Rails.application.credentials.twilio_alt_account_sid,
+                             twilio_auth_token: Rails.application.credentials.twilio_alt_auth_token)
 
       user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
     end
