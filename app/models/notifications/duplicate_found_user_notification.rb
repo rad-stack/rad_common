@@ -10,7 +10,7 @@ module Notifications
     end
 
     def absolute_user_ids
-      [created_by_user.id]
+      [created_by.id]
     end
 
     def auth_mode
