@@ -217,7 +217,7 @@ module RadCommon
     end
 
     def created_by_show_item(record)
-      return if record.created_by.blank?
+      return { label: 'Created By', value: nil } if record.created_by.blank?
 
       { label: 'Created By', value: secured_link(record.created_by) }
     end
