@@ -11,6 +11,6 @@ module CreatedBy
   end
 
   def created_by
-    audits.where(action: 'create').first&.user
+    audits.where(action: 'create').where.not(user_id: nil).first&.user
   end
 end
