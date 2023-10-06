@@ -5,6 +5,8 @@ describe DuplicateFixable do
   let(:email) { Faker::Internet.email }
   let(:first_name) { 'John' }
   let(:last_name) { 'Smith' }
+  let(:created_by) { create :user }
+  let!(:admin) { create :admin }
 
   let!(:attorney_1) do
     create :attorney, attorney_1_attributes.merge(company_name: 'ABC',
@@ -24,11 +26,16 @@ describe DuplicateFixable do
                                                   zipcode: '22222')
   end
 
+  let(:attorney_1_attributes) do
+    { phone_number: phone_number, email: email, first_name: 'Xxxx', last_name: 'Tttt' }
+  end
+
+  let(:attorney_2_attributes) do
+    { phone_number: phone_number, email: email, first_name: 'Yyyy', last_name: 'Ssss' }
+  end
+
   describe 'process_duplicates' do
     subject { attorney_1.duplicate.score }
-
-    let(:created_by) { create :user }
-    let!(:admin) { create :admin }
 
     before do
       allow_any_instance_of(Notifications::DuplicateFoundUserNotification).to receive(:created_by)
@@ -42,14 +49,6 @@ describe DuplicateFixable do
     end
 
     context 'when matching only on additional items' do
-      let(:attorney_1_attributes) do
-        { phone_number: phone_number, email: email, first_name: 'Xxxx', last_name: 'Tttt' }
-      end
-
-      let(:attorney_2_attributes) do
-        { phone_number: phone_number, email: email, first_name: 'Yyyy', last_name: 'Ssss' }
-      end
-
       it { is_expected.to eq 32 }
     end
 
@@ -127,6 +126,26 @@ describe DuplicateFixable do
       end
 
       it { is_expected.to include attorney_2.id }
+    end
+  end
+
+  describe 'reset_duplicates' do
+    it "doesn't notify when duplicates are reset" do
+      allow(Attorney).to receive(:score_upper_threshold).and_return(10)
+
+      allow_any_instance_of(Notifications::DuplicateFoundUserNotification).to receive(:created_by)
+        .and_return(created_by)
+
+      allow_any_instance_of(Notifications::DuplicateFoundAdminNotification).to receive(:created_by)
+        .and_return(created_by)
+
+      attorney_1.process_duplicates
+      attorney_1.reload
+
+      expect(ActionMailer::Base.deliveries.count).to eq 2
+      ActionMailer::Base.deliveries.clear
+      attorney_1.reset_duplicates
+      expect(ActionMailer::Base.deliveries.count).to eq 0
     end
   end
 end

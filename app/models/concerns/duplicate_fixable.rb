@@ -6,6 +6,8 @@ module DuplicateFixable
 
     has_one :duplicate, as: :duplicatable, dependent: :destroy
 
+    attr_accessor :duplicates_resetting
+
     scope :duplicates_to_process, lambda {
       left_outer_joins(:duplicate)
         .where("duplicates.processed_at IS NULL OR (#{table_name}.updated_at >= duplicates.processed_at)")
@@ -135,12 +137,16 @@ module DuplicateFixable
   end
 
   def reset_duplicates
+    self.duplicates_resetting = true
+
     if duplicate.present?
       duplicate.destroy!
       reload
     end
 
     process_duplicates
+
+    self.duplicates_resetting = false
   end
 
   def duplicates
