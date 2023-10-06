@@ -4,6 +4,7 @@ class Duplicate < ApplicationRecord
   after_commit :maybe_notify_duplicates, on: :create
 
   def maybe_notify_duplicates
+    return if duplicatable.duplicates_resetting
     return unless score && score >= duplicatable.class.score_upper_threshold
 
     Notifications::DuplicateFoundUserNotification.main.notify! duplicatable
