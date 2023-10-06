@@ -176,5 +176,21 @@ module RadCommon
           saved_filter_errors << "Filter \"#{filter}\" could not be saved: #{filter.errors.full_messages.to_sentence}"
         end
       end
+
+      def created_by_filter
+        { input_label: 'Created By',
+          scope: :for_created_by,
+          options: [['Active', active_users], ['Inactive', inactive_users]],
+          grouped: true,
+          blank_value_label: 'All Users' }
+      end
+
+      def active_users
+        Pundit.policy_scope!(current_user, User).active.by_name
+      end
+
+      def inactive_users
+        Pundit.policy_scope!(current_user, User).inactive.by_name
+      end
   end
 end

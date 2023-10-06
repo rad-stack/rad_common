@@ -1,6 +1,7 @@
 class Division < ApplicationRecord
   SKIP_SCHEMA_VALIDATION_INDEXES = [:index_divisions_on_name].freeze
   include Hashable
+  include CreatedBy
 
   belongs_to :owner, class_name: 'User'
   belongs_to :category, optional: true

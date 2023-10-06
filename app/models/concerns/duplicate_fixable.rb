@@ -2,6 +2,8 @@ module DuplicateFixable
   extend ActiveSupport::Concern
 
   included do
+    include CreatedBy
+
     has_one :duplicate, as: :duplicatable, dependent: :destroy
 
     scope :duplicates_to_process, lambda {

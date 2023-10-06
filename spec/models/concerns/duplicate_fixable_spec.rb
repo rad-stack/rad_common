@@ -27,15 +27,15 @@ describe DuplicateFixable do
   describe 'process_duplicates' do
     subject { attorney_1.duplicate.score }
 
-    let(:created_by_user) { create :user }
+    let(:created_by) { create :user }
     let!(:admin) { create :admin }
 
     before do
-      allow_any_instance_of(Notifications::DuplicateFoundUserNotification).to receive(:created_by_user)
-        .and_return(created_by_user)
+      allow_any_instance_of(Notifications::DuplicateFoundUserNotification).to receive(:created_by)
+        .and_return(created_by)
 
-      allow_any_instance_of(Notifications::DuplicateFoundAdminNotification).to receive(:created_by_user)
-        .and_return(created_by_user)
+      allow_any_instance_of(Notifications::DuplicateFoundAdminNotification).to receive(:created_by)
+        .and_return(created_by)
 
       attorney_1.process_duplicates
       attorney_1.reload
@@ -80,10 +80,10 @@ describe DuplicateFixable do
 
       it 'sends notifications' do
         expect(ActionMailer::Base.deliveries.first.subject).to eq "Possible Duplicate (#{attorney_2}) Entered By You"
-        expect(ActionMailer::Base.deliveries.first.to).to include created_by_user.email
+        expect(ActionMailer::Base.deliveries.first.to).to include created_by.email
 
         expect(ActionMailer::Base.deliveries.second.subject)
-          .to eq "Possible Duplicate (#{attorney_2}) Entered By #{created_by_user}"
+          .to eq "Possible Duplicate (#{attorney_2}) Entered By #{created_by}"
 
         expect(ActionMailer::Base.deliveries.second.to).to include admin.email
       end
