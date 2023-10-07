@@ -90,9 +90,9 @@ module DuplicateFixable
       percentage = (duplicate_records / (all_records * 1.0))
       return unless percentage > duplicate_notify_threshold
 
-      Notifications::HighDuplicatesNotification.main.notify!(threshold: duplicate_notify_threshold,
-                                                             percentage: percentage,
-                                                             model_name: to_s)
+      Notifications::HighDuplicatesNotification.main(threshold: duplicate_notify_threshold,
+                                                     percentage: percentage,
+                                                     model_name: to_s).notify!
     end
 
     def duplicate_notify_threshold

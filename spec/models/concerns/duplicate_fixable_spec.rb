@@ -81,6 +81,14 @@ describe DuplicateFixable do
 
         expect(ActionMailer::Base.deliveries.second.to).to include admin.email
       end
+
+      context 'when admin user creates the duplicate' do
+        let(:created_by) { admin }
+
+        it 'only sends one notification' do
+          expect(ActionMailer::Base.deliveries.count).to eq 1
+        end
+      end
     end
 
     context 'when matching on standard plus additional items' do
