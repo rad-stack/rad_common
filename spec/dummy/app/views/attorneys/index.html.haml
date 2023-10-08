@@ -13,6 +13,7 @@
         %th State
         %th Phone number
         %th Email
+        %th Active
         - if show_actions
           %th.actions Actions
 
@@ -24,6 +25,7 @@
           %td= attorney.state
           %td= attorney.phone_number
           %td= attorney.email
+          %td= format_boolean attorney.active
           - if show_actions
             %td
               - if policy(attorney).update?
