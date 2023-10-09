@@ -192,6 +192,10 @@ class RadSeeder
       users.sample
     end
 
+    def random_internal_user
+      users.internal.sample
+    end
+
     def user_status
       UserStatus.default_active_status
     end

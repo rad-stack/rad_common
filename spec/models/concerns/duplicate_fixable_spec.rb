@@ -38,12 +38,7 @@ describe DuplicateFixable do
     subject { attorney_1.duplicate.score }
 
     before do
-      allow_any_instance_of(Notifications::DuplicateFoundUserNotification).to receive(:created_by)
-        .and_return(created_by)
-
-      allow_any_instance_of(Notifications::DuplicateFoundAdminNotification).to receive(:created_by)
-        .and_return(created_by)
-
+      allow(attorney_1).to receive(:created_by).and_return(created_by)
       attorney_1.process_duplicates
       attorney_1.reload
     end
@@ -85,6 +80,14 @@ describe DuplicateFixable do
           .to eq "Possible Duplicate (#{attorney_2}) Entered By #{created_by}"
 
         expect(ActionMailer::Base.deliveries.second.to).to include admin.email
+      end
+
+      context 'when admin user creates the duplicate' do
+        let(:created_by) { admin }
+
+        it 'only sends one notification' do
+          expect(ActionMailer::Base.deliveries.count).to eq 1
+        end
       end
     end
 
@@ -132,12 +135,7 @@ describe DuplicateFixable do
   describe 'reset_duplicates' do
     it "doesn't notify when duplicates are reset" do
       allow(Attorney).to receive(:score_upper_threshold).and_return(10)
-
-      allow_any_instance_of(Notifications::DuplicateFoundUserNotification).to receive(:created_by)
-        .and_return(created_by)
-
-      allow_any_instance_of(Notifications::DuplicateFoundAdminNotification).to receive(:created_by)
-        .and_return(created_by)
+      allow(attorney_1).to receive(:created_by).and_return(created_by)
 
       attorney_1.process_duplicates
       attorney_1.reload

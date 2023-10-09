@@ -7,7 +7,10 @@ class Duplicate < ApplicationRecord
     return if duplicatable.duplicates_resetting
     return unless score && score >= duplicatable.class.score_upper_threshold
 
-    Notifications::DuplicateFoundUserNotification.main.notify! duplicatable
-    Notifications::DuplicateFoundAdminNotification.main.notify! duplicatable
+    admin_notification = Notifications::DuplicateFoundAdminNotification.main(duplicatable)
+    user_notification = Notifications::DuplicateFoundUserNotification.main(duplicatable)
+
+    user_notification.notify! if user_notification.should_send?(admin_notification)
+    admin_notification.notify!
   end
 end
