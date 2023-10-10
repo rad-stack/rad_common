@@ -6,7 +6,7 @@ module RadCommon
     def check_threshold
       return unless exceeded_error_threshold?
 
-      Notifications::TwilioErrorThresholdExceededNotification.main.notify! failed_percentage
+      Notifications::TwilioErrorThresholdExceededNotification.main(failed_percentage).notify!
     end
 
     private

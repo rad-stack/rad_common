@@ -1,5 +1,5 @@
 module Notifications
-  class DuplicateFoundUserNotification < DuplicateFoundNotification
+  class DuplicateFoundUserNotification < ::NotificationType
     def mailer_subject
       "Possible Duplicate (#{subject_record}) Entered By You"
     end
@@ -10,11 +10,27 @@ module Notifications
     end
 
     def absolute_user_ids
-      [created_by_user.id]
+      [created_by.id]
     end
 
     def auth_mode
       :absolute_users
     end
+
+    def should_send?(admin_notification)
+      return false unless active_internal_user?
+
+      admin_notification.notify_user_ids_all.exclude?(created_by.id)
+    end
+
+    private
+
+      def created_by
+        subject_record.created_by
+      end
+
+      def active_internal_user?
+        created_by.present? && created_by.active? && created_by.internal?
+      end
   end
 end
