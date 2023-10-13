@@ -10,6 +10,13 @@ namespace :heroku do
     HerokuCommands.clone args[:heroku_app], args[:backup_id]
   end
 
+  task :copy_production_to_staging, %i[production_heroku_app staging_heroku_app] => :environment do |_t, args|
+    # to run this with multiple args, the brackets must be escaped like this:
+    # rails heroku:copy_production_to_staging\[elo-roofing,elo-roofing-staging\]
+
+    HerokuCommands.copy_production_data args[:production_heroku_app], args[:staging_heroku_app]
+  end
+
   task :reset_staging, [:heroku_app] => :environment do |_t, args|
     HerokuCommands.reset_staging args[:heroku_app]
   end
