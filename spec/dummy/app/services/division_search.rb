@@ -27,6 +27,7 @@ class DivisionSearch < RadCommon::Search
        search_scope_name: 'category_name',
        multiple: true
      },
+     created_by_filter,
      { column: :name, type: RadCommon::LikeFilter },
      { column: :created_at, type: RadCommon::DateFilter,
        start_input_label: 'Division Created At Start',
