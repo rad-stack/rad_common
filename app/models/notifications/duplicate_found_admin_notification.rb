@@ -20,7 +20,7 @@ module Notifications
         user = subject_record if user.blank? && subject_record.is_a?(User)
         return user if user.present?
 
-        raise 'no created by user found'
+        raise "no created by user found for #{subject_record.class} #{subject_record.id}"
       end
   end
 end
