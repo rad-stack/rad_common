@@ -46,7 +46,7 @@ describe 'Users' do
         user = User.last
         user.process_duplicates
         expect(ActionMailer::Base.deliveries.size).to eq 1
-        expect(ActionMailer::Base.deliveries.last.subject).to include 'Possible Duplicate'
+        expect(ActionMailer::Base.deliveries.last.subject).to include "Possible Duplicate User (#{user}) Signed Up"
       end
     end
   end
