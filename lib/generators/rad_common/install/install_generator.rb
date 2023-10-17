@@ -227,7 +227,7 @@ end
 
         def merge_package_json
           dummy_file_path = '../../../../../spec/dummy/package.json'
-          return copy_file dummy_file_path, 'package.json' unless File.exists? 'custom-dependencies.json'
+          return copy_file dummy_file_path, 'package.json' unless File.exist? 'custom-dependencies.json'
 
           custom_dependencies = JSON.parse(File.read('custom-dependencies.json'))
           package_source = File.expand_path(find_in_source_paths(dummy_file_path))
