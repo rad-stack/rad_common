@@ -106,6 +106,19 @@ class DuplicatesController < ApplicationController
     redirect_to @record
   end
 
+  def switch
+    @record = model.find(params[:id])
+    record = other_model.find(params[:other_id])
+
+    authorize @record, :reset_duplicates?
+    authorize record, :reset_duplicates?
+
+    @record.reset_duplicates
+    record.reset_duplicates
+
+    redirect_to duplicates_path(model: @record.class, id: @record.id)
+  end
+
   def check_duplicate
     @record = model.new(params[:record].permit!.to_h.except(:authenticity_token, :create_anyway))
     authorize @record, :create?
@@ -139,6 +152,10 @@ class DuplicatesController < ApplicationController
 
     def model
       Object.const_get params[:model]
+    end
+
+    def other_model
+      Object.const_get params[:other_model]
     end
 
     def notify_user(subject, message)

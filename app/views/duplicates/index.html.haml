@@ -120,7 +120,11 @@
                           class: 'btn btn-sm btn-warning btn-block'
 
               = link_to icon('arrow-up', 'Switch to Current'),
-                        duplicates_path(model: record.class, id: record.id),
+                        switch_duplicates_path(model: record.class,
+                                               id: record.id,
+                                               other_model: @record.class,
+                                               other_id: @record.id),
+                        method: :put,
                         class: 'btn btn-sm btn-success btn-block'
 
             %td= record_result[:score]
