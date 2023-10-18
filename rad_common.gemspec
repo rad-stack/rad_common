@@ -47,7 +47,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'pretender'
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
-  s.add_dependency 'rails'
+  s.add_dependency 'rails', '~> 7.0.8'
   s.add_dependency 'redis'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
