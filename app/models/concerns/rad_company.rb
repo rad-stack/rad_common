@@ -16,7 +16,7 @@ module RadCompany
     before_validation :clean_domain_spaces
 
     strip_attributes
-    audited
+    audited except: %i[quickbooks_token quickbooks_refresh_token github_token]
   end
 
   module ClassMethods
