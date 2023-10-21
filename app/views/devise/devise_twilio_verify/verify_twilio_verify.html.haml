@@ -8,5 +8,5 @@
       = twilio_verify_request_sms_link
 
   %label
-    = check_box_tag :remember_device
+    = check_box_tag :remember_device, checked: true
     %span Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}
