@@ -183,6 +183,8 @@ class RadConfig
     end
 
     def impersonate?
+      return true unless Rails.env.production?
+
       boolean_config_item! :impersonate
     end
 
