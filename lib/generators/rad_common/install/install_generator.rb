@@ -31,6 +31,8 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
+        copy_file '../database.yml', 'config/database.yml'
+        gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
@@ -274,6 +276,10 @@ end
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
+        end
+
+        def installed_app_name
+          ::Rails.application.class.module_parent.to_s.underscore
         end
     end
   end
