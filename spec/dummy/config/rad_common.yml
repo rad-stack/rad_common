@@ -40,8 +40,8 @@ default: &default
     - User
 
   duplicates:
-    -
-      name: Attorney
+    - :name: Attorney
+    - :name: User
 
   restricted_audit_attributes:
     -

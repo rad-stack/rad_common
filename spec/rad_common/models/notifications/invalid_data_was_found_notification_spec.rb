@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Notifications::InvalidDataWasFoundNotification, type: :model do
-  let(:notification_type) { described_class.main }
+  let(:notification_type) { described_class.main([]) }
   let(:mail) { ActionMailer::Base.deliveries.last }
 
   before { create :admin }
@@ -9,7 +9,7 @@ RSpec.describe Notifications::InvalidDataWasFoundNotification, type: :model do
   describe '#notify!' do
     before do
       ActionMailer::Base.deliveries = []
-      notification_type.notify! []
+      notification_type.notify!
     end
 
     it 'emails' do

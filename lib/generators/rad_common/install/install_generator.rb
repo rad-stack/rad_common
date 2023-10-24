@@ -17,6 +17,7 @@ module RadCommon
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
         copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
+        copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js', 'app/javascript/packs/rad_mailer.js'
         directory '../../../../../.bundle', '.bundle'
 
         # code style config
@@ -228,7 +229,7 @@ end
 
         def merge_package_json
           dummy_file_path = '../../../../../spec/dummy/package.json'
-          return copy_file dummy_file_path, 'package.json' unless File.exists? 'custom-dependencies.json'
+          return copy_file dummy_file_path, 'package.json' unless File.exist? 'custom-dependencies.json'
 
           custom_dependencies = JSON.parse(File.read('custom-dependencies.json'))
           package_source = File.expand_path(find_in_source_paths(dummy_file_path))

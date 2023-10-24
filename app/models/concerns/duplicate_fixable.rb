@@ -2,7 +2,11 @@ module DuplicateFixable
   extend ActiveSupport::Concern
 
   included do
+    include CreatedBy
+
     has_one :duplicate, as: :duplicatable, dependent: :destroy
+
+    attr_accessor :duplicates_resetting
 
     scope :duplicates_to_process, lambda {
       left_outer_joins(:duplicate)
@@ -77,6 +81,23 @@ module DuplicateFixable
     def applicable_duplicate_items
       additional_duplicate_items.select { |item| new.respond_to?(item[:name]) }
     end
+
+    def notify_high_duplicates
+      all_records = all.size
+      return unless all_records.positive?
+
+      duplicate_records = high_duplicates.count
+      percentage = (duplicate_records / (all_records * 1.0))
+      return unless percentage > duplicate_notify_threshold
+
+      Notifications::HighDuplicatesNotification.main(threshold: duplicate_notify_threshold,
+                                                     percentage: percentage,
+                                                     model_name: to_s).notify!
+    end
+
+    def duplicate_notify_threshold
+      new.duplicate_model_config[:notify_threshold].presence || 0.01
+    end
   end
 
   def process_duplicates
@@ -116,12 +137,16 @@ module DuplicateFixable
   end
 
   def reset_duplicates
+    self.duplicates_resetting = true
+
     if duplicate.present?
       duplicate.destroy!
       reload
     end
 
     process_duplicates
+
+    self.duplicates_resetting = false
   end
 
   def duplicates

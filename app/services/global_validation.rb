@@ -10,8 +10,8 @@ class GlobalValidation
 
     error_messages = check_global_validity
 
-    Notifications::InvalidDataWasFoundNotification.main.notify!(error_messages) if error_messages.any?
-    Notifications::GlobalValidityRanLongNotification.main.notify!(@run_stats) if took_too_long?
+    Notifications::InvalidDataWasFoundNotification.main(error_messages).notify! if error_messages.any?
+    Notifications::GlobalValidityRanLongNotification.main(@run_stats).notify! if took_too_long?
 
     Company.main.global_validity_ran!
   end
