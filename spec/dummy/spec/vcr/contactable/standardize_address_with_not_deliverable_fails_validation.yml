@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://us-street.api.smartystreets.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Mordor&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=FL&street=4000%20Bro%20Bruh&street2&urbanization&zipcode=32816
+    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Mordor&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=FL&street=4000%20Bro%20Bruh&street2&urbanization&zipcode=32816
     body:
       encoding: US-ASCII
       string: ''
@@ -12,9 +12,9 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.14.19)
+      - smartystreets (sdk:ruby@5.15.2)
       Host:
-      - us-street.api.smartystreets.com
+      - us-street.api.smarty.com
       Content-Type:
       - application/json
   response:
@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 21 Jun 2023 10:38:39 GMT
+      - Wed, 25 Oct 2023 10:03:15 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -36,10 +36,10 @@ http_interactions:
         FL","components":{"primary_number":"4000","street_name":"Bro Bruh","city_name":"Mordor","state_abbreviation":"FL"},"metadata":{"precision":"Unknown"},"analysis":{"dpv_footnotes":"A1","active":"Y","footnotes":"C#","enhanced_match":"none"}}]
 
         '
-  recorded_at: Wed, 21 Jun 2023 10:38:39 GMT
+  recorded_at: Wed, 25 Oct 2023 10:03:15 GMT
 - request:
     method: get
-    uri: https://us-street.api.smartystreets.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Mordor&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=FL&street=4000%20Bro%20Bruh&street2&urbanization&zipcode=32816
+    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Mordor&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=FL&street=4000%20Bro%20Bruh&street2&urbanization&zipcode=32816
     body:
       encoding: US-ASCII
       string: ''
@@ -49,9 +49,9 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.14.19)
+      - smartystreets (sdk:ruby@5.15.2)
       Host:
-      - us-street.api.smartystreets.com
+      - us-street.api.smarty.com
       Content-Type:
       - application/json
   response:
@@ -62,7 +62,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 21 Jun 2023 10:38:40 GMT
+      - Wed, 25 Oct 2023 10:03:15 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -73,5 +73,5 @@ http_interactions:
         FL","components":{"primary_number":"4000","street_name":"Bro Bruh","city_name":"Mordor","state_abbreviation":"FL"},"metadata":{"precision":"Unknown"},"analysis":{"dpv_footnotes":"A1","active":"Y","footnotes":"C#","enhanced_match":"none"}}]
 
         '
-  recorded_at: Wed, 21 Jun 2023 10:38:40 GMT
-recorded_with: VCR 6.1.0
+  recorded_at: Wed, 25 Oct 2023 10:03:15 GMT
+recorded_with: VCR 6.2.0
