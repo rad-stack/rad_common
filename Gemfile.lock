@@ -11,7 +11,7 @@ PATH
   remote: .
   specs:
     rad_common (0.1.0)
-      active_storage_validations
+      active_storage_validations (= 1.0.4)
       audited
       authtrail
       aws-sdk-s3
@@ -102,7 +102,7 @@ GEM
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
     active_record_doctor (1.12.0)
       activerecord (>= 4.2.0)
-    active_storage_validations (1.1.0)
+    active_storage_validations (1.0.4)
       activejob (>= 5.2.0)
       activemodel (>= 5.2.0)
       activestorage (>= 5.2.0)
