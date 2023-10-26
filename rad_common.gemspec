@@ -12,13 +12,13 @@ Gem::Specification.new do |s|
   s.description = 'A library of common functions for a standard business web app, developed by Radical Bear'
   s.license = 'MIT'
   s.metadata['rubygems_mfa_required'] = 'true'
-  s.required_ruby_version = '>= 3.0.4'
+  s.required_ruby_version = '>= 3.2.2'
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   s.bindir = 'bin'
   s.executables = %w[reset_db migrate_reset rc_update rc_rspec rc_parallel_rspec]
 
-  s.add_dependency 'active_storage_validations'
+  s.add_dependency 'active_storage_validations', '1.0.4' # see Task 43068
   s.add_dependency 'audited'
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
