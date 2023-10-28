@@ -42,4 +42,12 @@ RSpec.describe StringUtil do
       expect { described_class.integer? input_value }.to raise_error 'input value is not a string'
     end
   end
+
+  context 'with nil' do
+    let(:input_value) { nil }
+
+    it 'raises an exception' do
+      expect { described_class.integer? input_value }.to raise_error 'input value is not a string'
+    end
+  end
 end
