@@ -1,0 +1,13 @@
+---
+:concurrency: 10
+:queues:
+  - default
+  - mailers
+  - active_storage_analysis
+  - active_storage_purge
+  <% additional_queues = YAML.load_file('config/rad_common.yml', aliases: true).dig('default', 'additional_sidekiq_queues') %>
+  <% if additional_queues&.any? %>
+  <% additional_queues.each do |queue| %>
+  - <%= queue %>
+  <% end %>
+  <% end %>
