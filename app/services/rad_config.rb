@@ -244,10 +244,6 @@ class RadConfig
       boolean_config_item! :legal_docs
     end
 
-    def wide_margins?
-      boolean_config_item! :wide_margins
-    end
-
     def favicon_filename!
       override_variable(:favicon_filename) || 'favicon.ico'
     end
