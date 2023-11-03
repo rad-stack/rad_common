@@ -27,7 +27,7 @@ RSpec.describe 'Search' do
       it 'queries specified column' do
         visit '/rad_common/audits'
         fill_in 'search_audited_changes_like', with: 'query'
-        click_on 'Apply Filters'
+        click_button 'Apply Filters'
         expect(current_url).to include('search[audited_changes_like]=query')
       end
     end

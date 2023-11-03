@@ -503,6 +503,7 @@ DEPENDENCIES
   rad_common!
   rspec-rails
   rubocop
+  rubocop-capybara
   rubocop-rails
   rubocop-rspec
   selenium-webdriver

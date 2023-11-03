@@ -174,8 +174,7 @@ RSpec.describe 'Users', type: :system do
       end
 
       it 'requires mobile phone when twilio verify enabled' do
-        allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false)
-        allow(RadConfig).to receive(:require_mobile_phone?).and_return(false)
+        allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
 
         visit edit_user_path(user)
         fill_in 'Mobile Phone', with: ''
@@ -289,8 +288,7 @@ RSpec.describe 'Users', type: :system do
   describe 'sign up', :js, :sign_up_specs do
     before do
       create :security_role, :external, allow_sign_up: true
-      allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false)
-      allow(RadConfig).to receive(:legal_docs?).and_return(true)
+      allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, legal_docs?: true)
     end
 
     it 'signs up' do
@@ -486,16 +484,9 @@ RSpec.describe 'Users', type: :system do
 
     before do
       allow(Rails.application.credentials)
-        .to receive(:twilio_verify_service_sid)
-        .and_return(Rails.application.credentials.twilio_alt_verify_service_sid)
-
-      allow(Rails.application.credentials)
-        .to receive(:twilio_account_sid)
-        .and_return(Rails.application.credentials.twilio_alt_account_sid)
-
-      allow(Rails.application.credentials)
-        .to receive(:twilio_auth_token)
-        .and_return(Rails.application.credentials.twilio_alt_auth_token)
+        .to receive_messages(twilio_verify_service_sid: Rails.application.credentials.twilio_alt_verify_service_sid,
+                             twilio_account_sid: Rails.application.credentials.twilio_alt_account_sid,
+                             twilio_auth_token: Rails.application.credentials.twilio_alt_auth_token)
 
       allow(TwilioVerifyService).to receive(:send_sms_token).and_return(double(status: 'pending'))
 
