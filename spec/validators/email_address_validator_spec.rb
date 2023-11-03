@@ -46,7 +46,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
       invalid_items.each do |item|
         model = build :division, invoice_email: item
 
-        expect(model).to be_invalid
+        expect(model).not_to be_valid
         expect(model.errors.details.first[0]).to eq :invoice_email
         expect(model.errors.full_messages.to_s).to include 'Invoice email is not written in a valid format. ' \
                                                            'Email cannot have capital letters, domain must be less ' \

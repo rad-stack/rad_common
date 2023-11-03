@@ -25,7 +25,7 @@ class Seeder < RadSeeder
         end
       end
 
-      Attorney.all.each(&:process_duplicates)
+      Attorney.find_each(&:process_duplicates)
     end
 
     3.times { FactoryBot.create :client } if Client.count.zero?

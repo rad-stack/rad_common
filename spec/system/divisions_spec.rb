@@ -19,7 +19,7 @@ RSpec.describe 'Divisions' do
     end
 
     context 'with default placeholder' do
-      it 'shows placeholder on autocomplete field', js: true do
+      it 'shows placeholder on autocomplete field', :js do
         visit new_division_path
         click_bootstrap_select(from: 'division_owner_id')
         expect(find("input[type='search']")['placeholder']).to eq('Start typing to search')
@@ -27,7 +27,7 @@ RSpec.describe 'Divisions' do
     end
 
     context 'with custom placeholder' do
-      it 'shows placeholder on autocomplete field', js: true do
+      it 'shows placeholder on autocomplete field', :js do
         visit new_division_path
         click_bootstrap_select(from: 'division_category_id')
         expect(find("input[type='search']")['placeholder']).to eq('Search for a category')
@@ -70,7 +70,7 @@ RSpec.describe 'Divisions' do
       expect(page).to have_content('Editing Division')
     end
 
-    context 'with bootstrap select search field', js: true do
+    context 'with bootstrap select search field', :js do
       let(:other_user) { create :user }
 
       before do
@@ -117,7 +117,7 @@ RSpec.describe 'Divisions' do
       end
     end
 
-    context 'when saving search filters', js: true do
+    context 'when saving search filters', :js do
       let(:applied_params) { -> { Rack::Utils.parse_query URI.parse(current_url).query } }
       let(:last_filter) { SavedSearchFilter.last }
 
@@ -183,7 +183,7 @@ RSpec.describe 'Divisions' do
         visit division_path(division)
       end
 
-      it 'allows attachment to be deleted', js: true do
+      it 'allows attachment to be deleted', :js do
         expect(ActiveStorage::Attachment.count).to eq 1
 
         page.accept_alert prompt do

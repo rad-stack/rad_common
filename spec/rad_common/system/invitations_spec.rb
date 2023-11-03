@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Invitations', invite_specs: true, type: :system do
+RSpec.describe 'Invitations', :invite_specs, type: :system do
   let(:company) { Company.main }
   let(:admin) { create :admin }
   let(:user) { create :user }
@@ -86,7 +86,7 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
           let(:invite_role) { external_role }
           let(:invite_email) { external_email }
 
-          it 'invites', external_user_specs: true do
+          it 'invites', :external_user_specs do
             expect(User.last.external?).to be true
           end
         end
@@ -96,7 +96,7 @@ RSpec.describe 'Invitations', invite_specs: true, type: :system do
           let(:invite_role) { another_role }
           let(:invite_email) { external_email }
 
-          it 'invites an external user and sets initial role', external_user_specs: true do
+          it 'invites an external user and sets initial role', :external_user_specs do
             expect(SecurityRole.external.size).to eq 3
           end
         end

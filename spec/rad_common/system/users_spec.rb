@@ -121,7 +121,7 @@ RSpec.describe 'Users', type: :system do
         end
       end
 
-      it 'filters by user type', external_user_specs: true do
+      it 'filters by user type', :external_user_specs do
         external_user.update!(user_status: user.user_status)
         visit users_path(search: { user_status_id: user.user_status_id, external: 'external' })
         expect(page).not_to have_content user.email
@@ -198,12 +198,12 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content user.to_s
       end
 
-      it 'shows external user', external_user_specs: true do
+      it 'shows external user', :external_user_specs do
         visit user_path(external_user)
         expect(page).to have_content external_user.first_name
       end
 
-      it 'shows external user with client', user_client_specs: true do
+      it 'shows external user with client', :user_client_specs do
         visit user_path(client_user)
         expect(page).to have_content client_user.first_name
       end
@@ -226,7 +226,7 @@ RSpec.describe 'Users', type: :system do
         visit user_path(user)
       end
 
-      it 'can manually confirm a user', js: true, user_confirmable_specs: true do
+      it 'can manually confirm a user', :js, :user_confirmable_specs do
         page.accept_confirm do
           click_link 'Confirm Email'
         end
@@ -235,7 +235,7 @@ RSpec.describe 'Users', type: :system do
       end
     end
 
-    describe 'reactivate', user_expirable_specs: true do
+    describe 'reactivate', :user_expirable_specs do
       let(:user) { create :user, last_activity_at: last_activity_at }
 
       before do
@@ -266,7 +266,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'external user', external_user_specs: true do
+  describe 'external user', :external_user_specs do
     before do
       login_as(external_user, scope: :user)
     end
@@ -286,7 +286,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'sign up', js: true, sign_up_specs: true do
+  describe 'sign up', :js, :sign_up_specs do
     before do
       create :security_role, :external, allow_sign_up: true
       allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false)
@@ -358,7 +358,7 @@ RSpec.describe 'Users', type: :system do
       expect(page).to have_content 'Invalid Email or password'
     end
 
-    it 'cannot sign in with expired password', password_expirable_specs: true do
+    it 'cannot sign in with expired password', :password_expirable_specs do
       current_password = password
       new_password = 'Passwords2!!!!!'
 
@@ -378,7 +378,7 @@ RSpec.describe 'Users', type: :system do
       expect(page).to have_content 'Your new password is saved.'
     end
 
-    it 'cannot sign in when expired', user_expirable_specs: true do
+    it 'cannot sign in when expired', :user_expirable_specs do
       user.update!(last_activity_at: 98.days.ago)
       user.reload
 
@@ -412,7 +412,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'devise paranoid setting', devise_paranoid_specs: true do
+  describe 'devise paranoid setting', :devise_paranoid_specs do
     it 'wrong password - does not specify if email or password is wrong' do
       visit new_user_session_path
       fill_in 'user_email', with: user.email
@@ -428,7 +428,7 @@ RSpec.describe 'Users', type: :system do
           'confirm your email address in a few minutes.'
       end
 
-      it "doesn't say whether the email exists", user_confirmable_specs: true do
+      it "doesn't say whether the email exists", :user_confirmable_specs do
         visit new_user_session_path
 
         click_link "Didn't Receive Confirmation Instructions?"
@@ -479,7 +479,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'two factor authentication', twilio_verify_specs: true do
+  describe 'two factor authentication', :twilio_verify_specs do
     let(:remember_message) do
       "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
     end
