@@ -141,10 +141,8 @@ end
         RUBY
         end
 
-        inject_into_file 'Gemfile', after: "gem 'rubocop', require: false" do <<-'RUBY'
-
-  gem 'rubocop-capybara'
-        RUBY
+        inject_into_file 'Gemfile', after: "gem 'rubocop', require: false" do
+          "gem 'rubocop-capybara'"
         end
 
         apply_migration '20140302111111_add_radbear_user_fields.rb'
