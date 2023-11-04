@@ -141,7 +141,7 @@ end
         RUBY
         end
 
-        inject_into_file 'Gemfile', after: "gem 'rubocop', require: false" do
+        inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do
           "gem 'rubocop-capybara'"
         end
 
