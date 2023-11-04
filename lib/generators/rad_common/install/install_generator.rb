@@ -13,6 +13,7 @@ module RadCommon
         # misc
         merge_package_json
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+        copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
