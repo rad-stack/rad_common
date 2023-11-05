@@ -110,7 +110,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    it 'accepts same password only after 12 changes', password_expirable_specs: true do
+    it 'accepts same password only after 12 changes', :password_expirable_specs do
       13.times do |i|
         user.update(password: "Password#{i + 1}!", password_confirmation: "Password#{i + 1}!")
       end
@@ -180,7 +180,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    it 'allows unauthorized email addresses for inactive users', external_user_specs: true do
+    it 'allows unauthorized email addresses for inactive users', :external_user_specs do
       addresses = %w[user@example.com user@radicalbear.com]
 
       addresses.each do |address|
@@ -189,7 +189,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    it 'allows valid email addresses', external_user_specs: true do
+    it 'allows valid email addresses', :external_user_specs do
       addresses = %w[joe@abc.com bob@abc.com sally@abc.com]
 
       addresses.each do |address|
@@ -223,14 +223,14 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'password expirable', password_expirable_specs: true do
+  describe 'password expirable', :password_expirable_specs do
     it 'has a password that expires after 90 days' do
       expect(user.need_change_password?).to be(false)
       Timecop.travel(91.days.from_now) { expect(user.need_change_password?).to be(true) }
     end
   end
 
-  describe 'exiprable', user_expirable_specs: true do
+  describe 'exiprable', :user_expirable_specs do
     it 'expires after 90 days' do
       user.update!(last_activity_at: Time.current)
       expect(user.expired?).to be(false)

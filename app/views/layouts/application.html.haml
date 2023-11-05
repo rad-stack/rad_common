@@ -4,6 +4,7 @@
     %meta{ charset: 'utf-8' }
     %meta{ 'http-equiv': 'X-UA-Compatible', content: 'IE=Edge,chrome=1' }
     %meta{ name: 'viewport', content: 'width=device-width, initial-scale=1.0' }
+    %link{ rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }
     %title= content_for?(:title) ? yield(:title) : RadConfig.app_name!
     = csrf_meta_tags
     = favicon_pack_tag RadConfig.favicon_filename!, rel: 'shortcut icon'
@@ -17,12 +18,7 @@
         .col-lg-12
           - if user_signed_in?
             = render 'layouts/global_search'
+          = render 'layouts/header'
           = bootstrap_flash
-          - if RadConfig.wide_margins?
-            .row
-              .col-2
-              .col-8
-                = yield
-          - else
-            = yield
+          = yield
           = render 'layouts/footer'

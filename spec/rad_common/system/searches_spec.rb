@@ -17,7 +17,7 @@ RSpec.describe 'Searches', type: :system do
     before { create :user, last_name: term }
 
     context 'when asking the user if they want to use' do
-      xit 'clears checkbox if dismissed', js: true do
+      xit 'clears checkbox if dismissed', :js do
         visit '/'
         page.dismiss_confirm prompt do
           check 'super_search'
@@ -25,7 +25,7 @@ RSpec.describe 'Searches', type: :system do
         expect(first('.global_search_name', match: :first)[:placeholder]).to eq 'Search user by name'
       end
 
-      xit 'uses if confirmed', js: true do
+      xit 'uses if confirmed', :js do
         visit '/'
         page.accept_confirm prompt do
           check 'super_search'

@@ -19,7 +19,7 @@ RSpec.describe 'Divisions' do
     end
 
     context 'with default placeholder' do
-      it 'shows placeholder on autocomplete field', js: true do
+      it 'shows placeholder on autocomplete field', :js do
         visit new_division_path
         click_bootstrap_select(from: 'division_owner_id')
         expect(find("input[type='search']")['placeholder']).to eq('Start typing to search')
@@ -27,7 +27,7 @@ RSpec.describe 'Divisions' do
     end
 
     context 'with custom placeholder' do
-      it 'shows placeholder on autocomplete field', js: true do
+      it 'shows placeholder on autocomplete field', :js do
         visit new_division_path
         click_bootstrap_select(from: 'division_category_id')
         expect(find("input[type='search']")['placeholder']).to eq('Search for a category')
@@ -42,7 +42,7 @@ RSpec.describe 'Divisions' do
         fill_in 'Name', with: 'Foo'
         fill_in 'Code', with: 'BAR'
         page.attach_file('Icon', file)
-        click_on 'Save'
+        click_button 'Save'
       end
 
       context 'when invalid due to content type' do
@@ -70,7 +70,7 @@ RSpec.describe 'Divisions' do
       expect(page).to have_content('Editing Division')
     end
 
-    context 'with bootstrap select search field', js: true do
+    context 'with bootstrap select search field', :js do
       let(:other_user) { create :user }
 
       before do
@@ -117,36 +117,36 @@ RSpec.describe 'Divisions' do
       end
     end
 
-    context 'when saving search filters', js: true do
+    context 'when saving search filters', :js do
       let(:applied_params) { -> { Rack::Utils.parse_query URI.parse(current_url).query } }
       let(:last_filter) { SavedSearchFilter.last }
 
       it 'allows saving and applying search filters' do
         visit divisions_path
         bootstrap_select user.to_s, from: 'search_owner_id'
-        click_on 'saved-search-filters-dropdown'
+        click_button 'saved-search-filters-dropdown'
         page.evaluate_script 'window.prompt = () => { document.getElementById("search_saved_name").value = "Test" }'
         page.evaluate_script 'window.alert = (msg) => { return true; }'
-        expect { click_on('save_and_apply_filters') }.to change(SavedSearchFilter, :count).by(1)
+        expect { click_button('save_and_apply_filters') }.to change(SavedSearchFilter, :count).by(1)
 
         expect(SavedSearchFilter.last.name).to eq('Test')
         expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
 
-        click_on 'Clear Filters'
+        click_link 'Clear Filters'
         expect(applied_params.call['search[owner_id]']).to be_nil
 
-        click_on 'saved-search-filters-dropdown'
-        click_on "saved_filter_#{last_filter.id}"
+        click_button 'saved-search-filters-dropdown'
+        click_link "saved_filter_#{last_filter.id}"
         expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
-        click_on 'saved-search-filters-dropdown'
+        click_button 'saved-search-filters-dropdown'
         expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('active')
       end
 
       it 'allows deleting saved filters' do
         create :saved_search_filter, user: user, search_class: 'DivisionSearch'
         visit divisions_path
-        click_on 'saved-search-filters-dropdown'
-        page.accept_confirm { click_on "delete_saved_filter_#{last_filter.id}" }
+        click_button 'saved-search-filters-dropdown'
+        page.accept_confirm { click_link "delete_saved_filter_#{last_filter.id}" }
         wait_for_ajax
         expect(SavedSearchFilter.count).to eq(0)
       end
@@ -183,7 +183,7 @@ RSpec.describe 'Divisions' do
         visit division_path(division)
       end
 
-      it 'allows attachment to be deleted', js: true do
+      it 'allows attachment to be deleted', :js do
         expect(ActiveStorage::Attachment.count).to eq 1
 
         page.accept_alert prompt do

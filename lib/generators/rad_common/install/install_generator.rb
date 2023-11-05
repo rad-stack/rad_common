@@ -13,9 +13,11 @@ module RadCommon
         # misc
         merge_package_json
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+        copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
+        copy_file '../../../../../spec/dummy/public/robots.txt', 'public/robots.txt'
         copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
         copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js', 'app/javascript/packs/rad_mailer.js'
         directory '../../../../../.bundle', '.bundle'
@@ -136,6 +138,11 @@ end
   mount RadCommon::Engine => '/rad_common'
   extend RadCommonRoutes
 
+        RUBY
+        end
+
+        inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do <<-'RUBY'
+  gem 'rubocop-capybara'
         RUBY
         end
 
