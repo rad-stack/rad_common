@@ -174,6 +174,10 @@ module RadUser
     end
   end
 
+  def notify_new_user_signed_up
+    Notifications::NewUserSignedUpNotification.main(self).notify!
+  end
+
   def send_devise_notification(notification, *args)
     # background devise emails
     # https://github.com/plataformatec/devise#activejob-integration
