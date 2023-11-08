@@ -11,8 +11,6 @@
     "rad_common_js": "https://github.com/radicalbear/rad_common_js#86aa0a31dce6353acfdf76fc0a31b9e5c22b9fed"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@babel/plugin-proposal-private-methods": "^7.18.6",
     "webpack": "^4.41.2",
     "webpack-dev-server": "^3.10.1",
     "eslint": "^6.3.0",
