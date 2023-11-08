@@ -395,7 +395,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'timeout', devise_timeoutable_specs: true do
+  describe 'timeout', :devise_timeoutable_specs do
     before { allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false) }
 
     context 'with internal user' do
