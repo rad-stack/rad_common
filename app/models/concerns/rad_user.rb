@@ -209,7 +209,7 @@ module RadUser
   def twilio_totp_factor_sid; end
 
   def timeout_in
-    RadConfig.timeout_hours!.hours
+    external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
   end
 
   private

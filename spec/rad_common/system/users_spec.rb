@@ -393,9 +393,13 @@ RSpec.describe 'Users', type: :system do
       click_button 'Sign In'
       expect(page).to have_content('Signed in successfully')
     end
+  end
 
-    it 'sign in times out after 3 hours' do
-      if Devise.mappings[:user].timeoutable?
+  describe 'timeout', devise_timeoutable_specs: true do
+    before { allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false) }
+
+    context 'with internal user' do
+      it 'sign in times out after 3 hours' do
         visit new_user_session_path
         fill_in 'user_email', with: user.email
         fill_in 'user_password', with: password
