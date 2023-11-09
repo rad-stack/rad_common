@@ -23,7 +23,7 @@ default: &default
   storage_config_override: false
   require_mobile_phone: false
   check_js_errors: true
-
+  timeout_hours: 6
   system_usage_models:
     -
       - Division

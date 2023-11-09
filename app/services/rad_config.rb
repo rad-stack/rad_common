@@ -94,6 +94,10 @@ class RadConfig
       secret_config_item(:jwt_secret).present?
     end
 
+    def timeout_hours!
+      config_item! :timeout_hours
+    end
+
     def test_phone_number
       secret_config_item :test_phone_number
     end
