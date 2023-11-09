@@ -413,7 +413,7 @@ RSpec.describe 'Users', type: :system do
       end
     end
 
-    context 'with external user' do
+    context 'with external user', :external_user_specs do
       it 'sign in times out after 3 hours' do
         visit new_user_session_path
         fill_in 'user_email', with: external_user.email
