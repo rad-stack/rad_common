@@ -1,6 +1,9 @@
 {
   "license": "UNLICENSED",
   "private": true,
+  "engines": {
+    "node": "16.20.2"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
     "@rails/actiontext": "^6.0.2-1",
@@ -16,7 +19,6 @@
   "resolutions": {
     "serialize-javascript": "^3.1.0",
     "ssri": "^8.0.1",
-    "dns-packet": "^5.2.2",
     "ws": "^7.4.6",
     "glob-parent": "^5.1.2",
     "normalize-url": "^4.5.1",
@@ -37,6 +39,7 @@
     "jquery-ui": "^1.13.2",
     "json5": "^2.2.2",
     "decode-uri-component": "^0.2.1",
-    "dns-packet": "^5.4.0"
+    "dns-packet": "^5.4.0",
+    "browserify-sign": "^4.2.2"
   }
 }

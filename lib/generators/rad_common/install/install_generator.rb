@@ -13,9 +13,11 @@ module RadCommon
         # misc
         merge_package_json
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+        copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
+        copy_file '../../../../../spec/dummy/public/robots.txt', 'public/robots.txt'
         copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
         copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js', 'app/javascript/packs/rad_mailer.js'
         directory '../../../../../.bundle', '.bundle'
@@ -31,6 +33,8 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
+        copy_file '../database.yml', 'config/database.yml'
+        gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
@@ -137,6 +141,11 @@ end
         RUBY
         end
 
+        inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do <<-'RUBY'
+  gem 'rubocop-capybara'
+        RUBY
+        end
+
         apply_migration '20140302111111_add_radbear_user_fields.rb'
         apply_migration '20140827111111_add_name_index_to_users.rb'
         apply_migration '20140903124700_expand_facebook_access_token.rb'
@@ -227,7 +236,7 @@ end
 
         def merge_package_json
           dummy_file_path = '../../../../../spec/dummy/package.json'
-          return copy_file dummy_file_path, 'package.json' unless File.exists? 'custom-dependencies.json'
+          return copy_file dummy_file_path, 'package.json' unless File.exist? 'custom-dependencies.json'
 
           custom_dependencies = JSON.parse(File.read('custom-dependencies.json'))
           package_source = File.expand_path(find_in_source_paths(dummy_file_path))
@@ -274,6 +283,10 @@ end
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
+        end
+
+        def installed_app_name
+          ::Rails.application.class.module_parent.to_s.underscore
         end
     end
   end

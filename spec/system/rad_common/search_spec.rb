@@ -13,21 +13,21 @@ RSpec.describe 'Search' do
   describe 'like filter' do
     it 'displays a text input' do
       visit divisions_path
-      expect(page).to have_selector("input[type='text']#search_name_like")
+      expect(page).to have_css("input[type='text']#search_name_like")
     end
 
     it 'retains search value after applying filters' do
       visit divisions_path
       fill_in 'search_name_like', with: 'Foo'
       click_button 'Apply Filters'
-      expect(page).to have_selector("input[value='Foo']#search_name_like")
+      expect(page).to have_css("input[value='Foo']#search_name_like")
     end
 
     context 'with name not matching column name' do
       it 'queries specified column' do
         visit '/rad_common/audits'
         fill_in 'search_audited_changes_like', with: 'query'
-        click_on 'Apply Filters'
+        click_button 'Apply Filters'
         expect(current_url).to include('search[audited_changes_like]=query')
       end
     end
@@ -37,17 +37,17 @@ RSpec.describe 'Search' do
     before { visit divisions_path }
 
     unless ENV['CI'] # TODO: this fails on codeship
-      it 'displays a select input', js: true do
+      it 'displays a select input', :js do
         visit divisions_path
-        expect(page).to have_selector(".bootstrap-select .dropdown-toggle[data-id='search_owner_id']")
+        expect(page).to have_css(".bootstrap-select .dropdown-toggle[data-id='search_owner_id']")
         click_bootstrap_select(from: 'search_owner_id')
         expect(page).to have_css('.dropdown-header.optgroup-1 span', text: 'Active')
-        expect(page).to have_selector('.dropdown-header.optgroup-2 span', text: 'Inactive')
-        expect(page).to have_selector(".bootstrap-select .dropdown-toggle[data-id='search_division_status']")
+        expect(page).to have_css('.dropdown-header.optgroup-2 span', text: 'Inactive')
+        expect(page).to have_css(".bootstrap-select .dropdown-toggle[data-id='search_division_status']")
       end
     end
 
-    it 'selects a default value', js: true do
+    it 'selects a default value', :js do
       selector = ".bootstrap-select .dropdown-toggle[data-id='search_owner_id'] .filter-option-inner-inner"
       expect(page).to have_selector(selector, text: user.to_s)
     end
@@ -71,16 +71,15 @@ RSpec.describe 'Search' do
     end
 
     unless ENV['CI'] # TODO: this fails on codeship
-      it 'select should have warning style when a value a blank value is selected on filter without default',
-         js: true do
-        expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-light]')
+      it 'select should have warning style when a value a blank value is selected on filter without default', :js do
+        expect(page).to have_css('button[data-id=search_owner_id][class*=btn-light]')
         bootstrap_select 'All Owners', from: 'search_owner_id'
         click_button 'Apply Filters'
-        expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-warning]')
+        expect(page).to have_css('button[data-id=search_owner_id][class*=btn-warning]')
       end
     end
 
-    context 'when ajax select', js: true do
+    context 'when ajax select', :js do
       let(:category) { create :category, name: 'Appliance' }
       let(:other_category) { create :category, name: 'Applications' }
       let!(:other_division) { create :division, category: other_category, owner: user }

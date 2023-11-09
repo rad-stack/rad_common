@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://us-street.api.smartystreets.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Jacksonville&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=FL&street=3615%20Dupont%20Avenue&street2&urbanization&zipcode=32217
+    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Jacksonville&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=FL&street=3615%20Dupont%20Avenue&street2&urbanization&zipcode=32217
     body:
       encoding: US-ASCII
       string: ''
@@ -12,9 +12,9 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.14.19)
+      - smartystreets (sdk:ruby@5.15.2)
       Host:
-      - us-street.api.smartystreets.com
+      - us-street.api.smarty.com
       Content-Type:
       - application/json
   response:
@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 21 Jun 2023 10:38:40 GMT
+      - Wed, 25 Oct 2023 10:03:16 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -36,5 +36,5 @@ http_interactions:
         Ave","last_line":"Jacksonville FL 32217-2790","components":{"primary_number":"3615","street_name":"DuPont","street_suffix":"Ave","city_name":"Jacksonville","default_city_name":"Jacksonville","state_abbreviation":"FL","zipcode":"32217","plus4_code":"2790","delivery_point":"99","delivery_point_check_digit":"9"},"metadata":{"record_type":"H","zip_type":"Standard","county_fips":"12031","county_name":"Duval","carrier_route":"C042","building_default_indicator":"Y","elot_sequence":"0400","elot_sort":"A","latitude":30.2555,"longitude":-81.6241,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"D","dpv_footnotes":"AAN1","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"Y","active":"Y","footnotes":"H#N#","enhanced_match":"postal-match,missing-secondary"}}]
 
         '
-  recorded_at: Wed, 21 Jun 2023 10:38:40 GMT
-recorded_with: VCR 6.1.0
+  recorded_at: Wed, 25 Oct 2023 10:03:16 GMT
+recorded_with: VCR 6.2.0

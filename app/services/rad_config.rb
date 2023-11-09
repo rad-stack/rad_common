@@ -94,6 +94,10 @@ class RadConfig
       secret_config_item(:jwt_secret).present?
     end
 
+    def timeout_hours!
+      config_item! :timeout_hours
+    end
+
     def test_phone_number
       secret_config_item :test_phone_number
     end
@@ -183,6 +187,8 @@ class RadConfig
     end
 
     def impersonate?
+      return true unless Rails.env.production?
+
       boolean_config_item! :impersonate
     end
 
@@ -244,10 +250,6 @@ class RadConfig
 
     def legal_docs?
       boolean_config_item! :legal_docs
-    end
-
-    def wide_margins?
-      boolean_config_item! :wide_margins
     end
 
     def favicon_filename!
