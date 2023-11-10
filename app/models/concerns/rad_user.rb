@@ -34,14 +34,7 @@ module RadUser
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
     scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
-
-    scope :admins, lambda {
-      active.where('users.id IN (' \
-                   'SELECT user_id FROM user_security_roles ' \
-                   'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
-                   'WHERE security_roles.admin = TRUE)')
-    }
-
+    scope :admins, -> { by_permission 'admin' }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
     scope :by_name, -> { order(:first_name, :last_name) }
     scope :by_id, -> { order(:id) }
@@ -54,7 +47,10 @@ module RadUser
     scope :except_user, ->(user) { where.not(id: user.id) }
 
     scope :by_permission, lambda { |permission_attr|
-      joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct
+      active.where('users.id IN (' \
+                   'SELECT user_id FROM user_security_roles ' \
+                   'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
+                   "WHERE security_roles.#{permission_attr} = TRUE)")
     }
 
     scope :inactive, lambda {
