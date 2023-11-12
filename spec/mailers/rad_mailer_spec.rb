@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'csv'
 
 describe RadMailer do
   let(:user) { create :user }
