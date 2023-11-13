@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'csv'
 
 RSpec.describe UserExport, type: :service do
   RSpec::Matchers.define :have_expected_export_content do |expected_user|
