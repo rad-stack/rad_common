@@ -47,7 +47,7 @@ module RadCommon
                   'config/initializers/simple_form.rb'
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb',
-                 'config/initializers/simple_form_bootstrap.rb'
+                  'config/initializers/simple_form_bootstrap.rb'
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
                   'config/initializers/simple_form_components.rb'
@@ -69,7 +69,10 @@ module RadCommon
                   'app/models/application_record.rb'
 
         # specs
-        directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/', exclude_pattern: /clients.rb/
+        directory '../../../../../spec/factories/rad_common/',
+                  'spec/factories/rad_common/',
+                  exclude_pattern: /clients.rb/
+
         copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
 
         # templates
@@ -284,7 +287,7 @@ Seeder.new.seed!
         def install_database_yml
           copy_file '../../../../../spec/dummy/config/database.yml', 'config/database.yml'
 
-          gsub_file 'config/database.yml', "rad_common_test", "rad_common_test<%= ENV['TEST_ENV_NUMBER'] %>"
+          gsub_file 'config/database.yml', 'rad_common_test', "rad_common_test<%= ENV['TEST_ENV_NUMBER'] %>"
           gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
         end
 
