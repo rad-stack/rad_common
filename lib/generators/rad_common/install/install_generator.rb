@@ -288,13 +288,12 @@ module RadCommon
         end
 
         def install_database_yml
+          return # TODO: this won't be needed when cannasaver_admin is combined with cannasaver_public
+
           copy_file '../../../../../spec/dummy/config/database.yml', 'config/database.yml'
 
           gsub_file 'config/database.yml', 'rad_common_test', "rad_common_test<%= ENV['TEST_ENV_NUMBER'] %>"
-
-          # TODO: this won't be needed when cannasaver_admin is combined with cannasaver_public
-          # gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
-          gsub_file 'config/database.yml', 'rad_common_test', "#{installed_app_name}_test"
+          gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
         end
 
         def installed_app_name
