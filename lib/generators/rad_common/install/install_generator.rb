@@ -34,7 +34,7 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
-        copy_file '../database.yml', 'config/database.yml'
+        copy_file '../../../../../spec/dummy/config/database.yml', 'config/database.yml'
         gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
