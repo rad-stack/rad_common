@@ -6,9 +6,8 @@ development:
 test:
   adapter: postgresql
   encoding: unicode
-  database: rad_common_test
+  database: rad_common_test<%= ENV['TEST_ENV_NUMBER'] %>
 
 production:
-  adapter: postgresql
-  encoding: unicode
-  database: rad_common_production
+  url:  <%= ENV["DATABASE_URL"] %>
+  pool: <%= ENV["DB_POOL"] || 10 %>

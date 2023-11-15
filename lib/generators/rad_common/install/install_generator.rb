@@ -6,6 +6,7 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
+        remove_deprecated_config
         standardize_date_methods
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
@@ -105,18 +106,12 @@ module RadCommon
         copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb',
                   'lib/templates/rspec/system/system_spec.rb'
 
-        gsub_file 'config/environments/production.rb',
-                  '#config.force_ssl = true',
-                  'config.force_ssl = true'
-
-unless RadConfig.shared_database?
         create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 
 Seeder.new.seed!
         RUBY
         end
-end
 
         inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
     # added by rad_common
@@ -248,8 +243,6 @@ end
         end
 
         def apply_migration(source)
-          return if RadConfig.shared_database?
-
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
           if self.class.migration_exists?('db/migrate', filename)
@@ -267,6 +260,10 @@ end
           return unless js
 
           system "find . -type f -name \"*.js\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+        end
+
+        def remove_deprecated_config
+          gsub_file 'config/rad_common.yml', 'shared_database: false\n', ''
         end
 
         def standardize_date_methods
