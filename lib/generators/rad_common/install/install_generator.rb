@@ -263,7 +263,7 @@ Seeder.new.seed!
         end
 
         def remove_deprecated_config
-          gsub_file 'config/rad_common.yml', 'shared_database: false\n', ''
+          gsub_file 'config/rad_common.yml', 'shared_database: false', ''
         end
 
         def standardize_date_methods
