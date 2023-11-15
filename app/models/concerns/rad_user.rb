@@ -34,14 +34,7 @@ module RadUser
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
     scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
-
-    scope :admins, lambda {
-      active.where('users.id IN (' \
-                   'SELECT user_id FROM user_security_roles ' \
-                   'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
-                   'WHERE security_roles.admin = TRUE)')
-    }
-
+    scope :admins, -> { active.by_permission 'admin' }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
     scope :by_name, -> { order(:first_name, :last_name) }
     scope :by_id, -> { order(:id) }
@@ -53,8 +46,13 @@ module RadUser
     scope :recent_last, -> { order('users.created_at') }
     scope :except_user, ->(user) { where.not(id: user.id) }
 
-    scope :by_permission, lambda { |permission_attr|
-      joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct
+    scope :by_permission, lambda { |permission|
+      raise "missing permission column: #{permission}" unless RadPermission.exists?(permission)
+
+      where('users.id IN (' \
+            'SELECT user_id FROM user_security_roles ' \
+            'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
+            "WHERE security_roles.#{permission} = TRUE)")
     }
 
     scope :inactive, lambda {
@@ -118,6 +116,8 @@ module RadUser
   end
 
   def permission?(permission)
+    raise "missing permission column: #{permission}" unless RadPermission.exists?(permission)
+
     security_roles.select { |x| x[permission] }.length.positive?
   end
 
@@ -207,6 +207,10 @@ module RadUser
 
   # TODO: this should be a db attribute when we enable the TOTP feature
   def twilio_totp_factor_sid; end
+
+  def timeout_in
+    external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
+  end
 
   private
 

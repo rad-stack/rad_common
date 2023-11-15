@@ -28,12 +28,16 @@ class RadPermission
   end
 
   def users
-    User.by_permission(name).by_name
+    User.active.by_permission(name).by_name
   end
 
   class << self
     def all
       (SecurityRole.attribute_names - %w[id name created_at updated_at external allow_invite allow_sign_up]).sort
+    end
+
+    def exists?(permission_name)
+      all.include? permission_name.to_s
     end
 
     def security_role_categories(security_role)
