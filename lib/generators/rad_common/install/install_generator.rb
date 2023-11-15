@@ -8,6 +8,7 @@ module RadCommon
       def create_initializer_file
         remove_deprecated_config
         standardize_date_methods
+        install_database_yml
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
@@ -34,8 +35,6 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
-        copy_file '../../../../../spec/dummy/config/database.yml', 'config/database.yml'
-        gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
@@ -280,6 +279,13 @@ Seeder.new.seed!
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
+        end
+
+        def install_database_yml
+          copy_file '../../../../../spec/dummy/config/database.yml', 'config/database.yml'
+
+          gsub_file "rad_common_test", "rad_common_test<%= ENV['TEST_ENV_NUMBER'] %>"
+          gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
         end
 
         def installed_app_name
