@@ -6,7 +6,9 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
+        remove_deprecated_config
         standardize_date_methods
+        install_database_yml
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
@@ -33,8 +35,6 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
-        copy_file '../database.yml', 'config/database.yml'
-        gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
@@ -47,7 +47,7 @@ module RadCommon
                   'config/initializers/simple_form.rb'
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb',
-                 'config/initializers/simple_form_bootstrap.rb'
+                  'config/initializers/simple_form_bootstrap.rb'
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
                   'config/initializers/simple_form_components.rb'
@@ -69,7 +69,10 @@ module RadCommon
                   'app/models/application_record.rb'
 
         # specs
-        directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/', exclude_pattern: /clients.rb/
+        directory '../../../../../spec/factories/rad_common/',
+                  'spec/factories/rad_common/',
+                  exclude_pattern: /clients.rb/
+
         copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
 
         # templates
@@ -105,18 +108,12 @@ module RadCommon
         copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb',
                   'lib/templates/rspec/system/system_spec.rb'
 
-        gsub_file 'config/environments/production.rb',
-                  '#config.force_ssl = true',
-                  'config.force_ssl = true'
-
-unless RadConfig.shared_database?
         create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 
 Seeder.new.seed!
         RUBY
         end
-end
 
         inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
     # added by rad_common
@@ -248,8 +245,6 @@ end
         end
 
         def apply_migration(source)
-          return if RadConfig.shared_database?
-
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
           if self.class.migration_exists?('db/migrate', filename)
@@ -269,6 +264,10 @@ end
           system "find . -type f -name \"*.js\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
         end
 
+        def remove_deprecated_config
+          gsub_file 'config/rad_common.yml', 'shared_database: false', ''
+        end
+
         def standardize_date_methods
           search_and_replace 'Time.zone.today', 'Date.current'
           search_and_replace 'DateTime.now', 'Time.current'
@@ -283,6 +282,13 @@ end
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
+        end
+
+        def install_database_yml
+          copy_file '../../../../../spec/dummy/config/database.yml', 'config/database.yml'
+
+          gsub_file 'config/database.yml', 'rad_common_test', "rad_common_test<%= ENV['TEST_ENV_NUMBER'] %>"
+          gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
         end
 
         def installed_app_name
