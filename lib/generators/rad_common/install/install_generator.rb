@@ -108,12 +108,13 @@ module RadCommon
         copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb',
                   'lib/templates/rspec/system/system_spec.rb'
 
-        create_file 'db/seeds.rb' do <<-'RUBY'
-require 'factory_bot_rails'
-
-Seeder.new.seed!
-        RUBY
-        end
+# TODO: this won't be needed when cannasaver_admin is combined with cannasaver_public
+#         create_file 'db/seeds.rb' do <<-'RUBY'
+# require 'factory_bot_rails'
+#
+# Seeder.new.seed!
+#         RUBY
+#         end
 
         inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
     # added by rad_common
@@ -245,6 +246,8 @@ Seeder.new.seed!
         end
 
         def apply_migration(source)
+          return # TODO: this won't be needed when cannasaver_admin is combined with cannasaver_public
+
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
           if self.class.migration_exists?('db/migrate', filename)
@@ -288,7 +291,10 @@ Seeder.new.seed!
           copy_file '../../../../../spec/dummy/config/database.yml', 'config/database.yml'
 
           gsub_file 'config/database.yml', 'rad_common_test', "rad_common_test<%= ENV['TEST_ENV_NUMBER'] %>"
-          gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
+
+          # TODO: this won't be needed when cannasaver_admin is combined with cannasaver_public
+          # gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
+          gsub_file 'config/database.yml', 'rad_common_test', "#{installed_app_name}_test"
         end
 
         def installed_app_name
