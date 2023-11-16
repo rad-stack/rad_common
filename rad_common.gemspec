@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.description = 'A library of common functions for a standard business web app, developed by Radical Bear'
   s.license = 'MIT'
   s.metadata['rubygems_mfa_required'] = 'true'
-  s.required_ruby_version = '>= 3.2.2'
+  s.required_ruby_version = '>= 3.1.2'
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   s.bindir = 'bin'
