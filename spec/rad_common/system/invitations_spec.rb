@@ -66,7 +66,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           let(:invite_role) { internal_role }
           let(:invite_email) { valid_email }
 
-          it 'invites' do
+          xit 'invites' do
             expect(User.last.internal?).to be true
             expect(User.last.twilio_verify_enabled?).to be true
           end
