@@ -8,19 +8,17 @@ class RadNav
   end
 
   def top_nav
-    [top_nav_index_item('Client'),
-     top_nav_item('Contact', view_context.contact_us_path),
-     top_nav_index_item('Attorney', badge: duplicates_badge(Attorney)),
-     top_nav_index_item('User'),
-     admin_menu]
+    raise 'implement in subclasses'
   end
 
   private
 
-    def top_nav_index_item(model_name, path: nil, badge: nil)
+    def top_nav_index_item(model_name, path: nil, badge: nil, label: nil)
       return unless policy(model_name.constantize).index?
 
-      top_nav_item model_name.pluralize, path.presence || "/#{model_name.constantize.table_name}", badge: badge
+      top_nav_item label.presence || model_name.pluralize,
+                   path.presence || "/#{model_name.constantize.table_name}",
+                   badge: badge
     end
 
     def top_nav_item(label, path, badge: nil)
@@ -39,21 +37,33 @@ class RadNav
       end
     end
 
+    def user_nav
+      top_nav_index_item('User')
+    end
+
     def dropdown_menu(label)
       tag.a(class: 'nav-link dropdown-toggle', 'data-toggle': 'dropdown', href: '#') do
         label
       end
     end
 
-    def division_item
+    def dropdown_menu_item(label, path)
       tag.li do
-        link_to 'Divisions', view_context.divisions_path(search: { show_header: 'true' }), class: 'dropdown-item'
+        link_to label, path, class: 'dropdown-item'
       end
+    end
+
+    def additional_admin_items
+      []
     end
 
     def admin_nav
       tag.ul(class: 'dropdown-menu') do
-        safe_join([division_item, render('layouts/navigation_admin')])
+        safe_join(additional_admin_items + [render('layouts/navigation_admin', no_divider: no_admin_divider?)])
       end
+    end
+
+    def no_admin_divider?
+      additional_admin_items.blank?
     end
 end

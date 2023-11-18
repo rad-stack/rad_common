@@ -1,4 +1,4 @@
-- rad_nav = RadNav.new(self)
+- rad_nav = Nav.new(self)
 
 .navbar.navbar-expand-lg.navbar-light.bg-light#navbar
   .container-fluid
@@ -9,7 +9,8 @@
     .navbar-collapse.collapse.navbar-responsive-collapse#navbar-supported-content
       - if user_signed_in?
         %ul.nav.navbar-nav.navbar-left
-          = render 'layouts/onboarding_navigation'
+          - if RadConfig.start_route! == '/onboardings'
+            = render 'layouts/onboarding_navigation'
           - rad_nav.top_nav.each do |item|
             = item
           %li.global-search-nav
