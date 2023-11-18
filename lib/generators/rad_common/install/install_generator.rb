@@ -6,6 +6,9 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
+        # TODO: test this, and handle when file doesn't exist
+        remove_file 'app/views/layouts/_navigation.html.haml'
+
         remove_deprecated_config
         standardize_date_methods
         install_database_yml
