@@ -20,7 +20,7 @@ class RadNav
     def top_nav_index_item(model_name, path: nil, badge: nil, label: nil)
       return unless policy(model_name.constantize).index?
 
-      top_nav_item label.presence || model_name.pluralize,
+      top_nav_item label.presence || model_name.titleize.pluralize,
                    path.presence || "/#{model_name.constantize.table_name}",
                    badge: badge
     end
