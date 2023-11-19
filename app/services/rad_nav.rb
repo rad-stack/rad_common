@@ -11,6 +11,10 @@ class RadNav
     raise 'implement in subclasses'
   end
 
+  def disable_nav?
+    false
+  end
+
   private
 
     def top_nav_index_item(model_name, path: nil, badge: nil, label: nil)
