@@ -13,7 +13,6 @@ default: &default
   start_route: onboardings
   user_clients: true
   user_profiles: true
-  shared_database: false
   canadian_addresses: false
   show_help_menu: true
   saved_search_filters_enabled: true

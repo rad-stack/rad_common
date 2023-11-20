@@ -232,10 +232,6 @@ class RadConfig
       boolean_config_item! :show_help_menu
     end
 
-    def shared_database?
-      boolean_config_item! :shared_database
-    end
-
     def canadian_addresses?
       boolean_config_item! :canadian_addresses
     end
