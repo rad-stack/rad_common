@@ -2,9 +2,6 @@ module RadNav
   class Nav
     attr_accessor :view_context
 
-    # TODO: remove unused
-    delegate :duplicates_badge, to: :view_context
-
     def initialize(view_context)
       @view_context = view_context
     end
