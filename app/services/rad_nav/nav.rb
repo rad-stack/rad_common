@@ -1,9 +1,10 @@
 module RadNav
   class Nav
-    attr_accessor :view_context
+    attr_accessor :view_context, :disable_nav
 
-    def initialize(view_context)
+    def initialize(view_context, disable_nav: false)
       @view_context = view_context
+      @disable_nav = disable_nav
     end
 
     def content
@@ -11,7 +12,7 @@ module RadNav
     end
 
     def disable_nav?
-      false
+      disable_nav
     end
   end
 end
