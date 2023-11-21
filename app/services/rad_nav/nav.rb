@@ -6,7 +6,7 @@ module RadNav
       @view_context = view_context
     end
 
-    def top_nav
+    def content
       raise 'implement in subclasses'
     end
 

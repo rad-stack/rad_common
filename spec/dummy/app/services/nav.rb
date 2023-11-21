@@ -1,6 +1,5 @@
 class Nav < RadNav::Nav
-  def top_nav
-    # TODO: rename method name?
+  def content
     [RadNav::TopNavIndexItem.new(view_context, 'Client').content,
      RadNav::TopNavItem.new(view_context, 'Contact', view_context.contact_us_path).content,
      attorney_item,
