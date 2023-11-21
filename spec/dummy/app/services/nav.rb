@@ -3,7 +3,7 @@ class Nav < RadNav::Nav
     [RadNav::TopNavIndexItem.new(view_context, 'Client').content,
      RadNav::TopNavItem.new(view_context, 'Contact', view_context.contact_us_path).content,
      RadNav::TopNavIndexItem.new(view_context, 'Attorney', badge: duplicates_badge(Attorney)).content,
-     user_nav,
+     RadNav::UserNav.new(view_context).content,
      admin_menu]
   end
 

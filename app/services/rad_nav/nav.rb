@@ -19,10 +19,6 @@ module RadNav
 
     private
 
-      def user_nav
-        RadNav::TopNavIndexItem.new(view_context, 'User').content
-      end
-
       def admin_menu
         return unless current_user.admin?
 
