@@ -28,8 +28,8 @@ module RadCommon
     def apply_filter(results, params)
       value = like_value(params)
       value = input_transform.call(value) if input_transform.present? && value.present?
-
-      results = results.where("#{column} ilike ?", "%#{value}%") if value.present?
+      query = column.is_a?(Array) ? column.map { |c| "#{c} ilike :search" }.join(' OR ') : "#{column} ilike :search"
+      results = results.where(query, search: "%#{value}%") if value.present?
       results
     end
 
