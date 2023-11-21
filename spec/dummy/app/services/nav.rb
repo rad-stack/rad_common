@@ -1,8 +1,8 @@
 class Nav < RadNav::Nav
   def top_nav
-    [top_nav_index_item('Client'),
+    [RadNav::TopNavIndexItem.new(view_context, 'Client').content,
      RadNav::TopNavItem.new(view_context, 'Contact', view_context.contact_us_path).content,
-     top_nav_index_item('Attorney', badge: duplicates_badge(Attorney)),
+     RadNav::TopNavIndexItem.new(view_context, 'Attorney', badge: duplicates_badge(Attorney)).content,
      user_nav,
      admin_menu]
   end

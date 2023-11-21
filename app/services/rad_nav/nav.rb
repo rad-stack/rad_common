@@ -3,7 +3,7 @@ module RadNav
     attr_accessor :view_context
 
     # TODO: remove unused
-    delegate :policy, :tag, :safe_join, :duplicates_badge, :current_user, :render, to: :view_context
+    delegate :tag, :safe_join, :duplicates_badge, :current_user, :render, to: :view_context
 
     def initialize(view_context)
       @view_context = view_context
@@ -20,7 +20,7 @@ module RadNav
     private
 
       def user_nav
-        top_nav_index_item('User')
+        RadNav::TopNavIndexItem.new(view_context, 'User').content
       end
 
       def admin_menu
@@ -57,15 +57,6 @@ module RadNav
         tag.ul(class: 'dropdown-menu') do
           items
         end
-      end
-
-      def top_nav_index_item(model_name, path: nil, badge: nil, label: nil)
-        return unless policy(model_name.constantize).index?
-
-        RadNav::TopNavItem.new(view_context,
-                               label.presence || model_name.titleize.pluralize,
-                               path.presence || "/#{model_name.constantize.table_name}",
-                               badge: badge).content
       end
   end
 end
