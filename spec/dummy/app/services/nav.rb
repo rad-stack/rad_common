@@ -14,6 +14,8 @@ class Nav < RadNav::Nav
     end
 
     def division_item
-      dropdown_menu_item 'Divisions', view_context.divisions_path(search: { show_header: 'true' })
+      RadNav::DropdownMenuItem.new(view_context,
+                                   'Divisions',
+                                   view_context.divisions_path(search: { show_header: 'true' })).content
     end
 end

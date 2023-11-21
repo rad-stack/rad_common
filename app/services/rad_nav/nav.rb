@@ -3,7 +3,7 @@ module RadNav
     attr_accessor :view_context
 
     # TODO: remove unused
-    delegate :policy, :tag, :link_to, :safe_join, :duplicates_badge, :current_user, :render, to: :view_context
+    delegate :policy, :tag, :safe_join, :duplicates_badge, :current_user, :render, to: :view_context
 
     def initialize(view_context)
       @view_context = view_context
@@ -56,12 +56,6 @@ module RadNav
       def dropdown_menu_content(items)
         tag.ul(class: 'dropdown-menu') do
           items
-        end
-      end
-
-      def dropdown_menu_item(label, path)
-        tag.li do
-          link_to label, path, class: 'dropdown-item'
         end
       end
 
