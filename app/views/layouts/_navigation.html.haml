@@ -12,7 +12,7 @@
           %ul.nav.navbar-nav.navbar-left
             - if RadConfig.start_route! == '/onboardings'
               = render 'layouts/onboarding_navigation'
-            - rad_nav.top_nav.each do |item|
+            - rad_nav.content.each do |item|
               = item
             %li.global-search-nav
               = render 'layouts/global_search'
