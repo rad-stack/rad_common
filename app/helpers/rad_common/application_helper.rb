@@ -125,6 +125,10 @@ module RadCommon
       RadEnum.new(klass, enum_name).options
     end
 
+    def options_for_enum_reversed(klass, enum_name)
+      RadEnum.new(klass, enum_name).options_reversed
+    end
+
     def enum_translation(klass, enum_name, value)
       RadEnum.new(klass, enum_name).translation(value)
     end
