@@ -145,6 +145,8 @@ class DuplicatesController < ApplicationController
     def gather_record
       if params[:id].present?
         @model.relevant_duplicates.where(id: params[:id]).first
+      elsif @model.column_names.include? 'active'
+        @model.relevant_duplicates.order(sort: :asc, score: :desc, active: :desc, updated_at: :desc, id: :desc).limit(1).first
       else
         @model.relevant_duplicates.order(sort: :asc, score: :desc, updated_at: :desc, id: :desc).limit(1).first
       end
