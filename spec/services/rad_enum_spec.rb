@@ -8,4 +8,10 @@ RSpec.describe RadEnum, type: :service do
 
     it { is_expected.to eq options }
   end
+
+  describe 'db_value' do
+    subject { described_class.new(Division, :division_status).db_value('status_active') }
+
+    it { is_expected.to eq 1 }
+  end
 end
