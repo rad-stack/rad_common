@@ -2,8 +2,7 @@ class UserSearch < RadCommon::Search
   def initialize(params, current_user)
     @current_user = current_user
 
-    # TODO: why don't I need to add distinct when joining a many table?
-    super(query: User.joins(:user_status).left_joins(:clients).includes(:user_status, :security_roles),
+    super(query: User.joins(:user_status).left_joins(:clients).includes(:user_status, :security_roles).distinct,
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
@@ -23,7 +22,7 @@ class UserSearch < RadCommon::Search
                  default_value: UserStatus.default_active_status.id }]
 
       if RadConfig.external_users? && current_user.internal?
-        items.push({ input_label: 'Type', name: :external, scope_values: %i[internal external] })
+        items.push(input_label: 'Type', name: :external, scope_values: %i[internal external])
       end
 
       if RadConfig.user_clients?
