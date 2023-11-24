@@ -43,6 +43,19 @@ RSpec.describe RadCommon::Search, type: :service do
       end
     end
 
+    context 'when using a phone number filter' do
+      let!(:role_1) { create :security_role, name: '9045555555' }
+      let!(:role_2) { create :security_role, name: '1029323213' }
+      let(:query) { SecurityRole }
+      let(:filters) { [{ column: :name, type: RadCommon::PhoneNumberFilter }] }
+      let(:params) { ActionController::Parameters.new(search: { name_like: '((904)) 555' }) }
+
+      it 'filters results' do
+        expect(search).to include role_1
+        expect(search).not_to include role_2
+      end
+    end
+
     context 'when using a date filter' do
       let(:query) { User.joins(:security_roles) }
       let(:user_1) { create :user, confirmed_at: 2.days.ago }
