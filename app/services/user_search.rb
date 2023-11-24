@@ -26,7 +26,6 @@ class UserSearch < RadCommon::Search
       end
 
       if RadConfig.user_clients?
-        # TODO: this won't perform well when many clients exist
         items.push(input_label: RadCommon::AppInfo.new.client_model_label, column: 'clients.id', options: clients)
       end
 
@@ -60,6 +59,6 @@ class UserSearch < RadCommon::Search
 
     def clients
       Pundit.policy_scope!(current_user, RadCommon::AppInfo.new.client_model_class)
-            .where('id IN (SELECT client_id FROM user_clients)')
+            .where('id IN (SELECT client_id FROM user_clients)').sorted
     end
 end
