@@ -28,8 +28,16 @@ class RadEnum
     retrieve_options false
   end
 
+  def options_reversed
+    options.map { |item| [item.last, item.first] }
+  end
+
   def db_options
     retrieve_options true
+  end
+
+  def db_value(enum_value)
+    enum_values[enum_value]
   end
 
   def random_value
