@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Sendgrid', type: :request do
+describe 'Sendgrid' do
   describe 'POST email_error' do
     let!(:admin_user_1) { create :admin }
     let!(:admin_user_2) { create :admin }

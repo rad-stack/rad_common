@@ -1,11 +1,11 @@
 class PagesController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[home terms privacy]
+  skip_before_action :authenticate_user!, only: %i[home contact_us terms privacy]
 
   def home
     skip_authorization
 
     if user_signed_in?
-      redirect_to RadicalConfig.start_route!
+      redirect_to RadConfig.start_route!
     else
       redirect_to new_user_session_path
     end

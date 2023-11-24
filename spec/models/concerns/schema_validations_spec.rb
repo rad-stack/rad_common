@@ -56,9 +56,9 @@ describe 'SchemaValidations', type: :module do
 
     it 'allows empty array' do
       company.update(valid_user_domains: [])
-      expect(company.errors.full_messages).not_to include("Valid user domains can't be blank")
+      expect(company.errors.full_messages).not_to include("Valid User Email Domains can't be blank")
       company.update(valid_user_domains: nil)
-      expect(company.errors.full_messages).to include("Valid user domains can't be blank")
+      expect(company.errors.full_messages).to include("Valid User Email Domains can't be blank")
     end
   end
 

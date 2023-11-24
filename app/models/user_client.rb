@@ -27,13 +27,12 @@ class UserClient < ApplicationRecord
 
     def validate_user
       return if user.blank?
-      return unless RadicalConfig.validate_external_email_domain?
 
       errors.add(:user, 'is not valid when internal') if user.internal?
     end
 
     def validate_email_domain
-      return unless RadicalConfig.validate_external_email_domain?
+      return unless RadConfig.validate_external_email_domain?
       return if user.blank? || client.blank? || !user.user_status.validate_email_phone?
 
       components = user.email.split('@')

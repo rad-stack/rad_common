@@ -1,4 +1,6 @@
 class HerokuCommands
+  IGNORED_HEROKU_ERRORS = ['free Heroku Dynos will'].freeze
+
   class << self
     def backup(app_name)
       check_production do
@@ -68,7 +70,7 @@ class HerokuCommands
         write_log 'Clearing certain production data'
         remove_user_avatars
         remove_accounting_keys
-        User.update_all authy_enabled: false, authy_id: nil
+        User.update_all twilio_verify_enabled: false
       end
     end
 
@@ -83,6 +85,23 @@ class HerokuCommands
         write_log `heroku pg:reset DATABASE_URL #{app_option(app_name)} --confirm #{app_name}`
         write_log `heroku run rails db:schema:load #{app_option(app_name)}`
         write_log `heroku run rails db:seed #{app_option(app_name)}`
+
+        write_log 'Done.'
+      end
+    end
+
+    def copy_production_data(production_app_name, staging_app_name)
+      Bundler.with_unbundled_env do
+        check_valid_app(production_app_name)
+        check_valid_app(staging_app_name)
+        unless heroku_rails_environment(staging_app_name) == 'staging'
+          write_log 'This is only available in the staging environment.'
+          return
+        end
+
+        write_log `heroku pg:copy #{production_app_name}::DATABASE_URL DATABASE_URL --app #{staging_app_name}`
+        write_log `heroku restart --app #{staging_app_name}`
+        write_log `heroku run rails db:migrate --app #{staging_app_name}`
 
         write_log 'Done.'
       end
@@ -156,7 +175,14 @@ class HerokuCommands
 
       def check_valid_app(app_name)
         _output, error = Open3.capture3("heroku apps:info #{app_option(app_name)}")
-        raise error if error.present?
+
+        raise error if valid_error?(error)
+      end
+
+      def valid_error?(error)
+        return false if error.blank?
+
+        IGNORED_HEROKU_ERRORS.select { |ignored_error| error.include?(ignored_error) }.blank?
       end
   end
 end

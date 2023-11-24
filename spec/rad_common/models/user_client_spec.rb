@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe UserClient, type: :model, user_client_specs: true do
+describe UserClient, :user_client_specs, type: :model do
   let(:client) { create :client }
   let(:user_client) { build :user_client, user: user, client: client }
 
@@ -25,7 +25,7 @@ describe UserClient, type: :model, user_client_specs: true do
         user = create :user, :external, email: address
         user_client = described_class.new(user: user, client: client)
 
-        if RadicalConfig.validate_external_email_domain?
+        if RadConfig.validate_external_email_domain?
           expect(user_client).not_to be_valid
           expect(user_client.errors.full_messages.to_s).to include 'Client is not valid for this email user'
         else
@@ -41,21 +41,9 @@ describe UserClient, type: :model, user_client_specs: true do
 
       before { client.update! valid_user_domains: %w[radbear.net] }
 
-      context 'when internal client users are allowed' do
-        before { allow(RadicalConfig).to receive(:validate_external_email_domain?).and_return false }
-
-        it 'allows internal users' do
-          expect(user_client).to be_valid
-        end
-      end
-
-      context 'when internal client users are not allowed' do
-        before { allow(RadicalConfig).to receive(:validate_external_email_domain?).and_return true }
-
-        it 'rejects internal users' do
-          expect(user_client).not_to be_valid
-          expect(user_client.errors.full_messages.to_s).to include 'User is not valid when internal'
-        end
+      it 'rejects internal users' do
+        expect(user_client).not_to be_valid
+        expect(user_client.errors.full_messages.to_s).to include 'User is not valid when internal'
       end
     end
   end

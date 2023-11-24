@@ -23,7 +23,7 @@ RSpec.describe PhoneNumberValidator do
   end
 
   it 'formats phone numbers before validating' do
-    numbers = ['1233211234', '123-321-1234', '123 321 1234', ' 123 321 1234 ']
+    numbers = ['1233211234', '123-321-1234', '123 321 1234', ' 123 321 1234 ', '+11233211234']
 
     numbers.each do |phone_number|
       model = TestPhoneModel.new
@@ -38,7 +38,7 @@ RSpec.describe PhoneNumberValidator do
     invalid_numbers.each do |phone_number|
       model = TestPhoneModel.new
       model.phone_number = phone_number
-      expect(model).to be_invalid
+      expect(model).not_to be_valid
       expect(model.errors.full_messages.to_s).to include 'number invalid, format must be'
     end
   end
@@ -60,19 +60,16 @@ RSpec.describe PhoneNumberValidator do
     let(:mobile_phone) { create :phone_number, :mobile }
 
     before do
-      allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return true
+      allow_any_instance_of(RadTwilio).to receive(:twilio_enabled?).and_return true
 
-      allow(RadicalConfig).to receive(:twilio_phone_number!)
-        .and_return RadicalConfig.secret_config_item!(:twilio_alt_phone_number)
+      allow(RadConfig).to receive(:twilio_phone_number!)
+        .and_return RadConfig.secret_config_item!(:twilio_alt_phone_number)
 
-      allow(RadicalConfig).to receive(:twilio_mms_phone_number!)
-        .and_return RadicalConfig.secret_config_item!(:twilio_alt_mms_phone_number)
+      allow(RadConfig).to receive(:twilio_account_sid!)
+        .and_return RadConfig.secret_config_item!(:twilio_alt_account_sid)
 
-      allow(RadicalConfig).to receive(:twilio_account_sid!)
-        .and_return RadicalConfig.secret_config_item!(:twilio_alt_account_sid)
-
-      allow(RadicalConfig).to receive(:twilio_auth_token!)
-        .and_return RadicalConfig.secret_config_item!(:twilio_alt_auth_token)
+      allow(RadConfig).to receive(:twilio_auth_token!)
+        .and_return RadConfig.secret_config_item!(:twilio_alt_auth_token)
     end
 
     it 'validates with mobile phone number' do

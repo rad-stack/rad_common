@@ -21,7 +21,7 @@ RSpec.describe 'Audits', type: :request do
       let(:user) { create :user }
 
       it 'denies access' do
-        expect(response.code).to eq '403'
+        expect(response).to have_http_status :forbidden
       end
     end
   end

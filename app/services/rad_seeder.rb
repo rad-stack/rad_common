@@ -7,8 +7,8 @@ class RadSeeder
     seed_security_roles
     seed_user_statuses
     seed_company
-    seed_notification_types
     seed_users
+    mute_staging_notifications if staging?
 
     @users = User.all
   end
@@ -17,16 +17,6 @@ class RadSeeder
 
     def display_log(message)
       puts message
-    end
-
-    def seed_notification_types
-      return if NotificationType.count.positive?
-
-      Notifications::NewUserSignedUpNotification.create! security_roles: [SecurityRole.admin_role]
-      Notifications::UserWasApprovedNotification.create! security_roles: [SecurityRole.admin_role]
-      Notifications::UserAcceptedInvitationNotification.create! security_roles: [SecurityRole.admin_role]
-      Notifications::InvalidDataWasFoundNotification.create! security_roles: [SecurityRole.admin_role]
-      Notifications::GlobalValidityRanLongNotification.create! security_roles: [SecurityRole.admin_role]
     end
 
     def seed_users
@@ -41,8 +31,7 @@ class RadSeeder
                        last_name: seeded_user[:last_name],
                        mobile_phone: seeded_user_mobile_phone(seeded_user),
                        timezone: seeded_user[:timezone],
-                       security_roles: user_security_roles(seeded_user),
-                       authy_enabled: RadicalConfig.authy_enabled? }
+                       security_roles: user_security_roles(seeded_user) }
 
         if seeded_user[:trait].present?
           FactoryBot.create seeded_user[:factory], seeded_user[:trait], attributes
@@ -52,26 +41,40 @@ class RadSeeder
       end
     end
 
+    def mute_staging_notifications
+      DEV_NOTIFICATION_TYPES.each do |notification_type_class|
+        notification_type = notification_type_class.constantize.main
+
+        notification_type.security_roles.each do |security_role|
+          security_role.users.active.each do |user|
+            next if developer_user?(user)
+
+            NotificationSetting.init_for_user(notification_type, user).update! enabled: false
+          end
+        end
+      end
+    end
+
+    def developer_user?(user)
+      user.email.include?('radicalbear.com')
+    end
+
     def seed_security_roles
       return if SecurityRole.count.positive?
 
       seed_admin
       seed_user
 
-      return true unless RadicalConfig.external_users?
+      return true unless RadConfig.external_users?
 
-      seed_portal_admin
-      seed_portal_user
+      seed_client_user
     end
 
     def seed_admin(role_name = 'Admin')
       role = get_role(role_name)
+      role.allow_invite = !RadConfig.disable_invite?
       seed_all role
       role.save!
-
-      NotificationType.all.find_each do |notification_type|
-        role.notification_security_roles.create! notification_type: notification_type
-      end
 
       true
     end
@@ -81,19 +84,18 @@ class RadSeeder
     end
 
     def seed_user
+      return unless seeded_user_role?
+
       role = get_role('User')
+      role.allow_invite = !RadConfig.disable_invite?
       role.save!
     end
 
-    def seed_portal_admin
-      role = get_role('Portal Admin')
+    def seed_client_user
+      role = get_role('Client User')
       role.external = true
-      role.save!
-    end
-
-    def seed_portal_user
-      role = get_role('Portal User')
-      role.external = true
+      role.allow_invite = !RadConfig.disable_invite?
+      role.allow_sign_up = !RadConfig.disable_sign_up?
       role.save!
     end
 
@@ -123,7 +125,7 @@ class RadSeeder
     end
 
     def seeded_user_config
-      RadicalConfig.seeded_users!
+      RadConfig.seeded_users!
     end
 
     def seeded_user_mobile_phone(seeded_user)
@@ -134,8 +136,19 @@ class RadSeeder
       seeded_user[:mobile_phone]
     end
 
+    def staging_safe_email
+      # this is helpful when sendgrid email validation is enabled on staging, the faker emails would then fail
+      return seeded_user_config.first[:email] if staging?
+
+      Faker::Internet.email
+    end
+
     def seeded_user_domains
       internal_user_emails.map { |item| item.split('@').last }.uniq.sort
+    end
+
+    def seeded_user_role?
+      seeded_user_config.pluck(:security_role).include?('User')
     end
 
     def internal_user_emails
@@ -156,6 +169,10 @@ class RadSeeder
       role_by_name 'User'
     end
 
+    def client_user_role
+      role_by_name 'Client User'
+    end
+
     def admin_user
       first_user_in_role 'Admin'
     end
@@ -165,11 +182,18 @@ class RadSeeder
     end
 
     def role_by_name(name)
-      SecurityRole.find_by!(name: name)
+      role = SecurityRole.find_by(name: name)
+      return role if role.present?
+
+      raise "Couldn't find security role named #{name}"
     end
 
     def random_user
       users.sample
+    end
+
+    def random_internal_user
+      users.internal.sample
     end
 
     def user_status
@@ -183,4 +207,18 @@ class RadSeeder
     def random_date(from_date, to_date)
       Faker::Date.unique.between(from: from_date, to: to_date)
     end
+
+    def production?
+      Rails.env.production?
+    end
+
+    def staging?
+      Rails.env.staging?
+    end
+
+    DEV_NOTIFICATION_TYPES = %w[Notifications::DuplicateFoundAdminNotification
+                                Notifications::GlobalValidityRanLongNotification
+                                Notifications::HighDuplicatesNotification
+                                Notifications::InvalidDataWasFoundNotification
+                                Notifications::TwilioErrorThresholdExceededNotification].freeze
 end

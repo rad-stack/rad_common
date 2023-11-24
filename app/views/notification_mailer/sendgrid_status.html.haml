@@ -1,0 +1,32 @@
+.email.row
+  .email-col-12
+    .email-info-box
+      %table.info-table
+        - if @user.present?
+          %tr
+            %th User:
+            %td= link_to @user, user_url(@user)
+        %tr
+          %th Email:
+          %td= @email
+        - if @content[:event].present?
+          %tr
+            %th Event:
+            %td= @content[:event]
+        - if @content[:type].present?
+          %tr
+            %th Type:
+            %td= @content[:type]
+        - if @content[:bounce_classification].present?
+          %tr
+            %th Bounce Classification
+            %td= @content[:bounce_classification]
+        - if @content[:reason].present?
+          %tr
+            %th Reason
+            %td= @content[:reason]
+
+- if @user.present?
+  = render 'layouts/email_action',
+           message: 'Click here to view the details.',
+           button_text: 'View', button_url: user_url(@user)

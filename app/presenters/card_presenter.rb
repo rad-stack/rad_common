@@ -139,16 +139,15 @@ class CardPresenter
     end
 
     if action_name == 'edit' || action_name == 'update'
-      the_title = "Editing #{object_label}:"
+      title_items = ["Editing #{object_label}:"]
 
-      if no_show_link
-        the_title += " #{instance_label}"
-      else
-        the_title += " #{@view_context.link_to(instance_label, instance)}"
-        the_title = the_title.html_safe
-      end
+      title_items += if no_show_link
+                       [' ', instance_label]
+                     else
+                       [' ', @view_context.link_to(instance_label, instance)]
+                     end
 
-      return the_title
+      return @view_context.safe_join(title_items)
     end
 
     raise 'missing card header title'
@@ -172,7 +171,7 @@ class CardPresenter
     actions += external_actions
 
     if (action_name == 'edit' || action_name == 'update' || action_name == 'show') &&
-       !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass).new?
+       !no_new_button && current_user && Pundit.policy!(current_user, klass.new).new?
 
       actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"),
                                          new_url,
@@ -187,7 +186,7 @@ class CardPresenter
     end
 
     if action_name == 'index' && !no_new_button && current_user &&
-       Pundit.policy!(current_user, check_policy_klass).new?
+       Pundit.policy!(current_user, klass.new).new?
 
       actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"),
                                          new_url,
@@ -212,29 +211,13 @@ class CardPresenter
       klass.model_name.human.titleize
     end
 
-    def check_policy_klass
-      if current_user.portal?
-        [:portal, klass.new]
-      else
-        klass.new
-      end
-    end
-
-    def check_policy_instance
-      if current_user.portal?
-        [:portal, instance]
-      else
-        instance
-      end
-    end
-
     def include_edit_action?
       action_name == 'show' &&
         !no_edit_button &&
         instance&.persisted? &&
         current_user &&
-        Pundit.policy!(current_user, check_policy_klass).update? &&
-        Pundit.policy!(current_user, check_policy_instance).update?
+        Pundit.policy!(current_user, klass.new).update? &&
+        Pundit.policy!(current_user, instance).update?
     end
 
     def edit_action
@@ -250,7 +233,7 @@ class CardPresenter
 
     def duplicate_action
       @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                            "/rad_common/duplicates?model=#{instance.class}&id=#{instance.id}",
+                            @view_context.duplicates_path(model: instance.class, id: instance.id),
                             class: 'btn btn-warning btn-sm')
     end
 
@@ -263,7 +246,7 @@ class CardPresenter
 
     def duplicates_action
       @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                            "/rad_common/duplicates?model=#{klass}",
+                            @view_context.duplicates_path(model: klass),
                             class: 'btn btn-warning btn-sm')
     end
 
@@ -272,8 +255,8 @@ class CardPresenter
         !no_delete_button &&
         instance&.persisted? &&
         current_user &&
-        Pundit.policy!(current_user, check_policy_klass).destroy? &&
-        Pundit.policy!(current_user, check_policy_instance).destroy?
+        Pundit.policy!(current_user, klass.new).destroy? &&
+        Pundit.policy!(current_user, instance).destroy?
     end
 
     def delete_action
@@ -287,7 +270,7 @@ class CardPresenter
     def show_index_button?
       return false if no_index_button
       return false unless %w[show edit update new create].include?(action_name)
-      return false unless current_user && Pundit.policy!(current_user, check_policy_klass).index?
+      return false unless current_user && Pundit.policy!(current_user, klass.new).index?
       return false if no_records?
 
       true

@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe UserPolicy, type: :policy do
-  describe 'impersonate permissions', impersonate_specs: true do
+  describe 'impersonate permissions', :impersonate_specs do
     subject { described_class }
 
     let(:admin) { create :admin }
     let(:user) { create :user }
-    let(:portal_user) { create(:user, :external) }
+    let(:client_user) { create :user, :external }
 
     permissions :impersonate? do
       context 'with admin' do
@@ -17,8 +17,8 @@ RSpec.describe UserPolicy, type: :policy do
         it { is_expected.not_to permit(user, User.new) }
       end
 
-      context 'with portal user' do
-        it { is_expected.to permit(admin, portal_user) }
+      context 'with client user' do
+        it { is_expected.to permit(admin, client_user) }
       end
     end
   end

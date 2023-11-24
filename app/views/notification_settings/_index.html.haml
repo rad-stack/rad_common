@@ -25,7 +25,7 @@
                               method: :post,
                               html: { class: 'dynamic-updater' } do |f|
 
-              = f.error_notification
+              = rad_form_errors f
               .row
                 .col-lg
                   = f.input :enabled,
@@ -40,7 +40,7 @@
                                                     id: "notification_setting_email_#{setting_id_string}" },
                                       disabled: !notification_setting.notification_type.email_enabled?
 
-                    - if RadicalTwilio.new.twilio_enabled?
+                    - if RadTwilio.new.twilio_enabled?
                       = f.input :sms, tooltip: 'Enable SMS (text message) notifications.',
                                       input_html: { class: 'ays-ignore',
                                                     id: "notification_setting_sms_#{setting_id_string}" },

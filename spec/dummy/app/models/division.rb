@@ -1,11 +1,10 @@
 class Division < ApplicationRecord
   SKIP_SCHEMA_VALIDATION_INDEXES = [:index_divisions_on_name].freeze
   include Hashable
+  include CreatedBy
 
   belongs_to :owner, class_name: 'User'
   belongs_to :category, optional: true
-
-  attr_accessor :category_name
 
   has_one_attached :logo
   has_one_attached :icon
@@ -26,8 +25,6 @@ class Division < ApplicationRecord
   validates_with EmailAddressValidator, fields: [:invoice_email]
   validates_with InternalUserValidator, fields: [:owner]
 
-  before_validation :set_category
-
   strip_attributes
   audited
 
@@ -40,12 +37,6 @@ class Division < ApplicationRecord
   private
 
     def notify_owner
-      Notifications::DivisionUpdatedNotification.main.notify! self
-    end
-
-    def set_category
-      return if category.present? || category_name.blank?
-
-      self.category = Category.find_or_create_by!(name: category_name.strip)
+      Notifications::DivisionUpdatedNotification.main(self).notify!
     end
 end

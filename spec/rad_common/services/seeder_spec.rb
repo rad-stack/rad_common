@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Seeder, type: :service do
-  before { allow(RadicalConfig).to receive(:authy_enabled?).and_return false }
+  before { allow_any_instance_of(Duplicate).to receive(:maybe_notify_duplicates) }
 
   it 'runs' do
     described_class.new.seed!

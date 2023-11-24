@@ -1,12 +1,15 @@
 = simple_form_for(@security_role) do |f|
-  = f.error_notification
-  = base_errors(f)
+  = rad_form_errors f
 
   .form-inputs
     .row
       .col-lg-6= f.input :name
-      - if RadicalConfig.external_users?
-        .col-lg-6= f.input :external
+      - if RadConfig.external_users?
+        .col-lg-2= f.input :external
+      - unless RadConfig.disable_invite?
+        .col-lg-2= f.input :allow_invite
+      - unless RadConfig.disable_sign_up?
+        .col-lg-2= f.input :allow_sign_up
 
     .row
       .col-lg-12

@@ -21,7 +21,7 @@ module RadCommon
     end
 
     def avatar_image(user, size)
-      if RadicalConfig.avatar? && user.avatar.attached?
+      if RadConfig.avatar? && user.avatar.attached?
         image_tag(user.avatar.variant(resize: '50x50'))
       else
         image_tag(gravatar_for(user, size))
@@ -73,7 +73,7 @@ module RadCommon
     def format_datetime(value, options = {})
       return nil if value.blank?
 
-      format_string = '%-m/%-d/%Y %l:%M'
+      format_string = '%-m/%-d/%Y %-l:%M'
       format_string += ':%S' if options[:include_seconds]
       format_string += ' %p'
       format_string += ' %Z' if options[:include_zone]
@@ -82,6 +82,13 @@ module RadCommon
 
     def format_time(value)
       value.strftime('%l:%M%P').strip if value.present?
+    end
+
+    def rad_form_errors(form)
+      return form.error_notification if form.object.blank?
+
+      message = "Please review the problems below: #{form.object.errors.full_messages.to_sentence}"
+      form.error_notification message: message
     end
 
     def format_boolean(value)
@@ -108,18 +115,6 @@ module RadCommon
       regex_str.gsub!(')', '\\)')
       regex_str = "(#{regex_str})"
       Regexp.new regex_str
-    end
-
-    def enum_to_translated_option(record, enum_name)
-      RadicalEnum.new(record.class, enum_name).translated_option(record)
-    end
-
-    def options_for_enum(klass, enum_name)
-      RadicalEnum.new(klass, enum_name).options
-    end
-
-    def enum_translation(klass, enum_name, value)
-      RadicalEnum.new(klass, enum_name).translation(value)
     end
 
     def bootstrap_flash
@@ -154,10 +149,6 @@ module RadCommon
       tag.button(sanitize('&times;'), type: 'button', class: 'close', 'data-dismiss': 'alert')
     end
 
-    def base_errors(form)
-      form.error :base, class: 'alert alert-danger' if form.object.errors[:base].present?
-    end
-
     def icon(icon, text = nil, options = {})
       text_class = text.present? ? 'mr-2' : nil
       capture do
@@ -167,25 +158,54 @@ module RadCommon
     end
 
     def verify_sign_up
-      raise RadicallyIntermittentException if RadicalConfig.disable_sign_up?
+      raise RadIntermittentException if RadConfig.disable_sign_up?
+    end
+
+    def sign_up_roles
+      SecurityRole.allow_sign_up.by_name
+    end
+
+    def invite_roles
+      SecurityRole.allow_invite.by_name
     end
 
     def verify_invite
-      raise RadicallyIntermittentException if RadicalConfig.disable_invite?
+      raise RadIntermittentException if RadConfig.disable_invite?
     end
 
     def verify_manually_create_users
-      return if RadicalConfig.disable_sign_up? && RadicalConfig.disable_invite?
+      return if RadConfig.manually_create_users?
 
-      raise RadicallyIntermittentException
+      raise RadIntermittentException
     end
 
-    def export_button(model_name)
-      return unless policy(model_name.constantize.new).export?
+    def export_button(model_name, format: Exporter::DEFAULT_FORMAT, override_path: nil, additional_params: {},
+                      policy_model: nil)
+      return unless policy(policy_model.presence || model_name.constantize.new).export?
 
-      link_to(icon(:file, 'Export to File'),
-              send("export_#{model_name.tableize}_path", params.permit!.to_h.merge(format: :csv)),
+      icon, text = format == :csv ? [:file, 'Export to File'] : ['file-pdf', 'Export to PDF']
+      export_path = override_path.presence || "export_#{model_name.tableize}_path"
+      link_to(icon(icon, text),
+              send(export_path, params.permit!.to_h.merge(format: format).deep_merge(additional_params)),
               class: 'btn btn-secondary btn-sm')
+    end
+
+    def export_buttons(model_name, **options)
+      %i[csv pdf].map { |format| export_button(model_name, format: format, **options) }.compact
+    end
+
+    def onboarded?
+      Onboarding.new(current_user).onboarded?
+    end
+
+    def pdf_output?
+      return true if request.nil?
+
+      request.format.pdf?
+    end
+
+    def created_by_show_item(record)
+      { label: 'Created By', value: secured_link(record.created_by) }
     end
 
     private

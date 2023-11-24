@@ -1,0 +1,2 @@
+class TwilioReply < RadTwilioReply
+end
