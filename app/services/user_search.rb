@@ -2,7 +2,7 @@ class UserSearch < RadCommon::Search
   def initialize(params, current_user)
     @current_user = current_user
 
-    super(query: User.joins(:user_status).left_joins(:clients).includes(:user_status, :security_roles).distinct,
+    super(query: query_def,
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
@@ -10,6 +10,14 @@ class UserSearch < RadCommon::Search
   end
 
   private
+
+    def query_def
+      if RadConfig.user_clients?
+        User.joins(:user_status).left_joins(:clients).includes(:user_status, :security_roles).distinct
+      else
+        User.joins(:user_status).includes(:user_status, :security_roles)
+      end
+    end
 
     def filters_def
       items = [{ column: 'first_name', type: RadCommon::LikeFilter, input_label: 'First Name' },
