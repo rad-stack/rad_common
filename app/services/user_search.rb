@@ -23,7 +23,7 @@ class UserSearch < RadCommon::Search
                  default_value: UserStatus.default_active_status.id }]
 
       if RadConfig.external_users? && current_user.internal?
-        items.push({ input_label: 'Type', name: :external, scope_values: %i[internal external] })
+        items.push(input_label: 'Type', name: :external, scope_values: %i[internal external])
       end
 
       if RadConfig.user_clients?
