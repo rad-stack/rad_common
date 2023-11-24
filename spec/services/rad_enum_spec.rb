@@ -9,14 +9,6 @@ RSpec.describe RadEnum, type: :service do
     it { is_expected.to eq options }
   end
 
-  describe 'options_reversed' do
-    subject { described_class.new(Division, :division_status).options_reversed }
-
-    let(:options) { [%w[status_pending Pending], %w[status_active Active], %w[status_inactive Inactive]] }
-
-    it { is_expected.to eq options }
-  end
-
   describe 'db_options' do
     subject { described_class.new(Division, :division_status).db_options }
 
