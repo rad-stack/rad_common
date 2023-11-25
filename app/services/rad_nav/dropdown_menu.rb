@@ -1,14 +1,15 @@
 module RadNav
   class DropdownMenu
-    attr_accessor :view_context, :label, :items, :permission
+    attr_accessor :view_context, :label, :items, :badge, :permission
 
     delegate :tag, :safe_join, to: :view_context
 
-    def initialize(view_context, label, items, permission: true)
+    def initialize(view_context, label, items, badge: nil, permission: true)
       @view_context = view_context
       @label = label
       @items = items
       @permission = permission
+      @badge = badge
     end
 
     def content
@@ -23,7 +24,7 @@ module RadNav
 
       def menu_header(label)
         tag.a(class: 'nav-link dropdown-toggle', 'data-toggle': 'dropdown', href: '#') do
-          label
+          badge.present? ? safe_join([label, ' ', badge].compact) : label
         end
       end
 

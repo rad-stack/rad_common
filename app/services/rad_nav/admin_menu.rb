@@ -12,7 +12,7 @@ module RadNav
     def content
       return unless current_user.admin?
 
-      RadNav::DropdownMenu.new(view_context, 'Admin', admin_menu_items).content
+      RadNav::DropdownMenu.new(view_context, 'Admin', admin_menu_items, badge: user_badge).content
     end
 
     private
@@ -34,7 +34,7 @@ module RadNav
          system_messages,
          RadNav::DropdownMenuItem.new(view_context, 'System Usage', '/rad_common/system_usages').content,
          twilio_logs,
-         RadNav::DropdownMenuIndexItem.new(view_context, 'User').content,
+         user_nav.content,
          validate_database]
       end
 
@@ -72,6 +72,14 @@ module RadNav
         RadNav::DropdownMenuItem.new(view_context,
                                      'Validate Database',
                                      '/rad_common/global_validations/new').content
+      end
+
+      def user_nav
+        RadNav::DropdownMenuIndexItem.new(view_context, 'User')
+      end
+
+      def user_badge
+        user_nav.badge
       end
   end
 end
