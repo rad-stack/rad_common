@@ -1,12 +1,13 @@
 module RadNav
   class AdminMenu
-    attr_accessor :view_context, :additional_items
+    attr_accessor :view_context, :additional_items, :include_users
 
     delegate :current_user, :render, :tag, to: :view_context
 
-    def initialize(view_context, additional_items: [])
+    def initialize(view_context, include_users, additional_items: [])
       @view_context = view_context
       @additional_items = additional_items
+      @include_users = include_users
     end
 
     def content
@@ -34,7 +35,7 @@ module RadNav
          system_messages,
          RadNav::DropdownMenuItem.new(view_context, 'System Usage', '/rad_common/system_usages').content,
          twilio_logs,
-         user_nav.content,
+         users,
          validate_database]
       end
 
@@ -68,6 +69,12 @@ module RadNav
         RadNav::DropdownMenuItem.new(view_context, 'Twilio Logs', '/rad_common/twilio_logs').content
       end
 
+      def users
+        return if user_nav.blank?
+
+        user_nav.content
+      end
+
       def validate_database
         RadNav::DropdownMenuItem.new(view_context,
                                      'Validate Database',
@@ -75,11 +82,19 @@ module RadNav
       end
 
       def user_nav
+        return unless include_users?
+
         RadNav::DropdownMenuIndexItem.new(view_context, 'User')
       end
 
       def user_badge
+        return if user_nav.blank?
+
         user_nav.badge
+      end
+
+      def include_users?
+        include_users
       end
   end
 end

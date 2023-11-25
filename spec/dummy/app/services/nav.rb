@@ -4,7 +4,7 @@ class Nav < RadNav::Nav
      RadNav::TopNavItem.new(view_context, 'Contact', view_context.contact_us_path).content,
      attorney_item,
      RadNav::UserNav.new(view_context).content,
-     RadNav::AdminMenu.new(view_context, additional_items: [division_item]).content]
+     RadNav::AdminMenu.new(view_context, false, additional_items: [division_item]).content]
   end
 
   private
