@@ -25,8 +25,5 @@
   %li= link_to 'System Usage', '/rad_common/system_usages', class: 'dropdown-item'
   - if RadTwilio.new.twilio_enabled? || TwilioLog.exists?
     %li= link_to 'Twilio Logs', '/rad_common/twilio_logs', class: 'dropdown-item'
-  %li
-    = link_to users_path, class: 'dropdown-item' do
-      Users
-      = duplicates_badge User
+  = RadNav::DropdownMenuIndexItem.new(self, 'User').content
   %li= link_to 'Validate Database', '/rad_common/global_validations/new', class: 'dropdown-item'

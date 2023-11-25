@@ -10,9 +10,7 @@ class Nav < RadNav::Nav
   private
 
     def attorney_item
-      RadNav::TopNavIndexItem.new(view_context,
-                                  'Attorney',
-                                  badge: view_context.duplicates_badge(Attorney)).content
+      RadNav::TopNavIndexItem.new(view_context, 'Attorney').content
     end
 
     def division_item

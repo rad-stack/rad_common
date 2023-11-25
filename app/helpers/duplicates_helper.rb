@@ -17,17 +17,6 @@ module DuplicatesHelper
       RadCommon::AppInfo.new.duplicates_enabled?(record.class.name) && policy(record).reset_duplicates?
   end
 
-  def duplicates_badge(klass)
-    return unless RadCommon::AppInfo.new.duplicates_enabled?(klass.name) && policy(klass.new).index_duplicates?
-
-    count = klass.high_duplicates.count
-    return unless count.positive?
-
-    tag.span(class: 'badge alert-warning') do
-      count.to_s
-    end
-  end
-
   def pluralize_model_string(model_string)
     model_string.pluralize(2)
   end

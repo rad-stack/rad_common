@@ -15,7 +15,8 @@ module RadNav
       RadNav::DropdownMenuItem.new(view_context,
                                    label.presence || model_name.titleize.pluralize,
                                    path.presence || "/#{model_name.constantize.table_name}",
-                                   permission: policy(model_name.constantize).index?).content
+                                   permission: policy(model_name.constantize).index?,
+                                   badge: RadNav::DuplicatesBadge.new(view_context, model_name).content).content
     end
   end
 end
