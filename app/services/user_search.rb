@@ -34,7 +34,8 @@ class UserSearch < RadCommon::Search
       end
 
       if RadConfig.user_clients?
-        items.push(input_label: RadCommon::AppInfo.new.client_model_label, column: 'clients.id', options: clients)
+        items.push(input_label: RadCommon::AppInfo.new.client_model_label,
+                   column: "#{RadConfig.client_table_name!}.id", options: clients)
       end
 
       items
