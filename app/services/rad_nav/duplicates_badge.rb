@@ -16,9 +16,7 @@ module RadNav
       count = klass.high_duplicates.count
       return unless count.positive?
 
-      tag.span(class: 'badge alert-warning') do
-        count.to_s
-      end
+      RadNav::NavBadge.new(view_context, :warning, count).content
     end
   end
 end
