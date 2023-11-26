@@ -5,6 +5,8 @@ module RadNav
     delegate :tag, :safe_join, to: :view_context
 
     def initialize(view_context, label, items, badge: nil, permission: true)
+      raise 'missing items' if items.empty?
+
       @view_context = view_context
       @label = label
       @items = items

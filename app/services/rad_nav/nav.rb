@@ -48,6 +48,10 @@ module RadNav
         RadNav::NavBadge.new(view_context, alert_style, count).content
       end
 
+      def duplicates_badge(model_name)
+        RadNav::DuplicatesBadge.new(view_context, model_name).content
+      end
+
       def user_nav
         RadNav::UserNav.new(view_context).content
       end
