@@ -1,5 +1,5 @@
 module RadNav
-  class UserNav
+  class TopNavUsers
     attr_accessor :view_context
 
     def initialize(view_context)

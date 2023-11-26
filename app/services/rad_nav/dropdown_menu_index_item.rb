@@ -20,16 +20,16 @@ module RadNav
                                    badge: badge_content).content
     end
 
-    private
-
-      def badge_content
-        if badge.present? && duplicates_badge.present?
-          # need to figure out how to merge them if needed
-          raise 'having a badge option when duplicates badge exists is not yet supported'
-        end
-
-        badge.presence || duplicates_badge
+    def badge_content
+      if badge.present? && duplicates_badge.present?
+        # need to figure out how to merge them if needed
+        raise 'having a badge option when duplicates badge exists is not yet supported'
       end
+
+      badge.presence || duplicates_badge
+    end
+
+    private
 
       def duplicates_badge
         RadNav::DuplicatesBadge.new(view_context, model_name).content

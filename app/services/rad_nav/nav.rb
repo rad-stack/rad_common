@@ -52,8 +52,8 @@ module RadNav
         RadNav::DuplicatesBadge.new(view_context, model_name).content
       end
 
-      def user_nav
-        RadNav::UserNav.new(view_context).content
+      def top_nav_users
+        RadNav::TopNavUsers.new(view_context).content
       end
 
       def admin_menu(include_users, additional_items: [])

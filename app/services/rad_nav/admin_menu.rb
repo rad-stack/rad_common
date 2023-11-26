@@ -89,7 +89,7 @@ module RadNav
       end
 
       def user_nav
-        @user_nav ||= include_users? ? RadNav::DropdownMenuIndexItem.new(view_context, 'User') : nil
+        @user_nav ||= include_users? ? RadNav::DropdownMenuUsersItem.new(view_context) : nil
       end
 
       def user_badge

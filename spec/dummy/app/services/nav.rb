@@ -3,7 +3,7 @@ class Nav < RadNav::Nav
     [top_nav_index_item('Client'),
      top_nav_item('Contact', view_context.contact_us_path),
      top_nav_index_item('Attorney'),
-     user_nav,
+     top_nav_users,
      admin_menu(false, additional_items: [division_item])]
   end
 
