@@ -11,6 +11,8 @@ module RadNav
     end
 
     def content
+      return if count.zero?
+
       tag.span(class: "badge alert-#{alert_style}") do
         count.to_s
       end
