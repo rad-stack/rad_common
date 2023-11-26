@@ -28,8 +28,8 @@ module RadNav
         RadNav::TopNavItem.new(view_context, label, path, badge: badge).content
       end
 
-      def dropdown_menu_index_item(model_name, path: nil, label: nil)
-        RadNav::DropdownMenuIndexItem.new(view_context, model_name, path: path, label: label).content
+      def dropdown_menu_index_item(model_name, path: nil, label: nil, badge: nil)
+        RadNav::DropdownMenuIndexItem.new(view_context, model_name, path: path, label: label, badge: badge).content
       end
 
       def dropdown_menu(label, items, badge: nil, permission: true)
