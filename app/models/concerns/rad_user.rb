@@ -174,6 +174,10 @@ module RadUser
     end
   end
 
+  def notify_new_user_signed_up
+    Notifications::NewUserSignedUpNotification.main(self).notify!
+  end
+
   def send_devise_notification(notification, *args)
     # background devise emails
     # https://github.com/plataformatec/devise#activejob-integration
@@ -287,8 +291,18 @@ module RadUser
       return unless saved_change_to_user_status_id? && user_status &&
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
+      notify_user_approved_user
+      notify_user_approved_admins
+    end
+
+    def notify_user_approved_user
       RadMailer.your_account_approved(self).deliver_later
-      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify! unless do_not_notify_approved
+    end
+
+    def notify_user_approved_admins
+      return if do_not_notify_approved
+
+      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify!
     end
 
     def notify_user_accepted
