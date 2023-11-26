@@ -3,6 +3,7 @@ module RadNav
     attr_accessor :view_context, :disable_nav
 
     delegate :policy, :current_user, to: :view_context
+    delegate :admin?, to: :current_user
 
     def initialize(view_context, disable_nav: false)
       @view_context = view_context
