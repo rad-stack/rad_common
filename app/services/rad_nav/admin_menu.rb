@@ -25,7 +25,7 @@ module RadNav
       def standard_items
         [divider,
          RadNav::DropdownMenuItem.new(view_context, 'Audit Search', '/rad_common/audits').content,
-         RadNav::DropdownMenuItem.new(view_context, 'Background Jobs', '/sidekiq', separate_tab: true).content,
+         sidekiq,
          RadNav::DropdownMenuItem.new(view_context, 'Company Info', '/rad_common/company/edit').content,
          generate_jwt,
          RadNav::DropdownMenuItem.new(view_context, 'Notification Types', '/rad_common/notification_types').content,
@@ -43,6 +43,13 @@ module RadNav
         return if additional_items.blank?
 
         tag.li(class: 'dropdown-divider')
+      end
+
+      def sidekiq
+        RadNav::DropdownMenuItem.new(view_context,
+                                     'Background Jobs',
+                                     '/sidekiq',
+                                     link_options: { target: '_blank', rel: :noopener }).content
       end
 
       def generate_jwt
