@@ -1,5 +1,7 @@
 class Exporter
   include RadCommon::ApplicationHelper
+  include EnumsHelper
+
   attr_reader :records, :current_record, :current_user, :format
 
   DEFAULT_FORMAT = :csv
