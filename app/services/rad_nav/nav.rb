@@ -32,12 +32,20 @@ module RadNav
         RadNav::DropdownMenuIndexItem.new(view_context, model_name, path: path, label: label).content
       end
 
+      def dropdown_menu(label, items, badge: nil, permission: true)
+        RadNav::DropdownMenu.new(view_context, label, items, badge: badge, permission: permission).content
+      end
+
       def dropdown_menu_item(label, path, badge: nil, link_options: {}, permission: true)
         RadNav::DropdownMenuItem.new(view_context,
                                      label, path,
                                      badge: badge,
                                      link_options: link_options,
                                      permission: permission).content
+      end
+
+      def nav_badge(alert_style, count)
+        RadNav::NavBadge.new(view_context, alert_style, count).content
       end
 
       def user_nav
