@@ -3,7 +3,6 @@ module RadNav
     attr_accessor :view_context, :additional_items, :include_users
 
     delegate :current_user, :render, :tag, to: :view_context
-    delegate :admin?, to: :current_user
 
     def initialize(view_context, include_users, additional_items: [])
       @view_context = view_context
@@ -90,9 +89,7 @@ module RadNav
       end
 
       def user_nav
-        return unless include_users?
-
-        RadNav::DropdownMenuIndexItem.new(view_context, 'User')
+        @user_nav ||= include_users? ? RadNav::DropdownMenuIndexItem.new(view_context, 'User') : nil
       end
 
       def user_badge
@@ -103,6 +100,10 @@ module RadNav
 
       def include_users?
         include_users
+      end
+
+      def admin?
+        @admin ||= current_user.admin?
       end
   end
 end
