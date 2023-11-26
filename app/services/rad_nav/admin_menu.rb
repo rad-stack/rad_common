@@ -3,6 +3,7 @@ module RadNav
     attr_accessor :view_context, :additional_items, :include_users
 
     delegate :current_user, :render, :tag, to: :view_context
+    delegate :admin?, to: :current_user
 
     def initialize(view_context, include_users, additional_items: [])
       @view_context = view_context
@@ -11,7 +12,7 @@ module RadNav
     end
 
     def content
-      return unless current_user.admin?
+      return unless admin?
 
       RadNav::DropdownMenu.new(view_context, 'Admin', admin_menu_items, badge: user_badge).content
     end
