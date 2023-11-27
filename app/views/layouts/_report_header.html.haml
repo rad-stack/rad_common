@@ -8,7 +8,8 @@
   %hr
 - else
   .card
-    - actions = (try(:additional_actions).presence || []) + [printable_report_button(@report, main_path)]
+    - exports = [csv_report_button(@report, main_path), printable_report_button(@report, main_path)].compact
+    - actions = (try(:additional_actions).presence || []) + exports
 
     = render 'layouts/card_header',
              action_name: 'custom',
