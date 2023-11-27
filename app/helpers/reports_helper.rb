@@ -16,13 +16,7 @@ module ReportsHelper
     return unless report.csv_exportable? && report.valid?
 
     query_string = report.params.to_unsafe_hash.merge(format: :csv).to_query
-    link_to(
-      icon(:file, 'Export to File'),
-      "#{report_path}?#{query_string}",
-      target: '_blank',
-      class: 'btn btn-secondary btn-sm',
-      rel: 'noopener'
-    )
+    link_to(icon(:file, 'Export to File'), "#{report_path}?#{query_string}", class: 'btn btn-secondary btn-sm')
   end
 
   def format_report_boolean(value)
