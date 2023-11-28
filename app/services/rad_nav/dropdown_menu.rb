@@ -30,7 +30,7 @@ module RadNav
 
       def menu_header(label)
         tag.a(class: 'nav-link dropdown-toggle', 'data-toggle': 'dropdown', href: '#') do
-          badge.present? ? safe_join([label, ' ', badge].compact) : label
+          badge.present? ? safe_join([label, ' ', badge.content].compact) : label
         end
       end
 
