@@ -17,7 +17,7 @@ module RadNav
       RadNav::TopNavItem.new(view_context,
                              label.presence || model_name.titleize.pluralize,
                              path.presence || "/#{model_name.constantize.table_name}",
-                             badge: RadNav::DuplicatesBadge.new(view_context, model_name).content).content
+                             badge: RadNav::DuplicatesBadge.new(view_context, model_name)).content
     end
   end
 end

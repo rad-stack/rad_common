@@ -4,14 +4,18 @@ module RadNav
 
     delegate :tag, :safe_join, to: :view_context
 
+    # TODO: try removing badge and derive it from items
+
     def initialize(view_context, label, items, badge: nil, permission: true)
       raise 'missing items' if items.empty?
 
       @view_context = view_context
       @label = label
-      @items = items
+      @items = items.compact.map { |item| item.content }
       @permission = permission
       @badge = badge
+
+      check_items
     end
 
     def content
@@ -34,6 +38,13 @@ module RadNav
         tag.ul(class: 'dropdown-menu') do
           safe_join items
         end
+      end
+
+      def check_items
+        # TODO: fix
+        # items.each do |item|
+        #   raise "invalid item: #{item}" unless item.include?('dropdown-item') || item.to_s.include?('dropdown-divider')
+        # end
       end
   end
 end

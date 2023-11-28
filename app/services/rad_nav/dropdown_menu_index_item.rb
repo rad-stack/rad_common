@@ -32,7 +32,7 @@ module RadNav
     private
 
       def duplicates_badge
-        RadNav::DuplicatesBadge.new(view_context, model_name).content
+        @duplicates_badge ||= RadNav::DuplicatesBadge.new(view_context, model_name)
       end
   end
 end
