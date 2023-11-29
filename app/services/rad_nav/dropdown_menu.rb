@@ -59,12 +59,12 @@ module RadNav
         raise 'missing items' if items.empty?
 
         items.each do |item|
-          unless item.is_a?(DropdownMenuItem) ||
-                 item.is_a?(DropdownMenuIndexItem) ||
-                 item.is_a?(NavDivider) ||
-                 item.is_a?(DropdownMenuUsersItem)
-            raise "invalid item: #{item.class}"
-          end
+          next if item.is_a?(DropdownMenuItem) ||
+                  item.is_a?(DropdownMenuIndexItem) ||
+                  item.is_a?(NavDivider) ||
+                  item.is_a?(DropdownMenuUsersItem)
+
+          raise "invalid item: #{item.class}"
         end
       end
   end
