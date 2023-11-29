@@ -13,7 +13,7 @@ module RadNav
     def content
       return unless admin?
 
-      RadNav::DropdownMenu.new(view_context, 'Admin', admin_menu_items, badge: user_badge).content
+      RadNav::DropdownMenu.new(view_context, 'Admin', admin_menu_items).content
     end
 
     private
@@ -77,25 +77,15 @@ module RadNav
       end
 
       def users
-        return if user_nav.blank?
+        return unless include_users?
 
-        user_nav
+        RadNav::DropdownMenuUsersItem.new(view_context)
       end
 
       def validate_database
         RadNav::DropdownMenuItem.new(view_context,
                                      'Validate Database',
                                      '/rad_common/global_validations/new')
-      end
-
-      def user_nav
-        @user_nav ||= include_users? ? RadNav::DropdownMenuUsersItem.new(view_context) : nil
-      end
-
-      def user_badge
-        return if user_nav.blank?
-
-        user_nav.badge
       end
 
       def include_users?
