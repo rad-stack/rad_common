@@ -12,8 +12,9 @@ module RadNav
     end
 
     def content
-      check_items
       return unless permission
+
+      check_items
 
       tag.li(class: 'nav-item dropdown px-3') do # TODO: do we like the px-3?
         safe_join [menu_header(label), menu_content(items)]
