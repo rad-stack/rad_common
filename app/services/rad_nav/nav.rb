@@ -63,7 +63,7 @@ module RadNav
       end
 
       def check_items
-        raise 'missing items' if items.compact.empty?
+        raise 'missing items' if items.nil? || items.compact.empty?
 
         items.compact.each do |item|
           next if item.is_a?(TopNavItem) ||
