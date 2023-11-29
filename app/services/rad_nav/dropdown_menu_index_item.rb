@@ -31,11 +31,11 @@ module RadNav
     private
 
       def duplicates_badge
-        # TODO: refactor this with the other one
-        # TODO: cache it
-        return unless RadCommon::AppInfo.new.duplicates_enabled?(model_name) && policy(model_name.constantize.new).index_duplicates?
+        @duplicates_badge ||= calc_duplicates_badge
+      end
 
-        count = model_name.constantize.high_duplicates.count
+      def calc_duplicates_badge
+        count = view_context.duplicates_badge_count(model_name)
         return if count.zero?
 
         RadNav::NavBadge.new(view_context, :warning, count)

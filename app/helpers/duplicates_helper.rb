@@ -17,6 +17,14 @@ module DuplicatesHelper
       RadCommon::AppInfo.new.duplicates_enabled?(record.class.name) && policy(record).reset_duplicates?
   end
 
+  def duplicates_badge_count(model_name)
+    unless RadCommon::AppInfo.new.duplicates_enabled?(model_name) && policy(model_name.constantize.new).index_duplicates?
+      return 0
+    end
+
+    model_name.constantize.high_duplicates.count
+  end
+
   def pluralize_model_string(model_string)
     model_string.pluralize(2)
   end
