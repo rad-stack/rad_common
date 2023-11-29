@@ -11,7 +11,7 @@ module RadNav
     end
 
     def badge
-      nav.badge_content
+      nav.badge
     end
 
     private

@@ -14,7 +14,7 @@ module RadNav
     def content
       tag.li do
         link_to path, class: 'nav-link px-3' do # TODO: do we like the px-3?
-          badge.present? ? safe_join([label, ' ', badge].compact) : label
+          badge.present? ? safe_join([label, ' ', badge.content].compact) : label
         end
       end
     end

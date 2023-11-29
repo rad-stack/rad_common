@@ -18,7 +18,7 @@ module RadNav
 
       tag.li do
         link_to path, { class: 'dropdown-item' }.merge(link_options) do
-          badge.present? ? safe_join([label, ' ', badge].compact) : label
+          badge.present? ? safe_join([label, ' ', badge.content].compact) : label
         end
       end
     end
