@@ -8,15 +8,16 @@ module RadNav
     def initialize(view_context, disable_nav: false)
       @view_context = view_context
       @disable_nav = disable_nav
-
-      check_items
     end
 
     def items
+      # TODO: should this be private?
       raise 'implement in subclasses'
     end
 
     def content
+      check_items
+
       items.map { |item| item.content }
     end
 
@@ -63,9 +64,6 @@ module RadNav
       end
 
       def check_items
-        return
-        # TODO:
-        #
         raise 'missing items' if items.compact.empty?
 
         items.compact.each do |item|
