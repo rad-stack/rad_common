@@ -9,11 +9,10 @@ module RadNav
       @label = label
       @items = items.compact
       @permission = permission
-
-      check_items
     end
 
     def content
+      check_items
       return unless permission
 
       tag.li(class: 'nav-item dropdown px-3') do # TODO: do we like the px-3?
@@ -36,32 +35,37 @@ module RadNav
       end
 
       def badge_count
-        @badge_count ||= badges.map { |item| item.count }.sum
+        @badge_count ||= badges.map(&:count).sum
       end
 
       def badge_style
-        styles = badges.map { |item| item.alert_style }.uniq
+        styles = badges.map(&:alert_style).uniq
         return styles.first if styles.count == 1
 
         raise 'conflicting badge styles'
       end
 
       def badges
-        @badges ||= items.select { |item| item.respond_to?(:badge) && item.badge.present? }.map { |item| item.badge }
+        @badges ||= items.select { |item| item.respond_to?(:badge) && item.badge.present? }.map(&:badge)
       end
 
       def menu_content(items)
         tag.ul(class: 'dropdown-menu') do
-          safe_join items.map { |item| item.content }
+          safe_join(items.map(&:content))
         end
       end
 
       def check_items
-        # raise if empty
-        # TODO: fix
-        # items.each do |item|
-        #   raise "invalid item: #{item}" unless item.include?('dropdown-item') || item.to_s.include?('dropdown-divider')
-        # end
+        raise 'missing items' if items.empty?
+
+        items.each do |item|
+          unless item.is_a?(DropdownMenuItem) ||
+                 item.is_a?(DropdownMenuIndexItem) ||
+                 item.is_a?(NavDivider) ||
+                 item.is_a?(DropdownMenuUsersItem)
+            raise "invalid item: #{item.class}"
+          end
+        end
       end
   end
 end

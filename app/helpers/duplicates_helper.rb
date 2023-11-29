@@ -18,7 +18,8 @@ module DuplicatesHelper
   end
 
   def duplicates_badge_count(model_name)
-    unless RadCommon::AppInfo.new.duplicates_enabled?(model_name) && policy(model_name.constantize.new).index_duplicates?
+    unless RadCommon::AppInfo.new.duplicates_enabled?(model_name) &&
+           policy(model_name.constantize.new).index_duplicates?
       return 0
     end
 

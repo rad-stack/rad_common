@@ -13,7 +13,7 @@ module RadNav
     def content
       check_items
 
-      items.map { |item| item.content }
+      items.map(&:content)
     end
 
     def disable_nav?
@@ -66,11 +66,11 @@ module RadNav
         raise 'missing items' if items.compact.empty?
 
         items.compact.each do |item|
-          next if item.is_a?(RadNav::TopNavItem) ||
-                  item.is_a?(RadNav::TopNavIndexItem) ||
-                  item.is_a?(RadNav::DropdownMenu) ||
-                  item.is_a?(RadNav::TopNavUsers) ||
-                  item.is_a?(RadNav::AdminMenu)
+          next if item.is_a?(TopNavItem) ||
+                  item.is_a?(TopNavIndexItem) ||
+                  item.is_a?(DropdownMenu) ||
+                  item.is_a?(TopNavUsers) ||
+                  item.is_a?(AdminMenu)
 
           raise "invalid item: #{item.class}"
         end

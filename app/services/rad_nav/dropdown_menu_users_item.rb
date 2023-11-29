@@ -2,16 +2,10 @@ module RadNav
   class DropdownMenuUsersItem
     attr_accessor :view_context
 
+    delegate :content, :badge, to: :nav
+
     def initialize(view_context)
       @view_context = view_context
-    end
-
-    def content
-      nav.content
-    end
-
-    def badge
-      nav.badge
     end
 
     private
