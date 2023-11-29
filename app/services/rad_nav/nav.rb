@@ -13,7 +13,7 @@ module RadNav
     def content
       check_items
 
-      items.map(&:content)
+      items.compact.map(&:content)
     end
 
     def disable_nav?
