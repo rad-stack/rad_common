@@ -15,14 +15,28 @@ describe 'Nav' do
            email: attorney.email
   end
 
+  let(:duplicate_user_1) { create :user }
+
+  let(:duplicate_user_2) do
+    create :user,
+           first_name: duplicate_user_1.first_name,
+           last_name: duplicate_user_1.last_name,
+           mobile_phone: duplicate_user_1.mobile_phone,
+           birth_date: duplicate_user_1.birth_date
+  end
+
   before do
     allow_any_instance_of(Duplicate).to receive :maybe_notify_duplicates
 
     attorney
     duplicate_attorney
+    duplicate_user_1
+    duplicate_user_2
 
     attorney.process_duplicates
     duplicate_attorney.process_duplicates
+    duplicate_user_1.process_duplicates
+    duplicate_user_2.process_duplicates
 
     login_as user, scope: :user
   end
