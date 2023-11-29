@@ -10,11 +10,6 @@ module RadNav
       @disable_nav = disable_nav
     end
 
-    def items
-      # TODO: should this be private?
-      raise 'implement in subclasses'
-    end
-
     def content
       check_items
 
@@ -26,6 +21,10 @@ module RadNav
     end
 
     private
+
+      def items
+        raise 'implement in subclasses'
+      end
 
       def top_nav_index_item(model_name, path: nil, label: nil)
         RadNav::TopNavIndexItem.new(view_context, model_name, path: path, label: label)
