@@ -4,10 +4,10 @@ module RadNav
 
     delegate :tag, :safe_join, to: :view_context
 
-    def initialize(view_context, label, items, permission: true)
+    def initialize(view_context, label, items, sort: false, permission: true)
       @view_context = view_context
       @label = label
-      @items = items.compact
+      @items = sort ? items.compact.sort_by(&:label) : items.compact
       @permission = permission
     end
 
@@ -17,13 +17,13 @@ module RadNav
       check_items
 
       tag.li(class: 'nav-item dropdown px-3') do # TODO: do we like the px-3?
-        safe_join [menu_header(label), menu_content(items)]
+        safe_join [menu_header, menu_content]
       end
     end
 
     private
 
-      def menu_header(label)
+      def menu_header
         tag.a(class: 'nav-link dropdown-toggle', 'data-toggle': 'dropdown', href: '#') do
           badge.present? ? safe_join([label, ' ', badge.content].compact) : label
         end
@@ -43,6 +43,7 @@ module RadNav
         styles = badges.map(&:alert_style).uniq
         return styles.first if styles.count == 1
 
+        return styles.last # TODO: ?
         raise 'conflicting badge styles'
       end
 
@@ -50,7 +51,7 @@ module RadNav
         @badges ||= items.select { |item| item.respond_to?(:badge) && item.badge.present? }.map(&:badge)
       end
 
-      def menu_content(items)
+      def menu_content
         tag.ul(class: 'dropdown-menu') do
           safe_join(items.map(&:content))
         end

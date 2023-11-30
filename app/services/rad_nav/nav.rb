@@ -13,7 +13,7 @@ module RadNav
     def content
       check_items
 
-      items.compact.map(&:content)
+      top_nav_items.compact.map(&:content)
     end
 
     def disable_nav?
@@ -22,7 +22,7 @@ module RadNav
 
     private
 
-      def items
+      def top_nav_items
         raise 'implement in subclasses'
       end
 
@@ -38,8 +38,8 @@ module RadNav
         RadNav::DropdownMenuIndexItem.new(view_context, model_name, path: path, label: label, badge: badge)
       end
 
-      def dropdown_menu(label, items, permission: true)
-        RadNav::DropdownMenu.new(view_context, label, items, permission: permission)
+      def dropdown_menu(label, items, sort: false, permission: true)
+        RadNav::DropdownMenu.new(view_context, label, items, sort: sort, permission: permission)
       end
 
       def dropdown_menu_item(label, path, badge: nil, link_options: {}, permission: true)
@@ -63,9 +63,9 @@ module RadNav
       end
 
       def check_items
-        raise 'missing items' if items.nil? || items.compact.empty?
+        raise 'missing items' if top_nav_items.nil? || top_nav_items.compact.empty?
 
-        items.compact.each do |item|
+        top_nav_items.compact.each do |item|
           next if item.is_a?(TopNavItem) ||
                   item.is_a?(TopNavIndexItem) ||
                   item.is_a?(DropdownMenu) ||

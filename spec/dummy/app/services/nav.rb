@@ -1,7 +1,7 @@
 class Nav < RadNav::Nav
   private
 
-    def items
+    def top_nav_items
       [dropdown_menu('Clients', client_items),
        attorneys_menu,
        top_nav_item('Contact', view_context.contact_us_path, badge: nav_badge(:danger, 9)),

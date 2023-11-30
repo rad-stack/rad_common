@@ -7,8 +7,8 @@ module RadNav
     def initialize(view_context, model_name, path: nil, label: nil, badge: nil)
       @view_context = view_context
       @model_name = model_name
-      @path = path
-      @label = label
+      @path = path.presence || "/#{model_name.constantize.table_name}"
+      @label = label.presence || model_name.titleize.pluralize
 
       if badge.present? && duplicates_badge.present?
         # need to figure out how to merge them if needed
@@ -22,8 +22,8 @@ module RadNav
 
     def content
       RadNav::DropdownMenuItem.new(view_context,
-                                   label.presence || model_name.titleize.pluralize,
-                                   path.presence || "/#{model_name.constantize.table_name}",
+                                   label,
+                                   path,
                                    permission: policy(model_name.constantize).index?,
                                    badge: badge).content
     end
