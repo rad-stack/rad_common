@@ -8,6 +8,10 @@ module RadNav
       @view_context = view_context
     end
 
+    def label
+      'Users'
+    end
+
     private
 
       def nav

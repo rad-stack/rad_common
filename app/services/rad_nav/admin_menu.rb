@@ -6,7 +6,7 @@ module RadNav
 
     def initialize(view_context, include_users, additional_items: [])
       @view_context = view_context
-      @additional_items = additional_items
+      @additional_items = additional_items.compact.sort_by(&:label)
       @include_users = include_users
     end
 
@@ -19,12 +19,11 @@ module RadNav
     private
 
       def admin_menu_items
-        (additional_items + standard_items).compact
+        additional_items + [divider] + standard_items
       end
 
       def standard_items
-        [divider,
-         RadNav::DropdownMenuItem.new(view_context, 'Audit Search', '/rad_common/audits'),
+        [RadNav::DropdownMenuItem.new(view_context, 'Audit Search', '/rad_common/audits'),
          sidekiq,
          RadNav::DropdownMenuItem.new(view_context, 'Company Info', '/rad_common/company/edit'),
          generate_jwt,
@@ -36,7 +35,7 @@ module RadNav
          RadNav::DropdownMenuItem.new(view_context, 'System Usage', '/rad_common/system_usages'),
          twilio_logs,
          users,
-         validate_database]
+         validate_database].compact.sort_by(&:label)
       end
 
       def divider
