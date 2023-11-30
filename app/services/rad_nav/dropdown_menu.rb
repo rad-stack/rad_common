@@ -16,7 +16,7 @@ module RadNav
 
       check_items
 
-      tag.li(class: 'nav-item dropdown px-3') do # TODO: do we like the px-3?
+      tag.li(class: 'nav-item dropdown px-2') do
         safe_join [menu_header, menu_content]
       end
     end
@@ -43,7 +43,6 @@ module RadNav
         styles = badges.map(&:alert_style).uniq
         return styles.first if styles.count == 1
 
-        return styles.last # TODO: ?
         raise 'conflicting badge styles'
       end
 
