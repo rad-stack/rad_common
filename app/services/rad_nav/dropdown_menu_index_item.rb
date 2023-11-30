@@ -11,6 +11,7 @@ module RadNav
       @label = label.presence || model_name.titleize.pluralize
 
       if badge.present? && duplicates_badge.present?
+        # TODO: use the higher alert style
         @badge = NavBadge.new(view_context, badge.alert_style, badge.count + duplicates_badge.count)
       elsif badge.present?
         @badge = badge
