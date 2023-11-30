@@ -13,7 +13,7 @@ module RadNav
     def content
       check_items
 
-      top_nav_items.compact.map(&:content)
+      nav_items.compact.map(&:content)
     end
 
     def disable_nav?
@@ -24,6 +24,10 @@ module RadNav
 
       def top_nav_items
         raise 'implement in subclasses'
+      end
+
+      def nav_items
+        @nav_items ||= top_nav_items
       end
 
       def top_nav_index_item(model_name, path: nil, label: nil)
@@ -63,9 +67,13 @@ module RadNav
       end
 
       def check_items
-        raise 'missing items' if top_nav_items.nil? || top_nav_items.compact.empty?
+        raise 'missing items' if nav_items.nil? || nav_items.compact.empty?
 
-        top_nav_items.compact.each do |item|
+        check_item_types
+      end
+
+      def check_item_types
+        nav_items.compact.each do |item|
           next if item.is_a?(TopNavItem) ||
                   item.is_a?(TopNavIndexItem) ||
                   item.is_a?(DropdownMenu) ||
