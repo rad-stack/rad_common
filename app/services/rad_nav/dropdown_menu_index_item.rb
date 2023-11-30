@@ -11,8 +11,7 @@ module RadNav
       @label = label.presence || model_name.titleize.pluralize
 
       if badge.present? && duplicates_badge.present?
-        # need to figure out how to merge them if needed
-        raise 'having a badge option when duplicates badge exists is not yet supported'
+        @badge = NavBadge.new(view_context, badge.alert_style, badge.count + duplicates_badge.count)
       elsif badge.present?
         @badge = badge
       elsif duplicates_badge.present?
@@ -21,11 +20,11 @@ module RadNav
     end
 
     def content
-      RadNav::DropdownMenuItem.new(view_context,
-                                   label,
-                                   path,
-                                   permission: policy(model_name.constantize).index?,
-                                   badge: badge).content
+      DropdownMenuItem.new(view_context,
+                           label,
+                           path,
+                           permission: policy(model_name.constantize).index?,
+                           badge: badge).content
     end
 
     private
@@ -38,7 +37,7 @@ module RadNav
         count = view_context.duplicates_badge_count(model_name)
         return if count.zero?
 
-        RadNav::NavBadge.new(view_context, :warning, count)
+        NavBadge.new(view_context, :warning, count)
       end
   end
 end

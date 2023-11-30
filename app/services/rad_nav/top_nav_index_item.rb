@@ -14,10 +14,10 @@ module RadNav
     def content
       return unless policy(model_name.constantize).index?
 
-      RadNav::TopNavItem.new(view_context,
-                             label.presence || model_name.titleize.pluralize,
-                             path.presence || "/#{model_name.constantize.table_name}",
-                             badge: duplicates_badge).content
+      TopNavItem.new(view_context,
+                     label.presence || model_name.titleize.pluralize,
+                     path.presence || "/#{model_name.constantize.table_name}",
+                     badge: duplicates_badge).content
     end
 
     private
@@ -26,7 +26,7 @@ module RadNav
         count = view_context.duplicates_badge_count(model_name)
         return if count.zero?
 
-        RadNav::NavBadge.new(view_context, :warning, count)
+        NavBadge.new(view_context, :warning, count)
       end
   end
 end

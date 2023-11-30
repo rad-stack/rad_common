@@ -13,7 +13,7 @@ module RadNav
     def content
       return unless admin?
 
-      RadNav::DropdownMenu.new(view_context, 'Admin', admin_menu_items).content
+      DropdownMenu.new(view_context, 'Admin', admin_menu_items).content
     end
 
     private
@@ -23,16 +23,16 @@ module RadNav
       end
 
       def standard_items
-        [RadNav::DropdownMenuItem.new(view_context, 'Audit Search', '/rad_common/audits'),
+        [DropdownMenuItem.new(view_context, 'Audit Search', '/rad_common/audits'),
          sidekiq,
-         RadNav::DropdownMenuItem.new(view_context, 'Company Info', '/rad_common/company/edit'),
+         DropdownMenuItem.new(view_context, 'Company Info', '/rad_common/company/edit'),
          generate_jwt,
-         RadNav::DropdownMenuItem.new(view_context, 'Notification Types', '/rad_common/notification_types'),
-         RadNav::DropdownMenuIndexItem.new(view_context, 'SecurityRole'),
+         DropdownMenuItem.new(view_context, 'Notification Types', '/rad_common/notification_types'),
+         DropdownMenuIndexItem.new(view_context, 'SecurityRole'),
          sentry_test,
-         RadNav::DropdownMenuItem.new(view_context, 'Sign In Activity', '/rad_common/login_activities'),
+         DropdownMenuItem.new(view_context, 'Sign In Activity', '/rad_common/login_activities'),
          system_messages,
-         RadNav::DropdownMenuItem.new(view_context, 'System Usage', '/rad_common/system_usages'),
+         DropdownMenuItem.new(view_context, 'System Usage', '/rad_common/system_usages'),
          twilio_logs,
          users,
          validate_database].compact.sort_by(&:label)
@@ -41,50 +41,48 @@ module RadNav
       def divider
         return if additional_items.blank?
 
-        RadNav::NavDivider.new view_context
+        NavDivider.new view_context
       end
 
       def sidekiq
-        RadNav::DropdownMenuItem.new(view_context,
-                                     'Background Jobs',
-                                     '/sidekiq',
-                                     link_options: { target: '_blank', rel: :noopener })
+        DropdownMenuItem.new(view_context,
+                             'Background Jobs',
+                             '/sidekiq',
+                             link_options: { target: '_blank', rel: :noopener })
       end
 
       def generate_jwt
         return unless RadConfig.jwt_enabled?
 
-        RadNav::DropdownMenuItem.new(view_context, 'Generate JWT Token', view_context.new_json_web_token_path)
+        DropdownMenuItem.new(view_context, 'Generate JWT Token', view_context.new_json_web_token_path)
       end
 
       def sentry_test
-        RadNav::DropdownMenuItem.new(view_context,
-                                     'Sentry Test',
-                                     RadCommon::Engine.routes.url_helpers.edit_sentry_test_path(current_user))
+        DropdownMenuItem.new(view_context,
+                             'Sentry Test',
+                             RadCommon::Engine.routes.url_helpers.edit_sentry_test_path(current_user))
       end
 
       def system_messages
-        RadNav::DropdownMenuItem.new(view_context,
-                                     'System Message',
-                                     RadCommon::Engine.routes.url_helpers.new_system_message_path)
+        DropdownMenuItem.new(view_context,
+                             'System Message',
+                             RadCommon::Engine.routes.url_helpers.new_system_message_path)
       end
 
       def twilio_logs
         return unless RadTwilio.new.twilio_enabled? || TwilioLog.exists?
 
-        RadNav::DropdownMenuItem.new(view_context, 'Twilio Logs', '/rad_common/twilio_logs')
+        DropdownMenuItem.new(view_context, 'Twilio Logs', '/rad_common/twilio_logs')
       end
 
       def users
         return unless include_users?
 
-        RadNav::DropdownMenuUsersItem.new(view_context)
+        DropdownMenuUsersItem.new(view_context)
       end
 
       def validate_database
-        RadNav::DropdownMenuItem.new(view_context,
-                                     'Validate Database',
-                                     '/rad_common/global_validations/new')
+        DropdownMenuItem.new(view_context, 'Validate Database', '/rad_common/global_validations/new')
       end
 
       def include_users?

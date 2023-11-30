@@ -15,7 +15,7 @@ module RadNav
     private
 
       def nav
-        @nav ||= RadNav::DropdownMenuIndexItem.new(view_context, 'User')
+        @nav ||= DropdownMenuIndexItem.new(view_context, 'User')
       end
   end
 end

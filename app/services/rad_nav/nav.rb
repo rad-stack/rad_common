@@ -27,39 +27,39 @@ module RadNav
       end
 
       def top_nav_index_item(model_name, path: nil, label: nil)
-        RadNav::TopNavIndexItem.new(view_context, model_name, path: path, label: label)
+        TopNavIndexItem.new(view_context, model_name, path: path, label: label)
       end
 
       def top_nav_item(label, path, badge: nil)
-        RadNav::TopNavItem.new(view_context, label, path, badge: badge)
+        TopNavItem.new(view_context, label, path, badge: badge)
       end
 
       def dropdown_menu_index_item(model_name, path: nil, label: nil, badge: nil)
-        RadNav::DropdownMenuIndexItem.new(view_context, model_name, path: path, label: label, badge: badge)
+        DropdownMenuIndexItem.new(view_context, model_name, path: path, label: label, badge: badge)
       end
 
       def dropdown_menu(label, items, sort: false, permission: true)
-        RadNav::DropdownMenu.new(view_context, label, items, sort: sort, permission: permission)
+        DropdownMenu.new(view_context, label, items, sort: sort, permission: permission)
       end
 
       def dropdown_menu_item(label, path, badge: nil, link_options: {}, permission: true)
-        RadNav::DropdownMenuItem.new(view_context,
-                                     label, path,
-                                     badge: badge,
-                                     link_options: link_options,
-                                     permission: permission)
+        DropdownMenuItem.new(view_context,
+                             label, path,
+                             badge: badge,
+                             link_options: link_options,
+                             permission: permission)
       end
 
       def nav_badge(alert_style, count)
-        RadNav::NavBadge.new(view_context, alert_style, count)
+        NavBadge.new(view_context, alert_style, count)
       end
 
       def top_nav_users
-        RadNav::TopNavUsers.new(view_context)
+        TopNavUsers.new(view_context)
       end
 
       def admin_menu(include_users, additional_items: [])
-        RadNav::AdminMenu.new(view_context, include_users, additional_items: additional_items)
+        AdminMenu.new(view_context, include_users, additional_items: additional_items)
       end
 
       def check_items

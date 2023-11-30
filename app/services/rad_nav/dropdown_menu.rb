@@ -32,7 +32,7 @@ module RadNav
       def badge
         return if badges.empty? || badge_count.zero?
 
-        RadNav::NavBadge.new(view_context, badge_style, badge_count)
+        NavBadge.new(view_context, badge_style, badge_count)
       end
 
       def badge_count
