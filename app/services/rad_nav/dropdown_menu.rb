@@ -43,6 +43,9 @@ module RadNav
         styles = badges.map(&:alert_style).uniq
         return styles.first if styles.count == 1
 
+        # hardcoding this for now, there may be future scenarios to account for
+        return :warning if styles.sort == %i[info warning]
+
         raise 'conflicting badge styles'
       end
 
