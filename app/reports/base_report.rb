@@ -54,11 +54,17 @@ class BaseReport
     false
   end
 
+  def csv_exportable?
+    export_job.present?
+  end
+
   def orientation
     'Portrait'.freeze
   end
 
   def warning; end
+
+  def export_job; end
 
   private
 
