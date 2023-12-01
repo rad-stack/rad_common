@@ -20,6 +20,15 @@ module RadNav
       end
     end
 
+    def self.highest_alert_style(badges)
+      styles = badges.map(&:alert_style).uniq
+      return styles.first if styles.count == 1
+      return :warning if styles.sort == %i[info warning]
+
+      # just need to handle any additional combinations that occur, choose the higher alert level
+      raise "conflicting badge styles: #{styles}"
+    end
+
     private
 
       def check_alert_style

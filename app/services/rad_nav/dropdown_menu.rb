@@ -40,13 +40,7 @@ module RadNav
       end
 
       def badge_style
-        styles = badges.map(&:alert_style).uniq
-        return styles.first if styles.count == 1
-
-        # TODO: use the higher alert style when multiple exist
-        return :warning if styles.sort == %i[info warning]
-
-        raise 'conflicting badge styles'
+        NavBadge.highest_alert_style badges
       end
 
       def badges
