@@ -41,8 +41,6 @@ describe 'Nav' do
     login_as user, scope: :user
   end
 
-  # TODO: assert dupes badge in various locations
-
   context 'with admin' do
     let(:user) { create :admin }
 
