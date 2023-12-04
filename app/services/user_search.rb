@@ -20,8 +20,8 @@ class UserSearch < RadCommon::Search
     end
 
     def filters_def
-      items = [{ column: 'first_name', type: RadCommon::LikeFilter, input_label: 'First Name' },
-               { column: 'last_name', type: RadCommon::LikeFilter, input_label: 'Last Name' },
+      items = [{ column: 'users.first_name', type: RadCommon::LikeFilter, input_label: 'First Name' },
+               { column: 'users.last_name', type: RadCommon::LikeFilter, input_label: 'Last Name' },
                { column: 'email', type: RadCommon::LikeFilter, input_label: 'Email' },
                { column: 'mobile_phone', type: RadCommon::LikeFilter, input_label: 'Mobile Phone' },
                { input_label: 'Status',
@@ -42,7 +42,7 @@ class UserSearch < RadCommon::Search
     end
 
     def sort_columns_def
-      items = [{ label: 'Name', column: 'first_name, last_name', default: !can_update? },
+      items = [{ label: 'Name', column: 'users.first_name, users.last_name', default: !can_update? },
                { column: 'email' },
                { column: 'mobile_phone' }]
 
