@@ -4,7 +4,7 @@ RSpec.describe 'Users', type: :system do
   include ActionView::Helpers::DateHelper
 
   let(:user_status) { UserStatus.default_active_status }
-  let(:pending_status) { create :user_status, :pending }
+  let(:pending_status) { UserStatus.default_pending_status }
   let(:user) { create :user, user_status: user_status }
   let(:admin) { create :admin }
   let(:password) { 'cOmpl3x_p@55w0rd' }
@@ -32,7 +32,7 @@ RSpec.describe 'Users', type: :system do
         end
       end
 
-      it "doesn't show pending users" do
+      it "doesn't show pending users", :pending_user_specs do
         visit users_path
 
         if Pundit.policy!(user, User.new).update?
