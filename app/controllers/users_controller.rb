@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   def index
     authorize User
 
-    if policy(User.new).update?
+    if RadConfig.pending_user_status? && policy(User.new).update?
       @pending = policy_scope(User).includes(:user_status, :security_roles)
                                    .pending
                                    .recent_first
