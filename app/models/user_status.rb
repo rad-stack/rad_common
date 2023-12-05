@@ -15,7 +15,7 @@ class UserStatus < ApplicationRecord
   strip_attributes
 
   def self.default_pending_status
-    raise PENDING_STATUS_ERROR unless RadConfig.pending_user_status?
+    raise PENDING_STATUS_ERROR unless RadConfig.pending_users?
 
     UserStatus.find_by(name: PENDING_STATUS_NAME)
   end
@@ -31,7 +31,7 @@ class UserStatus < ApplicationRecord
   private
 
     def validate_pending
-      return unless !RadConfig.pending_user_status? && name == PENDING_STATUS_NAME
+      return unless !RadConfig.pending_users? && name == PENDING_STATUS_NAME
 
       raise PENDING_STATUS_ERROR
     end

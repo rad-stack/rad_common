@@ -39,7 +39,7 @@ RSpec.describe User, type: :model do
     let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
 
     before do
-      allow(RadConfig).to receive(:pending_user_status?).and_return true
+      allow(RadConfig).to receive(:pending_users?).and_return true
       user.update! user_status: create(:user_status, :pending)
     end
 

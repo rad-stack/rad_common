@@ -1,4 +1,4 @@
-- if RadConfig.pending_user_status? && policy(User.new).update?
+- if RadConfig.pending_users? && policy(User.new).update?
   .card
     = render 'layouts/card_header', action_name: 'custom',
                                     title: "Pending Users (#{@pending.total_count})",

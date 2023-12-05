@@ -5,7 +5,7 @@ class RadSpecSupport
 
     rspec.allow(Company).to rspec.receive(:main).and_return(Company.main || rspec.create(:company))
 
-    if RadConfig.pending_user_status?
+    if RadConfig.pending_users?
       pending_status = UserStatus.default_pending_status
 
       rspec.allow(UserStatus).to rspec.receive(:default_pending_status).and_return pending_status || rspec.create(

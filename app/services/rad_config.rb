@@ -228,8 +228,8 @@ class RadConfig
       boolean_config_item! :manually_create_users
     end
 
-    def pending_user_status?
-      boolean_config_item! :pending_user_status
+    def pending_users?
+      boolean_config_item! :pending_users
     end
 
     def show_help_menu?

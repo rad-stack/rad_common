@@ -26,7 +26,7 @@ class UserSearch < RadCommon::Search
                { column: 'mobile_phone', type: RadCommon::LikeFilter, input_label: 'Mobile Phone' },
                { input_label: 'Status',
                  column: :user_status_id,
-                 options: RadConfig.pending_user_status? ? UserStatus.not_pending.by_id : UserStatus.by_id,
+                 options: RadConfig.pending_users? ? UserStatus.not_pending.by_id : UserStatus.by_id,
                  default_value: UserStatus.default_active_status.id }]
 
       if RadConfig.external_users? && current_user.internal?
