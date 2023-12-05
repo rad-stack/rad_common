@@ -32,7 +32,7 @@ RSpec.describe 'Users', type: :system do
       end
 
       it "doesn't show pending users", :pending_user_specs do
-        pending_user = create(:user, user_status: pending_status)
+        pending_user = create :user, user_status: pending_status
         visit users_path
 
         if Pundit.policy!(user, User.new).update?
@@ -111,7 +111,7 @@ RSpec.describe 'Users', type: :system do
       end
 
       it 'shows pending users', :pending_user_specs do
-        pending_user = create(:user, user_status: pending_status)
+        pending_user = create :user, user_status: pending_status
         visit users_path
 
         if Pundit.policy!(admin, User.new).update?
