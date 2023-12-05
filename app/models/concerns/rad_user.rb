@@ -230,8 +230,13 @@ module RadUser
         self.external = security_roles.first.external
       end
 
-      status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
-      self.user_status = status if new_record? && !user_status
+      self.user_status = default_user_status if new_record? && !user_status
+    end
+
+    def default_user_status
+      return UserStatus.default_active_status unless RadConfig.pending_user_status?
+
+      auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
     end
 
     def initial_security_role
