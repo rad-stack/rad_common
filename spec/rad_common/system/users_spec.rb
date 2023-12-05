@@ -111,7 +111,7 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content external_user.to_s if RadConfig.external_users?
       end
 
-      it 'shows pending users' do
+      it 'shows pending users', :pending_user_specs do
         visit users_path
 
         if Pundit.policy!(admin, User.new).update?
