@@ -288,8 +288,8 @@ module RadCommon
       end
 
       def apply_mixed_group_scope_values(results, values)
-        scopes = grouped_scope_values.intersection(scope_name.map(&:to_sym))
-        values = (scope_name.compact - scopes.map(&:to_s)).reject(&:blank?)
+        scopes = grouped_scope_values.intersection(values.map(&:to_sym))
+        values = (values.compact - scopes.map(&:to_s)).reject(&:blank?)
         results = results.where("#{searchable_name} IN (?)", values) if values.present?
         scopes.each { |scope|  results = results.send(scope) }
 
