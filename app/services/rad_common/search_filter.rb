@@ -291,7 +291,7 @@ module RadCommon
         scopes = grouped_scope_values.intersection(values.map(&:to_sym))
         values = (values.compact - scopes.map(&:to_s)).reject(&:blank?)
         results = results.where("#{searchable_name} IN (?)", values) if values.present?
-        scopes.each { |scope|  results = results.send(scope) }
+        scopes.each { |scope| results = results.send(scope) }
 
         results
       end
