@@ -305,6 +305,7 @@ RSpec.describe 'Users', type: :system do
 
       click_button 'Sign Up'
       expect(page).to have_content 'message with a confirmation link has been sent'
+      expect(User.last.user_status.active?).to be false
     end
 
     it "can't sign up with invalid email address" do
