@@ -132,11 +132,6 @@ module RadUser
     permission?(:admin)
   end
 
-  def auto_approve?
-    # override this as needed in model
-    false
-  end
-
   def greeting
     "Hello #{first_name}"
   end
@@ -236,7 +231,7 @@ module RadUser
       return UserStatus.default_active_status unless RadConfig.pending_users?
       return UserStatus.default_active_status if invited_by.present?
 
-      auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
+      UserStatus.default_pending_status
     end
 
     def initial_security_role
@@ -291,7 +286,8 @@ module RadUser
     end
 
     def notify_user_approved
-      return if auto_approve? || invited_to_sign_up? || !RadConfig.pending_users?
+      return unless RadConfig.pending_users?
+      return if invited_to_sign_up?
 
       return unless user_status_id_previously_changed?(from: UserStatus.default_pending_status.id,
                                                        to: UserStatus.default_active_status.id)

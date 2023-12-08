@@ -24,7 +24,6 @@ RSpec.describe User, type: :model do
 
     before do
       create :admin, user_status: active_status
-      allow_any_instance_of(described_class).to receive(:auto_approve?).and_return false
 
       ActionMailer::Base.deliveries = []
       user.update! user_status: active_status, do_not_notify_approved: false
