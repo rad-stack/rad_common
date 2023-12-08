@@ -2,9 +2,10 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   let(:security_role) { create :security_role }
-  let(:user) { create :user, security_roles: [security_role] }
-  let(:active_status) { create :user_status, :active }
-  let(:inactive_status) { create :user_status, :inactive }
+  let(:user) { create :user, security_roles: [security_role], user_status: active_status }
+  let(:active_status) { UserStatus.default_active_status.presence || create(:user_status, :active, name: 'Active') }
+  let(:inactive_status) { UserStatus.default_inactive_status.presence || create(:user_status, :inactive, name: 'Inactive') }
+  let(:pending_status) { UserStatus.default_pending_status.presence || create(:user_status, :pending, name: 'Pending') }
 
   let(:attributes) do
     { first_name: 'Example',
@@ -17,12 +18,12 @@ RSpec.describe User, type: :model do
 
   describe 'notify_user_approved' do
     let(:notification_type) { Notifications::UserWasApprovedNotification.main }
-    let(:user) { create :user, security_roles: [security_role], user_status: inactive_status }
+    let(:user) { create :user, security_roles: [security_role], user_status: pending_status }
     let(:first_mail) { ActionMailer::Base.deliveries.first }
     let(:last_mail) { ActionMailer::Base.deliveries.last }
 
     before do
-      create :admin
+      create :admin, user_status: active_status
       allow_any_instance_of(described_class).to receive(:auto_approve?).and_return false
 
       ActionMailer::Base.deliveries = []

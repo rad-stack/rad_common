@@ -80,8 +80,7 @@ module RadUser
     after_initialize :twilio_verify_default, if: :new_record?
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
-    after_save :notify_user_approved
-
+    after_commit :notify_user_approved, only: :update
     after_invitation_accepted :notify_user_accepted
 
     strip_attributes
@@ -292,10 +291,10 @@ module RadUser
     end
 
     def notify_user_approved
-      return if auto_approve?
+      return if auto_approve? || invited_to_sign_up? || !RadConfig.pending_users?
 
-      return unless saved_change_to_user_status_id? && user_status &&
-                    user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
+      return unless user_status_id_previously_changed?(from: UserStatus.default_pending_status.id,
+                                                       to: UserStatus.default_active_status.id)
 
       notify_user_approved_user
       notify_user_approved_admins
