@@ -4,8 +4,11 @@ RSpec.describe User, type: :model do
   let(:security_role) { create :security_role }
   let(:user) { create :user, security_roles: [security_role], user_status: active_status }
   let(:active_status) { UserStatus.default_active_status.presence || create(:user_status, :active, name: 'Active') }
-  let(:inactive_status) { UserStatus.default_inactive_status.presence || create(:user_status, :inactive, name: 'Inactive') }
   let(:pending_status) { UserStatus.default_pending_status.presence || create(:user_status, :pending, name: 'Pending') }
+
+  let(:inactive_status) do
+    UserStatus.default_inactive_status.presence || create(:user_status, :inactive, name: 'Inactive')
+  end
 
   let(:attributes) do
     { first_name: 'Example',
@@ -40,7 +43,7 @@ RSpec.describe User, type: :model do
 
     before do
       allow(RadConfig).to receive(:pending_users?).and_return true
-      allow_any_instance_of(User).to receive(:notify_user_approved).and_return(nil)
+      allow_any_instance_of(described_class).to receive(:notify_user_approved).and_return(nil)
       user.update! user_status: create(:user_status, :pending)
     end
 
