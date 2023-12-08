@@ -98,6 +98,18 @@ module RadUser
     active
   end
 
+  def needs_confirmation?
+    RadConfig.user_confirmable? && !confirmed?
+  end
+
+  def needs_accept_invite?
+    invitation_sent_at.present? && invitation_accepted_at.blank?
+  end
+
+  def needs_reactivate?
+    RadConfig.user_expirable? && expired?
+  end
+
   def stale?
     updated_at < 4.months.ago
   end
