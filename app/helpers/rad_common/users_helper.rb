@@ -21,15 +21,15 @@ module RadCommon
       items = [user.user_status.name, ' ']
 
       if user.needs_confirmation?
-        items += [user_status_icon('fa-circle-question', 'This user has not yet confirmed their email.'), ' ']
+        items += user_status_icon('fa-circle-question', 'This user has not yet confirmed their email.')
       end
 
       if user.needs_accept_invite?
-        items += [user_status_icon('fa-envelope', 'This user has not yet accepted their invitation.'), ' ']
+        items += user_status_icon('fa-envelope', 'This user has not yet accepted their invitation.')
       end
 
       if user.needs_reactivate?
-        items += [user_status_icon('fa-triangle-exclamation', 'This user is expired due to inactivity.'), ' ']
+        items += user_status_icon('fa-triangle-exclamation', 'This user is expired due to inactivity.')
       end
 
       tag.div do
@@ -38,9 +38,7 @@ module RadCommon
     end
 
     def user_status_icon(icon, tooltip)
-      tag.span(class: 'text-warning') do
-        icon_tooltip 'span', tooltip, icon
-      end
+      [icon_tooltip('span', tooltip, icon, html_class: 'text-warning'), ' ']
     end
 
     def my_profile_nav?
