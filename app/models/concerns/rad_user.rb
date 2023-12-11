@@ -192,11 +192,15 @@ module RadUser
   end
 
   def send_reset_password_instructions
-    if invited_to_sign_up?
-      errors.add :email, :not_found
-    else
-      super
-    end
+    raise "There is an open invitation for this user: #{email}" if needs_accept_invite?
+
+    super
+  end
+
+  def pending_any_confirmation
+    raise "There is an open invitation for this user: #{email}" if needs_accept_invite?
+
+    super
   end
 
   def test_email!

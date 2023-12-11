@@ -12,14 +12,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
   let(:external_email) { "#{Faker::Internet.user_name}@#{external_domain}" }
   let!(:internal_role) { create :security_role, allow_invite: true }
   let!(:external_role) { create :security_role, :external, allow_invite: true }
-
-  let(:invite_message) do
-    if Devise.paranoid
-      'If your email address exists in our database, you will receive a password'
-    else
-      'not found'
-    end
-  end
+  let(:open_invite_error) { "There is an open invitation for this user: #{invitee.email}" }
 
   describe 'user' do
     before { login_as user, scope: :user }
@@ -179,18 +172,6 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
                    initial_security_role_id: internal_role.id)
     end
 
-    it 'does not allow invitee to reset password after invite expires' do
-      expect(invitee.errors.count).to eq(0)
-      invitee.invitation_created_at = 3.weeks.ago
-      invitee.invitation_sent_at = 3.weeks.ago
-      invitee.save!
-
-      visit new_user_password_path
-      fill_in 'Email', with: invitee.email
-      click_button 'Send Me Reset Password Instructions'
-      expect(page).to have_content invite_message
-    end
-
     it 'notifies admin when invitee accepts' do
       ActionMailer::Base.deliveries = []
       admin
@@ -203,14 +184,15 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     end
 
     it "doesn't let unaccepted invitee reset password" do
-      ActionMailer::Base.deliveries = []
-
       visit new_user_password_path
       fill_in 'Email', with: invitee.email
-      click_button 'Send Me Reset Password Instructions'
-      expect(page).to have_content invite_message
+      expect { click_button 'Send Me Reset Password Instructions' }.to raise_error(open_invite_error)
+    end
 
-      expect(ActionMailer::Base.deliveries.count).to eq 0
+    it "doesn't let unaccepted invitee request confirmation instructions" do
+      visit new_user_confirmation_path
+      fill_in 'Email', with: invitee.email
+      expect { click_button 'Resend Confirmation Instructions' }.to raise_error(open_invite_error)
     end
   end
 end
