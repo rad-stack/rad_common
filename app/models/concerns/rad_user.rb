@@ -157,7 +157,7 @@ module RadUser
   end
 
   def display_style
-    if user_status.active || user_status == UserStatus.default_pending_status
+    if user_status.active || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
       external? ? 'table-warning' : ''
     else
       'table-danger'
