@@ -54,7 +54,7 @@
             %td
               - if show_actions_record
                 = format_date(user.created_at)
-          %td= user.user_status
+          %td= user_status_item user
           - if show_roles && show_actions
             %td
               - if show_actions_record

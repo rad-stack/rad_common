@@ -60,6 +60,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
 
           expect(page).to have_content "We invited '#{first_name} #{last_name}'"
           expect(User.last.security_roles.first).to eq invite_role
+          expect(User.last.user_status.active?).to be true
         end
 
         context 'with internal user' do
