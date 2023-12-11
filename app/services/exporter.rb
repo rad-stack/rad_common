@@ -1,6 +1,7 @@
 class Exporter
   include RadCommon::ApplicationHelper
   include EnumsHelper
+  include ActionView::Helpers::NumberHelper
 
   attr_reader :records, :current_record, :current_user, :format
 
