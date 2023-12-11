@@ -229,6 +229,8 @@ module RadCommon
         values = grouped_scope_values
         return false if values.blank?
 
+        return values.intersect?(value.map(&:to_sym).reject(&:blank?)) if value.is_a?(Array)
+
         values.include?(value.to_sym)
       end
 
@@ -280,7 +282,18 @@ module RadCommon
       end
 
       def apply_scope_grouped_value(results, scope_name)
+        return apply_mixed_group_scope_values(results, scope_name) if scope_name.is_a?(Array)
+
         results.send(scope_name)
+      end
+
+      def apply_mixed_group_scope_values(results, values)
+        scopes = grouped_scope_values.intersection(values.map(&:to_sym))
+        values = (values.compact - scopes.map(&:to_s)).reject(&:blank?)
+        results = results.where("#{searchable_name} IN (?)", values) if values.present?
+        scopes.each { |scope| results = results.send(scope) }
+
+        results
       end
 
       def apply_scope_a_value(results, scope_name)
