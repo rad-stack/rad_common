@@ -50,6 +50,10 @@ class BaseReport
     export_job.present?
   end
 
+  def csv?
+    params[:format] == 'csv'
+  end
+
   def orientation
     'Portrait'.freeze
   end
