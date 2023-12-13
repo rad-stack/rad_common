@@ -37,15 +37,6 @@ class BaseReport
     items.join(', ')
   end
 
-  # Override default start and end dates in sub classes as needed
-  def end_date_default
-    end_of_last_week
-  end
-
-  def start_date_default
-    beginning_of_last_week
-  end
-
   def sub_title
     "#{start_date.to_formatted_s(:long)} through #{end_date.to_formatted_s(:long)}"
   end
@@ -67,6 +58,16 @@ class BaseReport
   def export_job; end
 
   private
+
+    # Override default start and end dates in sub classes as needed
+
+    def start_date_default
+      beginning_of_last_week
+    end
+
+    def end_date_default
+      end_of_last_week
+    end
 
     def beginning_of_last_week
       end_of_last_week.beginning_of_week
