@@ -1,7 +1,7 @@
 class BaseReport
-  attr_accessor :current_user, :view_context, :params, :start_date, :end_date, :invalid_date
+  include RadCommon::ApplicationHelper
 
-  delegate :format_date, :format_datetime, :format_date_long, to: :view_context
+  attr_accessor :current_user, :view_context, :params, :start_date, :end_date, :invalid_date
 
   def initialize(current_user, view_context, params)
     @current_user = current_user
