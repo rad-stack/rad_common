@@ -1,10 +1,11 @@
 class BaseReport
-  include ActionView::Helpers::TagHelper
+  attr_accessor :current_user, :view_context, :params, :start_date, :end_date, :invalid_date
 
-  attr_accessor :current_user, :params, :start_date, :end_date, :invalid_date
+  delegate :format_date, :format_datetime, :format_date_long, to: :view_context
 
-  def initialize(current_user, params)
+  def initialize(current_user, view_context, params)
     @current_user = current_user
+    @view_context = view_context
     @params = params
     @invalid_date = false
 
@@ -38,7 +39,7 @@ class BaseReport
   end
 
   def sub_title
-    "#{start_date.to_formatted_s(:long)} through #{end_date.to_formatted_s(:long)}"
+    "#{format_date_long(start_date)} through #{format_date_long(end_date)}"
   end
 
   def printable?
