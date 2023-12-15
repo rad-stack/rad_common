@@ -50,6 +50,10 @@ class BaseReport
     export_job.present?
   end
 
+  def clear_filters_button?
+    true
+  end
+
   def csv?
     params[:format] == 'csv'
   end
