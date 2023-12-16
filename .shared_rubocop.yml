@@ -131,6 +131,9 @@ Rails/FilePath:
   Exclude:
     - 'config/environments/development.rb'
 
+Rails/FindEach:
+  Enabled: false
+
 # Check for uses of braces around single-line blocks, and also for multi-line blocks with an
 # attached method like: {...}.where
 # It will still preferentially choose do/end for multi-line blocks
