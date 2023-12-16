@@ -1,10 +1,11 @@
 class BaseReport
-  include ActionView::Helpers::TagHelper
+  include RadCommon::ApplicationHelper
 
-  attr_accessor :current_user, :params, :start_date, :end_date, :invalid_date
+  attr_accessor :current_user, :view_context, :params, :start_date, :end_date, :invalid_date
 
-  def initialize(current_user, params)
+  def initialize(current_user, view_context, params)
     @current_user = current_user
+    @view_context = view_context
     @params = params
     @invalid_date = false
 
@@ -37,17 +38,8 @@ class BaseReport
     items.join(', ')
   end
 
-  # Override default start and end dates in sub classes as needed
-  def end_date_default
-    end_of_last_week
-  end
-
-  def start_date_default
-    beginning_of_last_week
-  end
-
   def sub_title
-    "#{start_date.to_formatted_s(:long)} through #{end_date.to_formatted_s(:long)}"
+    "#{format_date_long(start_date)} through #{format_date_long(end_date)}"
   end
 
   def printable?
@@ -56,6 +48,14 @@ class BaseReport
 
   def csv_exportable?
     export_job.present?
+  end
+
+  def clear_filters_button?
+    true
+  end
+
+  def csv?
+    params[:format] == 'csv'
   end
 
   def orientation
@@ -67,6 +67,16 @@ class BaseReport
   def export_job; end
 
   private
+
+    # Override default start and end dates in sub classes as needed
+
+    def start_date_default
+      beginning_of_last_week
+    end
+
+    def end_date_default
+      end_of_last_week
+    end
 
     def beginning_of_last_week
       end_of_last_week.beginning_of_week

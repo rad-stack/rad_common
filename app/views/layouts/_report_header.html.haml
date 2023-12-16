@@ -35,4 +35,5 @@
             = render partial: "#{controller_name}/report_form", locals: { f: f }
         .form-actions
           = f.button :button, icon(:filter, 'Apply Filters'), class: 'btn btn-success'
-          = link_to icon(:times, 'Clear Filters'), main_path, class: 'btn btn-danger'
+          - if @report.clear_filters_button?
+            = link_to icon(:times, 'Clear Filters'), main_path, class: 'btn btn-danger'

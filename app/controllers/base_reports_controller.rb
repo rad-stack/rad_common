@@ -18,7 +18,7 @@ class BaseReportsController < ApplicationController
       format.csv do
         export_job.perform_later(params.to_unsafe_hash, current_user.id, format: :csv)
         flash[:success] = report_generating_message
-        redirect_to action: :index
+        redirect_back fallback_location: :index
       end
     end
   end
