@@ -247,10 +247,11 @@ module RadCommon
       grouped = users.include?(current_user) ? [['Me', [current_user]]] : []
       users = users.where.not(id: current_user.id)
 
-      inactive = always_include if always_include.present? && !always_include.active
-
       grouped.push(['Users', users]) if users.any?
-      grouped.push(['Inactive', [inactive]]) if inactive
+
+      if always_include.present? && (!always_include.active? || users.exclude?(always_include) )
+        grouped.push(['Inactive', [always_include]])
+      end
 
       grouped
     end

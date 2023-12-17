@@ -11,15 +11,20 @@ describe RadCommon::UsersHelper do
   describe 'user_grouped_collection' do
     let(:user) { create :user, first_name: 'Allan' }
     let(:another_user) { create :user, first_name: 'Bobby' }
-    let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
+    let(:inactive_user) { create :user, :inactive }
 
     before do
       user
       another_user
+      inactive_user
     end
 
-    it 'returns users' do
-      expect(helper.user_grouped_collection(nil)).to eq result
+    context 'with standard case' do
+      let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
+
+      it 'returns users' do
+        expect(helper.user_grouped_collection(nil)).to eq result
+      end
     end
 
     context 'with scope' do
@@ -45,6 +50,42 @@ describe RadCommon::UsersHelper do
 
       it 'returns users' do
         expect(helper.user_grouped_collection(nil, scopes: [:with_mobile_phone])).to eq result
+      end
+    end
+
+    context 'with always include' do
+      context 'with active user' do
+        let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
+
+        it 'returns users' do
+          expect(helper.user_grouped_collection(user)).to eq result
+        end
+      end
+
+      context 'with inactive user' do
+        let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
+
+        it 'returns users' do
+          expect(helper.user_grouped_collection(inactive_user)).to eq result
+        end
+      end
+
+      context 'with active user not in scope' do
+        let(:user) { create :user, first_name: 'Allan', mobile_phone: nil }
+        let(:result) { [['Me', [current_user]], ['Users', [another_user]], ['Inactive', [user]]] }
+
+        it 'returns users' do
+          expect(helper.user_grouped_collection(user, scopes: [:with_mobile_phone])).to eq result
+        end
+      end
+
+      context 'with inactive user not in scope' do
+        let(:inactive_user) { create :user, :inactive, mobile_phone: nil }
+        let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
+
+        it 'returns users' do
+          expect(helper.user_grouped_collection(inactive_user, scopes: [:with_mobile_phone])).to eq result
+        end
       end
     end
   end
