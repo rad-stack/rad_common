@@ -239,14 +239,16 @@ module RadCommon
       'users-collapse'
     end
 
-    def user_grouped_collection(user, scopes: [])
-      users = Pundit.policy_scope!(current_user, User).active.by_name.where.not(id: current_user.id)
+    def user_grouped_collection(always_include, scopes: [])
+      users = Pundit.policy_scope!(current_user, User).active.by_name
 
       scopes.each { |scope| users = users.send(scope) }
 
-      inactive = user if user && !user.active
+      grouped = users.include?(current_user) ? [['Me', [current_user]]] : []
+      users = users.where.not(id: current_user.id)
 
-      grouped = [['Me', [current_user]]]
+      inactive = always_include if always_include.present? && !always_include.active
+
       grouped.push(['Users', users]) if users.any?
       grouped.push(['Inactive', [inactive]]) if inactive
 

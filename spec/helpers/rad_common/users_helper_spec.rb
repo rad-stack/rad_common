@@ -38,5 +38,14 @@ describe RadCommon::UsersHelper do
         expect(helper.user_grouped_collection(nil, scopes: [:with_mobile_phone])).to eq result
       end
     end
+
+    context 'with scope without me' do
+      let(:current_user) { create :user, mobile_phone: nil }
+      let(:result) { [['Users', [user, another_user]]] }
+
+      it 'returns users' do
+        expect(helper.user_grouped_collection(nil, scopes: [:with_mobile_phone])).to eq result
+      end
+    end
   end
 end
