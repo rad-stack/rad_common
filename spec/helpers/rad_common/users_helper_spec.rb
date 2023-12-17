@@ -9,9 +9,13 @@ describe RadCommon::UsersHelper do
   end
 
   describe 'user_grouped_collection' do
+    subject { helper.user_grouped_collection(always_include, scopes: scopes) }
+
     let(:user) { create :user, first_name: 'Allan' }
     let(:another_user) { create :user, first_name: 'Bobby' }
     let(:inactive_user) { create :user, :inactive }
+    let(:always_include) { nil }
+    let(:scopes) { [] }
 
     before do
       user
@@ -22,70 +26,63 @@ describe RadCommon::UsersHelper do
     context 'with standard case' do
       let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
 
-      it 'returns users' do
-        expect(helper.user_grouped_collection(nil)).to eq result
-      end
+      it { is_expected.to eq result }
     end
 
     context 'with scope' do
+      let(:scopes) { [:with_mobile_phone] }
       let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
 
-      it 'returns users' do
-        expect(helper.user_grouped_collection(nil, scopes: [:with_mobile_phone])).to eq result
-      end
+      it { is_expected.to eq result }
     end
 
     context 'with scope without another user' do
+      let(:scopes) { [:with_mobile_phone] }
       let(:another_user) { create :user, mobile_phone: nil }
       let(:result) { [['Me', [current_user]], ['Users', [user]]] }
 
-      it 'returns users' do
-        expect(helper.user_grouped_collection(nil, scopes: [:with_mobile_phone])).to eq result
-      end
+      it { is_expected.to eq result }
     end
 
     context 'with scope without me' do
+      let(:scopes) { [:with_mobile_phone] }
       let(:current_user) { create :user, mobile_phone: nil }
       let(:result) { [['Users', [user, another_user]]] }
 
-      it 'returns users' do
-        expect(helper.user_grouped_collection(nil, scopes: [:with_mobile_phone])).to eq result
-      end
+      it { is_expected.to eq result }
     end
 
     context 'with always include' do
       context 'with active user' do
+        let(:always_include) { user }
         let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
 
-        it 'returns users' do
-          expect(helper.user_grouped_collection(user)).to eq result
-        end
+        it { is_expected.to eq result }
       end
 
       context 'with inactive user' do
+        let(:always_include) { inactive_user }
         let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
 
-        it 'returns users' do
-          expect(helper.user_grouped_collection(inactive_user)).to eq result
-        end
+        it { is_expected.to eq result }
       end
 
       context 'with active user not in scope' do
+        let(:scopes) { [:with_mobile_phone] }
+        let(:always_include) { user }
         let(:user) { create :user, first_name: 'Allan', mobile_phone: nil }
         let(:result) { [['Me', [current_user]], ['Users', [another_user]], ['Inactive', [user]]] }
 
-        it 'returns users' do
-          expect(helper.user_grouped_collection(user, scopes: [:with_mobile_phone])).to eq result
-        end
+        it { is_expected.to eq result }
       end
 
       context 'with inactive user not in scope' do
+        let(:scopes) { [:with_mobile_phone] }
+        let(:always_include) { inactive_user }
         let(:inactive_user) { create :user, :inactive, mobile_phone: nil }
         let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
 
-        it 'returns users' do
-          expect(helper.user_grouped_collection(inactive_user, scopes: [:with_mobile_phone])).to eq result
-        end
+        it { is_expected.to eq result }
       end
     end
   end
