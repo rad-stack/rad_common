@@ -249,7 +249,7 @@ module RadCommon
 
       grouped.push(['Users', users]) if users.any?
 
-      if always_include.present? && (!always_include.active? || users.exclude?(always_include) )
+      if always_include.present? && (!always_include.active? || users.exclude?(always_include))
         grouped.push(['Inactive', [always_include]])
       end
 
