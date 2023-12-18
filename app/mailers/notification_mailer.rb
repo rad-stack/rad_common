@@ -2,17 +2,17 @@ class NotificationMailer < RadMailer
   before_action :enable_settings_link
 
   def new_user_signed_up(recipients, user)
-    auto_approve = user.auto_approve?
+    user_is_active = user.user_status.active?
 
     action_message = 'Review their user registration information'
-    action_message += auto_approve ? ' if desired.' : ' and approve them if desired.'
+    action_message += user_is_active ? ' if desired.' : ' and approve them if desired.'
 
     @email_action = { message: action_message,
-                      button_text: auto_approve ? 'Review' : 'Review & Approve',
+                      button_text: user_is_active ? 'Review' : 'Review & Approve',
                       button_url: edit_user_url(user) }
 
     @message = "#{user} has signed up on #{RadConfig.app_name!}"
-    @message += auto_approve ? '.' : ' and is awaiting approval.'
+    @message += user_is_active ? '.' : ' and is awaiting approval.'
 
     send_notification_mail recipients, "New User on #{RadConfig.app_name!}"
   end

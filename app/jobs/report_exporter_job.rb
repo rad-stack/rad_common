@@ -3,7 +3,7 @@ class ReportExporterJob < ApplicationJob
 
   def perform(params, user_id, format: Exporter::DEFAULT_FORMAT)
     user = User.find(user_id)
-    report = report_class.new(user, params)
+    report = report_class.new(user, nil, params)
     exporter = export_class.new(report: report, current_user: user, format: format)
     export = exporter.generate
 

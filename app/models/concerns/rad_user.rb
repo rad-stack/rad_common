@@ -80,8 +80,7 @@ module RadUser
     after_initialize :twilio_verify_default, if: :new_record?
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
-    after_save :notify_user_approved
-
+    after_commit :notify_user_approved, only: :update
     after_invitation_accepted :notify_user_accepted
 
     strip_attributes
@@ -97,6 +96,18 @@ module RadUser
 
   def active?
     active
+  end
+
+  def needs_confirmation?
+    RadConfig.user_confirmable? && !confirmed?
+  end
+
+  def needs_accept_invite?
+    invitation_sent_at.present? && invitation_accepted_at.blank?
+  end
+
+  def needs_reactivate?
+    RadConfig.user_expirable? && expired?
   end
 
   def stale?
@@ -133,11 +144,6 @@ module RadUser
     permission?(:admin)
   end
 
-  def auto_approve?
-    # override this as needed in model
-    false
-  end
-
   def greeting
     "Hello #{first_name}"
   end
@@ -151,7 +157,7 @@ module RadUser
   end
 
   def display_style
-    if user_status.active || user_status == UserStatus.default_pending_status
+    if user_status.active || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
       external? ? 'table-warning' : ''
     else
       'table-danger'
@@ -186,11 +192,15 @@ module RadUser
   end
 
   def send_reset_password_instructions
-    if invited_to_sign_up?
-      errors.add :email, :not_found
-    else
-      super
-    end
+    raise "There is an open invitation for this user: #{email}" if needs_accept_invite?
+
+    super
+  end
+
+  def pending_any_confirmation
+    raise "There is an open invitation for this user: #{email}" if needs_accept_invite?
+
+    super
   end
 
   def test_email!
@@ -230,8 +240,14 @@ module RadUser
         self.external = security_roles.first.external
       end
 
-      status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
-      self.user_status = status if new_record? && !user_status
+      self.user_status = default_user_status if new_record? && !user_status
+    end
+
+    def default_user_status
+      return UserStatus.default_active_status unless RadConfig.pending_users?
+      return UserStatus.default_active_status if invited_by.present?
+
+      UserStatus.default_pending_status
     end
 
     def initial_security_role
@@ -286,10 +302,11 @@ module RadUser
     end
 
     def notify_user_approved
-      return if auto_approve?
+      return unless RadConfig.pending_users?
+      return if invited_to_sign_up?
 
-      return unless saved_change_to_user_status_id? && user_status &&
-                    user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
+      return unless user_status_id_previously_changed?(from: UserStatus.default_pending_status.id,
+                                                       to: UserStatus.default_active_status.id)
 
       notify_user_approved_user
       notify_user_approved_admins

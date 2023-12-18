@@ -5,6 +5,7 @@ RSpec.describe 'Users', type: :system do
 
   let(:user_status) { UserStatus.default_active_status }
   let(:pending_status) { UserStatus.default_pending_status }
+  let(:inactive_status) { UserStatus.default_inactive_status }
   let(:user) { create :user, user_status: user_status }
   let(:admin) { create :admin }
   let(:password) { 'cOmpl3x_p@55w0rd' }
@@ -15,8 +16,6 @@ RSpec.describe 'Users', type: :system do
     before { login_as user, scope: :user }
 
     describe 'index' do
-      let!(:pending_user) { create :user, user_status: pending_status }
-
       before { visit users_path }
 
       it 'shows users and limited info' do
@@ -32,7 +31,8 @@ RSpec.describe 'Users', type: :system do
         end
       end
 
-      it "doesn't show pending users" do
+      it "doesn't show pending users", :pending_user_specs do
+        pending_user = create :user, user_status: pending_status
         visit users_path
 
         if Pundit.policy!(user, User.new).update?
@@ -91,7 +91,6 @@ RSpec.describe 'Users', type: :system do
 
     describe 'index' do
       let(:result_label) { RadConfig.external_users? ? 'Users (2)' : 'Users (1)' }
-      let!(:pending_user) { create :user, user_status: pending_status }
 
       before { external_user.update! user_status: user.user_status if RadConfig.external_users? }
 
@@ -111,7 +110,8 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content external_user.to_s if RadConfig.external_users?
       end
 
-      it 'shows pending users' do
+      it 'shows pending users', :pending_user_specs do
+        pending_user = create :user, user_status: pending_status
         visit users_path
 
         if Pundit.policy!(admin, User.new).update?
@@ -305,6 +305,7 @@ RSpec.describe 'Users', type: :system do
 
       click_button 'Sign Up'
       expect(page).to have_content 'message with a confirmation link has been sent'
+      expect(User.last.user_status.active?).to be false if RadConfig.pending_users?
     end
 
     it "can't sign up with invalid email address" do
@@ -327,7 +328,7 @@ RSpec.describe 'Users', type: :system do
     before { allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false) }
 
     it 'can not sign in without active user status' do
-      user.update!(user_status: pending_status)
+      user.update!(user_status: RadConfig.pending_users? ? pending_status : inactive_status)
 
       visit new_user_session_path
 
@@ -429,7 +430,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'devise paranoid setting', :devise_paranoid_specs do
+  describe 'devise paranoid setting' do
     it 'wrong password - does not specify if email or password is wrong' do
       visit new_user_session_path
       fill_in 'user_email', with: user.email

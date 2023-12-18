@@ -5,6 +5,7 @@ default: &default
   disable_sign_up: false
   disable_invite: false
   manually_create_users: false
+  pending_users: true
   secure_sentry: true
   external_users: true
   validate_external_email_domain: true

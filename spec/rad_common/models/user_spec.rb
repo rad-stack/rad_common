@@ -2,9 +2,13 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   let(:security_role) { create :security_role }
-  let(:user) { create :user, security_roles: [security_role] }
-  let(:active_status) { create :user_status, :active }
-  let(:inactive_status) { create :user_status, :inactive }
+  let(:user) { create :user, security_roles: [security_role], user_status: active_status }
+  let(:active_status) { UserStatus.default_active_status.presence || create(:user_status, :active, name: 'Active') }
+  let(:pending_status) { UserStatus.default_pending_status.presence || create(:user_status, :pending, name: 'Pending') }
+
+  let(:inactive_status) do
+    UserStatus.default_inactive_status.presence || create(:user_status, :inactive, name: 'Inactive')
+  end
 
   let(:attributes) do
     { first_name: 'Example',
@@ -15,15 +19,14 @@ RSpec.describe User, type: :model do
       password_confirmation: 'cOmpl3x_p@55w0rd' }
   end
 
-  describe 'notify_user_approved' do
+  describe 'notify_user_approved', :pending_user_specs do
     let(:notification_type) { Notifications::UserWasApprovedNotification.main }
-    let(:user) { create :user, security_roles: [security_role], user_status: inactive_status }
+    let(:user) { create :user, security_roles: [security_role], user_status: pending_status }
     let(:first_mail) { ActionMailer::Base.deliveries.first }
     let(:last_mail) { ActionMailer::Base.deliveries.last }
 
     before do
-      create :admin
-      allow_any_instance_of(described_class).to receive(:auto_approve?).and_return false
+      create :admin, user_status: active_status
 
       ActionMailer::Base.deliveries = []
       user.update! user_status: active_status, do_not_notify_approved: false
@@ -38,7 +41,11 @@ RSpec.describe User, type: :model do
   describe 'auditing of associations' do
     let(:audit) { user.own_and_associated_audits.reorder('created_at DESC').first }
 
-    before { user.update! user_status: UserStatus.default_pending_status }
+    before do
+      allow(RadConfig).to receive(:pending_users?).and_return true
+      allow_any_instance_of(described_class).to receive(:notify_user_approved).and_return(nil)
+      user.update! user_status: create(:user_status, :pending)
+    end
 
     context 'with create' do
       before do
