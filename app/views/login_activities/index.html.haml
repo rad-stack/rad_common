@@ -9,7 +9,7 @@
         = render 'layouts/sort_headers', search: @login_activity_search
 
       - @login_activities.each do |record|
-        %tr{ class: table_row_style(record, method_name: :success?) }
+        %tr{ class: table_row_style(record) }
           %td= format_datetime(record.created_at)
           %td= record.identity
           %td= format_boolean(record.success)
