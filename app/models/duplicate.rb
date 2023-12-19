@@ -3,11 +3,16 @@ class Duplicate < ApplicationRecord
 
   after_commit :maybe_notify_duplicates, on: :create
 
-  def maybe_notify_duplicates
-    return if duplicatable.duplicates_resetting
-    return unless score && score >= duplicatable.class.score_upper_threshold
+  private
 
-    Notifications::DuplicateFoundUserNotification.main.notify! duplicatable
-    Notifications::DuplicateFoundAdminNotification.main.notify! duplicatable
-  end
+    def maybe_notify_duplicates
+      return if duplicatable.duplicates_resetting
+      return unless score && score >= duplicatable.class.score_upper_threshold
+
+      admin_notification = Notifications::DuplicateFoundAdminNotification.main(duplicatable)
+      user_notification = Notifications::DuplicateFoundUserNotification.main(duplicatable)
+
+      user_notification.notify! if user_notification.should_send?(admin_notification)
+      admin_notification.notify!
+    end
 end

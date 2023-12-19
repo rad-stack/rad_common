@@ -35,6 +35,7 @@ module RadCommonRoutes
             get :not
             put :do_later
             put :reset
+            put :switch
             patch :merge
             post :check_duplicate
           end

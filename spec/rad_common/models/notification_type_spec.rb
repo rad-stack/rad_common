@@ -3,11 +3,9 @@ require 'rails_helper'
 RSpec.describe NotificationType, type: :model do
   let(:user) { create :admin }
   let!(:security_role) { user.security_roles.first }
-  let(:notification_type) { Notifications::InvalidDataWasFoundNotification.main }
+  let(:notification_type) { Notifications::InvalidDataWasFoundNotification.main(notification_payload) }
   let(:notification_method) { :email }
   let(:notification_payload) { [] }
-
-  before { notification_type.payload = notification_payload }
 
   describe 'notify_feed' do
     subject { user.notifications.last.unread }

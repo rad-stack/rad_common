@@ -12,13 +12,13 @@ Gem::Specification.new do |s|
   s.description = 'A library of common functions for a standard business web app, developed by Radical Bear'
   s.license = 'MIT'
   s.metadata['rubygems_mfa_required'] = 'true'
-  s.required_ruby_version = '>= 3.0.4'
+  s.required_ruby_version = '>= 3.2.2'
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   s.bindir = 'bin'
   s.executables = %w[reset_db migrate_reset rc_update rc_rspec rc_parallel_rspec]
 
-  s.add_dependency 'active_storage_validations'
+  s.add_dependency 'active_storage_validations', '1.0.4' # see Task 43068
   s.add_dependency 'audited'
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'nokogiri'
 
   # this needs to match the ruby version to avoid warnings, see Task 40504
-  s.add_dependency 'parser', '~> 3.1.2.1'
+  s.add_dependency 'parser', '~> 3.2.2.4'
 
   s.add_dependency 'pg'
   s.add_dependency 'prawn'
@@ -47,14 +47,16 @@ Gem::Specification.new do |s|
   s.add_dependency 'pretender'
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
-  s.add_dependency 'rails'
+  s.add_dependency 'rails', '~> 7.0.8'
   s.add_dependency 'redis'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
   s.add_dependency 'sidekiq', '~> 7.1'
   s.add_dependency 'simple_form'
-  s.add_dependency 'smartystreets_ruby_sdk'
+
+  # the update fails, will pin it for now, see Task 43240
+  s.add_dependency 'smartystreets_ruby_sdk', '5.15.4'
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
   s.add_dependency 'twilio-ruby'
@@ -67,6 +69,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'haml_lint', '0.45.0'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'rubocop-capybara'
   s.add_development_dependency 'rubocop-rails'
   s.add_development_dependency 'rubocop-rspec'
   s.add_development_dependency 'vcr'
