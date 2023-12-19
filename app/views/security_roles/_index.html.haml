@@ -15,8 +15,8 @@
     %tr{ class: table_row_style(record) }
       %td= secured_link record
       %td
-        %p #{pluralize(record.users.active.count, 'Active User')}
-        %p #{pluralize(record.users.inactive.count, 'Inactive User')}
+        %p= pluralize record.users.active.count, 'Active User'
+        %p= pluralize record.users.inactive.count, 'Inactive User'
       - if RadConfig.external_users?
         %td= format_boolean record.external
       - unless RadConfig.disable_invite?
