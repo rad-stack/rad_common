@@ -32,6 +32,6 @@ class PagesController < ApplicationController
   private
 
     def marketing_site?
-      request.host.start_with?('www.')
+      Rails.env.production? && request.host.start_with?('www.')
     end
 end
