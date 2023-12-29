@@ -7,12 +7,10 @@ class PagesController < ApplicationController
     if marketing_site?
       @marketing_site = true
       render 'pages/marketing'
+    elsif user_signed_in?
+      redirect_to RadConfig.start_route!
     else
-      if user_signed_in?
-        redirect_to RadConfig.start_route!
-      else
-        redirect_to new_user_session_path
-      end
+      redirect_to new_user_session_path
     end
   end
 
