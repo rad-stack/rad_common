@@ -30,6 +30,8 @@ class PagesController < ApplicationController
   private
 
     def marketing_site?
-      Rails.env.production? && request.host.start_with?('www.')
+      return true if RadConfig.force_marketing_site?
+
+      RadConfig.allow_marketing_site? && request.host.start_with?('www.')
     end
 end
