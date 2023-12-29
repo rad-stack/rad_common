@@ -11,7 +11,7 @@
         %th Content
         %th Subject
       - @notifications.each do |record|
-        %tr{ class: notification.unread? ? 'text-danger' : '' }
+        %tr{ class: record.unread? ? 'text-danger' : '' }
           %td
             %p= format_datetime(record.created_at)
             %p #{distance_of_time_in_words_to_now(record.created_at)} ago

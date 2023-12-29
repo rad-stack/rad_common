@@ -9,7 +9,7 @@
         = render 'layouts/sort_headers', search: @login_activity_search
 
       - @login_activities.each do |record|
-        %tr{ class: login_activity.success ? '' : 'alert-danger' }
+        %tr{ class: record.success ? '' : 'alert-danger' }
           %td= format_datetime(record.created_at)
           %td= record.identity
           %td= format_boolean(record.success)
