@@ -101,7 +101,8 @@ default: &default
       hide_global_nav: true
       columns:
         - name
-    - name: attorney_name
+    -
+      name: attorney_name
       model: Attorney
       description: Search attorney by name
       min_length: 3
