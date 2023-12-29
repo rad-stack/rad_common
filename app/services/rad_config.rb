@@ -405,6 +405,7 @@ class RadConfig
       check_aws!
       check_twilio_verify!
       check_smarty!
+      check_marketing!
     end
 
     private
@@ -434,6 +435,12 @@ class RadConfig
         return if smarty_auth_id.blank? && smarty_auth_token.blank?
 
         raise 'include all or none of smarty_auth_id and smarty_auth_token'
+      end
+
+      def check_marketing!
+        return unless force_marketing_site? && !allow_marketing_site?
+
+        raise 'force_marketing_site not allowed'
       end
 
       def override_variable(item)
