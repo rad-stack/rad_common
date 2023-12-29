@@ -236,6 +236,14 @@ class RadConfig
       boolean_config_item! :show_help_menu
     end
 
+    def force_marketing_site?
+      boolean_config_item! :force_marketing_site
+    end
+
+    def allow_marketing_site?
+      boolean_config_item! :allow_marketing_site
+    end
+
     def canadian_addresses?
       boolean_config_item! :canadian_addresses
     end
