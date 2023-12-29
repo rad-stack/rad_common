@@ -12,7 +12,7 @@
       %th.actions Actions
 
   - security_roles.each do |record|
-    %tr{ class: table_row_style(record) }
+    %tr
       %td= secured_link record
       %td
         %p= pluralize record.users.active.count, 'Active User'
