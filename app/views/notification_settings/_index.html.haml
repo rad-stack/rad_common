@@ -9,18 +9,18 @@
         Enabled
         %p Email/SMS/Feed
 
-    - settings.each do |notification_setting|
-      - setting_id_string = notification_setting.notification_type.description.parameterize.underscore
+    - settings.each do |record|
+      - setting_id_string = record.notification_type.description.parameterize.underscore
       %tr
         %td
           - if can_type
-            = link_to notification_setting.notification_type,
-                      "/rad_common/notification_types/#{notification_setting.notification_type_id}/edit"
+            = link_to record.notification_type,
+                      "/rad_common/notification_types/#{record.notification_type_id}/edit"
           - else
-            = notification_setting.notification_type
+            = record.notification_type
         %td
-          - if can_create && policy(notification_setting).create?
-            = simple_form_for notification_setting,
+          - if can_create && policy(record).create?
+            = simple_form_for record,
                               url: '/rad_common/notification_settings',
                               method: :post,
                               html: { class: 'dynamic-updater' } do |f|
@@ -38,25 +38,25 @@
                     = f.input :email, tooltip: 'Enable email notifications.',
                                       input_html: { class: 'ays-ignore',
                                                     id: "notification_setting_email_#{setting_id_string}" },
-                                      disabled: !notification_setting.notification_type.email_enabled?
+                                      disabled: !record.notification_type.email_enabled?
 
                     - if RadTwilio.new.twilio_enabled?
                       = f.input :sms, tooltip: 'Enable SMS (text message) notifications.',
                                       input_html: { class: 'ays-ignore',
                                                     id: "notification_setting_sms_#{setting_id_string}" },
-                                      disabled: !notification_setting.notification_type.sms_enabled?
+                                      disabled: !record.notification_type.sms_enabled?
 
                     = f.input :feed,
                               tooltip: 'Show a red badge on the top right navigation when a notification occurs.',
                               input_html: { class: 'ays-ignore',
                                             id: "notification_setting_feed_#{setting_id_string}" },
-                              disabled: !notification_setting.notification_type.feed_enabled?
+                              disabled: !record.notification_type.feed_enabled?
 
               = f.association :notification_type, as: :hidden
               = f.input :user_id, as: :hidden
           - else
-            = format_boolean(notification_setting.enabled)
+            = format_boolean(record.enabled)
             %p
-            = format_boolean(notification_setting.email)
-            = format_boolean(notification_setting.sms)
-            = format_boolean(notification_setting.feed)
+            = format_boolean(record.email)
+            = format_boolean(record.sms)
+            = format_boolean(record.feed)
