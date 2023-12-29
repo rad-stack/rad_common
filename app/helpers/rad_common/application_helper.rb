@@ -150,7 +150,7 @@ module RadCommon
     end
 
     def table_row_style(record, style_class: 'table-danger')
-      return unless record.present? && !record.active?
+      return unless record.present? && record.respond_to?(:active?) && !record.active?
 
       style_class
     end
