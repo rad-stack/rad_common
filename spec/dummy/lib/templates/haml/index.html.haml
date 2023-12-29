@@ -1,36 +1,31 @@
-- show_actions = show_actions?(Division)
+- show_actions = show_actions?(<%= class_name %>)
 
 .card
   = render 'layouts/card_header'
   .card-body
-    - if @division_search.show_header?
-      %h3 Showing header
-    = render 'layouts/filter', search: @division_search, path: divisions_path
-
-    = paginate @divisions, theme: 'twitter-bootstrap-4'
+    = paginate @<%= plural_table_name %>, theme: 'twitter-bootstrap-4'
 
     %table.table.table-striped.table-bordered
       %tr
         %th Name
-        %th Code
-        %th Owner
-        %th Logo
-        - if show_actions
+    <% for attribute in attributes -%>
+    %th <%= attribute.human_name %>
+    <% end -%>
+    - if show_actions
           %th.actions Actions
 
-      - @divisions.each do |record|
+      - @<%= plural_table_name %>.each do |record|
         %tr
           %td= secured_link record
-          %td= record.code
-          %td= secured_link(record.owner)
-          %td= render_one_attachment record: record, attachment_name: 'logo', new_tab: true
-          - if show_actions
+    <% for attribute in attributes -%>
+      %td= record.<%= attribute.name %>
+    <% end -%>
+      - if show_actions
             %td
               - if policy(record).update?
                 = link_to icon(:pencil, 'Edit'),
-                          edit_division_path(record),
+                          edit_<%= singular_table_name %>_path(record),
                           class: 'btn btn-sm btn-secondary btn-block'
-
               - if policy(record).destroy?
                 = link_to icon(:times, 'Delete'),
                           record,
@@ -38,4 +33,4 @@
                           data: { confirm: 'Are you sure?' },
                           class: 'btn btn-danger btn-sm btn-block'
 
-    = paginate @divisions, theme: 'twitter-bootstrap-4'
+    = paginate @<%= plural_table_name %>, theme: 'twitter-bootstrap-4'
