@@ -2,8 +2,8 @@
   - if user_signed_in?
     - unread_count = current_user.notifications.unread.count
 
-    - unless Rails.env.test?
-      = render 'layouts/message_indicator'
+    = render 'layouts/message_indicator'
+
     %li.nav-item.dropdown
       %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#', class: impersonate_style }
         - if impersonating?
