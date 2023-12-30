@@ -37,7 +37,7 @@ module RadCommon
         end
 
         copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
-        gsub_file 'config/application.rb', 'Dummy', installed_app_name
+        gsub_file 'config/application.rb', installed_app_name, 'Dummy'
 
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
