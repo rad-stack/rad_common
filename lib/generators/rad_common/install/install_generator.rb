@@ -11,8 +11,8 @@ module RadCommon
         remove_deprecated_config
         standardize_date_methods
         install_database_yml
-
         search_and_replace '= f.error_notification', '= rad_form_errors f'
+        gsub_file 'config/application.rb', '/config.load_defaults 6.0/' '/config.load_defaults 7.0/'
 
         # misc
         merge_package_json
@@ -54,6 +54,9 @@ module RadCommon
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
                   'config/initializers/simple_form_components.rb'
+
+        copy_file '../../../../../spec/dummy/config/initializers/new_framework_defaults_7_0.rb',
+                  'config/initializers/new_framework_defaults_7_0.rb'
 
         # bin
         directory '../../../../../spec/dummy/bin/', 'bin/'
