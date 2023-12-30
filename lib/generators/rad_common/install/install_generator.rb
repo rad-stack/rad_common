@@ -12,8 +12,7 @@ module RadCommon
         standardize_date_methods
         install_database_yml
         search_and_replace '= f.error_notification', '= rad_form_errors f'
-        gsub_file 'config/application.rb', '/config.load_defaults 6.0/' '/config.load_defaults 7.0/'
-        gsub_file 'config/application.rb', '/config.load_defaults 6.1/' '/config.load_defaults 7.0/'
+        update_app_config
 
         # misc
         merge_package_json
@@ -119,21 +118,6 @@ module RadCommon
 require 'factory_bot_rails'
 
 Seeder.new.seed!
-        RUBY
-        end
-
-        inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
-    # added by rad_common
-    config.generators do |g|
-      g.helper false
-      g.stylesheets false
-      g.javascripts false
-      g.view_specs false
-      g.helper_specs false
-      g.routing_specs false
-      g.controller_specs false
-    end
-
         RUBY
         end
 
@@ -290,6 +274,27 @@ Seeder.new.seed!
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
+        end
+
+        def update_app_config
+          gsub_file 'config/application.rb', 'config.load_defaults 6.0' 'config.load_defaults 7.0'
+          gsub_file 'config/application.rb', 'config.load_defaults 6.1' 'config.load_defaults 7.0'
+
+          inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
+    # added by rad_common
+    config.generators do |g|
+      g.helper false
+      g.stylesheets false
+      g.javascripts false
+      g.view_specs false
+      g.helper_specs false
+      g.routing_specs false
+      g.controller_specs false
+    end
+
+          RUBY
+          end
+
         end
 
         def install_database_yml
