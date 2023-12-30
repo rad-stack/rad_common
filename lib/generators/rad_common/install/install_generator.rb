@@ -7,6 +7,7 @@ module RadCommon
 
       def create_initializer_file
         remove_file 'app/views/layouts/_navigation.html.haml'
+        remove_file 'config/initializers/new_framework_defaults_7_0.rb'
 
         remove_deprecated_config
         standardize_date_methods
