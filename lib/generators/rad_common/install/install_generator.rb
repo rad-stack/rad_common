@@ -12,7 +12,6 @@ module RadCommon
         standardize_date_methods
         install_database_yml
         search_and_replace '= f.error_notification', '= rad_form_errors f'
-        update_app_config
 
         # misc
         merge_package_json
@@ -37,6 +36,7 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
+        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
@@ -274,28 +274,6 @@ Seeder.new.seed!
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
-        end
-
-        def update_app_config
-          # TODO: this isn't working
-          gsub_file 'config/application.rb', 'load_defaults 6.0' 'load_defaults 7.0'
-          gsub_file 'config/application.rb', 'load_defaults 6.1' 'load_defaults 7.0'
-
-          inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
-    # added by rad_common
-    config.generators do |g|
-      g.helper false
-      g.stylesheets false
-      g.javascripts false
-      g.view_specs false
-      g.helper_specs false
-      g.routing_specs false
-      g.controller_specs false
-    end
-
-          RUBY
-          end
-
         end
 
         def install_database_yml
