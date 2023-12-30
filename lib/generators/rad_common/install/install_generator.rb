@@ -57,9 +57,6 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
                   'config/initializers/simple_form_components.rb'
 
-        copy_file '../../../../../spec/dummy/config/initializers/new_framework_defaults_7_0.rb',
-                  'config/initializers/new_framework_defaults_7_0.rb'
-
         # bin
         directory '../../../../../spec/dummy/bin/', 'bin/'
 

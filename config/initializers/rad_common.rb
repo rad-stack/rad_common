@@ -11,6 +11,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
 end
 
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
+Rails.application.config.active_storage.variant_processor = :mini_magick
 
 Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
 
