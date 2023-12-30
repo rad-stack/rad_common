@@ -277,8 +277,9 @@ Seeder.new.seed!
         end
 
         def update_app_config
-          gsub_file 'config/application.rb', 'config.load_defaults 6.0' 'config.load_defaults 7.0'
-          gsub_file 'config/application.rb', 'config.load_defaults 6.1' 'config.load_defaults 7.0'
+          # TODO: this isn't working
+          gsub_file 'config/application.rb', 'load_defaults 6.0' 'load_defaults 7.0'
+          gsub_file 'config/application.rb', 'load_defaults 6.1' 'load_defaults 7.0'
 
           inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
     # added by rad_common
