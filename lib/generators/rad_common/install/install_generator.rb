@@ -13,6 +13,7 @@ module RadCommon
         install_database_yml
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         gsub_file 'config/application.rb', '/config.load_defaults 6.0/' '/config.load_defaults 7.0/'
+        gsub_file 'config/application.rb', '/config.load_defaults 6.1/' '/config.load_defaults 7.0/'
 
         # misc
         merge_package_json
