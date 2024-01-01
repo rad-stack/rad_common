@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe RadRateLimiter, type: :service do
-  subject(:rate_limiter) { described_class.new(limit: 5, period: 1, key: 'foo') }
+  subject(:rate_limiter) { described_class.new(limit: 5, period: 1.minute, key: 'foo') }
 
   after { Rails.cache.clear }
 
