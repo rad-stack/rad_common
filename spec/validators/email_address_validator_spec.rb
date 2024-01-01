@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe EmailAddressValidator, type: :validator do
   subject(:result) { build :division, invoice_email: email }
 
+  before { Rails.cache.write("rate_limit:sendgrid_verify", 0, expires_in: 5.minutes) }
+
   context 'when the email is nil' do
     let(:email) { nil }
 
