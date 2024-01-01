@@ -5,6 +5,8 @@ class RadRateLimiter
     @limit = limit
     @period = period
     @key = key
+
+    Rails.cache.fetch(cache_key, expires_in: @period.minutes) { 0 }
   end
 
   def run
@@ -16,16 +18,14 @@ class RadRateLimiter
   private
 
     def check_rate_limit!
-      current_count = increment_key
-
       raise RateLimitExceededError, "Rate limit exceeded for key: #{@key}" if current_count > @limit
     end
 
-    def increment_key
-      cache_key = "rate_limit:#{@key}"
-      current_value = Rails.cache.fetch(cache_key, expires_in: @period.minutes) { 0 }
-      incremented_value = current_value + 1
-      Rails.cache.write(cache_key, incremented_value)
-      incremented_value
+    def current_count
+      Rails.cache.increment(cache_key)
+    end
+
+    def cache_key
+      "rate_limit:#{@key}"
     end
 end
