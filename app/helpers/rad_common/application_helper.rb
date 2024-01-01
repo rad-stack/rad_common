@@ -180,7 +180,7 @@ module RadCommon
     end
 
     def nav_container_class
-      marketing_site? ?  'container' : 'container-fluid'
+      @marketing_site ?  'container' : 'container-fluid'
     end
 
     def export_button(model_name, format: Exporter::DEFAULT_FORMAT, override_path: nil, additional_params: {},
