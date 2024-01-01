@@ -5,8 +5,6 @@ class RadRateLimiter
     @limit = limit
     @period = period
     @key = key
-
-    Rails.cache.fetch(cache_key, expires_in: @period) { 0 }
   end
 
   def run

@@ -1,8 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe RadRateLimiter, type: :service do
-  subject(:rate_limiter) { described_class.new(limit: 5, period: 1.minute, key: 'foo') }
+  subject(:rate_limiter) { described_class.new(limit: 5, period: period, key: key) }
 
+  let(:period) { 1.minute }
+  let(:key) { 'foo' }
+
+  before { Rails.cache.write("rate_limit:#{key}", 0, expires_in: period) }
   after { Rails.cache.clear }
 
   describe '#check_rate_limit!' do
