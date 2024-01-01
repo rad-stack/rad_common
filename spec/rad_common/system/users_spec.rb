@@ -12,6 +12,8 @@ RSpec.describe 'Users', type: :system do
   let(:external_user) { create :user, :external }
   let(:client_user) { create :client_user }
 
+  before { Rails.cache.write('rate_limit:twilio_verify', 0, expires_in: 5.minutes) }
+
   describe 'user' do
     before { login_as user, scope: :user }
 
