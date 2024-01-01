@@ -179,10 +179,6 @@ module RadCommon
       raise RadIntermittentException
     end
 
-    def nav_container_class
-      @marketing_site ?  'container' : 'container-fluid'
-    end
-
     def export_button(model_name, format: Exporter::DEFAULT_FORMAT, override_path: nil, additional_params: {},
                       policy_model: nil)
       return unless policy(policy_model.presence || model_name.constantize.new).export?
