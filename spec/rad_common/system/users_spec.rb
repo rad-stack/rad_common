@@ -12,6 +12,8 @@ RSpec.describe 'Users', type: :system do
   let(:external_user) { create :user, :external }
   let(:client_user) { create :client_user }
 
+  before { Rails.cache.write('rate_limit:twilio_verify', 0, expires_in: 5.minutes) }
+
   describe 'user' do
     before { login_as user, scope: :user }
 
@@ -99,7 +101,7 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content result_label
         expect(page).to have_content user.to_s
         expect(page).to have_content user.security_roles.first.name
-        expect(page).to have_content ApplicationController.helpers.format_date(user.created_at)
+        expect(page).to have_content user.mobile_phone
 
         if Pundit.policy!(admin, user).export?
           expect(page).to have_content 'Export to File'

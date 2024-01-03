@@ -10,6 +10,8 @@ describe 'Users' do
   let(:admin) { create :admin }
   let(:password) { 'cOmpl3x_p@55w0rd' }
 
+  before { Rails.cache.write('rate_limit:twilio_verify', 0, expires_in: 5.minutes) }
+
   describe 'sign up', :js do
     before do
       create :security_role, :external, allow_sign_up: true
@@ -108,6 +110,23 @@ describe 'Users' do
       fill_in 'twilio-verify-token', with: '123456'
       click_button 'Verify and Sign in'
       expect(page).to have_content('The entered token is invalid')
+    end
+  end
+
+  describe 'edit user registration' do
+    before do
+      login_as admin, scope: :user
+      visit edit_user_registration_path
+    end
+
+    it "can change user's own email address" do
+      visit edit_user_registration_path
+
+      fill_in 'user_email', with: "new_#{admin.email}"
+      fill_in 'Current Password', with: password
+      click_button 'Save'
+
+      expect(page).to have_content 'You updated your account successfully, but we need to verify your new email address'
     end
   end
 end
