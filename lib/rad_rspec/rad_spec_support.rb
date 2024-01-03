@@ -47,10 +47,8 @@ class RadSpecSupport
       end
     end
 
-    RSpec.configure do |config|
-      config.after(:each) do
-        Rails.cache.clear
-      end
+    config.after(:each) do
+      Rails.cache.clear
     end
 
     config.before(:example, type: :system) do
