@@ -10,6 +10,8 @@ describe 'Users' do
   let(:admin) { create :admin }
   let(:password) { 'cOmpl3x_p@55w0rd' }
 
+  before { Rails.cache.write('rate_limit:twilio_verify', 0, expires_in: 5.minutes) }
+
   describe 'sign up', :js do
     before do
       create :security_role, :external, allow_sign_up: true

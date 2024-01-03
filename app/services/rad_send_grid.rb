@@ -7,7 +7,9 @@ class RadSendGrid
     return unless sendgrid_enabled?
 
     response = RadRetry.perform_request(retry_count: 2) do
-      inner_response = client._('validations/email').post(request_body: "{\"email\":\"#{email}\"}")
+      inner_response = RadRateLimiter.new(limit: 500, period: 5.minutes, key: 'sendgrid_verify').run do
+        client._('validations/email').post(request_body: "{\"email\":\"#{email}\"}")
+      end
       raise RadSendGridError, inner_response.body unless inner_response.status_code == '200'
 
       inner_response

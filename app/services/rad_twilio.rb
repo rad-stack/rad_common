@@ -17,7 +17,9 @@ class RadTwilio
 
   def self.send_verify_sms(mobile_phone)
     response = RadRetry.perform_request(retry_count: 2, raise_original: true) do
-      TwilioVerifyService.send_sms_token(mobile_phone)
+      RadRateLimiter.new(limit: 500, period: 5.minutes, key: 'twilio_verify').run do
+        TwilioVerifyService.send_sms_token(mobile_phone)
+      end
     end
 
     response.status == 'pending'
