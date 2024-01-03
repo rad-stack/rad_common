@@ -124,7 +124,7 @@ describe 'Users' do
       fill_in 'Current Password', with: password
       click_button 'Save'
 
-      expect(page).to have_content 'You updated your account successfully, but we need to verify your new email address.'
+      expect(page).to have_content 'You updated your account successfully, but we need to verify your new email address'
     end
   end
 end
