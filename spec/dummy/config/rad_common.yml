@@ -23,6 +23,8 @@ default: &default
   storage_config_override: false
   require_mobile_phone: false
   timeout_hours: 6
+  force_marketing_site: false
+  allow_marketing_site: false
 
   system_usage_models:
     -
