@@ -47,6 +47,12 @@ class RadSpecSupport
       end
     end
 
+    RSpec.configure do |config|
+      config.after(:each) do
+        Rails.cache.clear
+      end
+    end
+
     config.before(:example, type: :system) do
       driven_by :rack_test
     end
