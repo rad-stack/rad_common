@@ -4,7 +4,10 @@ class PagesController < ApplicationController
   def home
     skip_authorization
 
-    if user_signed_in?
+    if marketing_site?
+      @marketing_site = true
+      render 'pages/marketing'
+    elsif user_signed_in?
       redirect_to RadConfig.start_route!
     else
       redirect_to new_user_session_path
@@ -23,4 +26,12 @@ class PagesController < ApplicationController
   def privacy
     skip_authorization
   end
+
+  private
+
+    def marketing_site?
+      return true if RadConfig.force_marketing_site?
+
+      RadConfig.allow_marketing_site? && request.host.start_with?('www.')
+    end
 end
