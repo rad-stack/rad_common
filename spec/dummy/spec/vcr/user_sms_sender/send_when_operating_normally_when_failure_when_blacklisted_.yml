@@ -25,7 +25,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:13:13 GMT
+      - Sat, 06 Jan 2024 10:34:20 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -44,9 +44,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQdcf1ca24d6f51f524c538896aa742ce6
+      - RQ319be051e13c4619ce4aa027a88c2549
       Twilio-Request-Duration:
-      - '0.035'
+      - '0.026'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -61,7 +61,7 @@ http_interactions:
       encoding: UTF-8
       string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
         "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:13:13 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:20 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -87,7 +87,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:13:13 GMT
+      - Sat, 06 Jan 2024 10:34:21 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -106,9 +106,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQdb6b7fa7d4ca377d580951a466f902b3
+      - RQc79c013d88d5f693dcc5c68e1c843a5e
       Twilio-Request-Duration:
-      - '0.035'
+      - '0.047'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -123,7 +123,7 @@ http_interactions:
       encoding: UTF-8
       string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
         "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:13:13 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:21 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -149,7 +149,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:13:14 GMT
+      - Sat, 06 Jan 2024 10:34:21 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -168,9 +168,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQ3c671fca4bd847051d1859b1a4c224fb
+      - RQfbb8c6bc7a881f692fa61d25456cafca
       Twilio-Request-Duration:
-      - '0.034'
+      - '0.039'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -185,7 +185,7 @@ http_interactions:
       encoding: UTF-8
       string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
         "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:13:13 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:21 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -211,7 +211,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:13:14 GMT
+      - Sat, 06 Jan 2024 10:34:21 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -230,9 +230,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQfd8905c5c6fb5409bffba86c319dc6b9
+      - RQ804791f185a8129e72e305798f3ce2d5
       Twilio-Request-Duration:
-      - '0.034'
+      - '0.025'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -247,7 +247,7 @@ http_interactions:
       encoding: UTF-8
       string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
         "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:13:14 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:21 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -273,7 +273,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:13:14 GMT
+      - Sat, 06 Jan 2024 10:34:21 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -292,9 +292,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQ11c33f2156283422531fa1030a1cede9
+      - RQ60d9caa8598f6f1b581522120da20933
       Twilio-Request-Duration:
-      - '0.034'
+      - '0.037'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -309,5 +309,5 @@ http_interactions:
       encoding: UTF-8
       string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
         "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:13:14 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:21 GMT
 recorded_with: VCR 6.2.0

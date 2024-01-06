@@ -25,7 +25,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Sat, 06 Jan 2024 10:14:02 GMT
+      - Sat, 06 Jan 2024 10:35:07 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -33,11 +33,11 @@ http_interactions:
       Connection:
       - keep-alive
       X-Amzn-Requestid:
-      - 4c4c6704-b25c-425a-b3fd-c798c7105595
+      - 00eb9083-a2dc-4101-9de3-17439fd7a182
       X-Amz-Apigw-Id:
-      - RHMsqEFViYcEaEg=
+      - RHPyQFeeiYcECkQ=
       X-Amzn-Trace-Id:
-      - Root=1-659927ea-681998a749e3f40d2d967ba1;Sampled=0;lineage=3bae0364:0
+      - Root=1-65992cda-76f8a2617724ad6a3cdcf33b;Sampled=0;lineage=3bae0364:0
       Access-Control-Allow-Methods:
       - HEAD, GET, PUT, POST, DELETE, OPTIONS, PATCH
       Access-Control-Max-Age:
@@ -59,17 +59,17 @@ http_interactions:
       X-Client-Ff:
       - '1000'
       X-Ratelimit-Remaining:
-      - '6'
+      - '5'
       X-Ratelimit-Limit:
       - '7'
       X-Ratelimit-Reset:
-      - '1704536043'
+      - '1704537307'
       Twilio-Request-Id:
-      - RQ2aZpdTHhvIKn7LX8FL1HzkdWx96
+      - RQ2aZsCKkp5EvovPe2kBDxuHBgdqa
       Powered-By:
       - Mako
     body:
       encoding: UTF-8
       string: '{"result":{"email":"example979@example.com","verdict":"Valid","score":0.90861,"local":"example979","host":"example.com","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":true,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"38.85.130.68"}}'
-  recorded_at: Sat, 06 Jan 2024 10:14:02 GMT
+  recorded_at: Sat, 06 Jan 2024 10:35:06 GMT
 recorded_with: VCR 6.2.0

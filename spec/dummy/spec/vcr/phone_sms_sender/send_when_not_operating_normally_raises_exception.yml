@@ -25,7 +25,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:12:57 GMT
+      - Sat, 06 Jan 2024 10:34:05 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -44,9 +44,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQ13bc39ee8b40de5254516d6edc134f13
+      - RQc032efc3788a9c7629cb560c3d316e4f
       Twilio-Request-Duration:
-      - '0.045'
+      - '0.037'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -62,7 +62,7 @@ http_interactions:
       string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
         mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
         400}'
-  recorded_at: Sat, 06 Jan 2024 10:12:57 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:05 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -88,7 +88,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:12:57 GMT
+      - Sat, 06 Jan 2024 10:34:05 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -107,9 +107,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQ5b90d7291fef10e4a549bfe914a55253
+      - RQ85fd7bcba00b51332f5c76727602b88d
       Twilio-Request-Duration:
-      - '0.052'
+      - '0.030'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -125,7 +125,7 @@ http_interactions:
       string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
         mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
         400}'
-  recorded_at: Sat, 06 Jan 2024 10:12:57 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:05 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -151,7 +151,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:12:58 GMT
+      - Sat, 06 Jan 2024 10:34:05 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -170,9 +170,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQf56c16714a360d544b9c9f3facfefb4e
+      - RQ8fb1c14a6967d066c22b6da25b680e97
       Twilio-Request-Duration:
-      - '0.161'
+      - '0.050'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -188,7 +188,7 @@ http_interactions:
       string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
         mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
         400}'
-  recorded_at: Sat, 06 Jan 2024 10:12:58 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:05 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -214,7 +214,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:12:58 GMT
+      - Sat, 06 Jan 2024 10:34:05 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -233,9 +233,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQ33e6e7be4a5dac2c140e5b233033b4d1
+      - RQ8966fddfb6d5d2505b70a392333ed9e3
       Twilio-Request-Duration:
-      - '0.032'
+      - '0.035'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -251,7 +251,7 @@ http_interactions:
       string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
         mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
         400}'
-  recorded_at: Sat, 06 Jan 2024 10:12:58 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:05 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -277,7 +277,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:12:58 GMT
+      - Sat, 06 Jan 2024 10:34:06 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -296,9 +296,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQ9ef92c2d1b7b2ec5fe0c0a2d4a483da6
+      - RQ057c4cde91e6b0e4ede31cd3130ef164
       Twilio-Request-Duration:
-      - '0.040'
+      - '0.031'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -314,5 +314,5 @@ http_interactions:
       string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
         mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
         400}'
-  recorded_at: Sat, 06 Jan 2024 10:12:58 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:05 GMT
 recorded_with: VCR 6.2.0

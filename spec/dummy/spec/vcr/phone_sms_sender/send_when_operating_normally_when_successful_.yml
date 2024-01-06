@@ -25,7 +25,7 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:12:56 GMT
+      - Sat, 06 Jan 2024 10:34:03 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -44,9 +44,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQ2f326cec22bc7d9db127fcec33a2e1d1
+      - RQf26730c83d04cd56e566f43cab687d36
       Twilio-Request-Duration:
-      - '0.045'
+      - '0.044'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -61,12 +61,12 @@ http_interactions:
       encoding: UTF-8
       string: '{"body": "test message - To no longer receive text messages, text STOP",
         "num_segments": "1", "direction": "outbound-api", "from": "+15005550006",
-        "date_updated": "Sat, 06 Jan 2024 10:12:56 +0000", "price": null, "error_message":
-        null, "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SM2f326cec22bc7d9db127fcec33a2e1d1.json",
+        "date_updated": "Sat, 06 Jan 2024 10:34:03 +0000", "price": null, "error_message":
+        null, "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SMf26730c83d04cd56e566f43cab687d36.json",
         "account_sid": "ACaae98776bde4ed53d0fb1dfcc262558e", "num_media": "0", "to":
-        "+16187222169", "date_created": "Sat, 06 Jan 2024 10:12:56 +0000", "status":
-        "queued", "sid": "SM2f326cec22bc7d9db127fcec33a2e1d1", "date_sent": null,
+        "+16187222169", "date_created": "Sat, 06 Jan 2024 10:34:03 +0000", "status":
+        "queued", "sid": "SMf26730c83d04cd56e566f43cab687d36", "date_sent": null,
         "messaging_service_sid": null, "error_code": null, "price_unit": "USD", "api_version":
-        "2010-04-01", "subresource_uris": {"media": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SM2f326cec22bc7d9db127fcec33a2e1d1/Media.json"}}'
-  recorded_at: Sat, 06 Jan 2024 10:12:56 GMT
+        "2010-04-01", "subresource_uris": {"media": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SMf26730c83d04cd56e566f43cab687d36/Media.json"}}'
+  recorded_at: Sat, 06 Jan 2024 10:34:03 GMT
 recorded_with: VCR 6.2.0
