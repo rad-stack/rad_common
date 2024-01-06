@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.15.2)
+      - smartystreets (sdk:ruby@5.15.4)
       Host:
       - us-street.api.smarty.com
       Content-Type:
@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Wed, 25 Oct 2023 10:03:16 GMT
+      - Sat, 06 Jan 2024 10:11:42 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -36,5 +36,5 @@ http_interactions:
         St Apt 1","last_line":"Oakland CA 94606-4138","components":{"primary_number":"1921","street_predirection":"E","street_name":"24th","street_suffix":"St","secondary_number":"1","secondary_designator":"Apt","city_name":"Oakland","default_city_name":"Oakland","state_abbreviation":"CA","zipcode":"94606","plus4_code":"4138","delivery_point":"21","delivery_point_check_digit":"6"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"06001","county_name":"Alameda","carrier_route":"C027","elot_sequence":"0113","elot_sort":"A","latitude":37.79321,"longitude":-122.23336,"precision":"Zip9","time_zone":"Pacific","utc_offset":-8,"dst":true},"analysis":{"dpv_match_code":"S","dpv_footnotes":"AABBCC","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","footnotes":"A#N#","enhanced_match":"postal-match,unknown-secondary,ignored-input"}}]
 
         '
-  recorded_at: Wed, 25 Oct 2023 10:03:16 GMT
+  recorded_at: Sat, 06 Jan 2024 10:11:42 GMT
 recorded_with: VCR 6.2.0

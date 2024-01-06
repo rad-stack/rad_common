@@ -8,7 +8,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin20 x86_64) Ruby/3.1.2
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
       Accept-Charset:
       - utf-8
       Accept:
@@ -22,46 +22,52 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Date:
-      - Wed, 21 Jun 2023 10:40:53 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '341'
+      - '328'
       Connection:
       - keep-alive
-      Twilio-Request-Id:
-      - RQdc838edb42c12733072ceb4395cb15a7
-      Twilio-Request-Duration:
-      - '0.024'
+      Date:
+      - Sat, 06 Jan 2024 10:14:03 GMT
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
         If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
       Access-Control-Allow-Methods:
       - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
       - ETag
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Powered-By:
-      - AT-5000
-      Strict-Transport-Security:
-      - max-age=31536000
+      Twilio-Request-Id:
+      - RQ5a869bec21a9e25c78ea85ebc5974b72
+      Twilio-Request-Duration:
+      - '0.028'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
       - none
+      X-Powered-By:
+      - AT-5000
       X-Home-Region:
       - us1
       X-Api-Domain:
       - lookups.twilio.com
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 adc415102a6f30645ade53a4352ac02a.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - ATL58-P4
+      X-Amz-Cf-Id:
+      - jGi0QfxvrXP2JXF1poFECgNq6sJhJN8PDUx016vdum1G6U89UF4QRw==
     body:
       encoding: UTF-8
       string: '{"caller_name": null, "country_code": "US", "phone_number": "+1<TEST_PHONE_NUMBER_STRIPPED>",
         "national_format": "<TEST_PHONE_NUMBER>", "carrier": {"mobile_country_code":
         "310", "mobile_network_code": null, "name": "BellSouth", "type": "landline",
-        "error_code": null}, "add_ons": null, "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_PHONE_NUMBER_STRIPPED>?Type=carrier"}'
-  recorded_at: Wed, 21 Jun 2023 10:40:53 GMT
-recorded_with: VCR 6.1.0
+        "error_code": null}, "add_ons": null, "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_PHONE_NUMBER_STRIPPED>"}'
+  recorded_at: Sat, 06 Jan 2024 10:14:03 GMT
+recorded_with: VCR 6.2.0

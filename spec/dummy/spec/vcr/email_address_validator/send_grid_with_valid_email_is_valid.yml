@@ -25,7 +25,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Sat, 06 Jan 2024 09:28:21 GMT
+      - Sat, 06 Jan 2024 10:14:00 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -33,11 +33,11 @@ http_interactions:
       Connection:
       - keep-alive
       X-Amzn-Requestid:
-      - 41a86f84-4476-4921-ad1a-4537d5d2ecc9
+      - 3f1f7261-d9e8-42b2-bd95-0897556113da
       X-Amz-Apigw-Id:
-      - RHGAZEr3CYcEKtA=
+      - RHMsUEiniYcEUTw=
       X-Amzn-Trace-Id:
-      - Root=1-65991d35-4736025e0c43362d2bcd2cd5;Sampled=0;lineage=3bae0364:0
+      - Root=1-659927e8-3fc6b1a8661658966b9f8452;Sampled=0;lineage=3bae0364:0
       Access-Control-Allow-Methods:
       - HEAD, GET, PUT, POST, DELETE, OPTIONS, PATCH
       Access-Control-Max-Age:
@@ -63,13 +63,15 @@ http_interactions:
       X-Ratelimit-Limit:
       - '7'
       X-Ratelimit-Reset:
-      - '1704533302'
+      - '1704536041'
       Twilio-Request-Id:
-      - RQ2aZk53XsGOi5B5NsgPFsC2MDYqS
+      - RQ2aZpdDEWyBu50BreQvmQMk8IPli
+      X-Envoy-Upstream-Service-Time:
+      - '635'
       Powered-By:
       - Mako
     body:
       encoding: UTF-8
       string: '{"result":{"email":"support@invest.ally.com","verdict":"Risky","score":0.29941,"local":"support","host":"invest.ally.com","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":true,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":true},"additional":{"has_known_bounces":false,"has_suspected_bounces":true}},"ip_address":"38.85.130.68"}}'
-  recorded_at: Sat, 06 Jan 2024 09:28:21 GMT
+  recorded_at: Sat, 06 Jan 2024 10:14:00 GMT
 recorded_with: VCR 6.2.0

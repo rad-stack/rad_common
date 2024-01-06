@@ -2,13 +2,13 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
     body:
       encoding: UTF-8
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin20 x86_64) Ruby/3.1.2
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -16,7 +16,7 @@ http_interactions:
       Accept:
       - application/json
       Authorization:
-      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -25,55 +25,53 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Wed, 21 Jun 2023 10:39:55 GMT
+      - Sat, 06 Jan 2024 10:12:57 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '149'
+      - '157'
       Connection:
       - keep-alive
-      Twilio-Request-Id:
-      - RQ123845bd41c9d0030fe6d9c6e17940f8
-      Twilio-Request-Duration:
-      - '0.062'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
         If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
       Access-Control-Allow-Methods:
       - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
       - ETag
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Powered-By:
-      - AT-5000
-      Strict-Transport-Security:
-      - max-age=31536000
+      Twilio-Request-Id:
+      - RQ13bc39ee8b40de5254516d6edc134f13
+      Twilio-Request-Duration:
+      - '0.045'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
       - none
+      X-Powered-By:
+      - AT-5000
       X-Home-Region:
       - us1
       X-Api-Domain:
       - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21614, "message": "To number: +15005550009, is not a mobile
-        number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
+      string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
+        mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
         400}'
-  recorded_at: Wed, 21 Jun 2023 10:39:55 GMT
+  recorded_at: Sat, 06 Jan 2024 10:12:57 GMT
 - request:
     method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
     body:
       encoding: UTF-8
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin20 x86_64) Ruby/3.1.2
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -81,7 +79,7 @@ http_interactions:
       Accept:
       - application/json
       Authorization:
-      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -90,55 +88,53 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Wed, 21 Jun 2023 10:39:56 GMT
+      - Sat, 06 Jan 2024 10:12:57 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '149'
+      - '157'
       Connection:
       - keep-alive
-      Twilio-Request-Id:
-      - RQf4b46956d0069086f2c5e09812489302
-      Twilio-Request-Duration:
-      - '0.042'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
         If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
       Access-Control-Allow-Methods:
       - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
       - ETag
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Powered-By:
-      - AT-5000
-      Strict-Transport-Security:
-      - max-age=31536000
+      Twilio-Request-Id:
+      - RQ5b90d7291fef10e4a549bfe914a55253
+      Twilio-Request-Duration:
+      - '0.052'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
       - none
+      X-Powered-By:
+      - AT-5000
       X-Home-Region:
       - us1
       X-Api-Domain:
       - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21614, "message": "To number: +15005550009, is not a mobile
-        number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
+      string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
+        mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
         400}'
-  recorded_at: Wed, 21 Jun 2023 10:39:56 GMT
+  recorded_at: Sat, 06 Jan 2024 10:12:57 GMT
 - request:
     method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
     body:
       encoding: UTF-8
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin20 x86_64) Ruby/3.1.2
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -146,7 +142,7 @@ http_interactions:
       Accept:
       - application/json
       Authorization:
-      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -155,55 +151,53 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Wed, 21 Jun 2023 10:39:56 GMT
+      - Sat, 06 Jan 2024 10:12:58 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '149'
+      - '157'
       Connection:
       - keep-alive
-      Twilio-Request-Id:
-      - RQ55c163d125e6daafec6cf32d31a46903
-      Twilio-Request-Duration:
-      - '0.038'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
         If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
       Access-Control-Allow-Methods:
       - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
       - ETag
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Powered-By:
-      - AT-5000
-      Strict-Transport-Security:
-      - max-age=31536000
+      Twilio-Request-Id:
+      - RQf56c16714a360d544b9c9f3facfefb4e
+      Twilio-Request-Duration:
+      - '0.161'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
       - none
+      X-Powered-By:
+      - AT-5000
       X-Home-Region:
       - us1
       X-Api-Domain:
       - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21614, "message": "To number: +15005550009, is not a mobile
-        number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
+      string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
+        mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
         400}'
-  recorded_at: Wed, 21 Jun 2023 10:39:56 GMT
+  recorded_at: Sat, 06 Jan 2024 10:12:58 GMT
 - request:
     method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
     body:
       encoding: UTF-8
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin20 x86_64) Ruby/3.1.2
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -211,7 +205,7 @@ http_interactions:
       Accept:
       - application/json
       Authorization:
-      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -220,55 +214,53 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Wed, 21 Jun 2023 10:39:56 GMT
+      - Sat, 06 Jan 2024 10:12:58 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '149'
+      - '157'
       Connection:
       - keep-alive
-      Twilio-Request-Id:
-      - RQ7586867c0cc3024867f2fee0d34bc483
-      Twilio-Request-Duration:
-      - '0.036'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
         If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
       Access-Control-Allow-Methods:
       - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
       - ETag
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Powered-By:
-      - AT-5000
-      Strict-Transport-Security:
-      - max-age=31536000
+      Twilio-Request-Id:
+      - RQ33e6e7be4a5dac2c140e5b233033b4d1
+      Twilio-Request-Duration:
+      - '0.032'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
       - none
+      X-Powered-By:
+      - AT-5000
       X-Home-Region:
       - us1
       X-Api-Domain:
       - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21614, "message": "To number: +15005550009, is not a mobile
-        number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
+      string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
+        mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
         400}'
-  recorded_at: Wed, 21 Jun 2023 10:39:56 GMT
+  recorded_at: Sat, 06 Jan 2024 10:12:58 GMT
 - request:
     method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
     body:
       encoding: UTF-8
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin20 x86_64) Ruby/3.1.2
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -276,7 +268,7 @@ http_interactions:
       Accept:
       - application/json
       Authorization:
-      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -285,44 +277,42 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Wed, 21 Jun 2023 10:39:57 GMT
+      - Sat, 06 Jan 2024 10:12:58 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '149'
+      - '157'
       Connection:
       - keep-alive
-      Twilio-Request-Id:
-      - RQ2c01db3b6ca17ef616ddaf73603dd314
-      Twilio-Request-Duration:
-      - '0.036'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
         If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
       Access-Control-Allow-Methods:
       - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
       - ETag
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Powered-By:
-      - AT-5000
-      Strict-Transport-Security:
-      - max-age=31536000
+      Twilio-Request-Id:
+      - RQ9ef92c2d1b7b2ec5fe0c0a2d4a483da6
+      Twilio-Request-Duration:
+      - '0.040'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
       - none
+      X-Powered-By:
+      - AT-5000
       X-Home-Region:
       - us1
       X-Api-Domain:
       - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21614, "message": "To number: +15005550009, is not a mobile
-        number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
+      string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
+        mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
         400}'
-  recorded_at: Wed, 21 Jun 2023 10:39:57 GMT
-recorded_with: VCR 6.1.0
+  recorded_at: Sat, 06 Jan 2024 10:12:58 GMT
+recorded_with: VCR 6.2.0
