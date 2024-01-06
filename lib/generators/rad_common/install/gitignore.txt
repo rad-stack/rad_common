@@ -15,6 +15,7 @@ heroku_backups/
 /certificates
 /storage
 latest.dump
+/vendor/
 
 /public/packs
 /public/packs-test
