@@ -1,3 +1,5 @@
+require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/app/services/rad_config.rb"
+
 require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record" \
         '/base/schema_validations'
 
@@ -11,7 +13,6 @@ end
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 
 Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
-Rails.application.config.assets.precompile += %w[rad_common/rad_mailer.css rad_common/rad_mailer_reset.css]
 
 RadConfig.check_validity!
 

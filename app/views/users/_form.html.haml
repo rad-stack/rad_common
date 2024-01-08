@@ -6,11 +6,13 @@
       .col-lg-6= f.input :first_name
       .col-lg-6= f.input :last_name
     .row
-      .col-lg-6= f.input :mobile_phone
+      .col-lg-6= f.input :mobile_phone, required: require_mobile_phone?
       .col-lg-6= f.input :email, disabled: !@user.new_record?
     .row
       .col-lg-6= f.association :user_status, collection: UserStatus.by_id
-      .col-lg-6= f.input :timezone, as: :time_zone, priority: timezone_us_filter
+      - if RadConfig.switch_languages?
+        .col-lg-3= f.input :language, collection: options_for_enum(User, :language)
+      .col-lg-3= f.input :timezone, as: :time_zone, priority: timezone_us_filter
     .row
       - if RadConfig.external_users?
         .col-lg-3= f.input :external

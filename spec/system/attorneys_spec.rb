@@ -11,12 +11,22 @@ RSpec.describe 'Attorneys' do
       visit new_attorney_path
       expect(page).to have_content('New Attorney')
     end
+
+    it "doesn't show the reset duplicates link", :js do
+      visit new_attorney_path
+      expect(page).not_to have_content('Reset Duplicates')
+    end
   end
 
   describe 'edit' do
     it 'renders the edit template' do
       visit edit_attorney_path(attorney)
       expect(page).to have_content('Editing Attorney')
+    end
+
+    it 'shows the reset duplicates link' do
+      visit edit_attorney_path(attorney)
+      expect(page).to have_content('Reset Duplicates')
     end
   end
 
@@ -38,7 +48,7 @@ RSpec.describe 'Attorneys' do
   describe 'duplicates' do
     let(:user) { create :admin }
     let(:model_name) { 'Attorney' }
-    let(:index_path) { "/rad_common/duplicates?model=#{model_name}" }
+    let(:index_path) { duplicates_path model: model_name }
     let(:record_1_path) { attorney_path(record_1) }
     let!(:record_1) { create :attorney, first_name: 'Fred123', last_name: 'Flintstone' }
     let!(:record_2) { create :attorney, first_name: 'John456', last_name: 'Smith' }
@@ -48,6 +58,7 @@ RSpec.describe 'Attorneys' do
     before do
       allow_any_instance_of(DuplicateFixable).to receive(:duplicate_record_score).and_return 60
       allow(Attorney).to receive(:allow_merge_all?).and_return(true)
+      allow_any_instance_of(Duplicate).to receive :maybe_notify_duplicates
 
       record_1.process_duplicates
       record_2.process_duplicates
@@ -90,7 +101,7 @@ RSpec.describe 'Attorneys' do
       expect(page).not_to have_content(record_2.first_name)
     end
 
-    it 'allows user to merge duplicate contacts', js: true do
+    it 'allows user to merge duplicate contacts', :js do
       visit index_path
       expect(page).to have_content('(4)')
       expect(page).to have_content(record_2.first_name)
@@ -101,7 +112,7 @@ RSpec.describe 'Attorneys' do
       expect(page).to have_content(record_1.first_name)
     end
 
-    it 'shows fix duplicates', js: true do
+    it 'shows fix duplicates', :js do
       visit record_1_path
       expect(page).to have_content('Fix Duplicates')
 
@@ -114,7 +125,7 @@ RSpec.describe 'Attorneys' do
       visit record_1_path
       expect(page).not_to have_content('Fix Duplicates')
 
-      visit "/rad_common/duplicates?model=#{model_name}&id=#{record_1.id}"
+      visit duplicates_path(model: model_name, id: record_1.id)
       expect(page).to have_content('Congratulations, there are no more duplicates found!')
     end
   end

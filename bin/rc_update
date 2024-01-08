@@ -12,6 +12,7 @@ FileUtils.chdir directory do
   system 'rm -rf log/'
   system 'rm -rf tmp/'
   system 'rm -rf storage/'
+  system 'rm -rf coverage/'
 
   puts "== Updating the rad_common gem conservatively =="
   system 'bundle update rad_common --conservative'
@@ -21,4 +22,7 @@ FileUtils.chdir directory do
 
   puts "== Running RC Generator =="
   system 'bin/rails g rad_common:install'
+
+  puts '== Running Yarn Install =='
+  system 'yarn install'
 end

@@ -29,17 +29,12 @@ module RadUser
 
     has_one_attached :avatar
 
+    enum language: { English: 'en', Spanish: 'es' }
+
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
     scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
-
-    scope :admins, lambda {
-      active.where('users.id IN (' \
-                   'SELECT user_id FROM user_security_roles ' \
-                   'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
-                   'WHERE security_roles.admin = TRUE)')
-    }
-
+    scope :admins, -> { active.by_permission 'admin' }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
     scope :by_name, -> { order(:first_name, :last_name) }
     scope :by_id, -> { order(:id) }
@@ -51,8 +46,13 @@ module RadUser
     scope :recent_last, -> { order('users.created_at') }
     scope :except_user, ->(user) { where.not(id: user.id) }
 
-    scope :by_permission, lambda { |permission_attr|
-      joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct
+    scope :by_permission, lambda { |permission|
+      raise "missing permission column: #{permission}" unless RadPermission.exists?(permission)
+
+      where('users.id IN (' \
+            'SELECT user_id FROM user_security_roles ' \
+            'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
+            "WHERE security_roles.#{permission} = TRUE)")
     }
 
     scope :inactive, lambda {
@@ -65,8 +65,7 @@ module RadUser
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
-    validate :validate_sms_mobile_phone, on: :update
-    validate :validate_2fa_mobile_phone
+    validate :validate_mobile_phone
     validate :password_excludes_name
     validates :security_roles, presence: true, if: :active?
 
@@ -81,8 +80,7 @@ module RadUser
     after_initialize :twilio_verify_default, if: :new_record?
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
-    after_save :notify_user_approved
-
+    after_commit :notify_user_approved, only: :update
     after_invitation_accepted :notify_user_accepted
 
     strip_attributes
@@ -98,6 +96,18 @@ module RadUser
 
   def active?
     active
+  end
+
+  def needs_confirmation?
+    RadConfig.user_confirmable? && !confirmed?
+  end
+
+  def needs_accept_invite?
+    invitation_sent_at.present? && invitation_accepted_at.blank?
+  end
+
+  def needs_reactivate?
+    RadConfig.user_expirable? && expired?
   end
 
   def stale?
@@ -117,6 +127,8 @@ module RadUser
   end
 
   def permission?(permission)
+    raise "missing permission column: #{permission}" unless RadPermission.exists?(permission)
+
     security_roles.select { |x| x[permission] }.length.positive?
   end
 
@@ -132,11 +144,6 @@ module RadUser
     permission?(:admin)
   end
 
-  def auto_approve?
-    # override this as needed in model
-    false
-  end
-
   def greeting
     "Hello #{first_name}"
   end
@@ -150,7 +157,7 @@ module RadUser
   end
 
   def display_style
-    if user_status.active || user_status == UserStatus.default_pending_status
+    if user_status.active || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
       external? ? 'table-warning' : ''
     else
       'table-danger'
@@ -173,6 +180,10 @@ module RadUser
     end
   end
 
+  def notify_new_user_signed_up
+    Notifications::NewUserSignedUpNotification.main(self).notify!
+  end
+
   def send_devise_notification(notification, *args)
     # background devise emails
     # https://github.com/plataformatec/devise#activejob-integration
@@ -181,11 +192,15 @@ module RadUser
   end
 
   def send_reset_password_instructions
-    if invited_to_sign_up?
-      errors.add :email, :not_found
-    else
-      super
-    end
+    raise "There is an open invitation for this user: #{email}" if needs_accept_invite?
+
+    super
+  end
+
+  def pending_any_confirmation
+    raise "There is an open invitation for this user: #{email}" if needs_accept_invite?
+
+    super
   end
 
   def test_email!
@@ -200,7 +215,16 @@ module RadUser
     update(last_activity_at: nil)
   end
 
-  def twilio_totp_factor_sid; end # TODO: this should be a db attribute when we enable the TOTP feature
+  def locale
+    User.languages[language]
+  end
+
+  # TODO: this should be a db attribute when we enable the TOTP feature
+  def twilio_totp_factor_sid; end
+
+  def timeout_in
+    external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
+  end
 
   private
 
@@ -216,8 +240,14 @@ module RadUser
         self.external = security_roles.first.external
       end
 
-      status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
-      self.user_status = status if new_record? && !user_status
+      self.user_status = default_user_status if new_record? && !user_status
+    end
+
+    def default_user_status
+      return UserStatus.default_active_status unless RadConfig.pending_users?
+      return UserStatus.default_active_status if invited_by.present?
+
+      UserStatus.default_pending_status
     end
 
     def initial_security_role
@@ -239,17 +269,24 @@ module RadUser
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
 
-    def validate_sms_mobile_phone
-      return if !RadTwilio.new.twilio_enabled? || mobile_phone.present?
-      return if notification_settings.enabled.where(sms: true).count.zero?
+    def validate_mobile_phone
+      return if mobile_phone.present? || user_status.blank? || !user_status.validate_email_phone?
 
-      errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
+      if RadConfig.require_mobile_phone?
+        errors.add(:mobile_phone, "can't be blank")
+      elsif require_mobile_phone_sms?
+        errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
+      elsif require_mobile_phone_two_factor?
+        errors.add(:mobile_phone, 'is required for two factor authentication')
+      end
     end
 
-    def validate_2fa_mobile_phone
-      return if !RadConfig.twilio_verify_enabled? || mobile_phone.present? || !twilio_verify_enabled?
+    def require_mobile_phone_sms?
+      RadTwilio.new.twilio_enabled? && persisted? && notification_settings.enabled.where(sms: true).count.positive?
+    end
 
-      errors.add(:mobile_phone, 'is required for two factor authentication')
+    def require_mobile_phone_two_factor?
+      RadConfig.twilio_verify_enabled? && twilio_verify_enabled?
     end
 
     def password_excludes_name
@@ -265,16 +302,27 @@ module RadUser
     end
 
     def notify_user_approved
-      return if auto_approve?
+      return unless RadConfig.pending_users?
+      return if invited_to_sign_up?
 
-      return unless saved_change_to_user_status_id? && user_status &&
-                    user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
+      return unless user_status_id_previously_changed?(from: UserStatus.default_pending_status.id,
+                                                       to: UserStatus.default_active_status.id)
 
+      notify_user_approved_user
+      notify_user_approved_admins
+    end
+
+    def notify_user_approved_user
       RadMailer.your_account_approved(self).deliver_later
-      Notifications::UserWasApprovedNotification.main.notify!([self, approved_by]) unless do_not_notify_approved
+    end
+
+    def notify_user_approved_admins
+      return if do_not_notify_approved
+
+      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify!
     end
 
     def notify_user_accepted
-      Notifications::UserAcceptedInvitationNotification.main.notify!(self)
+      Notifications::UserAcceptedInvitationNotification.main(self).notify!
     end
 end

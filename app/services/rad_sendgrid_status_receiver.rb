@@ -62,7 +62,7 @@ class RadSendgridStatusReceiver
         user.update! user_status: UserStatus.default_inactive_status
         Rails.logger.info "sendgrid suppression received from stale user #{user.email}, deactivating"
       else
-        Notifications::SendgridEmailStatusNotification.main.notify! @content
+        Notifications::SendgridEmailStatusNotification.main(@content).notify!
       end
     end
 

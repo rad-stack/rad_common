@@ -139,6 +139,7 @@ SimpleForm.setup do |config|
     b.use :html5
     b.optional :readonly
     b.use :label
+    b.use :icon
     b.wrapper tag: 'div', class: 'd-flex flex-row justify-content-between align-items-center' do |ba|
       ba.use :input, class: 'form-control mx-1', error_class: 'is-invalid', valid_class: ''
     end

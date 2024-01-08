@@ -6,7 +6,12 @@ class AttorneysController < ApplicationController
     @attorneys = policy_scope(Attorney).by_name.page(params[:page])
   end
 
-  def show; end
+  def show
+    respond_to do |format|
+      format.html
+      format.pdf { render pdf: @attorney.to_s }
+    end
+  end
 
   def new
     @attorney = Attorney.new
@@ -61,6 +66,6 @@ class AttorneysController < ApplicationController
 
     def permitted_params
       params.require(:attorney).permit(:first_name, :last_name, :middle_name, :company_name, :phone_number, :email,
-                                       :address_1, :address_2, :city, :state, :zipcode)
+                                       :address_1, :address_2, :city, :state, :zipcode, :active)
     end
 end

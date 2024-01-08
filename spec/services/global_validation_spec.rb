@@ -22,8 +22,8 @@ describe GlobalValidation, type: :service do
 
     let(:models) do
       %w[Attorney Category Client Company Division Duplicate Notification NotificationSecurityRole NotificationSetting
-         NotificationType SavedSearchFilter SecurityRole Status SystemMessage User UserClient UserSecurityRole
-         UserStatus]
+         NotificationType SavedSearchFilter SecurityRole Status SystemMessage TwilioLog TwilioLogAttachment User
+         UserClient UserSecurityRole UserStatus]
     end
 
     it { is_expected.to eq models }
@@ -57,7 +57,7 @@ describe GlobalValidation, type: :service do
       it 'raises an exception' do
         expect {
           result
-        }.to raise_error(RuntimeError, 'no users to notify')
+        }.to raise_error(RuntimeError, 'no users to notify: Notifications::InvalidDataWasFoundNotification')
       end
     end
 

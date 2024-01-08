@@ -30,13 +30,4 @@ RadCommon::Engine.routes.draw do
   resources :login_activities, only: :index
   resources :twilio_logs, only: :index
   resources :global_validations, only: %i[new create]
-
-  resources :duplicates, only: :index do
-    collection do
-      get :not
-      put :do_later
-      put :reset
-      patch :merge
-    end
-  end
 end

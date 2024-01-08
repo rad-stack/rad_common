@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :notification do
-    association :user
+    user
     content { Faker::Movies::StarWars.quote }
   end
 end

@@ -22,6 +22,16 @@ RSpec.describe 'Attorneys' do
     login_as user, scope: :user
   end
 
+  describe 'index' do
+    context 'when pdf format' do
+      it 'generates a pdf' do
+        get "/attorneys/#{attorney.id}", params: { format: 'pdf' }
+
+        expect(response.content_type).to eq('application/pdf')
+      end
+    end
+  end
+
   describe 'POST create' do
     describe 'with valid params' do
       it 'creates a new Attorney' do

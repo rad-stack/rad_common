@@ -28,6 +28,9 @@
         = f.input :phone_number
       .col-lg-3
         = f.input :email
+      .col-lg-3
+        = f.input :active
 
   .form-actions
+    = render 'layouts/duplicate_check', record: @attorney
     = f.button :submit, 'Save', class: 'btn btn-primary'

@@ -1,7 +1,7 @@
 module RadCommon
   module UsersHelper
     def user_show_data(user)
-      items = %i[email mobile_phone user_status timezone]
+      items = [:email, :mobile_phone, { label: 'User Status', value: user_status_item(user) }, :timezone]
       items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
 
       items += %i[sign_in_count invitation_accepted_at invited_by current_sign_in_ip current_sign_in_at confirmed_at
@@ -15,6 +15,30 @@ module RadCommon
       end
 
       items
+    end
+
+    def user_status_item(user)
+      items = [user.user_status.name, ' ']
+
+      if user.needs_confirmation?
+        items += user_status_icon('fa-circle-question', 'This user has not yet confirmed their email.')
+      end
+
+      if user.needs_accept_invite?
+        items += user_status_icon('fa-envelope', 'This user has not yet accepted their invitation.')
+      end
+
+      if user.needs_reactivate?
+        items += user_status_icon('fa-triangle-exclamation', 'This user is expired due to inactivity.')
+      end
+
+      tag.div do
+        safe_join items
+      end
+    end
+
+    def user_status_icon(icon, tooltip)
+      [icon_tooltip('span', tooltip, icon, html_class: 'text-warning'), ' ']
     end
 
     def my_profile_nav?
@@ -122,10 +146,10 @@ module RadCommon
     end
 
     def user_confirm_action(user)
-      return unless RadConfig.user_confirmable? && policy(user).update? && !user.confirmed?
+      return unless user.needs_confirmation? && policy(user).update?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
-      link_to icon(:check, 'Confirm Email'),
+      link_to icon('circle-question', 'Confirm Email'),
               confirm_user_path(user),
               method: :put,
               data: { confirm: confirm },
@@ -133,12 +157,12 @@ module RadCommon
     end
 
     def user_resend_action(user)
-      return unless policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
+      return unless policy(User.new).create? && user.needs_accept_invite?
 
-      link_to 'Resend Invitation',
+      link_to icon(:envelope, 'Resend Invitation'),
               resend_invitation_user_path(user),
               method: :put,
-              class: 'btn btn-sm btn-success',
+              class: 'btn btn-sm btn-warning',
               data: { confirm: 'Are you sure?' }
     end
 
@@ -177,7 +201,7 @@ module RadCommon
     end
 
     def reactivate_user_warning(user)
-      return unless RadConfig.user_expirable? && policy(user).update? && user.expired?
+      return unless user.needs_reactivate? && policy(user).update?
 
       link = link_to 'click here', reactivate_user_path(user), method: :put, data: { confirm: 'Are you sure?' }
       message = safe_join(["User's account has been expired due to inactivity, to re-activate the user, ", link, '.'])
@@ -185,7 +209,7 @@ module RadCommon
     end
 
     def require_mobile_phone?
-      RadConfig.twilio_verify_enabled? && RadConfig.twilio_verify_all_users?
+      RadConfig.require_mobile_phone? || (RadConfig.twilio_verify_enabled? && RadConfig.twilio_verify_all_users?)
     end
 
     def clients_to_add_to_user(user)
@@ -213,6 +237,19 @@ module RadCommon
       return if !hide_inactive || user.not_inactive?
 
       'users-collapse'
+    end
+
+    def user_grouped_collection(user, scopes: [])
+      users = policy_scope(User).active.by_name.where.not(id: current_user.id)
+      scopes.each { |scope| users = users.send(scope) }
+
+      inactive = user if user && !user.active
+
+      grouped = [['Me', [current_user]]]
+      grouped.push(['Users', users]) if users.any?
+      grouped.push(['Inactive', [inactive]]) if inactive
+
+      grouped
     end
   end
 end

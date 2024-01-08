@@ -54,7 +54,7 @@ class DataColumnsPresenter
     when Symbol
       translation = I18n.t "activerecord.attributes.#{resource.class.to_s.underscore}.#{item}"
 
-      if translation.include?('translation missing')
+      if translation.downcase.include?('translation missing')
         item.to_s.titlecase
       else
         translation

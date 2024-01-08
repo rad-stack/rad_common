@@ -1,11 +1,13 @@
 class UsersController < ApplicationController
+  include Exportable
+
   before_action :set_user, only: %i[show edit update destroy resend_invitation confirm test_email test_sms reactivate]
   before_action :remove_blank_passwords, only: :update
 
   def index
     authorize User
 
-    if policy(User.new).update?
+    if RadConfig.pending_users? && policy(User.new).update?
       @pending = policy_scope(User).includes(:user_status, :security_roles)
                                    .pending
                                    .recent_first
@@ -14,18 +16,6 @@ class UsersController < ApplicationController
 
     @user_search = UserSearch.new(params, current_user)
     @users = policy_scope(@user_search.results).page(params[:page])
-  end
-
-  def export
-    authorize User
-
-    respond_to do |format|
-      format.csv do
-        UserExportJob.perform_later(search_params.to_h, current_user.id)
-        flash[:success] = report_generating_message
-        redirect_to users_path(search_params.to_h)
-      end
-    end
   end
 
   def show

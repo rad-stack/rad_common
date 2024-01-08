@@ -1,10 +1,11 @@
 require:
   - rubocop-rails
   - rubocop-rspec
+  - rubocop-capybara
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.1.2
+  TargetRubyVersion: 3.2.2
   TargetRailsVersion: 6.0.3.4
   Exclude:
     - 'db/schema.rb'
@@ -16,6 +17,7 @@ AllCops:
     - 'config/initializers/simple_form.rb'
     - 'config/initializers/simple_form_bootstrap.rb'
     - 'config/initializers/simple_form_components.rb'
+    - 'config/initializers/new_framework_defaults*'
     - 'spec/spec_helper.rb'
     - 'config.ru'
 
@@ -27,6 +29,11 @@ Layout/IndentationConsistency:
 # Commonly used screens these days easily fit more than 80 characters
 Layout/LineLength:
   Max: 120
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  Exclude:
+    - 'config/environments/production.rb'
+    - 'config/environments/staging.rb'
 
 # Must use a comparator for conditionals instead of an equals sign
 Lint/AssignmentInCondition:
@@ -120,6 +127,13 @@ Rails/SkipsModelValidations:
 Rails/I18nLocaleTexts:
   Enabled: false
 
+Rails/FilePath:
+  Exclude:
+    - 'config/environments/development.rb'
+
+Rails/FindEach:
+  Enabled: false
+
 # Check for uses of braces around single-line blocks, and also for multi-line blocks with an
 # attached method like: {...}.where
 # It will still preferentially choose do/end for multi-line blocks
@@ -151,6 +165,11 @@ Style/StringLiterals:
     - 'config/environment.rb'
     - 'config/application.rb'
     - 'config/initializers/backtrace_silencers.rb'
+    - 'config/initializers/assets.rb'
+    - 'config/environments/development.rb'
+    - 'config/environments/staging.rb'
+    - 'config/environments/production.rb'
+    - 'config/environments/test.rb'
 
 Style/SymbolArray:
   Enabled: true
@@ -178,10 +197,15 @@ Style/ParenthesesAroundCondition:
 Style/SignalException:
   EnforcedStyle: only_raise
 
+Style/GlobalStdStream:
+  Exclude:
+    - 'config/environments/production.rb'
+    - 'config/environments/staging.rb'
+
 RSpec/ExampleLength:
   Enabled: false
 
-RSpec/FactoryBot/ConsistentParenthesesStyle:
+FactoryBot/ConsistentParenthesesStyle:
   EnforcedStyle: omit_parentheses
 
 RSpec/MultipleExpectations:
@@ -203,6 +227,9 @@ RSpec/MessageSpies:
   Enabled: false
 
 RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/IndexedLet:
   Enabled: false
 
 Rails/HttpPositionalArguments:

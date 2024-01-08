@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe EmailAddressValidator, type: :validator do
   subject(:result) { build :division, invoice_email: email }
 
+  before { Rails.cache.write('rate_limit:sendgrid_verify', 0, expires_in: 5.minutes) }
+
   context 'when the email is nil' do
     let(:email) { nil }
 
@@ -46,7 +48,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
       invalid_items.each do |item|
         model = build :division, invoice_email: item
 
-        expect(model).to be_invalid
+        expect(model).not_to be_valid
         expect(model.errors.details.first[0]).to eq :invoice_email
         expect(model.errors.full_messages.to_s).to include 'Invoice email is not written in a valid format. ' \
                                                            'Email cannot have capital letters, domain must be less ' \

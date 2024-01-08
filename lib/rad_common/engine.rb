@@ -22,6 +22,8 @@ module RadCommon
     require 'bootstrap4-kaminari-views'
     require 'nokogiri'
     require 'pg'
+    require 'prawn'
+    require 'prawn/table'
     require 'premailer/rails'
     require 'pretender'
     require 'pundit'
@@ -36,5 +38,6 @@ module RadCommon
     require 'text'
     require 'twilio-ruby'
     require 'webpacker'
+    require 'wicked_pdf'
   end
 end

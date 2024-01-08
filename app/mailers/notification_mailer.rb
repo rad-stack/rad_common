@@ -2,17 +2,17 @@ class NotificationMailer < RadMailer
   before_action :enable_settings_link
 
   def new_user_signed_up(recipients, user)
-    auto_approve = user.auto_approve?
+    user_is_active = user.user_status.active?
 
     action_message = 'Review their user registration information'
-    action_message += auto_approve ? ' if desired.' : ' and approve them if desired.'
+    action_message += user_is_active ? ' if desired.' : ' and approve them if desired.'
 
     @email_action = { message: action_message,
-                      button_text: auto_approve ? 'Review' : 'Review & Approve',
+                      button_text: user_is_active ? 'Review' : 'Review & Approve',
                       button_url: edit_user_url(user) }
 
     @message = "#{user} has signed up on #{RadConfig.app_name!}"
-    @message += auto_approve ? '.' : ' and is awaiting approval.'
+    @message += user_is_active ? '.' : ' and is awaiting approval.'
 
     send_notification_mail recipients, "New User on #{RadConfig.app_name!}"
   end
@@ -56,10 +56,31 @@ class NotificationMailer < RadMailer
                            "SendGrid Email Status for #{@user.presence || @email} in #{RadConfig.app_name!}"
   end
 
+  def high_duplicates(recipients, payload)
+    model_name = payload[:model_name]
+
+    threshold = ActiveSupport::NumberHelper.number_to_percentage(payload[:threshold] * 100,
+                                                                 strip_insignificant_zeros: true,
+                                                                 precision: 2)
+
+    formatted_percent = ActiveSupport::NumberHelper.number_to_percentage(payload[:percentage] * 100,
+                                                                         strip_insignificant_zeros: true,
+                                                                         precision: 2)
+
+    @message = "The threshold of #{threshold} for potential duplicate #{model_name.titleize} records has been " \
+               "exceeded with #{formatted_percent} of records to review."
+
+    @email_action = { message: 'You can review the records here.',
+                      button_text: 'Review Records',
+                      button_url: duplicates_url(model: model_name) }
+
+    send_notification_mail recipients, "Too Many Potential Duplicate #{model_name.titleize} Records"
+  end
+
   private
 
-    def send_notification_mail(recipients, subject)
+    def send_notification_mail(recipients, subject, options = {})
       @recipient = User.where(id: recipients)
-      mail to: @recipient.map(&:formatted_email), subject: subject
+      mail to: @recipient.map(&:formatted_email), subject: subject, cc: options[:cc]
     end
 end

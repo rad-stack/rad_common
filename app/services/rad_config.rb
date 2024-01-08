@@ -94,6 +94,10 @@ class RadConfig
       secret_config_item(:jwt_secret).present?
     end
 
+    def timeout_hours!
+      config_item! :timeout_hours
+    end
+
     def test_phone_number
       secret_config_item :test_phone_number
     end
@@ -136,10 +140,6 @@ class RadConfig
       secret_config_item! :twilio_phone_number
     end
 
-    def twilio_mms_phone_number!
-      secret_config_item! :twilio_mms_phone_number
-    end
-
     def twilio_account_sid!
       secret_config_item! :twilio_account_sid
     end
@@ -150,6 +150,18 @@ class RadConfig
 
     def twilio_verify_service_sid!
       secret_config_item! :twilio_verify_service_sid
+    end
+
+    def twilio_verify_enabled?
+      boolean_config_item! :twilio_verify_enabled
+    end
+
+    def twilio_verify_all_users?
+      boolean_config_item! :twilio_verify_all_users
+    end
+
+    def twilio_verify_remember_device!
+      config_item!(:twilio_verify_remember_device_days).days
     end
 
     def seeded_users!
@@ -175,6 +187,8 @@ class RadConfig
     end
 
     def impersonate?
+      return true unless Rails.env.production?
+
       boolean_config_item! :impersonate
     end
 
@@ -182,12 +196,12 @@ class RadConfig
       boolean_config_item! :use_avatar
     end
 
-    def twilio_verify_enabled?
-      boolean_config_item! :twilio_verify_enabled
+    def switch_languages?
+      boolean_config_item! :switch_languages
     end
 
-    def twilio_verify_all_users?
-      boolean_config_item! :twilio_verify_all_users
+    def require_mobile_phone?
+      boolean_config_item! :require_mobile_phone
     end
 
     def storage_config_override?
@@ -214,12 +228,20 @@ class RadConfig
       boolean_config_item! :manually_create_users
     end
 
+    def pending_users?
+      boolean_config_item! :pending_users
+    end
+
     def show_help_menu?
       boolean_config_item! :show_help_menu
     end
 
-    def shared_database?
-      boolean_config_item! :shared_database
+    def force_marketing_site?
+      boolean_config_item! :force_marketing_site
+    end
+
+    def allow_marketing_site?
+      boolean_config_item! :allow_marketing_site
     end
 
     def canadian_addresses?
@@ -232,10 +254,6 @@ class RadConfig
 
     def legal_docs?
       boolean_config_item! :legal_docs
-    end
-
-    def wide_margins?
-      boolean_config_item! :wide_margins
     end
 
     def favicon_filename!
@@ -387,6 +405,7 @@ class RadConfig
       check_aws!
       check_twilio_verify!
       check_smarty!
+      check_marketing!
     end
 
     private
@@ -416,6 +435,12 @@ class RadConfig
         return if smarty_auth_id.blank? && smarty_auth_token.blank?
 
         raise 'include all or none of smarty_auth_id and smarty_auth_token'
+      end
+
+      def check_marketing!
+        return unless force_marketing_site? && !allow_marketing_site?
+
+        raise 'force_marketing_site not allowed'
       end
 
       def override_variable(item)

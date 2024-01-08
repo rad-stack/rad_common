@@ -30,6 +30,17 @@ module RadCommonRoutes
           get :permission, on: :collection
         end
 
+        resources :duplicates, only: :index do
+          collection do
+            get :not
+            put :do_later
+            put :reset
+            put :switch
+            patch :merge
+            post :check_duplicate
+          end
+        end
+
         resources :saved_search_filters, only: :destroy
         resources :user_security_roles, only: :show
         resources :user_clients, only: %i[create destroy]
@@ -46,6 +57,7 @@ module RadCommonRoutes
 
       resources :user_profiles, only: %i[show edit update] if RadConfig.user_profiles?
       resources :twilio_statuses, only: :create
+      resources :twilio_replies, only: :create
       resources :sendgrid_statuses, only: :create
 
       get 'contact_us', to: 'pages#contact_us'

@@ -4,7 +4,7 @@ class RadTwilio
   end
 
   def send_mms(to:, message:, media_url:)
-    client.messages.create from: from_number_mms,
+    client.messages.create from: from_number,
                            to: to,
                            body: message,
                            media_url: media_url,
@@ -17,7 +17,9 @@ class RadTwilio
 
   def self.send_verify_sms(mobile_phone)
     response = RadRetry.perform_request(retry_count: 2, raise_original: true) do
-      TwilioVerifyService.send_sms_token(mobile_phone)
+      RadRateLimiter.new(limit: 500, period: 5.minutes, key: 'twilio_verify').run do
+        TwilioVerifyService.send_sms_token(mobile_phone)
+      end
     end
 
     response.status == 'pending'
@@ -29,10 +31,6 @@ class RadTwilio
 
   def from_number
     RadConfig.twilio_phone_number!
-  end
-
-  def from_number_mms
-    RadConfig.twilio_mms_phone_number!
   end
 
   def validate_phone_number(phone_number, mobile)
@@ -58,6 +56,10 @@ class RadTwilio
   end
 
   def self.twilio_to_human_format(phone_number)
+    phone_number = phone_number.to_s unless phone_number.is_a?(String)
+    phone_number = "+#{phone_number}" if phone_number.size == 11 && phone_number.first != '+'
+    raise 'invalid twilio number format' unless phone_number.size == 12
+
     "(#{phone_number[2, 3]}) #{phone_number[5, 3]}-#{phone_number[8, 4]}"
   end
 

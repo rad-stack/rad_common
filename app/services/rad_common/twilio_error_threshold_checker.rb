@@ -1,11 +1,12 @@
 module RadCommon
   class TwilioErrorThresholdChecker
     FAILURE_THRESHOLD_PERCENTAGE = 0.2
+    MIN_FAILURES = 10
 
     def check_threshold
       return unless exceeded_error_threshold?
 
-      Notifications::TwilioErrorThresholdExceededNotification.main.notify! failed_percentage
+      Notifications::TwilioErrorThresholdExceededNotification.main(failed_percentage).notify!
     end
 
     private
@@ -17,7 +18,9 @@ module RadCommon
       def exceeded_error_threshold?
         return false if recent_undelivered_count.zero?
 
-        failed_percentage >= FAILURE_THRESHOLD_PERCENTAGE
+        return failed_percentage >= FAILURE_THRESHOLD_PERCENTAGE if recent_undelivered_count >= MIN_FAILURES
+
+        failed_percentage.to_d == 1.0.to_d
       end
 
       def recent_undelivered_count

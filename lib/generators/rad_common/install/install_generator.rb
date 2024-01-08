@@ -6,17 +6,24 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
+        remove_file 'app/views/layouts/_navigation.html.haml'
+
+        remove_deprecated_config
         standardize_date_methods
+        install_database_yml
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
         # misc
         merge_package_json
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+        copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
+        copy_file '../../../../../spec/dummy/public/robots.txt', 'public/robots.txt'
         copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
+        copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js', 'app/javascript/packs/rad_mailer.js'
         directory '../../../../../.bundle', '.bundle'
 
         # code style config
@@ -31,6 +38,7 @@ module RadCommon
         end
 
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
+        copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
@@ -42,7 +50,7 @@ module RadCommon
                   'config/initializers/simple_form.rb'
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb',
-                 'config/initializers/simple_form_bootstrap.rb'
+                  'config/initializers/simple_form_bootstrap.rb'
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
                   'config/initializers/simple_form_components.rb'
@@ -64,8 +72,10 @@ module RadCommon
                   'app/models/application_record.rb'
 
         # specs
-        directory '../../../../../spec/rad_common/', 'spec/rad_common/'
-        directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/', exclude_pattern: /clients.rb/
+        directory '../../../../../spec/factories/rad_common/',
+                  'spec/factories/rad_common/',
+                  exclude_pattern: /clients.rb/
+
         copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
 
         # templates
@@ -101,18 +111,12 @@ module RadCommon
         copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb',
                   'lib/templates/rspec/system/system_spec.rb'
 
-        gsub_file 'config/environments/production.rb',
-                  '#config.force_ssl = true',
-                  'config.force_ssl = true'
-
-unless RadConfig.shared_database?
         create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 
 Seeder.new.seed!
         RUBY
         end
-end
 
         inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
     # added by rad_common
@@ -134,6 +138,11 @@ end
   mount RadCommon::Engine => '/rad_common'
   extend RadCommonRoutes
 
+        RUBY
+        end
+
+        inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do <<-'RUBY'
+  gem 'rubocop-capybara'
         RUBY
         end
 
@@ -207,7 +216,12 @@ end
         apply_migration '20221221134935_remove_legacy_audited_changes.rb'
         apply_migration '20230222162024_migrate_authy_to_twilio_verify.rb'
         apply_migration '20230310161506_more_twilio_verify.rb'
+        apply_migration '20230313195243_add_language.rb'
         apply_migration '20230401113151_fix_sendgrid_notification.rb'
+        apply_migration '20230419121743_twilio_replies.rb'
+        apply_migration '20230420102508_update_twilio_log_number_format.rb'
+        apply_migration '20230425215920_create_twilio_log_attachments.rb'
+        apply_migration '20231205185433_pending_user_status.rb'
       end
 
       def self.next_migration_number(path)
@@ -223,7 +237,7 @@ end
 
         def merge_package_json
           dummy_file_path = '../../../../../spec/dummy/package.json'
-          return copy_file dummy_file_path, 'package.json' unless File.exists? 'custom-dependencies.json'
+          return copy_file dummy_file_path, 'package.json' unless File.exist? 'custom-dependencies.json'
 
           custom_dependencies = JSON.parse(File.read('custom-dependencies.json'))
           package_source = File.expand_path(find_in_source_paths(dummy_file_path))
@@ -235,8 +249,6 @@ end
         end
 
         def apply_migration(source)
-          return if RadConfig.shared_database?
-
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
           if self.class.migration_exists?('db/migrate', filename)
@@ -256,6 +268,10 @@ end
           system "find . -type f -name \"*.js\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
         end
 
+        def remove_deprecated_config
+          gsub_file 'config/rad_common.yml', 'shared_database: false', ''
+        end
+
         def standardize_date_methods
           search_and_replace 'Time.zone.today', 'Date.current'
           search_and_replace 'DateTime.now', 'Time.current'
@@ -270,6 +286,17 @@ end
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
+        end
+
+        def install_database_yml
+          copy_file '../../../../../spec/dummy/config/database.yml', 'config/database.yml'
+
+          gsub_file 'config/database.yml', 'rad_common_test', "rad_common_test<%= ENV['TEST_ENV_NUMBER'] %>"
+          gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
+        end
+
+        def installed_app_name
+          ::Rails.application.class.module_parent.to_s.underscore
         end
     end
   end
