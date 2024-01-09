@@ -69,10 +69,6 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/locales/simple_form.en.yml',
                   'config/locales/simple_form.en.yml'
 
-        # models
-        copy_file '../../../../../spec/dummy/app/models/application_record.rb',
-                  'app/models/application_record.rb'
-
         # specs
         directory '../../../../../spec/factories/rad_common/',
                   'spec/factories/rad_common/',
