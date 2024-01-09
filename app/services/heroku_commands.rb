@@ -123,6 +123,9 @@ class HerokuCommands
           write_log `HEROKU_API_KEY=#{heroku_api_key} git push -f https://git.heroku.com/#{app_name}.git #{branch_name}:main`
         end
 
+        write_log 'Restarting Application Dynos...'
+        write_log `HEROKU_API_KEY=#{heroku_api_key} heroku restart -a #{app_name}`
+
         write_log 'Fetching Heroku Release ID...'
         release_info = `HEROKU_API_KEY=#{heroku_api_key} heroku releases -a #{app_name} --json`
         release_id = extract_release_id(release_info)
