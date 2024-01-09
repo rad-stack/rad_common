@@ -107,20 +107,22 @@ class HerokuCommands
       end
     end
 
-    def deploy(app_name, api_key, repo_name, branch_name)
+    def deploy(app_name, repo_name, branch_name, heroku_api_key, github_token)
       check_valid_app(app_name)
 
       Bundler.with_unbundled_env do
-        ENV['HEROKU_API_KEY'] = api_key
         write_log 'Deploying to Heroku...'
 
         clone_dir = "temp_repo_#{branch_name}"
-        write_log `git clone --depth 50 -b #{branch_name} git@github.com:#{repo_name}.git #{clone_dir}`
+        github_repo_url = "https://#{github_token}:x-oauth-basic@github.com/#{repo_name}.git"
+
+        write_log `git clone --depth 50 -b #{branch_name} #{github_repo_url} #{clone_dir}`
         Dir.chdir(clone_dir) do
           write_log 'Deploying to Heroku...'
-          write_log `git push -f https://git.heroku.com/#{app_name}.git #{branch_name}:main`
+          write_log `HEROKU_API_KEY=#{heroku_api_key} git push -f https://git.heroku.com/#{app_name}.git #{branch_name}:main`
         end
 
+        write_log 'Deleting Cloned Repository...'
         FileUtils.rm_rf(clone_dir)
       end
     end
