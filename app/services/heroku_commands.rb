@@ -107,6 +107,24 @@ class HerokuCommands
       end
     end
 
+    def deploy(app_name, api_key, repo_name, branch_name)
+      check_valid_app(app_name)
+
+      Bundler.with_unbundled_env do
+        ENV['HEROKU_API_KEY'] = api_key
+        write_log 'Deploying to Heroku...'
+
+        clone_dir = "temp_repo_#{branch_name}"
+        write_log `git clone --depth 50 -b #{branch_name} git@github.com:#{repo_name}.git #{clone_dir}`
+        Dir.chdir(clone_dir) do
+          write_log 'Deploying to Heroku...'
+          write_log `git push -f https://git.heroku.com/#{app_name}.git #{branch_name}:main`
+        end
+
+        FileUtils.rm_rf(clone_dir)
+      end
+    end
+
     private
 
       def app_option(app_name)
