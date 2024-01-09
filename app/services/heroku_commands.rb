@@ -108,8 +108,12 @@ class HerokuCommands
     end
 
     def deploy(app_name, repo_name, branch_name, heroku_api_key, github_token)
-      check_valid_app(app_name)
       release_id = nil
+      clone_dir = "temp_repo_#{branch_name}"
+      heroku_api = Faraday.new(url: 'https://api.heroku.com') do |faraday|
+        faraday.headers['Authorization'] = "Bearer #{heroku_api_key}"
+        faraday.headers['Accept'] = 'application/vnd.heroku+json; version=3'
+      end
 
       Bundler.with_unbundled_env do
         write_log 'Deploying to Heroku...'
@@ -120,22 +124,32 @@ class HerokuCommands
         write_log `git clone --depth 50 -b #{branch_name} #{github_repo_url} #{clone_dir}`
         Dir.chdir(clone_dir) do
           write_log 'Deploying to Heroku...'
-          write_log `HEROKU_API_KEY=#{heroku_api_key} git push -f https://git.heroku.com/#{app_name}.git #{branch_name}:main`
+          remote_url = "https://blank:#{heroku_api_key}@git.heroku.com/#{app_name}.git"
+          deploy_output = `git push -f #{remote_url} #{branch_name}:main`
+          write_log deploy_output
         end
 
-        write_log 'Restarting Application Dynos...'
-        write_log `HEROKU_API_KEY=#{heroku_api_key} heroku restart -a #{app_name}`
+        write_log 'Restarting Dynos...'
+        heroku_api.delete("/apps/#{app_name}/dynos") { |req| req.headers['Content-Type'] = 'application/json' }
 
-        write_log 'Fetching Heroku Release ID...'
-        release_info = `HEROKU_API_KEY=#{heroku_api_key} heroku releases -a #{app_name} --json`
-        release_id = extract_release_id(release_info)
-        write_log "Latest Release ID: #{release_id}"
+        releases_response = heroku_api.get("/apps/#{app_name}/releases") do |req|
+          req.headers['Range'] = 'version ..; order=desc, max=1'
+        end
+        if releases_response.success?
+          releases = JSON.parse(releases_response.body)
+          latest_release = releases.last
+          release_id = latest_release['id']
+          write_log "Latest Release ID: #{release_id}"
+        else
+          write_log "Failed to fetch releases: #{releases_response.status}"
+        end
 
         write_log 'Deleting Cloned Repository...'
-        FileUtils.rm_rf(clone_dir)
       end
 
       release_id
+    ensure
+      FileUtils.rm_rf(clone_dir)
     end
 
     private
