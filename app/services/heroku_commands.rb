@@ -109,6 +109,7 @@ class HerokuCommands
 
     def deploy(app_name, repo_name, branch_name, heroku_api_key, github_token)
       check_valid_app(app_name)
+      release_id = nil
 
       Bundler.with_unbundled_env do
         write_log 'Deploying to Heroku...'
@@ -122,9 +123,16 @@ class HerokuCommands
           write_log `HEROKU_API_KEY=#{heroku_api_key} git push -f https://git.heroku.com/#{app_name}.git #{branch_name}:main`
         end
 
+        write_log 'Fetching Heroku Release ID...'
+        release_info = `HEROKU_API_KEY=#{heroku_api_key} heroku releases -a #{app_name} --json`
+        release_id = extract_release_id(release_info)
+        write_log "Latest Release ID: #{release_id}"
+
         write_log 'Deleting Cloned Repository...'
         FileUtils.rm_rf(clone_dir)
       end
+
+      release_id
     end
 
     private
@@ -203,6 +211,15 @@ class HerokuCommands
         return false if error.blank?
 
         IGNORED_HEROKU_ERRORS.select { |ignored_error| error.include?(ignored_error) }.blank?
+      end
+
+      def extract_release_id(release_info)
+        releases = JSON.parse(release_info)
+        latest_release = releases.max_by { |release| release['version'] }
+        latest_release['id']
+      rescue JSON::ParserError => e
+        write_log "Error parsing release information: #{e}"
+        nil
       end
   end
 end
