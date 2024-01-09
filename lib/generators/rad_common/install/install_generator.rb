@@ -11,6 +11,7 @@ module RadCommon
         remove_deprecated_config
         standardize_date_methods
         install_database_yml
+        update_seeder_method
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
@@ -268,6 +269,16 @@ Seeder.new.seed!
 
         def remove_deprecated_config
           gsub_file 'config/rad_common.yml', 'shared_database: false', ''
+        end
+
+        def update_seeder_method
+          file_path = 'app/services/seeder.rb'
+          if File.exist?(file_path)
+            gsub_file file_path, /def seed!\n\s*super\n?/, 'def seed'
+            say_status('updated', "#{file_path} to use new seed method")
+          else
+            say_status('skipped', "File #{file_path} does not exist")
+          end
         end
 
         def standardize_date_methods
