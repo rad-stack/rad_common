@@ -99,7 +99,7 @@ module RadUser
   end
 
   def needs_confirmation?
-    RadConfig.user_confirmable? && !confirmed?
+    RadConfig.user_confirmable? && !confirmed? && !needs_accept_invite?
   end
 
   def needs_accept_invite?
