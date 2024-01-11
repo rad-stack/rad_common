@@ -2,6 +2,7 @@ class RadSeeder
   attr_accessor :users
 
   def seed!
+    ApplicationRecord.seeding = true
     display_log 'seeding base tables'
 
     seed_security_roles
@@ -11,9 +12,17 @@ class RadSeeder
     mute_staging_notifications if staging?
 
     @users = User.all
+
+    seed
+  ensure
+    ApplicationRecord.seeding = false
   end
 
   private
+
+    def seed
+      raise 'Seeder class must implement #seed'
+    end
 
     def display_log(message)
       puts message

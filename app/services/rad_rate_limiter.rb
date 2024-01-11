@@ -20,7 +20,7 @@ class RadRateLimiter
     end
 
     def current_count
-      Rails.cache.increment(cache_key)
+      Rails.cache.increment(cache_key, expires_in: @period.minutes)
     end
 
     def cache_key
