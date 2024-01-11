@@ -7,18 +7,22 @@ module RadCommon
 
       def create_initializer_file
         remove_file 'app/views/layouts/_navigation.html.haml'
+        remove_file 'app/models/application_record.rb'
 
         remove_deprecated_config
         standardize_date_methods
         install_database_yml
+        update_seeder_method
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
         # misc
         merge_package_json
+        copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../gitignore.txt', '.gitignore'
+        copy_file '../pull_request_template.md', '.github/pull_request_template.md'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
         copy_file '../../../../../spec/dummy/public/robots.txt', 'public/robots.txt'
@@ -66,10 +70,6 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/locales/devise.en.yml', 'config/locales/devise.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/simple_form.en.yml',
                   'config/locales/simple_form.en.yml'
-
-        # models
-        copy_file '../../../../../spec/dummy/app/models/application_record.rb',
-                  'app/models/application_record.rb'
 
         # specs
         directory '../../../../../spec/factories/rad_common/',
@@ -270,6 +270,16 @@ Seeder.new.seed!
 
         def remove_deprecated_config
           gsub_file 'config/rad_common.yml', 'shared_database: false', ''
+        end
+
+        def update_seeder_method
+          file_path = 'app/services/seeder.rb'
+          if File.exist?(file_path)
+            gsub_file file_path, /def seed!\n\s*super\n?/, 'def seed'
+            say_status('updated', "#{file_path} to use new seed method")
+          else
+            say_status('skipped', "File #{file_path} does not exist")
+          end
         end
 
         def standardize_date_methods

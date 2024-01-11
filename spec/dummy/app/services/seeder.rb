@@ -1,7 +1,5 @@
 class Seeder < RadSeeder
-  def seed!
-    super
-
+  def seed
     if Division.count.zero?
       display_log 'seeding divisions'
 
