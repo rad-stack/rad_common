@@ -1,10 +1,16 @@
 = render 'users/devise_layout' do
-  = render 'layouts/card_header', action_name: 'custom', title: 'Sign In', icon: 'fa-right-to-bracket'
+  %h4.ml-3= icon('sign-in-alt', 'Sign In')
   .card-body
     = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
       .form-inputs
-        = f.input :email, required: true, autofocus: true, input_html: email_input_defaults(params)
-        = f.input :password, required: true, input_html: password_input_defaults(params)
+        .input-group.mb-3
+          .input-group-prepend
+            %span.input-group-text.bg-transparent.border-none= icon('envelope')
+          = f.input :email, required: true, autofocus: true, input_html: email_input_defaults(params), wrapper: false, label: false
+        .input-group.mb-3
+          .input-group-prepend
+            %span.input-group-text.bg-transparent.border-none= icon('lock')
+          = f.input :password, required: true, input_html: password_input_defaults(params), wrapper: false, label: false
         = f.input :remember_me, as: :boolean, input_html: remember_me_input_defaults if devise_mapping.rememberable?
       .form-actions
         = f.button :submit, 'Sign In', class: 'btn btn-primary'
