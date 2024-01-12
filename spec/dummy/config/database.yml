@@ -7,6 +7,9 @@ test:
   adapter: postgresql
   encoding: unicode
   database: rad_common_test
+  username: postgres
+  password: postgres
+  host: localhost
 
 production:
   url:  <%= ENV["DATABASE_URL"] %>
