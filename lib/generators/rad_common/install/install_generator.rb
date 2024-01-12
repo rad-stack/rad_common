@@ -309,6 +309,10 @@ Seeder.new.seed!
         def install_github_workflow
           copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
+          gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
+          gsub_file '.github/workflows/rspec_tests.yml',
+                   "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
+                   'bin/rc_parallel_rspec'
         end
 
         def installed_app_name

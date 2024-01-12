@@ -59,21 +59,26 @@ jobs:
           cache: 'yarn'
 
       - name: Yarn install
+        working-directory: spec/dummy
         run: yarn install
 
       - name: Prepare database
+        working-directory: spec/dummy
         run: |
           bundle exec rails db:test:prepare
 
       - name: Compile Webpacker assets
+        working-directory: spec/dummy
         run: bundle exec rails webpacker:compile
 
       - name: Update webdrivers
+        working-directory: spec/dummy
         run: bundle exec rake webdrivers:chromedriver:update
 
       - name: Load schema
+        working-directory: spec/dummy
         run: bundle exec rake parallel:load_schema
 
       - name: Run RSpec tests
         run: |
-          bin/rc_parallel_rspec -n 4 --only-group ${{ matrix.GROUP }}
+          bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n 4 --only-group ${{ matrix.GROUP }}
