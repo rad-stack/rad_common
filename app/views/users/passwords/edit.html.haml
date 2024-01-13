@@ -1,5 +1,5 @@
 = render 'users/devise_layout' do
-  = render 'layouts/card_header', action_name: 'custom', title: 'Change Your Password', icon: 'fa-lock'
+  %h4.ml-3= icon('lock', 'Change Your Password')
   .card-body
     = simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f|
       = rad_form_errors f
@@ -19,6 +19,6 @@
                                           input_html: { autocomplete: 'new-password' }
 
       .form-actions
-        = f.button :submit, 'Change My Password', class: 'btn btn-primary'
+        = f.button :submit, 'Change My Password', class: 'btn btn-primary btn-block'
 
     = render 'users/shared/links'
