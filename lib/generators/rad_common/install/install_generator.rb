@@ -12,6 +12,7 @@ module RadCommon
         remove_deprecated_config
         standardize_date_methods
         install_database_yml
+        install_github_workflow
         update_seeder_method
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
@@ -303,6 +304,15 @@ Seeder.new.seed!
 
           gsub_file 'config/database.yml', 'rad_common_test', "rad_common_test<%= ENV['TEST_ENV_NUMBER'] %>"
           gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
+        end
+
+        def install_github_workflow
+          copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
+          gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
+          gsub_file '.github/workflows/rspec_tests.yml',
+                   "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
+                   'bin/rc_parallel_rspec'
         end
 
         def installed_app_name
