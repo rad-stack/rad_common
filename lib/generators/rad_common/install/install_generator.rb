@@ -302,7 +302,6 @@ Seeder.new.seed!
         def install_database_yml
           copy_file '../../../../../spec/dummy/config/database.yml', 'config/database.yml'
 
-          gsub_file 'config/database.yml', 'rad_common_test', "rad_common_test<%= ENV['TEST_ENV_NUMBER'] %>"
           gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
         end
 
