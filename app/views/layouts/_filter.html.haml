@@ -3,7 +3,7 @@
 .d-none.d-md-block
   = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results)
 
-.d-block.d-md-none.text-right.mb-2
+.d-block.d-md-none.text-right.my-2.sticky-top.bg-white.border-bottom.border-secondary.py-2
   %button.btn.btn-primary.btn-block{ type: 'button', data: { toggle: 'modal', target: '#mobile-filters-modal' } }
     = icon 'filter', 'Filters'
 
