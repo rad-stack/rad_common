@@ -19,12 +19,12 @@
       %i.fa.fa-times
       Clear Filters
 
-- if RadConfig.saved_search_filters_enabled?
-  - if search.applied_saved_filter.present?
-    .text-muted.mt-1 Applied Filter: #{search.applied_saved_filter}
-  = f.hidden_field :saved_name
-- else
+  - if RadConfig.saved_search_filters_enabled?
+    - if search.applied_saved_filter.present?
+      .text-muted.mt-1 Applied Filter: #{search.applied_saved_filter}
+    = f.hidden_field :saved_name
+  - else
+    %br
   %br
-%br
-- if paged_results.present?
-  = render 'layouts/paging', paged_results: paged_results, f: f, search: search
+  - if paged_results.present?
+    = render 'layouts/paging', paged_results: paged_results, f: f, search: search
