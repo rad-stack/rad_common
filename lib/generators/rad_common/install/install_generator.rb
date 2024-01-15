@@ -20,6 +20,7 @@ module RadCommon
         # misc
         merge_package_json
         copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
+        copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../gitignore.txt', '.gitignore'

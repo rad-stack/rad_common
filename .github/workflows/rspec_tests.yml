@@ -13,6 +13,7 @@ concurrency:
 env:
   RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
   RAILS_ENV: test
+  CI: true
 
 jobs:
   tests:
