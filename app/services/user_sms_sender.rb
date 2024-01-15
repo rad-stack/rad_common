@@ -8,7 +8,13 @@ class UserSMSSender < PhoneSMSSender
   private
 
     def handle_blacklist
-      to_user.update! mobile_phone: nil
+      ActiveRecord::Base.transaction do
+        to_user.notification_settings.enabled.where(sms: true).each do |item|
+          item.update! sms: false
+        end
+
+        to_user.update! mobile_phone: nil
+      end
 
       RadMailer.simple_message(to_user,
                                "SMS Message from #{RadConfig.app_name!} Failed",
