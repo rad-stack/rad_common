@@ -19,6 +19,7 @@ module RadCommon
 
         # misc
         merge_package_json
+        copy_custom_github_actions
         copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
@@ -248,6 +249,14 @@ Seeder.new.seed!
           dependencies = dependencies.merge(custom_dependencies)
           package['dependencies'] = dependencies
           File.write('package.json', JSON.pretty_generate(package) + "\n")
+        end
+
+        def copy_custom_github_actions
+          dummy_action_path = '../../../../../.github/actions/custom-action/action.yml'
+          new_action_path = '.github/actions/custom-action/action.yml'
+          return if File.exist? new_action_path
+
+          copy_file dummy_action_path, new_action_path
         end
 
         def apply_migration(source)

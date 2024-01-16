@@ -47,6 +47,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Running custom steps
+        uses: ./.github/actions/custom-action
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
