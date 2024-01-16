@@ -256,6 +256,14 @@ class RadConfig
       boolean_config_item! :legal_docs
     end
 
+    def additional_sidekiq_queues
+      config_item :additional_sidekiq_queues
+    end
+
+    def sidekiq_limits
+      config_item :sidekiq_limits
+    end
+
     def favicon_filename!
       override_variable(:favicon_filename) || 'favicon.ico'
     end

@@ -1,2 +1,2 @@
-worker: bundle exec sidekiq -q default -q mailers -q active_storage_analysis -q active_storage_purge -c 10
+worker: bundle exec rake sidekiq:merge_config_file && bundle exec sidekiq -C tmp/sidekiq_merged_config.yml
 release: bundle exec rake db:migrate
