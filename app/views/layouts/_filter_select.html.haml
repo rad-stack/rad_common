@@ -17,4 +17,5 @@
   = f.input "#{filter.searchable_name}_not",
             as: :boolean,
             label: "Exclude #{filter.input_label.pluralize}",
-            input_html: { checked: filter.not_value(params) }
+            input_html: { checked: filter.not_value(params) },
+            wrapper_html: { class: 'text-right mb-0' }
