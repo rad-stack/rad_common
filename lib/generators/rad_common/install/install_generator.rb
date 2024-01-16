@@ -62,6 +62,8 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
                   'config/initializers/simple_form_components.rb'
 
+        copy_file '../../../../../spec/dummy/config/initializers/sidekiq.yml', 'config/initializers/sidekiq.yml'
+
         # bin
         directory '../../../../../spec/dummy/bin/', 'bin/'
 

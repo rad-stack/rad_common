@@ -1,0 +1,7 @@
+---
+:concurrency: 10
+:queues:
+  - default
+  - mailers
+  - active_storage_analysis
+  - active_storage_purge
