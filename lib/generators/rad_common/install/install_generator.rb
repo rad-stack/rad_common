@@ -252,7 +252,7 @@ Seeder.new.seed!
         end
 
         def copy_custom_github_actions
-          dummy_action_path = '../../../../../spec/dummy/action.yml'
+          dummy_action_path = '../../../../../.github/actions/custom-action/action.yml'
           new_action_path = '.github/actions/custom-action/action.yml'
           return if File.exist? new_action_path
 
