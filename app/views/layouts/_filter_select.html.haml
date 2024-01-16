@@ -13,4 +13,8 @@
           input_html: { multiple: filter.multiple,
                         'data-live-search': true,
                         'data-style': data_style }.merge(input_html)
-
+- if filter.allow_not
+  = f.input "#{filter.searchable_name}_not",
+            as: :boolean,
+            label: "Exclude #{filter.input_label.pluralize}",
+            input_html: { checked: filter.not_value(params) }

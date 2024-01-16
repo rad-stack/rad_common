@@ -34,5 +34,9 @@ module RadCommon
     def skip_default?
       true
     end
+
+    def allow_not
+      false
+    end
   end
 end
