@@ -110,20 +110,20 @@ RSpec.describe 'Search' do
       context 'when exclude is checked' do
         it 'filters out selected options' do
           bootstrap_select 'Active', from: 'search_division_status'
-          click_button 'Apply Filters'
+          click_on 'Apply Filters'
 
           expect(page).to have_content(division.name)
           expect(page).to have_content(other_division.name)
 
           bootstrap_select category.name, from: 'search_category_id', search: category.name
-          click_button 'Apply Filters'
+          click_on 'Apply Filters'
           expect(page).to have_content(division.name)
-          expect(page).not_to have_content(other_division.name)
+          expect(page).to have_no_content(other_division.name)
 
           check 'search_category_id_not'
-          click_button 'Apply Filters'
+          click_on 'Apply Filters'
 
-          expect(page).not_to have_content(division.name)
+          expect(page).to have_no_content(division.name)
           expect(page).to have_content(other_division.name)
         end
       end
