@@ -142,7 +142,7 @@ class NotificationType < ApplicationRecord
                     .not(id: NotificationSetting.where(notification_type: self, enabled: false)
                                                 .pluck(:user_id)).pluck(:id)
 
-    raise 'no users to notify' if security_roles? && user_ids.count.zero?
+    raise "no users to notify: #{type}" if security_roles? && user_ids.count.zero?
 
     return user_ids unless security_roles?
     raise 'exclude_user_ids is invalid' unless exclude_user_ids.is_a?(Array)

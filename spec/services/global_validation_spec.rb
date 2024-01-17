@@ -57,7 +57,7 @@ describe GlobalValidation, type: :service do
       it 'raises an exception' do
         expect {
           result
-        }.to raise_error(RuntimeError, 'no users to notify')
+        }.to raise_error(RuntimeError, 'no users to notify: Notifications::InvalidDataWasFoundNotification')
       end
     end
 
