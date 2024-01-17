@@ -8,7 +8,7 @@
     .col-auto
       = f.input "#{filter.searchable_name}_not",
                 as: :boolean,
-                label: "Exclude #{filter.input_label}",
+                label: 'Exclude',
                 input_html: { checked: filter.not_value(params) },
                 wrapper_html: { class: 'text-right mb-0' },
                 tooltip: "Exclude results that match selected #{filter.input_label}"
