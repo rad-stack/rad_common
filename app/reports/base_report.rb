@@ -1,13 +1,13 @@
 class BaseReport
   include RadCommon::ApplicationHelper
 
-  attr_accessor :current_user, :view_context, :params, :start_date, :end_date, :invalid_date
+  attr_accessor :current_user, :view_context, :params, :start_date, :end_date, :report_errors
 
   def initialize(current_user, view_context, params)
     @current_user = current_user
     @view_context = view_context
     @params = params
-    @invalid_date = false
+    @report_errors = []
 
     if params[:report].blank?
       @start_date = start_date_default
@@ -17,25 +17,15 @@ class BaseReport
         @start_date = params[:report][:start_date]&.to_date
         @end_date = params[:report][:end_date]&.to_date
       rescue ArgumentError
-        @invalid_date = true
+        @report_errors.push 'Invalid date'
       end
     end
+
+    apply_base_errors
   end
 
   def valid?
-    errors.blank?
-  end
-
-  def errors
-    return 'Invalid date' if @invalid_date
-
-    items = []
-
-    items.push 'Start date is required' if start_date.blank?
-    items.push 'End date is required' if end_date.blank?
-    items.push 'Start date must be before end date' if start_date.present? && end_date.present? && start_date > end_date
-
-    items.join(', ')
+    report_errors.empty?
   end
 
   def sub_title
@@ -62,7 +52,11 @@ class BaseReport
     'Portrait'.freeze
   end
 
-  def warning; end
+  def warning_message; end
+
+  def error_message
+    report_errors.join(', ')
+  end
 
   def export_job; end
 
@@ -96,5 +90,13 @@ class BaseReport
 
     def end_of_last_month
       Date.current.beginning_of_month.advance days: -1
+    end
+
+    def apply_base_errors
+      report_errors.push 'Start date is required' if start_date.blank?
+      report_errors.push 'End date is required' if end_date.blank?
+      return unless start_date.present? && end_date.present? && start_date > end_date
+
+      report_errors.push 'Start date must be before end date'
     end
 end
