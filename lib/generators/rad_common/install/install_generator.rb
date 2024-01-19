@@ -12,13 +12,16 @@ module RadCommon
         remove_deprecated_config
         standardize_date_methods
         install_database_yml
+        install_github_workflow
         update_seeder_method
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
         # misc
         merge_package_json
+        copy_custom_github_actions
         copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
+        copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../gitignore.txt', '.gitignore'
@@ -248,6 +251,14 @@ Seeder.new.seed!
           File.write('package.json', JSON.pretty_generate(package) + "\n")
         end
 
+        def copy_custom_github_actions
+          dummy_action_path = '../../../../../.github/actions/custom-action/action.yml'
+          new_action_path = '.github/actions/custom-action/action.yml'
+          return if File.exist? new_action_path
+
+          copy_file dummy_action_path, new_action_path
+        end
+
         def apply_migration(source)
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
@@ -301,8 +312,16 @@ Seeder.new.seed!
         def install_database_yml
           copy_file '../../../../../spec/dummy/config/database.yml', 'config/database.yml'
 
-          gsub_file 'config/database.yml', 'rad_common_test', "rad_common_test<%= ENV['TEST_ENV_NUMBER'] %>"
           gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
+        end
+
+        def install_github_workflow
+          copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
+          gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
+          gsub_file '.github/workflows/rspec_tests.yml',
+                   "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
+                   'bin/rc_parallel_rspec'
         end
 
         def installed_app_name
