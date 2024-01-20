@@ -6,9 +6,9 @@ class BaseReportsController < ApplicationController
     set_report
 
     if @report.valid?
-      flash[:warning] = @report.warning
+      flash[:warning] = @report.warning_message
     else
-      flash.now[:error] = @report.errors
+      flash.now[:error] = @report.error_message
       return
     end
 

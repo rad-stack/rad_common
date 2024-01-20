@@ -315,9 +315,10 @@ module RadCommon
         def install_database_yml
           return # TODO: this won't be needed when cannasaver_admin is combined with cannasaver_public
 
-          copy_file '../../../../../spec/dummy/config/database.yml', 'config/database.yml'
-
-          gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
+          copy_file '../../../../../spec/dummy/config/database.yml', 'config/temp_database.yml'
+          gsub_file 'config/temp_database.yml', 'rad_common_', "#{installed_app_name}_"
+          copy_file Rails.root.join('config/temp_database.yml'), 'config/database.yml'
+          remove_file Rails.root.join('config/temp_database.yml')
         end
 
         def install_github_workflow
