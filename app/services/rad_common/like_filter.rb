@@ -33,6 +33,10 @@ module RadCommon
       results
     end
 
+    def allow_not
+      false
+    end
+
     private
 
       def like_value(params)

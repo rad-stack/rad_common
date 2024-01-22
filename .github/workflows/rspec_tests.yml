@@ -19,6 +19,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         include:
           - TEST_ENV_NUMBER: 1
@@ -69,6 +70,17 @@ jobs:
         working-directory: spec/dummy
         run: |
           bundle exec rails db:test:prepare
+
+      - name: Cache Webpacker packs
+        uses: actions/cache@v4
+        with:
+          path: |
+            public/packs
+            public/packs-test
+            node_modules
+          key: ${{ runner.os }}-webpacker-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-webpacker-
 
       - name: Compile Webpacker assets
         working-directory: spec/dummy
