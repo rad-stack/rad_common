@@ -9,17 +9,17 @@
         %div{ class: "#{col_class} #{filter_col_class(filter)}" }
           = render "layouts/filter_#{filter.filter_view}", filter: filter, search: search, f: f
   .form-actions
-    = f.button :button, class: 'btn btn-success' do
+    = f.button :button, class: "btn btn-success #{mobile ? 'btn-block' : ''}" do
       %i.fa.fa-filter
       Apply Filters
-    - if RadConfig.saved_search_filters_enabled?
+    - if RadConfig.saved_search_filters_enabled? && !mobile
       = render 'layouts/saved_filters_dropdown', search: search, f: f, path: path
     \
-    = link_to "#{path}?clear_filters=true", class: 'btn btn-danger' do
+    = link_to "#{path}?clear_filters=true", class: "btn btn-danger #{mobile ? 'btn-block mt-2' : ''}" do
       %i.fa.fa-times
       Clear Filters
 
-  - if RadConfig.saved_search_filters_enabled?
+  - if RadConfig.saved_search_filters_enabled? && !mobile
     - if search.applied_saved_filter.present?
       .text-muted.mt-1 Applied Filter: #{search.applied_saved_filter}
     = f.hidden_field :saved_name

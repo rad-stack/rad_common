@@ -1,18 +1,23 @@
 - if (search.search_params? && search.invalid?) || search.saved_filter_errors.present?
   - flash.now[:error] = search.error_messages
 .d-none.d-md-block
-  = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results)
+  = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: true
 
-.d-block.d-md-none.text-right.mb-2
-  %button.btn.btn-primary.btn-block{ type: 'button', data: { toggle: 'modal', target: '#mobile-filters-modal' } }
-    = icon 'filter', 'Filters'
+- if RadConfig.mobile_filters?
+  .d-block.d-md-none.text-right.mb-2
+    %button.btn.btn-primary.btn-block{ type: 'button', data: { toggle: 'modal', target: '#mobile-filters-modal' } }
+      = icon 'filter', 'Filters'
+    = link_to "#{path}?clear_filters=true", class: 'd-block mt-2 btn btn-danger' do
+      %i.fa.fa-times
+      Clear Filters
 
-.modal.fade#mobile-filters-modal{ tabindex: '-1', role: 'dialog' }
-  .modal-dialog{ role: 'document' }
-    .modal-content
-      .modal-header.bg-light.sticky-top
-        %h4.modal-title= icon 'filter', 'Filters'
-        %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: 'Close' } }
-          %span{ aria: { hidden: 'true' } } &times;
-      .modal-body
-        = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results)
+  .modal.fade#mobile-filters-modal{ tabindex: '-1', role: 'dialog' }
+    .modal-dialog{ role: 'document' }
+      .modal-content
+        .modal-header.bg-light.sticky-top
+          %h4.modal-title= icon 'filter', 'Filters'
+          %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: 'Close' } }
+            %span{ aria: { hidden: 'true' } }
+            = icon 'times'
+        .modal-body
+          = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: true
