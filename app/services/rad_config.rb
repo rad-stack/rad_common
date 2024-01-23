@@ -280,6 +280,10 @@ class RadConfig
       boolean_config_item! :secure_sentry
     end
 
+    def mobile_filters?
+      boolean_config_item! :mobile_filters
+    end
+
     def s3_access_key_id!
       secret_config_item! :s3_access_key_id
     end
