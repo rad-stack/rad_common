@@ -8,6 +8,7 @@ module RadCommon
       def create_initializer_file
         remove_file 'app/views/layouts/_navigation.html.haml'
         remove_file 'app/models/application_record.rb'
+        remove_file '.hound.yml'
 
         remove_deprecated_config
         standardize_date_methods
