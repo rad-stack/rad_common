@@ -8,6 +8,7 @@ module RadCommon
       def create_initializer_file
         remove_file 'app/views/layouts/_navigation.html.haml'
         remove_file 'app/models/application_record.rb'
+        remove_file '.hound.yml'
 
         remove_deprecated_config
         standardize_date_methods
@@ -35,7 +36,7 @@ module RadCommon
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
-        copy_file '../../../../../.hound.yml', '.hound.yml'
+        copy_file '../../../../../.sniff.yml', '.sniff.yml'
         copy_file '../../../../../.eslintrc', '.eslintrc'
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
 
