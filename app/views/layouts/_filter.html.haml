@@ -1,23 +1,21 @@
 - if (search.search_params? && search.invalid?) || search.saved_filter_errors.present?
   - flash.now[:error] = search.error_messages
+
+.d-block.d-md-none.text-right.mb-2.sticky-top.bg-white.py-2.border-bottom.border-secondary
+  %button.btn.btn-block{ class: search.search_params? ? 'btn-warning' : 'btn-primary',
+                         type: 'button',
+                         data: { toggle: 'modal', target: '#mobile-filters-modal' } }
+    = icon 'filter', 'Filters'
+.modal.fade#mobile-filters-modal{ tabindex: '-1', role: 'dialog' }
+  .modal-dialog{ role: 'document' }
+    .modal-content
+      .modal-header.bg-light.sticky-top
+        %h4.modal-title= icon 'filter', 'Filters'
+        %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: 'Close' } }
+          %span{ aria: { hidden: 'true' } }
+          = icon 'times'
+      .modal-body
+        = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: true
+
 .d-none.d-md-block
   = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: false
-
-- if RadConfig.mobile_filters?
-  .d-block.d-md-none.text-right.mb-2
-    %button.btn.btn-primary.btn-block{ type: 'button', data: { toggle: 'modal', target: '#mobile-filters-modal' } }
-      = icon 'filter', 'Filters'
-    = link_to "#{path}?clear_filters=true", class: 'd-block mt-2 btn btn-danger' do
-      %i.fa.fa-times
-      Clear Filters
-
-  .modal.fade#mobile-filters-modal{ tabindex: '-1', role: 'dialog' }
-    .modal-dialog{ role: 'document' }
-      .modal-content
-        .modal-header.bg-light.sticky-top
-          %h4.modal-title= icon 'filter', 'Filters'
-          %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: 'Close' } }
-            %span{ aria: { hidden: 'true' } }
-            = icon 'times'
-        .modal-body
-          = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: true
