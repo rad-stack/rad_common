@@ -211,6 +211,8 @@ module RadCommon
       end
 
       def convert_array_values(value)
+        return value if value.any? { |v| v.is_a? String }
+
         value.select(&:present?).map(&:to_i)
       end
 
