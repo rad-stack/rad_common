@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+      total_groups: ${{ steps.set-matrix.outputs.total_groups }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,7 +30,9 @@ jobs:
         run: |
           content=$(cat .github/actions/custom_matrix.json)
           matrix=$(echo "$content" | jq -c .)
+          total_groups=$(echo "$content" | jq '[.include[].GROUP[]] | unique | length')
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
+          echo "total_groups=$total_groups" >> $GITHUB_OUTPUT
 
   tests:
     runs-on: ubuntu-latest
@@ -104,7 +107,7 @@ jobs:
       - name: Load schema
         working-directory: spec/dummy
         run: |
-          if [ "${{ secrets.TEST_GROUPS}}" == "1" ]; then
+          if [ "${{ needs.setup-matrix.outputs.total_groups }}" == "1" ]; then
             bundle exec rake db:schema:load
           else
             bundle exec rake parallel:load_schema
@@ -112,8 +115,9 @@ jobs:
 
       - name: Run RSpec tests
         run: |
-          if [ "${{ secrets.TEST_GROUPS}}" == "1" ]; then
+          if [ "${{ needs.setup-matrix.outputs.total_groups }}" == "1" ]; then
             bin/rc_rspec
           else
-            bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n $((secrets.TEST_GROUPS . 2)) --only-group ${{ matrix.GROUP }}
+            bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{ matrix.GROUP }}
           fi
+      
