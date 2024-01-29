@@ -115,5 +115,5 @@ jobs:
           if [ "${{ secrets.TEST_GROUPS}}" == "1" ]; then
             bin/rc_rspec
           else
-            bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n $((secrets.TEST_GROUPS * 2)) --only-group ${{ matrix.GROUP }}
+            bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n $((secrets.TEST_GROUPS . 2)) --only-group ${{ matrix.GROUP }}
           fi
