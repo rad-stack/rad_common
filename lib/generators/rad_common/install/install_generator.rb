@@ -21,6 +21,7 @@ module RadCommon
         # misc
         merge_package_json
         copy_custom_github_actions
+        copy_custom_github_matrix
         copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
@@ -258,6 +259,14 @@ Seeder.new.seed!
           return if File.exist? new_action_path
 
           copy_file dummy_action_path, new_action_path
+        end
+
+        def copy_custom_github_matrix
+          dummy_matrix_path = '../../../../../.github/actions/custom_matrix.json'
+          new_matrix_path = '.github/actions/custom_matrix.json'
+          return if File.exist? new_matrix_path
+
+          copy_file dummy_matrix_path, new_matrix_path
         end
 
         def apply_migration(source)
