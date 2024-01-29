@@ -118,7 +118,6 @@ jobs:
           if [ "${{ needs.setup-matrix.outputs.total_groups }}" == "1" ]; then
             bin/rc_rspec
           else
-            GROUPS=$(IFS=,; echo "${{ join(matrix.GROUP, ',') }}")
-            bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group $GROUPS
+            bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{join(matrix.GROUP, ',')}}
           fi
       
