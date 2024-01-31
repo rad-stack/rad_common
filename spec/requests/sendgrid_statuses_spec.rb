@@ -10,7 +10,11 @@ describe 'SendgridStatuses' do
 
   context 'when raw items are present' do
     let(:params) do
-      { _json: [{ event: 'bounce', type: 'block', bounce_classification: 'Reputation', email: Faker::Internet.email }] }
+      { _json: [{ event: 'bounce',
+                  type: 'block',
+                  bounce_classification: 'Reputation',
+                  email: Faker::Internet.email,
+                  host_name: RadConfig.host_name! }] }
     end
 
     it 'notifies' do
