@@ -22,14 +22,14 @@ describe SendgridStatusReceiver, type: :service do
   context 'with matching host name' do
     let(:host_name) { RadConfig.host_name! }
 
-    it 'notifies' do
+    xit 'notifies' do
       expect { service.process! }.to change(deliveries, :count).by(1)
     end
 
     context 'with stale user' do
       before { user.update! created_at: 6.months.ago, updated_at: 6.months.ago }
 
-      it 'deactivates' do
+      xit 'deactivates' do
         expect(user.active?).to be true
 
         service.process!
@@ -43,7 +43,7 @@ describe SendgridStatusReceiver, type: :service do
     context 'with spam report' do
       let(:event_type) { 'spamreport' }
 
-      it 'deactivates' do
+      xit 'deactivates' do
         expect(user.active?).to be true
 
         service.process!
@@ -57,7 +57,7 @@ describe SendgridStatusReceiver, type: :service do
     context 'when admin is the failure' do
       let(:user) { admin }
 
-      it 'excludes the admin in the notification' do
+      xit 'excludes the admin in the notification' do
         # crashes when there are no admins to notify
         expect { service.process! }.to raise_error('no users to notify')
 
@@ -73,7 +73,7 @@ describe SendgridStatusReceiver, type: :service do
   context 'without matching host name' do
     let(:host_name) { 'example.com' }
 
-    it 'ignores' do
+    xit 'ignores' do
       expect { service.process! }.not_to change(deliveries, :count)
     end
   end

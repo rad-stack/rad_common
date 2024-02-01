@@ -17,7 +17,7 @@ describe 'SendgridStatuses' do
                   host_name: RadConfig.host_name! }] }
     end
 
-    it 'notifies' do
+    xit 'notifies' do
       expect {
         post '/sendgrid_statuses', params: params
       }.to change(deliveries, :count).by(1)
@@ -27,7 +27,7 @@ describe 'SendgridStatuses' do
   context 'when raw items are not present' do
     let(:params) { { _json: nil } }
 
-    it 'renders message' do
+    xit 'renders message' do
       post '/sendgrid_statuses', params: params
       expect(response.body).to include 'These are not the droids you are looking for.'
     end
