@@ -19,7 +19,7 @@ describe SendgridStatusReceiver, type: :service do
 
   before { deliveries.clear }
 
-  context 'with matching host name' do
+  context 'when internal' do
     let(:host_name) { RadConfig.host_name! }
 
     it 'notifies' do
@@ -70,10 +70,12 @@ describe SendgridStatusReceiver, type: :service do
     end
   end
 
-  context 'without matching host name' do
+  context 'when forward' do
     let(:host_name) { 'example.com' }
 
-    it 'ignores' do
+    before { allow_any_instance_of(RadSendgridStatusReceiver).to receive(:forward!) }
+
+    it 'forwards' do
       expect { service.process! }.not_to change(deliveries, :count)
     end
   end
