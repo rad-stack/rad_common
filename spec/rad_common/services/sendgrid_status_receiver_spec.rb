@@ -73,7 +73,7 @@ describe SendgridStatusReceiver, type: :service do
   context 'when forward' do
     let(:host_name) { 'example.com' }
 
-    before { allow_any_instance_of(RadSendgridStatusReceiver).to receive(:forward!) }
+    # before { allow_any_instance_of(RadSendgridStatusReceiver).to receive(:forward!) }
 
     it 'forwards' do
       expect { service.process! }.not_to change(deliveries, :count)
