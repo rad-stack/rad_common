@@ -13,6 +13,7 @@ RSpec.describe 'Companies', type: :system do
   context 'when full database' do
     it 'runs' do
       click_link 'Validate Full Database'
+
       expect(page).to have_content(result)
     end
   end
