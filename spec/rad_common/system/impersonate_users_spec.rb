@@ -26,7 +26,7 @@ RSpec.describe 'User Impersonation', :impersonate_specs, type: :system do
 
       click_link "Signed In as #{impersonated_user}"
       click_link "Sign Out from #{impersonated_user}"
-      find('.navbar-toggler').click
+
       expect(page).to have_content signed_in_user.to_s
     end
 
