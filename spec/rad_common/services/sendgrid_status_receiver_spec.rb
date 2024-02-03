@@ -70,7 +70,7 @@ describe SendgridStatusReceiver, type: :service do
     end
   end
 
-  context 'when forward' do
+  context 'without matching host name' do
     let(:host_name) { 'example.com' }
 
     # before { allow_any_instance_of(RadSendgridStatusReceiver).to receive(:forward!) }
