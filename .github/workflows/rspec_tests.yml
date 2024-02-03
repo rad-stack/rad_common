@@ -120,3 +120,10 @@ jobs:
           else
             bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{join(matrix.GROUP, ',')}}
           fi
+
+      - name: Upload screenshots on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: failed-screenshots
+          path: tmp/capybara/**/*
