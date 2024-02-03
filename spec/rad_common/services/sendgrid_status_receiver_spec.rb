@@ -73,7 +73,9 @@ describe SendgridStatusReceiver, type: :service do
   context 'without matching host name' do
     let(:host_name) { 'example.com' }
 
-    it 'ignores' do
+    # before { allow_any_instance_of(RadSendgridStatusReceiver).to receive(:forward!) }
+
+    it 'forwards' do
       expect { service.process! }.not_to change(deliveries, :count)
     end
   end
