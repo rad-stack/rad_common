@@ -19,7 +19,7 @@ describe SendgridStatusReceiver, type: :service do
 
   before { deliveries.clear }
 
-  context 'when internal' do
+  context 'with matching host name' do
     let(:host_name) { RadConfig.host_name! }
 
     it 'notifies' do
