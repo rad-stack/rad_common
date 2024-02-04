@@ -8,6 +8,7 @@ module RadCommon
       def create_initializer_file
         remove_file 'app/views/layouts/_navigation.html.haml'
         remove_file 'app/models/application_record.rb'
+        remove_file '.hound.yml'
 
         remove_deprecated_config
         standardize_date_methods
@@ -20,6 +21,7 @@ module RadCommon
         # misc
         merge_package_json
         copy_custom_github_actions
+        copy_custom_github_matrix
         copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
@@ -35,7 +37,7 @@ module RadCommon
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
-        copy_file '../../../../../.hound.yml', '.hound.yml'
+        copy_file '../../../../../.sniff.yml', '.sniff.yml'
         copy_file '../../../../../.eslintrc', '.eslintrc'
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
 
@@ -258,6 +260,14 @@ module RadCommon
           return if File.exist? new_action_path
 
           copy_file dummy_action_path, new_action_path
+        end
+
+        def copy_custom_github_matrix
+          dummy_matrix_path = '../../../../../.github/actions/custom_matrix.json'
+          new_matrix_path = '.github/actions/custom_matrix.json'
+          return if File.exist? new_matrix_path
+
+          copy_file dummy_matrix_path, new_matrix_path
         end
 
         def apply_migration(source)
