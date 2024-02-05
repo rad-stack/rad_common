@@ -25,7 +25,8 @@ class DivisionSearch < RadCommon::Search
        column: :category_id,
        include_blank: false,
        search_scope_name: 'category_name',
-       multiple: true
+       multiple: true,
+       allow_not: true
      },
      created_by_filter,
      { column: :name, type: RadCommon::LikeFilter },

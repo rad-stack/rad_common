@@ -3,7 +3,7 @@ module RadCommon
   # This is used to generate dropdown filter containing options to be filtered on
   class SearchFilter
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value, :errors, :include_blank,
-                :search_scope, :show_search_subtext
+                :search_scope, :show_search_subtext, :allow_not
 
     ##
     # @param [Symbol optional] column the database column that is being filtered
@@ -44,7 +44,7 @@ module RadCommon
     #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
     def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil,
                    default_value: nil, blank_value_label: nil, scope: nil, multiple: false, required: false,
-                   include_blank: true, search_scope_name: nil, show_search_subtext: false)
+                   include_blank: true, search_scope_name: nil, show_search_subtext: false, allow_not: false)
       if input_label.blank? && !options.respond_to?(:table_name)
         raise 'Input label is required when options are not active record objects'
       end
@@ -68,6 +68,7 @@ module RadCommon
       @required = required
       @search_scope = RadConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
       @show_search_subtext = show_search_subtext
+      @allow_not = allow_not
       @errors = []
     end
 
@@ -142,11 +143,16 @@ module RadCommon
       elsif scope_value?(value)
         apply_scope_value(results, value)
       elsif value.present?
+        not_filter = search_params["#{searchable_name}_not"] == '1'
         if value.is_a? Array
           values = convert_array_values(value)
-          results.where("#{searchable_name} IN (?)", values) if values.present?
+          return if values.blank?
+
+          query = not_filter ? "#{query_column(results)} NOT IN (?)" : "#{query_column(results)} IN (?)"
+          results.where(query, values)
         else
-          results.where("#{query_column(results)} = ?", value)
+          query = "#{query_column(results)} = ?"
+          not_filter ? results.where.not(query, value) : results.where(query, value)
         end
       end
     end
@@ -174,6 +180,10 @@ module RadCommon
           'term' => '{{{q}}}'
         }.to_json
       }
+    end
+
+    def not_value(params)
+      allow_not && params.dig(:search, "#{searchable_name}_not") == '1'
     end
 
     private
