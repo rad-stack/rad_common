@@ -31,7 +31,7 @@
 
         - if impersonating?
           %li
-            = link_to "Sign Out from #{current_user}",
+            = link_to icon('user-slash', "Sign Out from #{current_user}"),
                       '/rad_common/impersonations/stop',
                       method: 'delete',
                       class: "dropdown-item #{impersonate_style}"
