@@ -14,17 +14,20 @@
           %span.badge.alert-danger= unread_count
         = show_nav_avatar
       %ul.dropdown-menu.dropdown-menu-right
-        %li= link_to t('navigation.my_account'), edit_user_registration_path, class: 'dropdown-item'
+        %li= link_to icon('user', t('navigation.my_account')), edit_user_registration_path, class: 'dropdown-item'
         - if my_profile_nav?
           %li= link_to 'My Profile', "/user_profiles/#{current_user.id}", class: 'dropdown-item'
         - if current_user.internal? && policy(Notification).index?
           %li
             = link_to '/rad_common/notifications', class: 'dropdown-item' do
-              Notifications
+              = icon 'bell', 'Notifications'
               - if unread_count.positive?
                 %span.badge.alert-danger= unread_count
         - if current_user.internal? && policy(NotificationSetting).index?
-          %li= link_to 'Notification Settings', '/rad_common/notification_settings', class: 'dropdown-item'
+          %li
+            = link_to icon('gear', 'Notification Settings'),
+                      '/rad_common/notification_settings',
+                      class: 'dropdown-item'
 
         - if impersonating?
           %li
@@ -32,8 +35,12 @@
                       '/rad_common/impersonations/stop',
                       method: 'delete',
                       class: "dropdown-item #{impersonate_style}"
-
-        %li= link_to 'Sign Out', destroy_user_session_path, method: 'delete', class: 'dropdown-item'
+        %hr.my-2
+        %li
+          = link_to icon('arrow-right-from-bracket', 'Sign Out'),
+                    destroy_user_session_path,
+                    method: 'delete',
+                    class: 'dropdown-item'
   - else
     - unless @marketing_site
       %li= link_to 'Sign In', new_user_session_path, class: 'nav-link'
