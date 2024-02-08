@@ -28,7 +28,9 @@ RSpec.describe PhoneNumberValidator do
     numbers.each do |phone_number|
       model = TestPhoneModel.new
       model.phone_number = phone_number
+
       expect(model).to be_valid
+      expect(model.phone_number).to eq '(123) 321-1234'
     end
   end
 
