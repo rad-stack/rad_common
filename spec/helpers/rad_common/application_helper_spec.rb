@@ -176,4 +176,28 @@ describe RadCommon::ApplicationHelper do
       expect(helper.format_datetime(date)).to eq('5/29/2023 9:38 AM')
     end
   end
+
+  describe 'table_row_style' do
+    subject { helper.table_row_style record }
+
+    let(:record) { create :attorney, active: active }
+
+    context 'with active record' do
+      let(:active) { true }
+
+      it { is_expected.to be_nil }
+    end
+
+    context 'with inactive record' do
+      let(:active) { false }
+
+      it { is_expected.to eq 'table-danger' }
+
+      context 'with style class' do
+        it 'returns the class' do
+          expect(helper.table_row_style(record, style_class: 'text-danger')).to eq 'text-danger'
+        end
+      end
+    end
+  end
 end
