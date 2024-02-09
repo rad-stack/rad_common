@@ -12,7 +12,7 @@ module RadCommon
     # @param [Hash] params the url params from the current url
     # @param [String optional] search_name an identifying named used for storing user defaults. Only required when user defaults enabled and not using a custom search class
     # @param [Boolean optional] turns on sticky filters (aka FilterDefaulting) so that user filter selections are remembered
-    def initialize(query:, filters:, sort_columns: nil, current_user:, params:, search_name: nil, sticky_filters: false)
+    def initialize(query:, filters:, current_user:, params:, sort_columns: nil, search_name: nil, sticky_filters: false)
       if sticky_filters && search_name.nil? && self.class.to_s == 'RadCommon::Search'
         raise 'search_name is required when not using a custom search class'
       end
@@ -117,7 +117,7 @@ module RadCommon
     end
 
     def saved_filters
-      @saved_filters ||= Pundit.policy_scope(current_user, SavedSearchFilter).where(search_class: self.class.name)
+      @saved_filters ||= Pundit.policy_scope(current_user, SavedSearchFilter).for_search_class(self.class.name)
     end
 
     def applied_saved_filter
@@ -165,9 +165,7 @@ module RadCommon
         filter_name = search_params[:saved_name]
         return unless RadConfig.saved_search_filters_enabled? && filter_name.present?
 
-        filter = SavedSearchFilter.find_or_initialize_by(name: filter_name,
-                                                         user: current_user,
-                                                         search_class: self.class.name)
+        filter = SavedSearchFilter.find_or_initialize_by(search_setting: search_setting, name: filter_name)
         filter.search_filters = search_params.to_h.compact_blank
         if filter.save
           params[:search][:applied_filter] = filter.id
@@ -190,6 +188,10 @@ module RadCommon
 
       def inactive_users
         Pundit.policy_scope!(current_user, User).inactive.by_name
+      end
+
+      def search_setting
+        @search_setting ||= SearchSetting.find_or_initialize_by(user: current_user, search_class: self.class.name)
       end
   end
 end

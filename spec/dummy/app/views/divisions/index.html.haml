@@ -1,41 +1,6 @@
-- show_actions = show_actions?(Division)
-
 .card
   = render 'layouts/card_header'
   .card-body
     - if @division_search.show_header?
       %h3 Showing header
-    = render 'layouts/filter', search: @division_search, path: divisions_path
-
-    = paginate @divisions, theme: 'twitter-bootstrap-4'
-
-    %table.table.table-striped.table-bordered
-      %tr
-        %th Name
-        %th Code
-        %th Owner
-        %th Logo
-        - if show_actions
-          %th.actions Actions
-
-      - @divisions.each do |record|
-        %tr{ class: table_row_style(record) }
-          %td= secured_link record
-          %td= record.code
-          %td= secured_link(record.owner)
-          %td= render_one_attachment record: record, attachment_name: 'logo', new_tab: true
-          - if show_actions
-            %td
-              - if policy(record).update?
-                = link_to icon(:pencil, 'Edit'),
-                          edit_division_path(record),
-                          class: 'btn btn-sm btn-secondary btn-block'
-
-              - if policy(record).destroy?
-                = link_to icon(:times, 'Delete'),
-                          record,
-                          method: :delete,
-                          data: { confirm: 'Are you sure?' },
-                          class: 'btn btn-danger btn-sm btn-block'
-
-    = paginate @divisions, theme: 'twitter-bootstrap-4'
+    = render 'layouts/rad_table', rad_table: @division_table

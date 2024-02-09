@@ -1,0 +1,6 @@
+- if table.search.sort_columns.present?
+  = render 'layouts/sort_headers', search: table.search
+- else
+  %tr
+    - table.visible_columns.each do |column|
+      %th= column[:label].presence || column[:name].to_s.titleize

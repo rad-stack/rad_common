@@ -4,7 +4,7 @@ class SavedSearchFilterPolicy < ApplicationPolicy
   end
 
   def destroy?
-    record.user == user
+    record.search_setting.user == user
   end
 
   def update?
@@ -17,7 +17,7 @@ class SavedSearchFilterPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      scope.where(user: user)
+      scope.joins(:search_setting).where(search_settings: { user: user })
     end
   end
 end

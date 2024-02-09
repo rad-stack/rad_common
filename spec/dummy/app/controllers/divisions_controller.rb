@@ -6,6 +6,7 @@ class DivisionsController < ApplicationController
 
     @division_search = DivisionSearch.new(params, current_user)
     @divisions = policy_scope(@division_search.results).page(params[:page])
+    @division_table = DivisionTable.new(@divisions, current_user, view_context, search: @division_search)
   end
 
   def show; end

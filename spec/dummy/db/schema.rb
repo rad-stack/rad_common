@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_29_152746) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_09_165219) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -84,7 +84,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_29_152746) do
     t.string "comment"
     t.string "remote_address"
     t.string "request_uuid"
-    t.datetime "created_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
     t.jsonb "audited_changes"
     t.index ["associated_id", "associated_type"], name: "associated_index"
     t.index ["auditable_id", "auditable_type", "version"], name: "auditable_index"
@@ -237,13 +237,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_29_152746) do
 
   create_table "saved_search_filters", force: :cascade do |t|
     t.string "name", null: false
-    t.bigint "user_id", null: false
-    t.string "search_class", null: false
     t.jsonb "search_filters", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "name", "search_class"], name: "unique_saved_search_filters", unique: true
-    t.index ["user_id"], name: "index_saved_search_filters_on_user_id"
+    t.bigint "search_setting_id"
+    t.index ["search_setting_id"], name: "index_saved_search_filters_on_search_setting_id"
+  end
+
+  create_table "search_settings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "search_class", null: false
+    t.string "columns", default: [], null: false, array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "search_class"], name: "unique_search_settings", unique: true
+    t.index ["user_id"], name: "index_search_settings_on_user_id"
   end
 
   create_table "security_roles", id: :serial, force: :cascade do |t|
@@ -408,7 +416,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_29_152746) do
   add_foreign_key "notification_settings", "users"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
-  add_foreign_key "saved_search_filters", "users"
+  add_foreign_key "saved_search_filters", "search_settings"
+  add_foreign_key "search_settings", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
   add_foreign_key "twilio_log_attachments", "twilio_logs"

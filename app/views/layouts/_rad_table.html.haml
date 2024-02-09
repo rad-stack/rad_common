@@ -1,0 +1,35 @@
+
+- unless rad_table.search.nil?
+  = render 'layouts/filter', search: rad_table.search, path: rad_table.path
+.float-right.mb-2
+  .dropdown
+    %button.btn.btn-secondary.dropdown-toggle{ 'aria-expanded' => 'false',
+      'aria-haspopup' => 'true',
+      'data-toggle' => 'dropdown',
+      type: 'button' }
+      = icon(:gear, 'Column Settings')
+
+    .div.dropdown-menu.dropdown-menu-right.p-3.w-100
+      = simple_form_for rad_table.search_setting do |f|
+        = f.input :columns, as: :check_boxes,
+                            item_wrapper_class: 'col-12 border-bottom py-2',
+                            collection: rad_table.column_selections,
+                            checked: rad_table.search_setting.columns.presence || rad_table.columns.pluck(:name),
+                            disabled: rad_table.columns.select { |c| c[:toggleable] == false }.pluck(:name),
+                            label: 'Select Columns'
+        = f.button :submit, 'Save', class: 'btn btn-sm btn-primary btn-block'
+        - unless rad_table.all_columns_selected?
+          = f.button :submit, 'Enable All', class: 'btn btn-sm btn-warning btn-block'
+
+- if rad_table.records.respond_to?(:total_pages)
+  = paginate rad_table.records, theme: 'twitter-bootstrap-4'
+
+%table{ class: rad_table_classes(rad_table) }
+  = render 'layouts/rad_table_headers', table: rad_table
+
+  - rad_table.records.each do |record|
+    %tr
+      - rad_table.visible_columns.each do |column|
+        %td= rad_table.render_cell(record, column)
+- if rad_table.records.respond_to?(:total_pages)
+  = paginate rad_table.records, theme: 'twitter-bootstrap-4'
