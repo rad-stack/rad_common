@@ -4,8 +4,6 @@ class TwilioLog < ApplicationRecord
 
   has_many :twilio_log_attachments, dependent: :destroy
 
-  scope :last_day, -> { where('created_at > ?', 24.hours.ago) }
-
   enum log_type: { outgoing: 0, incoming: 1 }
 
   enum twilio_status: { accepted: 0,
@@ -18,6 +16,9 @@ class TwilioLog < ApplicationRecord
                         undelivered: 7,
                         failed: 8 }, _prefix: true
 
+  alias_attribute :active?, :success?
+
+  scope :last_day, -> { where('created_at > ?', 24.hours.ago) }
   scope :failure, -> { where(success: false) }
   scope :successful, -> { where(success: true) }
 

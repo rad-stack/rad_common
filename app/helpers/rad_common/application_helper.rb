@@ -149,6 +149,12 @@ module RadCommon
       tag.button(sanitize('&times;'), type: 'button', class: 'close', 'data-dismiss': 'alert')
     end
 
+    def table_row_style(record, style_class: 'table-danger')
+      return unless record.present? && record.respond_to?(:active?) && !record.active?
+
+      style_class
+    end
+
     def icon(icon, text = nil, options = {})
       text_class = text.present? ? 'mr-2' : nil
       capture do

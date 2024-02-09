@@ -48,6 +48,10 @@ module RadCommon
       results
     end
 
+    def allow_not
+      false
+    end
+
     private
 
       def equals_value(params)

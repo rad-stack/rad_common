@@ -9,6 +9,7 @@ module RadCommon
         remove_file 'app/views/layouts/_navigation.html.haml'
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
+        remove_file '.hound.yml'
 
         remove_deprecated_config
         standardize_date_methods
@@ -20,7 +21,10 @@ module RadCommon
 
         # misc
         merge_package_json
+        copy_custom_github_actions
+        copy_custom_github_matrix
         copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
+        copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../gitignore.txt', '.gitignore'
@@ -34,7 +38,7 @@ module RadCommon
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
-        copy_file '../../../../../.hound.yml', '.hound.yml'
+        copy_file '../../../../../.sniff.yml', '.sniff.yml'
         copy_file '../../../../../.eslintrc', '.eslintrc'
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
 
@@ -238,6 +242,22 @@ Seeder.new.seed!
           File.write('package.json', JSON.pretty_generate(package) + "\n")
         end
 
+        def copy_custom_github_actions
+          dummy_action_path = '../../../../../.github/actions/custom-action/action.yml'
+          new_action_path = '.github/actions/custom-action/action.yml'
+          return if File.exist? new_action_path
+
+          copy_file dummy_action_path, new_action_path
+        end
+
+        def copy_custom_github_matrix
+          dummy_matrix_path = '../../../../../.github/actions/custom_matrix.json'
+          new_matrix_path = '.github/actions/custom_matrix.json'
+          return if File.exist? new_matrix_path
+
+          copy_file dummy_matrix_path, new_matrix_path
+        end
+
         def apply_migration(source)
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
@@ -289,9 +309,10 @@ Seeder.new.seed!
         end
 
         def install_database_yml
-          copy_file '../../../../../spec/dummy/config/database.yml', 'config/database.yml'
-
-          gsub_file 'config/database.yml', 'rad_common_', "#{installed_app_name}_"
+          copy_file '../../../../../spec/dummy/config/database.yml', 'config/temp_database.yml'
+          gsub_file 'config/temp_database.yml', 'rad_common_', "#{installed_app_name}_"
+          copy_file Rails.root.join('config/temp_database.yml'), 'config/database.yml'
+          remove_file Rails.root.join('config/temp_database.yml')
         end
 
         def install_github_workflow

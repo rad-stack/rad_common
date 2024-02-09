@@ -3,11 +3,11 @@ require 'rails_helper'
 RSpec.describe PhoneNumberFormatter, type: :service do
   describe 'format' do
     it 'formats phone numbers correctly' do
-      expect(described_class.format('(999)999-9999')).to eq '(999) 999-9999'
-      expect(described_class.format('999999-9999')).to eq '(999) 999-9999'
-      expect(described_class.format('9999999999')).to eq '(999) 999-9999'
-      expect(described_class.format(9_999_999_999)).to eq '(999) 999-9999'
-      expect(described_class.format('999-999-9999')).to eq '(999) 999-9999'
+      expect(described_class.format('(123)321-1234')).to eq '(123) 321-1234'
+      expect(described_class.format('123321-1234')).to eq '(123) 321-1234'
+      expect(described_class.format('1233211234')).to eq '(123) 321-1234'
+      expect(described_class.format(1_233_211_234)).to eq '(123) 321-1234'
+      expect(described_class.format('123-321-1234')).to eq '(123) 321-1234'
     end
   end
 end
