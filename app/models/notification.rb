@@ -7,4 +7,8 @@ class Notification < ApplicationRecord
   scope :recent_first, -> { order(id: :desc) }
 
   strip_attributes
+
+  def active?
+    !unread?
+  end
 end

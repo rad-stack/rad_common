@@ -9,7 +9,7 @@
         = render 'layouts/sort_headers', search: @twilio_log_search
 
       - @twilio_logs.each do |record|
-        %tr{ class: record.success ? '' : 'alert-danger' }
+        %tr{ class: table_row_style(record) }
           %td= enum_to_translated_option(record, :log_type)
           %td= format_datetime record.created_at
           %td= record.from_number
