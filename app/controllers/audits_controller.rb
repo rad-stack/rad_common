@@ -6,6 +6,7 @@ class AuditsController < ApplicationController
       skip_policy_scope
 
       @audits = @resource.own_and_associated_audits.page(params[:page])
+      @audit_table = AuditTable.new(@audits, current_user, view_context)
       @show_search = false
     else
       authorize RadAudit
@@ -13,6 +14,7 @@ class AuditsController < ApplicationController
 
       @audit_search = RadAuditSearch.new(params, current_user)
       @audits = @audit_search.results.page(params[:page])
+      @audit_table = AuditTable.new(@audits, current_user, view_context, search: @audit_search)
       @show_search = true
     end
   end

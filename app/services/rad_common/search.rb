@@ -43,6 +43,10 @@ module RadCommon
       !valid?
     end
 
+    def errors
+      @filtering.errors.uniq
+    end
+
     def error_messages
       errors.join(', ')
     end

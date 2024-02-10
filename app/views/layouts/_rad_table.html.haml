@@ -14,8 +14,8 @@
         = f.input :columns, as: :check_boxes,
                             item_wrapper_class: 'col-12 border-bottom py-2',
                             collection: rad_table.column_selections,
-                            checked: rad_table.search_setting.columns.presence || rad_table.columns.pluck(:name),
-                            disabled: rad_table.columns.select { |c| c[:toggleable] == false }.pluck(:name),
+                            checked: rad_table.search_setting.columns.presence || rad_table.columns.map(&:name),
+                            disabled: rad_table.columns.reject(&:toggleable?).map(&:name),
                             label: 'Select Columns'
         = f.button :submit, 'Save', class: 'btn btn-sm btn-primary btn-block'
         - unless rad_table.all_columns_selected?
@@ -27,7 +27,9 @@
         .text-muted.mt-1 Applied Filter: #{rad_table.search.applied_saved_filter}
 
 - if rad_table.records.respond_to?(:total_pages)
-  = paginate rad_table.records, theme: 'twitter-bootstrap-4'
+  = paginate rad_table.records,
+             theme: 'twitter-bootstrap-4',
+             routes_proxy: (rad_common_engine if rad_table.rad_common_engine?)
 
 %table{ class: rad_table_classes(rad_table) }
   = render 'layouts/rad_table_headers', table: rad_table
@@ -37,4 +39,6 @@
       - rad_table.visible_columns.each do |column|
         %td= rad_table.render_cell(record, column)
 - if rad_table.records.respond_to?(:total_pages)
-  = paginate rad_table.records, theme: 'twitter-bootstrap-4'
+  = paginate rad_table.records,
+             theme: 'twitter-bootstrap-4',
+             routes_proxy: (rad_common_engine if rad_table.rad_common_engine?)

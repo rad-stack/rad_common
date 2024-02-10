@@ -248,10 +248,6 @@ class RadConfig
       boolean_config_item! :canadian_addresses
     end
 
-    def saved_search_filters_enabled?
-      boolean_config_item! :saved_search_filters_enabled
-    end
-
     def legal_docs?
       boolean_config_item! :legal_docs
     end

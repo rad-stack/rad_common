@@ -16,7 +16,6 @@ default: &default
   user_profiles: true
   canadian_addresses: false
   show_help_menu: true
-  saved_search_filters_enabled: true
   legal_docs: true
   twilio_verify_all_users: true
   twilio_verify_remember_device_days: 7

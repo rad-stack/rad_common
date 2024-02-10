@@ -5,8 +5,8 @@ class SearchSetting < ApplicationRecord
 
   before_validation :compact_columns
 
-  def show_column?(column_name)
-    columns.empty? || columns.include?(column_name.to_s)
+  def show_column?(column)
+    columns.empty? || columns.include?(column.name.to_s)
   end
 
   private

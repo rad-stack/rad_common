@@ -3,4 +3,4 @@
 - else
   %tr
     - table.visible_columns.each do |column|
-      %th= column[:label].presence || column[:name].to_s.titleize
+      %th= column.header

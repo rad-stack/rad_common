@@ -1,16 +1,12 @@
-class DivisionTable < RadTable
+class DivisionTable < RadTable::Table
   def columns
     [
-      { name: :name },
-      { name: :code },
-      { name: :owner, type: :secured_link },
-      { name: :logo, type: :attachment },
-      actions_column
+      RadTable::SecuredLinkColumn.new(:name, value_parser: ->(record) { record }),
+      RadTable::Column.new(:code),
+      RadTable::SecuredLinkColumn.new(:owner),
+      RadTable::AttachmentColumn.new(:logo),
+      RadTable::ActionsColumn.new(:actions, hidden: !view_context.show_actions?(Division))
     ]
-  end
-
-  def show_actions?
-    view_context.show_actions?(Division)
   end
 
   def path(search_params = nil)
