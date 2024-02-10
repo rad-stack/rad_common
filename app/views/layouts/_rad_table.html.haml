@@ -1,7 +1,7 @@
 
 - unless rad_table.search.nil?
   = render 'layouts/filter', search: rad_table.search, path: rad_table.path
-.float-right.mb-2
+.float-right.mb-2.d-flex
   .dropdown
     %button.btn.btn-secondary.dropdown-toggle{ 'aria-expanded' => 'false',
       'aria-haspopup' => 'true',
@@ -20,6 +20,11 @@
         = f.button :submit, 'Save', class: 'btn btn-sm btn-primary btn-block'
         - unless rad_table.all_columns_selected?
           = f.button :submit, 'Enable All', class: 'btn btn-sm btn-warning btn-block'
+  - unless rad_table.search.nil?
+    .ml-2
+      = render 'layouts/saved_filters_dropdown', rad_table: rad_table
+      - if rad_table.search.applied_saved_filter.present?
+        .text-muted.mt-1 Applied Filter: #{rad_table.search.applied_saved_filter}
 
 - if rad_table.records.respond_to?(:total_pages)
   = paginate rad_table.records, theme: 'twitter-bootstrap-4'

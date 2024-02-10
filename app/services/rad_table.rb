@@ -79,6 +79,14 @@ class RadTable
     columns.all? { |c| search_setting.show_column?(c[:name]) }
   end
 
+  def saved_filters
+    @saved_filters ||= if search.nil?
+                         []
+                       else
+                         Pundit.policy_scope(user, SavedSearchFilter).for_search_class(search.class.name)
+                       end
+  end
+
   private
 
     def parse_value(record, column)

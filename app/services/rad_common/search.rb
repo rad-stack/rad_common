@@ -32,7 +32,6 @@ module RadCommon
     end
 
     def results
-      maybe_save_filters
       retrieve_results
     end
 
@@ -42,10 +41,6 @@ module RadCommon
 
     def invalid?
       !valid?
-    end
-
-    def errors
-      @filtering.errors.uniq + saved_filter_errors
     end
 
     def error_messages
@@ -116,18 +111,10 @@ module RadCommon
       @filtering.filters
     end
 
-    def saved_filters
-      @saved_filters ||= Pundit.policy_scope(current_user, SavedSearchFilter).for_search_class(self.class.name)
-    end
-
     def applied_saved_filter
       return if search_params[:applied_filter].blank?
 
       @applied_saved_filter ||= SavedSearchFilter.find(search_params[:applied_filter])
-    end
-
-    def saved_filter_errors
-      @saved_filter_errors ||= []
     end
 
     private
@@ -159,19 +146,6 @@ module RadCommon
             [not_filter, f.searchable_name].compact
           end
         }.flatten + %i[applied_filter saved_name]
-      end
-
-      def maybe_save_filters
-        filter_name = search_params[:saved_name]
-        return unless RadConfig.saved_search_filters_enabled? && filter_name.present?
-
-        filter = SavedSearchFilter.find_or_initialize_by(search_setting: search_setting, name: filter_name)
-        filter.search_filters = search_params.to_h.compact_blank
-        if filter.save
-          params[:search][:applied_filter] = filter.id
-        else
-          saved_filter_errors << "Filter \"#{filter}\" could not be saved: #{filter.errors.full_messages.to_sentence}"
-        end
       end
 
       def created_by_filter
