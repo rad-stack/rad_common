@@ -18,7 +18,7 @@
           %th.actions Actions
 
       - @attorneys.each do |record|
-        %tr
+        %tr{ class: table_row_style(record) }
           %td= secured_link record
           %td= record.company_name
           %td= record.city
