@@ -1,5 +1,7 @@
 .card
-  = render 'layouts/card_header', title: "Notifications (#{current_user.notifications.unread.count} unread)"
+  = render 'layouts/card_header',
+           title: "Notifications (#{current_user.notifications.unread.count} unread)",
+           icon: 'fa-bell'
   .card-body
 
     -# see kaminari monkey patch on initializers/rad_common.rb
