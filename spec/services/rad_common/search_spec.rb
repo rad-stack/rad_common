@@ -375,6 +375,23 @@ RSpec.describe RadCommon::Search, type: :service do
       end
     end
 
+    context 'when using multiple select string values' do
+      let(:query) { Division }
+      let(:divisions) do
+        [create(:division, code: 'A', owner_id: user.id),
+         create(:division, code: 'B', owner_id: user.id),
+         create(:division, code: 'C', owner_id: user.id)]
+      end
+      let(:filters) do
+        [{ column: :code, options: divisions.map(&:code), multiple: true, input_label: 'Codes' }]
+      end
+      let(:params) { ActionController::Parameters.new(search: { code: %w[A B] }) }
+
+      it 'filters selected codes' do
+        expect(search.results.count).to eq 2
+      end
+    end
+
     context 'when using multiple/mixed/grouped scope_values' do
       let(:query) { Division }
       let(:filters) do
