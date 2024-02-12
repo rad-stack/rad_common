@@ -54,9 +54,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sentry-ruby'
   s.add_dependency 'sidekiq', '~> 7.1'
   s.add_dependency 'simple_form'
-
-  # the update fails, will pin it for now, see Task 43240
-  s.add_dependency 'smartystreets_ruby_sdk', '5.15.4'
+  s.add_dependency 'smartystreets_ruby_sdk'
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
   s.add_dependency 'twilio-ruby'
