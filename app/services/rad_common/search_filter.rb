@@ -189,7 +189,7 @@ module RadCommon
     end
 
     def not_value?(search_params)
-      allow_not && search_params["#{searchable_name}_not"] == '1'
+      allow_not && search_params && search_params["#{searchable_name}_not"] == '1'
     end
 
     private
