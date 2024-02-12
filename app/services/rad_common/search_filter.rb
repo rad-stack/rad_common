@@ -218,7 +218,7 @@ module RadCommon
       end
 
       def number_array?(values)
-        values.any? { |v| Integer(v, exception: false) }
+        values.all? { |v| Integer(v, exception: false) }
       end
 
       def filter_value(search_params)
