@@ -43,9 +43,10 @@ module RadCommon
     #     blank_value_label: 'All Users' }
     # @example Using scope values
     #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
-    def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil,
-                   default_value: nil, blank_value_label: nil, scope: nil, not_scope: nil, multiple: false, required: false,
-                   include_blank: true, search_scope_name: nil, show_search_subtext: false, allow_not: false)
+    def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil,
+                   input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, not_scope: nil,
+                   multiple: false, required: false, include_blank: true, search_scope_name: nil,
+                   show_search_subtext: false, allow_not: false)
       if input_label.blank? && !options.respond_to?(:table_name)
         raise 'Input label is required when options are not active record objects'
       end
