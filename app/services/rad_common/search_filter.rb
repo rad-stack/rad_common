@@ -211,7 +211,14 @@ module RadCommon
       end
 
       def convert_array_values(value)
-        value.select(&:present?).map(&:to_i)
+        values = value.select(&:present?)
+        return values.map(&:to_i) if number_array?(values)
+
+        values
+      end
+
+      def number_array?(values)
+        values.all? { |v| Integer(v, exception: false) }
       end
 
       def filter_value(search_params)
