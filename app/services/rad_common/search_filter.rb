@@ -2,7 +2,8 @@ module RadCommon
   ##
   # This is used to generate dropdown filter containing options to be filtered on
   class SearchFilter
-    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value, :errors, :include_blank,
+    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :not_scope,
+                :default_value, :errors, :include_blank,
                 :search_scope, :show_search_subtext, :allow_not
 
     ##
@@ -43,12 +44,15 @@ module RadCommon
     # @example Using scope values
     #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
     def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil,
-                   default_value: nil, blank_value_label: nil, scope: nil, multiple: false, required: false,
+                   default_value: nil, blank_value_label: nil, scope: nil, not_scope: nil, multiple: false, required: false,
                    include_blank: true, search_scope_name: nil, show_search_subtext: false, allow_not: false)
       if input_label.blank? && !options.respond_to?(:table_name)
         raise 'Input label is required when options are not active record objects'
       end
 
+      if scope.present? && allow_not && not_scope.blank?
+        raise 'not_scope is required when scope and allow_not are present'
+      end
       raise 'options, scope_values, or search_scope' if options.nil? && scope_values.nil? && search_scope_name.nil?
       raise 'name is only valid when scope_values are present' if name.present? && scope_values.blank?
       raise 'must have a column, name, or scope defined' if column.blank? && name.blank? && scope.blank?
@@ -62,6 +66,7 @@ module RadCommon
       @blank_value_label = blank_value_label
       @scope_values = scope_values
       @scope = scope
+      @not_scope = not_scope
       @multiple = multiple
       @default_value = default_value
       @grouped = grouped
@@ -139,11 +144,11 @@ module RadCommon
     def apply_filter(results, search_params)
       value = filter_value(search_params)
       if scope_search?
-        apply_scope_filter(results, value)
+        apply_scope_filter(results, value, search_params)
       elsif scope_value?(value)
         apply_scope_value(results, value)
       elsif value.present?
-        not_filter = search_params["#{searchable_name}_not"] == '1'
+        not_filter = not_value?(search_params)
         if value.is_a? Array
           values = convert_array_values(value)
           return if values.blank?
@@ -182,8 +187,8 @@ module RadCommon
       }
     end
 
-    def not_value(params)
-      allow_not && params.dig(:search, "#{searchable_name}_not") == '1'
+    def not_value?(search_params)
+      allow_not && search_params["#{searchable_name}_not"] == '1'
     end
 
     private
@@ -263,13 +268,13 @@ module RadCommon
         scope.present?
       end
 
-      def apply_scope_filter(results, value)
+      def apply_scope_filter(results, value, search_params)
         if scope.is_a? Hash
           scope_proc = scope.values.first
           scope_proc.call(results, value)
         else
           value = convert_array_values(value) if value.is_a? Array
-          results.send(scope, value) if value.present?
+          results.send(not_value?(search_params) ? not_scope : scope, value) if value.present?
         end
       end
 
