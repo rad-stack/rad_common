@@ -9,7 +9,7 @@
         %th Active
         %th.actions Actions
       - @notification_types.each do |record|
-        %tr
+        %tr{ class: table_row_style(record) }
           %td= link_to record, "/rad_common/notification_types/#{record.id}/edit"
           %td= record.auth_mode_name
           %td

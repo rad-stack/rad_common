@@ -14,7 +14,7 @@
         setting_id_string = record.notification_type.description.parameterize.underscore
         collapse_id = "notification-options-#{setting_id_string}"
         updatable = can_create && policy(record).create?
-      %tr
+      %tr{ class: table_row_style(record) }
         %td
           - if can_type
             = link_to record.notification_type,

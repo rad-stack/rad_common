@@ -103,8 +103,8 @@ RSpec.describe 'Divisions' do
     it 'handles date filter errors' do
       visit divisions_path
 
-      fill_in 'search_created_at_start', with: '01/32/2020'
-      click_button 'Apply Filters'
+      first('#search_created_at_start').fill_in(with: '01/32/2020')
+      first('button', text: 'Apply Filters').click
       expect(page).to have_content('Invalid date entered')
     end
 
