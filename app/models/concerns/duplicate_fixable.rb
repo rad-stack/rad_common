@@ -123,7 +123,7 @@ module DuplicateFixable
       create_or_update_metadata! duplicates_info: nil, score: nil
     end
 
-    self.bypass_notifications = bypass_notifications
+    self.bypass_notifications = false
   end
 
   def duplicate_fields
@@ -159,7 +159,7 @@ module DuplicateFixable
       reload
     end
 
-    process_duplicates
+    process_duplicates bypass_notifications: true
 
     self.bypass_notifications = false
   end
