@@ -17,10 +17,8 @@ module Api
       def valid_token?
         return false if token.blank?
 
-        secret = RadConfig.jwt_secret!
-
         begin
-          JWT.decode token, secret, true
+          RadJwt.new.decode token
           return true
         rescue JWT::DecodeError => e
           Rails.logger.warn "Error decoding the JWT: #{e}"
