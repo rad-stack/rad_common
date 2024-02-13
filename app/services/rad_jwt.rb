@@ -1,6 +1,8 @@
 require 'jwt'
 
 class RadJwt
+  class InvalidJwtKeyLength < StandardError; end
+
   BITS_IN_BYTE = 8
   MINIMUM_SECRET_BIT_SIZE = 256
   JWT_ALGORITHM = 'HS256'.freeze
@@ -25,6 +27,6 @@ class RadJwt
 
     def validate_key!
       bit_size = RadConfig.jwt_secret!.bytesize * BITS_IN_BYTE
-      raise 'JWT secret must be at least 256 bits' if bit_size < MINIMUM_SECRET_BIT_SIZE
+      raise InvalidJwtKeyLength, 'JWT secret must be at least 256 bits' if bit_size < MINIMUM_SECRET_BIT_SIZE
     end
 end
