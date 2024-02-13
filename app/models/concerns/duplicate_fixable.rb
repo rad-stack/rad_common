@@ -104,7 +104,7 @@ module DuplicateFixable
       count = records.count
 
       records.each do |record|
-        break if session&.check_status("checking #{to_s} records for duplicates", count)
+        break if session&.check_status("checking #{self} records for duplicates", count)
 
         record.process_duplicates bypass_notifications: bypass_notifications
       end
