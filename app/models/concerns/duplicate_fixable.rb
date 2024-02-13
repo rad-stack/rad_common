@@ -6,7 +6,7 @@ module DuplicateFixable
 
     has_one :duplicate, as: :duplicatable, dependent: :destroy
 
-    attr_accessor :duplicates_resetting
+    attr_accessor :bypass_notifications
 
     scope :duplicates_to_process, lambda {
       left_outer_joins(:duplicate)
@@ -98,9 +98,22 @@ module DuplicateFixable
     def duplicate_notify_threshold
       new.duplicate_model_config[:notify_threshold].presence || 0.01
     end
+
+    def process_duplicates(session, bypass_notifications: false)
+      records = duplicates_to_process
+      count = records.count
+
+      records.each do |record|
+        break if session&.check_status("checking #{to_s} records for duplicates", count)
+
+        record.process_duplicates bypass_notifications: bypass_notifications
+      end
+    end
   end
 
-  def process_duplicates
+  def process_duplicates(bypass_notifications: false)
+    self.bypass_notifications = bypass_notifications
+
     contacts = duplicate_matches
 
     if contacts.any?
@@ -109,6 +122,8 @@ module DuplicateFixable
     else
       create_or_update_metadata! duplicates_info: nil, score: nil
     end
+
+    self.bypass_notifications = bypass_notifications
   end
 
   def duplicate_fields
@@ -137,7 +152,7 @@ module DuplicateFixable
   end
 
   def reset_duplicates
-    self.duplicates_resetting = true
+    self.bypass_notifications = true
 
     if duplicate.present?
       duplicate.destroy!
@@ -146,7 +161,7 @@ module DuplicateFixable
 
     process_duplicates
 
-    self.duplicates_resetting = false
+    self.bypass_notifications = false
   end
 
   def duplicates
