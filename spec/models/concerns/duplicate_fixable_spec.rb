@@ -137,12 +137,24 @@ describe DuplicateFixable do
       allow(Attorney).to receive(:score_upper_threshold).and_return(10)
       allow(attorney_1).to receive(:created_by).and_return(created_by)
 
+      ActionMailer::Base.deliveries.clear
+
       attorney_1.process_duplicates
       attorney_1.reload
 
       expect(ActionMailer::Base.deliveries.count).to eq 2
       ActionMailer::Base.deliveries.clear
       attorney_1.reset_duplicates
+      expect(ActionMailer::Base.deliveries.count).to eq 0
+    end
+
+    it 'optionally bypasses notifications' do
+      allow(Attorney).to receive(:score_upper_threshold).and_return(10)
+      allow(attorney_1).to receive(:created_by).and_return(created_by)
+
+      ActionMailer::Base.deliveries.clear
+      attorney_1.process_duplicates(bypass_notifications: true)
+
       expect(ActionMailer::Base.deliveries.count).to eq 0
     end
   end
