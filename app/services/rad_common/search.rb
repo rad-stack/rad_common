@@ -152,12 +152,11 @@ module RadCommon
 
         columns = filters.sort_by { |f| f.respond_to?(:multiple) && f.multiple ? 1 : 0 }
         columns.map { |f|
+          not_filter = "#{f.searchable_name}_not" if f.allow_not
           if f.respond_to?(:multiple) && f.multiple
-            hash = {}
-            hash[f.searchable_name] = []
-            hash
+            [not_filter, { f.searchable_name => [] }].compact
           else
-            f.searchable_name
+            [not_filter, f.searchable_name].compact
           end
         }.flatten + %i[applied_filter saved_name]
       end

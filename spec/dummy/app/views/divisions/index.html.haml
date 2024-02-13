@@ -19,7 +19,7 @@
           %th.actions Actions
 
       - @divisions.each do |record|
-        %tr
+        %tr{ class: table_row_style(record) }
           %td= secured_link record
           %td= record.code
           %td= secured_link(record.owner)

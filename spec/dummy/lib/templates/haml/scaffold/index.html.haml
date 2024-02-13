@@ -15,7 +15,7 @@
           %th.actions Actions
 
       - @<%= plural_table_name %>.each do |record|
-        %tr
+        %tr{ class: table_row_style(record) }
           %td= secured_link record
     <% for attribute in attributes -%>
       %td= record.<%= attribute.name %>

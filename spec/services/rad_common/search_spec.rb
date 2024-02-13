@@ -375,6 +375,43 @@ RSpec.describe RadCommon::Search, type: :service do
       end
     end
 
+    context 'when using multiple select string values' do
+      let(:query) { Division }
+      let(:divisions) do
+        [create(:division, code: 'A', owner_id: user.id),
+         create(:division, code: 'B', owner_id: user.id),
+         create(:division, code: 'C', owner_id: user.id)]
+      end
+      let(:filters) do
+        [{ column: :code, options: divisions.map(&:code), multiple: true, input_label: 'Codes' }]
+      end
+      let(:params) { ActionController::Parameters.new(search: { code: %w[A B] }) }
+
+      it 'filters selected codes' do
+        expect(search.results.count).to eq 2
+      end
+    end
+
+    context 'when using not_scope' do
+      let(:query) { Attorney }
+      let(:filters) do
+        [{ scope: :with_cities, not_scope: :without_cities, options: Attorney.pluck(:city),
+           multiple: true, allow_not: true, input_label: 'Cities' }]
+      end
+      let(:params) { ActionController::Parameters.new(search: { with_cities: ['City A'], with_cities_not: '1' }) }
+
+      before do
+        create :attorney, city: 'City A'
+        create :attorney, city: 'City B'
+        create :attorney, city: 'City C'
+      end
+
+      it 'filters selected cities' do
+        expect(search.results.count).to eq 2
+        expect(search.results.pluck(:city)).to eq ['City B', 'City C']
+      end
+    end
+
     context 'when using multiple/mixed/grouped scope_values' do
       let(:query) { Division }
       let(:filters) do

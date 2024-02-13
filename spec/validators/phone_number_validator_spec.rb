@@ -21,21 +21,27 @@ RSpec.describe PhoneNumberValidator do
   let(:phone_number_stripped) do
     phone_number.delete('(').delete(')').delete('-').delete(' ')
   end
+  let(:valid_phone_formats) do
+    ['1233211234', '123-321-1234', '123 321 1234', ' 123 321 1234 ', '+11233211234',
+     '(123) 321-1234', '123-321-1234', '1-123-321-1234',
+     '21233211234', '+1 (123) 321-1234', '(123)321-1234']
+  end
+  let(:invalid_phone_formats) do
+    ['1234', '123-321-1234 ext 5', '(800) 748-2030 ext. 2326 or (800) 550-8582', 'not_a_number']
+  end
 
   it 'formats phone numbers before validating' do
-    numbers = ['1233211234', '123-321-1234', '123 321 1234', ' 123 321 1234 ', '+11233211234']
-
-    numbers.each do |phone_number|
+    valid_phone_formats.each do |phone_number|
       model = TestPhoneModel.new
       model.phone_number = phone_number
+
       expect(model).to be_valid
+      expect(model.phone_number).to eq '(123) 321-1234'
     end
   end
 
   it 'can not be valid' do
-    invalid_numbers = %w([232332 1234 -])
-
-    invalid_numbers.each do |phone_number|
+    invalid_phone_formats.each do |phone_number|
       model = TestPhoneModel.new
       model.phone_number = phone_number
       expect(model).not_to be_valid
