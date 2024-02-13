@@ -52,7 +52,8 @@ module DuplicatesHelper
 
   def show_duplicate_item(item, record)
     return secured_link(record.send(item[:name].to_s.gsub('_id', ''))) if item[:type] == :association
+    return if record.send(item[:name]).blank?
 
-    record.send item[:name]
+    link_to record.send(item[:name]), record
   end
 end
