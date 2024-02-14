@@ -93,33 +93,31 @@ describe UserGrouper do
 
       it { is_expected.to eq result }
     end
-  end
 
-  describe 'grouped_list (more)' do
-    # TODO: refactor more
+    context 'with active scope' do
+      let(:always_include) { item_user }
+      let(:scopes) { [:active] }
 
-    let(:always_include) { item_user }
-    let(:scopes) { [:active] }
+      context 'when item user is current user' do
+        let(:item_user) { current_user }
+        let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
 
-    context 'when item user is current user' do
-      let(:item_user) { current_user }
-      let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
+        it { is_expected.to eq result }
+      end
 
-      it { is_expected.to eq result }
-    end
+      context 'when item user is an active user' do
+        let(:item_user) { user }
+        let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
 
-    context 'when item user is an active user' do
-      let(:item_user) { user }
-      let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
+        it { is_expected.to eq result }
+      end
 
-      it { is_expected.to eq result }
-    end
+      context 'when item user is an inactive user' do
+        let(:item_user) { inactive_user }
+        let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
 
-    context 'when item user is an inactive user' do
-      let(:item_user) { inactive_user }
-      let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
-
-      it { is_expected.to eq result }
+        it { is_expected.to eq result }
+      end
     end
   end
 
@@ -127,9 +125,7 @@ describe UserGrouper do
     let(:always_include) { notification.user }
     let(:scopes) { [:active] }
 
-    before do
-      active_client
-    end
+    before { active_client }
 
     context 'with active user' do
       let(:notification_user) { user }
