@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe UserGrouper do
+  subject do
+    described_class.new(current_user, with_ids: with_ids, scopes: scopes, always_include: always_include).grouped_list
+  end
+
   let(:current_user) { create :admin }
   let(:user) { create :user, first_name: 'Allan' }
   let(:another_user) { create :user, first_name: 'Bobby' }
@@ -13,8 +17,9 @@ describe UserGrouper do
   let(:another_active_client) { create :client_user, client: another_client }
   let(:with_ids) { false }
 
-  subject do
-    described_class.new(current_user, with_ids: with_ids, scopes: scopes, always_include: always_include).grouped_list
+  before do
+    allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false)
+    allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
   end
 
   describe 'grouped_list (formerly list)' do
@@ -22,9 +27,6 @@ describe UserGrouper do
     let(:scopes) { [] }
 
     before do
-      allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false)
-      allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
-
       user
       another_user
     end
