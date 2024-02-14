@@ -157,8 +157,8 @@ describe UserGrouper do
       end
     end
 
-    describe 'list_for_tasks' do
-      subject { described_class.new(current_user, base_query: User.for_task_assignment(task)).list_for_tasks(task) }
+    describe 'legacy_list (formerly list_for_tasks)' do
+      subject { described_class.new(current_user, base_query: User.for_task_assignment(task), always_include: task.assigned_to_user, scopes: [:active]).legacy_list }
 
       before do
         active_client
