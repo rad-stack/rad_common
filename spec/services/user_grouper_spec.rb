@@ -93,8 +93,9 @@ describe UserGrouper do
   end
 
   describe 'custom' do
-    describe 'better_way_list' do
-      subject { described_class.new(current_user, always_include: item_user).better_way_list }
+    describe 'legacy_list (more)' do
+      # TODO: refactor more
+      subject { described_class.new(current_user, scopes: [:active], always_include: item_user).legacy_list }
 
       before do
         user
@@ -123,8 +124,9 @@ describe UserGrouper do
       end
     end
 
-    describe 'better_way_list (more)' do
-      subject { described_class.new(current_user, always_include: notification.user).better_way_list }
+    describe 'legacy_list (even more)' do
+      # TODO: refactor more
+      subject { described_class.new(current_user, scopes: [:active], always_include: notification.user).legacy_list }
 
       # using notification is not ideal since we don't have a use case for this, but demonstrates a user association
       # available in all projects

@@ -13,16 +13,6 @@ class UserGrouper
     self.base_query = base_query
   end
 
-  def better_way_list
-    # TODO: remove this method and incorporate the specs, it's no longer used
-    inactive = always_include.present? && !always_include.active ? always_include : nil
-
-    items = [me_item, internal_user_item, client_user_item]
-    items.push(['Inactive', [inactive]]) if inactive
-
-    items.compact
-  end
-
   def list
     users = base_users.active.internal # TODO: refactor
 
