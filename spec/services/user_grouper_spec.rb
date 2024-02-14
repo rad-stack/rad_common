@@ -123,7 +123,7 @@ describe UserGrouper do
     end
   end
 
-  describe 'grouped_list (even more)' do
+  context 'with client user' do
     # TODO: refactor more
 
     let(:always_include) { notification.user }
