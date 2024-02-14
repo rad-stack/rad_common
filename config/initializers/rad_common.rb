@@ -12,6 +12,9 @@ end
 
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 
+# https://app.radstack.com/tasks/25
+Rails.application.config.active_storage.variant_processor = :mini_magick
+
 Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
 
 RadConfig.check_validity!

@@ -7,6 +7,7 @@ module RadCommon
 
       def create_initializer_file
         remove_file 'app/views/layouts/_navigation.html.haml'
+        remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
 
@@ -45,6 +46,9 @@ module RadCommon
         unless RadConfig.storage_config_override?
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
+
+        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+        gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
 
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
@@ -120,21 +124,6 @@ module RadCommon
 require 'factory_bot_rails'
 
 Seeder.new.seed!
-        RUBY
-        end
-
-        inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
-    # added by rad_common
-    config.generators do |g|
-      g.helper false
-      g.stylesheets false
-      g.javascripts false
-      g.view_specs false
-      g.helper_specs false
-      g.routing_specs false
-      g.controller_specs false
-    end
-
         RUBY
         end
 
