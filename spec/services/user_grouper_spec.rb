@@ -17,6 +17,7 @@ describe UserGrouper do
   let(:another_active_client) { create :client_user, client: another_client }
   let(:with_ids) { false }
   let(:always_include) { nil }
+  let(:scopes) { [] }
 
   # using notification is not ideal since we don't have a use case for this, but demonstrates a user association
   # available in all projects
@@ -29,8 +30,6 @@ describe UserGrouper do
   end
 
   describe 'grouped_list (formerly list)' do
-    let(:scopes) { [] }
-
     before do
       user
       another_user
@@ -171,7 +170,6 @@ describe UserGrouper do
     end
 
     context 'when including inactive' do
-      let(:scopes) { [] }
 
       let(:result) do
         [['Me', [[current_user, current_user.id]]],
