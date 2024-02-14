@@ -124,8 +124,6 @@ describe UserGrouper do
   end
 
   context 'with client user' do
-    # TODO: refactor more
-
     let(:always_include) { notification.user }
     let(:scopes) { [:active] }
 
@@ -151,19 +149,14 @@ describe UserGrouper do
     end
   end
 
-  describe 'grouped_list' do
+  context "with ID's" do
     let(:with_ids) { true }
-
-    before do
-      active_client
-    end
 
     context 'when including inactive' do
 
       let(:result) do
         [['Me', [[current_user, current_user.id]]],
          ['Users', [[user, user.id], [another_user, another_user.id]]],
-         ['Clients', [[active_client, active_client.id]]],
          ['Inactive', [[inactive_user, inactive_user.id]]]]
       end
 
@@ -174,9 +167,7 @@ describe UserGrouper do
       let(:scopes) { [:active] }
 
       let(:result) do
-        [['Me', [[current_user, current_user.id]]],
-         ['Users', [[user, user.id], [another_user, another_user.id]]],
-         ['Clients', [[active_client, active_client.id]]]]
+        [['Me', [[current_user, current_user.id]]], ['Users', [[user, user.id], [another_user, another_user.id]]]]
       end
 
       it { is_expected.to eq result }
@@ -187,7 +178,6 @@ describe UserGrouper do
         let(:result) do
           [['Me', [[current_user, current_user.id]]],
            ['Users', [[user, user.id], [another_user, another_user.id]]],
-           ['Clients', [[active_client, active_client.id]]],
            ['Inactive', [[inactive_user, inactive_user.id]]]]
         end
 
