@@ -29,13 +29,10 @@ describe UserGrouper do
     allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
 
     user
+    another_user
   end
 
   describe 'grouped_list (formerly list)' do
-    before do
-      another_user
-    end
-
     context 'with standard case' do
       let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
 
@@ -106,10 +103,6 @@ describe UserGrouper do
     let(:always_include) { item_user }
     let(:scopes) { [:active] }
 
-    before do
-      another_user
-    end
-
     context 'when item user is current user' do
       let(:item_user) { current_user }
       let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
@@ -144,7 +137,7 @@ describe UserGrouper do
 
     context 'with active user' do
       let(:notification_user) { user }
-      let(:result) { [['Me', [current_user]], ['Users', [user]], ['Clients', [active_client]]] }
+      let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Clients', [active_client]]] }
 
       it { is_expected.to eq result }
     end
@@ -153,7 +146,7 @@ describe UserGrouper do
       let(:notification_user) { inactive_user }
 
       let(:result) do
-        [['Me', [current_user]], ['Users', [user]], ['Clients', [active_client]], ['Inactive', [inactive_user]]]
+        [['Me', [current_user]], ['Users', [user, another_user]], ['Clients', [active_client]], ['Inactive', [inactive_user]]]
       end
 
       it { is_expected.to eq result }
@@ -171,7 +164,7 @@ describe UserGrouper do
 
       let(:result) do
         [['Me', [[current_user, current_user.id]]],
-         ['Users', [[user, user.id]]],
+         ['Users', [[user, user.id], [another_user, another_user.id]]],
          ['Clients', [[active_client, active_client.id]]],
          ['Inactive', [[inactive_user, inactive_user.id]]]]
       end
@@ -184,7 +177,7 @@ describe UserGrouper do
 
       let(:result) do
         [['Me', [[current_user, current_user.id]]],
-         ['Users', [[user, user.id]]],
+         ['Users', [[user, user.id], [another_user, another_user.id]]],
          ['Clients', [[active_client, active_client.id]]]]
       end
 
@@ -195,7 +188,7 @@ describe UserGrouper do
 
         let(:result) do
           [['Me', [[current_user, current_user.id]]],
-           ['Users', [[user, user.id]]],
+           ['Users', [[user, user.id], [another_user, another_user.id]]],
            ['Clients', [[active_client, active_client.id]]],
            ['Inactive', [[inactive_user, inactive_user.id]]]]
         end
