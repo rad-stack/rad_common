@@ -27,11 +27,12 @@ describe UserGrouper do
   before do
     allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false)
     allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
+
+    user
   end
 
   describe 'grouped_list (formerly list)' do
     before do
-      user
       another_user
     end
 
@@ -106,7 +107,6 @@ describe UserGrouper do
     let(:scopes) { [:active] }
 
     before do
-      user
       another_user
     end
 
@@ -139,7 +139,6 @@ describe UserGrouper do
     let(:scopes) { [:active] }
 
     before do
-      user
       active_client
     end
 
@@ -165,7 +164,6 @@ describe UserGrouper do
     let(:with_ids) { true }
 
     before do
-      user
       active_client
     end
 
