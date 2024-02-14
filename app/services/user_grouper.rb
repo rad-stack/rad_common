@@ -104,9 +104,7 @@ class UserGrouper
       scopes.each { |scope| records = records.send(scope) }
 
       # TODO: eventually remove allow_always_include
-      if always_include.present? && allow_always_include
-        records = records.or(User.where(id: always_include.id))
-      end
+      records = records.or(User.where(id: always_include.id)) if always_include.present? && allow_always_include
 
       records.sorted
     end

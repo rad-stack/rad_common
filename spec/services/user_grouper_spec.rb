@@ -183,7 +183,9 @@ describe UserGrouper do
     end
 
     describe 'legacy_list' do
-      subject { described_class.new(current_user, with_ids: true, scopes: scopes, always_include: always_include).legacy_list }
+      subject do
+        described_class.new(current_user, with_ids: true, scopes: scopes, always_include: always_include).legacy_list
+      end
 
       let(:always_include) { nil }
 
