@@ -183,7 +183,9 @@ describe UserGrouper do
     end
 
     describe 'legacy_list' do
-      subject { described_class.new(current_user, with_ids: true, scopes: scopes).legacy_list }
+      subject { described_class.new(current_user, with_ids: true, scopes: scopes, always_include: always_include).legacy_list }
+
+      let(:always_include) { nil }
 
       before do
         user
@@ -213,6 +215,19 @@ describe UserGrouper do
         end
 
         it { is_expected.to eq result }
+
+        context 'with always include' do
+          let(:always_include) { inactive_user }
+
+          let(:result) do
+            [['Me', [[current_user, current_user.id]]],
+             ['Users', [[user, user.id]]],
+             ['Clients', [[active_client, active_client.id]]],
+             ['Inactive', [[inactive_user, inactive_user.id]]]]
+          end
+
+          it { is_expected.to eq result }
+        end
       end
     end
   end
