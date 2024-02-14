@@ -142,7 +142,10 @@ describe UserGrouper do
       let(:notification_user) { inactive_user }
 
       let(:result) do
-        [['Me', [current_user]], ['Users', [user, another_user]], ['Clients', [active_client]], ['Inactive', [inactive_user]]]
+        [['Me', [current_user]],
+         ['Users', [user, another_user]],
+         ['Clients', [active_client]],
+         ['Inactive', [inactive_user]]]
       end
 
       it { is_expected.to eq result }
@@ -153,7 +156,6 @@ describe UserGrouper do
     let(:with_ids) { true }
 
     context 'when including inactive' do
-
       let(:result) do
         [['Me', [[current_user, current_user.id]]],
          ['Users', [[user, user.id], [another_user, another_user.id]]],
