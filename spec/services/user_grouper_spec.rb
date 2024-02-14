@@ -11,10 +11,13 @@ describe UserGrouper do
   let(:task) { create :task, project: project, assigned_to_user: assigned_to_user }
   let(:active_client) { create :client_user, client: client }
   let(:another_active_client) { create :client_user, client: another_client }
+  let(:with_ids) { false }
+
+  subject do
+    described_class.new(current_user, with_ids: with_ids, scopes: scopes, always_include: always_include).grouped_list
+  end
 
   describe 'grouped_list (formerly list)' do
-    subject { described_class.new(current_user, always_include: always_include, scopes: scopes).grouped_list }
-
     let(:always_include) { nil }
     let(:scopes) { [] }
 
@@ -92,7 +95,9 @@ describe UserGrouper do
 
   describe 'grouped_list (more)' do
     # TODO: refactor more
-    subject { described_class.new(current_user, scopes: [:active], always_include: item_user).grouped_list }
+
+    let(:always_include) { item_user }
+    let(:scopes) { [:active] }
 
     before do
       user
@@ -123,13 +128,15 @@ describe UserGrouper do
 
   describe 'grouped_list (even more)' do
     # TODO: refactor more
-    subject { described_class.new(current_user, scopes: [:active], always_include: notification.user).grouped_list }
 
     # using notification is not ideal since we don't have a use case for this, but demonstrates a user association
     # available in all projects
 
     let(:notification_type) { Notifications::InvalidDataWasFoundNotification.main({}) }
     let(:notification) { create :notification, user: notification_user, notification_type: notification_type }
+
+    let(:always_include) { notification.user }
+    let(:scopes) { [:active] }
 
     before do
       user
@@ -155,11 +162,8 @@ describe UserGrouper do
   end
 
   describe 'grouped_list' do
-    subject do
-      described_class.new(current_user, with_ids: true, scopes: scopes, always_include: always_include).grouped_list
-    end
-
     let(:always_include) { nil }
+    let(:with_ids) { true }
 
     before do
       user
