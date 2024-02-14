@@ -13,8 +13,8 @@ describe UserGrouper do
   let(:another_active_client) { create :client_user, client: another_client }
 
   describe 'standard' do
-    describe 'list' do
-      subject { described_class.new(current_user, always_include: always_include, scopes: scopes).list }
+    describe 'legacy_list (formerly list)' do
+      subject { described_class.new(current_user, always_include: always_include, scopes: scopes).legacy_list }
 
       let(:always_include) { nil }
       let(:scopes) { [] }
@@ -28,14 +28,14 @@ describe UserGrouper do
       end
 
       context 'with standard case' do
-        let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
+        let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
 
         it { is_expected.to eq result }
       end
 
       context 'with scope' do
         let(:scopes) { [:with_mobile_phone] }
-        let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
+        let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
 
         it { is_expected.to eq result }
       end
@@ -43,7 +43,7 @@ describe UserGrouper do
       context 'with scope without another user' do
         let(:scopes) { [:with_mobile_phone] }
         let(:another_user) { create :user, mobile_phone: nil }
-        let(:result) { [['Me', [current_user]], ['Users', [user]]] }
+        let(:result) { [['Me', [current_user]], ['Users', [user]], ['Inactive', [inactive_user]]] }
 
         it { is_expected.to eq result }
       end
@@ -51,7 +51,7 @@ describe UserGrouper do
       context 'with scope without me' do
         let(:scopes) { [:with_mobile_phone] }
         let(:current_user) { create :user, mobile_phone: nil }
-        let(:result) { [['Users', [user, another_user]]] }
+        let(:result) { [['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
 
         it { is_expected.to eq result }
       end
@@ -59,7 +59,7 @@ describe UserGrouper do
       context 'with always include' do
         context 'with active user' do
           let(:always_include) { user }
-          let(:result) { [['Me', [current_user]], ['Users', [user, another_user]]] }
+          let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
 
           it { is_expected.to eq result }
         end
@@ -75,7 +75,7 @@ describe UserGrouper do
           let(:scopes) { [:with_mobile_phone] }
           let(:always_include) { user }
           let(:user) { create :user, first_name: 'Allan', mobile_phone: nil }
-          let(:result) { [['Me', [current_user]], ['Users', [another_user]], ['Inactive', [user]]] }
+          let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
 
           it { is_expected.to eq result }
         end

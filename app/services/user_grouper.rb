@@ -13,22 +13,6 @@ class UserGrouper
     self.base_query = base_query
   end
 
-  def list
-    users = base_users.active.internal # TODO: refactor
-
-    items = users.include?(current_user) ? [me_item] : []
-    users = users.where.not(id: current_user.id)
-
-    items.push(['Users', users]) if users.any?
-    items.push(client_user_item)
-
-    if always_include.present? && (!always_include.active? || users.exclude?(always_include))
-      items.push(['Inactive', [always_include]])
-    end
-
-    items.compact
-  end
-
   def legacy_list
     self.allow_always_include = true
 
