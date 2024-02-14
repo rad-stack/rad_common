@@ -12,7 +12,7 @@ class UserGrouper
     self.base_query = base_query
   end
 
-  def legacy_list
+  def grouped_list
     [me_item, internal_user_item, client_user_item, inactive_user_item].compact
   end
 
