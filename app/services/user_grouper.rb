@@ -1,19 +1,20 @@
 class UserGrouper
-  attr_accessor :current_user, :always_include, :scopes, :with_ids, :base_query
+  attr_accessor :current_user, :always_include, :allow_always_include, :scopes, :with_ids, :base_query
 
   def initialize(current_user, always_include: nil, scopes: [], with_ids: false, base_query: User.all)
     self.current_user = current_user
     self.always_include = always_include
     self.scopes = scopes
     self.with_ids = with_ids
+    self.allow_always_include = false
 
     # TODO: try replacing the base_query feature with scopes, but will need to allow passing a block like
     # TODO: User.for_task_assignment(task)
-
     self.base_query = base_query
   end
 
   def better_way_list
+    # TODO: remove this method and incorporate the specs, it's no longer used
     inactive = always_include.present? && !always_include.active ? always_include : nil
 
     items = [me_item, internal_user_item, client_user_item]
@@ -39,7 +40,7 @@ class UserGrouper
   end
 
   def legacy_list
-    # TODO: handle always_include
+    self.allow_always_include = true
 
     [me_item, internal_user_item, client_user_item, inactive_user_item].compact
   end
@@ -101,6 +102,12 @@ class UserGrouper
     def base_users
       records = Pundit.policy_scope!(current_user, base_query)
       scopes.each { |scope| records = records.send(scope) }
+
+      # TODO: eventually remove allow_always_include
+      if always_include.present? && allow_always_include
+        records = records.or(User.where(id: always_include.id))
+      end
+
       records.sorted
     end
 
