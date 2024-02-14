@@ -157,33 +157,6 @@ describe UserGrouper do
       end
     end
 
-    describe 'legacy_list (formerly list_for_tasks)' do
-      subject { described_class.new(current_user, base_query: User.for_task_assignment(task), always_include: task.assigned_to_user, scopes: [:active]).legacy_list }
-
-      before do
-        active_client
-        another_active_client
-        task
-      end
-
-      context 'with active user' do
-        let(:assigned_to_user) { user }
-        let(:result) { [['Me', [current_user]], ['Users', [user]], ['Clients', [active_client]]] }
-
-        xit { is_expected.to eq result }
-      end
-
-      context 'with inactive user' do
-        let(:assigned_to_user) { inactive_user }
-
-        let(:result) do
-          [['Me', [current_user]], ['Users', [user]], ['Clients', [active_client]], ['Inactive', [inactive_user]]]
-        end
-
-        xit { is_expected.to eq result }
-      end
-    end
-
     describe 'legacy_list' do
       subject do
         described_class.new(current_user, with_ids: true, scopes: scopes, always_include: always_include).legacy_list
