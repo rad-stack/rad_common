@@ -16,6 +16,12 @@ describe UserGrouper do
   let(:active_client) { create :client_user, client: client }
   let(:another_active_client) { create :client_user, client: another_client }
   let(:with_ids) { false }
+  let(:always_include) { nil }
+
+  # using notification is not ideal since we don't have a use case for this, but demonstrates a user association
+  # available in all projects
+  let(:notification_type) { Notifications::InvalidDataWasFoundNotification.main({}) }
+  let(:notification) { create :notification, user: notification_user, notification_type: notification_type }
 
   before do
     allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false)
@@ -23,7 +29,6 @@ describe UserGrouper do
   end
 
   describe 'grouped_list (formerly list)' do
-    let(:always_include) { nil }
     let(:scopes) { [] }
 
     before do
@@ -131,12 +136,6 @@ describe UserGrouper do
   describe 'grouped_list (even more)' do
     # TODO: refactor more
 
-    # using notification is not ideal since we don't have a use case for this, but demonstrates a user association
-    # available in all projects
-
-    let(:notification_type) { Notifications::InvalidDataWasFoundNotification.main({}) }
-    let(:notification) { create :notification, user: notification_user, notification_type: notification_type }
-
     let(:always_include) { notification.user }
     let(:scopes) { [:active] }
 
@@ -164,7 +163,6 @@ describe UserGrouper do
   end
 
   describe 'grouped_list' do
-    let(:always_include) { nil }
     let(:with_ids) { true }
 
     before do
