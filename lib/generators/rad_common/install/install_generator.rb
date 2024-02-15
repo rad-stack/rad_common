@@ -216,6 +216,7 @@ Seeder.new.seed!
         apply_migration '20230420102508_update_twilio_log_number_format.rb'
         apply_migration '20230425215920_create_twilio_log_attachments.rb'
         apply_migration '20231205185433_pending_user_status.rb'
+        apply_migration '20240209114718_make_audits_created_at_non_nullable.rb'
         apply_migration '20240209141219_missing_fks.rb'
       end
 
