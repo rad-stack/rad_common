@@ -6,9 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:11-alpine
-        ports:
-          - "5432:5432"
+        image: postgres:latest
         env:
           POSTGRES_DB: rad_common_development
           POSTGRES_USER: postgres
