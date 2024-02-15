@@ -1,7 +1,7 @@
 class PhoneNumberFormatter
   extend ActionView::Helpers::NumberHelper
 
-  VALID_FORMATTED_REGEX = /\A\+?(\d{1,2}\s*)?(\d{1,2}-)?(?:\((\d{3})\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}\s*\z/
+  VALID_FORMATTED_REGEX = /\A\+?(\d{1,2}\s*)?[-.\s]?(\d{1,2}-)?(?:\((\d{3})\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}\s*\z/
 
   def self.format(phone_number)
     return if phone_number.blank?
