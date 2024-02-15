@@ -12,7 +12,6 @@ import 'rad_common_js/src/css/main.css.scss';
 import '@fortawesome/fontawesome-free/css/all';
 
 import { RadCommon } from 'rad_common_js/src/radCommon';
-// Testing RC Update
 RadCommon.setup();
 
 import './app_specific.js';
