@@ -33,7 +33,6 @@ jobs:
           bundler-cache: true
       - name: Set up database schema
         run: |
-          cp .github/gha-database.yml config/database.yml
           bin/rails db:schema:load
       - name: Set up Node
         uses: actions/setup-node@v4
