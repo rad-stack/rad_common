@@ -1,9 +1,5 @@
 name: "RC UPDATE"
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: workflow_dispatch
 jobs:
   test:
     environment: test
@@ -20,6 +16,9 @@ jobs:
     env:
       RAILS_ENV: development
       RAILS_MASTER_KEY: ${{ secrets.DEV_KEY }}
+      POSTGRES_DB: rad_common_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -33,6 +32,7 @@ jobs:
           bundler-cache: true
       - name: Set up database schema
         run: |
+          bin/rails db:create
           bin/rails db:schema:load
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -68,7 +68,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.GIT_TOKEN }}
+          token: ${{ secrets.RC_UPDATE_TOKEN }}
           base: main
           branch: "rad_common_update-${{ env.RAD_COMMON_VERSION }}"
           title: "Rad Common Update ${{ env.RAD_COMMON_VERSION }}"
