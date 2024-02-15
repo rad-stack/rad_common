@@ -12,7 +12,13 @@
       = f.input :logo
     = f.input :icon
 
-    = f.association :owner, as: :searchable_association, search_scope: 'user_name'
+    = f.association :owner,
+                    as: :grouped_select,
+                    collection: UserGrouper.new(current_user,
+                                                scopes: [:active],
+                                                always_include: @division.owner).grouped_list,
+                    group_method: :last
+
     = f.association :category,
                     as: :searchable_association,
                     search_scope: 'category_name',

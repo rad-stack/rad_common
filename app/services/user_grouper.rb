@@ -1,15 +1,11 @@
 class UserGrouper
-  attr_accessor :current_user, :always_include, :scopes, :with_ids, :base_query
+  attr_accessor :current_user, :always_include, :scopes, :with_ids
 
-  def initialize(current_user, always_include: nil, scopes: [], with_ids: false, base_query: User.all)
+  def initialize(current_user, always_include: nil, scopes: [], with_ids: false)
     self.current_user = current_user
     self.always_include = always_include
     self.scopes = scopes
     self.with_ids = with_ids
-
-    # TODO: try replacing the base_query feature with scopes, but will need to allow passing a block like
-    # TODO: User.for_task_assignment(task)
-    self.base_query = base_query
   end
 
   def grouped_list
@@ -59,12 +55,25 @@ class UserGrouper
     end
 
     def base_users
-      records = Pundit.policy_scope!(current_user, base_query)
-      scopes.each { |scope| records = records.send(scope) }
-
+      records = Pundit.policy_scope!(current_user, User)
+      records = apply_scopes(records) if scopes.any?
       records = records.or(User.where(id: always_include.id)) if always_include.present?
-
       records.sorted
+    end
+
+    def apply_scopes(records)
+      scopes.each do |scope|
+        if scope.is_a?(Hash)
+          scope_args = scope.values.first.is_a?(Array) ? scope.values.first : [scope.values.first]
+          records = records.public_send(scope.keys.first, *scope_args)
+        elsif scope.is_a?(Symbol)
+          records = records.public_send(scope)
+        else
+          raise "invalid scope type #{scope.class}"
+        end
+      end
+
+      records
     end
 
     def format_collection(collection)
