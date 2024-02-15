@@ -14,9 +14,9 @@ jobs:
         ports:
           - "5432:5432"
         env:
-          POSTGRES_DB: rails_development
-          POSTGRES_USER: rails
-          POSTGRES_PASSWORD: password
+          POSTGRES_DB: rad_common_development
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
     env:
       RAILS_ENV: development
       RAILS_MASTER_KEY: ${{ secrets.DEV_KEY }}
@@ -24,7 +24,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          ref: gh-actions-eric # TODO: change to main
+          ref: main
       - name: Git status
         run: git status
       - name: Install Ruby and gems
@@ -53,10 +53,8 @@ jobs:
         #    connect to the database. We then have to copy multiples times, due to the fact rad_common:install overwrites.
         run: |
           bin/rc_update --force-rad-common-install
-          cp .github/gha-database.yml config/database.yml
           bundle update rad_common --conservative
           bundle binstubs rad_common
-          cp .github/gha-database.yml config/database.yml
           bin/rails g rad_common:install --force
       - name: Git cleanup and status
         run: |
