@@ -25,5 +25,6 @@ FileUtils.chdir directory do
   system "bin/rails g rad_common:install #{force_rad_common_install}"
 
   puts '== Running Yarn Install =='
+  system 'nvm use'
   system 'yarn install'
 end
