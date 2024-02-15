@@ -13,6 +13,9 @@ spec/dummy/storage
 .env
 .env.test
 /coverage/
+# TODO: we are ignoring vendor because GHA populates this folder during rc_update.yml
+# we should probably figure out a better way to handle this in case we need to use this folder in future
+/vendor/
 
 spec/dummy/public/packs
 spec/dummy/public/packs-test
