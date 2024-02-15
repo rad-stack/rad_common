@@ -329,6 +329,8 @@ Seeder.new.seed!
 
         def install_github_workflow
           copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          copy_file '../../../../../.github/workflows/rc_update.yml', '.github/workflows/rc_update.yml'
+          copy_file '../../../../../gha-database.yml', '.github/gha-database.yml'
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
           gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
           gsub_file '.github/workflows/rspec_tests.yml',

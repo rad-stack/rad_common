@@ -1,0 +1,14 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: rails_development
+  username: rails
+  password: password
+  host: localhost
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: rails_development
+  username: rails
+  password: password
+  host: localhost

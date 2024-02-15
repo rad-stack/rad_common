@@ -1,0 +1,77 @@
+name: "RC UPDATE"
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  test:
+    environment: test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:11-alpine
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_DB: rails_development
+          POSTGRES_USER: rails
+          POSTGRES_PASSWORD: password
+    env:
+      RAILS_ENV: development
+      RAILS_MASTER_KEY: ${{ secrets.DEV_KEY }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: gh-actions-eric # TODO: change to main
+      - name: Git status
+        run: git status
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+        with:
+          bundler-cache: true
+      - name: Set up database schema
+        run: |
+          cp .github/gha-database.yml config/database.yml
+          bin/rails db:schema:load
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16.20.2'
+          cache: 'yarn'
+
+      - name: Yarn install
+        run: yarn install
+      # Add or replace test runners here
+
+      - name: RC Update
+        # TODO: somethings to cleanup
+        # 1. For some reason I have to run rc_update and then manually run bundle update rad_common --conservative and
+        #    rails g rad_common:install --force for the files to copy
+        # 2. I'm using a custom database.yml file because we need to manually set the postgres password to be able to
+        #    connect to the database. We then have to copy multiples times, due to the fact rad_common:install overwrites.
+        run: |
+          bin/rc_update --force-rad-common-install
+          cp .github/gha-database.yml config/database.yml
+          bundle update rad_common --conservative
+          bundle binstubs rad_common
+          cp .github/gha-database.yml config/database.yml
+          bin/rails g rad_common:install --force
+      - name: Git cleanup and status
+        run: |
+          git checkout config/database.yml
+          git status
+      - name: Capture rad_common version
+        run: |
+          echo "RAD_COMMON_VERSION=$(bundle show rad_common | grep -oE 'rad_common-([[:alnum:]]+)' | cut -d'-' -f2)" >> "$GITHUB_ENV"
+        # UNCOMMENT BELOW LINES TO DEBUG IN TERMINAL
+        # - name: Setup upterm session
+        # uses: lhotari/action-upterm@v1
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+          base: main
+          branch: "rad_common_update-${{ env.RAD_COMMON_VERSION }}"
+          title: "Rad Common Update ${{ env.RAD_COMMON_VERSION }}"
