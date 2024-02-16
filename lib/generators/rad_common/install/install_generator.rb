@@ -52,7 +52,7 @@ module RadCommon
 
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
-        copy_file '../../../../../spec/dummy/config/sidekiq.rb', 'config/sidekiq.rb'
+        copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
