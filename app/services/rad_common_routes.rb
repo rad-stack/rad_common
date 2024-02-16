@@ -65,6 +65,8 @@ module RadCommonRoutes
       get 'privacy', to: 'pages#privacy'
 
       root to: 'pages#home'
+
+      get '/robots.:format', to: 'robots#robots'
     end
   end
 end
