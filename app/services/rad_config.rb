@@ -366,6 +366,18 @@ class RadConfig
       Devise.mappings[:user].password_expirable?
     end
 
+    def allow_crawling?
+      boolean_config_item! :allow_crawling
+    end
+
+    def always_crawl?
+      boolean_config_item! :always_crawl
+    end
+
+    def crawlable_subdomains
+      array_config_item! :crawlable_subdomains
+    end
+
     def secret_config_item!(item)
       value = secret_config_item(item)
       raise "required secret config item #{item} is missing" if value.blank?

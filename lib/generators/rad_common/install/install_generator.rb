@@ -9,9 +9,11 @@ module RadCommon
         remove_file 'app/views/layouts/_navigation.html.haml'
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
+        remove_file 'public/robots.txt'
         remove_file '.hound.yml'
 
         remove_deprecated_config
+        add_crawling_config
         standardize_date_methods
         install_database_yml
         install_github_workflow
@@ -31,7 +33,6 @@ module RadCommon
         copy_file '../pull_request_template.md', '.github/pull_request_template.md'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
-        copy_file '../../../../../spec/dummy/public/robots.txt', 'public/robots.txt'
         copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
         copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js', 'app/javascript/packs/rad_mailer.js'
         directory '../../../../../.bundle', '.bundle'
@@ -52,6 +53,7 @@ module RadCommon
 
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
+        copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
@@ -284,6 +286,16 @@ module RadCommon
 
         def remove_deprecated_config
           gsub_file 'config/rad_common.yml', 'shared_database: false', ''
+        end
+
+        def add_crawling_config
+          remove_file Rails.root.join('public/robots.txt')
+          standard_config_end = /\n(  system_usage_models:)/
+          new_config = "  allow_crawling: false\n  always_crawl: false\n  crawling_subdomains: []\n\n"
+          config_file = 'config/rad_common.yml'
+          unless File.readlines(config_file).grep(/allow_crawling:/).any?
+            gsub_file config_file, standard_config_end, "#{new_config}\\1"
+          end
         end
 
         def update_seeder_method

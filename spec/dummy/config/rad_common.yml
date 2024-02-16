@@ -26,6 +26,9 @@ default: &default
   timeout_hours: 6
   force_marketing_site: false
   allow_marketing_site: false
+  allow_crawling: false
+  always_crawl: false
+  crawlable_domains: []
 
   system_usage_models:
     -
