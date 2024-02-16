@@ -288,7 +288,10 @@ Seeder.new.seed!
           remove_file Rails.root.join('public/robots.txt')
           standard_config_end = /\n(  system_usage_models:)/
           new_config = "  allow_crawling: false\n  always_crawl: false\n  crawling_subdomains: []\n\n"
-          gsub_file 'config/rad_common.yml', standard_config_end, "#{new_config}\\1"
+          config_file = 'config/rad_common.yml'
+          unless File.readlines(config_file).grep(/allow_crawling:/).any?
+            gsub_file config_file, standard_config_end, "#{new_config}\\1"
+          end
         end
 
         def update_seeder_method
