@@ -285,6 +285,7 @@ Seeder.new.seed!
         end
 
         def add_crawling_config
+          remove_file Rails.root.join('public/robots.txt')
           standard_config_end = /\n(  system_usage_models:)/
           new_config = "  allow_crawling: false\n  always_crawl: false\n  crawling_subdomains: []\n\n"
           gsub_file 'config/rad_common.yml', standard_config_end, "#{new_config}\\1"
