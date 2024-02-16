@@ -13,7 +13,7 @@ spec/dummy/storage
 .env
 .env.test
 /coverage/
-# TODO: we are ignoring vendor because GHA populates this folder during rc_update.yml
+# TODO: we are ignoring vendor because GHA populates this folder during rad_update_bot.yml
 # we should probably figure out a better way to handle this in case we need to use this folder in future
 /vendor/
 
