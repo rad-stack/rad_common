@@ -1,4 +1,4 @@
-name: "RC UPDATE"
+name: "RadUpdateBot"
 on: workflow_dispatch
 jobs:
   test:
