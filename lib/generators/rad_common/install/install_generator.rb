@@ -7,6 +7,7 @@ module RadCommon
 
       def create_initializer_file
         remove_file 'app/views/layouts/_navigation.html.haml'
+        remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
 
@@ -45,6 +46,9 @@ module RadCommon
         unless RadConfig.storage_config_override?
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
+
+        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+        gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
 
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
@@ -123,21 +127,6 @@ module RadCommon
 # Seeder.new.seed!
 #         RUBY
 #         end
-
-        inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
-    # added by rad_common
-    config.generators do |g|
-      g.helper false
-      g.stylesheets false
-      g.javascripts false
-      g.view_specs false
-      g.helper_specs false
-      g.routing_specs false
-      g.controller_specs false
-    end
-
-        RUBY
-        end
 
         inject_into_file 'config/routes.rb', after: 'Rails.application.routes.draw do' do <<-'RUBY'
 
@@ -334,7 +323,9 @@ module RadCommon
 
         def install_github_workflow
           copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          copy_file '../../../../../.github/workflows/rc_update.yml', '.github/workflows/rc_update.yml'
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
+          gsub_file '.github/workflows/rc_update.yml', 'rad_common_development', "#{installed_app_name}_development"
           gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
           gsub_file '.github/workflows/rspec_tests.yml',
                    "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",

@@ -4,8 +4,11 @@ class MissingFks < ActiveRecord::Migration[7.0]
       add_foreign_key :audits, :users
     end
 
-    unless foreign_key_exists?(:user_clients, :clients)
-      add_foreign_key :user_clients, :clients
+    if RadConfig.user_clients?
+      unless foreign_key_exists?(:user_clients, :clients)
+        # you may need to change the table name of :clients
+        add_foreign_key :user_clients, :clients
+      end
     end
   end
 end
