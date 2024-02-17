@@ -281,20 +281,25 @@ Seeder.new.seed!
         end
 
         def remove_deprecated_config
+          # TODO: refactor these methods to manipulate rad_common.yml
           gsub_file 'config/rad_common.yml', 'shared_database: false', ''
         end
 
         def add_crawling_config
           remove_file 'public/robots.txt'
+
+          # TODO: refactor these methods to manipulate rad_common.yml
           standard_config_end = /\n(  system_usage_models:)/
           new_config = "  allow_crawling: false\n  always_crawl: false\n  crawling_subdomains: []\n\n"
           config_file = 'config/rad_common.yml'
+
           unless File.readlines(config_file).grep(/allow_crawling:/).any?
             gsub_file config_file, standard_config_end, "#{new_config}\\1"
           end
         end
 
         def install_procfile
+          # TODO: refactor these methods to manipulate rad_common.yml
           standard_config_end = /\n(  system_usage_models:)/
           new_config = "  procfile_override: false\n\n\n"
           config_file = 'config/rad_common.yml'
