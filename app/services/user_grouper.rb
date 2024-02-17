@@ -8,7 +8,7 @@ class UserGrouper
     self.with_ids = with_ids
   end
 
-  def grouped_list
+  def call
     [me_item, internal_user_item, client_user_item, inactive_user_item].compact
   end
 

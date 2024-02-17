@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe UserGrouper do
   subject do
-    described_class.new(current_user, with_ids: with_ids, scopes: scopes, always_include: always_include).grouped_list
+    described_class.new(current_user, with_ids: with_ids, scopes: scopes, always_include: always_include).call
   end
 
   let(:current_user) { create :admin }
