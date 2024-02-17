@@ -9,11 +9,11 @@ module RadCommon
         remove_file 'app/views/layouts/_navigation.html.haml'
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
-        remove_file 'public/robots.txt'
         remove_file '.hound.yml'
 
         remove_deprecated_config
         add_crawling_config
+        install_procfile
         standardize_date_methods
         install_database_yml
         install_github_workflow
@@ -25,7 +25,6 @@ module RadCommon
         merge_package_json
         copy_custom_github_actions
         copy_custom_github_matrix
-        copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
@@ -286,13 +285,27 @@ Seeder.new.seed!
         end
 
         def add_crawling_config
-          remove_file Rails.root.join('public/robots.txt')
+          remove_file 'public/robots.txt'
           standard_config_end = /\n(  system_usage_models:)/
           new_config = "  allow_crawling: false\n  always_crawl: false\n  crawling_subdomains: []\n\n"
           config_file = 'config/rad_common.yml'
           unless File.readlines(config_file).grep(/allow_crawling:/).any?
             gsub_file config_file, standard_config_end, "#{new_config}\\1"
           end
+        end
+
+        def install_procfile
+          standard_config_end = /\n(  system_usage_models:)/
+          new_config = "  procfile_override: false\n\n\n"
+          config_file = 'config/rad_common.yml'
+
+          unless File.readlines(config_file).grep(/procfile_override:/).any?
+            gsub_file config_file, standard_config_end, "#{new_config}\\1"
+          end
+
+          return if RadConfig.procfile_override?
+
+          copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
         end
 
         def update_seeder_method
