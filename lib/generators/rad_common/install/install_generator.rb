@@ -301,6 +301,7 @@ Seeder.new.seed!
 
           unless File.readlines(config_file).grep(/procfile_override:/).any?
             gsub_file config_file, standard_config_end, "#{new_config}\\1"
+            return
           end
 
           return if RadConfig.procfile_override?
