@@ -22,7 +22,7 @@
     <% end -%>
       - if show_actions
             %td
-              - if policy(record).update?
+              - if policy(record).edit?
                 = link_to icon(:pencil, 'Edit'),
                           edit_<%= singular_table_name %>_path(record),
                           class: 'btn btn-sm btn-secondary btn-block'
