@@ -5,7 +5,7 @@ module RadController
   included do
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     before_action :set_sentry_user_context
-    around_action :user_time_zone, if: :current_user
+    around_action :user_time_zone
     around_action :switch_locale, if: :switch_languages?
     after_action :verify_authorized, unless: :devise_controller?
     after_action :verify_policy_scoped, only: :index
@@ -51,8 +51,9 @@ module RadController
       "#{true_user} impersonating #{current_user}"
     end
 
-    def user_time_zone(&block)
-      Time.use_zone(current_user.timezone, &block)
+    def user_time_zone(&)
+      timezone = current_user.present? ? current_user.timezone : Company.main.timezone
+      Time.use_zone(timezone, &)
     end
 
     def search_params

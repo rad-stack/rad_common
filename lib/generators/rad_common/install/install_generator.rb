@@ -7,10 +7,13 @@ module RadCommon
 
       def create_initializer_file
         remove_file 'app/views/layouts/_navigation.html.haml'
+        remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
 
         remove_deprecated_config
+        add_crawling_config
+        install_procfile
         standardize_date_methods
         install_database_yml
         install_github_workflow
@@ -22,7 +25,6 @@ module RadCommon
         merge_package_json
         copy_custom_github_actions
         copy_custom_github_matrix
-        copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
@@ -30,7 +32,6 @@ module RadCommon
         copy_file '../pull_request_template.md', '.github/pull_request_template.md'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
-        copy_file '../../../../../spec/dummy/public/robots.txt', 'public/robots.txt'
         copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
         copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js', 'app/javascript/packs/rad_mailer.js'
         directory '../../../../../.bundle', '.bundle'
@@ -45,6 +46,9 @@ module RadCommon
         unless RadConfig.storage_config_override?
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
+
+        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+        gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
 
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
@@ -120,21 +124,6 @@ module RadCommon
 require 'factory_bot_rails'
 
 Seeder.new.seed!
-        RUBY
-        end
-
-        inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
-    # added by rad_common
-    config.generators do |g|
-      g.helper false
-      g.stylesheets false
-      g.javascripts false
-      g.view_specs false
-      g.helper_specs false
-      g.routing_specs false
-      g.controller_specs false
-    end
-
         RUBY
         end
 
@@ -291,7 +280,38 @@ Seeder.new.seed!
         end
 
         def remove_deprecated_config
+          # TODO: refactor these methods to manipulate rad_common.yml
           gsub_file 'config/rad_common.yml', 'shared_database: false', ''
+        end
+
+        def add_crawling_config
+          remove_file 'public/robots.txt'
+
+          # TODO: refactor these methods to manipulate rad_common.yml
+          standard_config_end = /\n(  system_usage_models:)/
+          new_config = "  allow_crawling: false\n  always_crawl: false\n  crawling_subdomains: []\n\n"
+          config_file = 'config/rad_common.yml'
+
+          unless File.readlines(config_file).grep(/allow_crawling:/).any?
+            gsub_file config_file, standard_config_end, "#{new_config}\\1"
+          end
+        end
+
+        def install_procfile
+          # TODO: refactor these methods to manipulate rad_common.yml
+          standard_config_end = /\n(  system_usage_models:)/
+          new_config = "  procfile_override: false\n\n\n"
+          config_file = 'config/rad_common.yml'
+
+          unless File.readlines(config_file).grep(/procfile_override:/).any?
+            gsub_file config_file, standard_config_end, "#{new_config}\\1"
+            return
+          end
+
+          return if RadConfig.procfile_override?
+
+          copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
+          copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
         end
 
         def update_seeder_method
@@ -329,7 +349,10 @@ Seeder.new.seed!
 
         def install_github_workflow
           copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
+          remove_file '.github/workflows/rc_update.yml'
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
+          gsub_file '.github/workflows/rad_update_bot.yml', 'rad_common_development', "#{installed_app_name}_development"
           gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
           gsub_file '.github/workflows/rspec_tests.yml',
                    "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",

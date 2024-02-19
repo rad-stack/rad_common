@@ -208,6 +208,10 @@ class RadConfig
       boolean_config_item! :storage_config_override
     end
 
+    def procfile_override?
+      boolean_config_item! :procfile_override
+    end
+
     def external_users?
       boolean_config_item! :external_users
     end
@@ -360,6 +364,18 @@ class RadConfig
 
     def password_expirable?
       Devise.mappings[:user].password_expirable?
+    end
+
+    def allow_crawling?
+      boolean_config_item! :allow_crawling
+    end
+
+    def always_crawl?
+      boolean_config_item! :always_crawl
+    end
+
+    def crawlable_subdomains
+      array_config_item! :crawlable_subdomains
     end
 
     def secret_config_item!(item)
