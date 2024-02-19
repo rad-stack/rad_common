@@ -84,7 +84,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
     t.string "comment"
     t.string "remote_address"
     t.string "request_uuid"
-    t.datetime "created_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
     t.jsonb "audited_changes"
     t.index ["associated_id", "associated_type"], name: "associated_index"
     t.index ["auditable_id", "auditable_type", "version"], name: "auditable_index"

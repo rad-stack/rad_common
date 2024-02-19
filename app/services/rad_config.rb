@@ -212,6 +212,10 @@ class RadConfig
       boolean_config_item! :storage_config_override
     end
 
+    def procfile_override?
+      boolean_config_item! :procfile_override
+    end
+
     def external_users?
       boolean_config_item! :external_users
     end

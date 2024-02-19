@@ -1,6 +1,4 @@
 class ClientPolicy < ApplicationPolicy
-  alias report? index?
-
   class Scope < Scope
     def resolve
       if user.external?

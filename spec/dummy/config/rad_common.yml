@@ -29,6 +29,7 @@ default: &default
   allow_crawling: false
   always_crawl: false
   crawlable_domains: []
+  procfile_override: false
 
   system_usage_models:
     -

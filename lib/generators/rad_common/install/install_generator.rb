@@ -9,11 +9,11 @@ module RadCommon
         remove_file 'app/views/layouts/_navigation.html.haml'
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
-        remove_file 'public/robots.txt'
         remove_file '.hound.yml'
 
         remove_deprecated_config
         add_crawling_config
+        install_procfile
         standardize_date_methods
         install_database_yml
         install_github_workflow
@@ -25,7 +25,6 @@ module RadCommon
         merge_package_json
         copy_custom_github_actions
         copy_custom_github_matrix
-        copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
@@ -53,7 +52,6 @@ module RadCommon
 
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
-        copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
@@ -219,6 +217,7 @@ module RadCommon
         apply_migration '20230420102508_update_twilio_log_number_format.rb'
         apply_migration '20230425215920_create_twilio_log_attachments.rb'
         apply_migration '20231205185433_pending_user_status.rb'
+        apply_migration '20240209114718_make_audits_created_at_non_nullable.rb'
         apply_migration '20240209141219_missing_fks.rb'
       end
 
@@ -285,17 +284,38 @@ module RadCommon
         end
 
         def remove_deprecated_config
+          # TODO: refactor these methods to manipulate rad_common.yml
           gsub_file 'config/rad_common.yml', 'shared_database: false', ''
         end
 
         def add_crawling_config
-          remove_file Rails.root.join('public/robots.txt')
+          remove_file 'public/robots.txt'
+
+          # TODO: refactor these methods to manipulate rad_common.yml
           standard_config_end = /\n(  system_usage_models:)/
           new_config = "  allow_crawling: false\n  always_crawl: false\n  crawling_subdomains: []\n\n"
           config_file = 'config/rad_common.yml'
+
           unless File.readlines(config_file).grep(/allow_crawling:/).any?
             gsub_file config_file, standard_config_end, "#{new_config}\\1"
           end
+        end
+
+        def install_procfile
+          # TODO: refactor these methods to manipulate rad_common.yml
+          standard_config_end = /\n(  system_usage_models:)/
+          new_config = "  procfile_override: false\n\n\n"
+          config_file = 'config/rad_common.yml'
+
+          unless File.readlines(config_file).grep(/procfile_override:/).any?
+            gsub_file config_file, standard_config_end, "#{new_config}\\1"
+            return
+          end
+
+          return if RadConfig.procfile_override?
+
+          copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
+          copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
         end
 
         def update_seeder_method
