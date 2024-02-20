@@ -55,6 +55,7 @@ jobs:
           bundle update rad_common --conservative
           bundle binstubs rad_common
           bin/rails g rad_common:install --force
+          bin/rails db:migrate
       - name: Git cleanup and status
         run: |
           git checkout config/database.yml

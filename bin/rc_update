@@ -27,7 +27,4 @@ FileUtils.chdir directory do
   puts '== Running Yarn Install =='
   system 'nvm use'
   system 'yarn install'
-
-  puts '== Running DB Migrate =='
-  system 'bundle exec rails db:migrate'
 end
