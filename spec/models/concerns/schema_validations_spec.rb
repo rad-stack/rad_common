@@ -27,7 +27,8 @@ describe 'SchemaValidations', type: :module do
     context 'with association' do
       before { division.update(owner: nil) }
 
-      it { is_expected.to include "Owner can't be blank" }
+      it { is_expected.to include 'Owner must exist' }
+      it { is_expected.not_to include "Owner can't be blank" }
     end
   end
 
