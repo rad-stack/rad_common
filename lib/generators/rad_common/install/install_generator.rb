@@ -11,7 +11,6 @@ module RadCommon
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
 
-        remove_deprecated_config
         add_crawling_config
         install_procfile
         standardize_date_methods
@@ -93,7 +92,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/lib/templates/active_record/model/model.rb',
                   'lib/templates/active_record/model/model.rb'
 
-        # haml` templates
+        # haml templates
         copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/_form.html.haml',
                   'lib/templates/haml/scaffold/_form.html.haml'
 
@@ -280,18 +279,12 @@ Seeder.new.seed!
           system "find . -type f -name \"*.js\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
         end
 
-        def remove_deprecated_config
-          # TODO: refactor these methods to manipulate rad_common.yml
-          gsub_file 'config/rad_common.yml', 'shared_database: false', ''
-        end
-
         def add_crawling_config
           remove_file 'public/robots.txt'
 
-          # TODO: refactor these methods to manipulate rad_common.yml
-          standard_config_end = /\n(  system_usage_models:)/
-          new_config = "  allow_crawling: false\n  always_crawl: false\n  crawling_subdomains: []\n\n"
-          config_file = 'config/rad_common.yml'
+          add_rad_config_setting 'crawling_subdomains', '[]'
+          add_rad_config_setting 'always_crawl', 'false'
+          add_rad_config_setting 'allow_crawling', 'false'
 
           unless File.readlines(config_file).grep(/allow_crawling:/).any?
             gsub_file config_file, standard_config_end, "#{new_config}\\1"
@@ -299,20 +292,21 @@ Seeder.new.seed!
         end
 
         def install_procfile
-          # TODO: refactor these methods to manipulate rad_common.yml
-          standard_config_end = /\n(  system_usage_models:)/
-          new_config = "  procfile_override: false\n\n\n"
-          config_file = 'config/rad_common.yml'
-
-          unless File.readlines(config_file).grep(/procfile_override:/).any?
-            gsub_file config_file, standard_config_end, "#{new_config}\\1"
-            return
-          end
-
+          add_rad_config_setting 'procfile_override', 'false'
           return if RadConfig.procfile_override?
 
           copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
           copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
+        end
+
+        def add_rad_config_setting(setting_name, default_value)
+          standard_config_end = /\n(  system_usage_models:)/
+          new_config = "  #{setting_name}: #{default_value}\n\n\n"
+          config_file = 'config/rad_common.yml'
+
+          unless File.readlines(config_file).grep(/#{setting_name}:/).any?
+            gsub_file config_file, standard_config_end, "#{new_config}\\1"
+          end
         end
 
         def update_seeder_method
@@ -342,6 +336,9 @@ Seeder.new.seed!
         end
 
         def install_database_yml
+          add_rad_config_setting 'database_config_override', 'false'
+          return if RadConfig.database_config_override?
+
           copy_file '../../../../../spec/dummy/config/database.yml', 'config/temp_database.yml'
           gsub_file 'config/temp_database.yml', 'rad_common_', "#{installed_app_name}_"
           copy_file Rails.root.join('config/temp_database.yml'), 'config/database.yml'
