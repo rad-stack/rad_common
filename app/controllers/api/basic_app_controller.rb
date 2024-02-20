@@ -11,7 +11,7 @@ module Api
       end
 
       def token
-        request.headers['HTTP_AUTHORIZATION']
+        request.headers['HTTP_AUTHORIZATION']&.gsub('Bearer ', '')
       end
 
       def valid_token?
