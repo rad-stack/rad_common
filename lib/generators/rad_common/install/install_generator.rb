@@ -289,7 +289,7 @@ Seeder.new.seed!
 
         def install_procfile
           add_rad_config_setting 'procfile_override', 'false'
-          return if RadConfig.procfile_override?
+          return if rad_config_setting_exits?('procfile_override') && RadConfig.procfile_override?
 
           copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
           copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
@@ -298,11 +298,14 @@ Seeder.new.seed!
         def add_rad_config_setting(setting_name, default_value)
           standard_config_end = /\n(  system_usage_models:)/
           new_config = "  #{setting_name}: #{default_value}\n\n\n"
-          config_file = 'config/rad_common.yml'
 
-          unless File.readlines(config_file).grep(/#{setting_name}:/).any?
-            gsub_file config_file, standard_config_end, "#{new_config}\\1"
+          unless rad_config_setting_exists?(setting_name)
+            gsub_file RAD_CONFIG_FILE, standard_config_end, "#{new_config}\\1"
           end
+        end
+
+        def rad_config_setting_exists?(setting_name)
+          File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
         end
 
         def update_seeder_method
@@ -333,7 +336,7 @@ Seeder.new.seed!
 
         def install_database_yml
           add_rad_config_setting 'database_config_override', 'false'
-          return if RadConfig.database_config_override?
+          return if rad_config_setting_exits?('database_config_override') && RadConfig.database_config_override?
 
           copy_file '../../../../../spec/dummy/config/database.yml', 'config/temp_database.yml'
           gsub_file 'config/temp_database.yml', 'rad_common_', "#{installed_app_name}_"
@@ -356,6 +359,8 @@ Seeder.new.seed!
         def installed_app_name
           ::Rails.application.class.module_parent.to_s.underscore
         end
+
+        RAD_CONFIG_FILE = 'config/rad_common.yml'.freeze
     end
   end
 end
