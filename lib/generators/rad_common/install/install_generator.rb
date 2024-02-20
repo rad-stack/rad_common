@@ -285,10 +285,6 @@ Seeder.new.seed!
           add_rad_config_setting 'crawling_subdomains', '[]'
           add_rad_config_setting 'always_crawl', 'false'
           add_rad_config_setting 'allow_crawling', 'false'
-
-          unless File.readlines(config_file).grep(/allow_crawling:/).any?
-            gsub_file config_file, standard_config_end, "#{new_config}\\1"
-          end
         end
 
         def install_procfile
