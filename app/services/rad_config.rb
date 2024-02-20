@@ -208,6 +208,10 @@ class RadConfig
       boolean_config_item! :storage_config_override
     end
 
+    def database_config_override?
+      boolean_config_item! :database_config_override
+    end
+
     def procfile_override?
       boolean_config_item! :procfile_override
     end
