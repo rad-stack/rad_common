@@ -288,8 +288,9 @@ Seeder.new.seed!
         end
 
         def install_procfile
+          setting_exists = rad_config_setting_exists?('procfile_override')
           add_rad_config_setting 'procfile_override', 'false'
-          return if rad_config_setting_exists?('procfile_override') && RadConfig.procfile_override?
+          return if setting_exists && RadConfig.procfile_override?
 
           copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
           copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
@@ -335,8 +336,9 @@ Seeder.new.seed!
         end
 
         def install_database_yml
+          setting_exists = rad_config_setting_exists?('database_config_override')
           add_rad_config_setting 'database_config_override', 'false'
-          return if rad_config_setting_exists?('database_config_override') && RadConfig.database_config_override?
+          return if setting_exists && RadConfig.database_config_override?
 
           copy_file '../../../../../spec/dummy/config/database.yml', 'config/temp_database.yml'
           gsub_file 'config/temp_database.yml', 'rad_common_', "#{installed_app_name}_"
