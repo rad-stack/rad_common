@@ -17,6 +17,7 @@ module RadCommon
         install_database_yml
         install_github_workflow
         update_seeder_method
+        replace_webdrivers_gem_with_selenium
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
@@ -302,6 +303,11 @@ Seeder.new.seed!
 
           copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
           copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
+        end
+
+        def replace_webdrivers_gem_with_selenium
+          gsub_file 'Gemfile', /\n\s*gem 'webdrivers'.*\n/, "\n"
+          gsub_file 'Gemfile', /\n\s*gem 'simplecov', require: false\n/, "\n  gem 'selenium-webdriver'\n  gem 'simplecov', require: false\n"
         end
 
         def add_rad_config_setting(setting_name, default_value)
