@@ -118,7 +118,7 @@ RSpec.describe 'Search' do
           bootstrap_select category.name, from: 'search_category_id', search: category.name
           first('button', text: 'Apply Filters').click
           expect(page).to have_content(division.name)
-          expect(page).to have_no_content(other_division.name)
+          expect(page).not_to have_content(other_division.name)
 
           first('#search_category_id_not').check
           first('button', text: 'Apply Filters').click
