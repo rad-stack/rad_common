@@ -1,4 +1,4 @@
-class ActiveRecordDoctorIssues < ActiveRecord::Migration[6.1]
+class ActiveRecordDoctorIssues < ActiveRecord::Migration[7.0]
   def change
     change_column :notification_settings, :notification_type_id, :bigint, null: false
     change_column :notifications, :notification_type_id, :bigint, null: false
