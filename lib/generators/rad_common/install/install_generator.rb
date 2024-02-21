@@ -307,6 +307,8 @@ Seeder.new.seed!
 
         def replace_webdrivers_gem_with_selenium
           gsub_file 'Gemfile', /\n\s*gem 'webdrivers'.*\n/, "\n"
+          return if File.readlines('Gemfile').grep(/gem 'selenium-webdriver'/).any?
+
           gsub_file 'Gemfile', /\n\s*gem 'simplecov', require: false\n/, "\n  gem 'selenium-webdriver'\n  gem 'simplecov', require: false\n"
         end
 
