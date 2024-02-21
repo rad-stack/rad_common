@@ -2,13 +2,13 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
     body:
       encoding: UTF-8
-      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&To=%2B15005550004
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.66.1 (ruby/x86_64-darwin20 2.7.5-p203)
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -16,7 +16,7 @@ http_interactions:
       Accept:
       - application/json
       Authorization:
-      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -25,54 +25,52 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Tue, 12 Apr 2022 13:53:21 GMT
+      - Sat, 06 Jan 2024 10:34:20 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
       - '143'
       Connection:
       - keep-alive
-      Twilio-Request-Id:
-      - RQ8a8585281ee9c964a86a5e1be2fb6ab6
-      Twilio-Request-Duration:
-      - '0.054'
-      Twilio-Concurrent-Requests:
-      - '1'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since
+        If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
       Access-Control-Allow-Methods:
       - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
       - ETag
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Powered-By:
-      - AT-5000
+      Twilio-Request-Id:
+      - RQ319be051e13c4619ce4aa027a88c2549
+      Twilio-Request-Duration:
+      - '0.026'
+      Twilio-Concurrent-Requests:
+      - '1'
       X-Shenanigans:
       - none
+      X-Powered-By:
+      - AT-5000
       X-Home-Region:
       - us1
       X-Api-Domain:
       - api.twilio.com
-      Strict-Transport-Security:
-      - max-age=31536000
     body:
       encoding: UTF-8
       string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
         "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Tue, 12 Apr 2022 13:53:21 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:20 GMT
 - request:
     method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
     body:
       encoding: UTF-8
-      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&To=%2B15005550004
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.66.1 (ruby/x86_64-darwin20 2.7.5-p203)
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -80,7 +78,7 @@ http_interactions:
       Accept:
       - application/json
       Authorization:
-      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -89,54 +87,52 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Tue, 12 Apr 2022 13:53:37 GMT
+      - Sat, 06 Jan 2024 10:34:21 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
       - '143'
       Connection:
       - keep-alive
-      Twilio-Request-Id:
-      - RQ7a14f2f4dea1f2ee9ba0cbc80478d7e8
-      Twilio-Request-Duration:
-      - '0.050'
-      Twilio-Concurrent-Requests:
-      - '1'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since
+        If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
       Access-Control-Allow-Methods:
       - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
       - ETag
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Powered-By:
-      - AT-5000
+      Twilio-Request-Id:
+      - RQc79c013d88d5f693dcc5c68e1c843a5e
+      Twilio-Request-Duration:
+      - '0.047'
+      Twilio-Concurrent-Requests:
+      - '1'
       X-Shenanigans:
       - none
+      X-Powered-By:
+      - AT-5000
       X-Home-Region:
       - us1
       X-Api-Domain:
       - api.twilio.com
-      Strict-Transport-Security:
-      - max-age=31536000
     body:
       encoding: UTF-8
       string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
         "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Tue, 12 Apr 2022 13:53:37 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:21 GMT
 - request:
     method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
     body:
       encoding: UTF-8
-      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&To=%2B15005550004
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.66.1 (ruby/x86_64-darwin20 2.7.5-p203)
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -144,7 +140,7 @@ http_interactions:
       Accept:
       - application/json
       Authorization:
-      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -153,54 +149,52 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Tue, 12 Apr 2022 13:53:46 GMT
+      - Sat, 06 Jan 2024 10:34:21 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
       - '143'
       Connection:
       - keep-alive
-      Twilio-Request-Id:
-      - RQ2326babd48986467da45c9b66d7d31f5
-      Twilio-Request-Duration:
-      - '0.055'
-      Twilio-Concurrent-Requests:
-      - '1'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since
+        If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
       Access-Control-Allow-Methods:
       - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
       - ETag
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Powered-By:
-      - AT-5000
+      Twilio-Request-Id:
+      - RQfbb8c6bc7a881f692fa61d25456cafca
+      Twilio-Request-Duration:
+      - '0.039'
+      Twilio-Concurrent-Requests:
+      - '1'
       X-Shenanigans:
       - none
+      X-Powered-By:
+      - AT-5000
       X-Home-Region:
       - us1
       X-Api-Domain:
       - api.twilio.com
-      Strict-Transport-Security:
-      - max-age=31536000
     body:
       encoding: UTF-8
       string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
         "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Tue, 12 Apr 2022 13:53:46 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:21 GMT
 - request:
     method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
     body:
       encoding: UTF-8
-      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&To=%2B15005550004
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.66.1 (ruby/x86_64-darwin20 2.7.5-p203)
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -208,7 +202,7 @@ http_interactions:
       Accept:
       - application/json
       Authorization:
-      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -217,54 +211,52 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Tue, 12 Apr 2022 13:53:50 GMT
+      - Sat, 06 Jan 2024 10:34:21 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
       - '143'
       Connection:
       - keep-alive
-      Twilio-Request-Id:
-      - RQ6105f56cbd9b6e2165ffbcf118f38826
-      Twilio-Request-Duration:
-      - '0.053'
-      Twilio-Concurrent-Requests:
-      - '1'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since
+        If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
       Access-Control-Allow-Methods:
       - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
       - ETag
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Powered-By:
-      - AT-5000
+      Twilio-Request-Id:
+      - RQ804791f185a8129e72e305798f3ce2d5
+      Twilio-Request-Duration:
+      - '0.025'
+      Twilio-Concurrent-Requests:
+      - '1'
       X-Shenanigans:
       - none
+      X-Powered-By:
+      - AT-5000
       X-Home-Region:
       - us1
       X-Api-Domain:
       - api.twilio.com
-      Strict-Transport-Security:
-      - max-age=31536000
     body:
       encoding: UTF-8
       string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
         "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Tue, 12 Apr 2022 13:53:50 GMT
+  recorded_at: Sat, 06 Jan 2024 10:34:21 GMT
 - request:
     method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
     body:
       encoding: UTF-8
-      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&To=%2B15005550004
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.66.1 (ruby/x86_64-darwin20 2.7.5-p203)
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -272,7 +264,7 @@ http_interactions:
       Accept:
       - application/json
       Authorization:
-      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -281,43 +273,41 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Tue, 12 Apr 2022 13:53:52 GMT
+      - Sat, 06 Jan 2024 10:34:21 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
       - '143'
       Connection:
       - keep-alive
-      Twilio-Request-Id:
-      - RQccc27cf7929afb4820b19b88d660cd23
-      Twilio-Request-Duration:
-      - '0.064'
-      Twilio-Concurrent-Requests:
-      - '1'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since
+        If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
       Access-Control-Allow-Methods:
       - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
       - ETag
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Powered-By:
-      - AT-5000
+      Twilio-Request-Id:
+      - RQ60d9caa8598f6f1b581522120da20933
+      Twilio-Request-Duration:
+      - '0.037'
+      Twilio-Concurrent-Requests:
+      - '1'
       X-Shenanigans:
       - none
+      X-Powered-By:
+      - AT-5000
       X-Home-Region:
       - us1
       X-Api-Domain:
       - api.twilio.com
-      Strict-Transport-Security:
-      - max-age=31536000
     body:
       encoding: UTF-8
       string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
         "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Tue, 12 Apr 2022 13:53:52 GMT
-recorded_with: VCR 6.1.0
+  recorded_at: Sat, 06 Jan 2024 10:34:21 GMT
+recorded_with: VCR 6.2.0

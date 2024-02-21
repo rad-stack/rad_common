@@ -1,12 +1,22 @@
 require 'rails_helper'
 
-RSpec.describe RadPermission, type: :model do
+RSpec.describe RadPermission do
+  let(:user) { create :admin }
+
   describe 'label' do
     subject { described_class.new(permission).label }
 
     let(:permission) { 'read_division' }
 
     it { is_expected.to eq 'Read Division' }
+  end
+
+  describe 'user_categories' do
+    subject { described_class.user_categories(user).map(&:first) }
+
+    let(:result) { %w[Admin Division User] }
+
+    it { is_expected.to eq result }
   end
 
   describe 'short_label' do

@@ -3,7 +3,6 @@ require 'rails_helper'
 describe RadCommon::ApplicationHelper do
   let(:me) { create :user }
   let(:date) { Time.current }
-  let(:division) { create :division }
   let(:timestamp) { '2018-06-15 06:43 AM' }
 
   describe '#show_actions?' do
@@ -48,45 +47,10 @@ describe RadCommon::ApplicationHelper do
     end
   end
 
-  describe 'enum_to_translated_option' do
-    let(:error_message) { "enum division_status_xxx on Division doesn't exist" }
-
-    it 'translates the value' do
-      expect(enum_to_translated_option(division, :division_status)).to eq 'Active'
-    end
-
-    it 'handles nil' do
-      division.division_status = nil
-      expect(enum_to_translated_option(division, :division_status)).to be_nil
-    end
-
-    it 'handles blank' do
-      division.division_status = ''
-      expect(enum_to_translated_option(division, :division_status)).to be_nil
-    end
-
-    it 'raises error when missing enum' do
-      expect { enum_to_translated_option(division, :division_status_xxx) }.to raise_error(error_message)
-    end
-  end
-
-  describe 'options_for_enum' do
-    subject { options_for_enum(Division, :division_status) }
-
-    let(:options) { [%w[Pending status_pending], %w[Active status_active], %w[Inactive status_inactive]] }
-    let(:error_message) { "enum division_status_xxx on Division doesn't exist" }
-
-    it { is_expected.to eq options }
-
-    it 'raises error when missing enum' do
-      expect { options_for_enum(Division, :division_status_xxx) }.to raise_error(error_message)
-    end
-  end
-
   describe '#gravatar_for' do
     context 'with string size' do
       let(:size) { '60' }
-      let(:resource) { build(:user) }
+      let(:resource) { build :user }
 
       it 'returns a url with the correct size' do
         expect(avatar_image(resource, size)).to include('gravatar')
@@ -96,7 +60,7 @@ describe RadCommon::ApplicationHelper do
 
     context 'with integer size' do
       let(:size) { 100 }
-      let(:resource) { build(:user) }
+      let(:resource) { build :user }
 
       it 'returns a url with the correct size' do
         expect(avatar_image(resource, size)).to include('gravatar')
@@ -105,7 +69,7 @@ describe RadCommon::ApplicationHelper do
     end
 
     context 'with symbol size' do
-      let(:resource) { build(:user) }
+      let(:resource) { build :user }
 
       it 'returns a url with a non string size' do
         expect(avatar_image(resource, :small)).to include('25')
@@ -120,7 +84,7 @@ describe RadCommon::ApplicationHelper do
     let(:filename) { 'avatar.png' }
 
     context 'when user does not have avatar' do
-      let(:resource) { build(:user, avatar: nil) }
+      let(:resource) { build :user, avatar: nil }
 
       it 'returns an image tag with the user gravatar' do
         expect(avatar_image(resource, size)).to include('gravatar')
@@ -132,7 +96,7 @@ describe RadCommon::ApplicationHelper do
     before { allow(controller).to receive(:current_user).and_return(me) }
 
     context 'with resource' do
-      let(:resource) { build(:user) }
+      let(:resource) { build :user }
 
       context 'when user is authorized' do
         before { allow_any_instance_of(UserPolicy).to receive(:show?).and_return(true) }
@@ -190,20 +154,49 @@ describe RadCommon::ApplicationHelper do
 
     context 'with no options' do
       it 'formats the date' do
-        expect(helper.format_datetime(date)).to eq(date.strftime('%-m/%-d/%Y %l:%M %p'))
+        expect(helper.format_datetime(date)).to eq(date.strftime('%-m/%-d/%Y %-l:%M %p'))
       end
     end
 
     context 'with seconds option' do
       it 'formats the date' do
-        expect(helper.format_datetime(date, include_seconds: true)).to eq(date.strftime('%-m/%-d/%Y %l:%M:%S %p'))
+        expect(helper.format_datetime(date, include_seconds: true)).to eq(date.strftime('%-m/%-d/%Y %-l:%M:%S %p'))
       end
     end
 
     context 'with zone option' do
       it 'formats the date' do
-        result = date.in_time_zone.strftime('%-m/%-d/%Y %l:%M %p %Z')
+        result = date.in_time_zone.strftime('%-m/%-d/%Y %-l:%M %p %Z')
         expect(helper.format_datetime(date, include_zone: true)).to eq(result)
+      end
+    end
+
+    it 'has the proper spacing' do
+      date = DateTime.parse('2023-05-29 9:38AM')
+      expect(helper.format_datetime(date)).to eq('5/29/2023 9:38 AM')
+    end
+  end
+
+  describe 'table_row_style' do
+    subject { helper.table_row_style record }
+
+    let(:record) { create :attorney, active: active }
+
+    context 'with active record' do
+      let(:active) { true }
+
+      it { is_expected.to be_nil }
+    end
+
+    context 'with inactive record' do
+      let(:active) { false }
+
+      it { is_expected.to eq 'table-danger' }
+
+      context 'with style class' do
+        it 'returns the class' do
+          expect(helper.table_row_style(record, style_class: 'text-danger')).to eq 'text-danger'
+        end
       end
     end
   end

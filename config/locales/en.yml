@@ -1,5 +1,7 @@
 en:
   communication_sms_opt_in: 'Your communication preferences have been changed, we will start sending you text message notifications.'
+  navigation:
+    my_account: My Account
   activerecord:
     attributes:
       company:
@@ -12,6 +14,7 @@ en:
           sms: 'SMS'
       user:
         external: 'External User?'
+        twilio_verify_enabled: 'Two Factor Auth'
       security_role:
         external: 'External User?'
   faker:

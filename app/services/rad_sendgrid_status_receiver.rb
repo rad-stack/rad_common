@@ -1,11 +1,16 @@
 class RadSendgridStatusReceiver
+  SPAM_REPORT = 'spamreport'.freeze
+  SUPPRESSION_EVENTS = %w[dropped bounce spamreport].freeze
+
   def initialize(content)
     @content = content
     check_events
   end
 
   def process!
-    Notifications::SendgridEmailStatusNotification.main.notify! @content
+    return unless host_matches?
+
+    process_status!
   end
 
   def email
@@ -25,8 +30,7 @@ class RadSendgridStatusReceiver
   end
 
   def record_id
-    # legacy support for post_id, remove this eventually, see Task 41177
-    @content[:record_id].presence || @content[:post_id]
+    @content[:record_id]
   end
 
   def host_name
@@ -34,7 +38,7 @@ class RadSendgridStatusReceiver
   end
 
   def suppression?
-    suppression_events.include?(event)
+    SUPPRESSION_EVENTS.include?(event)
   end
 
   def timestamp
@@ -51,15 +55,36 @@ class RadSendgridStatusReceiver
 
   private
 
+    def process_status!
+      if suppression? && user.present? && (spam_report? || user.stale?)
+        user.update! user_status: UserStatus.default_inactive_status
+        Rails.logger.info "sendgrid status: suppression received from stale user #{user.email}, deactivating"
+      else
+        Notifications::SendgridEmailStatusNotification.main(@content).notify!
+      end
+    end
+
     def check_events
       raise "unknown event type #{event}" unless all_events.include?(event)
     end
 
-    def all_events
-      suppression_events + %w[open click]
+    def host_matches?
+      if host_name.blank?
+        Rails.logger.info "sendgrid status for #{email}: missing host name, ignoring"
+        false
+      elsif host_name == RadConfig.host_name!
+        true
+      else
+        Rails.logger.info "sendgrid status for #{email}: host name doesn't match, ignoring - #{host_name}"
+        false
+      end
     end
 
-    def suppression_events
-      ['dropped', 'bounce', 'spam report']
+    def spam_report?
+      event == SPAM_REPORT
+    end
+
+    def all_events
+      SUPPRESSION_EVENTS + %w[open click]
     end
 end

@@ -48,11 +48,11 @@ RSpec.describe Contactable do
     end
   end
 
-  describe 'standardize_address', smarty_specs: true, vcr: true do
+  describe 'standardize_address', :smarty_specs, :vcr do
     subject(:company) { Company.main }
 
     before do
-      allow(RadicalConfig).to receive(:canadian_addresses?).and_return true
+      allow(RadConfig).to receive(:canadian_addresses?).and_return true
 
       company.update bypass_address_validation: false,
                      address_1: address_1,
@@ -108,15 +108,15 @@ RSpec.describe Contactable do
     end
 
     context 'with enhanced matching' do
-      let(:address_1) { '6450 Autumn Berry Cirlce' }
+      let(:address_1) { '2 Buttonwood Lane' }
       let(:address_2) { nil }
-      let(:city) { 'Jacksonville' }
+      let(:city) { 'Palm Coast' }
       let(:state) { 'FL' }
-      let(:zipcode) { '32258' }
+      let(:zipcode) { '32137' }
 
       it 'standardizes' do
         expect(company.valid?).to be true
-        expect(company.address_1).to eq('6450 Autumn Berry Cir')
+        expect(company.address_1).to eq('2 Buttonwood Ln')
         expect(company.address_problems).to eq 'non-postal match using enhanced address matching'
       end
     end

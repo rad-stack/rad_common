@@ -2,12 +2,12 @@ module RadCommonRoutes
   def self.extended(router)
     router.instance_exec do
       devise_controllers = { confirmations: 'users/confirmations',
-                             devise_authy: 'users/devise_authy',
+                             devise_twilio_verify: 'users/devise_twilio_verify',
                              invitations: 'users/invitations' }
 
-      devise_paths = { verify_authy: '/verify-token',
-                       enable_authy: '/enable-two-factor',
-                       verify_authy_installation: '/verify-installation' }
+      devise_paths = { verify_twilio_verify: '/verify-token',
+                       enable_twilio_verify: '/enable-two-factor',
+                       verify_twilio_verify_installation: '/verify-installation' }
 
       devise_for :users, path: 'auth', controllers: devise_controllers, path_names: devise_paths
 
@@ -18,7 +18,6 @@ module RadCommonRoutes
           member do
             put :resend_invitation
             put :confirm
-            put :reset_authy
             put :reactivate
             put :test_email
             put :test_sms
@@ -29,6 +28,17 @@ module RadCommonRoutes
 
         resources :security_roles do
           get :permission, on: :collection
+        end
+
+        resources :duplicates, only: :index do
+          collection do
+            get :not
+            put :do_later
+            put :reset
+            put :switch
+            patch :merge
+            post :check_duplicate
+          end
         end
 
         resources :saved_search_filters, only: :destroy
@@ -45,8 +55,9 @@ module RadCommonRoutes
         mount Sidekiq::Web => '/sidekiq'
       end
 
-      resources :user_profiles, only: %i[show edit update] if RadicalConfig.user_profiles?
+      resources :user_profiles, only: %i[show edit update] if RadConfig.user_profiles?
       resources :twilio_statuses, only: :create
+      resources :twilio_replies, only: :create
       resources :sendgrid_statuses, only: :create
 
       get 'contact_us', to: 'pages#contact_us'
@@ -54,6 +65,8 @@ module RadCommonRoutes
       get 'privacy', to: 'pages#privacy'
 
       root to: 'pages#home'
+
+      get '/robots.:format', to: 'robots#robots'
     end
   end
 end

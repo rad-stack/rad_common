@@ -5,6 +5,12 @@ namespace :rad_common do
     Timeout.timeout(session.time_limit) do
       session.reset_status
 
+      Duplicate.where.not(sort: 500).update_all sort: 500 if Date.current.wday == 1
+
+      RadCommon::AppInfo.new.duplicate_models.each do |model_name|
+        model_name.constantize.notify_high_duplicates
+      end
+
       RadCommon::TwilioErrorThresholdChecker.new.check_threshold
 
       global_validity = GlobalValidation.new
@@ -12,16 +18,6 @@ namespace :rad_common do
       global_validity.run
 
       session.finished
-    end
-  end
-
-  task redo_authy: :environment do
-    Timeout.timeout(1.hour) do
-      User.where(authy_enabled: true).find_each do |user|
-        user.update!(authy_enabled: false)
-        user.update!(authy_enabled: true)
-        sleep 2 # avoid DDOS throttling
-      end
     end
   end
 

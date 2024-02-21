@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://us-street.api.smartystreets.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Jacksonville&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=FL&street=6450%20Autumn%20Berry%20Cirlce&street2&urbanization&zipcode=32258
+    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Palm%20Coast&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=FL&street=2%20Buttonwood%20Lane&street2&urbanization&zipcode=32137
     body:
       encoding: US-ASCII
       string: ''
@@ -12,9 +12,9 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.14.13)
+      - smartystreets (sdk:ruby@5.17.0)
       Host:
-      - us-street.api.smartystreets.com
+      - us-street.api.smarty.com
       Content-Type:
       - application/json
   response:
@@ -25,15 +25,17 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 22 Sep 2022 09:31:31 GMT
+      - Mon, 05 Feb 2024 13:13:43 GMT
       Transfer-Encoding:
       - chunked
       Vary:
       - Accept-Encoding
     body:
       encoding: ASCII-8BIT
-      string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"6450 Autumn
-        Berry Cir","last_line":"Jacksonville FL 32258-8417","components":{"primary_number":"6450","street_name":"Autumn
-        Berry","street_suffix":"Cir","city_name":"Jacksonville","default_city_name":"Jacksonville","state_abbreviation":"FL","zipcode":"32258","plus4_code":"8417"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12031","county_name":"Duval","carrier_route":"R057","latitude":30.128640,"longitude":-81.542180,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"N","dpv_footnotes":"AAM3","active":"Y","enhanced_match":"non-postal-match"}}]'
-  recorded_at: Thu, 22 Sep 2022 09:31:31 GMT
-recorded_with: VCR 6.1.0
+      string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"2 Buttonwood
+        Ln","last_line":"Palm Coast FL 32137-9406","components":{"primary_number":"2","street_name":"Buttonwood","street_suffix":"Ln","city_name":"Palm
+        Coast","default_city_name":"Palm Coast","state_abbreviation":"FL","zipcode":"32137","plus4_code":"9406"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12035","county_name":"Flagler","carrier_route":"R070","latitude":29.5913,"longitude":-81.25356,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"N","dpv_footnotes":"AAM3","active":"Y","footnotes":"N#","enhanced_match":"non-postal-match,missing-secondary"}}]
+
+        '
+  recorded_at: Mon, 05 Feb 2024 13:13:43 GMT
+recorded_with: VCR 6.2.0

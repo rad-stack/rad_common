@@ -1,12 +1,13 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm
-                                    reset_authy test_email test_sms reactivate]
+  include Exportable
+
+  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm test_email test_sms reactivate]
   before_action :remove_blank_passwords, only: :update
 
   def index
     authorize User
 
-    if policy(User.new).update?
+    if RadConfig.pending_users? && policy(User.new).update?
       @pending = policy_scope(User).includes(:user_status, :security_roles)
                                    .pending
                                    .recent_first
@@ -17,21 +18,9 @@ class UsersController < ApplicationController
     @users = policy_scope(@user_search.results).page(params[:page])
   end
 
-  def export
-    authorize User
-
-    respond_to do |format|
-      format.csv do
-        UserExportJob.perform_later(search_params.to_h, current_user.id)
-        flash[:success] = report_generating_message
-        redirect_to users_path(search_params.to_h)
-      end
-    end
-  end
-
   def show
     @permission_categories = RadPermission.user_categories(@user)
-    return unless RadicalConfig.user_clients?
+    return unless RadConfig.user_clients?
 
     @user_clients = @user.user_clients.sorted
   end
@@ -136,12 +125,6 @@ class UsersController < ApplicationController
     redirect_to @user
   end
 
-  def reset_authy
-    @user.reset_authy!
-    flash[:success] = 'User was successfully reset.'
-    redirect_to @user
-  end
-
   def test_email
     @user.test_email!
     flash[:success] = 'A test email was sent to the user.'
@@ -180,11 +163,17 @@ class UsersController < ApplicationController
 
     def base_params
       %i[email user_status_id first_name last_name mobile_phone last_activity_at password password_confirmation external
-         timezone avatar authy_sms]
+         timezone avatar language]
     end
 
     def permitted_params
-      params.require(:user).permit(base_params + RadicalConfig.additional_user_params!)
+      params.require(:user).permit(base_params + twilio_verify_params + RadConfig.additional_user_params!)
+    end
+
+    def twilio_verify_params
+      return [:twilio_verify_enabled] if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
+
+      []
     end
 
     def duplicates_enabled?

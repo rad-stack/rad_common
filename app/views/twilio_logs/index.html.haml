@@ -8,21 +8,22 @@
       %tr
         = render 'layouts/sort_headers', search: @twilio_log_search
 
-      - @twilio_logs.each do |twilio_log|
-        %tr{ class: twilio_log.success ? '' : 'alert-danger' }
-          %td= format_datetime twilio_log.created_at
-          %td= twilio_log.from_number
-          %td= twilio_log.to_number
-          %td= secured_link twilio_log.from_user
-          %td= secured_link twilio_log.to_user
+      - @twilio_logs.each do |record|
+        %tr{ class: table_row_style(record) }
+          %td= enum_to_translated_option(record, :log_type)
+          %td= format_datetime record.created_at
+          %td= record.from_number
+          %td= record.to_number
+          %td= secured_link record.from_user
+          %td= secured_link record.to_user
           %td
-            = twilio_log.message
-            - if twilio_log.media_url.present?
-              = icon_tooltip('span', twilio_log.media_url, 'fa-image')
-          %td= format_boolean twilio_log.opt_out_message_sent
+            = record.message
+            - if record.media_url.present?
+              = icon_tooltip('span', record.media_url, 'fa-image')
+          %td= format_boolean record.opt_out_message_sent
           %td
-            = twilio_log.status
-            - if twilio_log.message_sid.present?
-              = icon_tooltip('span', twilio_log.message_sid, 'fa-circle-info')
+            = record.status
+            - if record.message_sid.present?
+              = icon_tooltip('span', record.message_sid, 'fa-circle-info')
 
     = paginate @twilio_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine

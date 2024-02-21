@@ -2,13 +2,18 @@ development:
   adapter: postgresql
   encoding: unicode
   database: rad_common_development
+  username: postgres
+  password: postgres
+  host: localhost
 
 test:
   adapter: postgresql
   encoding: unicode
-  database: rad_common_test
+  database: rad_common_test<%= ENV['TEST_ENV_NUMBER'] %>
+  username: postgres
+  password: postgres
+  host: localhost
 
 production:
-  adapter: postgresql
-  encoding: unicode
-  database: rad_common_production
+  url:  <%= ENV["DATABASE_URL"] %>
+  pool: <%= ENV["DB_POOL"] || 10 %>

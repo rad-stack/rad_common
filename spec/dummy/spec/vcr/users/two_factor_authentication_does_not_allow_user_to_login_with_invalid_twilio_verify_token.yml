@@ -1,0 +1,136 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications
+    body:
+      encoding: UTF-8
+      string: Channel=sms&To=%2B1<TEST_MOBILE_PHONE_STRIPPED>
+    headers:
+      User-Agent:
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - application/json
+      Authorization:
+      - Basic QUM4MDNjYzQ4MWZmZTExYmFiMjY4ZmNmYjhmMjQ3ZGQ1OTo1MWQ0NDA3NzYzNzdiNzQ5MWFkNzBlNDc1MzI5MWQxYQ==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Sat, 06 Jan 2024 10:35:04 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '742'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag
+      Twilio-Request-Id:
+      - RQc1e0579f29175ada3b4611ae5a60df3e
+      Twilio-Request-Duration:
+      - '0.135'
+      Twilio-Concurrent-Requests:
+      - '1'
+      X-Shenanigans:
+      - none
+      X-Powered-By:
+      - AT-5000
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - verify.twilio.com
+    body:
+      encoding: UTF-8
+      string: '{"status": "pending", "payee": null, "date_updated": "2024-01-06T10:35:04Z",
+        "send_code_attempts": [{"attempt_sid": "VL182110a797d3603261f7c68fe16c17d3",
+        "channel": "sms", "time": "2024-01-06T10:35:03.000Z"}, {"attempt_sid": "VLc96ef5550396614027b4ec60a6930871",
+        "channel": "sms", "time": "2024-01-06T10:35:03.000Z"}], "account_sid": "AC803cc481ffe11bab268fcfb8f247dd59",
+        "to": "+1<TEST_MOBILE_PHONE_STRIPPED>", "amount": null, "valid": false, "lookup":
+        {"carrier": null}, "url": "https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications/VEa56434589a9e0167dfb118c4f69b0a5f",
+        "sid": "VEa56434589a9e0167dfb118c4f69b0a5f", "date_created": "2024-01-06T10:35:03Z",
+        "service_sid": "<TWILIO_ALT_VERIFY_SERVICE_SID>", "channel": "sms"}'
+  recorded_at: Sat, 06 Jan 2024 10:35:03 GMT
+- request:
+    method: post
+    uri: https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/VerificationCheck
+    body:
+      encoding: UTF-8
+      string: Code=123456&To=%2B1<TEST_MOBILE_PHONE_STRIPPED>
+    headers:
+      User-Agent:
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - application/json
+      Authorization:
+      - Basic QUM4MDNjYzQ4MWZmZTExYmFiMjY4ZmNmYjhmMjQ3ZGQ1OTo1MWQ0NDA3NzYzNzdiNzQ5MWFkNzBlNDc1MzI5MWQxYQ==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 06 Jan 2024 10:35:04 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '339'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag
+      Twilio-Request-Id:
+      - RQ962ec0f5d789330a0e4e21f717de2737
+      Twilio-Request-Duration:
+      - '0.027'
+      Twilio-Concurrent-Requests:
+      - '1'
+      X-Shenanigans:
+      - none
+      X-Powered-By:
+      - AT-5000
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - verify.twilio.com
+    body:
+      encoding: UTF-8
+      string: '{"status": "pending", "payee": null, "date_updated": "2024-01-06T10:35:04Z",
+        "account_sid": "AC803cc481ffe11bab268fcfb8f247dd59", "to": "+1<TEST_MOBILE_PHONE_STRIPPED>",
+        "amount": null, "valid": false, "sid": "VEa56434589a9e0167dfb118c4f69b0a5f",
+        "date_created": "2024-01-06T10:35:03Z", "service_sid": "<TWILIO_ALT_VERIFY_SERVICE_SID>",
+        "channel": "sms"}'
+  recorded_at: Sat, 06 Jan 2024 10:35:04 GMT
+recorded_with: VCR 6.2.0

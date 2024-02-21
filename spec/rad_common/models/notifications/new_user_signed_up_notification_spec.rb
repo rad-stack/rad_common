@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Notifications::NewUserSignedUpNotification, type: :model do
   let(:user) { create :user }
-  let(:notification_type) { described_class.main }
+  let(:notification_type) { described_class.main(user) }
   let(:mail) { ActionMailer::Base.deliveries.last }
 
   before do
@@ -13,11 +13,11 @@ RSpec.describe Notifications::NewUserSignedUpNotification, type: :model do
   describe '#notify!' do
     before do
       ActionMailer::Base.deliveries = []
-      notification_type.notify! user
+      notification_type.notify!
     end
 
     it 'emails' do
-      expect(mail.subject).to eq "New User on #{RadicalConfig.app_name!}"
+      expect(mail.subject).to eq "New User on #{RadConfig.app_name!}"
     end
   end
 end

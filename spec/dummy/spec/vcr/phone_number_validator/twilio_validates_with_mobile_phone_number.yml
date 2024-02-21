@@ -8,7 +8,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - twilio-ruby/5.66.1 (ruby/x86_64-darwin20 2.7.5-p203)
+      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
       Accept-Charset:
       - utf-8
       Accept:
@@ -22,46 +22,52 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Date:
-      - Tue, 12 Apr 2022 13:55:19 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '347'
+      - '331'
       Connection:
       - keep-alive
-      Twilio-Concurrent-Requests:
-      - '1'
-      Twilio-Request-Id:
-      - RQ3efa423700147c2145feaf6f99372522
-      Twilio-Request-Duration:
-      - '0.035'
+      Date:
+      - Sat, 06 Jan 2024 10:35:07 GMT
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since
+        If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
       Access-Control-Allow-Methods:
       - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
       - ETag
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Powered-By:
-      - AT-5000
+      Twilio-Request-Id:
+      - RQ700f107e2830cc9ea01ec210f53cf214
+      Twilio-Request-Duration:
+      - '0.059'
+      Twilio-Concurrent-Requests:
+      - '1'
       X-Shenanigans:
       - none
+      X-Powered-By:
+      - AT-5000
       X-Home-Region:
       - us1
       X-Api-Domain:
       - lookups.twilio.com
-      Strict-Transport-Security:
-      - max-age=31536000
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 1dcffd1e5bf97ae0fbec7cbf73534c80.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - ATL58-P4
+      X-Amz-Cf-Id:
+      - O1CeDf-zgTSNI0VAZdmjOeQW5LvW4nX6PuKnh5h72wHust-_etFs2w==
     body:
       encoding: UTF-8
       string: '{"caller_name": null, "country_code": "US", "phone_number": "+1<TEST_MOBILE_PHONE_STRIPPED>",
         "national_format": "<TEST_MOBILE_PHONE>", "carrier": {"mobile_country_code":
-        "311", "mobile_network_code": "489", "name": "Verizon Wireless", "type": "mobile",
-        "error_code": null}, "add_ons": null, "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_MOBILE_PHONE_STRIPPED>?Type=carrier"}'
-  recorded_at: Tue, 12 Apr 2022 13:55:19 GMT
-recorded_with: VCR 6.1.0
+        "311", "mobile_network_code": "180", "name": "AT&T Wireless", "type": "mobile",
+        "error_code": null}, "add_ons": null, "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_MOBILE_PHONE_STRIPPED>"}'
+  recorded_at: Sat, 06 Jan 2024 10:35:07 GMT
+recorded_with: VCR 6.2.0

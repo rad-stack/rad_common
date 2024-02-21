@@ -11,16 +11,14 @@ module Api
       end
 
       def token
-        request.headers['HTTP_AUTHORIZATION']
+        request.headers['HTTP_AUTHORIZATION']&.gsub('Bearer ', '')
       end
 
       def valid_token?
         return false if token.blank?
 
-        secret = RadicalConfig.jwt_secret!
-
         begin
-          JWT.decode token, secret, true
+          RadJwt.new.decode token
           return true
         rescue JWT::DecodeError => e
           Rails.logger.warn "Error decoding the JWT: #{e}"

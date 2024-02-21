@@ -30,10 +30,7 @@ RSpec.describe 'Users', type: :request do
     let(:signed_in_user) { create :admin }
 
     describe 'POST create' do
-      before do
-        allow(RadicalConfig).to receive(:manually_create_users?).and_return true
-        allow_any_instance_of(User).to receive(:authy_enabled?).and_return false
-      end
+      before { allow(RadConfig).to receive(:manually_create_users?).and_return true }
 
       describe 'with valid params' do
         let(:valid_attributes) do
@@ -109,6 +106,14 @@ RSpec.describe 'Users', type: :request do
 
         follow_redirect!
         expect(flash[:error]).to include 'User has audit history'
+      end
+    end
+
+    describe 'export' do
+      it 'exports' do
+        get '/users/export', params: { format: :pdf }
+        expect(response).to have_http_status :redirect
+        expect(flash[:success]).to include 'Your report is generating'
       end
     end
   end

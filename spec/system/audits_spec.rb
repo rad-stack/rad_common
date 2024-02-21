@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Audits', type: :system do
+describe 'Audits' do
   let(:admin) { create :admin }
 
   before { login_as admin, scope: :user }
@@ -9,7 +9,7 @@ describe 'Audits', type: :system do
     it 'shows audits for objects without show pages' do
       open_status = create :status, name: 'Open'
 
-      Audited.audit_model.as_user(admin) do
+      Audited.audit_class.as_user(admin) do
         open_status.update!(name: 'Foo')
       end
 
