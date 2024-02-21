@@ -335,6 +335,12 @@ Seeder.new.seed!
           search_and_replace 'Date.today', 'Date.current'
           search_and_replace 'Date.tomorrow', 'Time.zone.tomorrow'
           search_and_replace 'Date.yesterday', 'Time.zone.yesterday'
+
+          search_and_replace 'before { login_as(user, scope: :user) }',
+                             'before { login_as user, scope: :user }'
+
+          search_and_replace 'before { login_as(admin, scope: :user) }',
+                             'before { login_as admin, scope: :user }'
         end
 
         def install_database_yml
