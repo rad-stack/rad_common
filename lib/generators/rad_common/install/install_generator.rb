@@ -271,12 +271,12 @@ Seeder.new.seed!
         end
 
         def search_and_replace(search, replace, js: false)
-          system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed --debug -i '' -e 's/#{search}/#{replace}/g'"
-          system "find . -type f -name \"*.haml\" -print0 | xargs -0 sed --debug -i '' -e 's/#{search}/#{replace}/g'"
-          system "find . -type f -name \"*.rake\" -print0 | xargs -0 sed --debug -i '' -e 's/#{search}/#{replace}/g'"
+          system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
+          system "find . -type f -name \"*.haml\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
+          system "find . -type f -name \"*.rake\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
           return unless js
 
-          system "find . -type f -name \"*.js\" -print0 | xargs -0 sed --debug -i '' -e 's/#{search}/#{replace}/g'"
+          system "find . -type f -name \"*.js\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
         end
 
         def add_crawling_config
@@ -327,12 +327,6 @@ Seeder.new.seed!
           search_and_replace 'Date.today', 'Date.current'
           search_and_replace 'Date.tomorrow', 'Time.zone.tomorrow'
           search_and_replace 'Date.yesterday', 'Time.zone.yesterday'
-
-          search_and_replace 'before { login_as(user, scope: :user) }',
-                             'before { login_as user, scope: :user }'
-
-          search_and_replace 'before { login_as(admin, scope: :user) }',
-                             'before { login_as admin, scope: :user }'
         end
 
         def install_database_yml
