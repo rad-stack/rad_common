@@ -282,7 +282,7 @@ Seeder.new.seed!
         def add_crawling_config
           remove_file 'public/robots.txt'
 
-          add_rad_config_setting 'crawling_subdomains', '[]'
+          add_rad_config_setting 'crawlable_subdomains', '[]'
           add_rad_config_setting 'always_crawl', 'false'
           add_rad_config_setting 'allow_crawling', 'false'
         end
