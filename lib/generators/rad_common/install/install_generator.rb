@@ -329,8 +329,6 @@ module RadCommon
         end
 
         def install_database_yml
-          return # TODO: this won't be needed when cannasaver_admin is combined with cannasaver_public
-
           setting_exists = rad_config_setting_exists?('database_config_override')
           add_rad_config_setting 'database_config_override', 'false'
           return if setting_exists && RadConfig.database_config_override?
