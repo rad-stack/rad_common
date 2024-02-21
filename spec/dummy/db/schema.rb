@@ -292,7 +292,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_21_201012) do
   create_table "twilio_logs", force: :cascade do |t|
     t.string "from_number", null: false
     t.string "to_number", null: false
-    t.bigint "from_user_id", null: false
+    t.bigint "from_user_id"
     t.bigint "to_user_id"
     t.string "message", null: false
     t.string "media_url"

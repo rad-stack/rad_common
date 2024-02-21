@@ -19,7 +19,7 @@ class ActiveRecordDoctorIssues < ActiveRecord::Migration[7.0]
     change_column :user_clients, :client_id, :bigint, null: false
     change_column :user_clients, :user_id, :bigint, null: false
     change_column :twilio_logs, :to_user_id, :bigint
-    change_column :twilio_logs, :from_user_id, :bigint, null: false
+    change_column :twilio_logs, :from_user_id, :bigint
     change_column :audits, :user_id, :bigint
     change_column :user_security_roles, :user_id, :bigint, null: false
     change_column :user_security_roles, :security_role_id, :bigint, null: false
