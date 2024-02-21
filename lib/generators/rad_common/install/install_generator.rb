@@ -271,12 +271,20 @@ Seeder.new.seed!
         end
 
         def search_and_replace(search, replace, js: false)
-          system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
-          system "find . -type f -name \"*.haml\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
-          system "find . -type f -name \"*.rake\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
+          search_and_replace_type search, replace, 'rb'
+          search_and_replace_type search, replace, 'haml'
+          search_and_replace_type search, replace, 'rake'
           return unless js
 
-          system "find . -type f -name \"*.js\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
+          search_and_replace_type search, replace, 'js'
+        end
+
+        def search_and_replace_type(search, replace, file_type)
+          if ENV['CI']
+            system "find . -type f -name \"*.#{file_type}\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
+          else
+            system "find . -type f -name \"*.#{file_type}\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          end
         end
 
         def add_crawling_config
