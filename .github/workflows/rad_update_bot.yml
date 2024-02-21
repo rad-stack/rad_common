@@ -19,6 +19,7 @@ jobs:
       POSTGRES_DB: rad_common_development
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      CI: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
