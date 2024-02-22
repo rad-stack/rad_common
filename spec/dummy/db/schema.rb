@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_22_093427) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -71,12 +71,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
     t.boolean "active", default: true, null: false
   end
 
-  create_table "audits", id: :serial, force: :cascade do |t|
+  create_table "audits", force: :cascade do |t|
     t.integer "auditable_id"
     t.string "auditable_type"
     t.integer "associated_id"
     t.string "associated_type"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.string "user_type"
     t.string "username"
     t.string "action"
@@ -110,16 +110,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
     t.index ["name"], name: "index_clients_on_name"
   end
 
-  create_table "companies", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255, null: false
-    t.string "phone_number", limit: 255, null: false
-    t.string "website", limit: 255, null: false
-    t.string "email", limit: 255, null: false
-    t.string "address_1", limit: 255, null: false
-    t.string "address_2", limit: 255
-    t.string "city", limit: 255, null: false
-    t.string "state", limit: 255, null: false
-    t.string "zipcode", limit: 255, null: false
+  create_table "companies", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "phone_number", null: false
+    t.string "website", null: false
+    t.string "email", null: false
+    t.string "address_1", null: false
+    t.string "address_2"
+    t.string "city", null: false
+    t.string "state", null: false
+    t.string "zipcode", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.datetime "validity_checked_at", precision: nil
@@ -129,10 +129,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
     t.jsonb "address_metadata"
   end
 
-  create_table "divisions", id: :serial, force: :cascade do |t|
+  create_table "divisions", force: :cascade do |t|
     t.string "name", null: false
     t.string "code", null: false
-    t.integer "owner_id", null: false
+    t.bigint "owner_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "division_status"
@@ -185,19 +185,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
   end
 
   create_table "notification_security_roles", force: :cascade do |t|
-    t.integer "security_role_id", null: false
+    t.bigint "security_role_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.integer "notification_type_id", null: false
+    t.bigint "notification_type_id", null: false
     t.index ["notification_type_id", "security_role_id"], name: "unique_notification_roles", unique: true
   end
 
   create_table "notification_settings", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.boolean "enabled", default: true, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.integer "notification_type_id", null: false
+    t.bigint "notification_type_id", null: false
     t.boolean "email", default: false, null: false
     t.boolean "feed", default: false, null: false
     t.boolean "sms", default: false, null: false
@@ -213,8 +213,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
   end
 
   create_table "notifications", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "notification_type_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "notification_type_id", null: false
     t.string "content", null: false
     t.boolean "unread", default: true, null: false
     t.string "record_type"
@@ -246,7 +246,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
     t.index ["user_id"], name: "index_saved_search_filters_on_user_id"
   end
 
-  create_table "security_roles", id: :serial, force: :cascade do |t|
+  create_table "security_roles", force: :cascade do |t|
     t.string "name", null: false
     t.boolean "admin", default: false, null: false
     t.datetime "created_at", precision: nil, null: false
@@ -271,12 +271,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
 
   create_table "system_messages", force: :cascade do |t|
     t.text "sms_message_body"
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.integer "send_to", default: 0, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "message_type", null: false
-    t.integer "security_role_id"
+    t.bigint "security_role_id"
     t.index ["security_role_id"], name: "index_system_messages_on_security_role_id"
     t.index ["user_id"], name: "index_system_messages_on_user_id"
   end
@@ -292,8 +292,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
   create_table "twilio_logs", force: :cascade do |t|
     t.string "from_number", null: false
     t.string "to_number", null: false
-    t.integer "from_user_id"
-    t.integer "to_user_id"
+    t.bigint "from_user_id"
+    t.bigint "to_user_id"
     t.string "message", null: false
     t.string "media_url"
     t.boolean "sent", default: true, null: false
@@ -314,16 +314,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
   end
 
   create_table "user_clients", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "client_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "client_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id", "client_id"], name: "index_user_clients_on_user_id_and_client_id", unique: true
   end
 
-  create_table "user_security_roles", id: :serial, force: :cascade do |t|
-    t.integer "security_role_id", null: false
-    t.integer "user_id", null: false
+  create_table "user_security_roles", force: :cascade do |t|
+    t.bigint "security_role_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["security_role_id", "user_id"], name: "index_user_security_roles_on_security_role_id_and_user_id", unique: true
@@ -331,7 +331,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
     t.index ["user_id"], name: "index_user_security_roles_on_user_id"
   end
 
-  create_table "user_statuses", id: :serial, force: :cascade do |t|
+  create_table "user_statuses", force: :cascade do |t|
     t.string "name", null: false
     t.boolean "active", default: false, null: false
     t.boolean "validate_email_phone", default: true, null: false
@@ -340,29 +340,29 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
     t.index ["name"], name: "index_user_statuses_on_name", unique: true
   end
 
-  create_table "users", id: :serial, force: :cascade do |t|
-    t.string "email", limit: 255, default: "", null: false
-    t.string "encrypted_password", limit: 255, default: "", null: false
-    t.string "reset_password_token", limit: 255
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
     t.datetime "reset_password_sent_at", precision: nil
     t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at", precision: nil
     t.datetime "last_sign_in_at", precision: nil
-    t.string "current_sign_in_ip", limit: 255
-    t.string "last_sign_in_ip", limit: 255
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.string "confirmation_token", limit: 255
+    t.string "confirmation_token"
     t.datetime "confirmed_at", precision: nil
     t.datetime "confirmation_sent_at", precision: nil
-    t.string "unconfirmed_email", limit: 255
-    t.string "first_name", limit: 255, null: false
-    t.string "last_name", limit: 255, null: false
-    t.string "mobile_phone", limit: 255
-    t.string "timezone", limit: 255, null: false
-    t.string "global_search_default", limit: 255
-    t.integer "user_status_id", null: false
+    t.string "unconfirmed_email"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "mobile_phone"
+    t.string "timezone", null: false
+    t.string "global_search_default"
+    t.bigint "user_status_id", null: false
     t.datetime "last_sign_in_with_twilio_verify", precision: nil
     t.boolean "twilio_verify_enabled", default: true, null: false
     t.string "invitation_token"
@@ -370,7 +370,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_09_141219) do
     t.datetime "invitation_sent_at", precision: nil
     t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
-    t.integer "invited_by_id"
+    t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.boolean "external", default: false, null: false
     t.integer "failed_attempts", default: 0, null: false
