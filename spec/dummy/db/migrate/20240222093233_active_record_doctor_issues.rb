@@ -23,5 +23,28 @@ class ActiveRecordDoctorIssues < ActiveRecord::Migration[7.0]
     change_column :audits, :user_id, :bigint
     change_column :user_security_roles, :user_id, :bigint, null: false
     change_column :user_security_roles, :security_role_id, :bigint, null: false
+
+    change_column :companies, :name, :string, limit: nil, null: false
+    change_column :companies, :phone_number, :string, limit: nil, null: false
+    change_column :companies, :website, :string, limit: nil, null: false
+    change_column :companies, :email, :string, limit: nil, null: false
+    change_column :companies, :address_1, :string, limit: nil, null: false
+    change_column :companies, :address_2, :string, limit: nil
+    change_column :companies, :city, :string, limit: nil, null: false
+    change_column :companies, :state, :string, limit: nil, null: false
+    change_column :companies, :zipcode, :string, limit: nil, null: false
+
+    change_column :users, :email, :string, limit: nil, default: "", null: false
+    change_column :users, :encrypted_password, :string, limit: nil, default: "", null: false
+    change_column :users, :reset_password_token, :string, limit: nil
+    change_column :users, :current_sign_in_ip, :string, limit: nil
+    change_column :users, :last_sign_in_ip, :string, limit: nil
+    change_column :users, :confirmation_token, :string, limit: nil
+    change_column :users, :unconfirmed_email, :string, limit: nil
+    change_column :users, :first_name, :string, limit: nil, null: false
+    change_column :users, :last_name, :string, limit: nil, null: false
+    change_column :users, :mobile_phone, :string, limit: nil
+    change_column :users, :timezone, :string, limit: nil, null: false
+    change_column :users, :global_search_default, :string, limit: nil
   end
 end
