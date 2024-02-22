@@ -18,7 +18,7 @@ FileUtils.chdir directory do
   system 'bundle update rad_common --conservative'
 
   puts "== Updating Binstubs =="
-  system 'bundle binstubs rad_common'
+  system 'bundle binstubs rad_common --force'
 
   puts "== Running RC Generator =="
   force_rad_common_install = ARGV.include?('--force-rad-common-install') ? '--force' : ''
