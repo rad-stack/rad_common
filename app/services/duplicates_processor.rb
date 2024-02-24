@@ -6,11 +6,9 @@ class DuplicatesProcessor
   end
 
   def process!(bypass_notifications: false)
-    items = matches # TODO: ||=
-
-    if items.any?
-      raw_score = items.first[:score]
-      record.create_or_update_metadata!({ duplicates_info: items.to_json,
+    if matches.any?
+      raw_score = matches.first[:score]
+      record.create_or_update_metadata!({ duplicates_info: matches.to_json,
                                           score: raw_score.positive? ? raw_score : nil },
                                         bypass_notifications: bypass_notifications)
     else
@@ -20,15 +18,17 @@ class DuplicatesProcessor
   end
 
   def matches
-    items = []
+    @matches ||= begin
+      items = []
 
-    all_matches.each do |match|
-      item = model_klass.find(match)
-      score = duplicate_record_score(item)
-      items.push(id: item.id, score: score)
+      all_matches.each do |match|
+        item = model_klass.find(match)
+        score = duplicate_record_score(item)
+        items.push(id: item.id, score: score)
+      end
+
+      items.sort_by { |item| item[:score] }.reverse.first(100)
     end
-
-    items.sort_by { |item| item[:score] }.reverse.first(100)
   end
 
   private
