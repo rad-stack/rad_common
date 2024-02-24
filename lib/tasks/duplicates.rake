@@ -6,22 +6,10 @@ namespace :duplicates do
 
     Timeout.timeout(session.time_limit) do
       RadCommon::AppInfo.new.duplicate_models.each do |model_name|
-        session.reset_status
-        model_name.constantize.process_duplicates(session)
+        DuplicatesProcessor.new(model_name, rake_session: session).all!
         break if session.timing_out?
       end
 
-      session.finished
-    end
-  end
-end
-
-namespace :duplicates do
-  task reset_all: :environment do |task|
-    session = RakeSession.new(task, 5.minutes, 1)
-
-    Timeout.timeout(session.time_limit) do
-      Duplicate.delete_all
       session.finished
     end
   end
