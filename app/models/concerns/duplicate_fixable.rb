@@ -99,7 +99,7 @@ module DuplicateFixable
   end
 
   def process_duplicates(bypass_notifications: false)
-    DuplicatesProcessor.new(class_name, bypass_notifications: bypass_notifications).record!(self)
+    DuplicatesProcessor.new(self, bypass_notifications: bypass_notifications).run!
   end
 
   def duplicate_fields

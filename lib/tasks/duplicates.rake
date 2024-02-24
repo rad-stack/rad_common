@@ -6,7 +6,8 @@ namespace :duplicates do
 
     Timeout.timeout(session.time_limit) do
       RadCommon::AppInfo.new.duplicate_models.each do |model_name|
-        DuplicatesProcessor.new(model_name, rake_session: session).all!
+        session.reset_status
+        model_name.constantize.process_duplicates(session)
         break if session.timing_out?
       end
 
