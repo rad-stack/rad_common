@@ -58,6 +58,7 @@ RSpec.describe 'Attorneys' do
     before do
       allow_any_instance_of(DuplicatesMatcher).to receive(:duplicate_record_score).and_return 60
       allow(Attorney).to receive(:allow_merge_all?).and_return(true)
+      allow_any_instance_of(Duplicate).to receive :maybe_notify!
 
       record_1.process_duplicates
       record_2.process_duplicates

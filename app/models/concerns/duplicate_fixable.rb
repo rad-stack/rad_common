@@ -235,7 +235,7 @@ module DuplicateFixable
       items.push(record_2.id)
       items = items.uniq
 
-      record_1.create_or_update_metadata! duplicates_not: items.to_json
+      record_1.create_or_update_metadata!({ duplicates_not: items.to_json })
       record_1.reload
       record_1.process_duplicates
     end
