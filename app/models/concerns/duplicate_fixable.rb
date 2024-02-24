@@ -118,7 +118,7 @@ module DuplicateFixable
   end
 
   def process_duplicates(bypass_notifications: false)
-    DuplicatesProcessor.new(self, bypass_notifications: bypass_notifications).run!
+    DuplicatesProcessor.new(self).process!(bypass_notifications: bypass_notifications)
   end
 
   def duplicate_fields
@@ -140,8 +140,8 @@ module DuplicateFixable
   end
 
   def find_duplicates
-    items = DuplicatesMatcher.new(self).matches.reject do |contact|
-      contact[:score] < self.class.score_lower_threshold
+    items = DuplicatesProcessor.new(self).matches.reject do |item|
+      item[:score] < self.class.score_lower_threshold
     end
 
     return if items.empty?
