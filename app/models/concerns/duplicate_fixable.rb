@@ -163,7 +163,7 @@ module DuplicateFixable
   def create_or_update_metadata!(attributes, bypass_notifications: false)
     if duplicate.blank?
       record = Duplicate.create! attributes.merge(processed_at: Time.current, duplicatable: self)
-      record.notify! unless bypass_notifications
+      record.maybe_notify! unless bypass_notifications
     else
       duplicate.update! attributes.merge(processed_at: Time.current)
     end

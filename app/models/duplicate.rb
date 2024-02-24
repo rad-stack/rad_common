@@ -1,7 +1,7 @@
 class Duplicate < ApplicationRecord
   belongs_to :duplicatable, polymorphic: true
 
-  def notify!
+  def maybe_notify!
     return unless score && score >= duplicatable.class.score_upper_threshold
 
     admin_notification = Notifications::DuplicateFoundAdminNotification.main(duplicatable)
