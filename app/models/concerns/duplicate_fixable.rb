@@ -107,6 +107,14 @@ module DuplicateFixable
         record.process_duplicates bypass_notifications: bypass_notifications
       end
     end
+
+    def no_matches(record)
+      if record.duplicate.blank? || record.duplicate.duplicates_not.blank?
+        []
+      else
+        JSON.parse(record.duplicate.duplicates_not)
+      end
+    end
   end
 
   def process_duplicates(bypass_notifications: false)
@@ -225,13 +233,6 @@ module DuplicateFixable
       process_duplicates
       [:success, "The duplicates for #{self.class} '#{self}' were successfully resolved."]
     end
-  end
-
-  def all_matches
-    (name_matches +
-      similar_name_matches +
-      birth_date_matches +
-      additional_item_matches).uniq - no_matches(self)
   end
 
   def duplicate_record_score(duplicate_record)
@@ -363,21 +364,13 @@ module DuplicateFixable
     end
 
     def set_not_duplicate(record_1, record_2)
-      items = no_matches(record_1)
+      items = model_klass.no_matches(record_1)
       items.push(record_2.id)
       items = items.uniq
 
       record_1.create_or_update_metadata!({ duplicates_not: items.to_json })
       record_1.reload
       record_1.process_duplicates
-    end
-
-    def no_matches(record)
-      if record.duplicate.blank? || record.duplicate.duplicates_not.blank?
-        []
-      else
-        JSON.parse(record.duplicate.duplicates_not)
-      end
     end
 
     def fix_duplicate(key, user)

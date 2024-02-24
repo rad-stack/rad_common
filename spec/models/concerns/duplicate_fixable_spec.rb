@@ -105,7 +105,7 @@ describe DuplicateFixable do
   end
 
   describe 'all_matches' do
-    subject { attorney_1.send(:all_matches) }
+    subject { DuplicatesMatcher.new(attorney_1).send(:all_matches) }
 
     context 'when matching only on additional items' do
       let(:attorney_1_attributes) do
