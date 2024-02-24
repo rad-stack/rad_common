@@ -255,65 +255,6 @@ module DuplicateFixable
       "#{self.class.to_s.underscore}s"
     end
 
-    def name_matches
-      return [] unless model_klass.use_first_last_name? && first_last_name_present?
-
-      query = model_klass.where('upper(first_name) = ? AND upper(last_name) = ?',
-                                first_name.upcase,
-                                last_name.upcase)
-      query = query.where.not(id: id) if id.present?
-      query.pluck(:id)
-    end
-
-    def similar_name_matches
-      return [] unless model_klass.use_first_last_name? && first_last_name_present?
-
-      query = model_klass.where('levenshtein(upper(first_name), ?) <= 1 AND levenshtein(upper(last_name), ?) <= 1',
-                                first_name.upcase,
-                                last_name.upcase)
-      query = query.where.not(id: id) if id.present?
-      query.pluck(:id)
-    end
-
-    def birth_date_matches
-      return [] unless model_klass.use_birth_date? && model_klass.use_first_last_name? && first_last_name_present?
-
-      query_string = 'birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR ' \
-                     'levenshtein(upper(last_name), ?) <= 1)'
-
-      query = model_klass.where(query_string,
-                                birth_date,
-                                first_name.upcase,
-                                last_name.upcase)
-      query = query.where.not(id: id) if id.present?
-      query.pluck(:id)
-    end
-
-    def additional_item_matches
-      items = []
-
-      model_klass.applicable_duplicate_items.each do |item|
-        item_value = send(item[:name])
-        next if item[:display_only] || item_value.blank?
-
-        query = case item[:type]
-                when :association
-                  "#{item[:name]} IS NOT NULL AND #{item[:name]} = ?"
-                when :levenshtein
-                  "levenshtein(upper(#{item[:name]}), ?) <= 1"
-                else
-                  "#{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?"
-                end
-
-        check_value = item[:type] == :levenshtein ? item_value.upcase : item_value
-        query = model_klass.where(query, check_value)
-        query = query.where.not(id: id) if id.present?
-        items += query.pluck(:id)
-      end
-
-      items
-    end
-
     def all_duplicate_attributes
       items = []
 
@@ -396,9 +337,5 @@ module DuplicateFixable
 
       'Could not remove the unused duplicate record ' \
         "id #{duplicate_record.id}: #{duplicate_record.errors.full_messages.join(', ')}"
-    end
-
-    def first_last_name_present?
-      first_name.present? && last_name.present?
     end
 end
