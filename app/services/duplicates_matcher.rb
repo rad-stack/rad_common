@@ -104,7 +104,7 @@ class DuplicatesMatcher
       model_klass.applicable_duplicate_items.each do |item|
         next if item[:display_only]
 
-        items.push(name: item[:name], weight: item[:weight]) if respond_to?(item[:name])
+        items.push(name: item[:name], weight: item[:weight]) if record.respond_to?(item[:name])
       end
 
       if model_klass.use_address?
