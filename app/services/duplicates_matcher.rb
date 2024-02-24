@@ -6,15 +6,15 @@ class DuplicatesMatcher
   end
 
   def matches
-    contacts = []
+    items = []
 
     all_matches.each do |match|
       item = model_klass.find(match)
       score = duplicate_record_score(item)
-      contacts.push(id: item.id, score: score)
+      items.push(id: item.id, score: score)
     end
 
-    contacts.sort_by { |item| item[:score] }.reverse.first(100)
+    items.sort_by { |item| item[:score] }.reverse.first(100)
   end
 
   private
@@ -107,8 +107,8 @@ class DuplicatesMatcher
       items = []
 
       if model_klass.use_first_last_name?
-        items += [{ name: 'first_name', weight: record.duplicate_first_name_weight },
-                  { name: 'last_name', weight: record.duplicate_last_name_weight }]
+        items += [{ name: 'first_name', weight: duplicate_first_name_weight },
+                  { name: 'last_name', weight: duplicate_last_name_weight }]
       end
 
       items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
@@ -138,6 +138,14 @@ class DuplicatesMatcher
       else
         0
       end
+    end
+
+    def duplicate_first_name_weight
+      record.duplicate_model_config[:first_name_weight].presence || 10
+    end
+
+    def duplicate_last_name_weight
+      record.duplicate_model_config[:last_name_weight].presence || 10
     end
 
     def first_last_name_present?

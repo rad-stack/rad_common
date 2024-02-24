@@ -197,14 +197,6 @@ module DuplicateFixable
     # override as needed in models
   end
 
-  def duplicate_first_name_weight
-    duplicate_model_config[:first_name_weight].presence || 10
-  end
-
-  def duplicate_last_name_weight
-    duplicate_model_config[:last_name_weight].presence || 10
-  end
-
   def duplicate_other_weight
     duplicate_model_config[:other_weight].presence || 20
   end
