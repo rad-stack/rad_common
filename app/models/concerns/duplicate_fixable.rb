@@ -235,33 +235,6 @@ module DuplicateFixable
     end
   end
 
-  def all_duplicate_attributes
-    items = []
-
-    if model_klass.use_first_last_name?
-      items += [{ name: 'first_name', weight: duplicate_first_name_weight },
-                { name: 'last_name', weight: duplicate_last_name_weight }]
-    end
-
-    items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
-
-    model_klass.applicable_duplicate_items.each do |item|
-      next if item[:display_only]
-
-      items.push(name: item[:name], weight: item[:weight]) if respond_to?(item[:name])
-    end
-
-    if model_klass.use_address?
-      items += [{ name: 'city', weight: 10 },
-                { name: 'state', weight: 10 },
-                { name: 'zipcode', weight: 10 },
-                { name: 'address_1', weight: duplicate_other_weight },
-                { name: 'address_2', weight: duplicate_other_weight }]
-    end
-
-    items
-  end
-
   private
 
     def model_klass

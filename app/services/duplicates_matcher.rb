@@ -84,11 +84,11 @@ class DuplicatesMatcher
     def duplicate_record_score(duplicate_record)
       score = 0
 
-      record.all_duplicate_attributes.each do |attribute|
+      all_duplicate_attributes.each do |attribute|
         score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
       end
 
-      ((score / record.all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
+      ((score / all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
     end
 
     def duplicate_field_score(duplicate_record, attribute, weight)
@@ -101,6 +101,33 @@ class DuplicatesMatcher
       return weight if record.send(attribute) == duplicate_record.send(attribute)
 
       0
+    end
+
+    def all_duplicate_attributes
+      items = []
+
+      if model_klass.use_first_last_name?
+        items += [{ name: 'first_name', weight: record.duplicate_first_name_weight },
+                  { name: 'last_name', weight: record.duplicate_last_name_weight }]
+      end
+
+      items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
+
+      model_klass.applicable_duplicate_items.each do |item|
+        next if item[:display_only]
+
+        items.push(name: item[:name], weight: item[:weight]) if record.respond_to?(item[:name])
+      end
+
+      if model_klass.use_address?
+        items += [{ name: 'city', weight: 10 },
+                  { name: 'state', weight: 10 },
+                  { name: 'zipcode', weight: 10 },
+                  { name: 'address_1', weight: record.duplicate_other_weight },
+                  { name: 'address_2', weight: record.duplicate_other_weight }]
+      end
+
+      items
     end
 
     def calc_string_weight(attribute_1, attribute_2, weight)
