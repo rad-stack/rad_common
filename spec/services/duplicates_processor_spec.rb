@@ -36,9 +36,7 @@ RSpec.describe DuplicatesProcessor do
     { phone_number: phone_number, email: email, first_name: 'Yyyy', last_name: 'Ssss' }
   end
 
-  describe 'process_duplicates' do
-    subject { attorney_1.duplicate.score }
-
+  describe 'process!' do
     before do
       allow(attorney_1).to receive(:created_by).and_return(created_by)
       attorney_1.process_duplicates
@@ -87,6 +85,54 @@ RSpec.describe DuplicatesProcessor do
           expect(ActionMailer::Base.deliveries.count).to eq 1
         end
       end
+    end
+  end
+
+  describe 'matches' do
+    subject { described_class.new(attorney_1).matches }
+
+    context 'when matching only on additional items' do
+      it { is_expected.to eq [{ id: attorney_2.id, score: 32 }] }
+    end
+
+    context 'when matching on standard plus additional items' do
+      let(:attorney_1_attributes) do
+        { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
+      end
+
+      let(:attorney_2_attributes) do
+        { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
+      end
+
+      it { is_expected.to eq [{ id: attorney_2.id, score: 46 }] }
+    end
+
+    context 'when matching only on additional items 2' do
+      let(:attorney_1) do
+        create :attorney,
+               first_name: 'John',
+               last_name: 'Smith',
+               company_name: 'ABC',
+               address_1: 'Yyyy',
+               address_2: nil,
+               city: 'Xxxx',
+               state: 'FL',
+               zipcode: '11111'
+      end
+
+      let(:attorney_2) do
+        create :attorney,
+               first_name: 'John',
+               last_name: 'Smith',
+               company_name: 'ABC',
+               address_1: 'Yyyy',
+               address_2: nil,
+               city: 'Xxxx',
+               state: 'FL',
+               zipcode: '22222'
+      end
+
+      it { is_expected.to eq [{ id: attorney_2.id, score: 50 }] }
     end
   end
 end
