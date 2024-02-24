@@ -56,7 +56,7 @@ RSpec.describe 'Attorneys' do
     let!(:duplicate_2) { create :attorney, first_name: 'John456', last_name: 'Smith' }
 
     before do
-      allow_any_instance_of(DuplicatesMatcher).to receive(:duplicate_record_score).and_return 60
+      allow_any_instance_of(DuplicatesProcessor).to receive(:duplicate_record_score).and_return 60
       allow(Attorney).to receive(:allow_merge_all?).and_return(true)
       allow_any_instance_of(Duplicate).to receive :maybe_notify!
 
