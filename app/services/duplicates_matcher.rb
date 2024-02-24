@@ -20,7 +20,8 @@ class DuplicatesMatcher
   private
 
     def all_matches
-      (name_matches + similar_name_matches + birth_date_matches + additional_item_matches).uniq - model_klass.no_matches(record)
+      (name_matches + similar_name_matches + birth_date_matches + additional_item_matches).uniq -
+        model_klass.no_matches(record)
     end
 
     def name_matches
