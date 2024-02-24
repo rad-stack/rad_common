@@ -262,18 +262,6 @@ module DuplicateFixable
     items
   end
 
-  def duplicate_field_score(duplicate_record, attribute, weight)
-    return 0 if send(attribute).blank? || duplicate_record.send(attribute).blank?
-
-    if send(attribute).is_a?(String)
-      return calc_string_weight(send(attribute), duplicate_record.send(attribute), weight)
-    end
-
-    return weight if send(attribute) == duplicate_record.send(attribute)
-
-    0
-  end
-
   private
 
     def model_klass
@@ -282,16 +270,6 @@ module DuplicateFixable
 
     def table_name
       "#{self.class.to_s.underscore}s"
-    end
-
-    def calc_string_weight(attribute_1, attribute_2, weight)
-      if attribute_1.upcase == attribute_2.upcase
-        weight
-      elsif Text::Levenshtein.distance(attribute_1.upcase, attribute_2.upcase) <= 2
-        weight / 2
-      else
-        0
-      end
     end
 
     def set_not_duplicate(record_1, record_2)

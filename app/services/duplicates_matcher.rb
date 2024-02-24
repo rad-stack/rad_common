@@ -85,10 +85,32 @@ class DuplicatesMatcher
       score = 0
 
       record.all_duplicate_attributes.each do |attribute|
-        score += record.duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
+        score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
       end
 
       ((score / record.all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
+    end
+
+    def duplicate_field_score(duplicate_record, attribute, weight)
+      return 0 if record.send(attribute).blank? || duplicate_record.send(attribute).blank?
+
+      if record.send(attribute).is_a?(String)
+        return calc_string_weight(record.send(attribute), duplicate_record.send(attribute), weight)
+      end
+
+      return weight if record.send(attribute) == duplicate_record.send(attribute)
+
+      0
+    end
+
+    def calc_string_weight(attribute_1, attribute_2, weight)
+      if attribute_1.upcase == attribute_2.upcase
+        weight
+      elsif Text::Levenshtein.distance(attribute_1.upcase, attribute_2.upcase) <= 2
+        weight / 2
+      else
+        0
+      end
     end
 
     def first_last_name_present?
