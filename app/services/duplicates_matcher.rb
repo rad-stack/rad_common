@@ -6,21 +6,21 @@ class DuplicatesMatcher
   end
 
   def matches
-    contacts = []
+    items = []
 
     all_matches.each do |match|
       item = model_klass.find(match)
       score = duplicate_record_score(item)
-      contacts.push(id: item.id, score: score)
+      items.push(id: item.id, score: score)
     end
 
-    contacts.sort_by { |item| item[:score] }.reverse.first(100)
+    items.sort_by { |item| item[:score] }.reverse.first(100)
   end
 
   private
 
     def all_matches
-      (name_matches + similar_name_matches + birth_date_matches + additional_item_matches).uniq - record.no_matches
+      (name_matches + similar_name_matches + birth_date_matches + additional_item_matches).uniq - model_klass.no_matches(record)
     end
 
     def name_matches

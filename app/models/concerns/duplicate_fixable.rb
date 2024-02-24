@@ -96,6 +96,14 @@ module DuplicateFixable
     def duplicate_notify_threshold
       new.duplicate_model_config[:notify_threshold].presence || 0.01
     end
+
+    def no_matches(record)
+      if record.duplicate.blank? || record.duplicate.duplicates_not.blank?
+        []
+      else
+        JSON.parse(record.duplicate.duplicates_not)
+      end
+    end
   end
 
   def process_duplicates(bypass_notifications: false)
@@ -208,14 +216,6 @@ module DuplicateFixable
     end
   end
 
-  def no_matches
-    if duplicate.blank? || duplicate.duplicates_not.blank?
-      []
-    else
-      JSON.parse(duplicate.duplicates_not)
-    end
-  end
-
   private
 
     def model_klass
@@ -231,7 +231,7 @@ module DuplicateFixable
     end
 
     def set_not_duplicate(record_1, record_2)
-      items = record_1.no_matches
+      items = model_klass.no_matches(record_1)
       items.push(record_2.id)
       items = items.uniq
 
