@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe DuplicatesProcessor do
-  # TODO: move some of these to matcher spec
+  # TODO: mock this more to remove some of the lets
 
   let(:phone_number) { create :phone_number }
   let(:email) { Faker::Internet.email }
@@ -45,10 +45,6 @@ RSpec.describe DuplicatesProcessor do
       attorney_1.reload
     end
 
-    context 'when matching only on additional items' do
-      it { is_expected.to eq 32 }
-    end
-
     context 'when matching only on additional items 2' do
       let(:attorney_1) do
         create :attorney,
@@ -74,8 +70,6 @@ RSpec.describe DuplicatesProcessor do
                zipcode: '22222'
       end
 
-      it { is_expected.to eq 50 }
-
       it 'sends notifications' do
         expect(ActionMailer::Base.deliveries.first.subject).to eq "Possible Duplicate (#{attorney_2}) Entered By You"
         expect(ActionMailer::Base.deliveries.first.to).to include created_by.email
@@ -93,18 +87,6 @@ RSpec.describe DuplicatesProcessor do
           expect(ActionMailer::Base.deliveries.count).to eq 1
         end
       end
-    end
-
-    context 'when matching on standard plus additional items' do
-      let(:attorney_1_attributes) do
-        { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
-      end
-
-      let(:attorney_2_attributes) do
-        { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
-      end
-
-      it { is_expected.to eq 46 }
     end
   end
 end

@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe DuplicatesMatcher do
+  subject { described_class.new(attorney_1).matches }
+
   let(:phone_number) { create :phone_number }
   let(:email) { Faker::Internet.email }
   let(:first_name) { 'John' }
@@ -33,31 +35,55 @@ RSpec.describe DuplicatesMatcher do
     { phone_number: phone_number, email: email, first_name: 'Yyyy', last_name: 'Ssss' }
   end
 
-  describe 'all_matches' do
-    subject { described_class.new(attorney_1).send(:all_matches) }
-
-    context 'when matching only on additional items' do
-      let(:attorney_1_attributes) do
-        { phone_number: phone_number, email: email, first_name: 'Xxxx', last_name: 'Tttt' }
-      end
-
-      let(:attorney_2_attributes) do
-        { phone_number: phone_number, email: email, first_name: 'Yyyy', last_name: 'Ssss' }
-      end
-
-      it { is_expected.to include attorney_2.id }
+  context 'when matching only on additional items' do
+    let(:attorney_1_attributes) do
+      { phone_number: phone_number, email: email, first_name: 'Xxxx', last_name: 'Tttt' }
     end
 
-    context 'when matching on standard plus additional items' do
-      let(:attorney_1_attributes) do
-        { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
-      end
-
-      let(:attorney_2_attributes) do
-        { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
-      end
-
-      it { is_expected.to include attorney_2.id }
+    let(:attorney_2_attributes) do
+      { phone_number: phone_number, email: email, first_name: 'Yyyy', last_name: 'Ssss' }
     end
+
+    it { is_expected.to eq [{ id: attorney_2.id, score: 32 }] }
+  end
+
+  context 'when matching on standard plus additional items' do
+    let(:attorney_1_attributes) do
+      { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
+    end
+
+    let(:attorney_2_attributes) do
+      { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
+    end
+
+    it { is_expected.to eq [{ id: attorney_2.id, score: 46 }] }
+  end
+
+  context 'when matching only on additional items 2' do
+    let(:attorney_1) do
+      create :attorney,
+             first_name: 'John',
+             last_name: 'Smith',
+             company_name: 'ABC',
+             address_1: 'Yyyy',
+             address_2: nil,
+             city: 'Xxxx',
+             state: 'FL',
+             zipcode: '11111'
+    end
+
+    let(:attorney_2) do
+      create :attorney,
+             first_name: 'John',
+             last_name: 'Smith',
+             company_name: 'ABC',
+             address_1: 'Yyyy',
+             address_2: nil,
+             city: 'Xxxx',
+             state: 'FL',
+             zipcode: '22222'
+    end
+
+    it { is_expected.to eq [{ id: attorney_2.id, score: 50 }] }
   end
 end
