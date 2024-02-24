@@ -83,14 +83,14 @@ class DuplicatesController < ApplicationController
 
     max = Duplicate.where(duplicatable_type: model.name).maximum(:sort)
     sort = (max ? max + 1 : 1)
-    @record.create_or_update_metadata! sort: sort
+    @record.create_or_update_metadata!({ sort: sort })
 
     if @record.duplicate.present? && @record.duplicate.score.present?
       dupes = @record.duplicates
 
       if dupes.count == 1
         record = dupes.first[:record]
-        record.create_or_update_metadata! sort: sort
+        record.create_or_update_metadata!({ sort: sort })
       end
     end
 

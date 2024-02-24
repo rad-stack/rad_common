@@ -6,8 +6,6 @@ module DuplicateFixable
 
     has_one :duplicate, as: :duplicatable, dependent: :destroy
 
-    attr_accessor :bypass_notifications
-
     scope :duplicates_to_process, lambda {
       left_outer_joins(:duplicate)
         .where("duplicates.processed_at IS NULL OR (#{table_name}.updated_at >= duplicates.processed_at)")
@@ -112,18 +110,17 @@ module DuplicateFixable
   end
 
   def process_duplicates(bypass_notifications: false)
-    self.bypass_notifications = bypass_notifications
-
     contacts = duplicate_matches
 
     if contacts.any?
       raw_score = contacts.first[:score]
-      create_or_update_metadata! duplicates_info: contacts.to_json, score: raw_score.positive? ? raw_score : nil
+      create_or_update_metadata!({ duplicates_info: contacts.to_json,
+                                   score: raw_score.positive? ? raw_score : nil },
+                                 bypass_notifications: bypass_notifications)
     else
-      create_or_update_metadata! duplicates_info: nil, score: nil
+      create_or_update_metadata!({ duplicates_info: nil, score: nil },
+                                 bypass_notifications: bypass_notifications)
     end
-
-    self.bypass_notifications = false
   end
 
   def duplicate_fields
@@ -152,16 +149,12 @@ module DuplicateFixable
   end
 
   def reset_duplicates
-    self.bypass_notifications = true
-
     if duplicate.present?
       duplicate.destroy!
       reload
     end
 
     process_duplicates bypass_notifications: true
-
-    self.bypass_notifications = false
   end
 
   def duplicates
@@ -185,9 +178,10 @@ module DuplicateFixable
     set_not_duplicate other_record, self
   end
 
-  def create_or_update_metadata!(attributes)
+  def create_or_update_metadata!(attributes, bypass_notifications: false)
     if duplicate.blank?
-      Duplicate.create! attributes.merge(processed_at: Time.current, duplicatable: self)
+      record = Duplicate.create! attributes.merge(processed_at: Time.current, duplicatable: self)
+      record.maybe_notify! unless bypass_notifications
     else
       duplicate.update! attributes.merge(processed_at: Time.current)
     end
@@ -392,7 +386,7 @@ module DuplicateFixable
       items.push(record_2.id)
       items = items.uniq
 
-      record_1.create_or_update_metadata! duplicates_not: items.to_json
+      record_1.create_or_update_metadata!({ duplicates_not: items.to_json })
       record_1.reload
       record_1.process_duplicates
     end
