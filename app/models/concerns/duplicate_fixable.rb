@@ -132,7 +132,10 @@ module DuplicateFixable
   end
 
   def find_duplicates
-    contacts = duplicate_matches.reject { |contact| contact[:score] < self.class.score_lower_threshold }
+    contacts = DuplicatesMatcher.new(self).matches.reject do |contact|
+      contact[:score] < self.class.score_lower_threshold
+    end
+
     return if contacts.empty?
 
     contacts.map { |contact| self.class.find(contact[:id]) }
@@ -224,16 +227,21 @@ module DuplicateFixable
     end
   end
 
-  def duplicate_matches
-    contacts = []
+  def all_matches
+    (name_matches +
+      similar_name_matches +
+      birth_date_matches +
+      additional_item_matches).uniq - no_matches(self)
+  end
 
-    all_matches.each do |match|
-      record = model_klass.find(match)
-      score = duplicate_record_score(record)
-      contacts.push(id: record.id, score: score)
+  def duplicate_record_score(duplicate_record)
+    score = 0
+
+    all_duplicate_attributes.each do |attribute|
+      score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
     end
 
-    contacts.sort_by { |item| item[:score] }.reverse.first(100)
+    ((score / all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
   end
 
   private
@@ -244,13 +252,6 @@ module DuplicateFixable
 
     def table_name
       "#{self.class.to_s.underscore}s"
-    end
-
-    def all_matches
-      (name_matches +
-       similar_name_matches +
-       birth_date_matches +
-       additional_item_matches).uniq - no_matches(self)
     end
 
     def name_matches
@@ -310,16 +311,6 @@ module DuplicateFixable
       end
 
       items
-    end
-
-    def duplicate_record_score(duplicate_record)
-      score = 0
-
-      all_duplicate_attributes.each do |attribute|
-        score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
-      end
-
-      ((score / all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
     end
 
     def all_duplicate_attributes

@@ -7,7 +7,7 @@ class DuplicatesProcessor
   end
 
   def run!
-    contacts = record.duplicate_matches
+    contacts = DuplicatesMatcher.new(record).matches
 
     if contacts.any?
       raw_score = contacts.first[:score]
