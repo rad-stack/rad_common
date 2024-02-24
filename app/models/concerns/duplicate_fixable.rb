@@ -97,6 +97,17 @@ module DuplicateFixable
       new.duplicate_model_config[:notify_threshold].presence || 0.01
     end
 
+    def process_duplicates(session, bypass_notifications: false)
+      records = duplicates_to_process
+      count = records.count
+
+      records.each do |record|
+        break if session&.check_status("checking #{self} records for duplicates", count)
+
+        record.process_duplicates bypass_notifications: bypass_notifications
+      end
+    end
+
     def no_matches(record)
       if record.duplicate.blank? || record.duplicate.duplicates_not.blank?
         []
@@ -219,11 +230,7 @@ module DuplicateFixable
   private
 
     def model_klass
-      class_name.constantize
-    end
-
-    def class_name
-      self.class.to_s
+      self.class.to_s.constantize
     end
 
     def table_name
