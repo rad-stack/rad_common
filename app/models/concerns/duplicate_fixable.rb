@@ -140,13 +140,13 @@ module DuplicateFixable
   end
 
   def find_duplicates
-    contacts = DuplicatesMatcher.new(self).matches.reject do |contact|
+    items = DuplicatesMatcher.new(self).matches.reject do |contact|
       contact[:score] < self.class.score_lower_threshold
     end
 
-    return if contacts.empty?
+    return if items.empty?
 
-    contacts.map { |contact| self.class.find(contact[:id]) }
+    items.map { |contact| self.class.find(contact[:id]) }
   end
 
   def reset_duplicates
