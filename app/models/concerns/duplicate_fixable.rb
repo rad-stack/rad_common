@@ -110,17 +110,7 @@ module DuplicateFixable
   end
 
   def process_duplicates(bypass_notifications: false)
-    contacts = duplicate_matches
-
-    if contacts.any?
-      raw_score = contacts.first[:score]
-      create_or_update_metadata!({ duplicates_info: contacts.to_json,
-                                   score: raw_score.positive? ? raw_score : nil },
-                                 bypass_notifications: bypass_notifications)
-    else
-      create_or_update_metadata!({ duplicates_info: nil, score: nil },
-                                 bypass_notifications: bypass_notifications)
-    end
+    DuplicatesProcessor.new(self, bypass_notifications: bypass_notifications).run!
   end
 
   def duplicate_fields
@@ -234,6 +224,18 @@ module DuplicateFixable
     end
   end
 
+  def duplicate_matches
+    contacts = []
+
+    all_matches.each do |match|
+      record = model_klass.find(match)
+      score = duplicate_record_score(record)
+      contacts.push(id: record.id, score: score)
+    end
+
+    contacts.sort_by { |item| item[:score] }.reverse.first(100)
+  end
+
   private
 
     def model_klass
@@ -249,18 +251,6 @@ module DuplicateFixable
        similar_name_matches +
        birth_date_matches +
        additional_item_matches).uniq - no_matches(self)
-    end
-
-    def duplicate_matches
-      contacts = []
-
-      all_matches.each do |match|
-        record = model_klass.find(match)
-        score = duplicate_record_score(record)
-        contacts.push(id: record.id, score: score)
-      end
-
-      contacts.sort_by { |item| item[:score] }.reverse.first(100)
     end
 
     def name_matches
