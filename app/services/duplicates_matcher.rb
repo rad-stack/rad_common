@@ -91,18 +91,6 @@ class DuplicatesMatcher
       ((score / all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
     end
 
-    def duplicate_field_score(duplicate_record, attribute, weight)
-      return 0 if record.send(attribute).blank? || duplicate_record.send(attribute).blank?
-
-      if record.send(attribute).is_a?(String)
-        return calc_string_weight(record.send(attribute), duplicate_record.send(attribute), weight)
-      end
-
-      return weight if record.send(attribute) == duplicate_record.send(attribute)
-
-      0
-    end
-
     def all_duplicate_attributes
       items = []
 
@@ -130,6 +118,18 @@ class DuplicatesMatcher
       items
     end
 
+    def duplicate_field_score(duplicate_record, attribute, weight)
+      return 0 if record.send(attribute).blank? || duplicate_record.send(attribute).blank?
+
+      if record.send(attribute).is_a?(String)
+        return calc_string_weight(record.send(attribute), duplicate_record.send(attribute), weight)
+      end
+
+      return weight if record.send(attribute) == duplicate_record.send(attribute)
+
+      0
+    end
+
     def calc_string_weight(attribute_1, attribute_2, weight)
       if attribute_1.upcase == attribute_2.upcase
         weight
@@ -140,16 +140,16 @@ class DuplicatesMatcher
       end
     end
 
+    def first_last_name_present?
+      record.first_name.present? && record.last_name.present?
+    end
+
     def duplicate_first_name_weight
       record.duplicate_model_config[:first_name_weight].presence || 10
     end
 
     def duplicate_last_name_weight
       record.duplicate_model_config[:last_name_weight].presence || 10
-    end
-
-    def first_last_name_present?
-      record.first_name.present? && record.last_name.present?
     end
 
     def model_klass

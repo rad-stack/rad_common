@@ -146,7 +146,7 @@ module DuplicateFixable
 
     return if items.empty?
 
-    items.map { |contact| self.class.find(contact[:id]) }
+    items.map { |item| self.class.find(item[:id]) }
   end
 
   def reset_duplicates
