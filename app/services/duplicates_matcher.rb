@@ -10,7 +10,7 @@ class DuplicatesMatcher
 
     all_matches.each do |match|
       item = model_klass.find(match)
-      score = record.duplicate_record_score(item)
+      score = duplicate_record_score(item)
       contacts.push(id: item.id, score: score)
     end
 
@@ -49,7 +49,7 @@ class DuplicatesMatcher
       return [] unless model_klass.use_birth_date? && model_klass.use_first_last_name? && first_last_name_present?
 
       query_string = 'birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR ' \
-        'levenshtein(upper(last_name), ?) <= 1)'
+                     'levenshtein(upper(last_name), ?) <= 1)'
 
       query = model_klass.where(query_string, record.birth_date, record.first_name.upcase, record.last_name.upcase)
       query = query.where.not(id: record.id) if record.id.present?
@@ -79,6 +79,16 @@ class DuplicatesMatcher
       end
 
       items
+    end
+
+    def duplicate_record_score(duplicate_record)
+      score = 0
+
+      record.all_duplicate_attributes.each do |attribute|
+        score += record.duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
+      end
+
+      ((score / record.all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
     end
 
     def first_last_name_present?
