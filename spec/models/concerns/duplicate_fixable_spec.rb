@@ -5,7 +5,7 @@ describe DuplicateFixable do
   let(:created_by) { create :user }
   let!(:admin) { create :admin }
 
-  let(:attorney_2) do
+  let!(:attorney_2) do
     create :attorney,
            first_name: attorney.first_name,
            last_name: attorney.last_name,
@@ -17,13 +17,14 @@ describe DuplicateFixable do
            zipcode: attorney.zipcode
   end
 
+  before do
+    allow(attorney).to receive(:created_by).and_return(created_by)
+    ActionMailer::Base.deliveries.clear
+  end
+
   describe 'process_duplicates' do
     before do
-      attorney_2
-
-      allow(attorney).to receive(:created_by).and_return(created_by)
       attorney.process_duplicates
-
       attorney.reload
     end
 
@@ -47,15 +48,6 @@ describe DuplicateFixable do
   end
 
   describe 'reset_duplicates' do
-    before do
-      attorney_2
-
-      allow(attorney).to receive(:created_by).and_return(created_by)
-      allow(Attorney).to receive(:score_upper_threshold).and_return(10)
-
-      ActionMailer::Base.deliveries.clear
-    end
-
     it "doesn't notify when duplicates are reset" do
       attorney.process_duplicates
       attorney.reload
