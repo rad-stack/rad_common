@@ -125,11 +125,12 @@ class DuplicatesController < ApplicationController
 
     @record.valid?
     found_duplicates = @record.find_duplicates
-    if found_duplicates.present?
 
+    if found_duplicates.present?
       duplicates = found_duplicates.map do |dupe|
         { duplicate_data: dupe.duplicate_fields, duplicate_path: "/#{model.table_name}/#{dupe.id}" }
       end
+
       render json: { duplicate: true, duplicates: duplicates }
     else
       render json: { duplicate: false }
