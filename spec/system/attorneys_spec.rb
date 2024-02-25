@@ -16,6 +16,18 @@ RSpec.describe 'Attorneys' do
       visit new_attorney_path
       expect(page).not_to have_content('Reset Duplicates')
     end
+
+    it 'triggers duplicates detection when entering', :js do
+      visit new_attorney_path
+      expect(page).to have_content('New Attorney')
+
+      fill_in 'First Name', with: attorney.first_name
+      fill_in 'Last Name', with: attorney.last_name
+      fill_in 'Phone Number', with: attorney.phone_number
+      fill_in 'Email', with: attorney.email
+
+      expect(page).to have_content('This is not a duplicate')
+    end
   end
 
   describe 'edit' do
