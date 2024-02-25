@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-describe Duplicate do
-  let(:created_by) { create :user }
+describe DuplicateFixable do
   let(:attorney) { create :attorney }
+  let(:created_by) { create :user }
 
   before do
     create :admin
