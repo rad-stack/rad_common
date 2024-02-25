@@ -11,7 +11,6 @@ RSpec.describe DuplicatesProcessor do
   let(:zipcode) { '11111' }
   let(:phone_number) { '(111) 111-1111' }
   let(:email) { '111@abc.com' }
-  let(:created_by) { create :user }
 
   let(:attorney_1) do
     create :attorney,

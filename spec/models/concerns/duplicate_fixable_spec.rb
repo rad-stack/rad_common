@@ -23,7 +23,15 @@ describe DuplicateFixable do
     ActionMailer::Base.deliveries.clear
   end
 
-  describe 'process_duplicates' do
+  describe '.process_duplicates' do
+    before { allow_any_instance_of(Duplicate).to receive :maybe_notify! }
+
+    it 'adds duplicate records' do
+      expect { Attorney.process_duplicates(nil) }.to change(Duplicate, :count).by(2)
+    end
+  end
+
+  describe '#process_duplicates' do
     before do
       attorney.process_duplicates(bypass_notifications: bypass_notifications)
       attorney.reload
