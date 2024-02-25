@@ -15,14 +15,3 @@ namespace :duplicates do
     end
   end
 end
-
-namespace :duplicates do
-  task reset_all: :environment do |task|
-    session = RakeSession.new(task, 5.minutes, 1)
-
-    Timeout.timeout(session.time_limit) do
-      Duplicate.delete_all
-      session.finished
-    end
-  end
-end
