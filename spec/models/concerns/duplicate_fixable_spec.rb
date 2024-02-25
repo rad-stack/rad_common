@@ -4,6 +4,7 @@ describe DuplicateFixable do
   let(:attorney) { create :attorney }
   let(:created_by) { create :user }
   let!(:admin) { create :admin }
+  let(:bypass_notifications) { false }
 
   let!(:attorney_2) do
     create :attorney,
@@ -24,7 +25,7 @@ describe DuplicateFixable do
 
   describe 'process_duplicates' do
     before do
-      attorney.process_duplicates
+      attorney.process_duplicates(bypass_notifications: bypass_notifications)
       attorney.reload
     end
 
@@ -48,20 +49,24 @@ describe DuplicateFixable do
   end
 
   describe 'reset_duplicates' do
-    it "doesn't notify when duplicates are reset" do
-      attorney.process_duplicates
+    before do
+      attorney.process_duplicates(bypass_notifications: bypass_notifications)
       attorney.reload
+    end
 
+    it "doesn't notify when duplicates are reset" do
       expect(ActionMailer::Base.deliveries.count).to eq 2
       ActionMailer::Base.deliveries.clear
       attorney.reset_duplicates
       expect(ActionMailer::Base.deliveries.count).to eq 0
     end
 
-    it 'optionally bypasses notifications' do
-      attorney.process_duplicates(bypass_notifications: true)
+    context 'when bypassing notifications' do
+      let(:bypass_notifications) { true }
 
-      expect(ActionMailer::Base.deliveries.count).to eq 0
+      it "doesn't notify" do
+        expect(ActionMailer::Base.deliveries.count).to eq 0
+      end
     end
   end
 end
