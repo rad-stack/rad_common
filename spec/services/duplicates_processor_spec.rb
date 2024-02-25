@@ -1,46 +1,87 @@
 require 'rails_helper'
 
 RSpec.describe DuplicatesProcessor do
-  # TODO: this might be similar to the stuff in duplicate_fixable_spec
-
-  let(:attorney) { create :attorney }
+  let(:first_name) { 'John' }
+  let(:last_name) { 'Smith' }
+  let(:company_name) { 'ABC' }
+  let(:address_1) { '100 8th St' }
+  let(:address_2) { nil }
+  let(:city) { 'Honolulu' }
+  let(:state) { 'HI' }
+  let(:zipcode) { '11111' }
+  let(:phone_number) { '(111) 111-1111' }
+  let(:email) { '111@abc.com' }
   let(:created_by) { create :user }
-  let!(:admin) { create :admin }
 
-  let(:attorney_2) do
+  let(:attorney_1) do
     create :attorney,
-           first_name: attorney.first_name,
-           last_name: attorney.last_name,
-           company_name: attorney.company_name,
-           address_1: attorney.address_1,
-           address_2: attorney.address_2,
-           city: attorney.city,
-           state: attorney.state,
-           zipcode: attorney.zipcode
+           first_name: first_name,
+           last_name: last_name,
+           company_name: company_name,
+           address_1: address_1,
+           address_2: address_2,
+           city: city,
+           state: state,
+           zipcode: zipcode,
+           phone_number: phone_number,
+           email: email
   end
 
-  before do
-    attorney_2
-    allow(attorney).to receive(:created_by).and_return(created_by)
-    attorney.process_duplicates
-    attorney.reload
-  end
+  describe 'matches' do
+    subject { described_class.new(attorney_1).matches }
 
-  it 'sends notifications' do
-    expect(ActionMailer::Base.deliveries.first.subject).to eq "Possible Duplicate (#{attorney_2}) Entered By You"
-    expect(ActionMailer::Base.deliveries.first.to).to include created_by.email
+    context 'when matching only on additional items' do
+      let!(:attorney_2) do
+        create :attorney,
+               first_name: 'Yyyy',
+               last_name: 'Ssss',
+               company_name: 'XYZ',
+               address_1: 'Yyyy',
+               address_2: address_2,
+               city: 'Yyyy',
+               state: 'CA',
+               zipcode: '22222',
+               phone_number: phone_number,
+               email: email
+      end
 
-    expect(ActionMailer::Base.deliveries.second.subject)
-      .to eq "Possible Duplicate (#{attorney_2}) Entered By #{created_by}"
+      it { is_expected.to eq [{ id: attorney_2.id, score: 32 }] }
+    end
 
-    expect(ActionMailer::Base.deliveries.second.to).to include admin.email
-  end
+    context 'when matching on standard plus additional items' do
+      let!(:attorney_2) do
+        create :attorney,
+               first_name: first_name,
+               last_name: last_name,
+               company_name: 'XYZ',
+               address_1: 'Yyyy',
+               address_2: address_2,
+               city: 'Yyyy',
+               state: 'CA',
+               zipcode: '22222',
+               phone_number: phone_number,
+               email: email
+      end
 
-  context 'when admin user creates the duplicate' do
-    let(:created_by) { admin }
+      it { is_expected.to eq [{ id: attorney_2.id, score: 46 }] }
+    end
 
-    it 'only sends one notification' do
-      expect(ActionMailer::Base.deliveries.count).to eq 1
+    context 'when matching only on additional items 2' do
+      let!(:attorney_2) do
+        create :attorney,
+               first_name: first_name,
+               last_name: last_name,
+               company_name: attorney_1.company_name,
+               address_1: attorney_1.address_1,
+               address_2: address_2,
+               city: attorney_1.city,
+               state: attorney_1.state,
+               zipcode: '22222',
+               phone_number: '(222) 222-2222',
+               email: '222@xyz.com'
+      end
+
+      it { is_expected.to eq [{ id: attorney_2.id, score: 50 }] }
     end
   end
 end
