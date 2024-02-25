@@ -233,10 +233,6 @@ module DuplicateFixable
       self.class.to_s.constantize
     end
 
-    def table_name
-      "#{self.class.to_s.underscore}s"
-    end
-
     def set_not_duplicate(record_1, record_2)
       items = model_klass.no_matches(record_1)
       items.push(record_2.id)
