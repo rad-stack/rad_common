@@ -26,7 +26,7 @@ describe 'Nav' do
   end
 
   before do
-    allow_any_instance_of(Duplicate).to receive :maybe_notify_duplicates
+    allow_any_instance_of(Duplicate).to receive :maybe_notify!
 
     attorney
     duplicate_attorney
