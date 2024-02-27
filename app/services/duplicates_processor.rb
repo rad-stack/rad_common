@@ -3,6 +3,7 @@ class DuplicatesProcessor
 
   def initialize(record)
     self.record = record
+    check_item_schema
   end
 
   def process!(bypass_notifications: false)
@@ -74,7 +75,7 @@ class DuplicatesProcessor
     def additional_item_matches
       items = []
 
-      model_klass.applicable_duplicate_items.each do |item|
+      applicable_duplicate_items.each do |item|
         item_value = record.send(item[:name])
         next if item[:display_only] || item_value.blank?
 
@@ -116,7 +117,7 @@ class DuplicatesProcessor
 
       items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
 
-      model_klass.applicable_duplicate_items.each do |item|
+      applicable_duplicate_items.each do |item|
         next if item[:display_only]
 
         items.push(name: item[:name], weight: item[:weight]) if record.respond_to?(item[:name])
@@ -169,5 +170,13 @@ class DuplicatesProcessor
 
     def model_klass
       @model_klass ||= record.class.to_s.constantize
+    end
+
+    def applicable_duplicate_items
+      @applicable_duplicate_items ||= model_klass.applicable_duplicate_items
+    end
+
+    def check_item_schema
+      applicable_duplicate_items.each { |item| raise item[:name].to_s unless item[:name].is_a?(String) }
     end
 end
