@@ -80,15 +80,13 @@ class DuplicatesProcessor
 
         query = case item[:type]
                 when :association
-                  "#{item[:name]} IS NOT NULL AND #{item[:name]} = ?"
+                  association_query item, item_value
                 when :levenshtein
-                  "levenshtein(upper(#{item[:name]}), ?) <= 1"
+                  levenshtein_query item, item_value.upcase
                 else
-                  "#{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?"
+                  other_query item, item_value
                 end
 
-        check_value = item[:type] == :levenshtein ? item_value.upcase : item_value
-        query = model_klass.where(query, check_value)
         query = query.where.not(id: record.id) if record.id.present?
         items += query.pluck(:id)
       end
@@ -96,11 +94,36 @@ class DuplicatesProcessor
       items
     end
 
+    def association_query(item, item_value)
+      model_klass.where("#{item[:name]} IS NOT NULL AND #{item[:name]} = ?", item_value)
+    end
+
+    def levenshtein_query(item, item_value)
+      model_klass.where("levenshtein(upper(#{item[:name]}), ?) <= 1", item_value)
+    end
+
+    def other_query(item, item_value)
+      raise "#{item[:name]}" unless item[:name].is_a?(String)
+
+      case item[:name]
+      when 'email'
+        model_klass.where("email IS NOT NULL AND email <> '' AND (email = ? OR email_2 = ?)", item_value, item_value)
+      when 'phone_number'
+        model_klass.where("phone_number IS NOT NULL AND phone_number <> '' AND (phone_number = ? OR phone_number_2 = ? OR mobile_phone = ?)", item_value, item_value, item_value)
+      when 'mobile_phone'
+        model_klass.where("mobile_phone IS NOT NULL AND mobile_phone <> '' AND (mobile_phone = ? OR phone_number = ? OR phone_number_2 = ?)", item_value, item_value, item_value)
+      else
+        model_klass.where("#{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?", item_value)
+      end
+    end
+
     def duplicate_record_score(duplicate_record)
       score = 0
 
       all_duplicate_attributes.each do |attribute|
-        score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
+        this_score = duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
+        puts "#{attribute}: #{this_score}" # TODO: create an option to formalize this debug mode
+        score += this_score
       end
 
       ((score / all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
@@ -134,10 +157,10 @@ class DuplicatesProcessor
     end
 
     def duplicate_field_score(duplicate_record, attribute, weight)
-      return 0 if record.send(attribute).blank? || duplicate_record.send(attribute).blank?
+      return 0 if record.send(attribute).blank?
 
       if record.send(attribute).is_a?(String)
-        return calc_string_weight(record.send(attribute), duplicate_record.send(attribute), weight)
+        return calc_string_weight(record, duplicate_record, attribute, weight)
       end
 
       return weight if record.send(attribute) == duplicate_record.send(attribute)
@@ -145,14 +168,54 @@ class DuplicatesProcessor
       0
     end
 
-    def calc_string_weight(attribute_1, attribute_2, weight)
-      if attribute_1.upcase == attribute_2.upcase
-        weight
-      elsif Text::Levenshtein.distance(attribute_1.upcase, attribute_2.upcase) <= 2
-        weight / 2
+    def calc_string_weight(record, duplicate_record, field_name, weight)
+      raise "#{field_name}" unless field_name.is_a?(String)
+
+      case field_name.to_s
+      when 'email'
+        if record.email == duplicate_record.email || record.email == record.email_2
+          weight
+        elsif levenshtein_compare(record.email, duplicate_record.email) || levenshtein_compare(record.email, record.email_2)
+          weight / 2
+        else
+          0
+        end
+      when 'phone_number'
+        if record.phone_number == duplicate_record.phone_number || record.phone_number == duplicate_record.phone_number_2 || record.phone_number == duplicate_record.mobile_phone
+          weight
+        elsif levenshtein_compare(record.phone_number, duplicate_record.phone_number) || levenshtein_compare(record.phone_number, duplicate_record.phone_number_2) || levenshtein_compare(record.phone_number, duplicate_record.mobile_phone)
+          weight / 2
+        else
+          0
+        end
+      when 'mobile_phone'
+        if record.mobile_phone == duplicate_record.mobile_phone || record.mobile_phone == duplicate_record.phone_number || record.mobile_phone == duplicate_record.phone_number_2
+          weight
+        elsif levenshtein_compare(record.mobile_phone, duplicate_record.mobile_phone) || levenshtein_compare(record.mobile_phone, duplicate_record.phone_number) || levenshtein_compare(record.mobile_phone, duplicate_record.phone_number_2)
+          weight / 2
+        else
+          0
+        end
       else
-        0
+        attribute_1 = record.send(field_name)
+        attribute_2 = duplicate_record.send(field_name)
+
+        if attribute_1.blank? || attribute_2.blank?
+          0
+        elsif attribute_1.upcase == attribute_2.upcase
+          weight
+        elsif levenshtein_compare(attribute_1, attribute_2)
+          weight / 2
+        else
+          0
+        end
       end
+    end
+
+    def levenshtein_compare(string_1, string_2)
+      return false if string_1.blank? || string_2.blank?
+
+      Text::Levenshtein.distance(string_1.upcase, string_2.upcase) <= 2
     end
 
     def first_last_name_present?
