@@ -31,9 +31,10 @@ class NotificationMailer < RadMailer
     send_notification_mail recipients, "User Was Approved on #{RadConfig.app_name!}"
   end
 
-  def global_validity(recipients, problems)
-    @problems = problems
-    @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
+  def global_validity(recipients, payload)
+    @problems = payload[:error_messages]
+    @message = "There #{payload[:error_count] == 1 ? 'is' : 'are'} #{pluralize(payload[:error_count], 'invalid record')}."
+    # TODO: enhance message to explain when only limited errors could be shown
 
     send_notification_mail recipients, "Invalid data in #{RadConfig.app_name!}"
   end
