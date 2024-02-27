@@ -83,14 +83,14 @@ class DuplicatesController < ApplicationController
 
     max = Duplicate.where(duplicatable_type: model.name).maximum(:sort)
     sort = (max ? max + 1 : 1)
-    @record.create_or_update_metadata! sort: sort
+    @record.create_or_update_metadata!({ sort: sort })
 
     if @record.duplicate.present? && @record.duplicate.score.present?
       dupes = @record.duplicates
 
       if dupes.count == 1
         record = dupes.first[:record]
-        record.create_or_update_metadata! sort: sort
+        record.create_or_update_metadata!({ sort: sort })
       end
     end
 
@@ -125,11 +125,12 @@ class DuplicatesController < ApplicationController
 
     @record.valid?
     found_duplicates = @record.find_duplicates
-    if found_duplicates.present?
 
+    if found_duplicates.present?
       duplicates = found_duplicates.map do |dupe|
         { duplicate_data: dupe.duplicate_fields, duplicate_path: "/#{model.table_name}/#{dupe.id}" }
       end
+
       render json: { duplicate: true, duplicates: duplicates }
     else
       render json: { duplicate: false }

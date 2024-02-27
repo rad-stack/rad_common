@@ -17,6 +17,7 @@ module RadCommon
         install_database_yml
         install_github_workflow
         update_seeder_method
+        replace_webdrivers_gem_with_selenium
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
@@ -217,6 +218,7 @@ Seeder.new.seed!
         apply_migration '20231205185433_pending_user_status.rb'
         apply_migration '20240209114718_make_audits_created_at_non_nullable.rb'
         apply_migration '20240209141219_missing_fks.rb'
+        apply_migration '20240222093233_active_record_doctor_issues.rb'
       end
 
       def self.next_migration_number(path)
@@ -271,12 +273,20 @@ Seeder.new.seed!
         end
 
         def search_and_replace(search, replace, js: false)
-          system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
-          system "find . -type f -name \"*.haml\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
-          system "find . -type f -name \"*.rake\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          search_and_replace_type search, replace, 'rb'
+          search_and_replace_type search, replace, 'haml'
+          search_and_replace_type search, replace, 'rake'
           return unless js
 
-          system "find . -type f -name \"*.js\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          search_and_replace_type search, replace, 'js'
+        end
+
+        def search_and_replace_type(search, replace, file_type)
+          if ENV['CI']
+            system "find . -type f -name \"*.#{file_type}\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
+          else
+            system "find . -type f -name \"*.#{file_type}\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          end
         end
 
         def add_crawling_config
@@ -294,6 +304,13 @@ Seeder.new.seed!
 
           copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
           copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
+        end
+
+        def replace_webdrivers_gem_with_selenium
+          gsub_file 'Gemfile', /\n\s*gem 'webdrivers'.*\n/, "\n"
+          return if File.readlines('Gemfile').grep(/gem 'selenium-webdriver'/).any?
+
+          gsub_file 'Gemfile', /\n\s*gem 'simplecov', require: false\n/, "\n  gem 'selenium-webdriver'\n  gem 'simplecov', require: false\n"
         end
 
         def add_rad_config_setting(setting_name, default_value)
