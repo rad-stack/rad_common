@@ -104,8 +104,6 @@ class DuplicatesProcessor
     end
 
     def other_query(item, item_value)
-      raise "#{item[:name]}" unless item[:name].is_a?(String)
-
       case item[:name]
       when 'email'
         model_klass.where("email IS NOT NULL AND email <> '' AND (email = ? OR email_2 = ?)", item_value, item_value)
@@ -170,8 +168,6 @@ class DuplicatesProcessor
     end
 
     def calc_string_weight(record, duplicate_record, field_name, weight)
-      raise "#{field_name}" unless field_name.is_a?(String)
-
       case field_name.to_s
       when 'email'
         if record.email == duplicate_record.email || record.email == record.email_2
