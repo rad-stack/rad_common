@@ -10,8 +10,14 @@
 
   .col-lg-6
     .card
-      - users = @security_role.users.active.by_name
-      = render 'layouts/card_header', action_name: 'custom', title: "Users in Role (#{users.count})", icon: 'fa-list'
+      - users = @security_role.users.sorted
+
+      = render 'layouts/card_header',
+               action_name: 'custom',
+               title: "Active Users (#{users.active.size})",
+               icon: 'fa-list',
+               additional_actions: [show_hide_users_button(users)]
+
       .card-body
         %table.table.table-striped.table-bordered
           %tr
@@ -19,6 +25,6 @@
             %th Signed In
 
           - users.each do |user|
-            %tr
+            %tr{ class: user_row_class(user, true), id: user_row_id(user, true) }
               %td= secured_link(user)
               %td= format_date(user.current_sign_in_at)
