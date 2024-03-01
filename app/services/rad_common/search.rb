@@ -64,8 +64,8 @@ module RadCommon
       @sorting.sort_direction
     end
 
-    def sort_clause
-      @sorting.sort_clause
+    def sort_clause(record_class)
+      @sorting.sort_clause record_class
     end
 
     def search_params?
