@@ -11,9 +11,8 @@
         = text_field_tag :token, '', autocomplete: 'one-time-code', id: 'twilio-verify-token',
                         autofocus: true, class: 'form-control', placeholder: t('submit_token_title', scope: 'devise')
         = twilio_verify_request_sms_link class: 'btn btn-link'
-        %hr
-        = submit_tag I18n.t('submit_token', scope: 'devise'), class: 'btn btn-primary btn-lg'
-
-        %label
-          = check_box_tag :remember_device, '1', checked: true
-          %span Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}
+        .mt-3.d-flex.align-items-center
+          = submit_tag I18n.t('submit_token', scope: 'devise'), class: 'btn btn-primary btn-lg'
+          %label
+            = check_box_tag :remember_device, '1', checked: true
+            %span Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}
