@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Divisions', type: :system do
+RSpec.describe 'Divisions' do
   let(:user) { create :admin }
 
   before { login_as user, scope: :user }
@@ -14,7 +14,7 @@ RSpec.describe 'Divisions', type: :system do
     Object.send(:remove_const, :Division)
     load 'division.rb'
     Division.schema_validations_loaded = true
-    division = create(:division)
+    division = create :division
     Division.schema_validations_loaded = false
     visit edit_division_path(division)
     expect(page).to have_css '.string.required'

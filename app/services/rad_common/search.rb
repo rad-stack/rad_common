@@ -73,7 +73,7 @@ module RadCommon
     end
 
     def search_params
-      search_params? ? params.require(:search).permit(permitted_searchable_columns) : {}
+      search_params? ? params.require(:search).permit(permitted_searchable_columns + %i[sort direction]) : {}
     end
 
     def page_size_param
@@ -152,19 +152,18 @@ module RadCommon
 
         columns = filters.sort_by { |f| f.respond_to?(:multiple) && f.multiple ? 1 : 0 }
         columns.map { |f|
+          not_filter = "#{f.searchable_name}_not" if f.allow_not
           if f.respond_to?(:multiple) && f.multiple
-            hash = {}
-            hash[f.searchable_name] = []
-            hash
+            [not_filter, { f.searchable_name => [] }].compact
           else
-            f.searchable_name
+            [not_filter, f.searchable_name].compact
           end
         }.flatten + %i[applied_filter saved_name]
       end
 
       def maybe_save_filters
         filter_name = search_params[:saved_name]
-        return unless RadicalConfig.saved_search_filters_enabled? && filter_name.present?
+        return unless RadConfig.saved_search_filters_enabled? && filter_name.present?
 
         filter = SavedSearchFilter.find_or_initialize_by(name: filter_name,
                                                          user: current_user,
@@ -175,6 +174,22 @@ module RadCommon
         else
           saved_filter_errors << "Filter \"#{filter}\" could not be saved: #{filter.errors.full_messages.to_sentence}"
         end
+      end
+
+      def created_by_filter
+        { input_label: 'Created By',
+          scope: :for_created_by,
+          options: [['Active', active_users], ['Inactive', inactive_users]],
+          grouped: true,
+          blank_value_label: 'All Users' }
+      end
+
+      def active_users
+        Pundit.policy_scope!(current_user, User).active.by_name
+      end
+
+      def inactive_users
+        Pundit.policy_scope!(current_user, User).inactive.by_name
       end
   end
 end

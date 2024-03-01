@@ -1,4 +1,4 @@
-- if RadicalConfig.user_clients? && @user.external?
+- if RadConfig.user_clients? && @user.external?
   - if @user_clients.count.zero?
     .alert.alert-danger Add at least one client to this user to give them access to their data
   .card

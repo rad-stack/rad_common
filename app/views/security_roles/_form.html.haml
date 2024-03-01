@@ -4,11 +4,11 @@
   .form-inputs
     .row
       .col-lg-6= f.input :name
-      - if RadicalConfig.external_users?
+      - if RadConfig.external_users?
         .col-lg-2= f.input :external
-      - unless RadicalConfig.disable_invite?
+      - unless RadConfig.disable_invite?
         .col-lg-2= f.input :allow_invite
-      - unless RadicalConfig.disable_sign_up?
+      - unless RadConfig.disable_sign_up?
         .col-lg-2= f.input :allow_sign_up
 
     .row

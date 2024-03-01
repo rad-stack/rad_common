@@ -5,51 +5,57 @@ VCR.configure do |c|
   c.hook_into :webmock
 
   # see Task 37353, need the example.com item for now
-  c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com', 'www.example.com'
+  c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com', 'googlechromelabs.github.io', 'www.example.com'
 
-  if RadicalConfig.test_mobile_phone.present?
-    c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { RadicalConfig.test_mobile_phone! }
+  if RadConfig.test_mobile_phone.present?
+    c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { RadConfig.test_mobile_phone! }
 
     c.filter_sensitive_data('<TEST_MOBILE_PHONE_STRIPPED>') do
-      RadicalConfig.test_mobile_phone!.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
+      RadConfig.test_mobile_phone!.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
     end
   end
 
-  if RadicalConfig.test_phone_number.present?
-    c.filter_sensitive_data('<TEST_PHONE_NUMBER>') { RadicalConfig.test_phone_number! }
+  if RadConfig.test_phone_number.present?
+    c.filter_sensitive_data('<TEST_PHONE_NUMBER>') { RadConfig.test_phone_number! }
 
     c.filter_sensitive_data('<TEST_PHONE_NUMBER_STRIPPED>') do
-      RadicalConfig.test_phone_number!.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
+      RadConfig.test_phone_number!.gsub('(', '').gsub(')', '').gsub(' ', '').gsub('-', '')
     end
   end
 
-  c.filter_sensitive_data('<AUTHY_API_KEY>') { RadicalConfig.authy_api_key! } if RadicalConfig.authy_api_key.present?
+  c.filter_sensitive_data('<SENDGRID_API_KEY>') { RadConfig.sendgrid_api_key! } if RadConfig.sendgrid_api_key.present?
 
-  if RadicalConfig.sendgrid_api_key.present?
-    c.filter_sensitive_data('<SENDGRID_API_KEY>') { RadicalConfig.sendgrid_api_key! }
+  if RadConfig.secret_config_item(:twilio_alt_verify_service_sid).present?
+    c.filter_sensitive_data('<TWILIO_ALT_VERIFY_SERVICE_SID>') do
+      RadConfig.secret_config_item!(:twilio_alt_verify_service_sid)
+    end
   end
 
-  c.filter_sensitive_data('<SMARTY_AUTH_ID>') { RadicalConfig.smarty_auth_id! } if RadicalConfig.smarty_auth_id.present?
+  c.filter_sensitive_data('<SMARTY_AUTH_ID>') { RadConfig.smarty_auth_id! } if RadConfig.smarty_auth_id.present?
 
-  if RadicalConfig.smarty_auth_token.present?
-    c.filter_sensitive_data('<SMARTY_AUTH_TOKEN>') { RadicalConfig.smarty_auth_token! }
+  if RadConfig.smarty_auth_token.present?
+    c.filter_sensitive_data('<SMARTY_AUTH_TOKEN>') { RadConfig.smarty_auth_token! }
   end
 
-  if RadicalConfig.secret_config_item(:chrome_username).present?
+  if RadConfig.secret_config_item(:chrome_username).present?
     c.filter_sensitive_data('chrome_api') do
-      "#{RadicalConfig.secret_config_item!(:chrome_username)}:" \
-        "#{RadicalConfig.secret_config_item!(:chrome_password)}@media.chromedata.com"
+      "#{RadConfig.secret_config_item!(:chrome_username)}:" \
+        "#{RadConfig.secret_config_item!(:chrome_password)}@media.chromedata.com"
     end
   end
 
-  if RadicalConfig.secret_config_item(:github_access_token).present?
-    c.filter_sensitive_data('<GITHUB_ACCESS_TOKEN>') { RadicalConfig.secret_config_item!(:github_access_token) }
+  if RadConfig.secret_config_item(:github_access_token).present?
+    c.filter_sensitive_data('<GITHUB_ACCESS_TOKEN>') { RadConfig.secret_config_item!(:github_access_token) }
   end
 
-  c.filter_sensitive_data('<S3_ACCESS_KEY_ID>') { RadicalConfig.s3_access_key_id! }
+  if RadConfig.secret_config_item(:sentry_api_token).present?
+    c.filter_sensitive_data('<SENTRY_API_TOKEN>') { RadConfig.secret_config_item!(:sentry_api_token) }
+  end
 
-  if RadicalConfig.secret_config_item(:lob_key).present?
-    c.filter_sensitive_data('<LOB_KEY>') { RadicalConfig.secret_config_item!(:lob_key) }
+  c.filter_sensitive_data('<S3_ACCESS_KEY_ID>') { RadConfig.s3_access_key_id! }
+
+  if RadConfig.secret_config_item(:lob_key).present?
+    c.filter_sensitive_data('<LOB_KEY>') { RadConfig.secret_config_item!(:lob_key) }
   end
 end
 

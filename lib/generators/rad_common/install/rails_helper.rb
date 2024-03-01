@@ -83,23 +83,26 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   Capybara.register_driver :headless_chrome do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: { args: %w[headless disable-popup-blocking disable-gpu window-size=1400,900], w3c: false }
-    )
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless=new')
+    options.add_argument('--window-size=1400,900')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-gpu')
 
     Capybara::Selenium::Driver.new app,
                                    browser: :chrome,
-                                   desired_capabilities: capabilities
+                                   options: options
   end
 
   Capybara.register_driver :chrome do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: { args: %w[disable-popup-blocking disable-gpu window-size=1400,900], w3c: false }
-    )
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--window-size=1400,900')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-gpu')
 
     Capybara::Selenium::Driver.new app,
                                    browser: :chrome,
-                                   desired_capabilities: capabilities
+                                   options: options
   end
 
   chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
@@ -118,16 +121,18 @@ RSpec.configure do |config|
 
   SpecSupport.hooks(config, chrome_driver)
 
-  config.filter_run_excluding(authy_specs: true) unless RadicalConfig.authy_enabled?
-  config.filter_run_excluding(impersonate_specs: true) unless RadicalConfig.impersonate?
-  config.filter_run_excluding(invite_specs: true) if RadicalConfig.disable_invite?
-  config.filter_run_excluding(sign_up_specs: true) if RadicalConfig.disable_sign_up?
-  config.filter_run_excluding(external_user_specs: true) unless RadicalConfig.external_users?
-  config.filter_run_excluding(user_client_specs: true) unless RadicalConfig.user_clients?
-  config.filter_run_excluding(devise_paranoid_specs: true) unless Devise.paranoid
-  config.filter_run_excluding(smarty_specs: true) unless RadicalConfig.smarty_enabled?
-  config.filter_run_excluding(user_confirmable_specs: true) unless RadicalConfig.user_confirmable?
-  config.filter_run_excluding(user_expirable_specs: true) unless RadicalConfig.user_expirable?
+  config.filter_run_excluding(twilio_verify_specs: true) unless RadConfig.twilio_verify_enabled?
+  config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
+  config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
+  config.filter_run_excluding(sign_up_specs: true) if RadConfig.disable_sign_up?
+  config.filter_run_excluding(pending_user_specs: true) unless RadConfig.pending_users?
+  config.filter_run_excluding(external_user_specs: true) unless RadConfig.external_users?
+  config.filter_run_excluding(user_client_specs: true) unless RadConfig.user_clients?
+  config.filter_run_excluding(devise_timeoutable_specs: true) unless Devise.mappings[:user].timeoutable?
+  config.filter_run_excluding(smarty_specs: true) unless RadConfig.smarty_enabled?
+  config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
+  config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
+  config.filter_run_excluding(password_expirable_specs: true) unless RadConfig.password_expirable?
 
   include Warden::Test::Helpers
   config.include Capybara::DSL

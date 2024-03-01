@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'UserProfiles', type: :system do
+RSpec.describe 'UserProfiles' do
   before { login_as user, scope: :user }
 
   describe 'edit' do

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe NotificationMailer, type: :mailer do
+describe NotificationMailer do
   let(:user) { create :user }
   let(:another_user) { create :user }
   let(:email) { user.email }
@@ -10,8 +10,10 @@ describe NotificationMailer, type: :mailer do
   before { ActionMailer::Base.deliveries.clear }
 
   describe '#global_validity' do
+    let(:payload) { { error_count: 0, error_messages: [] } }
+
     context 'with one user' do
-      before { described_class.global_validity([user], []).deliver_now }
+      before { described_class.global_validity([user], payload).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -21,7 +23,7 @@ describe NotificationMailer, type: :mailer do
     end
 
     context 'with multiple users' do
-      before { described_class.global_validity(User.where(id: [user.id, another_user.id]), []).deliver_now }
+      before { described_class.global_validity(User.where(id: [user.id, another_user.id]), payload).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -32,7 +34,9 @@ describe NotificationMailer, type: :mailer do
     end
 
     context 'with a problem with a link' do
-      before { described_class.global_validity([user], [[user, 'foo bar']]).deliver_now }
+      let(:payload) { { error_count: 1, error_messages: [[user, 'foo bar']] } }
+
+      before { described_class.global_validity([user], payload).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -44,10 +48,15 @@ describe NotificationMailer, type: :mailer do
 
     context 'with a problem without a link' do
       let(:notification_setting) do
-        create :notification_setting, notification_type: create(:global_validity_notification)
+        create :notification_setting, notification_type: Notifications::InvalidDataWasFoundNotification.main
       end
 
-      before { described_class.global_validity([user], [[notification_setting, 'foo bar']]).deliver_now }
+      let(:payload) { { error_count: 1, error_messages: [[notification_setting, 'foo bar']] } }
+
+      before do
+        create :admin
+        described_class.global_validity([user], payload).deliver_now
+      end
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'

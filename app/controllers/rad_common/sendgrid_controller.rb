@@ -19,7 +19,7 @@ module RadCommon
       recipients = admins.map(&:email)
 
       recipients.each do |recipient|
-        RadbearMailer.simple_message(recipient, subject, message).deliver_later
+        RadMailer.simple_message(recipient, subject, message).deliver_later
       end
     end
   end

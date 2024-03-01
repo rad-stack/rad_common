@@ -2,8 +2,9 @@ module RadCommon
   ##
   # This is used to generate dropdown filter containing options to be filtered on
   class SearchFilter
-    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :default_value, :errors, :include_blank,
-                :search_scope, :show_search_subtext
+    attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :not_scope,
+                :default_value, :errors, :include_blank,
+                :search_scope, :show_search_subtext, :allow_not
 
     ##
     # @param [Symbol optional] column the database column that is being filtered
@@ -12,8 +13,9 @@ module RadCommon
     # @param [ActiveRecord_Relation, Array] options the options to be displayed in the dropdown. See examples
     #   This is required when no scope values are specified.
     # @param [Boolean optional] grouped will the options be grouped
-    # @param [Array optional] scope_values An array of scopes active record scopes represented by symbols to be inserted
-    #   into the dropdown options.For example :closed_orders, :open_orders. This is required when no options are specified.
+    # @param [Array optional] scope_values An array of active record scope names as as selectable values represented
+    #   by symbols to be inserted into the dropdown options. For example :closed_orders, :open_orders.
+    #   This is required when no options are specified.
     # @param [String optional] joins any necessary sql joins so that the query can be performed
     # @param [String optional] input_label by default the input label for the dropdown is determined by the column name
     #   but you can override that by specifying it here
@@ -36,15 +38,26 @@ module RadCommon
     # [{ column: :user_search_id, input_label: 'Users', grouped: true,
     #    options: [['Active', [scope_label: 'Some Active User', scope_value: { for_project_user: 1 }]],
     #              ['Inactive', [scope_label: 'Some Inactive User', scope_value: { for_project_user: 2 }]]] }]
+    # @example Using scope with grouped options
+    #   { input_label: 'Sales User',
+    #     scope: :for_sales_user,
+    #     options: [['Active', User.active.by_name],
+    #               ['Inactive', User.inactive.by_name]],
+    #     grouped: true,
+    #     blank_value_label: 'All Users' }
     # @example Using scope values
     #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
-    def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil, input_label: nil,
-                   default_value: nil, blank_value_label: nil, scope: nil, multiple: false, required: false,
-                   include_blank: true, search_scope_name: nil, show_search_subtext: false)
+    def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil,
+                   input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, not_scope: nil,
+                   multiple: false, required: false, include_blank: true, search_scope_name: nil,
+                   show_search_subtext: false, allow_not: false)
       if input_label.blank? && !options.respond_to?(:table_name)
         raise 'Input label is required when options are not active record objects'
       end
 
+      if scope.present? && allow_not && not_scope.blank?
+        raise 'not_scope is required when scope and allow_not are present'
+      end
       raise 'options, scope_values, or search_scope' if options.nil? && scope_values.nil? && search_scope_name.nil?
       raise 'name is only valid when scope_values are present' if name.present? && scope_values.blank?
       raise 'must have a column, name, or scope defined' if column.blank? && name.blank? && scope.blank?
@@ -58,12 +71,14 @@ module RadCommon
       @blank_value_label = blank_value_label
       @scope_values = scope_values
       @scope = scope
+      @not_scope = not_scope
       @multiple = multiple
       @default_value = default_value
       @grouped = grouped
       @required = required
-      @search_scope = RadicalConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
+      @search_scope = RadConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
       @show_search_subtext = show_search_subtext
+      @allow_not = allow_not
       @errors = []
     end
 
@@ -134,15 +149,20 @@ module RadCommon
     def apply_filter(results, search_params)
       value = filter_value(search_params)
       if scope_search?
-        apply_scope_filter(results, value)
+        apply_scope_filter(results, value, search_params)
       elsif scope_value?(value)
         apply_scope_value(results, value)
       elsif value.present?
+        not_filter = not_value?(search_params)
         if value.is_a? Array
           values = convert_array_values(value)
-          results.where("#{searchable_name} IN (?)", values) if values.present?
+          return if values.blank?
+
+          query = not_filter ? "#{query_column(results)} NOT IN (?)" : "#{query_column(results)} IN (?)"
+          results.where(query, values)
         else
-          results.where("#{query_column(results)} = ?", value)
+          query = "#{query_column(results)} = ?"
+          not_filter ? results.where.not(query, value) : results.where(query, value)
         end
       end
     end
@@ -172,6 +192,10 @@ module RadCommon
       }
     end
 
+    def not_value?(search_params)
+      allow_not && search_params && search_params["#{searchable_name}_not"] == '1'
+    end
+
     private
 
       def scope_name
@@ -199,7 +223,14 @@ module RadCommon
       end
 
       def convert_array_values(value)
-        value.select(&:present?).map(&:to_i)
+        values = value.select(&:present?)
+        return values.map(&:to_i) if number_array?(values)
+
+        values
+      end
+
+      def number_array?(values)
+        values.all? { |v| Integer(v, exception: false) }
       end
 
       def filter_value(search_params)
@@ -228,6 +259,7 @@ module RadCommon
         return false if values.blank?
 
         return values.map(&:to_s).include?(value.to_s) if group_scope_hash?
+        return values.intersect?(value.map(&:to_sym).reject(&:blank?)) if value.is_a?(Array)
 
         values.include?(value.to_sym)
       end
@@ -260,13 +292,13 @@ module RadCommon
         scope.present?
       end
 
-      def apply_scope_filter(results, value)
+      def apply_scope_filter(results, value, search_params)
         if scope.is_a? Hash
           scope_proc = scope.values.first
           scope_proc.call(results, value)
         else
           value = convert_array_values(value) if value.is_a? Array
-          results.send(scope, value) if value.present?
+          results.send(not_value?(search_params) ? not_scope : scope, value) if value.present?
         end
       end
 
@@ -301,7 +333,18 @@ module RadCommon
           return results.send(scope_params[:scope], scope_params[:scope_args])
         end
 
+        return apply_mixed_group_scope_values(results, scope_name) if scope_name.is_a?(Array)
+
         results.send(scope_name)
+      end
+
+      def apply_mixed_group_scope_values(results, values)
+        scopes = grouped_scope_values.intersection(values.map(&:to_sym))
+        values = (values.compact - scopes.map(&:to_s)).reject(&:blank?)
+        results = results.where("#{searchable_name} IN (?)", values) if values.present?
+        scopes.each { |scope| results = results.send(scope) }
+
+        results
       end
 
       def apply_scope_a_value(results, scope_name)

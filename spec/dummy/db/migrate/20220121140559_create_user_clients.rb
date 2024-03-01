@@ -1,6 +1,6 @@
 class CreateUserClients < ActiveRecord::Migration[6.1]
   def change
-    if RadicalConfig.user_clients?
+    if RadConfig.user_clients?
       create_table :clients do |t|
         t.string :name, null: false
         t.boolean :active, null: false, default: true
@@ -23,7 +23,7 @@ class CreateUserClients < ActiveRecord::Migration[6.1]
 
     add_foreign_key :user_clients, :users
 
-    if RadicalConfig.user_clients?
+    if RadConfig.user_clients?
       add_foreign_key :user_clients, :clients
     end
   end

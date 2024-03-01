@@ -1,12 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe NotificationType, type: :model do
+RSpec.describe NotificationType do
   let(:user) { create :admin }
-  let(:notification_type) { create :new_division_notification }
+  let(:notification_type) { Notifications::DivisionUpdatedNotification.main(notification_payload) }
   let(:notification_payload) { create :division, owner: user }
   let(:notification_method) { :email }
-
-  before { notification_type.payload = notification_payload }
 
   describe 'notify_user_ids_opted with absolute_users' do
     subject(:result) { notification_type.send(:notify_user_ids_opted, notification_method) }

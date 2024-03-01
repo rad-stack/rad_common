@@ -1,5 +1,7 @@
 .card
-  = render 'layouts/card_header', title: "Notifications (#{current_user.notifications.unread.count} unread)"
+  = render 'layouts/card_header',
+           title: "Notifications (#{current_user.notifications.unread.count} unread)",
+           icon: 'fa-bell'
   .card-body
 
     -# see kaminari monkey patch on initializers/rad_common.rb
@@ -10,15 +12,15 @@
         %th When
         %th Content
         %th Subject
-      - @notifications.each do |notification|
-        %tr{ class: notification.unread? ? 'text-danger' : '' }
+      - @notifications.each do |record|
+        %tr{ class: table_row_style(record, style_class: 'text-danger') }
           %td
-            %p= format_datetime(notification.created_at)
-            %p #{distance_of_time_in_words_to_now(notification.created_at)} ago
-          %td= sanitize notification.content
+            %p= format_datetime(record.created_at)
+            %p #{distance_of_time_in_words_to_now(record.created_at)} ago
+          %td= sanitize record.content
           %td
-            - if notification.record.present?
-              %p= secured_link(notification.record)
+            - if record.record.present?
+              %p= secured_link(record.record)
 
     -# see kaminari monkey patch on initializers/rad_common.rb
     = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine

@@ -40,7 +40,7 @@ class SmartyAddress
 
           log_request_made
 
-          RadicalRetry.perform_request(additional_errors: [SmartyStreets::SmartyError]) { client.send_lookup(lookup) }
+          RadRetry.perform_request(additional_errors: [SmartyStreets::SmartyError]) { client.send_lookup(lookup) }
         end
     end
 
@@ -57,6 +57,6 @@ class SmartyAddress
     end
 
     def credentials
-      SmartyStreets::StaticCredentials.new(RadicalConfig.smarty_auth_id!, RadicalConfig.smarty_auth_token!)
+      SmartyStreets::StaticCredentials.new(RadConfig.smarty_auth_id!, RadConfig.smarty_auth_token!)
     end
 end

@@ -8,7 +8,7 @@ describe DatabaseUseChecker do
 
     context 'when table has more than 1 record' do
       before do
-        create_list(:user, 2)
+        create_list :user, 2
       end
 
       it 'generates a report for each table' do
@@ -19,7 +19,7 @@ describe DatabaseUseChecker do
 
     context 'when table has one record' do
       before do
-        create(:user)
+        create :user
       end
 
       it 'skips table report with one record' do

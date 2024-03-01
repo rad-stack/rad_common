@@ -13,26 +13,28 @@
         %th State
         %th Phone number
         %th Email
+        %th Active
         - if show_actions
           %th.actions Actions
 
-      - @attorneys.each do |attorney|
-        %tr
-          %td= secured_link attorney
-          %td= attorney.company_name
-          %td= attorney.city
-          %td= attorney.state
-          %td= attorney.phone_number
-          %td= attorney.email
+      - @attorneys.each do |record|
+        %tr{ class: table_row_style(record) }
+          %td= secured_link record
+          %td= record.company_name
+          %td= record.city
+          %td= record.state
+          %td= record.phone_number
+          %td= record.email
+          %td= format_boolean record.active
           - if show_actions
             %td
-              - if policy(attorney).update?
+              - if policy(record).update?
                 = link_to icon(:pencil, 'Edit'),
-                          edit_attorney_path(attorney),
+                          edit_attorney_path(record),
                           class: 'btn btn-sm btn-secondary btn-block'
-              - if policy(attorney).destroy?
+              - if policy(record).destroy?
                 = link_to icon(:times, 'Delete'),
-                          attorney,
+                          record,
                           method: :delete,
                           data: { confirm: 'Are you sure?' },
                           class: 'btn btn-danger btn-sm btn-block'

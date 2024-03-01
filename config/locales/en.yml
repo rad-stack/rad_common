@@ -1,7 +1,11 @@
 en:
   communication_sms_opt_in: 'Your communication preferences have been changed, we will start sending you text message notifications.'
+  navigation:
+    my_account: My Account
   activerecord:
     attributes:
+      company:
+        valid_user_domains: 'Valid User Email Domains'
       system_message:
         send_tos:
           preview: 'Me (preview)'
@@ -9,7 +13,10 @@ en:
           email: 'Email'
           sms: 'SMS'
       user:
-        external: 'External user?'
+        external: 'External User?'
+        twilio_verify_enabled: 'Two Factor Auth'
+      security_role:
+        external: 'External User?'
   faker:
     phone_number:
       formats: ['(###) ###-####']

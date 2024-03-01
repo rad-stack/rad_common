@@ -25,4 +25,8 @@ class UserExport < Exporter
     end
 
     def reset_attributes; end
+
+    def report_name
+      'Users Report'
+    end
 end

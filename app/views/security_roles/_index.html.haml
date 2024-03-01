@@ -2,37 +2,37 @@
   %tr
     %th Name
     %th # of Users
-    - if RadicalConfig.external_users?
+    - if RadConfig.external_users?
       %th External
-    - unless RadicalConfig.disable_invite?
+    - unless RadConfig.disable_invite?
       %th Allow Invite
-    - unless RadicalConfig.disable_sign_up?
+    - unless RadConfig.disable_sign_up?
       %th Allow Sign Up
     - if show_actions
       %th.actions Actions
 
-  - security_roles.each do |security_role|
-    %tr
-      %td= secured_link security_role
+  - security_roles.each do |record|
+    %tr{ class: table_row_style(record) }
+      %td= secured_link record
       %td
-        %p #{pluralize(security_role.users.active.count, 'Active User')}
-        %p #{pluralize(security_role.users.inactive.count, 'Inactive User')}
-      - if RadicalConfig.external_users?
-        %td= format_boolean security_role.external
-      - unless RadicalConfig.disable_invite?
-        %td= format_boolean security_role.allow_invite
-      - unless RadicalConfig.disable_sign_up?
-        %td= format_boolean security_role.allow_sign_up
+        %p= pluralize record.users.active.count, 'Active User'
+        %p= pluralize record.users.inactive.count, 'Inactive User'
+      - if RadConfig.external_users?
+        %td= format_boolean record.external
+      - unless RadConfig.disable_invite?
+        %td= format_boolean record.allow_invite
+      - unless RadConfig.disable_sign_up?
+        %td= format_boolean record.allow_sign_up
       - if show_actions
         %td
-          - if policy(security_role).update?
+          - if policy(record).update?
             = link_to icon(:pencil, 'Edit'),
-                      edit_security_role_path(security_role),
+                      edit_security_role_path(record),
                       class: 'btn btn-sm btn-secondary btn-block'
 
-          - if policy(security_role).destroy?
+          - if policy(record).destroy?
             = link_to icon(:times, 'Delete'),
-                      security_role,
+                      record,
                       method: :delete,
                       data: { confirm: 'Are you sure?' },
                       class: 'btn btn-danger btn-sm btn-block'

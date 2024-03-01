@@ -1,15 +1,20 @@
-- if controller_name != 'sessions'
-  = link_to 'Sign In', new_user_session_path
-  %br
-- if !RadicalConfig.disable_sign_up? && devise_mapping.registerable? && controller_name != 'registrations'
-  = link_to 'Sign Up', new_user_registration_path
-  %br
-- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations'
-  = link_to 'Forgot Your Password?', new_password_path(resource_name)
-  %br
-- if devise_mapping.confirmable? && controller_name != 'confirmations'
-  = link_to "Didn't Receive Confirmation Instructions?", new_confirmation_path(resource_name)
-  %br
-- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks'
-  = link_to "Didn't Receive Unlock Instructions?", new_unlock_path(resource_name)
-  %br
+.mt-3.overflow-auto
+  - if controller_name != 'sessions'
+    = link_to icon('sign-in-alt', 'Sign In'), new_user_session_path, class: 'btn btn-link px-0'
+    %br
+  - if !RadConfig.disable_sign_up? && devise_mapping.registerable? && controller_name != 'registrations'
+    = link_to icon('user-plus', 'Sign Up'), new_user_registration_path, class: 'btn btn-link p-0'
+    %br
+  - if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations'
+    = link_to icon('key', 'Forgot Your Password?'), new_password_path(resource_name), class: 'btn btn-link px-0'
+    %br
+  - if devise_mapping.confirmable? && controller_name != 'confirmations'
+    = link_to icon('envelope', "Didn't Receive Confirmation Instructions?"),
+              new_confirmation_path(resource_name),
+              class: 'btn btn-link p-0'
+    %br
+  - if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks'
+    = link_to icon('unlock', "Didn't Receive Unlock Instructions?"),
+              new_unlock_path(resource_name),
+              class: 'btn btn-link px-0'
+    %br

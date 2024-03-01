@@ -125,6 +125,10 @@ module RadCommon
       true
     end
 
+    def allow_not
+      false
+    end
+
     private
 
       def start_label_error

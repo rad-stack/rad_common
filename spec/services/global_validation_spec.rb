@@ -2,16 +2,16 @@ require 'rails_helper'
 
 describe GlobalValidation, type: :service do
   let(:global_validity) { described_class.new }
-  let(:admin_security_role) { admin.security_roles.first }
+  let!(:admin_security_role) { admin.security_roles.first }
   let(:company) { Company.main }
-  let!(:admin) { create :admin }
+  let(:admin) { create :admin }
   let(:url) { "http://localhost:3000/security_roles/#{admin_security_role.id}" }
   let(:last_email) { ActionMailer::Base.deliveries.last }
   let(:email_body_text) { last_email.body.parts.first.body.raw_source }
   let(:email_body_html) { last_email.body.parts.second.body.raw_source }
 
   before do
-    create :global_validity_notification, security_roles: [admin_security_role]
+    Notifications::InvalidDataWasFoundNotification.main
     ActionMailer::Base.deliveries.clear
   end
 
@@ -22,8 +22,8 @@ describe GlobalValidation, type: :service do
 
     let(:models) do
       %w[Attorney Category Client Company Division Duplicate Notification NotificationSecurityRole NotificationSetting
-         NotificationType SavedSearchFilter SecurityRole Status SystemMessage User UserClient UserSecurityRole
-         UserStatus]
+         NotificationType SavedSearchFilter SecurityRole Status SystemMessage TwilioLog TwilioLogAttachment User
+         UserClient UserSecurityRole UserStatus]
     end
 
     it { is_expected.to eq models }
@@ -57,20 +57,20 @@ describe GlobalValidation, type: :service do
       it 'raises an exception' do
         expect {
           result
-        }.to raise_error(RuntimeError, 'no users to notify')
+        }.to raise_error(RuntimeError, 'no users to notify: Notifications::InvalidDataWasFoundNotification')
       end
     end
 
     describe '.run' do
       before do
-        allow(RadicalConfig).to receive(:global_validity_supress!)
+        allow(RadConfig).to receive(:global_validity_supress!)
           .and_return([{ class: 'SomeSuppression', messages: ['Anything'] }])
       end
 
       it 'sends an email to admins when data is invalid' do
         global_validity.run
 
-        expect(last_email.subject).to eq("Invalid data in #{RadicalConfig.app_name!}")
+        expect(last_email.subject).to eq("Invalid data in #{RadConfig.app_name!}")
         expect(last_email.to).to eq([admin.email])
         expect(email_body_text).to include('requires all permissions to be true')
         expect(email_body_html).to include('requires all permissions to be true')
@@ -85,14 +85,14 @@ describe GlobalValidation, type: :service do
         let(:specific_query) { -> { SecurityRole.where(id: admin_security_role.id) } }
 
         before do
-          allow(RadicalConfig).to receive(:global_validity_exclude!).and_return ['SecurityRole']
-          allow(RadicalConfig).to receive(:global_validity_include!).and_return [specific_query]
+          allow(RadConfig).to receive(:global_validity_exclude!).and_return ['SecurityRole']
+          allow(RadConfig).to receive(:global_validity_include!).and_return [specific_query]
         end
 
         it 'sends an email to current user when data is invalid' do
           global_validity.run
 
-          expect(last_email.subject).to eq("Invalid data in #{RadicalConfig.app_name!}")
+          expect(last_email.subject).to eq("Invalid data in #{RadConfig.app_name!}")
           expect(last_email.to).to eq([admin.email])
           expect(email_body_text).to include('requires all permissions to be true')
           expect(email_body_html).to include('requires all permissions to be true')

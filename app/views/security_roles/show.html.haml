@@ -1,7 +1,7 @@
 .card
   = render 'layouts/card_header'
   .card-body
-    - if RadicalConfig.external_users?
+    - if RadConfig.external_users?
       = render 'layouts/show_data_columns', data: security_role_show_data, resource: @security_role
 
 .row

@@ -1,7 +1,5 @@
 class Seeder < RadSeeder
-  def seed!
-    super
-
+  def seed
     if Division.count.zero?
       display_log 'seeding divisions'
 
@@ -13,17 +11,19 @@ class Seeder < RadSeeder
 
       display_log 'seeding duplicate attorneys'
 
-      2.times do
-        FactoryBot.build(:attorney,
-                         first_name: 'Bruh',
-                         last_name: 'Bro',
-                         company_name: 'Bruh, Bro and Brah',
-                         city: 'Atlanta',
-                         state: 'GA',
-                         email: 'bruh_bro@example.com').save!(validate: false)
+      Audited.audit_class.as_user(random_internal_user) do
+        2.times do
+          FactoryBot.build(:attorney,
+                           first_name: 'Bruh',
+                           last_name: 'Bro',
+                           company_name: 'Bruh, Bro and Brah',
+                           city: 'Atlanta',
+                           state: 'GA',
+                           email: 'bruh_bro@example.com').save!(validate: false)
+        end
       end
 
-      Attorney.all.each(&:process_duplicates)
+      Attorney.find_each { |item| item.process_duplicates(bypass_notifications: true) }
     end
 
     3.times { FactoryBot.create :client } if Client.count.zero?
@@ -33,19 +33,10 @@ class Seeder < RadSeeder
     display_log 'seeding twilio logs'
 
     30.times do
-      from_user = users.sample
+      from_user = random_internal_user
       to_user = [1, 2].sample == 1 ? users.sample : nil
 
       FactoryBot.create :twilio_log, from_user: from_user, to_user: to_user
     end
   end
-
-  private
-
-    def seed_notification_types
-      super
-      return if NotificationType.find_by(type: 'Notifications::DivisionUpdatedNotification').present?
-
-      Notifications::DivisionUpdatedNotification.create!
-    end
 end

@@ -10,13 +10,13 @@ RSpec.describe RadCommon::TwilioErrorThresholdChecker, type: :service do
     context 'when threshold is exceeded' do
       before do
         create_list :twilio_log, 23, twilio_status: :delivered
-        create_list :twilio_log, 8, twilio_status: :undelivered
+        create_list :twilio_log, 10, twilio_status: :undelivered
         described_class.new.check_threshold
       end
 
       it 'sends a notification' do
         expect(email.subject).to eq 'Twilio Error Threshold Exceeded'
-        expect(body).to include 'Twilio Error Threshold has been exceeded. 25.81% of messages have failed to deliver. ' \
+        expect(body).to include 'Twilio Error Threshold has been exceeded. 30.3% of messages have failed to deliver. ' \
                                 'Check twilio logs for more details'
       end
     end
@@ -30,6 +30,31 @@ RSpec.describe RadCommon::TwilioErrorThresholdChecker, type: :service do
 
       it 'does not sends a notification' do
         expect(email).to be_nil
+      end
+    end
+
+    context 'when min failures is not exceeded' do
+      before do
+        create_list :twilio_log, 2, twilio_status: :delivered
+        create_list :twilio_log, 8, twilio_status: :undelivered
+        described_class.new.check_threshold
+      end
+
+      it 'does not sends a notification' do
+        expect(email).to be_nil
+      end
+    end
+
+    context 'when min failures is not exceeded and 100% are failures' do
+      before do
+        create_list :twilio_log, 8, twilio_status: :undelivered
+        described_class.new.check_threshold
+      end
+
+      it 'sends a notification' do
+        expect(email.subject).to eq 'Twilio Error Threshold Exceeded'
+        expect(body).to include 'Twilio Error Threshold has been exceeded. 100% of messages have failed ' \
+                                'to deliver. Check twilio logs for more details'
       end
     end
   end

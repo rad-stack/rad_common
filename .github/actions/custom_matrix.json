@@ -1,0 +1,12 @@
+{
+  "include": [
+    {
+      "TEST_ENV_NUMBER": 1,
+      "GROUP": [1, 2]
+    },
+    {
+      "TEST_ENV_NUMBER": 2,
+      "GROUP": [3, 4]
+    }
+  ]
+}

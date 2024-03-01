@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Audits', type: :request do
+RSpec.describe 'Audits' do
   let(:division) { create :division }
 
   before { login_as user, scope: :user }
@@ -32,7 +32,7 @@ RSpec.describe 'Audits', type: :request do
         let(:allowed) { false }
 
         it 'denies access' do
-          expect(response.code).to eq '403'
+          expect(response).to have_http_status :forbidden
         end
       end
     end

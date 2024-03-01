@@ -1,42 +1,49 @@
 - verify_sign_up
-
-.card
-  = render 'layouts/card_header', action_name: 'custom', title: 'Sign Up', icon: 'fa-file'
+= render 'users/devise_layout' do
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Sign Up',
+           icon: 'fa-user-plus',
+           card_style: 'bg-white'
   .card-body
     = simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
       = rad_form_errors f
 
       .form-inputs
         .row
-          .col-lg-4
+          .col-lg
             - if sign_up_roles.size > 1
               = f.input :initial_security_role_id,
-                        label: 'Initial security role',
+                        label: 'Initial Security Role',
                         collection: sign_up_roles,
                         include_blank: false
 
             - else
               = f.input :initial_security_role_id, as: :hidden, input_html: { value: sign_up_roles.first.id }
         .row
-          .col-lg-4
-            = f.input :email, required: true, autofocus: true, input_html: { autocomplete: 'email' }
-          .col-lg-4
+          .col-lg
             = f.input :first_name, required: true
-          .col-lg-4
+        .row
+          .col-lg
             = f.input :last_name, required: true
         .row
-          .col-lg-4
+          .col-lg
+            = f.input :email, required: true, autofocus: true, input_html: { autocomplete: 'email' }
+        .row
+          .col-lg
             = f.input :mobile_phone, required: require_mobile_phone?
-          .col-lg-4
+        .row
+          .col-lg
+            - hint = @minimum_password_length ? "#{@minimum_password_length} characters minimum" : nil
             = f.input :password, required: true,
-                                 hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                                 hint: hint,
                                  input_html: { autocomplete: 'new-password' }
-
-          .col-lg-4
+        .row
+          .col-lg
             = f.input :password_confirmation, required: true, input_html: { autocomplete: 'new-password' }
         .row.mb-3
-          .col-2
-            - if RadicalConfig.legal_docs?
+          .col-lg
+            - if RadConfig.legal_docs?
               = check_box_tag :accept_terms, false, false
               %label.pb-2{ for: 'accept_terms' }
                 I agree to the #{link_to('Terms & Conditions', terms_path, target: '_blank', rel: 'noopener')}
@@ -44,7 +51,7 @@
               = hidden_field_tag :accept_terms, '1'
 
       .form-actions
-        - if RadicalConfig.legal_docs?
+        - if RadConfig.legal_docs?
           = f.button :submit, 'Sign Up', class: 'btn btn-primary', disabled: true
         - else
           = f.button :submit, 'Sign Up', class: 'btn btn-primary'

@@ -2,6 +2,8 @@ class NotificationSetting < ApplicationRecord
   belongs_to :notification_type
   belongs_to :user
 
+  alias_attribute :active?, :enabled?
+
   scope :enabled, -> { where(enabled: true) }
 
   validate :validate_notify_methods
@@ -18,17 +20,13 @@ class NotificationSetting < ApplicationRecord
     return [] if user.external?
 
     types = Pundit.policy_scope!(user, NotificationType).by_type
-    settings = []
+    types.map { |notification_type| NotificationSetting.init_for_user(notification_type, user) }
+  end
 
-    types.each do |notification_type|
-      setting = NotificationSetting.find_or_initialize_by(notification_type: notification_type,
-                                                          user_id: user.id)
-
-      setting.check_defaults
-      settings.push setting
-    end
-
-    settings
+  def self.init_for_user(notification_type, user)
+    record = NotificationSetting.find_or_initialize_by(notification_type: notification_type, user: user)
+    record.check_defaults
+    record
   end
 
   def check_defaults
@@ -66,7 +64,7 @@ class NotificationSetting < ApplicationRecord
     end
 
     def validate_sms_possible_app
-      return if RadicalTwilio.new.twilio_enabled? || !sms?
+      return if RadTwilio.new.twilio_enabled? || !sms?
 
       errors.add(:sms, 'is not available for this application')
     end

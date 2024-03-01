@@ -6,7 +6,7 @@ module RadCommon
   VALID_VIDEO_TYPES = %w[video/x-msvideo video/mp4 video/mpeg video/3gpp video/quicktime].freeze
 
   VALID_AUDIO_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/wave audio/x-wav audio/aiff audio/x-aifc audio/x-aiff
-                         audio/x-gsm audio/ulaw].freeze
+                         audio/mp4 audio/x-gsm audio/ulaw].freeze
 
   VALID_ATTACHMENT_TYPES = (%w[application/msword
                                application/pdf
@@ -17,6 +17,8 @@ module RadCommon
                                application/vnd.openxmlformats-officedocument.presentationml.presentation
                                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
                                application/vnd.openxmlformats-officedocument.wordprocessingml.document
+                               application/vnd.openxmlformats-officedocument.wordprocessingml.template
+                               application/rtf
                                application/x-iwork-pages-sffpages
                                application/x-ole-storage
                                application/x-secure-download
@@ -27,6 +29,8 @@ module RadCommon
                                application/vnd.apple.numbers
                                image/bmp
                                image/gif
+                               image/heic
+                               image/tiff
                                image/vnd.adobe.photoshop
                                message/rfc822
                                text/csv

@@ -114,7 +114,7 @@ class StateOptions
     private
 
       def active_states
-        return STATE_DATA if RadicalConfig.canadian_addresses?
+        return STATE_DATA if RadConfig.canadian_addresses?
 
         STATE_DATA.select { |item| item[:country] == 'US' }
       end

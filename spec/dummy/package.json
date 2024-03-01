@@ -1,11 +1,14 @@
 {
   "license": "UNLICENSED",
   "private": true,
+  "engines": {
+    "node": "16.20.2"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
     "@rails/actiontext": "^6.0.2-1",
     "@rails/webpacker": "5.4.3",
-    "rad_common_js": "https://github.com/radicalbear/rad_common_js#dc418ddd5b47d9e63350498d5afda8b01fa815ac"
+    "rad_common_js": "https://github.com/rad-stack/rad_common_js#4596dc24c3b60fa34e6aefcdf9c4eb1259dd0d11"
   },
   "devDependencies": {
     "webpack": "^4.41.2",
@@ -16,7 +19,6 @@
   "resolutions": {
     "serialize-javascript": "^3.1.0",
     "ssri": "^8.0.1",
-    "dns-packet": "^5.2.2",
     "ws": "^7.4.6",
     "glob-parent": "^5.1.2",
     "normalize-url": "^4.5.1",
@@ -35,6 +37,9 @@
     "loader-utils": "^2.0.3",
     "terser": "^5.14.2",
     "jquery-ui": "^1.13.2",
-    "json5": "^2.2.2"
+    "json5": "^2.2.2",
+    "decode-uri-component": "^0.2.1",
+    "dns-packet": "^5.4.0",
+    "browserify-sign": "^4.2.2"
   }
 }

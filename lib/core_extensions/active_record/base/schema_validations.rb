@@ -8,7 +8,9 @@ module CoreExtensions
 
         module ClassMethods
           def validators
-            new.load_schema_validations if database_exists? && table_exists? && requires_schema_validation_load?
+            if name != 'ActiveRecord::Base' && database_exists? && table_exists? && requires_schema_validation_load?
+              new.load_schema_validations
+            end
             super
           end
 

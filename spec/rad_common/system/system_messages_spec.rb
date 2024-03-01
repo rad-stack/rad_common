@@ -9,7 +9,7 @@ RSpec.describe 'SystemMessages', type: :system do
   describe 'new' do
     context 'with twilio disabled' do
       before do
-        allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return false
+        allow_any_instance_of(RadTwilio).to receive(:twilio_enabled?).and_return false
         visit '/rad_common/system_messages/new'
       end
 
@@ -23,14 +23,14 @@ RSpec.describe 'SystemMessages', type: :system do
         expect(page.all('#system_message_message_type option').map(&:value)).to eq ['email']
       end
 
-      it 'shows custom trix actions', js: true do
+      it 'shows custom trix actions', :js do
         expect(page.body).to include 'trix-button--icon-color'
       end
     end
 
     context 'with twilio enabled' do
       before do
-        allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return true
+        allow_any_instance_of(RadTwilio).to receive(:twilio_enabled?).and_return true
         visit '/rad_common/system_messages/new'
       end
 
@@ -39,18 +39,18 @@ RSpec.describe 'SystemMessages', type: :system do
       end
 
       it 'sets the message type based on the previous system message' do
-        expect(find_field('Message type').value).to eq 'email'
+        expect(find_field('Message Type').value).to eq 'email'
         create :system_message, :sms, user: user
         visit '/rad_common/system_messages/new'
-        expect(find_field('Message type').value).to eq 'sms'
+        expect(find_field('Message Type').value).to eq 'sms'
       end
 
-      context 'when dynamically changing fields', js: true do
+      context 'when dynamically changing fields', :js do
         it 'shows and hides trix editor based on message type' do
           find('body').click
           expect(page).to have_css('.email-message', visible: :visible)
           expect(page).to have_css('.sms-message', visible: :hidden)
-          select 'SMS', from: 'Message type'
+          select 'SMS', from: 'Message Type'
           expect(page).to have_css('.email-message', visible: :hidden)
           expect(page).to have_css('.sms-message', visible: :visible)
         end

@@ -83,14 +83,14 @@ class DuplicatesController < ApplicationController
 
     max = Duplicate.where(duplicatable_type: model.name).maximum(:sort)
     sort = (max ? max + 1 : 1)
-    @record.create_or_update_metadata! sort: sort
+    @record.create_or_update_metadata!({ sort: sort })
 
     if @record.duplicate.present? && @record.duplicate.score.present?
       dupes = @record.duplicates
 
       if dupes.count == 1
         record = dupes.first[:record]
-        record.create_or_update_metadata! sort: sort
+        record.create_or_update_metadata!({ sort: sort })
       end
     end
 
@@ -106,10 +106,41 @@ class DuplicatesController < ApplicationController
     redirect_to @record
   end
 
+  def switch
+    @record = model.find(params[:id])
+    record = other_model.find(params[:other_id])
+
+    authorize @record, :reset_duplicates?
+    authorize record, :reset_duplicates?
+
+    @record.reset_duplicates
+    record.reset_duplicates
+
+    redirect_to duplicates_path(model: @record.class, id: @record.id)
+  end
+
+  def check_duplicate
+    @record = model.new(params[:record].permit!.to_h.except(:authenticity_token, :create_anyway))
+    authorize @record, :create?
+
+    @record.valid?
+    found_duplicates = @record.find_duplicates
+
+    if found_duplicates.present?
+      duplicates = found_duplicates.map do |dupe|
+        { duplicate_data: dupe.duplicate_fields, duplicate_path: "/#{model.table_name}/#{dupe.id}" }
+      end
+
+      render json: { duplicate: true, duplicates: duplicates }
+    else
+      render json: { duplicate: false }
+    end
+  end
+
   private
 
     def index_path
-      "/rad_common/duplicates?model=#{model}"
+      duplicates_path model: model
     end
 
     def gather_record
@@ -124,8 +155,12 @@ class DuplicatesController < ApplicationController
       Object.const_get params[:model]
     end
 
+    def other_model
+      Object.const_get params[:other_model]
+    end
+
     def notify_user(subject, message)
-      RadbearMailer.simple_message(current_user, subject, message, email_options).deliver_later
+      RadMailer.simple_message(current_user, subject, message, email_options).deliver_later
     end
 
     def email_options

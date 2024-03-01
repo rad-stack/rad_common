@@ -13,8 +13,8 @@ RSpec.describe 'Audits', type: :system do
       security_role.update! name: new_name
 
       visit '/rad_common/audits'
-      select 'SecurityRole', from: 'search_auditable_type'
-      click_button 'Apply Filters'
+      first('#search_auditable_type').select('SecurityRole')
+      first('button', text: 'Apply Filters').click
 
       expect(page).to have_content new_name
     end
@@ -23,8 +23,8 @@ RSpec.describe 'Audits', type: :system do
       security_role.destroy!
 
       visit '/rad_common/audits'
-      select 'SecurityRole', from: 'search_auditable_type'
-      click_button 'Apply Filters'
+      first('#search_auditable_type').select('SecurityRole')
+      first('button', text: 'Apply Filters').click
 
       expect(page).to have_content deleted_name
     end

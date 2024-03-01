@@ -1,5 +1,9 @@
-.card
-  = render 'layouts/card_header', action_name: 'custom', title: 'Resend Unlock Instructions', icon: 'fa-unlock'
+= render 'users/devise_layout' do
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Resend Unlock Instructions',
+           icon: 'fa-unlock',
+           card_style: 'bg-white'
   .card-body
     = simple_form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f|
       = rad_form_errors f

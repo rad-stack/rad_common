@@ -6,4 +6,6 @@ class LoginActivity < ApplicationRecord
   scope :failure, -> { where(success: false) }
 
   strip_attributes
+
+  alias_attribute :active?, :success?
 end

@@ -128,6 +128,19 @@ class CardPresenter
     raise 'missing card header icon'
   end
 
+  def card_style
+    return local_assigns[:card_style] if local_assigns[:card_style].present?
+
+    unless %w[show edit].include?(action_name) &&
+           instance.present? &&
+           instance.respond_to?(:active?) &&
+           !instance.active?
+      return
+    end
+
+    'alert-danger'
+  end
+
   def output_title
     return title if title.present?
     return "New #{object_label}" if action_name == 'new' || action_name == 'create'
@@ -233,7 +246,7 @@ class CardPresenter
 
     def duplicate_action
       @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                            "/rad_common/duplicates?model=#{instance.class}&id=#{instance.id}",
+                            @view_context.duplicates_path(model: instance.class, id: instance.id),
                             class: 'btn btn-warning btn-sm')
     end
 
@@ -246,7 +259,7 @@ class CardPresenter
 
     def duplicates_action
       @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                            "/rad_common/duplicates?model=#{klass}",
+                            @view_context.duplicates_path(model: klass),
                             class: 'btn btn-warning btn-sm')
     end
 

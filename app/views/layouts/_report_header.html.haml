@@ -1,0 +1,39 @@
+- if pdf_output?
+  .mb-4
+    = wicked_pdf_image_tag(asset_pack_url('media/images/app_logo.png'), class: 'logo-thumbnail')
+    .text-center
+      %h1= @report.title
+      %br
+      %h4= @report.try(:sub_title)
+  %hr
+- else
+  .card
+    - exports = [csv_report_button(@report, main_path), printable_report_button(@report, main_path)].compact
+    - actions = (try(:additional_actions).presence || []) + exports
+
+    = render 'layouts/card_header',
+             action_name: 'custom',
+             title: @report.title,
+             icon: 'fa-magnifying-glass',
+             additional_actions: actions
+
+    .card-body
+      = simple_form_for :report, url: main_path, method: :get do |f|
+        .form-inputs
+          .row
+            .col-lg-2
+              = f.input :start_date,
+                        as: :date,
+                        html5: true,
+                        required: true,
+                        inline: false,
+                        input_html: { value: @report.start_date }
+
+            .col-lg-2
+              = f.input :end_date, as: :date, html5: true, required: true, input_html: { value: @report.end_date }
+          - if lookup_context.exists?('report_form', controller_name, true)
+            = render partial: "#{controller_name}/report_form", locals: { f: f }
+        .form-actions
+          = f.button :button, icon(:filter, 'Apply Filters'), class: 'btn btn-success'
+          - if @report.clear_filters_button?
+            = link_to icon(:times, 'Clear Filters'), main_path, class: 'btn btn-danger'

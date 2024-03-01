@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Permissions', type: :system do
+describe 'Permissions' do
   let(:user) { create :user, security_roles: [security_role] }
   let(:security_role) { create :security_role, read_division: true }
   let(:division) { create :division }

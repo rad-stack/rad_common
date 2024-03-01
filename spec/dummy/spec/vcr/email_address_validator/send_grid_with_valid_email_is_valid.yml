@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - application/json
       User-Agent:
-      - sendgrid/6.6.2;ruby
+      - sendgrid/6.7.0;ruby
       Authorization:
       - Bearer <SENDGRID_API_KEY>
       Content-Type:
@@ -25,19 +25,19 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Tue, 12 Apr 2022 13:55:18 GMT
+      - Sat, 06 Jan 2024 10:35:05 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '390'
+      - '389'
       Connection:
       - keep-alive
       X-Amzn-Requestid:
-      - 91f168eb-2101-417c-8cc1-2790c832ecf4
+      - 334b3193-07a5-4228-b589-08f8818fe112
       X-Amz-Apigw-Id:
-      - QeGu7GZOCYcFxwA=
+      - RHPyBH3JiYcEWDg=
       X-Amzn-Trace-Id:
-      - Root=1-625584c5-725e94060be8707d6f2c1f18;Sampled=0
+      - Root=1-65992cd9-3eeb32dd40675ad71a002eae;Sampled=0;lineage=3bae0364:0
       Access-Control-Allow-Methods:
       - HEAD, GET, PUT, POST, DELETE, OPTIONS, PATCH
       Access-Control-Max-Age:
@@ -63,15 +63,15 @@ http_interactions:
       X-Ratelimit-Limit:
       - '7'
       X-Ratelimit-Reset:
-      - '1649771718'
+      - '1704537306'
       Twilio-Request-Id:
-      - RQ27hUGnpDUkhcwtqs4qVZa9TsX1K
+      - RQ2aZsC9VFz2jDNH2vNjeLfNL4SbH
       X-Envoy-Upstream-Service-Time:
-      - '493'
+      - '386'
       Powered-By:
       - Mako
     body:
       encoding: UTF-8
-      string: '{"result":{"email":"support@invest.ally.com","verdict":"Risky","score":0.29941,"local":"support","host":"invest.ally.com","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":true,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":true},"additional":{"has_known_bounces":false,"has_suspected_bounces":true}},"ip_address":"67.190.197.70"}}'
-  recorded_at: Tue, 12 Apr 2022 13:55:17 GMT
-recorded_with: VCR 6.1.0
+      string: '{"result":{"email":"support@invest.ally.com","verdict":"Risky","score":0.29941,"local":"support","host":"invest.ally.com","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":true,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":true},"additional":{"has_known_bounces":false,"has_suspected_bounces":true}},"ip_address":"38.85.130.68"}}'
+  recorded_at: Sat, 06 Jan 2024 10:35:05 GMT
+recorded_with: VCR 6.2.0

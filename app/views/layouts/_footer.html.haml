@@ -6,7 +6,7 @@
           - confirm_message = 'This will reset non-duplicates and regenerate possible matches for this record, proceed?'
 
           = link_to 'Reset Duplicates',
-                    reset_duplicates_path(current_instance_variable),
+                    reset_duplicates_path(model: current_instance_variable.class, id: current_instance_variable.id),
                     method: :put,
                     data: { confirm: confirm_message }
   - if show_auditing?

@@ -11,7 +11,7 @@ This will then create the initializer in the /config/initializers directory with
 Emails are sent in the background so make sure you have a mailers queue running in sidekiq.
 
 ## Email Template
-To use the common email template in your Rails project, just have your mailer subclass RadbearMailer.
+To use the common email template in your Rails project, just have your mailer subclass RadMailer.
 
 ## Heroku Database Utilities
 
@@ -81,4 +81,4 @@ To run the test suite, run the following command:
 
 When refactoring and modifying code in this project while developing other projects, you may want your other project to point to the local source rather than the remote on Github. In your client project, you can override the gem path like:
 
-`gem 'rad_common', path: '/Users/garyfoster/Documents/Projects/rad_common'`
+`gem 'rad_common', path: '/Users/garyfoster/Projects/rad_common'`
