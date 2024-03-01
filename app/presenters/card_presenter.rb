@@ -129,6 +129,8 @@ class CardPresenter
   end
 
   def card_style
+    return local_assigns[:card_style] if local_assigns[:card_style].present?
+
     unless %w[show edit].include?(action_name) &&
            instance.present? &&
            instance.respond_to?(:active?) &&
