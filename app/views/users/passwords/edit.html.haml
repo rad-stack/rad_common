@@ -1,6 +1,9 @@
 = render 'users/devise_layout' do
-  %h4.ml-3= icon('lock', 'Change Your Password')
-  %hr
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Change Your Password',
+           icon: 'fa-lock',
+           card_style: 'bg-white'
   .card-body
     = simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f|
       = rad_form_errors f

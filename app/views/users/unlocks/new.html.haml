@@ -1,6 +1,9 @@
 = render 'users/devise_layout' do
-  %h4.ml-3= icon('unlock', 'Resend Unlock Instructions')
-  %hr
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Resend Unlock Instructions',
+           icon: 'fa-unlock',
+           card_style: 'bg-white'
   .card-body
     = simple_form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f|
       = rad_form_errors f
