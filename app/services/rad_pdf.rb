@@ -4,6 +4,10 @@ class RadPDF < Prawn::Document
     setup_font!
   end
 
+  def fallback_fonts
+    ['OpenSans']
+  end
+
   private
 
     def setup_font!
@@ -16,7 +20,5 @@ class RadPDF < Prawn::Document
           bold_italic: "#{font_path}OpenSans-BoldItalic.ttf"
         }
       )
-
-      font 'OpenSans'
     end
 end
