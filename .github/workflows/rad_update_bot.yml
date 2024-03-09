@@ -19,6 +19,7 @@ jobs:
       POSTGRES_DB: rad_common_development
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      CI: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -29,9 +30,10 @@ jobs:
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
         with:
-          bundler-cache: true
+          bundler-cache: false # TODO: maybe we can get caching working in future see docs https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
       - name: Set up database schema
         run: |
+          bundle
           bin/rails db:create
           bin/rails db:schema:load
       - name: Set up Node
@@ -45,15 +47,7 @@ jobs:
       # Add or replace test runners here
 
       - name: RC Update
-        # TODO: somethings to cleanup
-        # 1. For some reason I have to run rc_update and then manually run bundle update rad_common --conservative and
-        #    rails g rad_common:install --force for the files to copy
-        run: |
-          bin/rc_update --force-rad-common-install
-          bundle update rad_common --conservative
-          bundle binstubs rad_common
-          bin/rails g rad_common:install --force
-          bin/rails db:migrate
+        run: bin/rc_update --force-rad-common-install
       - name: Capture rad_common version
         run: |
           echo "RAD_COMMON_VERSION=$(bundle show rad_common | grep -oE 'rad_common-([[:alnum:]]+)' | cut -d'-' -f2)" >> "$GITHUB_ENV"

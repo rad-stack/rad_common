@@ -6,8 +6,6 @@ module DuplicateFixable
 
     has_one :duplicate, as: :duplicatable, dependent: :destroy
 
-    attr_accessor :bypass_notifications
-
     scope :duplicates_to_process, lambda {
       left_outer_joins(:duplicate)
         .where("duplicates.processed_at IS NULL OR (#{table_name}.updated_at >= duplicates.processed_at)")
@@ -59,19 +57,19 @@ module DuplicateFixable
     end
 
     def additional_duplicate_items
-      [{ name: :company_name, label: 'Company Name', type: :levenshtein, display_only: false, weight: 10 },
-       { name: :email, label: 'Email', type: :string, display_only: false, weight: 20 },
-       { name: :phone_number,
+      [{ name: 'company_name', label: 'Company Name', type: :levenshtein, display_only: false, weight: 10 },
+       { name: 'email', label: 'Email', type: :string, display_only: false, weight: 20 },
+       { name: 'phone_number',
          label: 'Phone #',
          type: :string,
          display_only: false,
          weight: new.duplicate_other_weight },
-       { name: :mobile_phone,
+       { name: 'mobile_phone',
          label: 'Mobile Phone',
          type: :string,
          display_only: false,
          weight: new.duplicate_other_weight },
-       { name: :fax_number,
+       { name: 'fax_number',
          label: 'Fax #',
          type: :string,
          display_only: false,
@@ -109,21 +107,18 @@ module DuplicateFixable
         record.process_duplicates bypass_notifications: bypass_notifications
       end
     end
+
+    def no_matches(record)
+      if record.duplicate.blank? || record.duplicate.duplicates_not.blank?
+        []
+      else
+        JSON.parse(record.duplicate.duplicates_not)
+      end
+    end
   end
 
   def process_duplicates(bypass_notifications: false)
-    self.bypass_notifications = bypass_notifications
-
-    contacts = duplicate_matches
-
-    if contacts.any?
-      raw_score = contacts.first[:score]
-      create_or_update_metadata! duplicates_info: contacts.to_json, score: raw_score.positive? ? raw_score : nil
-    else
-      create_or_update_metadata! duplicates_info: nil, score: nil
-    end
-
-    self.bypass_notifications = false
+    DuplicatesProcessor.new(self).process!(bypass_notifications: bypass_notifications)
   end
 
   def duplicate_fields
@@ -145,23 +140,22 @@ module DuplicateFixable
   end
 
   def find_duplicates
-    contacts = duplicate_matches.reject { |contact| contact[:score] < self.class.score_lower_threshold }
-    return if contacts.empty?
+    items = DuplicatesProcessor.new(self).matches.reject do |item|
+      item[:score] < self.class.score_lower_threshold
+    end
 
-    contacts.map { |contact| self.class.find(contact[:id]) }
+    return if items.empty?
+
+    items.map { |item| self.class.find(item[:id]) }
   end
 
   def reset_duplicates
-    self.bypass_notifications = true
-
     if duplicate.present?
       duplicate.destroy!
       reload
     end
 
     process_duplicates bypass_notifications: true
-
-    self.bypass_notifications = false
   end
 
   def duplicates
@@ -185,9 +179,10 @@ module DuplicateFixable
     set_not_duplicate other_record, self
   end
 
-  def create_or_update_metadata!(attributes)
+  def create_or_update_metadata!(attributes, bypass_notifications: false)
     if duplicate.blank?
-      Duplicate.create! attributes.merge(processed_at: Time.current, duplicatable: self)
+      record = Duplicate.create! attributes.merge(processed_at: Time.current, duplicatable: self)
+      record.maybe_notify! unless bypass_notifications
     else
       duplicate.update! attributes.merge(processed_at: Time.current)
     end
@@ -200,14 +195,6 @@ module DuplicateFixable
 
   def clean_up_duplicate(_new_record)
     # override as needed in models
-  end
-
-  def duplicate_first_name_weight
-    duplicate_model_config[:first_name_weight].presence || 10
-  end
-
-  def duplicate_last_name_weight
-    duplicate_model_config[:last_name_weight].presence || 10
   end
 
   def duplicate_other_weight
@@ -246,163 +233,14 @@ module DuplicateFixable
       self.class.to_s.constantize
     end
 
-    def table_name
-      "#{self.class.to_s.underscore}s"
-    end
-
-    def all_matches
-      (name_matches +
-       similar_name_matches +
-       birth_date_matches +
-       additional_item_matches).uniq - no_matches(self)
-    end
-
-    def duplicate_matches
-      contacts = []
-
-      all_matches.each do |match|
-        record = model_klass.find(match)
-        score = duplicate_record_score(record)
-        contacts.push(id: record.id, score: score)
-      end
-
-      contacts.sort_by { |item| item[:score] }.reverse.first(100)
-    end
-
-    def name_matches
-      return [] unless model_klass.use_first_last_name? && first_last_name_present?
-
-      query = model_klass.where('upper(first_name) = ? AND upper(last_name) = ?',
-                                first_name.upcase,
-                                last_name.upcase)
-      query = query.where.not(id: id) if id.present?
-      query.pluck(:id)
-    end
-
-    def similar_name_matches
-      return [] unless model_klass.use_first_last_name? && first_last_name_present?
-
-      query = model_klass.where('levenshtein(upper(first_name), ?) <= 1 AND levenshtein(upper(last_name), ?) <= 1',
-                                first_name.upcase,
-                                last_name.upcase)
-      query = query.where.not(id: id) if id.present?
-      query.pluck(:id)
-    end
-
-    def birth_date_matches
-      return [] unless model_klass.use_birth_date? && model_klass.use_first_last_name? && first_last_name_present?
-
-      query_string = 'birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR ' \
-                     'levenshtein(upper(last_name), ?) <= 1)'
-
-      query = model_klass.where(query_string,
-                                birth_date,
-                                first_name.upcase,
-                                last_name.upcase)
-      query = query.where.not(id: id) if id.present?
-      query.pluck(:id)
-    end
-
-    def additional_item_matches
-      items = []
-
-      model_klass.applicable_duplicate_items.each do |item|
-        item_value = send(item[:name])
-        next if item[:display_only] || item_value.blank?
-
-        query = case item[:type]
-                when :association
-                  "#{item[:name]} IS NOT NULL AND #{item[:name]} = ?"
-                when :levenshtein
-                  "levenshtein(upper(#{item[:name]}), ?) <= 1"
-                else
-                  "#{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?"
-                end
-
-        check_value = item[:type] == :levenshtein ? item_value.upcase : item_value
-        query = model_klass.where(query, check_value)
-        query = query.where.not(id: id) if id.present?
-        items += query.pluck(:id)
-      end
-
-      items
-    end
-
-    def duplicate_record_score(duplicate_record)
-      score = 0
-
-      all_duplicate_attributes.each do |attribute|
-        score += duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
-      end
-
-      ((score / all_duplicate_attributes.pluck(:weight).sum.to_f) * 100).to_i
-    end
-
-    def all_duplicate_attributes
-      items = []
-
-      if model_klass.use_first_last_name?
-        items += [{ name: 'first_name', weight: duplicate_first_name_weight },
-                  { name: 'last_name', weight: duplicate_last_name_weight }]
-      end
-
-      items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
-
-      model_klass.applicable_duplicate_items.each do |item|
-        next if item[:display_only]
-
-        items.push(name: item[:name], weight: item[:weight]) if respond_to?(item[:name])
-      end
-
-      if model_klass.use_address?
-        items += [{ name: 'city', weight: 10 },
-                  { name: 'state', weight: 10 },
-                  { name: 'zipcode', weight: 10 },
-                  { name: 'address_1', weight: duplicate_other_weight },
-                  { name: 'address_2', weight: duplicate_other_weight }]
-      end
-
-      items
-    end
-
-    def duplicate_field_score(duplicate_record, attribute, weight)
-      return 0 if send(attribute).blank? || duplicate_record.send(attribute).blank?
-
-      if send(attribute).is_a?(String)
-        return calc_string_weight(send(attribute), duplicate_record.send(attribute), weight)
-      end
-
-      return weight if send(attribute) == duplicate_record.send(attribute)
-
-      0
-    end
-
-    def calc_string_weight(attribute_1, attribute_2, weight)
-      if attribute_1.upcase == attribute_2.upcase
-        weight
-      elsif Text::Levenshtein.distance(attribute_1.upcase, attribute_2.upcase) <= 2
-        weight / 2
-      else
-        0
-      end
-    end
-
     def set_not_duplicate(record_1, record_2)
-      items = no_matches(record_1)
+      items = model_klass.no_matches(record_1)
       items.push(record_2.id)
       items = items.uniq
 
-      record_1.create_or_update_metadata! duplicates_not: items.to_json
+      record_1.create_or_update_metadata!({ duplicates_not: items.to_json })
       record_1.reload
       record_1.process_duplicates
-    end
-
-    def no_matches(record)
-      if record.duplicate.blank? || record.duplicate.duplicates_not.blank?
-        []
-      else
-        JSON.parse(record.duplicate.duplicates_not)
-      end
     end
 
     def fix_duplicate(key, user)
@@ -428,9 +266,5 @@ module DuplicateFixable
 
       'Could not remove the unused duplicate record ' \
         "id #{duplicate_record.id}: #{duplicate_record.errors.full_messages.join(', ')}"
-    end
-
-    def first_last_name_present?
-      first_name.present? && last_name.present?
     end
 end

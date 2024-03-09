@@ -1,5 +1,9 @@
 = render 'users/devise_layout' do
-  = render 'layouts/card_header', action_name: 'custom', title: 'Renew Your Password', icon: 'fa-lock'
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Renew Your Password',
+           icon: 'fa-lock',
+           card_style: 'bg-white'
   .card-body
     = simple_form_for(resource, as: resource_name, url: [resource_name, :password_expired], html: { method: :put }) do |f|
       = render partial: 'devise/shared/error_messages'

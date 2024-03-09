@@ -1,6 +1,10 @@
 - verify_sign_up
 = render 'users/devise_layout' do
-  = render 'layouts/card_header', action_name: 'custom', title: 'Sign Up', icon: 'fa-file'
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Sign Up',
+           icon: 'fa-user-plus',
+           card_style: 'bg-white'
   .card-body
     = simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
       = rad_form_errors f

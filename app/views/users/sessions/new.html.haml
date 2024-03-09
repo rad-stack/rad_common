@@ -1,5 +1,9 @@
 = render 'users/devise_layout' do
-  = render 'layouts/card_header', action_name: 'custom', title: 'Sign In', icon: 'fa-right-to-bracket'
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Sign In',
+           icon: 'fa-sign-in-alt',
+           card_style: 'bg-white'
   .card-body
     = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
       .form-inputs

@@ -100,10 +100,6 @@ jobs:
         working-directory: spec/dummy
         run: bundle exec rails webpacker:compile
 
-      - name: Update webdrivers
-        working-directory: spec/dummy
-        run: bundle exec rake webdrivers:chromedriver:update
-
       - name: Load schema
         working-directory: spec/dummy
         run: |

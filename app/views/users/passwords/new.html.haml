@@ -1,5 +1,9 @@
 = render 'users/devise_layout' do
-  = render 'layouts/card_header', action_name: 'custom', title: 'Forgot Your Password?', icon: 'fa-unlock'
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Forgot Your Password?',
+           icon: 'fa-key',
+           card_style: 'bg-white'
   .card-body
     = simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
       = rad_form_errors f
