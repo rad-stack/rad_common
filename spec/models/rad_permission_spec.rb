@@ -27,7 +27,7 @@ RSpec.describe RadPermission do
     end
 
     context 'with Company model' do
-      let(:permission_name) { 'update_insurance_company' }
+      let(:permission_name) { 'update_company' }
 
       it { is_expected.to eq 'Company' }
     end
