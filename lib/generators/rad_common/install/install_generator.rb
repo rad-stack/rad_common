@@ -19,6 +19,8 @@ module RadCommon
         update_seeder_method
         replace_webdrivers_gem_with_selenium
 
+        add_rad_config_setting 'mini_magick', 'false'
+
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
         # misc

@@ -382,6 +382,10 @@ class RadConfig
       array_config_item! :crawlable_subdomains
     end
 
+    def mini_magick?
+      boolean_config_item! :mini_magick
+    end
+
     def secret_config_item!(item)
       value = secret_config_item(item)
       raise "required secret config item #{item} is missing" if value.blank?
