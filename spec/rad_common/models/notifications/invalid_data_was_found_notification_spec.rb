@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Notifications::InvalidDataWasFoundNotification, type: :model do
-  let(:notification_type) { described_class.main([]) }
+  let(:notification_type) { described_class.main({ error_count: 0, error_messages: [] }) }
   let(:mail) { ActionMailer::Base.deliveries.last }
 
   before { create :admin }

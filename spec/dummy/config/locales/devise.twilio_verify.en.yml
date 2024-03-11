@@ -1,7 +1,7 @@
 en:
   devise:
     submit_token: 'Verify and Sign in'
-    submit_token_title: 'Please enter your authentication token:'
+    submit_token_title: 'Enter your authentication token'
     twilio_verify_register_title: 'Two factor authentication'
     enable_twilio_verify: 'Enable'
     cellphone: 'Enter your cellphone'

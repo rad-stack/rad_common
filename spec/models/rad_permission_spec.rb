@@ -19,6 +19,26 @@ RSpec.describe RadPermission do
     it { is_expected.to eq result }
   end
 
+  describe 'permission_category_name' do
+    subject { described_class.send(:permission_category_name, model_category_names, permission_name) }
+
+    let(:model_category_names) do
+      %w[attorney category client company insurance_company division duplicate notification]
+    end
+
+    context 'with Company model' do
+      let(:permission_name) { 'update_company' }
+
+      it { is_expected.to eq 'Company' }
+    end
+
+    context 'with InsuranceCompany model' do
+      let(:permission_name) { 'update_insurance_company' }
+
+      it { is_expected.to eq 'Insurance Company' }
+    end
+  end
+
   describe 'short_label' do
     subject { described_class.new(permission).short_label('Division') }
 

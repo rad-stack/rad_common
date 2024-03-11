@@ -9,8 +9,9 @@ class GlobalValidation
     return unless needs_to_run?
 
     error_messages = check_global_validity
+    payload = { error_count: error_messages.size, error_messages: error_messages.take(1000) }
 
-    Notifications::InvalidDataWasFoundNotification.main(error_messages).notify! if error_messages.any?
+    Notifications::InvalidDataWasFoundNotification.main(payload).notify! if error_messages.any?
     Notifications::GlobalValidityRanLongNotification.main(@run_stats).notify! if took_too_long?
 
     Company.main.global_validity_ran!
