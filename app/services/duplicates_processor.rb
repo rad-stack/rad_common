@@ -106,14 +106,26 @@ class DuplicatesProcessor
     def other_query(item, item_value)
       case item[:name]
       when 'email'
-        model_klass.where("email IS NOT NULL AND email <> '' AND (email = ? OR email_2 = ?)", item_value, item_value)
+        email_query item_value
       when 'phone_number'
-        model_klass.where("phone_number IS NOT NULL AND phone_number <> '' AND (phone_number = ? OR phone_number_2 = ? OR mobile_phone = ?)", item_value, item_value, item_value)
+        phone_query item_value
       when 'mobile_phone'
-        model_klass.where("mobile_phone IS NOT NULL AND mobile_phone <> '' AND (mobile_phone = ? OR phone_number = ? OR phone_number_2 = ?)", item_value, item_value, item_value)
+        mobile_phone_query item_value
       else
         model_klass.where("#{item[:name]} IS NOT NULL AND #{item[:name]} <> '' AND #{item[:name]} = ?", item_value)
       end
+    end
+
+    def email_query(item_value)
+      model_klass.where("email IS NOT NULL AND email <> '' AND (email = ? OR email_2 = ?)", item_value, item_value)
+    end
+
+    def phone_query(item_value)
+      model_klass.where("phone_number IS NOT NULL AND phone_number <> '' AND (phone_number = ? OR phone_number_2 = ? OR mobile_phone = ?)", item_value, item_value, item_value)
+    end
+
+    def mobile_phone_query(item_value)
+      model_klass.where("mobile_phone IS NOT NULL AND mobile_phone <> '' AND (mobile_phone = ? OR phone_number = ? OR phone_number_2 = ?)", item_value, item_value, item_value)
     end
 
     def duplicate_record_score(duplicate_record)
