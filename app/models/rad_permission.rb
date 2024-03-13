@@ -83,7 +83,7 @@ class RadPermission
       def permission_category_name(model_category_names, permission_name)
         return 'Admin' if permission_name == 'admin'
 
-        model_category_names.each do |category|
+        model_category_names.sort_by(&:size).reverse.each do |category|
           return category.titleize if permission_name.end_with?(category)
         end
 

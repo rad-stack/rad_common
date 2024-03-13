@@ -67,7 +67,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
-  s.add_development_dependency 'haml_lint', '0.45.0'
+  s.add_development_dependency 'haml_lint', '0.45.0' # pinned for now, see Task 915
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'rubocop'
   s.add_development_dependency 'rubocop-capybara'

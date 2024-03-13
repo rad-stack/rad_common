@@ -31,9 +31,9 @@ class NotificationMailer < RadMailer
     send_notification_mail recipients, "User Was Approved on #{RadConfig.app_name!}"
   end
 
-  def global_validity(recipients, problems)
-    @problems = problems
-    @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
+  def global_validity(recipients, payload)
+    @problems = payload[:error_messages]
+    @message = global_validity_message(payload)
 
     send_notification_mail recipients, "Invalid data in #{RadConfig.app_name!}"
   end
@@ -82,5 +82,16 @@ class NotificationMailer < RadMailer
     def send_notification_mail(recipients, subject, options = {})
       @recipient = User.where(id: recipients)
       mail to: @recipient.map(&:formatted_email), subject: subject, cc: options[:cc]
+    end
+
+    def global_validity_message(payload)
+      message_count = payload[:error_messages].size
+      return standard_global_validity_message(payload) if payload[:error_count] == message_count
+
+      "#{standard_global_validity_message(payload)} Only the first #{message_count} records are included here."
+    end
+
+    def standard_global_validity_message(payload)
+      "There #{payload[:error_count] == 1 ? 'is' : 'are'} #{pluralize(payload[:error_count], 'invalid record')}."
     end
 end
