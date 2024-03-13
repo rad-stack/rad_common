@@ -219,6 +219,7 @@ Seeder.new.seed!
         apply_migration '20240209114718_make_audits_created_at_non_nullable.rb'
         apply_migration '20240209141219_missing_fks.rb'
         apply_migration '20240222093233_active_record_doctor_issues.rb'
+        apply_migration '20240313112119_more_active_record_doctor_issues.rb'
       end
 
       def self.next_migration_number(path)

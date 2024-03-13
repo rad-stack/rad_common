@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_22_093427) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_13_112119) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -190,6 +190,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_22_093427) do
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "notification_type_id", null: false
     t.index ["notification_type_id", "security_role_id"], name: "unique_notification_roles", unique: true
+    t.index ["notification_type_id"], name: "index_notification_security_roles_on_notification_type_id"
+    t.index ["security_role_id"], name: "index_notification_security_roles_on_security_role_id"
   end
 
   create_table "notification_settings", force: :cascade do |t|
@@ -202,6 +204,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_22_093427) do
     t.boolean "feed", default: false, null: false
     t.boolean "sms", default: false, null: false
     t.index ["notification_type_id", "user_id"], name: "index_notification_settings_on_notification_type_id_and_user_id", unique: true
+    t.index ["notification_type_id"], name: "index_notification_settings_on_notification_type_id"
+    t.index ["user_id"], name: "index_notification_settings_on_user_id"
   end
 
   create_table "notification_types", force: :cascade do |t|
@@ -318,7 +322,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_22_093427) do
     t.bigint "client_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_user_clients_on_client_id"
     t.index ["user_id", "client_id"], name: "index_user_clients_on_user_id_and_client_id", unique: true
+    t.index ["user_id"], name: "index_user_clients_on_user_id"
   end
 
   create_table "user_security_roles", force: :cascade do |t|
