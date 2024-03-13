@@ -23,6 +23,7 @@ default: &default
   storage_config_override: false
   database_config_override: false
   require_mobile_phone: false
+  check_js_errors: true
   timeout_hours: 6
   force_marketing_site: false
   allow_marketing_site: false
