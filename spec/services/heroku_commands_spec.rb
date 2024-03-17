@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 describe HerokuCommands do
-  before { allow(described_class).to receive(:dbname).and_return 'rad_common_development' }
+  before do
+    allow(described_class).to receive(:dbname).and_return 'rad_common_development'
+    allow(described_class).to(receive(:check_valid_app)) if ENV['CI']
+  end
 
   describe 'backup' do
     it 'runs without exception' do
