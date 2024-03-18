@@ -40,7 +40,6 @@ Metrics/BlockLength:
 
 Rails/Output:
   Exclude:
-    - 'app/services/rad_seeder.rb'
     - 'lib/generators/rad_common/install/rails_helper.rb'
 
 Rails/Exit:
