@@ -124,7 +124,7 @@ module RadCommon
         create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 
-Seeder.new(Logger.new(STDOUT)).seed!
+Seeder.new(Logger.new($stdout)).seed!
         RUBY
         end
 
