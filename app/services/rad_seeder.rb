@@ -1,5 +1,9 @@
 class RadSeeder
-  attr_accessor :users
+  attr_accessor :logger, :users
+
+  def initialize(logger)
+    self.logger = logger
+  end
 
   def seed!
     ApplicationRecord.seeding = true
@@ -25,7 +29,7 @@ class RadSeeder
     end
 
     def display_log(message)
-      puts message
+      logger.info message
     end
 
     def seed_users
