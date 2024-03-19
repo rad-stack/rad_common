@@ -263,26 +263,30 @@ class DuplicatesProcessor
     end
 
     def phone_number_compare?(record, duplicate_record)
+      return true if record.phone_number == duplicate_record.phone_number
+
       if model_klass.use_phone_number_2? && model_klass.use_mobile_phone?
-        record.phone_number == duplicate_record.phone_number || record.phone_number == duplicate_record.phone_number_2 || record.phone_number == duplicate_record.mobile_phone
+        record.phone_number == duplicate_record.phone_number_2 || record.phone_number == duplicate_record.mobile_phone
       elsif model_klass.use_phone_number_2?
-        record.phone_number == duplicate_record.phone_number || record.phone_number == duplicate_record.phone_number_2
+        record.phone_number == duplicate_record.phone_number_2
       elsif model_klass.use_mobile_phone?
-        record.phone_number == duplicate_record.phone_number || record.phone_number == duplicate_record.mobile_phone
+        record.phone_number == duplicate_record.mobile_phone
       else
-        record.phone_number == duplicate_record.phone_number
+        false
       end
     end
 
     def mobile_phone_compare?(record, duplicate_record)
+      return true if record.mobile_phone == duplicate_record.mobile_phone
+
       if model_klass.use_phone_number? && model_klass.use_phone_number_2?
-        record.mobile_phone == duplicate_record.mobile_phone || record.mobile_phone == duplicate_record.phone_number || record.mobile_phone == duplicate_record.phone_number_2
+        record.mobile_phone == duplicate_record.phone_number || record.mobile_phone == duplicate_record.phone_number_2
       elsif model_klass.use_phone_number?
-        record.mobile_phone == duplicate_record.mobile_phone || record.mobile_phone == duplicate_record.phone_number
+        record.mobile_phone == duplicate_record.phone_number
       elsif model_klass.use_phone_number_2?
-        record.mobile_phone == duplicate_record.mobile_phone || record.mobile_phone == duplicate_record.phone_number_2
+        record.mobile_phone == duplicate_record.phone_number_2
       else
-        record.mobile_phone == duplicate_record.mobile_phone
+        false
       end
     end
 
@@ -295,26 +299,32 @@ class DuplicatesProcessor
     end
 
     def levenshtein_phone_number_compare?(record, duplicate_record)
+      return true if levenshtein_compare?(record.phone_number, duplicate_record.phone_number)
+
       if model_klass.use_phone_number_2? && model_klass.use_mobile_phone?
-        levenshtein_compare?(record.phone_number, duplicate_record.phone_number) || levenshtein_compare?(record.phone_number, duplicate_record.phone_number_2) || levenshtein_compare?(record.phone_number, duplicate_record.mobile_phone)
+        levenshtein_compare?(record.phone_number, duplicate_record.phone_number_2) ||
+          levenshtein_compare?(record.phone_number, duplicate_record.mobile_phone)
       elsif model_klass.use_phone_number_2?
-        levenshtein_compare?(record.phone_number, duplicate_record.phone_number) || levenshtein_compare?(record.phone_number, duplicate_record.phone_number_2)
+        levenshtein_compare?(record.phone_number, duplicate_record.phone_number_2)
       elsif model_klass.use_mobile_phone?
-        levenshtein_compare?(record.phone_number, duplicate_record.phone_number) || levenshtein_compare?(record.phone_number, duplicate_record.mobile_phone)
+        levenshtein_compare?(record.phone_number, duplicate_record.mobile_phone)
       else
-        levenshtein_compare?(record.phone_number, duplicate_record.phone_number)
+        false
       end
     end
 
     def levenshtein_mobile_phone_compare?(record, duplicate_record)
+      return true if levenshtein_compare?(record.mobile_phone, duplicate_record.mobile_phone)
+
       if model_klass.use_phone_number? && model_klass.use_phone_number_2?
-        levenshtein_compare?(record.mobile_phone, duplicate_record.mobile_phone) || levenshtein_compare?(record.mobile_phone, duplicate_record.phone_number) || levenshtein_compare?(record.mobile_phone, duplicate_record.phone_number_2)
+        levenshtein_compare?(record.mobile_phone, duplicate_record.phone_number) ||
+          levenshtein_compare?(record.mobile_phone, duplicate_record.phone_number_2)
       elsif model_klass.use_phone_number?
-        levenshtein_compare?(record.mobile_phone, duplicate_record.mobile_phone) || levenshtein_compare?(record.mobile_phone, duplicate_record.phone_number)
+        levenshtein_compare?(record.mobile_phone, duplicate_record.phone_number)
       elsif model_klass.use_phone_number_2?
-        levenshtein_compare?(record.mobile_phone, duplicate_record.mobile_phone) || levenshtein_compare?(record.mobile_phone, duplicate_record.phone_number_2)
+        levenshtein_compare?(record.mobile_phone, duplicate_record.phone_number_2)
       else
-        levenshtein_compare?(record.mobile_phone, duplicate_record.mobile_phone)
+        false
       end
     end
 
