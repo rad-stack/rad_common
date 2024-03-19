@@ -126,9 +126,11 @@ class DuplicatesProcessor
 
     def phone_query(item_value)
       if model_klass.use_phone_number_2? && model_klass.use_mobile_phone?
-        model_klass.where('phone_number IS NOT NULL AND (phone_number = ? OR phone_number_2 = ? OR mobile_phone = ?)', item_value, item_value, item_value)
+        model_klass.where('phone_number IS NOT NULL AND (phone_number = ? OR phone_number_2 = ? OR mobile_phone = ?)',
+                          item_value, item_value, item_value)
       elsif model_klass.use_phone_number_2?
-        model_klass.where('phone_number IS NOT NULL AND (phone_number = ? OR phone_number_2 = ?)', item_value, item_value)
+        model_klass.where('phone_number IS NOT NULL AND (phone_number = ? OR phone_number_2 = ?)',
+                          item_value, item_value)
       elsif model_klass.use_mobile_phone?
         model_klass.where('phone_number IS NOT NULL AND (phone_number = ? OR mobile_phone = ?)', item_value, item_value)
       else
@@ -137,7 +139,18 @@ class DuplicatesProcessor
     end
 
     def mobile_phone_query(item_value)
-      model_klass.where('mobile_phone IS NOT NULL AND (mobile_phone = ? OR phone_number = ? OR phone_number_2 = ?)', item_value, item_value, item_value)
+      if model_klass.use_phone_number? && model_klass.use_phone_number_2?
+        model_klass.where('mobile_phone IS NOT NULL AND (mobile_phone = ? OR phone_number = ? OR phone_number_2 = ?)',
+                          item_value, item_value, item_value)
+      elsif model_klass.use_phone_number?
+        model_klass.where('mobile_phone IS NOT NULL AND (mobile_phone = ? OR phone_number = ?)',
+                          item_value, item_value)
+      elsif model_klass.use_phone_number_2?
+        model_klass.where('mobile_phone IS NOT NULL AND (mobile_phone = ? OR phone_number_2 = ?)',
+                          item_value, item_value)
+      else
+        model_klass.where('mobile_phone IS NOT NULL AND mobile_phone = ?', item_value)
+      end
     end
 
     def duplicate_record_score(duplicate_record)
@@ -181,11 +194,7 @@ class DuplicatesProcessor
 
     def duplicate_field_score(duplicate_record, attribute, weight)
       return 0 if record.send(attribute).blank?
-
-      if record.send(attribute).is_a?(String)
-        return calc_string_weight(record, duplicate_record, attribute, weight)
-      end
-
+      return calc_string_weight(record, duplicate_record, attribute, weight) if record.send(attribute).is_a?(String)
       return weight if record.send(attribute) == duplicate_record.send(attribute)
 
       0
