@@ -158,7 +158,7 @@ class DuplicatesProcessor
 
       all_duplicate_attributes.each do |attribute|
         this_score = duplicate_field_score(duplicate_record, attribute[:name], attribute[:weight])
-        puts "#{attribute}: #{this_score}" # TODO: create an option to formalize this debug mode
+        Rails.logger.debug { "#{attribute}: #{this_score}" } # TODO: create an option to formalize this debug mode
         score += this_score
       end
 
@@ -211,10 +211,9 @@ class DuplicatesProcessor
       else
         attribute_1 = record.send(field_name)
         attribute_2 = duplicate_record.send(field_name)
+        return 0 if attribute_1.blank? || attribute_2.blank?
 
-        if attribute_1.blank? || attribute_2.blank?
-          0
-        elsif attribute_1.upcase == attribute_2.upcase
+        if attribute_1.upcase == attribute_2.upcase
           weight
         elsif levenshtein_compare?(attribute_1, attribute_2)
           weight / 2
