@@ -44,6 +44,18 @@ module DuplicateFixable
       new.respond_to?(:birth_date)
     end
 
+    def use_email_2?
+      new.respond_to?(:email_2)
+    end
+
+    def use_phone_number_2?
+      new.respond_to?(:phone_number_2)
+    end
+
+    def use_mobile_phone?
+      new.respond_to?(:mobile_phone)
+    end
+
     def use_address?
       new.respond_to?(:address_1) && !new.duplicates_bypass_address?
     end

@@ -117,15 +117,27 @@ class DuplicatesProcessor
     end
 
     def email_query(item_value)
-      model_klass.where("email IS NOT NULL AND email <> '' AND (email = ? OR email_2 = ?)", item_value, item_value)
+      if model_klass.use_email_2?
+        model_klass.where('email IS NOT NULL AND (email = ? OR email_2 = ?)', item_value, item_value)
+      else
+        model_klass.where('email IS NOT NULL AND email = ?', item_value)
+      end
     end
 
     def phone_query(item_value)
-      model_klass.where("phone_number IS NOT NULL AND phone_number <> '' AND (phone_number = ? OR phone_number_2 = ? OR mobile_phone = ?)", item_value, item_value, item_value)
+      if model_klass.use_phone_number_2? && model_klass.use_mobile_phone?
+        model_klass.where('phone_number IS NOT NULL AND (phone_number = ? OR phone_number_2 = ? OR mobile_phone = ?)', item_value, item_value, item_value)
+      elsif model_klass.use_phone_number_2?
+        model_klass.where('phone_number IS NOT NULL AND (phone_number = ? OR phone_number_2 = ?)', item_value, item_value)
+      elsif model_klass.use_mobile_phone?
+        model_klass.where('phone_number IS NOT NULL AND (phone_number = ? OR mobile_phone = ?)', item_value, item_value)
+      else
+        model_klass.where('phone_number IS NOT NULL AND phone_number = ?', item_value)
+      end
     end
 
     def mobile_phone_query(item_value)
-      model_klass.where("mobile_phone IS NOT NULL AND mobile_phone <> '' AND (mobile_phone = ? OR phone_number = ? OR phone_number_2 = ?)", item_value, item_value, item_value)
+      model_klass.where('mobile_phone IS NOT NULL AND (mobile_phone = ? OR phone_number = ? OR phone_number_2 = ?)', item_value, item_value, item_value)
     end
 
     def duplicate_record_score(duplicate_record)
@@ -182,29 +194,11 @@ class DuplicatesProcessor
     def calc_string_weight(record, duplicate_record, field_name, weight)
       case field_name.to_s
       when 'email'
-        if record.email == duplicate_record.email || record.email == record.email_2
-          weight
-        elsif levenshtein_compare(record.email, duplicate_record.email) || levenshtein_compare(record.email, record.email_2)
-          weight / 2
-        else
-          0
-        end
+        calc_email_weight record, duplicate_record, weight
       when 'phone_number'
-        if record.phone_number == duplicate_record.phone_number || record.phone_number == duplicate_record.phone_number_2 || record.phone_number == duplicate_record.mobile_phone
-          weight
-        elsif levenshtein_compare(record.phone_number, duplicate_record.phone_number) || levenshtein_compare(record.phone_number, duplicate_record.phone_number_2) || levenshtein_compare(record.phone_number, duplicate_record.mobile_phone)
-          weight / 2
-        else
-          0
-        end
+        calc_phone_number_weight record, duplicate_record, weight
       when 'mobile_phone'
-        if record.mobile_phone == duplicate_record.mobile_phone || record.mobile_phone == duplicate_record.phone_number || record.mobile_phone == duplicate_record.phone_number_2
-          weight
-        elsif levenshtein_compare(record.mobile_phone, duplicate_record.mobile_phone) || levenshtein_compare(record.mobile_phone, duplicate_record.phone_number) || levenshtein_compare(record.mobile_phone, duplicate_record.phone_number_2)
-          weight / 2
-        else
-          0
-        end
+        calc_mobile_phone_weight record, duplicate_record, weight
       else
         attribute_1 = record.send(field_name)
         attribute_2 = duplicate_record.send(field_name)
@@ -213,7 +207,7 @@ class DuplicatesProcessor
           0
         elsif attribute_1.upcase == attribute_2.upcase
           weight
-        elsif levenshtein_compare(attribute_1, attribute_2)
+        elsif levenshtein_compare?(attribute_1, attribute_2)
           weight / 2
         else
           0
@@ -221,7 +215,101 @@ class DuplicatesProcessor
       end
     end
 
-    def levenshtein_compare(string_1, string_2)
+    def calc_email_weight(record, duplicate_record, weight)
+      if email_compare?(record, duplicate_record)
+        weight
+      elsif levenshtein_email_compare?(record, duplicate_record)
+        weight / 2
+      else
+        0
+      end
+    end
+
+    def calc_phone_number_weight(record, duplicate_record, weight)
+      if phone_number_compare?(record, duplicate_record)
+        weight
+      elsif levenshtein_phone_number_compare?(record, duplicate_record)
+        weight / 2
+      else
+        0
+      end
+    end
+
+    def calc_mobile_phone_weight(record, duplicate_record, weight)
+      if mobile_phone_compare?(record, duplicate_record)
+        weight
+      elsif levenshtein_mobile_phone_compare?(record, duplicate_record)
+        weight / 2
+      else
+        0
+      end
+    end
+
+    def email_compare?(record, duplicate_record)
+      if model_klass.use_email_2?
+        record.email == duplicate_record.email || record.email == record.email_2
+      else
+        record.email == duplicate_record.email
+      end
+    end
+
+    def phone_number_compare?(record, duplicate_record)
+      if model_klass.use_phone_number_2? && model_klass.use_mobile_phone?
+        record.phone_number == duplicate_record.phone_number || record.phone_number == duplicate_record.phone_number_2 || record.phone_number == duplicate_record.mobile_phone
+      elsif model_klass.use_phone_number_2?
+        record.phone_number == duplicate_record.phone_number || record.phone_number == duplicate_record.phone_number_2
+      elsif model_klass.use_mobile_phone?
+        record.phone_number == duplicate_record.phone_number || record.phone_number == duplicate_record.mobile_phone
+      else
+        record.phone_number == duplicate_record.phone_number
+      end
+    end
+
+    def mobile_phone_compare?(record, duplicate_record)
+      if model_klass.use_phone_number? && model_klass.use_phone_number_2?
+        record.mobile_phone == duplicate_record.mobile_phone || record.mobile_phone == duplicate_record.phone_number || record.mobile_phone == duplicate_record.phone_number_2
+      elsif model_klass.use_phone_number?
+        record.mobile_phone == duplicate_record.mobile_phone || record.mobile_phone == duplicate_record.phone_number
+      elsif model_klass.use_phone_number_2?
+        record.mobile_phone == duplicate_record.mobile_phone || record.mobile_phone == duplicate_record.phone_number_2
+      else
+        record.mobile_phone == duplicate_record.mobile_phone
+      end
+    end
+
+    def levenshtein_email_compare?(record, duplicate_record)
+      if model_klass.use_email_2?
+        levenshtein_compare?(record.email, duplicate_record.email) || levenshtein_compare?(record.email, record.email_2)
+      else
+        levenshtein_compare?(record.email, duplicate_record.email)
+      end
+    end
+
+    def levenshtein_phone_number_compare?(record, duplicate_record)
+      if model_klass.use_phone_number_2? && model_klass.use_mobile_phone?
+        levenshtein_compare?(record.phone_number, duplicate_record.phone_number) || levenshtein_compare?(record.phone_number, duplicate_record.phone_number_2) || levenshtein_compare?(record.phone_number, duplicate_record.mobile_phone)
+      elsif model_klass.use_phone_number_2?
+        levenshtein_compare?(record.phone_number, duplicate_record.phone_number) || levenshtein_compare?(record.phone_number, duplicate_record.phone_number_2)
+      elsif model_klass.use_mobile_phone?
+        levenshtein_compare?(record.phone_number, duplicate_record.phone_number) || levenshtein_compare?(record.phone_number, duplicate_record.mobile_phone)
+      else
+        levenshtein_compare?(record.phone_number, duplicate_record.phone_number)
+      end
+    end
+
+    def levenshtein_mobile_phone_compare?(record, duplicate_record)
+      if model_klass.use_phone_number? && model_klass.use_phone_number_2?
+        levenshtein_compare?(record.mobile_phone, duplicate_record.mobile_phone) || levenshtein_compare?(record.mobile_phone, duplicate_record.phone_number) || levenshtein_compare?(record.mobile_phone, duplicate_record.phone_number_2)
+      elsif model_klass.use_phone_number?
+        levenshtein_compare?(record.mobile_phone, duplicate_record.mobile_phone) || levenshtein_compare?(record.mobile_phone, duplicate_record.phone_number)
+      elsif model_klass.use_phone_number_2?
+        levenshtein_compare?(record.mobile_phone, duplicate_record.mobile_phone) || levenshtein_compare?(record.mobile_phone, duplicate_record.phone_number_2)
+      else
+        levenshtein_compare?(record.mobile_phone, duplicate_record.mobile_phone)
+      end
+    end
+
+    def levenshtein_compare?(string_1, string_2)
       return false if string_1.blank? || string_2.blank?
 
       Text::Levenshtein.distance(string_1.upcase, string_2.upcase) <= 2
