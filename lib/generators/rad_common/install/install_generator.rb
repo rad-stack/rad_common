@@ -28,6 +28,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
+        copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../pull_request_template.md', '.github/pull_request_template.md'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
@@ -219,6 +220,7 @@ Seeder.new.seed!
         apply_migration '20240209114718_make_audits_created_at_non_nullable.rb'
         apply_migration '20240209141219_missing_fks.rb'
         apply_migration '20240222093233_active_record_doctor_issues.rb'
+        apply_migration '20240313112119_more_active_record_doctor_issues.rb'
       end
 
       def self.next_migration_number(path)
