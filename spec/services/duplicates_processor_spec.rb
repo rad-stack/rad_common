@@ -43,7 +43,7 @@ RSpec.describe DuplicatesProcessor do
              email: email
     end
 
-    it { is_expected.to eq [{ id: attorney_2.id, score: 32 }] }
+    it { is_expected.to eq [{ id: attorney_2.id, score: 28 }] }
   end
 
   context 'when matching on standard plus additional items' do
@@ -61,7 +61,7 @@ RSpec.describe DuplicatesProcessor do
              email: email
     end
 
-    it { is_expected.to eq [{ id: attorney_2.id, score: 46 }] }
+    it { is_expected.to eq [{ id: attorney_2.id, score: 40 }] }
   end
 
   context 'when matching only on additional items 2' do
@@ -79,6 +79,6 @@ RSpec.describe DuplicatesProcessor do
              email: '222@xyz.com'
     end
 
-    it { is_expected.to eq [{ id: attorney_2.id, score: 50 }] }
+    it { is_expected.to eq [{ id: attorney_2.id, score: 43 }] }
   end
 end

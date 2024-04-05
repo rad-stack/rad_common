@@ -58,7 +58,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_26_172910) do
     t.string "last_name", null: false
     t.string "middle_name"
     t.string "company_name", null: false
-    t.string "phone_number", null: false
+    t.string "phone_number"
     t.string "email", null: false
     t.string "address_1", null: false
     t.string "address_2"
@@ -70,8 +70,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_26_172910) do
     t.jsonb "address_metadata"
     t.boolean "active", default: true, null: false
     t.string "mobile_phone"
-    t.string "phone_number_2"
-    t.string "email_2"
   end
 
   create_table "audits", force: :cascade do |t|
