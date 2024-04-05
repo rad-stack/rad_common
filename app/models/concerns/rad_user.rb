@@ -17,15 +17,15 @@ module RadUser
     has_many :clients, through: :user_clients, source: :client
     has_many :saved_search_filters, dependent: :destroy
 
-    has_many :twilio_logs_from, class_name: 'TwilioLog',
-                                foreign_key: 'from_user_id',
-                                dependent: :destroy,
-                                inverse_of: :from_user
+    has_many :contact_logs_from, class_name: 'ContactLog',
+                                 foreign_key: 'from_user_id',
+                                 dependent: :destroy,
+                                 inverse_of: :from_user
 
-    has_many :twilio_logs_to, class_name: 'TwilioLog',
-                              foreign_key: 'to_user_id',
-                              dependent: :destroy,
-                              inverse_of: :to_user
+    has_many :contact_logs_to, class_name: 'ContactLog',
+                               foreign_key: 'to_user_id',
+                               dependent: :destroy,
+                               inverse_of: :to_user
 
     has_one_attached :avatar
 
@@ -184,11 +184,11 @@ module RadUser
     Notifications::NewUserSignedUpNotification.main(self).notify!
   end
 
-  def send_devise_notification(notification, *args)
+  def send_devise_notification(notification, *)
     # background devise emails
     # https://github.com/plataformatec/devise#activejob-integration
 
-    devise_mailer.send(notification, self, *args).deliver_later
+    devise_mailer.send(notification, self, *).deliver_later
   end
 
   def send_reset_password_instructions

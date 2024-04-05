@@ -22,7 +22,7 @@ describe GlobalValidation, type: :service do
 
     let(:models) do
       %w[Attorney Category Client Company Division Duplicate Notification NotificationSecurityRole NotificationSetting
-         NotificationType SavedSearchFilter SecurityRole Status SystemMessage TwilioLog TwilioLogAttachment User
+         NotificationType SavedSearchFilter SecurityRole Status SystemMessage ContactLog ContactLogAttachment User
          UserClient UserSecurityRole UserStatus]
     end
 

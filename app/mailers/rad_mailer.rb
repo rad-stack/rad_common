@@ -6,6 +6,7 @@ class RadMailer < ActionMailer::Base
 
   layout 'rad_mailer'
   before_action :set_defaults
+  after_action :create_contact_log
 
   default from: RadConfig.from_email!
   default reply_to: RadConfig.admin_email!
@@ -89,7 +90,8 @@ class RadMailer < ActionMailer::Base
 
     def set_defaults
       @include_yield = true
-      headers['X-SMTPAPI'] = { unique_args: { host_name: RadConfig.host_name! } }.to_json
+      @log_id = SecureRandom.uuid
+      headers['X-SMTPAPI'] = { unique_args: { host_name: RadConfig.host_name!, log_id: @log_id } }.to_json
     end
 
     def parse_recipients_array(recipients)
@@ -113,5 +115,28 @@ class RadMailer < ActionMailer::Base
 
     def enable_settings_link
       @notification_settings_link = true
+    end
+
+    def create_contact_log
+      log = ContactLog.create!(
+        from_email: mail.from.first,
+        reply_to: mail.reply_to.first,
+        subject: mail.subject,
+        message: mail.body.to_s,
+        log_type: :outgoing,
+        message_sid: @log_id,
+        service_type: :sendgrid
+      )
+      mail.to.each do |recipient|
+        ContactLogRecipient.create!(contact_log: log, email: recipient, email_type: :to, service_status: :sent)
+      end
+
+      mail.cc.each do |recipient|
+        ContactLogRecipient.create!(contact_log: log, email: recipient, email_type: :cc, service_status: :sent)
+      end
+
+      mail.bcc.each do |recipient|
+        ContactLogRecipient.create!(contact_log: log, email: recipient, email_type: :bcc, service_status: :sent)
+      end
     end
 end

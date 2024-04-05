@@ -1,8 +1,8 @@
-class TwilioLogSearch < RadCommon::Search
+class ContactLogSearch < RadCommon::Search
   def initialize(params, current_user)
     @current_user = current_user
 
-    super(query: TwilioLog.includes(:from_user, :to_user),
+    super(query: ContactLogRecipient.joins(:contact_log),
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
@@ -14,8 +14,8 @@ class TwilioLogSearch < RadCommon::Search
     def filters_def
       [{ input_label: 'Log Type',
          name: :log_type,
-         scope_values: TwilioLog.log_types.keys.index_by { |record|
-           RadEnum.new(TwilioLog, :log_type).translation(record)
+         scope_values: ContactLog.log_types.keys.index_by { |record|
+           RadEnum.new(ContactLog, :log_type).translation(record)
          }.transform_values(&:to_sym) },
        { start_input_label: 'Start Date',
          end_input_label: 'End Date',

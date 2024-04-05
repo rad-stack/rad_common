@@ -28,15 +28,15 @@ class Seeder < RadSeeder
 
     3.times { FactoryBot.create :client } if Client.count.zero?
 
-    return unless TwilioLog.count.zero?
+    return unless ContactLog.count.zero?
 
-    display_log 'seeding twilio logs'
+    display_log 'seeding contact logs'
 
     30.times do
       from_user = random_internal_user
       to_user = [1, 2].sample == 1 ? users.sample : nil
 
-      FactoryBot.create :twilio_log, from_user: from_user, to_user: to_user
+      FactoryBot.create :contact_log, from_user: from_user, to_user: to_user
     end
   end
 end
