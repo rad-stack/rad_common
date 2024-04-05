@@ -81,4 +81,42 @@ RSpec.describe DuplicatesProcessor do
 
     it { is_expected.to eq [{ id: attorney_2.id, score: 43 }] }
   end
+
+  context 'when matching on phone numbers' do
+    context 'with phone number matching phone number' do
+      let!(:attorney_2) do
+        create :attorney,
+               first_name: first_name,
+               last_name: last_name,
+               company_name: 'XYZ',
+               address_1: address_1,
+               address_2: address_2,
+               city: city,
+               state: state,
+               zipcode: zipcode,
+               phone_number: phone_number,
+               email: '222@xyz.edu'
+      end
+
+      it { is_expected.to eq [{ id: attorney_2.id, score: 56 }] }
+    end
+
+    context 'with phone number matching mobile phone' do
+      let!(:attorney_2) do
+        create :attorney,
+               first_name: first_name,
+               last_name: last_name,
+               company_name: 'XYZ',
+               address_1: address_1,
+               address_2: address_2,
+               city: city,
+               state: state,
+               zipcode: zipcode,
+               mobile_phone: phone_number,
+               email: '222@xyz.edu'
+      end
+
+      it { is_expected.to eq [{ id: attorney_2.id, score: 56 }] }
+    end
+  end
 end
