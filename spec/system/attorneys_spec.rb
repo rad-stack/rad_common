@@ -23,8 +23,8 @@ RSpec.describe 'Attorneys' do
 
       fill_in 'First Name', with: attorney.first_name
       fill_in 'Last Name', with: attorney.last_name
-      fill_in 'Phone Number', with: attorney.phone_number
-      fill_in 'Email', with: attorney.email
+      fill_in 'attorney_phone_number', with: attorney.phone_number
+      fill_in 'attorney_email', with: attorney.email
 
       expect(page).to have_content('This is not a duplicate')
     end
