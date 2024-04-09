@@ -5,6 +5,8 @@ namespace :rad_common do
     Timeout.timeout(session.time_limit) do
       session.reset_status
 
+      Rails.cache.delete_matched('views/*')
+
       Duplicate.where.not(sort: 500).update_all sort: 500 if Date.current.wday == 1
 
       RadCommon::AppInfo.new.duplicate_models.each do |model_name|
