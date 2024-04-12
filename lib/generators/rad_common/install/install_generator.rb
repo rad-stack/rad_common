@@ -220,6 +220,7 @@ Seeder.new.seed!
         apply_migration '20240222093233_active_record_doctor_issues.rb'
         apply_migration '20240313112119_more_active_record_doctor_issues.rb'
         apply_migration '20240412165055_rename_twilio_logs.rb'
+        apply_migration '20240412175512_create_contact_log_recipients.rb'
       end
 
       def self.next_migration_number(path)

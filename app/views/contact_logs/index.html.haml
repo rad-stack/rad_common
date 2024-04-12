@@ -10,20 +10,21 @@
 
       - @contact_logs.each do |record|
         %tr{ class: table_row_style(record) }
-          %td= enum_to_translated_option(record, :log_type)
+          %td= enum_to_translated_option(record.contact_log, :service_type)
+          %td= enum_to_translated_option(record.contact_log, :log_type)
           %td= format_datetime record.created_at
-          %td= record.from_number
-          %td= record.to_number
-          %td= secured_link record.from_user
+          %td= record.contact_log.from_number
+          %td= record.phone_number
+          %td= secured_link record.contact_log.from_user
           %td= secured_link record.to_user
           %td
-            = record.message
-            - if record.media_url.present?
-              = icon_tooltip('span', record.media_url, 'fa-image')
-          %td= format_boolean record.opt_out_message_sent
+            = record.contact_log.message
+            - if record.contact_log.media_url.present?
+              = icon_tooltip('span', record.contact_log.media_url, 'fa-image')
+          %td= format_boolean record.contact_log.opt_out_message_sent
           %td
-            = record.status
-            - if record.message_sid.present?
-              = icon_tooltip('span', record.message_sid, 'fa-circle-info')
+            = enum_to_translated_option(record, :service_status)
+            - if record.contact_log.message_sid.present?
+              = icon_tooltip('span', record.contact_log.message_sid, 'fa-circle-info')
 
     = paginate @contact_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine

@@ -19,14 +19,13 @@ class RadTwilioReply
 
     def log_event
       log = ContactLog.create! log_type: :incoming,
-                               to_number: to_number,
                                from_number: from_number,
                                from_user_id: from_user_id,
                                message: message,
                                sent: true,
                                message_sid: message_sid,
-                               success: true,
                                opt_out_message_sent: false
+      ContactLogRecipient.create! contact_log: log, phone_number: to_number, success: true
       handle_attachments(log)
     end
 
@@ -51,7 +50,7 @@ class RadTwilioReply
     def message
       return params[:Body] if params[:Body].present?
 
-      return 'File' if media_urls.present?
+      'File' if media_urls.present?
     end
 
     def message_sid

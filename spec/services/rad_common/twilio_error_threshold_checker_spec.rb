@@ -9,22 +9,22 @@ RSpec.describe RadCommon::TwilioErrorThresholdChecker, type: :service do
 
     context 'when threshold is exceeded' do
       before do
-        create_list :contact_log, 23, twilio_status: :delivered
-        create_list :contact_log, 10, twilio_status: :undelivered
+        2.times { create_list :contact_log_recipient, 10, service_status: :delivered }
+        create_list :contact_log_recipient, 10, service_status: :undelivered
         described_class.new.check_threshold
       end
 
       it 'sends a notification' do
         expect(email.subject).to eq 'Twilio Error Threshold Exceeded'
-        expect(body).to include 'Twilio Error Threshold has been exceeded. 30.3% of messages have failed to deliver. ' \
-                                'Check contact logs for more details'
+        expect(body).to include 'Twilio Error Threshold has been exceeded. ' \
+                                '33.33% of messages have failed to deliver. Check contact logs for more details'
       end
     end
 
     context 'when threshold is not exceeded' do
       before do
-        create_list :contact_log, 24, twilio_status: :delivered
-        create_list :contact_log, 1, twilio_status: :undelivered
+        create_list :contact_log_recipient, 10, service_status: :delivered
+        create_list :contact_log_recipient, 1, service_status: :undelivered
         described_class.new.check_threshold
       end
 
@@ -35,8 +35,8 @@ RSpec.describe RadCommon::TwilioErrorThresholdChecker, type: :service do
 
     context 'when min failures is not exceeded' do
       before do
-        create_list :contact_log, 2, twilio_status: :delivered
-        create_list :contact_log, 8, twilio_status: :undelivered
+        create_list :contact_log_recipient, 2, service_status: :delivered
+        create_list :contact_log_recipient, 8, service_status: :undelivered
         described_class.new.check_threshold
       end
 
@@ -47,7 +47,7 @@ RSpec.describe RadCommon::TwilioErrorThresholdChecker, type: :service do
 
     context 'when min failures is not exceeded and 100% are failures' do
       before do
-        create_list :contact_log, 8, twilio_status: :undelivered
+        create_list :contact_log_recipient, 8, service_status: :undelivered
         described_class.new.check_threshold
       end
 

@@ -24,11 +24,11 @@ module RadCommon
       end
 
       def recent_undelivered_count
-        ContactLog.failure.last_day.count.to_f
+        ContactLogRecipient.twilio.failure.last_day.count.to_f
       end
 
       def recent_count
-        ContactLog.last_day.count.to_f
+        ContactLogRecipient.twilio.last_day.count.to_f
       end
   end
 end
