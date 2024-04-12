@@ -331,7 +331,8 @@ class RadConfig
       items = array_config_item!(:system_usage_models)
       return items unless twilio_enabled?
 
-      items + [['ContactLog', 'successful', 'Successful Contact Logs'], ['ContactLog', 'failure', 'Failure Contact Logs']]
+      items + [['ContactLog', 'successful', 'Successful Contact Logs'],
+               ['ContactLog', 'failure', 'Failure Contact Logs']]
     end
 
     def global_validity_days!
