@@ -20,7 +20,7 @@ RSpec.describe RadCommon::AppInfo, type: :service do
 
     let(:result) do
       %w[Attorney Category Client Company Division Duplicate Notification NotificationSecurityRole NotificationSetting
-         NotificationType SavedSearchFilter SecurityRole Status SystemMessage TwilioLog TwilioLogAttachment
+         NotificationType SavedSearchFilter SecurityRole Status SystemMessage ContactLog ContactLogAttachment
          User UserClient UserSecurityRole UserStatus]
     end
 

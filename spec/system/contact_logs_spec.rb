@@ -1,16 +1,16 @@
 require 'rails_helper'
 
-RSpec.describe 'TwilioLogs' do
+RSpec.describe 'ContactLogs' do
   let(:user) { create :admin }
-  let(:twilio_log) { create :twilio_log }
+  let(:contact_log) { create :contact_log }
 
   before { login_as user, scope: :user }
 
   describe 'index' do
     it 'displays the twilio_logs' do
-      twilio_log
+      contact_log
       visit '/rad_common/twilio_logs'
-      expect(page).to have_content(twilio_log.message)
+      expect(page).to have_content(contact_log.message)
     end
   end
 end

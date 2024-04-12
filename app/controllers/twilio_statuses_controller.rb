@@ -6,14 +6,14 @@ class TwilioStatusesController < ApplicationController
 
   def create
     skip_authorization
-    return if @twilio_log.blank?
+    return if @contact_log.blank?
 
-    @twilio_log.update! twilio_status: params['MessageStatus']
+    @contact_log.update! twilio_status: params['MessageStatus']
   end
 
   private
 
-    def set_twilio_log
-      @twilio_log = TwilioLog.find_by(message_sid: params['MessageSid'])
+    def set_contact_log
+      @contact_log = ContactLog.find_by(message_sid: params['MessageSid'])
     end
 end

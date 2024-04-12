@@ -41,7 +41,7 @@ RSpec.describe PhoneSMSSender, type: :service do
     let(:message) { 'Hey check out this document!' }
     let(:twilio_log_attachment_ids) { [twilio_log_attachment.id] }
     let(:twilio_log_attachment) do
-      twilio_log_attachment = TwilioLogAttachment.new
+      twilio_log_attachment = ContactLogAttachment.new
       twilio_log_attachment.attachment.attach(io: file, filename: 'test.pdf')
       twilio_log_attachment.save!
       twilio_log_attachment
@@ -80,7 +80,7 @@ RSpec.describe PhoneSMSSender, type: :service do
 
       context 'when opt out message already sent' do
         before do
-          create :twilio_log,
+          create :contact_log,
                  opt_out_message_sent: true,
                  sent: true,
                  to_number: mobile_phone

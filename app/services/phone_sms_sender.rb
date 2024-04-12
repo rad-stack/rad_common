@@ -16,7 +16,7 @@ class PhoneSMSSender
     self.media_url = media_url
     self.twilio = RadTwilio.new
     if twilio_log_attachment_ids.present?
-      self.twilio_log_attachments = TwilioLogAttachment.where(id: twilio_log_attachment_ids)
+      self.twilio_log_attachments = ContactLogAttachment.where(id: twilio_log_attachment_ids)
     end
     self.message = augment_message(message, force_opt_out)
   end
@@ -101,20 +101,20 @@ class PhoneSMSSender
     end
 
     def opt_out_message_already_sent?
-      TwilioLog.opt_out_message_sent?(to_mobile_phone)
+      ContactLog.opt_out_message_sent?(to_mobile_phone)
     end
 
     def log_event(sent, message_sid)
-      TwilioLog.create! log_type: :outgoing,
-                        to_number: to_mobile_phone,
-                        from_number: RadTwilio.twilio_to_human_format(from_number),
-                        to_user: to_user,
-                        from_user_id: from_user_id,
-                        message: message,
-                        media_url: media_url,
-                        sent: sent,
-                        message_sid: message_sid,
-                        opt_out_message_sent: opt_out_message_sent,
-                        twilio_log_attachments: twilio_log_attachments.presence || []
+      ContactLog.create! log_type: :outgoing,
+                         to_number: to_mobile_phone,
+                         from_number: RadTwilio.twilio_to_human_format(from_number),
+                         to_user: to_user,
+                         from_user_id: from_user_id,
+                         message: message,
+                         media_url: media_url,
+                         sent: sent,
+                         message_sid: message_sid,
+                         opt_out_message_sent: opt_out_message_sent,
+                         twilio_log_attachments: twilio_log_attachments.presence || []
     end
 end

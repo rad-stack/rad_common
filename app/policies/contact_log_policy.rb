@@ -1,4 +1,4 @@
-class TwilioLogPolicy < ApplicationPolicy
+class ContactLogPolicy < ApplicationPolicy
   def create?
     false
   end

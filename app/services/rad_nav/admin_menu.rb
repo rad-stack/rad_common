@@ -70,9 +70,9 @@ module RadNav
       end
 
       def twilio_logs
-        return unless RadTwilio.new.twilio_enabled? || TwilioLog.exists?
+        return unless RadTwilio.new.twilio_enabled? || ContactLog.exists?
 
-        DropdownMenuItem.new(view_context, 'Twilio Logs', '/rad_common/twilio_logs')
+        DropdownMenuItem.new(view_context, 'Contact Logs', '/rad_common/twilio_logs')
       end
 
       def users
