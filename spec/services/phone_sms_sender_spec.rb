@@ -4,8 +4,8 @@ RSpec.describe PhoneSMSSender, type: :service do
   let(:from_user) { create :user }
   let(:mobile_phone) { '(618) 722-2169' }
   let(:message) { 'test message' }
-  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, twilio_log_attachment_ids) }
-  let(:twilio_log_attachment_ids) { [] }
+  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, contact_log_attachment_ids) }
+  let(:contact_log_attachment_ids) { [] }
 
   before { allow(RadRetry).to receive(:exponential_pause) }
 
@@ -35,19 +35,19 @@ RSpec.describe PhoneSMSSender, type: :service do
     end
   end
 
-  describe 'twilio_log_attachment' do
+  describe 'contact_log_attachment' do
     subject(:message_to_send) { sms_sender.send(:augment_message, message, false) }
 
     let(:message) { 'Hey check out this document!' }
-    let(:twilio_log_attachment_ids) { [twilio_log_attachment.id] }
-    let(:twilio_log_attachment) do
-      twilio_log_attachment = TwilioLogAttachment.new
-      twilio_log_attachment.attachment.attach(io: file, filename: 'test.pdf')
-      twilio_log_attachment.save!
-      twilio_log_attachment
+    let(:contact_log_attachment_ids) { [contact_log_attachment.id] }
+    let(:contact_log_attachment) do
+      contact_log_attachment = ContactLogAttachment.new
+      contact_log_attachment.attachment.attach(io: file, filename: 'test.pdf')
+      contact_log_attachment.save!
+      contact_log_attachment
     end
     let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/test.pdf')) }
-    let(:perm_url) { AttachmentUrlGenerator.permanent_attachment_url(twilio_log_attachment.attachment) }
+    let(:perm_url) { AttachmentUrlGenerator.permanent_attachment_url(contact_log_attachment.attachment) }
 
     context 'with other file type besides image' do
       it 'appends permanent url to message' do
@@ -80,10 +80,10 @@ RSpec.describe PhoneSMSSender, type: :service do
 
       context 'when opt out message already sent' do
         before do
-          create :twilio_log,
+          create :contact_log,
                  opt_out_message_sent: true,
                  sent: true,
-                 to_number: mobile_phone
+                 phone_number: mobile_phone
         end
 
         it { is_expected.to eq "I'm taking your surfboard" }
