@@ -9,7 +9,7 @@ RSpec.describe RadCommon::AppInfo, type: :service do
     let(:result) do
       %w[attorneys categories clients companies divisions duplicates notification_security_roles notification_settings
          notification_types notifications saved_search_filters security_roles statuses system_messages
-         twilio_log_attachments twilio_logs user_clients user_security_roles user_statuses users]
+         contact_log_attachments contact_logs user_clients user_security_roles user_statuses users]
     end
 
     it { is_expected.to eq result }

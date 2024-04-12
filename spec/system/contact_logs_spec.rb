@@ -7,9 +7,9 @@ RSpec.describe 'ContactLogs' do
   before { login_as user, scope: :user }
 
   describe 'index' do
-    it 'displays the twilio_logs' do
+    it 'displays the contact_logs' do
       contact_log
-      visit '/rad_common/twilio_logs'
+      visit '/rad_common/contact_logs'
       expect(page).to have_content(contact_log.message)
     end
   end

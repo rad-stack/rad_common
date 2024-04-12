@@ -33,7 +33,7 @@ module RadNav
          DropdownMenuItem.new(view_context, 'Sign In Activity', '/rad_common/login_activities'),
          system_messages,
          DropdownMenuItem.new(view_context, 'System Usage', '/rad_common/system_usages'),
-         twilio_logs,
+         contact_logs,
          users,
          validate_database].compact.sort_by(&:label)
       end
@@ -69,10 +69,10 @@ module RadNav
                              RadCommon::Engine.routes.url_helpers.new_system_message_path)
       end
 
-      def twilio_logs
+      def contact_logs
         return unless RadTwilio.new.twilio_enabled? || ContactLog.exists?
 
-        DropdownMenuItem.new(view_context, 'Contact Logs', '/rad_common/twilio_logs')
+        DropdownMenuItem.new(view_context, 'Contact Logs', '/rad_common/contact_logs')
       end
 
       def users

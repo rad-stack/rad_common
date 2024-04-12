@@ -1,7 +1,7 @@
 .card
   = render 'layouts/card_header'
   .card-body
-    = render 'layouts/filter', search: @contact_log_search, path: '/rad_common/twilio_logs'
+    = render 'layouts/filter', search: @contact_log_search, path: '/rad_common/contact_logs'
     = paginate @contact_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
 
     %table.table.table-bordered

@@ -131,11 +131,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_12_165055) do
   end
 
   create_table "contact_log_attachments", force: :cascade do |t|
-    t.bigint "twilio_log_id"
+    t.bigint "contact_log_id"
     t.string "twilio_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["twilio_log_id"], name: "index_contact_log_attachments_on_twilio_log_id"
+    t.index ["contact_log_id"], name: "index_contact_log_attachments_on_contact_log_id"
   end
 
   create_table "contact_logs", force: :cascade do |t|
@@ -407,7 +407,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_12_165055) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audits", "users"
-  add_foreign_key "contact_log_attachments", "contact_logs", column: "twilio_log_id"
+  add_foreign_key "contact_log_attachments", "contact_logs"
   add_foreign_key "contact_logs", "users", column: "from_user_id"
   add_foreign_key "contact_logs", "users", column: "to_user_id"
   add_foreign_key "divisions", "categories"

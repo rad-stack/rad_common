@@ -2,7 +2,7 @@ class ContactLog < ApplicationRecord
   belongs_to :from_user, class_name: 'User', optional: true
   belongs_to :to_user, class_name: 'User', optional: true
 
-  has_many :twilio_log_attachments, dependent: :destroy
+  has_many :contact_log_attachments, dependent: :destroy
 
   enum log_type: { outgoing: 0, incoming: 1 }
 

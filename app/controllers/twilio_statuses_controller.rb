@@ -2,7 +2,7 @@ class TwilioStatusesController < ApplicationController
   skip_before_action :authenticate_user!
   skip_before_action :verify_authenticity_token
 
-  before_action :set_twilio_log
+  before_action :set_contact_log
 
   def create
     skip_authorization
