@@ -72,6 +72,14 @@ describe RadMailer do
 
       it { is_expected.to eq 1 }
     end
+
+    describe 'contact logs' do
+      it 'creates a contact log' do
+        expect(ContactLog.count).to eq 1
+        expect(ContactLogRecipient.count).to eq 1
+        expect(ContactLogAttachment.count).to eq 1
+      end
+    end
   end
 
   describe '#email_report' do
