@@ -168,11 +168,11 @@ module RadCommon
     end
 
     def sign_up_roles
-      SecurityRole.allow_sign_up.by_name
+      SecurityRole.allow_sign_up.sorted
     end
 
     def invite_roles
-      SecurityRole.allow_invite.by_name
+      SecurityRole.allow_invite.sorted
     end
 
     def verify_invite

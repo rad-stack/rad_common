@@ -36,10 +36,9 @@ module RadUser
     scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
     scope :admins, -> { active.by_permission 'admin' }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
-    scope :by_name, -> { order(:first_name, :last_name) }
+    scope :sorted, -> { order(:first_name, :last_name) }
     scope :by_id, -> { order(:id) }
     scope :by_last, -> { order(:last_name, :first_name) }
-    scope :sorted, -> { by_name }
     scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
     scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
     scope :recent_first, -> { order('users.created_at DESC') }

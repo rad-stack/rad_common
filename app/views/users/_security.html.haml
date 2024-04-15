@@ -9,7 +9,7 @@
       .card
         = render 'layouts/card_header', action_name: 'custom', title: 'Security Roles', icon: 'fa-list'
         .card-body
-          = render 'security_roles/index', security_roles: @user.security_roles.by_name, show_actions: false
+          = render 'security_roles/index', security_roles: @user.security_roles.sorted, show_actions: false
 
     %div{ class: column_class }
       = render 'security_roles/permissions', permission_categories: @permission_categories
