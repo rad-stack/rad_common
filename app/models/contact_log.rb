@@ -1,8 +1,8 @@
-class TwilioLog < ApplicationRecord
+class ContactLog < ApplicationRecord
   belongs_to :from_user, class_name: 'User', optional: true
   belongs_to :to_user, class_name: 'User', optional: true
 
-  has_many :twilio_log_attachments, dependent: :destroy
+  has_many :contact_log_attachments, dependent: :destroy
 
   enum log_type: { outgoing: 0, incoming: 1 }
 
@@ -32,14 +32,14 @@ class TwilioLog < ApplicationRecord
   before_validation :check_success
 
   def self.opt_out_message_sent?(to_number)
-    TwilioLog.where(sent: true, opt_out_message_sent: true, to_number: to_number).limit(1).any?
+    ContactLog.where(sent: true, opt_out_message_sent: true, to_number: to_number).limit(1).any?
   end
 
   def status
     return 'not sent' unless sent?
     return if twilio_status.blank?
 
-    RadEnum.new(TwilioLog, :twilio_status).translated_option(self)
+    RadEnum.new(ContactLog, :twilio_status).translated_option(self)
   end
 
   private

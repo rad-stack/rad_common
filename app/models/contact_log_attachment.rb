@@ -1,5 +1,5 @@
-class TwilioLogAttachment < ApplicationRecord
-  belongs_to :twilio_log, optional: true
+class ContactLogAttachment < ApplicationRecord
+  belongs_to :contact_log, optional: true
 
   VALID_IMAGE_TYPES = (RadCommon::VALID_IMAGE_TYPES + %w[image/gif]).freeze
 

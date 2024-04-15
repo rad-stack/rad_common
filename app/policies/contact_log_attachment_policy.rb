@@ -1,0 +1,2 @@
+class ContactLogAttachmentPolicy < ContactLogPolicy
+end
