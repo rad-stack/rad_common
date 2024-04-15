@@ -9,6 +9,8 @@ class ContactLog < ApplicationRecord
 
   alias_attribute :active?, :success?
 
+  scope :sorted, -> { order(created_at: :desc, id: :desc) }
+
   validates :from_user_id, presence: true, if: :outgoing?
   validates :message_sid, presence: true, if: :incoming?
   validates :media_url, absence: true, if: :incoming?
