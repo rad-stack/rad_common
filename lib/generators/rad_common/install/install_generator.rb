@@ -318,6 +318,8 @@ Seeder.new.seed!
 
             remove_file factory_file
           end
+
+          Dir.rmdir('spec/factories/rad_common') if Dir.empty?('spec/factories/rad_common')
         end
 
         def add_rad_config_setting(setting_name, default_value)
