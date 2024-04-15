@@ -119,7 +119,9 @@ module RadCommon
 
         create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
+require 'rad_rspec/rad_factories'
 
+RadFactories.load!
 Seeder.new.seed!
         RUBY
         end
