@@ -36,13 +36,20 @@ module RadUser
     scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
     scope :admins, -> { active.by_permission 'admin' }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
-    scope :sorted, -> { order(:first_name, :last_name) }
     scope :by_id, -> { order(:id) }
     scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
     scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
     scope :recent_first, -> { order('users.created_at DESC') }
     scope :recent_last, -> { order('users.created_at') }
     scope :except_user, ->(user) { where.not(id: user.id) }
+
+    scope :sorted, lambda {
+      if RadConfig.last_first_user?
+        order(:last_name, :first_name)
+      else
+        order(:first_name, :last_name)
+      end
+    }
 
     scope :by_permission, lambda { |permission|
       raise "missing permission column: #{permission}" unless RadPermission.exists?(permission)
@@ -85,7 +92,11 @@ module RadUser
   end
 
   def to_s
-    "#{first_name} #{last_name}"
+    if RadConfig.last_first_user?
+      "#{last_name}, #{first_name}"
+    else
+      "#{first_name} #{last_name}"
+    end
   end
 
   def active

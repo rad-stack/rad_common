@@ -382,6 +382,10 @@ class RadConfig
       array_config_item! :crawlable_subdomains
     end
 
+    def last_first_user?
+      boolean_config_item! :last_first_user
+    end
+
     def secret_config_item!(item)
       value = secret_config_item(item)
       raise "required secret config item #{item} is missing" if value.blank?

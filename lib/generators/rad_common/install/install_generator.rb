@@ -18,6 +18,7 @@ module RadCommon
         install_github_workflow
         update_seeder_method
         replace_webdrivers_gem_with_selenium
+        add_rad_config_setting 'last_first_user', 'false'
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
