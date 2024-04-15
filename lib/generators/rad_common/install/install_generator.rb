@@ -19,6 +19,7 @@ module RadCommon
         update_seeder_method
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
+        remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
@@ -82,11 +83,6 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/locales/simple_form.en.yml',
                   'config/locales/simple_form.en.yml'
 
-        # specs
-        directory '../../../../../spec/factories/rad_common/',
-                  'spec/factories/rad_common/',
-                  exclude_pattern: /clients.rb/
-
         copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
 
         # templates
@@ -124,7 +120,9 @@ module RadCommon
 
         create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
+require 'rad_rspec/rad_factories'
 
+RadFactories.load!
 Seeder.new.seed!
         RUBY
         end
@@ -222,6 +220,7 @@ Seeder.new.seed!
         apply_migration '20240209141219_missing_fks.rb'
         apply_migration '20240222093233_active_record_doctor_issues.rb'
         apply_migration '20240313112119_more_active_record_doctor_issues.rb'
+        apply_migration '20240412165055_rename_twilio_logs.rb'
       end
 
       def self.next_migration_number(path)
@@ -314,6 +313,17 @@ Seeder.new.seed!
           return if File.readlines('Gemfile').grep(/gem 'selenium-webdriver'/).any?
 
           gsub_file 'Gemfile', /\n\s*gem 'simplecov', require: false\n/, "\n  gem 'selenium-webdriver'\n  gem 'simplecov', require: false\n"
+        end
+
+        def remove_rad_factories
+          Dir['spec/factories/rad_common/*.rb'].each do |factory_file|
+            factory_name = File.basename(factory_file, '.rb')
+            next if factory_name == 'clients'
+
+            remove_file factory_file
+          end
+
+          Dir.rmdir('spec/factories/rad_common') if Dir.empty?('spec/factories/rad_common')
         end
 
         def add_rad_config_setting(setting_name, default_value)
