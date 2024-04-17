@@ -6,6 +6,7 @@ class RadMailer < ActionMailer::Base
 
   layout 'rad_mailer'
   before_action :set_defaults
+  after_action :create_contact_log
 
   default from: RadConfig.from_email!
   default reply_to: RadConfig.admin_email!
@@ -113,5 +114,44 @@ class RadMailer < ActionMailer::Base
 
     def enable_settings_link
       @notification_settings_link = true
+    end
+
+    def create_contact_log
+      ContactLog.create!(
+        from_email: mail.from.first,
+        reply_to: mail.reply_to.first,
+        subject: mail.subject,
+        message: @message, # What to store here if anything? could be html template
+        log_type: :outgoing,
+        service_type: :sendgrid
+      ).tap do |log|
+        create_contact_log_attachments(log) # Do we want to store all of these?
+        create_contact_log_recipients(log)
+      end
+    end
+
+    def create_contact_log_attachments(log)
+      mail.attachments.each do |attachment|
+        file = StringIO.new(Base64.decode64(attachment.body.decoded))
+        log.contact_log_attachments.create!(attachment: { io: file, filename: attachment.filename })
+      end
+    end
+
+    def create_contact_log_recipients(log)
+      mail.to.each do |recipient|
+        ContactLogRecipient.create!(contact_log: log, email: recipient, email_type: :to, service_status: :delivered)
+      end
+
+      if mail.cc.present?
+        mail.cc.each do |recipient|
+          ContactLogRecipient.create!(contact_log: log, email: recipient, email_type: :cc, service_status: :delivered)
+        end
+      end
+
+      return if mail.bcc.blank?
+
+      mail.bcc.each do |recipient|
+        ContactLogRecipient.create!(contact_log: log, email: recipient, email_type: :bcc, service_status: :delivered)
+      end
     end
 end
