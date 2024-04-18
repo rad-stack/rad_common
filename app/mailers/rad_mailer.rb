@@ -125,15 +125,7 @@ class RadMailer < ActionMailer::Base
         log_type: :outgoing,
         service_type: :sendgrid
       ).tap do |log|
-        create_contact_log_attachments(log) # Do we want to store all of these?
         create_contact_log_recipients(log)
-      end
-    end
-
-    def create_contact_log_attachments(log)
-      mail.attachments.each do |attachment|
-        file = StringIO.new(Base64.decode64(attachment.body.decoded))
-        log.contact_log_attachments.create!(attachment: { io: file, filename: attachment.filename })
       end
     end
 
