@@ -2,12 +2,11 @@ class PhoneSMSSender
   OPT_OUT_MESSAGE = 'To no longer receive text messages, text STOP'.freeze
 
   attr_accessor :message, :from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio, :opt_out_message_sent,
-                :exception, :contact_log_attachments
+                :exception
 
   delegate :from_number, to: :twilio
 
-  def initialize(message, from_user_id, to_mobile_phone, media_url, force_opt_out, contact_log_attachment_ids = nil)
-    message = 'File' if message.blank? && contact_log_attachment_ids.present?
+  def initialize(message, from_user_id, to_mobile_phone, media_url, force_opt_out)
     raise "The message from user #{from_user_id} failed: the message is blank." if message.blank?
     raise 'The message failed: the mobile phone number is blank.' if to_mobile_phone.blank?
 
@@ -15,21 +14,13 @@ class PhoneSMSSender
     self.to_mobile_phone = to_mobile_phone
     self.media_url = media_url
     self.twilio = RadTwilio.new
-    if contact_log_attachment_ids.present?
-      self.contact_log_attachments = ContactLogAttachment.where(id: contact_log_attachment_ids)
-    end
     self.message = augment_message(message, force_opt_out)
   end
 
   def send!
     response = RadRetry.perform_request(raise_original: true) do
       if mms?
-        url = if image_files.present?
-                image_files.map { |log_attachment| log_attachment.attachment.url }
-              else
-                media_url
-              end
-        twilio.send_mms to: to_number, message: message, media_url: url
+        twilio.send_mms to: to_number, message: message, media_url: media_url
       else
         twilio.send_sms to: to_number, message: message
       end
@@ -52,24 +43,11 @@ class PhoneSMSSender
       # override as needed
     end
 
-    def image_files
-      return [] if contact_log_attachments.nil?
-
-      contact_log_attachments.images
-    end
-
-    def other_files
-      return [] if contact_log_attachments.nil?
-
-      contact_log_attachments.other_files
-    end
-
     def mms?
-      media_url.present? || image_files.present?
+      media_url.present?
     end
 
     def augment_message(message, force_opt_out)
-      message = maybe_add_attachment_urls(message)
       if !force_opt_out && opt_out_message_already_sent?
         self.opt_out_message_sent = false
         return message
@@ -79,16 +57,6 @@ class PhoneSMSSender
       return "#{message} - #{OPT_OUT_MESSAGE}" unless %w[. ! ?].include?(message[-1])
 
       "#{message} #{OPT_OUT_MESSAGE}."
-    end
-
-    def maybe_add_attachment_urls(message)
-      return message if other_files.empty?
-
-      urls = other_files.map(&:attachment)
-                        .map { |file| AttachmentUrlGenerator.permanent_attachment_url(file) }
-                        .join(' ')
-      message = "#{message} #{urls}" if urls.present?
-      message
     end
 
     def to_number
@@ -114,7 +82,6 @@ class PhoneSMSSender
                          media_url: media_url,
                          sent: sent,
                          message_sid: message_sid,
-                         opt_out_message_sent: opt_out_message_sent,
-                         contact_log_attachments: contact_log_attachments.presence || []
+                         opt_out_message_sent: opt_out_message_sent
     end
 end
