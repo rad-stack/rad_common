@@ -1,7 +1,6 @@
 class ContactLog < ApplicationRecord
   belongs_to :from_user, class_name: 'User', optional: true
 
-  has_many :contact_log_attachments, dependent: :destroy
   has_many :contact_log_recipients, dependent: :destroy
 
   enum log_type: { outgoing: 0, incoming: 1 }
