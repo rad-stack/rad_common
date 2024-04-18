@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_12_175512) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_18_101832) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -128,14 +128,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_12_175512) do
     t.string "timezone", null: false
     t.integer "address_requests_made", default: 0, null: false
     t.jsonb "address_metadata"
-  end
-
-  create_table "contact_log_attachments", force: :cascade do |t|
-    t.bigint "contact_log_id"
-    t.string "service_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["contact_log_id"], name: "index_contact_log_attachments_on_contact_log_id"
   end
 
   create_table "contact_log_recipients", force: :cascade do |t|
@@ -423,7 +415,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_12_175512) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audits", "users"
-  add_foreign_key "contact_log_attachments", "contact_logs"
   add_foreign_key "contact_log_recipients", "contact_logs"
   add_foreign_key "contact_log_recipients", "users", column: "to_user_id"
   add_foreign_key "contact_logs", "users", column: "from_user_id"

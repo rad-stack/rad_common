@@ -25,8 +25,8 @@ class RadTwilioReply
                                sent: true,
                                message_sid: message_sid,
                                opt_out_message_sent: false
+
       ContactLogRecipient.create! contact_log: log, phone_number: to_number, success: true
-      handle_attachments(log)
     end
 
     def from_number
@@ -55,18 +55,6 @@ class RadTwilioReply
 
     def message_sid
       params[:MessageSid]
-    end
-
-    def handle_attachments(contact_log)
-      return if media_urls.none?
-
-      media_urls.each do |media_url|
-        log_attachment = ContactLogAttachment.new(contact_log: contact_log, twilio_url: media_url)
-        file = URI.parse(media_url).open(http_basic_authentication: [RadConfig.twilio_account_sid!,
-                                                                     RadConfig.twilio_auth_token!])
-        log_attachment.attachment.attach(io: file, filename: File.basename(media_url))
-        log_attachment.save!
-      end
     end
 
     def media_urls
