@@ -1,14 +1,14 @@
 .card
   = render 'layouts/card_header'
   .card-body
-    = render 'layouts/filter', search: @twilio_log_search, path: '/rad_common/twilio_logs'
-    = paginate @twilio_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+    = render 'layouts/filter', search: @contact_log_search, path: '/rad_common/contact_logs'
+    = paginate @contact_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
 
     %table.table.table-bordered
       %tr
-        = render 'layouts/sort_headers', search: @twilio_log_search
+        = render 'layouts/sort_headers', search: @contact_log_search
 
-      - @twilio_logs.each do |record|
+      - @contact_logs.each do |record|
         %tr{ class: table_row_style(record) }
           %td= enum_to_translated_option(record, :log_type)
           %td= format_datetime record.created_at
@@ -26,4 +26,4 @@
             - if record.message_sid.present?
               = icon_tooltip('span', record.message_sid, 'fa-circle-info')
 
-    = paginate @twilio_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+    = paginate @contact_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine

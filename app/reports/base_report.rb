@@ -88,6 +88,10 @@ class BaseReport
       Date.current.beginning_of_quarter.advance days: -1
     end
 
+    def beginning_of_last_month
+      end_of_last_month.beginning_of_month
+    end
+
     def end_of_last_month
       Date.current.beginning_of_month.advance days: -1
     end

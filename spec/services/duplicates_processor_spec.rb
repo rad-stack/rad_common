@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe DuplicatesProcessor do
+  subject { described_class.new(attorney_1).matches }
+
   let(:first_name) { 'John' }
   let(:last_name) { 'Smith' }
   let(:company_name) { 'ABC' }
@@ -26,61 +28,95 @@ RSpec.describe DuplicatesProcessor do
            email: email
   end
 
-  describe 'matches' do
-    subject { described_class.new(attorney_1).matches }
-
-    context 'when matching only on additional items' do
-      let!(:attorney_2) do
-        create :attorney,
-               first_name: 'Yyyy',
-               last_name: 'Ssss',
-               company_name: 'XYZ',
-               address_1: 'Yyyy',
-               address_2: address_2,
-               city: 'Yyyy',
-               state: 'CA',
-               zipcode: '22222',
-               phone_number: phone_number,
-               email: email
-      end
-
-      it { is_expected.to eq [{ id: attorney_2.id, score: 32 }] }
+  context 'when matching only on additional items' do
+    let!(:attorney_2) do
+      create :attorney,
+             first_name: 'Yyyy',
+             last_name: 'Ssss',
+             company_name: 'XYZ',
+             address_1: 'Yyyy',
+             address_2: address_2,
+             city: 'Yyyy',
+             state: 'CA',
+             zipcode: '22222',
+             phone_number: phone_number,
+             email: email
     end
 
-    context 'when matching on standard plus additional items' do
+    it { is_expected.to eq [{ id: attorney_2.id, score: 28 }] }
+  end
+
+  context 'when matching on standard plus additional items' do
+    let!(:attorney_2) do
+      create :attorney,
+             first_name: first_name,
+             last_name: last_name,
+             company_name: 'XYZ',
+             address_1: 'Yyyy',
+             address_2: address_2,
+             city: 'Yyyy',
+             state: 'CA',
+             zipcode: '22222',
+             phone_number: phone_number,
+             email: email
+    end
+
+    it { is_expected.to eq [{ id: attorney_2.id, score: 40 }] }
+  end
+
+  context 'when matching only on additional items 2' do
+    let!(:attorney_2) do
+      create :attorney,
+             first_name: first_name,
+             last_name: last_name,
+             company_name: attorney_1.company_name,
+             address_1: attorney_1.address_1,
+             address_2: address_2,
+             city: attorney_1.city,
+             state: attorney_1.state,
+             zipcode: '22222',
+             phone_number: '(222) 222-2222',
+             email: '222@xyz.com'
+    end
+
+    it { is_expected.to eq [{ id: attorney_2.id, score: 43 }] }
+  end
+
+  context 'when matching on phone numbers' do
+    context 'with phone number matching phone number' do
       let!(:attorney_2) do
         create :attorney,
                first_name: first_name,
                last_name: last_name,
                company_name: 'XYZ',
-               address_1: 'Yyyy',
+               address_1: address_1,
                address_2: address_2,
-               city: 'Yyyy',
-               state: 'CA',
-               zipcode: '22222',
+               city: city,
+               state: state,
+               zipcode: zipcode,
                phone_number: phone_number,
-               email: email
+               email: '222@xyz.edu'
       end
 
-      it { is_expected.to eq [{ id: attorney_2.id, score: 46 }] }
+      it { is_expected.to eq [{ id: attorney_2.id, score: 56 }] }
     end
 
-    context 'when matching only on additional items 2' do
+    context 'with phone number matching mobile phone' do
       let!(:attorney_2) do
         create :attorney,
                first_name: first_name,
                last_name: last_name,
-               company_name: attorney_1.company_name,
-               address_1: attorney_1.address_1,
+               company_name: 'XYZ',
+               address_1: address_1,
                address_2: address_2,
-               city: attorney_1.city,
-               state: attorney_1.state,
-               zipcode: '22222',
-               phone_number: '(222) 222-2222',
-               email: '222@xyz.com'
+               city: city,
+               state: state,
+               zipcode: zipcode,
+               mobile_phone: phone_number,
+               email: '222@xyz.edu'
       end
 
-      it { is_expected.to eq [{ id: attorney_2.id, score: 50 }] }
+      it { is_expected.to eq [{ id: attorney_2.id, score: 56 }] }
     end
   end
 end

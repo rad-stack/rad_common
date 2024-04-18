@@ -110,6 +110,16 @@ RSpec.configure do |config|
   chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
   Capybara.javascript_driver = chrome_driver
 
+  config.before(:suite) do
+    rad_factories = "#{Gem.loaded_specs['rad_common'].full_gem_path}/spec/factories/rad_common"
+    Dir["#{rad_factories}/*.rb"].each do |factory_file|
+      factory_name = File.basename(factory_file, '.rb')
+      next if FactoryBot.factories.registered?(factory_name.singularize.to_sym)
+
+      require factory_file
+    end
+  end
+
   config.before do
     # TODO: workaround for this issue:
     # https://github.com/rails/rails/issues/37270

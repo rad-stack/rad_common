@@ -28,6 +28,6 @@ RadCommon::Engine.routes.draw do
   resources :notifications, only: :index
   resources :sentry_tests, only: %i[edit update]
   resources :login_activities, only: :index
-  resources :twilio_logs, only: :index
+  resources :contact_logs, only: :index
   resources :global_validations, only: %i[new create]
 end
