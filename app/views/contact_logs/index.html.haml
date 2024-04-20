@@ -18,7 +18,7 @@
           %td= secured_link record.contact_log.from_user
           %td= secured_link record.to_user
           %td
-            = record.contact_log.message
+            = record.contact_log.content
             - if record.contact_log.media_url.present?
               = icon_tooltip('span', record.contact_log.media_url, 'fa-image')
           %td= format_boolean record.contact_log.opt_out_message_sent

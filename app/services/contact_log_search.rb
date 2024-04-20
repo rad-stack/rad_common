@@ -38,7 +38,7 @@ class ContactLogSearch < RadCommon::Search
          column: 'contact_log_recipients.to_user_id',
          options: user_array,
          blank_value_label: 'All Users' },
-       { column: 'message', type: RadCommon::LikeFilter },
+       { column: 'content', type: RadCommon::LikeFilter },
        { input_label: 'Status', name: :status, scope_values: %i[failure successful] }]
     end
 
@@ -50,7 +50,7 @@ class ContactLogSearch < RadCommon::Search
        { label: 'To Number', column: 'contact_log_recipients.phone_number' },
        { label: 'From User' },
        { label: 'To User' },
-       { label: 'Message', column: 'contact_logs.message' },
+       { label: 'Content', column: 'contact_logs.content' },
        { label: 'Opt Out Message Sent?', column: 'contact_Logs.opt_out_message_sent' },
        { label: 'Status' }]
     end

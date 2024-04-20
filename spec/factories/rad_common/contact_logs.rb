@@ -4,7 +4,7 @@ FactoryBot.define do
     log_type { 'outgoing' }
     from_number { Faker::PhoneNumber.cell_phone }
     from_user factory: :user
-    message { Faker::TvShows::GameOfThrones.quote }
+    content { Faker::TvShows::GameOfThrones.quote }
     media_url { Faker::Internet.url if rand(1..3) == 1 }
     sent { rand(1..5) != 1 }
 

@@ -120,8 +120,7 @@ class RadMailer < ActionMailer::Base
       ContactLog.create!(
         from_email: mail.from.first,
         reply_to: mail.reply_to.first,
-        subject: mail.subject,
-        message: @message, # What to store here if anything? could be html template
+        content: mail.subject,
         log_type: :outgoing,
         service_type: :sendgrid
       ).tap do |log|

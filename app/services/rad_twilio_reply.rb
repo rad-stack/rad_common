@@ -21,7 +21,7 @@ class RadTwilioReply
       log = ContactLog.create! log_type: :incoming,
                                from_number: from_number,
                                from_user_id: from_user_id,
-                               message: message,
+                               content: message,
                                sent: true,
                                message_sid: message_sid,
                                opt_out_message_sent: false

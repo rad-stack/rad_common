@@ -10,7 +10,7 @@ RSpec.describe 'ContactLogs' do
     it 'displays the contact_logs' do
       contact_log_recipient
       visit '/rad_common/contact_logs'
-      expect(page).to have_content(contact_log_recipient.contact_log.message)
+      expect(page).to have_content(contact_log_recipient.contact_log.content)
       expect(page).to have_content(contact_log_recipient.to_user.to_s)
     end
   end
