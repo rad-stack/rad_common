@@ -1,6 +1,6 @@
 class ContactLog < ApplicationRecord
   belongs_to :from_user, class_name: 'User', optional: true
-  belongs_to :record, polymorphic: true
+  belongs_to :record, polymorphic: true, optional: true
 
   has_many :contact_log_recipients, dependent: :destroy
 
