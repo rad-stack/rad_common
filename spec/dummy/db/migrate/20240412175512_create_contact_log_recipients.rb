@@ -9,6 +9,9 @@ class CreateContactLogRecipients < ActiveRecord::Migration[7.0]
       t.integer :service_status
       t.boolean :success, default: false, null: false
 
+      t.index :email
+      t.index :phone_number
+
       t.timestamps
     end
 

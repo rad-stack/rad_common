@@ -141,6 +141,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_18_101832) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
+    t.index ["email"], name: "index_contact_log_recipients_on_email"
+    t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"
     t.index ["to_user_id"], name: "index_contact_log_recipients_on_to_user_id"
   end
 
