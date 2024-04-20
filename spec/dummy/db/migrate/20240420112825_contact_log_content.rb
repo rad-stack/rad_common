@@ -9,7 +9,7 @@ class ContactLogContent < ActiveRecord::Migration[7.0]
       SQL
     end
 
-    change_column_null :contact_logs, :content, :content, false
+    change_column_null :contact_logs, :content, false
     remove_column :contact_logs, :subject
     remove_column :contact_logs, :message
   end
