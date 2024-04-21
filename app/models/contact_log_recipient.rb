@@ -32,14 +32,6 @@ class ContactLogRecipient < ApplicationRecord
 
   before_validation :check_success
 
-  # TODO: Verify that this is method is actually used
-  def status
-    return 'not sent' unless contact_log.sent?
-    return if service_status.blank?
-
-    RadEnum.new(self.class, :service_status).translated_option(self)
-  end
-
   private
 
     def check_success
