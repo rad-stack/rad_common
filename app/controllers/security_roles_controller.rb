@@ -3,7 +3,7 @@ class SecurityRolesController < ApplicationController
 
   def index
     authorize SecurityRole
-    @security_roles = policy_scope(SecurityRole.by_name).page(params[:page])
+    @security_roles = policy_scope(SecurityRole.sorted).page(params[:page])
   end
 
   def show
