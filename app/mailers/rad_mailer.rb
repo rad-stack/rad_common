@@ -123,7 +123,8 @@ class RadMailer < ActionMailer::Base
         content: mail.subject,
         log_type: :outgoing,
         service_type: :sendgrid,
-        record: @contact_log_record
+        record: @contact_log_record,
+        from_user: @from_user
       ).tap do |log|
         create_contact_log_recipients(log)
       end
