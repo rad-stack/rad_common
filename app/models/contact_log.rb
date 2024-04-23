@@ -5,7 +5,7 @@ class ContactLog < ApplicationRecord
   has_many :contact_log_recipients, dependent: :destroy
 
   enum log_type: { outgoing: 0, incoming: 1 }
-  enum service_type: { twilio: 0, sendgrid: 1 }
+  enum service_type: { sms: 0, email: 1 }
 
   alias_attribute :active?, :success?
 
