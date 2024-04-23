@@ -34,7 +34,7 @@ class CreateContactLogRecipients < ActiveRecord::Migration[7.0]
         contact_log_recipients = logs.map do |log|
           {
             contact_log_id: log.id,
-            service_status: ContactLogRecipient.service_statuses.key(log.service_status),
+            service_status: ContactLogRecipient.sms_statuses.key(log.service_status),
             phone_number: log.to_number,
             to_user_id: log.to_user_id,
             success: log.success,
