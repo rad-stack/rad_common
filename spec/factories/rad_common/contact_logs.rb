@@ -21,12 +21,13 @@ FactoryBot.define do
       end
     end
 
-    trait :sendgrid do
+    trait :email do
       service_type { :email }
       sms_log_type { nil }
       sms_media_url { nil }
       from_number { nil }
       from_email { Faker::Internet.email }
+      sms_sent { false }
     end
   end
 end

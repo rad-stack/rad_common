@@ -10,7 +10,7 @@ FactoryBot.define do
       end
     end
 
-    trait :sendgrid do
+    trait :email do
       email { Faker::Internet.email }
       email_type { :to }
       phone_number { nil }
