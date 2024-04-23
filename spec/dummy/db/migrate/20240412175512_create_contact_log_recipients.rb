@@ -28,7 +28,6 @@ class CreateContactLogRecipients < ActiveRecord::Migration[7.0]
     change_column_null :contact_logs, :to_number, true
 
     rename_column :contact_logs, :twilio_status, :service_status
-    rename_column :contact_log_attachments, :twilio_url, :service_url
 
     if ContactLog.exists?
       ContactLog.in_batches(of: 1000) do |logs|

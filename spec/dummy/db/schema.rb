@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_20_112825) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_23_100042) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -136,8 +136,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_20_112825) do
     t.string "email"
     t.string "phone_number"
     t.integer "email_type"
-    t.integer "service_status"
-    t.boolean "success", default: false, null: false
+    t.integer "sms_status"
+    t.boolean "sms_success", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
@@ -149,15 +149,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_20_112825) do
   create_table "contact_logs", force: :cascade do |t|
     t.string "from_number"
     t.bigint "from_user_id"
-    t.string "media_url"
-    t.boolean "sent", default: true, null: false
+    t.string "sms_media_url"
+    t.boolean "sms_sent", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "opt_out_message_sent", default: false, null: false
-    t.string "message_sid"
-    t.integer "log_type", null: false
+    t.boolean "sms_opt_out_message_sent", default: false, null: false
+    t.string "sms_message_id"
+    t.integer "sms_log_type"
     t.string "from_email"
-    t.string "reply_to"
     t.integer "service_type", default: 0, null: false
     t.string "record_type"
     t.bigint "record_id"
@@ -165,10 +164,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_20_112825) do
     t.index ["created_at"], name: "index_contact_logs_on_created_at"
     t.index ["from_number"], name: "index_contact_logs_on_from_number"
     t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
-    t.index ["opt_out_message_sent"], name: "index_contact_logs_on_opt_out_message_sent"
     t.index ["record_type", "record_id"], name: "index_contact_logs_on_record"
-    t.index ["sent"], name: "index_contact_logs_on_sent"
     t.index ["service_type"], name: "index_contact_logs_on_service_type"
+    t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
+    t.index ["sms_sent"], name: "index_contact_logs_on_sms_sent"
   end
 
   create_table "divisions", force: :cascade do |t|

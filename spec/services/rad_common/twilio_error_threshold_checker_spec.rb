@@ -9,8 +9,8 @@ RSpec.describe RadCommon::TwilioErrorThresholdChecker, type: :service do
 
     context 'when threshold is exceeded' do
       before do
-        2.times { create_list :contact_log_recipient, 10, service_status: :delivered }
-        create_list :contact_log_recipient, 10, service_status: :undelivered
+        2.times { create_list :contact_log_recipient, 10, sms_status: :delivered }
+        create_list :contact_log_recipient, 10, sms_status: :undelivered
         described_class.new.check_threshold
       end
 
@@ -23,8 +23,8 @@ RSpec.describe RadCommon::TwilioErrorThresholdChecker, type: :service do
 
     context 'when threshold is not exceeded' do
       before do
-        create_list :contact_log_recipient, 10, service_status: :delivered
-        create_list :contact_log_recipient, 1, service_status: :undelivered
+        create_list :contact_log_recipient, 10, sms_status: :delivered
+        create_list :contact_log_recipient, 1, sms_status: :undelivered
         described_class.new.check_threshold
       end
 
@@ -35,8 +35,8 @@ RSpec.describe RadCommon::TwilioErrorThresholdChecker, type: :service do
 
     context 'when min failures is not exceeded' do
       before do
-        create_list :contact_log_recipient, 2, service_status: :delivered
-        create_list :contact_log_recipient, 8, service_status: :undelivered
+        create_list :contact_log_recipient, 2, sms_status: :delivered
+        create_list :contact_log_recipient, 8, sms_status: :undelivered
         described_class.new.check_threshold
       end
 
@@ -47,7 +47,7 @@ RSpec.describe RadCommon::TwilioErrorThresholdChecker, type: :service do
 
     context 'when min failures is not exceeded and 100% are failures' do
       before do
-        create_list :contact_log_recipient, 8, service_status: :undelivered
+        create_list :contact_log_recipient, 8, sms_status: :undelivered
         described_class.new.check_threshold
       end
 

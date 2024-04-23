@@ -4,29 +4,40 @@ class ContactLog < ApplicationRecord
 
   has_many :contact_log_recipients, dependent: :destroy
 
-  enum log_type: { outgoing: 0, incoming: 1 }
-  enum service_type: { twilio: 0, sendgrid: 1 }
+  enum sms_log_type: { outgoing: 0, incoming: 1 }
+  enum service_type: { sms: 0, email: 1 }
 
-  alias_attribute :active?, :success?
+  alias_attribute :active?, :sms_success?
 
   scope :sorted, -> { order(created_at: :desc, id: :desc) }
 
-  validates :from_user_id, presence: true, if: -> { outgoing? && twilio? }
-  validates :message_sid, presence: true, if: :incoming?
-  validates :media_url, absence: true, if: :incoming?
+  validates :from_user_id, presence: true, if: -> { outgoing? && sms? }
+  validates :sms_message_id, presence: true, if: :incoming?
+  validates :sms_media_url, absence: true, if: :incoming?
+  validates :sms_log_type, presence: true, if: :sms?
+  validates :sms_log_type, :sms_media_url, :sms_message_id, absence: true, if: :email?
   validate :validate_incoming, if: :incoming?
+  validate :validate_sms_only_booleans, if: :email?
 
   validates_with PhoneNumberValidator, fields: [{ field: :from_number }], skip_twilio: true
 
   def self.opt_out_message_sent?(to_number)
-    ContactLog.twilio.joins(:contact_log_recipients)
-              .exists?(sent: true, opt_out_message_sent: true, contact_log_recipients: { phone_number: to_number })
+    ContactLog.sms.joins(:contact_log_recipients).exists?(
+      sms_sent: true,
+      sms_opt_out_message_sent: true,
+      contact_log_recipients: { phone_number: to_number }
+    )
   end
 
   private
 
     def validate_incoming
-      errors.add(:sent, 'must be true') unless sent?
-      errors.add(:opt_out_message_sent, 'must be false') if opt_out_message_sent?
+      errors.add(:sent, 'must be true') unless sms_sent?
+      errors.add(:sms_opt_out_message_sent, 'must be false') if sms_opt_out_message_sent?
+    end
+
+    def validate_sms_only_booleans
+      errors.add(:sms_sent, 'must be false') if sms_sent?
+      errors.add(:sms_opt_out_message_sent, 'must be false') if sms_opt_out_message_sent?
     end
 end

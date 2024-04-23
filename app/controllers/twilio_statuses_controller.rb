@@ -9,13 +9,13 @@ class TwilioStatusesController < ApplicationController
     return if @contact_log.blank?
 
     @contact_log.contact_log_recipients.each do |recipient|
-      recipient.update! service_status: params['MessageStatus']
+      recipient.update! sms_status: params['MessageStatus']
     end
   end
 
   private
 
     def set_contact_log
-      @contact_log = ContactLog.twilio.find_by(message_sid: params['MessageSid'])
+      @contact_log = ContactLog.sms.find_by(sms_message_id: params['MessageSid'])
     end
 end
