@@ -7,7 +7,7 @@ module RadSecurityRole
     has_many :notification_security_roles, dependent: :destroy
     has_many :system_messages, dependent: :destroy
 
-    scope :by_name, -> { order(:name) }
+    scope :sorted, -> { order(:name) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
     scope :allow_sign_up, -> { where(allow_sign_up: true) }

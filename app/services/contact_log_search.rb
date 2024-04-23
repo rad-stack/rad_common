@@ -67,6 +67,6 @@ class ContactLogSearch < RadCommon::Search
     end
 
     def user_array
-      Pundit.policy_scope!(current_user, User).by_name.pluck(Arel.sql("first_name || ' ' || last_name"), :id)
+      Pundit.policy_scope!(current_user, User).sorted.pluck(Arel.sql("first_name || ' ' || last_name"), :id)
     end
 end

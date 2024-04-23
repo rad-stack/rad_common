@@ -3,7 +3,7 @@ class AttorneysController < ApplicationController
 
   def index
     authorize Attorney
-    @attorneys = policy_scope(Attorney).by_name.page(params[:page])
+    @attorneys = policy_scope(Attorney).sorted.page(params[:page])
   end
 
   def show

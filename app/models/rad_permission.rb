@@ -24,11 +24,11 @@ class RadPermission
   end
 
   def security_roles
-    SecurityRole.where("#{name} = TRUE").by_name
+    SecurityRole.where("#{name} = TRUE").sorted
   end
 
   def users
-    User.active.by_permission(name).by_name
+    User.active.by_permission(name).sorted
   end
 
   class << self

@@ -18,6 +18,7 @@ module RadCommon
         install_github_workflow
         update_seeder_method
         replace_webdrivers_gem_with_selenium
+        add_rad_config_setting 'last_first_user', 'false'
         remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
@@ -325,7 +326,9 @@ Seeder.new.seed!
             remove_file factory_file
           end
 
-          Dir.rmdir('spec/factories/rad_common') if Dir.empty?('spec/factories/rad_common')
+          if Dir.exist?('spec/factories/rad_common') && Dir.empty?('spec/factories/rad_common')
+            Dir.rmdir('spec/factories/rad_common')
+          end
         end
 
         def add_rad_config_setting(setting_name, default_value)

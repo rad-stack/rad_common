@@ -17,7 +17,7 @@ module RadCommon
         roles = roles.external
       end
 
-      roles.by_name.map { |role| [role.name, role.id] }
+      roles.sorted.map { |role| [role.name, role.id] }
     end
 
     def permission_tooltip_content(tooltip)
