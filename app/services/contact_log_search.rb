@@ -17,7 +17,7 @@ class ContactLogSearch < RadCommon::Search
          scope_values: enum_scopes(ContactLog, :service_type) },
        { input_label: 'Log Type',
          name: :log_type,
-         scope_values: enum_scopes(ContactLog, :log_type) },
+         scope_values: enum_scopes(ContactLog, :sms_log_type) },
        { start_input_label: 'Start Date',
          end_input_label: 'End Date',
          column: :created_at,
@@ -52,7 +52,7 @@ class ContactLogSearch < RadCommon::Search
 
     def sort_columns_def
       [{ label: 'Service Type', column: 'contact_logs.service_type' },
-       { label: 'Log Type', column: 'contact_logs.log_type' },
+       { label: 'Log Type', column: 'contact_logs.sms_log_type' },
        { label: 'When', column: 'created_at', direction: 'desc', default: true },
        { label: 'From Number', column: 'contact_logs.from_number' },
        { label: 'To Number', column: 'contact_log_recipients.phone_number' },
@@ -62,7 +62,7 @@ class ContactLogSearch < RadCommon::Search
        { label: 'From User' },
        { label: 'To User' },
        { label: 'Content', column: 'contact_logs.content' },
-       { label: 'Opt Out Message Sent?', column: 'contact_Logs.opt_out_message_sent' },
+       { label: 'Opt Out Message Sent?', column: 'contact_logs.sms_opt_out_message_sent' },
        { label: 'Status' }]
     end
 

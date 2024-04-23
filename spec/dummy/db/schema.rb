@@ -155,7 +155,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_100042) do
     t.datetime "updated_at", null: false
     t.boolean "sms_opt_out_message_sent", default: false, null: false
     t.string "sms_message_id"
-    t.integer "sms_log_type", null: false
+    t.integer "sms_log_type"
     t.string "from_email"
     t.integer "service_type", default: 0, null: false
     t.string "record_type"

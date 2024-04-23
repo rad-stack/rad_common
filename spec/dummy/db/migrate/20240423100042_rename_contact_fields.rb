@@ -10,5 +10,7 @@ class RenameContactFields < ActiveRecord::Migration[7.0]
     rename_column :contact_log_recipients, :success, :sms_success
 
     remove_column :contact_logs, :reply_to
+
+    change_column_null :contact_logs, :sms_log_type, true
   end
 end
