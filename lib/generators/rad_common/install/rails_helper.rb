@@ -113,6 +113,12 @@ RSpec.configure do |config|
     RadFactories.load!
   end
 
+  config.after(:each, :js) do
+    page.find('body').click # Gesture to fix beforeunload error
+  rescue Selenium::WebDriver::Error::ElementNotInteractableError
+    # Ignore
+  end
+
   config.before do
     # TODO: workaround for this issue:
     # https://github.com/rails/rails/issues/37270
