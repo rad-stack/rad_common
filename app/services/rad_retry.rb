@@ -1,3 +1,5 @@
+class RadRetryError < StandardError; end
+
 class RadRetry
   # do not add Timeout::Error, I think this is what is used in the rake session stuff and might conflict, dunno
   # if we find we need to add the above, we can allow passing an exception to exclude to perform_request
@@ -6,7 +8,7 @@ class RadRetry
                       Errno::ENOENT, Errno::ECONNRESET, Net::ReadTimeout, Errno::ECONNREFUSED, JSON::ParserError,
                       ActiveStorage::FileNotFoundError, RadSendGridError, EOFError, Twilio::REST::TwilioError,
                       Faraday::ConnectionFailed, Faraday::TimeoutError, Faraday::SSLError,
-                      Faraday::RackBuilder::StackLocked].freeze
+                      Faraday::RackBuilder::StackLocked, RadRetryError].freeze
 
   class << self
     def perform_request(no_delay: false, retry_count: 5, additional_errors: [], raise_original: false, &block)
