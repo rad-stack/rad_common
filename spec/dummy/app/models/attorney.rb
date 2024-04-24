@@ -2,10 +2,12 @@ class Attorney < ApplicationRecord
   include Contactable
   include DuplicateFixable
 
-  scope :by_name, -> { order(:first_name, :last_name) }
+  scope :sorted, -> { order(:first_name, :last_name) }
+
   scope :created_between, lambda { |start_date, end_date|
     where('created_at >= ? and created_at <= ?', start_date, end_date)
   }
+
   scope :with_cities, ->(cities) { where(city: cities) }
   scope :without_cities, ->(cities) { where.not(city: cities) }
 

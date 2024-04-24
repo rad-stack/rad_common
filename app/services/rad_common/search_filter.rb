@@ -32,17 +32,17 @@ module RadCommon
     # @example Grouped options mixed with scoped values
     #   [{ column: :owner_id, input_label: 'Users', grouped: true,
     #      options: [['...', [user, { scope_value: :unassigned }]],
-    #               ['Active', User.active.by_name],
-    #               ['Inactive', User.inactive.by_name]] }]
+    #               ['Active', User.active.sorted],
+    #               ['Inactive', User.inactive.sorted]] }]
     # @example Using scope with grouped options
     #   { input_label: 'Sales User',
     #     scope: :for_sales_user,
-    #     options: [['Active', User.active.by_name],
-    #               ['Inactive', User.inactive.by_name]],
+    #     options: [['Active', User.active.sorted],
+    #               ['Inactive', User.inactive.sorted]],
     #     grouped: true,
     #     blank_value_label: 'All Users' }
     # @example Using scope values
-    #   [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }]
+    #   [{ column: :owner_id, options: User.sorted, scope_values: { 'Pending Values': :pending } }]
     def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil,
                    input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, not_scope: nil,
                    multiple: false, required: false, include_blank: true, search_scope_name: nil,

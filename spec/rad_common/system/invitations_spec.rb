@@ -8,6 +8,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
   let(:external_domain) { 'abc.com' }
   let(:first_name) { Faker::Name.first_name }
   let(:last_name) { Faker::Name.last_name }
+  let(:name_display) { RadConfig.last_first_user? ? "#{last_name}, #{first_name}" : "#{first_name} #{last_name}" }
   let(:valid_email) { "#{Faker::Internet.user_name}@#{email_domain}" }
   let(:external_email) { "#{Faker::Internet.user_name}@#{external_domain}" }
   let!(:internal_role) { create :security_role, allow_invite: true }
@@ -51,7 +52,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send'
 
-          expect(page).to have_content "We invited '#{first_name} #{last_name}'"
+          expect(page).to have_content "We invited '#{name_display}'"
           expect(User.last.security_roles.first).to eq invite_role
           expect(User.last.user_status.active?).to be true
         end
@@ -139,7 +140,8 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send an invitation'
 
-          expect(page).to have_content "We invited 'f b'"
+          name_display = RadConfig.last_first_user? ? 'b, f' : 'f b'
+          expect(page).to have_content "We invited '#{name_display}'"
         end
       end
     end
@@ -154,7 +156,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
         fill_in 'Mobile Phone', with: '(999) 231-1111'
         click_button 'Send'
 
-        expect(page).to have_content "We invited '#{first_name} #{last_name}'"
+        expect(page).to have_content "We invited '#{name_display}'"
 
         visit user_path(User.last)
         click_link 'Resend Invitation'

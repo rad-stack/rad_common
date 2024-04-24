@@ -17,6 +17,7 @@ module RadCommon
         install_github_workflow
         update_seeder_method
         replace_webdrivers_gem_with_selenium
+        add_rad_config_setting 'last_first_user', 'false'
         remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
@@ -328,7 +329,7 @@ module RadCommon
 
         def add_rad_config_setting(setting_name, default_value)
           standard_config_end = /\n(  system_usage_models:)/
-          new_config = "  #{setting_name}: #{default_value}\n\n\n"
+          new_config = "  #{setting_name}: #{default_value}\n\n"
 
           unless rad_config_setting_exists?(setting_name)
             gsub_file RAD_CONFIG_FILE, standard_config_end, "#{new_config}\\1"
