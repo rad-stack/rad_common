@@ -21,8 +21,7 @@ FileUtils.chdir directory do
   system 'bundle binstubs rad_common --force'
 
   puts "== Running RC Generator =="
-  force_rad_common_install = ARGV.include?('--force-rad-common-install') ? '--force' : ''
-  system "bin/rails g rad_common:install #{force_rad_common_install}"
+  system "bin/rails g rad_common:install --force"
 
   puts '== Running Yarn Install =='
   system 'nvm use'

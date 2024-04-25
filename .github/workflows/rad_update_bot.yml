@@ -47,7 +47,7 @@ jobs:
       # Add or replace test runners here
 
       - name: RC Update
-        run: bin/rc_update --force-rad-common-install
+        run: bin/rc_update
       - name: Capture rad_common version
         run: |
           echo "RAD_COMMON_VERSION=$(bundle show rad_common | grep -oE 'rad_common-([[:alnum:]]+)' | cut -d'-' -f2)" >> "$GITHUB_ENV"
