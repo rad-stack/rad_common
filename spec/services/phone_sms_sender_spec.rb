@@ -59,9 +59,9 @@ RSpec.describe PhoneSMSSender, type: :service do
       context 'when opt out message already sent' do
         before do
           create :contact_log,
-                 opt_out_message_sent: true,
-                 sent: true,
-                 to_number: mobile_phone
+                 sms_opt_out_message_sent: true,
+                 sms_sent: true,
+                 phone_number: mobile_phone
         end
 
         it { is_expected.to eq "I'm taking your surfboard" }

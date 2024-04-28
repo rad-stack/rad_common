@@ -22,7 +22,7 @@ module RadUser
                                  dependent: :destroy,
                                  inverse_of: :from_user
 
-    has_many :contact_logs_to, class_name: 'ContactLog',
+    has_many :contact_logs_to, class_name: 'ContactLogRecipient',
                                foreign_key: 'to_user_id',
                                dependent: :destroy,
                                inverse_of: :to_user

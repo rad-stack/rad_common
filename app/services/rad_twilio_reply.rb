@@ -18,15 +18,15 @@ class RadTwilioReply
   private
 
     def log_event
-      ContactLog.create! log_type: :incoming,
-                         to_number: to_number,
-                         from_number: from_number,
-                         from_user_id: from_user_id,
-                         message: message,
-                         sent: true,
-                         message_sid: message_sid,
-                         success: true,
-                         opt_out_message_sent: false
+      log = ContactLog.create! sms_log_type: :incoming,
+                               from_number: from_number,
+                               from_user_id: from_user_id,
+                               content: message,
+                               sms_sent: true,
+                               sms_message_id: message_sid,
+                               sms_opt_out_message_sent: false
+
+      ContactLogRecipient.create! contact_log: log, phone_number: to_number, sms_success: true
     end
 
     def from_number
@@ -50,7 +50,7 @@ class RadTwilioReply
     def message
       return params[:Body] if params[:Body].present?
 
-      return 'File' if media_urls.present?
+      'File' if media_urls.present?
     end
 
     def message_sid
