@@ -41,6 +41,7 @@ module RadCommonRoutes
           end
         end
 
+        resources :contact_logs, only: :index
         resources :saved_search_filters, only: :destroy
         resources :user_security_roles, only: :show
         resources :user_clients, only: %i[create destroy]

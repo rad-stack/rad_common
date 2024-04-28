@@ -291,7 +291,7 @@ module RadUser
     end
 
     def require_mobile_phone_sms?
-      RadTwilio.new.twilio_enabled? && persisted? && notification_settings.enabled.where(sms: true).count.positive?
+      RadConfig.twilio_enabled? && persisted? && notification_settings.enabled.where(sms: true).count.positive?
     end
 
     def require_mobile_phone_two_factor?

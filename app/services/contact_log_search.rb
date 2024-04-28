@@ -47,7 +47,7 @@ class ContactLogSearch < RadCommon::Search
          options: user_array,
          blank_value_label: 'All Users' },
        { column: 'content', type: RadCommon::LikeFilter },
-       { input_label: 'Status', name: :status, scope_values: %i[failure successful] }]
+       { input_label: 'SMS Success', name: :status, scope_values: %i[failure successful] }]
     end
 
     def sort_columns_def
