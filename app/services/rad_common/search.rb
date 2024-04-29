@@ -155,7 +155,7 @@ module RadCommon
         columns.map { |f|
           not_filter = "#{f.searchable_name}_not" if f.allow_not
           if f.respond_to?(:multiple) && f.multiple
-            [not_filter, { f.searchable_name => [] }].compact
+            [not_filter, f.searchable_name, { f.searchable_name => [] }].compact
           else
             [not_filter, f.searchable_name].compact
           end

@@ -4,6 +4,8 @@ module Api
 
     before_action :authorize_with_jwt
 
+    attr_reader :current_user
+
     private
 
       def authorize_with_jwt
@@ -18,7 +20,8 @@ module Api
         return false if token.blank?
 
         begin
-          RadJwt.new.decode token
+          decoded_token = RadJwt.new.decode token
+          @current_user = User.find(decoded_token.first['user_id']) if decoded_token.first.has_key?('user_id')
           return true
         rescue JWT::DecodeError => e
           Rails.logger.warn "Error decoding the JWT: #{e}"

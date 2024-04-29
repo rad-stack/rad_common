@@ -18,9 +18,9 @@ class RadJwt
     JWT.decode token, RadConfig.jwt_secret!, true
   end
 
-  def generate_token(valid_for_minutes = 5)
+  def generate_token(valid_for_minutes = 5, payload = {})
     expires_at = Time.now.to_i + (valid_for_minutes * 60)
-    encode({ exp: expires_at })
+    encode({ exp: expires_at }.merge(payload))
   end
 
   private
