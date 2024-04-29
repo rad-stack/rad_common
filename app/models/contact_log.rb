@@ -20,8 +20,7 @@ class ContactLog < ApplicationRecord
   validates_with PhoneNumberValidator, fields: [{ field: :from_number }], skip_twilio: true
 
   def to_s
-    "#{ApplicationController.helpers.enum_to_translated_option(self, :service_type)} " \
-      "sent on #{ApplicationController.helpers.format_datetime(created_at)}"
+    "#{ApplicationController.helpers.enum_to_translated_option(self, :service_type)} #{id}"
   end
 
   def self.opt_out_message_sent?(to_number)
