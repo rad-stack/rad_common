@@ -7,8 +7,6 @@ class ContactLog < ApplicationRecord
   enum sms_log_type: { outgoing: 0, incoming: 1 }
   enum service_type: { sms: 0, email: 1 }
 
-  alias_attribute :active?, :sms_success?
-
   scope :sorted, -> { order(created_at: :desc, id: :desc) }
 
   validates :from_user_id, presence: true, if: -> { outgoing? && sms? }
@@ -20,6 +18,11 @@ class ContactLog < ApplicationRecord
   validate :validate_sms_only_booleans, if: :email?
 
   validates_with PhoneNumberValidator, fields: [{ field: :from_number }], skip_twilio: true
+
+  def to_s
+    "#{ApplicationController.helpers.enum_to_translated_option(self, :service_type)} " \
+      "sent on #{ApplicationController.helpers.format_datetime(created_at)}"
+  end
 
   def self.opt_out_message_sent?(to_number)
     ContactLog.sms.joins(:contact_log_recipients).exists?(
