@@ -12,7 +12,10 @@ class ContactLogSearch < RadCommon::Search
   private
 
     def filters_def
-      items = []
+      items = [{ start_input_label: 'Start Date',
+                 end_input_label: 'End Date',
+                 column: :created_at,
+                 type: RadCommon::DateFilter }]
 
       if RadConfig.twilio_enabled?
         items += [{ input_label: 'Service Type',
@@ -22,11 +25,6 @@ class ContactLogSearch < RadCommon::Search
                     name: :log_type,
                     scope_values: enum_scopes(ContactLog, :sms_log_type) }]
       end
-
-      items.push({ start_input_label: 'Start Date',
-                   end_input_label: 'End Date',
-                   column: :created_at,
-                   type: RadCommon::DateFilter })
 
       if RadConfig.twilio_enabled?
         items += [{ input_label: 'From Number',
@@ -69,14 +67,12 @@ class ContactLogSearch < RadCommon::Search
     end
 
     def sort_columns_def
-      items = []
+      items = [{ label: 'When', column: 'created_at', direction: 'desc', default: true }]
 
       if RadConfig.twilio_enabled?
         items += [{ label: 'Service Type', column: 'contact_logs.service_type' },
                   { label: 'Log Type', column: 'contact_logs.sms_log_type' }]
       end
-
-      items.push({ label: 'When', column: 'created_at', direction: 'desc', default: true })
 
       if RadConfig.twilio_enabled?
         items += [{ label: 'From Number', column: 'contact_logs.from_number' },

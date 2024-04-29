@@ -10,10 +10,10 @@
 
       - @contact_logs.each do |record|
         %tr{ class: table_row_style(record) }
-          - if RadConfig.twilio_enabled?
-            %td= link_to enum_to_translated_option(record.contact_log, :service_type), record.contact_log
-            %td= link_to enum_to_translated_option(record.contact_log, :sms_log_type), record.contact_log
           %td= link_to format_datetime(record.created_at), record.contact_log
+          - if RadConfig.twilio_enabled?
+            %td= enum_to_translated_option record.contact_log, :service_type
+            %td= enum_to_translated_option record.contact_log, :sms_log_type
           - if RadConfig.twilio_enabled?
             %td= record.contact_log.from_number
             %td= record.phone_number

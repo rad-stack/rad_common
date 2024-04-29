@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :contact_log do
-    service_type { :sms }
+    service_type { 'sms' }
     sms_log_type { 'outgoing' }
     from_number { Faker::PhoneNumber.cell_phone }
     from_user factory: :user
@@ -10,14 +10,29 @@ FactoryBot.define do
 
     transient do
       to_user { nil }
+      email { nil }
       phone_number { nil }
     end
 
     after(:create) do |contact_log, evaluator|
-      if evaluator.to_user || evaluator.phone_number
-        attrs = { to_user: evaluator.to_user, phone_number: evaluator.phone_number }
-        create :contact_log_recipient, contact_log: contact_log, **attrs.compact
+      if evaluator.to_user || evaluator.email || evaluator.phone_number
+        attrs = { to_user: evaluator.to_user, phone_number: evaluator.phone_number, email: evaluator.email }
+
+        if contact_log.sms?
+          create :contact_log_recipient, contact_log: contact_log, **attrs.compact
+        else
+          create :contact_log_recipient, :email, contact_log: contact_log, **attrs.compact
+        end
       end
+    end
+
+    trait :email do
+      service_type { :email }
+      sms_log_type { nil }
+      sms_media_url { nil }
+      from_number { nil }
+      from_email { Faker::Internet.email }
+      sms_sent { false }
     end
   end
 end
