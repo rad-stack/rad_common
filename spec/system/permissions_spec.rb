@@ -9,7 +9,7 @@ describe 'Permissions' do
 
   it 'updates the ui when changed', :js do
     visit "/divisions/#{division.id}"
-    expect(page).not_to have_content 'Delete'
+    expect(page).to have_no_content 'Delete'
 
     user.security_roles.update_all delete_division: true
 
