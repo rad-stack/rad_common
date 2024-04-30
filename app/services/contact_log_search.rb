@@ -12,25 +12,42 @@ class ContactLogSearch < RadCommon::Search
   private
 
     def filters_def
-      [{ input_label: 'Service Type',
-         name: :service_type,
-         scope_values: enum_scopes(ContactLog, :service_type) },
-       { input_label: 'Log Type',
-         name: :log_type,
-         scope_values: enum_scopes(ContactLog, :sms_log_type) },
-       { start_input_label: 'Start Date',
-         end_input_label: 'End Date',
-         column: :created_at,
-         type: RadCommon::DateFilter },
-       { input_label: 'From Number',
-         column: 'contact_logs.from_number',
-         type: RadCommon::PhoneNumberFilter,
-         name: :from_number },
-       { input_label: 'To Number',
-         column: 'contact_log_recipients.phone_number',
-         type: RadCommon::PhoneNumberFilter,
-         name: :to_number },
-       { input_label: 'From Email',
+      items = [{ start_input_label: 'Start Date',
+                 end_input_label: 'End Date',
+                 column: :created_at,
+                 type: RadCommon::DateFilter }]
+
+      if RadConfig.twilio_enabled?
+        items += [{ input_label: 'Service Type',
+                    name: :service_type,
+                    scope_values: enum_scopes(ContactLog, :service_type) },
+                  { input_label: 'Log Type',
+                    name: :log_type,
+                    scope_values: enum_scopes(ContactLog, :sms_log_type) }]
+      end
+
+      if RadConfig.twilio_enabled?
+        items += [{ input_label: 'From Number',
+                    column: 'contact_logs.from_number',
+                    type: RadCommon::PhoneNumberFilter,
+                    name: :from_number },
+                  { input_label: 'To Number',
+                    column: 'contact_log_recipients.phone_number',
+                    type: RadCommon::PhoneNumberFilter,
+                    name: :to_number }]
+      end
+
+      items += base_filters
+
+      if RadConfig.twilio_enabled?
+        items.push({ input_label: 'SMS Success', name: :status, scope_values: %i[failure successful] })
+      end
+
+      items
+    end
+
+    def base_filters
+      [{ input_label: 'From Email',
          column: 'contact_logs.from_email',
          type: RadCommon::LikeFilter,
          name: :from_email },
@@ -46,24 +63,35 @@ class ContactLogSearch < RadCommon::Search
          column: 'contact_log_recipients.to_user_id',
          options: user_array,
          blank_value_label: 'All Users' },
-       { column: 'content', type: RadCommon::LikeFilter },
-       { input_label: 'Status', name: :status, scope_values: %i[failure successful] }]
+       { column: 'content', type: RadCommon::LikeFilter }]
     end
 
     def sort_columns_def
-      [{ label: 'Service Type', column: 'contact_logs.service_type' },
-       { label: 'Log Type', column: 'contact_logs.sms_log_type' },
-       { label: 'When', column: 'created_at', direction: 'desc', default: true },
-       { label: 'From Number', column: 'contact_logs.from_number' },
-       { label: 'To Number', column: 'contact_log_recipients.phone_number' },
-       { label: 'From Email', column: 'contact_logs.from_email' },
-       { label: 'To Email', column: 'contact_log_recipients.email' },
-       { label: 'To Email Type', column: 'contact_log_recipients.email_type' },
-       { label: 'From User' },
-       { label: 'To User' },
-       { label: 'Content', column: 'contact_logs.content' },
-       { label: 'Opt Out Message Sent?', column: 'contact_logs.sms_opt_out_message_sent' },
-       { label: 'Status' }]
+      items = [{ label: 'When', column: 'created_at', direction: 'desc', default: true }]
+
+      if RadConfig.twilio_enabled?
+        items += [{ label: 'Service Type', column: 'contact_logs.service_type' },
+                  { label: 'Log Type', column: 'contact_logs.sms_log_type' }]
+      end
+
+      if RadConfig.twilio_enabled?
+        items += [{ label: 'From Number', column: 'contact_logs.from_number' },
+                  { label: 'To Number', column: 'contact_log_recipients.phone_number' }]
+      end
+
+      items += [{ label: 'From Email', column: 'contact_logs.from_email' },
+                { label: 'To Email', column: 'contact_log_recipients.email' },
+                { label: 'From User' },
+                { label: 'To User' },
+                { label: 'Record' },
+                { label: 'Content', column: 'contact_logs.content' }]
+
+      if RadConfig.twilio_enabled?
+        items += [{ label: 'Opt Out Message Sent?', column: 'contact_logs.sms_opt_out_message_sent' },
+                  { label: 'SMS Success', column: 'contact_log_recipients.sms_success' }]
+      end
+
+      items
     end
 
     def user_array

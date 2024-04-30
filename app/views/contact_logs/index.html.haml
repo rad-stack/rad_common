@@ -1,8 +1,8 @@
 .card
   = render 'layouts/card_header'
   .card-body
-    = render 'layouts/filter', search: @contact_log_search, path: '/rad_common/contact_logs'
-    = paginate @contact_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+    = render 'layouts/filter', search: @contact_log_search, path: contact_logs_path
+    = paginate @contact_logs, theme: 'twitter-bootstrap-4'
 
     %table.table.table-bordered
       %tr
@@ -10,24 +10,21 @@
 
       - @contact_logs.each do |record|
         %tr{ class: table_row_style(record) }
-          %td= enum_to_translated_option(record.contact_log, :service_type)
-          %td= enum_to_translated_option(record.contact_log, :sms_log_type)
-          %td= format_datetime record.created_at
-          %td= record.contact_log.from_number
-          %td= record.phone_number
+          %td= link_to format_datetime(record.created_at), record.contact_log
+          - if RadConfig.twilio_enabled?
+            %td= enum_to_translated_option record.contact_log, :service_type
+            %td= enum_to_translated_option record.contact_log, :sms_log_type
+          - if RadConfig.twilio_enabled?
+            %td= record.contact_log.from_number
+            %td= record.phone_number
           %td= record.contact_log.from_email
           %td= record.email
-          %td= enum_to_translated_option(record, :email_type)
           %td= secured_link record.contact_log.from_user
           %td= secured_link record.to_user
-          %td
-            = record.contact_log.content
-            - if record.contact_log.sms_media_url.present?
-              = icon_tooltip('span', record.contact_log.sms_media_url, 'fa-image')
-          %td= format_boolean record.contact_log.sms_opt_out_message_sent
-          %td
-            = enum_to_translated_option(record, :sms_status)
-            - if record.contact_log.sms_message_id.present?
-              = icon_tooltip('span', record.contact_log.sms_message_id, 'fa-circle-info')
+          %td= secured_link record.contact_log.record
+          %td= record.contact_log.content
+          - if RadConfig.twilio_enabled?
+            %td= format_boolean record.contact_log.sms_opt_out_message_sent
+            %td= format_boolean record.sms_success
 
-    = paginate @contact_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+    = paginate @contact_logs, theme: 'twitter-bootstrap-4'

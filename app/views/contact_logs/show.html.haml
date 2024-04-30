@@ -1,0 +1,35 @@
+.card
+  = render 'layouts/card_header'
+  .card-body
+    = render 'layouts/show_data_columns',
+             data: contact_log_show_data(@contact_log),
+             resource: @contact_log,
+             no_timestamps: true
+
+.card
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: "Recipients (#{@contact_log_recipients.size})",
+           icon: 'fa-list'
+
+  .card-body
+    %table.table.table-bordered
+      %tr
+        %th To User
+        - if @contact_log.email?
+          %th Email
+          %th Email Type
+        - if @contact_log.sms?
+          %th Phone #
+          %th SMS Status
+          %th SMS Success
+      - @contact_log_recipients.each do |record|
+        %tr{ class: table_row_style(record) }
+          %td= secured_link record.to_user
+          - if @contact_log.email?
+            %td= record.email
+            %td= enum_to_translated_option(record, :email_type)
+          - if @contact_log.sms?
+            %td= record.phone_number
+            %td= enum_to_translated_option(record, :sms_status)
+            %td= format_boolean record.sms_success

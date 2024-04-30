@@ -17,9 +17,12 @@ class ContactLogRecipient < ApplicationRecord
   scope :failure, -> { where(sms_success: false) }
   scope :successful, -> { where(sms_success: true) }
   scope :last_day, -> { joins(:contact_log).where('contact_logs.created_at > ?', 24.hours.ago) }
+  scope :sorted, -> { order(:id) }
+
   ContactLog.service_types.each_key do |service_type|
     scope service_type, -> { joins(:contact_log).where(contact_logs: { service_type: service_type }) }
   end
+
   ContactLog.sms_log_types.each_key do |log_type|
     scope log_type, -> { joins(:contact_log).where(contact_logs: { log_type: log_type }) }
   end
@@ -33,6 +36,14 @@ class ContactLogRecipient < ApplicationRecord
   validate :validate_sms_only_booleans, if: -> { contact_log&.email? }
 
   before_validation :check_success
+
+  def active?
+    if contact_log.sms?
+      sms_success?
+    else
+      true
+    end
+  end
 
   private
 
