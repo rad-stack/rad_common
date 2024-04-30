@@ -38,8 +38,8 @@ class CreateContactLogRecipients < ActiveRecord::Migration[7.0]
             phone_number: log.to_number,
             to_user_id: log.to_user_id,
             success: log.success,
-            created_at: Time.now,
-            updated_at: Time.now
+            created_at: Time.current,
+            updated_at: Time.current
           }
         end
         ContactLogRecipient.insert_all(contact_log_recipients)
