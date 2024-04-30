@@ -19,6 +19,7 @@ module RadCommon
         update_seeder_method
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
+        add_rad_config_setting 'legacy_rails_config', 'false'
         remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
@@ -52,6 +53,10 @@ module RadCommon
 
         copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
         gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
+
+        if RadConfig.legacy_rails_config?
+          gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
+        end
 
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
