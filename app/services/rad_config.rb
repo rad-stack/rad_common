@@ -387,6 +387,10 @@ class RadConfig
       boolean_config_item! :last_first_user
     end
 
+    def legacy_rails_config?
+      boolean_config_item! :legacy_rails_config
+    end
+
     def secret_config_item!(item)
       value = secret_config_item(item)
       raise "required secret config item #{item} is missing" if value.blank?
