@@ -115,7 +115,7 @@ RSpec.configure do |config|
 
   config.after(:each, :js) do
     page.find('body').click # Gesture to fix beforeunload error
-  rescue Selenium::WebDriver::Error::ElementNotInteractableError
+  rescue Selenium::WebDriver::Error::ElementNotInteractableError, Selenium::WebDriver::Error::UnexpectedAlertOpenError
     # Ignore
   end
 
