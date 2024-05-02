@@ -54,7 +54,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
         gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
 
-        if RadConfig.legacy_rails_config?
+        if !RadConfig.config_item(:legacy_rails_config).nil? && RadConfig.legacy_rails_config?
           gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
         end
 
