@@ -69,7 +69,7 @@ AuthTrail.geocode = false
 
 module Kaminari
   # monkey patch to fix paging on engine routes
-  # https://github.com/radicalbear/rad_common/pull/211/files
+  # https://github.com/rad-stack/rad_common/pull/211/files
   # https://github.com/kaminari/kaminari/issues/457
 
   module Helpers

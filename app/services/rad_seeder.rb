@@ -65,7 +65,7 @@ class RadSeeder
     end
 
     def developer_user?(user)
-      user.email.include?('radicalbear.com')
+      user.email.include?('radstack.com')
     end
 
     def seed_security_roles
