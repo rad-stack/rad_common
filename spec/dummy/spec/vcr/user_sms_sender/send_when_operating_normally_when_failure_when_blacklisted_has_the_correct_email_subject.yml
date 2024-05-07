@@ -25,43 +25,46 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:22 GMT
+      - Tue, 07 May 2024 15:22:35 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '143'
+      - '136'
       Connection:
       - keep-alive
+      X-Twilio-Error-Code:
+      - '21610'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQd2aa935aa6826d5e42a997fd6307e1c5
+      Twilio-Request-Duration:
+      - '32'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
       Access-Control-Allow-Credentials:
       - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQbe40bf28c2e4fbd2acb0183c54ca4834
-      Twilio-Request-Duration:
-      - '0.027'
-      Twilio-Concurrent-Requests:
-      - '1'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
-        "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:21 GMT
+      string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
+  recorded_at: Tue, 07 May 2024 15:22:35 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -87,43 +90,46 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:22 GMT
+      - Tue, 07 May 2024 15:22:35 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '143'
+      - '136'
       Connection:
       - keep-alive
+      X-Twilio-Error-Code:
+      - '21610'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQ991a015ba772cf2ad7c9f7c2a8d2325f
+      Twilio-Request-Duration:
+      - '27'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
       Access-Control-Allow-Credentials:
       - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQ8170f4d2d3f685b3c3261c33683b6c39
-      Twilio-Request-Duration:
-      - '0.028'
-      Twilio-Concurrent-Requests:
-      - '1'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
-        "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:22 GMT
+      string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
+  recorded_at: Tue, 07 May 2024 15:22:35 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -149,43 +155,46 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:22 GMT
+      - Tue, 07 May 2024 15:22:35 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '143'
+      - '136'
       Connection:
       - keep-alive
+      X-Twilio-Error-Code:
+      - '21610'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQbe5f1a569ce3a79c4b5bcba6fd20c6ce
+      Twilio-Request-Duration:
+      - '36'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
       Access-Control-Allow-Credentials:
       - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQ387b4df26a55b129eb9da27a6b902d36
-      Twilio-Request-Duration:
-      - '0.042'
-      Twilio-Concurrent-Requests:
-      - '1'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
-        "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:22 GMT
+      string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
+  recorded_at: Tue, 07 May 2024 15:22:35 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -211,43 +220,46 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:22 GMT
+      - Tue, 07 May 2024 15:22:36 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '143'
+      - '136'
       Connection:
       - keep-alive
+      X-Twilio-Error-Code:
+      - '21610'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQ97ff2bca5b55da2d1e51304515589a7b
+      Twilio-Request-Duration:
+      - '48'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
       Access-Control-Allow-Credentials:
       - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQba7239a74a1f52b9292537feeb1e436f
-      Twilio-Request-Duration:
-      - '0.029'
-      Twilio-Concurrent-Requests:
-      - '1'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
-        "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:22 GMT
+      string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
+  recorded_at: Tue, 07 May 2024 15:22:36 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -273,41 +285,44 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:22 GMT
+      - Tue, 07 May 2024 15:22:36 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '143'
+      - '136'
       Connection:
       - keep-alive
+      X-Twilio-Error-Code:
+      - '21610'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQeeb7b91dced249d1a02b796ab56797e1
+      Twilio-Request-Duration:
+      - '34'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
       Access-Control-Allow-Credentials:
       - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQ552ad1ea20cdc3816c237019b7ff7aeb
-      Twilio-Request-Duration:
-      - '0.031'
-      Twilio-Concurrent-Requests:
-      - '1'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
-        "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:22 GMT
+      string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
+  recorded_at: Tue, 07 May 2024 15:22:36 GMT
 recorded_with: VCR 6.2.0

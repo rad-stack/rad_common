@@ -25,48 +25,50 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:20 GMT
+      - Tue, 07 May 2024 15:22:33 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json;charset=utf-8
       Content-Length:
       - '824'
       Connection:
       - keep-alive
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQcfc3cecbc72cd9c1361aab63bf95cfb8
+      Twilio-Request-Duration:
+      - '47'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
       Access-Control-Allow-Credentials:
       - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQa2851c4b0b2c8337927c8a20ffb24995
-      Twilio-Request-Duration:
-      - '0.036'
-      Twilio-Concurrent-Requests:
-      - '1'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"body": "test message - To no longer receive text messages, text STOP",
-        "num_segments": "1", "direction": "outbound-api", "from": "+15005550006",
-        "date_updated": "Sat, 06 Jan 2024 10:34:20 +0000", "price": null, "error_message":
-        null, "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SMa2851c4b0b2c8337927c8a20ffb24995.json",
-        "account_sid": "ACaae98776bde4ed53d0fb1dfcc262558e", "num_media": "0", "to":
-        "+16187222169", "date_created": "Sat, 06 Jan 2024 10:34:20 +0000", "status":
-        "queued", "sid": "SMa2851c4b0b2c8337927c8a20ffb24995", "date_sent": null,
-        "messaging_service_sid": null, "error_code": null, "price_unit": "USD", "api_version":
-        "2010-04-01", "subresource_uris": {"media": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SMa2851c4b0b2c8337927c8a20ffb24995/Media.json"}}'
-  recorded_at: Sat, 06 Jan 2024 10:34:20 GMT
+      string: '{"account_sid": "ACaae98776bde4ed53d0fb1dfcc262558e", "api_version":
+        "2010-04-01", "body": "test message - To no longer receive text messages,
+        text STOP", "date_created": "Tue, 07 May 2024 15:22:33 +0000", "date_sent":
+        null, "date_updated": "Tue, 07 May 2024 15:22:33 +0000", "direction": "outbound-api",
+        "error_code": null, "error_message": null, "from": "+15005550006", "messaging_service_sid":
+        null, "num_media": "0", "num_segments": "1", "price": null, "price_unit":
+        "USD", "sid": "SMcfc3cecbc72cd9c1361aab63bf95cfb8", "status": "queued", "subresource_uris":
+        {"media": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SMcfc3cecbc72cd9c1361aab63bf95cfb8/Media.json"},
+        "to": "+16187222169", "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SMcfc3cecbc72cd9c1361aab63bf95cfb8.json"}'
+  recorded_at: Tue, 07 May 2024 15:22:33 GMT
 recorded_with: VCR 6.2.0
