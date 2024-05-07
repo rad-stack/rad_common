@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.sendgrid.com/v3/validations/email
     body:
       encoding: UTF-8
-      string: '{"email":"support@radicalbear.co"}'
+      string: '{"email":"support@rubygems.co"}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -72,6 +72,6 @@ http_interactions:
       - Mako
     body:
       encoding: UTF-8
-      string: '{"result":{"email":"support@radicalbear.co","verdict":"Invalid","score":0,"local":"support","host":"radicalbear.co","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":false,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"38.85.130.68"}}'
+      string: '{"result":{"email":"support@rubygems.co","verdict":"Invalid","score":0,"local":"support","host":"rubygems.co","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":false,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"38.85.130.68"}}'
   recorded_at: Sat, 06 Jan 2024 10:35:06 GMT
 recorded_with: VCR 6.2.0

@@ -6,10 +6,8 @@ Gem::Specification.new do |s|
   s.name = 'rad_common'
   s.version = RadCommon::VERSION
   s.authors = ['Gary Foster']
-  s.email = ['gary@radicalbear.com']
-  s.homepage = 'https://www.radicalbear.com/'
   s.summary = 'A library of common functions for a rad bear app'
-  s.description = 'A library of common functions for a standard business web app, developed by Radical Bear'
+  s.description = 'A library of common functions for a standard business web app'
   s.license = 'MIT'
   s.metadata['rubygems_mfa_required'] = 'true'
   s.required_ruby_version = '>= 3.2.2'
