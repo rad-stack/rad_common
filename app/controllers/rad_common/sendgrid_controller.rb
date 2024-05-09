@@ -21,6 +21,8 @@ module RadCommon
       recipients.each do |recipient|
         RadMailer.simple_message(recipient, subject, message).deliver_later
       end
+
+      head :ok
     end
   end
 end
