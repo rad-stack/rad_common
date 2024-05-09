@@ -201,13 +201,19 @@ module RadUser
   end
 
   def send_reset_password_instructions
-    raise "There is an open invitation for this user: #{email}" if needs_accept_invite?
+    if needs_accept_invite?
+      Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
+      return
+    end
 
     super
   end
 
   def pending_any_confirmation
-    raise "There is an open invitation for this user: #{email}" if needs_accept_invite?
+    if needs_accept_invite?
+      Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
+      return
+    end
 
     super
   end
