@@ -6,11 +6,14 @@ class TwilioStatusesController < ApplicationController
 
   def create
     skip_authorization
-    return if @contact_log.blank?
 
-    @contact_log.contact_log_recipients.each do |recipient|
-      recipient.update! sms_status: params['MessageStatus']
+    if @contact_log.present?
+      @contact_log.contact_log_recipients.each do |recipient|
+        recipient.update! sms_status: params['MessageStatus']
+      end
     end
+
+    head :ok
   end
 
   private
