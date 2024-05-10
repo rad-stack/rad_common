@@ -2,8 +2,6 @@ RadCommon::Engine.routes.draw do
   get 'global_search', to: 'search#global_search'
   get 'global_search_result', to: 'search#global_search_result'
 
-  post :email_error, to: 'rad_common/sendgrid#email_error'
-
   delete 'attachments/:id(.:format)', to: 'rad_common/attachments#destroy', as: :attachment
 
   get 'attachments/:class_name/:id(.:format)/:variant(.:format)', to: 'rad_common/attachments#download_variant'
