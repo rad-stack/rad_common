@@ -3,6 +3,8 @@ module RadCommon
     skip_before_action :authenticate_user!
 
     def email_error
+      raise 'wtf - see Task 3835'
+
       skip_authorization
 
       emails = []
