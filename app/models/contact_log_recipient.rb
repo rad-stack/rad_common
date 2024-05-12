@@ -14,8 +14,8 @@ class ContactLogRecipient < ApplicationRecord
                      undelivered: 7,
                      failed: 8 }, _prefix: true
 
-  scope :sms_failure, -> { joins(:contact_log).where(contact_log: { service_type: :sms }, sms_success: false) }
-  scope :sms_successful, -> { joins(:contact_log).where(contact_log: { service_type: :sms }, sms_success: true) }
+  scope :sms_failure, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }, sms_success: false) }
+  scope :sms_successful, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }, sms_success: true) }
   scope :last_day, -> { joins(:contact_log).where('contact_logs.created_at > ?', 24.hours.ago) }
   scope :sorted, -> { order(:id) }
 
