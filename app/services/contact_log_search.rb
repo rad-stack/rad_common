@@ -40,7 +40,7 @@ class ContactLogSearch < RadCommon::Search
       items += base_filters
 
       if RadConfig.twilio_enabled?
-        items.push({ input_label: 'SMS Success', name: :status, scope_values: %i[failure successful] })
+        items.push({ input_label: 'SMS Success', name: :status, scope_values: %i[sms_failure sms_successful] })
       end
 
       items

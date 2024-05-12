@@ -331,8 +331,8 @@ class RadConfig
       items = array_config_item!(:system_usage_models)
       return items unless twilio_enabled?
 
-      items + [['ContactLogRecipient', 'successful', 'Successful Twilio Logs'],
-               ['ContactLogRecipient', 'failure', 'Failure Twilio Logs']]
+      items + [['ContactLogRecipient', 'sms_successful', 'Successful Twilio Logs'],
+               ['ContactLogRecipient', 'sms_failure', 'Failure Twilio Logs']]
     end
 
     def global_validity_days!

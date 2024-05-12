@@ -24,7 +24,7 @@ module RadCommon
       end
 
       def recent_undelivered_count
-        ContactLogRecipient.sms.failure.last_day.count.to_f
+        ContactLogRecipient.sms_failure.last_day.count.to_f
       end
 
       def recent_count
