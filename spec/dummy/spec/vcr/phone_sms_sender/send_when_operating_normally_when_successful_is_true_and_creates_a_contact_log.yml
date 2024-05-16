@@ -25,7 +25,7 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Tue, 07 May 2024 15:22:13 GMT
+      - Thu, 16 May 2024 16:39:18 GMT
       Content-Type:
       - application/json;charset=utf-8
       Content-Length:
@@ -35,9 +35,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ8ff45a1ee2fcb2e4d88c9ca4b37dc85a
+      - RQe1447b6dbb2402b6d4deb655acf8738e
       Twilio-Request-Duration:
-      - '83'
+      - '62'
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -63,12 +63,12 @@ http_interactions:
       encoding: UTF-8
       string: '{"account_sid": "ACaae98776bde4ed53d0fb1dfcc262558e", "api_version":
         "2010-04-01", "body": "test message - To no longer receive text messages,
-        text STOP", "date_created": "Tue, 07 May 2024 15:22:13 +0000", "date_sent":
-        null, "date_updated": "Tue, 07 May 2024 15:22:13 +0000", "direction": "outbound-api",
+        text STOP", "date_created": "Thu, 16 May 2024 16:39:18 +0000", "date_sent":
+        null, "date_updated": "Thu, 16 May 2024 16:39:18 +0000", "direction": "outbound-api",
         "error_code": null, "error_message": null, "from": "+15005550006", "messaging_service_sid":
         null, "num_media": "0", "num_segments": "1", "price": null, "price_unit":
-        "USD", "sid": "SM8ff45a1ee2fcb2e4d88c9ca4b37dc85a", "status": "queued", "subresource_uris":
-        {"media": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SM8ff45a1ee2fcb2e4d88c9ca4b37dc85a/Media.json"},
-        "to": "+16187222169", "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SM8ff45a1ee2fcb2e4d88c9ca4b37dc85a.json"}'
-  recorded_at: Tue, 07 May 2024 15:22:13 GMT
+        "USD", "sid": "SMe1447b6dbb2402b6d4deb655acf8738e", "status": "queued", "subresource_uris":
+        {"media": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SMe1447b6dbb2402b6d4deb655acf8738e/Media.json"},
+        "to": "+16187222169", "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SMe1447b6dbb2402b6d4deb655acf8738e.json"}'
+  recorded_at: Thu, 16 May 2024 16:39:18 GMT
 recorded_with: VCR 6.2.0
