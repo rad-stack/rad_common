@@ -70,6 +70,7 @@ module RadUser
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
+    validate :validate_internal, on: :update
     validate :validate_mobile_phone
     validate :password_excludes_name
     validates :security_roles, presence: true, if: :active?
@@ -282,6 +283,12 @@ module RadUser
       return if (internal? && match_domains) || (external? && !match_domains)
 
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
+    end
+
+    def validate_internal
+      return if external? || user_clients.none?
+
+      errors.add :external, 'not allowed when clients are assigned to this user'
     end
 
     def validate_mobile_phone
