@@ -22,7 +22,7 @@ module RadUser
                                  dependent: :destroy,
                                  inverse_of: :from_user
 
-    has_many :contact_logs_to, class_name: 'ContactLog',
+    has_many :contact_logs_to, class_name: 'ContactLogRecipient',
                                foreign_key: 'to_user_id',
                                dependent: :destroy,
                                inverse_of: :to_user
@@ -70,6 +70,7 @@ module RadUser
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
+    validate :validate_internal, on: :update
     validate :validate_mobile_phone
     validate :password_excludes_name
     validates :security_roles, presence: true, if: :active?
@@ -201,13 +202,19 @@ module RadUser
   end
 
   def send_reset_password_instructions
-    raise "There is an open invitation for this user: #{email}" if needs_accept_invite?
+    if needs_accept_invite?
+      Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
+      return
+    end
 
     super
   end
 
   def pending_any_confirmation
-    raise "There is an open invitation for this user: #{email}" if needs_accept_invite?
+    if needs_accept_invite?
+      Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
+      return
+    end
 
     super
   end
@@ -278,6 +285,12 @@ module RadUser
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
 
+    def validate_internal
+      return if external? || user_clients.none?
+
+      errors.add :external, 'not allowed when clients are assigned to this user'
+    end
+
     def validate_mobile_phone
       return if mobile_phone.present? || user_status.blank? || !user_status.validate_email_phone?
 
@@ -291,7 +304,7 @@ module RadUser
     end
 
     def require_mobile_phone_sms?
-      RadTwilio.new.twilio_enabled? && persisted? && notification_settings.enabled.where(sms: true).count.positive?
+      RadConfig.twilio_enabled? && persisted? && notification_settings.enabled.where(sms: true).count.positive?
     end
 
     def require_mobile_phone_two_factor?

@@ -25,44 +25,47 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:05 GMT
+      - Tue, 07 May 2024 15:22:15 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '157'
+      - '150'
       Connection:
       - keep-alive
+      X-Twilio-Error-Code:
+      - '21614'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQbe545a06c35a38fcaf0f52aef0b526ce
+      Twilio-Request-Duration:
+      - '57'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
       Access-Control-Allow-Credentials:
       - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQc032efc3788a9c7629cb560c3d316e4f
-      Twilio-Request-Duration:
-      - '0.037'
-      Twilio-Concurrent-Requests:
-      - '1'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
-        mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
-        400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:05 GMT
+      string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
+        mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
+  recorded_at: Tue, 07 May 2024 15:22:15 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -88,44 +91,47 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:05 GMT
+      - Tue, 07 May 2024 15:22:15 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '157'
+      - '150'
       Connection:
       - keep-alive
+      X-Twilio-Error-Code:
+      - '21614'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQdaac9eb1e4cccf2006f65500c8a54bcd
+      Twilio-Request-Duration:
+      - '44'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
       Access-Control-Allow-Credentials:
       - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQ85fd7bcba00b51332f5c76727602b88d
-      Twilio-Request-Duration:
-      - '0.030'
-      Twilio-Concurrent-Requests:
-      - '1'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
-        mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
-        400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:05 GMT
+      string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
+        mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
+  recorded_at: Tue, 07 May 2024 15:22:15 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -151,44 +157,47 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:05 GMT
+      - Tue, 07 May 2024 15:22:15 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '157'
+      - '150'
       Connection:
       - keep-alive
+      X-Twilio-Error-Code:
+      - '21614'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQb96c2893aadc762ac332620a4fbdc8a3
+      Twilio-Request-Duration:
+      - '43'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
       Access-Control-Allow-Credentials:
       - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQ8fb1c14a6967d066c22b6da25b680e97
-      Twilio-Request-Duration:
-      - '0.050'
-      Twilio-Concurrent-Requests:
-      - '1'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
-        mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
-        400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:05 GMT
+      string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
+        mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
+  recorded_at: Tue, 07 May 2024 15:22:15 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -214,44 +223,47 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:05 GMT
+      - Tue, 07 May 2024 15:22:16 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '157'
+      - '150'
       Connection:
       - keep-alive
+      X-Twilio-Error-Code:
+      - '21614'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQ0938f39724bda9aa685d8602c7254233
+      Twilio-Request-Duration:
+      - '54'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
       Access-Control-Allow-Credentials:
       - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQ8966fddfb6d5d2505b70a392333ed9e3
-      Twilio-Request-Duration:
-      - '0.035'
-      Twilio-Concurrent-Requests:
-      - '1'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
-        mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
-        400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:05 GMT
+      string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
+        mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
+  recorded_at: Tue, 07 May 2024 15:22:16 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -277,42 +289,45 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:06 GMT
+      - Tue, 07 May 2024 15:22:16 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '157'
+      - '150'
       Connection:
       - keep-alive
+      X-Twilio-Error-Code:
+      - '21614'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQ7bf52f78abf2e3bf08abca20ee8c6ae0
+      Twilio-Request-Duration:
+      - '50'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
       Access-Control-Allow-Credentials:
       - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQ057c4cde91e6b0e4ede31cd3130ef164
-      Twilio-Request-Duration:
-      - '0.031'
-      Twilio-Concurrent-Requests:
-      - '1'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21614, "message": "''To'' number: +1500555XXXX, is not a valid
-        mobile number", "more_info": "https://www.twilio.com/docs/errors/21614", "status":
-        400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:05 GMT
+      string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
+        mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
+  recorded_at: Tue, 07 May 2024 15:22:16 GMT
 recorded_with: VCR 6.2.0

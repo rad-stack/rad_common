@@ -174,27 +174,38 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
                    initial_security_role_id: internal_role.id)
     end
 
-    it 'notifies admin when invitee accepts' do
-      ActionMailer::Base.deliveries = []
-      admin
+    let(:mail) { ActionMailer::Base.deliveries.last }
 
+    before do
+      admin
+      ActionMailer::Base.deliveries.clear
+    end
+
+    it 'notifies admin when invitee accepts' do
       invitee.accept_invitation!
 
-      mail = ActionMailer::Base.deliveries.last
       expect(mail.subject).to include 'Accepted'
       expect(mail.to).to include admin.email
     end
 
-    it "doesn't let unaccepted invitee reset password" do
-      visit new_user_password_path
-      fill_in 'Email', with: invitee.email
-      expect { click_button 'Send Me Reset Password Instructions' }.to raise_error(open_invite_error)
-    end
+    context 'when user is struggling' do
+      it "doesn't let unaccepted invitee reset password" do
+        visit new_user_password_path
+        fill_in 'Email', with: invitee.email
+        click_on 'Send Me Reset Password Instructions'
 
-    it "doesn't let unaccepted invitee request confirmation instructions" do
-      visit new_user_confirmation_path
-      fill_in 'Email', with: invitee.email
-      expect { click_button 'Resend Confirmation Instructions' }.to raise_error(open_invite_error)
+        expect(mail.subject).to include 'User Has Open Invitation'
+        expect(mail.to).to include admin.email
+      end
+
+      it "doesn't let unaccepted invitee request confirmation instructions" do
+        visit new_user_confirmation_path
+        fill_in 'Email', with: invitee.email
+        click_on 'Resend Confirmation Instructions'
+
+        expect(mail.subject).to include 'User Has Open Invitation'
+        expect(mail.to).to include admin.email
+      end
     end
   end
 end

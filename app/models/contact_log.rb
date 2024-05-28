@@ -1,56 +1,45 @@
 class ContactLog < ApplicationRecord
   belongs_to :from_user, class_name: 'User', optional: true
-  belongs_to :to_user, class_name: 'User', optional: true
+  belongs_to :record, polymorphic: true, optional: true
 
-  enum log_type: { outgoing: 0, incoming: 1 }
+  has_many :contact_log_recipients, dependent: :destroy
 
-  enum twilio_status: { accepted: 0,
-                        scheduled: 1,
-                        queued: 2,
-                        sending: 3,
-                        sent: 4,
-                        receiving: 5,
-                        delivered: 6,
-                        undelivered: 7,
-                        failed: 8 }, _prefix: true
+  enum sms_log_type: { outgoing: 0, incoming: 1 }
+  enum service_type: { sms: 0, email: 1 }
 
-  alias_attribute :active?, :success?
+  scope :sorted, -> { order(created_at: :desc, id: :desc) }
 
-  scope :last_day, -> { where('created_at > ?', 24.hours.ago) }
-  scope :failure, -> { where(success: false) }
-  scope :successful, -> { where(success: true) }
-
-  validates :from_user_id, presence: true, if: :outgoing?
-  validates :message_sid, presence: true, if: :incoming?
-  validates :to_user_id, :media_url, :twilio_status, absence: true, if: :incoming?
+  validates :from_user_id, presence: true, if: -> { outgoing? && sms? }
+  validates :sms_message_id, presence: true, if: :incoming?
+  validates :sms_media_url, absence: true, if: :incoming?
+  validates :sms_log_type, presence: true, if: :sms?
+  validates :sms_log_type, :sms_media_url, :sms_message_id, absence: true, if: :email?
   validate :validate_incoming, if: :incoming?
+  validate :validate_sms_only_booleans, if: :email?
 
-  validates_with PhoneNumberValidator, fields: [{ field: :from_number }, { field: :to_number }], skip_twilio: true
+  validates_with PhoneNumberValidator, fields: [{ field: :from_number }], skip_twilio: true
 
-  before_validation :check_success
-
-  def self.opt_out_message_sent?(to_number)
-    ContactLog.where(sent: true, opt_out_message_sent: true, to_number: to_number).limit(1).any?
+  def to_s
+    "#{ApplicationController.helpers.enum_to_translated_option(self, :service_type)} #{id}"
   end
 
-  def status
-    return 'not sent' unless sent?
-    return if twilio_status.blank?
-
-    RadEnum.new(ContactLog, :twilio_status).translated_option(self)
+  def self.opt_out_message_sent?(to_number)
+    ContactLog.sms.joins(:contact_log_recipients).exists?(
+      sms_sent: true,
+      sms_opt_out_message_sent: true,
+      contact_log_recipients: { phone_number: to_number }
+    )
   end
 
   private
 
-    def check_success
-      return unless twilio_status_delivered?
-
-      self.success = true
+    def validate_incoming
+      errors.add(:sent, 'must be true') unless sms_sent?
+      errors.add(:sms_opt_out_message_sent, 'must be false') if sms_opt_out_message_sent?
     end
 
-    def validate_incoming
-      errors.add(:sent, 'must be true') unless sent?
-      errors.add(:success, 'must be true') unless success?
-      errors.add(:opt_out_message_sent, 'must be false') if opt_out_message_sent?
+    def validate_sms_only_booleans
+      errors.add(:sms_sent, 'must be false') if sms_sent?
+      errors.add(:sms_opt_out_message_sent, 'must be false') if sms_opt_out_message_sent?
     end
 end

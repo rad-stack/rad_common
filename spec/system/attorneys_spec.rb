@@ -14,7 +14,7 @@ RSpec.describe 'Attorneys' do
 
     it "doesn't show the reset duplicates link", :js do
       visit new_attorney_path
-      expect(page).not_to have_content('Reset Duplicates')
+      expect(page).to have_no_content('Reset Duplicates')
     end
 
     it 'triggers duplicates detection when entering', :js do
@@ -82,7 +82,7 @@ RSpec.describe 'Attorneys' do
       visit index_path
       expect(page).to have_content('(4)')
       expect(page).to have_content(record_2.first_name)
-      expect(page).not_to have_content(record_1.first_name)
+      expect(page).to have_no_content(record_1.first_name)
 
       click_link 'Switch to Current'
 
@@ -99,25 +99,25 @@ RSpec.describe 'Attorneys' do
     it 'does not show non applicable columns' do
       visit index_path
       expect(page).to have_content('(4)')
-      expect(page).not_to have_content('Birth Date')
+      expect(page).to have_no_content('Birth Date')
     end
 
     it 'allows user to skip duplicate record for later review' do
       visit index_path
       expect(page).to have_content('(4)')
       expect(page).to have_content(record_2.first_name)
-      expect(page).not_to have_content(record_1.first_name)
+      expect(page).to have_no_content(record_1.first_name)
 
       click_link 'Skip for now, review later'
       expect(page).to have_content(record_1.first_name)
-      expect(page).not_to have_content(record_2.first_name)
+      expect(page).to have_no_content(record_2.first_name)
     end
 
     it 'allows user to merge duplicate contacts', :js do
       visit index_path
       expect(page).to have_content('(4)')
       expect(page).to have_content(record_2.first_name)
-      expect(page).not_to have_content(record_1.first_name)
+      expect(page).to have_no_content(record_1.first_name)
 
       page.accept_confirm { click_button 'Merge All' }
       expect(page).to have_content('(2)')
@@ -135,7 +135,7 @@ RSpec.describe 'Attorneys' do
       expect(page).to have_content('(2)')
 
       visit record_1_path
-      expect(page).not_to have_content('Fix Duplicates')
+      expect(page).to have_no_content('Fix Duplicates')
 
       visit duplicates_path(model: model_name, id: record_1.id)
       expect(page).to have_content('Congratulations, there are no more duplicates found!')

@@ -25,16 +25,12 @@ class RadTwilio
     response.status == 'pending'
   end
 
-  def twilio_enabled?
-    RadConfig.twilio_enabled?
-  end
-
   def from_number
     RadConfig.twilio_phone_number!
   end
 
   def validate_phone_number(phone_number, mobile)
-    return unless twilio_enabled?
+    return unless RadConfig.twilio_enabled?
 
     # twilio phone number validations that check whether valid mobile # cost half a penny per request
 

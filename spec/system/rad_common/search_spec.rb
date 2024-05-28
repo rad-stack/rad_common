@@ -99,7 +99,7 @@ RSpec.describe 'Search' do
         bootstrap_select category.name, from: 'search_category_id', search: category.name
         first('button', text: 'Apply Filters').click
         expect(page).to have_content(division.name)
-        expect(page).not_to have_content(other_division.name)
+        expect(page).to have_no_content(other_division.name)
 
         # Partial Search
         bootstrap_select other_category.name, from: 'search_category_id', search: 'App'
@@ -118,7 +118,7 @@ RSpec.describe 'Search' do
           bootstrap_select category.name, from: 'search_category_id', search: category.name
           first('button', text: 'Apply Filters').click
           expect(page).to have_content(division.name)
-          expect(page).not_to have_content(other_division.name)
+          expect(page).to have_no_content(other_division.name)
 
           first('#search_category_id_not').check
           first('button', text: 'Apply Filters').click
@@ -136,7 +136,7 @@ RSpec.describe 'Search' do
 
       first('#search_division_status').select('Active')
       first('button', text: 'Apply Filters').click
-      expect(page).not_to have_content 'Status is required'
+      expect(page).to have_no_content 'Status is required'
     end
   end
 
@@ -169,7 +169,7 @@ RSpec.describe 'Search' do
       expect(page).to have_content 'Invalid date entered for created_at'
       visit '/'
       visit divisions_path
-      expect(page).not_to have_content 'Invalid date entered for created_at'
+      expect(page).to have_no_content 'Invalid date entered for created_at'
     end
 
     it 'does save valid date to users.filter_defaults' do

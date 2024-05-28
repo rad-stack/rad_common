@@ -33,7 +33,7 @@ RSpec.describe 'User Impersonation', :impersonate_specs, type: :system do
 
     it 'is not allowed for users without the proper permission', :js do
       visit user_path(signed_in_user)
-      expect(page).not_to have_content 'Sign In As'
+      expect(page).to have_no_content 'Sign In As'
 
       visit user_path(impersonated_user)
       expect(page).to have_content 'Sign In As'

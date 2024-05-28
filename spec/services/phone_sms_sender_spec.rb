@@ -4,7 +4,8 @@ RSpec.describe PhoneSMSSender, type: :service do
   let(:from_user) { create :user }
   let(:mobile_phone) { '(618) 722-2169' }
   let(:message) { 'test message' }
-  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false) }
+  let(:client) { create :client }
+  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, record: client) }
 
   before { allow(RadRetry).to receive(:exponential_pause) }
 
@@ -13,7 +14,12 @@ RSpec.describe PhoneSMSSender, type: :service do
 
     context 'when operating normally' do
       context 'when successful' do
-        it { is_expected.to be true }
+        it 'is true and creates a contact log' do
+          expect { result }.to change(ContactLog, :count).by(1)
+          expect(result).to be(true)
+          expect(ContactLog.last.from_user).to eq from_user
+          expect(ContactLog.last.record).to eq client
+        end
       end
 
       context 'when failure' do
@@ -59,9 +65,9 @@ RSpec.describe PhoneSMSSender, type: :service do
       context 'when opt out message already sent' do
         before do
           create :contact_log,
-                 opt_out_message_sent: true,
-                 sent: true,
-                 to_number: mobile_phone
+                 sms_opt_out_message_sent: true,
+                 sms_sent: true,
+                 phone_number: mobile_phone
         end
 
         it { is_expected.to eq "I'm taking your surfboard" }

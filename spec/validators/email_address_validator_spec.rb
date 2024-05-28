@@ -59,7 +59,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
 
   describe 'send grid', :vcr do
     let(:good_email) { 'support@invest.ally.com' } # just grabbed any ole email address from the web
-    let(:bad_email) { 'support@radicalbear.co' }
+    let(:bad_email) { 'support@rubygems.co' }
     let!(:division) { build :division, invoice_email: email }
 
     before { allow_any_instance_of(RadSendGrid).to receive(:sendgrid_enabled?).and_return true }

@@ -9,7 +9,7 @@ RSpec.describe 'SystemMessages', type: :system do
   describe 'new' do
     context 'with twilio disabled' do
       before do
-        allow_any_instance_of(RadTwilio).to receive(:twilio_enabled?).and_return false
+        allow(RadConfig).to receive(:twilio_enabled?).and_return false
         visit '/rad_common/system_messages/new'
       end
 
@@ -30,7 +30,7 @@ RSpec.describe 'SystemMessages', type: :system do
 
     context 'with twilio enabled' do
       before do
-        allow_any_instance_of(RadTwilio).to receive(:twilio_enabled?).and_return true
+        allow(RadConfig).to receive(:twilio_enabled?).and_return true
         visit '/rad_common/system_messages/new'
       end
 

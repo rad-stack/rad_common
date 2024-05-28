@@ -132,7 +132,7 @@ RSpec.describe User, type: :model do
   end
 
   describe 'validate email address' do
-    before { Company.main.update! valid_user_domains: %w[example.com radicalbear.com] }
+    before { Company.main.update! valid_user_domains: %w[example.com rubygems.org] }
 
     it 'rejects unauthorized email addresses' do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo. user@foo.com user@foo.com]
@@ -155,7 +155,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'allows valid email addresses' do
-      addresses = %w[joe@example.com bob@example.com sally@example.com brah@radicalbear.com]
+      addresses = %w[joe@example.com bob@example.com sally@example.com brah@rubygems.org]
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
@@ -175,10 +175,10 @@ RSpec.describe User, type: :model do
         external: true }
     end
 
-    before { Company.main.update! valid_user_domains: %w[example.com radicalbear.com] }
+    before { Company.main.update! valid_user_domains: %w[example.com rubygems.org] }
 
     it 'rejects unauthorized email addresses' do
-      addresses = %w[user@example.com user@radicalbear.com]
+      addresses = %w[user@example.com user@rubygems.org]
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
@@ -188,7 +188,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'allows unauthorized email addresses for inactive users', :external_user_specs do
-      addresses = %w[user@example.com user@radicalbear.com]
+      addresses = %w[user@example.com user@rubygems.org]
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address, user_status: inactive_status))

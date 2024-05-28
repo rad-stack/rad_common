@@ -36,7 +36,11 @@ class Seeder < RadSeeder
       from_user = random_internal_user
       to_user = [1, 2].sample == 1 ? users.sample : nil
 
-      FactoryBot.create :contact_log, from_user: from_user, to_user: to_user
+      if [1, 2].sample == 1
+        FactoryBot.create :contact_log, from_user: from_user, to_user: to_user
+      else
+        FactoryBot.create :contact_log, :email, from_user: from_user, to_user: to_user
+      end
     end
   end
 end

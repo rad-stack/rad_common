@@ -335,8 +335,8 @@ class RadConfig
       items = array_config_item!(:system_usage_models)
       return items unless twilio_enabled?
 
-      items + [['ContactLog', 'successful', 'Successful Contact Logs'],
-               ['ContactLog', 'failure', 'Failure Contact Logs']]
+      items + [['ContactLogRecipient', 'sms_successful', 'Successful Twilio Logs'],
+               ['ContactLogRecipient', 'sms_failure', 'Failure Twilio Logs']]
     end
 
     def global_validity_days!
@@ -389,6 +389,10 @@ class RadConfig
 
     def last_first_user?
       boolean_config_item! :last_first_user
+    end
+
+    def legacy_rails_config?
+      boolean_config_item! :legacy_rails_config
     end
 
     def secret_config_item!(item)
