@@ -60,8 +60,8 @@ module RadCommonRoutes
       resources :twilio_statuses, only: :create
       resources :twilio_replies, only: :create
       resources :sendgrid_statuses, only: :create
+      resources :company_contacts, only: %i[new create]
 
-      get 'contact_us', to: 'pages#contact_us'
       get 'terms', to: 'pages#terms'
       get 'privacy', to: 'pages#privacy'
 
