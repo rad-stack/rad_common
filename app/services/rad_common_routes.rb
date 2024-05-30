@@ -30,8 +30,9 @@ module RadCommonRoutes
           get :permission, on: :collection
         end
 
-        resources :duplicates, only: :index do
+        resources :duplicates, only: [] do
           collection do
+            get :resolve
             get :not
             put :do_later
             put :reset
