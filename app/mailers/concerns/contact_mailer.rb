@@ -9,8 +9,7 @@ module ContactMailer
   private
 
     def start_contact_log
-      # TODO: don't set content to dummy value and enforce content presence when sent is true
-      @contact_log = ContactLog.create!(content: 'n/a', service_type: :email, sent: false)
+      @contact_log = ContactLog.create!(service_type: :email)
     end
 
     def finish_contact_log

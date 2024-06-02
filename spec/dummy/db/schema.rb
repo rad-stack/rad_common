@@ -151,7 +151,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_02_130347) do
     t.string "from_number"
     t.bigint "from_user_id"
     t.string "sms_media_url"
-    t.boolean "sent", default: true, null: false
+    t.boolean "sent", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "sms_opt_out_message_sent", default: false, null: false
@@ -161,7 +161,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_02_130347) do
     t.integer "service_type", default: 0, null: false
     t.string "record_type"
     t.bigint "record_id"
-    t.string "content", null: false
+    t.string "content"
     t.index ["created_at"], name: "index_contact_logs_on_created_at"
     t.index ["from_number"], name: "index_contact_logs_on_from_number"
     t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
