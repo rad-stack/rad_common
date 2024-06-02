@@ -1,4 +1,5 @@
 class RadMailer < ActionMailer::Base
+  include ContactMailer
   include ActionView::Helpers::TextHelper
   include RadCommon::ApplicationHelper
 
@@ -6,7 +7,6 @@ class RadMailer < ActionMailer::Base
 
   layout 'rad_mailer'
   before_action :set_defaults
-  after_action :create_contact_log
 
   default from: RadConfig.from_email!
   default reply_to: RadConfig.admin_email!
@@ -115,30 +115,5 @@ class RadMailer < ActionMailer::Base
 
     def enable_settings_link
       @notification_settings_link = true
-    end
-
-    def create_contact_log
-      ContactLog.create!(
-        from_email: mail.from.first,
-        content: mail.subject,
-        service_type: :email,
-        sms_sent: false,
-        record: @contact_log_record,
-        from_user: @from_user
-      ).tap do |log|
-        create_contact_log_recipients(log)
-      end
-    end
-
-    def create_contact_log_recipients(log)
-      mail.to.each { |recipient| ContactLogRecipient.create!(contact_log: log, email: recipient, email_type: :to) }
-
-      if mail.cc.present?
-        mail.cc.each { |recipient| ContactLogRecipient.create!(contact_log: log, email: recipient, email_type: :cc) }
-      end
-
-      return if mail.bcc.blank?
-
-      mail.bcc.each { |recipient| ContactLogRecipient.create!(contact_log: log, email: recipient, email_type: :bcc) }
     end
 end
