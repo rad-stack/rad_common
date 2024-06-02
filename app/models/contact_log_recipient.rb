@@ -14,8 +14,7 @@ class ContactLogRecipient < ApplicationRecord
                      undelivered: 7,
                      failed: 8 }, _prefix: true
 
-  # TODO: should we add delivered and default to that until a supression happens or allow this to be nil?
-  enum email_status: { dropped:0, bounce: 1, spamreport: 2 }
+  enum email_status: { delivered: 0, dropped: 1, bounce: 2, spamreport: 3 }, _prefix: true
 
   scope :sms_failure, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }, sms_success: false) }
   scope :sms_successful, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }, sms_success: true) }
@@ -33,6 +32,9 @@ class ContactLogRecipient < ApplicationRecord
   validates_with PhoneNumberValidator, fields: [{ field: :phone_number }], skip_twilio: true
   validates_with EmailAddressValidator, fields: [:email], skip_sendgrid: true
   validates :sms_status, absence: true, if: -> { contact_log&.email? }
+  validates :email_status, absence: true, if: -> { contact_log&.sms? }
+
+  # TODO: should sms_status be required if sms? and email_status be required for email?
 
   validate :validate_service_type
   validate :validate_incoming_fields
@@ -54,13 +56,20 @@ class ContactLogRecipient < ApplicationRecord
   private
 
     def check_success
-      return unless sms_status_delivered?
+      if sms?
+        return unless sms_status_delivered?
 
-      self.sms_success = true
+        self.sms_success = true
+      elsif email?
+        return unless email_status_delivered?
+
+        self.email_success = true
+      end
     end
 
     def validate_incoming_fields
-      return if contact_log.blank? || contact_log.outgoing? || contact_log.email?
+      return if contact_log.blank? || contact_log.outgoing?
+      raise 'incoming email logs are not yet supported' if contact_log.email?
 
       errors.add(:to_user_id, 'must be blank') if to_user_id.present?
       errors.add(:sms_status, 'must be blank') if sms_status.present?

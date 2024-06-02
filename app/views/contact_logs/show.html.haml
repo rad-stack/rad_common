@@ -19,6 +19,7 @@
         - if @contact_log.email?
           %th Email
           %th Email Type
+          %th Email Status
         - if @contact_log.sms?
           %th Phone #
           %th SMS Status
@@ -29,6 +30,7 @@
           - if @contact_log.email?
             %td= record.email
             %td= enum_to_translated_option(record, :email_type)
+            %td= enum_to_translated_option(record, :email_status)
           - if @contact_log.sms?
             %td= record.phone_number
             %td= enum_to_translated_option(record, :sms_status)
