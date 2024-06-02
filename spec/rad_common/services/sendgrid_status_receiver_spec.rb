@@ -9,10 +9,7 @@ describe SendgridStatusReceiver, type: :service do
   let(:event_type) { 'bounce' }
   let(:last_email) { deliveries.last }
   let(:contact_log) { create :contact_log, :email }
-
-  let(:contact_log_recipient) do
-    create :contact_log_recipient, contact_log: contact_log, phone_number: nil, email: Faker::Internet.email
-  end
+  let(:contact_log_recipient) { create :contact_log_recipient, :email, contact_log: contact_log }
 
   let(:content) do
     { event: event_type,
@@ -33,10 +30,10 @@ describe SendgridStatusReceiver, type: :service do
     end
 
     it 'updates status of contact log' do
-      expect(contact_log_recipient.email_status).to be_nil
-      service.process!
-      contact_log_recipient.reload
-      expect(contact_log_recipient.email_status).to eq 'bounce'
+      expect {
+        service.process!
+        contact_log_recipient.reload
+      }.to change(contact_log_recipient, :email_status).from('delivered').to('bounce')
     end
 
     context 'with stale user' do

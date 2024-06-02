@@ -32,10 +32,13 @@ class ContactLogRecipient < ApplicationRecord
 
   validates_with PhoneNumberValidator, fields: [{ field: :phone_number }], skip_twilio: true
   validates_with EmailAddressValidator, fields: [:email], skip_sendgrid: true
+
+  # TODO: try these
+  # validates :sms_status, presence: true, if: -> { contact_log&.sms? }
+  # validates :email_status, presence: true, if: -> { contact_log&.email? }
+
   validates :sms_status, absence: true, if: -> { contact_log&.email? }
   validates :email_status, absence: true, if: -> { contact_log&.sms? }
-
-  # TODO: should sms_status be required if sms? and email_status be required for email?
 
   validate :validate_service_type
   validate :validate_incoming_fields
