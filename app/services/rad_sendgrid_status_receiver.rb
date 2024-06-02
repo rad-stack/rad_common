@@ -68,10 +68,7 @@ class RadSendgridStatusReceiver
     def update_contact_log!
       return unless suppression?
 
-      # TODO: find just the recipient that the suppression is applicable to
-      contact_log.contact_log_recipients.each do |recipient|
-        recipient.update! email_status: event
-      end
+      contact_log.contact_log_recipients.find_by!(email: email).update! email_status: event
     end
 
     def contact_log
