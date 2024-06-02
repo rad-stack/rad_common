@@ -9,7 +9,7 @@ describe SendgridStatusReceiver, type: :service do
   let(:event_type) { 'bounce' }
   let(:last_email) { deliveries.last }
   let(:contact_log) { create :contact_log, :email }
-  let(:contact_log_recipient) { create :contact_log_recipient, :email, contact_log: contact_log }
+  let!(:contact_log_recipient) { create :contact_log_recipient, :email, contact_log: contact_log, email: user.email }
 
   let(:content) do
     { event: event_type,
