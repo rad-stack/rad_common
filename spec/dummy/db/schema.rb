@@ -137,7 +137,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_02_130347) do
     t.string "phone_number"
     t.integer "email_type"
     t.integer "sms_status"
-    t.boolean "sms_success", default: false, null: false
+    t.boolean "success", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "email_status"

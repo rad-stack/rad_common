@@ -331,6 +331,7 @@ class RadConfig
       items = array_config_item!(:system_usage_models)
       return items unless twilio_enabled?
 
+      # TODO: incorporate email success?
       items + [['ContactLogRecipient', 'sms_successful', 'Successful Twilio Logs'],
                ['ContactLogRecipient', 'sms_failure', 'Failure Twilio Logs']]
     end

@@ -34,4 +34,5 @@
           - if @contact_log.sms?
             %td= record.phone_number
             %td= enum_to_translated_option(record, :sms_status)
-            %td= format_boolean record.sms_success
+            -# TODO: move this out of the if for both email and sms?
+            %td= format_boolean record.success

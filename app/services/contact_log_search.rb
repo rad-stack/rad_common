@@ -40,6 +40,7 @@ class ContactLogSearch < RadCommon::Search
       items += base_filters
 
       if RadConfig.twilio_enabled?
+        # TODO: incorporate email success?
         items.push({ input_label: 'SMS Success', name: :status, scope_values: %i[sms_failure sms_successful] })
       end
 
@@ -87,6 +88,7 @@ class ContactLogSearch < RadCommon::Search
                 { label: 'Content', column: 'contact_logs.content' }]
 
       if RadConfig.twilio_enabled?
+        # TODO: incorporate email success?
         items += [{ label: 'Opt Out Message Sent?', column: 'contact_logs.sms_opt_out_message_sent' },
                   { label: 'SMS Success', column: 'contact_log_recipients.sms_success' }]
       end

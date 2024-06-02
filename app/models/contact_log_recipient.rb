@@ -16,8 +16,9 @@ class ContactLogRecipient < ApplicationRecord
 
   enum email_status: { delivered: 0, dropped: 1, bounce: 2, spamreport: 3 }, _prefix: true
 
-  scope :sms_failure, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }, sms_success: false) }
-  scope :sms_successful, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }, sms_success: true) }
+  # TODO: what are these 2 scopes used for and do we need email_failure and email_successful?
+  scope :sms_failure, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }, success: false) }
+  scope :sms_successful, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }, success: true) }
   scope :last_day, -> { joins(:contact_log).where('contact_logs.created_at > ?', 24.hours.ago) }
   scope :sorted, -> { order(:id) }
 
@@ -38,7 +39,6 @@ class ContactLogRecipient < ApplicationRecord
 
   validate :validate_service_type
   validate :validate_incoming_fields
-  validate :validate_sms_only_booleans, if: -> { contact_log&.email? }
 
   before_validation :check_success
 
@@ -46,35 +46,31 @@ class ContactLogRecipient < ApplicationRecord
   strip_attributes
 
   def active?
-    if contact_log.sms?
-      sms_success?
-    else
-      true
-    end
+    success?
   end
 
   private
 
     def check_success
-      if sms?
+      return if contact_log.blank?
+
+      if contact_log.sms?
         return unless sms_status_delivered?
 
-        self.sms_success = true
-      elsif email?
+        self.success = true
+      elsif contact_log.email?
         return unless email_status_delivered?
 
-        self.email_success = true
+        self.success = true
       end
     end
 
     def validate_incoming_fields
-      return if contact_log.blank? || contact_log.outgoing?
-      raise 'incoming email logs are not yet supported' if contact_log.email?
+      return if contact_log.blank? || contact_log.outgoing? || contact_log.email?
 
       errors.add(:to_user_id, 'must be blank') if to_user_id.present?
       errors.add(:sms_status, 'must be blank') if sms_status.present?
-      errors.add(:sms_success, 'must be true') unless sms_success?
-      errors.add(:sms_success, 'must be true') unless sms_success?
+      errors.add(:success, 'must be true') unless success?
     end
 
     def validate_service_type
@@ -87,9 +83,5 @@ class ContactLogRecipient < ApplicationRecord
         errors.add(:phone_number, 'must be blank') if phone_number.present?
         errors.add(:email, 'must be present') if email.blank?
       end
-    end
-
-    def validate_sms_only_booleans
-      errors.add(:sms_success, 'must be false') if sms_success?
     end
 end
