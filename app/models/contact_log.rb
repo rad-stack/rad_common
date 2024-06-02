@@ -28,7 +28,7 @@ class ContactLog < ApplicationRecord
 
   def self.opt_out_message_sent?(to_number)
     ContactLog.sms.joins(:contact_log_recipients).exists?(
-      sms_sent: true,
+      sent: true,
       sms_opt_out_message_sent: true,
       contact_log_recipients: { phone_number: to_number }
     )
@@ -37,12 +37,11 @@ class ContactLog < ApplicationRecord
   private
 
     def validate_incoming
-      errors.add(:sms_sent, 'must be true') unless sms_sent?
+      errors.add(:sent, 'must be true') unless sent?
       errors.add(:sms_opt_out_message_sent, 'must be false') if sms_opt_out_message_sent?
     end
 
     def validate_sms_only_booleans
-      errors.add(:sms_sent, 'must be false') if sms_sent?
       errors.add(:sms_opt_out_message_sent, 'must be false') if sms_opt_out_message_sent?
     end
 end

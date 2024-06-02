@@ -79,7 +79,7 @@ class PhoneSMSSender
                                from_user_id: from_user_id,
                                content: message,
                                sms_media_url: media_url,
-                               sms_sent: sent,
+                               sent: sent,
                                sms_message_id: message_sid,
                                sms_opt_out_message_sent: opt_out_message_sent,
                                record: record

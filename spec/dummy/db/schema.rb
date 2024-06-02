@@ -151,7 +151,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_02_130347) do
     t.string "from_number"
     t.bigint "from_user_id"
     t.string "sms_media_url"
-    t.boolean "sms_sent", default: true, null: false
+    t.boolean "sent", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "sms_opt_out_message_sent", default: false, null: false
@@ -166,9 +166,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_02_130347) do
     t.index ["from_number"], name: "index_contact_logs_on_from_number"
     t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
     t.index ["record_type", "record_id"], name: "index_contact_logs_on_record"
+    t.index ["sent"], name: "index_contact_logs_on_sent"
     t.index ["service_type"], name: "index_contact_logs_on_service_type"
     t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
-    t.index ["sms_sent"], name: "index_contact_logs_on_sms_sent"
   end
 
   create_table "divisions", force: :cascade do |t|

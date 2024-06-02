@@ -22,7 +22,7 @@ class RadTwilioReply
                                from_number: from_number,
                                from_user_id: from_user_id,
                                content: message,
-                               sms_sent: true,
+                               sent: true,
                                sms_message_id: message_sid,
                                sms_opt_out_message_sent: false
 

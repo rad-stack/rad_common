@@ -5,7 +5,7 @@ FactoryBot.define do
     to_user factory: :user
 
     after(:build) do |record|
-      if record.sms_status.blank? && record.contact_log.sms_sent? && record.contact_log.outgoing?
+      if record.contact_log.sms? && record.sms_status.blank? && record.contact_log.sent? && record.contact_log.outgoing?
         record.sms_status = RadEnum.new(ContactLogRecipient, :sms_status).random_value
       end
     end
