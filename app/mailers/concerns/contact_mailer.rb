@@ -27,4 +27,9 @@ module ContactMailer
 
       mail.bcc.each { |recipient| ContactLogRecipient.create!(contact_log: log, email: recipient, email_type: :bcc) }
     end
+
+    def rad_headers
+      headers['X-SMTPAPI'] = { unique_args: { host_name: RadConfig.host_name!,
+                                              contact_log_id: @contact_log_id } }.to_json
+    end
 end

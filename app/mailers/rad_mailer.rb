@@ -91,7 +91,7 @@ class RadMailer < ActionMailer::Base
 
     def set_defaults
       @include_yield = true
-      headers['X-SMTPAPI'] = { unique_args: { host_name: RadConfig.host_name!, contact_log_id: @contact_log_id } }.to_json
+      rad_headers
     end
 
     def parse_recipients_array(recipients)
