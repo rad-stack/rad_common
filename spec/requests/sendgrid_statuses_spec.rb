@@ -9,8 +9,6 @@ describe 'SendgridStatuses' do
   end
 
   context 'when raw items are present' do
-    # TODO: hack to let tests pass for now
-
     let(:params) do
       { _json: [{ event: 'bounce',
                   type: 'block',

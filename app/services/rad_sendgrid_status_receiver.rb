@@ -66,8 +66,7 @@ class RadSendgridStatusReceiver
     end
 
     def update_contact_log!
-      # TODO: what if contact_log is not found?
-      return unless suppression? && contact_log.present?
+      return unless suppression?
 
       # TODO: find just the recipient that the suppression is applicable to
       contact_log.contact_log_recipients.each do |recipient|

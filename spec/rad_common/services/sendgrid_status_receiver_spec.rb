@@ -8,8 +8,11 @@ describe SendgridStatusReceiver, type: :service do
   let!(:admin) { create :admin, security_roles: [admin_role] }
   let(:event_type) { 'bounce' }
   let(:last_email) { deliveries.last }
+  let(:contact_log) { create :contact_log, :email }
 
-  # TODO: hack to let tests pass for now
+  let(:contact_log_recipient) do
+    create :contact_log_recipient, contact_log: contact_log, phone_number: nil, email: Faker::Internet.email
+  end
 
   let(:content) do
     { event: event_type,
@@ -17,7 +20,7 @@ describe SendgridStatusReceiver, type: :service do
       bounce_classification: 'Reputation',
       email: user.email,
       host_name: host_name,
-      contact_log_id: create(:contact_log).id }
+      contact_log_id: contact_log.id }
   end
 
   before { deliveries.clear }
@@ -27,6 +30,13 @@ describe SendgridStatusReceiver, type: :service do
 
     it 'notifies' do
       expect { service.process! }.to change(deliveries, :count).by(1)
+    end
+
+    it 'updates status of contact log' do
+      expect(contact_log_recipient.email_status).to be_nil
+      service.process!
+      contact_log_recipient.reload
+      expect(contact_log_recipient.email_status).to eq 'bounce'
     end
 
     context 'with stale user' do
