@@ -104,6 +104,6 @@ class RadDeviseMailer < Devise::Mailer
 
     def set_defaults
       @include_yield = false
-      headers['X-SMTPAPI'] = { unique_args: { host_name: RadConfig.host_name! } }.to_json
+      headers['X-SMTPAPI'] = { unique_args: { host_name: RadConfig.host_name!, contact_log_id: @contact_log_id } }.to_json
     end
 end
