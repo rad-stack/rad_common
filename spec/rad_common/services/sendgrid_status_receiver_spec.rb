@@ -9,12 +9,15 @@ describe SendgridStatusReceiver, type: :service do
   let(:event_type) { 'bounce' }
   let(:last_email) { deliveries.last }
 
+  # TODO: hack to let tests pass for now
+
   let(:content) do
     { event: event_type,
       type: 'block',
       bounce_classification: 'Reputation',
       email: user.email,
-      host_name: host_name }
+      host_name: host_name,
+      contact_log_id: create(:contact_log).id }
   end
 
   before { deliveries.clear }

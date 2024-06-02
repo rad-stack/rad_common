@@ -9,12 +9,15 @@ describe 'SendgridStatuses' do
   end
 
   context 'when raw items are present' do
+    # TODO: hack to let tests pass for now
+
     let(:params) do
       { _json: [{ event: 'bounce',
                   type: 'block',
                   bounce_classification: 'Reputation',
                   email: Faker::Internet.email,
-                  host_name: RadConfig.host_name! }] }
+                  host_name: RadConfig.host_name!,
+                  contact_log_id: create(:contact_log).id }] }
     end
 
     it 'notifies' do
