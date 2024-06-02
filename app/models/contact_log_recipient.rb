@@ -16,9 +16,9 @@ class ContactLogRecipient < ApplicationRecord
 
   enum email_status: { delivered: 0, dropped: 1, bounce: 2, spamreport: 3 }, _prefix: true
 
-  # TODO: what are these 2 scopes used for and do we need email_failure and email_successful?
-  scope :sms_failure, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }, success: false) }
-  scope :sms_successful, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }, success: true) }
+  scope :sms, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }) }
+  scope :failed, -> { joins(:contact_log).where(success: false) }
+  scope :successful, -> { joins(:contact_log).where(success: true) }
   scope :last_day, -> { joins(:contact_log).where('contact_logs.created_at > ?', 24.hours.ago) }
   scope :sorted, -> { order(:id) }
 

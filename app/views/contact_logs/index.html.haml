@@ -25,7 +25,6 @@
           %td= record.contact_log.content
           - if RadConfig.twilio_enabled?
             %td= format_boolean record.contact_log.sms_opt_out_message_sent
-            -# TODO: move this out of the if for both email and sms?
-            %td= format_boolean record.success
+          %td= format_boolean record.success
 
     = paginate @contact_logs, theme: 'twitter-bootstrap-4'
