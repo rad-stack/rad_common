@@ -44,6 +44,10 @@ class LoginActivitySearch < RadCommon::Search
     end
 
     def failure_reasons
-      Pundit.policy_scope!(current_user, LoginActivity).failed.select(:failure_reason).distinct.map(&:failure_reason)
+      Pundit.policy_scope!(current_user, LoginActivity)
+            .failed
+            .select(:failure_reason)
+            .group(:failure_reason)
+            .pluck(:failure_reason)
     end
 end
