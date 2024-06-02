@@ -37,6 +37,9 @@ class ContactLogRecipient < ApplicationRecord
 
   before_validation :check_success
 
+  audited
+  strip_attributes
+
   def active?
     if contact_log.sms?
       sms_success?

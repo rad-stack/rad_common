@@ -19,6 +19,9 @@ class ContactLog < ApplicationRecord
 
   validates_with PhoneNumberValidator, fields: [{ field: :from_number }], skip_twilio: true
 
+  audited
+  strip_attributes
+
   def to_s
     "#{ApplicationController.helpers.enum_to_translated_option(self, :service_type)} #{id}"
   end
@@ -34,7 +37,7 @@ class ContactLog < ApplicationRecord
   private
 
     def validate_incoming
-      errors.add(:sent, 'must be true') unless sms_sent?
+      errors.add(:sms_sent, 'must be true') unless sms_sent?
       errors.add(:sms_opt_out_message_sent, 'must be false') if sms_opt_out_message_sent?
     end
 
