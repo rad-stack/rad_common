@@ -47,6 +47,6 @@ module ContactMailer
 
     def rad_headers
       headers['X-SMTPAPI'] = { unique_args: { host_name: RadConfig.host_name!,
-                                              contact_log_id: @contact_log_id } }.to_json
+                                              contact_log_id: @contact_log.id } }.to_json
     end
 end
