@@ -11,6 +11,7 @@ class RadSendgridStatusReceiver
     return unless host_matches?
 
     process_status!
+    update_contact_log!
   end
 
   def email
@@ -55,20 +56,27 @@ class RadSendgridStatusReceiver
 
   private
 
-    def contact_log
-      @contact_log ||= ContactLog.find(@content[:contact_log_id])
-    end
-
     def process_status!
-      # TODO: temp debug code
-      puts contact_log.to_s
-
       if suppression? && user.present? && (spam_report? || user.stale?)
         user.update! user_status: UserStatus.default_inactive_status
         Rails.logger.info "sendgrid status: suppression received from stale user #{user.email}, deactivating"
       else
         Notifications::SendgridEmailStatusNotification.main(@content).notify!
       end
+    end
+
+    def update_contact_log!
+      # TODO: what if contact_log is not found?
+      return unless suppression? && contact_log.present?
+
+      # TODO: find just the recipient that the suppression is applicable to
+      contact_log.contact_log_recipients.each do |recipient|
+        recipient.update! email_status: event
+      end
+    end
+
+    def contact_log
+      @contact_log ||= ContactLog.find(@content[:contact_log_id])
     end
 
     def check_events

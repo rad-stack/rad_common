@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_23_100042) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_02_130347) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -140,6 +140,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_100042) do
     t.boolean "sms_success", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "email_status"
     t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
     t.index ["email"], name: "index_contact_log_recipients_on_email"
     t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"

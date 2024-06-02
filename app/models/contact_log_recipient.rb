@@ -14,6 +14,9 @@ class ContactLogRecipient < ApplicationRecord
                      undelivered: 7,
                      failed: 8 }, _prefix: true
 
+  # TODO: should we add delivered and default to that until a supression happens or allow this to be nil?
+  enum email_status: { dropped:0, bounce: 1, spamreport: 2 }
+
   scope :sms_failure, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }, sms_success: false) }
   scope :sms_successful, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }, sms_success: true) }
   scope :last_day, -> { joins(:contact_log).where('contact_logs.created_at > ?', 24.hours.ago) }
