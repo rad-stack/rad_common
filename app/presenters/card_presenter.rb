@@ -246,20 +246,20 @@ class CardPresenter
 
     def duplicate_action
       @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                            @view_context.duplicates_path(model: instance.class, id: instance.id),
+                            @view_context.resolve_duplicates_path(model: instance.class, id: instance.id),
                             class: 'btn btn-warning btn-sm')
     end
 
     def include_duplicates_action?
       action_name == 'index' &&
         RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
-        Pundit.policy!(current_user, klass.new).index_duplicates? &&
+        Pundit.policy!(current_user, klass.new).resolve_duplicates? &&
         klass.high_duplicates.size.positive?
     end
 
     def duplicates_action
       @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                            @view_context.duplicates_path(model: klass),
+                            @view_context.resolve_duplicates_path(model: klass),
                             class: 'btn btn-warning btn-sm')
     end
 
