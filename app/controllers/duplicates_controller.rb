@@ -1,5 +1,5 @@
 class DuplicatesController < ApplicationController
-  def index
+  def resolve
     skip_policy_scope
 
     @model = model
@@ -12,7 +12,7 @@ class DuplicatesController < ApplicationController
       return
     end
 
-    authorize @record, :index_duplicates?
+    authorize @record, :resolve_duplicates?
 
     @records = []
     @duplicates_count = model.relevant_duplicates.count
@@ -116,7 +116,7 @@ class DuplicatesController < ApplicationController
     @record.reset_duplicates
     record.reset_duplicates
 
-    redirect_to duplicates_path(model: @record.class, id: @record.id)
+    redirect_to resolve_duplicates_path model: @record.class, id: @record.id
   end
 
   def check_duplicate
@@ -140,7 +140,7 @@ class DuplicatesController < ApplicationController
   private
 
     def index_path
-      duplicates_path model: model
+      resolve_duplicates_path model: model
     end
 
     def gather_record
