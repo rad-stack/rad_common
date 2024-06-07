@@ -108,15 +108,16 @@ RSpec.describe Contactable do
     end
 
     context 'with enhanced matching' do
-      let(:address_1) { '2 Buttonwood Lane' }
+      let(:address_1) { '11556 Braddock Road' }
       let(:address_2) { nil }
-      let(:city) { 'Palm Coast' }
+      let(:city) { 'Dinsmore' }
       let(:state) { 'FL' }
-      let(:zipcode) { '32137' }
+      let(:zipcode) { '32219' }
 
       it 'standardizes' do
+        company
         expect(company.valid?).to be true
-        expect(company.address_1).to eq('2 Buttonwood Ln')
+        expect(company.address_1).to eq('11556 Braddock Rd')
         expect(company.address_problems).to eq 'non-postal match using enhanced address matching'
       end
     end
