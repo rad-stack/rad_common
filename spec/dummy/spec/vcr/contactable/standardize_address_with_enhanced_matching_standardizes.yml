@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.17.0)
+      - smartystreets (sdk:ruby@5.17.2)
       Host:
       - us-street.api.smarty.com
       Content-Type:
@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Tue, 07 May 2024 15:20:55 GMT
+      - Fri, 07 Jun 2024 12:13:32 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -33,9 +33,9 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"2 Buttonwood
-        Ln","last_line":"Palm Coast FL 32137-9406","delivery_point_barcode":"321379406","components":{"primary_number":"2","street_name":"Buttonwood","street_suffix":"Ln","city_name":"Palm
-        Coast","default_city_name":"Palm Coast","state_abbreviation":"FL","zipcode":"32137","plus4_code":"9406"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12035","county_name":"Flagler","carrier_route":"R070","congressional_district":"06","latitude":29.5913,"longitude":-81.25356,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"N","dpv_footnotes":"AAM3","active":"Y","footnotes":"N#","enhanced_match":"non-postal-match,missing-secondary"}}]
+        Ln","last_line":"Palm Coast FL 32137-9406","delivery_point_barcode":"321379406023","components":{"primary_number":"2","street_name":"Buttonwood","street_suffix":"Ln","city_name":"Palm
+        Coast","default_city_name":"Palm Coast","state_abbreviation":"FL","zipcode":"32137","plus4_code":"9406","delivery_point":"02","delivery_point_check_digit":"3"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12035","county_name":"Flagler","carrier_route":"R070","congressional_district":"06","rdi":"Residential","elot_sequence":"0145","elot_sort":"A","latitude":29.5913,"longitude":-81.25356,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"D","dpv_footnotes":"AAN1","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"Y","active":"Y","footnotes":"N#","enhanced_match":"postal-match,missing-secondary"}}]
 
         '
-  recorded_at: Tue, 07 May 2024 15:20:54 GMT
+  recorded_at: Fri, 07 Jun 2024 12:13:32 GMT
 recorded_with: VCR 6.2.0
