@@ -44,6 +44,10 @@ module DuplicateFixable
       new.respond_to?(:birth_date)
     end
 
+    def use_multiples?
+      new.respond_to?(:multiples)
+    end
+
     def use_email_2?
       new.respond_to?(:email_2)
     end

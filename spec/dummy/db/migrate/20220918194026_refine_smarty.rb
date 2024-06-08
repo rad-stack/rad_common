@@ -2,7 +2,7 @@ class RefineSmarty < ActiveRecord::Migration[6.1]
   def change
     # run this for each model that has the Contactable concern
     fix_address_metadata 'companies', 'Company'
-    fix_address_metadata 'attorneys', 'Attorney'
+    # fix_address_metadata 'attorneys', 'Attorney'
   end
 
   private

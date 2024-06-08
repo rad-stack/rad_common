@@ -17,7 +17,7 @@ module Notifications
     end
 
     def subject_url
-      Rails.application.routes.url_helpers.duplicates_url model: subject_record.class, id: subject_record.id
+      Rails.application.routes.url_helpers.resolve_duplicates_url model: subject_record.class, id: subject_record.id
     end
 
     private

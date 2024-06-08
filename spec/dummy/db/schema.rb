@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_04_194517) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_07_120745) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -67,9 +67,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_04_194517) do
     t.string "zipcode", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "address_metadata"
     t.boolean "active", default: true, null: false
     t.string "mobile_phone"
+    t.jsonb "address_metadata"
   end
 
   create_table "audits", force: :cascade do |t|
@@ -303,13 +303,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_04_194517) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "create_division", default: false, null: false
-    t.boolean "read_division", default: false, null: false
-    t.boolean "update_division", default: false, null: false
-    t.boolean "delete_division", default: false, null: false
     t.boolean "external", default: false, null: false
     t.boolean "manage_user", default: false, null: false
     t.boolean "allow_sign_up", default: false, null: false
     t.boolean "allow_invite", default: false, null: false
+    t.boolean "read_division", default: false, null: false
+    t.boolean "update_division", default: false, null: false
+    t.boolean "delete_division", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 

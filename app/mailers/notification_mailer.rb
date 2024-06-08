@@ -79,7 +79,7 @@ class NotificationMailer < RadMailer
 
     @email_action = { message: 'You can review the records here.',
                       button_text: 'Review Records',
-                      button_url: duplicates_url(model: model_name) }
+                      button_url: resolve_duplicates_url(model: model_name) }
 
     send_notification_mail recipients, "Too Many Potential Duplicate #{model_name.titleize} Records"
   end
