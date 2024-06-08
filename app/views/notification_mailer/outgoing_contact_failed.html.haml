@@ -1,0 +1,37 @@
+.email.row
+  .email-col-12
+    .email-info-box
+      %table.info-table
+        - if @contact_log_recipient.to_user.present?
+          %tr
+            %th User:
+            %td= link_to @contact_log_recipient.to_user, user_url(@contact_log_recipient.to_user)
+        - if @contact_log_recipient.email.present?
+          %tr
+            %th Email:
+            %td= @contact_log_recipient.email
+        - if @contact_log_recipient.phone_number.present?
+          %tr
+            %th Phone #:
+            %td= @contact_log_recipient.phone_number
+        - if @contact_log_recipient.sendgrid_event.present?
+          %tr
+            %th Event:
+            %td= @contact_log_recipient.sendgrid_event
+        - if @contact_log_recipient.sendgrid_type.present?
+          %tr
+            %th Type:
+            %td= @contact_log_recipient.sendgrid_type
+        - if @contact_log_recipient.bounce_classification.present?
+          %tr
+            %th Bounce Classification
+            %td= @contact_log_recipient.bounce_classification
+        - if @contact_log_recipient.sendgrid_reason.present?
+          %tr
+            %th Reason
+            %td= @contact_log_recipient.sendgrid_reason
+
+- if @contact_log_recipient.to_user.present?
+  = render 'layouts/email_action',
+           message: 'Click here to view the details.',
+           button_text: 'View', button_url: user_url(@contact_log_recipient.to_user)

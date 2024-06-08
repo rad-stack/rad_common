@@ -26,7 +26,7 @@ class RadTwilioReply
                                sms_message_id: message_sid,
                                sms_opt_out_message_sent: false
 
-      ContactLogRecipient.create! contact_log: log, phone_number: to_number, success: true
+      ContactLogRecipient.create! contact_log: log, phone_number: to_number
     end
 
     def from_number

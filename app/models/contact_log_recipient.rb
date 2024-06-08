@@ -37,12 +37,15 @@ class ContactLogRecipient < ApplicationRecord
   validates :email_status, presence: true, if: -> { contact_log&.email? }
 
   validates :sms_status, absence: true, if: -> { contact_log&.email? || contact_log&.incoming? }
-  validates :email_status, absence: true, if: -> { contact_log&.sms? }
+
+  validates :email_status, :sendgrid_event, :sendgrid_type, :bounce_classification, :sendgrid_reason,
+            absence: true, if: -> { contact_log&.sms? }
 
   validate :validate_service_type
   validate :validate_incoming_fields
 
   before_validation :check_success
+  after_commit :maybe_notify, only: :update
 
   audited
   strip_attributes
@@ -56,14 +59,12 @@ class ContactLogRecipient < ApplicationRecord
     def check_success
       return if contact_log.blank?
 
-      if contact_log.sms?
-        return unless sms_status_delivered?
-
+      if contact_log.incoming?
         self.success = true
+      elsif contact_log.sms?
+        self.success = sms_status_delivered?
       elsif contact_log.email?
-        return unless email_status_delivered?
-
-        self.success = true
+        self.success = email_status_delivered?
       end
     end
 
@@ -85,5 +86,11 @@ class ContactLogRecipient < ApplicationRecord
         errors.add(:phone_number, 'must be blank') if phone_number.present?
         errors.add(:email, 'must be present') if email.blank?
       end
+    end
+
+    def maybe_notify
+      return unless notify_on_fail? && success_previously_changed?(from: true, to: false)
+
+      Notifications::OutgoingContactFailedNotification.main(self).notify!
     end
 end
