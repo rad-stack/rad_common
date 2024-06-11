@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_07_120745) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_11_203430) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -206,7 +206,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_07_120745) do
     t.string "scope"
     t.string "strategy"
     t.string "identity"
-    t.boolean "success"
+    t.boolean "success", default: false, null: false
     t.string "failure_reason"
     t.string "user_type"
     t.bigint "user_id"
