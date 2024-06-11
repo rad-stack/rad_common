@@ -58,9 +58,7 @@ module RadNav
       end
 
       def sentry_test
-        DropdownMenuItem.new(view_context,
-                             'Sentry Test',
-                             RadCommon::Engine.routes.url_helpers.edit_sentry_test_path(current_user))
+        DropdownMenuItem.new(view_context, 'Sentry Test', view_context.new_sentry_test_path)
       end
 
       def system_messages
