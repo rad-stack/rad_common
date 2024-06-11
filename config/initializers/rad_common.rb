@@ -80,3 +80,20 @@ module Kaminari
     end
   end
 end
+
+SimpleForm::FormBuilder.class_eval do
+  alias_method :original_association, :association
+
+  def association(association, options = {}, &)
+    if options[:live_search].nil? || options[:live_search]
+      options[:input_html] ||= {}
+      existing_classes = options[:input_html][:class].to_s.split
+      options[:input_html][:class] = (existing_classes + ['selectpicker']).uniq.join(' ')
+      options[:input_html]['data-live-search'] ||= true
+      placeholder = options[:search_placeholder].presence || 'Start typing to search'
+      options[:input_html]['data-live-search-placeholder'] ||= placeholder
+    end
+
+    original_association(association, options, &)
+  end
+end

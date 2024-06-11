@@ -15,11 +15,6 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
   private
 
     def add_default_options
-      input_html_options[:class].push(:selectpicker)
-      input_html_options.merge!(
-        'data-live-search' => true,
-        'data-live-search-placeholder' => options[:search_placeholder].presence || 'Start typing to search'
-      )
       return unless search_only?
 
       input_html_options.merge!(search_options)
