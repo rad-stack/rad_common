@@ -69,7 +69,13 @@ class RadSendgridStatusReceiver
     def update_contact_log!
       return unless suppression?
 
-      contact_log.contact_log_recipients.find_by!(email: email).update! email_status: event, notify_on_fail: @notify
+      recipients = contact_log.contact_log_recipients.where(email: email)
+
+      # if this occurs in the wild, we should see if there is a valid use case or was it an oversight that needs fixing
+      # we can also add a uniqueness check to prevent the scenario further upstream
+      raise "multiple recipients with same email #{email} for contact log #{contact_log.id}" if recipients.size > 1
+
+      recipients.first.update! email_status: event, notify_on_fail: @notify
     end
 
     def contact_log

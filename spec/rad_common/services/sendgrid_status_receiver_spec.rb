@@ -36,6 +36,16 @@ describe SendgridStatusReceiver, type: :service do
       }.to change(contact_log_recipient, :email_status).from('delivered').to('bounce')
     end
 
+    context 'with more than one recipient with same email' do
+      let(:error_message) { "multiple recipients with same email #{user.email} for contact log #{contact_log.id}" }
+
+      before { create :contact_log_recipient, :email, contact_log: contact_log, email: user.email, email_type: :bcc }
+
+      it 'raises an error when updating status of contact log' do
+        expect { service.process! }.to raise_error error_message
+      end
+    end
+
     context 'with stale user' do
       before { user.update! created_at: 6.months.ago, updated_at: 6.months.ago }
 
