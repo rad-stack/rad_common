@@ -21,6 +21,7 @@ module RadCommon
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'legacy_rails_config', 'false'
         remove_rad_factories
+        check_boolean_fields
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
 
@@ -230,6 +231,7 @@ Seeder.new.seed!
         apply_migration '20240423100042_rename_contact_fields.rb'
         apply_migration '20240602130347_contact_log_sendgrid_stuff.rb'
         apply_migration '20240604194517_more_sendgrid_stuff.rb'
+        apply_migration '20240611203404_fix_null_fields.rb'
       end
 
       def self.next_migration_number(path)
@@ -334,6 +336,16 @@ Seeder.new.seed!
 
           if Dir.exist?('spec/factories/rad_common') && Dir.empty?('spec/factories/rad_common')
             Dir.rmdir('spec/factories/rad_common')
+          end
+        end
+
+        def check_boolean_fields
+          ActiveRecord::Base.connection.tables.each do |table|
+            ActiveRecord::Base.connection.columns(table).each do |column|
+              next unless column.type == :boolean && (column.null || column.default.blank?)
+
+              raise "column #{table}.#{column.name}: null: #{column.null}, default: #{column.default}"
+            end
           end
         end
 
