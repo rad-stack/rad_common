@@ -56,6 +56,8 @@ linters:
 
   RuboCop:
     enabled: true
+    ignored_cops:
+      - 'Style/IfUnlessModifier'
 
   RubyComments:
     enabled: true
