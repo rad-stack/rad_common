@@ -35,10 +35,7 @@ class RadTwilio
     # twilio phone number validations that check whether valid mobile # cost half a penny per request
 
     begin
-      response = Rails.cache.fetch("#{phone_number}-#{mobile}", expires_in: 10.minutes) do
-        get_phone_number(phone_number, mobile)
-      end
-
+      response = get_phone_number(phone_number, mobile)
       return 'does not appear to be a valid mobile phone number' if mobile && response.carrier['type'] != 'mobile'
 
       response.phone_number
