@@ -229,6 +229,8 @@ Seeder.new.seed!
         apply_migration '20240418101832_remove_contact_log_attachments.rb'
         apply_migration '20240420112825_contact_log_content.rb'
         apply_migration '20240423100042_rename_contact_fields.rb'
+        apply_migration '20240602130347_contact_log_sendgrid_stuff.rb'
+        apply_migration '20240604194517_more_sendgrid_stuff.rb'
         apply_migration '20240611203404_fix_null_fields.rb'
       end
 

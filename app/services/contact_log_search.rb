@@ -37,13 +37,7 @@ class ContactLogSearch < RadCommon::Search
                     name: :to_number }]
       end
 
-      items += base_filters
-
-      if RadConfig.twilio_enabled?
-        items.push({ input_label: 'SMS Success', name: :status, scope_values: %i[sms_failure sms_successful] })
-      end
-
-      items
+      items + base_filters
     end
 
     def base_filters
@@ -63,7 +57,11 @@ class ContactLogSearch < RadCommon::Search
          column: 'contact_log_recipients.to_user_id',
          options: user_array,
          blank_value_label: 'All Users' },
-       { column: 'content', type: RadCommon::LikeFilter }]
+       { column: 'content', type: RadCommon::LikeFilter },
+       { input_label: 'Success',
+         name: :status,
+         scope_values: %i[failed successful],
+         blank_value_label: 'All Records' }]
     end
 
     def sort_columns_def
@@ -87,11 +85,10 @@ class ContactLogSearch < RadCommon::Search
                 { label: 'Content', column: 'contact_logs.content' }]
 
       if RadConfig.twilio_enabled?
-        items += [{ label: 'Opt Out Message Sent?', column: 'contact_logs.sms_opt_out_message_sent' },
-                  { label: 'SMS Success', column: 'contact_log_recipients.sms_success' }]
+        items += [{ label: 'Opt Out Message Sent?', column: 'contact_logs.sms_opt_out_message_sent' }]
       end
 
-      items
+      items + [{ label: 'Success', column: 'contact_log_recipients.sms_success' }]
     end
 
     def user_array

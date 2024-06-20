@@ -6,7 +6,7 @@ FactoryBot.define do
     from_user factory: :user
     content { Faker::TvShows::GameOfThrones.quote }
     sms_media_url { Faker::Internet.url if rand(1..3) == 1 }
-    sms_sent { rand(1..5) != 1 }
+    sent { rand(1..5) != 1 }
 
     transient do
       to_user { nil }
@@ -32,7 +32,7 @@ FactoryBot.define do
       sms_media_url { nil }
       from_number { nil }
       from_email { Faker::Internet.email }
-      sms_sent { false }
+      sent { true }
     end
   end
 end

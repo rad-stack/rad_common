@@ -46,14 +46,21 @@ class NotificationMailer < RadMailer
     send_notification_mail recipients, "Global Validity in #{RadConfig.app_name!} Ran Long"
   end
 
-  def sendgrid_status(recipients, content)
-    @content = content
-    @message = 'An email that was sent has an issue reported by SendGrid.'
-    @email = content[:email]
-    @user = User.find_by(email: @email)
+  def outgoing_contact_failed(recipients, contact_log_recipient)
+    @contact_log_recipient = contact_log_recipient
 
-    send_notification_mail recipients,
-                           "SendGrid Email Status for #{@user.presence || @email} in #{RadConfig.app_name!}"
+    contact_description = RadEnum.new(ContactLog, 'service_type')
+                                 .translation(contact_log_recipient.contact_log)
+
+    @message = "An #{contact_description} message that was sent has failed."
+
+    contacted_item = contact_log_recipient.to_user.presence ||
+                     contact_log_recipient.email.presence ||
+                     contact_log_recipient.phone_number.presence
+
+    subject = "Outgoing #{contact_description} Failed for #{contacted_item} in #{RadConfig.app_name!}"
+
+    send_notification_mail recipients, subject
   end
 
   def high_duplicates(recipients, payload)

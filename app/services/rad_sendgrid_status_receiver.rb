@@ -4,6 +4,8 @@ class RadSendgridStatusReceiver
 
   def initialize(content)
     @content = content
+    @notify = true
+
     check_events
   end
 
@@ -11,6 +13,7 @@ class RadSendgridStatusReceiver
     return unless host_matches?
 
     process_status!
+    update_contact_log!
   end
 
   def email
@@ -56,12 +59,27 @@ class RadSendgridStatusReceiver
   private
 
     def process_status!
-      if suppression? && user.present? && (spam_report? || user.stale?)
-        user.update! user_status: UserStatus.default_inactive_status
-        Rails.logger.info "sendgrid status: suppression received from stale user #{user.email}, deactivating"
-      else
-        Notifications::SendgridEmailStatusNotification.main(@content).notify!
-      end
+      return unless suppression? && user.present? && (spam_report? || user.stale?)
+
+      @notify = false
+      user.update! user_status: UserStatus.default_inactive_status
+      Rails.logger.info "sendgrid status: suppression received from stale user #{user.email}, deactivating"
+    end
+
+    def update_contact_log!
+      return unless suppression?
+
+      recipients = contact_log.contact_log_recipients.where(email: email)
+
+      # if this occurs in the wild, we should see if there is a valid use case or was it an oversight that needs fixing
+      # we can also add a uniqueness check to prevent the scenario further upstream
+      raise "multiple recipients with same email #{email} for contact log #{contact_log.id}" if recipients.size > 1
+
+      recipients.first.update! email_status: event, notify_on_fail: @notify
+    end
+
+    def contact_log
+      @contact_log ||= ContactLog.find(@content[:contact_log_id])
     end
 
     def check_events
