@@ -16,6 +16,7 @@ PATH
       authtrail
       aws-sdk-s3
       bootstrap4-kaminari-views
+      csv
       devise
       devise-security
       devise_invitable
@@ -27,6 +28,7 @@ PATH
       jwt
       kaminari
       matrix
+      mutex_m
       nokogiri
       parser (~> 3.3.1.0)
       pg
@@ -184,6 +186,7 @@ GEM
     crass (1.0.6)
     css_parser (1.17.1)
       addressable
+    csv (3.3.0)
     date (3.3.4)
     devise (4.9.4)
       bcrypt (~> 3.0)
@@ -270,6 +273,7 @@ GEM
     mini_portile2 (2.8.7)
     minitest (5.23.1)
     msgpack (1.7.2)
+    mutex_m (0.2.0)
     net-http (0.4.1)
       uri
     net-imap (0.4.12)
