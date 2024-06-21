@@ -24,7 +24,6 @@ FileUtils.chdir directory do
   system! "bin/rails g rad_common:install --force"
 
   puts '== Running Yarn Install =='
-  system! 'nvm use'
   system! 'yarn install'
 
   puts '== Running DB Migrate =='
