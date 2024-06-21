@@ -20,6 +20,7 @@ PATH
       devise
       devise-security
       devise_invitable
+      drb
       factory_bot_rails
       faker
       haml-rails
@@ -201,6 +202,7 @@ GEM
       devise (>= 4.6)
     diff-lcs (1.5.1)
     docile (1.4.0)
+    drb (2.2.1)
     erubi (1.12.0)
     factory_bot (6.4.6)
       activesupport (>= 5.0.0)

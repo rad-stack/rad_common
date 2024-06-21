@@ -62,6 +62,7 @@ Gem::Specification.new do |s|
 
   # see Task 4406 - should be able to remove later
   s.add_dependency 'csv'
+  s.add_dependency 'drb'
   s.add_dependency 'mutex_m'
 
   # Test Group
