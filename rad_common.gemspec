@@ -60,6 +60,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'wicked_pdf', '2.6.3'
   s.add_dependency 'wkhtmltopdf-heroku', '2.12.6.1.pre.jammy'
 
+  # see Task 4406 - should be able to remove later
+  s.add_dependency 'csv'
+  s.add_dependency 'mutex_m'
+
   # Test Group
   s.add_dependency 'selenium-webdriver', '~> 4.18.1'
 
