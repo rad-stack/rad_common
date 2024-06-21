@@ -8,7 +8,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Accept:
@@ -29,22 +29,11 @@ http_interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 07 May 2024 15:23:30 GMT
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Allow-Headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
+      - Fri, 21 Jun 2024 18:29:41 GMT
       Twilio-Request-Id:
-      - RQb2bc9d84edc72d95c4cca8afd9596d1f
+      - RQ80dd5977acb1c2f2a3c3177868a83c0f
       Twilio-Request-Duration:
-      - '0.020'
+      - '0.016'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -58,15 +47,17 @@ http_interactions:
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 15ee105a0023d36792571b758757e06c.cloudfront.net (CloudFront)
+      - 1.1 873ea86a53e828bcd9ffd511bda586c8.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
       - MIA3-P8
       X-Amz-Cf-Id:
-      - HN3P11QPkHRnEg5y8kRnBAXSCM4jy1Rex3V06usT3RBkYZmd-r42Og==
+      - scbqXsvhC-tvm92_9kluSww9JeSdSOcXSgUZBjs1qfVJCTPIYOap2g==
+      Vary:
+      - Origin
     body:
       encoding: UTF-8
-      string: '{"caller_name": null, "country_code": "US", "phone_number": "+1<TEST_PHONE_NUMBER_STRIPPED>",
-        "national_format": "<TEST_PHONE_NUMBER>", "carrier": null, "add_ons": null,
-        "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_PHONE_NUMBER_STRIPPED>"}'
-  recorded_at: Tue, 07 May 2024 15:23:29 GMT
+      string: '{"phone_number": "+1<TEST_PHONE_NUMBER_STRIPPED>", "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_PHONE_NUMBER_STRIPPED>",
+        "caller_name": null, "national_format": "<TEST_PHONE_NUMBER>", "country_code":
+        "US", "carrier": null, "add_ons": null}'
+  recorded_at: Fri, 21 Jun 2024 18:29:41 GMT
 recorded_with: VCR 6.2.0
