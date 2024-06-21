@@ -23,11 +23,13 @@ module RadCommon
         remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
+        search_and_replace_file "ruby '3.2.2'", "ruby '3.1.1'", 'Gemfile'
 
         # misc
         merge_package_json
         copy_custom_github_actions
         copy_custom_github_matrix
+        copy_file '../../../../../.ruby-version', '.ruby-version'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
         copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
@@ -215,6 +217,14 @@ Seeder.new.seed!
             system "find . -type f -name \"*.#{file_type}\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
           else
             system "find . -type f -name \"*.#{file_type}\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          end
+        end
+
+        def search_and_replace_name(search, replace, file_name)
+          if ENV['CI']
+            system "find . -type f -name \"#{file_name}\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
+          else
+            system "find . -type f -name \"#{file_name}\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
           end
         end
 
