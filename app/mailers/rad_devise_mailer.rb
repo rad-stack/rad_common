@@ -1,13 +1,16 @@
 class RadDeviseMailer < Devise::Mailer
+  include ContactMailer
   include Devise::Controllers::UrlHelpers
   helper RadCommon::ApplicationHelper
 
   layout 'rad_mailer'
 
   before_action :set_defaults
+
   default reply_to: RadConfig.admin_email!
 
   def confirmation_instructions(record, token, opts = {})
+    @contact_log_record = record
     @token = token
     initialize_from_record(record)
 
@@ -22,6 +25,7 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def reset_password_instructions(record, token, opts = {})
+    @contact_log_record = record
     @token = token
     initialize_from_record(record)
 
@@ -37,6 +41,7 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def unlock_instructions(record, token, opts = {})
+    @contact_log_record = record
     @token = token
     initialize_from_record(record)
 
@@ -51,6 +56,7 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def invitation_instructions(record, token, opts = {})
+    @contact_log_record = record
     @token = token
     initialize_from_record(record)
 
@@ -67,6 +73,7 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def email_changed(record, opts = {})
+    @contact_log_record = record
     initialize_from_record(record)
 
     @recipient = @resource
@@ -78,6 +85,7 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def password_change(record, opts = {})
+    @contact_log_record = record
     initialize_from_record(record)
 
     @recipient = @resource
@@ -96,6 +104,6 @@ class RadDeviseMailer < Devise::Mailer
 
     def set_defaults
       @include_yield = false
-      headers['X-SMTPAPI'] = { unique_args: { host_name: RadConfig.host_name! } }.to_json
+      rad_headers
     end
 end
