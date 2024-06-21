@@ -220,7 +220,7 @@ Seeder.new.seed!
           end
         end
 
-        def search_and_replace_name(search, replace, file_name)
+        def search_and_replace_file(search, replace, file_name)
           if ENV['CI']
             system "find . -type f -name \"#{file_name}\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
           else
