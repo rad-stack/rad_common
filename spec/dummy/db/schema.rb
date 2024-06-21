@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_23_100042) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_11_203430) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -67,9 +67,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_100042) do
     t.string "zipcode", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "address_metadata"
     t.boolean "active", default: true, null: false
     t.string "mobile_phone"
+    t.jsonb "address_metadata"
   end
 
   create_table "audits", force: :cascade do |t|
@@ -137,9 +137,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_100042) do
     t.string "phone_number"
     t.integer "email_type"
     t.integer "sms_status"
-    t.boolean "sms_success", default: false, null: false
+    t.boolean "success", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "email_status"
+    t.string "sendgrid_event"
+    t.string "sendgrid_type"
+    t.string "bounce_classification"
+    t.string "sendgrid_reason"
+    t.boolean "notify_on_fail", default: true, null: false
     t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
     t.index ["email"], name: "index_contact_log_recipients_on_email"
     t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"
@@ -150,7 +156,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_100042) do
     t.string "from_number"
     t.bigint "from_user_id"
     t.string "sms_media_url"
-    t.boolean "sms_sent", default: true, null: false
+    t.boolean "sent", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "sms_opt_out_message_sent", default: false, null: false
@@ -160,14 +166,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_100042) do
     t.integer "service_type", default: 0, null: false
     t.string "record_type"
     t.bigint "record_id"
-    t.string "content", null: false
+    t.string "content"
     t.index ["created_at"], name: "index_contact_logs_on_created_at"
     t.index ["from_number"], name: "index_contact_logs_on_from_number"
     t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
     t.index ["record_type", "record_id"], name: "index_contact_logs_on_record"
+    t.index ["sent"], name: "index_contact_logs_on_sent"
     t.index ["service_type"], name: "index_contact_logs_on_service_type"
     t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
-    t.index ["sms_sent"], name: "index_contact_logs_on_sms_sent"
   end
 
   create_table "divisions", force: :cascade do |t|
@@ -206,7 +212,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_100042) do
     t.string "scope"
     t.string "strategy"
     t.string "identity"
-    t.boolean "success"
+    t.boolean "success", default: false, null: false
     t.string "failure_reason"
     t.string "user_type"
     t.bigint "user_id"
@@ -297,13 +303,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_100042) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "create_division", default: false, null: false
-    t.boolean "read_division", default: false, null: false
-    t.boolean "update_division", default: false, null: false
-    t.boolean "delete_division", default: false, null: false
     t.boolean "external", default: false, null: false
     t.boolean "manage_user", default: false, null: false
     t.boolean "allow_sign_up", default: false, null: false
     t.boolean "allow_invite", default: false, null: false
+    t.boolean "read_division", default: false, null: false
+    t.boolean "update_division", default: false, null: false
+    t.boolean "delete_division", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 

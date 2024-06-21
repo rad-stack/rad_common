@@ -30,8 +30,9 @@ module RadCommonRoutes
           get :permission, on: :collection
         end
 
-        resources :duplicates, only: :index do
+        resources :duplicates, only: [] do
           collection do
+            get :resolve
             get :not
             put :do_later
             put :reset
@@ -41,6 +42,7 @@ module RadCommonRoutes
           end
         end
 
+        resources :sentry_tests, only: :new
         resources :contact_logs, only: %i[index show]
         resources :saved_search_filters, only: :destroy
         resources :user_security_roles, only: :show

@@ -25,6 +25,6 @@
           %td= record.contact_log.content
           - if RadConfig.twilio_enabled?
             %td= format_boolean record.contact_log.sms_opt_out_message_sent
-            %td= format_boolean record.sms_success
+          %td= format_boolean record.success
 
     = paginate @contact_logs, theme: 'twitter-bootstrap-4'

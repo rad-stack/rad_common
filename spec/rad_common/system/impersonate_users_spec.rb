@@ -37,6 +37,11 @@ RSpec.describe 'User Impersonation', :impersonate_specs, type: :system do
 
       visit user_path(impersonated_user)
       expect(page).to have_content 'Sign In As'
+
+      impersonated_user.update! user_status: create(:user_status, :inactive)
+
+      visit user_path(impersonated_user)
+      expect(page).to have_no_content 'Sign In As'
     end
   end
 end

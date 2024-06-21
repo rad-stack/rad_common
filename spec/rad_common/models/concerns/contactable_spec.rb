@@ -108,15 +108,19 @@ RSpec.describe Contactable do
     end
 
     context 'with enhanced matching' do
-      let(:address_1) { '2 Buttonwood Lane' }
+      let(:address_1) { '11556 Braddock Road' }
       let(:address_2) { nil }
-      let(:city) { 'Palm Coast' }
+      let(:city) { 'Dinsmore' }
       let(:state) { 'FL' }
-      let(:zipcode) { '32137' }
+      let(:zipcode) { '32219' }
 
       it 'standardizes' do
+        company
         expect(company.valid?).to be true
-        expect(company.address_1).to eq('2 Buttonwood Ln')
+        expect(company.address_1).to eq('11556 Braddock Rd')
+
+        # if we need to re-record and find another example address, you can search through a client's database
+        # looking for this message in address_problems
         expect(company.address_problems).to eq 'non-postal match using enhanced address matching'
       end
     end
@@ -211,6 +215,9 @@ RSpec.describe Contactable do
 
       it 'sets address_problems and does not touch address' do
         expect(company.valid?).to be true
+
+        # if we need to re-record and find another example address, you can search through a client's database
+        # looking for this message in address_problems
         expect(company.address_problems).to eq 'missing suite or unit #'
       end
     end
@@ -226,6 +233,9 @@ RSpec.describe Contactable do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('1921 E 24th St')
         expect(company.address_2).to eq('Apt 1')
+
+        # if we need to re-record and find another example address, you can search through a client's database
+        # looking for this message in address_problems
         expect(company.address_problems).to eq 'verified by ignoring invalid suite or unit #'
       end
     end
