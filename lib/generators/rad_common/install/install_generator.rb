@@ -23,7 +23,7 @@ module RadCommon
         remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
-        search_and_replace_file "ruby '3.2.2'", "ruby '3.1.1'", 'Gemfile'
+        search_and_replace_file "ruby \'3.2.2\'", "ruby '3.1.1'", 'Gemfile'
 
         # misc
         merge_package_json
