@@ -26,8 +26,8 @@ class ContactLogRecipient < ApplicationRecord
     scope service_type, -> { joins(:contact_log).where(contact_logs: { service_type: service_type }) }
   end
 
-  ContactLog.sms_log_types.each_key do |log_type|
-    scope log_type, -> { joins(:contact_log).where(contact_logs: { log_type: log_type }) }
+  ContactLog.sms_log_types.each_key do |sms_log_type|
+    scope sms_log_type, -> { joins(:contact_log).where(contact_logs: { sms_log_type: sms_log_type }) }
   end
 
   validates_with PhoneNumberValidator, fields: [{ field: :phone_number }], skip_twilio: true
