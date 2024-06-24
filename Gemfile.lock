@@ -16,9 +16,11 @@ PATH
       authtrail
       aws-sdk-s3
       bootstrap4-kaminari-views
+      csv
       devise
       devise-security
       devise_invitable
+      drb
       factory_bot_rails
       faker
       haml-rails
@@ -27,8 +29,9 @@ PATH
       jwt
       kaminari
       matrix
+      mutex_m
       nokogiri
-      parser (~> 3.2.2.4)
+      parser (~> 3.3.1.0)
       pg
       prawn
       prawn-table
@@ -162,7 +165,7 @@ GEM
     bootstrap4-kaminari-views (1.0.1)
       kaminari (>= 0.13)
       rails (>= 3.1)
-    builder (3.2.4)
+    builder (3.3.0)
     capybara (3.40.0)
       addressable
       matrix
@@ -184,6 +187,7 @@ GEM
     crass (1.0.6)
     css_parser (1.17.1)
       addressable
+    csv (3.3.0)
     date (3.3.4)
     devise (4.9.4)
       bcrypt (~> 3.0)
@@ -198,6 +202,7 @@ GEM
       devise (>= 4.6)
     diff-lcs (1.5.1)
     docile (1.4.0)
+    drb (2.2.1)
     erubi (1.12.0)
     factory_bot (6.4.6)
       activesupport (>= 5.0.0)
@@ -270,6 +275,7 @@ GEM
     mini_portile2 (2.8.7)
     minitest (5.23.1)
     msgpack (1.7.2)
+    mutex_m (0.2.0)
     net-http (0.4.1)
       uri
     net-imap (0.4.12)
@@ -289,7 +295,7 @@ GEM
     parallel (1.24.0)
     parallel_tests (4.7.1)
       parallel
-    parser (3.2.2.4)
+    parser (3.3.1.0)
       ast (~> 2.4.1)
       racc
     pdf-core (0.10.0)
@@ -387,28 +393,28 @@ GEM
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
     rspec-support (3.13.1)
-    rubocop (1.59.0)
+    rubocop (1.64.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.2.2.4)
+      parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
-      rubocop-ast (>= 1.30.0, < 2.0)
+      rubocop-ast (>= 1.31.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.30.0)
-      parser (>= 3.2.1.0)
+    rubocop-ast (1.31.3)
+      parser (>= 3.3.1.0)
     rubocop-capybara (2.20.0)
       rubocop (~> 1.41)
     rubocop-factory_bot (2.25.1)
       rubocop (~> 1.41)
-    rubocop-rails (2.23.1)
+    rubocop-rails (2.25.0)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
-      rubocop-ast (>= 1.30.0, < 2.0)
+      rubocop-ast (>= 1.31.1, < 2.0)
     rubocop-rspec (2.30.0)
       rubocop (~> 1.40)
       rubocop-capybara (~> 2.17)

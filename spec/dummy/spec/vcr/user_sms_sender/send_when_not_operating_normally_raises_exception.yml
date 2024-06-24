@@ -8,7 +8,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -25,7 +25,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Tue, 07 May 2024 15:22:36 GMT
+      - Fri, 21 Jun 2024 18:28:04 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -37,9 +37,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ0378c29496aa610f1e2ccaa0f0af02d1
+      - RQfabc88732925b7cb5587a4f12ec9b9b0
       Twilio-Request-Duration:
-      - '34'
+      - '0.049'
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -65,7 +65,7 @@ http_interactions:
       encoding: UTF-8
       string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
         mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
-  recorded_at: Tue, 07 May 2024 15:22:36 GMT
+  recorded_at: Fri, 21 Jun 2024 18:28:04 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -74,7 +74,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -91,7 +91,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Tue, 07 May 2024 15:22:37 GMT
+      - Fri, 21 Jun 2024 18:28:04 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -103,9 +103,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQc314e487d81a11f17aa585a65eadb267
+      - RQaec411fa7825b21c6f3fbc53c6ae0416
       Twilio-Request-Duration:
-      - '44'
+      - '0.043'
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -131,7 +131,7 @@ http_interactions:
       encoding: UTF-8
       string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
         mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
-  recorded_at: Tue, 07 May 2024 15:22:36 GMT
+  recorded_at: Fri, 21 Jun 2024 18:28:04 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -140,7 +140,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -157,7 +157,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Tue, 07 May 2024 15:22:37 GMT
+      - Fri, 21 Jun 2024 18:28:05 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -169,9 +169,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ880c6c04ad7786c83511f16c2ed3db2e
+      - RQ90cdf9def62d21d25497c009a51829ae
       Twilio-Request-Duration:
-      - '47'
+      - '0.063'
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -197,7 +197,7 @@ http_interactions:
       encoding: UTF-8
       string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
         mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
-  recorded_at: Tue, 07 May 2024 15:22:37 GMT
+  recorded_at: Fri, 21 Jun 2024 18:28:05 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -206,7 +206,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -223,7 +223,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Tue, 07 May 2024 15:22:37 GMT
+      - Fri, 21 Jun 2024 18:28:05 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -235,9 +235,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ123e5b25ceafd7c4b6d9e0e0e175a020
+      - RQfa639632a46cdfd644d0a2ea5b07b70b
       Twilio-Request-Duration:
-      - '50'
+      - '0.033'
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -263,7 +263,7 @@ http_interactions:
       encoding: UTF-8
       string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
         mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
-  recorded_at: Tue, 07 May 2024 15:22:37 GMT
+  recorded_at: Fri, 21 Jun 2024 18:28:05 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -272,7 +272,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -289,7 +289,7 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Tue, 07 May 2024 15:22:37 GMT
+      - Fri, 21 Jun 2024 18:28:05 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -301,9 +301,9 @@ http_interactions:
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ8a84cfee3e42ca15ed97caf6b35e0bcc
+      - RQbc79fa4d95d4ee7d3361a36a3ef514a5
       Twilio-Request-Duration:
-      - '51'
+      - '0.050'
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -329,5 +329,5 @@ http_interactions:
       encoding: UTF-8
       string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
         mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
-  recorded_at: Tue, 07 May 2024 15:22:37 GMT
+  recorded_at: Fri, 21 Jun 2024 18:28:05 GMT
 recorded_with: VCR 6.2.0

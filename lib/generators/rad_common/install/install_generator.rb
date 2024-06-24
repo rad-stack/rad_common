@@ -22,10 +22,12 @@ module RadCommon
         remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
+        search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
 
         # misc
         copy_custom_github_actions
         copy_custom_github_matrix
+        copy_file '../../../../../.ruby-version', '.ruby-version'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
@@ -209,6 +211,14 @@ module RadCommon
             system "find . -type f -name \"*.#{file_type}\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
           else
             system "find . -type f -name \"*.#{file_type}\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          end
+        end
+
+        def search_and_replace_file(search, replace, file_name)
+          if ENV['CI']
+            system "find . -type f -name \"#{file_name}\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
+          else
+            system "find . -type f -name \"#{file_name}\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
           end
         end
 
