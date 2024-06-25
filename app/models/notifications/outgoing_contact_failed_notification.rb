@@ -35,7 +35,7 @@ module Notifications
       end
 
       def contact_description
-        RadEnum.new(ContactLog, 'service_type').translation(payload.contact_log)
+        RadEnum.new(ContactLog, 'service_type').translation(payload.contact_log.service_type)
       end
 
       def user
