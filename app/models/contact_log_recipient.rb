@@ -72,7 +72,6 @@ class ContactLogRecipient < ApplicationRecord
       return if contact_log.blank? || contact_log.outgoing? || contact_log.email?
 
       errors.add(:to_user_id, 'must be blank') if to_user_id.present?
-      errors.add(:sms_status, 'must be blank') if sms_status.present?
       errors.add(:success, 'must be true') unless success?
     end
 

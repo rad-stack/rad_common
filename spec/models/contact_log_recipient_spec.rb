@@ -26,6 +26,7 @@ RSpec.describe ContactLogRecipient do
           contact_log_recipient.update! email_status: :bounce
         }.to change(deliveries, :count).by(1)
 
+        expect(last_email.subject).to include 'Outgoing Email Failed for'
         expect(last_email.to).not_to include admin.email
         expect(last_email.to).to include another_admin.email
       end

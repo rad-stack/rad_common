@@ -50,7 +50,7 @@ class NotificationMailer < RadMailer
     @contact_log_recipient = contact_log_recipient
 
     contact_description = RadEnum.new(ContactLog, 'service_type')
-                                 .translation(contact_log_recipient.contact_log)
+                                 .translation(contact_log_recipient.contact_log.service_type)
 
     @message = "An #{contact_description} message that was sent has failed."
 
