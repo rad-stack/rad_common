@@ -41,7 +41,7 @@ describe 'Users' do
         expect(find_button('Sign Up', disabled: true).disabled?).to be(true)
         check 'accept_terms'
 
-        click_on 'Sign Up'
+        click_button 'Sign Up'
         expect(page).to have_content 'message with a confirmation link has been sent'
 
         ActionMailer::Base.deliveries.clear
@@ -94,7 +94,7 @@ describe 'Users' do
       visit new_user_session_path
       fill_in 'user_email', with: user.email
       fill_in 'user_password', with: password
-      click_on 'Sign In'
+      click_button 'Sign In'
       expect(page).to have_content remember_message
       fill_in 'twilio-verify-token', with: '7721070'
       click_on 'Verify and Sign in'
@@ -106,7 +106,7 @@ describe 'Users' do
 
       fill_in 'user_email', with: user.email
       fill_in 'user_password', with: password
-      click_on 'Sign In'
+      click_button 'Sign In'
       fill_in 'twilio-verify-token', with: '123456'
       click_on 'Verify and Sign in'
       expect(page).to have_content('The entered token is invalid')
