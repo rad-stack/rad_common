@@ -7,7 +7,7 @@ module RadCommon
     end
 
     def date_filter_dropdown_label(filter)
-      icon_attrs = { class: 'fa fa-calendar-day mr-1 text-muted', id: 'date-range-dropdown', 'data-toggle' => 'dropdown',
+      icon_attrs = { class: 'fa fa-arrow-right mr-1 text-dark', id: 'date-range-dropdown', 'data-toggle' => 'dropdown',
                      'aria-haspopup' => 'true', 'aria-expanded' => 'false' }
       dropdown_menu_attrs = { class: 'dropdown-menu search-date-filter',
                               'aria-labelledby' => 'date-range-dropdown',
@@ -19,7 +19,7 @@ module RadCommon
             tag.div(class: 'dropdown-divider') +
             tag.div(class: 'dropdown-header font-weight-bold') { 'Previous' } +
             range_tag('yesterday') + range_tag('last_week') + range_tag('last_month') + range_tag('last_year')
-        end + filter.start_input_label
+        end
       end
     end
 
