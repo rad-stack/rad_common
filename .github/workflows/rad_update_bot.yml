@@ -58,6 +58,5 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           base: main
-          token: ${{ secrets.RC_UPDATE_TOKEN }}
           branch: "rad_common_update-${{ env.RAD_COMMON_VERSION }}"
           title: "Rad Common Update ${{ env.RAD_COMMON_VERSION }}"
