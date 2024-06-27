@@ -8,7 +8,7 @@
       = f.input filter.start_input,
                 as: :date,
                 html5: true,
-                label: filter.start_input_label,
+                label: date_filter_dropdown_label(filter),
                 required: false,
                 label_html: { class: filter.start_label_class },
                 input_html: { value: search.search_params[filter.start_input] || filter.default_start_value.to_s,
