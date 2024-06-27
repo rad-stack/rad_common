@@ -6,7 +6,7 @@ class RadSendGrid
   def validate_email(email)
     return unless sendgrid_enabled?
 
-    response = Rails.cache.fetch(email, expires_in: 10.minutes) do
+    response = Rails.cache.fetch("sendgrid_verify:#{email}", expires_in: 10.minutes) do
       RadRetry.perform_request(retry_count: 2) do
         inner_response = RadRateLimiter.new(limit: 500, period: 5.minutes, key: 'sendgrid_verify').run do
           client._('validations/email').post(request_body: "{\"email\":\"#{email}\"}")
