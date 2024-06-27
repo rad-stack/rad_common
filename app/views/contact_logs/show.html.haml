@@ -19,17 +19,27 @@
         - if @contact_log.email?
           %th Email
           %th Email Type
+          %th Email Status
+          %th SendGrid Event
+          %th SendGrid Type
+          %th Bounce Classification
+          %th SendGrid Reason
         - if @contact_log.sms?
           %th Phone #
           %th SMS Status
-          %th SMS Success
+        %th Success?
       - @contact_log_recipients.each do |record|
         %tr{ class: table_row_style(record) }
           %td= secured_link record.to_user
           - if @contact_log.email?
             %td= record.email
             %td= enum_to_translated_option(record, :email_type)
+            %td= enum_to_translated_option(record, :email_status)
+            %td= record.sendgrid_event
+            %td= record.sendgrid_type
+            %td= record.bounce_classification
+            %td= record.sendgrid_reason
           - if @contact_log.sms?
             %td= record.phone_number
             %td= enum_to_translated_option(record, :sms_status)
-            %td= format_boolean record.sms_success
+          %td= format_boolean record.success

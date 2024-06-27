@@ -9,24 +9,23 @@ directory = Dir.pwd.include?('rad_common') ? "#{Dir.pwd}/spec/dummy" : Dir.pwd
 FileUtils.chdir directory do
   puts "\n== Removing old logs and tempfiles =="
 
-  system 'rm -rf log/'
-  system 'rm -rf tmp/'
-  system 'rm -rf storage/'
-  system 'rm -rf coverage/'
+  system! 'rm -rf log/'
+  system! 'rm -rf tmp/'
+  system! 'rm -rf storage/'
+  system! 'rm -rf coverage/'
 
   puts "== Updating the rad_common gem conservatively =="
-  system 'bundle update rad_common --conservative'
+  system! 'bundle update rad_common --conservative'
 
   puts "== Updating Binstubs =="
-  system 'bundle binstubs rad_common --force'
+  system! 'bundle binstubs rad_common --force'
 
   puts "== Running RC Generator =="
-  system "bin/rails g rad_common:install --force"
+  system! "bin/rails g rad_common:install --force"
 
   puts '== Running Yarn Install =='
-  system 'nvm use'
-  system 'yarn install'
+  system! 'yarn install'
 
   puts '== Running DB Migrate =='
-  system 'bundle exec rails db:migrate'
+  system! 'bundle exec rails db:migrate'
 end

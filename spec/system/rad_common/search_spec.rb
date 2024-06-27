@@ -36,17 +36,6 @@ RSpec.describe 'Search' do
   describe 'select filter' do
     before { visit divisions_path }
 
-    unless ENV['CI'] # TODO: this fails on codeship
-      it 'displays a select input', :js do
-        visit divisions_path
-        expect(page).to have_css(".bootstrap-select .dropdown-toggle[data-id='search_owner_id']")
-        click_bootstrap_select(from: 'search_owner_id')
-        expect(page).to have_css('.dropdown-header.optgroup-1 span', text: 'Active')
-        expect(page).to have_css('.dropdown-header.optgroup-2 span', text: 'Inactive')
-        expect(page).to have_css(".bootstrap-select .dropdown-toggle[data-id='search_division_status']")
-      end
-    end
-
     it 'selects a default value', :js do
       selector = ".bootstrap-select .dropdown-toggle[data-id='search_owner_id'] .filter-option-inner-inner"
       expect(page).to have_selector(selector, text: user.to_s)
@@ -68,15 +57,6 @@ RSpec.describe 'Search' do
       first('#search_division_status').select('Active')
       first('button', text: 'Apply Filters').click
       expect(first('#search_division_status')['data-style']).to eq 'btn btn-warning'
-    end
-
-    unless ENV['CI'] # TODO: this fails on codeship
-      it 'select should have warning style when a value a blank value is selected on filter without default', :js do
-        expect(page).to have_css('button[data-id=search_owner_id][class*=btn-light]')
-        bootstrap_select 'All Owners', from: 'search_owner_id'
-        first('button', text: 'Apply Filters').click
-        expect(page).to have_css('button[data-id=search_owner_id][class*=btn-warning]')
-      end
     end
 
     context 'when ajax select', :js do

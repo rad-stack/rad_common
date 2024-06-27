@@ -25,7 +25,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Tue, 07 May 2024 15:23:28 GMT
+      - Fri, 21 Jun 2024 18:29:39 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -33,11 +33,11 @@ http_interactions:
       Connection:
       - keep-alive
       X-Amzn-Requestid:
-      - f9b95040-72e0-46ea-9d17-cc153fef2bc1
+      - d58d9b31-bbc0-4d34-9e90-b1558326fc13
       X-Amz-Apigw-Id:
-      - XaAZqF77CYcEflA=
+      - Zuv3IEogiYcENng=
       X-Amzn-Trace-Id:
-      - Root=1-663a4770-1ff663c72e7dbf464a3dbe07;Parent=60b7e437180d8d79;Sampled=0;lineage=3bae0364:0
+      - Root=1-6675c693-6b8d0a5d26034b7c41720b7b;Parent=1759060922952727;Sampled=0;lineage=3bae0364:0
       Access-Control-Allow-Methods:
       - HEAD, GET, PUT, POST, DELETE, OPTIONS, PATCH
       Access-Control-Max-Age:
@@ -59,19 +59,19 @@ http_interactions:
       X-Client-Ff:
       - '1000'
       X-Ratelimit-Remaining:
-      - '6'
+      - '5'
       X-Ratelimit-Limit:
       - '7'
       X-Ratelimit-Reset:
-      - '1715095409'
+      - '1718994580'
       Twilio-Request-Id:
-      - RQ2g92KT3Zxt4Bh1n5nicc05EqwAh
+      - RQ2iCVWlzKNOQD0emZ55xrNOKaE7k
       X-Envoy-Upstream-Service-Time:
-      - '319'
+      - '240'
       Powered-By:
       - Mako
     body:
       encoding: UTF-8
       string: '{"result":{"email":"support@rubygems.co","verdict":"Invalid","score":0,"local":"support","host":"rubygems.co","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":false,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"38.85.141.230"}}'
-  recorded_at: Tue, 07 May 2024 15:23:28 GMT
+  recorded_at: Fri, 21 Jun 2024 18:29:39 GMT
 recorded_with: VCR 6.2.0

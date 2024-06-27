@@ -8,7 +8,7 @@ http_interactions:
       string: Channel=sms&To=%2B1<TEST_MOBILE_PHONE_STRIPPED>
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -25,7 +25,7 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Tue, 07 May 2024 15:23:25 GMT
+      - Fri, 21 Jun 2024 18:29:35 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -44,9 +44,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQ12519e7f8e92a8c6939dde52fe6fcaee
+      - RQ8842b083d7aad373deafe7ccc4f5d9b2
       Twilio-Request-Duration:
-      - '0.130'
+      - '0.291'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -59,12 +59,12 @@ http_interactions:
       - verify.twilio.com
     body:
       encoding: UTF-8
-      string: '{"status": "pending", "payee": null, "date_updated": "2024-05-07T15:23:25Z",
-        "send_code_attempts": [{"attempt_sid": "VL7079573b38d9a9336240682060934503",
-        "channel": "sms", "time": "2024-05-07T15:23:25.000Z"}], "account_sid": "AC803cc481ffe11bab268fcfb8f247dd59",
+      string: '{"status": "pending", "payee": null, "date_updated": "2024-06-21T18:29:35Z",
+        "send_code_attempts": [{"attempt_sid": "VL9655a337a45db60218ccaa595ec19a0a",
+        "channel": "sms", "time": "2024-06-21T18:29:35.251Z"}], "account_sid": "AC803cc481ffe11bab268fcfb8f247dd59",
         "to": "+1<TEST_MOBILE_PHONE_STRIPPED>", "amount": null, "valid": false, "lookup":
-        {"carrier": null}, "url": "https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications/VE1c5a4a3b046985bcb4f7aacba8060ca7",
-        "sid": "VE1c5a4a3b046985bcb4f7aacba8060ca7", "date_created": "2024-05-07T15:23:25Z",
+        {"carrier": null}, "url": "https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications/VEf9ca6c7e13d052548d52aab4e47abfd1",
+        "sid": "VEf9ca6c7e13d052548d52aab4e47abfd1", "date_created": "2024-06-21T18:29:35Z",
         "service_sid": "<TWILIO_ALT_VERIFY_SERVICE_SID>", "channel": "sms"}'
-  recorded_at: Tue, 07 May 2024 15:23:25 GMT
+  recorded_at: Fri, 21 Jun 2024 18:29:35 GMT
 recorded_with: VCR 6.2.0

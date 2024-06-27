@@ -33,8 +33,8 @@ RSpec.describe RadCommon::AppInfo, type: :service do
     subject { service.audited_models }
 
     let(:result) do
-      %w[Attorney Category Client Company Division NotificationSecurityRole NotificationSetting SavedSearchFilter
-         SecurityRole Status User UserClient UserSecurityRole]
+      %w[Attorney Category Client Company ContactLog ContactLogRecipient Division NotificationSecurityRole
+         NotificationSetting SavedSearchFilter SecurityRole Status User UserClient UserSecurityRole]
     end
 
     it { is_expected.to eq result }

@@ -2,9 +2,12 @@ require 'rails_helper'
 
 describe 'SendgridStatuses' do
   let(:deliveries) { ActionMailer::Base.deliveries }
+  let(:email) { Faker::Internet.email }
+  let(:contact_log) { create :contact_log, :email }
 
   before do
     create :admin
+    create :contact_log_recipient, :email, email: email, contact_log: contact_log
     deliveries.clear
   end
 
@@ -13,8 +16,9 @@ describe 'SendgridStatuses' do
       { _json: [{ event: 'bounce',
                   type: 'block',
                   bounce_classification: 'Reputation',
-                  email: Faker::Internet.email,
-                  host_name: RadConfig.host_name! }] }
+                  email: email,
+                  host_name: RadConfig.host_name!,
+                  contact_log_id: contact_log.id }] }
     end
 
     it 'notifies' do
