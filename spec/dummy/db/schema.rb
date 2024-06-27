@@ -137,9 +137,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_11_203430) do
     t.string "phone_number"
     t.integer "email_type"
     t.integer "sms_status"
-    t.boolean "sms_success", default: false, null: false
+    t.boolean "success", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "email_status"
+    t.string "sendgrid_event"
+    t.string "sendgrid_type"
+    t.string "bounce_classification"
+    t.string "sendgrid_reason"
+    t.boolean "notify_on_fail", default: true, null: false
     t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
     t.index ["email"], name: "index_contact_log_recipients_on_email"
     t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"
@@ -150,7 +156,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_11_203430) do
     t.string "from_number"
     t.bigint "from_user_id"
     t.string "sms_media_url"
-    t.boolean "sms_sent", default: true, null: false
+    t.boolean "sent", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "sms_opt_out_message_sent", default: false, null: false
@@ -160,14 +166,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_11_203430) do
     t.integer "service_type", default: 0, null: false
     t.string "record_type"
     t.bigint "record_id"
-    t.string "content", null: false
+    t.string "content"
     t.index ["created_at"], name: "index_contact_logs_on_created_at"
     t.index ["from_number"], name: "index_contact_logs_on_from_number"
     t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
     t.index ["record_type", "record_id"], name: "index_contact_logs_on_record"
+    t.index ["sent"], name: "index_contact_logs_on_sent"
     t.index ["service_type"], name: "index_contact_logs_on_service_type"
     t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
-    t.index ["sms_sent"], name: "index_contact_logs_on_sms_sent"
   end
 
   create_table "divisions", force: :cascade do |t|

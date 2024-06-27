@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Jun 2024 12:13:33 GMT
+      - Fri, 21 Jun 2024 18:24:45 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -37,5 +37,5 @@ http_interactions:
         Crosse","carrier_route":"R017","congressional_district":"03","rdi":"Commercial","elot_sequence":"0184","elot_sort":"A","latitude":43.87811,"longitude":-91.19573,"precision":"Zip9","time_zone":"Central","utc_offset":-6,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","enhanced_match":"postal-match"}}]
 
         '
-  recorded_at: Fri, 07 Jun 2024 12:13:32 GMT
+  recorded_at: Fri, 21 Jun 2024 18:24:45 GMT
 recorded_with: VCR 6.2.0
