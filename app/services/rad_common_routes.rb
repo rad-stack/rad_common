@@ -44,6 +44,7 @@ module RadCommonRoutes
 
         resources :sentry_tests, only: :new
         resources :contact_logs, only: %i[index show]
+        resources :contact_log_recipients, only: :show
         resources :saved_search_filters, only: :destroy
         resources :user_security_roles, only: :show
         resources :user_clients, only: %i[create destroy]
