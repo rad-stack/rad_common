@@ -424,6 +424,7 @@ Seeder.new.seed!
           apply_migration '20240602130347_contact_log_sendgrid_stuff.rb'
           apply_migration '20240604194517_more_sendgrid_stuff.rb'
           apply_migration '20240611203430_fix_boolean_nulls_defaults.rb'
+          apply_migration '20240629114200_fix_contact_log_sms_status.rb'
         end
 
         def installed_app_name
