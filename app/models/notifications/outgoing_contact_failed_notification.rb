@@ -25,7 +25,7 @@ module Notifications
     end
 
     def subject_record
-      user
+      contact_log
     end
 
     private
@@ -35,7 +35,11 @@ module Notifications
       end
 
       def contact_description
-        RadEnum.new(ContactLog, 'service_type').translation(payload.contact_log.service_type)
+        RadEnum.new(ContactLog, 'service_type').translation(contact_log.service_type)
+      end
+
+      def contact_log
+        payload.contact_log
       end
 
       def user
