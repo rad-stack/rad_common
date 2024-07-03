@@ -31,7 +31,6 @@
             %th Reason
             %td= @contact_log_recipient.sendgrid_reason
 
-- if @contact_log_recipient.to_user.present?
-  = render 'layouts/email_action',
-           message: 'Click here to view the details.',
-           button_text: 'View', button_url: user_url(@contact_log_recipient.to_user)
+= render 'layouts/email_action',
+         message: 'Click here to view the details.',
+         button_text: 'View', button_url: contact_log_url(@contact_log_recipient.contact_log)
