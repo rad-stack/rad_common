@@ -4,10 +4,10 @@ describe 'SendgridStatuses' do
   let(:deliveries) { ActionMailer::Base.deliveries }
   let(:email) { Faker::Internet.email }
   let(:contact_log) { create :contact_log, :email }
+  let!(:contact_log_recipient) { create :contact_log_recipient, :email, email: email, contact_log: contact_log }
 
   before do
     create :admin
-    create :contact_log_recipient, :email, email: email, contact_log: contact_log
     deliveries.clear
   end
 
@@ -25,6 +25,13 @@ describe 'SendgridStatuses' do
       expect {
         post '/sendgrid_statuses', params: params
       }.to change(deliveries, :count).by(1)
+    end
+
+    it 'updates status of contact log' do
+      expect {
+        post '/sendgrid_statuses', params: params
+        contact_log_recipient.reload
+      }.to change(contact_log_recipient, :email_status).from('delivered').to('bounce').and change(contact_log_recipient, :bounce_classification).from(nil).to('Reputation')
     end
   end
 
