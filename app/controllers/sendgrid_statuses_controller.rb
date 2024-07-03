@@ -5,6 +5,8 @@ class SendgridStatusesController < ApplicationController
   def create
     skip_authorization
 
+    puts "debugging sendgrid: #{params}" # TODO: remove after debugging
+
     if valid?
       content.each do |item|
         SendgridStatusReceiverJob.perform_later permitted_params(item)

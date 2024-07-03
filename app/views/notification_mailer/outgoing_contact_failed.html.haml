@@ -14,14 +14,10 @@
           %tr
             %th Phone #:
             %td= @contact_log_recipient.phone_number
-        - if @contact_log_recipient.sendgrid_event.present?
+        - if @contact_log_recipient.email_status.present?
           %tr
-            %th Event:
-            %td= @contact_log_recipient.sendgrid_event
-        - if @contact_log_recipient.sendgrid_type.present?
-          %tr
-            %th Type:
-            %td= @contact_log_recipient.sendgrid_type
+            %th Status:
+            %td= ApplicationController.helpers.enum_to_translated_option(@contact_log_recipient, :email_status)
         - if @contact_log_recipient.bounce_classification.present?
           %tr
             %th Bounce Classification

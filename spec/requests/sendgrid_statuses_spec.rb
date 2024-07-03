@@ -15,6 +15,7 @@ describe 'SendgridStatuses' do
     let(:params) do
       { _json: [{ event: 'bounce',
                   type: 'block',
+                  reason: '500 unknown recipient',
                   bounce_classification: 'Reputation',
                   email: email,
                   host_name: RadConfig.host_name!,
@@ -31,7 +32,10 @@ describe 'SendgridStatuses' do
       expect {
         post '/sendgrid_statuses', params: params
         contact_log_recipient.reload
-      }.to change(contact_log_recipient, :email_status).from('delivered').to('bounce').and change(contact_log_recipient, :bounce_classification).from(nil).to('Reputation')
+      }.to change(contact_log_recipient, :email_status)
+        .from('delivered').to('bounce')
+        .and change(contact_log_recipient, :bounce_classification).from(nil).to('Reputation')
+        .and change(contact_log_recipient, :sendgrid_reason).from(nil).to('500 unknown recipient')
     end
   end
 

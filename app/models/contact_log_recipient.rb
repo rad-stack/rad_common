@@ -35,11 +35,8 @@ class ContactLogRecipient < ApplicationRecord
 
   validates :sms_status, presence: true, if: -> { contact_log&.sms? && contact_log&.outgoing? }
   validates :email_status, presence: true, if: -> { contact_log&.email? }
-
   validates :sms_status, absence: true, if: -> { contact_log&.email? || contact_log&.incoming? }
-
-  validates :email_status, :sendgrid_event, :sendgrid_type, :bounce_classification, :sendgrid_reason,
-            absence: true, if: -> { contact_log&.sms? }
+  validates :email_status, :bounce_classification, :sendgrid_reason, absence: true, if: -> { contact_log&.sms? }
 
   validate :validate_service_type
   validate :validate_incoming_fields

@@ -79,7 +79,10 @@ class RadSendgridStatusReceiver
       # we can also add a uniqueness check to prevent the scenario further upstream
       raise "multiple recipients with same email #{email} for contact log #{contact_log.id}" if recipients.size > 1
 
-      recipients.first.update! email_status: event, bounce_classification: bounce_classification, notify_on_fail: @notify
+      recipients.first.update! email_status: event,
+                               sendgrid_reason: reason,
+                               bounce_classification: bounce_classification,
+                               notify_on_fail: @notify
     end
 
     def contact_log

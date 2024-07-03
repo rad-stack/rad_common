@@ -20,8 +20,6 @@
           %th Email
           %th Email Type
           %th Email Status
-          %th SendGrid Event
-          %th SendGrid Type
           %th Bounce Classification
           %th SendGrid Reason
         - if @contact_log.sms?
@@ -35,8 +33,6 @@
             %td= record.email
             %td= enum_to_translated_option(record, :email_type)
             %td= enum_to_translated_option(record, :email_status)
-            %td= record.sendgrid_event
-            %td= record.sendgrid_type
             %td= record.bounce_classification
             %td= record.sendgrid_reason
           - if @contact_log.sms?
