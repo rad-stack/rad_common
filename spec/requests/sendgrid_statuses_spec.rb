@@ -16,7 +16,6 @@ describe 'SendgridStatuses' do
       { _json: [{ event: 'bounce',
                   type: 'block',
                   reason: '500 unknown recipient',
-                  bounce_classification: 'Reputation',
                   email: email,
                   host_name: RadConfig.host_name!,
                   contact_log_id: contact_log.id }] }
@@ -34,7 +33,6 @@ describe 'SendgridStatuses' do
         contact_log_recipient.reload
       }.to change(contact_log_recipient, :email_status)
         .from('delivered').to('bounce')
-        .and change(contact_log_recipient, :bounce_classification).from(nil).to('Reputation')
         .and change(contact_log_recipient, :sendgrid_reason).from(nil).to('500 unknown recipient')
     end
   end

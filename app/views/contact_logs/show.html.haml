@@ -20,7 +20,6 @@
           %th Email
           %th Email Type
           %th Email Status
-          %th Bounce Classification
           %th SendGrid Reason
         - if @contact_log.sms?
           %th Phone #
@@ -33,7 +32,6 @@
             %td= record.email
             %td= enum_to_translated_option(record, :email_type)
             %td= enum_to_translated_option(record, :email_status)
-            %td= record.bounce_classification
             %td= record.sendgrid_reason
           - if @contact_log.sms?
             %td= record.phone_number

@@ -32,10 +32,6 @@ class RadSendgridStatusReceiver
     @content[:reason]
   end
 
-  def bounce_classification
-    @content[:bounce_classification]
-  end
-
   def record_id
     @content[:record_id]
   end
@@ -79,10 +75,7 @@ class RadSendgridStatusReceiver
       # we can also add a uniqueness check to prevent the scenario further upstream
       raise "multiple recipients with same email #{email} for contact log #{contact_log.id}" if recipients.size > 1
 
-      recipients.first.update! email_status: event,
-                               sendgrid_reason: reason,
-                               bounce_classification: bounce_classification,
-                               notify_on_fail: @notify
+      recipients.first.update! email_status: event, sendgrid_reason: reason, notify_on_fail: @notify
     end
 
     def contact_log

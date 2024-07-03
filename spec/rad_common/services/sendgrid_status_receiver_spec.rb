@@ -9,12 +9,7 @@ describe SendgridStatusReceiver, type: :service do
   let!(:contact_log_recipient) { create :contact_log_recipient, :email, contact_log: contact_log, email: user.email }
 
   let(:content) do
-    { event: event_type,
-      type: 'block',
-      bounce_classification: 'Reputation',
-      email: user.email,
-      host_name: host_name,
-      contact_log_id: contact_log.id }
+    { event: event_type, type: 'block', email: user.email, host_name: host_name, contact_log_id: contact_log.id }
   end
 
   before do

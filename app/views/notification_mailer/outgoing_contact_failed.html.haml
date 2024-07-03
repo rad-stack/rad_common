@@ -18,10 +18,6 @@
           %tr
             %th Status:
             %td= ApplicationController.helpers.enum_to_translated_option(@contact_log_recipient, :email_status)
-        - if @contact_log_recipient.bounce_classification.present?
-          %tr
-            %th Bounce Classification
-            %td= @contact_log_recipient.bounce_classification
         - if @contact_log_recipient.sendgrid_reason.present?
           %tr
             %th Reason
