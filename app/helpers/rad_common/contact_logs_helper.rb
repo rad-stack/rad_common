@@ -7,7 +7,8 @@ module RadCommon
                :from_number,
                :from_email,
                { label: 'From User', value: secured_link(contact_log.from_user) },
-               { label: 'Record', value: secured_link(contact_log.record) },
+               { label: contact_log.record.present? ? contact_log.record_type.titleize : 'Record',
+                 value: secured_link(contact_log.record) },
                :content,
                :sent]
 
