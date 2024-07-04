@@ -19,7 +19,7 @@ RSpec.describe 'ContactLogs' do
   describe 'show' do
     it 'shows the contact_log' do
       visit contact_log_path(contact_log)
-      expect(page).to have_content(contact_log_recipient.contact_log.content)
+      expect(page).to have_content(contact_log.content)
     end
   end
 end
