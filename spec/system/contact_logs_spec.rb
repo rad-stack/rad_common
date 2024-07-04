@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'ContactLogs' do
   let(:user) { create :admin }
   let(:contact_log_recipient) { create :contact_log_recipient, contact_log: contact_log }
-  let(:contact_log) { create :contact_log, record: attorney}
+  let(:contact_log) { create :contact_log, record: attorney }
   let(:attorney) { create :attorney }
 
   before { login_as user, scope: :user }
