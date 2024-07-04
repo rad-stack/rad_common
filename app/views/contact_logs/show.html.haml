@@ -1,5 +1,5 @@
 .card
-  = render 'layouts/card_header'
+  = render 'layouts/card_header', title: 'Contact Log'
   .card-body
     = render 'layouts/show_data_columns',
              data: contact_log_show_data(@contact_log),
