@@ -28,7 +28,7 @@ namespace :rad_common do
 
     Timeout.timeout(session.time_limit) do
       ContactLogRecipient.sms_assumed_failed.each do |record|
-        record.update! sms_status: :failed
+        record.sms_assume_failed!
         session.reset_status
         break if session.timing_out?
       end

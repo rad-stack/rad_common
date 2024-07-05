@@ -58,6 +58,13 @@ class ContactLogRecipient < ApplicationRecord
     success?
   end
 
+  def sms_assume_failed!
+    update! sms_status: :failed
+    return unless record.notify_on_fail?
+
+    Notifications::OutgoingContactFailedNotification.main(self).notify!
+  end
+
   private
 
     def check_success
