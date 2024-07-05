@@ -22,6 +22,13 @@ class ContactLogRecipient < ApplicationRecord
   scope :last_day, -> { joins(:contact_log).where('contact_logs.created_at > ?', 24.hours.ago) }
   scope :sorted, -> { order(:id) }
 
+  scope :sms_assumed_failed, lambda {
+    joins(:contact_log)
+      .where(sms_status: :sent, contact_logs: { sms_log_type: :outgoing, service_type: :sms, sent: true })
+      .where(created_at: ..1.minute.ago)
+      .order(:id)
+  }
+
   ContactLog.service_types.each_key do |service_type|
     scope service_type, -> { joins(:contact_log).where(contact_logs: { service_type: service_type }) }
   end

@@ -23,6 +23,20 @@ namespace :rad_common do
     end
   end
 
+  task ten_minutes: :environment do |task|
+    session = RakeSession.new(task, 5.minutes, 1)
+
+    Timeout.timeout(session.time_limit) do
+      ContactLogRecipient.sms_assumed_failed.each do |record|
+        record.update! sms_status: :failed
+        session.reset_status
+        break if session.timing_out?
+      end
+
+      session.finished
+    end
+  end
+
   task check_database_use: :environment do
     Timeout.timeout(30.minutes) do
       DatabaseUseChecker.generate_report
