@@ -13,7 +13,10 @@ module RadCommon
     end
 
     def show_route_exists_for?(record)
-      Rails.application.routes.url_helpers.respond_to? "#{record.class.table_name.singularize}_path"
+      Rails.application.routes.recognize_path("/#{record.class.table_name}/#{record.id}", method: :get)
+      true
+    rescue ActionController::RoutingError
+      false
     end
 
     def current_instance_variable
