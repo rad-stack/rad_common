@@ -20,7 +20,10 @@ class ContactLogRecipient < ApplicationRecord
   scope :failed, -> { joins(:contact_log).where(success: false) }
   scope :successful, -> { joins(:contact_log).where(success: true) }
   scope :last_day, -> { joins(:contact_log).where('contact_logs.created_at > ?', 24.hours.ago) }
-  scope :sorted, -> { order(:id) }
+
+  scope :sorted, lambda {
+    joins(:contact_log).order('contact_logs.created_at DESC, contact_logs.id DESC, contact_log_recipients.id')
+  }
 
   scope :sms_assumed_failed, lambda {
     joins(:contact_log)
