@@ -16,10 +16,6 @@ module RadCommon
       Rails.application.routes.url_helpers.respond_to? "#{record.class.table_name.singularize}_path"
     end
 
-    def current_instance_variable
-      instance_variable_get("@#{controller_name.classify.underscore}")
-    end
-
     def avatar_image(user, size)
       if RadConfig.avatar? && user.avatar.attached?
         image_tag(user.avatar.variant(resize: '50x50'))

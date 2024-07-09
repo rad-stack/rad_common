@@ -1,24 +1,5 @@
 module RadCommon
   module AuditsHelper
-    def show_auditing?
-      return false if current_user.external?
-      return false if current_instance_variable.blank?
-
-      current_instance_variable.class.name != 'ActiveStorage::Attachment' &&
-        current_instance_variable.respond_to?(:audits) &&
-        current_instance_variable.persisted? &&
-        policy(current_instance_variable).audit?
-    end
-
-    def audit_history_link
-      "/rad_common/audits/?auditable_type=#{current_instance_variable.class}&auditable" \
-        "_id=#{current_instance_variable.id}"
-    end
-
-    def user_audit_history_link(user)
-      "/rad_common/audits/?#{{ search: { user_id: user.id } }.to_query}"
-    end
-
     def display_audited_changes(audit)
       audit_text = formatted_audited_changes(audit)
 

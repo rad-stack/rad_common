@@ -426,6 +426,7 @@ Seeder.new.seed!
           apply_migration '20240611203430_fix_boolean_nulls_defaults.rb'
           apply_migration '20240629114200_fix_contact_log_sms_status.rb'
           apply_migration '20240705173121_more_contact_log_fixes.rb'
+          apply_migration '20240709115421_notify_tool_actions.rb'
         end
 
         def installed_app_name
