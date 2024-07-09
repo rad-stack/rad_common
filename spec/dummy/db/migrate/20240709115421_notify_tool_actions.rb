@@ -1,6 +1,6 @@
 class NotifyToolActions < ActiveRecord::Migration[7.0]
   def change
-    # return unless Rails.env.production?
+    return unless Rails.env.production?
 
     message_body = "The 'Show History' and 'Reset Duplicates' links on the lower right of the page footer has been " \
                    "moved to a button on the top header with an icon of a gear."
