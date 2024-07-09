@@ -13,7 +13,7 @@ RSpec.describe 'AuditHistory', type: :system do
     fill_in 'First Name', with: new_name
     click_button 'Save'
 
-    click_link 'Show History'
+    click_link 'Audit History'
     expect(page).to have_content new_name
     expect(page).to have_content old_name
   end
@@ -28,7 +28,7 @@ RSpec.describe 'AuditHistory', type: :system do
     expect(page).to have_content 'account has been updated successfully'
 
     visit "/users/#{admin.id}"
-    click_link 'Show History'
+    click_link 'Audit History'
 
     expect(page).to have_content 'create attachment'
   end
@@ -38,7 +38,7 @@ RSpec.describe 'AuditHistory', type: :system do
     fill_in 'Name', with: 'Foo'
 
     click_button 'Save'
-    click_link 'Show History'
+    click_link 'Audit History'
     expect(page).to have_content 'create'
     expect(page).to have_content 'Changed Name to Foo'
   end
