@@ -141,9 +141,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_09_115421) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "email_status"
-    t.string "sendgrid_event"
-    t.string "sendgrid_type"
-    t.string "bounce_classification"
     t.string "sendgrid_reason"
     t.boolean "notify_on_fail", default: true, null: false
     t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"

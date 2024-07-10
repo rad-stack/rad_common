@@ -20,7 +20,17 @@ class ContactLogRecipient < ApplicationRecord
   scope :failed, -> { joins(:contact_log).where(success: false) }
   scope :successful, -> { joins(:contact_log).where(success: true) }
   scope :last_day, -> { joins(:contact_log).where('contact_logs.created_at > ?', 24.hours.ago) }
-  scope :sorted, -> { order(:id) }
+
+  scope :sorted, lambda {
+    joins(:contact_log).order('contact_logs.created_at DESC, contact_logs.id DESC, contact_log_recipients.id')
+  }
+
+  scope :sms_assumed_failed, lambda {
+    joins(:contact_log)
+      .where(sms_status: :sent, contact_logs: { sms_log_type: :outgoing, service_type: :sms, sent: true })
+      .where(created_at: ..1.minute.ago)
+      .order(:id)
+  }
 
   ContactLog.service_types.each_key do |service_type|
     scope service_type, -> { joins(:contact_log).where(contact_logs: { service_type: service_type }) }
@@ -35,11 +45,8 @@ class ContactLogRecipient < ApplicationRecord
 
   validates :sms_status, presence: true, if: -> { contact_log&.sms? && contact_log&.outgoing? }
   validates :email_status, presence: true, if: -> { contact_log&.email? }
-
   validates :sms_status, absence: true, if: -> { contact_log&.email? || contact_log&.incoming? }
-
-  validates :email_status, :sendgrid_event, :sendgrid_type, :bounce_classification, :sendgrid_reason,
-            absence: true, if: -> { contact_log&.sms? }
+  validates :email_status, :sendgrid_reason, absence: true, if: -> { contact_log&.sms? }
 
   validate :validate_service_type
   validate :validate_incoming_fields
@@ -52,6 +59,13 @@ class ContactLogRecipient < ApplicationRecord
 
   def active?
     success?
+  end
+
+  def sms_assume_failed!
+    update! sms_status: :failed
+    return unless notify_on_fail?
+
+    Notifications::OutgoingContactFailedNotification.main(self).notify!
   end
 
   private

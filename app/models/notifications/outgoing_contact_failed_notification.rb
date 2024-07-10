@@ -5,11 +5,14 @@ module Notifications
     end
 
     def absolute_user_ids
+      ids = []
+      ids += [from_user.id] if from_user.present?
+
       records = SecurityRole.admin_role.users.active
-      records = records.where.not(id: user.id) if user.present?
+      records = records.where.not(id: to_user.id) if to_user.present?
       raise 'no users to notify' if records.blank?
 
-      records.pluck(:id)
+      ids + records.pluck(:id)
     end
 
     def mailer_class
@@ -25,20 +28,28 @@ module Notifications
     end
 
     def subject_record
-      user
+      contact_log
     end
 
     private
 
       def feed_content_item
-        user.presence || email.presence || phone_number.presence
+        to_user.presence || email.presence || phone_number.presence
       end
 
       def contact_description
-        RadEnum.new(ContactLog, 'service_type').translation(payload.contact_log.service_type)
+        RadEnum.new(ContactLog, 'service_type').translation(contact_log.service_type)
       end
 
-      def user
+      def contact_log
+        payload.contact_log
+      end
+
+      def from_user
+        contact_log.from_user
+      end
+
+      def to_user
         payload.to_user
       end
 
