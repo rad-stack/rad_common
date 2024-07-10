@@ -1,5 +1,10 @@
 name: "RadUpdateBot"
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      rad_sniff_token:
+        description: 'Token used to create pull request'
+        required: true
 jobs:
   test:
     environment: test
@@ -58,6 +63,6 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           base: main
-          token: ${{ secrets.RC_UPDATE_TOKEN }}
+          token: ${{ github.event.inputs.rad_sniff_token }}
           branch: "rad_common_update-${{ env.RAD_COMMON_VERSION }}"
           title: "Rad Common Update ${{ env.RAD_COMMON_VERSION }}"
