@@ -52,6 +52,7 @@ class ContactLogRecipient < ApplicationRecord
   validate :validate_incoming_fields
 
   before_validation :check_success
+  after_validation :assign_to_user
   after_commit :maybe_notify, only: :update
 
   audited
@@ -79,6 +80,17 @@ class ContactLogRecipient < ApplicationRecord
         self.success = sms_status_delivered?
       elsif contact_log.email?
         self.success = email_status_delivered?
+      end
+    end
+
+    def assign_to_user
+      return if to_user.present?
+
+      if email.present?
+        self.to_user = User.find_by(email: email)
+      elsif phone_number.present?
+        users = User.where(mobile_phone: phone_number)
+        self.to_user = users.first if users.size == 1
       end
     end
 
