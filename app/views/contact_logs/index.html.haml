@@ -1,6 +1,7 @@
 .card
-  = render 'layouts/card_header'
+  = render 'layouts/card_header', action_name: 'index'
   .card-body
+    -# TODO: change path here as needed, will it work with paging?
     = render 'layouts/filter', search: @contact_log_search, path: contact_logs_path
     = paginate @contact_logs, theme: 'twitter-bootstrap-4'
 
@@ -10,21 +11,25 @@
 
       - @contact_logs.each do |record|
         %tr{ class: table_row_style(record) }
-          %td= link_to format_datetime(record.created_at), record.contact_log
+          %td= link_to format_datetime(record.created_at), record
           - if RadConfig.twilio_enabled?
-            %td= enum_to_translated_option record.contact_log, :service_type
-            %td= enum_to_translated_option record.contact_log, :sms_log_type
+            %td= enum_to_translated_option record, :service_type
+            %td= enum_to_translated_option record, :sms_log_type
+          %td
+            - if record.from_user.present?
+              %p= secured_link record.from_user
+            %p= record.from_number
+            %p= record.from_email
+          %td
+            - record.contact_log_recipients.each do |recipient|
+              - if recipient.to_user.present?
+                %p= secured_link recipient.to_user
+              %p= recipient.phone_number
+              %p= recipient.email
+          %td= secured_link record.record
+          %td= record.content
           - if RadConfig.twilio_enabled?
-            %td= record.contact_log.from_number
-            %td= record.phone_number
-          %td= record.contact_log.from_email
-          %td= record.email
-          %td= secured_link record.contact_log.from_user
-          %td= secured_link record.to_user
-          %td= secured_link record.contact_log.record
-          %td= record.contact_log.content
-          - if RadConfig.twilio_enabled?
-            %td= format_boolean record.contact_log.sms_opt_out_message_sent
-          %td= format_boolean record.success
+            %td= format_boolean record.sms_opt_out_message_sent
+          %td= format_boolean record.success?
 
     = paginate @contact_logs, theme: 'twitter-bootstrap-4'

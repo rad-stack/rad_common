@@ -282,7 +282,7 @@ class CardPresenter
     end
 
     def tool_actions
-      @tool_actions ||= [show_history_action, reset_duplicates_action].compact
+      @tool_actions ||= [show_history_action, contact_logs_action, reset_duplicates_action].compact
     end
 
     def show_history_action
@@ -296,6 +296,22 @@ class CardPresenter
 
       { label: 'Audit History',
         link: "/rad_common/audits/?auditable_type=#{instance.class}&auditable_id=#{instance.id}" }
+    end
+
+    def contact_logs_action
+      return unless action_name == 'show' &&
+                    instance&.persisted? &&
+                    current_user &&
+                    Pundit.policy!(current_user, ContactLog.new).related_to? &&
+                    contact_logs?
+
+      { label: 'Contact Logs',
+        link: @view_context.related_to_contact_logs_path(related_to_type: instance.class.name,
+                                                         related_to_id: instance.id) }
+    end
+
+    def contact_logs?
+      ContactLog.related_to(instance).limit(1).exists?
     end
 
     def reset_duplicates_action

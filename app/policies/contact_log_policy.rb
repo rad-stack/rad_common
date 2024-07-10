@@ -5,4 +5,5 @@ class ContactLogPolicy < ApplicationPolicy
 
   alias destroy? create?
   alias update? create?
+  alias related_to? index?
 end

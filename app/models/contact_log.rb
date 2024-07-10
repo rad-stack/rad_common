@@ -9,6 +9,19 @@ class ContactLog < ApplicationRecord
 
   scope :sorted, -> { order(created_at: :desc, id: :desc) }
 
+  scope :related_to, lambda { |record|
+    if record.is_a?(User)
+      # TODO: this might not perform well with the sub select
+      query = "(record_type = '#{record.class}' AND record_id = #{record.id}) OR " \
+              "from_user_id = #{record.id} OR " \
+              "id IN (SELECT contact_log_id FROM contact_log_recipients WHERE to_user_id = #{record.id})"
+
+      where(query)
+    else
+      where(record: record)
+    end
+  }
+
   validates :from_user_id, presence: true, if: -> { outgoing? && sms? }
   validates :sms_message_id, presence: true, if: :incoming?
   validates :content, presence: true, if: :sent?
@@ -33,6 +46,17 @@ class ContactLog < ApplicationRecord
       sms_opt_out_message_sent: true,
       contact_log_recipients: { phone_number: to_number }
     )
+  end
+
+  def active?
+    success?
+  end
+
+  def success?
+    recipients = contact_log_recipients
+    return false if recipients.none?
+
+    !recipients.where(success: false).exists?
   end
 
   private

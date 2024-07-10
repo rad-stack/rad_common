@@ -42,10 +42,13 @@ module RadCommonRoutes
           end
         end
 
-        resources :sentry_tests, only: :new
-        resources :contact_logs, only: %i[index show]
+        resources :contact_logs, only: %i[index show] do
+          get :related_to, on: :collection
+        end
+
         resources :contact_log_recipients, only: :show
         resources :saved_search_filters, only: :destroy
+        resources :sentry_tests, only: :new
         resources :user_security_roles, only: :show
         resources :user_clients, only: %i[create destroy]
         resources :json_web_tokens, only: :new
