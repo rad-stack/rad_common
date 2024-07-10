@@ -31,7 +31,7 @@ RSpec.describe PhoneSMSSender, type: :service do
           create :user, mobile_phone: mobile_phone
 
           expect { result }.to change(ContactLogRecipient, :count).by(1)
-          expect(ContactLogRecipient.last.to_user).to be nil
+          expect(ContactLogRecipient.last.to_user).to be_nil
         end
       end
 
