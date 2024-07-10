@@ -19,6 +19,7 @@ class RadAuditSearch < RadCommon::Search
        { input_label: 'Record Type',
          column: :auditable_type,
          options: RadCommon::AppInfo.new.audited_models },
+       { column: :auditable_id, type: RadCommon::EqualsFilter, data_type: :integer, input_label: 'Record ID' },
        { input_label: 'User',
          column: :user_id,
          options: user_array },
@@ -26,7 +27,6 @@ class RadAuditSearch < RadCommon::Search
          column: :action,
          options: %w[create update destroy] },
        { column: :remote_address, type: RadCommon::LikeFilter },
-       { column: :auditable_id, type: RadCommon::EqualsFilter, data_type: :integer },
        { column: 'audited_changes::TEXT', type: RadCommon::LikeFilter, name: :audited_changes }]
     end
 
