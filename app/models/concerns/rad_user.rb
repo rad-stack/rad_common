@@ -33,7 +33,7 @@ module RadUser
 
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
-    scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
+    scope :active, -> { joins(:user_status).where(user_statuses: { active: true }) }
     scope :admins, -> { active.by_permission 'admin' }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
     scope :by_id, -> { order(:id) }
@@ -100,12 +100,8 @@ module RadUser
     end
   end
 
-  def active
-    active_for_authentication?
-  end
-
   def active?
-    active
+    active_for_authentication?
   end
 
   def needs_confirmation?
@@ -167,7 +163,7 @@ module RadUser
   end
 
   def display_style
-    if user_status.active || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
+    if user_status.active? || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
       external? ? 'table-warning' : ''
     else
       'table-danger'
@@ -179,11 +175,11 @@ module RadUser
   end
 
   def active_for_authentication?
-    super && user_status && user_status.active
+    super && user_status && user_status.active?
   end
 
   def inactive_message
-    if user_status.active
+    if user_status.active?
       super
     else
       :not_approved
