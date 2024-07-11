@@ -26,7 +26,9 @@
                 %p= secured_link recipient.to_user
               %p= recipient.phone_number
               %p= recipient.email
-          %td= secured_link record.record
+          %td
+            %p= record.record_type.titleize
+            %p= secured_link record.record
           %td= record.content
           %td= format_boolean record.sms_opt_out_message_sent
           %td
