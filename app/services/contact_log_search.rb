@@ -1,9 +1,8 @@
 class ContactLogSearch < RadCommon::Search
-  def initialize(params, current_user, related_to_type: nil, related_to_id: nil)
+  def initialize(params, current_user)
     @current_user = current_user
-    @related_to = related_to_type.constantize.find(related_to_id) if related_to_type.present?
 
-    super(query: query_def,
+    super(query: ContactLog.joins(:contact_log_recipients).distinct,
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
@@ -11,12 +10,6 @@ class ContactLogSearch < RadCommon::Search
   end
 
   private
-
-    def query_def
-      return ContactLog.related_to(@related_to) if @related_to.present?
-
-      ContactLog.joins(:contact_log_recipients).distinct
-    end
 
     def filters_def
       [{ start_input_label: 'Start Date',
@@ -42,6 +35,11 @@ class ContactLogSearch < RadCommon::Search
          name: :to_email },
        { input_label: 'Record Type', column: 'contact_logs.record_type', options: record_type_options },
        { input_label: 'Record ID', column: :record_id, type: RadCommon::EqualsFilter, data_type: :integer },
+       { input_label: 'Related To',
+         column: 'related_to',
+         type: RadCommon::EqualsFilter,
+         data_type: :string,
+         scope: :related_to },
        { input_label: 'Content', column: 'content', type: RadCommon::LikeFilter },
        { input_label: 'Success', name: :status, scope_values: %i[failed successful], blank_value_label: 'All Records' }]
     end

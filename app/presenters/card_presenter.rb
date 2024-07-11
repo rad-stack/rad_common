@@ -302,16 +302,15 @@ class CardPresenter
       return unless action_name == 'show' &&
                     instance&.persisted? &&
                     current_user &&
-                    Pundit.policy!(current_user, ContactLog.new).related_to? &&
+                    Pundit.policy!(current_user, ContactLog.new).index? &&
                     contact_logs?
 
       { label: 'Contact Logs',
-        link: @view_context.related_to_contact_logs_path(related_to_type: instance.class.name,
-                                                         related_to_id: instance.id) }
+        link: @view_context.contact_logs_path(search: { related_to_equals: "#{instance.class.name}:#{instance.id}" }) }
     end
 
     def contact_logs?
-      ContactLog.related_to(instance).limit(1).exists?
+      ContactLog.related_to(record_identifier).limit(1).exists?
     end
 
     def reset_duplicates_action

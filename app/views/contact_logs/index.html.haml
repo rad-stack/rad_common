@@ -1,7 +1,6 @@
 .card
-  = render 'layouts/card_header', action_name: 'index'
+  = render 'layouts/card_header'
   .card-body
-    -# TODO: change path here as needed, will it work with paging?
     = render 'layouts/filter', search: @contact_log_search, path: contact_logs_path
     = paginate @contact_logs, theme: 'twitter-bootstrap-4'
 

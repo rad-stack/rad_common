@@ -11,15 +11,18 @@ class ContactLog < ApplicationRecord
   scope :failed, -> { where(contact_log_recipients: { success: false }) }
   scope :successful, -> { where(contact_log_recipients: { success: true }) }
 
-  scope :related_to, lambda { |record|
-    if record.is_a?(User)
-      query = "(record_type = '#{record.class}' AND record_id = #{record.id}) OR " \
-              "from_user_id = #{record.id} OR " \
-              "contact_log_recipients.to_user_id = #{record.id}"
+  scope :related_to, lambda { |record_identifier|
+    class_name = record_identifier.split(':').first
+    id = record_identifier.split(':').last.to_i
+
+    if class_name == 'User'
+      query = "(record_type = '#{class_name}' AND record_id = #{id}) OR " \
+              "from_user_id = #{id} OR " \
+              "contact_log_recipients.to_user_id = #{id}"
 
       joins(:contact_log_recipients).where(query).distinct
     else
-      where(record: record)
+      where(record_id: id)
     end
   }
 

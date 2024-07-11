@@ -12,19 +12,6 @@ class ContactLogsController < ApplicationController
     @contact_log_recipients = @contact_log.contact_log_recipients.sorted
   end
 
-  def related_to
-    authorize ContactLog
-
-    @contact_log_search = ContactLogSearch.new(params,
-                                               current_user,
-                                               related_to_type: params[:related_to_type],
-                                               related_to_id: params[:related_to_id])
-
-    @contact_logs = policy_scope(@contact_log_search.results).page(params[:page])
-
-    render :index
-  end
-
   private
 
     def set_contact_log
