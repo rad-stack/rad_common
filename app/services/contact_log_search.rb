@@ -43,7 +43,7 @@ class ContactLogSearch < RadCommon::Search
        { input_label: 'Record Type', column: 'contact_logs.record_type', options: record_type_options },
        { input_label: 'Record ID', column: :record_id, type: RadCommon::EqualsFilter, data_type: :integer },
        { input_label: 'Content', column: 'content', type: RadCommon::LikeFilter },
-       { input_label: 'Success', name: :status, scope_values: %i[failed successful], blank_value_label: 'All Records' } ]
+       { input_label: 'Success', name: :status, scope_values: %i[failed successful], blank_value_label: 'All Records' }]
     end
 
     def sort_columns_def
