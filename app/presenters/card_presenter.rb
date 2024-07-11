@@ -305,8 +305,11 @@ class CardPresenter
                     Pundit.policy!(current_user, ContactLog.new).index? &&
                     contact_logs?
 
-      { label: 'Contact Logs',
-        link: @view_context.contact_logs_path(search: { related_to_equals: "#{instance.class.name}:#{instance.id}" }) }
+      { label: 'Contact Logs', link: @view_context.contact_logs_path(search: { related_to_equals: record_identifier }) }
+    end
+
+    def record_identifier
+      "#{instance.class.name}:#{instance.id}"
     end
 
     def contact_logs?
