@@ -174,6 +174,7 @@ class CardPresenter
     actions.push(duplicate_action) if include_duplicate_action?
     actions.push(duplicates_action) if include_duplicates_action?
     actions.push(delete_action) if include_delete_action?
+    actions.push(tools_button) if include_tools_button?
 
     actions
   end
@@ -270,6 +271,48 @@ class CardPresenter
         current_user &&
         Pundit.policy!(current_user, klass.new).destroy? &&
         Pundit.policy!(current_user, instance).destroy?
+    end
+
+    def include_tools_button?
+      tool_actions.any?
+    end
+
+    def tools_button
+      @view_context.render 'layouts/card_tools_button', actions: tool_actions
+    end
+
+    def tool_actions
+      @tool_actions ||= [show_history_action, reset_duplicates_action].compact
+    end
+
+    def show_history_action
+      return unless @view_context.user_signed_in? &&
+                    current_user.internal? &&
+                    instance.present? &&
+                    instance.class.name != 'ActiveStorage::Attachment' &&
+                    instance.respond_to?(:audits) &&
+                    instance.persisted? &&
+                    Pundit.policy!(current_user, instance).audit?
+
+      { label: 'Audit History',
+        link: "/rad_common/audits/?auditable_type=#{instance.class}&auditable_id=#{instance.id}" }
+    end
+
+    def reset_duplicates_action
+      return unless @view_context.user_signed_in? &&
+                    current_user.internal? &&
+                    instance.present? &&
+                    instance.respond_to?(:persisted?) &&
+                    instance.persisted? &&
+                    RadCommon::AppInfo.new.duplicates_enabled?(instance.class.name) &&
+                    Pundit.policy!(current_user, instance).reset_duplicates?
+
+      confirm_message = 'This will reset non-duplicates and regenerate possible matches for this record, proceed?'
+
+      { label: 'Reset Duplicates',
+        link: @view_context.reset_duplicates_path(model: instance.class, id: instance.id),
+        method: :put,
+        data: { confirm: confirm_message } }
     end
 
     def delete_action

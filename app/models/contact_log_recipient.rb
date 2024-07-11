@@ -20,7 +20,17 @@ class ContactLogRecipient < ApplicationRecord
   scope :failed, -> { joins(:contact_log).where(success: false) }
   scope :successful, -> { joins(:contact_log).where(success: true) }
   scope :last_day, -> { joins(:contact_log).where('contact_logs.created_at > ?', 24.hours.ago) }
-  scope :sorted, -> { order(:id) }
+
+  scope :sorted, lambda {
+    joins(:contact_log).order('contact_logs.created_at DESC, contact_logs.id DESC, contact_log_recipients.id')
+  }
+
+  scope :sms_assumed_failed, lambda {
+    joins(:contact_log)
+      .where(sms_status: :sent, contact_logs: { sms_log_type: :outgoing, service_type: :sms, sent: true })
+      .where(created_at: ..1.minute.ago)
+      .order(:id)
+  }
 
   ContactLog.service_types.each_key do |service_type|
     scope service_type, -> { joins(:contact_log).where(contact_logs: { service_type: service_type }) }
@@ -35,16 +45,14 @@ class ContactLogRecipient < ApplicationRecord
 
   validates :sms_status, presence: true, if: -> { contact_log&.sms? && contact_log&.outgoing? }
   validates :email_status, presence: true, if: -> { contact_log&.email? }
-
   validates :sms_status, absence: true, if: -> { contact_log&.email? || contact_log&.incoming? }
-
-  validates :email_status, :sendgrid_event, :sendgrid_type, :bounce_classification, :sendgrid_reason,
-            absence: true, if: -> { contact_log&.sms? }
+  validates :email_status, :sendgrid_reason, absence: true, if: -> { contact_log&.sms? }
 
   validate :validate_service_type
   validate :validate_incoming_fields
 
   before_validation :check_success
+  after_validation :assign_to_user
   after_commit :maybe_notify, only: :update
 
   audited
@@ -52,6 +60,13 @@ class ContactLogRecipient < ApplicationRecord
 
   def active?
     success?
+  end
+
+  def sms_assume_failed!
+    update! sms_status: :failed
+    return unless notify_on_fail?
+
+    Notifications::OutgoingContactFailedNotification.main(self).notify!
   end
 
   private
@@ -68,11 +83,21 @@ class ContactLogRecipient < ApplicationRecord
       end
     end
 
+    def assign_to_user
+      return if to_user.present?
+
+      if email.present?
+        self.to_user = User.find_by(email: email)
+      elsif phone_number.present?
+        users = User.where(mobile_phone: phone_number)
+        self.to_user = users.first if users.size == 1
+      end
+    end
+
     def validate_incoming_fields
       return if contact_log.blank? || contact_log.outgoing? || contact_log.email?
 
       errors.add(:to_user_id, 'must be blank') if to_user_id.present?
-      errors.add(:sms_status, 'must be blank') if sms_status.present?
       errors.add(:success, 'must be true') unless success?
     end
 

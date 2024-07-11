@@ -97,7 +97,7 @@ describe 'Users' do
       click_button 'Sign In'
       expect(page).to have_content remember_message
       fill_in 'twilio-verify-token', with: '7721070'
-      click_button 'Verify and Sign in'
+      click_on 'Verify and Sign in'
       expect(page).to have_content 'Signed in successfully'
     end
 
@@ -108,7 +108,7 @@ describe 'Users' do
       fill_in 'user_password', with: password
       click_button 'Sign In'
       fill_in 'twilio-verify-token', with: '123456'
-      click_button 'Verify and Sign in'
+      click_on 'Verify and Sign in'
       expect(page).to have_content('The entered token is invalid')
     end
   end
