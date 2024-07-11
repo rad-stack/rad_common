@@ -84,6 +84,10 @@ describe RadMailer do
         expect(ContactLog.count).to eq 1
         expect(ContactLogRecipient.count).to eq 1
       end
+
+      it 'sets to user if email matches' do
+        expect(ContactLogRecipient.last.to_user).to eq user
+      end
     end
   end
 
