@@ -23,24 +23,17 @@ class ContactLogSearch < RadCommon::Search
          end_input_label: 'End Date',
          column: :created_at,
          type: RadCommon::DateFilter },
-       { input_label: 'Service Type',
-            name: :service_type,
-            scope_values: enum_scopes(ContactLog, :service_type) },
-          { input_label: 'Log Type',
-            name: :log_type,
-            scope_values: enum_scopes(ContactLog, :sms_log_type) },
+       { input_label: 'Service Type', name: :service_type, scope_values: enum_scopes(ContactLog, :service_type) },
+       { input_label: 'Log Type', name: :log_type, scope_values: enum_scopes(ContactLog, :sms_log_type) },
        { input_label: 'From Number',
-            column: 'contact_logs.from_number',
-            type: RadCommon::PhoneNumberFilter,
-            name: :from_number },
-          { input_label: 'To Number',
-            column: 'contact_log_recipients.phone_number',
-            type: RadCommon::PhoneNumberFilter,
-            name: :to_number },
-       { input_label: 'From Email',
-         column: 'contact_logs.from_email',
-         type: RadCommon::LikeFilter,
-         name: :from_email },
+         column: 'contact_logs.from_number',
+         type: RadCommon::PhoneNumberFilter,
+         name: :from_number },
+       { input_label: 'To Number',
+         column: 'contact_log_recipients.phone_number',
+         type: RadCommon::PhoneNumberFilter,
+         name: :to_number },
+       { input_label: 'From Email', column: 'contact_logs.from_email', type: RadCommon::LikeFilter, name: :from_email },
        { input_label: 'To Email',
          column: 'contact_log_recipients.email',
          type: RadCommon::LikeFilter,
@@ -53,15 +46,10 @@ class ContactLogSearch < RadCommon::Search
          column: 'contact_log_recipients.to_user_id',
          options: user_array,
          blank_value_label: 'All Users' },
-       { input_label: 'Record Type',
-         column: 'contact_logs.record_type',
-         options: ContactLog.group(:record_type).select(:record_type).order(:record_type).pluck(:record_type) },
-       { column: :record_id, type: RadCommon::EqualsFilter, data_type: :integer, input_label: 'Record ID' },
-       { column: 'content', type: RadCommon::LikeFilter },
-       { input_label: 'Success',
-         name: :status,
-         scope_values: %i[failed successful],
-         blank_value_label: 'All Records' }]
+       { input_label: 'Record Type', column: 'contact_logs.record_type', options: record_type_options },
+       { input_label: 'Record ID', column: :record_id, type: RadCommon::EqualsFilter, data_type: :integer },
+       { input_label: 'Content', column: 'content', type: RadCommon::LikeFilter },
+       { input_label: 'Success', name: :status, scope_values: %i[failed successful], blank_value_label: 'All Records' }]
     end
 
     def sort_columns_def
@@ -78,5 +66,9 @@ class ContactLogSearch < RadCommon::Search
 
     def user_array
       Pundit.policy_scope!(current_user, User).sorted.pluck(Arel.sql("first_name || ' ' || last_name"), :id)
+    end
+
+    def record_type_options
+      ContactLog.group(:record_type).select(:record_type).order(:record_type).pluck(:record_type)
     end
 end

@@ -56,7 +56,7 @@ class ContactLog < ApplicationRecord
     recipients = contact_log_recipients
     return false if recipients.none?
 
-    !recipients.where(success: false).exists?
+    !recipients.exists? success: false
   end
 
   private

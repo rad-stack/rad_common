@@ -12,9 +12,8 @@
       - @contact_logs.each do |record|
         %tr{ class: table_row_style(record) }
           %td= link_to format_datetime(record.created_at), record
-          - if RadConfig.twilio_enabled?
-            %td= enum_to_translated_option record, :service_type
-            %td= enum_to_translated_option record, :sms_log_type
+          %td= enum_to_translated_option record, :service_type
+          %td= enum_to_translated_option record, :sms_log_type
           %td
             - if record.from_user.present?
               %p= secured_link record.from_user
@@ -28,8 +27,7 @@
               %p= recipient.email
           %td= secured_link record.record
           %td= record.content
-          - if RadConfig.twilio_enabled?
-            %td= format_boolean record.sms_opt_out_message_sent
+          %td= format_boolean record.sms_opt_out_message_sent
           %td= format_boolean record.success?
 
     = paginate @contact_logs, theme: 'twitter-bootstrap-4'
