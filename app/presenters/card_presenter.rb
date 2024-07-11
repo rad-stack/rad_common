@@ -305,15 +305,22 @@ class CardPresenter
                     Pundit.policy!(current_user, ContactLog.new).index? &&
                     contact_logs?
 
-      { label: 'Contact Logs', link: @view_context.contact_logs_path(search: { related_to_equals: record_identifier }) }
-    end
+      link = if instance.is_a?(User)
+               @view_context.contact_logs_path(search: { associated_with_user: instance.id })
+             else
+               @view_context.contact_logs_path(search: { 'contact_logs.record_type': instance.class.name,
+                                                         record_id_equals: instance.id })
+             end
 
-    def record_identifier
-      "#{instance.class.name}:#{instance.id}"
+      { label: 'Contact Logs', link: link }
     end
 
     def contact_logs?
-      ContactLog.related_to(record_identifier).limit(1).exists?
+      # TODO: need to make sure these queries are very fast since it's gonna hit on every show action
+      # return ContactLog.associated_with_user(instance.id).limit(1).exists? if instance.is_a?(User)
+      return true if instance.is_a?(User) # TODO: temporary hack until query optimization is verified
+
+      ContactLog.where(record_type: instance.class.name, record_id: instance.id).limit(1).exists?
     end
 
     def reset_duplicates_action

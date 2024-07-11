@@ -11,19 +11,12 @@ class ContactLog < ApplicationRecord
   scope :failed, -> { where(contact_log_recipients: { success: false }) }
   scope :successful, -> { where(contact_log_recipients: { success: true }) }
 
-  scope :related_to, lambda { |record_identifier|
-    class_name = record_identifier.split(':').first
-    id = record_identifier.split(':').last.to_i
+  scope :associated_with_user, lambda { |user_id|
+    query = "(record_type = 'User' AND record_id = #{user_id}) OR " \
+            "from_user_id = #{user_id} OR " \
+            "contact_log_recipients.to_user_id = #{user_id}"
 
-    if class_name == 'User'
-      query = "(record_type = '#{class_name}' AND record_id = #{id}) OR " \
-              "from_user_id = #{id} OR " \
-              "contact_log_recipients.to_user_id = #{id}"
-
-      joins(:contact_log_recipients).where(query).distinct
-    else
-      where(record_id: id)
-    end
+    joins(:contact_log_recipients).where(query).distinct
   }
 
   validates :from_user_id, presence: true, if: -> { outgoing? && sms? }

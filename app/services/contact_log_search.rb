@@ -12,10 +12,7 @@ class ContactLogSearch < RadCommon::Search
   private
 
     def filters_def
-      [{ start_input_label: 'Start Date',
-         end_input_label: 'End Date',
-         column: :created_at,
-         type: RadCommon::DateFilter },
+      [date_filter,
        { input_label: 'Service Type', name: :service_type, scope_values: enum_scopes(ContactLog, :service_type) },
        { input_label: 'Log Type', name: :log_type, scope_values: enum_scopes(ContactLog, :sms_log_type) },
        user_filter('From User', 'contact_logs.from_user_id'),
@@ -35,11 +32,12 @@ class ContactLogSearch < RadCommon::Search
          name: :to_email },
        { input_label: 'Record Type', column: 'contact_logs.record_type', options: record_type_options },
        { input_label: 'Record ID', column: :record_id, type: RadCommon::EqualsFilter, data_type: :integer },
-       { input_label: 'Related To',
-         column: 'related_to',
-         type: RadCommon::EqualsFilter,
-         data_type: :string,
-         scope: :related_to },
+       { input_label: 'Associated User',
+         column: 'associated_with_user',
+         grouped: true,
+         options: UserGrouper.new(current_user).call,
+         scope: :associated_with_user,
+         blank_value_label: 'All Users' },
        { input_label: 'Content', column: 'content', type: RadCommon::LikeFilter },
        { input_label: 'Success', name: :status, scope_values: %i[failed successful], blank_value_label: 'All Records' }]
     end
@@ -58,6 +56,10 @@ class ContactLogSearch < RadCommon::Search
 
     def record_type_options
       ContactLog.group(:record_type).select(:record_type).order(:record_type).pluck(:record_type)
+    end
+
+    def date_filter
+      { start_input_label: 'Start Date', end_input_label: 'End Date', column: :created_at, type: RadCommon::DateFilter }
     end
 
     def user_filter(label, column)
