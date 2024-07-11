@@ -9,7 +9,9 @@
         = render 'layouts/sort_headers', search: @contact_log_search
 
       - @contact_logs.each do |record|
-        %tr{ class: table_row_style(record) }
+        - card_style = record.table_row_style
+
+        %tr{ class: card_style }
           %td= link_to format_datetime(record.created_at), record
           %td= enum_to_translated_option record, :service_type
           %td= enum_to_translated_option record, :sms_log_type
@@ -27,6 +29,12 @@
           %td= secured_link record.record
           %td= record.content
           %td= format_boolean record.sms_opt_out_message_sent
-          %td= format_boolean record.success?
+          %td
+            - if card_style == 'table-warning'
+              mixed
+            - elsif card_style == 'table-danger'
+              = format_boolean false
+            - else
+              = format_boolean true
 
     = paginate @contact_logs, theme: 'twitter-bootstrap-4'

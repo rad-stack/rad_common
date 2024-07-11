@@ -45,15 +45,19 @@ class ContactLog < ApplicationRecord
     )
   end
 
-  def active?
-    success?
+  def card_style
+    items = contact_log_recipients.pluck(:success).uniq
+    return 'alert-warning' if items.size == 2
+    return 'alert-danger' if items.size == 1 && !items.first
+    return if items.size == 1 && items.first
+
+    raise 'we missed something here'
   end
 
-  def success?
-    recipients = contact_log_recipients
-    return false if recipients.none?
+  def table_row_style
+    return if card_style.blank?
 
-    !recipients.exists? success: false
+    card_style.gsub('alert', 'table')
   end
 
   private
