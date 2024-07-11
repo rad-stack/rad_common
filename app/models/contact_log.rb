@@ -8,15 +8,16 @@ class ContactLog < ApplicationRecord
   enum service_type: { sms: 0, email: 1 }
 
   scope :sorted, -> { order(created_at: :desc, id: :desc) }
+  scope :failed, -> { where(contact_log_recipients: { success: false }) }
+  scope :successful, -> { where(contact_log_recipients: { success: true }) }
 
   scope :related_to, lambda { |record|
     if record.is_a?(User)
-      # TODO: this might not perform well with the sub select
       query = "(record_type = '#{record.class}' AND record_id = #{record.id}) OR " \
               "from_user_id = #{record.id} OR " \
-              "id IN (SELECT contact_log_id FROM contact_log_recipients WHERE to_user_id = #{record.id})"
+              "contact_log_recipients.to_user_id = #{record.id}"
 
-      where(query)
+      joins(:contact_log_recipients).where(query).distinct
     else
       where(record: record)
     end
