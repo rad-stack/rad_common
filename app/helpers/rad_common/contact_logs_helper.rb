@@ -27,4 +27,22 @@ module RadCommon
        :success]
     end
   end
+
+  def email_alert_label(record, attribute)
+    string_label = translated_attribute_label(record, attribute)
+
+    items = ContactLogRecipient.where(email: record.send(attribute)).sorted.limit(1)
+    return string_label if items.none?
+
+    contact_log_recipient = items.first
+    return string_label if contact_log_recipient.success?
+
+    contact_log = contact_log_recipient.contact_log
+    alert_tag = tag.span(class: 'badge badge-danger') { 'Outgoing Email Failed' }
+    content = policy(contact_log).show? ? link_to(alert_tag, contact_log) : alert_tag
+
+    tag.label do
+      safe_join(["#{string_label} ", content])
+    end
+  end
 end
