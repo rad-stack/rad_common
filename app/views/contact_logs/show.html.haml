@@ -26,7 +26,9 @@
         %th Success?
       - @contact_log_recipients.each do |record|
         %tr{ class: table_row_style(record) }
-          %td= link_to record.to_user, record
+          %td
+            - if record.to_user.present?
+              = link_to record.to_user, record
           - if @contact_log.email?
             %td
               - if record.email.present?
