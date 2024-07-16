@@ -8,7 +8,7 @@ RSpec.describe 'ContactLogRecipients' do
   before { login_as user, scope: :user }
 
   describe 'show' do
-    it 'shows the contact_log' do
+    it 'shows the contact_log_recipient' do
       visit contact_log_recipient_path(contact_log_recipient)
       expect(page).to have_content(contact_log.content)
     end
