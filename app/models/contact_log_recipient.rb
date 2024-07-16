@@ -28,7 +28,7 @@ class ContactLogRecipient < ApplicationRecord
   scope :sms_assumed_failed, lambda {
     joins(:contact_log)
       .where(sms_status: :sent, contact_logs: { sms_log_type: :outgoing, service_type: :sms, sent: true })
-      .where(created_at: ..5.minutes.ago)
+      .where(created_at: ..3.hours.ago)
       .order(:id)
   }
 

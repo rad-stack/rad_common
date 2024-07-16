@@ -1,9 +1,7 @@
 class ContactLogRecipientsController < ApplicationController
   before_action :set_contact_log_recipient, only: :show
 
-  def show
-    redirect_to @contact_log_recipient.contact_log
-  end
+  def show; end
 
   private
 
