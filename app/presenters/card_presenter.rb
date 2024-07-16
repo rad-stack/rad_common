@@ -320,7 +320,7 @@ class CardPresenter
       # return ContactLog.associated_with_user(instance.id).limit(1).exists? if instance.is_a?(User)
       return true if instance.is_a?(User) # TODO: temporary hack until query optimization is verified
 
-      ContactLog.where(record_type: instance.class.name, record_id: instance.id).limit(1).exists?
+      ContactLog.where(record: instance).limit(1).exists?
     end
 
     def reset_duplicates_action
