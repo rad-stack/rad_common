@@ -1,13 +1,11 @@
-- contact_log = @contact_log_recipient.contact_log
-
 .email.row
   .email-col-12
     .email-info-box
       %table.info-table
-        - if contact_log.from_user.present?
+        - if @contact_log.from_user.present?
           %tr
             %th From User:
-            %td= link_to contact_log.from_user, user_url(contact_log.from_user)
+            %td= link_to @contact_log.from_user, user_url(@contact_log.from_user)
 
         - if @contact_log_recipient.to_user.present?
           %tr
@@ -31,19 +29,19 @@
             %th To Phone #:
             %td= @contact_log_recipient.phone_number
 
-        - if contact_log.record.present?
+        - if @contact_log.record.present?
           %tr
-            %th #{contact_log.record_type.titleize}:
+            %th #{@contact_log.record_type.titleize}:
             %td
-              - if ApplicationController.helpers.show_route_exists_for?(contact_log.record)
-                = link_to contact_log.record, url_for(contact_log.record)
+              - if ApplicationController.helpers.show_route_exists_for?(@contact_log.record)
+                = link_to @contact_log.record, url_for(@contact_log.record)
               - else
-                = contact_log.record
+                = @contact_log.record
 
-        - if contact_log.content.present?
+        - if @contact_log.content.present?
           %tr
             %th Content
-            %td= contact_log.content
+            %td= @contact_log.content
 
         - if @contact_log_recipient.email_status.present?
           %tr
@@ -57,4 +55,4 @@
 
 = render 'layouts/email_action',
          message: 'Click here to view the details.',
-         button_text: 'View', button_url: contact_log_url(contact_log)
+         button_text: 'View', button_url: contact_log_url(@contact_log)
