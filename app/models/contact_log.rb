@@ -8,6 +8,16 @@ class ContactLog < ApplicationRecord
   enum service_type: { sms: 0, email: 1 }
 
   scope :sorted, -> { order(created_at: :desc, id: :desc) }
+  scope :failed, -> { where(contact_log_recipients: { success: false }) }
+  scope :successful, -> { where(contact_log_recipients: { success: true }) }
+
+  scope :associated_with_user, lambda { |user_id|
+    query = "(record_type = 'User' AND record_id = #{user_id}) OR " \
+            "from_user_id = #{user_id} OR " \
+            "contact_log_recipients.to_user_id = #{user_id}"
+
+    joins(:contact_log_recipients).where(query).distinct
+  }
 
   validates :from_user_id, presence: true, if: -> { outgoing? && sms? }
   validates :sms_message_id, presence: true, if: :incoming?
@@ -33,6 +43,21 @@ class ContactLog < ApplicationRecord
       sms_opt_out_message_sent: true,
       contact_log_recipients: { phone_number: to_number }
     )
+  end
+
+  def card_style
+    items = contact_log_recipients.pluck(:success).uniq
+    return 'alert-warning' if items.size == 2
+    return 'alert-danger' if items.blank? || (items.size == 1 && !items.first) # TODO: should blank even happen?
+    return if items.size == 1 && items.first
+
+    raise 'we missed something here'
+  end
+
+  def table_row_style
+    return if card_style.blank?
+
+    card_style.gsub('alert', 'table')
   end
 
   private

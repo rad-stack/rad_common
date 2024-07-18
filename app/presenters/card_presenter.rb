@@ -282,7 +282,7 @@ class CardPresenter
     end
 
     def tool_actions
-      @tool_actions ||= [show_history_action, reset_duplicates_action].compact
+      @tool_actions ||= [show_history_action, contact_logs_action, reset_duplicates_action].compact
     end
 
     def show_history_action
@@ -296,6 +296,31 @@ class CardPresenter
 
       { label: 'Audit History',
         link: "/rad_common/audits/?auditable_type=#{instance.class}&auditable_id=#{instance.id}" }
+    end
+
+    def contact_logs_action
+      return unless action_name == 'show' &&
+                    instance&.persisted? &&
+                    current_user &&
+                    Pundit.policy!(current_user, ContactLog.new).index? &&
+                    contact_logs?
+
+      link = if instance.is_a?(User)
+               @view_context.contact_logs_path(search: { associated_with_user: instance.id })
+             else
+               @view_context.contact_logs_path(search: { 'contact_logs.record_type': instance.class.name,
+                                                         record_id_equals: instance.id })
+             end
+
+      { label: 'Contact Logs', link: link }
+    end
+
+    def contact_logs?
+      # TODO: need to make sure these queries are very fast since it's gonna hit on every show action
+      # return ContactLog.associated_with_user(instance.id).limit(1).exists? if instance.is_a?(User)
+      return true if instance.is_a?(User) # TODO: temporary hack until query optimization is verified
+
+      ContactLog.where(record: instance).limit(1).exists?
     end
 
     def reset_duplicates_action

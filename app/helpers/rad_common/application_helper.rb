@@ -210,6 +210,16 @@ module RadCommon
       { label: 'Created By', value: secured_link(record.created_by) }
     end
 
+    def translated_attribute_label(record, attribute)
+      translation = I18n.t "activerecord.attributes.#{record.class.to_s.underscore}.#{attribute}"
+
+      if translation.downcase.include?('translation missing')
+        attribute.to_s.titlecase
+      else
+        translation
+      end
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
