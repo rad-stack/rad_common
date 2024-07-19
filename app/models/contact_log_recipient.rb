@@ -53,7 +53,7 @@ class ContactLogRecipient < ApplicationRecord
 
   before_validation :check_success
   after_validation :assign_to_user
-  after_commit :maybe_notify, only: :update
+  after_commit :notify!, only: :update, if: :notify_failure?
 
   audited
   strip_attributes
@@ -113,9 +113,11 @@ class ContactLogRecipient < ApplicationRecord
       end
     end
 
-    def maybe_notify
-      return unless notify_on_fail? && success_previously_changed?(from: true, to: false)
-
+    def notify!
       Notifications::OutgoingContactFailedNotification.main(self).notify!
+    end
+
+    def notify_failure?
+      notify_on_fail? && success_previously_changed?(from: true, to: false)
     end
 end

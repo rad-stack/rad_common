@@ -13,7 +13,7 @@ RSpec.describe ContactLogRecipient do
 
   before { deliveries.clear }
 
-  describe 'maybe_notify' do
+  describe 'notify!' do
     it 'raises error when no admins to notify' do
       expect { contact_log_recipient.update! email_status: :bounce }.to raise_error('no users to notify')
     end
