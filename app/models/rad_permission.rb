@@ -31,6 +31,18 @@ class RadPermission
     User.active.by_permission(name).sorted
   end
 
+  def unused?
+    return false if name == 'admin'
+
+    where_clause = 'users.id NOT IN (SELECT user_security_roles.user_id FROM user_security_roles ' \
+                   'WHERE user_security_roles.security_role_id = ?)'
+
+    return true if User.active.where(where_clause, SecurityRole.admin_role.id).by_permission(name).count < 1
+    return true if users.count == User.active.count
+
+    false
+  end
+
   class << self
     def all
       (SecurityRole.attribute_names - %w[id name created_at updated_at external allow_invite allow_sign_up]).sort
@@ -76,6 +88,10 @@ class RadPermission
       end
 
       categories.group_by { |item| item[:category_name] }.sort_by(&:first)
+    end
+
+    def unused
+      RadPermission.all.select { |item| RadPermission.new(item).unused? }
     end
 
     private

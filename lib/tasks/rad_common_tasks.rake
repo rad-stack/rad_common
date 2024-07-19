@@ -48,24 +48,6 @@ namespace :rad_common do
   end
 
   task unused_permissions: :environment do
-    admin_role_id = SecurityRole.admin_role
-    where_clause = 'users.id NOT IN (SELECT user_security_roles.user_id FROM user_security_roles ' \
-      'WHERE user_security_roles.security_role_id = ?)'
-
-    RadPermission.all.each do |item|
-      next if item == 'admin'
-      next unless User.active.where(where_clause, admin_role_id).by_permission(item).count < 1
-
-      puts item
-    end
-
-    RadPermission.all.each do |item|
-      next if item == 'admin'
-
-      permission = RadPermission.new(item)
-      next unless permission.users.count == User.active.count
-
-      puts item
-    end
+    puts RadPermission.unused
   end
 end
