@@ -48,6 +48,7 @@ namespace :rad_common do
   end
 
   task unused_permissions: :environment do
+    # TODO: need to split this out in 2 categories: 1) no users 2) all users
     puts RadPermission.unused
   end
 end
