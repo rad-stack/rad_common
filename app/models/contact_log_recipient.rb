@@ -70,6 +70,10 @@ class ContactLogRecipient < ApplicationRecord
     Notifications::OutgoingContactFailedNotification.main(self).notify!
   end
 
+  def notified_on_failure?
+    Notification.exists? record: contact_log
+  end
+
   private
 
     def check_success
