@@ -13,8 +13,6 @@ namespace :rad_common do
         model_name.constantize.notify_high_duplicates
       end
 
-      RadCommon::TwilioErrorThresholdChecker.new.check_threshold
-
       global_validity = GlobalValidation.new
       global_validity.override_model = args[:override_model]
       global_validity.run

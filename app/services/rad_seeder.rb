@@ -229,6 +229,5 @@ class RadSeeder
     DEV_NOTIFICATION_TYPES = %w[Notifications::DuplicateFoundAdminNotification
                                 Notifications::GlobalValidityRanLongNotification
                                 Notifications::HighDuplicatesNotification
-                                Notifications::InvalidDataWasFoundNotification
-                                Notifications::TwilioErrorThresholdExceededNotification].freeze
+                                Notifications::InvalidDataWasFoundNotification].freeze
 end
