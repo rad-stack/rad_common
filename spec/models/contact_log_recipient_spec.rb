@@ -83,5 +83,53 @@ RSpec.describe ContactLogRecipient do
         expect(contact_log_recipient.send(:just_a_few_sms_logs?)).to be true
       end
     end
+
+    context 'with a lot of recent logs' do
+      before do
+        10.times do
+          create :contact_log_recipient,
+                 contact_log: create(:contact_log, :sms),
+                 phone_number: admin.mobile_phone,
+                 to_user: admin,
+                 sms_status: :delivered,
+                 success: true
+        end
+      end
+
+      it 'has more than a few recent sms logs' do
+        expect(contact_log_recipient.send(:just_a_few_sms_logs?)).to be false
+      end
+
+      context 'when last few failed' do
+        before { described_class.sorted.limit(6).update_all success: false }
+
+        it { is_expected.to be false }
+
+        it 'last few failed' do
+          expect(contact_log_recipient.send(:last_few_sms_failed?)).to be true
+
+          described_class.sorted.limit(6).update_all success: true
+          expect(contact_log_recipient.send(:last_few_sms_failed?)).to be false
+        end
+      end
+
+      context 'with low success rate' do
+        before { described_class.sorted.limit(6).update_all success: false }
+
+        it { is_expected.to be false }
+
+        it 'has a low rate' do
+          expect(contact_log_recipient.send(:recent_sms_success_rate).round).to eq 36
+        end
+      end
+
+      context 'with high success rate' do
+        it { is_expected.to be true }
+
+        it 'has a high rate' do
+          expect(contact_log_recipient.send(:recent_sms_success_rate).round).to eq 91
+        end
+      end
+    end
   end
 end
