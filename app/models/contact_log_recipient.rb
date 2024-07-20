@@ -123,7 +123,7 @@ class ContactLogRecipient < ApplicationRecord
     end
 
     def sms_false_positive?
-      contact_log.sms? && contact_log.outgoing? && to_user.present? && sms_mostly_successful?
+      !success? && contact_log.sms? && contact_log.outgoing? && to_user.present? && sms_mostly_successful?
     end
 
     def sms_mostly_successful?
@@ -138,7 +138,7 @@ class ContactLogRecipient < ApplicationRecord
     end
 
     def last_few_sms_failed?
-      recent_sms_logs_to_user.limit(5).pluck(:success).uniq == [false]
+      recent_sms_logs_to_user.size >= 5 && recent_sms_logs_to_user.limit(5).pluck(:success).uniq == [false]
     end
 
     def recent_sms_success_rate

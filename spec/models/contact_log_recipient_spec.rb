@@ -64,5 +64,24 @@ RSpec.describe ContactLogRecipient do
     end
 
     it { is_expected.to be false }
+
+    context 'with only a few recent logs' do
+      before do
+        4.times do
+          create :contact_log_recipient,
+                 contact_log: create(:contact_log, :sms),
+                 phone_number: admin.mobile_phone,
+                 to_user: admin,
+                 sms_status: :delivered,
+                 success: true
+        end
+      end
+
+      it { is_expected.to be false }
+
+      it 'has just a few recent sms logs' do
+        expect(contact_log_recipient.send(:just_a_few_sms_logs?)).to be true
+      end
+    end
   end
 end
