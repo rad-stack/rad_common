@@ -44,12 +44,26 @@ RSpec.describe ContactLogRecipient do
 
       before { create :admin, security_roles: [admin_role] }
 
-      it 'notifies' do
-        expect {
-          contact_log_recipient.sms_assume_failed!
-        }.to change(deliveries, :count).by(1)
+      context 'when assumed failed' do
+        it 'notifies' do
+          expect {
+            contact_log_recipient.sms_assume_failed!
+          }.to change(deliveries, :count).by(1)
 
-        expect(last_email.subject).to include 'Outgoing SMS Failed for'
+          expect(last_email.subject).to include 'Outgoing SMS Failed for'
+        end
+      end
+
+      context 'when SMS status updated' do
+        it 'notifies' do
+          expect(contact_log_recipient.sms_status).to eq 'sent'
+
+          expect {
+            contact_log_recipient.update! sms_status: :undelivered
+          }.to change(deliveries, :count).by(1)
+
+          expect(last_email.subject).to include 'Outgoing SMS Failed for'
+        end
       end
     end
   end
