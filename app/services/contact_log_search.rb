@@ -50,8 +50,9 @@ class ContactLogSearch < RadCommon::Search
        { label: 'To' },
        { label: 'Record' },
        { label: 'Content', column: 'contact_logs.content' },
+       { label: 'Notified on Failure?' },
        { label: 'Opt Out Message Sent?', column: 'contact_logs.sms_opt_out_message_sent' },
-       { label: 'Success' }]
+       { label: 'Success?' }]
     end
 
     def record_type_options

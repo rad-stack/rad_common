@@ -31,6 +31,10 @@
               %p= record.record_type.titleize
               %p= secured_link record.record
           %td= record.content
+          %td
+            - if card_style.present?
+              - record.contact_log_recipients.each do |recipient|
+                %p= format_boolean recipient.notified_on_failure?
           %td= format_boolean record.sms_opt_out_message_sent
           %td
             - if card_style == 'table-warning'

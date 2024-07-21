@@ -53,7 +53,7 @@ class ContactLogRecipient < ApplicationRecord
 
   before_validation :check_success
   after_validation :assign_to_user
-  after_commit :maybe_notify, only: :update
+  after_commit :notify!, only: :update, if: :notify_failure?
 
   audited
   strip_attributes
@@ -65,8 +65,13 @@ class ContactLogRecipient < ApplicationRecord
   def sms_assume_failed!
     update! sms_status: :failed
     return unless notify_on_fail?
+    return if sms_false_positive?
 
-    Notifications::OutgoingContactFailedNotification.main(self).notify!
+    notify!
+  end
+
+  def notified_on_failure?
+    Notification.exists? record: contact_log
   end
 
   private
@@ -113,9 +118,44 @@ class ContactLogRecipient < ApplicationRecord
       end
     end
 
-    def maybe_notify
-      return unless notify_on_fail? && success_previously_changed?(from: true, to: false)
-
+    def notify!
       Notifications::OutgoingContactFailedNotification.main(self).notify!
+    end
+
+    def notify_failure?
+      return false unless notify_on_fail?
+      return success_previously_changed?(from: true, to: false) if contact_log.email?
+
+      sms_status_previously_changed? && sms_status_undelivered?
+    end
+
+    def sms_false_positive?
+      !success? && contact_log.sms? && contact_log.outgoing? && to_user.present? && sms_mostly_successful?
+    end
+
+    def sms_mostly_successful?
+      return false if just_a_few_sms_logs?
+      return false if last_few_sms_failed?
+
+      recent_sms_success_rate > 80
+    end
+
+    def just_a_few_sms_logs?
+      recent_sms_logs_to_user.size < 10
+    end
+
+    def last_few_sms_failed?
+      recent_sms_logs_to_user.size >= 5 && recent_sms_logs_to_user.limit(5).pluck(:success).uniq == [false]
+    end
+
+    def recent_sms_success_rate
+      (recent_sms_logs_to_user.where(success: true).size / (recent_sms_logs_to_user.size * 1.0)) * 100
+    end
+
+    def recent_sms_logs_to_user
+      @recent_sms_logs_to_user ||= to_user.contact_logs_to.joins(:contact_log)
+                                          .where(contact_logs: { service_type: :sms, sms_log_type: :outgoing })
+                                          .where(created_at: 30.days.ago..)
+                                          .sorted
     end
 end
