@@ -71,6 +71,7 @@ module RadUser
 
     validate :validate_email_address
     validate :validate_internal, on: :update
+    validate :validate_twilio_verify
     validate :validate_mobile_phone
     validate :password_excludes_name
     validates :security_roles, presence: true, if: :active?
@@ -241,7 +242,7 @@ module RadUser
   private
 
     def twilio_verify_default
-      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && RadConfig.twilio_verify_all_users?
+      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && (RadConfig.twilio_verify_all_users? || admin?)
     end
 
     def check_defaults
@@ -285,6 +286,14 @@ module RadUser
       return if external? || user_clients.none?
 
       errors.add :external, 'not allowed when clients are assigned to this user'
+    end
+
+    def validate_twilio_verify
+      return unless RadConfig.twilio_verify_enabled?
+      return if twilio_verify_enabled?
+      return unless RadConfig.twilio_verify_all_users? || admin?
+
+      errors.add(:twilio_verify_enabled, 'is required')
     end
 
     def validate_mobile_phone
