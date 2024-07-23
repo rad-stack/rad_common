@@ -9,7 +9,7 @@ class HerokuCommands
       FileUtils.mkdir_p dump_folder
 
       Bundler.with_unbundled_env do
-        url_output = `heroku pg:backups public-url #{app_option(app_name)}`
+        url_output = `heroku pg:backups:url #{app_option(app_name)}`
         backup_url = "\"#{url_output.strip}\""
 
         write_log backup_url
@@ -42,9 +42,9 @@ class HerokuCommands
         end
 
         url_output = if backup_id.present?
-                       `heroku pg:backups public-url #{backup_id} #{app_option(app_name)}`
+                       `heroku pg:backups:url #{backup_id} #{app_option(app_name)}`
                      else
-                       `heroku pg:backups public-url #{app_option(app_name)}`
+                       `heroku pg:backups:url #{app_option(app_name)}`
                      end
 
         backup_url = "\"#{url_output.strip}\""
