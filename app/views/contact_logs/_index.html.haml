@@ -17,7 +17,11 @@
     - card_style = record.table_row_style
 
     %tr{ class: card_style }
-      %td= link_to format_datetime(record.created_at), record
+      %td
+        - if policy(record).show?
+          = link_to format_datetime(record.created_at), record
+        - else
+          = format_datetime record.created_at
       %td= enum_to_translated_option record, :service_type
       %td= enum_to_translated_option record, :sms_log_type
       %td
