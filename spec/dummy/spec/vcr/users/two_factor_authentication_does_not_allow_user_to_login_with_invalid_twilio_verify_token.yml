@@ -8,7 +8,7 @@ http_interactions:
       string: Channel=sms&To=%2B1<TEST_MOBILE_PHONE_STRIPPED>
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -25,7 +25,7 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:35:04 GMT
+      - Fri, 21 Jun 2024 18:29:36 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -44,9 +44,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQc1e0579f29175ada3b4611ae5a60df3e
+      - RQa90570583cda38bf61ca2c7262f2f082
       Twilio-Request-Duration:
-      - '0.135'
+      - '0.114'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -59,15 +59,15 @@ http_interactions:
       - verify.twilio.com
     body:
       encoding: UTF-8
-      string: '{"status": "pending", "payee": null, "date_updated": "2024-01-06T10:35:04Z",
-        "send_code_attempts": [{"attempt_sid": "VL182110a797d3603261f7c68fe16c17d3",
-        "channel": "sms", "time": "2024-01-06T10:35:03.000Z"}, {"attempt_sid": "VLc96ef5550396614027b4ec60a6930871",
-        "channel": "sms", "time": "2024-01-06T10:35:03.000Z"}], "account_sid": "AC803cc481ffe11bab268fcfb8f247dd59",
+      string: '{"status": "pending", "payee": null, "date_updated": "2024-06-21T18:29:36Z",
+        "send_code_attempts": [{"attempt_sid": "VL9655a337a45db60218ccaa595ec19a0a",
+        "channel": "sms", "time": "2024-06-21T18:29:35.251Z"}, {"attempt_sid": "VL5c37765ff3557eaeec4d653f9e3d4ba5",
+        "channel": "sms", "time": "2024-06-21T18:29:36.226Z"}], "account_sid": "AC803cc481ffe11bab268fcfb8f247dd59",
         "to": "+1<TEST_MOBILE_PHONE_STRIPPED>", "amount": null, "valid": false, "lookup":
-        {"carrier": null}, "url": "https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications/VEa56434589a9e0167dfb118c4f69b0a5f",
-        "sid": "VEa56434589a9e0167dfb118c4f69b0a5f", "date_created": "2024-01-06T10:35:03Z",
+        {"carrier": null}, "url": "https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications/VEf9ca6c7e13d052548d52aab4e47abfd1",
+        "sid": "VEf9ca6c7e13d052548d52aab4e47abfd1", "date_created": "2024-06-21T18:29:35Z",
         "service_sid": "<TWILIO_ALT_VERIFY_SERVICE_SID>", "channel": "sms"}'
-  recorded_at: Sat, 06 Jan 2024 10:35:03 GMT
+  recorded_at: Fri, 21 Jun 2024 18:29:36 GMT
 - request:
     method: post
     uri: https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/VerificationCheck
@@ -76,7 +76,7 @@ http_interactions:
       string: Code=123456&To=%2B1<TEST_MOBILE_PHONE_STRIPPED>
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -93,7 +93,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:35:04 GMT
+      - Fri, 21 Jun 2024 18:29:36 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -112,9 +112,9 @@ http_interactions:
       Access-Control-Expose-Headers:
       - ETag
       Twilio-Request-Id:
-      - RQ962ec0f5d789330a0e4e21f717de2737
+      - RQ463bce9a8b581e01e58e0adfa4d50683
       Twilio-Request-Duration:
-      - '0.027'
+      - '0.025'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -127,10 +127,10 @@ http_interactions:
       - verify.twilio.com
     body:
       encoding: UTF-8
-      string: '{"status": "pending", "payee": null, "date_updated": "2024-01-06T10:35:04Z",
+      string: '{"status": "pending", "payee": null, "date_updated": "2024-06-21T18:29:36Z",
         "account_sid": "AC803cc481ffe11bab268fcfb8f247dd59", "to": "+1<TEST_MOBILE_PHONE_STRIPPED>",
-        "amount": null, "valid": false, "sid": "VEa56434589a9e0167dfb118c4f69b0a5f",
-        "date_created": "2024-01-06T10:35:03Z", "service_sid": "<TWILIO_ALT_VERIFY_SERVICE_SID>",
+        "amount": null, "valid": false, "sid": "VEf9ca6c7e13d052548d52aab4e47abfd1",
+        "date_created": "2024-06-21T18:29:35Z", "service_sid": "<TWILIO_ALT_VERIFY_SERVICE_SID>",
         "channel": "sms"}'
-  recorded_at: Sat, 06 Jan 2024 10:35:04 GMT
+  recorded_at: Fri, 21 Jun 2024 18:29:36 GMT
 recorded_with: VCR 6.2.0

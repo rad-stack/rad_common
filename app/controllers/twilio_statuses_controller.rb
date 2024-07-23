@@ -2,18 +2,23 @@ class TwilioStatusesController < ApplicationController
   skip_before_action :authenticate_user!
   skip_before_action :verify_authenticity_token
 
-  before_action :set_twilio_log
+  before_action :set_contact_log
 
   def create
     skip_authorization
-    return if @twilio_log.blank?
 
-    @twilio_log.update! twilio_status: params['MessageStatus']
+    if @contact_log.present?
+      @contact_log.contact_log_recipients.each do |recipient|
+        recipient.update! sms_status: params['MessageStatus']
+      end
+    end
+
+    head :ok
   end
 
   private
 
-    def set_twilio_log
-      @twilio_log = TwilioLog.find_by(message_sid: params['MessageSid'])
+    def set_contact_log
+      @contact_log = ContactLog.sms.find_by(sms_message_id: params['MessageSid'])
     end
 end

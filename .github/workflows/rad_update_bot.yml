@@ -1,5 +1,10 @@
 name: "RadUpdateBot"
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      rad_sniff_token:
+        description: 'Token used to create pull request'
+        required: true
 jobs:
   test:
     environment: test
@@ -28,7 +33,7 @@ jobs:
       - name: Git status
         run: git status
       - name: Install Ruby and gems
-        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+        uses: ruby/setup-ruby@v1
         with:
           bundler-cache: false # TODO: maybe we can get caching working in future see docs https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
       - name: Set up database schema
@@ -47,17 +52,17 @@ jobs:
       # Add or replace test runners here
 
       - name: RC Update
-        run: bin/rc_update --force-rad-common-install
+        run: bin/rc_update
       - name: Capture rad_common version
         run: |
           echo "RAD_COMMON_VERSION=$(bundle show rad_common | grep -oE 'rad_common-([[:alnum:]]+)' | cut -d'-' -f2)" >> "$GITHUB_ENV"
-        # UNCOMMENT BELOW LINES TO DEBUG IN TERMINAL
+        # UNCOMMENT BELOW LINES TO DEBUG IN TERMINAL...
         # - name: Setup upterm session
         # uses: lhotari/action-upterm@v1
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.RC_UPDATE_TOKEN }}
           base: main
+          token: ${{ github.event.inputs.rad_sniff_token }}
           branch: "rad_common_update-${{ env.RAD_COMMON_VERSION }}"
           title: "Rad Common Update ${{ env.RAD_COMMON_VERSION }}"

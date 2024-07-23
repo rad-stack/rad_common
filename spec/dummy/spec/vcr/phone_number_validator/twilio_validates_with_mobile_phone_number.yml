@@ -8,7 +8,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Accept:
@@ -29,22 +29,11 @@ http_interactions:
       Connection:
       - keep-alive
       Date:
-      - Sat, 06 Jan 2024 10:35:07 GMT
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Allow-Headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
+      - Fri, 21 Jun 2024 18:29:41 GMT
       Twilio-Request-Id:
-      - RQ700f107e2830cc9ea01ec210f53cf214
+      - RQd1c9ea5451f28058cc09490acae02c5b
       Twilio-Request-Duration:
-      - '0.059'
+      - '0.024'
       Twilio-Concurrent-Requests:
       - '1'
       X-Shenanigans:
@@ -58,16 +47,19 @@ http_interactions:
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 1dcffd1e5bf97ae0fbec7cbf73534c80.cloudfront.net (CloudFront)
+      - 1.1 f27d77f5cb464d2f833e73d78c3c2ccc.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
-      - ATL58-P4
+      - MIA3-P8
       X-Amz-Cf-Id:
-      - O1CeDf-zgTSNI0VAZdmjOeQW5LvW4nX6PuKnh5h72wHust-_etFs2w==
+      - QGPAeqTAG4M3aYfyHo_IS78c0XJc_Zg6ibClLVNIMAErG0jpsoDe4g==
+      Vary:
+      - Origin
     body:
       encoding: UTF-8
-      string: '{"caller_name": null, "country_code": "US", "phone_number": "+1<TEST_MOBILE_PHONE_STRIPPED>",
-        "national_format": "<TEST_MOBILE_PHONE>", "carrier": {"mobile_country_code":
-        "311", "mobile_network_code": "180", "name": "AT&T Wireless", "type": "mobile",
-        "error_code": null}, "add_ons": null, "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_MOBILE_PHONE_STRIPPED>"}'
-  recorded_at: Sat, 06 Jan 2024 10:35:07 GMT
+      string: '{"phone_number": "+1<TEST_MOBILE_PHONE_STRIPPED>", "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_MOBILE_PHONE_STRIPPED>",
+        "caller_name": null, "national_format": "<TEST_MOBILE_PHONE>", "country_code":
+        "US", "carrier": {"name": "AT&T Wireless", "type": "mobile", "error_code":
+        null, "mobile_country_code": "311", "mobile_network_code": "180"}, "add_ons":
+        null}'
+  recorded_at: Fri, 21 Jun 2024 18:29:41 GMT
 recorded_with: VCR 6.2.0

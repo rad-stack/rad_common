@@ -2,25 +2,4 @@
   - sort_columns = search.sort_columns
 
 - sort_columns.each do |sort_column|
-  %th
-    - if sort_column[:column]
-      :ruby
-        direction = sort_column[:column] == search.sort_column && search.sort_direction == 'asc' ? 'desc' : 'asc'
-        label = sort_column[:label] || sort_column[:column].titleize
-        search_params = { search: search.search_params.merge({ sort: sort_column[:column], direction: direction }) }
-
-      - case search.class.to_s
-      - when 'RadAuditSearch'
-        = link_to label, "/rad_common/audits?#{search_params.to_query}"
-      - when 'LoginActivitySearch'
-        = link_to label, "/rad_common/login_activities?#{search_params.to_query}"
-      - when 'TwilioLogSearch'
-        = link_to label, "/rad_common/twilio_logs?#{search_params.to_query}"
-      - else
-        = link_to label, search_params
-
-      - if sort_column[:column] == search.sort_column
-        - icon = search.sort_direction == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'
-        = tag.i '', class: "#{icon} ml-1"
-    - else
-      = sort_column[:label]
+  = render 'layouts/sort_header', search: search, sort_column: sort_column

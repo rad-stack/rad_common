@@ -15,7 +15,7 @@
       - @clients.each do |record|
         %tr{ class: table_row_style(record) }
           %td= secured_link record
-          %td= format_boolean record.active
+          %td= format_boolean record.active?
           - if show_actions
             %td
               - if policy(record).update?

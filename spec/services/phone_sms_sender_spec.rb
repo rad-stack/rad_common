@@ -2,10 +2,11 @@ require 'rails_helper'
 
 RSpec.describe PhoneSMSSender, type: :service do
   let(:from_user) { create :user }
-  let(:mobile_phone) { '(618) 722-2169' }
+  let(:to_user) { create :user, mobile_phone: '(618) 722-2169' }
+  let(:mobile_phone) { to_user.mobile_phone }
   let(:message) { 'test message' }
-  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, twilio_log_attachment_ids) }
-  let(:twilio_log_attachment_ids) { [] }
+  let(:client) { create :client }
+  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, record: client) }
 
   before { allow(RadRetry).to receive(:exponential_pause) }
 
@@ -14,7 +15,24 @@ RSpec.describe PhoneSMSSender, type: :service do
 
     context 'when operating normally' do
       context 'when successful' do
-        it { is_expected.to be true }
+        it 'is true and creates a contact log' do
+          expect { result }.to change(ContactLog, :count).by(1)
+          expect(result).to be(true)
+          expect(ContactLog.last.from_user).to eq from_user
+          expect(ContactLog.last.record).to eq client
+        end
+
+        it 'sets to user if phone number matches' do
+          expect { result }.to change(ContactLogRecipient, :count).by(1)
+          expect(ContactLogRecipient.last.to_user).to eq to_user
+        end
+
+        it "doesn't set to user if more than one user has the phone number" do
+          create :user, mobile_phone: mobile_phone
+
+          expect { result }.to change(ContactLogRecipient, :count).by(1)
+          expect(ContactLogRecipient.last.to_user).to be_nil
+        end
       end
 
       context 'when failure' do
@@ -31,27 +49,6 @@ RSpec.describe PhoneSMSSender, type: :service do
 
       it 'raises exception' do
         expect { result }.to raise_error RuntimeError
-      end
-    end
-  end
-
-  describe 'twilio_log_attachment' do
-    subject(:message_to_send) { sms_sender.send(:augment_message, message, false) }
-
-    let(:message) { 'Hey check out this document!' }
-    let(:twilio_log_attachment_ids) { [twilio_log_attachment.id] }
-    let(:twilio_log_attachment) do
-      twilio_log_attachment = TwilioLogAttachment.new
-      twilio_log_attachment.attachment.attach(io: file, filename: 'test.pdf')
-      twilio_log_attachment.save!
-      twilio_log_attachment
-    end
-    let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/test.pdf')) }
-    let(:perm_url) { AttachmentUrlGenerator.permanent_attachment_url(twilio_log_attachment.attachment) }
-
-    context 'with other file type besides image' do
-      it 'appends permanent url to message' do
-        expect(message_to_send).to include perm_url
       end
     end
   end
@@ -79,12 +76,7 @@ RSpec.describe PhoneSMSSender, type: :service do
       it { is_expected.to eq "I'm taking your surfboard - To no longer receive text messages, text STOP" }
 
       context 'when opt out message already sent' do
-        before do
-          create :twilio_log,
-                 opt_out_message_sent: true,
-                 sent: true,
-                 to_number: mobile_phone
-        end
+        before { create :contact_log, sms_opt_out_message_sent: true, sent: true, phone_number: mobile_phone }
 
         it { is_expected.to eq "I'm taking your surfboard" }
 

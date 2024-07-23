@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_13_112119) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_10_175508) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -58,7 +58,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_13_112119) do
     t.string "last_name", null: false
     t.string "middle_name"
     t.string "company_name", null: false
-    t.string "phone_number", null: false
+    t.string "phone_number"
     t.string "email", null: false
     t.string "address_1", null: false
     t.string "address_2"
@@ -67,8 +67,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_13_112119) do
     t.string "zipcode", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "address_metadata"
     t.boolean "active", default: true, null: false
+    t.string "mobile_phone"
+    t.jsonb "address_metadata"
   end
 
   create_table "audits", force: :cascade do |t|
@@ -129,6 +130,49 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_13_112119) do
     t.jsonb "address_metadata"
   end
 
+  create_table "contact_log_recipients", force: :cascade do |t|
+    t.bigint "contact_log_id", null: false
+    t.bigint "to_user_id"
+    t.string "email"
+    t.string "phone_number"
+    t.integer "email_type"
+    t.integer "sms_status"
+    t.boolean "success", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "email_status"
+    t.string "sendgrid_reason"
+    t.boolean "notify_on_fail", default: true, null: false
+    t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
+    t.index ["email"], name: "index_contact_log_recipients_on_email"
+    t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"
+    t.index ["to_user_id"], name: "index_contact_log_recipients_on_to_user_id"
+  end
+
+  create_table "contact_logs", force: :cascade do |t|
+    t.string "from_number"
+    t.bigint "from_user_id"
+    t.string "sms_media_url"
+    t.boolean "sent", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "sms_opt_out_message_sent", default: false, null: false
+    t.string "sms_message_id"
+    t.integer "sms_log_type"
+    t.string "from_email"
+    t.integer "service_type", default: 0, null: false
+    t.string "record_type"
+    t.bigint "record_id"
+    t.string "content"
+    t.index ["created_at"], name: "index_contact_logs_on_created_at"
+    t.index ["from_number"], name: "index_contact_logs_on_from_number"
+    t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
+    t.index ["record_type", "record_id"], name: "index_contact_logs_on_record"
+    t.index ["sent"], name: "index_contact_logs_on_sent"
+    t.index ["service_type"], name: "index_contact_logs_on_service_type"
+    t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
+  end
+
   create_table "divisions", force: :cascade do |t|
     t.string "name", null: false
     t.string "code", null: false
@@ -165,7 +209,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_13_112119) do
     t.string "scope"
     t.string "strategy"
     t.string "identity"
-    t.boolean "success"
+    t.boolean "success", default: false, null: false
     t.string "failure_reason"
     t.string "user_type"
     t.bigint "user_id"
@@ -256,13 +300,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_13_112119) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "create_division", default: false, null: false
-    t.boolean "read_division", default: false, null: false
-    t.boolean "update_division", default: false, null: false
-    t.boolean "delete_division", default: false, null: false
     t.boolean "external", default: false, null: false
     t.boolean "manage_user", default: false, null: false
     t.boolean "allow_sign_up", default: false, null: false
     t.boolean "allow_invite", default: false, null: false
+    t.boolean "read_division", default: false, null: false
+    t.boolean "update_division", default: false, null: false
+    t.boolean "delete_division", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 
@@ -283,38 +327,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_13_112119) do
     t.bigint "security_role_id"
     t.index ["security_role_id"], name: "index_system_messages_on_security_role_id"
     t.index ["user_id"], name: "index_system_messages_on_user_id"
-  end
-
-  create_table "twilio_log_attachments", force: :cascade do |t|
-    t.bigint "twilio_log_id"
-    t.string "twilio_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["twilio_log_id"], name: "index_twilio_log_attachments_on_twilio_log_id"
-  end
-
-  create_table "twilio_logs", force: :cascade do |t|
-    t.string "from_number", null: false
-    t.string "to_number", null: false
-    t.bigint "from_user_id"
-    t.bigint "to_user_id"
-    t.string "message", null: false
-    t.string "media_url"
-    t.boolean "sent", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "opt_out_message_sent", default: false, null: false
-    t.string "message_sid"
-    t.integer "twilio_status"
-    t.boolean "success", default: false, null: false
-    t.integer "log_type", null: false
-    t.index ["created_at"], name: "index_twilio_logs_on_created_at"
-    t.index ["from_number"], name: "index_twilio_logs_on_from_number"
-    t.index ["from_user_id"], name: "index_twilio_logs_on_from_user_id"
-    t.index ["opt_out_message_sent"], name: "index_twilio_logs_on_opt_out_message_sent"
-    t.index ["sent"], name: "index_twilio_logs_on_sent"
-    t.index ["to_number"], name: "index_twilio_logs_on_to_number"
-    t.index ["to_user_id"], name: "index_twilio_logs_on_to_user_id"
   end
 
   create_table "user_clients", force: :cascade do |t|
@@ -406,6 +418,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_13_112119) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audits", "users"
+  add_foreign_key "contact_log_recipients", "contact_logs"
+  add_foreign_key "contact_log_recipients", "users", column: "to_user_id"
+  add_foreign_key "contact_logs", "users", column: "from_user_id"
   add_foreign_key "divisions", "categories"
   add_foreign_key "divisions", "users", column: "owner_id"
   add_foreign_key "notification_security_roles", "notification_types"
@@ -417,9 +432,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_13_112119) do
   add_foreign_key "saved_search_filters", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
-  add_foreign_key "twilio_log_attachments", "twilio_logs"
-  add_foreign_key "twilio_logs", "users", column: "from_user_id"
-  add_foreign_key "twilio_logs", "users", column: "to_user_id"
   add_foreign_key "user_clients", "clients"
   add_foreign_key "user_clients", "users"
   add_foreign_key "user_security_roles", "security_roles"

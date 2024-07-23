@@ -17,15 +17,15 @@ module RadUser
     has_many :clients, through: :user_clients, source: :client
     has_many :saved_search_filters, dependent: :destroy
 
-    has_many :twilio_logs_from, class_name: 'TwilioLog',
-                                foreign_key: 'from_user_id',
-                                dependent: :destroy,
-                                inverse_of: :from_user
+    has_many :contact_logs_from, class_name: 'ContactLog',
+                                 foreign_key: 'from_user_id',
+                                 dependent: :destroy,
+                                 inverse_of: :from_user
 
-    has_many :twilio_logs_to, class_name: 'TwilioLog',
-                              foreign_key: 'to_user_id',
-                              dependent: :destroy,
-                              inverse_of: :to_user
+    has_many :contact_logs_to, class_name: 'ContactLogRecipient',
+                               foreign_key: 'to_user_id',
+                               dependent: :destroy,
+                               inverse_of: :to_user
 
     has_one_attached :avatar
 
@@ -33,18 +33,23 @@ module RadUser
 
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
-    scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
+    scope :active, -> { joins(:user_status).where(user_statuses: { active: true }) }
     scope :admins, -> { active.by_permission 'admin' }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
-    scope :by_name, -> { order(:first_name, :last_name) }
     scope :by_id, -> { order(:id) }
-    scope :by_last, -> { order(:last_name, :first_name) }
-    scope :sorted, -> { by_name }
     scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
     scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
     scope :recent_first, -> { order('users.created_at DESC') }
     scope :recent_last, -> { order('users.created_at') }
     scope :except_user, ->(user) { where.not(id: user.id) }
+
+    scope :sorted, lambda {
+      if RadConfig.last_first_user?
+        order(:last_name, :first_name)
+      else
+        order(:first_name, :last_name)
+      end
+    }
 
     scope :by_permission, lambda { |permission|
       raise "missing permission column: #{permission}" unless RadPermission.exists?(permission)
@@ -65,6 +70,7 @@ module RadUser
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
+    validate :validate_internal, on: :update
     validate :validate_mobile_phone
     validate :password_excludes_name
     validates :security_roles, presence: true, if: :active?
@@ -87,15 +93,15 @@ module RadUser
   end
 
   def to_s
-    "#{first_name} #{last_name}"
-  end
-
-  def active
-    active_for_authentication?
+    if RadConfig.last_first_user?
+      "#{last_name}, #{first_name}"
+    else
+      "#{first_name} #{last_name}"
+    end
   end
 
   def active?
-    active
+    active_for_authentication?
   end
 
   def needs_confirmation?
@@ -157,7 +163,7 @@ module RadUser
   end
 
   def display_style
-    if user_status.active || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
+    if user_status.active? || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
       external? ? 'table-warning' : ''
     else
       'table-danger'
@@ -169,11 +175,11 @@ module RadUser
   end
 
   def active_for_authentication?
-    super && user_status && user_status.active
+    super && user_status && user_status.active?
   end
 
   def inactive_message
-    if user_status.active
+    if user_status.active?
       super
     else
       :not_approved
@@ -192,13 +198,19 @@ module RadUser
   end
 
   def send_reset_password_instructions
-    raise "There is an open invitation for this user: #{email}" if needs_accept_invite?
+    if needs_accept_invite?
+      Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
+      return
+    end
 
     super
   end
 
   def pending_any_confirmation
-    raise "There is an open invitation for this user: #{email}" if needs_accept_invite?
+    if needs_accept_invite?
+      Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
+      return
+    end
 
     super
   end
@@ -269,6 +281,12 @@ module RadUser
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
 
+    def validate_internal
+      return if external? || user_clients.none?
+
+      errors.add :external, 'not allowed when clients are assigned to this user'
+    end
+
     def validate_mobile_phone
       return if mobile_phone.present? || user_status.blank? || !user_status.validate_email_phone?
 
@@ -282,7 +300,7 @@ module RadUser
     end
 
     def require_mobile_phone_sms?
-      RadTwilio.new.twilio_enabled? && persisted? && notification_settings.enabled.where(sms: true).count.positive?
+      RadConfig.twilio_enabled? && persisted? && notification_settings.enabled.where(sms: true).count.positive?
     end
 
     def require_mobile_phone_two_factor?

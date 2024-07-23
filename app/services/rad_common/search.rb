@@ -186,11 +186,17 @@ module RadCommon
       end
 
       def active_users
-        Pundit.policy_scope!(current_user, User).active.by_name
+        Pundit.policy_scope!(current_user, User).active.sorted
       end
 
       def inactive_users
-        Pundit.policy_scope!(current_user, User).inactive.by_name
+        Pundit.policy_scope!(current_user, User).inactive.sorted
+      end
+
+      def enum_scopes(model, enum)
+        model.public_send(enum.to_s.pluralize).keys.index_by { |record|
+          RadEnum.new(model, enum).translation(record)
+        }.transform_values(&:to_sym)
       end
   end
 end

@@ -8,18 +8,9 @@ module DuplicatesHelper
              class: 'btn btn-warning btn-sm')]
   end
 
-  def show_reset_duplicates_link?
-    return false if current_user.external?
-
-    record = current_instance_variable
-
-    record.present? && record.respond_to?(:persisted?) && record.persisted? &&
-      RadCommon::AppInfo.new.duplicates_enabled?(record.class.name) && policy(record).reset_duplicates?
-  end
-
   def duplicates_badge_count(model_name)
     unless RadCommon::AppInfo.new.duplicates_enabled?(model_name) &&
-           policy(model_name.constantize.new).index_duplicates?
+           policy(model_name.constantize.new).resolve_duplicates?
       return 0
     end
 

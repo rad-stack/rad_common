@@ -23,13 +23,13 @@ RSpec.describe 'Users', type: :system do
       it 'shows users and limited info' do
         expect(page).to have_content 'Users (1)'
         expect(page).to have_content user.to_s
-        expect(page).not_to have_content user.security_roles.first.name
-        expect(page).not_to have_content ApplicationController.helpers.format_date(user.created_at)
+        expect(page).to have_no_content user.security_roles.first.name
+        expect(page).to have_no_content ApplicationController.helpers.format_date(user.created_at)
 
         if Pundit.policy!(user, user).export?
           expect(page).to have_content 'Export to File'
         else
-          expect(page).not_to have_content 'Export to File'
+          expect(page).to have_no_content 'Export to File'
         end
       end
 
@@ -40,7 +40,7 @@ RSpec.describe 'Users', type: :system do
         if Pundit.policy!(user, User.new).update?
           expect(page).to have_content pending_user.to_s
         else
-          expect(page).not_to have_content pending_user.to_s
+          expect(page).to have_no_content pending_user.to_s
         end
       end
     end
@@ -106,7 +106,7 @@ RSpec.describe 'Users', type: :system do
         if Pundit.policy!(admin, user).export?
           expect(page).to have_content 'Export to File'
         else
-          expect(page).not_to have_content 'Export to File'
+          expect(page).to have_no_content 'Export to File'
         end
 
         expect(page).to have_content external_user.to_s if RadConfig.external_users?
@@ -119,14 +119,14 @@ RSpec.describe 'Users', type: :system do
         if Pundit.policy!(admin, User.new).update?
           expect(page).to have_content pending_user.to_s
         else
-          expect(page).not_to have_content pending_user.to_s
+          expect(page).to have_no_content pending_user.to_s
         end
       end
 
       it 'filters by user type', :external_user_specs do
         external_user.update!(user_status: user.user_status)
         visit users_path(search: { user_status_id: user.user_status_id, external: 'external' })
-        expect(page).not_to have_content user.email
+        expect(page).to have_no_content user.email
         expect(page).to have_content external_user.email
       end
     end
@@ -261,7 +261,7 @@ RSpec.describe 'Users', type: :system do
         let(:last_activity_at) { (Devise.expire_after - 1.day).ago }
 
         it 'does not display reactivate option' do
-          expect(page).not_to have_content("User's account has been expired due to inactivity")
+          expect(page).to have_no_content("User's account has been expired due to inactivity")
         end
       end
     end
@@ -455,7 +455,7 @@ RSpec.describe 'Users', type: :system do
         fill_in 'Email', with: user.email
         click_button 'Resend Confirmation Instructions'
 
-        expect(page).not_to have_content 'not found'
+        expect(page).to have_no_content 'not found'
         expect(page).to have_content message
         expect(page).to have_current_path(new_user_session_path)
       end
@@ -475,7 +475,7 @@ RSpec.describe 'Users', type: :system do
         fill_in 'Email', with: user.email
         click_button 'Resend Unlock Instructions'
 
-        expect(page).not_to have_content 'not found'
+        expect(page).to have_no_content 'not found'
         expect(page).to have_content message
       end
     end
@@ -493,7 +493,7 @@ RSpec.describe 'Users', type: :system do
         fill_in 'Email', with: user.email
         click_button 'Send Me Reset Password Instructions'
 
-        expect(page).not_to have_content 'not found'
+        expect(page).to have_no_content 'not found'
         expect(page).to have_content message
       end
     end

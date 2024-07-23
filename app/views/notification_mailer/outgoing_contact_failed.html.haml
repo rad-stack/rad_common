@@ -1,0 +1,63 @@
+.email.row
+  .email-col-12
+    .email-info-box
+      %table.info-table
+        - if @contact_log.from_user.present?
+          %tr
+            %th From User:
+            %td= link_to @contact_log.from_user, user_url(@contact_log.from_user)
+
+        - if @contact_log_recipient.to_user.present?
+          %tr
+            %th To User:
+            %td= link_to @contact_log_recipient.to_user, user_url(@contact_log_recipient.to_user)
+
+        - if @contact_log_recipient.email.present?
+          %tr
+            %th
+              - if @contact_log_recipient.to?
+                To Email:
+              - else
+                - email_type = ApplicationController.helpers.enum_to_translated_option(@contact_log_recipient,
+                                                                                       :email_type)
+
+                To Email (#{email_type}):
+            %td= @contact_log_recipient.email
+
+        - if @contact_log_recipient.phone_number.present?
+          %tr
+            %th To Phone #:
+            %td= @contact_log_recipient.phone_number
+
+        - if @contact_log.record.present?
+          %tr
+            %th #{@contact_log.record_type.titleize}:
+            %td
+              - if ApplicationController.helpers.show_route_exists_for?(@contact_log.record)
+                = link_to @contact_log.record, url_for(@contact_log.record)
+              - else
+                = @contact_log.record
+
+        - if @contact_log.content.present?
+          %tr
+            %th Content
+            %td= @contact_log.content
+
+        - if @contact_log_recipient.email_status.present?
+          %tr
+            %th Status:
+            %td= ApplicationController.helpers.enum_to_translated_option(@contact_log_recipient, :email_status)
+
+        - if @contact_log_recipient.sms_status.present?
+          %tr
+            %th Status:
+            %td= ApplicationController.helpers.enum_to_translated_option(@contact_log_recipient, :sms_status)
+
+        - if @contact_log_recipient.sendgrid_reason.present?
+          %tr
+            %th Reason:
+            %td= @contact_log_recipient.sendgrid_reason
+
+= render 'layouts/email_action',
+         message: 'Click here to view the details.',
+         button_text: 'View', button_url: contact_log_url(@contact_log)

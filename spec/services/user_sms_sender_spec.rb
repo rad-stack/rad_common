@@ -5,7 +5,8 @@ RSpec.describe UserSMSSender, type: :service do
   let(:user) { create :user, mobile_phone: '(618) 722-2169' }
   let(:message) { 'test message' }
   let(:media_url) { nil }
-  let(:sms_sender) { described_class.new(message, from_user.id, user.id, media_url, false) }
+  let(:division) { create :division }
+  let(:sms_sender) { described_class.new(message, from_user.id, user.id, media_url, false, record: division) }
   let(:last_email) { ActionMailer::Base.deliveries.last }
 
   before do
@@ -24,6 +25,10 @@ RSpec.describe UserSMSSender, type: :service do
 
       context 'when successful SMS' do
         it { is_expected.to be_nil }
+
+        it 'creates a contact log' do
+          expect(ContactLog.order(:created_at).last.record).to eq division
+        end
       end
 
       context 'when successful MMS' do

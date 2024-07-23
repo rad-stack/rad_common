@@ -8,7 +8,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -25,43 +25,46 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:04 GMT
+      - Fri, 21 Jun 2024 18:27:12 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '143'
+      - '136'
       Connection:
       - keep-alive
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Allow-Headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
+      X-Twilio-Error-Code:
+      - '21610'
+      Twilio-Concurrent-Requests:
+      - '1'
       Twilio-Request-Id:
-      - RQce78d742f252b62b10909e3038d8bad7
+      - RQa77f9d4b91761ef1293ba5b8062fa38b
       Twilio-Request-Duration:
       - '0.052'
-      Twilio-Concurrent-Requests:
-      - '1'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
+      Access-Control-Allow-Credentials:
+      - 'true'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
-        "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:03 GMT
+      string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
+  recorded_at: Fri, 21 Jun 2024 18:27:12 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -70,7 +73,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -87,43 +90,46 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:04 GMT
+      - Fri, 21 Jun 2024 18:27:12 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '143'
+      - '136'
       Connection:
       - keep-alive
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Allow-Headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
+      X-Twilio-Error-Code:
+      - '21610'
+      Twilio-Concurrent-Requests:
+      - '1'
       Twilio-Request-Id:
-      - RQc40681a4a8c7e4f981106bc4afb43289
+      - RQ0ebab6e80b079393994c41e543df4cd7
       Twilio-Request-Duration:
-      - '0.038'
-      Twilio-Concurrent-Requests:
-      - '1'
+      - '0.048'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
+      Access-Control-Allow-Credentials:
+      - 'true'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
-        "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:04 GMT
+      string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
+  recorded_at: Fri, 21 Jun 2024 18:27:12 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -132,7 +138,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -149,165 +155,174 @@ http_interactions:
       message: Bad Request
     headers:
       Date:
-      - Sat, 06 Jan 2024 10:34:04 GMT
+      - Fri, 21 Jun 2024 18:27:12 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
       Content-Length:
-      - '143'
+      - '136'
       Connection:
       - keep-alive
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Allow-Headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQc86f6dd6cf98b7cbd780be1275c55a97
-      Twilio-Request-Duration:
-      - '0.038'
+      X-Twilio-Error-Code:
+      - '21610'
       Twilio-Concurrent-Requests:
       - '1'
-      X-Shenanigans:
-      - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
-      X-Api-Domain:
-      - api.twilio.com
-    body:
-      encoding: UTF-8
-      string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
-        "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:04 GMT
-- request:
-    method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
-    body:
-      encoding: UTF-8
-      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
-    headers:
-      User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
-      Accept-Charset:
-      - utf-8
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Accept:
-      - application/json
-      Authorization:
-      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 400
-      message: Bad Request
-    headers:
-      Date:
-      - Sat, 06 Jan 2024 10:34:04 GMT
-      Content-Type:
-      - application/json; charset=utf-8
-      Content-Length:
-      - '143'
-      Connection:
-      - keep-alive
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Allow-Headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
       Twilio-Request-Id:
-      - RQf42f97bf0689f4bf3865128edb678914
-      Twilio-Request-Duration:
-      - '0.039'
-      Twilio-Concurrent-Requests:
-      - '1'
-      X-Shenanigans:
-      - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
-      X-Api-Domain:
-      - api.twilio.com
-    body:
-      encoding: UTF-8
-      string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
-        "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:04 GMT
-- request:
-    method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
-    body:
-      encoding: UTF-8
-      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
-    headers:
-      User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
-      Accept-Charset:
-      - utf-8
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Accept:
-      - application/json
-      Authorization:
-      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 400
-      message: Bad Request
-    headers:
-      Date:
-      - Sat, 06 Jan 2024 10:34:04 GMT
-      Content-Type:
-      - application/json; charset=utf-8
-      Content-Length:
-      - '143'
-      Connection:
-      - keep-alive
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Allow-Headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQ3ec617e36e5ae0deb5840fc4a52fe5c7
+      - RQ6bc66c6832ea583695d7f24f641271ea
       Twilio-Request-Duration:
       - '0.043'
-      Twilio-Concurrent-Requests:
-      - '1'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
+      Access-Control-Allow-Credentials:
+      - 'true'
       X-Shenanigans:
       - none
       X-Powered-By:
       - AT-5000
       X-Home-Region:
       - us1
-      X-Api-Domain:
-      - api.twilio.com
     body:
       encoding: UTF-8
-      string: '{"code": 21610, "message": "Attempt to send to unsubscribed recipient",
-        "more_info": "https://www.twilio.com/docs/errors/21610", "status": 400}'
-  recorded_at: Sat, 06 Jan 2024 10:34:04 GMT
+      string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
+  recorded_at: Fri, 21 Jun 2024 18:27:12 GMT
+- request:
+    method: post
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
+    body:
+      encoding: UTF-8
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
+    headers:
+      User-Agent:
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - application/json
+      Authorization:
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Fri, 21 Jun 2024 18:27:12 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '136'
+      Connection:
+      - keep-alive
+      X-Twilio-Error-Code:
+      - '21610'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQ268b3aa12edb94d6748f1911b4735c44
+      Twilio-Request-Duration:
+      - '0.051'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
+      Access-Control-Allow-Credentials:
+      - 'true'
+      X-Shenanigans:
+      - none
+      X-Powered-By:
+      - AT-5000
+      X-Home-Region:
+      - us1
+    body:
+      encoding: UTF-8
+      string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
+  recorded_at: Fri, 21 Jun 2024 18:27:12 GMT
+- request:
+    method: post
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
+    body:
+      encoding: UTF-8
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
+    headers:
+      User-Agent:
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - application/json
+      Authorization:
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Fri, 21 Jun 2024 18:27:13 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '136'
+      Connection:
+      - keep-alive
+      X-Twilio-Error-Code:
+      - '21610'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQ2248c8f911654b9f33488624b4caa309
+      Twilio-Request-Duration:
+      - '0.049'
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
+      Access-Control-Allow-Credentials:
+      - 'true'
+      X-Shenanigans:
+      - none
+      X-Powered-By:
+      - AT-5000
+      X-Home-Region:
+      - us1
+    body:
+      encoding: UTF-8
+      string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
+  recorded_at: Fri, 21 Jun 2024 18:27:13 GMT
 recorded_with: VCR 6.2.0

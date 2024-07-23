@@ -5,6 +5,8 @@ namespace :rad_common do
     Timeout.timeout(session.time_limit) do
       session.reset_status
 
+      Rails.cache.delete_matched('views/*')
+
       Duplicate.where.not(sort: 500).update_all sort: 500 if Date.current.wday == 1
 
       RadCommon::AppInfo.new.duplicate_models.each do |model_name|
@@ -16,6 +18,20 @@ namespace :rad_common do
       global_validity = GlobalValidation.new
       global_validity.override_model = args[:override_model]
       global_validity.run
+
+      session.finished
+    end
+  end
+
+  task ten_minutes: :environment do |task|
+    session = RakeSession.new(task, 5.minutes, 1)
+
+    Timeout.timeout(session.time_limit) do
+      ContactLogRecipient.sms_assumed_failed.each do |record|
+        record.sms_assume_failed!
+        session.reset_status
+        break if session.timing_out?
+      end
 
       session.finished
     end

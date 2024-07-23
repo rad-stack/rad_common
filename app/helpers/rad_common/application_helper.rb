@@ -16,10 +16,6 @@ module RadCommon
       Rails.application.routes.url_helpers.respond_to? "#{record.class.table_name.singularize}_path"
     end
 
-    def current_instance_variable
-      instance_variable_get("@#{controller_name.classify.underscore}")
-    end
-
     def avatar_image(user, size)
       if RadConfig.avatar? && user.avatar.attached?
         image_tag(user.avatar.variant(resize: '50x50'))
@@ -168,11 +164,11 @@ module RadCommon
     end
 
     def sign_up_roles
-      SecurityRole.allow_sign_up.by_name
+      SecurityRole.allow_sign_up.sorted
     end
 
     def invite_roles
-      SecurityRole.allow_invite.by_name
+      SecurityRole.allow_invite.sorted
     end
 
     def verify_invite
@@ -212,6 +208,16 @@ module RadCommon
 
     def created_by_show_item(record)
       { label: 'Created By', value: secured_link(record.created_by) }
+    end
+
+    def translated_attribute_label(record, attribute)
+      translation = I18n.t "activerecord.attributes.#{record.class.to_s.underscore}.#{attribute}"
+
+      if translation.downcase.include?('translation missing')
+        attribute.to_s.titlecase
+      else
+        translation
+      end
     end
 
     private

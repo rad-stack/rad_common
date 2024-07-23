@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.sendgrid.com/v3/validations/email
     body:
       encoding: UTF-8
-      string: '{"email":"support@radicalbear.co"}'
+      string: '{"email":"support@rubygems.co"}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -25,19 +25,19 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Sat, 06 Jan 2024 10:35:06 GMT
+      - Fri, 21 Jun 2024 18:29:39 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '386'
+      - '381'
       Connection:
       - keep-alive
       X-Amzn-Requestid:
-      - 754b5a30-571d-48d1-9d3d-7130947d657c
+      - d58d9b31-bbc0-4d34-9e90-b1558326fc13
       X-Amz-Apigw-Id:
-      - RHPyJFLHCYcENww=
+      - Zuv3IEogiYcENng=
       X-Amzn-Trace-Id:
-      - Root=1-65992cda-5f22d8716a69cf09059fff7a;Sampled=0;lineage=3bae0364:0
+      - Root=1-6675c693-6b8d0a5d26034b7c41720b7b;Parent=1759060922952727;Sampled=0;lineage=3bae0364:0
       Access-Control-Allow-Methods:
       - HEAD, GET, PUT, POST, DELETE, OPTIONS, PATCH
       Access-Control-Max-Age:
@@ -59,19 +59,19 @@ http_interactions:
       X-Client-Ff:
       - '1000'
       X-Ratelimit-Remaining:
-      - '6'
+      - '5'
       X-Ratelimit-Limit:
       - '7'
       X-Ratelimit-Reset:
-      - '1704537307'
+      - '1718994580'
       Twilio-Request-Id:
-      - RQ2aZsCKeXh9NshHkxgxq83IRIrQr
+      - RQ2iCVWlzKNOQD0emZ55xrNOKaE7k
       X-Envoy-Upstream-Service-Time:
-      - '301'
+      - '240'
       Powered-By:
       - Mako
     body:
       encoding: UTF-8
-      string: '{"result":{"email":"support@radicalbear.co","verdict":"Invalid","score":0,"local":"support","host":"radicalbear.co","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":false,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"38.85.130.68"}}'
-  recorded_at: Sat, 06 Jan 2024 10:35:06 GMT
+      string: '{"result":{"email":"support@rubygems.co","verdict":"Invalid","score":0,"local":"support","host":"rubygems.co","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":false,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"38.85.141.230"}}'
+  recorded_at: Fri, 21 Jun 2024 18:29:39 GMT
 recorded_with: VCR 6.2.0

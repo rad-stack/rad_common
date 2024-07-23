@@ -6,8 +6,5 @@ class TwilioLogChanges < ActiveRecord::Migration[6.1]
     rename_column :twilio_logs, :success, :sent
 
     add_column :twilio_logs, :success, :boolean, null: false, default: false
-    return if TwilioLog.none?
-
-    TwilioLog.where(sent: true).update_all success: true
   end
 end

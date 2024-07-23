@@ -33,7 +33,7 @@ module RadNav
          DropdownMenuItem.new(view_context, 'Sign In Activity', '/rad_common/login_activities'),
          system_messages,
          DropdownMenuItem.new(view_context, 'System Usage', '/rad_common/system_usages'),
-         twilio_logs,
+         DropdownMenuIndexItem.new(view_context, 'ContactLog'),
          users,
          validate_database].compact.sort_by(&:label)
       end
@@ -58,21 +58,13 @@ module RadNav
       end
 
       def sentry_test
-        DropdownMenuItem.new(view_context,
-                             'Sentry Test',
-                             RadCommon::Engine.routes.url_helpers.edit_sentry_test_path(current_user))
+        DropdownMenuItem.new(view_context, 'Sentry Test', view_context.new_sentry_test_path)
       end
 
       def system_messages
         DropdownMenuItem.new(view_context,
                              'System Message',
                              RadCommon::Engine.routes.url_helpers.new_system_message_path)
-      end
-
-      def twilio_logs
-        return unless RadTwilio.new.twilio_enabled? || TwilioLog.exists?
-
-        DropdownMenuItem.new(view_context, 'Twilio Logs', '/rad_common/twilio_logs')
       end
 
       def users

@@ -24,6 +24,7 @@ require 'capybara/rails'
 require 'selenium/webdriver'
 require 'pundit/rspec'
 require 'factory_bot_rails'
+require 'rad_rspec/rad_factories'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -107,6 +108,16 @@ RSpec.configure do |config|
 
   chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
   Capybara.javascript_driver = chrome_driver
+
+  config.before(:suite) do
+    RadFactories.load!
+  end
+
+  config.after(:each, :js) do
+    page.find('body').click # Gesture to fix beforeunload error
+  rescue Selenium::WebDriver::Error::ElementNotInteractableError, Selenium::WebDriver::Error::UnexpectedAlertOpenError
+    # Ignore
+  end
 
   config.before do
     # TODO: workaround for this issue:

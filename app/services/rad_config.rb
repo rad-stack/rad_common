@@ -328,10 +328,9 @@ class RadConfig
     end
 
     def system_usage_models!
-      items = array_config_item!(:system_usage_models)
-      return items unless twilio_enabled?
-
-      items + [['TwilioLog', 'successful', 'Successful Twilio Logs'], ['TwilioLog', 'failure', 'Failure Twilio Logs']]
+      array_config_item!(:system_usage_models) +
+        [['ContactLogRecipient', 'successful', 'Successful Contacts'],
+         ['ContactLogRecipient', 'failed', 'Failed Contacts']]
     end
 
     def global_validity_days!
@@ -380,6 +379,14 @@ class RadConfig
 
     def crawlable_subdomains
       array_config_item! :crawlable_subdomains
+    end
+
+    def last_first_user?
+      boolean_config_item! :last_first_user
+    end
+
+    def legacy_rails_config?
+      boolean_config_item! :legacy_rails_config
     end
 
     def secret_config_item!(item)

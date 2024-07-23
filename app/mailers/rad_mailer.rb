@@ -1,4 +1,5 @@
 class RadMailer < ActionMailer::Base
+  include ContactMailer
   include ActionView::Helpers::TextHelper
   include RadCommon::ApplicationHelper
 
@@ -20,6 +21,7 @@ class RadMailer < ActionMailer::Base
   end
 
   def simple_message(recipient, subject, message, options = {})
+    @contact_log_record = options[:record]
     recipient = User.find(recipient.first) if recipient.is_a?(Array) && recipient.count == 1
 
     if recipient.respond_to?(:email)
@@ -89,7 +91,7 @@ class RadMailer < ActionMailer::Base
 
     def set_defaults
       @include_yield = true
-      headers['X-SMTPAPI'] = { unique_args: { host_name: RadConfig.host_name! } }.to_json
+      rad_headers
     end
 
     def parse_recipients_array(recipients)

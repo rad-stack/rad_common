@@ -44,6 +44,26 @@ module DuplicateFixable
       new.respond_to?(:birth_date)
     end
 
+    def use_multiples?
+      new.respond_to?(:multiples)
+    end
+
+    def use_email_2?
+      new.respond_to?(:email_2)
+    end
+
+    def use_phone_number?
+      new.respond_to?(:phone_number)
+    end
+
+    def use_phone_number_2?
+      new.respond_to?(:phone_number_2)
+    end
+
+    def use_mobile_phone?
+      new.respond_to?(:mobile_phone)
+    end
+
     def use_address?
       new.respond_to?(:address_1) && !new.duplicates_bypass_address?
     end
@@ -260,6 +280,14 @@ module DuplicateFixable
       return message unless status
 
       duplicate_record.clean_up_duplicate(self)
+
+      if is_a?(User)
+        duplicate_record.contact_logs_from.update_all from_user_id: id
+        duplicate_record.contact_logs_to.update_all to_user_id: id
+        ContactLog.where(record_type: 'User', record_id: duplicate_record.id).update_all record_id: id
+        Audited::Audit.where(user_id: duplicate_record.id).update_all user_id: id
+      end
+
       duplicate_record.reload
 
       return nil if duplicate_record.destroy

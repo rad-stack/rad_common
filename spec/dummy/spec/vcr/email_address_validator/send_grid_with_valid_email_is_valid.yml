@@ -25,19 +25,19 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Sat, 06 Jan 2024 10:35:05 GMT
+      - Fri, 21 Jun 2024 18:29:39 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '389'
+      - '390'
       Connection:
       - keep-alive
       X-Amzn-Requestid:
-      - 334b3193-07a5-4228-b589-08f8818fe112
+      - babf4ac9-1989-4bb8-a88d-13bf2f3f7441
       X-Amz-Apigw-Id:
-      - RHPyBH3JiYcEWDg=
+      - Zuv3BGp0CYcEv4g=
       X-Amzn-Trace-Id:
-      - Root=1-65992cd9-3eeb32dd40675ad71a002eae;Sampled=0;lineage=3bae0364:0
+      - Root=1-6675c693-63366e8714d5be833a8457db;Parent=5e1e59a2b47dac01;Sampled=0;lineage=3bae0364:0
       Access-Control-Allow-Methods:
       - HEAD, GET, PUT, POST, DELETE, OPTIONS, PATCH
       Access-Control-Max-Age:
@@ -63,15 +63,15 @@ http_interactions:
       X-Ratelimit-Limit:
       - '7'
       X-Ratelimit-Reset:
-      - '1704537306'
+      - '1718994580'
       Twilio-Request-Id:
-      - RQ2aZsC9VFz2jDNH2vNjeLfNL4SbH
+      - RQ2iCVWcHKmUsOtQy3wtg8fJ2gFqD
       X-Envoy-Upstream-Service-Time:
-      - '386'
+      - '437'
       Powered-By:
       - Mako
     body:
       encoding: UTF-8
-      string: '{"result":{"email":"support@invest.ally.com","verdict":"Risky","score":0.29941,"local":"support","host":"invest.ally.com","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":true,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":true},"additional":{"has_known_bounces":false,"has_suspected_bounces":true}},"ip_address":"38.85.130.68"}}'
-  recorded_at: Sat, 06 Jan 2024 10:35:05 GMT
+      string: '{"result":{"email":"support@invest.ally.com","verdict":"Risky","score":0.29941,"local":"support","host":"invest.ally.com","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":true,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":true},"additional":{"has_known_bounces":false,"has_suspected_bounces":true}},"ip_address":"38.85.141.230"}}'
+  recorded_at: Fri, 21 Jun 2024 18:29:39 GMT
 recorded_with: VCR 6.2.0
