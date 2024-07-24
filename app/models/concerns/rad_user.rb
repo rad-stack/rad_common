@@ -289,17 +289,9 @@ module RadUser
     end
 
     def validate_twilio_verify
-      # TODO: remove logging when done
-      Rails.logger.info 'validate_twilio_verify: 1'
-
       return unless RadConfig.twilio_verify_enabled?
-      Rails.logger.info 'validate_twilio_verify: 2'
-
-      return if twilio_verify_enabled?
-      Rails.logger.info 'validate_twilio_verify: 3'
-
+      return if twilio_verify_enabled? || user_status.blank? || !user_status.validate_email_phone?
       return unless RadConfig.twilio_verify_all_users? || admin?
-      Rails.logger.info 'validate_twilio_verify: 4'
 
       errors.add(:twilio_verify_enabled, 'is required')
     end
