@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Invitations' do
-  let(:admin) { create :admin, security_roles: [admin_role], twilio_verify_enabled: true } # TODO: can this arg be removed when done?
+  let(:admin) { create :admin, security_roles: [admin_role] }
   let(:first_name) { Faker::Name.first_name }
   let(:last_name) { Faker::Name.last_name }
   let(:name_display) { RadConfig.last_first_user? ? "#{last_name}, #{first_name}" : "#{first_name} #{last_name}" }
