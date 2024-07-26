@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Invitations', :invite_specs, type: :system do
+RSpec.describe 'Invitations' do
   let(:company) { Company.main }
   let(:admin) { create :admin, twilio_verify_enabled: true } # TODO: can this arg be removed when done?
   let(:user) { create :user }
@@ -13,21 +13,13 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
   let(:external_email) { "#{Faker::Internet.user_name}@#{external_domain}" }
   let!(:admin_role) { create :security_role, :admin, allow_invite: true }
   let!(:internal_role) { create :security_role, allow_invite: true }
-  let!(:external_role) { create :security_role, :external, allow_invite: true }
   let(:open_invite_error) { "There is an open invitation for this user: #{invitee.email}" }
   let(:another_role) { create :security_role, :external, allow_invite: true }
-  let(:multiple_roles) { false }
-  let(:all_users) { true }
 
   before do
     allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false)
 
     login_as admin, scope: :user
-
-    if multiple_roles
-      another_role
-      create :security_role, :external, allow_invite: true
-    end
 
     visit new_user_invitation_path
 
@@ -36,7 +28,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     fill_in 'First Name', with: first_name
     fill_in 'Last Name', with: last_name
     fill_in 'Mobile Phone', with: '(999) 231-1111'
-    click_button 'Send'
+    click_on 'Send'
 
     expect(page).to have_content "We invited '#{name_display}'"
     expect(User.last.security_roles.first).to eq invite_role
