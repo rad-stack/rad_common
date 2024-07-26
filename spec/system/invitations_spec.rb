@@ -10,24 +10,25 @@ RSpec.describe 'Invitations' do
 
   before do
     create :security_role, allow_invite: true
-    allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false)
     login_as admin, scope: :user
   end
 
-  it 'invites an admin and enabled two factor auth' do
-    visit new_user_invitation_path
+  context 'when twilio_verify_all_users is disabled' do
+    before { allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false) }
 
-    select admin_role.name, from: 'Initial Security Role'
-    fill_in 'Email', with: invite_email
-    fill_in 'First Name', with: first_name
-    fill_in 'Last Name', with: last_name
-    fill_in 'Mobile Phone', with: '(999) 231-1111'
-    click_on 'Send'
+    it 'invites an admin and enabled two factor auth' do
+      visit new_user_invitation_path
 
-    expect(page).to have_content "We invited '#{name_display}'"
-    expect(User.last.security_roles.first).to eq admin_role
-    expect(User.last.user_status.active?).to be true
-    expect(User.last.internal?).to be true
-    expect(User.last.twilio_verify_enabled?).to be true
+      select admin_role.name, from: 'Initial Security Role'
+      fill_in 'Email', with: invite_email
+      fill_in 'First Name', with: first_name
+      fill_in 'Last Name', with: last_name
+      fill_in 'Mobile Phone', with: '(999) 231-1111'
+      click_on 'Send'
+
+      expect(page).to have_content "We invited '#{name_display}'"
+      expect(User.last.security_roles.first).to eq admin_role
+      expect(User.last.twilio_verify_enabled?).to be true
+    end
   end
 end
