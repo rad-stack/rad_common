@@ -84,7 +84,6 @@ module RadUser
 
     validates_with EmailAddressValidator, fields: %i[email], if: :fully_validate_email_phone?
 
-    after_initialize :twilio_verify_default, if: :new_record?
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
     after_commit :notify_user_approved, only: :update
@@ -241,10 +240,6 @@ module RadUser
 
   private
 
-    def twilio_verify_default
-      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && (RadConfig.twilio_verify_all_users? || admin?)
-    end
-
     def check_defaults
       if security_roles.none? && initial_security_role_id.present?
         self.security_roles = [initial_security_role]
@@ -254,6 +249,9 @@ module RadUser
       end
 
       self.user_status = default_user_status if new_record? && !user_status
+      return unless new_record?
+
+      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && (RadConfig.twilio_verify_all_users? || admin?)
     end
 
     def default_user_status
