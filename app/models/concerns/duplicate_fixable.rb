@@ -78,6 +78,7 @@ module DuplicateFixable
 
     def additional_duplicate_items
       [{ name: 'company_name', label: 'Company Name', type: :levenshtein, display_only: false, weight: 10 },
+       { name: 'name', label: 'Name', type: :levenshtein, display_only: false, weight: 10 },
        { name: 'email', label: 'Email', type: :string, display_only: false, weight: 20 },
        { name: 'phone_number',
          label: 'Phone #',
