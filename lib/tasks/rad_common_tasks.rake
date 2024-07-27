@@ -1,5 +1,3 @@
-require 'rake_session'
-
 namespace :rad_common do
   task :daily, [:override_model] => :environment do |task, args|
     session = RakeSession.new(task, 24.hours, 1)
