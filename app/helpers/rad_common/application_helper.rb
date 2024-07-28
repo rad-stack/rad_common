@@ -5,10 +5,14 @@ module RadCommon
     def secured_link(record, format: nil)
       return unless record
 
+      style = secured_link_style(record)
+
       if Pundit.policy!(current_user, record).show?
-        link_to(record, record, format: format, class: secured_link_style(record))
+        link_to record, record, format: format, class: style
+      elsif style.present?
+        content_tag :span, record, class: style
       else
-        content_tag(:span, record, class: secured_link_style(record))
+        record.to_s
       end
     end
 
