@@ -5,7 +5,10 @@ RSpec.describe RadCommon::TwilioErrorThresholdChecker, type: :service do
     let(:email) { ActionMailer::Base.deliveries.last }
     let(:body) { email.body.encoded }
 
-    before { create :admin }
+    before do
+      allow_any_instance_of(ContactLogRecipient).to receive(:notify!)
+      create :admin
+    end
 
     context 'when threshold is exceeded' do
       before do

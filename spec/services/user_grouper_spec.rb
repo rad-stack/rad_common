@@ -25,8 +25,7 @@ describe UserGrouper do
   let(:notification) { create :notification, user: notification_user, notification_type: notification_type }
 
   before do
-    allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false)
-    allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
+    allow(RadConfig).to receive_messages(twilio_verify_enabled?: false, require_mobile_phone?: false)
 
     user
     another_user

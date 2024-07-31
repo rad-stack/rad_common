@@ -10,6 +10,7 @@
       %table.table.table-striped.table-bordered
         %tr
           %th Item
+          %th Current Count
           - @system_usage_search.date_column_ranges.each do |item|
             %th= item[:label]
           %th Total
@@ -17,6 +18,7 @@
         - @system_usage_search.usage_items.each_with_index do |_item, item_index|
           %tr
             %td= @system_usage_search.usage_data[item_index].first[:name]
+            %td= @system_usage_search.usage_data[item_index].first[:current_count]
             - @system_usage_search.date_column_ranges.each_with_index do |_header, header_index|
               %td= @system_usage_search.usage_data[item_index][header_index][:value]
             %td= @system_usage_search.total item_index

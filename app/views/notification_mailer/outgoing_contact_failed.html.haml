@@ -48,6 +48,11 @@
             %th Status:
             %td= ApplicationController.helpers.enum_to_translated_option(@contact_log_recipient, :email_status)
 
+        - if @contact_log_recipient.sms_status.present?
+          %tr
+            %th Status:
+            %td= ApplicationController.helpers.enum_to_translated_option(@contact_log_recipient, :sms_status)
+
         - if @contact_log_recipient.sendgrid_reason.present?
           %tr
             %th Reason:
