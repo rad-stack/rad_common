@@ -31,16 +31,19 @@ class RadPermission
     User.active.by_permission(name).sorted
   end
 
-  def unused?
+  def unused_no_users?
     return false if name == 'admin'
 
     where_clause = 'users.id NOT IN (SELECT user_security_roles.user_id FROM user_security_roles ' \
                    'WHERE user_security_roles.security_role_id = ?)'
 
-    return true if User.active.where(where_clause, SecurityRole.admin_role.id).by_permission(name).count < 1
-    return true if users.count == User.active.count
+    User.active.where(where_clause, SecurityRole.admin_role.id).by_permission(name).count < 1
+  end
 
-    false
+  def unused_all_users?
+    return false if name == 'admin'
+
+    users.count == User.active.count
   end
 
   class << self
@@ -90,8 +93,12 @@ class RadPermission
       categories.group_by { |item| item[:category_name] }.sort_by(&:first)
     end
 
-    def unused
-      RadPermission.all.select { |item| RadPermission.new(item).unused? }
+    def unused_no_users
+      RadPermission.all.select { |item| RadPermission.new(item).unused_no_users? }
+    end
+
+    def unused_all_users
+      RadPermission.all.select { |item| RadPermission.new(item).unused_all_users? }
     end
 
     private

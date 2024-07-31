@@ -62,7 +62,19 @@ namespace :rad_common do
   end
 
   task unused_permissions: :environment do
-    # TODO: need to split this out in 2 categories: 1) no users 2) all users
-    puts RadPermission.unused
+    puts 'no users have these permissions:'
+
+    RadPermission.unused_no_users.each do |item|
+      puts item
+    end
+
+    puts
+    puts
+
+    puts 'all users have these permissions:'
+
+    RadPermission.unused_all_users.each do |item|
+      puts item
+    end
   end
 end
