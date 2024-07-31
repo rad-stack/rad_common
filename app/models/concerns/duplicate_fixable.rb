@@ -78,6 +78,7 @@ module DuplicateFixable
 
     def additional_duplicate_items
       [{ name: 'company_name', label: 'Company Name', type: :levenshtein, display_only: false, weight: 10 },
+       { name: 'name', label: 'Name', type: :levenshtein, display_only: false, weight: 10 },
        { name: 'email', label: 'Email', type: :string, display_only: false, weight: 20 },
        { name: 'phone_number',
          label: 'Phone #',
@@ -286,6 +287,7 @@ module DuplicateFixable
         duplicate_record.contact_logs_to.update_all to_user_id: id
         ContactLog.where(record_type: 'User', record_id: duplicate_record.id).update_all record_id: id
         Audited::Audit.where(user_id: duplicate_record.id).update_all user_id: id
+        User.where(invited_by_id: duplicate_record.id).update_all invited_by_id: id
       end
 
       duplicate_record.reload

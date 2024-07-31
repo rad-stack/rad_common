@@ -24,6 +24,7 @@ module RadCommon
        :phone_number,
        :sms_status,
        :notify_on_fail,
+       :notified_on_failure?,
        :success]
     end
 

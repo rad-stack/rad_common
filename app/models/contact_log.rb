@@ -48,7 +48,7 @@ class ContactLog < ApplicationRecord
   def card_style
     items = contact_log_recipients.pluck(:success).uniq
     return 'alert-warning' if items.size == 2
-    return 'alert-danger' if items.blank? || (items.size == 1 && !items.first) # TODO: should blank even happen?
+    return 'alert-danger' if items.blank? || (items.size == 1 && !items.first)
     return if items.size == 1 && items.first
 
     raise 'we missed something here'

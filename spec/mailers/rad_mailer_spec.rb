@@ -7,6 +7,7 @@ describe RadMailer do
   let(:comma_email) { comma_user.email }
   let(:email) { user.email }
   let(:last_email) { ActionMailer::Base.deliveries.last }
+  let(:attachment) { { record: division, method: :logo } }
 
   before { ActionMailer::Base.deliveries.clear }
 
@@ -15,10 +16,7 @@ describe RadMailer do
     let(:division) { create :division, :with_logo }
 
     before do
-      described_class.simple_message(recipient,
-                                     'foo',
-                                     'bar',
-                                     attachment: { record: division, method: :logo }, record: division).deliver_now
+      described_class.simple_message(recipient, 'foo', 'bar', attachment: attachment, record: division).deliver_now
     end
 
     describe 'subject' do
@@ -75,6 +73,14 @@ describe RadMailer do
 
     describe 'attachment' do
       subject { last_email.attachments.count }
+
+      it { is_expected.to eq 1 }
+    end
+
+    describe 'raw file attachment' do
+      subject { last_email.attachments.count }
+
+      let(:attachment) { { raw_file: 'foo', filename: 'bar', content_type: 'baz' } }
 
       it { is_expected.to eq 1 }
     end
