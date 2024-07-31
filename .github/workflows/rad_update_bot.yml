@@ -5,6 +5,12 @@ on:
       rad_sniff_token:
         description: 'Token used to create pull request'
         required: true
+      rad_user_name:
+        description: 'Name of user who triggered the workflow'
+        required: true
+      rad_user_email:
+        description: 'Email of user who triggered the workflow'
+        required: true
 jobs:
   test:
     environment: test
@@ -64,6 +70,7 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           base: main
+          author: ${{github.event.inputs.rad_user_name}} <${{github.event.inputs.rad_user_email}} >
           token: ${{ github.event.inputs.rad_sniff_token }}
           branch: "rad_common_update-${{ env.RAD_COMMON_VERSION }}"
           title: "Rad Common Update ${{ env.RAD_COMMON_VERSION }}"
