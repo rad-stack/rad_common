@@ -22,6 +22,7 @@ class RadMailer < ActionMailer::Base
 
   def simple_message(recipient, subject, message, options = {})
     @contact_log_record = options[:record]
+    @from_user = options[:from_user]
     recipient = User.find(recipient.first) if recipient.is_a?(Array) && recipient.count == 1
 
     if recipient.respond_to?(:email)
