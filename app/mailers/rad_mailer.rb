@@ -49,6 +49,7 @@ class RadMailer < ActionMailer::Base
 
   def global_validity_on_demand(recipient, problems)
     @recipient = recipient
+    @rad_from_user = recipient
     @problems = problems
     @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
@@ -59,6 +60,7 @@ class RadMailer < ActionMailer::Base
   end
 
   def email_report(user, file, report_name, options = {})
+    @rad_from_user = user
     start_date = options[:start_date]
     end_date   = options[:end_date]
     export_format = options[:format].presence || Exporter::DEFAULT_FORMAT

@@ -11,6 +11,7 @@ class RadDeviseMailer < Devise::Mailer
 
   def confirmation_instructions(record, token, opts = {})
     @rad_record = record
+    @rad_from_user = record
     @token = token
     initialize_from_record(record)
 
@@ -26,6 +27,7 @@ class RadDeviseMailer < Devise::Mailer
 
   def reset_password_instructions(record, token, opts = {})
     @rad_record = record
+    @rad_from_user = record
     @token = token
     initialize_from_record(record)
 
@@ -42,6 +44,7 @@ class RadDeviseMailer < Devise::Mailer
 
   def unlock_instructions(record, token, opts = {})
     @rad_record = record
+    @rad_from_user = record
     @token = token
     initialize_from_record(record)
 
@@ -57,6 +60,7 @@ class RadDeviseMailer < Devise::Mailer
 
   def invitation_instructions(record, token, opts = {})
     @rad_record = record
+    @rad_from_user = record.invited_by
     @token = token
     initialize_from_record(record)
 
