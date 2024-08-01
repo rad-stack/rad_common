@@ -38,6 +38,10 @@ module RadSecurityRole
 
       role
     end
+
+    def unused
+      SecurityRole.sorted.select { |item| item.users.active.count.zero? }
+    end
   end
 
   private
