@@ -15,7 +15,7 @@ describe 'Users' do
   describe 'sign up', :js do
     before do
       create :security_role, :external, allow_sign_up: true
-      allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, legal_docs?: true)
+      allow(RadConfig).to receive_messages(twilio_verify_enabled?: false, legal_docs?: true)
     end
 
     context 'with duplicate' do

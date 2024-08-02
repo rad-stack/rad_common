@@ -70,7 +70,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
-  s.add_development_dependency 'haml_lint'
+  s.add_development_dependency 'haml_lint', '0.55.0'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'rubocop'
   s.add_development_dependency 'rubocop-capybara'

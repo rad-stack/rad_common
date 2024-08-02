@@ -21,6 +21,20 @@ namespace :rad_common do
     end
   end
 
+  task hourly: :environment do |task|
+    session = RakeSession.new(task, 58.minutes, 10)
+
+    Timeout.timeout(session.time_limit) do
+      RadCommon::AppInfo.new.duplicate_models.each do |model_name|
+        session.reset_status
+        model_name.constantize.process_duplicates(session)
+        break if session.timing_out?
+      end
+
+      session.finished
+    end
+  end
+
   task ten_minutes: :environment do |task|
     session = RakeSession.new(task, 5.minutes, 1)
 
@@ -38,6 +52,27 @@ namespace :rad_common do
   task check_database_use: :environment do
     Timeout.timeout(30.minutes) do
       DatabaseUseChecker.generate_report
+    end
+  end
+
+  task unused_security_roles: :environment do
+    puts SecurityRole.unused.pluck(:id)
+  end
+
+  task unused_permissions: :environment do
+    puts 'no users have these permissions:'
+
+    RadPermission.unused_no_users.each do |item|
+      puts item
+    end
+
+    puts
+    puts
+
+    puts 'all users have these permissions:'
+
+    RadPermission.unused_all_users.each do |item|
+      puts item
     end
   end
 end

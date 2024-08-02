@@ -67,7 +67,7 @@ class ContactLogRecipient < ApplicationRecord
     return unless notify_on_fail?
     return if sms_false_positive?
 
-    Notifications::OutgoingContactFailedNotification.main(self).notify!
+    notify!
   end
 
   def notified_on_failure?
@@ -123,7 +123,10 @@ class ContactLogRecipient < ApplicationRecord
     end
 
     def notify_failure?
-      notify_on_fail? && success_previously_changed?(from: true, to: false)
+      return false unless notify_on_fail?
+      return success_previously_changed?(from: true, to: false) if contact_log.email?
+
+      sms_status_previously_changed? && sms_status_undelivered?
     end
 
     def sms_false_positive?
