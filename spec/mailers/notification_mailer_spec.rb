@@ -27,7 +27,11 @@ describe NotificationMailer do
     end
 
     context 'with multiple users' do
-      before { described_class.global_validity(notification_type, User.where(id: [user.id, another_user.id]), payload).deliver_now }
+      before do
+        described_class.global_validity(notification_type,
+                                        User.where(id: [user.id, another_user.id]),
+                                        payload).deliver_now
+      end
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
