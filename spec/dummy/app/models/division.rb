@@ -28,7 +28,7 @@ class Division < ApplicationRecord
   strip_attributes
   audited
 
-  after_update :notify_owner
+  after_commit :notify_owner
 
   def logo_variant
     logo.variant(resize: '290x218>')

@@ -4,6 +4,8 @@ module RadUser
   USER_AUDIT_COLUMNS_DISABLED = %i[password password_confirmation encrypted_password reset_password_token
                                    confirmation_token unlock_token remember_created_at].freeze
 
+  RAD_DOMAIN = 'radstack.com'.freeze
+
   included do
     belongs_to :user_status
 
@@ -236,6 +238,10 @@ module RadUser
 
   def timeout_in
     external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
+  end
+
+  def rad_developer?
+    email.end_with? RAD_DOMAIN
   end
 
   private

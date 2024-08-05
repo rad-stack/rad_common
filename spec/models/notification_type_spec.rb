@@ -3,8 +3,33 @@ require 'rails_helper'
 RSpec.describe NotificationType do
   let(:user) { create :admin }
   let(:notification_type) { Notifications::DivisionUpdatedNotification.main(notification_payload) }
-  let(:notification_payload) { create :division, owner: user }
+  let(:division) { create :division, owner: user }
+  let(:notification_payload) { division }
   let(:notification_method) { :email }
+
+  describe 'bcc recipient' do
+    subject { last_email.bcc }
+
+    let(:last_email) { ActionMailer::Base.deliveries.last }
+
+    before do
+      notification_type.update! bcc_recipient: bcc_recipient
+      ActionMailer::Base.deliveries.clear
+      Notifications::DivisionUpdatedNotification.main(division).notify!
+    end
+
+    context 'when enabled' do
+      let(:bcc_recipient) { Faker::Internet.email }
+
+      it { is_expected.to eq [bcc_recipient] }
+    end
+
+    context 'when disabled' do
+      let(:bcc_recipient) { nil }
+
+      it { is_expected.to be_nil }
+    end
+  end
 
   describe 'notify_user_ids_opted with absolute_users' do
     subject(:result) { notification_type.send(:notify_user_ids_opted, notification_method) }

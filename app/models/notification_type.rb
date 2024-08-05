@@ -10,6 +10,7 @@ class NotificationType < ApplicationRecord
 
   scope :by_type, -> { order(:type) }
 
+  validates_with EmailAddressValidator, fields: [:bcc_recipient]
   validate :validate_auth
 
   def email_enabled?
@@ -25,7 +26,7 @@ class NotificationType < ApplicationRecord
   end
 
   def mailer_class
-    'RadMailer'
+    'NotificationMailer'
   end
 
   def mailer_method
@@ -164,11 +165,8 @@ class NotificationType < ApplicationRecord
       id_list = notify_user_ids_opted(:email)
       return if id_list.count.zero?
 
-      if mailer_class == 'RadMailer' && mailer_method == 'simple_message'
-        RadMailer.simple_message(id_list,
-                                 mailer_subject,
-                                 mailer_message,
-                                 mailer_options.merge(notification_settings_link: true)).deliver_later
+      if mailer_class == 'NotificationMailer' && mailer_method == 'simple_message'
+        NotificationMailer.simple_message(self, id_list, mailer_subject, mailer_message).deliver_later
       else
         mailer = mailer_class.constantize
 
@@ -176,7 +174,7 @@ class NotificationType < ApplicationRecord
           raise 'all notification mailers must subclass NotificationMailer'
         end
 
-        mailer.send(mailer_method, id_list, payload).deliver_later
+        mailer.send(mailer_method, self, id_list, payload).deliver_later
       end
     end
 
