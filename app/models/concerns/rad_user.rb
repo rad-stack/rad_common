@@ -60,11 +60,7 @@ module RadUser
             "WHERE security_roles.#{permission} = TRUE)")
     }
 
-    scope :inactive, lambda {
-      joins(:user_status)
-        .where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)')
-    }
-
+    scope :inactive, -> { joins(:user_status).where(user_statuses: { active: false }) }
     scope :not_inactive, -> { where.not(user_status_id: UserStatus.default_inactive_status.id) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
@@ -74,7 +70,9 @@ module RadUser
     validate :validate_twilio_verify
     validate :validate_mobile_phone
     validate :password_excludes_name
-    validates :security_roles, presence: true, if: :active?
+
+    # this should be changed to "if: :active?" at some point, see Task 2024
+    validates :security_roles, presence: true, if: :active_for_authentication?
 
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
                                        message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
@@ -101,7 +99,7 @@ module RadUser
   end
 
   def active?
-    active_for_authentication?
+    user_status&.active?
   end
 
   def needs_confirmation?
@@ -163,7 +161,7 @@ module RadUser
   end
 
   def display_style
-    if user_status.active? || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
+    if active? || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
       external? ? 'table-warning' : ''
     else
       'table-danger'
@@ -175,11 +173,11 @@ module RadUser
   end
 
   def active_for_authentication?
-    super && user_status && user_status.active?
+    super && active?
   end
 
   def inactive_message
-    if user_status.active?
+    if active?
       super
     else
       :not_approved
