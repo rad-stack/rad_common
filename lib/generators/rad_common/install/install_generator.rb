@@ -429,7 +429,7 @@ Seeder.new.seed!
           apply_migration '20240705173121_more_contact_log_fixes.rb'
           apply_migration '20240709115421_notify_tool_actions.rb'
           apply_migration '20240710175508_fix_contact_to_users.rb'
-          apply_migration '20240803114036_bcc_notify_developers.rb'
+          apply_migration '20240803114036_bcc_notify_recipient.rb'
         end
 
         def installed_app_name
