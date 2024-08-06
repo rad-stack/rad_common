@@ -6,6 +6,7 @@ class NotificationMailer < RadMailer
   end
 
   def new_user_signed_up(notification_type, recipients, user)
+    @rad_from_user = user
     user_is_active = user.user_status.active?
 
     action_message = 'Review their user registration information'
@@ -24,6 +25,7 @@ class NotificationMailer < RadMailer
   def user_was_approved(notification_type, recipients, user_and_approver)
     user = user_and_approver.first
     approver = user_and_approver.last
+    @rad_from_user = approver
 
     @email_action = { message: 'You can review this approval if desired.',
                       button_text: 'Review User',

@@ -126,7 +126,7 @@ class UsersController < ApplicationController
   end
 
   def test_email
-    @user.test_email!
+    @user.test_email! current_user
     flash[:success] = 'A test email was sent to the user.'
     redirect_to @user
   end

@@ -217,8 +217,11 @@ module RadUser
     super
   end
 
-  def test_email!
-    RadMailer.simple_message(self, 'Test Email', 'This is a test.').deliver_later
+  def test_email!(from_user)
+    RadMailer.simple_message(self,
+                             'Test Email',
+                             'This is a test.',
+                             from_user: from_user).deliver_later
   end
 
   def test_sms!(from_user)

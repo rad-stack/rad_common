@@ -10,7 +10,7 @@ class GlobalValidationJob < ApplicationJob
       RadMailer.global_validity_on_demand(current_user, problems).deliver_now
     else
       message = 'No invalid data found'
-      RadMailer.simple_message(current_user, message, message).deliver_now
+      RadMailer.simple_message(current_user, message, message, from_user: current_user).deliver_now
     end
   end
 end
