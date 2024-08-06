@@ -1,4 +1,4 @@
-module ContactMailer
+module RadContactMailer
   extend ActiveSupport::Concern
 
   included do
@@ -15,8 +15,8 @@ module ContactMailer
     def finish_contact_log
       @rad_contact_log.update! from_email: mail.from.first,
                                content: mail.subject,
-                               record: @contact_log_record,
-                               from_user: @from_user,
+                               record: @rad_record,
+                               from_user: @rad_from_user,
                                sent: true
 
       mail.to.each do |recipient|

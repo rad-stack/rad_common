@@ -1,5 +1,5 @@
 class RadMailer < ActionMailer::Base
-  include ContactMailer
+  include RadContactMailer
   include ActionView::Helpers::TextHelper
   include RadCommon::ApplicationHelper
 
@@ -21,7 +21,8 @@ class RadMailer < ActionMailer::Base
   end
 
   def simple_message(recipient, subject, message, options = {})
-    @contact_log_record = options[:record]
+    @rad_record = options[:record]
+    @rad_from_user = options[:from_user]
     recipient = User.find(recipient.first) if recipient.is_a?(Array) && recipient.count == 1
 
     if recipient.respond_to?(:email)
@@ -48,6 +49,7 @@ class RadMailer < ActionMailer::Base
 
   def global_validity_on_demand(recipient, problems)
     @recipient = recipient
+    @rad_from_user = recipient
     @problems = problems
     @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
@@ -58,6 +60,7 @@ class RadMailer < ActionMailer::Base
   end
 
   def email_report(user, file, report_name, options = {})
+    @rad_from_user = user
     start_date = options[:start_date]
     end_date   = options[:end_date]
     export_format = options[:format].presence || Exporter::DEFAULT_FORMAT
