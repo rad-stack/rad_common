@@ -5,14 +5,16 @@ module Notifications
     end
 
     def absolute_user_ids
-      ids = []
-      ids += [from_user.id] if from_user.present?
+      ids = if from_user.present?
+              [from_user.id]
+            else
+              SecurityRole.admin_role.users.active.pluck(:id)
+            end
 
-      records = SecurityRole.admin_role.users.active
-      records = records.where.not(id: to_user.id) if to_user.present?
-      raise 'no users to notify' if records.blank?
+      ids.delete(to_user.id) if to_user.present?
+      raise 'no users to notify' if ids.blank?
 
-      ids + records.pluck(:id)
+      ids.uniq
     end
 
     def mailer_class

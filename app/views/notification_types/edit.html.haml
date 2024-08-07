@@ -10,8 +10,12 @@
 
       .form-inputs
         .row
-          .col-lg-12
-            = f.input :active
+          .col-lg-3= f.input :active
+        .row
+          .col-lg-3
+            = f.input :bcc_recipient,
+                      tooltip: 'Send a copy of any email notifications to this email address (not available for SMS)'
+
         - unless @notification_type.absolute_users?
           .row
             .col-lg-12

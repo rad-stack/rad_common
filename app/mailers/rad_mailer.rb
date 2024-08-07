@@ -40,11 +40,15 @@ class RadMailer < ActionMailer::Base
 
     @message = options[:do_not_format] ? message : simple_format(message)
     @email_action = options[:email_action] if options[:email_action]
-    enable_settings_link if options[:notification_settings_link]
 
     maybe_attach options
 
-    mail(to: to_address, subject: subject, cc: options[:cc], bcc: options[:bcc])
+    mail to: to_address,
+         subject: subject,
+         cc: options[:cc],
+         bcc: options[:bcc],
+         template_path: 'rad_mailer',
+         template_name: 'simple_message'
   end
 
   def global_validity_on_demand(recipient, problems)
@@ -135,9 +139,5 @@ class RadMailer < ActionMailer::Base
 
     def escape_name(recipient_name)
       recipient_name.gsub(',', ' ')
-    end
-
-    def enable_settings_link
-      @notification_settings_link = true
     end
 end
