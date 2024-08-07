@@ -60,6 +60,12 @@ class ContactLog < ApplicationRecord
     card_style.gsub('alert', 'table')
   end
 
+  def record_is_to_user?
+    return false unless record.present? && record.is_a?(User)
+
+    contact_log_recipients.pluck(:to_user_id).include?(record.id)
+  end
+
   private
 
     def validate_incoming
