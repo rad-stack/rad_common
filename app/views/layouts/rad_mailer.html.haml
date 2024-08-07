@@ -33,7 +33,10 @@
                 - elsif @recipient.is_a?(String)
                   Hello #{@recipient},
                 - elsif @recipient.respond_to?(:count)
-                  Hello all,
+                  - if @recipient.count == 1 && @recipient.first.respond_to?(:greeting)
+                    #{@recipient.first.greeting},
+                  - else
+                    Hello all,
                 - else
                   - raise "please set up greeting method in #{@recipient.class} before using this mailer"
         .email-row
