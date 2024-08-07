@@ -10,7 +10,7 @@ RSpec.describe ContactLogRecipient do
 
   describe 'notify!' do
     context 'with email' do
-      let(:contact_log) { create :contact_log, :email }
+      let(:contact_log) { create :contact_log, :email, from_user: nil }
 
       let(:contact_log_recipient) do
         create :contact_log_recipient, :email, contact_log: contact_log, email: admin.email, to_user: admin
