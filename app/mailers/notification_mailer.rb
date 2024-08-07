@@ -7,7 +7,7 @@ class NotificationMailer < RadMailer
 
   def new_user_signed_up(notification_type, recipients, user)
     @rad_from_user = user
-    user_is_active = user.user_status.active?
+    user_is_active = user.active?
 
     action_message = 'Review their user registration information'
     action_message += user_is_active ? ' if desired.' : ' and approve them if desired.'
