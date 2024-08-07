@@ -166,7 +166,11 @@ class NotificationType < ApplicationRecord
       return if id_list.count.zero?
 
       if mailer_class == 'NotificationMailer' && mailer_method == 'simple_message'
-        NotificationMailer.simple_message(self, id_list, mailer_subject, mailer_message).deliver_later
+        NotificationMailer.simple_message(self,
+                                          id_list,
+                                          mailer_subject,
+                                          mailer_message,
+                                          mailer_options).deliver_later
       else
         mailer = mailer_class.constantize
 
