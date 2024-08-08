@@ -21,6 +21,15 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
       expect(mail.to).to include from_user.email
       expect(mail.to).not_to include admin.email
     end
+
+    context 'when same as to_user' do
+      let(:from_user) { to_user }
+
+      it 'emails the admins' do
+        expect(mail.to).not_to include from_user.email
+        expect(mail.to).to include admin.email
+      end
+    end
   end
 
   context 'without from_user' do
