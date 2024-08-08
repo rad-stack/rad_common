@@ -61,7 +61,7 @@ class ContactLog < ApplicationRecord
   end
 
   def from_user_is_to_user?
-    return false unless from_user.present?
+    return false if from_user.blank?
 
     contact_log_recipients.pluck(:to_user_id).include?(from_user_id)
   end
