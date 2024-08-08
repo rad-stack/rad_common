@@ -13,6 +13,7 @@ module Notifications
 
       ids.delete(to_user.id) if to_user.present?
       ids = SecurityRole.admin_role.users.active.pluck(:id) if ids.blank?
+      ids.delete(to_user.id) if to_user.present?
       raise 'no users to notify' if ids.blank?
 
       ids.uniq
