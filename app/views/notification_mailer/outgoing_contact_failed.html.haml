@@ -2,7 +2,7 @@
   .email-col-12
     .email-info-box
       %table.info-table
-        - if @contact_log.from_user.present?
+        - if @contact_log.from_user.present? && !@contact_log.from_user_is_to_user?
           %tr
             %th From User:
             %td= link_to @contact_log.from_user, user_url(@contact_log.from_user)

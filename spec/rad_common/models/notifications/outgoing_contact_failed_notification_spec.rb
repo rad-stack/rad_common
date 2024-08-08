@@ -29,6 +29,10 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
         expect(mail.to).not_to include from_user.email
         expect(mail.to).to include admin.email
       end
+
+      it "doesn't include from_user" do
+        expect(mail.text_part.body.to_s).to include(to_user.to_s).once
+      end
     end
   end
 
