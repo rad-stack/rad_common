@@ -5,6 +5,8 @@ def system!(*args)
   system(*args) || abort("\n== Command #{args} failed ==")
 end
 
+regenerate_lockfile = ARGV.include?('--regenerate-lockfile')
+
 directory = Dir.pwd.include?('rad_common') ? "#{Dir.pwd}/spec/dummy" : Dir.pwd
 FileUtils.chdir directory do
   puts "\n== Removing old logs and tempfiles =="
@@ -22,6 +24,11 @@ FileUtils.chdir directory do
 
   puts "== Running RC Generator =="
   system! "bin/rails g rad_common:install --force"
+
+  if regenerate_lockfile
+    puts '== Deleting yarn.lock =='
+    system! 'rm yarn.lock'
+  end
 
   puts '== Running Yarn Install =='
   system! 'yarn install'
