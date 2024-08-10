@@ -2,7 +2,7 @@
   .email-col-12
     .email-info-box
       %table.info-table
-        - if @contact_log.from_user.present?
+        - if @contact_log.from_user.present? && !@contact_log.from_user_is_to_user?
           %tr
             %th From User:
             %td= link_to @contact_log.from_user, user_url(@contact_log.from_user)
@@ -29,7 +29,7 @@
             %th To Phone #:
             %td= @contact_log_recipient.phone_number
 
-        - if @contact_log.record.present?
+        - if @contact_log.record.present? && !@contact_log.record_is_to_user?
           %tr
             %th #{@contact_log.record_type.titleize}:
             %td

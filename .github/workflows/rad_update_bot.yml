@@ -33,7 +33,7 @@ jobs:
       CI: true
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: main
       - name: Git status
@@ -50,7 +50,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '16.20.2'
+          node-version: '20.16.0'
           cache: 'yarn'
 
       - name: Yarn install
@@ -70,6 +70,7 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           base: main
+          committer: ${{github.event.inputs.rad_user_name}} <${{github.event.inputs.rad_user_email}} >
           author: ${{github.event.inputs.rad_user_name}} <${{github.event.inputs.rad_user_email}} >
           token: ${{ github.event.inputs.rad_sniff_token }}
           branch: "rad_common_update-${{ env.RAD_COMMON_VERSION }}"

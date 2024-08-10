@@ -14,6 +14,7 @@ env:
   RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
   RAILS_ENV: test
   CI: true
+  NODE_OPTIONS: --openssl-legacy-provider # Remove when webpacker is replaced
 
 jobs:
   setup-matrix:
@@ -73,7 +74,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '16.20.2'
+          node-version: '20.16.0'
           cache: 'yarn'
 
       - name: Yarn install

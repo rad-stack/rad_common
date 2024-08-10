@@ -57,4 +57,25 @@ namespace :rad_common do
       DatabaseUseChecker.generate_report
     end
   end
+
+  task unused_security_roles: :environment do
+    puts SecurityRole.unused.pluck(:id)
+  end
+
+  task unused_permissions: :environment do
+    puts 'no users have these permissions:'
+
+    RadPermission.unused_no_users.each do |item|
+      puts item
+    end
+
+    puts
+    puts
+
+    puts 'all users have these permissions:'
+
+    RadPermission.unused_all_users.each do |item|
+      puts item
+    end
+  end
 end

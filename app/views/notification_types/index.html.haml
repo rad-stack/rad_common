@@ -6,6 +6,7 @@
         %th Name
         %th Auth Mode
         %th Roles to Notify
+        %th BCC Recipient
         %th Active
         %th.actions Actions
       - @notification_types.each do |record|
@@ -18,6 +19,7 @@
             - record.security_roles.each do |security_role|
               = secured_link(security_role)
               %p
+          %td= record.bcc_recipient
           %td= format_boolean record.active?
           %td
             = link_to icon(:pencil, 'Edit'),

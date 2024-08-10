@@ -4,6 +4,8 @@ module RadUser
   USER_AUDIT_COLUMNS_DISABLED = %i[password password_confirmation encrypted_password reset_password_token
                                    confirmation_token unlock_token remember_created_at].freeze
 
+  RAD_DOMAIN = 'radstack.com'.freeze
+
   included do
     belongs_to :user_status
 
@@ -60,11 +62,7 @@ module RadUser
             "WHERE security_roles.#{permission} = TRUE)")
     }
 
-    scope :inactive, lambda {
-      joins(:user_status)
-        .where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)')
-    }
-
+    scope :inactive, -> { joins(:user_status).where(user_statuses: { active: false }) }
     scope :not_inactive, -> { where.not(user_status_id: UserStatus.default_inactive_status.id) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
@@ -74,7 +72,9 @@ module RadUser
     validate :validate_twilio_verify
     validate :validate_mobile_phone
     validate :password_excludes_name
-    validates :security_roles, presence: true, if: :active?
+
+    # this should be changed to "if: :active?" at some point, see Task 2024
+    validates :security_roles, presence: true, if: :active_for_authentication?
 
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
                                        message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
@@ -101,7 +101,7 @@ module RadUser
   end
 
   def active?
-    active_for_authentication?
+    user_status&.active?
   end
 
   def needs_confirmation?
@@ -163,7 +163,7 @@ module RadUser
   end
 
   def display_style
-    if user_status.active? || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
+    if active? || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
       external? ? 'table-warning' : ''
     else
       'table-danger'
@@ -175,11 +175,11 @@ module RadUser
   end
 
   def active_for_authentication?
-    super && user_status && user_status.active?
+    super && active?
   end
 
   def inactive_message
-    if user_status.active?
+    if active?
       super
     else
       :not_approved
@@ -215,8 +215,11 @@ module RadUser
     super
   end
 
-  def test_email!
-    RadMailer.simple_message(self, 'Test Email', 'This is a test.').deliver_later
+  def test_email!(from_user)
+    RadMailer.simple_message(self,
+                             'Test Email',
+                             'This is a test.',
+                             from_user: from_user).deliver_later
   end
 
   def test_sms!(from_user)
@@ -236,6 +239,10 @@ module RadUser
 
   def timeout_in
     external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
+  end
+
+  def rad_developer?
+    email.end_with? RAD_DOMAIN
   end
 
   private

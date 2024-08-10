@@ -6,14 +6,18 @@ describe NotificationMailer do
   let(:email) { user.email }
   let(:another_email) { another_user.email }
   let(:last_email) { ActionMailer::Base.deliveries.last }
+  let(:notification_type) { Notifications::InvalidDataWasFoundNotification.main }
 
-  before { ActionMailer::Base.deliveries.clear }
+  before do
+    create :admin
+    ActionMailer::Base.deliveries.clear
+  end
 
   describe '#global_validity' do
     let(:payload) { { error_count: 0, error_messages: [] } }
 
     context 'with one user' do
-      before { described_class.global_validity([user], payload).deliver_now }
+      before { described_class.global_validity(notification_type, [user], payload).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -23,7 +27,11 @@ describe NotificationMailer do
     end
 
     context 'with multiple users' do
-      before { described_class.global_validity(User.where(id: [user.id, another_user.id]), payload).deliver_now }
+      before do
+        described_class.global_validity(notification_type,
+                                        User.where(id: [user.id, another_user.id]),
+                                        payload).deliver_now
+      end
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -36,7 +44,7 @@ describe NotificationMailer do
     context 'with a problem with a link' do
       let(:payload) { { error_count: 1, error_messages: [[user, 'foo bar']] } }
 
-      before { described_class.global_validity([user], payload).deliver_now }
+      before { described_class.global_validity(notification_type, [user], payload).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -55,7 +63,7 @@ describe NotificationMailer do
 
       before do
         create :admin
-        described_class.global_validity([user], payload).deliver_now
+        described_class.global_validity(notification_type, [user], payload).deliver_now
       end
 
       it 'matches as expected' do
