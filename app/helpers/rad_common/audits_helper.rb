@@ -60,11 +60,11 @@ module RadCommon
           changed_attribute = change.first
 
           if change[1].instance_of?(Array)
-            from_value = change[1][0]
-            to_value = change[1][1]
+            from_value = formatted_audit_value(audit, changed_attribute, change[1][0])
+            to_value = formatted_audit_value(audit, changed_attribute, change[1][1])
           else
             from_value = nil
-            to_value = change[1]
+            to_value = formatted_audit_value(audit, changed_attribute, change[1])
           end
 
           next if (from_value.blank? && to_value.blank?) || (from_value.to_s == to_value.to_s)
@@ -101,6 +101,13 @@ module RadCommon
         end
 
         audit_text
+      end
+
+      def formatted_audit_value(audit, attribute, raw_value)
+        record = audit.auditable
+        return raw_value unless record.defined_enums.has_key?(attribute)
+
+        RadEnum.new(record.class, attribute).raw_translation(raw_value)
       end
 
       def classify_foreign_key(audit_column, audit_type)

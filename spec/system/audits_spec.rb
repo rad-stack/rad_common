@@ -21,7 +21,7 @@ describe 'Audits' do
     it 'shows enum value in human readable form' do
       contact_log_recipient.update! sms_status: :queued
       visit "rad_common/audits/?auditable_type=ContactLogRecipient&auditable_id=#{contact_log_recipient.id}"
-      expect(page).to have_content 'queued'
+      expect(page).to have_content 'Queued'
     end
   end
 end

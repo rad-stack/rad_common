@@ -57,7 +57,6 @@ end
 
 Audited.current_user_method = :true_user
 Audited.ignored_attributes += ['address_changes']
-Audited.store_synthesized_enums = true
 
 Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
