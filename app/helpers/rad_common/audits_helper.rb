@@ -105,7 +105,7 @@ module RadCommon
 
       def formatted_audit_value(audit, attribute, raw_value)
         record = audit.auditable
-        return raw_value unless record.defined_enums.has_key?(attribute)
+        return raw_value unless record&.defined_enums&.has_key?(attribute)
 
         RadEnum.new(record.class, attribute).raw_translation(raw_value)
       end
