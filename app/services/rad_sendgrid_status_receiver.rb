@@ -11,6 +11,7 @@ class RadSendgridStatusReceiver
 
   def process!
     return unless host_matches?
+    return if missing_contact_log?
 
     process_status!
     update_contact_log!
@@ -78,8 +79,16 @@ class RadSendgridStatusReceiver
       recipients.first.update! email_status: event, sendgrid_reason: reason, notify_on_fail: @notify
     end
 
+    def contact_log_id
+      @contact_log_id ||= @content[:contact_log_id]
+    end
+
     def contact_log
-      @contact_log ||= ContactLog.find(@content[:contact_log_id])
+      @contact_log ||= ContactLog.find_by(id: contact_log_id)
+    end
+
+    def missing_contact_log?
+      contact_log_id.present? && contact_log.blank?
     end
 
     def check_events
