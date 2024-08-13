@@ -22,13 +22,18 @@ describe SendgridStatusReceiver, type: :service do
     create :admin
 
     deliveries.clear
-
-    service.process!
   end
 
   it 'notifies' do
+    service.process!
+
     expect(last_email.subject).to include 'Outgoing Email Failed'
     expect(last_email.body.encoded).to include 'Attorney'
     expect(last_email.body.encoded).to include contact_log.content
+  end
+
+  it 'ignores when a contact log was previously deleted' do
+    contact_log.destroy!
+    expect(service.process!).to be_nil
   end
 end
