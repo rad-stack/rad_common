@@ -64,6 +64,11 @@ class ContactLogRecipient < ApplicationRecord
 
   def sms_assume_failed!
     update! sms_status: :failed
+
+    Rails.logger.info "sms_assume_failed for #{id}: sms_false_positive?=#{sms_false_positive?}, " \
+                      "sms_mostly_successful?=#{sms_mostly_successful?}, just_a_few_sms_logs?=" \
+                      "#{just_a_few_sms_logs?}, last_few_sms_failed?=#{last_few_sms_failed?}"
+
     return unless notify_on_fail?
     return if sms_false_positive?
 
