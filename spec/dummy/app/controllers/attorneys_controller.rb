@@ -25,8 +25,7 @@ class AttorneysController < ApplicationController
     authorize @attorney
 
     if @attorney.save
-      flash[:toast_success] = 'Attorney was successfully created.'
-      redirect_to @attorney
+      redirect_to @attorney, notice: 'Attorney was successfully created.'
     else
       render :new
     end
@@ -34,8 +33,7 @@ class AttorneysController < ApplicationController
 
   def update
     if @attorney.update(permitted_params)
-      flash[:toast_success] = 'Attorney was successfully updated.'
-      redirect_to @attorney
+      redirect_to @attorney, notice: 'Attorney was successfully updated.'
     else
       render :edit
     end
