@@ -282,7 +282,7 @@ class CardPresenter
     end
 
     def tool_actions
-      @tool_actions ||= [show_history_action, contact_logs_action, reset_duplicates_action].compact
+      @tool_actions ||= [show_history_action] + contact_log_actions + [reset_duplicates_action].compact
     end
 
     def show_history_action
@@ -298,21 +298,31 @@ class CardPresenter
         link: "/rad_common/audits/?auditable_type=#{instance.class}&auditable_id=#{instance.id}" }
     end
 
-    def contact_logs_action
-      return unless action_name == 'show' &&
-                    instance&.persisted? &&
-                    current_user &&
-                    Pundit.policy!(current_user, ContactLog.new).index? &&
-                    contact_logs?
+    def contact_log_actions
+      return [] unless action_name == 'show' &&
+                       instance&.persisted? &&
+                       current_user &&
+                       Pundit.policy!(current_user, ContactLog.new).index? &&
+                       contact_logs?
 
-      link = if instance.is_a?(User)
-               @view_context.contact_logs_path(search: { associated_with_user: instance.id })
-             else
-               @view_context.contact_logs_path(search: { 'contact_logs.record_type': instance.class.name,
-                                                         record_id_equals: instance.id })
-             end
+      return user_contact_log_actions if instance.is_a?(User)
 
-      { label: 'Contact Logs', link: link }
+      [{ label: 'Contact Logs', link: contact_log_record_action }]
+    end
+
+    def user_contact_log_actions
+      [{ label: 'Contact Logs to User',
+         link: @view_context.contact_logs_path(search: { 'contact_log_recipients.to_user_id': instance.id }) },
+       { label: 'Contact Logs from User',
+         link: @view_context.contact_logs_path(search: { 'contact_logs.from_user_id': instance.id }) },
+       { label: 'Contact Logs w/ User as Subject', link: contact_log_record_action },
+       { label: 'All Associated Contact Logs',
+         link: @view_context.contact_logs_path(search: { associated_with_user: instance.id }) }]
+    end
+
+    def contact_log_record_action
+      @view_context.contact_logs_path(search: { 'contact_logs.record_type': instance.class.name,
+                                                record_id_equals: instance.id })
     end
 
     def contact_logs?
