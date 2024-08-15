@@ -131,7 +131,7 @@ class ContactLogRecipient < ApplicationRecord
       return false unless notify_on_fail?
       return success_previously_changed?(from: true, to: false) if contact_log.email?
 
-      sms_status_previously_changed? && sms_status_undelivered?
+      sms_status_previously_changed? && sms_status_undelivered? && !sms_false_positive?
     end
 
     def sms_false_positive?

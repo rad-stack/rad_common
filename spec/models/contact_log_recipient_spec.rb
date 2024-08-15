@@ -55,14 +55,33 @@ RSpec.describe ContactLogRecipient do
       end
 
       context 'when SMS status updated' do
-        it 'notifies' do
-          expect(contact_log_recipient.sms_status).to eq 'sent'
+        before { expect(contact_log_recipient.sms_status).to eq 'sent' }
 
+        it 'notifies' do
           expect {
             contact_log_recipient.update! sms_status: :undelivered
           }.to change(deliveries, :count).by(1)
 
           expect(last_email.subject).to include 'Outgoing SMS Failed for'
+        end
+
+        context 'with false positive' do
+          before do
+            10.times do
+              create :contact_log_recipient,
+                     contact_log: create(:contact_log, :sms),
+                     phone_number: admin.mobile_phone,
+                     to_user: admin,
+                     sms_status: :delivered,
+                     success: true
+            end
+          end
+
+          it "doesn't notify" do
+            expect {
+              contact_log_recipient.update! sms_status: :undelivered
+            }.not_to change(deliveries, :count)
+          end
         end
       end
     end
