@@ -29,7 +29,7 @@ module RadCommon
     end
 
     def email_alert_input_label(record, attribute)
-      string_label, content = email_alert_content(record, attribute)
+      string_label, content = contact_alert_content(record, attribute, :email)
       return string_label unless content
 
       tag.label do
@@ -37,23 +37,23 @@ module RadCommon
       end
     end
 
-    def email_show_item(record, attribute)
-      string_label, content = email_alert_content(record, attribute)
+    def contact_show_item(record, attribute, contact_attribute)
+      string_label, content = contact_alert_content(record, attribute, contact_attribute)
       value = record.send(attribute)
 
       { label: string_label, value: content ? safe_join([value, ' ', content]) : value }
     end
 
-    def email_alert_content(record, attribute)
+    def contact_alert_content(record, attribute, contact_attribute)
       string_label = translated_attribute_label(record, attribute)
-      items = ContactLogRecipient.where(email: record.send(attribute)).sorted.limit(1)
+      items = ContactLogRecipient.where("#{contact_attribute} = ?", record.send(attribute)).sorted.limit(1)
       return [string_label, nil] if items.none?
 
       contact_log_recipient = items.first
       return [string_label, nil] if contact_log_recipient.success?
 
       contact_log = contact_log_recipient.contact_log
-      alert_tag = tag.span(class: 'badge badge-danger') { 'Outgoing Email Failed' }
+      alert_tag = tag.span(class: 'badge badge-danger') { 'Outgoing Contact Failed' }
       content = policy(contact_log).show? ? link_to(alert_tag, contact_log) : alert_tag
 
       [string_label, content]
