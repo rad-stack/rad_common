@@ -28,8 +28,8 @@ module RadCommon
        :success]
     end
 
-    def email_alert_input_label(record, attribute)
-      string_label, content = contact_alert_content(record, attribute, :email)
+    def contact_alert_input_label(record, attribute, contact_attribute)
+      string_label, content = contact_alert_content(record, attribute, contact_attribute)
       return string_label unless content
 
       tag.label do
