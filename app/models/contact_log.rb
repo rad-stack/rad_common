@@ -63,9 +63,7 @@ class ContactLog < ApplicationRecord
   def from_user_is_to_user?
     return false if from_user.blank?
 
-    contact_log_recipients.where('email_type IS NULL OR email_type = ?', :to)
-                          .pluck(:to_user_id)
-                          .include?(from_user_id)
+    contact_log_recipients.where(email_type: :to).pluck(:to_user_id).include?(from_user_id)
   end
 
   def record_is_to_user?
