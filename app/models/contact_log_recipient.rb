@@ -62,6 +62,10 @@ class ContactLogRecipient < ApplicationRecord
     success?
   end
 
+  def to_s
+    "Contact Log Recipient #{id}"
+  end
+
   def sms_assume_failed!
     update! sms_status: :failed
 
@@ -158,9 +162,9 @@ class ContactLogRecipient < ApplicationRecord
     end
 
     def recent_sms_logs_to_user
-      @recent_sms_logs_to_user ||= to_user.contact_logs_to.joins(:contact_log)
-                                          .where(contact_logs: { service_type: :sms, sms_log_type: :outgoing })
-                                          .where(created_at: 30.days.ago..)
-                                          .sorted
+      to_user.contact_logs_to.joins(:contact_log)
+             .where(contact_logs: { service_type: :sms, sms_log_type: :outgoing })
+             .where(created_at: 30.days.ago..)
+             .sorted
     end
 end
