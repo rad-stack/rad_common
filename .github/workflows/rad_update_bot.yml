@@ -11,6 +11,13 @@ on:
       rad_user_email:
         description: 'Email of user who triggered the workflow'
         required: true
+      rc_branch:
+        description: 'Branch to use for rad_common'
+        required: false
+      full_bundle_update:
+        description: 'Run full bundle update with custom branch'
+        required: false
+        default: 'false'
 jobs:
   test:
     environment: test
@@ -56,6 +63,16 @@ jobs:
       - name: Yarn install
         run: yarn install
       # Add or replace test runners here
+
+      - name: Update rad_common branch (if provided)
+        if: ${{ github.event.inputs.rc_branch != '' }}
+        run: |
+          sed -i "/gem 'rad_common'/ s|branch: 'main'|branch: '${{ github.event.inputs.rc_branch }}'|" Gemfile
+          if [ "${{ github.event.inputs.full_bundle_update }}" == "true" ]; then
+            bundle update
+          else
+            bundle install
+          fi
 
       - name: RC Update
         run: bin/rc_update
