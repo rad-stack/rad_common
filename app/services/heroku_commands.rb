@@ -38,7 +38,7 @@ class HerokuCommands
         check_valid_app(app_name)
         if backup_id.blank?
           write_log 'Running backup on Heroku...'
-          `heroku pg:backups capture #{app_option(app_name)}`
+          `heroku pg:backups:capture #{app_option(app_name)}`
         end
 
         url_output = if backup_id.present?
