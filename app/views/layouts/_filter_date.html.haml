@@ -12,7 +12,9 @@
                 label_html: { class: filter.start_label_class },
                 input_html: { value: search.search_params[filter.start_input] || filter.default_start_value.to_s,
                               data: input_data }
-    .my-auto.pt-2.px-1= date_filter_dropdown_label(filter)
+    .my-auto.pt-2.px-1
+      - col = filter.column.to_s.underscore
+      = date_filter_dropdown_label("[name='search[#{col}_start]']", "[name='search[#{col}_end]']")
     .flex-grow-1
       - input_data = { default: search.search_params[filter.end_input] || filter.default_end_value.to_s }
 
