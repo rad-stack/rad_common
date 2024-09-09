@@ -93,9 +93,8 @@ jobs:
             public/packs
             public/packs-test
             node_modules
-          key: ${{ runner.os }}-webpacker-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-webpacker-
+            tmp/cache/webpacker
+          key: webpacker-${{ hashFiles('**/package-lock.json') }}
 
       - name: Compile Webpacker assets
         working-directory: spec/dummy
