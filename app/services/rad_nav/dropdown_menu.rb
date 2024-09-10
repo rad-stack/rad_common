@@ -15,6 +15,7 @@ module RadNav
       return unless permission
 
       check_items
+      return if content_items.empty?
 
       tag.li(class: 'nav-item dropdown px-2') do
         safe_join [menu_header, menu_content]
@@ -49,8 +50,12 @@ module RadNav
 
       def menu_content
         tag.ul(class: 'dropdown-menu') do
-          safe_join(items.map(&:content))
+          safe_join(content_items)
         end
+      end
+
+      def content_items
+        @content_items ||= items.map(&:content).compact
       end
 
       def check_items
