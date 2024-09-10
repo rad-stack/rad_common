@@ -1,9 +1,10 @@
 class DateFilterDropdownPresenter
-  attr_reader :view, :filter
+  attr_reader :view, :start_target, :end_target
 
-  def initialize(view_context, filter)
+  def initialize(view_context, start_target, end_target)
     @view = view_context
-    @filter = filter
+    @start_target = start_target
+    @end_target = end_target
   end
 
   def render
@@ -25,7 +26,8 @@ class DateFilterDropdownPresenter
     def dropdown_menu_attrs
       { class: 'dropdown-menu search-date-filter',
         'aria-labelledby' => 'date-range-dropdown',
-        'data-filter-target' => filter.column.to_s.underscore }
+        'data-filter-target-start' => start_target,
+        'data-filter-target-end' => end_target }
     end
 
     def current_ranges

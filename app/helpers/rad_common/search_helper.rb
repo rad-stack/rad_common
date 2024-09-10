@@ -6,8 +6,8 @@ module RadCommon
       end
     end
 
-    def date_filter_dropdown_label(filter)
-      DateFilterDropdownPresenter.new(self, filter).render
+    def date_filter_dropdown_label(start_target, end_target)
+      DateFilterDropdownPresenter.new(self, start_target, end_target).render
     end
   end
 end
