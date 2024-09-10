@@ -90,12 +90,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            public/packs
-            public/packs-test
-            node_modules
-          key: ${{ runner.os }}-webpacker-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-webpacker-
+            spec/dummy/public/packs
+            spec/dummy/public/packs-test
+            spec/dummy/node_modules
+            spec/dummy/tmp/cache/webpacker
+          key: webpacker-${{ hashFiles('**/package-lock.json') }}
 
       - name: Compile Webpacker assets
         working-directory: spec/dummy
