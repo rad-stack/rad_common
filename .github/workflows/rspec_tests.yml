@@ -94,7 +94,7 @@ jobs:
             spec/dummy/public/packs-test
             spec/dummy/node_modules
             spec/dummy/tmp/cache/webpacker
-          key: webpacker-${{ hashFiles('**/package-lock.json') }}
+          key: webpacker-${{ hashFiles('**/yarn.lock') }}
 
       - name: Compile Webpacker assets
         working-directory: spec/dummy
