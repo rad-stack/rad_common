@@ -10,7 +10,7 @@ class DateFilterDropdownPresenter
   def render
     view.tag.label(class: 'mb-0') do
       view.tag.a(**icon_attrs) + view.tag.div(**dropdown_menu_attrs) do
-        current_ranges + previous_ranges
+        current_ranges + previous_ranges + clear_option
       end
     end
   end
@@ -43,5 +43,10 @@ class DateFilterDropdownPresenter
 
     def range_tag(range)
       view.tag.a(range.titleize, href: '#', 'data-range' => range, class: 'dropdown-item')
+    end
+
+    def clear_option
+      view.tag.div(class: 'dropdown-divider') +
+        view.tag.a('Clear', href: '#', class: 'dropdown-item text-danger', 'data-range' => 'clear')
     end
 end
