@@ -52,6 +52,7 @@ class ContactLogRecipient < ApplicationRecord
   validate :validate_incoming_fields
 
   before_validation :check_success
+  before_validation :check_sms_false_positive
   after_validation :assign_to_user
   after_commit :notify!, only: :update, if: :notify_failure?
 
@@ -69,7 +70,7 @@ class ContactLogRecipient < ApplicationRecord
   def sms_assume_failed!
     update! sms_status: :failed
 
-    Rails.logger.info "sms_assume_failed for #{id}: sms_false_positive?=#{sms_false_positive?}"
+    Rails.logger.info "sms_assume_failed for #{id}"
 
     return unless notify_on_fail?
     return if sms_false_positive?
@@ -93,6 +94,13 @@ class ContactLogRecipient < ApplicationRecord
       elsif contact_log.email?
         self.success = email_status_delivered?
       end
+    end
+
+    def check_sms_false_positive
+      return if contact_log.blank?
+
+      self.sms_false_positive =
+        !success? && contact_log.sms? && contact_log.outgoing? && to_user.present? && sms_mostly_successful?
     end
 
     def assign_to_user
@@ -134,10 +142,6 @@ class ContactLogRecipient < ApplicationRecord
       return success_previously_changed?(from: true, to: false) if contact_log.email?
 
       sms_status_previously_changed? && sms_status_undelivered? && !sms_false_positive?
-    end
-
-    def sms_false_positive?
-      !success? && contact_log.sms? && contact_log.outgoing? && to_user.present? && sms_mostly_successful?
     end
 
     def sms_mostly_successful?
