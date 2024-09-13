@@ -22,6 +22,7 @@
           %th SendGrid Reason
         - if @contact_log.sms?
           %th Phone #
+          %th SMS False Positive
           %th SMS Status
         %th Success?
       - @contact_log_recipients.each do |record|
@@ -46,6 +47,7 @@
             %td
               - if record.phone_number.present?
                 = link_to record.phone_number, record
+            %td= link_to format_boolean(record.sms_false_positive), record
             %td
               - if record.sms_status.present?
                 = link_to enum_to_translated_option(record, :sms_status), record
