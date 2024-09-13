@@ -327,6 +327,7 @@ module RadCommon
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
           gsub_file '.github/workflows/rad_update_bot.yml', 'rad_common_development', 'cannasaver_admin_development'
           gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
+          gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
           gsub_file '.github/workflows/rspec_tests.yml',
                    "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
                    'bin/rc_parallel_rspec'
