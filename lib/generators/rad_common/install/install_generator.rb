@@ -432,6 +432,7 @@ Seeder.new.seed!
           apply_migration '20240710175508_fix_contact_to_users.rb'
           apply_migration '20240803114036_bcc_notify_recipient.rb'
           apply_migration '20240912133320_persist_sms_false_positive.rb'
+          apply_migration '20240911184745_fix_last_activity.rb'
         end
 
         def installed_app_name

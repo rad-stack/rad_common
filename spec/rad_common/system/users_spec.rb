@@ -253,7 +253,7 @@ RSpec.describe 'Users', type: :system do
           end
 
           expect(page).to have_content 'User was successfully reactivated'
-          expect(user.reload.last_activity_at).to be_nil
+          expect(user.reload.last_activity_at).not_to be_nil
         end
       end
 

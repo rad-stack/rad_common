@@ -72,6 +72,7 @@ module RadUser
     validate :validate_twilio_verify
     validate :validate_mobile_phone
     validate :password_excludes_name
+    validate :validate_last_activity
 
     # this should be changed to "if: :active?" at some point, see Task 2024
     validates :security_roles, presence: true, if: :active_for_authentication?
@@ -227,7 +228,7 @@ module RadUser
   end
 
   def reactivate
-    update(last_activity_at: nil)
+    update last_activity_at: Time.current
   end
 
   def locale
@@ -259,6 +260,7 @@ module RadUser
       return unless new_record?
 
       self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && (RadConfig.twilio_verify_all_users? || admin?)
+      self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
     end
 
     def default_user_status
@@ -327,6 +329,12 @@ module RadUser
       return unless password.downcase.include?(first_name.downcase) || password.downcase.include?(last_name.downcase)
 
       errors.add(:password, 'cannot contain your name')
+    end
+
+    def validate_last_activity
+      return unless RadConfig.user_expirable? && last_activity_at.blank?
+
+      errors.add :last_activity_at, 'is required'
     end
 
     def set_timezone
