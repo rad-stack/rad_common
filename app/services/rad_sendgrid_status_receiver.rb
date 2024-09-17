@@ -4,7 +4,6 @@ class RadSendgridStatusReceiver
 
   def initialize(content)
     @content = content
-    @notify = true
 
     check_events
   end
@@ -76,7 +75,12 @@ class RadSendgridStatusReceiver
       # we can also add a uniqueness check to prevent the scenario further upstream
       raise "multiple recipients with same email #{email} for contact log #{contact_log.id}" if recipients.size > 1
 
-      recipients.first.update! email_status: event, sendgrid_reason: reason, notify_on_fail: @notify
+      recipient = recipients.first
+
+      recipient.email_status = event
+      recipient.sendgrid_reason = reason
+      recipient.notify_on_fail = @notify unless @notify.nil?
+      recipient.save!
     end
 
     def contact_log_id

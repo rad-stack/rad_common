@@ -36,4 +36,22 @@ describe SendgridStatusReceiver, type: :service do
     contact_log.destroy!
     expect(service.process!).to be_nil
   end
+
+  it "doesn't notify for email changed email failures" do
+    # TODO: refactor this spec to use better patterns
+    RadDeviseMailer.email_changed(user).deliver_now
+    contact_log = ContactLog.last
+    expect(contact_log.content).to eq 'Email Changed'
+
+    content = { event: event_type,
+                type: 'block',
+                email: user.email,
+                host_name: RadConfig.host_name!,
+                contact_log_id: contact_log.id }
+
+    deliveries.clear
+    described_class.new(content).process!
+
+    expect(last_email).to be_nil
+  end
 end
