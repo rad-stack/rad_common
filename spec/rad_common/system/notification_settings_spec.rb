@@ -15,7 +15,7 @@ RSpec.describe 'NotificationSettings', type: :system do
         expect(page).to have_content(notification_type.description)
       end
 
-      it 'updates the settings successfully without save button', :js do
+      it 'updates the settings successfully without save button', :js, :non_react_specs do
         visit '/rad_common/notification_settings'
         expect(NotificationSetting.count).to eq 0
         page.check('notification_setting[feed]')
@@ -23,7 +23,7 @@ RSpec.describe 'NotificationSettings', type: :system do
         expect(NotificationSetting.count).to eq 1
       end
 
-      it 'displays error message when updating without button', :js do
+      it 'displays error message when updating without button', :js, :non_react_specs do
         visit '/rad_common/notification_settings'
         page.uncheck('notification_setting[email]')
         expect(accept_alert).to eq 'The setting could not be saved: Enabled requires one of email/sms/feed be turned on'

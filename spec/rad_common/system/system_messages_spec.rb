@@ -23,7 +23,7 @@ RSpec.describe 'SystemMessages', type: :system do
         expect(page.all('#system_message_message_type option').map(&:value)).to eq ['email']
       end
 
-      it 'shows custom trix actions', :js do
+      it 'shows custom trix actions', :js, :non_react_specs do
         expect(page.body).to include 'trix-button--icon-color'
       end
     end
@@ -46,7 +46,7 @@ RSpec.describe 'SystemMessages', type: :system do
       end
 
       context 'when dynamically changing fields', :js do
-        it 'shows and hides trix editor based on message type' do
+        it 'shows and hides trix editor based on message type', :non_react_specs do
           find('body').click
           expect(page).to have_css('.email-message', visible: :visible)
           expect(page).to have_css('.sms-message', visible: :hidden)

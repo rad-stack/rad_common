@@ -6,7 +6,7 @@ RSpec.describe 'AreYouSure', type: :system do
   before { login_as user, scope: :user }
 
   describe 'global super search field' do
-    it 'does not warn', :js do
+    it 'does not warn', :js, :non_react_specs do
       visit '/'
       fill_in 'global_search_name', with: 'test'
       find('body').click

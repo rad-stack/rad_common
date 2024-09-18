@@ -144,6 +144,7 @@ RSpec.configure do |config|
   config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
   config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
   config.filter_run_excluding(password_expirable_specs: true) unless RadConfig.password_expirable?
+  config.filter_run_excluding(non_react_specs: true) if RadConfig.react_app?
 
   include Warden::Test::Helpers
   config.include Capybara::DSL
