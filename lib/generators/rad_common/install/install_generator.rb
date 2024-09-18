@@ -6,7 +6,7 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
-        remove_file 'app/views/layouts/_navigation.html.haml'
+        remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.react_app?
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
@@ -27,12 +27,16 @@ module RadCommon
         gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
 
         # misc
-        merge_package_json
+        merge_package_json unless RadConfig.react_app?
         copy_custom_github_actions
         copy_custom_github_matrix
         copy_file '../../../../../.ruby-version', '.ruby-version'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
-        copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+        end
+
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
