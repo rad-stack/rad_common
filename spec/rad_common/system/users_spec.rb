@@ -227,7 +227,7 @@ RSpec.describe 'Users', type: :system do
         visit user_path(user)
       end
 
-      it 'can manually confirm a user', :js, :user_confirmable_specs, :non_react_specs do
+      it 'can manually confirm a user', :js, :non_react_specs, :user_confirmable_specs do
         page.accept_confirm do
           click_link 'Confirm Email'
         end
