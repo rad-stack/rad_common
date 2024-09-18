@@ -43,8 +43,15 @@ module RadCommon
         copy_file '../pull_request_template.md', '.github/pull_request_template.md'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
-        copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
-        copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js', 'app/javascript/packs/rad_mailer.js'
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/app/javascript/packs/application.js',
+                    'app/javascript/packs/application.js'
+        end
+
+        copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js',
+                  'app/javascript/packs/rad_mailer.js'
+
         directory '../../../../../.bundle', '.bundle'
 
         # code style config
@@ -58,17 +65,24 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
-        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
-        gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+          gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
 
-        if !RadConfig.config_item(:legacy_rails_config).nil? && RadConfig.legacy_rails_config?
-          gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
+          if !RadConfig.config_item(:legacy_rails_config).nil? && RadConfig.legacy_rails_config?
+            gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
+          end
+
+          copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         end
 
-        copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
-        directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
-        directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
+
+        unless RadConfig.react_app?
+          directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
+          directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
+        end
+
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
@@ -130,13 +144,15 @@ module RadCommon
         copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb',
                   'lib/templates/rspec/system/system_spec.rb'
 
-        create_file 'db/seeds.rb' do <<-'RUBY'
+        unless RadConfig.react_app?
+          create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 require 'rad_rspec/rad_factories'
 
 RadFactories.load!
 Seeder.new.seed!
         RUBY
+          end
         end
 
         inject_into_file 'config/routes.rb', after: 'Rails.application.routes.draw do' do <<-'RUBY'
@@ -198,6 +214,8 @@ Seeder.new.seed!
         end
 
         def apply_migration(source)
+          return if RadConfig.react_app?
+
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
           if self.class.migration_exists?('db/migrate', filename)
@@ -335,7 +353,17 @@ Seeder.new.seed!
           copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
           remove_file '.github/workflows/rc_update.yml'
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
-          gsub_file '.github/workflows/rad_update_bot.yml', 'rad_common_development', "#{installed_app_name}_development"
+
+          if RadConfig.react_app?
+            gsub_file '.github/workflows/rad_update_bot.yml',
+                      'rad_common_development',
+                      'cannasaver_admin_development'
+          else
+            gsub_file '.github/workflows/rad_update_bot.yml',
+                      'rad_common_development',
+                      "#{installed_app_name}_development"
+          end
+
           gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
           gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
           gsub_file '.github/workflows/rspec_tests.yml',
