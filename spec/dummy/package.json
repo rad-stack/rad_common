@@ -8,7 +8,7 @@
     "@fortawesome/fontawesome-free": "^6.1.1",
     "@rails/actiontext": "^6.0.2-1",
     "@rails/webpacker": "5.4.3",
-    "rad_common_js": "https://github.com/rad-stack/rad_common_js#07783b501f934cb37a4e94dd526998691b2f13ad"
+    "rad_common_js": "https://github.com/rad-stack/rad_common_js#f79874913291f6a911eb90e9ef6cee5daec9010b"
   },
   "devDependencies": {
     "webpack": "^4.41.2",
