@@ -5,7 +5,7 @@ class Attorney < ApplicationRecord
   scope :sorted, -> { order(:first_name, :last_name) }
 
   scope :created_between, lambda { |start_date, end_date|
-    where('created_at >= ? and created_at <= ?', start_date, end_date)
+    where(created_at: start_date..end_date)
   }
 
   scope :with_cities, ->(cities) { where(city: cities) }
