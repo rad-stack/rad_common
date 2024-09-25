@@ -64,7 +64,10 @@ class RadSendgridStatusReceiver
 
       @notify = false
       user.update! user_status: UserStatus.default_inactive_status
+
+      # TODO: make this a notification once stable
       RadMailer.simple_message('gary.foster@radstack.com', "User #{user.email} Deactivated", "User #{user.email} Deactivated").deliver_later
+
       Rails.logger.info "sendgrid status: suppression received from stale user #{user.email}, deactivating"
     end
 
