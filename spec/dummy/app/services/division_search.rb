@@ -17,9 +17,7 @@ class DivisionSearch < RadCommon::Search
        options: [['Active', User.active.sorted],
                  ['Inactive', User.inactive.sorted]],
        grouped: true },
-     { input_label: 'Status', column: :division_status,
-       options: RadEnum.new(Division, :division_status).db_options,
-       required: true },
+     { input_label: 'Status', column: :division_status, type: RadCommon::EnumFilter, klass: Division, required: true },
      {
        input_label: 'Category',
        column: :category_id,
@@ -34,6 +32,7 @@ class DivisionSearch < RadCommon::Search
        start_input_label: 'Division Created At Start',
        end_input_label: 'Division Created At End',
        default_start_value: Date.current, default_end_value: Date.current },
+     { column: :notify, type: RadCommon::BooleanFilter },
      { name: 'show_header', type: RadCommon::HiddenFilter }]
   end
 
