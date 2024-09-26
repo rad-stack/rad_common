@@ -1,4 +1,4 @@
-class RadMailer < ActionMailer::Base
+class RadMailer < ApplicationMailer
   include RadContactMailer
   include ActionView::Helpers::TextHelper
   include RadCommon::ApplicationHelper
@@ -138,6 +138,6 @@ class RadMailer < ActionMailer::Base
     end
 
     def escape_name(recipient_name)
-      recipient_name.gsub(',', ' ')
+      recipient_name.gsub(/[<>]/, '').gsub(',', ' ').strip
     end
 end
