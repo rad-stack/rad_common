@@ -1,4 +1,4 @@
-class RadMailer < ApplicationMailer
+class RadMailer < ActionMailer::Base
   include RadContactMailer
   include ActionView::Helpers::TextHelper
   include RadCommon::ApplicationHelper
