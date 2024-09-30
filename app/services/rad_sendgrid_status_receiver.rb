@@ -13,7 +13,7 @@ class RadSendgridStatusReceiver
     return unless host_matches?
     return if missing_contact_log?
 
-    process_status!
+    process_status
     update_contact_log!
   end
 
@@ -59,9 +59,17 @@ class RadSendgridStatusReceiver
 
   private
 
-    def process_status!
-      return unless suppression? && user.present? && (spam_report? || user.stale?)
+    def process_status
+      return unless deactivate_user?
 
+      deactivate_user!
+    end
+
+    def deactivate_user?
+      suppression? && user.present? && (spam_report? || user.stale?)
+    end
+
+    def deactivate_user!
       @notify = false
       user.update! user_status: UserStatus.default_inactive_status
 
