@@ -5,9 +5,9 @@ describe SendgridStatusReceiver, type: :service do
   let(:deliveries) { ActionMailer::Base.deliveries }
   let(:last_email) { deliveries.last }
   let(:user) { create :user }
-  let(:attorney) { create :attorney }
+  let(:attorney) { create :attorney, last_name: "O'Connor" }
   let(:event_type) { 'bounce' }
-  let(:contact_log) { create :contact_log, :email, record: attorney, content: "Once you've accepted your flaws, no one can use them against you." }
+  let(:contact_log) { create :contact_log, :email, record: attorney }
 
   let(:content) do
     { event: event_type,
