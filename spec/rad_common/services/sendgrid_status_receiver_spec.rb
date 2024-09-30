@@ -53,7 +53,7 @@ describe SendgridStatusReceiver, type: :service do
 
         expect(user.active?).to be false
         expect(deliveries.count).to eq 1
-        expect(last_email.subject).to eq "User #{user.email} Deactivated"
+        expect(last_email.subject).to eq 'User Deactivated'
       end
     end
 
@@ -68,7 +68,7 @@ describe SendgridStatusReceiver, type: :service do
 
         expect(user.active?).to be false
         expect(deliveries.count).to eq 1
-        expect(last_email.subject).to eq "User #{user.email} Deactivated"
+        expect(last_email.subject).to eq 'User Deactivated'
       end
     end
   end
