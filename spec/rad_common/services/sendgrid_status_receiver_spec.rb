@@ -7,6 +7,7 @@ describe SendgridStatusReceiver, type: :service do
   let(:event_type) { 'bounce' }
   let(:contact_log) { create :contact_log, :email }
   let!(:contact_log_recipient) { create :contact_log_recipient, :email, contact_log: contact_log, email: user.email }
+  let(:last_email) { deliveries.last }
 
   let(:content) do
     { event: event_type, type: 'block', email: user.email, host_name: host_name, contact_log_id: contact_log.id }
@@ -51,7 +52,8 @@ describe SendgridStatusReceiver, type: :service do
         user.reload
 
         expect(user.active?).to be false
-        expect(deliveries.count).to eq 0
+        expect(deliveries.count).to eq 1
+        expect(last_email.subject).to eq 'User Deactivated'
       end
     end
 
@@ -65,7 +67,8 @@ describe SendgridStatusReceiver, type: :service do
         user.reload
 
         expect(user.active?).to be false
-        expect(deliveries.count).to eq 0
+        expect(deliveries.count).to eq 1
+        expect(last_email.subject).to eq 'User Deactivated'
       end
     end
   end
