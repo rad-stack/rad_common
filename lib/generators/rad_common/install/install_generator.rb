@@ -355,8 +355,11 @@ Seeder.new.seed!
         def install_github_workflow
           copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
           copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
+          copy_file '../../../../../.github/workflows/generate_coverage_report.yml',
+                    '.github/workflows/generate_coverage_report.yml'
           remove_file '.github/workflows/rc_update.yml'
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
+          gsub_file '.github/workflows/generate_coverage_report.yml', 'rad_common_test', "#{installed_app_name}_test"
 
           if RadConfig.react_app?
             gsub_file '.github/workflows/rad_update_bot.yml',
