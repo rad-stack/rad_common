@@ -106,7 +106,7 @@ module RadCommon
     end
 
     def icon_tag(icon, text)
-      tag.i('', class: "mr-2 #{icon}") + text
+      tag.i('', class: "me-2 #{icon}") + text
     end
 
     def timezone_us_filter
@@ -146,7 +146,7 @@ module RadCommon
     end
 
     def bootstrap_flash_close_button
-      tag.button(sanitize('&times;'), type: 'button', class: 'close', 'data-dismiss': 'alert')
+      tag.button('', type: 'button', class: 'btn-close me-2', 'data-bs-dismiss': 'alert')
     end
 
     def table_row_style(record, style_class: 'table-danger')
@@ -162,7 +162,7 @@ module RadCommon
     end
 
     def icon(icon, text = nil, options = {})
-      text_class = text.present? ? 'mr-2' : nil
+      text_class = text.present? ? 'me-2' : nil
       capture do
         concat tag.i('', class: "fa fa-#{icon} #{text_class} #{options[:class]}".strip)
         concat text
@@ -202,8 +202,8 @@ module RadCommon
               class: 'btn btn-secondary btn-sm')
     end
 
-    def export_buttons(model_name, **options)
-      %i[csv pdf].map { |format| export_button(model_name, format: format, **options) }.compact
+    def export_buttons(model_name, **)
+      %i[csv pdf].map { |format| export_button(model_name, format: format, **) }.compact
     end
 
     def onboarded?

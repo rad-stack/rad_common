@@ -9,10 +9,10 @@
             %span.input-group-text.global-search-dropdown
               .nav-item.dropdown
 
-                %a.nav-link.dropdown-toggle.text-dark.p-0{ 'data-toggle': 'dropdown', href: '#' }
+                %a.nav-link.dropdown-toggle.text-dark.p-0{ 'data-bs-toggle': 'dropdown', href: '#' }
                   %span{ class: 'fa fa-magnifying-glass search-options',
                        'aria-expanded': 'true',
-                       'data-toggle': 'dropdown' }
+                       'data-bs-toggle': 'dropdown' }
 
                 %ul.dropdown-menu{ 'aria-labelledby': 'dropdownMenu1', role: 'menu' }
                   - search_scopes.each_with_index do |scope, index|
@@ -44,7 +44,7 @@
                      data: { toggle: 'tooltip', placement: 'top' },
                      title: 'Super search takes longer than scoped search.' }
 
-              %input.super_search.ml-2{ type: 'checkbox', name: 'super_search' }
+              %input.super_search.ms-2{ type: 'checkbox', name: 'super_search' }
               %input.global_search_id{ type: 'hidden', name: 'global_search_id' }
               %input.global_search_model_name{ type: 'hidden', name: 'global_search_model_name' }
               %input.global_search_scope{ type: 'hidden', name: 'global_search_scope' }

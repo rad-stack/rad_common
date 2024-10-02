@@ -112,7 +112,7 @@ module RadCommon
       items.push(add_user_client_action(user, true))
 
       if policy(user).update?
-        items.push(link_to(icon(:pencil, 'Edit'), edit_user_path(user), class: 'btn btn-secondary btn-sm btn-block'))
+        items.push(link_to(icon(:pencil, 'Edit'), edit_user_path(user), class: 'btn btn-secondary btn-sm'))
       end
 
       if policy(user).destroy?
@@ -120,7 +120,7 @@ module RadCommon
                            user,
                            method: :delete,
                            data: { confirm: 'Are you sure?' },
-                           class: 'btn btn-danger btn-sm btn-block'))
+                           class: 'btn btn-danger btn-sm'))
       end
 
       items
@@ -193,7 +193,7 @@ module RadCommon
     def add_user_client_action(user, index_page)
       return unless RadConfig.user_clients? && user.external? && policy(UserClient.new(user: user)).new?
 
-      link_class = index_page ? 'btn btn-sm btn-success btn-block' : 'btn btn-sm btn-success'
+      link_class = index_page ? 'btn btn-sm btn-success' : 'btn btn-sm btn-success'
 
       link_to(icon(:plus, "Add #{RadCommon::AppInfo.new.client_model_label} to User"),
               [:new, user, :user_client],
@@ -223,7 +223,7 @@ module RadCommon
                  type: 'button',
                  class: 'btn btn-sm btn-secondary',
                  'data-target': '#users-collapse',
-                 'data-toggle': 'collapse'
+                 'data-bs-toggle': 'collapse'
     end
 
     def user_row_class(user, hide_inactive)

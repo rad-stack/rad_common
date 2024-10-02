@@ -8,6 +8,7 @@ environment.plugins.append(
       jQuery: 'jquery',
       moment: 'moment',
       Raphael: 'raphael',
+      bootstrap: 'bootstrap',
       Popper: ['popper.js', 'default']
     })
 );
