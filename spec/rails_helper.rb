@@ -149,4 +149,6 @@ RSpec.configure do |config|
 
   include Warden::Test::Helpers
   config.include Capybara::DSL
+
+  Sidekiq.logger.level = Logger::WARN
 end
