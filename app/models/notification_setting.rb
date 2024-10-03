@@ -2,8 +2,6 @@ class NotificationSetting < ApplicationRecord
   belongs_to :notification_type
   belongs_to :user
 
-  alias_attribute :active?, :enabled?
-
   scope :enabled, -> { where(enabled: true) }
 
   validate :validate_notify_methods
@@ -14,6 +12,10 @@ class NotificationSetting < ApplicationRecord
 
   def to_s
     "#{user} - #{notification_type}"
+  end
+
+  def active?
+    enabled?
   end
 
   def self.settings_for_user(user)

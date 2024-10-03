@@ -6,12 +6,14 @@ class NotificationType < ApplicationRecord
 
   attr_accessor :payload
 
-  alias_attribute :to_s, :description
-
   scope :by_type, -> { order(:type) }
 
   validates_with EmailAddressValidator, fields: [:bcc_recipient]
   validate :validate_auth
+
+  def to_s
+    description
+  end
 
   def email_enabled?
     true
