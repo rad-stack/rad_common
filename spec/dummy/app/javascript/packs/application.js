@@ -15,3 +15,7 @@ import { RadCommon } from 'rad_common_js/src/radCommon';
 RadCommon.setup();
 
 import './app_specific.js';
+
+$(document).ready(function () {
+  $('.selectpicker').selectpicker();
+});

@@ -15,7 +15,7 @@ module SimpleForm
       def tooltip_tag
         template.content_tag(:i, '', class: 'fa fa-circle-question custom-tooltip tooltip-pad',
                                      'data-bs-toggle' => 'tooltip',
-                                     'data-original-title' => options[:tooltip])
+                                     'data-o=title' => options[:tooltip])
       end
     end
   end
