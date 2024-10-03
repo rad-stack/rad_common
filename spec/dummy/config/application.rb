@@ -20,6 +20,16 @@ Bundler.require(*Rails.groups)
 
 module Dummy
   class Application < Rails::Application
+    config.generators do |g|
+      g.helper false
+      g.stylesheets false
+      g.javascripts false
+      g.view_specs false
+      g.helper_specs false
+      g.routing_specs false
+      g.controller_specs false
+    end
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.1
 
