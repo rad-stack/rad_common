@@ -13,6 +13,8 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
+# Heroku API
+gem 'platform-api'
 gem 'devise-twilio-verify', git: 'https://github.com/jayywolff/twilio-verify-devise.git',
                             branch: 'authy-to-twilio-verify'
 

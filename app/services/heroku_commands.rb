@@ -1,21 +1,27 @@
+require 'platform-api'
+
 class HerokuCommands
   IGNORED_HEROKU_ERRORS = ['free Heroku Dynos will'].freeze
 
   class << self
+    # This initializes the client, need to add api key
+    def heroku_client
+      @heroku_client ||= PlatformAPI.connect_oauth(ENV['api_key'])
+    end
+
     def backup(app_name)
       check_production!
 
       check_valid_app(app_name)
       FileUtils.mkdir_p dump_folder
 
-      Bundler.with_unbundled_env do
-        url_output = `heroku pg:backups:url #{app_option(app_name)}`
-        backup_url = "\"#{url_output.strip}\""
+      # This uses the api for backup
+      backup = heroku_client.backup.capture.create(app_name)
+      backup_url = backup['public-url']
 
-        write_log backup_url
-        write_log 'Downloading last backup file:'
-        write_log `curl -o #{backup_dump_file(app_name)} #{backup_url}`
-      end
+      write_log backup_url
+      write_log 'Downloading last backup file:'
+      write_log `curl -o #{backup_dump_file(app_name)} #{backup_url}`
     end
 
     def restore_from_backup(file_name)
@@ -34,24 +40,18 @@ class HerokuCommands
     def clone(app_name, backup_id)
       check_production!
 
-      Bundler.with_unbundled_env do
-        check_valid_app(app_name)
-        if backup_id.blank?
-          write_log 'Running backup on Heroku...'
-          `heroku pg:backups:capture #{app_option(app_name)}`
-        end
+      check_valid_app(app_name)
 
-        url_output = if backup_id.present?
-                       `heroku pg:backups:url #{backup_id} #{app_option(app_name)}`
-                     else
-                       `heroku pg:backups:url #{app_option(app_name)}`
-                     end
+      # This captures a backup if blank
+      backup_id ||= heroku_client.backup.capture.create(app_name)['id']
 
-        backup_url = "\"#{url_output.strip}\""
+      # This fetches the backup info
+      backup_info = heroku_client.backup.info(app_name, backup_id)
+      backup_url = backup_info['public-url']
+      write_log backup_url
 
-        write_log 'Downloading dump file:'
-        write_log `curl -o #{clone_dump_file} #{backup_url}`
-      end
+      write_log 'Downloading dump file:'
+      write_log `curl -o #{clone_dump_file} #{backup_url}`
 
       restore_from_backup(clone_dump_file)
 
@@ -76,47 +76,49 @@ class HerokuCommands
     end
 
     def reset_staging(app_name)
-      Bundler.with_unbundled_env do
-        check_valid_app(app_name)
-        unless heroku_rails_environment(app_name) == 'staging'
-          write_log 'This is only available in the staging environment.'
-          return
-        end
-
-        write_log `heroku pg:reset DATABASE_URL #{app_option(app_name)} --confirm #{app_name}`
-        write_log `heroku run rails db:schema:load #{app_option(app_name)}`
-        write_log `heroku run rails db:seed #{app_option(app_name)}`
-        write_log `heroku restart #{app_option(app_name)}`
-
-        write_log 'Done.'
+      check_valid_app(app_name)
+      unless heroku_rails_environment(app_name) == 'staging'
+        write_log 'This is only available in the staging environment.'
+        return
       end
+
+      # This resets the database
+      heroku_client.pg_reset.create(app_name)
+
+      # This restarts the app
+      heroku_client.dyno.restart_all(app_name)
+
+      write_log 'Done.'
     end
 
     def copy_production_data(production_app_name, staging_app_name)
-      Bundler.with_unbundled_env do
-        check_valid_app(production_app_name)
-        check_valid_app(staging_app_name)
-        unless heroku_rails_environment(staging_app_name) == 'staging'
-          write_log 'This is only available in the staging environment.'
-          return
-        end
-
-        write_log `heroku pg:copy #{production_app_name}::DATABASE_URL DATABASE_URL --app #{staging_app_name}`
-        write_log `heroku restart --app #{staging_app_name}`
-        write_log `heroku run rails db:migrate --app #{staging_app_name}`
-
-        write_log 'Done.'
+      check_valid_app(production_app_name)
+      check_valid_app(staging_app_name)
+      unless heroku_rails_environment(staging_app_name) == 'staging'
+        write_log 'This is only available in the staging environment.'
+        return
       end
+
+      # This copies the production database to staging
+      heroku_client.pg_copy.create(production_app_name, staging_app_name)
+
+      # This restarts the staging app
+      heroku_client.dyno.restart_all(staging_app_name)
+
+      write_log 'Done.'
     end
 
     private
+
+
 
       def app_option(app_name)
         "--app #{app_name}"
       end
 
+      # This gets the rails environment from Heroku
       def heroku_rails_environment(app_name)
-        `heroku config:get RAILS_ENV #{app_option(app_name)}`.strip
+        heroku_client.config_var.info(app_name)['RAILS_ENV']
       end
 
       def backup_dump_file(app_name)
@@ -171,10 +173,13 @@ class HerokuCommands
         puts message
       end
 
+      # This checks if an app is valid
       def check_valid_app(app_name)
-        _output, error = Open3.capture3("heroku apps:info #{app_option(app_name)}")
-
-        raise error if valid_error?(error)
+        begin
+          heroku_client.app.info(app_name)
+        rescue StandardError => e
+          raise "Invalid app: #{e.message}"
+        end
       end
 
       def valid_error?(error)
