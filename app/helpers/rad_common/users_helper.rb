@@ -109,7 +109,7 @@ module RadCommon
     def user_index_actions(user)
       items = []
 
-      items.push(add_user_client_action(user, true))
+      items.push(add_user_client_action(user))
 
       if policy(user).update?
         items.push(link_to(icon(:pencil, 'Edit'), edit_user_path(user), class: 'btn btn-secondary btn-sm'))
@@ -187,17 +187,15 @@ module RadCommon
     end
 
     def user_client_actions(user)
-      [add_user_client_action(user, false)]
+      [add_user_client_action(user)]
     end
 
-    def add_user_client_action(user, index_page)
+    def add_user_client_action(user)
       return unless RadConfig.user_clients? && user.external? && policy(UserClient.new(user: user)).new?
-
-      link_class = index_page ? 'btn btn-sm btn-success' : 'btn btn-sm btn-success'
 
       link_to(icon(:plus, "Add #{RadCommon::AppInfo.new.client_model_label} to User"),
               [:new, user, :user_client],
-              class: link_class)
+              class: 'btn btn-sm btn-success')
     end
 
     def reactivate_user_warning(user)

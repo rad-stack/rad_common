@@ -128,7 +128,8 @@ module RadCommon
         next unless ALERT_TYPES.include?(type)
 
         Array(message).each do |msg|
-          flash_messages << tag.div(bootstrap_flash_close_button + msg, class: "alert alert-dismissible in alert-#{type}") if msg
+          alert_class = "alert alert-dismissible in alert-#{type}"
+          flash_messages << tag.div(bootstrap_flash_close_button + msg, class: alert_class) if msg
         end
       end
 
