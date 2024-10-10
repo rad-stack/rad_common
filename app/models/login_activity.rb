@@ -7,5 +7,7 @@ class LoginActivity < ApplicationRecord
 
   strip_attributes
 
-  alias_attribute :active?, :success?
+  def active?
+    success?
+  end
 end
