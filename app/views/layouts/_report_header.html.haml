@@ -20,8 +20,8 @@
     .card-body
       = simple_form_for :report, url: main_path, method: :get do |f|
         .form-inputs
-          .row
-            .col-lg-2
+          .d-flex.jusify-space-between.col-lg-5.flex-wrap
+            .flex-grow-1
               = f.input :start_date,
                         as: :date,
                         html5: true,
@@ -29,7 +29,7 @@
                         inline: false,
                         input_html: { value: @report.start_date }
             .my-auto.pt-2.px-1= date_filter_dropdown_label('#report_start_date', '#report_end_date')
-            .col-lg-2
+            .flex-grow-1
               = f.input :end_date, as: :date, html5: true, required: true, input_html: { value: @report.end_date }
           - if lookup_context.exists?('report_form', controller_name, true)
             = render partial: "#{controller_name}/report_form", locals: { f: f }

@@ -1067,6 +1067,11 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
+"@popperjs/core@^2.11.8":
+  version "2.11.8"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
+  integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
+
 "@rails/actiontext@^6.0.2-1":
   version "6.1.7"
   resolved "https://registry.yarnpkg.com/@rails/actiontext/-/actiontext-6.1.7.tgz#62997bda1d938743ed36bb802885592b01bc6782"
@@ -1813,15 +1818,15 @@ boolbase@^1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
 
-bootstrap-select@^1.13.18:
-  version "1.13.18"
-  resolved "https://registry.yarnpkg.com/bootstrap-select/-/bootstrap-select-1.13.18.tgz#4557119d58dc1159189977161c803962220e4dda"
-  integrity sha512-V1IzK4rxBq5FrJtkzSH6RmFLFBsjx50byFbfAf8jYyXROWs7ZpprGjdHeoyq2HSsHyjJhMMwjsQhRoYAfxCGow==
+bootstrap-select@v1.14.0-beta3:
+  version "1.14.0-beta3"
+  resolved "https://registry.yarnpkg.com/bootstrap-select/-/bootstrap-select-1.14.0-beta3.tgz#dc15083fe51d0ac7b38a3b99dfd492dcc0a783b0"
+  integrity sha512-wYUDY4NAYBcNydXybE7wh3+ucyf+AcUOhZ+e0TFIoZ38A+k/3BVT1RPl5f0CiPxAexP1IQuqALKMqI8wtZS71A==
 
-bootstrap@^4.0.0:
-  version "4.6.2"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.6.2.tgz#8e0cd61611728a5bf65a3a2b8d6ff6c77d5d7479"
-  integrity sha512-51Bbp/Uxr9aTuy6ca/8FbFloBUJZLHwnhTcnjIeRn2suQWsWzcuJhGjKDB5eppVte/8oCdOL3VuwxvZDUggwGQ==
+bootstrap@^5.0.0:
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.3.3.tgz#de35e1a765c897ac940021900fcbb831602bac38"
+  integrity sha512-8HLCdWgyoMguSO9o+aH+iuZ+aht+mzW0u3HIMzVu7Srrpv7EBBxTnrFlSCskwdY1+EOFQSm7uMJhNQHkdPcmjg==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -5932,11 +5937,6 @@ pnp-webpack-plugin@^1.7.0:
   dependencies:
     ts-pnp "^1.1.6"
 
-popper.js@^1.16.1:
-  version "1.16.1"
-  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
-  integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
-
 portfinder@^1.0.26:
   version "1.0.32"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.32.tgz#2fe1b9e58389712429dc2bea5beb2146146c7f81"
@@ -6773,23 +6773,23 @@ quick-lru@^4.0.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-4.0.1.tgz#5b8878f113a58217848c6482026c73e1ba57727f"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
 
-"rad_common_js@https://github.com/rad-stack/rad_common_js#f79874913291f6a911eb90e9ef6cee5daec9010b":
+"rad_common_js@https://github.com/rad-stack/rad_common_js#36eaf8dac7b67964d27d3b55decb680f59029223":
   version "2.1.8"
-  resolved "https://github.com/rad-stack/rad_common_js#f79874913291f6a911eb90e9ef6cee5daec9010b"
+  resolved "https://github.com/rad-stack/rad_common_js#36eaf8dac7b67964d27d3b55decb680f59029223"
   dependencies:
+    "@popperjs/core" "^2.11.8"
     "@rails/actiontext" "^6.0.2-1"
     "@rails/ujs" "^6.0.5"
     "@rails/webpacker" "5.4.3"
     ajax-bootstrap-select "^1.4.5"
-    bootstrap "^4.0.0"
-    bootstrap-select "^1.13.18"
+    bootstrap "^5.0.0"
+    bootstrap-select v1.14.0-beta3
     chosen-js "^1.8.7"
     jquery "^3.3.1"
     jquery-ui "^1.12.1"
     jquery-ujs "^1.2.3"
     jquery.are-you-sure "^1.9.0"
     moment "^2.29.4"
-    popper.js "^1.16.1"
     postcss "^8.2.10"
     readmore-js "^2.2.1"
     trix "^1.0.0"
