@@ -25,17 +25,17 @@
           %td= secured_link(record.owner)
           %td= render_one_attachment record: record, attachment_name: 'logo', new_tab: true
           - if show_actions
-            %td
+            %td.d-grid.gap-2
               - if policy(record).update?
                 = link_to icon(:pencil, 'Edit'),
                           edit_division_path(record),
-                          class: 'btn btn-sm btn-secondary btn-block'
+                          class: 'btn btn-sm btn-secondary'
 
               - if policy(record).destroy?
                 = link_to icon(:times, 'Delete'),
                           record,
                           method: :delete,
                           data: { confirm: 'Are you sure?' },
-                          class: 'btn btn-danger btn-sm btn-block'
+                          class: 'btn btn-danger btn-sm'
 
     = paginate @divisions, theme: 'twitter-bootstrap-4'

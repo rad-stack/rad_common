@@ -21,7 +21,7 @@
               %p
           %td= record.bcc_recipient
           %td= format_boolean record.active?
-          %td
+          %td.d-grid.gap-2
             = link_to icon(:pencil, 'Edit'),
                       "/rad_common/notification_types/#{record.id}/edit",
                       class: 'btn btn-sm btn-secondary btn-block'

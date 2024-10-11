@@ -10,12 +10,11 @@
           %td= permission_category.first
           %td
             - permission_category.last.each do |permission|
-              .row.col-lg-12
+              .d-flex.align-items-center.mb-2
                 - if permission[:value]
-                  .fa.fa-check.green-check.align-self-center
+                  %i.fa.fa-check.text-success.me-2
                 - else
-                  .fa.fa-times.red-x.align-self-center
-                &nbsp
+                  %i.fa.fa-times.text-danger.me-2
                 = link_to permission[:permission_label],
                           permission_security_roles_path(permission_name: permission[:permission])
 
