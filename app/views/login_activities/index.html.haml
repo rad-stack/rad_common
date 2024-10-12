@@ -1,7 +1,7 @@
 .card
   = render 'layouts/card_header', title: "Sign In Activity (#{@login_activities.total_count})"
   .card-body
-    = render 'layouts/filter', search: @login_activity_search, path: '/rad_common/login_activities'
+    = render 'layouts/filter', search: @login_activity_search, path: '/login_activities'
     = paginate @login_activities
 
     %table.table.table-bordered

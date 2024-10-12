@@ -30,7 +30,7 @@ module RadNav
          DropdownMenuItem.new(view_context, 'Notification Types', '/rad_common/notification_types'),
          DropdownMenuIndexItem.new(view_context, 'SecurityRole'),
          sentry_test,
-         DropdownMenuItem.new(view_context, 'Sign In Activity', '/rad_common/login_activities'),
+         DropdownMenuItem.new(view_context, 'Sign In Activity', '/login_activities'),
          system_messages,
          DropdownMenuItem.new(view_context, 'System Usage', '/rad_common/system_usages'),
          DropdownMenuIndexItem.new(view_context, 'ContactLog'),
