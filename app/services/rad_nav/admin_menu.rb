@@ -23,7 +23,7 @@ module RadNav
       end
 
       def standard_items
-        [DropdownMenuItem.new(view_context, 'Audit Search', '/rad_common/audits'),
+        [DropdownMenuItem.new(view_context, 'Audit Search', '/audits'),
          sidekiq,
          DropdownMenuItem.new(view_context, 'Company Info', '/rad_common/company/edit'),
          generate_jwt,

@@ -68,17 +68,3 @@ Rails.application.config.after_initialize do
 end
 
 AuthTrail.geocode = false
-
-module Kaminari
-  # monkey patch to fix paging on engine routes
-  # https://github.com/rad-stack/rad_common/pull/211/files
-  # https://github.com/kaminari/kaminari/issues/457
-
-  module Helpers
-    class Tag
-      def page_url_for(page)
-        (@options[:routes_proxy] || @template).url_for @params.merge(@param_name => (page <= 1 ? nil : page))
-      end
-    end
-  end
-end

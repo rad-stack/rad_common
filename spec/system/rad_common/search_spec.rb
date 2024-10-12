@@ -25,7 +25,7 @@ RSpec.describe 'Search' do
 
     context 'with name not matching column name' do
       it 'queries specified column' do
-        visit '/rad_common/audits'
+        visit '/audits'
         first('#search_audited_changes_like').fill_in(with: 'query')
         first('button', text: 'Apply Filters').click
         expect(current_url).to include('search[audited_changes_like]=query')

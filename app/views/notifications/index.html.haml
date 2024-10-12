@@ -4,8 +4,7 @@
            icon: 'fa-bell'
   .card-body
 
-    -# see kaminari monkey patch on initializers/rad_common.rb
-    = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+    = paginate @notifications
 
     %table.table.table-striped.table-bordered
       %tr
@@ -22,7 +21,6 @@
             - if record.record.present?
               %p= secured_link(record.record)
 
-    -# see kaminari monkey patch on initializers/rad_common.rb
-    = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+    = paginate @notifications
 
 - current_user.read_notifications!

@@ -295,7 +295,7 @@ class CardPresenter
                     Pundit.policy!(current_user, instance).audit?
 
       { label: 'Audit History',
-        link: "/rad_common/audits/?auditable_type=#{instance.class}&auditable_id=#{instance.id}" }
+        link: "/audits/?auditable_type=#{instance.class}&auditable_id=#{instance.id}" }
     end
 
     def contact_log_actions

@@ -42,6 +42,9 @@ module RadCommonRoutes
           end
         end
 
+        resources :audits, only: :index
+        resources :login_activities, only: :index
+        resources :notifications, only: :index
         resources :sentry_tests, only: :new
         resources :contact_logs, only: %i[index show]
         resources :contact_log_recipients, only: :show
