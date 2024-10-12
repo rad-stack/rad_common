@@ -23,14 +23,14 @@ module RadNav
       end
 
       def standard_items
-        [DropdownMenuItem.new(view_context, 'Audit Search', '/audits'),
+        [DropdownMenuItem.new(view_context, 'Audit Search', view_context.audits_path),
          sidekiq,
          DropdownMenuItem.new(view_context, 'Company Info', '/rad_common/company/edit'),
          generate_jwt,
          DropdownMenuItem.new(view_context, 'Notification Types', '/rad_common/notification_types'),
          DropdownMenuIndexItem.new(view_context, 'SecurityRole'),
          sentry_test,
-         DropdownMenuItem.new(view_context, 'Sign In Activity', '/login_activities'),
+         DropdownMenuItem.new(view_context, 'Sign In Activity', view_context.login_activities_path),
          system_messages,
          DropdownMenuItem.new(view_context, 'System Usage', '/rad_common/system_usages'),
          DropdownMenuIndexItem.new(view_context, 'ContactLog'),

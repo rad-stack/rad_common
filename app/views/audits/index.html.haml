@@ -7,7 +7,7 @@
     - if @show_search
       = render 'layouts/filter', search: @audit_search, path: '/audits'
     - if @audits.count.positive? || @show_search
-      = paginate @audits
+      = paginate @audits, theme: 'twitter-bootstrap-4'
       %table.table.table-striped.table-bordered
         %tr
           - if @show_search
@@ -39,6 +39,6 @@
             %td= audit.remote_address
             %td= audit.id
             %td= simple_format(display_audited_changes(audit))
-      = paginate @audits
+      = paginate @audits, theme: 'twitter-bootstrap-4'
     - else
       %p No activity exists for this item
