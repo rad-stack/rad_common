@@ -44,11 +44,9 @@ module RadCommonRoutes
 
         resources :audits, only: :index
         resources :login_activities, only: :index
-        resources :notifications, only: :index
         resources :system_messages, only: %i[new create show]
         resources :system_usages, only: %i[index]
         resources :notification_types, only: %i[index edit update]
-        resources :notification_settings, only: %i[index create]
         resources :global_validations, only: %i[new create]
         resources :sentry_tests, only: :new
         resources :contact_logs, only: %i[index show]
@@ -64,6 +62,9 @@ module RadCommonRoutes
             delete :stop
           end
         end
+
+        get 'company/edit', to: 'companies#edit'
+        put 'company/update', to: 'companies#update'
       end
 
       authenticate :user, ->(u) { u.external? } do
@@ -74,12 +75,17 @@ module RadCommonRoutes
         mount Sidekiq::Web => '/sidekiq'
       end
 
+      resources :notifications, only: :index
+      resources :notification_settings, only: %i[index create]
       resources :user_profiles, only: %i[show edit update] if RadConfig.user_profiles?
       resources :twilio_statuses, only: :create
       resources :twilio_replies, only: :create
       resources :sendgrid_statuses, only: :create
       resources :company_contacts, only: %i[new create]
 
+      get 'global_search', to: 'search#global_search'
+      get 'global_search_result', to: 'search#global_search_result'
+      get 'company', to: 'companies#show'
       get 'terms', to: 'pages#terms'
       get 'privacy', to: 'pages#privacy'
 

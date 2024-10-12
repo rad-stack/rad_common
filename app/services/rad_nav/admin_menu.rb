@@ -25,7 +25,7 @@ module RadNav
       def standard_items
         [DropdownMenuItem.new(view_context, 'Audit Search', view_context.audits_path),
          sidekiq,
-         DropdownMenuItem.new(view_context, 'Company Info', '/rad_common/company/edit'),
+         DropdownMenuItem.new(view_context, 'Company Info', view_context.company_edit_path),
          generate_jwt,
          DropdownMenuIndexItem.new(view_context, 'NotificationType'),
          DropdownMenuIndexItem.new(view_context, 'SecurityRole'),
