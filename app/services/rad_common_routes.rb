@@ -57,6 +57,13 @@ module RadCommonRoutes
         resources :user_security_roles, only: :show
         resources :user_clients, only: %i[create destroy]
         resources :json_web_tokens, only: :new
+
+        resources :impersonations, only: [] do
+          collection do
+            post :start
+            delete :stop
+          end
+        end
       end
 
       authenticate :user, ->(u) { u.external? } do

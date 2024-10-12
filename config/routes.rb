@@ -10,11 +10,4 @@ RadCommon::Engine.routes.draw do
   get 'company', to: 'companies#show'
   get 'company/edit', to: 'companies#edit'
   put 'company/update', to: 'companies#update'
-
-  resources :impersonations, only: [] do
-    collection do
-      post :start
-      delete :stop
-    end
-  end
 end
