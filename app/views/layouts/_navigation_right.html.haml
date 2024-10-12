@@ -22,7 +22,7 @@
           %li= link_to icon('user', 'My Profile'), "/user_profiles/#{current_user.id}", class: 'dropdown-item'
         - if current_user.internal? && policy(Notification).index?
           %li
-            = link_to '/notifications', class: 'dropdown-item' do
+            = link_to notifications_path, class: 'dropdown-item' do
               = icon 'bell', 'Notifications'
               - if unread_count.positive?
                 %span.badge.alert-danger= unread_count

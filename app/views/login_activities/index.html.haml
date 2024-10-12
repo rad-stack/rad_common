@@ -1,7 +1,7 @@
 .card
   = render 'layouts/card_header', title: "Sign In Activity (#{@login_activities.total_count})"
   .card-body
-    = render 'layouts/filter', search: @login_activity_search, path: '/login_activities'
+    = render 'layouts/filter', search: @login_activity_search, path: login_activities_path
     = paginate @login_activities, theme: 'twitter-bootstrap-4'
 
     %table.table.table-bordered
