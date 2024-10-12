@@ -17,10 +17,4 @@ RadCommon::Engine.routes.draw do
       delete :stop
     end
   end
-
-  resources :system_messages, only: %i[new create show]
-  resources :system_usages, only: %i[index]
-  resources :notification_types, only: %i[index edit update]
-  resources :notification_settings, only: %i[index create]
-  resources :global_validations, only: %i[new create]
 end

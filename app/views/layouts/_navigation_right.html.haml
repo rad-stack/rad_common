@@ -29,7 +29,7 @@
         - if current_user.internal? && policy(NotificationSetting).index?
           %li
             = link_to icon('gear', 'Notification Settings'),
-                      '/rad_common/notification_settings',
+                      notification_settings_path,
                       class: 'dropdown-item'
 
         - if impersonating?

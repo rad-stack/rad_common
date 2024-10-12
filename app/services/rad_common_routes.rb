@@ -45,6 +45,11 @@ module RadCommonRoutes
         resources :audits, only: :index
         resources :login_activities, only: :index
         resources :notifications, only: :index
+        resources :system_messages, only: %i[new create show]
+        resources :system_usages, only: %i[index]
+        resources :notification_types, only: %i[index edit update]
+        resources :notification_settings, only: %i[index create]
+        resources :global_validations, only: %i[new create]
         resources :sentry_tests, only: :new
         resources :contact_logs, only: %i[index show]
         resources :contact_log_recipients, only: :show

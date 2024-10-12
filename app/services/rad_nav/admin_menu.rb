@@ -27,12 +27,12 @@ module RadNav
          sidekiq,
          DropdownMenuItem.new(view_context, 'Company Info', '/rad_common/company/edit'),
          generate_jwt,
-         DropdownMenuItem.new(view_context, 'Notification Types', '/rad_common/notification_types'),
+         DropdownMenuItem.new(view_context, 'Notification Types', view_context.notification_types_path),
          DropdownMenuIndexItem.new(view_context, 'SecurityRole'),
          sentry_test,
          DropdownMenuItem.new(view_context, 'Sign In Activity', view_context.login_activities_path),
          system_messages,
-         DropdownMenuItem.new(view_context, 'System Usage', '/rad_common/system_usages'),
+         DropdownMenuItem.new(view_context, 'System Usage', view_context.system_usages_path),
          DropdownMenuIndexItem.new(view_context, 'ContactLog'),
          users,
          validate_database].compact.sort_by(&:label)
@@ -62,9 +62,7 @@ module RadNav
       end
 
       def system_messages
-        DropdownMenuItem.new(view_context,
-                             'System Message',
-                             RadCommon::Engine.routes.url_helpers.new_system_message_path)
+        DropdownMenuItem.new(view_context, 'System Message', view_context.new_system_message_path)
       end
 
       def users
@@ -74,7 +72,7 @@ module RadNav
       end
 
       def validate_database
-        DropdownMenuItem.new(view_context, 'Validate Database', '/rad_common/global_validations/new')
+        DropdownMenuItem.new(view_context, 'Validate Database', view_context.new_global_validation_path)
       end
 
       def include_users?
