@@ -7,3 +7,5 @@
         %span{ 'aria-hidden': 'true' } ×
     .toast-body
       .lead.p-2#toast-nav-message
+        - if flash[:notice].present?
+          = flash[:notice]
