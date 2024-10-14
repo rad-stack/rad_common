@@ -12,7 +12,7 @@ RSpec.describe 'Audits', type: :system do
     it 'searches by record type' do
       security_role.update! name: new_name
 
-      visit '/rad_common/audits'
+      visit '/audits'
       first('#search_auditable_type').select('SecurityRole')
       first('button', text: 'Apply Filters').click
 
@@ -22,7 +22,7 @@ RSpec.describe 'Audits', type: :system do
     it 'finds deleted audits' do
       security_role.destroy!
 
-      visit '/rad_common/audits'
+      visit '/audits'
       first('#search_auditable_type').select('SecurityRole')
       first('button', text: 'Apply Filters').click
 

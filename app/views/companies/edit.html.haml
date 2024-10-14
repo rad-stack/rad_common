@@ -7,7 +7,7 @@
            no_show_link: true
 
   .card-body
-    = simple_form_for(@company, url: '/rad_common/company/update', method: :put) do |f|
+    = simple_form_for(@company, url: company_update_path, method: :put) do |f|
       = rad_form_errors f
 
       = render 'companies/form', f: f

@@ -18,7 +18,7 @@ RSpec.describe 'AreYouSure', type: :system do
 
   describe 'search filter form fields' do
     it 'does not warn', :js do
-      visit '/rad_common/login_activities?search%5Bcreated_at_start%5D=2020-11-11&search%5Bcreated_at_end%5D=2020-11-11'
+      visit '/login_activities?search%5Bcreated_at_start%5D=2020-11-11&search%5Bcreated_at_end%5D=2020-11-11'
       find('body').click
       visit '/'
 

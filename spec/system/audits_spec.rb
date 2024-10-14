@@ -14,13 +14,13 @@ describe 'Audits' do
         open_status.update!(name: 'Foo')
       end
 
-      visit "/rad_common/audits/?#{{ search: { user_id: admin.id } }.to_query}"
+      visit "/audits/?#{{ search: { user_id: admin.id } }.to_query}"
       expect(page).to have_content 'Status - Foo'
     end
 
     it 'shows enum value in human readable form' do
       contact_log_recipient.update! sms_status: :queued
-      visit "rad_common/audits/?auditable_type=ContactLogRecipient&auditable_id=#{contact_log_recipient.id}"
+      visit "/audits/?auditable_type=ContactLogRecipient&auditable_id=#{contact_log_recipient.id}"
       expect(page).to have_content 'Queued'
     end
   end
