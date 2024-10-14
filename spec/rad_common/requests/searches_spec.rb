@@ -9,7 +9,7 @@ RSpec.describe 'Searches', type: :request do
 
   context 'when scope search' do
     let(:search_scope) { 'user_name' }
-    let(:search_path) { "/rad_common/global_search?term=#{search_term}&global_search_scope=#{search_scope}" }
+    let(:search_path) { "/global_search?term=#{search_term}&global_search_scope=#{search_scope}" }
 
     it 'finds a user' do
       get search_path
@@ -18,7 +18,7 @@ RSpec.describe 'Searches', type: :request do
     end
 
     it 'shows a search result' do
-      get "/rad_common/global_search_result?global_search_model_name=#{user.class}&global_search_id=#{user.id}"
+      get "/global_search_result?global_search_model_name=#{user.class}&global_search_id=#{user.id}"
       expect(response).to redirect_to "/users/#{user.id}"
     end
   end

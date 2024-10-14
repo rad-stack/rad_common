@@ -16,7 +16,7 @@ class NotificationTypesController < ApplicationController
 
     if @notification_type.save
       flash[:success] = 'Notification Type updated.'
-      redirect_to '/rad_common/notification_types'
+      redirect_to notification_types_path
     else
       render :edit
     end
