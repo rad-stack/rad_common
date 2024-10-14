@@ -1394,7 +1394,6 @@ aggregate-error@^3.0.0:
     indent-string "^4.0.0"
 
 ajax-bootstrap-select@^1.4.5:
-ajax-bootstrap-select@^1.4.5:
   version "1.4.5"
   resolved "https://registry.yarnpkg.com/ajax-bootstrap-select/-/ajax-bootstrap-select-1.4.5.tgz#2bce36ddbaf9e2cda8e331a2ddcb454216a58473"
   integrity sha512-xDnoD1xq3bekqEVJsye1LcsxQ4jpdnyMJrTdsZqZySA7hc6R02D/23uVaE3P/2POyam1eRkC+c+ph59m9IJLgg==
