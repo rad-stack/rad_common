@@ -4,7 +4,7 @@ class NotificationTypesController < ApplicationController
   def index
     authorize NotificationType
     skip_policy_scope
-    @notification_types = NotificationType.by_type
+    @notification_types = NotificationType.sorted
   end
 
   def edit; end
