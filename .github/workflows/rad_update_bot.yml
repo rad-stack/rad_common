@@ -67,7 +67,7 @@ jobs:
       - name: Update rad_common branch (if provided)
         if: ${{ github.event.inputs.rc_branch != '' }}
         run: |
-          sed -i "/gem 'rad_common'/ s|branch: 'main'|branch: '${{ github.event.inputs.rc_branch }}'|" Gemfile
+          sed -i '' "/^gem 'rad_common'/ s/branch: '[^']*'/branch: '${{ github.event.inputs.rc_branch }}'/" Gemfile
           if [ "${{ github.event.inputs.full_bundle_update }}" == "true" ]; then
             bundle update
           else
