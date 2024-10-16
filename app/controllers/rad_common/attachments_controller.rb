@@ -43,8 +43,7 @@ module RadCommon
       attachment.send(:audit_destroy)
       attachment.purge_later
 
-      flash[:notice] = 'Attachment successfully deleted'
-      redirect_back(fallback_location: record)
+      redirect_back fallback_location: record, notice: 'Attachment successfully deleted'
     end
 
     def auditing_security?

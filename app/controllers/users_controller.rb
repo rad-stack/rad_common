@@ -114,26 +114,22 @@ class UsersController < ApplicationController
 
   def resend_invitation
     @user.invite!(current_user)
-    flash[:notice] = 'We resent the invitation to the user.'
-    redirect_back(fallback_location: root_path)
+    redirect_back fallback_location: root_path, notice: 'We resent the invitation to the user.'
   end
 
   def confirm
     @user.confirm
-    flash[:notice] = 'User was successfully confirmed.'
-    redirect_to @user
+    redirect_to @user, notice: 'User was successfully confirmed.'
   end
 
   def test_email
     @user.test_email! current_user
-    flash[:notice] = 'A test email was sent to the user.'
-    redirect_to @user
+    redirect_to @user, notice: 'A test email was sent to the user.'
   end
 
   def test_sms
     @user.test_sms! current_user
-    flash[:notice] = 'A test SMS was sent to the user.'
-    redirect_to @user
+    redirect_to @user, notice: 'A test SMS was sent to the user.'
   end
 
   def reactivate
