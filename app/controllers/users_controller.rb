@@ -60,8 +60,7 @@ class UsersController < ApplicationController
       authorize @user
 
       if @user.save
-        flash[:success] = 'User updated.'
-        redirect_to @user
+        redirect_to @user, notice: 'User was successfully updated.'
       else
         render :edit
         raise ActiveRecord::Rollback
