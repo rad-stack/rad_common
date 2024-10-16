@@ -48,7 +48,7 @@ class SecurityRolesController < ApplicationController
     destroyed = @security_role.destroy
 
     if destroyed
-      flash[:success] = 'Security role was successfully deleted.'
+      flash[:notice] = 'Security role was successfully deleted.'
     else
       flash[:error] = @security_role.errors.full_messages.join(', ')
     end

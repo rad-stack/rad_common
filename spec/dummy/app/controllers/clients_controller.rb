@@ -38,7 +38,7 @@ class ClientsController < ApplicationController
     destroyed = @client.destroy
 
     if destroyed
-      flash[:success] = 'Client was successfully deleted.'
+      flash[:notice] = 'Client was successfully deleted.'
     else
       flash[:error] = @client.errors.full_messages.join(', ')
     end

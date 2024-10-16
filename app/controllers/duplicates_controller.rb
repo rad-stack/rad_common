@@ -94,8 +94,7 @@ class DuplicatesController < ApplicationController
       end
     end
 
-    flash[:notice] = "#{model} was successfully updated."
-    redirect_to index_path
+    redirect_to index_path, notice: "#{model} was successfully updated."
   end
 
   def reset

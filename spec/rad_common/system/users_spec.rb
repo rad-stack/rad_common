@@ -188,7 +188,7 @@ RSpec.describe 'Users', type: :system do
         fill_in 'Mobile Phone', with: user.mobile_phone
         click_button 'Save'
 
-        expect(page).to have_content 'User updated'
+        expect(page).to have_content 'User was successfully updated'
       end
     end
 

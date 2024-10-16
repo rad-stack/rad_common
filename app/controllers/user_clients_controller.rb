@@ -25,7 +25,7 @@ class UserClientsController < ApplicationController
     user = @user_client.user
 
     if @user_client.destroy
-      flash[:success] = "#{RadCommon::AppInfo.new.client_model_label} was successfully deleted."
+      flash[:notice] = "#{RadCommon::AppInfo.new.client_model_label} was successfully deleted."
     else
       flash[:error] = @user_client.errors.full_messages.join(', ')
     end
