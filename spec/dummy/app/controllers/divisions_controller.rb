@@ -40,7 +40,7 @@ class DivisionsController < ApplicationController
     destroyed = @division.destroy
 
     if destroyed
-      flash[:success] = 'Division was successfully deleted.'
+      flash[:notice] = 'Division was successfully deleted.'
     else
       flash[:error] = @division.errors.full_messages.join(', ')
     end
