@@ -45,6 +45,8 @@ jobs:
           ref: main
       - name: Git status
         run: git status
+      - name: Running custom steps
+        uses: ./.github/actions/custom-action
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
