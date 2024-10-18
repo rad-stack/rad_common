@@ -6,6 +6,7 @@ def system!(*args)
 end
 
 regenerate_lockfile = ARGV.include?('--regenerate-lockfile')
+yarn_upgrade = ARGV.include?('--yarn-upgrade')
 
 directory = Dir.pwd.include?('rad_common') ? "#{Dir.pwd}/spec/dummy" : Dir.pwd
 FileUtils.chdir directory do
@@ -30,8 +31,13 @@ FileUtils.chdir directory do
     system! 'rm yarn.lock'
   end
 
-  puts '== Running Yarn Install =='
-  system! 'yarn install'
+  if yarn_upgrade
+    puts '== Running Yarn Upgrade =='
+    system! 'yarn upgrade'
+  else
+    puts '== Running Yarn Install =='
+    system! 'yarn install'
+  end
 
   puts '== Running DB Migrate =='
   system! 'bundle exec rails db:migrate'
