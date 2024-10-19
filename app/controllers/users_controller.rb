@@ -60,8 +60,7 @@ class UsersController < ApplicationController
       authorize @user
 
       if @user.save
-        flash[:success] = 'User updated.'
-        redirect_to @user
+        redirect_to @user, notice: 'User was successfully updated.'
       else
         render :edit
         raise ActiveRecord::Rollback
@@ -93,7 +92,7 @@ class UsersController < ApplicationController
                  end
 
     if @user.destroy
-      flash[:success] = 'User deleted.'
+      flash[:notice] = 'User deleted.'
       destroyed = true
     else
       flash[:error] = @user.errors.full_messages.join(', ')
@@ -115,31 +114,27 @@ class UsersController < ApplicationController
 
   def resend_invitation
     @user.invite!(current_user)
-    flash[:success] = 'We resent the invitation to the user.'
-    redirect_back(fallback_location: root_path)
+    redirect_back fallback_location: root_path, notice: 'We resent the invitation to the user.'
   end
 
   def confirm
     @user.confirm
-    flash[:success] = 'User was successfully confirmed.'
-    redirect_to @user
+    redirect_to @user, notice: 'User was successfully confirmed.'
   end
 
   def test_email
     @user.test_email! current_user
-    flash[:success] = 'A test email was sent to the user.'
-    redirect_to @user
+    redirect_to @user, notice: 'A test email was sent to the user.'
   end
 
   def test_sms
     @user.test_sms! current_user
-    flash[:success] = 'A test SMS was sent to the user.'
-    redirect_to @user
+    redirect_to @user, notice: 'A test SMS was sent to the user.'
   end
 
   def reactivate
     if @user.reactivate
-      flash[:success] = 'User was successfully reactivated.'
+      flash[:notice] = 'User was successfully reactivated.'
     else
       flash[:error] = "User could not be reactivated: #{@user.errors.full_messages.to_sentence}"
     end
