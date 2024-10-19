@@ -20,29 +20,28 @@ module RadContactMailer
                                sent: true
 
       mail.to.each do |recipient|
-        ContactLogRecipient.create! contact_log: @rad_contact_log,
-                                    email: recipient,
-                                    email_type: :to,
-                                    email_status: :delivered
+        add_rad_recipient recipient, :to
       end
 
       if mail.cc.present?
         mail.cc.each do |recipient|
-          ContactLogRecipient.create! contact_log: @rad_contact_log,
-                                      email: recipient,
-                                      email_type: :cc,
-                                      email_status: :delivered
+          add_rad_recipient recipient, :cc
         end
       end
 
       return if mail.bcc.blank?
 
       mail.bcc.each do |recipient|
-        ContactLogRecipient.create! contact_log: @rad_contact_log,
-                                    email: recipient,
-                                    email_type: :bcc,
-                                    email_status: :delivered
+        add_rad_recipient recipient, :bcc
       end
+    end
+
+    def add_rad_recipient(recipient, type)
+      ContactLogRecipient.create! contact_log: @rad_contact_log,
+                                  email: recipient,
+                                  email_type: type,
+                                  email_status: :delivered,
+                                  notify_on_fail: @rad_notify_on_fail.nil? ? true : @rad_notify_on_fail
     end
 
     def rad_headers
