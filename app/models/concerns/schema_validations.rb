@@ -31,7 +31,7 @@ module SchemaValidations
   private
 
     def load_column_validations
-      klass.content_columns.each do |column|
+      klass.columns.each do |column|
         name = column.name.to_sym
         next if exempt_column?(name)
 
@@ -125,7 +125,9 @@ module SchemaValidations
 
     def exempt_column?(column)
       # Timestamps and model-specific instances to be skipped
-      column.in?(EXEMPT_COLUMNS + skip_columns)
+      column.in?(
+        (EXEMPT_COLUMNS + skip_columns + fk_columns + [klass.inheritance_column] + [klass.primary_key]).map(&:to_sym)
+      )
     end
 
     def klass
@@ -146,6 +148,10 @@ module SchemaValidations
 
     def index_options(index)
       schema_validation_config&.index_options&.dig(index.to_sym) || {}
+    end
+
+    def fk_columns
+      @fk_columns ||= klass.reflect_on_all_associations(:belongs_to).map(&:foreign_key)
     end
 end
 
