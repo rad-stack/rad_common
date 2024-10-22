@@ -7,7 +7,7 @@ describe SendgridStatusReceiver, type: :service do
   let(:user) { create :user }
   let(:attorney) { create :attorney }
   let(:event_type) { 'bounce' }
-  let(:contact_log) { create :contact_log, :email, record: attorney }
+  let(:contact_log) { create :contact_log, :email, record: attorney, content: 'This is a test' }
 
   let(:content) do
     { event: event_type,
