@@ -7,7 +7,17 @@ module SchemaValidations
 
   included do
     class_attribute :schema_validations_loaded
-    before_validation :load_schema_validations
+    class_attribute :schema_validation_config, default: SchemaValidationConfig.new
+
+    after_initialize :load_schema_validations
+  end
+
+  class_methods do
+    def schema_validation_options(&block)
+      config = SchemaValidationConfig.new
+      config.instance_eval(&block)
+      self.schema_validation_config = config
+    end
   end
 
   def load_schema_validations
@@ -15,14 +25,13 @@ module SchemaValidations
 
     load_index_validations
     load_column_validations
-    load_association_validations
     klass.schema_validations_loaded = true
   end
 
   private
 
     def load_column_validations
-      klass.content_columns.each do |column|
+      klass.columns.each do |column|
         name = column.name.to_sym
         next if exempt_column?(name)
 
@@ -51,29 +60,44 @@ module SchemaValidations
     end
 
     def validate_numericality_and_length(name, datatype, column)
+      custom_options = column_options(name)
       if datatype.in?(%i[numeric integer])
-        validate_logged :validates_numericality_of, name, allow_nil: true
+        opts = { allow_nil: true }
+        opts.merge! custom_options
+        validate_logged :validates_numericality_of, name, opts
       elsif datatype == :decimal
         if column.precision
           limit = 10**(column.precision - (column.scale || 0))
-          validate_logged :validates_numericality_of, name, allow_nil: true, greater_than: -limit, less_than: limit
+          opts = { allow_nil: true, greater_than: -limit, less_than: limit }
+          opts.merge! custom_options
+          validate_logged :validates_numericality_of, name, opts
         end
-      elsif datatype == :text
-        validate_logged :validates_length_of, name, allow_nil: true, maximum: column.limit if column.limit.present?
+      elsif datatype == :text && column.limit.present?
+        opts = { allow_nil: true, maximum: column.limit }
+        opts.merge! custom_options
+        validate_logged :validates_length_of, name, opts
       end
     end
 
     def validate_presence(column, name, datatype)
       return if column.null
 
+      custom_options = column_options(name)
       if datatype == :boolean
-        validate_logged :validates_inclusion_of, name, in: [true, false], message: :blank
+        opts = { in: [true, false], message: :blank }
+        opts.merge! custom_options
+        validate_logged :validates_inclusion_of, name, opts
       elsif !column.default.nil? && column.default.blank?
-        validate_logged :validates_with, NotNilValidator, attributes: [name]
+        opts = { attributes: [name] }
+        opts.merge! custom_options
+        validate_logged :validates_with, NotNilValidator, opts
       elsif datatype == :array
-        validate_logged :validates, name, presence: true, if: -> { public_send(name).nil? }
+        opts = { presence: true, if: -> { public_send(name).nil? } }
+        opts.merge! custom_options
+        validate_logged :validates, name, opts
       else
-        validate_logged :validates_presence_of, name
+        opts = column_options(name)
+        validate_logged :validates_presence_of, name, opts
       end
     end
 
@@ -86,19 +110,8 @@ module SchemaValidations
         options = {}
         options[:allow_nil] = true
         options[:scope] = columns[1..-1].map(&:to_sym) if columns.count > 1
+        options.merge! index_options(index.name.to_sym)
         validate_logged :validates_uniqueness_of, first_column, options
-      end
-    end
-
-    def load_association_validations
-      klass.reflect_on_all_associations(:belongs_to).each do |association|
-        next if association.options[:optional] || exempt_column?(association.name)
-
-        foreign_key_method = association.respond_to?(:foreign_key) ? :foreign_key : :primary_key_name
-        column = klass.columns_hash[association.send(foreign_key_method).to_s]
-        next unless column
-
-        validate_logged :validates_presence_of, association.name
       end
     end
 
@@ -112,7 +125,9 @@ module SchemaValidations
 
     def exempt_column?(column)
       # Timestamps and model-specific instances to be skipped
-      column.in?(EXEMPT_COLUMNS + skip_columns)
+      column.in?(
+        (EXEMPT_COLUMNS + skip_columns + fk_columns + [klass.inheritance_column] + [klass.primary_key]).map(&:to_sym)
+      )
     end
 
     def klass
@@ -120,10 +135,51 @@ module SchemaValidations
     end
 
     def skip_columns
-      klass.const_defined?('SKIP_SCHEMA_VALIDATION_COLUMNS') ? klass::SKIP_SCHEMA_VALIDATION_COLUMNS : []
+      schema_validation_config&.skip_columns || []
     end
 
     def skip_indexes
-      klass.const_defined?('SKIP_SCHEMA_VALIDATION_INDEXES') ? klass::SKIP_SCHEMA_VALIDATION_INDEXES : []
+      schema_validation_config&.skip_indexes || []
     end
+
+    def column_options(column)
+      schema_validation_config&.column_options&.dig(column.to_sym) || {}
+    end
+
+    def index_options(index)
+      schema_validation_config&.index_options&.dig(index.to_sym) || {}
+    end
+
+    def fk_columns
+      @fk_columns ||= klass.reflect_on_all_associations(:belongs_to).map(&:foreign_key)
+    end
+end
+
+class SchemaValidationConfig
+  attr_reader :column_options, :index_options, :skip_columns, :skip_indexes
+
+  def initialize
+    @column_options = {}
+    @index_options = {}
+    @skip_columns = []
+    @skip_indexes = []
+  end
+
+  def column(name, opts = {})
+    name = name.to_sym
+    if opts.delete(:skip)
+      @skip_columns << name
+    else
+      @column_options[name] = opts
+    end
+  end
+
+  def index(name, opts = {})
+    name = name.to_sym
+    if opts.delete(:skip)
+      @skip_indexes << name
+    else
+      @index_options[name] = opts
+    end
+  end
 end
