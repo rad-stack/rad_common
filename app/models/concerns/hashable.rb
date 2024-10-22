@@ -12,7 +12,7 @@ module Hashable
   class_methods do
     def find_decoded(encoded_id)
       ids = Hashable.hashids.decode(encoded_id)
-      raise Hashids::InputError, "Couldn't decoded: #{encoded_id}" if ids.empty?
+      raise Hashids::InputError, "Couldn't decode: #{encoded_id}" if ids.empty?
 
       find(ids[0]) if ids && ids.count == 1 && ids[0]
     end
