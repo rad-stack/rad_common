@@ -4,8 +4,15 @@ module RadCommon
       items = [:email, :mobile_phone, { label: 'User Status', value: user_status_item(user) }, :timezone]
       items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
 
-      items += %i[sign_in_count invitation_accepted_at invited_by current_sign_in_ip current_sign_in_at confirmed_at
-                  confirmation_sent_at unconfirmed_email]
+      items += [:sign_in_count,
+                :invitation_accepted_at,
+                :invited_by,
+                :current_sign_in_ip,
+                :current_sign_in_at,
+                :confirmed_at,
+                :confirmation_sent_at,
+                { label: 'Unconfirmed Email',
+                  value: content_tag(:span, user.unconfirmed_email, class: 'badge alert-warning') }]
 
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
 

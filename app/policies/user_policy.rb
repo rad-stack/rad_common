@@ -27,4 +27,29 @@ class UserPolicy < ApplicationPolicy
 
     record.active? && user != record
   end
+
+  def allow_email_change?
+    record.new_record? || !record.admin?
+  end
+
+  def permitted_attributes
+    base_attributes + twilio_verify_attributes + RadConfig.additional_user_params!
+  end
+
+  private
+
+    def base_attributes
+      items = %i[user_status_id first_name last_name mobile_phone last_activity_at password password_confirmation
+                 external timezone avatar language]
+
+      items.push(:email) if allow_email_change?
+
+      items
+    end
+
+    def twilio_verify_attributes
+      return [:twilio_verify_enabled] if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
+
+      []
+    end
 end

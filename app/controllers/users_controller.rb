@@ -33,7 +33,8 @@ class UsersController < ApplicationController
   def edit; end
 
   def create
-    @user = User.new(permitted_params)
+    @user = User.new
+    @user.assign_attributes permitted_attributes(@user)
 
     if policy(@user).update_security_roles? && !params[:user][:security_roles].nil?
       @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
@@ -50,7 +51,7 @@ class UsersController < ApplicationController
 
   def update
     ActiveRecord::Base.transaction do
-      @user.assign_attributes(permitted_params)
+      @user.assign_attributes permitted_attributes(@user)
       @user.approved_by = true_user
 
       if policy(@user).update_security_roles? && !params[:user][:security_roles].nil?
@@ -154,21 +155,6 @@ class UsersController < ApplicationController
 
       params[:user].delete(:password)
       params[:user].delete(:password_confirmation)
-    end
-
-    def base_params
-      %i[email user_status_id first_name last_name mobile_phone last_activity_at password password_confirmation external
-         timezone avatar language]
-    end
-
-    def permitted_params
-      params.require(:user).permit(base_params + twilio_verify_params + RadConfig.additional_user_params!)
-    end
-
-    def twilio_verify_params
-      return [:twilio_verify_enabled] if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
-
-      []
     end
 
     def duplicates_enabled?
