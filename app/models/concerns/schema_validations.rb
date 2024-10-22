@@ -9,7 +9,7 @@ module SchemaValidations
     class_attribute :schema_validations_loaded
     class_attribute :schema_validation_config, default: SchemaValidationConfig.new
 
-    before_validation :load_schema_validations
+    after_initialize :load_schema_validations
   end
 
   class_methods do
