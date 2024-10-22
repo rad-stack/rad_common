@@ -29,7 +29,8 @@ describe SendgridStatusReceiver, type: :service do
 
     expect(last_email.subject).to include 'Outgoing Email Failed'
     expect(last_email.body.encoded).to include 'Attorney'
-    expect(last_email.body.encoded).to include contact_log.content
+    decoded_body = Mail::Encodings.q_value_decode(last_email.body.encoded)
+    expect(decoded_body).to include contact_log.content
   end
 
   it 'ignores when a contact log was previously deleted' do
