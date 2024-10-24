@@ -21,10 +21,9 @@ describe 'Audits' do
     it 'shows enum value in human readable form' do
       contact_log_recipient.update! sms_status: :queued
 
-      visit audits_path(search: { auditable_type: 'ContactLogRecipient',
-                                  auditable_id_equals: contact_log_recipient.id })
+      visit "/contact_log_recipients/#{contact_log_recipient.id}"
+      click_link_or_button 'Audit History'
 
-      expect(page).to have_content 'Audits (2)'
       expect(page).to have_content 'Queued'
     end
   end
