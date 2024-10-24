@@ -295,7 +295,7 @@ class CardPresenter
                     Pundit.policy!(current_user, instance).audit?
 
       { label: 'Audit History',
-        link: @view_context.audits_path(auditable_type: instance.class, auditable_id: instance.id) }
+        link: @view_context.audits_path(search: { single_record: "#{instance.class}:#{instance.id}" }) }
     end
 
     def contact_log_actions
