@@ -6,7 +6,7 @@ RSpec.describe 'Audits' do
   before { login_as user, scope: :user }
 
   describe 'index' do
-    before { get '/audits', params: { search: { auditable_type: 'Division', auditable_id_equals: division.id } } }
+    before { get '/audits', params: { search: { single_record: "Division:#{division.id}" } } }
 
     context 'when admin' do
       let(:user) { create :admin }
@@ -23,8 +23,7 @@ RSpec.describe 'Audits' do
       context 'when allowed' do
         let(:allowed) { true }
 
-        xit 'shows audits' do
-          # TODO: fix this
+        it 'shows audits' do
           expect(response.body).to include division.name
         end
       end
