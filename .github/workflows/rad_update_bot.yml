@@ -18,6 +18,10 @@ on:
         description: 'Run full bundle update with custom branch'
         required: false
         default: 'false'
+      yarn_upgrade:
+        description: 'Run yarn upgrade'
+        required: false
+        default: 'false'
 jobs:
   test:
     environment: test
@@ -45,6 +49,8 @@ jobs:
           ref: main
       - name: Git status
         run: git status
+      - name: Running custom steps
+        uses: ./.github/actions/custom-action
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
@@ -67,7 +73,7 @@ jobs:
       - name: Update rad_common branch (if provided)
         if: ${{ github.event.inputs.rc_branch != '' }}
         run: |
-          sed -i "/gem 'rad_common'/ s|branch: 'main'|branch: '${{ github.event.inputs.rc_branch }}'|" Gemfile
+          sed -i "/^gem 'rad_common'/ s/branch: '[^']*'/branch: '${{ github.event.inputs.rc_branch }}'/" Gemfile
           if [ "${{ github.event.inputs.full_bundle_update }}" == "true" ]; then
             bundle update
           else
@@ -75,7 +81,12 @@ jobs:
           fi
 
       - name: RC Update
-        run: bin/rc_update
+        run: |
+          if [ "${{ github.event.inputs.yarn_upgrade }}" == "true" ]; then
+            bin/rc_update --yarn-upgrade
+          else
+            bin/rc_update
+          fi
       - name: Capture rad_common version
         run: |
           echo "RAD_COMMON_VERSION=$(bundle show rad_common | grep -oE 'rad_common-([[:alnum:]]+)' | cut -d'-' -f2)" >> "$GITHUB_ENV"
