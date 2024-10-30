@@ -15,8 +15,8 @@ module RadContactMailer
     def finish_contact_log
       @rad_contact_log.update! from_email: mail.from.first,
                                content: mail.subject,
-                               record: @rad_record,
-                               from_user: @rad_from_user,
+                               record: @contact_log_record,
+                               from_user: @contact_log_from_user,
                                sent: true
 
       mail.to.each do |recipient|
