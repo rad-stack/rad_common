@@ -45,7 +45,7 @@ class NotificationType < ApplicationRecord
     "#{description}: #{subject_record}"
   end
 
-  def mailer_from_user; end
+  def mailer_contact_log_from_user; end
 
   def mailer_options
     items = {}
@@ -56,7 +56,11 @@ class NotificationType < ApplicationRecord
                                             button_url: subject_url } })
     end
 
-    items = items.merge({ from_user: mailer_from_user }) if mailer_from_user.present?
+    if mailer_contact_log_from_user.present?
+      items = items.merge({ contact_log_from_user: mailer_contact_log_from_user })
+    end
+
+    items = items.merge({ contact_log_record: subject_record }) if subject_record.present?
 
     items
   end
@@ -219,7 +223,8 @@ class NotificationType < ApplicationRecord
                                        user_id,
                                        user_id,
                                        nil,
-                                       false
+                                       false,
+                                       contact_log_record: subject_record
       end
     end
 
