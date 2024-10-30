@@ -45,12 +45,20 @@ class NotificationType < ApplicationRecord
     "#{description}: #{subject_record}"
   end
 
-  def mailer_options
-    return {} if subject_url.blank?
+  def mailer_from_user; end
 
-    { email_action: { message: 'Click here to view the details.',
-                      button_text: 'View',
-                      button_url: subject_url } }
+  def mailer_options
+    items = {}
+
+    if subject_url.present?
+      items = items.merge({ email_action: { message: 'Click here to view the details.',
+                                            button_text: 'View',
+                                            button_url: subject_url } })
+    end
+
+    items = items.merge({ from_user: mailer_from_user }) if mailer_from_user.present?
+
+    items
   end
 
   def exclude_user_ids
