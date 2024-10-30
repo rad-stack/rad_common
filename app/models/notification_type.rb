@@ -57,6 +57,7 @@ class NotificationType < ApplicationRecord
     end
 
     items = items.merge({ from_user: mailer_from_user }) if mailer_from_user.present?
+    items = items.merge({ record: subject_record }) if subject_record.present?
 
     items
   end

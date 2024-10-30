@@ -9,6 +9,10 @@ module Notifications
         'Please review the record and ensure that it is indeed a new record.'
     end
 
+    def mailer_from_user
+      created_by
+    end
+
     def absolute_user_ids
       [created_by.id]
     end
