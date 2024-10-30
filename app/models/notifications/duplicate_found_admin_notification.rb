@@ -16,7 +16,7 @@ module Notifications
         'Please review the record and ensure that it is indeed a new record.'
     end
 
-    def mailer_from_user
+    def mailer_contact_log_from_user
       created_by
     end
 

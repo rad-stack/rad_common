@@ -12,7 +12,7 @@ class RadMailer < ActionMailer::Base
   default reply_to: RadConfig.admin_email!
 
   def your_account_approved(user)
-    @rad_record = user
+    @contact_log_record = user
     @email_action = { button_text: 'Get Started',
                       button_url: root_url }
 
@@ -24,8 +24,8 @@ class RadMailer < ActionMailer::Base
   def simple_message(recipient, subject, message, options = {})
     validate_simple_message_options options
 
-    @rad_record = options[:record]
-    @rad_from_user = options[:from_user]
+    @contact_log_record = options[:contact_log_record]
+    @contact_log_from_user = options[:contact_log_from_user]
 
     recipient = User.find(recipient.first) if recipient.is_a?(Array) && recipient.count == 1
 
@@ -57,7 +57,7 @@ class RadMailer < ActionMailer::Base
 
   def global_validity_on_demand(recipient, problems)
     @recipient = recipient
-    @rad_from_user = recipient
+    @contact_log_from_user = recipient
     @problems = problems
     @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
@@ -70,7 +70,7 @@ class RadMailer < ActionMailer::Base
   def email_report(user, file, report_name, options = {})
     validate_email_report_options options
 
-    @rad_from_user = user
+    @contact_log_from_user = user
 
     start_date = options[:start_date]
     end_date   = options[:end_date]
@@ -149,7 +149,8 @@ class RadMailer < ActionMailer::Base
     end
 
     def validate_simple_message_options(options)
-      validate_options options, %i[record from_user do_not_format email_action cc bcc attachment]
+      validate_options options,
+                       %i[contact_log_record contact_log_from_user do_not_format email_action cc bcc attachment]
     end
 
     def validate_email_report_options(options)

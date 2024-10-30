@@ -1,21 +1,21 @@
 class PhoneSMSSender
   OPT_OUT_MESSAGE = 'To no longer receive text messages, text STOP'.freeze
 
-  attr_accessor :message, :from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio, :opt_out_message_sent,
-                :exception, :record
+  attr_accessor :message, :contact_log_from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio, :opt_out_message_sent,
+                :exception, :contact_log_record
 
   delegate :from_number, to: :twilio
 
-  def initialize(message, from_user_id, to_mobile_phone, media_url, force_opt_out, record: nil)
-    raise "The message from user #{from_user_id} failed: the message is blank." if message.blank?
+  def initialize(message, contact_log_from_user_id, to_mobile_phone, media_url, force_opt_out, contact_log_record: nil)
+    raise "The message from user #{contact_log_from_user_id} failed: the message is blank." if message.blank?
     raise 'The message failed: the mobile phone number is blank.' if to_mobile_phone.blank?
 
-    self.from_user_id = from_user_id
+    self.contact_log_from_user_id = contact_log_from_user_id
     self.to_mobile_phone = to_mobile_phone
     self.media_url = media_url
     self.twilio = RadTwilio.new
     self.message = augment_message(message, force_opt_out)
-    self.record = record
+    self.contact_log_record = contact_log_record
   end
 
   def send!
@@ -76,13 +76,13 @@ class PhoneSMSSender
     def log_event(sent, message_sid)
       log = ContactLog.create! sms_log_type: :outgoing,
                                from_number: RadTwilio.twilio_to_human_format(from_number),
-                               from_user_id: from_user_id,
+                               from_user_id: contact_log_from_user_id,
                                content: message,
                                sms_media_url: media_url,
                                sent: sent,
                                sms_message_id: message_sid,
                                sms_opt_out_message_sent: opt_out_message_sent,
-                               record: record
+                               record: contact_log_record
 
       ContactLogRecipient.create! contact_log: log,
                                   phone_number: to_mobile_phone,

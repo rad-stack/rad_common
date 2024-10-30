@@ -6,7 +6,7 @@ RSpec.describe UserSMSSender, type: :service do
   let(:message) { 'test message' }
   let(:media_url) { nil }
   let(:division) { create :division }
-  let(:sms_sender) { described_class.new(message, from_user.id, user.id, media_url, false, record: division) }
+  let(:sms_sender) { described_class.new(message, from_user.id, user.id, media_url, false, contact_log_record: division) }
   let(:last_email) { ActionMailer::Base.deliveries.last }
 
   before do

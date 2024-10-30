@@ -222,12 +222,12 @@ module RadUser
     RadMailer.simple_message(self,
                              'Test Email',
                              'This is a test.',
-                             from_user: from_user,
-                             record: self).deliver_later
+                             contact_log_from_user: from_user,
+                             contact_log_record: self).deliver_later
   end
 
   def test_sms!(from_user)
-    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false, record: self
+    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false, contact_log_record: self
   end
 
   def reactivate

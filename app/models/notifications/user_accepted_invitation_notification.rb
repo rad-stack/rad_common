@@ -4,7 +4,7 @@ module Notifications
       "#{payload} has accepted the invitation to join #{RadConfig.app_name!}."
     end
 
-    def mailer_from_user
+    def mailer_contact_log_from_user
       payload
     end
   end

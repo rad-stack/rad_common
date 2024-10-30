@@ -16,7 +16,11 @@ describe RadMailer do
     let(:division) { create :division, :with_logo }
 
     before do
-      described_class.simple_message(recipient, 'foo', 'bar', attachment: attachment, record: division).deliver_now
+      described_class.simple_message(recipient,
+                                     'foo',
+                                     'bar',
+                                     attachment: attachment,
+                                     contact_log_record: division).deliver_now
     end
 
     describe 'subject' do

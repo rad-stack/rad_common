@@ -10,8 +10,8 @@ class RadDeviseMailer < Devise::Mailer
   default reply_to: RadConfig.admin_email!
 
   def confirmation_instructions(record, token, opts = {})
-    @rad_record = record
-    @rad_from_user = record
+    @contact_log_record = record
+    @contact_log_from_user = record
     @token = token
     initialize_from_record(record)
 
@@ -26,8 +26,8 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def reset_password_instructions(record, token, opts = {})
-    @rad_record = record
-    @rad_from_user = record
+    @contact_log_record = record
+    @contact_log_from_user = record
     @token = token
     initialize_from_record(record)
 
@@ -43,8 +43,8 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def unlock_instructions(record, token, opts = {})
-    @rad_record = record
-    @rad_from_user = record
+    @contact_log_record = record
+    @contact_log_from_user = record
     @token = token
     initialize_from_record(record)
 
@@ -59,8 +59,8 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def invitation_instructions(record, token, opts = {})
-    @rad_record = record
-    @rad_from_user = record.invited_by
+    @contact_log_record = record
+    @contact_log_from_user = record.invited_by
     @token = token
     initialize_from_record(record)
 
@@ -77,8 +77,8 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def email_changed(record, opts = {})
-    @rad_record = record
-    @rad_from_user = record
+    @contact_log_record = record
+    @contact_log_from_user = record
     initialize_from_record(record)
 
     @recipient = @resource
@@ -90,8 +90,8 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def password_change(record, opts = {})
-    @rad_record = record
-    @rad_from_user = record
+    @contact_log_record = record
+    @contact_log_from_user = record
     initialize_from_record(record)
 
     @recipient = @resource
