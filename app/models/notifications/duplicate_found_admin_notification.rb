@@ -16,6 +16,10 @@ module Notifications
         'Please review the record and ensure that it is indeed a new record.'
     end
 
+    def mailer_from_user
+      created_by
+    end
+
     def subject_url
       Rails.application.routes.url_helpers.resolve_duplicates_url model: subject_record.class, id: subject_record.id
     end

@@ -12,6 +12,7 @@ class RadMailer < ActionMailer::Base
   default reply_to: RadConfig.admin_email!
 
   def your_account_approved(user)
+    @rad_record = user
     @email_action = { button_text: 'Get Started',
                       button_url: root_url }
 

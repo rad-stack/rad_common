@@ -78,6 +78,7 @@ class RadDeviseMailer < Devise::Mailer
 
   def email_changed(record, opts = {})
     @rad_record = record
+    @rad_from_user = record
     initialize_from_record(record)
 
     @recipient = @resource
@@ -90,6 +91,7 @@ class RadDeviseMailer < Devise::Mailer
 
   def password_change(record, opts = {})
     @rad_record = record
+    @rad_from_user = record
     initialize_from_record(record)
 
     @recipient = @resource

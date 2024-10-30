@@ -220,7 +220,8 @@ class NotificationType < ApplicationRecord
                                        user_id,
                                        user_id,
                                        nil,
-                                       false
+                                       false,
+                                       record: subject_record
       end
     end
 

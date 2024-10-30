@@ -165,6 +165,8 @@ class DuplicatesController < ApplicationController
     def email_options
       { email_action: { message: 'Click here to view the details.',
                         button_text: 'View',
-                        button_url: url_for(@record) } }
+                        button_url: url_for(@record) },
+        from_user: current_user,
+        record: @record}
     end
 end
