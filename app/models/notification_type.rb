@@ -56,7 +56,10 @@ class NotificationType < ApplicationRecord
                                             button_url: subject_url } })
     end
 
-    items = items.merge({ contact_log_from_user: mailer_contact_log_from_user }) if mailer_contact_log_from_user.present?
+    if mailer_contact_log_from_user.present?
+      items = items.merge({ contact_log_from_user: mailer_contact_log_from_user })
+    end
+
     items = items.merge({ contact_log_record: subject_record }) if subject_record.present?
 
     items

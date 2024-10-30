@@ -2,7 +2,12 @@ class UserSMSSender < PhoneSMSSender
   def initialize(message, contact_log_from_user_id, to_user_id, media_url, force_opt_out, contact_log_record: nil)
     self.to_user = User.find(to_user_id)
 
-    super(message, contact_log_from_user_id, to_user.mobile_phone, media_url, force_opt_out, contact_log_record: contact_log_record)
+    super(message,
+          contact_log_from_user_id,
+          to_user.mobile_phone,
+          media_url,
+          force_opt_out,
+          contact_log_record: contact_log_record)
   end
 
   private

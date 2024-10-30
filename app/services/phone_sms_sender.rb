@@ -1,8 +1,8 @@
 class PhoneSMSSender
   OPT_OUT_MESSAGE = 'To no longer receive text messages, text STOP'.freeze
 
-  attr_accessor :message, :contact_log_from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio, :opt_out_message_sent,
-                :exception, :contact_log_record
+  attr_accessor :message, :contact_log_from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio,
+                :opt_out_message_sent, :exception, :contact_log_record
 
   delegate :from_number, to: :twilio
 
