@@ -22,8 +22,11 @@ class RadMailer < ActionMailer::Base
   end
 
   def simple_message(recipient, subject, message, options = {})
+    validate_simple_message_options options
+
     @rad_record = options[:record]
     @rad_from_user = options[:from_user]
+
     recipient = User.find(recipient.first) if recipient.is_a?(Array) && recipient.count == 1
 
     if recipient.respond_to?(:email)
@@ -65,7 +68,10 @@ class RadMailer < ActionMailer::Base
   end
 
   def email_report(user, file, report_name, options = {})
+    validate_email_report_options options
+
     @rad_from_user = user
+
     start_date = options[:start_date]
     end_date   = options[:end_date]
     export_format = options[:format].presence || Exporter::DEFAULT_FORMAT
@@ -140,5 +146,24 @@ class RadMailer < ActionMailer::Base
 
     def escape_name(recipient_name)
       recipient_name.gsub(',', ' ')
+    end
+
+    def validate_simple_message_options(options)
+      validate_options options, %i[record from_user do_not_format email_action cc bcc attachment]
+    end
+
+    def validate_email_report_options(options)
+      validate_options options, %i[start_date end_date format]
+    end
+
+    def validate_options(options, keys)
+      return if options.nil?
+      raise 'invalid options' unless options.is_a?(Hash)
+      return if options.blank?
+
+      unknown_keys = options.keys - keys
+      return if unknown_keys.empty?
+
+      raise "unknown options: #{unknown_keys}"
     end
 end
