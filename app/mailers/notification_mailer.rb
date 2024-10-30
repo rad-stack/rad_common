@@ -26,6 +26,7 @@ class NotificationMailer < RadMailer
     user = user_and_approver.first
     approver = user_and_approver.last
     @rad_from_user = approver
+    @rad_record = user
 
     @email_action = { message: 'You can review this approval if desired.',
                       button_text: 'Review User',

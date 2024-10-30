@@ -18,11 +18,11 @@ RSpec.describe NotificationType do
     let(:contact_log) { ContactLog.last }
 
     context "when notification has it's own mailer" do
-      before { Notifications::DivisionUpdatedNotification.main(division).notify! }
+      before { Notifications::UserWasApprovedNotification.main([another_user, user]).notify! }
 
-      it 'sets rad_record' do
-        # TODO: enhance this to do both rad_record and rad_from_user
-        expect(contact_log.record).to eq division
+      it 'sets rad_record and rad_from_user' do
+        expect(contact_log.record).to eq another_user
+        expect(contact_log.from_user).to eq user
       end
     end
 
