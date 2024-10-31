@@ -22,6 +22,10 @@ on:
         description: 'Run yarn upgrade'
         required: false
         default: 'false'
+      update_rad_update_bot_only:
+        description: 'Only update the rad_update_bot.yml file'
+        required: false
+        default: 'false'
 jobs:
   test:
     environment: test
@@ -93,6 +97,11 @@ jobs:
         # UNCOMMENT BELOW LINES TO DEBUG IN TERMINAL...
         # - name: Setup upterm session
         # uses: lhotari/action-upterm@v1
+      - name: Checking if only rad_update_bot.yml should be updated
+        if: ${{ github.event.inputs.update_rad_update_bot_only == 'true' }}
+        run: |
+          git stash
+          git checkout stash@{0} -- .github/workflows/rad_update_bot.yml
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v6
@@ -101,8 +110,8 @@ jobs:
           committer: ${{github.event.inputs.rad_user_name}} <${{github.event.inputs.rad_user_email}} >
           author: ${{github.event.inputs.rad_user_name}} <${{github.event.inputs.rad_user_email}} >
           token: ${{ github.event.inputs.rad_sniff_token }}
-          branch: "rad_common_update-${{ env.RAD_COMMON_VERSION }}"
-          title: "Rad Common Update ${{ env.RAD_COMMON_VERSION }}"
+          branch: "rad_common_update-${{ github.event.inputs.update_rad_update_bot_only == 'true' && 'rad_update_bot_only' || env.RAD_COMMON_VERSION }}"
+          title: "Rad Common Update ${{ github.event.inputs.update_rad_update_bot_only == 'true' && 'rad_update_bot_only' || env.RAD_COMMON_VERSION }}"
       - name: Check if Pull Request was created
         if: ${{ steps.cpr.outputs.pull-request-number == '' }}
         run: |
