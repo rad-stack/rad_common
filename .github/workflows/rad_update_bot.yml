@@ -73,7 +73,6 @@ jobs:
       - name: Yarn install
         run: yarn install
       # Add or replace test runners here
-      # Test update
 
       - name: Update rad_common branch (if provided)
         if: ${{ github.event.inputs.rc_branch != '' }}
