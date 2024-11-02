@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap4-kaminari-views'
+  s.add_dependency 'csv'
   s.add_dependency 'devise'
   s.add_dependency 'devise_invitable'
   s.add_dependency 'devise-security'
@@ -59,11 +60,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'webpacker'
   s.add_dependency 'wicked_pdf', '2.6.3'
   s.add_dependency 'wkhtmltopdf-heroku', '2.12.6.1.pre.jammy'
-
-  # see Task 4406 - should be able to remove later
-  s.add_dependency 'csv'
-  s.add_dependency 'drb'
-  s.add_dependency 'mutex_m'
 
   # Test Group
   s.add_dependency 'selenium-webdriver', '~> 4.18.1'
