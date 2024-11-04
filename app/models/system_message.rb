@@ -59,7 +59,7 @@ class SystemMessage < ApplicationRecord
                                  "Important Message From #{RadConfig.app_name!}",
                                  email_message_body,
                                  do_not_format: true,
-                                 from_user: user).deliver_later
+                                 contact_log_from_user: user).deliver_later
       else
         UserSMSSenderJob.perform_later(sms_message_body, user.id, recipient.id, nil, false)
       end
