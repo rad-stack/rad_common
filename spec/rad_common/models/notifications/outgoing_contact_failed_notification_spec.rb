@@ -25,16 +25,16 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
     before { expect(mail.subject).to eq "Outgoing SMS Failed for #{to_failed} in #{RadConfig.app_name!}" }
 
     describe 'absolute_user_ids' do
-      subject { notification_type.absolute_user_ids }
+      subject { notification_type.absolute_user_ids.sort }
 
       context 'with from_user same as to_user' do
         let(:from_user) { to_user }
 
-        it { is_expected.to eq [admin.id] }
+        it { is_expected.to eq [from_user.id] }
       end
 
       context 'with from_user different than to_user' do
-        it { is_expected.to eq [from_user.id] }
+        it { is_expected.to eq [from_user.id, to_user.id].sort }
       end
 
       context 'without to_user' do
