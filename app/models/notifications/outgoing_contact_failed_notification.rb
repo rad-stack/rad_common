@@ -35,6 +35,10 @@ module Notifications
       contact_log
     end
 
+    def sms_enabled?
+      false
+    end
+
     private
 
       def feed_content_item
