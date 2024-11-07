@@ -120,6 +120,8 @@ module RadCommon
                         end
         scope_options += options.map { |option| [option.to_s, option.id] } if options.present?
         scope_options
+      elsif options.is_a?(Range)
+        options
       else
         nil_input_option + (options.presence || [])
       end
