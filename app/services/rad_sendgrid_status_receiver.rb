@@ -72,7 +72,14 @@ class RadSendgridStatusReceiver
     def deactivate_user!
       @notify = false
       user.update! user_status: UserStatus.default_inactive_status
-      Notifications::UserDeactivatedNotification.main(user).notify!
+      Notifications::UserDeactivatedNotification.main(user: user, reason: deactivate_user_reason).notify!
+    end
+
+    def deactivate_user_reason
+      return 'they reported a recent email as spam' if spam_report?
+      return 'a recent email to them failed and they have not accessed the system in quite a while' if user.stale?
+
+      raise 'unhandled deactivation reason'
     end
 
     def update_contact_log!
