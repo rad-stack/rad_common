@@ -4,6 +4,10 @@ module Notifications
       "#{user} was deactivated from #{RadConfig.app_name!} because #{reason}."
     end
 
+    def subject_record
+      user
+    end
+
     private
 
       def user

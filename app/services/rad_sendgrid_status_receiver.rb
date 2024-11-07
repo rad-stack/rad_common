@@ -71,8 +71,9 @@ class RadSendgridStatusReceiver
 
     def deactivate_user!
       @notify = false
+      reason = deactivate_user_reason
       user.update! user_status: UserStatus.default_inactive_status
-      Notifications::UserDeactivatedNotification.main(user: user, reason: deactivate_user_reason).notify!
+      Notifications::UserDeactivatedNotification.main(user: user, reason: reason).notify!
     end
 
     def deactivate_user_reason
