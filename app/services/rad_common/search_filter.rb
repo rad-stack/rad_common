@@ -4,7 +4,7 @@ module RadCommon
   class SearchFilter
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :not_scope,
                 :default_value, :errors, :include_blank,
-                :search_scope, :show_search_subtext, :allow_not
+                :search_scope, :show_search_subtext, :allow_not, :include_nil_option
 
     ##
     # @param [Symbol optional] column the database column that is being filtered
@@ -46,7 +46,7 @@ module RadCommon
     def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil,
                    input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, not_scope: nil,
                    multiple: false, required: false, include_blank: true, search_scope_name: nil,
-                   show_search_subtext: false, allow_not: false)
+                   show_search_subtext: false, allow_not: false, include_nil_option: false)
       if input_label.blank? && !options.respond_to?(:table_name)
         raise 'Input label is required when options are not active record objects'
       end
@@ -75,6 +75,7 @@ module RadCommon
       @search_scope = RadConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
       @show_search_subtext = show_search_subtext
       @allow_not = allow_not
+      @include_nil_option = include_nil_option
       @errors = []
     end
 
@@ -120,8 +121,12 @@ module RadCommon
         scope_options += options.map { |option| [option.to_s, option.id] } if options.present?
         scope_options
       else
-        options.presence || []
+        nil_input_option + (options.presence || [])
       end
+    end
+
+    def nil_input_option
+      include_nil_option ? [["No #{input_label}", 'nil']] : []
     end
 
     def input_options_with_current_selection(search)
@@ -148,6 +153,8 @@ module RadCommon
         apply_scope_filter(results, value, search_params)
       elsif scope_value?(value)
         apply_scope_value(results, value)
+      elsif nil_value?(value)
+        results.where("#{query_column(results)} IS NULL")
       elsif value.present?
         not_filter = not_value?(search_params)
         if value.is_a? Array
@@ -292,6 +299,10 @@ module RadCommon
         else
           false
         end
+      end
+
+      def nil_value?(value)
+        value == 'nil'
       end
 
       def apply_scope_value(results, scope_name)
