@@ -18,6 +18,12 @@ describe 'Audits' do
       expect(page).to have_content 'Status - Foo'
     end
 
+    it 'shows audits for changes without a user' do
+      visit "/audits/?#{{ search: { user_id: 'nil', auditable_type: 'Company' } }.to_query}"
+      expect(page).to have_content 'Audits (1)'
+      expect(page).to have_content Company.main.to_s
+    end
+
     it 'shows enum value in human readable form' do
       contact_log_recipient.update! sms_status: :queued
 
