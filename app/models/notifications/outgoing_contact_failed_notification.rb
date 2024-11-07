@@ -5,15 +5,16 @@ module Notifications
     end
 
     def absolute_user_ids
-      ids = if from_user.present?
-              [from_user.id]
-            else
-              []
-            end
+      ids = init_ids
 
-      ids.delete(to_user.id) if to_user.present?
-      ids = SecurityRole.admin_role.users.active.pluck(:id) if ids.blank?
-      ids.delete(to_user.id) if to_user.present?
+      if contact_log.sms?
+        ids.push(to_user.id) if to_user.present?
+      else
+        ids.delete(to_user.id) if to_user.present?
+        ids = SecurityRole.admin_role.users.active.pluck(:id) if ids.blank?
+        ids.delete(to_user.id) if to_user.present?
+      end
+
       raise 'no users to notify' if ids.blank?
 
       ids.uniq
@@ -33,6 +34,10 @@ module Notifications
 
     def subject_record
       contact_log
+    end
+
+    def sms_enabled?
+      false
     end
 
     private
@@ -63,6 +68,14 @@ module Notifications
 
       def phone_number
         payload.phone_number
+      end
+
+      def init_ids
+        if from_user.present?
+          [from_user.id]
+        else
+          []
+        end
       end
   end
 end
