@@ -66,7 +66,7 @@ class RadSendgridStatusReceiver
     end
 
     def deactivate_user?
-      suppression? && user.present? && (spam_report? || user.stale?)
+      suppression? && user.present? && (spam_report? || user.stale? || user.needs_reactivate?)
     end
 
     def deactivate_user!
@@ -79,6 +79,7 @@ class RadSendgridStatusReceiver
     def deactivate_user_reason
       return 'they reported a recent email as spam' if spam_report?
       return 'a recent email to them failed and they have not accessed the system in quite a while' if user.stale?
+      return 'a recent email to them failed and their account has expired due to inactivity' if user.needs_reactivate?
 
       raise 'unhandled deactivation reason'
     end
