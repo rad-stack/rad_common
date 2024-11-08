@@ -74,7 +74,7 @@ RSpec.describe NotificationType do
     context 'with inactive user' do
       before { user.update! user_status: UserStatus.default_inactive_status }
 
-      it { expect { result }.to raise_error 'absolute users must be active' }
+      it { expect { result }.to raise_error "absolute users must be active: [#{user.id}]" }
     end
 
     context 'when email is turned off' do

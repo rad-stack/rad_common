@@ -151,7 +151,8 @@ class NotificationType < ApplicationRecord
       users = permitted_users
     else
       users = User.where(id: absolute_user_ids)
-      raise 'absolute users must be active' unless users.size == users.active.size
+      inactive_ids = users.pluck(:id) - users.active.pluck(:id)
+      raise "absolute users must be active: #{inactive_ids}" if inactive_ids.present?
     end
 
     user_ids = users.where
