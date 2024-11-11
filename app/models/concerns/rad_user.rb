@@ -118,7 +118,9 @@ module RadUser
   end
 
   def stale?
-    updated_at < 4.months.ago
+    (updated_at < 4.months.ago) ||
+      (current_sign_in_at.present? && current_sign_in_at < 6.months.ago) ||
+      many_recent_failed_emails?
   end
 
   def not_inactive?
@@ -220,11 +222,12 @@ module RadUser
     RadMailer.simple_message(self,
                              'Test Email',
                              'This is a test.',
-                             from_user: from_user).deliver_later
+                             contact_log_from_user: from_user,
+                             contact_log_record: self).deliver_later
   end
 
   def test_sms!(from_user)
-    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false
+    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false, contact_log_record: self
   end
 
   def reactivate
@@ -339,6 +342,17 @@ module RadUser
 
     def set_timezone
       self.timezone = Company.main.timezone if new_record? && timezone.blank?
+    end
+
+    def many_recent_failed_emails?
+      records = contact_logs_to.joins(:contact_log)
+                               .where(contact_logs: { service_type: :email })
+                               .order(created_at: :desc)
+                               .limit(10)
+
+      return false if records.size < 10
+
+      records.failed.size >= 8
     end
 
     def notify_user_approved

@@ -1,8 +1,5 @@
 require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/app/services/rad_config.rb"
 
-require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record" \
-        '/base/schema_validations'
-
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'SMS'
   inflect.acronym 'PDF'
@@ -10,8 +7,6 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'CSV'
   inflect.acronym 'BCC'
 end
-
-ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 
 # see Task 25
 Rails.application.config.active_storage.variant_processor = :mini_magick
@@ -63,21 +58,8 @@ Rails.configuration.to_prepare do
 end
 
 Rails.application.config.after_initialize do
-  ActionText::ContentHelper.allowed_attributes << 'style'
+  default_allowed_tags = Class.new.include(ActionText::ContentHelper).new.sanitizer_allowed_attributes
+  ActionText::ContentHelper.allowed_attributes = default_allowed_tags.add('style')
 end
 
 AuthTrail.geocode = false
-
-module Kaminari
-  # monkey patch to fix paging on engine routes
-  # https://github.com/rad-stack/rad_common/pull/211/files
-  # https://github.com/kaminari/kaminari/issues/457
-
-  module Helpers
-    class Tag
-      def page_url_for(page)
-        (@options[:routes_proxy] || @template).url_for @params.merge(@param_name => (page <= 1 ? nil : page))
-      end
-    end
-  end
-end

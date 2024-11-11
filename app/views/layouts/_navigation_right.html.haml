@@ -22,20 +22,20 @@
           %li= link_to icon('user', 'My Profile'), "/user_profiles/#{current_user.id}", class: 'dropdown-item'
         - if current_user.internal? && policy(Notification).index?
           %li
-            = link_to '/rad_common/notifications', class: 'dropdown-item' do
+            = link_to notifications_path, class: 'dropdown-item' do
               = icon 'bell', 'Notifications'
               - if unread_count.positive?
                 %span.badge.alert-danger= unread_count
         - if current_user.internal? && policy(NotificationSetting).index?
           %li
             = link_to icon('gear', 'Notification Settings'),
-                      '/rad_common/notification_settings',
+                      notification_settings_path,
                       class: 'dropdown-item'
 
         - if impersonating?
           %li
             = link_to icon('user-slash', "Sign Out from #{current_user}"),
-                      '/rad_common/impersonations/stop',
+                      stop_impersonations_path,
                       method: 'delete',
                       class: "dropdown-item #{impersonate_style}"
         %hr.my-2

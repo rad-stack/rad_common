@@ -43,7 +43,7 @@ class AttorneysController < ApplicationController
     destroyed = @attorney.destroy
 
     if destroyed
-      flash[:success] = 'Attorney was successfully deleted.'
+      flash[:notice] = 'Attorney was successfully deleted.'
     else
       flash[:error] = @attorney.errors.full_messages.join(', ')
     end

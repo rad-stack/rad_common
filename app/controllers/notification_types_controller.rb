@@ -15,8 +15,7 @@ class NotificationTypesController < ApplicationController
     @notification_type.security_roles = resolve_roles(params[type_param_name][:security_roles])
 
     if @notification_type.save
-      flash[:success] = 'Notification Type updated.'
-      redirect_to '/rad_common/notification_types'
+      redirect_to notification_types_path, notice: 'Notification Type updated.'
     else
       render :edit
     end

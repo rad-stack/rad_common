@@ -5,13 +5,7 @@
       label = sort_column[:label] || sort_column[:column].titleize
       search_params = { search: search.search_params.merge({ sort: sort_column[:column], direction: direction }) }
 
-    - case search.class.to_s
-    - when 'RadAuditSearch'
-      = link_to label, "/rad_common/audits?#{search_params.to_query}"
-    - when 'LoginActivitySearch'
-      = link_to label, "/rad_common/login_activities?#{search_params.to_query}"
-    - else
-      = link_to label, search_params
+    = link_to label, search_params
 
     - if sort_column[:column] == search.sort_column
       - icon = search.sort_direction == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'

@@ -114,8 +114,9 @@ module RadCommon
         # templates
 
         # active_record templates
-        copy_file '../../../../../spec/dummy/lib/templates/active_record/model/model.rb',
-                  'lib/templates/active_record/model/model.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/active_record/model/model.rb.tt',
+                  'lib/templates/active_record/model/model.rb.tt'
+        remove_file 'lib/templates/active_record/model/model.rb' # Removed old non-TT file
 
         # haml templates
         copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/_form.html.haml',
@@ -134,15 +135,18 @@ module RadCommon
                   'lib/templates/haml/scaffold/show.html.haml'
 
         # rails templates
-        copy_file '../../../../../spec/dummy/lib/templates/rails/scaffold_controller/controller.rb',
-                  'lib/templates/rails/scaffold_controller/controller.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rails/scaffold_controller/controller.rb.tt',
+                  'lib/templates/rails/scaffold_controller/controller.rb.tt'
+        remove_file 'lib/templates/rails/scaffold_controller/controller.rb' # Removed old non-TT file
 
         # rspec templates
-        copy_file '../../../../../spec/dummy/lib/templates/rspec/scaffold/request_spec.rb',
-                  'lib/templates/rspec/scaffold/request_spec.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rspec/scaffold/request_spec.rb.tt',
+                  'lib/templates/rspec/scaffold/request_spec.rb.tt'
+        remove_file 'lib/templates/rspec/scaffold/request_spec.rb' # Removed old non-TT file
 
-        copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb',
-                  'lib/templates/rspec/system/system_spec.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb.tt',
+                  'lib/templates/rspec/system/system_spec.rb.tt'
+        remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
 
         unless RadConfig.react_app?
           create_file 'db/seeds.rb' do <<-'RUBY'
@@ -175,7 +179,7 @@ Seeder.new.seed!
 
       def self.next_migration_number(path)
         next_migration_number = current_migration_number(path) + 1
-        if ActiveRecord::Base.timestamped_migrations
+        if ActiveRecord.timestamped_migrations
           [Time.current.utc.strftime('%Y%m%d%H%M%S'), '%.14d' % next_migration_number].max
         else
           '%.3d' % next_migration_number
@@ -351,8 +355,11 @@ Seeder.new.seed!
         def install_github_workflow
           copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
           copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
+          copy_file '../../../../../.github/workflows/generate_coverage_report.yml',
+                    '.github/workflows/generate_coverage_report.yml'
           remove_file '.github/workflows/rc_update.yml'
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
+          gsub_file '.github/workflows/generate_coverage_report.yml', 'rad_common_test', "#{installed_app_name}_test"
 
           if RadConfig.react_app?
             gsub_file '.github/workflows/rad_update_bot.yml',

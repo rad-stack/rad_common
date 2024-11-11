@@ -138,7 +138,6 @@ module RadCommon
     def bootstrap_flash_type(type)
       type = type.to_sym
 
-      type = :success if type == :notice
       type = :danger  if type == :alert
       type = :danger  if type == :error
 

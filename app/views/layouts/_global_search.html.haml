@@ -2,7 +2,7 @@
   - search_scopes = GlobalSearch.new(current_user).filtered_scopes
 
   - if search_scopes.any?
-    = form_tag('/rad_common/global_search_result', method: :get) do
+    = form_tag(global_search_result_path, method: :get) do
       .global-search-group
         .input-group
           .input-group-prepend
@@ -28,7 +28,7 @@
                             global-search-autocomplete
                             ui-autocomplete-input
                             global_search_name],
-                  'data-autocomplete': '/rad_common/global_search',
+                  'data-autocomplete': '/global_search',
                   'data-autocomplete-fields': "{ \"global_search_scope\" :
                                                 \".global_search_scope\",
                                                 \"super_search\" : \".super_search\"}",

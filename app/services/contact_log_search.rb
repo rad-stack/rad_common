@@ -13,8 +13,8 @@ class ContactLogSearch < RadCommon::Search
 
     def filters_def
       [date_filter,
-       { input_label: 'Service Type', name: :service_type, scope_values: enum_scopes(ContactLog, :service_type) },
-       { input_label: 'Log Type', name: :log_type, scope_values: enum_scopes(ContactLog, :sms_log_type) },
+       { column: :service_type, type: RadCommon::EnumFilter, klass: ContactLog },
+       { input_label: 'Log Type', column: :sms_log_type, type: RadCommon::EnumFilter, klass: ContactLog },
        user_filter('From User', 'contact_logs.from_user_id'),
        { input_label: 'From Number',
          column: 'contact_logs.from_number',
@@ -39,7 +39,7 @@ class ContactLogSearch < RadCommon::Search
          scope: :associated_with_user,
          blank_value_label: 'All Users' },
        { input_label: 'Content', column: 'content', type: RadCommon::LikeFilter },
-       { input_label: 'Success', name: :status, scope_values: %i[failed successful], blank_value_label: 'All Records' }]
+       { column: 'contact_log_recipients.success', input_label: 'Success?', type: RadCommon::BooleanFilter }]
     end
 
     def sort_columns_def

@@ -56,7 +56,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = [Rails.root.join('spec/fixtures').to_s]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -148,4 +148,6 @@ RSpec.configure do |config|
 
   include Warden::Test::Helpers
   config.include Capybara::DSL
+
+  Sidekiq.logger.level = Logger::WARN
 end

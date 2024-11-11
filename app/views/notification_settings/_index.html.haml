@@ -17,13 +17,12 @@
       %tr{ class: table_row_style(record) }
         %td
           - if can_type
-            = link_to record.notification_type,
-                      "/rad_common/notification_types/#{record.notification_type_id}/edit"
+            = link_to record.notification_type, edit_notification_type_path(record.notification_type)
           - else
             = record.notification_type
         %td.w-50
           = simple_form_for record,
-                            url: '/rad_common/notification_settings',
+                            url: notification_settings_path,
                             method: :post,
                             html: { class: 'dynamic-updater' } do |f|
 

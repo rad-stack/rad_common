@@ -27,12 +27,12 @@ RSpec.describe 'Notification Settings', type: :request do
         context 'when valid' do
           it 'creates' do
             expect {
-              post '/rad_common/notification_settings', params: { notification_setting: attributes }
+              post '/notification_settings', params: { notification_setting: attributes }
             }.to change(NotificationSetting, :count).by(1)
           end
 
           it 'responds with success json' do
-            post '/rad_common/notification_settings', params: { notification_setting: attributes }
+            post '/notification_settings', params: { notification_setting: attributes }
             expect(response.body).to include('The setting was successfully saved.')
           end
         end
@@ -42,7 +42,7 @@ RSpec.describe 'Notification Settings', type: :request do
 
           it 'fails' do
             expect {
-              post '/rad_common/notification_settings', params: { notification_setting: attributes }
+              post '/notification_settings', params: { notification_setting: attributes }
             }.not_to change(NotificationSetting, :count)
           end
         end
@@ -53,7 +53,7 @@ RSpec.describe 'Notification Settings', type: :request do
 
         it 'creates' do
           expect {
-            post '/rad_common/notification_settings', params: { notification_setting: attributes }
+            post '/notification_settings', params: { notification_setting: attributes }
           }.to change(NotificationSetting, :count).by(1)
         end
       end
@@ -73,7 +73,7 @@ RSpec.describe 'Notification Settings', type: :request do
         it 'creates' do
           user
           expect {
-            post '/rad_common/notification_settings', params: { notification_setting: attributes }
+            post '/notification_settings', params: { notification_setting: attributes }
           }.to change(NotificationSetting, :count).by(1)
         end
       end
@@ -84,7 +84,7 @@ RSpec.describe 'Notification Settings', type: :request do
         before { user.user_security_roles.delete_all }
 
         it 'denies access' do
-          post '/rad_common/notification_settings', params: { notification_setting: attributes }
+          post '/notification_settings', params: { notification_setting: attributes }
           expect(response).to have_http_status :forbidden
         end
       end
