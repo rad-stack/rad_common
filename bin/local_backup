@@ -2,15 +2,28 @@
 require 'fileutils'
 
 def system!(*args)
-  system(*args) || abort("\n== Command #{args} failed ==")
+  system(*args) || abort("\n== Command #{args.join(' ')} failed ==")
+end
+
+def heroku_app_exists?(app_name)
+  `heroku apps:info --app #{app_name}`
+  $?.success?
 end
 
 if Dir.pwd.include?('rad_common')
-  puts "== rad_common is not applicable for this operation =="
-else
-  heroku_app_name = Dir.pwd.split("/").last.gsub('_', '-')
+  puts '== rad_common is not applicable for this operation =='
+  exit
+end
 
-  FileUtils.chdir Dir.pwd do
-    system!("bundle exec rails \"heroku:local_backup[#{heroku_app_name}]\"")
+FileUtils.chdir Dir.pwd do
+  heroku_app_name = Dir.pwd.split('/').last.gsub('_', '-')
+
+  unless heroku_app_exists?(heroku_app_name)
+    puts "Could not find accessible Heroku app: #{heroku_app_name}."
+    print 'Please enter a valid Heroku app name: '
+    heroku_app_name = gets.chomp.strip
   end
+
+  puts "Proceeding with backup for app: #{heroku_app_name}..."
+  system!("bundle exec rails \"heroku:local_backup[#{heroku_app_name}]\"")
 end
