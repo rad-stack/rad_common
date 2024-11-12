@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+heroku_app_name = ::Rails.application.class.module_parent.to_s.underscore.gsub('_', '-')
+
+directory = Dir.pwd.include?('rad_common') ? "#{Dir.pwd}/spec/dummy" : Dir.pwd
+FileUtils.chdir directory do
+  system!("bundle exec rails \"heroku:local_backup[#{heroku_app_name}]\"")
+end
