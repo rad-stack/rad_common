@@ -6,7 +6,7 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
-        remove_file 'app/views/layouts/_navigation.html.haml'
+        remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.react_app?
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
@@ -19,24 +19,39 @@ module RadCommon
         update_seeder_method
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
+        add_rad_config_setting 'legacy_rails_config', 'false'
         remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
+        search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
+        gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
 
         # misc
-        merge_package_json
+        merge_package_json unless RadConfig.react_app?
         copy_custom_github_actions
         copy_custom_github_matrix
+        copy_file '../../../../../.ruby-version', '.ruby-version'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
-        copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+        end
+
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../pull_request_template.md', '.github/pull_request_template.md'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
-        copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
-        copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js', 'app/javascript/packs/rad_mailer.js'
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/app/javascript/packs/application.js',
+                    'app/javascript/packs/application.js'
+        end
+
+        copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js',
+                  'app/javascript/packs/rad_mailer.js'
+
         directory '../../../../../.bundle', '.bundle'
 
         # code style config
@@ -50,13 +65,24 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
-        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
-        gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+          gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
 
-        copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
+          if !RadConfig.config_item(:legacy_rails_config).nil? && RadConfig.legacy_rails_config?
+            gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
+          end
+
+          copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
+        end
+
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
-        directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
-        directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
+
+        unless RadConfig.react_app?
+          directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
+          directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
+        end
+
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
@@ -88,8 +114,9 @@ module RadCommon
         # templates
 
         # active_record templates
-        copy_file '../../../../../spec/dummy/lib/templates/active_record/model/model.rb',
-                  'lib/templates/active_record/model/model.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/active_record/model/model.rb.tt',
+                  'lib/templates/active_record/model/model.rb.tt'
+        remove_file 'lib/templates/active_record/model/model.rb' # Removed old non-TT file
 
         # haml templates
         copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/_form.html.haml',
@@ -108,23 +135,28 @@ module RadCommon
                   'lib/templates/haml/scaffold/show.html.haml'
 
         # rails templates
-        copy_file '../../../../../spec/dummy/lib/templates/rails/scaffold_controller/controller.rb',
-                  'lib/templates/rails/scaffold_controller/controller.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rails/scaffold_controller/controller.rb.tt',
+                  'lib/templates/rails/scaffold_controller/controller.rb.tt'
+        remove_file 'lib/templates/rails/scaffold_controller/controller.rb' # Removed old non-TT file
 
         # rspec templates
-        copy_file '../../../../../spec/dummy/lib/templates/rspec/scaffold/request_spec.rb',
-                  'lib/templates/rspec/scaffold/request_spec.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rspec/scaffold/request_spec.rb.tt',
+                  'lib/templates/rspec/scaffold/request_spec.rb.tt'
+        remove_file 'lib/templates/rspec/scaffold/request_spec.rb' # Removed old non-TT file
 
-        copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb',
-                  'lib/templates/rspec/system/system_spec.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb.tt',
+                  'lib/templates/rspec/system/system_spec.rb.tt'
+        remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
 
-        create_file 'db/seeds.rb' do <<-'RUBY'
+        unless RadConfig.react_app?
+          create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 require 'rad_rspec/rad_factories'
 
 RadFactories.load!
 Seeder.new.seed!
         RUBY
+          end
         end
 
         inject_into_file 'config/routes.rb', after: 'Rails.application.routes.draw do' do <<-'RUBY'
@@ -140,96 +172,14 @@ Seeder.new.seed!
         RUBY
         end
 
-        apply_migration '20140302111111_add_radbear_user_fields.rb'
-        apply_migration '20140827111111_add_name_index_to_users.rb'
-        apply_migration '20140903124700_expand_facebook_access_token.rb'
-        apply_migration '20141029233028_add_company_table.rb'
-        apply_migration '20141110200841_add_logo_stuff_to_company.rb'
-        apply_migration '20150221211338_add_optional_emails.rb'
-        apply_migration '20150810232946_add_user_global_search_default.rb'
-        apply_migration '20150916175409_remove_twitter.rb'
-        apply_migration '20160929174209_add_string_limits.rb'
-        apply_migration '20170702133404_company_validity_check.rb'
-        apply_migration '20170811123959_security_groups.rb'
-        apply_migration '20171122123931_user_statuses.rb'
-        apply_migration '20171230132438_super_search_default.rb'
-        apply_migration '20180314163722_devise_authy_add_to_users.rb'
-        apply_migration '20180411144821_convert_to_roles.rb'
-        apply_migration '20180509112357_remove_optional_emails.rb'
-        apply_migration '20180526160907_require_user_names.rb'
-        apply_migration '20180609150231_company_valid_domains.rb'
-        apply_migration '20180925214758_remove_rad_common_unused_fields.rb'
-        apply_migration '20190130182443_remove_logo_settings.rb'
-        apply_migration '20190225194928_devise_invitable_add_to_users.rb'
-        apply_migration '20190318115634_user_notifications.rb'
-        apply_migration '20190429211944_remove_super_search_from_users.rb'
-        apply_migration '20190524132649_refactor_notifications.rb'
-        apply_migration '20190810122656_create_system_messages.rb'
-        apply_migration '20190829220515_add_message_type_to_system_messages.rb'
-        apply_migration '20190911120012_timezones.rb'
-        apply_migration '20190919163914_remove_super_admin.rb'
-        apply_migration '20190929125052_notification_auth_mode.rb'
-        apply_migration '20191112111902_devise_lockable.rb'
-        apply_migration '20200128185735_make_message_not_required.rb'
-        apply_migration '20200203163827_convert_rich_text.rb'
-        apply_migration '20200227134827_create_rad_common_notifications.rb'
-        apply_migration '20200306204548_notifications_sti.rb'
-        apply_migration '20200311113900_fix_notification_names.rb'
-        apply_migration '20200325152933_devise_security_updates.rb'
-        apply_migration '20200408180735_ran_long_notification.rb'
-        apply_migration '20200526144750_convert_filter_defaults_to_json.rb'
-        apply_migration '20200810143832_create_login_activities.rb'
-        apply_migration '20200903192242_rename_security_roles.rb'
-        apply_migration '20210104154427_remove_current_phone.rb'
-        apply_migration '20210111201627_create_twilio_logs.rb'
-        apply_migration '20210119145517_external_security_roles.rb'
-        apply_migration '20210126120121_require_twilio_user.rb'
-        apply_migration '20210204112040_system_message_role.rb'
-        apply_migration '20210419153508_create_duplicates.rb'
-        apply_migration '20210428131743_unique_duplicates.rb'
-        apply_migration '20210522104137_duplicates_processed.rb'
-        apply_migration '20210621112203_opt_out_message_sent.rb'
-        apply_migration '20210729135942_authy_always_enabled.rb'
-        apply_migration '20210805105809_fix_notification_defaults.rb'
-        apply_migration '20211029155622_fix_array_type.rb'
-        apply_migration '20211202111615_fix_audits_index.rb'
-        apply_migration '20220121140559_create_user_clients.rb'
-        apply_migration '20220202173640_authy_no_sms.rb'
-        apply_migration '20220328202539_manage_users_perm.rb'
-        apply_migration '20220405182602_optional_mobile_phone.rb'
-        apply_migration '20220423173413_inactive_notifications.rb'
-        apply_migration '20220504114538_rename_validate_email.rb'
-        apply_migration '20220719162246_address_validation.rb'
-        apply_migration '20220901143808_sign_up_roles.rb'
-        apply_migration '20220905140634_allow_invite_role.rb'
-        apply_migration '20220918194026_refine_smarty.rb'
-        apply_migration '20221021113251_create_saved_search_filters.rb'
-        apply_migration '20221108110620_add_new_audited_changes_to_audits.rb'
-        apply_migration '20221123142522_twilio_log_changes.rb'
-        apply_migration '20221108114020_convert_audited_changes_text_to_json.rb'
-        apply_migration '20221221134935_remove_legacy_audited_changes.rb'
-        apply_migration '20230222162024_migrate_authy_to_twilio_verify.rb'
-        apply_migration '20230310161506_more_twilio_verify.rb'
-        apply_migration '20230313195243_add_language.rb'
-        apply_migration '20230401113151_fix_sendgrid_notification.rb'
-        apply_migration '20230419121743_twilio_replies.rb'
-        apply_migration '20230420102508_update_twilio_log_number_format.rb'
-        apply_migration '20230425215920_create_twilio_log_attachments.rb'
-        apply_migration '20231205185433_pending_user_status.rb'
-        apply_migration '20240209114718_make_audits_created_at_non_nullable.rb'
-        apply_migration '20240209141219_missing_fks.rb'
-        apply_migration '20240222093233_active_record_doctor_issues.rb'
-        apply_migration '20240313112119_more_active_record_doctor_issues.rb'
-        apply_migration '20240412165055_rename_twilio_logs.rb'
-        apply_migration '20240412175512_create_contact_log_recipients.rb'
-        apply_migration '20240418101832_remove_contact_log_attachments.rb'
-        apply_migration '20240420112825_contact_log_content.rb'
-        apply_migration '20240423100042_rename_contact_fields.rb'
+        apply_migrations
+
+        check_boolean_fields
       end
 
       def self.next_migration_number(path)
         next_migration_number = current_migration_number(path) + 1
-        if ActiveRecord::Base.timestamped_migrations
+        if ActiveRecord.timestamped_migrations
           [Time.current.utc.strftime('%Y%m%d%H%M%S'), '%.14d' % next_migration_number].max
         else
           '%.3d' % next_migration_number
@@ -268,6 +218,8 @@ Seeder.new.seed!
         end
 
         def apply_migration(source)
+          return if RadConfig.react_app?
+
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
           if self.class.migration_exists?('db/migrate', filename)
@@ -292,6 +244,14 @@ Seeder.new.seed!
             system "find . -type f -name \"*.#{file_type}\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
           else
             system "find . -type f -name \"*.#{file_type}\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          end
+        end
+
+        def search_and_replace_file(search, replace, file_name)
+          if ENV['CI']
+            system "find . -type f -name \"#{file_name}\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
+          else
+            system "find . -type f -name \"#{file_name}\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
           end
         end
 
@@ -329,6 +289,16 @@ Seeder.new.seed!
 
           if Dir.exist?('spec/factories/rad_common') && Dir.empty?('spec/factories/rad_common')
             Dir.rmdir('spec/factories/rad_common')
+          end
+        end
+
+        def check_boolean_fields
+          ActiveRecord::Base.connection.tables.each do |table|
+            ActiveRecord::Base.connection.columns(table).each do |column|
+              next unless column.type == :boolean && (column.null || column.default.blank?)
+
+              raise "column #{table}.#{column.name}: null: #{column.null}, default: #{column.default}"
+            end
           end
         end
 
@@ -385,13 +355,123 @@ Seeder.new.seed!
         def install_github_workflow
           copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
           copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
+          copy_file '../../../../../.github/workflows/generate_coverage_report.yml',
+                    '.github/workflows/generate_coverage_report.yml'
           remove_file '.github/workflows/rc_update.yml'
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
-          gsub_file '.github/workflows/rad_update_bot.yml', 'rad_common_development', "#{installed_app_name}_development"
+          gsub_file '.github/workflows/generate_coverage_report.yml', 'rad_common_test', "#{installed_app_name}_test"
+
+          if RadConfig.react_app?
+            gsub_file '.github/workflows/rad_update_bot.yml',
+                      'rad_common_development',
+                      'cannasaver_admin_development'
+          else
+            gsub_file '.github/workflows/rad_update_bot.yml',
+                      'rad_common_development',
+                      "#{installed_app_name}_development"
+          end
+
           gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
+          gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
           gsub_file '.github/workflows/rspec_tests.yml',
                    "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
                    'bin/rc_parallel_rspec'
+        end
+
+        def apply_migrations
+          apply_migration '20140302111111_add_radbear_user_fields.rb'
+          apply_migration '20140827111111_add_name_index_to_users.rb'
+          apply_migration '20140903124700_expand_facebook_access_token.rb'
+          apply_migration '20141029233028_add_company_table.rb'
+          apply_migration '20141110200841_add_logo_stuff_to_company.rb'
+          apply_migration '20150221211338_add_optional_emails.rb'
+          apply_migration '20150810232946_add_user_global_search_default.rb'
+          apply_migration '20150916175409_remove_twitter.rb'
+          apply_migration '20160929174209_add_string_limits.rb'
+          apply_migration '20170702133404_company_validity_check.rb'
+          apply_migration '20170811123959_security_groups.rb'
+          apply_migration '20171122123931_user_statuses.rb'
+          apply_migration '20171230132438_super_search_default.rb'
+          apply_migration '20180314163722_devise_authy_add_to_users.rb'
+          apply_migration '20180411144821_convert_to_roles.rb'
+          apply_migration '20180509112357_remove_optional_emails.rb'
+          apply_migration '20180526160907_require_user_names.rb'
+          apply_migration '20180609150231_company_valid_domains.rb'
+          apply_migration '20180925214758_remove_rad_common_unused_fields.rb'
+          apply_migration '20190130182443_remove_logo_settings.rb'
+          apply_migration '20190225194928_devise_invitable_add_to_users.rb'
+          apply_migration '20190318115634_user_notifications.rb'
+          apply_migration '20190429211944_remove_super_search_from_users.rb'
+          apply_migration '20190524132649_refactor_notifications.rb'
+          apply_migration '20190810122656_create_system_messages.rb'
+          apply_migration '20190829220515_add_message_type_to_system_messages.rb'
+          apply_migration '20190911120012_timezones.rb'
+          apply_migration '20190919163914_remove_super_admin.rb'
+          apply_migration '20190929125052_notification_auth_mode.rb'
+          apply_migration '20200128185735_make_message_not_required.rb'
+          apply_migration '20200203163827_convert_rich_text.rb'
+          apply_migration '20200227134827_create_rad_common_notifications.rb'
+          apply_migration '20200306204548_notifications_sti.rb'
+          apply_migration '20200311113900_fix_notification_names.rb'
+          apply_migration '20200325152933_devise_security_updates.rb'
+          apply_migration '20200408180735_ran_long_notification.rb'
+          apply_migration '20200526144750_convert_filter_defaults_to_json.rb'
+          apply_migration '20200810143832_create_login_activities.rb'
+          apply_migration '20200903192242_rename_security_roles.rb'
+          apply_migration '20210111201627_create_twilio_logs.rb'
+          apply_migration '20210119145517_external_security_roles.rb'
+          apply_migration '20210126120121_require_twilio_user.rb'
+          apply_migration '20210204112040_system_message_role.rb'
+          apply_migration '20210419153508_create_duplicates.rb'
+          apply_migration '20210428131743_unique_duplicates.rb'
+          apply_migration '20210522104137_duplicates_processed.rb'
+          apply_migration '20210621112203_opt_out_message_sent.rb'
+          apply_migration '20210729135942_authy_always_enabled.rb'
+          apply_migration '20210805105809_fix_notification_defaults.rb'
+          apply_migration '20211029155622_fix_array_type.rb'
+          apply_migration '20211202111615_fix_audits_index.rb'
+          apply_migration '20220121140559_create_user_clients.rb'
+          apply_migration '20220202173640_authy_no_sms.rb'
+          apply_migration '20220328202539_manage_users_perm.rb'
+          apply_migration '20220405182602_optional_mobile_phone.rb'
+          apply_migration '20220423173413_inactive_notifications.rb'
+          apply_migration '20220504114538_rename_validate_email.rb'
+          apply_migration '20220719162246_address_validation.rb'
+          apply_migration '20220901143808_sign_up_roles.rb'
+          apply_migration '20220905140634_allow_invite_role.rb'
+          apply_migration '20220918194026_refine_smarty.rb'
+          apply_migration '20221021113251_create_saved_search_filters.rb'
+          apply_migration '20221108110620_add_new_audited_changes_to_audits.rb'
+          apply_migration '20221123142522_twilio_log_changes.rb'
+          apply_migration '20221108114020_convert_audited_changes_text_to_json.rb'
+          apply_migration '20221221134935_remove_legacy_audited_changes.rb'
+          apply_migration '20230222162024_migrate_authy_to_twilio_verify.rb'
+          apply_migration '20230310161506_more_twilio_verify.rb'
+          apply_migration '20230313195243_add_language.rb'
+          apply_migration '20230401113151_fix_sendgrid_notification.rb'
+          apply_migration '20230419121743_twilio_replies.rb'
+          apply_migration '20230420102508_update_twilio_log_number_format.rb'
+          apply_migration '20230425215920_create_twilio_log_attachments.rb'
+          apply_migration '20231205185433_pending_user_status.rb'
+          apply_migration '20240209114718_make_audits_created_at_non_nullable.rb'
+          apply_migration '20240209141219_missing_fks.rb'
+          apply_migration '20240222093233_active_record_doctor_issues.rb'
+          apply_migration '20240313112119_more_active_record_doctor_issues.rb'
+          apply_migration '20240412165055_rename_twilio_logs.rb'
+          apply_migration '20240412175512_create_contact_log_recipients.rb'
+          apply_migration '20240418101832_remove_contact_log_attachments.rb'
+          apply_migration '20240420112825_contact_log_content.rb'
+          apply_migration '20240423100042_rename_contact_fields.rb'
+          apply_migration '20240602130347_contact_log_sendgrid_stuff.rb'
+          apply_migration '20240604194517_more_sendgrid_stuff.rb'
+          apply_migration '20240611203430_fix_boolean_nulls_defaults.rb'
+          apply_migration '20240629114200_fix_contact_log_sms_status.rb'
+          apply_migration '20240705173121_more_contact_log_fixes.rb'
+          apply_migration '20240709115421_notify_tool_actions.rb'
+          apply_migration '20240710175508_fix_contact_to_users.rb'
+          apply_migration '20240803114036_bcc_notify_recipient.rb'
+          apply_migration '20240912133320_persist_sms_false_positive.rb'
+          apply_migration '20240911184745_fix_last_activity.rb'
         end
 
         def installed_app_name

@@ -7,6 +7,7 @@ describe RadMailer do
   let(:comma_email) { comma_user.email }
   let(:email) { user.email }
   let(:last_email) { ActionMailer::Base.deliveries.last }
+  let(:attachment) { { record: division, method: :logo } }
 
   before { ActionMailer::Base.deliveries.clear }
 
@@ -18,7 +19,8 @@ describe RadMailer do
       described_class.simple_message(recipient,
                                      'foo',
                                      'bar',
-                                     attachment: { record: division, method: :logo }).deliver_now
+                                     attachment: attachment,
+                                     contact_log_record: division).deliver_now
     end
 
     describe 'subject' do
@@ -65,6 +67,12 @@ describe RadMailer do
           it { is_expected.to eq [user.email] }
         end
       end
+
+      it 'creates contact log' do
+        expect(ContactLog.count).to eq 1
+        expect(ContactLogRecipient.count).to eq 1
+        expect(ContactLog.last.record).to eq division
+      end
     end
 
     describe 'attachment' do
@@ -73,10 +81,22 @@ describe RadMailer do
       it { is_expected.to eq 1 }
     end
 
+    describe 'raw file attachment' do
+      subject { last_email.attachments.count }
+
+      let(:attachment) { { raw_file: 'foo', filename: 'bar', content_type: 'baz' } }
+
+      it { is_expected.to eq 1 }
+    end
+
     describe 'contact logs' do
       it 'creates a contact log' do
         expect(ContactLog.count).to eq 1
         expect(ContactLogRecipient.count).to eq 1
+      end
+
+      it 'sets to user if email matches' do
+        expect(ContactLogRecipient.last.to_user).to eq user
       end
     end
   end

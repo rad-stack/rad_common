@@ -4,8 +4,15 @@ module RadCommon
       items = [:email, :mobile_phone, { label: 'User Status', value: user_status_item(user) }, :timezone]
       items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
 
-      items += %i[sign_in_count invitation_accepted_at invited_by current_sign_in_ip current_sign_in_at confirmed_at
-                  confirmation_sent_at unconfirmed_email]
+      items += [:sign_in_count,
+                :invitation_accepted_at,
+                :invited_by,
+                :current_sign_in_ip,
+                :current_sign_in_at,
+                :confirmed_at,
+                :confirmation_sent_at,
+                { label: 'Unconfirmed Email',
+                  value: content_tag(:span, user.unconfirmed_email, class: 'badge alert-warning') }]
 
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
 
@@ -130,7 +137,7 @@ module RadCommon
       return unless policy(user).impersonate?
 
       link_to icon('right-to-bracket', 'Sign In As'),
-              "/rad_common/impersonations/start?id=#{user.id}",
+              start_impersonations_path(id: user.id),
               method: :post,
               data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to ' \
                                'your original user.' },
@@ -177,7 +184,7 @@ module RadCommon
     end
 
     def user_test_sms_action(user)
-      return unless RadTwilio.new.twilio_enabled? && user.mobile_phone.present? && policy(user).test_sms?
+      return unless RadConfig.twilio_enabled? && user.mobile_phone.present? && policy(user).test_sms?
 
       link_to icon(:comments, 'Send Test SMS'),
               test_sms_user_path(user),

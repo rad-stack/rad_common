@@ -95,7 +95,7 @@ RSpec.describe 'Users', type: :request do
         expect(response).to redirect_to(users_url)
       end
 
-      it 'can not delete if user created audits' do
+      it 'can not delete if user created audits', :non_react_specs do
         another
         Audited::Audit.as_user(another) { user.update!(first_name: 'Foo') }
         expect(another.other_audits_created.count.positive?).to be true
@@ -113,7 +113,7 @@ RSpec.describe 'Users', type: :request do
       it 'exports' do
         get '/users/export', params: { format: :pdf }
         expect(response).to have_http_status :redirect
-        expect(flash[:success]).to include 'Your report is generating'
+        expect(flash[:notice]).to include 'Your report is generating'
       end
     end
   end

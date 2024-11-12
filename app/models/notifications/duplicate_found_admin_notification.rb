@@ -16,8 +16,12 @@ module Notifications
         'Please review the record and ensure that it is indeed a new record.'
     end
 
+    def mailer_contact_log_from_user
+      created_by
+    end
+
     def subject_url
-      Rails.application.routes.url_helpers.duplicates_url model: subject_record.class, id: subject_record.id
+      Rails.application.routes.url_helpers.resolve_duplicates_url model: subject_record.class, id: subject_record.id
     end
 
     private
@@ -25,6 +29,7 @@ module Notifications
       def created_by
         user = subject_record.created_by
         user = subject_record if user.blank? && subject_record.is_a?(User)
+        user = subject_record.modified_by if user.blank?
         return user if user.present?
 
         raise "no created by user found for #{subject_record.class} #{subject_record.id}"

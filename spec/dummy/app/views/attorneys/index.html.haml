@@ -25,7 +25,7 @@
           %td= record.state
           %td= record.phone_number
           %td= record.email
-          %td= format_boolean record.active
+          %td= format_boolean record.active?
           - if show_actions
             %td
               - if policy(record).update?

@@ -2,22 +2,22 @@ module RadCommon
   module ApplicationHelper
     ALERT_TYPES = %i[success info warning danger].freeze unless const_defined?(:ALERT_TYPES)
 
-    def secured_link(resource, format: nil)
-      return unless resource
+    def secured_link(record, format: nil)
+      return unless record
 
-      if Pundit.policy!(current_user, resource).show?
-        link_to(resource_name(resource), resource, format: format)
+      style = secured_link_style(record)
+
+      if Pundit.policy!(current_user, record).show?
+        link_to record, record, format: format, class: style
+      elsif style.present?
+        content_tag :span, record, class: style
       else
-        resource_name(resource)
+        record.to_s
       end
     end
 
     def show_route_exists_for?(record)
       Rails.application.routes.url_helpers.respond_to? "#{record.class.table_name.singularize}_path"
-    end
-
-    def current_instance_variable
-      instance_variable_get("@#{controller_name.classify.underscore}")
     end
 
     def avatar_image(user, size)
@@ -138,7 +138,6 @@ module RadCommon
     def bootstrap_flash_type(type)
       type = type.to_sym
 
-      type = :success if type == :notice
       type = :danger  if type == :alert
       type = :danger  if type == :error
 
@@ -153,6 +152,12 @@ module RadCommon
       return unless record.present? && record.respond_to?(:active?) && !record.active?
 
       style_class
+    end
+
+    def secured_link_style(record)
+      return unless record.present? && record.respond_to?(:active?) && !record.active?
+
+      'text-danger'
     end
 
     def icon(icon, text = nil, options = {})
@@ -214,16 +219,22 @@ module RadCommon
       { label: 'Created By', value: secured_link(record.created_by) }
     end
 
+    def translated_attribute_label(record, attribute)
+      translation = I18n.t "activerecord.attributes.#{record.class.to_s.underscore}.#{attribute}"
+
+      if translation.downcase.include?('translation missing')
+        attribute.to_s.titlecase
+      else
+        translation
+      end
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
         { small: 25,
           medium: 50,
           large: 200 }[size_as_symbol]
-      end
-
-      def resource_name(resource)
-        resource.to_s
       end
   end
 end

@@ -56,16 +56,12 @@ class RadSeeder
 
         notification_type.security_roles.each do |security_role|
           security_role.users.active.each do |user|
-            next if developer_user?(user)
+            next if user.rad_developer?
 
             NotificationSetting.init_for_user(notification_type, user).update! enabled: false
           end
         end
       end
-    end
-
-    def developer_user?(user)
-      user.email.include?('radicalbear.com')
     end
 
     def seed_security_roles

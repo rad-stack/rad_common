@@ -1,5 +1,5 @@
 class DuplicatesController < ApplicationController
-  def index
+  def resolve
     skip_policy_scope
 
     @model = model
@@ -12,7 +12,7 @@ class DuplicatesController < ApplicationController
       return
     end
 
-    authorize @record, :index_duplicates?
+    authorize @record, :resolve_duplicates?
 
     @records = []
     @duplicates_count = model.relevant_duplicates.count
@@ -94,8 +94,7 @@ class DuplicatesController < ApplicationController
       end
     end
 
-    flash[:notice] = "#{model} was successfully updated."
-    redirect_to index_path
+    redirect_to index_path, notice: "#{model} was successfully updated."
   end
 
   def reset
@@ -116,7 +115,7 @@ class DuplicatesController < ApplicationController
     @record.reset_duplicates
     record.reset_duplicates
 
-    redirect_to duplicates_path(model: @record.class, id: @record.id)
+    redirect_to resolve_duplicates_path model: @record.class, id: @record.id
   end
 
   def check_duplicate
@@ -140,7 +139,7 @@ class DuplicatesController < ApplicationController
   private
 
     def index_path
-      duplicates_path model: model
+      resolve_duplicates_path model: model
     end
 
     def gather_record
@@ -164,8 +163,8 @@ class DuplicatesController < ApplicationController
     end
 
     def email_options
-      { email_action: { message: 'Click here to view the details.',
-                        button_text: 'View',
-                        button_url: url_for(@record) } }
+      { email_action: { message: 'Click here to view the details.', button_text: 'View', button_url: url_for(@record) },
+        contact_log_from_user: current_user,
+        contact_log_record: @record }
     end
 end

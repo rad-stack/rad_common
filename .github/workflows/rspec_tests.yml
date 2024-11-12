@@ -14,6 +14,7 @@ env:
   RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
   RAILS_ENV: test
   CI: true
+  NODE_OPTIONS: --openssl-legacy-provider # Remove when webpacker is replaced
 
 jobs:
   setup-matrix:
@@ -73,7 +74,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '16.20.2'
+          node-version: '20.16.0'
           cache: 'yarn'
 
       - name: Yarn install
@@ -89,12 +90,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            public/packs
-            public/packs-test
-            node_modules
-          key: ${{ runner.os }}-webpacker-${{ hashFiles('**/package-lock.json') }}
+            spec/dummy/public/packs
+            spec/dummy/public/packs-test
+            spec/dummy/node_modules
+            spec/dummy/tmp/cache/webpacker
+          key: webpacker-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-webpacker-
+            webpacker-${{ hashFiles('**/yarn.lock') }}-
 
       - name: Compile Webpacker assets
         working-directory: spec/dummy
@@ -121,5 +123,5 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: failed-screenshots
+          name: failed-screenshots-${{ matrix.TEST_ENV_NUMBER }}
           path: tmp/capybara/**/*

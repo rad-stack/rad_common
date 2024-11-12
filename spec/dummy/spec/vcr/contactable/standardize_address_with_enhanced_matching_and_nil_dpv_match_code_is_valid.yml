@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.17.0)
+      - smartystreets (sdk:ruby@5.17.2)
       Host:
       - us-street.api.smarty.com
       Content-Type:
@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Mon, 05 Feb 2024 13:13:43 GMT
+      - Fri, 21 Jun 2024 18:24:45 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -33,9 +33,9 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"331 Theater
-        Rd","last_line":"Onalaska WI 54650-8524","components":{"primary_number":"331","street_name":"Theater","street_suffix":"Rd","city_name":"Onalaska","default_city_name":"Onalaska","state_abbreviation":"WI","zipcode":"54650","plus4_code":"8524","delivery_point":"31","delivery_point_check_digit":"7"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"55063","county_name":"La
-        Crosse","carrier_route":"R017","elot_sequence":"0184","elot_sort":"A","latitude":43.87811,"longitude":-91.19573,"precision":"Zip9","time_zone":"Central","utc_offset":-6,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","enhanced_match":"postal-match"}}]
+        Rd","last_line":"Onalaska WI 54650-8524","delivery_point_barcode":"546508524317","components":{"primary_number":"331","street_name":"Theater","street_suffix":"Rd","city_name":"Onalaska","default_city_name":"Onalaska","state_abbreviation":"WI","zipcode":"54650","plus4_code":"8524","delivery_point":"31","delivery_point_check_digit":"7"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"55063","county_name":"La
+        Crosse","carrier_route":"R017","congressional_district":"03","rdi":"Commercial","elot_sequence":"0184","elot_sort":"A","latitude":43.87811,"longitude":-91.19573,"precision":"Zip9","time_zone":"Central","utc_offset":-6,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","enhanced_match":"postal-match"}}]
 
         '
-  recorded_at: Mon, 05 Feb 2024 13:13:43 GMT
+  recorded_at: Fri, 21 Jun 2024 18:24:45 GMT
 recorded_with: VCR 6.2.0

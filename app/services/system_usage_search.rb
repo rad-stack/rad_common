@@ -18,6 +18,7 @@ class SystemUsageSearch < RadCommon::Search
     @usage_data ||=
       usage_items.map do |item|
         data = []
+        current_count = nil
 
         date_column_ranges.each do |header|
           case item.class.to_s
@@ -33,7 +34,11 @@ class SystemUsageSearch < RadCommon::Search
             raise "invalid option: #{item.class}"
           end
 
-          data.push(name: name, value: result.where(created_at: header[:start]..header[:end]).count)
+          current_count = result.count if current_count.blank?
+
+          data.push(name: name,
+                    current_count: current_count,
+                    value: result.where(created_at: header[:start]..header[:end]).count)
         end
 
         data

@@ -23,13 +23,13 @@ RSpec.describe 'Users', type: :system do
       it 'shows users and limited info' do
         expect(page).to have_content 'Users (1)'
         expect(page).to have_content user.to_s
-        expect(page).not_to have_content user.security_roles.first.name
-        expect(page).not_to have_content ApplicationController.helpers.format_date(user.created_at)
+        expect(page).to have_no_content user.security_roles.first.name
+        expect(page).to have_no_content ApplicationController.helpers.format_date(user.created_at)
 
         if Pundit.policy!(user, user).export?
           expect(page).to have_content 'Export to File'
         else
-          expect(page).not_to have_content 'Export to File'
+          expect(page).to have_no_content 'Export to File'
         end
       end
 
@@ -40,7 +40,7 @@ RSpec.describe 'Users', type: :system do
         if Pundit.policy!(user, User.new).update?
           expect(page).to have_content pending_user.to_s
         else
-          expect(page).not_to have_content pending_user.to_s
+          expect(page).to have_no_content pending_user.to_s
         end
       end
     end
@@ -68,7 +68,7 @@ RSpec.describe 'Users', type: :system do
       context 'when switching languages' do
         before { allow(RadConfig).to receive(:switch_languages?).and_return true }
 
-        it 'updates registration' do
+        it 'updates registration', :non_react_specs do
           visit edit_user_registration_path
           expect(page).to have_content 'My Account'
           select 'Spanish', from: 'Language'
@@ -106,7 +106,7 @@ RSpec.describe 'Users', type: :system do
         if Pundit.policy!(admin, user).export?
           expect(page).to have_content 'Export to File'
         else
-          expect(page).not_to have_content 'Export to File'
+          expect(page).to have_no_content 'Export to File'
         end
 
         expect(page).to have_content external_user.to_s if RadConfig.external_users?
@@ -119,14 +119,14 @@ RSpec.describe 'Users', type: :system do
         if Pundit.policy!(admin, User.new).update?
           expect(page).to have_content pending_user.to_s
         else
-          expect(page).not_to have_content pending_user.to_s
+          expect(page).to have_no_content pending_user.to_s
         end
       end
 
       it 'filters by user type', :external_user_specs do
         external_user.update!(user_status: user.user_status)
         visit users_path(search: { user_status_id: user.user_status_id, external: 'external' })
-        expect(page).not_to have_content user.email
+        expect(page).to have_no_content user.email
         expect(page).to have_content external_user.email
       end
     end
@@ -175,7 +175,7 @@ RSpec.describe 'Users', type: :system do
         expect(user.security_roles.count).to eq 2
       end
 
-      it 'requires mobile phone when twilio verify enabled' do
+      it 'requires mobile phone when twilio verify enabled', :non_react_specs do
         allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
 
         visit edit_user_path(user)
@@ -188,7 +188,7 @@ RSpec.describe 'Users', type: :system do
         fill_in 'Mobile Phone', with: user.mobile_phone
         click_button 'Save'
 
-        expect(page).to have_content 'User updated'
+        expect(page).to have_content 'User was successfully updated'
       end
     end
 
@@ -213,7 +213,7 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content 'User Status'
       end
 
-      it 'allows updating notification settings', :js do
+      it 'allows updating notification settings', :js, :non_react_specs do
         expect(page).to have_content 'Notification Settings'
         uncheck 'Enabled'
         wait_for_ajax
@@ -227,7 +227,7 @@ RSpec.describe 'Users', type: :system do
         visit user_path(user)
       end
 
-      it 'can manually confirm a user', :js, :user_confirmable_specs do
+      it 'can manually confirm a user', :js, :non_react_specs, :user_confirmable_specs do
         page.accept_confirm do
           click_link 'Confirm Email'
         end
@@ -253,7 +253,7 @@ RSpec.describe 'Users', type: :system do
           end
 
           expect(page).to have_content 'User was successfully reactivated'
-          expect(user.reload.last_activity_at).to be_nil
+          expect(user.reload.last_activity_at).not_to be_nil
         end
       end
 
@@ -261,7 +261,7 @@ RSpec.describe 'Users', type: :system do
         let(:last_activity_at) { (Devise.expire_after - 1.day).ago }
 
         it 'does not display reactivate option' do
-          expect(page).not_to have_content("User's account has been expired due to inactivity")
+          expect(page).to have_no_content("User's account has been expired due to inactivity")
         end
       end
     end
@@ -307,7 +307,7 @@ RSpec.describe 'Users', type: :system do
 
       click_button 'Sign Up'
       expect(page).to have_content 'message with a confirmation link has been sent'
-      expect(User.last.user_status.active?).to be false if RadConfig.pending_users?
+      expect(User.last.active?).to be false if RadConfig.pending_users?
     end
 
     it "can't sign up with invalid email address" do
@@ -327,7 +327,7 @@ RSpec.describe 'Users', type: :system do
   end
 
   describe 'sign in' do
-    before { allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false) }
+    before { allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false }
 
     it 'can not sign in without active user status' do
       user.update!(user_status: RadConfig.pending_users? ? pending_status : inactive_status)
@@ -399,7 +399,7 @@ RSpec.describe 'Users', type: :system do
   end
 
   describe 'timeout', :devise_timeoutable_specs do
-    before { allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false) }
+    before { allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false }
 
     context 'with internal user' do
       it 'sign in times out after the configured hours' do
@@ -455,7 +455,7 @@ RSpec.describe 'Users', type: :system do
         fill_in 'Email', with: user.email
         click_button 'Resend Confirmation Instructions'
 
-        expect(page).not_to have_content 'not found'
+        expect(page).to have_no_content 'not found'
         expect(page).to have_content message
         expect(page).to have_current_path(new_user_session_path)
       end
@@ -475,7 +475,7 @@ RSpec.describe 'Users', type: :system do
         fill_in 'Email', with: user.email
         click_button 'Resend Unlock Instructions'
 
-        expect(page).not_to have_content 'not found'
+        expect(page).to have_no_content 'not found'
         expect(page).to have_content message
       end
     end
@@ -493,7 +493,7 @@ RSpec.describe 'Users', type: :system do
         fill_in 'Email', with: user.email
         click_button 'Send Me Reset Password Instructions'
 
-        expect(page).not_to have_content 'not found'
+        expect(page).to have_no_content 'not found'
         expect(page).to have_content message
       end
     end

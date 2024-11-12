@@ -1,7 +1,7 @@
 class RadSpecSupport
   def self.before_all
     rspec = yield
-    rspec.allow_any_instance_of(RadTwilio).to rspec.receive(:twilio_enabled?).and_return false
+    rspec.allow(RadConfig).to rspec.receive(:twilio_enabled?).and_return false
 
     rspec.allow(Company).to rspec.receive(:main).and_return(Company.main || rspec.create(:company))
 
@@ -39,11 +39,13 @@ class RadSpecSupport
   end
 
   def self.hooks(config, driver)
-    config.after(:each, type: :system, js: true) do |example|
-      unless example.metadata[:ignore_browser_errors]
-        errors = page.driver.browser.logs.get(:browser)
-        errors = errors.reject { |error| error.level == 'WARNING' }
-        expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
+    unless RadConfig.react_app?
+      config.after(:each, type: :system, js: true) do |example|
+        unless example.metadata[:ignore_browser_errors]
+          errors = page.driver.browser.logs.get(:browser)
+          errors = errors.reject { |error| error.level == 'WARNING' }
+          expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
+        end
       end
     end
 

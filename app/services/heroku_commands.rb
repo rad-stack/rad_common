@@ -3,18 +3,18 @@ class HerokuCommands
 
   class << self
     def backup(app_name)
-      check_production do
-        check_valid_app(app_name)
-        FileUtils.mkdir_p dump_folder
+      check_production!
 
-        Bundler.with_unbundled_env do
-          url_output = `heroku pg:backups public-url #{app_option(app_name)}`
-          backup_url = "\"#{url_output.strip}\""
+      check_valid_app(app_name)
+      FileUtils.mkdir_p dump_folder
 
-          write_log backup_url
-          write_log 'Downloading last backup file:'
-          write_log `curl -o #{backup_dump_file(app_name)} #{backup_url}`
-        end
+      Bundler.with_unbundled_env do
+        url_output = `heroku pg:backups:url #{app_option(app_name)}`
+        backup_url = "\"#{url_output.strip}\""
+
+        write_log backup_url
+        write_log 'Downloading last backup file:'
+        write_log `curl -o #{backup_dump_file(app_name)} #{backup_url}`
       end
     end
 
@@ -32,46 +32,47 @@ class HerokuCommands
     end
 
     def clone(app_name, backup_id)
-      check_production do
-        Bundler.with_unbundled_env do
-          check_valid_app(app_name)
-          if backup_id.blank?
-            write_log 'Running backup on Heroku...'
-            `heroku pg:backups capture #{app_option(app_name)}`
-          end
+      check_production!
 
-          url_output = if backup_id.present?
-                         `heroku pg:backups public-url #{backup_id} #{app_option(app_name)}`
-                       else
-                         `heroku pg:backups public-url #{app_option(app_name)}`
-                       end
-
-          backup_url = "\"#{url_output.strip}\""
-
-          write_log 'Downloading dump file:'
-          write_log `curl -o #{clone_dump_file} #{backup_url}`
+      Bundler.with_unbundled_env do
+        check_valid_app(app_name)
+        if backup_id.blank?
+          write_log 'Running backup on Heroku...'
+          `heroku pg:backups:capture #{app_option(app_name)}`
         end
 
-        restore_from_backup(clone_dump_file)
+        url_output = if backup_id.present?
+                       `heroku pg:backups:url #{backup_id} #{app_option(app_name)}`
+                     else
+                       `heroku pg:backups:url #{app_option(app_name)}`
+                     end
 
-        write_log 'Deleting temporary dump file'
-        write_log `rm #{clone_dump_file}`
+        backup_url = "\"#{url_output.strip}\""
 
-        write_log 'Migrating database'
-        write_log `skip_on_db_migrate=1 rake db:migrate`
-
-        write_log 'Changing passwords'
-        new_password = User.new.send(:password_digest, 'password')
-        User.update_all(encrypted_password: new_password)
-
-        write_log 'Changing Active Storage service to local'
-        ActiveStorage::Blob.update_all service_name: 'local'
-
-        write_log 'Clearing certain production data'
-        remove_user_avatars
-        remove_accounting_keys
-        User.update_all twilio_verify_enabled: false
+        write_log 'Downloading dump file:'
+        write_log `curl -o #{clone_dump_file} #{backup_url}`
       end
+
+      restore_from_backup(clone_dump_file)
+
+      write_log 'Deleting temporary dump file'
+      write_log `rm #{clone_dump_file}`
+
+      write_log 'Migrating database'
+      write_log `skip_on_db_migrate=1 rake db:migrate`
+
+      write_log 'Changing passwords'
+      new_password = User.new.send(:password_digest, 'password')
+      User.update_all(encrypted_password: new_password)
+
+      write_log 'Changing Active Storage service to local'
+      ActiveStorage::Blob.update_all service_name: 'local'
+
+      write_log 'Clearing certain production data'
+      remove_user_avatars
+      remove_accounting_keys
+      User.update_all twilio_verify_enabled: false
+      nil
     end
 
     def reset_staging(app_name)
@@ -85,6 +86,7 @@ class HerokuCommands
         write_log `heroku pg:reset DATABASE_URL #{app_option(app_name)} --confirm #{app_name}`
         write_log `heroku run rails db:schema:load #{app_option(app_name)}`
         write_log `heroku run rails db:seed #{app_option(app_name)}`
+        write_log `heroku restart #{app_option(app_name)}`
 
         write_log 'Done.'
       end
@@ -141,12 +143,8 @@ class HerokuCommands
         YAML.load_file('config/database.yml')['development']['database']
       end
 
-      def check_production
-        if Rails.env.production?
-          write_log 'This is not available in the production environment.'
-        else
-          yield
-        end
+      def check_production!
+        raise 'This is not available in the production environment.' if Rails.env.production?
       end
 
       def remove_user_avatars

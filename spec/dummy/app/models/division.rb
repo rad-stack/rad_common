@@ -1,7 +1,10 @@
 class Division < ApplicationRecord
-  SKIP_SCHEMA_VALIDATION_INDEXES = [:index_divisions_on_name].freeze
   include Hashable
   include CreatedBy
+
+  schema_validation_options do
+    index :index_divisions_on_name, skip: true
+  end
 
   belongs_to :owner, class_name: 'User'
   belongs_to :category, optional: true
@@ -28,7 +31,7 @@ class Division < ApplicationRecord
   strip_attributes
   audited
 
-  after_update :notify_owner
+  after_commit :notify_owner
 
   def logo_variant
     logo.variant(resize: '290x218>')

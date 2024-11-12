@@ -29,22 +29,22 @@ class CreateContactLogRecipients < ActiveRecord::Migration[7.0]
 
     rename_column :contact_logs, :twilio_status, :service_status
 
-    if ContactLog.exists?
-      ContactLog.in_batches(of: 1000) do |logs|
-        contact_log_recipients = logs.map do |log|
-          {
-            contact_log_id: log.id,
-            service_status: ContactLogRecipient.sms_statuses.key(log.service_status),
-            phone_number: log.to_number,
-            to_user_id: log.to_user_id,
-            success: log.success,
-            created_at: Time.now,
-            updated_at: Time.now
-          }
-        end
-        ContactLogRecipient.insert_all(contact_log_recipients)
-      end
-    end
+    # if ContactLog.exists?
+    #   ContactLog.in_batches(of: 1000) do |logs|
+    #     contact_log_recipients = logs.map do |log|
+    #       {
+    #         contact_log_id: log.id,
+    #         service_status: ContactLogRecipient.sms_statuses.key(log.service_status),
+    #         phone_number: log.to_number,
+    #         to_user_id: log.to_user_id,
+    #         success: log.success,
+    #         created_at: Time.current,
+    #         updated_at: Time.current
+    #       }
+    #     end
+    #     ContactLogRecipient.insert_all(contact_log_recipients)
+    #   end
+    # end
 
     remove_column :contact_logs, :to_number, :string
     remove_column :contact_logs, :to_user_id, :bigint

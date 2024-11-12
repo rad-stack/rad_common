@@ -86,8 +86,8 @@ describe GlobalValidation, type: :service do
         let(:specific_query) { -> { SecurityRole.where(id: admin_security_role.id) } }
 
         before do
-          allow(RadConfig).to receive(:global_validity_exclude!).and_return ['SecurityRole']
-          allow(RadConfig).to receive(:global_validity_include!).and_return [specific_query]
+          allow(RadConfig).to receive_messages(global_validity_exclude!: ['SecurityRole'],
+                                               global_validity_include!: [specific_query])
         end
 
         it 'sends an email to current user when data is invalid' do

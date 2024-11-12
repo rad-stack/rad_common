@@ -64,7 +64,7 @@ describe 'Nav' do
 
     it 'shows the menu' do
       visit root_path
-      expect(page).to have_content 'Clients'
+      expect(page).to have_no_content 'Clients'
     end
   end
 end

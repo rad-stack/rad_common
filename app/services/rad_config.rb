@@ -264,6 +264,10 @@ class RadConfig
       boolean_config_item! :legal_docs
     end
 
+    def react_app?
+      config_item(:react_app).presence || false
+    end
+
     def favicon_filename!
       override_variable(:favicon_filename) || 'favicon.ico'
     end
@@ -328,11 +332,9 @@ class RadConfig
     end
 
     def system_usage_models!
-      items = array_config_item!(:system_usage_models)
-      return items unless twilio_enabled?
-
-      items + [['ContactLogRecipient', 'successful', 'Successful Twilio Logs'],
-               ['ContactLogRecipient', 'failure', 'Failure Twilio Logs']]
+      array_config_item!(:system_usage_models) +
+        [['ContactLogRecipient', 'successful', 'Successful Contacts'],
+         ['ContactLogRecipient', 'failed', 'Failed Contacts']]
     end
 
     def global_validity_days!
@@ -385,6 +387,10 @@ class RadConfig
 
     def last_first_user?
       boolean_config_item! :last_first_user
+    end
+
+    def legacy_rails_config?
+      boolean_config_item! :legacy_rails_config
     end
 
     def secret_config_item!(item)

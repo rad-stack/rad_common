@@ -6,11 +6,12 @@
         %th Name
         %th Auth Mode
         %th Roles to Notify
+        %th BCC Recipient
         %th Active
         %th.actions Actions
       - @notification_types.each do |record|
         %tr{ class: table_row_style(record) }
-          %td= link_to record, "/rad_common/notification_types/#{record.id}/edit"
+          %td= link_to record, edit_notification_type_path(record)
           %td= record.auth_mode_name
           %td
             - if record.absolute_users?
@@ -18,8 +19,9 @@
             - record.security_roles.each do |security_role|
               = secured_link(security_role)
               %p
+          %td= record.bcc_recipient
           %td= format_boolean record.active?
           %td
             = link_to icon(:pencil, 'Edit'),
-                      "/rad_common/notification_types/#{record.id}/edit",
+                      edit_notification_type_path(record),
                       class: 'btn btn-sm btn-secondary btn-block'

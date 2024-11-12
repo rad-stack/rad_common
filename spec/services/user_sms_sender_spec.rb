@@ -5,12 +5,16 @@ RSpec.describe UserSMSSender, type: :service do
   let(:user) { create :user, mobile_phone: '(618) 722-2169' }
   let(:message) { 'test message' }
   let(:media_url) { nil }
-  let(:sms_sender) { described_class.new(message, from_user.id, user.id, media_url, false) }
+  let(:division) { create :division }
   let(:last_email) { ActionMailer::Base.deliveries.last }
 
+  let(:sms_sender) do
+    described_class.new(message, from_user.id, user.id, media_url, false, contact_log_record: division)
+  end
+
   before do
+    allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false
     allow(RadRetry).to receive(:exponential_pause)
-    allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return(false)
   end
 
   describe 'send', :vcr do
@@ -24,6 +28,10 @@ RSpec.describe UserSMSSender, type: :service do
 
       context 'when successful SMS' do
         it { is_expected.to be_nil }
+
+        it 'creates a contact log' do
+          expect(ContactLog.order(:created_at).last.record).to eq division
+        end
       end
 
       context 'when successful MMS' do

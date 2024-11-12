@@ -48,7 +48,7 @@ module RadCommon
 
       def exclude_tables
         %w[active_storage_attachments active_storage_variant_records active_storage_blobs action_text_rich_texts
-           ar_internal_metadata audits schema_migrations old_passwords login_activities]
+           action_mailbox_inbound_emails ar_internal_metadata audits schema_migrations old_passwords login_activities]
       end
   end
 end

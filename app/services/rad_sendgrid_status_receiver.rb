@@ -4,13 +4,17 @@ class RadSendgridStatusReceiver
 
   def initialize(content)
     @content = content
+    @notify = true
+
     check_events
   end
 
   def process!
     return unless host_matches?
+    return if missing_contact_log?
 
-    process_status!
+    process_status
+    update_contact_log!
   end
 
   def email
@@ -55,13 +59,44 @@ class RadSendgridStatusReceiver
 
   private
 
-    def process_status!
-      if suppression? && user.present? && (spam_report? || user.stale?)
-        user.update! user_status: UserStatus.default_inactive_status
-        Rails.logger.info "sendgrid status: suppression received from stale user #{user.email}, deactivating"
-      else
-        Notifications::SendgridEmailStatusNotification.main(@content).notify!
-      end
+    def process_status
+      return unless deactivate_user?
+
+      deactivate_user!
+    end
+
+    def deactivate_user?
+      suppression? && user.present? && (spam_report? || user.stale?)
+    end
+
+    def deactivate_user!
+      @notify = false
+      user.update! user_status: UserStatus.default_inactive_status
+      Notifications::UserDeactivatedNotification.main(user).notify!
+    end
+
+    def update_contact_log!
+      return unless suppression?
+
+      recipients = contact_log.contact_log_recipients.where(email: email)
+
+      # if this occurs in the wild, we should see if there is a valid use case or was it an oversight that needs fixing
+      # we can also add a uniqueness check to prevent the scenario further upstream
+      raise "multiple recipients with same email #{email} for contact log #{contact_log.id}" if recipients.size > 1
+
+      recipients.first.update! email_status: event, sendgrid_reason: reason, notify_on_fail: @notify
+    end
+
+    def contact_log_id
+      @contact_log_id ||= @content[:contact_log_id]
+    end
+
+    def contact_log
+      @contact_log ||= ContactLog.find_by(id: contact_log_id)
+    end
+
+    def missing_contact_log?
+      contact_log_id.present? && contact_log.blank?
     end
 
     def check_events

@@ -113,7 +113,7 @@ RSpec.describe 'Divisions' do
         visit divisions_path(search: { show_header: true })
         expect(page.body).to have_content 'Showing header'
         visit divisions_path
-        expect(page.body).not_to have_content 'Showing header'
+        expect(page.body).to have_no_content 'Showing header'
       end
     end
 
@@ -166,12 +166,12 @@ RSpec.describe 'Divisions' do
 
     it 'shows translated version of field name' do
       expect(page).to have_content 'Additional Data'
-      expect(page).not_to have_content 'Additional Info'
+      expect(page).to have_no_content 'Additional Info'
     end
 
     it 'shows translated enum value' do
       expect(page).to have_content 'Active'
-      expect(page).not_to have_content 'status_active'
+      expect(page).to have_no_content 'status_active'
     end
 
     context 'with attachments' do

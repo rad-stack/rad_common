@@ -9,8 +9,8 @@ RSpec.describe 'SystemMessages', type: :system do
   describe 'new' do
     context 'with twilio disabled' do
       before do
-        allow_any_instance_of(RadTwilio).to receive(:twilio_enabled?).and_return false
-        visit '/rad_common/system_messages/new'
+        allow(RadConfig).to receive(:twilio_enabled?).and_return false
+        visit '/system_messages/new'
       end
 
       it 'sends' do
@@ -23,15 +23,15 @@ RSpec.describe 'SystemMessages', type: :system do
         expect(page.all('#system_message_message_type option').map(&:value)).to eq ['email']
       end
 
-      it 'shows custom trix actions', :js do
+      it 'shows custom trix actions', :js, :non_react_specs do
         expect(page.body).to include 'trix-button--icon-color'
       end
     end
 
     context 'with twilio enabled' do
       before do
-        allow_any_instance_of(RadTwilio).to receive(:twilio_enabled?).and_return true
-        visit '/rad_common/system_messages/new'
+        allow(RadConfig).to receive(:twilio_enabled?).and_return true
+        visit '/system_messages/new'
       end
 
       it 'shows the sms option' do
@@ -41,12 +41,12 @@ RSpec.describe 'SystemMessages', type: :system do
       it 'sets the message type based on the previous system message' do
         expect(find_field('Message Type').value).to eq 'email'
         create :system_message, :sms, user: user
-        visit '/rad_common/system_messages/new'
+        visit '/system_messages/new'
         expect(find_field('Message Type').value).to eq 'sms'
       end
 
       context 'when dynamically changing fields', :js do
-        it 'shows and hides trix editor based on message type' do
+        it 'shows and hides trix editor based on message type', :non_react_specs do
           find('body').click
           expect(page).to have_css('.email-message', visible: :visible)
           expect(page).to have_css('.sms-message', visible: :hidden)
@@ -59,7 +59,7 @@ RSpec.describe 'SystemMessages', type: :system do
   end
 
   describe 'show' do
-    before { visit "/rad_common/system_messages/#{system_message.id}" }
+    before { visit "/system_messages/#{system_message.id}" }
 
     it 'shows the message' do
       expect(page).to have_content(system_message.email_message_body.to_plain_text)

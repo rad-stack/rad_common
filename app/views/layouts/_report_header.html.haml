@@ -28,7 +28,7 @@
                         required: true,
                         inline: false,
                         input_html: { value: @report.start_date }
-
+            .my-auto.pt-2.px-1= date_filter_dropdown_label('#report_start_date', '#report_end_date')
             .col-lg-2
               = f.input :end_date, as: :date, html5: true, required: true, input_html: { value: @report.end_date }
           - if lookup_context.exists?('report_form', controller_name, true)

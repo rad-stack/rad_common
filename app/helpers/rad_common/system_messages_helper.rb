@@ -7,7 +7,7 @@ module RadCommon
 
     def message_type_options
       options = options_for_enum(SystemMessage, :message_type)
-      options.reject! { |option| option.include?('sms') } unless RadTwilio.new.twilio_enabled?
+      options.reject! { |option| option.include?('sms') } unless RadConfig.twilio_enabled?
       options
     end
 

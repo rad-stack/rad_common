@@ -2,14 +2,18 @@ class NotificationType < ApplicationRecord
   has_many :notification_security_roles, dependent: :destroy
   has_many :security_roles, through: :notification_security_roles, dependent: :destroy
   has_many :notification_settings, dependent: :destroy
+  has_many :notifications, dependent: :destroy
 
   attr_accessor :payload
 
-  alias_attribute :to_s, :description
-
   scope :by_type, -> { order(:type) }
 
+  validates_with EmailAddressValidator, fields: [:bcc_recipient]
   validate :validate_auth
+
+  def to_s
+    description
+  end
 
   def email_enabled?
     true
@@ -24,7 +28,7 @@ class NotificationType < ApplicationRecord
   end
 
   def mailer_class
-    'RadMailer'
+    'NotificationMailer'
   end
 
   def mailer_method
@@ -41,12 +45,24 @@ class NotificationType < ApplicationRecord
     "#{description}: #{subject_record}"
   end
 
-  def mailer_options
-    return {} if subject_url.blank?
+  def mailer_contact_log_from_user; end
 
-    { email_action: { message: 'Click here to view the details.',
-                      button_text: 'View',
-                      button_url: subject_url } }
+  def mailer_options
+    items = {}
+
+    if subject_url.present?
+      items = items.merge({ email_action: { message: 'Click here to view the details.',
+                                            button_text: 'View',
+                                            button_url: subject_url } })
+    end
+
+    if mailer_contact_log_from_user.present?
+      items = items.merge({ contact_log_from_user: mailer_contact_log_from_user })
+    end
+
+    items = items.merge({ contact_log_record: subject_record }) if subject_record.present?
+
+    items
   end
 
   def exclude_user_ids
@@ -135,7 +151,8 @@ class NotificationType < ApplicationRecord
       users = permitted_users
     else
       users = User.where(id: absolute_user_ids)
-      raise 'absolute users must be active' unless users.size == users.active.size
+      inactive_ids = users.pluck(:id) - users.active.pluck(:id)
+      raise "absolute users must be active: #{inactive_ids}" if inactive_ids.present?
     end
 
     user_ids = users.where
@@ -163,11 +180,12 @@ class NotificationType < ApplicationRecord
       id_list = notify_user_ids_opted(:email)
       return if id_list.count.zero?
 
-      if mailer_class == 'RadMailer' && mailer_method == 'simple_message'
-        RadMailer.simple_message(id_list,
-                                 mailer_subject,
-                                 mailer_message,
-                                 mailer_options.merge(notification_settings_link: true)).deliver_later
+      if mailer_class == 'NotificationMailer' && mailer_method == 'simple_message'
+        NotificationMailer.simple_message(self,
+                                          id_list,
+                                          mailer_subject,
+                                          mailer_message,
+                                          mailer_options).deliver_later
       else
         mailer = mailer_class.constantize
 
@@ -175,7 +193,7 @@ class NotificationType < ApplicationRecord
           raise 'all notification mailers must subclass NotificationMailer'
         end
 
-        mailer.send(mailer_method, id_list, payload).deliver_later
+        mailer.send(mailer_method, self, id_list, payload).deliver_later
       end
     end
 
@@ -197,7 +215,7 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_sms!
-      return unless sms_enabled? && sms_content && RadTwilio.new.twilio_enabled?
+      return unless sms_enabled? && sms_content && RadConfig.twilio_enabled?
 
       id_list = notify_user_ids_opted(:sms)
 
@@ -206,7 +224,8 @@ class NotificationType < ApplicationRecord
                                        user_id,
                                        user_id,
                                        nil,
-                                       false
+                                       false,
+                                       contact_log_record: subject_record
       end
     end
 
