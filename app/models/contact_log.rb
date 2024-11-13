@@ -4,8 +4,8 @@ class ContactLog < ApplicationRecord
 
   has_many :contact_log_recipients, dependent: :destroy
 
-  enum sms_log_type: { outgoing: 0, incoming: 1 }
-  enum service_type: { sms: 0, email: 1 }
+  enum :sms_log_type, { outgoing: 0, incoming: 1 }
+  enum :service_type, { sms: 0, email: 1 }
 
   scope :sorted, -> { order(created_at: :desc, id: :desc) }
   scope :failed, -> { where(contact_log_recipients: { success: false }) }
