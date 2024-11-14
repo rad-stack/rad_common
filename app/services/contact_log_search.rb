@@ -2,7 +2,7 @@ class ContactLogSearch < RadCommon::Search
   def initialize(params, current_user)
     @current_user = current_user
 
-    super(query: ContactLog.joins(:contact_log_recipients).includes(:contact_log_recipients).distinct,
+    super(query: ContactLog.left_joins(:contact_log_recipients).includes(:contact_log_recipients).distinct,
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
