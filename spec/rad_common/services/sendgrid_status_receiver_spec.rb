@@ -5,7 +5,7 @@ describe SendgridStatusReceiver, type: :service do
   let(:deliveries) { ActionMailer::Base.deliveries }
   let(:user) { create :user }
   let(:event_type) { 'bounce' }
-  let(:contact_log) { create :contact_log, :email }
+  let(:contact_log) { create :contact_log, :email, record: create(:attorney) }
   let!(:contact_log_recipient) { create :contact_log_recipient, :email, contact_log: contact_log, email: user.email }
   let(:last_email) { deliveries.last }
 
