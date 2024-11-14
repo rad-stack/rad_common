@@ -2,19 +2,19 @@ class ContactLogRecipient < ApplicationRecord
   belongs_to :contact_log
   belongs_to :to_user, class_name: 'User', optional: true
 
-  enum email_type: { to: 0, cc: 1, bcc: 2 }
+  enum :email_type, { to: 0, cc: 1, bcc: 2 }
 
-  enum sms_status: { accepted: 0,
-                     scheduled: 1,
-                     queued: 2,
-                     sending: 3,
-                     sent: 4,
-                     receiving: 5,
-                     delivered: 6,
-                     undelivered: 7,
-                     failed: 8 }, _prefix: true
+  enum :sms_status, { accepted: 0,
+                      scheduled: 1,
+                      queued: 2,
+                      sending: 3,
+                      sent: 4,
+                      receiving: 5,
+                      delivered: 6,
+                      undelivered: 7,
+                      failed: 8 }, prefix: true
 
-  enum email_status: { delivered: 0, dropped: 1, bounce: 2, spamreport: 3 }, _prefix: true
+  enum :email_status, { delivered: 0, dropped: 1, bounce: 2, spamreport: 3 }, prefix: true
 
   scope :sms, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }) }
   scope :failed, -> { joins(:contact_log).where(success: false) }
