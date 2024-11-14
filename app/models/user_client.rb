@@ -2,11 +2,8 @@ class UserClient < ApplicationRecord
   belongs_to :user
   belongs_to :client, class_name: RadCommon::AppInfo.new.client_model_class_name
 
-  SKIP_SCHEMA_VALIDATION_COLUMNS = [:client_id].freeze
-
   scope :sorted, -> { joins(:client).merge(RadCommon::AppInfo.new.client_model_class.sorted) }
 
-  validates :client_id, presence: true
   validate :validate_user
   validate :validate_email_domain
 

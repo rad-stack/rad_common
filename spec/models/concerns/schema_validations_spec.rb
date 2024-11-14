@@ -4,6 +4,7 @@ describe 'SchemaValidations', type: :module do
   subject { division.errors.full_messages }
 
   let(:division) { create :division }
+  let(:category) { create :category }
 
   describe 'presence validations' do
     context 'with text field' do
@@ -27,7 +28,16 @@ describe 'SchemaValidations', type: :module do
     context 'with association' do
       before { division.update(owner: nil) }
 
-      it { is_expected.to include "Owner can't be blank" }
+      it { is_expected.to include 'Owner must exist' }
+      it { is_expected.not_to include "Owner can't be blank" }
+    end
+
+    context 'with custom options' do
+      subject { category.errors.full_messages }
+
+      before { category.update(name: '') }
+
+      it { is_expected.to include 'Name cannot be left blank' }
     end
   end
 
@@ -71,7 +81,15 @@ describe 'SchemaValidations', type: :module do
 
     it { is_expected.to include 'Name has already been taken' }
 
-    context 'when included in skipped constant' do
+    context 'with custom options' do
+      let(:dup_category) { build :category, name: category.name }
+
+      before { dup_category.save }
+
+      it { expect(dup_category.errors.full_messages).to include 'Name taken by another category' }
+    end
+
+    context 'when index is skipped' do
       let(:division) { create :division, division_status: 'status_pending' }
       let(:division_2) { create :division, division_status: 'status_pending' }
       let(:division_3) { create :division, division_status: 'status_active' }

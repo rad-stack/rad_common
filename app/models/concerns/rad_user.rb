@@ -31,7 +31,7 @@ module RadUser
 
     has_one_attached :avatar
 
-    enum language: { English: 'en', Spanish: 'es' }
+    enum :language, { English: 'en', Spanish: 'es' }
 
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
@@ -222,11 +222,12 @@ module RadUser
     RadMailer.simple_message(self,
                              'Test Email',
                              'This is a test.',
-                             from_user: from_user).deliver_later
+                             contact_log_from_user: from_user,
+                             contact_log_record: self).deliver_later
   end
 
   def test_sms!(from_user)
-    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false
+    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false, contact_log_record: self
   end
 
   def reactivate

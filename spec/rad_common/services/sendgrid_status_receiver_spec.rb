@@ -57,6 +57,21 @@ describe SendgridStatusReceiver, type: :service do
       end
     end
 
+    context 'with expired user', :user_expirable_specs do
+      before { user.update_column :last_activity_at, 1.year.ago }
+
+      it 'deactivates' do
+        expect(user.active?).to be true
+
+        service.process!
+        user.reload
+
+        expect(user.active?).to be false
+        expect(deliveries.count).to eq 1
+        expect(last_email.subject).to eq 'User Deactivated'
+      end
+    end
+
     context 'with spam report' do
       let(:event_type) { 'spamreport' }
 

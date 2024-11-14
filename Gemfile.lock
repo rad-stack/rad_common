@@ -20,7 +20,6 @@ PATH
       devise
       devise-security
       devise_invitable
-      drb
       factory_bot_rails
       faker
       haml-rails
@@ -29,7 +28,6 @@ PATH
       jwt
       kaminari
       matrix
-      mutex_m
       nokogiri
       parser (~> 3.3.1.0)
       pg

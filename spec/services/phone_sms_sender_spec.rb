@@ -6,7 +6,7 @@ RSpec.describe PhoneSMSSender, type: :service do
   let(:mobile_phone) { to_user.mobile_phone }
   let(:message) { 'test message' }
   let(:client) { create :client }
-  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, record: client) }
+  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, contact_log_record: client) }
 
   before { allow(RadRetry).to receive(:exponential_pause) }
 

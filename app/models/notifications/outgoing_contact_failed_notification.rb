@@ -5,15 +5,16 @@ module Notifications
     end
 
     def absolute_user_ids
-      ids = if from_user.present?
-              [from_user.id]
-            else
-              []
-            end
+      ids = init_ids
 
-      ids.delete(to_user.id) if to_user.present?
-      ids = SecurityRole.admin_role.users.active.pluck(:id) if ids.blank?
-      ids.delete(to_user.id) if to_user.present?
+      if contact_log.sms?
+        ids.push(to_user.id) if to_user.present?
+      else
+        ids.delete(to_user.id) if to_user.present?
+        ids = SecurityRole.admin_role.users.active.pluck(:id) if ids.blank?
+        ids.delete(to_user.id) if to_user.present?
+      end
+
       raise 'no users to notify' if ids.blank?
 
       ids.uniq
@@ -36,6 +37,10 @@ module Notifications
       return contact_log.record if contact_log.record.present? && can_show?(contact_log.record)
 
       raise "missing subject for #{contact_log.id} - see Task 5211"
+    end
+
+    def sms_enabled?
+      false
     end
 
     private
@@ -74,6 +79,14 @@ module Notifications
         end
 
         false
+      end
+
+      def init_ids
+        if from_user.present?
+          [from_user.id]
+        else
+          []
+        end
       end
   end
 end
