@@ -44,6 +44,9 @@ class RadSpecSupport
         unless example.metadata[:ignore_browser_errors]
           errors = page.driver.browser.logs.get(:browser)
           errors = errors.reject { |error| error.level == 'WARNING' }
+          if example.metadata[:ignore_unprocessable_entity_errors]
+            errors = errors.reject { |error| error.message.include?('422') }
+          end
           expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
         end
       end
