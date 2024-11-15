@@ -30,7 +30,7 @@ class SecurityRolesController < ApplicationController
     if @security_role.save
       redirect_to @security_role, notice: 'Security role was successfully created.'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -40,7 +40,7 @@ class SecurityRolesController < ApplicationController
     if @security_role.update(permitted_params)
       redirect_to @security_role, notice: 'Security role was successfully updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

@@ -9,7 +9,7 @@ class CompaniesController < ApplicationController
     if @company.update(permitted_params)
       redirect_to company_path, notice: 'Settings were successfully updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

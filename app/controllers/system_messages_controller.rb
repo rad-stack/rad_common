@@ -17,7 +17,7 @@ class SystemMessagesController < ApplicationController
       @system_message.send!
       redirect_to @system_message, notice: 'The message was successfully sent.'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 

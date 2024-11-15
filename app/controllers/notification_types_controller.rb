@@ -17,7 +17,7 @@ class NotificationTypesController < ApplicationController
     if @notification_type.save
       redirect_to notification_types_path, notice: 'Notification Type updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

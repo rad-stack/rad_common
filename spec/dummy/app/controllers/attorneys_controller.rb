@@ -27,7 +27,7 @@ class AttorneysController < ApplicationController
     if @attorney.save
       redirect_to @attorney, notice: 'Attorney was successfully created.'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -35,7 +35,7 @@ class AttorneysController < ApplicationController
     if @attorney.update(permitted_params)
       redirect_to @attorney, notice: 'Attorney was successfully updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

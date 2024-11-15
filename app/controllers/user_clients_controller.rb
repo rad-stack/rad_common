@@ -17,7 +17,7 @@ class UserClientsController < ApplicationController
     if @user_client.save
       redirect_to @user_client.user, notice: "#{RadCommon::AppInfo.new.client_model_label} was successfully added."
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 

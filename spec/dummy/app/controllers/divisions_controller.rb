@@ -24,7 +24,7 @@ class DivisionsController < ApplicationController
     if @division.save
       redirect_to @division, notice: 'Division was successfully created.'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -32,7 +32,7 @@ class DivisionsController < ApplicationController
     if @division.update(permitted_params)
       redirect_to @division, notice: 'Division was successfully updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

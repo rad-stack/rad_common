@@ -24,7 +24,7 @@ module Users
       else
         flash[:error] = "Could not add user: #{resource.errors.full_messages.join(', ')}" if resource.errors.any?
 
-        respond_with_navigational(resource) { render :new }
+        respond_with_navigational(resource) { render :new, status: :unprocessable_entity }
       end
     end
   end

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount ActionCable.server => '/cable'
   mount RadCommon::Engine => '/rad_common'
   extend RadCommonRoutes
 
