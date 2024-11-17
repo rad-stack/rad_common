@@ -22,14 +22,13 @@ RSpec.describe User, type: :model do
   describe 'notify_user_approved', :pending_user_specs do
     let(:notification_type) { Notifications::UserWasApprovedNotification.main }
     let(:user) { create :user, security_roles: [security_role], user_status: pending_status }
+    let(:admin) { create :admin, user_status: active_status }
     let(:first_mail) { ActionMailer::Base.deliveries.first }
     let(:last_mail) { ActionMailer::Base.deliveries.last }
 
     before do
-      create :admin, user_status: active_status
-
       ActionMailer::Base.deliveries = []
-      user.update! user_status: active_status, do_not_notify_approved: false
+      user.update! user_status: active_status, do_not_notify_approved: false, approved_by: admin
     end
 
     it 'notifies' do

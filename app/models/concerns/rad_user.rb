@@ -373,10 +373,12 @@ module RadUser
     end
 
     def notify_user_approved_user
-      RadMailer.your_account_approved(self).deliver_later
+      raise 'missing approved_by' if approved_by.blank?
+
+      RadMailer.your_account_approved(self, approved_by).deliver_later
       return unless RadConfig.twilio_enabled? && mobile_phone.present?
 
-      UserSMSSenderJob.perform_later(User.user_approved_message, id, id, nil, false)
+      UserSMSSenderJob.perform_later(User.user_approved_message, approved_by.id, id, nil, false)
     end
 
     def notify_user_approved_admins
