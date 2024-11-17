@@ -13,11 +13,10 @@ class RadMailer < ActionMailer::Base
 
   def your_account_approved(user)
     @contact_log_record = user
-    @email_action = { button_text: 'Get Started',
-                      button_url: root_url }
+    @email_action = { button_text: 'Get Started', button_url: root_url }
 
     @recipient = user
-    @message = "Your account was approved and you can begin using #{RadConfig.app_name!}."
+    @message = User.user_approved_message
     mail to: @recipient.formatted_email, subject: 'Your Account Was Approved'
   end
 
