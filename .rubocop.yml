@@ -6,7 +6,6 @@ AllCops:
     - 'db/migrate/*'
     - 'lib/templates/**/*'
     - 'node_modules/**/*'
-    - 'bin/**/*'
     - 'config/puma.rb'
     - 'config/initializers/simple_form.rb'
     - 'config/initializers/simple_form_bootstrap.rb'
