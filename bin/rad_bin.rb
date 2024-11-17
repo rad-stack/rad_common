@@ -1,3 +1,4 @@
+require 'English'
 require 'fileutils'
 
 module RadBin
@@ -14,7 +15,7 @@ module RadBin
 
   def self.heroku_app_exists?(app_name)
     `heroku apps:info --app #{app_name}`
-    $?.success?
+    $CHILD_STATUS.success?
   end
 
   def self.get_heroku_app_name(environment)
@@ -24,7 +25,7 @@ module RadBin
                     when :all
                       heroku_apps
                     when :production
-                      heroku_apps.select { |item| !item.include? 'staging' }
+                      heroku_apps.reject { |item| item.include? 'staging' }
                     when :staging
                       heroku_apps.select { |item| item.include? 'staging' }
                     end
@@ -54,7 +55,7 @@ module RadBin
       puts "#{index + 1}. #{app_name}"
     end
 
-    choice = STDIN.gets.chomp.to_i
+    choice = $stdin.gets.chomp.to_i
     return heroku_app_names[choice - 1] if choice.between?(1, heroku_app_names.size)
 
     puts "\nInvalid choice. Exiting..."
