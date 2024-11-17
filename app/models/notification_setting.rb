@@ -21,7 +21,7 @@ class NotificationSetting < ApplicationRecord
   def self.settings_for_user(user)
     return [] if user.external?
 
-    types = Pundit.policy_scope!(user, NotificationType).by_type
+    types = Pundit.policy_scope!(user, NotificationType).sorted
     types.map { |notification_type| NotificationSetting.init_for_user(notification_type, user) }
   end
 
