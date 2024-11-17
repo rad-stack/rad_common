@@ -33,7 +33,10 @@ module Notifications
     end
 
     def subject_record
-      contact_log
+      return contact_log if can_show?(contact_log)
+      return contact_log.record if contact_log.record.present? && can_show?(contact_log.record)
+
+      raise "missing subject for #{contact_log.id} - see Task 5211"
     end
 
     def sms_enabled?
@@ -68,6 +71,14 @@ module Notifications
 
       def phone_number
         payload.phone_number
+      end
+
+      def can_show?(record)
+        notify_user_ids_all.each do |user_id|
+          return true if Pundit.policy!(User.find(user_id), record).show?
+        end
+
+        false
       end
 
       def maybe_add_from_user

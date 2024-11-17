@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe Notifications::OutgoingContactFailedNotification do
   let!(:admin) { create :admin }
-  let(:from_user) { create :user }
-  let(:to_user) { create :user }
-  let(:record) { nil }
+  let(:from_user) { create :admin }
+  let(:to_user) { create :admin }
+  let(:record) { create :attorney }
   let(:contact_log) { create :contact_log, service_type, from_user: from_user, record: record }
   let(:notification_type) { described_class.main(contact_log_recipient) }
   let(:mail) { ActionMailer::Base.deliveries.last }

@@ -6,7 +6,7 @@ class NotificationType < ApplicationRecord
 
   attr_accessor :payload
 
-  scope :by_type, -> { order(:type) }
+  scope :sorted, -> { order(:type) }
 
   validates_with EmailAddressValidator, fields: [:bcc_recipient]
   validate :validate_auth

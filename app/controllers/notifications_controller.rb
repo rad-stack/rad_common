@@ -1,6 +1,8 @@
 class NotificationsController < ApplicationController
   def index
     authorize Notification
-    @notifications = policy_scope(Notification).recent_first.page(params[:page])
+
+    @notification_search = NotificationSearch.new(params, current_user)
+    @notifications = policy_scope(@notification_search.results).page(params[:page])
   end
 end
