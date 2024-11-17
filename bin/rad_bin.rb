@@ -29,33 +29,11 @@ module RadBin
                       heroku_apps.select { |item| item.include? 'staging' }
                     end
 
-    heroku_app_name = if filtered_apps.length == 1
-                        filtered_apps.first
-                      else
-                        puts "\nPlease select a Heroku app from the following options:"
+    heroku_app_name = select_heroku_app(filtered_apps)
+    return heroku_app_name if heroku_app_exists?(heroku_app_name)
 
-                        filtered_apps.each_with_index do |app_name, index|
-                          puts "#{index + 1}. #{app_name}"
-                        end
-
-                        choice = STDIN.gets.chomp.to_i
-
-                        if choice.between?(1, filtered_apps.size)
-                          filtered_apps[choice - 1]
-                        else
-                          nil
-                        end
-                      end
-
-    if heroku_app_name.nil?
-      puts "\nInvalid choice. Exiting..."
-      exit 1
-    elsif heroku_app_exists?(heroku_app_name)
-      heroku_app_name
-    else
-      puts "Could not find accessible Heroku app: #{heroku_app_name}."
-      exit 1
-    end
+    puts "Could not find accessible Heroku app: #{heroku_app_name}."
+    exit 1
   end
 
   def self.parse_heroku_apps
@@ -65,5 +43,21 @@ module RadBin
     heroku_lines.map { |line|
       line.split('heroku.com/').last.split('.git').first
     }.uniq.sort
+  end
+
+  def self.select_heroku_app(heroku_app_names)
+    return heroku_app_names.first if heroku_app_names.length == 1
+
+    puts "\nPlease select a Heroku app from the following options:"
+
+    heroku_app_names.each_with_index do |app_name, index|
+      puts "#{index + 1}. #{app_name}"
+    end
+
+    choice = STDIN.gets.chomp.to_i
+    return heroku_app_names[choice - 1] if choice.between?(1, heroku_app_names.size)
+
+    puts "\nInvalid choice. Exiting..."
+    exit 1
   end
 end
