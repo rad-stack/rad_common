@@ -5,7 +5,7 @@ module Notifications
     end
 
     def absolute_user_ids
-      ids = init_ids
+      ids = maybe_add_from_user
 
       if contact_log.sms?
         ids.push(to_user.id) if to_user.present?
@@ -81,12 +81,11 @@ module Notifications
         false
       end
 
-      def init_ids
-        if from_user.present?
-          [from_user.id]
-        else
-          []
-        end
+      def maybe_add_from_user
+        return [] if from_user.blank?
+        return [] if contact_log.sms? && to_user.present?
+
+        [from_user.id]
       end
   end
 end

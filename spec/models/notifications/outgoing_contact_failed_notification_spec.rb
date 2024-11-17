@@ -34,7 +34,7 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
       end
 
       context 'with from_user different than to_user' do
-        it { is_expected.to eq [from_user.id, to_user.id].sort }
+        it { is_expected.to eq [to_user.id].sort }
       end
 
       context 'without to_user' do
