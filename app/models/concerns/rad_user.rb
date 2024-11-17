@@ -249,8 +249,10 @@ module RadUser
     email.end_with? RAD_DOMAIN
   end
 
-  def self.user_approved_message
-    "Your account was approved and you can begin using #{RadConfig.app_name!}."
+  class_methods do
+    def user_approved_message
+      "Your account was approved and you can begin using #{RadConfig.app_name!}."
+    end
   end
 
   private
