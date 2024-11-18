@@ -253,7 +253,7 @@ RSpec.describe User, type: :model do
   end
 
   describe 'Email Changed' do
-    subject { ActionMailer::Base.deliveries[ActionMailer::Base.deliveries.length - 2].subject }
+    subject { ActionMailer::Base.deliveries[ActionMailer::Base.deliveries.length - 1].subject }
 
     let!(:user) { create :user }
 
