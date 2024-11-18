@@ -43,6 +43,13 @@ module RadCommon
         copy_file '../pull_request_template.md', '.github/pull_request_template.md'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
+        copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
+        copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
+        copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
+        copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
+                 'public/406-unsupported-browser.html'
+        copy_file '../../../../../spec/dummy/public/icon.png', 'public/icon.png'
+        copy_file '../../../../../spec/dummy/public/icon.svg', 'public/icon.svg'
 
         unless RadConfig.react_app?
           copy_file '../../../../../spec/dummy/app/javascript/packs/application.js',
