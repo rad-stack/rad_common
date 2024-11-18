@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'SendgridStatuses' do
   let(:deliveries) { ActionMailer::Base.deliveries }
   let(:email) { Faker::Internet.email }
-  let(:contact_log) { create :contact_log, :email }
+  let(:contact_log) { create :contact_log, :email, record: create(:attorney) }
   let!(:contact_log_recipient) { create :contact_log_recipient, :email, email: email, contact_log: contact_log }
 
   before do
