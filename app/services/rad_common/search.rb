@@ -94,8 +94,10 @@ module RadCommon
       val = selected_value(column)
       return true if val.nil?
       return false if blank?(column)
+      return false if filter.default_value.nil?
 
-      val && filter.default_value && val.to_s == filter.default_value.to_s
+      val = val.compact_blank.first if val.is_a?(Array) && !filter.default_value.is_a?(Array)
+      val.to_s == filter.default_value.to_s
     end
 
     def skip_default?(name)

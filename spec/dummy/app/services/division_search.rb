@@ -17,7 +17,8 @@ class DivisionSearch < RadCommon::Search
        options: [['Active', User.active.sorted],
                  ['Inactive', User.inactive.sorted]],
        grouped: true },
-     { input_label: 'Status', column: :division_status, type: RadCommon::EnumFilter, klass: Division, required: true },
+     { input_label: 'Status', column: :division_status, type: RadCommon::EnumFilter, klass: Division,
+       multiple: true, required: true, default_value: Division.division_statuses[:status_active] },
      {
        input_label: 'Category',
        column: :category_id,
