@@ -106,6 +106,7 @@ module RadCommon
 
         # bin
         directory '../../../../../spec/dummy/bin/', 'bin/'
+        gsub_file 'bin/setup', 'dummy', installed_app_name # TODO: Remove in Rails 8
 
         # locales
         copy_file '../../../../../spec/dummy/config/locales/devise.twilio_verify.en.yml',
