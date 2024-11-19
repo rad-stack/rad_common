@@ -4,8 +4,8 @@ require_relative 'rad_bin'
 RadBin.rad_common_not_permitted!
 
 FileUtils.chdir Dir.pwd do
-  heroku_app_name = RadBin.get_heroku_app_name
+  heroku_app_name = RadBin.get_heroku_app_name(:staging)
 
-   puts "Proceeding with resetting staging for app #{heroku_app_name}-staging..."
-  RadBin.system!("bundle exec rails \"heroku:reset_staging[#{heroku_app_name}-staging]\"")
+  puts "Proceeding with resetting staging for app #{heroku_app_name}..."
+  RadBin.system!("bundle exec rails \"heroku:reset_staging[#{heroku_app_name}]\"")
 end
