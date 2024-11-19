@@ -48,8 +48,6 @@ module RadCommon
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
         copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
                  'public/406-unsupported-browser.html'
-        copy_file '../../../../../spec/dummy/public/icon.png', 'public/icon.png'
-        copy_file '../../../../../spec/dummy/public/icon.svg', 'public/icon.svg'
 
         unless RadConfig.react_app?
           copy_file '../../../../../spec/dummy/app/javascript/packs/application.js',
