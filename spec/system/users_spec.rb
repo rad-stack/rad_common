@@ -5,10 +5,11 @@ describe 'Users' do
 
   let!(:internal_role) { create :security_role }
   let!(:external_role) { create :security_role, :external }
-
   let(:user) { create :user, security_roles: [internal_role] }
   let(:admin) { create :admin }
   let(:password) { 'cOmpl3x_p@55w0rd' }
+  let(:deliveries) { ActionMailer::Base.deliveries }
+  let(:last_email) { deliveries.last }
 
   before { Rails.cache.write('rate_limit:twilio_verify', 0, expires_in: 5.minutes) }
 
@@ -44,11 +45,11 @@ describe 'Users' do
         click_button 'Sign Up'
         expect(page).to have_content 'message with a confirmation link has been sent'
 
-        ActionMailer::Base.deliveries.clear
+        deliveries.clear
         user = User.last
         user.process_duplicates
-        expect(ActionMailer::Base.deliveries.size).to eq 1
-        expect(ActionMailer::Base.deliveries.last.subject).to include "Possible Duplicate User (#{user}) Signed Up"
+        expect(deliveries.size).to eq 1
+        expect(last_email.subject).to include "Possible Duplicate User (#{user}) Signed Up"
       end
     end
   end
@@ -56,20 +57,38 @@ describe 'Users' do
   describe 'edit' do
     before do
       login_as admin, scope: :user
-      visit edit_user_path(user)
+      visit edit_user_path user
+      deliveries.clear
     end
 
-    context 'when dynamically changing fields', :js do
-      it 'shows internal roles and hides others' do
-        find_field('user_external').set(false)
-        expect(page).to have_content 'Security Roles'
-        expect(page).to have_content internal_role.name
+    context 'when user is an admin' do
+      let(:user) { create :admin }
+
+      it "doesn't allow changing email" do
+        expect(find_field('user_email', disabled: true).value).to eq(user.email)
+      end
+    end
+
+    context 'when user is not an admin' do
+      context 'when dynamically changing fields', :js do
+        it 'shows internal roles and hides others' do
+          find_field('user_external').set(false)
+          expect(page).to have_content 'Security Roles'
+          expect(page).to have_content internal_role.name
+        end
+
+        it 'shows external roles and hides others' do
+          find_field('user_external').set(true)
+          expect(page).to have_content 'Security Roles'
+          expect(page).to have_content external_role.name
+        end
       end
 
-      it 'shows external roles and hides others' do
-        find_field('user_external').set(true)
-        expect(page).to have_content 'Security Roles'
-        expect(page).to have_content external_role.name
+      it 'allows changing email' do
+        fill_in 'user_email', with: "foo_#{user.email}"
+        click_link_or_button 'Save'
+        expect(page).to have_content 'User was successfully updated.'
+        expect(last_email.subject).to include 'Confirmation instructions'
       end
     end
   end

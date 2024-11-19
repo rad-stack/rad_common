@@ -10,7 +10,7 @@ module Exportable
       end
     end
 
-    flash[:success] = report_generating_message
+    flash[:notice] = report_generating_message
     export_redirect
   end
 

@@ -2,19 +2,19 @@ class ContactLogRecipient < ApplicationRecord
   belongs_to :contact_log
   belongs_to :to_user, class_name: 'User', optional: true
 
-  enum email_type: { to: 0, cc: 1, bcc: 2 }
+  enum :email_type, { to: 0, cc: 1, bcc: 2 }
 
-  enum sms_status: { accepted: 0,
-                     scheduled: 1,
-                     queued: 2,
-                     sending: 3,
-                     sent: 4,
-                     receiving: 5,
-                     delivered: 6,
-                     undelivered: 7,
-                     failed: 8 }, _prefix: true
+  enum :sms_status, { accepted: 0,
+                      scheduled: 1,
+                      queued: 2,
+                      sending: 3,
+                      sent: 4,
+                      receiving: 5,
+                      delivered: 6,
+                      undelivered: 7,
+                      failed: 8 }, prefix: true
 
-  enum email_status: { delivered: 0, dropped: 1, bounce: 2, spamreport: 3 }, _prefix: true
+  enum :email_status, { delivered: 0, dropped: 1, bounce: 2, spamreport: 3 }, prefix: true
 
   scope :sms, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }) }
   scope :failed, -> { joins(:contact_log).where(success: false) }
@@ -52,6 +52,7 @@ class ContactLogRecipient < ApplicationRecord
   validate :validate_incoming_fields
 
   before_validation :check_success
+  before_validation :check_sms_false_positive
   after_validation :assign_to_user
   after_commit :notify!, only: :update, if: :notify_failure?
 
@@ -69,7 +70,7 @@ class ContactLogRecipient < ApplicationRecord
   def sms_assume_failed!
     update! sms_status: :failed
 
-    Rails.logger.info "sms_assume_failed for #{id}: sms_false_positive?=#{sms_false_positive?}"
+    Rails.logger.info "sms_assume_failed for #{id}"
 
     return unless notify_on_fail?
     return if sms_false_positive?
@@ -93,6 +94,13 @@ class ContactLogRecipient < ApplicationRecord
       elsif contact_log.email?
         self.success = email_status_delivered?
       end
+    end
+
+    def check_sms_false_positive
+      return if contact_log.blank?
+
+      self.sms_false_positive =
+        !success? && contact_log.sms? && contact_log.outgoing? && to_user.present? && sms_mostly_successful?
     end
 
     def assign_to_user
@@ -134,10 +142,6 @@ class ContactLogRecipient < ApplicationRecord
       return success_previously_changed?(from: true, to: false) if contact_log.email?
 
       sms_status_previously_changed? && sms_status_undelivered? && !sms_false_positive?
-    end
-
-    def sms_false_positive?
-      !success? && contact_log.sms? && contact_log.outgoing? && to_user.present? && sms_mostly_successful?
     end
 
     def sms_mostly_successful?

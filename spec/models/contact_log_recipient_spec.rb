@@ -88,7 +88,7 @@ RSpec.describe ContactLogRecipient do
   end
 
   describe 'sms_false_positive?' do
-    subject { contact_log_recipient.send(:sms_false_positive?) }
+    subject { contact_log_recipient.sms_false_positive? }
 
     let(:contact_log) { create :contact_log, :sms }
 

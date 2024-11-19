@@ -244,6 +244,12 @@ RSpec.describe User, type: :model do
 
       Timecop.travel(91.days.from_now) { expect(user.expired?).to be(true) }
     end
+
+    it 'expires for a new user without activity' do
+      expect(user.expired?).to be(false)
+
+      Timecop.travel(91.days.from_now) { expect(user.expired?).to be(true) }
+    end
   end
 
   describe 'Email Changed' do

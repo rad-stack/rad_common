@@ -10,7 +10,7 @@ RSpec.describe 'Form Errors', type: :system do
   end
 
   it 'displays base errors' do
-    visit "/rad_common/notification_types/#{notification_type.id}/edit"
+    visit "/notification_types/#{notification_type.id}/edit"
     click_button 'Save'
     expect(page).to have_content('invalid without security roles')
   end

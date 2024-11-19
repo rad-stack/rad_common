@@ -15,6 +15,7 @@
 
   - contact_logs.each do |record|
     - card_style = record.table_row_style
+    - recipients = record.contact_log_recipients
 
     %tr{ class: card_style }
       %td
@@ -30,11 +31,15 @@
         %p= record.from_number
         %p= record.from_email
       %td
-        - record.contact_log_recipients.each do |recipient|
-          - if recipient.to_user.present?
-            %p= secured_link recipient.to_user
-          %p= recipient.phone_number
-          %p= recipient.email
+        - if recipients.exists?
+          - recipients.each do |recipient|
+            - if recipient.to_user.present?
+              %p= secured_link recipient.to_user
+            %p= recipient.phone_number
+            %p= recipient.email
+        - else
+          %i.fa.fa-triangle-exclamation
+          No Recipients
       %td
         - if record.record.present?
           %p= record.record_type.titleize
@@ -42,7 +47,7 @@
       %td= record.content
       %td
         - if card_style.present?
-          - record.contact_log_recipients.each do |recipient|
+          - recipients.each do |recipient|
             %p= format_boolean recipient.notified_on_failure?
       %td
         - if card_style == 'table-warning'

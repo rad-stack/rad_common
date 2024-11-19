@@ -264,6 +264,10 @@ class RadConfig
       boolean_config_item! :legal_docs
     end
 
+    def react_app?
+      config_item(:react_app).presence || false
+    end
+
     def favicon_filename!
       override_variable(:favicon_filename) || 'favicon.ico'
     end

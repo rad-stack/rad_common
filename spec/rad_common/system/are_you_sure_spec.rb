@@ -6,7 +6,7 @@ RSpec.describe 'AreYouSure', type: :system do
   before { login_as user, scope: :user }
 
   describe 'global super search field' do
-    it 'does not warn', :js do
+    it 'does not warn', :js, :non_react_specs do
       visit '/'
       fill_in 'global_search_name', with: 'test'
       find('body').click
@@ -18,7 +18,7 @@ RSpec.describe 'AreYouSure', type: :system do
 
   describe 'search filter form fields' do
     it 'does not warn', :js do
-      visit '/rad_common/login_activities?search%5Bcreated_at_start%5D=2020-11-11&search%5Bcreated_at_end%5D=2020-11-11'
+      visit '/login_activities?search%5Bcreated_at_start%5D=2020-11-11&search%5Bcreated_at_end%5D=2020-11-11'
       find('body').click
       visit '/'
 

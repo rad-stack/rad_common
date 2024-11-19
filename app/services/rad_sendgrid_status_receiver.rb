@@ -12,7 +12,7 @@ class RadSendgridStatusReceiver
     return unless host_matches?
     return if missing_contact_log?
 
-    process_status!
+    process_status
     update_contact_log!
   end
 
@@ -58,12 +58,29 @@ class RadSendgridStatusReceiver
 
   private
 
-    def process_status!
-      return unless suppression? && user.present? && (spam_report? || user.stale?)
+    def process_status
+      return unless deactivate_user?
 
+      deactivate_user!
+    end
+
+    def deactivate_user?
+      suppression? && user.present? && (spam_report? || user.stale? || user.needs_reactivate?)
+    end
+
+    def deactivate_user!
       @notify = false
+      reason = deactivate_user_reason
       user.update! user_status: UserStatus.default_inactive_status
-      Rails.logger.info "sendgrid status: suppression received from stale user #{user.email}, deactivating"
+      Notifications::UserDeactivatedNotification.main(user: user, reason: reason).notify!
+    end
+
+    def deactivate_user_reason
+      return 'they reported a recent email as spam' if spam_report?
+      return 'a recent email to them failed and they have not accessed the system in quite a while' if user.stale?
+      return 'a recent email to them failed and their account has expired due to inactivity' if user.needs_reactivate?
+
+      raise 'unhandled deactivation reason'
     end
 
     def update_contact_log!

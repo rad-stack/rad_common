@@ -6,7 +6,7 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
-        remove_file 'app/views/layouts/_navigation.html.haml'
+        remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.react_app?
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
@@ -27,20 +27,31 @@ module RadCommon
         gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
 
         # misc
-        merge_package_json
+        merge_package_json unless RadConfig.react_app?
         copy_custom_github_actions
         copy_custom_github_matrix
         copy_file '../../../../../.ruby-version', '.ruby-version'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
-        copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+        end
+
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../pull_request_template.md', '.github/pull_request_template.md'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
-        copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
-        copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js', 'app/javascript/packs/rad_mailer.js'
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/app/javascript/packs/application.js',
+                    'app/javascript/packs/application.js'
+        end
+
+        copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js',
+                  'app/javascript/packs/rad_mailer.js'
+
         directory '../../../../../.bundle', '.bundle'
 
         # code style config
@@ -54,17 +65,24 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
-        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
-        gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+          gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
 
-        if !RadConfig.config_item(:legacy_rails_config).nil? && RadConfig.legacy_rails_config?
-          gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
+          if !RadConfig.config_item(:legacy_rails_config).nil? && RadConfig.legacy_rails_config?
+            gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
+          end
+
+          copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         end
 
-        copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
-        directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
-        directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
+
+        unless RadConfig.react_app?
+          directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
+          directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
+        end
+
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
@@ -96,8 +114,9 @@ module RadCommon
         # templates
 
         # active_record templates
-        copy_file '../../../../../spec/dummy/lib/templates/active_record/model/model.rb',
-                  'lib/templates/active_record/model/model.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/active_record/model/model.rb.tt',
+                  'lib/templates/active_record/model/model.rb.tt'
+        remove_file 'lib/templates/active_record/model/model.rb' # Removed old non-TT file
 
         # haml templates
         copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/_form.html.haml',
@@ -116,23 +135,28 @@ module RadCommon
                   'lib/templates/haml/scaffold/show.html.haml'
 
         # rails templates
-        copy_file '../../../../../spec/dummy/lib/templates/rails/scaffold_controller/controller.rb',
-                  'lib/templates/rails/scaffold_controller/controller.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rails/scaffold_controller/controller.rb.tt',
+                  'lib/templates/rails/scaffold_controller/controller.rb.tt'
+        remove_file 'lib/templates/rails/scaffold_controller/controller.rb' # Removed old non-TT file
 
         # rspec templates
-        copy_file '../../../../../spec/dummy/lib/templates/rspec/scaffold/request_spec.rb',
-                  'lib/templates/rspec/scaffold/request_spec.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rspec/scaffold/request_spec.rb.tt',
+                  'lib/templates/rspec/scaffold/request_spec.rb.tt'
+        remove_file 'lib/templates/rspec/scaffold/request_spec.rb' # Removed old non-TT file
 
-        copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb',
-                  'lib/templates/rspec/system/system_spec.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb.tt',
+                  'lib/templates/rspec/system/system_spec.rb.tt'
+        remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
 
-        create_file 'db/seeds.rb' do <<-'RUBY'
+        unless RadConfig.react_app?
+          create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 require 'rad_rspec/rad_factories'
 
 RadFactories.load!
 Seeder.new.seed!
         RUBY
+          end
         end
 
         inject_into_file 'config/routes.rb', after: 'Rails.application.routes.draw do' do <<-'RUBY'
@@ -155,7 +179,7 @@ Seeder.new.seed!
 
       def self.next_migration_number(path)
         next_migration_number = current_migration_number(path) + 1
-        if ActiveRecord::Base.timestamped_migrations
+        if ActiveRecord.timestamped_migrations
           [Time.current.utc.strftime('%Y%m%d%H%M%S'), '%.14d' % next_migration_number].max
         else
           '%.3d' % next_migration_number
@@ -194,6 +218,8 @@ Seeder.new.seed!
         end
 
         def apply_migration(source)
+          return if RadConfig.react_app?
+
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
           if self.class.migration_exists?('db/migrate', filename)
@@ -329,9 +355,22 @@ Seeder.new.seed!
         def install_github_workflow
           copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
           copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
+          copy_file '../../../../../.github/workflows/generate_coverage_report.yml',
+                    '.github/workflows/generate_coverage_report.yml'
           remove_file '.github/workflows/rc_update.yml'
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
-          gsub_file '.github/workflows/rad_update_bot.yml', 'rad_common_development', "#{installed_app_name}_development"
+          gsub_file '.github/workflows/generate_coverage_report.yml', 'rad_common_test', "#{installed_app_name}_test"
+
+          if RadConfig.react_app?
+            gsub_file '.github/workflows/rad_update_bot.yml',
+                      'rad_common_development',
+                      'cannasaver_admin_development'
+          else
+            gsub_file '.github/workflows/rad_update_bot.yml',
+                      'rad_common_development',
+                      "#{installed_app_name}_development"
+          end
+
           gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
           gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
           gsub_file '.github/workflows/rspec_tests.yml',
@@ -431,6 +470,8 @@ Seeder.new.seed!
           apply_migration '20240709115421_notify_tool_actions.rb'
           apply_migration '20240710175508_fix_contact_to_users.rb'
           apply_migration '20240803114036_bcc_notify_recipient.rb'
+          apply_migration '20240912133320_persist_sms_false_positive.rb'
+          apply_migration '20240911184745_fix_last_activity.rb'
         end
 
         def installed_app_name
