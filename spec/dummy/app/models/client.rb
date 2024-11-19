@@ -1,11 +1,13 @@
 class Client < ApplicationRecord
   include RadClient
 
+  schema_validation_options do
+    column :valid_user_domains, skip: true
+  end
+
   alias_attribute :to_s, :name
 
   scope :sorted, -> { order(:name) }
-
-  SKIP_SCHEMA_VALIDATION_COLUMNS = [:valid_user_domains].freeze
 
   strip_attributes
   audited

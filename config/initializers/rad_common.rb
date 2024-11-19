@@ -1,8 +1,5 @@
 require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/app/services/rad_config.rb"
 
-require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record" \
-        '/base/schema_validations'
-
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'SMS'
   inflect.acronym 'PDF'
@@ -10,8 +7,6 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'CSV'
   inflect.acronym 'BCC'
 end
-
-ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 
 # see Task 25
 Rails.application.config.active_storage.variant_processor = :mini_magick
