@@ -249,6 +249,12 @@ module RadUser
     email.end_with? RAD_DOMAIN
   end
 
+  class_methods do
+    def user_approved_message
+      "Your account was approved and you can begin using #{RadConfig.app_name!}."
+    end
+  end
+
   private
 
     def check_defaults
@@ -367,7 +373,12 @@ module RadUser
     end
 
     def notify_user_approved_user
-      RadMailer.your_account_approved(self).deliver_later
+      raise 'missing approved_by' if approved_by.blank?
+
+      RadMailer.your_account_approved(self, approved_by).deliver_later
+      return unless RadConfig.twilio_enabled? && mobile_phone.present?
+
+      UserSMSSenderJob.perform_later(User.user_approved_message, approved_by.id, id, nil, false)
     end
 
     def notify_user_approved_admins
