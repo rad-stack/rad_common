@@ -44,7 +44,7 @@ RSpec.describe 'Search' do
     it 'retains search value after applying filters' do
       first('#search_division_status').select('Active')
       first('button', text: 'Apply Filters').click
-      expect(first('#search_division_status').value).to eq Division.division_statuses['status_active'].to_s
+      expect(first('#search_division_status').value).to eq [Division.division_statuses['status_active'].to_s]
     end
 
     it 'select should have success style when default value is selected' do
@@ -53,10 +53,11 @@ RSpec.describe 'Search' do
       expect(first('#search_division_status')['data-style']).to eq 'btn btn-light'
     end
 
-    it 'select should have warning style when a value is selected other than default' do
-      first('#search_division_status').select('Active')
+    it 'select should have warning style when a value is selected other than default', :js do
+      bootstrap_select 'Inactive', from: 'search_division_status'
+      find('body').click
       first('button', text: 'Apply Filters').click
-      expect(first('#search_division_status')['data-style']).to eq 'btn btn-warning'
+      expect(first('button[data-id="search_division_status"]')['class']).to include 'btn btn-warning'
     end
 
     context 'when ajax select', :js do
@@ -69,7 +70,6 @@ RSpec.describe 'Search' do
       end
 
       it 'allows searching and selecting filter option' do
-        bootstrap_select 'Active', from: 'search_division_status'
         first('button', text: 'Apply Filters').click
 
         expect(page).to have_content(division.name)
@@ -89,7 +89,6 @@ RSpec.describe 'Search' do
 
       context 'when exclude is checked' do
         it 'filters out selected options' do
-          bootstrap_select 'Active', from: 'search_division_status'
           first('button', text: 'Apply Filters').click
 
           expect(page).to have_content(division.name)

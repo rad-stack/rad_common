@@ -95,9 +95,17 @@ module RadCommon
       return true if val.nil?
       return false if blank?(column)
       return false if filter.default_value.nil?
+      return default_multi_select_value?(filter, val) if val.is_a?(Array)
 
-      val = val.compact_blank.first if val.is_a?(Array) && !filter.default_value.is_a?(Array)
       val.to_s == filter.default_value.to_s
+    end
+
+    def default_multi_select_value?(filter, value)
+      value = value.compact_blank
+      default_value = filter.default_value
+      default_value = default_value.is_a?(Array) ? default_value.compact_blank : [default_value.to_s]
+
+      value.sort == default_value.sort
     end
 
     def skip_default?(name)
