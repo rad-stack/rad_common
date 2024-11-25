@@ -110,12 +110,12 @@ RSpec.describe 'Search' do
     end
 
     it 'shows required field error' do
-      visit divisions_path
+      visit divisions_path(search: { division_status: [''] })
       first('button', text: 'Apply Filters').click
       expect(page).to have_content 'Status is required'
 
-      first('#search_division_status').select('Active')
-      first('button', text: 'Apply Filters').click
+
+      visit divisions_path(search: { division_status: [Division.division_statuses[:status_active]] })
       expect(page).to have_no_content 'Status is required'
     end
   end
