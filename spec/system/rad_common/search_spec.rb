@@ -113,7 +113,6 @@ RSpec.describe 'Search' do
       first('button', text: 'Apply Filters').click
       expect(page).to have_content 'Status is required'
 
-
       visit divisions_path(search: { division_status: [Division.division_statuses[:status_active]] })
       expect(page).to have_no_content 'Status is required'
     end
