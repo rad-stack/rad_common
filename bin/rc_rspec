@@ -7,5 +7,5 @@ end
 
 directory = Dir.pwd.include?('rad_common') ? "#{Dir.pwd}/spec/dummy" : Dir.pwd
 FileUtils.chdir directory do
-  system!('rspec spec `bundle show rad_common`/spec/rad_common')
+  system!('rspec spec `bundle show rad_common`/spec/shared')
 end
