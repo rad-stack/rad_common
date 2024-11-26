@@ -22,7 +22,7 @@ class ClientsController < ApplicationController
     if @client.save
       redirect_to @client, notice: 'Client was successfully created.'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -30,7 +30,7 @@ class ClientsController < ApplicationController
     if @client.update(permitted_params)
       redirect_to @client, notice: 'Client was successfully updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

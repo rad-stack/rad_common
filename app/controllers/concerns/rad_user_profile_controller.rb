@@ -20,7 +20,7 @@ module RadUserProfileController
 
       redirect_to user_profile_path(@user), notice: 'Your profile was successfully updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

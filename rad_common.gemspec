@@ -57,6 +57,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'smartystreets_ruby_sdk'
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
+  s.add_dependency 'turbo-rails'
   s.add_dependency 'twilio-ruby'
   s.add_dependency 'webpacker'
   s.add_dependency 'wicked_pdf', '2.6.3'
