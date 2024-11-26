@@ -79,6 +79,8 @@ class RadDeviseMailer < Devise::Mailer
   def email_changed(record, opts = {})
     @contact_log_record = record
     @contact_log_from_user = record
+    @rad_notify_on_fail = false
+
     initialize_from_record(record)
 
     @recipient = @resource
