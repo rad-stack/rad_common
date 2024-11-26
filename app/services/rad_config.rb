@@ -23,7 +23,7 @@ class RadConfig
     end
 
     def smtp_address!
-      override_variable(:smtp_address) || 'smtp.sendgrid.net'
+      secret_config_item! :smtp_address
     end
 
     def smtp_port!
@@ -258,6 +258,10 @@ class RadConfig
 
     def saved_search_filters_enabled?
       boolean_config_item! :saved_search_filters_enabled
+    end
+
+    def staging_to_number
+      config_item!(:staging_to_number)
     end
 
     def legal_docs?

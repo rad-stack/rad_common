@@ -27,7 +27,7 @@ class SmartyAddress
 
     def api_result
       @api_result ||=
-        Rails.cache.fetch(cache_key, expires_in: 1.day) do
+        Rails.cache.fetch(cache_key, expires_in: 30.days) do
           lookup = SmartyStreets::USStreet::Lookup.new
 
           lookup.street = address_args[:address_1]
