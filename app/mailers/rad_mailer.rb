@@ -27,15 +27,20 @@ class RadMailer < ActionMailer::Base
 
     if recipient.respond_to?(:email)
       @recipient = recipient
-      to_address = "#{escape_name(recipient.to_s)} <#{recipient.email}>"
+      to_address = "\"#{escape_name(recipient.to_s)}\" <#{recipient.email}>"
     elsif recipient.is_a?(String)
+      if recipient.match?(/(.*)<(.*)>/)
+        name, email = recipient.match(/(.*)<(.*)>/).captures
+        to_address = "\"#{escape_name(name.strip)}\" <#{email.strip}>"
+      else
+        to_address = recipient
+      end
       @recipient = recipient
-      to_address = recipient
     elsif recipient.is_a?(Array)
       @recipient = parse_recipients_array(recipient)
-      to_address = @recipient
+      to_address = @recipient.map { |r| "\"#{escape_name(r.to_s)}\" <#{r.email}>" }
     else
-      raise "recipient of type #{recipient.class} if not valid"
+      raise "recipient of type #{recipient.class} is not valid"
     end
 
     @message = options[:do_not_format] ? message : simple_format(message)
@@ -44,11 +49,11 @@ class RadMailer < ActionMailer::Base
     maybe_attach options
 
     mail to: to_address,
-         subject: subject,
-         cc: options[:cc],
-         bcc: options[:bcc],
-         template_path: 'rad_mailer',
-         template_name: 'simple_message'
+        subject: subject,
+        cc: options[:cc],
+        bcc: options[:bcc],
+        template_path: 'rad_mailer',
+        template_name: 'simple_message'
   end
 
   def global_validity_on_demand(recipient, problems)
