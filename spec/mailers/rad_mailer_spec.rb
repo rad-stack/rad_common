@@ -95,6 +95,38 @@ describe RadMailer do
         expect(ContactLogRecipient.last.to_user).to eq user
       end
     end
+
+    context 'when recipient name contains commas' do
+      let(:subject_line) { 'Congratulations' }
+      let(:recipient_name) { 'Justin, Samantha & Jackson!' }
+      let(:recipient_email) { 'validemail@example.com' }
+      let(:recipient) { "#{recipient_name} <#{recipient_email}>" }
+
+      before do
+        described_class.simple_message(recipient, subject_line, 'Message body').deliver_now
+      end
+
+      it 'escapes the recipient name correctly in the header' do
+        mail = ActionMailer::Base.deliveries.last
+        expect(mail.header[:to].to_s).to eq('Justin  Samantha & Jackson! <validemail@example.com>')
+      end
+    end
+
+    context 'when recipient name contains special characters' do
+      let(:subject_line) { 'Congratulations' }
+      let(:recipient_name) { 'Jane Happy Birthday!! <3' }
+      let(:recipient_email) { 'validemail@example.com' }
+      let(:recipient) { "#{recipient_name} <#{recipient_email}>" }
+
+      before do
+        described_class.simple_message(recipient, subject_line, 'Message body').deliver_now
+      end
+
+      it 'escapes the recipient name correctly in the header' do
+        mail = ActionMailer::Base.deliveries.last
+        expect(mail.header[:to].to_s).to eq('Jane Happy Birthday!! 3 <validemail@example.com>')
+      end
+    end
   end
 
   describe '#email_report' do
