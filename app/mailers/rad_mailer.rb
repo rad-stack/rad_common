@@ -40,7 +40,7 @@ class RadMailer < ActionMailer::Base
       @recipient = parse_recipients_array(recipient)
       to_address = @recipient.map { |r| "\"#{escape_name(r.to_s)}\" <#{r.email}>" }
     else
-      raise "recipient of type #{recipient.class} is not valid"
+      raise "recipient of type #{recipient.class} if not valid"
     end
 
     @message = options[:do_not_format] ? message : simple_format(message)
@@ -49,11 +49,11 @@ class RadMailer < ActionMailer::Base
     maybe_attach options
 
     mail to: to_address,
-        subject: subject,
-        cc: options[:cc],
-        bcc: options[:bcc],
-        template_path: 'rad_mailer',
-        template_name: 'simple_message'
+         subject: subject,
+         cc: options[:cc],
+         bcc: options[:bcc],
+         template_path: 'rad_mailer',
+         template_name: 'simple_message'
   end
 
   def global_validity_on_demand(recipient, problems)
