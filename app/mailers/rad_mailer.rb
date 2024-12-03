@@ -12,6 +12,7 @@ class RadMailer < ActionMailer::Base
   default reply_to: RadConfig.admin_email!
 
   def your_account_approved(user)
+    @contact_log_record = user
     @email_action = { button_text: 'Get Started',
                       button_url: root_url }
 
@@ -21,8 +22,11 @@ class RadMailer < ActionMailer::Base
   end
 
   def simple_message(recipient, subject, message, options = {})
-    @rad_record = options[:record]
-    @rad_from_user = options[:from_user]
+    validate_simple_message_options options
+
+    @contact_log_record = options[:contact_log_record]
+    @contact_log_from_user = options[:contact_log_from_user]
+
     recipient = User.find(recipient.first) if recipient.is_a?(Array) && recipient.count == 1
 
     if recipient.respond_to?(:email)
@@ -58,7 +62,7 @@ class RadMailer < ActionMailer::Base
 
   def global_validity_on_demand(recipient, problems)
     @recipient = recipient
-    @rad_from_user = recipient
+    @contact_log_from_user = recipient
     @problems = problems
     @message = "There #{@problems.count == 1 ? 'is' : 'are'} #{pluralize(@problems.count, 'invalid record')}."
 
@@ -69,7 +73,10 @@ class RadMailer < ActionMailer::Base
   end
 
   def email_report(user, file, report_name, options = {})
-    @rad_from_user = user
+    validate_email_report_options options
+
+    @contact_log_from_user = user
+
     start_date = options[:start_date]
     end_date   = options[:end_date]
     export_format = options[:format].presence || Exporter::DEFAULT_FORMAT
@@ -144,5 +151,25 @@ class RadMailer < ActionMailer::Base
 
     def escape_name(recipient_name)
       recipient_name.gsub(/[<>]/, '').gsub(',', ' ').strip
+    end
+
+    def validate_simple_message_options(options)
+      validate_options options,
+                       %i[contact_log_record contact_log_from_user do_not_format email_action cc bcc attachment]
+    end
+
+    def validate_email_report_options(options)
+      validate_options options, %i[start_date end_date format]
+    end
+
+    def validate_options(options, keys)
+      return if options.nil?
+      raise 'invalid options' unless options.is_a?(Hash)
+      return if options.blank?
+
+      unknown_keys = options.keys - keys
+      return if unknown_keys.empty?
+
+      raise "unknown options: #{unknown_keys}"
     end
 end

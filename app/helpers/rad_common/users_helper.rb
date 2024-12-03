@@ -4,8 +4,14 @@ module RadCommon
       items = [:email, :mobile_phone, { label: 'User Status', value: user_status_item(user) }, :timezone]
       items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
 
-      items += %i[sign_in_count invitation_accepted_at invited_by current_sign_in_ip current_sign_in_at confirmed_at
-                  confirmation_sent_at unconfirmed_email]
+      items += [:sign_in_count,
+                :invitation_accepted_at,
+                :invited_by,
+                :current_sign_in_ip,
+                :current_sign_in_at,
+                :confirmed_at,
+                :confirmation_sent_at,
+                unconfirmed_email_show_item(user)]
 
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
 
@@ -39,6 +45,14 @@ module RadCommon
 
     def user_status_icon(icon, tooltip)
       [icon_tooltip('span', tooltip, icon, html_class: 'text-warning'), ' ']
+    end
+
+    def unconfirmed_email_show_item(user)
+      value = if user.unconfirmed_email.present?
+                content_tag(:span, user.unconfirmed_email, class: 'badge alert-warning')
+              end
+
+      { label: 'Unconfirmed Email', value: value }
     end
 
     def my_profile_nav?
@@ -130,7 +144,7 @@ module RadCommon
       return unless policy(user).impersonate?
 
       link_to icon('right-to-bracket', 'Sign In As'),
-              "/rad_common/impersonations/start?id=#{user.id}",
+              start_impersonations_path(id: user.id),
               method: :post,
               data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to ' \
                                'your original user.' },

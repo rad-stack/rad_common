@@ -95,6 +95,8 @@ jobs:
             spec/dummy/node_modules
             spec/dummy/tmp/cache/webpacker
           key: webpacker-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            webpacker-${{ hashFiles('**/yarn.lock') }}-
 
       - name: Compile Webpacker assets
         working-directory: spec/dummy

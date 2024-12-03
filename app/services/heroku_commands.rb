@@ -83,10 +83,12 @@ class HerokuCommands
           return
         end
 
+        write_log `heroku ps:scale web=0 worker=0 #{app_option(app_name)}`
+        write_log `heroku run rails runner "'Sidekiq.redis(&:flushdb)'" #{app_option(app_name)}`
         write_log `heroku pg:reset DATABASE_URL #{app_option(app_name)} --confirm #{app_name}`
         write_log `heroku run rails db:schema:load #{app_option(app_name)}`
         write_log `heroku run rails db:seed #{app_option(app_name)}`
-        write_log `heroku restart #{app_option(app_name)}`
+        write_log `heroku ps:scale web=1 worker=1 #{app_option(app_name)}`
 
         write_log 'Done.'
       end
@@ -162,7 +164,7 @@ class HerokuCommands
         company.quickbooks_company_id = nil
         company.quickbooks_token = nil
         company.quickbooks_refresh_token = nil
-        company.refresh_token_by = nil
+        company.quickbooks_expires_at = nil
 
         company.save!(validate: false)
       end
