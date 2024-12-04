@@ -164,7 +164,7 @@ class HerokuCommands
         company.quickbooks_company_id = nil
         company.quickbooks_token = nil
         company.quickbooks_refresh_token = nil
-        company.refresh_token_by = nil
+        company.quickbooks_expires_at = nil
 
         company.save!(validate: false)
       end
