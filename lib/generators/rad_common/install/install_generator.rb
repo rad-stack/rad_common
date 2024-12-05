@@ -43,6 +43,11 @@ module RadCommon
         copy_file '../pull_request_template.md', '.github/pull_request_template.md'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
+        copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
+        copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
+        copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
+        copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
+                 'public/406-unsupported-browser.html'
 
         unless RadConfig.react_app?
           copy_file '../../../../../spec/dummy/app/javascript/packs/application.js',
@@ -99,6 +104,7 @@ module RadCommon
 
         # bin
         directory '../../../../../spec/dummy/bin/', 'bin/'
+        gsub_file 'bin/setup', 'dummy', installed_app_name # TODO: Remove in Rails 8
 
         # locales
         copy_file '../../../../../spec/dummy/config/locales/devise.twilio_verify.en.yml',
