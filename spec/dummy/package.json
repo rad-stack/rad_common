@@ -6,11 +6,8 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
-    "@rails/actiontext": "^6.0.2-1",
-    "@rails/webpacker": "5.4.3",
     "follow-redirects": "^1.14.8",
-    "jquery-ui": "^1.13.2",
-    "rad_common_js": "https://github.com/rad-stack/rad_common_js#53b7b189a1474b5d289c10ac109a14985e0e0425",
+    "rad_common_js": "https://github.com/rad-stack/rad_common_js#e6f1b2c95ff6633b6843279c9aca74551ac2cca4",
     "terser": "^5.14.2"
   },
   "devDependencies": {
