@@ -1,6 +1,5 @@
 require('trix');
 require('@rails/actiontext');
-require.context('../images', true);
 
 import 'trix/dist/trix.css';
 import 'rad_common_js/src/css/actiontext.scss';

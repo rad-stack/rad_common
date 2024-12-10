@@ -1,7 +1,5 @@
 module RadCommon
   class Sorting
-    NULLS_LAST = ' NULLS LAST'.freeze
-
     attr_reader :sort_columns, :sort_column, :sort_direction
 
     # @param [Array] sort_columns An array of sort columns
@@ -30,10 +28,8 @@ module RadCommon
       end
     end
 
-    def sort_clause(record_class)
-      @sort_column.split(',').map { |item|
-        "#{item.strip} #{@sort_direction}#{nulls_last(item, record_class)}"
-      }.join(', ')
+    def sort_clause
+      @sort_column.split(',').map { |item| "#{item.strip} #{@sort_direction} NULLS LAST" }.join(', ')
     end
 
     private
@@ -47,7 +43,7 @@ module RadCommon
       end
 
       def sort_query(query)
-        query.order(sort_clause(query.klass))
+        query.order(sort_clause)
       end
 
       def set_sort_column
@@ -71,13 +67,6 @@ module RadCommon
         return {} unless @search.search_params?
 
         @search.params.require(:search).slice(:sort, :direction).permit(:sort, :direction)
-      end
-
-      def nulls_last(item, record_class)
-        return NULLS_LAST unless record_class.respond_to?(:columns_hash)
-
-        column = record_class.columns_hash[item]
-        column.present? && !column.null ? '' : NULLS_LAST
       end
   end
 end

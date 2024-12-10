@@ -2,17 +2,18 @@
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 
-require 'simplecov'
-SimpleCov.start 'rails' do
-  add_filter 'lib/templates'
-  add_filter 'install_generator.rb'
-  add_filter 'install/rails_helper.rb'
+if ENV['COVERAGE'] == 'true'
+  require 'simplecov'
+  SimpleCov.start 'rails' do
+    add_filter 'lib/templates'
+    add_filter 'install_generator.rb'
 
-  add_group 'Services', 'app/services'
-  add_group 'Policies', 'app/policies'
+    add_group 'Services', 'app/services'
+    add_group 'Policies', 'app/policies'
 
-  groups.delete('Libraries')
-  groups.delete('Channels')
+    groups.delete('Libraries')
+    groups.delete('Channels')
+  end
 end
 
 require File.expand_path('dummy/config/environment.rb', __dir__)
@@ -57,7 +58,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_paths = [Rails.root.join('spec/fixtures').to_s]
+  config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -85,40 +86,27 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   Capybara.register_driver :headless_chrome do |app|
-    options = Selenium::WebDriver::Chrome::Options.new
-    options.add_argument('--headless=new')
-    options.add_argument('--window-size=1400,900')
-    options.add_argument('--disable-popup-blocking')
-    options.add_argument('--disable-gpu')
+    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+      chromeOptions: { args: %w[headless disable-popup-blocking disable-gpu window-size=1400,900], w3c: false }
+    )
 
     Capybara::Selenium::Driver.new app,
                                    browser: :chrome,
-                                   options: options
+                                   desired_capabilities: capabilities
   end
 
   Capybara.register_driver :chrome do |app|
-    options = Selenium::WebDriver::Chrome::Options.new
-    options.add_argument('--window-size=1400,900')
-    options.add_argument('--disable-popup-blocking')
-    options.add_argument('--disable-gpu')
+    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+      chromeOptions: { args: %w[disable-popup-blocking disable-gpu window-size=1400,900], w3c: false }
+    )
 
     Capybara::Selenium::Driver.new app,
                                    browser: :chrome,
-                                   options: options
+                                   desired_capabilities: capabilities
   end
 
   chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
   Capybara.javascript_driver = chrome_driver
-
-  config.before(:suite) do
-    rad_factories = "#{Gem.loaded_specs['rad_common'].full_gem_path}/spec/factories/rad_common"
-    Dir["#{rad_factories}/*.rb"].each do |factory_file|
-      factory_name = File.basename(factory_file, '.rb')
-      next if FactoryBot.factories.registered?(factory_name.singularize.to_sym)
-
-      require factory_file
-    end
-  end
 
   config.before do
     # TODO: workaround for this issue:
@@ -137,18 +125,13 @@ RSpec.configure do |config|
   config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
   config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
   config.filter_run_excluding(sign_up_specs: true) if RadConfig.disable_sign_up?
-  config.filter_run_excluding(pending_user_specs: true) unless RadConfig.pending_users?
   config.filter_run_excluding(external_user_specs: true) unless RadConfig.external_users?
   config.filter_run_excluding(user_client_specs: true) unless RadConfig.user_clients?
-  config.filter_run_excluding(devise_timeoutable_specs: true) unless Devise.mappings[:user].timeoutable?
+  config.filter_run_excluding(devise_paranoid_specs: true) unless Devise.paranoid
   config.filter_run_excluding(smarty_specs: true) unless RadConfig.smarty_enabled?
   config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
   config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
-  config.filter_run_excluding(password_expirable_specs: true) unless RadConfig.password_expirable?
-  config.filter_run_excluding(non_react_specs: true) if RadConfig.react_app?
 
   include Warden::Test::Helpers
   config.include Capybara::DSL
-
-  Sidekiq.logger.level = Logger::WARN
 end

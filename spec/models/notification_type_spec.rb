@@ -1,64 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe NotificationType do
+RSpec.describe NotificationType, type: :model do
   let(:user) { create :admin }
-  let(:another_user) { create :user }
-  let(:notification_type) { Notifications::DivisionUpdatedNotification.main(notification_payload) }
-
-  let(:division) do
-    Audited.audit_class.as_user(another_user) do
-      create :division, owner: user
-    end
-  end
-
-  let(:notification_payload) { division }
+  let(:notification_type) { create :new_division_notification }
+  let(:notification_payload) { create :division, owner: user }
   let(:notification_method) { :email }
 
-  describe 'contact_log' do
-    let(:contact_log) { ContactLog.last }
-
-    context "when notification has it's own mailer" do
-      before { Notifications::UserWasApprovedNotification.main([another_user, user]).notify! }
-
-      it 'sets contact_log record and contact_log from_user' do
-        expect(contact_log.record).to eq another_user
-        expect(contact_log.from_user).to eq user
-      end
-    end
-
-    context 'when notification uses simpler mailer' do
-      before { Notifications::DuplicateFoundUserNotification.main(division).notify! }
-
-      it 'sets contact_log record and contact_log from_user' do
-        expect(contact_log.record).to eq division
-        expect(contact_log.from_user).to eq another_user
-      end
-    end
-  end
-
-  describe 'bcc recipient' do
-    subject { last_email.bcc }
-
-    let(:last_email) { ActionMailer::Base.deliveries.last }
-
-    before do
-      notification_type.update! bcc_recipient: bcc_recipient
-      ActionMailer::Base.deliveries.clear
-      Notifications::DivisionUpdatedNotification.main(division).notify!
-    end
-
-    context 'when enabled' do
-      let(:bcc_recipient) { Faker::Internet.email }
-
-      it { is_expected.to eq [bcc_recipient] }
-    end
-
-    context 'when disabled' do
-      let(:bcc_recipient) { nil }
-
-      it { is_expected.to be_nil }
-    end
-  end
+  before { notification_type.payload = notification_payload }
 
   describe 'notify_user_ids_opted with absolute_users' do
     subject(:result) { notification_type.send(:notify_user_ids_opted, notification_method) }
@@ -74,7 +22,7 @@ RSpec.describe NotificationType do
     context 'with inactive user' do
       before { user.update! user_status: UserStatus.default_inactive_status }
 
-      it { expect { result }.to raise_error "absolute users must be active: [#{user.id}]" }
+      it { expect { result }.to raise_error 'absolute users must be active' }
     end
 
     context 'when email is turned off' do

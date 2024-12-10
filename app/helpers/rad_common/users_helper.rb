@@ -1,73 +1,30 @@
 module RadCommon
   module UsersHelper
     def user_show_data(user)
-      items = [:email, :mobile_phone, { label: 'User Status', value: user_status_item(user) }, :timezone]
-      items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
-
-      items += [:sign_in_count,
-                :invitation_accepted_at,
-                :invited_by,
-                :current_sign_in_ip,
-                :current_sign_in_at,
-                :confirmed_at,
-                :confirmation_sent_at,
-                unconfirmed_email_show_item(user)]
-
+      items = %i[email mobile_phone user_status timezone sign_in_count invitation_accepted_at invited_by]
+      items += %i[twilio_verify_sms] if RadConfig.twilio_verify_enabled?
+      items += %i[current_sign_in_ip current_sign_in_at confirmed_at confirmation_sent_at unconfirmed_email]
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
 
       if RadConfig.avatar? && user.avatar.attached?
         items.push(label: 'Avatar',
-                   value: render_one_attachment(record: user, attachment_name: 'avatar', new_tab: true))
+                   value: render('layouts/attachment', record: user, attachment_name: 'avatar', new_tab: true))
       end
 
       items
-    end
-
-    def user_status_item(user)
-      items = [user.user_status.name, ' ']
-
-      if user.needs_confirmation?
-        items += user_status_icon('fa-circle-question', 'This user has not yet confirmed their email.')
-      end
-
-      if user.needs_accept_invite?
-        items += user_status_icon('fa-envelope', 'This user has not yet accepted their invitation.')
-      end
-
-      if user.needs_reactivate?
-        items += user_status_icon('fa-triangle-exclamation', 'This user is expired due to inactivity.')
-      end
-
-      tag.div do
-        safe_join items
-      end
-    end
-
-    def user_status_icon(icon, tooltip)
-      [icon_tooltip('span', tooltip, icon, html_class: 'text-warning'), ' ']
-    end
-
-    def unconfirmed_email_show_item(user)
-      value = if user.unconfirmed_email.present?
-                content_tag(:span, user.unconfirmed_email, class: 'badge alert-warning')
-              end
-
-      { label: 'Unconfirmed Email', value: value }
     end
 
     def my_profile_nav?
       UserProfilePolicy.new(current_user, current_user).show?
     end
 
-    def show_nav_avatar
-      return unless RadConfig.avatar?
+    def next_profile_action(user)
+      onboarding = Onboarding.new(user)
 
-      # there is a complicated bug that requires this - Task 35304
-      return if RadConfig.password_expirable? && current_user.password_expired?
+      next_step = onboarding.next_step
+      return unless next_step
 
-      return unless current_user.avatar.attached?
-
-      image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
+      link_to(icon(:forward, next_step.label), next_step.path, class: 'btn btn-primary btn-lg')
     end
 
     def users_actions
@@ -81,9 +38,13 @@ module RadCommon
     end
 
     def new_user_action
-      return unless policy(User.new).new? && RadConfig.manually_create_users?
+      return unless policy(User.new).new? && manually_create_users?
 
       link_to(icon('plus-square', 'New User'), new_user_path, class: 'btn btn-success btn-sm')
+    end
+
+    def manually_create_users?
+      RadConfig.disable_invite? && RadConfig.disable_sign_up?
     end
 
     def user_actions(user)
@@ -144,7 +105,7 @@ module RadCommon
       return unless policy(user).impersonate?
 
       link_to icon('right-to-bracket', 'Sign In As'),
-              start_impersonations_path(id: user.id),
+              "/rad_common/impersonations/start?id=#{user.id}",
               method: :post,
               data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to ' \
                                'your original user.' },
@@ -160,10 +121,10 @@ module RadCommon
     end
 
     def user_confirm_action(user)
-      return unless user.needs_confirmation? && policy(user).update?
+      return unless RadConfig.user_confirmable? && policy(user).update? && !user.confirmed?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
-      link_to icon('circle-question', 'Confirm Email'),
+      link_to icon(:check, 'Confirm Email'),
               confirm_user_path(user),
               method: :put,
               data: { confirm: confirm },
@@ -171,12 +132,12 @@ module RadCommon
     end
 
     def user_resend_action(user)
-      return unless policy(User.new).create? && user.needs_accept_invite?
+      return unless policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
 
-      link_to icon(:envelope, 'Resend Invitation'),
+      link_to 'Resend Invitation',
               resend_invitation_user_path(user),
               method: :put,
-              class: 'btn btn-sm btn-warning',
+              class: 'btn btn-sm btn-success',
               data: { confirm: 'Are you sure?' }
     end
 
@@ -191,7 +152,7 @@ module RadCommon
     end
 
     def user_test_sms_action(user)
-      return unless RadConfig.twilio_enabled? && user.mobile_phone.present? && policy(user).test_sms?
+      return unless RadicalTwilio.new.twilio_enabled? && user.mobile_phone.present? && policy(user).test_sms?
 
       link_to icon(:comments, 'Send Test SMS'),
               test_sms_user_path(user),
@@ -215,7 +176,7 @@ module RadCommon
     end
 
     def reactivate_user_warning(user)
-      return unless user.needs_reactivate? && policy(user).update?
+      return unless RadConfig.user_expirable? && policy(user).update? && user.expired?
 
       link = link_to 'click here', reactivate_user_path(user), method: :put, data: { confirm: 'Are you sure?' }
       message = safe_join(["User's account has been expired due to inactivity, to re-activate the user, ", link, '.'])
@@ -223,34 +184,7 @@ module RadCommon
     end
 
     def require_mobile_phone?
-      RadConfig.require_mobile_phone? || (RadConfig.twilio_verify_enabled? && RadConfig.twilio_verify_all_users?)
-    end
-
-    def clients_to_add_to_user(user)
-      policy_scope(RadCommon::AppInfo.new.client_model_class).active.where.not(id: user.clients.pluck(:id)).sorted
-    end
-
-    def show_hide_users_button(users)
-      return if users.inactive.none?
-
-      tag.button 'Show/Hide Inactive',
-                 type: 'button',
-                 class: 'btn btn-sm btn-secondary',
-                 'data-target': '#users-collapse',
-                 'data-toggle': 'collapse'
-    end
-
-    def user_row_class(user, hide_inactive)
-      item = user.display_style
-      return item if !hide_inactive || user.not_inactive?
-
-      "#{item} collapse"
-    end
-
-    def user_row_id(user, hide_inactive)
-      return if !hide_inactive || user.not_inactive?
-
-      'users-collapse'
+      RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_internal_only?
     end
   end
 end

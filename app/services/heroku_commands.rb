@@ -83,12 +83,10 @@ class HerokuCommands
           return
         end
 
-        write_log `heroku ps:scale web=0 worker=0 #{app_option(app_name)}`
-        write_log `heroku run rails runner "'Sidekiq.redis(&:flushdb)'" #{app_option(app_name)}`
         write_log `heroku pg:reset DATABASE_URL #{app_option(app_name)} --confirm #{app_name}`
         write_log `heroku run rails db:schema:load #{app_option(app_name)}`
         write_log `heroku run rails db:seed #{app_option(app_name)}`
-        write_log `heroku ps:scale web=1 worker=1 #{app_option(app_name)}`
+        write_log `heroku restart #{app_option(app_name)}`
 
         write_log 'Done.'
       end
@@ -113,76 +111,76 @@ class HerokuCommands
 
     private
 
-      def app_option(app_name)
-        "--app #{app_name}"
+    def app_option(app_name)
+      "--app #{app_name}"
+    end
+
+    def heroku_rails_environment(app_name)
+      `heroku config:get RAILS_ENV #{app_option(app_name)}`.strip
+    end
+
+    def backup_dump_file(app_name)
+      "#{dump_folder}/#{app_name}_#{Date.current}.backup"
+    end
+
+    def clone_dump_file
+      'latest.dump'
+    end
+
+    def dump_folder
+      "#{Rails.root}/heroku_backups"
+    end
+
+    def local_host
+      'localhost'
+    end
+
+    def local_user
+      `whoami`.strip!
+    end
+
+    def dbname
+      YAML.load_file('config/database.yml')['development']['database']
+    end
+
+    def check_production!
+      raise 'This is not available in the production environment.' if Rails.env.production?
+    end
+
+    def remove_user_avatars
+      return unless User.new.respond_to?(:avatar)
+
+      User.joins(:avatar_attachment).order(:id).each do |user|
+        user.avatar.purge_later
       end
+    end
 
-      def heroku_rails_environment(app_name)
-        `heroku config:get RAILS_ENV #{app_option(app_name)}`.strip
-      end
+    def remove_accounting_keys
+      company = Company.main
+      return unless company.respond_to?(:quickbooks_access_token)
 
-      def backup_dump_file(app_name)
-        "#{dump_folder}/#{app_name}_#{Date.current}.backup"
-      end
+      company.quickbooks_company_id = nil
+      company.quickbooks_token = nil
+      company.quickbooks_refresh_token = nil
+      company.refresh_token_by = nil
 
-      def clone_dump_file
-        'latest.dump'
-      end
+      company.save!(validate: false)
+    end
 
-      def dump_folder
-        "#{Rails.root}/heroku_backups"
-      end
+    def write_log(message)
+      puts message
+    end
 
-      def local_host
-        'localhost'
-      end
+    def check_valid_app(app_name)
+      _output, error = Open3.capture3("heroku apps:info #{app_option(app_name)}")
 
-      def local_user
-        `whoami`.strip!
-      end
+      raise error if valid_error?(error)
+    end
 
-      def dbname
-        YAML.load_file('config/database.yml')['development']['database']
-      end
+    def valid_error?(error)
+      return false if error.blank?
 
-      def check_production!
-        raise 'This is not available in the production environment.' if Rails.env.production?
-      end
-
-      def remove_user_avatars
-        return unless User.new.respond_to?(:avatar)
-
-        User.joins(:avatar_attachment).order(:id).each do |user|
-          user.avatar.purge_later
-        end
-      end
-
-      def remove_accounting_keys
-        company = Company.main
-        return unless company.respond_to?(:quickbooks_access_token)
-
-        company.quickbooks_company_id = nil
-        company.quickbooks_token = nil
-        company.quickbooks_refresh_token = nil
-        company.quickbooks_expires_at = nil
-
-        company.save!(validate: false)
-      end
-
-      def write_log(message)
-        puts message
-      end
-
-      def check_valid_app(app_name)
-        _output, error = Open3.capture3("heroku apps:info #{app_option(app_name)}")
-
-        raise error if valid_error?(error)
-      end
-
-      def valid_error?(error)
-        return false if error.blank?
-
-        IGNORED_HEROKU_ERRORS.select { |ignored_error| error.include?(ignored_error) }.blank?
-      end
+      IGNORED_HEROKU_ERRORS.select { |ignored_error| error.include?(ignored_error) }.blank?
+    end
   end
 end

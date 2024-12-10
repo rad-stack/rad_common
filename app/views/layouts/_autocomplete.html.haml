@@ -1,0 +1,26 @@
+:ruby
+  excluded_ids = local_assigns.key?(:excluded_ids) ? local_assigns[:excluded_ids] : nil
+  allow_new = local_assigns[:allow_new] ? search_label : nil
+  a_element = local_assigns[:association_element]
+  tooltip = local_assigns[:tooltip]
+
+.form-group.string.optional
+  %label.string.optional.col-form-label{ class: defined?(label_class) ? label_class : '' }
+    = search_label
+    - if defined?(show_required_star) && show_required_star == true
+      %span{ title: 'required' }*
+    - if tooltip.present?
+      = icon_tooltip(:span, tooltip)
+
+  %input.form-control.input-medium.ui-autocomplete-input.field-autocomplete{ value: initial_value,
+                                                                             name: search_input_name,
+                                                                             id: search_input_name,
+                                                                             placeholder: search_placeholder,
+                                                                             size: '50',
+                                                                             type: 'text',
+                                                                             autocomplete: 'off',
+                                                                            'data-excluded-ids': excluded_ids,
+                                                                            'data-id-element': id_element,
+                                                                            'data-association-element': a_element,
+                                                                            'data-autocomplete': search_path,
+                                                                            'data-allow-new-model': allow_new }

@@ -2,22 +2,26 @@ module RadCommon
   module ApplicationHelper
     ALERT_TYPES = %i[success info warning danger].freeze unless const_defined?(:ALERT_TYPES)
 
-    def secured_link(record, format: nil)
-      return unless record
+    def secured_link(resource, format: nil, new_tab: false)
+      return unless resource
 
-      style = secured_link_style(record)
-
-      if Pundit.policy!(current_user, record).show?
-        link_to record, record, format: format, class: style
-      elsif style.present?
-        content_tag :span, record, class: style
+      if Pundit.policy!(current_user, resource).show?
+        if new_tab
+          link_to resource_name(resource), resource, format: format, target: '_blank', rel: 'noopener'
+        else
+          link_to resource_name(resource), resource, format: format
+        end
       else
-        record.to_s
+        resource_name(resource)
       end
     end
 
     def show_route_exists_for?(record)
       Rails.application.routes.url_helpers.respond_to? "#{record.class.table_name.singularize}_path"
+    end
+
+    def current_instance_variable
+      instance_variable_get("@#{controller_name.classify.underscore}")
     end
 
     def avatar_image(user, size)
@@ -73,7 +77,7 @@ module RadCommon
     def format_datetime(value, options = {})
       return nil if value.blank?
 
-      format_string = '%-m/%-d/%Y %-l:%M'
+      format_string = '%-m/%-d/%Y %l:%M'
       format_string += ':%S' if options[:include_seconds]
       format_string += ' %p'
       format_string += ' %Z' if options[:include_zone]
@@ -84,19 +88,18 @@ module RadCommon
       value.strftime('%l:%M%P').strip if value.present?
     end
 
-    def rad_form_errors(form)
-      return form.error_notification if form.object.blank?
-
-      message = "Please review the problems below: #{form.object.errors.full_messages.to_sentence}"
-      form.error_notification message: message
-    end
-
     def format_boolean(value)
       if value
-        tag.div(nil, class: 'fa fa-check')
+        tag.div(nil, class: 'fa fa-check', 'aria-label' => true)
       else
-        tag.div(nil, class: 'fa fa-regular fa-circle')
+        tag.div(nil, class: 'fa fa-regular fa-circle', 'aria-label' => false)
       end
+    end
+
+    def format_state(abbreviation)
+      return if abbreviation.blank?
+
+      StateOptions.full_name(abbreviation)
     end
 
     def formatted_decimal_hours(total_minutes)
@@ -115,6 +118,18 @@ module RadCommon
       regex_str.gsub!(')', '\\)')
       regex_str = "(#{regex_str})"
       Regexp.new regex_str
+    end
+
+    def enum_to_translated_option(record, enum_name)
+      RadicalEnum.new(record.class, enum_name).translated_option(record)
+    end
+
+    def options_for_enum(klass, enum_name)
+      RadicalEnum.new(klass, enum_name).options
+    end
+
+    def enum_translation(klass, enum_name, value)
+      RadicalEnum.new(klass, enum_name).translation(value)
     end
 
     def bootstrap_flash
@@ -138,6 +153,7 @@ module RadCommon
     def bootstrap_flash_type(type)
       type = type.to_sym
 
+      type = :success if type == :notice
       type = :danger  if type == :alert
       type = :danger  if type == :error
 
@@ -148,16 +164,13 @@ module RadCommon
       tag.button(sanitize('&times;'), type: 'button', class: 'close', 'data-dismiss': 'alert')
     end
 
-    def table_row_style(record, style_class: 'table-danger')
-      return unless record.present? && record.respond_to?(:active?) && !record.active?
-
-      style_class
+    def base_errors(form)
+      form.error :base, class: 'alert alert-danger' if form.object.errors[:base].present?
     end
 
-    def secured_link_style(record)
-      return unless record.present? && record.respond_to?(:active?) && !record.active?
-
-      'text-danger'
+    def form_errors_alert(form)
+      form.error_notification message: "#{I18n.t('simple_form.error_notification.default_message')} " \
+                                       "#{form.object.errors.full_messages.join('. ')}"
     end
 
     def icon(icon, text = nil, options = {})
@@ -169,64 +182,37 @@ module RadCommon
     end
 
     def verify_sign_up
-      raise RadIntermittentException if RadConfig.disable_sign_up?
+      raise RadicallyIntermittentException if RadConfig.disable_sign_up?
     end
 
     def sign_up_roles
-      SecurityRole.allow_sign_up.sorted
+      SecurityRole.allow_sign_up.by_name
     end
 
     def invite_roles
-      SecurityRole.allow_invite.sorted
+      SecurityRole.allow_invite.by_name
     end
 
     def verify_invite
-      raise RadIntermittentException if RadConfig.disable_invite?
+      raise RadicallyIntermittentException if RadConfig.disable_invite?
     end
 
     def verify_manually_create_users
-      return if RadConfig.manually_create_users?
+      return if RadConfig.disable_sign_up? && RadConfig.disable_invite?
 
-      raise RadIntermittentException
+      raise RadicallyIntermittentException
     end
 
-    def export_button(model_name, format: Exporter::DEFAULT_FORMAT, override_path: nil, additional_params: {},
-                      policy_model: nil)
-      return unless policy(policy_model.presence || model_name.constantize.new).export?
+    def export_button(model_name)
+      return unless policy(model_name.constantize.new).export?
 
-      icon, text = format == :csv ? [:file, 'Export to File'] : ['file-pdf', 'Export to PDF']
-      export_path = override_path.presence || "export_#{model_name.tableize}_path"
-      link_to(icon(icon, text),
-              send(export_path, params.permit!.to_h.merge(format: format).deep_merge(additional_params)),
+      link_to(icon(:file, 'Export to File'),
+              send("export_#{model_name.tableize}_path", params.permit!.to_h.merge(format: :csv)),
               class: 'btn btn-secondary btn-sm')
     end
 
-    def export_buttons(model_name, **options)
-      %i[csv pdf].map { |format| export_button(model_name, format: format, **options) }.compact
-    end
-
-    def onboarded?
-      Onboarding.new(current_user).onboarded?
-    end
-
-    def pdf_output?
-      return true if request.nil?
-
-      request.format.pdf?
-    end
-
-    def created_by_show_item(record)
-      { label: 'Created By', value: secured_link(record.created_by) }
-    end
-
-    def translated_attribute_label(record, attribute)
-      translation = I18n.t "activerecord.attributes.#{record.class.to_s.underscore}.#{attribute}"
-
-      if translation.downcase.include?('translation missing')
-        attribute.to_s.titlecase
-      else
-        translation
-      end
+    def portal_domain?
+      request.host_with_port == RadConfig.portal_host_name!
     end
 
     private
@@ -235,6 +221,10 @@ module RadCommon
         { small: 25,
           medium: 50,
           large: 200 }[size_as_symbol]
+      end
+
+      def resource_name(resource)
+        resource.to_s
       end
   end
 end

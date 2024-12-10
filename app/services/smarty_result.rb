@@ -71,8 +71,7 @@ class SmartyResult
     end
 
     def non_postal_match?
-      dpv_match_code = analysis['dpv_match_code']
-      (dpv_match_code.nil? || dpv_match_code == 'N') && analysis['enhanced_match'].include?('non-postal-match')
+      analysis['dpv_match_code'] == 'N' && analysis['enhanced_match'] == 'non-postal-match'
     end
 
     def missing_secondary?

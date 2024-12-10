@@ -1,10 +1,7 @@
 = reactivate_user_warning @user
 
 .card
-  = render 'layouts/card_header',
-           no_new_button: !RadConfig.manually_create_users?,
-           additional_actions: user_actions(@user)
-
+  = render 'layouts/card_header', no_new_button: !manually_create_users?, additional_actions: user_actions(@user)
   .card-body
     = render 'layouts/show_data_columns', data: user_show_data(@user), resource: @user
 

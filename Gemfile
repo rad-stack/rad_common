@@ -13,19 +13,19 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-devise.git',
-                            branch: 'authy-to-twilio-verify'
+gem 'devise-twilio-verify', git: 'https://github.com/injuryscripts/twilio-verify-devise.git'
 
 group :test do
   gem 'capybara-selenium'
   gem 'parallel_tests'
-  gem 'pdf-reader'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
   gem 'timecop'
+  gem 'webdrivers', '~> 4.6.1'
 end
 
 group :development, :test do
   gem 'bootsnap', require: false
   gem 'pry'
+  gem 'yard'
 end

@@ -2,6 +2,10 @@ require 'mail'
 
 class RadConfig
   class << self
+    def default_language_code!
+      config_item! :language_code
+    end
+
     def admin_email!
       secret_config_item! :admin_email
     end
@@ -90,14 +94,6 @@ class RadConfig
       secret_config_item! :jwt_secret
     end
 
-    def jwt_enabled?
-      secret_config_item(:jwt_secret).present?
-    end
-
-    def timeout_hours!
-      config_item! :timeout_hours
-    end
-
     def test_phone_number
       secret_config_item :test_phone_number
     end
@@ -140,6 +136,10 @@ class RadConfig
       secret_config_item! :twilio_phone_number
     end
 
+    def twilio_mms_phone_number!
+      secret_config_item(:twilio_mms_phone_number).presence || twilio_phone_number!
+    end
+
     def twilio_account_sid!
       secret_config_item! :twilio_account_sid
     end
@@ -152,16 +152,11 @@ class RadConfig
       secret_config_item! :twilio_verify_service_sid
     end
 
-    def twilio_verify_enabled?
-      boolean_config_item! :twilio_verify_enabled
-    end
 
-    def twilio_verify_all_users?
-      boolean_config_item! :twilio_verify_all_users
-    end
-
-    def twilio_verify_remember_device!
-      config_item!(:twilio_verify_remember_device_days).days
+    # Config item should be in sync with countries enabled for messaging in twilio account
+    # https://console.twilio.com/us1/develop/sms/settings/geo-permissions
+    def twilio_countries_enabled!
+      config_item!(:twilio_countries_enabled).split(' ')
     end
 
     def seeded_users!
@@ -172,6 +167,20 @@ class RadConfig
 
     def app_name!
       config_item! :app_name
+    end
+
+    def portal_app_name!(user = nil)
+      return config_item!(:portal_app_name) if user.blank?
+
+      if user.respond_to?(:portal_patient?) && user.portal_patient?
+        config_item! :portal_app_name
+      elsif user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
+        config_item! :prescriber_portal_app_name
+      elsif user.respond_to?(:portal_attorney?) && user.portal_attorney?
+        config_item! :attorney_portal_app_name
+      else
+        config_item! :portal_app_name
+      end
     end
 
     def host_name!
@@ -186,34 +195,38 @@ class RadConfig
       config_item(:client_table_name) || 'clients'
     end
 
-    def impersonate?
-      return true unless Rails.env.production?
+    def portal_host_name!(user = nil)
+      return config_item!(:portal_host_name) if user.blank?
 
+      if user.respond_to?(:portal_patient?) && user.portal_patient?
+        config_item! :portal_host_name
+      elsif user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
+        config_item! :prescriber_portal_host_name
+      elsif user.respond_to?(:portal_attorney?) && user.portal_attorney?
+        config_item! :attorney_portal_host_name
+      else
+        config_item! :portal_host_name
+      end
+    end
+
+    def portal?
+      boolean_config_item! :portal
+    end
+
+    def impersonate?
       boolean_config_item! :impersonate
     end
 
     def avatar?
-      boolean_config_item! :use_avatar
+      false
     end
 
-    def switch_languages?
-      boolean_config_item! :switch_languages
+    def twilio_verify_enabled?
+      boolean_config_item! :twilio_verify_enabled
     end
 
-    def require_mobile_phone?
-      boolean_config_item! :require_mobile_phone
-    end
-
-    def storage_config_override?
-      boolean_config_item! :storage_config_override
-    end
-
-    def database_config_override?
-      boolean_config_item! :database_config_override
-    end
-
-    def procfile_override?
-      boolean_config_item! :procfile_override
+    def twilio_verify_internal_only?
+      boolean_config_item! :twilio_verify_internal_only
     end
 
     def external_users?
@@ -232,40 +245,8 @@ class RadConfig
       boolean_config_item! :disable_invite
     end
 
-    def manually_create_users?
-      boolean_config_item! :manually_create_users
-    end
-
-    def pending_users?
-      boolean_config_item! :pending_users
-    end
-
-    def show_help_menu?
-      boolean_config_item! :show_help_menu
-    end
-
-    def force_marketing_site?
-      boolean_config_item! :force_marketing_site
-    end
-
-    def allow_marketing_site?
-      boolean_config_item! :allow_marketing_site
-    end
-
-    def canadian_addresses?
-      boolean_config_item! :canadian_addresses
-    end
-
-    def saved_search_filters_enabled?
-      boolean_config_item! :saved_search_filters_enabled
-    end
-
-    def legal_docs?
-      boolean_config_item! :legal_docs
-    end
-
-    def react_app?
-      config_item(:react_app).presence || false
+    def shared_database?
+      boolean_config_item! :shared_database
     end
 
     def favicon_filename!
@@ -316,10 +297,6 @@ class RadConfig
       array_config_item! :additional_user_params
     end
 
-    def additional_user_profile_params!
-      array_config_item! :additional_user_profile_params
-    end
-
     def restricted_audit_attributes!
       array_config_item! :restricted_audit_attributes
     end
@@ -332,9 +309,7 @@ class RadConfig
     end
 
     def system_usage_models!
-      array_config_item!(:system_usage_models) +
-        [['ContactLogRecipient', 'successful', 'Successful Contacts'],
-         ['ContactLogRecipient', 'failed', 'Failed Contacts']]
+      array_config_item! :system_usage_models
     end
 
     def global_validity_days!
@@ -367,30 +342,6 @@ class RadConfig
 
     def user_expirable?
       Devise.mappings[:user].expirable?
-    end
-
-    def password_expirable?
-      Devise.mappings[:user].password_expirable?
-    end
-
-    def allow_crawling?
-      boolean_config_item! :allow_crawling
-    end
-
-    def always_crawl?
-      boolean_config_item! :always_crawl
-    end
-
-    def crawlable_subdomains
-      array_config_item! :crawlable_subdomains
-    end
-
-    def last_first_user?
-      boolean_config_item! :last_first_user
-    end
-
-    def legacy_rails_config?
-      boolean_config_item! :legacy_rails_config
     end
 
     def secret_config_item!(item)
@@ -436,7 +387,10 @@ class RadConfig
       check_aws!
       check_twilio_verify!
       check_smarty!
-      check_marketing!
+    end
+
+    def enable_super_search?
+      boolean_config_item! :enable_super_search
     end
 
     private
@@ -466,12 +420,6 @@ class RadConfig
         return if smarty_auth_id.blank? && smarty_auth_token.blank?
 
         raise 'include all or none of smarty_auth_id and smarty_auth_token'
-      end
-
-      def check_marketing!
-        return unless force_marketing_site? && !allow_marketing_site?
-
-        raise 'force_marketing_site not allowed'
       end
 
       def override_variable(item)

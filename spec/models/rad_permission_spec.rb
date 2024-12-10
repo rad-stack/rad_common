@@ -1,42 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe RadPermission do
-  let(:user) { create :admin }
-
+RSpec.describe RadPermission, type: :model do
   describe 'label' do
     subject { described_class.new(permission).label }
 
     let(:permission) { 'read_division' }
 
     it { is_expected.to eq 'Read Division' }
-  end
-
-  describe 'user_categories' do
-    subject { described_class.user_categories(user).map(&:first) }
-
-    let(:result) { %w[Admin Division User] }
-
-    it { is_expected.to eq result }
-  end
-
-  describe 'permission_category_name' do
-    subject { described_class.send(:permission_category_name, model_category_names, permission_name) }
-
-    let(:model_category_names) do
-      %w[attorney category client company insurance_company division duplicate notification]
-    end
-
-    context 'with Company model' do
-      let(:permission_name) { 'update_company' }
-
-      it { is_expected.to eq 'Company' }
-    end
-
-    context 'with InsuranceCompany model' do
-      let(:permission_name) { 'update_insurance_company' }
-
-      it { is_expected.to eq 'Insurance Company' }
-    end
   end
 
   describe 'short_label' do

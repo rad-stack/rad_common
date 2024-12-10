@@ -21,30 +21,24 @@ RSpec.describe PhoneNumberValidator do
   let(:phone_number_stripped) do
     phone_number.delete('(').delete(')').delete('-').delete(' ')
   end
-  let(:valid_phone_formats) do
-    ['1233211234', '123-321-1234', '123 321 1234', ' 123 321 1234 ', '+11233211234',
-     '(123) 321-1234', '123-321-1234', '1-123-321-1234',
-     '21233211234', '+1 (123) 321-1234', '(123)321-1234', '1.123.321.1234', '123.321.1234']
-  end
-  let(:invalid_phone_formats) do
-    ['1234', '123-321-1234 ext 5', '(800) 748-2030 ext. 2326 or (800) 550-8582', 'not_a_number']
-  end
 
   it 'formats phone numbers before validating' do
-    valid_phone_formats.each do |phone_number|
+    numbers = ['1233211234', '123-321-1234', '123 321 1234', ' 123 321 1234 ']
+
+    numbers.each do |phone_number|
       model = TestPhoneModel.new
       model.phone_number = phone_number
-
       expect(model).to be_valid
-      expect(model.phone_number).to eq '(123) 321-1234'
     end
   end
 
   it 'can not be valid' do
-    invalid_phone_formats.each do |phone_number|
+    invalid_numbers = %w([232332 1234 -])
+
+    invalid_numbers.each do |phone_number|
       model = TestPhoneModel.new
       model.phone_number = phone_number
-      expect(model).not_to be_valid
+      expect(model).to be_invalid
       expect(model.errors.full_messages.to_s).to include 'number invalid, format must be'
     end
   end
@@ -64,15 +58,21 @@ RSpec.describe PhoneNumberValidator do
 
   describe 'twilio', :vcr do
     let(:mobile_phone) { create :phone_number, :mobile }
-    let(:twilio_alt_phone_number) { RadConfig.secret_config_item!(:twilio_alt_phone_number) }
-    let(:twilio_alt_account_sid) { RadConfig.secret_config_item!(:twilio_alt_account_sid) }
-    let(:twilio_alt_auth_token) { RadConfig.secret_config_item!(:twilio_alt_auth_token) }
 
     before do
-      allow(RadConfig).to receive_messages(twilio_enabled?: true,
-                                           twilio_phone_number!: twilio_alt_phone_number,
-                                           twilio_account_sid!: twilio_alt_account_sid,
-                                           twilio_auth_token!: twilio_alt_auth_token)
+      allow_any_instance_of(RadicalTwilio).to receive(:twilio_enabled?).and_return true
+
+      allow(RadConfig).to receive(:twilio_phone_number!)
+        .and_return RadConfig.secret_config_item!(:twilio_alt_phone_number)
+
+      allow(RadConfig).to receive(:twilio_mms_phone_number!)
+        .and_return RadConfig.secret_config_item!(:twilio_alt_mms_phone_number)
+
+      allow(RadConfig).to receive(:twilio_account_sid!)
+        .and_return RadConfig.secret_config_item!(:twilio_alt_account_sid)
+
+      allow(RadConfig).to receive(:twilio_auth_token!)
+        .and_return RadConfig.secret_config_item!(:twilio_alt_auth_token)
     end
 
     it 'validates with mobile phone number' do

@@ -2,18 +2,14 @@ class NotificationType < ApplicationRecord
   has_many :notification_security_roles, dependent: :destroy
   has_many :security_roles, through: :notification_security_roles, dependent: :destroy
   has_many :notification_settings, dependent: :destroy
-  has_many :notifications, dependent: :destroy
 
   attr_accessor :payload
 
-  scope :sorted, -> { order(:type) }
+  alias_attribute :to_s, :description
 
-  validates_with EmailAddressValidator, fields: [:bcc_recipient]
+  scope :by_type, -> { order(:type) }
+
   validate :validate_auth
-
-  def to_s
-    description
-  end
 
   def email_enabled?
     true
@@ -28,7 +24,7 @@ class NotificationType < ApplicationRecord
   end
 
   def mailer_class
-    'NotificationMailer'
+    'RadbearMailer'
   end
 
   def mailer_method
@@ -45,24 +41,12 @@ class NotificationType < ApplicationRecord
     "#{description}: #{subject_record}"
   end
 
-  def mailer_contact_log_from_user; end
-
   def mailer_options
-    items = {}
+    return {} if subject_url.blank?
 
-    if subject_url.present?
-      items = items.merge({ email_action: { message: 'Click here to view the details.',
-                                            button_text: 'View',
-                                            button_url: subject_url } })
-    end
-
-    if mailer_contact_log_from_user.present?
-      items = items.merge({ contact_log_from_user: mailer_contact_log_from_user })
-    end
-
-    items = items.merge({ contact_log_record: subject_record }) if subject_record.present?
-
-    items
+    { email_action: { message: 'Click here to view the details.',
+                      button_text: 'View',
+                      button_url: subject_url } }
   end
 
   def exclude_user_ids
@@ -108,26 +92,14 @@ class NotificationType < ApplicationRecord
     users
   end
 
-  def self.main(payload = nil)
-    item = NotificationType.find_by(type: name)
-
-    if item.present?
-      item.payload = payload
-      return item
-    end
-
-    item = if name.constantize.new.auth_mode == :security_roles
-             name.constantize.create! security_roles: [SecurityRole.admin_role]
-           else
-             name.constantize.create!
-           end
-
-    item.payload = payload
-    item
+  def self.main
+    NotificationType.find_by!(type: name)
   end
 
-  def notify!
+  def notify!(payload)
     return unless active?
+
+    @payload = payload
 
     notify_email!
     notify_feed!
@@ -146,27 +118,6 @@ class NotificationType < ApplicationRecord
     auth_mode == :absolute_users
   end
 
-  def notify_user_ids_all
-    if security_roles?
-      users = permitted_users
-    else
-      users = User.where(id: absolute_user_ids)
-      inactive_ids = users.pluck(:id) - users.active.pluck(:id)
-      raise "absolute users must be active: #{inactive_ids}" if inactive_ids.present?
-    end
-
-    user_ids = users.where
-                    .not(id: NotificationSetting.where(notification_type: self, enabled: false)
-                                                .pluck(:user_id)).pluck(:id)
-
-    raise "no users to notify: #{type}" if security_roles? && user_ids.count.zero?
-
-    return user_ids unless security_roles?
-    raise 'exclude_user_ids is invalid' unless exclude_user_ids.is_a?(Array)
-
-    user_ids - exclude_user_ids
-  end
-
   private
 
     def validate_auth
@@ -178,14 +129,13 @@ class NotificationType < ApplicationRecord
       return unless email_enabled?
 
       id_list = notify_user_ids_opted(:email)
-      return if id_list.count.zero?
+      return if id_list.none?
 
-      if mailer_class == 'NotificationMailer' && mailer_method == 'simple_message'
-        NotificationMailer.simple_message(self,
-                                          id_list,
-                                          mailer_subject,
-                                          mailer_message,
-                                          mailer_options).deliver_later
+      if mailer_class == 'RadbearMailer' && mailer_method == 'simple_message'
+        RadbearMailer.simple_message(id_list,
+                                     mailer_subject,
+                                     mailer_message,
+                                     mailer_options.merge(notification_settings_link: true)).deliver_later
       else
         mailer = mailer_class.constantize
 
@@ -193,7 +143,7 @@ class NotificationType < ApplicationRecord
           raise 'all notification mailers must subclass NotificationMailer'
         end
 
-        mailer.send(mailer_method, self, id_list, payload).deliver_later
+        mailer.send(mailer_method, id_list, payload).deliver_later
       end
     end
 
@@ -201,7 +151,7 @@ class NotificationType < ApplicationRecord
       return unless feed_enabled?
 
       all_ids = notify_user_ids_all
-      return if all_ids.count.zero?
+      return if all_ids.none?
 
       opted_ids = notify_user_ids_opted(:feed)
 
@@ -215,7 +165,7 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_sms!
-      return unless sms_enabled? && sms_content && RadConfig.twilio_enabled?
+      return unless sms_enabled? && sms_content && RadicalTwilio.new.twilio_enabled?
 
       id_list = notify_user_ids_opted(:sms)
 
@@ -224,9 +174,28 @@ class NotificationType < ApplicationRecord
                                        user_id,
                                        user_id,
                                        nil,
-                                       false,
-                                       contact_log_record: subject_record
+                                       false
       end
+    end
+
+    def notify_user_ids_all
+      if security_roles?
+        users = permitted_users
+      else
+        users = User.where(id: absolute_user_ids)
+        raise 'absolute users must be active' unless users.size == users.active.size
+      end
+
+      user_ids = users.where
+                      .not(id: NotificationSetting.where(notification_type: self, enabled: false)
+                      .pluck(:user_id)).pluck(:id)
+
+      raise 'no users to notify' if security_roles? && user_ids.none?
+
+      return user_ids unless security_roles?
+      raise 'exclude_user_ids is invalid' unless exclude_user_ids.is_a?(Array)
+
+      user_ids - exclude_user_ids
     end
 
     def notify_user_ids_opted(notification_method)

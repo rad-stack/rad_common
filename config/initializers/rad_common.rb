@@ -1,17 +1,19 @@
-require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/app/services/rad_config.rb"
+require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record" \
+        '/base/schema_validations'
+
+require 'httpclient'
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'SMS'
   inflect.acronym 'PDF'
   inflect.acronym 'CRM'
   inflect.acronym 'CSV'
-  inflect.acronym 'BCC'
 end
 
-# see Task 25
-Rails.application.config.active_storage.variant_processor = :mini_magick
+ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 
 Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
+Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css rad_common/radbear_mailer_reset.css]
 
 RadConfig.check_validity!
 
@@ -47,8 +49,12 @@ if Rails.env.staging?
 end
 
 Devise.setup do |config|
-  config.mailer = 'RadDeviseMailer'
+  config.mailer = 'RadbearDeviseMailer'
 end
+
+# https://swell.radicalbear.com/tasks/37444
+# https://github.com/collectiveidea/audited/issues/631
+Rails.configuration.active_record.use_yaml_unsafe_load = true
 
 Audited.current_user_method = :true_user
 Audited.ignored_attributes += ['address_changes']
@@ -57,9 +63,18 @@ Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
 end
 
-Rails.application.config.after_initialize do
-  default_allowed_tags = Class.new.include(ActionText::ContentHelper).new.sanitizer_allowed_attributes
-  ActionText::ContentHelper.allowed_attributes = default_allowed_tags.add('style')
-end
-
 AuthTrail.geocode = false
+
+module Kaminari
+  # monkey patch to fix paging on engine routes
+  # https://github.com/radicalbear/rad_common/pull/211/files
+  # https://github.com/kaminari/kaminari/issues/457
+
+  module Helpers
+    class Tag
+      def page_url_for(page)
+        (@options[:routes_proxy] || @template).url_for @params.merge(@param_name => (page <= 1 ? nil : page))
+      end
+    end
+  end
+end

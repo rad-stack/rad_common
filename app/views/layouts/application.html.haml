@@ -4,21 +4,19 @@
     %meta{ charset: 'utf-8' }
     %meta{ 'http-equiv': 'X-UA-Compatible', content: 'IE=Edge,chrome=1' }
     %meta{ name: 'viewport', content: 'width=device-width, initial-scale=1.0' }
-    %link{ rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }
     %title= content_for?(:title) ? yield(:title) : RadConfig.app_name!
     = csrf_meta_tags
-    = favicon_pack_tag RadConfig.favicon_filename!, rel: 'shortcut icon'
+    = favicon_link_tag RadConfig.favicon_filename!, rel: 'shortcut icon'
     = javascript_pack_tag 'application'
     = stylesheet_pack_tag 'application'
 
   %body
     = render 'layouts/navigation'
-    = render 'layouts/toast'
     .container-fluid.content
       .row
         .col-lg-12
           - if user_signed_in?
             = render 'layouts/global_search'
-          = render 'layouts/header'
           = bootstrap_flash
           = yield
+          = render 'layouts/footer'

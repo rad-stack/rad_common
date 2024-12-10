@@ -128,19 +128,6 @@ class CardPresenter
     raise 'missing card header icon'
   end
 
-  def card_style
-    return local_assigns[:card_style] if local_assigns[:card_style].present?
-
-    unless %w[show edit].include?(action_name) &&
-           instance.present? &&
-           instance.respond_to?(:active?) &&
-           !instance.active?
-      return
-    end
-
-    'alert-danger'
-  end
-
   def output_title
     return title if title.present?
     return "New #{object_label}" if action_name == 'new' || action_name == 'create'
@@ -152,15 +139,16 @@ class CardPresenter
     end
 
     if action_name == 'edit' || action_name == 'update'
-      title_items = ["Editing #{object_label}:"]
+      the_title = "Editing #{object_label}:"
 
-      title_items += if no_show_link
-                       [' ', instance_label]
-                     else
-                       [' ', @view_context.link_to(instance_label, instance)]
-                     end
+      if no_show_link
+        the_title += " #{instance_label}"
+      else
+        the_title += " #{@view_context.link_to(instance_label, instance)}"
+        the_title = the_title.html_safe
+      end
 
-      return @view_context.safe_join(title_items)
+      return the_title
     end
 
     raise 'missing card header title'
@@ -174,7 +162,6 @@ class CardPresenter
     actions.push(duplicate_action) if include_duplicate_action?
     actions.push(duplicates_action) if include_duplicates_action?
     actions.push(delete_action) if include_delete_action?
-    actions.push(tools_button) if include_tools_button?
 
     actions
   end
@@ -185,7 +172,7 @@ class CardPresenter
     actions += external_actions
 
     if (action_name == 'edit' || action_name == 'update' || action_name == 'show') &&
-       !no_new_button && current_user && Pundit.policy!(current_user, klass.new).new?
+       !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass).new?
 
       actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"),
                                          new_url,
@@ -200,7 +187,7 @@ class CardPresenter
     end
 
     if action_name == 'index' && !no_new_button && current_user &&
-       Pundit.policy!(current_user, klass.new).new?
+       Pundit.policy!(current_user, check_policy_klass).new?
 
       actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"),
                                          new_url,
@@ -225,13 +212,29 @@ class CardPresenter
       klass.model_name.human.titleize
     end
 
+    def check_policy_klass
+      if current_user.portal?
+        [:portal, klass.new]
+      else
+        klass.new
+      end
+    end
+
+    def check_policy_instance
+      if current_user.portal?
+        [:portal, instance]
+      else
+        instance
+      end
+    end
+
     def include_edit_action?
       action_name == 'show' &&
         !no_edit_button &&
         instance&.persisted? &&
         current_user &&
-        Pundit.policy!(current_user, klass.new).update? &&
-        Pundit.policy!(current_user, instance).update?
+        Pundit.policy!(current_user, check_policy_klass).update? &&
+        Pundit.policy!(current_user, check_policy_instance).update?
     end
 
     def edit_action
@@ -247,20 +250,20 @@ class CardPresenter
 
     def duplicate_action
       @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                            @view_context.resolve_duplicates_path(model: instance.class, id: instance.id),
+                            "/rad_common/duplicates?model=#{instance.class}&id=#{instance.id}",
                             class: 'btn btn-warning btn-sm')
     end
 
     def include_duplicates_action?
       action_name == 'index' &&
         RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
-        Pundit.policy!(current_user, klass.new).resolve_duplicates? &&
+        Pundit.policy!(current_user, klass.new).index_duplicates? &&
         klass.high_duplicates.size.positive?
     end
 
     def duplicates_action
       @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                            @view_context.resolve_duplicates_path(model: klass),
+                            "/rad_common/duplicates?model=#{klass}",
                             class: 'btn btn-warning btn-sm')
     end
 
@@ -269,85 +272,8 @@ class CardPresenter
         !no_delete_button &&
         instance&.persisted? &&
         current_user &&
-        Pundit.policy!(current_user, klass.new).destroy? &&
-        Pundit.policy!(current_user, instance).destroy?
-    end
-
-    def include_tools_button?
-      tool_actions.any?
-    end
-
-    def tools_button
-      @view_context.render 'layouts/card_tools_button', actions: tool_actions
-    end
-
-    def tool_actions
-      @tool_actions ||= [show_history_action] + contact_log_actions + [reset_duplicates_action].compact
-    end
-
-    def show_history_action
-      return unless @view_context.user_signed_in? &&
-                    current_user.internal? &&
-                    instance.present? &&
-                    instance.class.name != 'ActiveStorage::Attachment' &&
-                    instance.respond_to?(:audits) &&
-                    instance.persisted? &&
-                    Pundit.policy!(current_user, instance).audit?
-
-      { label: 'Audit History',
-        link: @view_context.audits_path(search: { single_record: "#{instance.class}:#{instance.id}" }) }
-    end
-
-    def contact_log_actions
-      return [] unless action_name == 'show' &&
-                       instance&.persisted? &&
-                       current_user &&
-                       Pundit.policy!(current_user, ContactLog.new).index? &&
-                       contact_logs?
-
-      return user_contact_log_actions if instance.is_a?(User)
-
-      [{ label: 'Contact Logs', link: contact_log_record_action }]
-    end
-
-    def user_contact_log_actions
-      [{ label: 'Contact Logs to User',
-         link: @view_context.contact_logs_path(search: { 'contact_log_recipients.to_user_id': instance.id }) },
-       { label: 'Contact Logs from User',
-         link: @view_context.contact_logs_path(search: { 'contact_logs.from_user_id': instance.id }) },
-       { label: 'Contact Logs w/ User as Subject', link: contact_log_record_action },
-       { label: 'All Associated Contact Logs',
-         link: @view_context.contact_logs_path(search: { associated_with_user: instance.id }) }]
-    end
-
-    def contact_log_record_action
-      @view_context.contact_logs_path(search: { 'contact_logs.record_type': instance.class.name,
-                                                record_id_equals: instance.id })
-    end
-
-    def contact_logs?
-      # TODO: need to make sure these queries are very fast since it's gonna hit on every show action
-      # return ContactLog.associated_with_user(instance.id).limit(1).exists? if instance.is_a?(User)
-      return true if instance.is_a?(User) # TODO: temporary hack until query optimization is verified
-
-      ContactLog.where(record: instance).limit(1).exists?
-    end
-
-    def reset_duplicates_action
-      return unless @view_context.user_signed_in? &&
-                    current_user.internal? &&
-                    instance.present? &&
-                    instance.respond_to?(:persisted?) &&
-                    instance.persisted? &&
-                    RadCommon::AppInfo.new.duplicates_enabled?(instance.class.name) &&
-                    Pundit.policy!(current_user, instance).reset_duplicates?
-
-      confirm_message = 'This will reset non-duplicates and regenerate possible matches for this record, proceed?'
-
-      { label: 'Reset Duplicates',
-        link: @view_context.reset_duplicates_path(model: instance.class, id: instance.id),
-        method: :put,
-        data: { confirm: confirm_message } }
+        Pundit.policy!(current_user, check_policy_klass).destroy? &&
+        Pundit.policy!(current_user, check_policy_instance).destroy?
     end
 
     def delete_action
@@ -361,13 +287,13 @@ class CardPresenter
     def show_index_button?
       return false if no_index_button
       return false unless %w[show edit update new create].include?(action_name)
-      return false unless current_user && Pundit.policy!(current_user, klass.new).index?
+      return false unless current_user && Pundit.policy!(current_user, check_policy_klass).index?
       return false if no_records?
 
       true
     end
 
     def no_records?
-      Pundit.policy_scope!(current_user, klass).count.zero?
+      Pundit.policy_scope!(current_user, klass).none?
     end
 end

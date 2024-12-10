@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=OrLando&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=fl&street=4000%20Central%20Florida%20Boulevard&street2&urbanization&zipcode=32816
+    uri: https://us-street.api.smartystreets.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=OrLando&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=fl&street=4000%20Central%20Florida%20Boulevard&street2&urbanization&zipcode=32816
     body:
       encoding: US-ASCII
       string: ''
@@ -12,9 +12,9 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.17.2)
+      - smartystreets (sdk:ruby@5.14.13)
       Host:
-      - us-street.api.smarty.com
+      - us-street.api.smartystreets.com
       Content-Type:
       - application/json
   response:
@@ -25,7 +25,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 21 Jun 2024 18:24:44 GMT
+      - Thu, 22 Sep 2022 09:31:30 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -33,9 +33,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"4000 Central
-        Florida Blvd","last_line":"Orlando FL 32816-8005","delivery_point_barcode":"328168005007","components":{"primary_number":"4000","street_name":"Central
-        Florida","street_suffix":"Blvd","city_name":"Orlando","default_city_name":"Orlando","state_abbreviation":"FL","zipcode":"32816","plus4_code":"8005","delivery_point":"00","delivery_point_check_digit":"7"},"metadata":{"record_type":"S","zip_type":"Unique","county_fips":"12095","county_name":"Orange","carrier_route":"C000","congressional_district":"10","rdi":"Commercial","elot_sequence":"0001","elot_sort":"A","latitude":28.59608,"longitude":-81.20403,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AAU1","active":"Y","footnotes":"N#Q#","enhanced_match":"postal-match"}}]
-
-        '
-  recorded_at: Fri, 21 Jun 2024 18:24:44 GMT
-recorded_with: VCR 6.2.0
+        Florida Blvd","last_line":"Orlando FL 32816-8005","components":{"primary_number":"4000","street_name":"Central
+        Florida","street_suffix":"Blvd","city_name":"Orlando","default_city_name":"Orlando","state_abbreviation":"FL","zipcode":"32816","plus4_code":"8005","delivery_point":"00","delivery_point_check_digit":"7"},"metadata":{"record_type":"S","zip_type":"Unique","county_fips":"12095","county_name":"Orange","carrier_route":"C000","elot_sequence":"0001","elot_sort":"A","latitude":28.596080,"longitude":-81.204030,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AAU1","active":"Y","footnotes":"N#Q#"}}]'
+  recorded_at: Thu, 22 Sep 2022 09:31:30 GMT
+recorded_with: VCR 6.1.0

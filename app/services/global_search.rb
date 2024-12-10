@@ -11,9 +11,11 @@ class GlobalSearch
 
   def scopes
     raw_scopes = RadConfig.global_search_scopes!
+    raw_scopes = raw_scopes.select { |item| item[:show_in_portal] } if current_user.portal?
 
     raw_scopes = raw_scopes.select do |item|
-      Pundit.policy!(current_user, item[:model].constantize).global_search?
+      Pundit.policy!(current_user,
+                     GlobalAutocomplete.check_policy_klass(current_user, item[:model].constantize)).global_search?
     end
 
     if current_user.global_search_default.blank?
