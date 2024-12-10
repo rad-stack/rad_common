@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/jayywolff/twilio-verify-devise.git
+  remote: https://github.com/rad-stack/twilio-verify-devise.git
   revision: 100fe38b039916b679a2259fba39216be141cba4
   branch: authy-to-twilio-verify
   specs:
