@@ -4,19 +4,20 @@ class NotificationTypesController < ApplicationController
   def index
     authorize NotificationType
     skip_policy_scope
-    @notification_types = NotificationType.sorted
+    @notification_types = NotificationType.by_type
   end
 
   def edit; end
 
   def update
     @notification_type.active = params[type_param_name][:active]
-    @notification_type.bcc_recipient = params[type_param_name][:bcc_recipient]
     @notification_type.security_roles = resolve_roles(params[type_param_name][:security_roles])
 
     if @notification_type.save
-      redirect_to notification_types_path, notice: 'Notification Type updated.'
+      flash[:success] = 'Notification Type updated.'
+      redirect_to '/rad_common/notification_types'
     else
+      flash[:error] = "Unable to update notification type: #{@notification_type.errors.full_messages.join(',')}"
       render :edit
     end
   end

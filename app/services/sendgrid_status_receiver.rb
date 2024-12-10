@@ -1,2 +1,0 @@
-class SendgridStatusReceiver < RadSendgridStatusReceiver
-end

@@ -1,0 +1,27 @@
+= f.input "#{association}_id", as: :hidden
+= f.input association, as: :hidden
+
+:ruby
+  excluded_ids = local_assigns.has_key?(:excluded_ids) ? local_assigns[:excluded_ids] : nil
+  search_placeholder = local_assigns[:initial_value].presence ||
+                       local_assigns[:search_placeholder] ||
+                       "Start typing to search for #{association.to_s.humanize}"
+  show_required_star = local_assigns.has_key?(:required) ? local_assigns[:required] : false
+  search_label = local_assigns.has_key?(:search_label) ? local_assigns[:search_label] : association.to_s.titleize
+  tooltip = local_assigns[:tooltip].presence ||
+            "Search for the intended #{association.to_s.humanize}, "\
+            'then select it from the dropdown that appears below.'
+  # TODO: Make this more dynamic, this currently drives the name for the accessor which has to be defined
+  # on hte model when allowing new records to be created through the search
+  input_name = local_assigns[:allow_new] ? "#{base_object}[#{association}_name]" : "#{association}_name_search"
+= render 'layouts/autocomplete', search_path: search_path,
+                                 search_input_name: input_name,
+                                 search_placeholder: search_placeholder,
+                                 show_required_star: show_required_star,
+                                 search_label: search_label,
+                                 initial_value: initial_value,
+                                 excluded_ids: excluded_ids,
+                                 id_element: "##{base_object}_#{association}_id",
+                                 association_element: "##{base_object}_#{association}",
+                                 tooltip: tooltip,
+                                 allow_new: local_assigns[:allow_new]

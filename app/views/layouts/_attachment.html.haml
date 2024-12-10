@@ -1,0 +1,41 @@
+- if record.persisted? && record.send(attachment_name).attached?
+  :ruby
+    attachment = record.send(attachment_name)
+    label_override = defined?(override_label) && override_label.present? ? override_label : nil
+    filename_label = defined?(show_filename) && show_filename ? " #{attachment.filename}" : nil
+    no_delete = (defined?(no_delete_button) && no_delete_button) || !policy(record).update?
+
+    delete_link = if no_delete
+                    nil
+                  else
+                    link_to tag.i('', class: 'fa fa-times'),
+                            RadCommon::Engine.routes.url_helpers.attachment_path(record.send(attachment_name).id),
+                            method: :delete,
+                            data: { confirm: 'Are you sure? Attachment cannot be recovered.' },
+                            class: 'btn btn-danger ml-5'
+                  end
+
+  .attachment-wrapper
+    - if attachment.content_type.include?('image')
+      :ruby
+        link = defined?(override_path) && override_path.present? ? override_path : url_for(attachment)
+        target = defined?(new_tab) && new_tab ? '_blank' : nil
+
+        attachment_label =
+          label_override.presence || image_tag(attachment, class: 'img-fluid rounded', id: 'attachment_layout')
+
+      = link_to(attachment_label, link, target: target, class: 'text-wrap')
+      = delete_link
+    - else
+      :ruby
+        attachment_label =
+          label_override.presence || tag.i('', class: "fas #{RadCommon::ContentTypeIcon.new(attachment.content_type)} fa-lg mr-2") + filename_label
+
+      .attachment-button-box
+        = link_to attachment_label,
+                  url_for(attachment),
+                  target: '_blank',
+                  rel: :noopener,
+                  class: 'btn btn-secondary attachment-link text-wrap'
+
+        = delete_link

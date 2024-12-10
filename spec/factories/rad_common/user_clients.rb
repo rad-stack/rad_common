@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :user_client do
-    user
-    client
+    association :user
+    association :client
   end
 end

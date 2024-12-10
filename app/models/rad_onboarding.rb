@@ -10,7 +10,7 @@ class RadOnboarding
   end
 
   def onboarding_path
-    next_step.path
+    @onboarding.next_step.path
   end
 
   def onboarded_path
@@ -18,16 +18,10 @@ class RadOnboarding
   end
 
   def steps_remaining?
-    !profile_entered? || next_step.present?
+    !current_user.profile_entered? || next_step.present?
   end
 
   def next_step
     raise 'implement in sub class'
   end
-
-  private
-
-    def profile_entered?
-      !RadConfig.user_profiles? || current_user.profile_entered?
-    end
 end

@@ -1,5 +1,5 @@
 class DuplicatesController < ApplicationController
-  def resolve
+  def index
     skip_policy_scope
 
     @model = model
@@ -12,7 +12,7 @@ class DuplicatesController < ApplicationController
       return
     end
 
-    authorize @record, :resolve_duplicates?
+    authorize @record, :index_duplicates?
 
     @records = []
     @duplicates_count = model.relevant_duplicates.count
@@ -83,18 +83,19 @@ class DuplicatesController < ApplicationController
 
     max = Duplicate.where(duplicatable_type: model.name).maximum(:sort)
     sort = (max ? max + 1 : 1)
-    @record.create_or_update_metadata!({ sort: sort })
+    @record.create_or_update_metadata! sort: sort
 
     if @record.duplicate.present? && @record.duplicate.score.present?
       dupes = @record.duplicates
 
       if dupes.count == 1
         record = dupes.first[:record]
-        record.create_or_update_metadata!({ sort: sort })
+        record.create_or_update_metadata! sort: sort
       end
     end
 
-    redirect_to index_path, notice: "#{model} was successfully updated."
+    flash[:notice] = "#{model} was successfully updated."
+    redirect_to index_path
   end
 
   def reset
@@ -105,41 +106,10 @@ class DuplicatesController < ApplicationController
     redirect_to @record
   end
 
-  def switch
-    @record = model.find(params[:id])
-    record = other_model.find(params[:other_id])
-
-    authorize @record, :reset_duplicates?
-    authorize record, :reset_duplicates?
-
-    @record.reset_duplicates
-    record.reset_duplicates
-
-    redirect_to resolve_duplicates_path model: @record.class, id: @record.id
-  end
-
-  def check_duplicate
-    @record = model.new(params[:record].permit!.to_h.except(:authenticity_token, :create_anyway))
-    authorize @record, :create?
-
-    @record.valid?
-    found_duplicates = @record.find_duplicates
-
-    if found_duplicates.present?
-      duplicates = found_duplicates.map do |dupe|
-        { duplicate_data: dupe.duplicate_fields, duplicate_path: "/#{model.table_name}/#{dupe.id}" }
-      end
-
-      render json: { duplicate: true, duplicates: duplicates }
-    else
-      render json: { duplicate: false }
-    end
-  end
-
   private
 
     def index_path
-      resolve_duplicates_path model: model
+      "/rad_common/duplicates?model=#{model}"
     end
 
     def gather_record
@@ -154,17 +124,13 @@ class DuplicatesController < ApplicationController
       Object.const_get params[:model]
     end
 
-    def other_model
-      Object.const_get params[:other_model]
-    end
-
     def notify_user(subject, message)
-      RadMailer.simple_message(current_user, subject, message, email_options).deliver_later
+      RadbearMailer.simple_message(current_user, subject, message, email_options).deliver_later
     end
 
     def email_options
-      { email_action: { message: 'Click here to view the details.', button_text: 'View', button_url: url_for(@record) },
-        contact_log_from_user: current_user,
-        contact_log_record: @record }
+      { email_action: { message: 'Click here to view the details.',
+                        button_text: 'View',
+                        button_url: url_for(@record) } }
     end
 end

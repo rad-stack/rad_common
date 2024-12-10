@@ -43,7 +43,8 @@ module RadCommon
       attachment.send(:audit_destroy)
       attachment.purge_later
 
-      redirect_back fallback_location: record, notice: 'Attachment successfully deleted'
+      flash[:success] = 'Attachment successfully deleted'
+      redirect_back(fallback_location: record)
     end
 
     def auditing_security?
@@ -57,7 +58,7 @@ module RadCommon
         record = klass.find_decoded(params[:id])
 
         begin
-          @variant = RadRetry.perform_request(retry_count: 2) { record.send(params[:variant]).processed }
+          @variant = RadicalRetry.perform_request(retry_count: 2) { record.send(params[:variant]).processed }
         rescue NoMethodError
           @variant = nil
         end

@@ -5,10 +5,6 @@ module TestHelpers
 
   def bootstrap_select(value, attrs)
     click_bootstrap_select(attrs)
-    if attrs[:search].present?
-      wait_for_ajax
-      find('.bs-searchbox input').fill_in(with: attrs[:search])
-    end
     find('ul.inner li a span', text: value).click
   end
 

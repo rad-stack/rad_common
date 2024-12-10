@@ -2,15 +2,14 @@
   - search_scopes = GlobalSearch.new(current_user).filtered_scopes
 
   - if search_scopes.any?
-    = form_tag(global_search_result_path, method: :get) do
+    = form_tag('/rad_common/global_search_result', method: :get) do
       .global-search-group
         .input-group
           .input-group-prepend
-            %span.input-group-text.global-search-dropdown
+            %span.input-group-text.global-search-dropdown.px-0
               .nav-item.dropdown
 
-                %a.nav-link.dropdown-toggle.text-dark.p-0{ 'data-toggle': 'dropdown', href: '#' }
-                  %span{ class: 'fa fa-magnifying-glass search-options',
+                %span{ class: 'fa fa-magnifying-glass nav-link.dropdown-toggle search-options px-3',
                        'aria-expanded': 'true',
                        'data-toggle': 'dropdown' }
 
@@ -18,33 +17,36 @@
                   - search_scopes.each_with_index do |scope, index|
                     %li{ role: 'presentation', class: index.zero? ? 'selected-search' : '' }
 
-                      %a.dropdown-item.search-option{ href: '#',
-                                                      role: 'menuitem',
-                                                      tabindex: '-1',
-                                                      'data-search-scope': scope[:name] }= scope[:description]
-
+                      %a.dropdown-item.search-option{ href: '#', role: 'menuitem', tabindex: '-1',
+                        data: { 'search-scope' => scope[:name],
+                                'min-length' => scope[:min_length] },
+                                'data-type' => scope[:data_type] }
+                        = scope[:description]
+            - if RadConfig.enable_super_search?
+              %input.super_search{ type: 'hidden', name: 'super_search', value: false }
+            %input.global_search_id{ type: 'hidden', name: 'global_search_id' }
+            %input.global_search_model_name{ type: 'hidden', name: 'global_search_model_name' }
+            %input.global_search_scope{ type: 'hidden', name: 'global_search_scope' }
           %input{ class: %w[form-control
                             input-medium
                             global-search-autocomplete
                             ui-autocomplete-input
                             global_search_name],
-                  'data-autocomplete': '/global_search',
+                  'data-autocomplete': '/rad_common/global_search',
                   'data-autocomplete-fields': "{ \"global_search_scope\" :
                                                 \".global_search_scope\",
                                                 \"super_search\" : \".super_search\"}",
+                  'data-data-type': search_scopes.first[:data_type],
                   name: 'global_search_name',
                   placeholder: search_scopes.first[:description],
+                  'min-length': search_scopes.first[:min_length],
                   size: '50',
                   type: 'text',
                   autocomplete: 'off' }
-          .input-group-append
-            %span.input-group-text
-
-              %span{ class: 'fa fa-globe',
-                     data: { toggle: 'tooltip', placement: 'top' },
-                     title: 'Super search takes longer than scoped search.' }
-
-              %input.super_search.ml-2{ type: 'checkbox', name: 'super_search' }
-              %input.global_search_id{ type: 'hidden', name: 'global_search_id' }
-              %input.global_search_model_name{ type: 'hidden', name: 'global_search_model_name' }
-              %input.global_search_scope{ type: 'hidden', name: 'global_search_scope' }
+          - if RadConfig.enable_super_search?
+            .input-group-append
+              %span.input-group-text
+                %span{ class: 'fa fa-globe',
+                       data: { toggle: 'tooltip', placement: 'top' },
+                       title: 'Super search takes longer than scoped search.' }
+                %input.super_search.ml-2{ type: 'checkbox', name: 'super_search' }

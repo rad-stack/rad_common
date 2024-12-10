@@ -46,14 +46,10 @@ class ApplicationPolicy
     index?
   end
 
-  def report?
-    user.permission?(:admin)
-  end
-
   alias not_duplicate? destroy?
   alias reset_duplicates? destroy?
   alias merge_duplicates? destroy?
-  alias resolve_duplicates? index?
+  alias index_duplicates? index?
   alias duplicate_do_later? destroy?
 
   class Scope

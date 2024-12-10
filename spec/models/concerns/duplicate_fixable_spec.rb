@@ -1,80 +1,87 @@
 require 'rails_helper'
 
-describe DuplicateFixable do
-  let(:attorney) { create :attorney }
-  let(:created_by) { create :user }
-  let!(:admin) { create :admin }
-  let(:bypass_notifications) { false }
+describe DuplicateFixable, type: :model do
+  let(:phone_number) { create :phone_number }
+  let(:email) { Faker::Internet.email }
+  let(:first_name) { 'John' }
+  let(:last_name) { 'Smith' }
+
+  let!(:attorney_1) do
+    create :attorney, attorney_1_attributes.merge(company_name: 'ABC',
+                                                  address_1: 'Xxxx',
+                                                  address_2: nil,
+                                                  city: 'Xxxx',
+                                                  state: 'FL',
+                                                  zipcode: '11111')
+  end
 
   let!(:attorney_2) do
-    create :attorney,
-           first_name: attorney.first_name,
-           last_name: attorney.last_name,
-           company_name: attorney.company_name,
-           address_1: attorney.address_1,
-           address_2: attorney.address_2,
-           city: attorney.city,
-           state: attorney.state,
-           zipcode: attorney.zipcode
+    create :attorney, attorney_2_attributes.merge(company_name: 'XYZ',
+                                                  address_1: 'Yyyy',
+                                                  address_2: nil,
+                                                  city: 'Yyyy',
+                                                  state: 'CA',
+                                                  zipcode: '22222')
   end
 
-  before do
-    allow(attorney).to receive(:created_by).and_return(created_by)
-    ActionMailer::Base.deliveries.clear
-  end
+  describe 'process_duplicates' do
+    subject { attorney_1.duplicate.score }
 
-  describe '.process_duplicates' do
-    before { allow_any_instance_of(Duplicate).to receive :maybe_notify! }
-
-    it 'adds duplicate records' do
-      expect { Attorney.process_duplicates(nil) }.to change(Duplicate, :count).by(2)
-    end
-  end
-
-  describe '#process_duplicates' do
     before do
-      attorney.process_duplicates(bypass_notifications: bypass_notifications)
-      attorney.reload
+      attorney_1.process_duplicates
+      attorney_1.reload
     end
 
-    it 'sends notifications' do
-      expect(ActionMailer::Base.deliveries.first.subject).to eq "Possible Duplicate (#{attorney_2}) Entered By You"
-      expect(ActionMailer::Base.deliveries.first.to).to include created_by.email
-
-      expect(ActionMailer::Base.deliveries.second.subject)
-        .to eq "Possible Duplicate (#{attorney_2}) Entered By #{created_by}"
-
-      expect(ActionMailer::Base.deliveries.second.to).to include admin.email
-    end
-
-    context 'when admin user creates the duplicate' do
-      let(:created_by) { admin }
-
-      it 'only sends one notification' do
-        expect(ActionMailer::Base.deliveries.count).to eq 1
+    context 'when matching only on additional items' do
+      let(:attorney_1_attributes) do
+        { phone_number: phone_number, email: email, first_name: 'Xxxx', last_name: 'Tttt' }
       end
+
+      let(:attorney_2_attributes) do
+        { phone_number: phone_number, email: email, first_name: 'Yyyy', last_name: 'Ssss' }
+      end
+
+      it { is_expected.to eq 32 }
+    end
+
+    context 'when matching on standard plus additional items' do
+      let(:attorney_1_attributes) do
+        { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
+      end
+
+      let(:attorney_2_attributes) do
+        { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
+      end
+
+      it { is_expected.to eq 46 }
     end
   end
 
-  describe 'reset_duplicates' do
-    before do
-      attorney.process_duplicates(bypass_notifications: bypass_notifications)
-      attorney.reload
-    end
+  describe 'all_matches' do
+    subject { attorney_1.send(:all_matches) }
 
-    it "doesn't notify when duplicates are reset" do
-      expect(ActionMailer::Base.deliveries.count).to eq 2
-      ActionMailer::Base.deliveries.clear
-      attorney.reset_duplicates
-      expect(ActionMailer::Base.deliveries.count).to eq 0
-    end
-
-    context 'when bypassing notifications' do
-      let(:bypass_notifications) { true }
-
-      it "doesn't notify" do
-        expect(ActionMailer::Base.deliveries.count).to eq 0
+    context 'when matching only on additional items' do
+      let(:attorney_1_attributes) do
+        { phone_number: phone_number, email: email, first_name: 'Xxxx', last_name: 'Tttt' }
       end
+
+      let(:attorney_2_attributes) do
+        { phone_number: phone_number, email: email, first_name: 'Yyyy', last_name: 'Ssss' }
+      end
+
+      it { is_expected.to include attorney_2.id }
+    end
+
+    context 'when matching on standard plus additional items' do
+      let(:attorney_1_attributes) do
+        { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
+      end
+
+      let(:attorney_2_attributes) do
+        { phone_number: phone_number, email: email, first_name: first_name, last_name: last_name }
+      end
+
+      it { is_expected.to include attorney_2.id }
     end
   end
 end

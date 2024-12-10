@@ -1,5 +1,25 @@
 module RadCommon
   module AuditsHelper
+    def show_auditing?
+      return false if current_user.external?
+      return false if current_instance_variable.blank?
+
+      current_instance_variable.class.name != 'ActiveStorage::Attachment' &&
+        current_instance_variable.respond_to?(:audits) &&
+        current_instance_variable.persisted? &&
+        policy(current_instance_variable).audit?
+    end
+
+    def audit_history_link(auditable = nil)
+      auditable ||= current_instance_variable
+
+      "/rad_common/audits/?auditable_type=#{auditable.class}&auditable_id=#{auditable.id}"
+    end
+
+    def user_audit_history_link(user)
+      "/rad_common/audits/?#{{ search: { user_id: user.id } }.to_query}"
+    end
+
     def display_audited_changes(audit)
       audit_text = formatted_audited_changes(audit)
 
@@ -26,11 +46,10 @@ module RadCommon
       action.gsub('destroy', 'delete')
     end
 
-    def audits_title(audits, audit_search)
-      return "Audits (#{audits.total_count})" unless audit_search.single_record?
+    def audits_title(audits, show_search, resource)
+      return "Audits (#{audits.total_count})" if show_search
 
-      record = audit_search.single_record
-      safe_join(['Audits for ', audit_model_link(nil, record), " (#{audits.total_count})"])
+      safe_join(['Audits for ', audit_model_link(nil, resource), " (#{audits.total_count})"])
     end
 
     def audit_model_link(audit, record)
@@ -61,11 +80,11 @@ module RadCommon
           changed_attribute = change.first
 
           if change[1].instance_of?(Array)
-            from_value = formatted_audit_value(audit, changed_attribute, change[1][0])
-            to_value = formatted_audit_value(audit, changed_attribute, change[1][1])
+            from_value = change[1][0]
+            to_value = change[1][1]
           else
             from_value = nil
-            to_value = formatted_audit_value(audit, changed_attribute, change[1])
+            to_value = change[1]
           end
 
           next if (from_value.blank? && to_value.blank?) || (from_value.to_s == to_value.to_s)
@@ -104,13 +123,6 @@ module RadCommon
         audit_text
       end
 
-      def formatted_audit_value(audit, attribute, raw_value)
-        record = audit.auditable
-        return raw_value unless record&.defined_enums&.has_key?(attribute)
-
-        RadEnum.new(record.class, attribute).raw_translation(raw_value)
-      end
-
       def classify_foreign_key(audit_column, audit_type)
         reflections = if audit_type.respond_to?(:reflect_on_all_associations)
                         audit_type.reflect_on_all_associations(:belongs_to).select { |r| r.foreign_key == audit_column }
@@ -132,7 +144,7 @@ module RadCommon
         return false if current_user.admin?
 
         restricted_attributes = RadConfig.restricted_audit_attributes!
-        return if restricted_attributes.count.zero?
+        return if restricted_attributes.none?
 
         matches = restricted_attributes.select do |item|
           item[:model] == audit.auditable_type && item[:attribute] == changed_attribute

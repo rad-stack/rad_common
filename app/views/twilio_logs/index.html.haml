@@ -1,0 +1,29 @@
+.card
+  = render 'layouts/card_header'
+  .card-body
+    = render 'layouts/filter', search: @twilio_log_search, path: '/rad_common/twilio_logs'
+    = paginate @twilio_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+
+    %table.table.table-bordered
+      %tr
+        = render 'layouts/sort_headers', search: @twilio_log_search
+
+      - @twilio_logs.each do |twilio_log|
+        %tr{ class: twilio_log.success ? '' : 'alert-danger' }
+          %td= format_datetime twilio_log.created_at
+          %td= twilio_log.from_number
+          %td= twilio_log.to_number
+          %td= secured_link twilio_log.from_user
+          %td= secured_link twilio_log.to_user
+          %td
+            = twilio_log.message
+            .mb-3= render 'layouts/attachments', record: twilio_log, attachment_name: :attachments, show_images: true, show_links: false
+          %td
+            - if twilio_log.attachments.attached?
+              = render 'layouts/attachments', record: twilio_log, attachment_name: :attachments, show_images: false, show_links: true
+            - elsif twilio_log.media_url.present?
+              = render 'media_attachment', twilio_log: twilio_log
+          %td= format_boolean twilio_log.opt_out_message_sent
+          %td= format_boolean twilio_log.success
+
+    = paginate @twilio_logs, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine

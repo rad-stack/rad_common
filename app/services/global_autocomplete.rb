@@ -32,23 +32,35 @@ class GlobalAutocomplete
     results.uniq { |result| [result[:model_name], result[:id]] }
   end
 
-  def base_autocomplete_collection(scope)
-    return [] unless scope && Pundit.policy!(user, klass).global_search?
-
-    self.current_scope = scope
-    order = scope[:query_order] || 'created_at DESC'
-    query = Pundit.policy_scope!(user, klass)
-    query = query.joins(joins) if joins
-    query.order(order)
+  def self.check_policy_klass(user, klass)
+    if user.portal?
+      [:portal, klass]
+    else
+      klass
+    end
   end
 
   private
 
     def autocomplete_result(scope)
-      query = base_autocomplete_collection(scope)
-      return [] if query.empty?
+      return [] unless scope && Pundit.policy!(user, GlobalAutocomplete.check_policy_klass(user, klass)).global_search?
 
-      query = query.where(where_query, search: "%#{params[:term]}%")
+      self.current_scope = scope
+      order = scope[:query_order] || 'created_at DESC'
+      query = Pundit.policy_scope!(user, GlobalAutocomplete.check_policy_klass(user, klass))
+      query = query.joins(joins) if joins
+      search_scope = case scope[:query_wildcard]
+                     when :beginning
+                       "%#{params[:term]}"
+                     when :end
+                       "#{params[:term]}%"
+                     when :none
+                       params[:term]
+                     else
+                       "%#{params[:term]}%"
+                     end
+
+      query = query.where(where_query, search: search_scope).order(order)
 
       if params[:excluded_ids].present?
         # TODO: this will fail when scope has joins due to ambiguous id column
@@ -56,7 +68,7 @@ class GlobalAutocomplete
         query = query.where.not(id: params[:excluded_ids])
       end
 
-      query = query.limit(params[:limit].presence || 50)
+      query = query.limit(50)
       search_label = scope[:search_label] || :to_s
 
       query.map do |record|

@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-describe 'Users API' do
+describe 'Users API', type: :request do
   let(:division) { create :division }
-  let(:headers) { { HTTP_AUTHORIZATION: RadJwt.new.generate_token(valid_for_minutes) } }
+  let(:headers) { { HTTP_AUTHORIZATION: RadicalJwtGenerator.new(valid_for_minutes).token } }
 
   describe 'show' do
     context 'when success' do
@@ -11,7 +11,7 @@ describe 'Users API' do
       it 'shows a division' do
         get "/api/divisions/#{division.id}", headers: headers
         expect(response).to have_http_status :ok
-        expect(response.parsed_body['name']).to eq division.name
+        expect(JSON.parse(response.body)['name']).to eq division.name
       end
     end
 

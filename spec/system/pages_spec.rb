@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Pages' do
+RSpec.describe 'Pages', type: :system do
   let(:user) { create :admin }
 
   before { login_as user, scope: :user }

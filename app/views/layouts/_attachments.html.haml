@@ -1,0 +1,20 @@
+- links = defined?(show_links) ? show_links : true
+- images = defined?(show_images) ? show_images : true
+
+- if record.persisted? && record.send(attachment_name).attached?
+  - record.send(attachment_name).each_with_index do |attachment, index|
+    .attachment-wrapper.mt-2
+      - if images && attachment.content_type.include?('image')
+        = link_to image_tag(attachment, class: 'attachment-content'),
+                  url_for(attachment),
+                  class: 'text-wrap',
+                  target: '_blank',
+                  rel: :noopener
+      - elsif links
+        - attachment_label = tag.i('', class: "fas #{RadCommon::ContentTypeIcon.new(attachment.content_type)} fa-lg mr-2") + "View Attachment#{' ' + (index + 1).to_s if index > 0}"
+        .attachment-button-box
+          = link_to attachment_label,
+                    url_for(attachment),
+                    target: '_blank',
+                    rel: :noopener,
+                    class: 'btn btn-info btn-sm attachment-link text-wrap'

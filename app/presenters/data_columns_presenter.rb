@@ -52,7 +52,13 @@ class DataColumnsPresenter
     when Hash
       item[:label].presence || item[:value]
     when Symbol
-      @view_context.translated_attribute_label(resource, item)
+      translation = I18n.t "activerecord.attributes.#{resource.class.to_s.underscore}.#{item}"
+
+      if translation.downcase.include?('translation missing')
+        item.to_s.titlecase
+      else
+        translation
+      end
     end
   end
 
@@ -70,7 +76,7 @@ class DataColumnsPresenter
     def calc_columns
       items = add_data_items
 
-      if items.count.zero?
+      if items.none?
         [stats]
       elsif items.count <= 5
         [items, stats]
@@ -108,7 +114,7 @@ class DataColumnsPresenter
       value = resource.send(item)
 
       if resource.defined_enums.has_key?(item.to_s)
-        return RadEnum.new(resource.class, item.to_s).translated_option(resource)
+        return RadicalEnum.new(resource.class, item.to_s).translated_option(resource)
       end
 
       case value.class.to_s

@@ -2,15 +2,14 @@ module RadCommon
   ##
   # This is used to generate an input used for a SQL like filter
   class LikeFilter
-    attr_reader :column, :input_label, :name, :input_transform
+    attr_reader :column, :input_label, :col_class
 
     ##
     # @param [String] column the database column that is being filtered
-    def initialize(column:, input_label: nil, name: nil, input_transform: nil)
+    def initialize(column:, input_label: nil, col_class: nil)
       @column = column
       @input_label = input_label
-      @name = name.presence || column
-      @input_transform = input_transform
+      @col_class = col_class
     end
 
     def filter_view
@@ -22,19 +21,14 @@ module RadCommon
     end
 
     def like_input
-      "#{name}_like"
+      "#{column}_like"
     end
 
     def apply_filter(results, params)
       value = like_value(params)
-      value = input_transform.call(value) if input_transform.present? && value.present?
 
-      results = results.where("#{column} ilike ?", "%#{value}%") if value.present?
+      results = results.where("lower(#{column}) like ?", "%#{value.downcase}%") if value.present?
       results
-    end
-
-    def allow_not
-      false
     end
 
     private

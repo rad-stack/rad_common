@@ -2,7 +2,7 @@ class RefineSmarty < ActiveRecord::Migration[6.1]
   def change
     # run this for each model that has the Contactable concern
     fix_address_metadata 'companies', 'Company'
-    # fix_address_metadata 'attorneys', 'Attorney'
+    fix_address_metadata 'attorneys', 'Attorney'
   end
 
   private
@@ -12,7 +12,7 @@ class RefineSmarty < ActiveRecord::Migration[6.1]
 
       klass = model_name.constantize
 
-      if klass.count.positive?
+      if klass.exists?
         klass.where.not(address_problems: nil).each do |item|
           item.update_column :address_metadata, { problems: item.address_problems_before_type_cast }
         end

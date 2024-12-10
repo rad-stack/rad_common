@@ -1,8 +1,12 @@
 en:
   activerecord:
     attributes:
+      user:
+        external: 'External user?'
+      security_role:
+        external: 'External user?'
       division:
-        additional_info: Additional Data
+        additional_info: Additional data
         division_statuses:
           status_active: Active
           status_pending: Pending

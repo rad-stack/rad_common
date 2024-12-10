@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - application/json
       User-Agent:
-      - sendgrid/6.7.0;ruby
+      - sendgrid/6.6.2;ruby
       Authorization:
       - Bearer <SENDGRID_API_KEY>
       Content-Type:
@@ -25,7 +25,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Fri, 21 Jun 2024 18:29:39 GMT
+      - Tue, 12 Apr 2022 13:55:18 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -33,11 +33,11 @@ http_interactions:
       Connection:
       - keep-alive
       X-Amzn-Requestid:
-      - babf4ac9-1989-4bb8-a88d-13bf2f3f7441
+      - 91f168eb-2101-417c-8cc1-2790c832ecf4
       X-Amz-Apigw-Id:
-      - Zuv3BGp0CYcEv4g=
+      - QeGu7GZOCYcFxwA=
       X-Amzn-Trace-Id:
-      - Root=1-6675c693-63366e8714d5be833a8457db;Parent=5e1e59a2b47dac01;Sampled=0;lineage=3bae0364:0
+      - Root=1-625584c5-725e94060be8707d6f2c1f18;Sampled=0
       Access-Control-Allow-Methods:
       - HEAD, GET, PUT, POST, DELETE, OPTIONS, PATCH
       Access-Control-Max-Age:
@@ -63,15 +63,15 @@ http_interactions:
       X-Ratelimit-Limit:
       - '7'
       X-Ratelimit-Reset:
-      - '1718994580'
+      - '1649771718'
       Twilio-Request-Id:
-      - RQ2iCVWcHKmUsOtQy3wtg8fJ2gFqD
+      - RQ27hUGnpDUkhcwtqs4qVZa9TsX1K
       X-Envoy-Upstream-Service-Time:
-      - '437'
+      - '493'
       Powered-By:
       - Mako
     body:
       encoding: UTF-8
-      string: '{"result":{"email":"support@invest.ally.com","verdict":"Risky","score":0.29941,"local":"support","host":"invest.ally.com","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":true,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":true},"additional":{"has_known_bounces":false,"has_suspected_bounces":true}},"ip_address":"38.85.141.230"}}'
-  recorded_at: Fri, 21 Jun 2024 18:29:39 GMT
-recorded_with: VCR 6.2.0
+      string: '{"result":{"email":"support@invest.ally.com","verdict":"Risky","score":0.29941,"local":"support","host":"invest.ally.com","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":true,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":true},"additional":{"has_known_bounces":false,"has_suspected_bounces":true}},"ip_address":"67.190.197.70"}}'
+  recorded_at: Tue, 12 Apr 2022 13:55:17 GMT
+recorded_with: VCR 6.1.0

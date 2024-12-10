@@ -1,7 +1,14 @@
 class SentryTestsController < ApplicationController
-  def new
+  def edit
     skip_authorization
-    Sentry.capture_message "Sentry Exception Reporting Test on #{RadConfig.app_name!}"
-    redirect_to root_path, notice: 'Sentry test was successfully executed.'
+
+    @user = current_user
+    @user.first_name = 'Test'
+    @user.last_name = 'Sentry'
+  end
+
+  def update
+    skip_authorization
+    raise 'sentry test'
   end
 end

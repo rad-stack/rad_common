@@ -12,19 +12,19 @@
         - if show_actions
           %th.actions Actions
 
-      - @clients.each do |record|
-        %tr{ class: table_row_style(record) }
-          %td= secured_link record
-          %td= format_boolean record.active?
+      - @clients.each do |client|
+        %tr
+          %td= secured_link client
+          %td= format_boolean client.active
           - if show_actions
             %td
-              - if policy(record).update?
+              - if policy(client).update?
                 = link_to icon(:pencil, 'Edit'),
-                          edit_client_path(record),
+                          edit_client_path(client),
                           class: 'btn btn-sm btn-secondary btn-block'
-              - if policy(record).destroy?
+              - if policy(client).destroy?
                 = link_to icon(:times, 'Delete'),
-                          record,
+                          client,
                           method: :delete,
                           data: { confirm: 'Are you sure?' },
                           class: 'btn btn-danger btn-sm btn-block'

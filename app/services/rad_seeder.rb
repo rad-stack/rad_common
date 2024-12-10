@@ -2,34 +2,35 @@ class RadSeeder
   attr_accessor :users
 
   def seed!
-    ApplicationRecord.seeding = true
     display_log 'seeding base tables'
 
     seed_security_roles
     seed_user_statuses
     seed_company
+    seed_notification_types
     seed_users
-    mute_staging_notifications if staging?
 
     @users = User.all
-
-    seed
-  ensure
-    ApplicationRecord.seeding = false
   end
 
   private
-
-    def seed
-      raise 'Seeder class must implement #seed'
-    end
 
     def display_log(message)
       puts message
     end
 
+    def seed_notification_types
+      return if NotificationType.exists?
+
+      Notifications::NewUserSignedUpNotification.create! security_roles: [SecurityRole.admin_role]
+      Notifications::UserWasApprovedNotification.create! security_roles: [SecurityRole.admin_role]
+      Notifications::UserAcceptedInvitationNotification.create! security_roles: [SecurityRole.admin_role]
+      Notifications::InvalidDataWasFoundNotification.create! security_roles: [SecurityRole.admin_role]
+      Notifications::GlobalValidityRanLongNotification.create! security_roles: [SecurityRole.admin_role]
+    end
+
     def seed_users
-      return if User.count.positive?
+      return if User.exists?
 
       display_log 'seeding users'
 
@@ -40,7 +41,8 @@ class RadSeeder
                        last_name: seeded_user[:last_name],
                        mobile_phone: seeded_user_mobile_phone(seeded_user),
                        timezone: seeded_user[:timezone],
-                       security_roles: user_security_roles(seeded_user) }
+                       security_roles: user_security_roles(seeded_user),
+                       twilio_verify_enabled: RadConfig.twilio_verify_enabled? }
 
         if seeded_user[:trait].present?
           FactoryBot.create seeded_user[:factory], seeded_user[:trait], attributes
@@ -50,22 +52,8 @@ class RadSeeder
       end
     end
 
-    def mute_staging_notifications
-      DEV_NOTIFICATION_TYPES.each do |notification_type_class|
-        notification_type = notification_type_class.constantize.main
-
-        notification_type.security_roles.each do |security_role|
-          security_role.users.active.each do |user|
-            next if user.rad_developer?
-
-            NotificationSetting.init_for_user(notification_type, user).update! enabled: false
-          end
-        end
-      end
-    end
-
     def seed_security_roles
-      return if SecurityRole.count.positive?
+      return if SecurityRole.exists?
 
       seed_admin
       seed_user
@@ -81,6 +69,10 @@ class RadSeeder
       seed_all role
       role.save!
 
+      NotificationType.all.find_each do |notification_type|
+        role.notification_security_roles.create! notification_type: notification_type
+      end
+
       true
     end
 
@@ -89,7 +81,8 @@ class RadSeeder
     end
 
     def seed_user
-      return unless seeded_user_role?
+      # don't seed this if there are no additional permissions than the 2 standard ones
+      return if RadPermission.only_standard?
 
       role = get_role('User')
       role.allow_invite = !RadConfig.disable_invite?
@@ -116,16 +109,15 @@ class RadSeeder
     end
 
     def seed_user_statuses
-      return if UserStatus.count.positive?
+      return if UserStatus.exists?
 
-      UserStatus.create! name: 'Pending', active: false, validate_email_phone: true if RadConfig.pending_users?
-
+      UserStatus.create! name: 'Pending', active: false, validate_email_phone: true
       UserStatus.create! name: 'Active', active: true, validate_email_phone: true
       UserStatus.create! name: 'Inactive', active: false, validate_email_phone: false
     end
 
     def seed_company
-      return if Company.count.positive?
+      return if Company.exists?
 
       FactoryBot.create :company, email: seeded_user_config.first[:email], valid_user_domains: seeded_user_domains
     end
@@ -143,18 +135,14 @@ class RadSeeder
     end
 
     def staging_safe_email
-      # this is helpful when sendgrid email validation is enabled on staging, the faker emails would then fail
-      return seeded_user_config.first[:email] if staging?
+      # this is helfpul when sendgrid email validaiton is enabled on staging, the faker emails would then fail
+      return seeded_user_config.first[:email] if Rails.env.staging?
 
       Faker::Internet.email
     end
 
     def seeded_user_domains
       internal_user_emails.map { |item| item.split('@').last }.uniq.sort
-    end
-
-    def seeded_user_role?
-      seeded_user_config.pluck(:security_role).include?('User')
     end
 
     def internal_user_emails
@@ -198,10 +186,6 @@ class RadSeeder
       users.sample
     end
 
-    def random_internal_user
-      users.internal.sample
-    end
-
     def user_status
       UserStatus.default_active_status
     end
@@ -213,18 +197,4 @@ class RadSeeder
     def random_date(from_date, to_date)
       Faker::Date.unique.between(from: from_date, to: to_date)
     end
-
-    def production?
-      Rails.env.production?
-    end
-
-    def staging?
-      Rails.env.staging?
-    end
-
-    DEV_NOTIFICATION_TYPES = %w[Notifications::DuplicateFoundAdminNotification
-                                Notifications::GlobalValidityRanLongNotification
-                                Notifications::HighDuplicatesNotification
-                                Notifications::InvalidDataWasFoundNotification
-                                Notifications::TwilioErrorThresholdExceededNotification].freeze
 end

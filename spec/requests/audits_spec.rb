@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe 'Audits' do
+RSpec.describe 'Audits', type: :request do
   let(:division) { create :division }
 
   before { login_as user, scope: :user }
 
   describe 'index' do
-    before { get '/audits', params: { search: { single_record: "Division:#{division.id}" } } }
+    before { get '/rad_common/audits', params: { auditable_type: 'Division', auditable_id: division.id } }
 
     context 'when admin' do
       let(:user) { create :admin }
@@ -32,7 +32,7 @@ RSpec.describe 'Audits' do
         let(:allowed) { false }
 
         it 'denies access' do
-          expect(response).to have_http_status :forbidden
+          expect(response.code).to eq '403'
         end
       end
     end

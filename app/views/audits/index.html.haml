@@ -1,28 +1,44 @@
 .card
   = render 'layouts/card_header', action_name: 'custom',
-                                  title: audits_title(@audits, @audit_search),
+                                  title: audits_title(@audits, @show_search, @resource),
                                   icon: 'fa-list'
 
   .card-body
-    = render 'layouts/filter', search: @audit_search, path: audits_path
-    = paginate @audits, theme: 'twitter-bootstrap-4'
-
-    %table.table.table-striped.table-bordered
-      %tr
-        = render 'layouts/sort_headers', search: @audit_search
-      - @audits.each do |audit|
+    - if @show_search
+      = render 'layouts/filter', search: @audit_search, path: '/rad_common/audits'
+    - if @audits.size.positive? || @show_search
+      = paginate @audits, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+      %table.table.table-striped.table-bordered#audits-table
         %tr
-          %td
-            %p= format_datetime(audit.created_at)
-            %p #{distance_of_time_in_words_to_now(audit.created_at)} ago
-          - if audit.action == 'destroy'
-            %td #{audit.auditable_type} (#{audit.auditable_id})
+          - if @show_search
+            = render 'layouts/sort_headers', search: @audit_search
           - else
-            %td= audit_model_link(audit, audit.auditable)
-          %td= audit.auditable_id
-          %td= secured_link(audit.user)
-          %td= display_audited_action(audit)
-          %td= audit.remote_address
-          %td= audit.id
-          %td= simple_format(display_audited_changes(audit))
-    = paginate @audits, theme: 'twitter-bootstrap-4'
+            %th Date
+            - if @show_search
+              %th Record
+              %th Record ID
+            %th User
+            %th Action
+            %th Remote Address
+            %th Audit ID
+            %th Changes
+
+        - @audits.each do |audit|
+          %tr
+            %td
+              %p= format_datetime(audit.created_at)
+              %p #{distance_of_time_in_words_to_now(audit.created_at)} ago
+            - if @show_search
+              - if audit.action == 'destroy'
+                %td #{audit.auditable_type} (#{audit.auditable_id})
+              - else
+                %td= audit_model_link(audit, audit.auditable)
+              %td= audit.auditable_id
+            %td= secured_link(audit.user)
+            %td= display_audited_action(audit)
+            %td= audit.remote_address
+            %td= audit.id
+            %td= simple_format(display_audited_changes(audit))
+      = paginate @audits, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+    - else
+      %p No activity exists for this item

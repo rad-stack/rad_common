@@ -1,5 +1,6 @@
 = simple_form_for(@security_role) do |f|
-  = rad_form_errors f
+  = f.error_notification
+  = base_errors(f)
 
   .form-inputs
     .row

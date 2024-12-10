@@ -29,7 +29,7 @@ module ActiveStorageDownloader
 
     def serve_file(url, ext, content_type, filename)
       # crashes locally, only use for production
-      data = RadRetry.perform_request(retry_count: 2) { URI.parse(url).open }
+      data = RadicalRetry.perform_request(retry_count: 2) { URI.parse(url).open }
       send_data data.read, filename: "#{filename}.#{ext}", type: content_type, disposition: 'inline'
     end
 end

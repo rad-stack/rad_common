@@ -1,0 +1,365 @@
+.email-container
+{
+  width: 100%;
+  border-style: solid;
+  border-color: #E5E5E5;
+  border-width: 1px;
+}
+
+.email-body, .email-header
+{
+  width: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #FFFFFF;
+}
+
+.email-header
+{
+  background-color: #E5E5E5;
+}
+
+.logo-col
+{
+  text-align: center;
+}
+
+.logo_text
+{
+    white-space: nowrap;
+    margin-right: 40px;
+}
+
+.email-header img
+{
+  max-height: 100px;
+  display: inline-block;
+  margin-right: 40px;
+  vertical-align: middle;
+}
+
+.email-header .email-col-12
+{
+  font-size: 26px;
+}
+
+.company-title
+{
+  display: inline-block;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+h1, h2, h3, h4
+{
+  margin:0;
+  margin-bottom: 4px;
+  font-family: Helvetica;
+}
+
+h1, h2
+{
+  font-weight: bold;
+}
+
+.picture
+{
+  width: 92%;
+  height: 120px;
+  background-color: #CCC;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 4px;
+  display: inline-block;
+}
+
+img
+{
+  max-width: 80%;
+  vertical-align: middle;
+}
+
+.footer
+{
+  margin-top: 5px;
+}
+
+.footer-item
+{
+  margin-right: 10px;
+  display: inline-block;
+  font-size: 12px;
+}
+
+.email-row
+{
+  width: 99%;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.email-col-1, .email-col-2, .email-col-3, .email-col-4, .email-col-5,
+.email-col-6, .email-col-7, .email-col-8, .email-col-9,
+.email-col-10, .email-col-11, .email-col-12
+{
+  display: inline-block;
+  vertical-align: middle;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: .9%;
+  padding-right: .9%;
+  font-size: 16px;
+  font-family: Helvetica;
+  line-height: 125%;
+}
+
+.email-info-box
+{
+  padding:4px;
+  background-color: #E5E5E5;
+  box-shadow: 2px 2px 5px #888888;
+  border-radius: 4px;
+}
+
+.email-light-text
+{
+  color: #B5B5B5;
+  font-size: 11px;
+}
+
+.short-row
+{
+  margin-bottom: 2px;
+}
+
+.email-col-1
+{
+  width: 7.75%;
+}
+
+.email-col-2
+{
+  width: 14.5%;
+}
+
+.email-col-3
+{
+  width: 22.75%;
+}
+
+.email-col-4
+{
+  width: 31%;
+}
+
+.email-col-5
+{
+  width: 38.75%;
+}
+
+.email-col-6
+{
+  width: 46.5%;
+}
+
+.email-col-7
+{
+  width: 56%;
+}
+
+.email-col-8
+{
+  width: 64.25%;
+}
+
+.email-col-9
+{
+  width: 72.25%;
+}
+
+.email-col-10
+{
+  width: 80.5%;
+}
+
+.email-col-11
+{
+  width: 88.76%;
+}
+
+.email-col-12
+{
+  width: 100%;
+}
+
+.error
+{
+  color: red;
+}
+
+.text-align-center
+{
+  text-align: center;
+}
+
+table.action-table
+{
+  background-color: #E5E5E5;
+}
+
+table.action-table td
+{
+  border-width: 1px;
+}
+
+table
+{
+  width: 100%;
+  border-style: solid;
+  border-width: 1px;
+  border-color:#E3E3E3;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td
+{
+  padding:3px;
+}
+
+tr.header-row
+{
+  background-color: #CCC;
+  font-weight: bold;
+  padding:4px;
+}
+
+tr.header-row th
+{
+  padding: 4px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  text-align: left;
+}
+
+tr.header-row th.text-right {
+  text-align: right;
+}
+
+tr.odd
+{
+  background-color: #E3E3E3;
+}
+
+tr.even
+{
+  background-color: #FFFFFF;
+}
+
+.email-btn-success
+{
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+  border-radius: 4px;
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 10px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.email-action-box
+{
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.email-action
+{
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: inline-block;
+  margin-right: 4px;
+  border-right-style: solid;
+  border-right-color: #000000;
+  border-right-width: 1px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 12px;
+  margin-right: 12px;
+}
+
+.info-table
+{
+  width: auto;
+}
+
+.info-table th
+{
+  padding-right: 40px;
+  padding-left: 20px;
+}
+
+.table-title {
+  margin-top: 10px;
+  margin-left: 12px;
+  font-size: 1.3em;
+}
+
+.greeting
+{
+  width: 100%;
+  text-align: left;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom-style : solid;
+  border-bottom-width : 5px;
+  border-bottom-color: #E5E5E5;
+  padding-bottom: 6px;
+}
+
+.greeting .text
+{
+  margin-left: .9%;
+  margin-right: .9%;
+}
+
+.greeting-row
+{
+  width: 100%;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  text-align: center;
+}
+
+div
+{
+  box-sizing: border-box;
+}
+
+@media (max-width: 765px)
+{
+  .email-col-1, .email-col-2, .email-col-3, .email-col-4, .email-col-5,
+  .email-col-6, .email-col-7, .email-col-8, .email-col-9,
+  .email-col-10, .email-col-11, .email-col-12
+  {
+    display: block;
+    width: auto;
+  }
+
+  .email-header .email-col-12
+  {
+    text-align: center;
+  }
+
+  img
+  {
+    max-width: inherit;
+    height: 40px;
+  }
+}

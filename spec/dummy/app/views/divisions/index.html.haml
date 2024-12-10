@@ -18,22 +18,22 @@
         - if show_actions
           %th.actions Actions
 
-      - @divisions.each do |record|
-        %tr{ class: table_row_style(record) }
-          %td= secured_link record
-          %td= record.code
-          %td= secured_link(record.owner)
-          %td= render_one_attachment record: record, attachment_name: 'logo', new_tab: true
+      - @divisions.each do |division|
+        %tr
+          %td= secured_link division
+          %td= division.code
+          %td= secured_link(division.owner)
+          %td= render 'layouts/attachment', record: division, attachment_name: 'logo', new_tab: true
           - if show_actions
             %td
-              - if policy(record).update?
+              - if policy(division).update?
                 = link_to icon(:pencil, 'Edit'),
-                          edit_division_path(record),
+                          edit_division_path(division),
                           class: 'btn btn-sm btn-secondary btn-block'
 
-              - if policy(record).destroy?
+              - if policy(division).destroy?
                 = link_to icon(:times, 'Delete'),
-                          record,
+                          division,
                           method: :delete,
                           data: { confirm: 'Are you sure?' },
                           class: 'btn btn-danger btn-sm btn-block'

@@ -5,7 +5,7 @@ namespace :heroku do
 
   task :clone_local, %i[heroku_app backup_id] => :environment do |_t, args|
     # to run this with multiple args, the brackets must be escaped like this:
-    # rails "heroku:clone_local[better-way-ars,a1010]"
+    # rails heroku:clone_local\[better-way-ars,a1010\]
 
     HerokuCommands.clone args[:heroku_app], args[:backup_id]
   end

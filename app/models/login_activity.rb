@@ -3,11 +3,7 @@ class LoginActivity < ApplicationRecord
 
   scope :recent_first, -> { order(id: :desc) }
   scope :successful, -> { where(success: true) }
-  scope :failed, -> { where(success: false) }
+  scope :failure, -> { where(success: false) }
 
   strip_attributes
-
-  def active?
-    success?
-  end
 end

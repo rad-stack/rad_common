@@ -1,6 +1,6 @@
 class NotificationPolicy < ApplicationPolicy
   def index?
-    Pundit.policy_scope!(user, Notification).count.positive?
+    Pundit.policy_scope!(user, Notification).exists?
   end
 
   def create?

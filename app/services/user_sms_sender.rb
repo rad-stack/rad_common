@@ -1,30 +1,19 @@
 class UserSMSSender < PhoneSMSSender
-  def initialize(message, contact_log_from_user_id, to_user_id, media_url, force_opt_out, contact_log_record: nil)
+  def initialize(message, from_user_id, to_user_id, media_url, force_opt_out)
     self.to_user = User.find(to_user_id)
 
-    super(message,
-          contact_log_from_user_id,
-          to_user.mobile_phone,
-          media_url,
-          force_opt_out,
-          contact_log_record: contact_log_record)
+    super message, from_user_id, to_user.mobile_phone, media_url, force_opt_out
   end
 
   private
 
     def handle_blacklist
-      ActiveRecord::Base.transaction do
-        to_user.notification_settings.enabled.where(sms: true).each do |item|
-          item.update! sms: false
-        end
+      to_user.update! mobile_phone: nil
 
-        to_user.update! mobile_phone: nil
-      end
-
-      RadMailer.simple_message(to_user,
-                               "SMS Message from #{RadConfig.app_name!} Failed",
-                               error_body,
-                               email_action: email_action).deliver_later
+      RadbearMailer.simple_message(to_user,
+                                   "SMS Message from #{RadConfig.app_name!} Failed",
+                                   error_body,
+                                   email_action: email_action).deliver_later
     end
 
     def error_body

@@ -22,7 +22,7 @@ Devise.setup do |config|
 
   # enable email validation for :secure_validatable. (true, false, validation_options)
   # dependency: see https://github.com/devise-security/devise-security/blob/master/README.md#e-mail-validation
-  config.email_validation = false
+  config.email_validation = { validate_mx: false }
 
   # captcha integration for recover form
   config.captcha_for_recover = false

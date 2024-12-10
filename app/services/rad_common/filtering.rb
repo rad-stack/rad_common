@@ -10,7 +10,7 @@ module RadCommon
     end
 
     def apply_filtering(results)
-      results = Pundit.policy_scope!(@current_user, results)
+      results = Pundit.policy_scope!(@current_user, check_policy(results))
       results = apply_joins(results)
       apply_filters(results)
     end
@@ -61,6 +61,14 @@ module RadCommon
 
       def joins
         filters.select { |f| f.respond_to? :joins }.map(&:joins).compact
+      end
+
+      def check_policy(query)
+        if @current_user.portal?
+          [:portal, query]
+        else
+          query
+        end
       end
   end
 end

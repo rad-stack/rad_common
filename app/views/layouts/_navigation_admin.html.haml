@@ -1,0 +1,28 @@
+- if current_user.admin?
+
+  - no_divider = false if local_assigns[:no_divider].nil?
+
+  - unless no_divider
+    %li.dropdown-divider
+
+  %li= link_to 'Audit Search', '/rad_common/audits', class: 'dropdown-item'
+  %li= link_to 'Background Jobs', '/sidekiq', target: '_blank', rel: :noopener, class: 'dropdown-item'
+  %li= link_to 'Company Info', '/rad_common/company/edit', class: 'dropdown-item'
+  %li= link_to 'Notification Types', '/rad_common/notification_types', class: 'dropdown-item'
+  %li= link_to 'Security Roles', security_roles_path, class: 'dropdown-item'
+
+  %li
+    = link_to 'Sentry Test',
+              RadCommon::Engine.routes.url_helpers.edit_sentry_test_path(current_user),
+              class: 'dropdown-item'
+
+  %li= link_to 'Sign In Activity', '/rad_common/login_activities', class: 'dropdown-item'
+  %li= link_to 'System Message', RadCommon::Engine.routes.url_helpers.new_system_message_path, class: 'dropdown-item'
+  %li= link_to 'System Usage', '/rad_common/system_usages', class: 'dropdown-item'
+  - if RadicalTwilio.new.twilio_enabled?
+    %li= link_to 'Twilio Logs', '/rad_common/twilio_logs', class: 'dropdown-item'
+  %li
+    = link_to users_path, class: 'dropdown-item' do
+      Users
+      = duplicates_badge User
+  %li= link_to 'Validate Database', '/rad_common/global_validations/new', class: 'dropdown-item'

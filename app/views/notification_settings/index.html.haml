@@ -1,3 +1,3 @@
 .card
-  = render 'layouts/card_header', action_name: 'custom', title: 'Notification Settings', icon: 'fa-gear'
+  = render 'layouts/card_header', action_name: 'custom', title: 'Notification Settings', icon: 'fa-list'
   = render 'notification_settings/index', settings: NotificationSetting.settings_for_user(current_user)

@@ -5,9 +5,5 @@ module RadCommon
         ["#{page_size} per page", page_size]
       end
     end
-
-    def date_filter_dropdown_label(start_target, end_target)
-      DateFilterDropdownPresenter.new(self, start_target, end_target).render
-    end
   end
 end

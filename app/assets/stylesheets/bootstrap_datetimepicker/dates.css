@@ -1,0 +1,26 @@
+input:not([data-html-5='true'])::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+input[type="date"]:not([data-html-5='true'])::-webkit-inner-spin-button,
+input[type="date"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=date]:not([data-html-5='true'])::-webkit-datetime-edit-text {
+    -webkit-appearance: none;
+    display: none;
+}
+input[type=date]:not([data-html-5='true'])::-webkit-datetime-edit-month-field{
+    -webkit-appearance: none;
+    display: none;
+}
+input[type=date]:not([data-html-5='true'])::-webkit-datetime-edit-day-field {
+    -webkit-appearance: none;
+    display: none;
+}
+input[type=date]:not([data-html-5='true'])::-webkit-datetime-edit-year-field {
+    -webkit-appearance: none;
+    display: none;
+}

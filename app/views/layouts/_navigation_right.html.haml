@@ -2,8 +2,6 @@
   - if user_signed_in?
     - unread_count = current_user.notifications.unread.count
 
-    = render 'layouts/message_indicator'
-
     %li.nav-item.dropdown
       %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#', class: impersonate_style }
         - if impersonating?
@@ -12,42 +10,30 @@
           = current_user
         - if unread_count.positive?
           %span.badge.alert-danger= unread_count
-        = show_nav_avatar
+        - if RadConfig.avatar? && current_user.avatar.attached?
+          = image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
       %ul.dropdown-menu.dropdown-menu-right
-        %li
-          = link_to icon('address-card', t('navigation.my_account')),
-                    edit_user_registration_path,
-                    class: 'dropdown-item'
+        %li= link_to 'My Account', edit_user_registration_path, class: 'dropdown-item'
         - if my_profile_nav?
-          %li= link_to icon('user', 'My Profile'), "/user_profiles/#{current_user.id}", class: 'dropdown-item'
+          %li= link_to 'My Profile', "/user_profiles/#{current_user.id}", class: 'dropdown-item'
         - if current_user.internal? && policy(Notification).index?
           %li
-            = link_to notifications_path, class: 'dropdown-item' do
-              = icon 'bell', 'Notifications'
+            = link_to '/rad_common/notifications', class: 'dropdown-item' do
+              Notifications
               - if unread_count.positive?
                 %span.badge.alert-danger= unread_count
         - if current_user.internal? && policy(NotificationSetting).index?
-          %li
-            = link_to icon('gear', 'Notification Settings'),
-                      notification_settings_path,
-                      class: 'dropdown-item'
+          %li= link_to 'Notification Settings', '/rad_common/notification_settings', class: 'dropdown-item'
 
         - if impersonating?
           %li
-            = link_to icon('user-slash', "Sign Out from #{current_user}"),
-                      stop_impersonations_path,
+            = link_to "Sign Out from #{current_user}",
+                      '/rad_common/impersonations/stop',
                       method: 'delete',
                       class: "dropdown-item #{impersonate_style}"
-        %hr.my-2
-        %li
-          = link_to icon('arrow-right-from-bracket', 'Sign Out'),
-                    destroy_user_session_path,
-                    method: 'delete',
-                    class: 'dropdown-item'
+
+        %li= link_to 'Sign Out', destroy_user_session_path, method: 'delete', class: 'dropdown-item'
   - else
-    - unless @marketing_site
-      %li= link_to 'Sign In', new_user_session_path, class: 'nav-link'
+    %li= link_to 'Sign In', new_user_session_path, class: 'nav-link'
     - unless RadConfig.disable_sign_up?
       %li= link_to 'Sign Up', new_user_registration_path, class: 'nav-link'
-
-  = render 'layouts/navigation_help'
