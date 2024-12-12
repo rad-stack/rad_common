@@ -159,7 +159,7 @@ class HerokuCommands
 
       def remove_encrypted_secrets
         [Company, User].each do |klass|
-          klass.encrypted_attributes.each do |attribute_name|
+          klass.encrypted_attributes&.each do |attribute_name|
             klass.where.not(attribute_name => nil).update_all "#{attribute_name}": nil
           end
         end
