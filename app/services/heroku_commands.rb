@@ -158,9 +158,7 @@ class HerokuCommands
       end
 
       def remove_encrypted_secrets
-        %w[Company User].each do |model_name|
-          klass = model_name.constantize
-
+        [Company, User].each do |klass|
           klass.encrypted_attributes.each do |attribute_name|
             klass.where.not(attribute_name => nil).update_all "#{attribute_name}": nil
           end
