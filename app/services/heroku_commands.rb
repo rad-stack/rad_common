@@ -70,7 +70,7 @@ class HerokuCommands
 
       write_log 'Clearing certain production data'
       remove_user_avatars
-      remove_accounting_keys
+      remove_encrypted_secrets
       User.update_all twilio_verify_enabled: false
       nil
     end
@@ -157,16 +157,12 @@ class HerokuCommands
         end
       end
 
-      def remove_accounting_keys
-        company = Company.main
-        return unless company.respond_to?(:quickbooks_access_token)
-
-        company.quickbooks_company_id = nil
-        company.quickbooks_token = nil
-        company.quickbooks_refresh_token = nil
-        company.quickbooks_expires_at = nil
-
-        company.save!(validate: false)
+      def remove_encrypted_secrets
+        [Company, User].each do |klass|
+          klass.encrypted_attributes&.each do |attribute_name|
+            klass.where.not(attribute_name => nil).update_all "#{attribute_name}": nil
+          end
+        end
       end
 
       def write_log(message)
