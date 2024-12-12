@@ -64,7 +64,7 @@ module RadSecurityRole
     end
 
     def validate_external_security_role
-      return unless external && !RadConfig.external_users?
+      return unless external? && !RadConfig.external_users?
 
       errors.add(:external, 'cannot be true when external users setting is off')
     end
