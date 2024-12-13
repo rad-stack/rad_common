@@ -145,7 +145,7 @@ class RadMailer < ActionMailer::Base
     end
 
     def escape_name(recipient_name)
-      recipient_name.gsub(',', ' ')
+      recipient_name.gsub(/[<>]/, '').gsub(',', ' ').strip
     end
 
     def validate_simple_message_options(options)
