@@ -47,10 +47,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
 
           visit new_user_invitation_path
 
-          if RadConfig.external_users?
-            select invite_role.name, from: 'Initial Security Role'
-          end
-
+          select invite_role.name, from: 'Initial Security Role' if RadConfig.external_users?
           fill_in 'Email', with: invite_email
           fill_in 'First Name', with: first_name
           fill_in 'Last Name', with: last_name
