@@ -17,7 +17,6 @@ module RadSecurityRole
 
     validate :validate_standard_permissions
     validate :validate_rules
-    validate :validate_external_security_role
 
     strip_attributes
     audited
@@ -61,11 +60,5 @@ module RadSecurityRole
     def validate_rules
       errors.add(:allow_invite, 'is not applicable') if allow_invite? && RadConfig.disable_invite?
       errors.add(:allow_sign_up, 'is not applicable') if allow_sign_up? && RadConfig.disable_sign_up?
-    end
-
-    def validate_external_security_role
-      return unless external? && !RadConfig.external_users?
-
-      errors.add(:external, 'cannot be true when external users setting is off')
     end
 end
