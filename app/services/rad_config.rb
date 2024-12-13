@@ -10,6 +10,10 @@ class RadConfig
       Mail::Address.new(admin_email!).address
     end
 
+    def developer_domain!
+      secret_config_item! :developer_domain
+    end
+
     def from_email!
       secret_config_item! :from_email
     end
