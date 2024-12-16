@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
+  s.add_dependency 'jsbundling-rails'
   s.add_dependency 'kaminari'
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
 
@@ -45,6 +46,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'prawn-table'
   s.add_dependency 'premailer-rails'
   s.add_dependency 'pretender'
+  s.add_dependency 'propshaft'
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
   s.add_dependency 'rails', '~> 7.2.2'
@@ -58,7 +60,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
   s.add_dependency 'twilio-ruby'
-  s.add_dependency 'webpacker'
   s.add_dependency 'wicked_pdf', '2.6.3'
   s.add_dependency 'wkhtmltopdf-heroku', '2.12.6.1.pre.jammy'
 

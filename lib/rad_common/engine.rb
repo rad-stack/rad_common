@@ -17,6 +17,7 @@ module RadCommon
     require 'faraday'
     require 'haml-rails'
     require 'hashids'
+    require 'jsbundling-rails'
     require 'jwt'
     require 'kaminari'
     require 'bootstrap4-kaminari-views'
@@ -26,6 +27,7 @@ module RadCommon
     require 'prawn/table'
     require 'premailer/rails'
     require 'pretender'
+    require 'propshaft'
     require 'pundit'
     require 'sendgrid-ruby'
     require 'sentry-rails'
@@ -37,7 +39,6 @@ module RadCommon
     require 'strip_attributes'
     require 'text'
     require 'twilio-ruby'
-    require 'webpacker'
     require 'wicked_pdf'
   end
 end

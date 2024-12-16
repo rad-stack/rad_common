@@ -95,7 +95,7 @@ module RadCommon
       if value
         tag.div(nil, class: 'fa fa-check')
       else
-        tag.div(nil, class: 'fa fa-regular fa-circle')
+        tag.div(nil, class: 'far fa-circle')
       end
     end
 
