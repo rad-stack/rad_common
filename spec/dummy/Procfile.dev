@@ -1,0 +1,2 @@
+web: env bin/rails server
+js: yarn build --watch

@@ -3,7 +3,7 @@
 .navbar.navbar-expand-lg.navbar-light.bg-light#navbar
   %div{ class: @marketing_site ? 'container' : 'container-fluid' }
     = link_to root_path, { class: 'navbar-brand' } do
-      = image_pack_tag RadConfig.app_logo_filename!
+      = image_tag RadConfig.app_logo_filename!
     - unless rad_nav.disable_nav?
       %button.navbar-toggler{ type: 'button', data: { toggle: 'collapse', target: '#navbar-supported-content' } }
         %span.navbar-toggler-icon
