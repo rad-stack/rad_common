@@ -24,7 +24,7 @@ describe SendgridStatusReceiver, type: :service do
 
     expect(last_email.subject).to include 'Outgoing Email Failed'
     expect(last_email.body.encoded).to include 'Attorney'
-    expect(last_email.body.encoded).to include contact_log.content
+    expect(last_email.html_part.decoded).to include contact_log.content
   end
 
   it 'ignores when a contact log was previously deleted' do
@@ -100,10 +100,20 @@ describe SendgridStatusReceiver, type: :service do
     end
   end
 
-  context 'without matching host name' do
-    let(:host_name) { 'example.com' }
+  context 'with missing host name' do
+    let(:host_name) { nil }
 
     it 'ignores' do
+      expect { service.process! }.not_to change(deliveries, :count)
+    end
+  end
+
+  context 'with non-matching host name' do
+    let(:host_name) { 'example.com' }
+
+    before { allow_any_instance_of(RadSendgridStatusReceiver).to receive(:forward!) }
+
+    it 'forwards' do
       expect { service.process! }.not_to change(deliveries, :count)
     end
   end

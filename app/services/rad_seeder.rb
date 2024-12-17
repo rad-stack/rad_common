@@ -56,7 +56,7 @@ class RadSeeder
 
         notification_type.security_roles.each do |security_role|
           security_role.users.active.each do |user|
-            next if user.rad_developer?
+            next if user.developer?
 
             NotificationSetting.init_for_user(notification_type, user).update! enabled: false
           end

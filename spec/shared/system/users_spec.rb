@@ -287,7 +287,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'sign up', :js, :sign_up_specs do
+  describe 'sign up', :external_user_specs, :js, :sign_up_specs do
     before do
       create :security_role, :external, allow_sign_up: true
       allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, legal_docs?: true)
