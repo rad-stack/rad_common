@@ -15,7 +15,7 @@ class RadMailer < ActionMailer::Base
     @contact_log_record = user
     @contact_log_from_user = approved_by
 
-    @email_action = { button_text: 'Get Started', button_url: root_url }
+    @email_action = { button_text: 'Get Started', button_url: get_started_link }
 
     @recipient = user
     @message = User.user_approved_message
@@ -167,5 +167,11 @@ class RadMailer < ActionMailer::Base
       return if unknown_keys.empty?
 
       raise "unknown options: #{unknown_keys}"
+    end
+
+    def get_started_link
+      return RadConfig.config_item!(:get_started_link) if RadConfig.config_item(:get_started_link).present?
+
+      root_url
     end
 end
