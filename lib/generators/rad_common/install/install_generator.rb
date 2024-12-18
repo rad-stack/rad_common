@@ -59,6 +59,11 @@ module RadCommon
                     'app/javascript/packs/application.js'
         end
 
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/app/javascript/controllers/index.js',
+                    'app/javascript/controllers/index.js'
+        end
+
         copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js',
                   'app/javascript/packs/rad_mailer.js'
 

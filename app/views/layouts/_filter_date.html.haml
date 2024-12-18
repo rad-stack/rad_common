@@ -1,22 +1,21 @@
 %div{ class: filter.group_label ? 'form-group grouped-dates' : '' }
   - if filter.group_label
     %label= filter.group_label
-  .d-flex.jusify-space-between
+  .d-flex.jusify-space-between{ 'data-controller': 'search-date-filter' }
     .flex-grow-1
-      - input_data = { default: search.search_params[filter.start_input] || filter.default_start_value.to_s }
+      - default_value = search.search_params[filter.start_input] || filter.default_start_value.to_s
+      - input_data = { default: default_value, 'search-date-filter-target' => 'startInput' }
       = f.input filter.start_input,
                 as: :date,
                 html5: true,
                 label: filter.start_input_label,
                 required: false,
                 label_html: { class: filter.start_label_class },
-                input_html: { value: search.search_params[filter.start_input] || filter.default_start_value.to_s,
-                              data: input_data }
-    .my-auto.pt-2.px-1
-      - col = filter.column.to_s.underscore
-      = date_filter_dropdown_label("[name='search[#{col}_start]']", "[name='search[#{col}_end]']")
+                input_html: { value: default_value, data: input_data }
+    .my-auto.pt-2.px-1= date_filter_dropdown_label
     .flex-grow-1
-      - input_data = { default: search.search_params[filter.end_input] || filter.default_end_value.to_s }
+      - default_value = search.search_params[filter.end_input] || filter.default_end_value.to_s
+      - input_data = { default: default_value, 'search-date-filter-target' => 'endInput' }
 
       = f.input filter.end_input,
                 as: :date,
@@ -24,5 +23,4 @@
                 label: filter.end_input_label,
                 required: false,
                 label_html: { class: filter.end_label_class },
-                input_html: { value: search.search_params[filter.end_input] || filter.default_end_value.to_s,
-                              data: input_data }
+                input_html: { value: default_value, data: input_data }
