@@ -9,7 +9,7 @@ describe 'Users' do
   let(:admin) { create :admin }
   let(:password) { 'cOmpl3x_p@55w0rd' }
   let(:deliveries) { ActionMailer::Base.deliveries }
-  let(:last_email) { deliveries.last }
+  let(:first_email) { deliveries.first }
 
   before { Rails.cache.write('rate_limit:twilio_verify', 0, expires_in: 5.minutes) }
 
@@ -49,7 +49,7 @@ describe 'Users' do
         user = User.last
         user.process_duplicates
         expect(deliveries.size).to eq 1
-        expect(last_email.subject).to include "Possible Duplicate User (#{user}) Signed Up"
+        expect(first_email.subject).to include "Possible Duplicate User (#{user}) Signed Up"
       end
     end
   end
@@ -88,7 +88,7 @@ describe 'Users' do
         fill_in 'user_email', with: "foo_#{user.email}"
         click_link_or_button 'Save'
         expect(page).to have_content 'User was successfully updated.'
-        expect(last_email.subject).to include 'Confirmation instructions'
+        expect(first_email.subject).to include 'Confirmation instructions'
       end
     end
   end

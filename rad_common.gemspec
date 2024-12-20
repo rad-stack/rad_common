@@ -14,7 +14,8 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   s.bindir = 'bin'
-  s.executables = %w[reset_db migrate_reset rc_update rc_rspec rc_parallel_rspec]
+  s.executables = %w[reset_db migrate_reset rc_update rc_rspec rc_parallel_rspec
+                     local_backup clone_local reset_staging creds]
 
   s.add_dependency 'active_storage_validations', '1.0.4' # see Task 43068
   s.add_dependency 'audited'
@@ -46,14 +47,14 @@ Gem::Specification.new do |s|
   s.add_dependency 'pretender'
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
-  s.add_dependency 'rails', '~> 7.1.3.4'
+  s.add_dependency 'rails', '~> 7.2.2'
   s.add_dependency 'redis'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
   s.add_dependency 'sidekiq', '~> 7.1'
   s.add_dependency 'simple_form'
-  s.add_dependency 'smartystreets_ruby_sdk'
+  s.add_dependency 'smartystreets_ruby_sdk', '5.20.4'
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
   s.add_dependency 'twilio-ruby'

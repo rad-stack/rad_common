@@ -10,7 +10,17 @@ class RadSendgridStatusReceiver
   end
 
   def process!
-    return unless host_matches?
+    if host_name.blank?
+      Rails.logger.info "sendgrid status for #{email}: missing host name, ignoring"
+      return
+    end
+
+    if forward?
+      Rails.logger.info "sendgrid status for #{email}: forwarding to #{host_name}"
+      forward!
+      return
+    end
+
     return if missing_contact_log?
 
     process_status
@@ -66,13 +76,22 @@ class RadSendgridStatusReceiver
     end
 
     def deactivate_user?
-      suppression? && user.present? && (spam_report? || user.stale?)
+      suppression? && user.present? && (spam_report? || user.stale? || user.needs_reactivate?)
     end
 
     def deactivate_user!
       @notify = false
+      reason = deactivate_user_reason
       user.update! user_status: UserStatus.default_inactive_status
-      Notifications::UserDeactivatedNotification.main(user).notify!
+      Notifications::UserDeactivatedNotification.main(user: user, reason: reason).notify!
+    end
+
+    def deactivate_user_reason
+      return 'they reported a recent email as spam' if spam_report?
+      return 'a recent email to them failed and they have not accessed the system in quite a while' if user.stale?
+      return 'a recent email to them failed and their account has expired due to inactivity' if user.needs_reactivate?
+
+      raise 'unhandled deactivation reason'
     end
 
     def update_contact_log!
@@ -103,23 +122,41 @@ class RadSendgridStatusReceiver
       raise "unknown event type #{event}" unless all_events.include?(event)
     end
 
-    def host_matches?
-      if host_name.blank?
-        Rails.logger.info "sendgrid status for #{email}: missing host name, ignoring"
-        false
-      elsif host_name == RadConfig.host_name!
-        true
-      else
-        Rails.logger.info "sendgrid status for #{email}: host name doesn't match, ignoring - #{host_name}"
-        false
-      end
-    end
-
     def spam_report?
       event == SPAM_REPORT
     end
 
     def all_events
       SUPPRESSION_EVENTS + %w[open click]
+    end
+
+    def forward?
+      host_name != RadConfig.host_name!
+    end
+
+    def forward!
+      RadRetry.perform_request do
+        response = forward_connection.post('/sendgrid_statuses') do |request|
+          request.body = forward_body
+        end
+
+        raise "forward failed, code: #{response.status}, message: #{response.body}" unless response.status == 200
+      end
+    end
+
+    def forward_connection
+      @forward_connection ||= Faraday.new url: "#{forward_protocol}://#{host_name}", headers: forward_headers
+    end
+
+    def forward_protocol
+      Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
+    end
+
+    def forward_headers
+      { 'Content-Type' => 'application/json' }
+    end
+
+    def forward_body
+      { '_json' => [@content] }.to_json
     end
 end

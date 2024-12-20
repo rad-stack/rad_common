@@ -25,6 +25,8 @@ module RadCommon
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
         gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
+        gsub_file 'Gemfile', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
+        gsub_file 'Gemfile.lock', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
 
         # misc
         merge_package_json unless RadConfig.react_app?
@@ -40,9 +42,17 @@ module RadCommon
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
-        copy_file '../pull_request_template.md', '.github/pull_request_template.md'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
+        end
+
+        copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
+        copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
+        copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
+                 'public/406-unsupported-browser.html'
 
         unless RadConfig.react_app?
           copy_file '../../../../../spec/dummy/app/javascript/packs/application.js',
@@ -99,6 +109,7 @@ module RadCommon
 
         # bin
         directory '../../../../../spec/dummy/bin/', 'bin/'
+        gsub_file 'bin/setup', 'dummy', installed_app_name # TODO: Remove in Rails 8
 
         # locales
         copy_file '../../../../../spec/dummy/config/locales/devise.twilio_verify.en.yml',

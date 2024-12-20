@@ -10,6 +10,10 @@ class RadConfig
       Mail::Address.new(admin_email!).address
     end
 
+    def developer_domain!
+      secret_config_item! :developer_domain
+    end
+
     def from_email!
       secret_config_item! :from_email
     end
@@ -437,6 +441,7 @@ class RadConfig
       check_twilio_verify!
       check_smarty!
       check_marketing!
+      check_external!
     end
 
     private
@@ -472,6 +477,12 @@ class RadConfig
         return unless force_marketing_site? && !allow_marketing_site?
 
         raise 'force_marketing_site not allowed'
+      end
+
+      def check_external!
+        return unless user_clients? && !external_users?
+
+        raise 'user_clients requires external_users'
       end
 
       def override_variable(item)

@@ -177,12 +177,14 @@ module RadCommon
     end
 
     def validate_params(params)
-      if @required && filter_value(params).blank?
-        @errors = ["#{input_label} is required"]
-        false
-      else
-        true
-      end
+      return true unless @required
+
+      value = filter_value(params)
+      value = value.compact_blank if value.is_a?(Array)
+      return true if value.present?
+
+      @errors = ["#{input_label} is required"]
+      false
     end
 
     def search_scope_params
