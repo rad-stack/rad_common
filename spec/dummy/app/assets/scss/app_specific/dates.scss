@@ -1,0 +1,23 @@
+@import 'variables';
+
+select.input-update {
+  width: auto;
+  margin-bottom: 3px;
+}
+
+.date-display { display: inline-block; }
+
+.update-container {
+  white-space: nowrap;
+  position: relative;
+}
+
+.date-field {
+  a { cursor: pointer; }
+  input { display: none; }
+}
+
+.update-date {
+  a { cursor: pointer; }
+  input.date { display: none; }
+}

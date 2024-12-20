@@ -1,0 +1,30 @@
+.subtask-link{
+  border-bottom: thin solid #edf0f4;
+}
+
+.subtask-link:last-of-type{
+  border: 0;
+}
+
+.reassign_tasks_action{
+  margin-right: 0.5em;
+}
+
+.reassign_tasks_label{
+  font-weight: bold;
+  margin-right: 0.2em;
+  display: inline;
+}
+
+.recent-task-dropdown {
+  width: 600px;
+
+  .dropdown-item {
+    white-space: normal;
+  }
+}
+
+.scrollable-task-list {
+  max-height: 35vh;
+  overflow-y: auto;
+}

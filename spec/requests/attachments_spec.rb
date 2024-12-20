@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Attachments' do
   let(:user) { create :admin }
   let!(:division) { create :division }
-  let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('app/javascript/images/app_logo.png')) }
+  let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('app/assets/images/app_logo.png')) }
 
   before { division.logo.attach(io: file, filename: 'logo.png') }
 
