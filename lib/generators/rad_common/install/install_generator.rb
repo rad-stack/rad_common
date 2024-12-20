@@ -35,10 +35,6 @@ module RadCommon
         copy_file '../../../../../.ruby-version', '.ruby-version'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
 
-        unless RadConfig.react_app?
-          copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
-        end
-
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
@@ -49,14 +45,16 @@ module RadCommon
           copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
         end
 
+        migrate_webpacker_to_esbuild unless RadConfig.react_app?
+
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
         copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
                  'public/406-unsupported-browser.html'
 
         unless RadConfig.react_app?
-          copy_file '../../../../../spec/dummy/app/javascript/packs/application.js',
-                    'app/javascript/packs/application.js'
+          copy_file '../../../../../spec/dummy/app/javascript/application.js',
+                    'app/javascript/application.js'
         end
 
         directory '../../../../../.bundle', '.bundle'
@@ -85,7 +83,6 @@ module RadCommon
 
         unless RadConfig.react_app?
           directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
-          directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
         end
 
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
@@ -382,6 +379,54 @@ Seeder.new.seed!
           gsub_file '.github/workflows/rspec_tests.yml',
                    "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
                    'bin/rc_parallel_rspec'
+        end
+
+        def migrate_webpacker_to_esbuild
+          remove_dir 'config/webpack'
+          remove_file 'config/webpacker.yml'
+          remove_file 'bin/webpack'
+          remove_file 'bin/webpack-dev-server'
+          remove_file 'babel.config.js'
+
+          copy_file '../../../../../spec/dummy/esbuild.config.js', 'esbuild.config.js'
+          copy_file '../../../../../spec/dummy/Procfile.dev', 'Procfile.dev'
+
+          if Dir.exist?('app/javascript/packs')
+            Dir['app/javascript/packs/*'].each do |file|
+              copy_file Rails.root.join(file), "app/javascript/#{File.basename(file)}"
+            end
+
+            remove_dir 'app/javascript/packs'
+          end
+
+          if Dir.exist?('app/javascript/images')
+            Dir['app/javascript/images/*'].each do |file|
+              copy_file Rails.root.join(file), "app/assets/images/#{File.basename(file)}"
+            end
+
+            remove_dir 'app/javascript/images'
+          end
+
+          search_and_replace 'image_pack_tag', 'image_tag'
+          search_and_replace 'javascript_pack_tag', 'javascript_include_tag'
+          search_and_replace 'stylesheet_pack_tag', 'stylesheet_link_tag'
+          search_and_replace 'favicon_pack_tag', 'favicon_link_tag'
+          search_and_replace 'app/javascript/images', 'app/assets/images'
+          search_and_replace "'app', 'javascript', 'images'", "'app', 'assets', 'images'"
+
+          copy_file '../../../../../spec/dummy/app/assets/scss/application.scss',
+                    'app/assets/scss/application.scss'
+          copy_file '../../../../../spec/dummy/app/assets/scss/rad_mailer.scss',
+                    'app/assets/scss/rad_mailer.scss'
+          create_file 'app/assets/scss/app_specific/main.scss'
+
+          if Dir.exist?('app/javascript/css')
+            Dir['app/javascript/css/*'].each do |file|
+              copy_file Rails.root.join(file), "app/assets/scss/#{File.basename(file)}"
+            end
+
+            remove_dir 'app/javascript/css'
+          end
         end
 
         def apply_migrations
