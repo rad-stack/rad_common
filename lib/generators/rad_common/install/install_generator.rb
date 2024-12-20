@@ -59,9 +59,6 @@ module RadCommon
                     'app/javascript/packs/application.js'
         end
 
-        copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js',
-                  'app/javascript/packs/rad_mailer.js'
-
         directory '../../../../../.bundle', '.bundle'
 
         # code style config
@@ -82,8 +79,6 @@ module RadCommon
           if !RadConfig.config_item(:legacy_rails_config).nil? && RadConfig.legacy_rails_config?
             gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
           end
-
-          copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         end
 
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
