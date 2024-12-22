@@ -418,7 +418,9 @@ Seeder.new.seed!
                     'app/assets/scss/application.scss'
           copy_file '../../../../../spec/dummy/app/assets/scss/rad_mailer.scss',
                     'app/assets/scss/rad_mailer.scss'
-          create_file 'app/assets/scss/app_specific/main.scss'
+          unless File.exist? 'app/assets/scss/app_specific/main.scss'
+            create_file 'app/assets/scss/app_specific/main.scss'
+          end
 
           if Dir.exist?('app/javascript/css')
             Dir['app/javascript/css/*'].each do |file|
