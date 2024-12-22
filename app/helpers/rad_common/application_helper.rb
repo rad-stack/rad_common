@@ -236,6 +236,12 @@ module RadCommon
       end
     end
 
+    def rad_wicked_pdf_stylesheet_link_tag(source)
+      # Hack until https://github.com/mileszs/wicked_pdf/pull/1120 is merged
+      protocol = Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
+      stylesheet_link_tag 'application', host: "#{protocol}://#{RadConfig.host_name!}"
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
