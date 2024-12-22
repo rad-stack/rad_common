@@ -1,6 +1,6 @@
 - if pdf_output?
   .mb-4
-    = wicked_pdf_image_tag(asset_pack_url('media/images/app_logo.png'), class: 'logo-thumbnail')
+    = wicked_pdf_image_tag(image_url('app_logo.png'), class: 'logo-thumbnail')
     .text-center
       %h1= @report.title
       %br
