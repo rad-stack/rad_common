@@ -87,7 +87,8 @@ jobs:
           bundle exec rails db:test:prepare
 
       - name: Compile esbuild assets
-        run: bin/rails assets:precompile
+        working-directory: spec/dummy
+        run: bundle exec bin/rails assets:precompile
 
       - name: Load schema
         working-directory: spec/dummy

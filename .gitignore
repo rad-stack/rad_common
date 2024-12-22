@@ -24,5 +24,8 @@ spec/dummy/.yarn-integrity
 spec/dummy/config/credentials/test.key
 spec/dummy/config/credentials/development.key
 
+spec/dummy/assets/builds/*
+!spec/dummy/assets/builds/.keep
+
 /app/assets/builds/*
 !/app/assets/builds/.keep
