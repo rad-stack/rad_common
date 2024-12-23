@@ -1,16 +1,5 @@
-// Font Awesome
-$fa-font-path: ".";
-@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
-@import "@fortawesome/fontawesome-free/scss/solid.scss";
-
 // Rad Common + Bootstrap with Overrides
 @import "rad_common_js/src/scss/main";
-
-// Trix
-@import "trix/dist/trix";
-
-// Bootstrap Select
-@import "bootstrap-select/dist/css/bootstrap-select";
 
 // Import app-specific scss
 @import "./app_specific/main";
