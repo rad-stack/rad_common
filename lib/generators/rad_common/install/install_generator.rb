@@ -44,7 +44,11 @@ module RadCommon
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
-        copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
+        end
+
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
         copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
