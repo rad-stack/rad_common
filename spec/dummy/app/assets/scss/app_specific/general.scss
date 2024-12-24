@@ -1,0 +1,112 @@
+@import 'variables';
+
+body,
+.inline { display: inline; }
+.btn { vertical-align: bottom; }
+.show-on-drag { display: none; }
+.thumbnail { width: 120px }
+select.btn-block { width: 100%; }
+h2.text-center .page-header { margin-top: -10px; }
+input[type=checkbox].form-control { width : auto; }
+
+td {
+  .assigned_to { display: block; }
+  .message-data {
+    img {
+      max-width:  200px !important;
+      max-height: 200px !important;
+    }
+  }
+  .preview img { width: 200px; }
+}
+
+td.message-data {
+  overflow-wrap: anywhere;
+}
+
+.file-notice {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.fileinput-button {
+  margin-top: 10px;
+  @include sm { margin-top: inherit; }
+}
+
+.action-buttons {
+  .btn { margin-right: 5px; }
+  input[type=file] { font-size: 9px; }
+}
+
+/* this is added because the standard bootstrap btn-block doesn't work on btn-groups */
+.btn-group.btn-block {
+  width: 100%;
+  display: block;
+
+  button {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+}
+
+ul.file-list {
+  list-style: none;
+  padding-left: 0;
+
+  li {
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+}
+
+.col-error {
+  color: #d9534f;
+  margin-bottom: 8px;
+  cursor: pointer;
+  .fa {
+    font-size: 18px;
+    margin-left: 4px;
+  }
+}
+
+.assigned_to {
+  display : inline-block;
+
+  form {
+    width: 88%;
+    display: inline-block;
+  }
+
+  select { min-width: 180px; }
+
+  i.fa {
+    display:inline-block;
+    margin-left : 5px;
+    margin-right: 5px;
+  }
+}
+
+.table>thead>tr>td.disabled,
+.table>tbody>tr>td.disabled,
+.table>tfoot>tr>td.disabled,
+.table>thead>tr>th.disabled,
+.table>tbody>tr>th.disabled,
+.table>tfoot>tr>th.disabled,
+.table>thead>tr.disabled>td,
+.table>tbody>tr.disabled>td,
+.table>tfoot>tr.disabled>td,
+.table>thead>tr.disabled>th,
+.table>tbody>tr.disabled>th,
+.table>tfoot>tr.disabled>th {
+  background-color: #CACACA;
+}
+
+.user-icon {
+  width: 40px;
+  margin-left: 4px;
+  margin-top : -9px;
+  vertical-align: text-top;
+}
