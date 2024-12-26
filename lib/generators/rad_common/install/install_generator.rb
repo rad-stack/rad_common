@@ -392,6 +392,8 @@ Seeder.new.seed!
           copy_file '../../../../../spec/dummy/Procfile.dev', 'Procfile.dev'
 
           if Dir.exist?('app/javascript/packs')
+            remove_file 'app/javascript/packs/rad_mailer.js'
+
             Dir['app/javascript/packs/*'].each do |file|
               copy_file Rails.root.join(file), "app/javascript/#{File.basename(file)}"
             end
