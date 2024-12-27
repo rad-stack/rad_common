@@ -1,6 +1,7 @@
 const esbuild = require('esbuild');
 
 async function build() {
+  const nodeEnv = process.env.NODE_ENV || 'development';
   const ctx = await esbuild.context({
     entryPoints: ['app/javascript/application.js'],
     outdir: 'app/assets/builds',
@@ -8,9 +9,10 @@ async function build() {
     sourcemap: true,
     format: 'esm',
     publicPath: '/assets',
+    minify: nodeEnv === 'production',
     define: {
       'process.env.SENTRY_DSN': JSON.stringify(process.env.SENTRY_DSN || ''),
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      'process.env.NODE_ENV': JSON.stringify(nodeEnv),
       global: 'window'
     }
   });
