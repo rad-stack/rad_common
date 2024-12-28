@@ -12,8 +12,10 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
   let(:valid_email) { "#{Faker::Internet.user_name}@#{email_domain}" }
   let(:external_email) { "#{Faker::Internet.user_name}@#{external_domain}" }
   let!(:internal_role) { create :security_role, allow_invite: true }
-  let!(:external_role) { create :security_role, :external, allow_invite: true }
+  let(:external_role) { create :security_role, :external, allow_invite: true }
   let(:open_invite_error) { "There is an open invitation for this user: #{invitee.email}" }
+
+  before { external_role if RadConfig.external_users? }
 
   describe 'user' do
     before { login_as user, scope: :user }
@@ -45,7 +47,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
 
           visit new_user_invitation_path
 
-          select invite_role.name, from: 'Initial Security Role'
+          select invite_role.name, from: 'Initial Security Role' if RadConfig.external_users?
           fill_in 'Email', with: invite_email
           fill_in 'First Name', with: first_name
           fill_in 'Last Name', with: last_name

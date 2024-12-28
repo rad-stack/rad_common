@@ -161,9 +161,16 @@ module RadCommon
     end
 
     def icon(icon, text = nil, options = {})
+      allowed_styles = %w[fa fab far fas fal]
+      style = options.fetch(:style, 'fa')
+
+      unless allowed_styles.include?(style)
+        raise ArgumentError, "Invalid Font Awesome style: '#{style}'. Allowed styles are: #{allowed_styles.join(', ')}"
+      end
+
       text_class = text.present? ? 'mr-2' : nil
       capture do
-        concat tag.i('', class: "fa fa-#{icon} #{text_class} #{options[:class]}".strip)
+        concat tag.i('', class: "#{style} fa-#{icon} #{text_class} #{options[:class]}".strip)
         concat text
       end
     end
