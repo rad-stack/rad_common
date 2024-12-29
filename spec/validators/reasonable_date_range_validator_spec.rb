@@ -8,6 +8,10 @@ class MockModelWithDateValidations
   def initialize(date)
     @date = date
   end
+
+  def date_changed?
+    true
+  end
 end
 
 describe ReasonableDateRangeValidator do
