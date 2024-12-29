@@ -16,7 +16,7 @@ class Exporter
 
     # we'll raise this for now and see what turns up in the wild, then probably change it to limit it let the user know
     # see Task
-    raise "exporter record limit of #{RECORD_LIMIT} exceeded with #{records.size}" if records.size > RECORD_LIMIT
+    raise "exporter record limit of #{RECORD_LIMIT} exceeded with #{record_count}" if record_count > RECORD_LIMIT
   end
 
   def generate
@@ -68,5 +68,9 @@ class Exporter
 
     def report_name
       "#{records.klass.name} Export"
+    end
+
+    def record_count
+      @record_count ||= records.size
     end
 end
