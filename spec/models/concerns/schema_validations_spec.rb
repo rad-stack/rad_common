@@ -78,6 +78,11 @@ describe 'SchemaValidations', type: :module do
         expect(company.valid?).to be item.last
       end
     end
+
+    it 'only validates when field is changed' do
+      division.update_column :date_established, 200.years.ago
+      expect(division.reload.valid?).to be true
+    end
   end
 
   describe 'exempt columns' do
