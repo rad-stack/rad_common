@@ -10,6 +10,7 @@ module RadCommon
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
+        remove_file '.github/pull_request_template.md'
 
         add_crawling_config
         install_procfile
