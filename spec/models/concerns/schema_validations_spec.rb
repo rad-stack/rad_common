@@ -55,6 +55,36 @@ describe 'SchemaValidations', type: :module do
     end
   end
 
+  describe 'reasonable date range validations' do
+    let(:division) { create :division }
+    let(:company) { Company.main }
+
+    it 'validates dates' do
+      [[200.years.ago, false],
+       [200.years.from_now, false],
+       [nil, true],
+       [2.years.ago, true]].each do |item|
+        division.date_established = item.first
+        expect(division.valid?).to be item.last
+      end
+    end
+
+    it 'validates datetimes' do
+      [[200.years.ago, false],
+       [200.years.from_now, false],
+       [nil, true],
+       [2.years.ago, true]].each do |item|
+        company.validity_checked_at = item.first
+        expect(company.valid?).to be item.last
+      end
+    end
+
+    it 'only validates when field is changed' do
+      division.update_column :date_established, 200.years.ago
+      expect(division.reload.valid?).to be true
+    end
+  end
+
   describe 'exempt columns' do
     it 'raises an error if exempt column fails database constraint' do
       expect { division.update!(created_at: nil) }.to raise_error ActiveRecord::NotNullViolation
