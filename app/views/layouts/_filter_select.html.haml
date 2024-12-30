@@ -1,4 +1,4 @@
-- data_style = "btn #{search.default_value?(filter.searchable_name) ? 'btn-light' : 'btn-warning'}"
+- data_style = search.default_value?(filter.searchable_name) ? '' : 'filter-selected'
 - input_html = filter.search_scope.present? ? filter.search_scope_params : { class: 'selectpicker' }
 
 .row.align-items-center
@@ -13,15 +13,15 @@
                 wrapper_html: { class: 'text-right mb-0' },
                 tooltip: "Exclude results that match selected #{filter.input_label}"
 
+- placeholder = filter.multiple ? filter.blank_value_label : 'Select an option'
 = f.input filter.searchable_name,
           collection: filter.input_options_with_current_selection(search),
           label: false,
           selected: filter.selected_value(search),
-          include_blank: filter.include_blank ? filter.blank_value_label : false,
+          include_blank: filter.include_blank && !filter.multiple ? filter.blank_value_label : false,
           as: filter.input_type,
           group_method: :last,
           required: false,
           label_method: filter.label_method,
-          input_html: { multiple: filter.multiple,
-                        'data-live-search': true,
-                        'data-style': data_style }.merge(input_html)
+          wrapper_html: { class: data_style },
+          input_html: { multiple: filter.multiple, data: { placeholder: placeholder } }.merge(input_html)

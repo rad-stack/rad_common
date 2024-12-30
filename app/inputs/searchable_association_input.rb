@@ -32,11 +32,8 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
         'data-abs-template' => { clear_option: 'None' }.to_json,
         'data-abs-subtext' => options[:show_subtext],
         'data-abs-locale-search-placeholder' => options[:search_placeholder],
-        'data-abs-ajax-data' => {
-          'global_search_scope' => options[:search_scope],
-          'excluded_ids' => options[:excluded_ids],
-          'term' => '{{{q}}}'
-        }.to_json
+        'data-global-search-scope' => options[:search_scope],
+        'data-excluded-ids' => options[:excluded_ids]
       }
     end
 
