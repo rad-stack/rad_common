@@ -15,12 +15,18 @@ RSpec.describe UserExport, type: :service do
 
   describe '.generate' do
     let(:user) { create :user, external: false, current_sign_in_at: Time.current }
-    let(:exporter) { described_class.new(records: [user], current_user: user, format: export_format) }
+    let(:another) { create :user, external: false, current_sign_in_at: Time.current }
+    let(:export_format) { :csv }
+    let(:exporter) { described_class.new(records: [user, another], current_user: user, format: export_format) }
     let(:file) { exporter.generate }
 
-    context 'when CSV format' do
-      let(:export_format) { :csv }
+    context 'when record limit is exceeded' do
+      before { stub_const('Exporter::RECORD_LIMIT', 1) }
 
+      it { expect { file }.to raise_error "exporter record limit of 1 exceeded with 2" }
+    end
+
+    context 'when CSV format' do
       before { exporter.send(:headers).each { |heading| expect(file).to include(heading) } }
 
       it 'generates an export csv file with expected content' do

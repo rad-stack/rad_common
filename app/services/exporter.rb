@@ -71,6 +71,6 @@ class Exporter
     end
 
     def record_count
-      @record_count ||= records.size
+      @record_count ||= records.size.is_a?(Hash) ? 1 : records.size
     end
 end
