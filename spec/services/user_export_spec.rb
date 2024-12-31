@@ -23,7 +23,7 @@ RSpec.describe UserExport, type: :service do
     context 'when record limit is exceeded' do
       before { stub_const('Exporter::RECORD_LIMIT', 1) }
 
-      it { expect { file }.to raise_error "exporter record limit of 1 exceeded with 2" }
+      it { expect { file }.to raise_error 'exporter record limit of 1 exceeded with 2' }
     end
 
     context 'when CSV format' do
