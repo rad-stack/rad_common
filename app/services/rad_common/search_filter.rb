@@ -183,10 +183,7 @@ module RadCommon
         class: 'selectpicker-search',
         'data-abs-subtext' => show_search_subtext,
         'data-abs-locale-search-placeholder' => search_scope[:description],
-        'data-abs-ajax-data' => {
-          'global_search_scope' => search_scope[:name],
-          'term' => '{{{q}}}'
-        }.to_json
+        'data-global-search-scope' => options[:search_scope]
       }
     end
 

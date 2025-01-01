@@ -12,7 +12,7 @@
           .col-lg-12
             = f.input :client_id,
                       collection: clients_to_add_to_user(@user),
-                      input_html: { class: 'selectpicker', 'data-live-search' => true },
+                      input_html: { class: 'selectpicker' },
                       label: RadCommon::AppInfo.new.client_model_label
 
             = f.input :user_id, as: :hidden
