@@ -3,6 +3,11 @@ class ContactLogPolicy < ApplicationPolicy
     false
   end
 
-  alias destroy? create?
-  alias update? create?
+  def destroy?
+    create?
+  end
+
+  def update?
+    create?
+  end
 end

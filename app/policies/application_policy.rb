@@ -54,10 +54,21 @@ class ApplicationPolicy
     index?
   end
 
-  alias not_duplicate? destroy?
-  alias reset_duplicates? destroy?
-  alias merge_duplicates? destroy?
-  alias duplicate_do_later? destroy?
+  def not_duplicate?
+    destroy?
+  end
+
+  def reset_duplicates?
+    destroy?
+  end
+
+  def merge_duplicates?
+    destroy?
+  end
+
+  def duplicate_do_later?
+    destroy?
+  end
 
   class Scope
     attr_reader :user, :scope
