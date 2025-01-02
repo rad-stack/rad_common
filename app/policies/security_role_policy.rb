@@ -1,3 +1,5 @@
 class SecurityRolePolicy < ApplicationPolicy
-  alias permission? show?
+  def permission?
+    show?
+  end
 end
