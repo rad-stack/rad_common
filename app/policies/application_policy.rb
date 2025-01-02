@@ -43,7 +43,7 @@ class ApplicationPolicy
   end
 
   def global_search?
-    index?
+    index? && show?
   end
 
   def report?

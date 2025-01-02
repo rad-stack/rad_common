@@ -13,7 +13,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
   describe '#global_autocomplete_result' do
     context 'when searching users' do
-      before { allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true) }
+      before { allow_any_instance_of(UserPolicy).to receive(:global_search?).and_return(true) }
 
       it 'returns results from selected scope' do
         scope = auto_complete.send(:selected_scope)
@@ -67,7 +67,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     let(:params) { ActionController::Parameters.new(term: term, global_search_scope: 'user_name') }
     let(:scope) { auto_complete.send(:selected_scope) }
 
-    before { allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true) }
+    before { allow_any_instance_of(UserPolicy).to receive(:global_search?).and_return(true) }
 
     context "when excluding id's" do
       let(:user) { create :admin }
@@ -131,7 +131,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
     context 'when user cannot read class' do
       it 'returns empty array' do
-        allow_any_instance_of(UserPolicy).to receive(:index?).and_return(false)
+        allow_any_instance_of(UserPolicy).to receive(:global_search?).and_return(false)
         expect(auto_complete.send(:autocomplete_result, scope)).to eq([])
       end
     end
@@ -145,7 +145,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       create :user, last_name: term, email: "#{term}@example.com"
       create :division, name: term, owner: user
 
-      allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true)
+      allow_any_instance_of(UserPolicy).to receive(:global_search?).and_return(true)
     end
 
     it 'includes results from multiple scopes' do
