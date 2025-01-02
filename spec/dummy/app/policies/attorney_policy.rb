@@ -1,6 +1,6 @@
 class AttorneyPolicy < ApplicationPolicy
   def index?
-    true
+    user.permission? :read_attorney
   end
 
   alias show? index?

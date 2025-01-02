@@ -3,9 +3,10 @@ require 'rails_helper'
 describe SendgridStatusReceiver, type: :service do
   let(:service) { described_class.new(content) }
   let(:deliveries) { ActionMailer::Base.deliveries }
-  let(:user) { create :user }
+  let(:user_role) { create :security_role, read_attorney: true }
+  let(:user) { create :user, security_roles: [user_role] }
   let(:event_type) { 'bounce' }
-  let(:contact_log) { create :contact_log, :email, record: create(:attorney) }
+  let(:contact_log) { create :contact_log, :email, record: create(:attorney), from_user: user }
   let!(:contact_log_recipient) { create :contact_log_recipient, :email, contact_log: contact_log, email: user.email }
   let(:last_email) { deliveries.last }
   let(:host_name) { RadConfig.host_name! }

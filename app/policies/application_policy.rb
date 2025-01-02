@@ -50,10 +50,13 @@ class ApplicationPolicy
     user.permission?(:admin)
   end
 
+  def resolve_duplicates?
+    index?
+  end
+
   alias not_duplicate? destroy?
   alias reset_duplicates? destroy?
   alias merge_duplicates? destroy?
-  alias resolve_duplicates? index?
   alias duplicate_do_later? destroy?
 
   class Scope
