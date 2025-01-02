@@ -4,6 +4,10 @@ require:
   - rubocop-capybara
   - rubocop-factory_bot
   - rubocop-rspec_rails
+  - ./lib/rubocop/cop/custom/prohibit_alias_in_policy
+
+Custom/ProhibitAliasInPolicy:
+  Enabled: true
 
 AllCops:
   NewCops: enable
