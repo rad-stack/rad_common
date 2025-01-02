@@ -1,5 +1,7 @@
 class Seeder < RadSeeder
   def seed
+    user_role.update! read_attorney: true
+
     if Division.count.zero?
       display_log 'seeding divisions'
 
