@@ -9,7 +9,10 @@ RSpec.describe 'Searches', type: :request do
 
   context 'when scope search' do
     let(:search_scope) { 'user_name' }
-    let(:search_path) { "/global_search?term=#{search_term}&global_search_scope=#{search_scope}&global_search_mode=searchable_association" }
+
+    let(:search_path) do
+      "/global_search?term=#{search_term}&global_search_scope=#{search_scope}&global_search_mode=searchable_association"
+    end
 
     it 'finds a user' do
       get search_path
