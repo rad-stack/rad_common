@@ -7,7 +7,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
     "follow-redirects": "^1.14.8",
-    "rad_common_js": "https://github.com/rad-stack/rad_common_js#efd9e554c0e191dc754dfdce46a4e83a0dad8771",
+    "rad_common_js": "https://github.com/rad-stack/rad_common_js#9efb2533e98a6d76d8daa0501e2faa8f0b1ac527",
     "terser": "^5.14.2"
   },
   "devDependencies": {
