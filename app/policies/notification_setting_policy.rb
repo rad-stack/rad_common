@@ -14,8 +14,8 @@ class NotificationSettingPolicy < ApplicationPolicy
     false
   end
 
-  alias index? show?
   alias destroy? update?
+  alias index? show?
 
   private
 
