@@ -281,7 +281,7 @@ class CardPresenter
     end
 
     def tool_actions
-      @tool_actions ||= [show_history_action] + contact_log_actions + [reset_duplicates_action].compact
+      @tool_actions ||= ([show_history_action] + contact_log_actions + [reset_duplicates_action]).compact
     end
 
     def show_history_action
@@ -375,6 +375,6 @@ class CardPresenter
     end
 
     def instance_policy
-      Pundit.policy!(current_user, instance)
+      @instance_policy ||= Pundit.policy!(current_user, instance)
     end
 end
