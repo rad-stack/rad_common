@@ -49,10 +49,10 @@ class GlobalSearch
     end
 
     def policy_ok?(item)
-      return false unless Pundit.policy!(current_user, item[:model].constantize).index?
+      return false unless Pundit.policy!(current_user, item[:model].constantize.new).index?
       return true if searchable_association?
 
-      Pundit.policy!(current_user, item[:model].constantize).show?
+      Pundit.policy!(current_user, item[:model].constantize.new).show?
     end
 
     def searchable_association?

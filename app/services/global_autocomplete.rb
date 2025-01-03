@@ -176,10 +176,10 @@ class GlobalAutocomplete
     end
 
     def policy_ok?
-      return false unless Pundit.policy!(user, klass).index?
+      return false unless Pundit.policy!(user, klass.new).index?
       return true if searchable_association?
 
-      Pundit.policy!(user, klass).show?
+      Pundit.policy!(user, klass.new).show?
     end
 
     def searchable_association?
