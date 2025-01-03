@@ -1,5 +1,5 @@
 - if user_signed_in? && current_user
-  - search_scopes = GlobalSearch.new(current_user, :global_search).filtered_scopes
+  - search_scopes = GlobalSearch.new(current_user).filtered_scopes
 
   - if search_scopes.any?
     = form_tag(global_search_result_path, method: :get) do
@@ -31,8 +31,6 @@
                   'data-autocomplete': '/global_search',
                   'data-autocomplete-fields': "{ \"global_search_scope\" :
                                                 \".global_search_scope\",
-                                                \"global_search_mode\" :
-                                                \".global_search_mode\",
                                                 \"super_search\" : \".super_search\"}",
                   name: 'global_search_name',
                   placeholder: search_scopes.first[:description],
@@ -50,4 +48,3 @@
               %input.global_search_id{ type: 'hidden', name: 'global_search_id' }
               %input.global_search_model_name{ type: 'hidden', name: 'global_search_model_name' }
               %input.global_search_scope{ type: 'hidden', name: 'global_search_scope' }
-              %input.global_search_mode{ type: 'hidden', name: 'global_search_mode', value: 'global_search' }
