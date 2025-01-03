@@ -9,7 +9,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
   let!(:division) { create :division }
   let(:search_scopes) { RadConfig.global_search_scopes! }
   let(:params) { ActionController::Parameters.new }
-  let(:auto_complete) { described_class.new(params, search_scopes, user, :searchable_association) }
+  let(:auto_complete) { described_class.new(params, search_scopes, user) }
 
   describe '#global_autocomplete_result' do
     context 'when searching users' do
@@ -21,7 +21,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       end
 
       context 'when search scopes empty' do
-        let(:auto_complete) { described_class.new(params, [], user, :searchable_association) }
+        let(:auto_complete) { described_class.new(params, [], user) }
 
         it 'returns empty array' do
           expect(auto_complete.global_autocomplete_result).to eq([])
@@ -167,7 +167,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       it 'excludes scopes with super_search_exclude marked true' do
         scopes = search_scopes.dup
         scopes[2][:super_search_exclude] = true
-        auto_complete = described_class.new(params, scopes, user, :searchable_association)
+        auto_complete = described_class.new(params, scopes, user)
         result = auto_complete.global_super_search_result
         expect(result.count).to eq(1)
       end
@@ -245,7 +245,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     end
 
     context 'when search scopes empty' do
-      let(:auto_complete) { described_class.new(params, [], user, :searchable_association) }
+      let(:auto_complete) { described_class.new(params, [], user) }
 
       it 'returns nil' do
         expect(auto_complete.send(:selected_scope)).to be_nil

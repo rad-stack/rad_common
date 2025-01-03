@@ -34,7 +34,6 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
         'data-abs-locale-search-placeholder' => options[:search_placeholder],
         'data-abs-ajax-data' => {
           'global_search_scope' => options[:search_scope],
-          'global_search_mode' => 'searchable_association',
           'excluded_ids' => options[:excluded_ids],
           'term' => '{{{q}}}'
         }.to_json
@@ -59,9 +58,8 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
 
     def global_autocomplete
       @global_autocomplete ||= GlobalAutocomplete.new(global_autocomplete_params,
-                                                      GlobalSearch.new(current_user, :searchable_association).scopes,
-                                                      current_user,
-                                                      :searchable_association)
+                                                      GlobalSearch.new(current_user).scopes,
+                                                      current_user)
     end
 
     def global_autocomplete_params

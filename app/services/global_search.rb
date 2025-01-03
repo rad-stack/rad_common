@@ -1,9 +1,8 @@
 class GlobalSearch
-  attr_accessor :current_user, :mode
+  attr_accessor :current_user
 
-  def initialize(current_user, mode)
+  def initialize(current_user)
     @current_user = current_user
-    @mode = mode
   end
 
   def filtered_scopes
@@ -11,7 +10,11 @@ class GlobalSearch
   end
 
   def scopes
-    raw_scopes = RadConfig.global_search_scopes!.select { |item| policy_ok?(item) }
+    raw_scopes = RadConfig.global_search_scopes!
+
+    raw_scopes = raw_scopes.select do |item|
+      Pundit.policy!(current_user, item[:model].constantize).global_search?
+    end
 
     if current_user.global_search_default.blank?
       scopes = raw_scopes
@@ -38,15 +41,5 @@ class GlobalSearch
 
     def no_records?(scope)
       Pundit.policy_scope!(current_user, scope[:model].constantize).none?
-    end
-
-    def policy_ok?(item)
-      if mode == :global_search
-        Pundit.policy!(current_user, item[:model].constantize.new).global_search?
-      elsif mode == :searchable_association
-        Pundit.policy!(current_user, item[:model].constantize.new).searchable_association?
-      else
-        raise "invalid mode: #{mode}"
-      end
     end
 end
