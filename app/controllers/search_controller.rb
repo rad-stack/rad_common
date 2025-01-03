@@ -1,9 +1,14 @@
 class SearchController < ApplicationController
+  before_action :set_global_search_mode, only: :global_search
+
   def global_search
     # authorization is checked within the global_autocomplete_result
     skip_authorization
 
-    global_autocomplete = GlobalAutocomplete.new(params, GlobalSearch.new(current_user).scopes, current_user)
+    global_autocomplete = GlobalAutocomplete.new(params,
+                                                 GlobalSearch.new(current_user, @global_search_mode).scopes,
+                                                 current_user,
+                                                 @global_search_mode)
 
     if params['super_search'].to_i == 1
       render json: global_autocomplete.global_super_search_result
@@ -37,4 +42,13 @@ class SearchController < ApplicationController
       end
     end
   end
+
+  private
+
+    def set_global_search_mode
+      @global_search_mode = params[:global_search_mode].to_sym
+      return if %i[global_search searchable_association].include?(@global_search_mode)
+
+      raise "Invalid mode #{@global_search_mode}"
+    end
 end
