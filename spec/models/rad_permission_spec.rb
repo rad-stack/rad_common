@@ -14,7 +14,7 @@ RSpec.describe RadPermission do
   describe 'user_categories' do
     subject { described_class.user_categories(user).map(&:first) }
 
-    let(:result) { %w[Admin Division User] }
+    let(:result) { %w[Admin Attorney Division User] }
 
     it { is_expected.to eq result }
   end

@@ -7,9 +7,17 @@ class NotificationPolicy < ApplicationPolicy
     false
   end
 
-  alias show? create?
-  alias update? create?
-  alias destroy? update?
+  def show?
+    create?
+  end
+
+  def update?
+    create?
+  end
+
+  def destroy?
+    update?
+  end
 
   class Scope < Scope
     def resolve
