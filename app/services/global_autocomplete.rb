@@ -1,13 +1,15 @@
 class GlobalAutocomplete
   include RadCommon::ApplicationHelper
 
-  attr_reader :params, :search_scopes, :user
+  attr_reader :params, :search_scopes, :user, :mode
   attr_accessor :current_scope
 
-  def initialize(params, search_scopes, user)
+  def initialize(params, search_scopes, user, mode)
     @params = params
     @search_scopes = search_scopes
     @current_scope = selected_scope
+    @mode = mode
+    validate_mode
     validate_global_search_scope
     @user = user
   end
@@ -33,7 +35,7 @@ class GlobalAutocomplete
   end
 
   def base_autocomplete_collection(scope)
-    return [] unless scope && Pundit.policy!(user, klass).global_search?
+    return [] unless scope && policy_ok?
 
     self.current_scope = scope
     order = scope[:query_order] || 'created_at DESC'
@@ -106,6 +108,12 @@ class GlobalAutocomplete
       params[:global_search_scope].presence || search_scopes.first[:name]
     end
 
+    def validate_mode
+      return if %i[global_search searchable_association].include?(mode)
+
+      raise "Invalid mode: #{mode}"
+    end
+
     def validate_global_search_scope
       return if params[:global_search_scope].blank?
 
@@ -165,5 +173,16 @@ class GlobalAutocomplete
 
     def scope_with_where?(scope)
       (scope[:columns].present? && scope[:columns].any?) || scope[:query_where].present?
+    end
+
+    def policy_ok?
+      return false unless Pundit.policy!(user, klass).index?
+      return true if searchable_association?
+
+      Pundit.policy!(user, klass).show?
+    end
+
+    def searchable_association?
+      mode == :searchable_association
     end
 end

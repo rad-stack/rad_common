@@ -42,10 +42,6 @@ class ApplicationPolicy
     user.permission?(:admin)
   end
 
-  def global_search?
-    index?
-  end
-
   def report?
     user.permission?(:admin)
   end
