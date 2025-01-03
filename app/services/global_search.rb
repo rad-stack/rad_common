@@ -4,8 +4,6 @@ class GlobalSearch
   def initialize(current_user, mode)
     @current_user = current_user
     @mode = mode
-
-    validate_mode
   end
 
   def filtered_scopes
@@ -34,12 +32,6 @@ class GlobalSearch
 
   private
 
-    def validate_mode
-      return if %i[global_search searchable_association].include?(mode)
-
-      raise "Invalid mode: #{mode}"
-    end
-
     def hide_scope?(scope)
       scope[:hide_global_nav] || no_records?(scope)
     end
@@ -49,13 +41,12 @@ class GlobalSearch
     end
 
     def policy_ok?(item)
-      return false unless Pundit.policy!(current_user, item[:model].constantize.new).index?
-      return true if searchable_association?
-
-      Pundit.policy!(current_user, item[:model].constantize.new).show?
-    end
-
-    def searchable_association?
-      mode == :searchable_association
+      if mode == :global_search
+        Pundit.policy!(current_user, item[:model].constantize.new).global_search?
+      elsif mode == :searchable_association
+        Pundit.policy!(current_user, item[:model].constantize.new).searchable_association?
+      else
+        raise "invalid mode: #{mode}"
+      end
     end
 end

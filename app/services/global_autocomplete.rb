@@ -9,7 +9,6 @@ class GlobalAutocomplete
     @search_scopes = search_scopes
     @current_scope = selected_scope
     @mode = mode
-    validate_mode
     validate_global_search_scope
     @user = user
   end
@@ -108,12 +107,6 @@ class GlobalAutocomplete
       params[:global_search_scope].presence || search_scopes.first[:name]
     end
 
-    def validate_mode
-      return if %i[global_search searchable_association].include?(mode)
-
-      raise "Invalid mode: #{mode}"
-    end
-
     def validate_global_search_scope
       return if params[:global_search_scope].blank?
 
@@ -176,13 +169,12 @@ class GlobalAutocomplete
     end
 
     def policy_ok?
-      return false unless Pundit.policy!(user, klass.new).index?
-      return true if searchable_association?
-
-      Pundit.policy!(user, klass.new).show?
-    end
-
-    def searchable_association?
-      mode == :searchable_association
+      if mode == :global_search
+        Pundit.policy!(user, klass.new).global_search?
+      elsif mode == :searchable_association
+        Pundit.policy!(user, klass.new).searchable_association?
+      else
+        raise "invalid mode: #{mode}"
+      end
     end
 end
