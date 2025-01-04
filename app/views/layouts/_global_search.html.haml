@@ -1,5 +1,5 @@
 - if user_signed_in? && current_user
-  - search_scopes = GlobalSearch.new(current_user).filtered_scopes
+  - search_scopes = GlobalSearch.new(current_user, :global_search).filtered_scopes
 
   - if search_scopes.any?
     = form_tag(global_search_result_path, method: :get) do
