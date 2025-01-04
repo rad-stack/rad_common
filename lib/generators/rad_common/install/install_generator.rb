@@ -193,16 +193,35 @@ Seeder.new.seed!
       protected
 
         def merge_package_json
-          dummy_file_path = '../../../../../spec/dummy/package.json'
-          return copy_file dummy_file_path, 'package.json' unless File.exist? 'custom-dependencies.json'
+          migrate_custom_dependencies_file # Temp: Migrate old custom_dependencies.json to new format
 
-          custom_dependencies = JSON.parse(File.read('custom-dependencies.json'))
-          package_source = File.expand_path(find_in_source_paths(dummy_file_path))
-          package = JSON.parse(File.read(package_source))
-          dependencies = package['dependencies']
-          dependencies = dependencies.merge(custom_dependencies)
-          package['dependencies'] = dependencies
-          File.write('package.json', JSON.pretty_generate(package) + "\n")
+          dummy_file_path = '../../../../../spec/dummy/package.json'
+          unless File.exist?('custom-dependencies.json')
+            return copy_file dummy_file_path, 'package.json'
+          end
+
+          base_package_source = File.expand_path(find_in_source_paths(dummy_file_path))
+          base_package = JSON.parse(File.read(base_package_source))
+          custom_package = JSON.parse(File.read('custom-dependencies.json'))
+
+          %w[dependencies devDependencies scripts].each do |key|
+            next unless custom_package[key]
+
+            base_package[key] ||= {}
+            base_package[key].merge!(custom_package[key])
+          end
+
+          File.write('package.json', JSON.pretty_generate(base_package) + "\n")
+        end
+
+        def migrate_custom_dependencies_file
+          return unless File.exist?('custom-dependencies.json')
+
+          contents = JSON.parse(File.read('custom-dependencies.json'))
+          if contents.is_a?(Hash) && (%w[dependencies devDependencies scripts] & contents.keys).none?
+            new_contents = { 'dependencies' => contents }
+            File.write('custom-dependencies.json', JSON.pretty_generate(new_contents) + "\n")
+          end
         end
 
         def copy_custom_github_actions
