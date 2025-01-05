@@ -56,6 +56,13 @@ module RadCommon
         unless RadConfig.react_app?
           copy_file '../../../../../spec/dummy/app/javascript/application.js',
                     'app/javascript/application.js'
+
+          unless File.exist? 'app/javascript/controllers/index.js'
+            create_file '../../../../../spec/dummy/app/javascript/controllers/index.js',
+                       'app/javascript/controllers/index.js'
+          end
+          copy_file '../../../../../spec/dummy/app/javascript/controllers/application.js',
+                    'app/javascript/controllers/application.js'
         end
 
         directory '../../../../../.bundle', '.bundle'
