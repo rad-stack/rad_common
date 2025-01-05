@@ -1,4 +1,8 @@
-// import { application } from './application';
-// import HelloWorldController from './hello-world_controller';
+import { application } from './application';
+import { radControllers } from 'rad_common_js/src/controllers/index';
+import { controllers } from './app_specific/index';
 
-// application.register('hello-world', HelloWorldController);
+[...controllers, ...radControllers].forEach(({ id, controller }) => {
+  application.register(id, controller);
+});
+
