@@ -38,6 +38,7 @@ module RadCommon
     require 'smartystreets_ruby_sdk'
     require 'strip_attributes'
     require 'text'
+    require 'turbo-rails'
     require 'twilio-ruby'
     require 'wicked_pdf'
   end
