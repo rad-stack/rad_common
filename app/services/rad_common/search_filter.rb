@@ -185,6 +185,7 @@ module RadCommon
         'data-abs-locale-search-placeholder' => search_scope[:description],
         'data-abs-ajax-data' => {
           'global_search_scope' => search_scope[:name],
+          'global_search_mode' => 'searchable_association',
           'term' => '{{{q}}}'
         }.to_json
       }
