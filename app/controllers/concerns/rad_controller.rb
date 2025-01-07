@@ -10,11 +10,11 @@ module RadController
     after_action :verify_authorized, unless: :devise_controller?
     after_action :verify_policy_scoped, only: :index
 
-    rescue_from Pundit::NotAuthorizedError do
+    rescue_from Pundit::NotAuthorizedError do |exception|
       # the application.rb config in the docs to do the same thing doesn't work
       # https://github.com/varvet/pundit#rescuing-a-denied-authorization-in-rails
 
-      Sentry.capture_message 'Access Denied' if Rails.env.production? || Rails.env.staging?
+      Sentry.capture_exception exception if Rails.env.production? || Rails.env.staging?
       render file: Rails.root.join('public/403.html'), formats: [:html], status: :forbidden, layout: false
     end
 
