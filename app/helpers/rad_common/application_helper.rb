@@ -253,6 +253,12 @@ module RadCommon
       options
     end
 
+    def rad_toast_data(template_locals)
+      { 'toast-success-message-value': template_locals[:toast_success] || template_locals[:notice],
+        'toast-error-message-value': template_locals[:toast_error],
+        controller: 'toast' }
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
