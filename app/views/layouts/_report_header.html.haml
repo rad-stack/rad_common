@@ -27,10 +27,11 @@
                         html5: true,
                         required: true,
                         inline: false,
-                        input_html: { value: @report.start_date }
+                        input_html: { value: @report.start_date, 'search-date-filter-target' => 'startInput' }
             .my-auto.pt-2.px-1= date_filter_dropdown_label
             .col-lg-2
-              = f.input :end_date, as: :date, html5: true, required: true, input_html: { value: @report.end_date }
+              = f.input :end_date, as: :date, html5: true, required: true,
+                                   input_html: { value: @report.end_date, 'search-date-filter-target' => 'endInput' }
           - if lookup_context.exists?('report_form', controller_name, true)
             = render partial: "#{controller_name}/report_form", locals: { f: f }
         .form-actions
