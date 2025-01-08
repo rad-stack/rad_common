@@ -236,6 +236,23 @@ module RadCommon
       end
     end
 
+    def rad_wicked_pdf_stylesheet_link_tag(source)
+      # Hack until https://github.com/mileszs/wicked_pdf/pull/1120 is merged
+      protocol = Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
+      stylesheet_link_tag source, host: "#{protocol}://#{RadConfig.host_name!}"
+    end
+
+    def rad_turbo_form_options(template_locals, options = {})
+      options[:data] ||= {}
+      options[:data].merge!(
+        controller: 'remote-form',
+        remote_form_success_message_value: template_locals[:toast_success],
+        remote_form_error_message_value: template_locals[:toast_error],
+        remote_form_target: 'form'
+      )
+      options
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)

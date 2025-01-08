@@ -40,7 +40,7 @@ describe RadCommon::AuditsHelper do
     subject { strip_tags(helper.display_audited_action(audit)) }
 
     let(:audit) { division.own_and_associated_audits.reorder(id: :desc).first }
-    let(:file) { Rails.root.join('app/javascript/images/app_logo.png').open }
+    let(:file) { Rails.root.join('app/assets/images/app_logo.png').open }
 
     context 'when associated attachment' do
       context 'when create' do

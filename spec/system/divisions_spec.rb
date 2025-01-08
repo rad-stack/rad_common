@@ -176,7 +176,7 @@ RSpec.describe 'Divisions' do
 
     context 'with attachments' do
       let(:prompt) { 'Are you sure? Attachment cannot be recovered.' }
-      let(:file) { Rails.root.join('app/javascript/images/app_logo.png').open }
+      let(:file) { Rails.root.join('app/assets/images/app_logo.png').open }
 
       before do
         division.logo.attach(io: file, filename: 'logo.png')

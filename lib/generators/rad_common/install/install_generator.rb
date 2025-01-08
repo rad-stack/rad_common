@@ -36,10 +36,6 @@ module RadCommon
         copy_file '../../../../../.ruby-version', '.ruby-version'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
 
-        unless RadConfig.react_app?
-          copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
-        end
-
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
@@ -50,18 +46,26 @@ module RadCommon
           copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
         end
 
+        migrate_webpacker_to_esbuild unless RadConfig.react_app?
+
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
         copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
                  'public/406-unsupported-browser.html'
 
         unless RadConfig.react_app?
-          copy_file '../../../../../spec/dummy/app/javascript/packs/application.js',
-                    'app/javascript/packs/application.js'
-        end
+          copy_file '../../../../../spec/dummy/app/javascript/application.js',
+                    'app/javascript/application.js'
 
-        copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js',
-                  'app/javascript/packs/rad_mailer.js'
+          unless File.exist? 'app/javascript/controllers/app_specific/index.js'
+            copy_file '../../../../../spec/dummy/app/javascript/controllers/app_specific/index.js',
+                     'app/javascript/controllers/app_specific/index.js'
+          end
+          copy_file '../../../../../spec/dummy/app/javascript/controllers/index.js',
+                   'app/javascript/controllers/index.js'
+          copy_file '../../../../../spec/dummy/app/javascript/controllers/application.js',
+                    'app/javascript/controllers/application.js'
+        end
 
         directory '../../../../../.bundle', '.bundle'
 
@@ -83,15 +87,12 @@ module RadCommon
           if !RadConfig.config_item(:legacy_rails_config).nil? && RadConfig.legacy_rails_config?
             gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
           end
-
-          copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         end
 
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
 
         unless RadConfig.react_app?
           directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
-          directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
         end
 
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
@@ -201,16 +202,35 @@ Seeder.new.seed!
       protected
 
         def merge_package_json
-          dummy_file_path = '../../../../../spec/dummy/package.json'
-          return copy_file dummy_file_path, 'package.json' unless File.exist? 'custom-dependencies.json'
+          migrate_custom_dependencies_file # Temp: Migrate old custom_dependencies.json to new format
 
-          custom_dependencies = JSON.parse(File.read('custom-dependencies.json'))
-          package_source = File.expand_path(find_in_source_paths(dummy_file_path))
-          package = JSON.parse(File.read(package_source))
-          dependencies = package['dependencies']
-          dependencies = dependencies.merge(custom_dependencies)
-          package['dependencies'] = dependencies
-          File.write('package.json', JSON.pretty_generate(package) + "\n")
+          dummy_file_path = '../../../../../spec/dummy/package.json'
+          unless File.exist?('custom-dependencies.json')
+            return copy_file dummy_file_path, 'package.json'
+          end
+
+          base_package_source = File.expand_path(find_in_source_paths(dummy_file_path))
+          base_package = JSON.parse(File.read(base_package_source))
+          custom_package = JSON.parse(File.read('custom-dependencies.json'))
+
+          %w[dependencies devDependencies scripts].each do |key|
+            next unless custom_package[key]
+
+            base_package[key] ||= {}
+            base_package[key].merge!(custom_package[key])
+          end
+
+          File.write('package.json', JSON.pretty_generate(base_package) + "\n")
+        end
+
+        def migrate_custom_dependencies_file
+          return unless File.exist?('custom-dependencies.json')
+
+          contents = JSON.parse(File.read('custom-dependencies.json'))
+          if contents.is_a?(Hash) && (%w[dependencies devDependencies scripts] & contents.keys).none?
+            new_contents = { 'dependencies' => contents }
+            File.write('custom-dependencies.json', JSON.pretty_generate(new_contents) + "\n")
+          end
         end
 
         def copy_custom_github_actions
@@ -388,6 +408,58 @@ Seeder.new.seed!
           gsub_file '.github/workflows/rspec_tests.yml',
                    "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
                    'bin/rc_parallel_rspec'
+        end
+
+        def migrate_webpacker_to_esbuild
+          remove_dir 'config/webpack'
+          remove_file 'config/webpacker.yml'
+          remove_file 'bin/webpack'
+          remove_file 'bin/webpack-dev-server'
+          remove_file 'babel.config.js'
+
+          copy_file '../../../../../spec/dummy/esbuild.config.js', 'esbuild.config.js'
+          copy_file '../../../../../spec/dummy/Procfile.dev', 'Procfile.dev'
+
+          if Dir.exist?('app/javascript/packs')
+            remove_file 'app/javascript/packs/rad_mailer.js'
+
+            Dir['app/javascript/packs/*'].each do |file|
+              copy_file Rails.root.join(file), "app/javascript/#{File.basename(file)}"
+            end
+
+            remove_dir 'app/javascript/packs'
+          end
+
+          if Dir.exist?('app/javascript/images')
+            Dir['app/javascript/images/*'].each do |file|
+              copy_file Rails.root.join(file), "app/assets/images/#{File.basename(file)}"
+            end
+
+            remove_dir 'app/javascript/images'
+          end
+
+          search_and_replace 'image_pack_tag', 'image_tag'
+          search_and_replace 'javascript_pack_tag', 'javascript_include_tag'
+          search_and_replace 'stylesheet_pack_tag', 'stylesheet_link_tag'
+          search_and_replace 'favicon_pack_tag', 'favicon_link_tag'
+          search_and_replace 'app/javascript/images', 'app/assets/images'
+          search_and_replace "'app', 'javascript', 'images'", "'app', 'assets', 'images'"
+
+          copy_file '../../../../../spec/dummy/app/assets/scss/application.scss',
+                    'app/assets/scss/application.scss'
+          copy_file '../../../../../spec/dummy/app/assets/scss/rad_mailer.scss',
+                    'app/assets/scss/rad_mailer.scss'
+          unless File.exist? 'app/assets/scss/app_specific/main.scss'
+            create_file 'app/assets/scss/app_specific/main.scss'
+          end
+
+          if Dir.exist?('app/javascript/css')
+            Dir['app/javascript/css/*'].each do |file|
+              copy_file Rails.root.join(file), "app/assets/scss/#{File.basename(file)}"
+            end
+
+            remove_dir 'app/javascript/css'
+          end
         end
 
         def apply_migrations
