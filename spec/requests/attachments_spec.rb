@@ -5,19 +5,52 @@ RSpec.describe 'Attachments' do
   let!(:division) { create :division }
   let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('app/assets/images/app_logo.png')) }
 
-  before { division.logo.attach(io: file, filename: 'logo.png') }
+  before do
+    allow_any_instance_of(Hashids).to receive(:decode).and_return [division.id]
+    division.logo.attach(io: file, filename: 'logo.png')
+  end
 
   context 'with permanent attachment url' do
     it 'allows navigation' do
-      get AttachmentUrlGenerator.permanent_attachment_url(division.logo)
+      get '/attachments/jkzedq'
       expect(response).to have_http_status :ok
+    end
+
+    context 'with filename option' do
+      it 'allows navigation' do
+        get '/attachments/jkzedq/logo.png'
+        expect(response).to have_http_status :ok
+      end
     end
   end
 
   context 'with permanent attachment variant url' do
     it 'allows navigation' do
-      get AttachmentUrlGenerator.permanent_attachment_variant_url(division, :logo_variant)
+      get '/attachments/divisions/kvperk/logo_variant'
       expect(response).to have_http_status :ok
+    end
+
+    context 'with filename option' do
+      it 'allows navigation' do
+        get '/attachments/divisions/kvperk/logo_variant/logo.png'
+        expect(response).to have_http_status :ok
+      end
+    end
+  end
+
+  context 'with legacy URLs' do
+    context 'with permanent attachment url' do
+      it 'allows navigation' do
+        get '/rad_common/attachments/jkzedq'
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context 'with permanent attachment variant url' do
+      it 'allows navigation' do
+        get '/rad_common/attachments/divisions/kvperk/logo_variant'
+        expect(response).to have_http_status :ok
+      end
     end
   end
 
