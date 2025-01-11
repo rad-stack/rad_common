@@ -28,7 +28,7 @@ RSpec.describe 'Attachments' do
 
     it 'destroys the attachment, redirects to the division and adds audit' do
       expect {
-        delete "/rad_common/attachments/#{division.logo.id}"
+        delete "/attachments/#{division.logo.id}"
       }.to change(ActiveStorage::Attachment, :count).by(-1)
 
       expect(response).to redirect_to(division_url(division))
