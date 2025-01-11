@@ -15,29 +15,21 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
   private
 
     def add_default_options
-      input_html_options[:class].push(:selectpicker)
-      input_html_options.merge!(
-        'data-live-search' => true,
-        'data-live-search-placeholder' => options[:search_placeholder].presence || 'Start typing to search'
-      )
-      return unless search_only?
-
-      input_html_options.merge!(search_options)
-      options[:include_blank] = false
+      if search_only?
+        input_html_options.merge!(search_options)
+      else
+        input_html_options[:class].push(:selectpicker)
+      end
+      options[:include_blank] = 'None' if options[:include_blank].nil?
     end
 
     def search_options
       {
         class: 'selectpicker-search',
-        'data-abs-template' => { clear_option: 'None' }.to_json,
-        'data-abs-subtext' => options[:show_subtext],
-        'data-abs-locale-search-placeholder' => options[:search_placeholder],
-        'data-abs-ajax-data' => {
-          'global_search_scope' => options[:search_scope],
-          'global_search_mode' => 'searchable_association',
-          'excluded_ids' => options[:excluded_ids],
-          'term' => '{{{q}}}'
-        }.to_json
+        'data-subtext' => options[:show_subtext],
+        'data-global-search-scope' => options[:search_scope],
+        'data-global-search-mode' => 'searchable_association',
+        'data-excluded-ids' => options[:excluded_ids]
       }
     end
 
