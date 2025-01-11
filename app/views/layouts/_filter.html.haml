@@ -17,5 +17,5 @@
       .modal-body
         = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: true
 
-.d-none.d-md-block
+.d-none.d-md-block{ data: { controller: 'search' } }
   = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: false

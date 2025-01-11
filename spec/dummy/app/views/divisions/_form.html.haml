@@ -13,10 +13,7 @@
     = f.input :icon
 
     = f.association :owner, as: :searchable_association, search_scope: 'user_name'
-    = f.association :category,
-                    as: :searchable_association,
-                    search_scope: 'category_name',
-                    search_placeholder: 'Search for a category'
+    = f.association :category, as: :searchable_association, search_scope: 'category_name'
 
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'

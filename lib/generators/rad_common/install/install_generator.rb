@@ -48,6 +48,8 @@ module RadCommon
 
         migrate_webpacker_to_esbuild unless RadConfig.react_app?
 
+        migrate_to_tom_select
+
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
         copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
@@ -460,6 +462,11 @@ Seeder.new.seed!
 
             remove_dir 'app/javascript/css'
           end
+        end
+
+        def migrate_to_tom_select
+          search_and_replace 'bootstrap_select', 'tom_select'
+          search_and_replace 'rad-chosen', 'selectpicker'
         end
 
         def apply_migrations

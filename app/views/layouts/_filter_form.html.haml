@@ -1,4 +1,4 @@
-= simple_form_for :search, url: path, method: :get do |f|
+= simple_form_for :search, url: path, method: :get, html: { data: { 'search-target': 'form' } } do |f|
   -# TODO: Set up permanent page size selection solution
   - if params[:page_size].present?
     = hidden_field_tag :page_size, params[:page_size]
@@ -22,7 +22,7 @@
   - if RadConfig.saved_search_filters_enabled? && !mobile
     - if search.applied_saved_filter.present?
       .text-muted.mt-1 Applied Filter: #{search.applied_saved_filter}
-    = f.hidden_field :saved_name
+    = f.hidden_field :saved_name, data: { 'search-target': 'savedNameInput' }
   - else
     %br
   %br
