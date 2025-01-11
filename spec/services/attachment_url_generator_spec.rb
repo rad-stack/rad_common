@@ -24,7 +24,11 @@ RSpec.describe AttachmentUrlGenerator do
   end
 
   context 'with permanent attachment variant url' do
-    subject { described_class.permanent_attachment_variant_url(division, :logo_variant, include_filename: include_filename) }
+    subject do
+      described_class.permanent_attachment_variant_url(division,
+                                                       :logo_variant,
+                                                       include_filename: include_filename)
+    end
 
     it { is_expected.to eq 'http://localhost:3000/attachments/divisions/dkadnq/logo_variant' }
 
