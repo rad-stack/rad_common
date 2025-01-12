@@ -376,7 +376,12 @@ module RadUser
       RadMailer.your_account_approved(self, approved_by).deliver_later
       return unless RadConfig.twilio_enabled? && mobile_phone.present?
 
-      UserSMSSenderJob.perform_later(User.user_approved_message, approved_by.id, id, nil, false)
+      UserSMSSenderJob.perform_later(User.user_approved_message,
+                                     approved_by.id,
+                                     id,
+                                     nil,
+                                     false,
+                                     contact_log_record: self)
     end
 
     def notify_user_approved_admins
