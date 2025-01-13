@@ -21,16 +21,11 @@ RSpec.describe 'Divisions' do
     context 'with default placeholder' do
       it 'shows placeholder on autocomplete field', :js do
         visit new_division_path
-        click_bootstrap_select(from: 'division_owner_id')
-        expect(find("input[type='search']")['placeholder']).to eq('Start typing to search')
-      end
-    end
+        click_tom_select(from: 'division_owner_id')
 
-    context 'with custom placeholder' do
-      it 'shows placeholder on autocomplete field', :js do
-        visit new_division_path
-        click_bootstrap_select(from: 'division_category_id')
-        expect(find("input[type='search']")['placeholder']).to eq('Search for a category')
+        within '#division_owner_id-ts-control' do
+          expect(find('input', visible: :all)[:placeholder]).to eq('Start typing to search')
+        end
       end
     end
 
@@ -70,7 +65,7 @@ RSpec.describe 'Divisions' do
       expect(page).to have_content('Editing Division')
     end
 
-    context 'with bootstrap select search field', :js do
+    context 'with tom select search field', :js do
       let(:other_user) { create :user }
 
       before do
@@ -80,14 +75,15 @@ RSpec.describe 'Divisions' do
       end
 
       it 'allows searching' do
-        click_bootstrap_select(from: 'division_owner_id')
-        wait_for_ajax
-        find('.bs-searchbox input').fill_in(with: other_user.first_name)
-        expect(find('ul.inner li a span', text: other_user.to_s)).to be_present
+        click_tom_select(from: 'division_owner_id')
+        first('.dropdown-input').fill_in(with: other_user.first_name)
+        expect(find('[data-selectable]', text: other_user.to_s)).to be_present
       end
 
       it 'displays existing value' do
-        expect(find("[data-id='division_owner_id']").text).to eq(division.owner.to_s)
+        within '#division_owner_id-ts-control' do
+          expect(find('[data-ts-item]').text).to eq(division.owner.to_s)
+        end
         expect(find_field('division_owner_id', visible: false).value).to eq(division.owner.id.to_s)
       end
     end
@@ -123,10 +119,9 @@ RSpec.describe 'Divisions' do
 
       it 'allows saving and applying search filters' do
         visit divisions_path
-        bootstrap_select user.to_s, from: 'search_owner_id'
+        tom_select user.to_s, from: 'search_owner_id'
         click_button 'saved-search-filters-dropdown'
-        page.evaluate_script 'window.prompt = () => { document.getElementById("search_saved_name").value = "Test" }'
-        page.evaluate_script 'window.alert = (msg) => { return true; }'
+        page.evaluate_script 'window.prompt = () => { return "Test" }'
         expect { click_button('save_and_apply_filters') }.to change(SavedSearchFilter, :count).by(1)
 
         expect(SavedSearchFilter.last.name).to eq('Test')
