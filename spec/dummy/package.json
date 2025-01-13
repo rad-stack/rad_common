@@ -7,7 +7,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
     "follow-redirects": "^1.14.8",
-    "rad_common_js": "https://github.com/rad-stack/rad_common_js#19d31002832d8131f9fd3af00e6b9ba6726476e6",
+    "rad_common_js": "https://github.com/rad-stack/rad_common_js#d507aed289c7135fc3addc23293af29ff9838377",
     "terser": "^5.14.2"
   },
   "devDependencies": {
@@ -36,7 +36,6 @@
     "moment": "^2.29.4",
     "loader-utils": "^2.0.3",
     "terser": "^5.14.2",
-    "jquery-ui": "^1.13.2",
     "json5": "^2.2.2",
     "decode-uri-component": "^0.2.1",
     "dns-packet": "^5.4.0",

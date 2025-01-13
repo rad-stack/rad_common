@@ -22,7 +22,7 @@ RSpec.describe 'Searches', type: :system do
         page.dismiss_confirm prompt do
           check 'super_search'
         end
-        expect(first('.global_search_name', match: :first)[:placeholder]).to eq 'Search user by name'
+        expect(find('[aria-controls="search-ts-dropdown"]')[:placeholder]).to eq 'Search user by name'
       end
 
       it 'uses if confirmed', :js, :non_react_specs do
@@ -30,7 +30,7 @@ RSpec.describe 'Searches', type: :system do
         page.accept_confirm prompt do
           check 'super_search'
         end
-        expect(first('.global_search_name')[:placeholder]).to eq 'Super Search'
+        expect(find('[aria-controls="search-ts-dropdown"]')[:placeholder]).to eq 'Super Search'
       end
     end
   end

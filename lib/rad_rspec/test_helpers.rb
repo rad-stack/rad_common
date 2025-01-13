@@ -4,12 +4,16 @@ module TestHelpers
   end
 
   def tom_select(value, attrs)
-    click_tom_select(attrs)
-    if attrs[:search].present?
-      find('.ts-dropdown input').fill_in(with: attrs[:search])
-      wait_for_ajax
-    end
+    tom_search(value, attrs)
     find('.ts-dropdown .option', text: value).click
+  end
+
+  def tom_search(value, attrs)
+    click_tom_select(attrs)
+    return if attrs[:search].blank?
+
+    find('.ts-dropdown input').fill_in(with: value)
+    wait_for_ajax
   end
 
   def click_tom_select(attrs)
