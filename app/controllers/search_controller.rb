@@ -10,7 +10,7 @@ class SearchController < ApplicationController
                                                  current_user,
                                                  @global_search_mode)
 
-    if params['super_search'].to_i == 1
+    if params['super_search'] == 'true'
       render json: global_autocomplete.global_super_search_result
     else
       render json: global_autocomplete.global_autocomplete_result
