@@ -89,6 +89,10 @@ module RadCommonRoutes
       get 'terms', to: 'pages#terms'
       get 'privacy', to: 'pages#privacy'
 
+      namespace :api do
+        resources :app_activities, only: :show
+      end
+
       root to: 'pages#home'
 
       get '/robots.:format', to: 'robots#robots'
