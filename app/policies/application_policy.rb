@@ -55,7 +55,7 @@ class ApplicationPolicy
   end
 
   def resolve_duplicates?
-    index?
+    destroy?
   end
 
   def not_duplicate?
