@@ -27,7 +27,7 @@ RSpec.describe AttorneyPolicy, type: :policy do
     end
 
     context 'when reader' do
-      it { is_expected.to permit(reader, Attorney.new) }
+      it { is_expected.not_to permit(reader, Attorney.new) }
     end
 
     context 'when non-admins' do
