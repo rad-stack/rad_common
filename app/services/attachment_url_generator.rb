@@ -7,7 +7,7 @@ class AttachmentUrlGenerator
     item = "#{protocol}://#{host}/attachments/#{class_name}/#{record_id}/#{variant}"
     return item unless include_filename
 
-    "#{item}/#{record.logo_variant.filename}"
+    "#{item}/#{URI.encode(record.logo_variant.filename)}"
   end
 
   def self.permanent_attachment_url(attachment, include_filename: false)
@@ -17,6 +17,6 @@ class AttachmentUrlGenerator
     item = "#{protocol}://#{host}/attachments/#{record_id}"
     return item unless include_filename
 
-    "#{item}/#{attachment.filename}"
+    "#{item}/#{URI.encode(attachment.filename)}"
   end
 end
