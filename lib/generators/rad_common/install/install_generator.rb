@@ -46,7 +46,7 @@ module RadCommon
           copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
         end
 
-        migrate_webpacker_to_esbuild unless RadConfig.react_app?
+        migrate_webpacker_to_esbuild
 
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
