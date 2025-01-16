@@ -21,6 +21,7 @@ AllCops:
     - 'config/initializers/new_framework_defaults*'
     - 'spec/spec_helper.rb'
     - 'config.ru'
+    - 'bin/*'
 
 # Want to use even indentation for the various methods within a class, and
 # also want to be able to indent private methods without errors
@@ -49,6 +50,11 @@ Lint/RaiseException:
 
 Lint/StructNewOverride:
   Enabled: true
+
+Lint/RedundantDirGlobSort:
+  Enabled: true
+  Exclude:
+    - 'spec/rails_helper.rb'
 
 # Calculated by number of assignments, branches, and conditions within a method
 # using this formula: http://c2.com/cgi/wiki?AbcMetric
@@ -113,6 +119,11 @@ Rails/UnknownEnv:
 
 Rails/Output:
   Enabled: true
+
+Rails/RootPathnameMethods:
+  Enabled: true
+  Exclude:
+    - 'spec/rails_helper.rb'
 
 Rails/Exit:
   Enabled: true
