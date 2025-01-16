@@ -23,4 +23,4 @@
           required: false,
           label_method: filter.label_method,
           wrapper_html: { class: filter_class },
-          input_html: { multiple: filter.multiple }.merge(input_html)
+          input_html: { multiple: filter.multiple, 'data-placeholder': filter.blank_value_label }.merge(input_html)
