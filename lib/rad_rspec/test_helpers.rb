@@ -12,7 +12,7 @@ module TestHelpers
     click_tom_select(attrs)
     return if attrs[:search].blank?
 
-    find('.ts-dropdown input').fill_in(with: value)
+    find('.ts-dropdown input').fill_in(with: attrs[:search])
     wait_for_ajax
   end
 
