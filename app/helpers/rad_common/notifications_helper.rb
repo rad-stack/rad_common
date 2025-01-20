@@ -20,4 +20,11 @@ module NotificationsHelper
         end
     end
   end
+
+  def mark_all_as_read_button
+    link_to icon('envelope-circle-check', 'Mark All As Read'),
+            mark_all_read_notifications_path,
+            method: :put,
+            class: 'btn btn-primary btn-sm'
+  end
 end
