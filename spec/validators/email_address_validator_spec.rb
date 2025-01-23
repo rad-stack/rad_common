@@ -43,7 +43,9 @@ RSpec.describe EmailAddressValidator, type: :validator do
                        'foo bar',
                        'foo@@bar.com',
                        'foo@example.com, bar@example.com',
-                       'foob@example.com, barf@example.com, xanz@example.com']
+                       'foob@example.com, barf@example.com, xanz@example.com',
+                       '#foobar@example.com',
+                       'foo/bar@example.com']
 
       invalid_items.each do |item|
         model = build :division, invoice_email: item
