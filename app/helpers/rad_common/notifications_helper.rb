@@ -1,6 +1,8 @@
 module RadCommon
   module NotificationsHelper
     def snooze_button(notification)
+      return unless Rails.application.routes.url_helpers.respond_to?(:notification_path)
+
       content_tag(:div, class: 'dropdown') do
         button_tag(class: 'btn btn-sm btn-success dropdown-toggle btn-block', data: { toggle: 'dropdown' }) {
           icon(:clock, 'Snooze Until')
