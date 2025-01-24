@@ -12,7 +12,7 @@ class NotificationPolicy < ApplicationPolicy
   end
 
   def update?
-    create?
+    record.user_id == user.id
   end
 
   def destroy?
