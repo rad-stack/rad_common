@@ -4,7 +4,9 @@ class Notification < ApplicationRecord
   belongs_to :record, polymorphic: true, optional: true
 
   scope :unread, -> { where(unread: true) }
-  scope :active, -> { unread.where('snooze_until IS NULL OR snooze_until <= ?', DateTime.current) }
+  scope :active, lambda {
+    unread.where('snooze_until IS NULL OR snooze_until <= ?', DateTime.current) if column_names.include?('snooze_until')
+  }
   scope :recent_first, -> { order(id: :desc) }
 
   strip_attributes
