@@ -23,8 +23,9 @@
               %p= secured_link record.record
           %td
             - if record.unread
-              = link_to icon(:envelope, 'Mark As Read'), notification_path(record, notification: { unread: false }),
-                        method: :put, class: 'btn btn-sm btn-primary btn-block mb-2'
+              - if defined?(notification_path)
+                = link_to icon(:envelope, 'Mark As Read'), notification_path(record, notification: { unread: false }),
+                          method: :put, class: 'btn btn-sm btn-primary btn-block mb-2'
               = snooze_button(record)
 
     = paginate @notifications, theme: 'twitter-bootstrap-4'
