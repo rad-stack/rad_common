@@ -12,6 +12,8 @@ class Notification < ApplicationRecord
   strip_attributes
 
   def active?
+    return unread? unless self.class.column_names.include?('snooze_until')
+
     unread? && (snooze_until.nil? || snooze_until <= DateTime.current)
   end
 end
