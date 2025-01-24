@@ -2434,9 +2434,9 @@ quick-lru@^4.0.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-4.0.1.tgz#5b8878f113a58217848c6482026c73e1ba57727f"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
 
-"rad_common_js@https://github.com/rad-stack/rad_common_js#bc1298476bc02524d050400573bee7abbde6fdc6":
+"rad_common_js@https://github.com/rad-stack/rad_common_js#ee2c4c84979b4f3165bbc6b68c3844d37ef8ca4e":
   version "2.1.8"
-  resolved "https://github.com/rad-stack/rad_common_js#bc1298476bc02524d050400573bee7abbde6fdc6"
+  resolved "https://github.com/rad-stack/rad_common_js#ee2c4c84979b4f3165bbc6b68c3844d37ef8ca4e"
   dependencies:
     "@hotwired/stimulus" "^3.2.2"
     "@hotwired/turbo-rails" "^8.0.12"
