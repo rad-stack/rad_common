@@ -24,6 +24,10 @@ class BaseReport
     apply_base_errors
   end
 
+  def date_filters?
+    true
+  end
+
   def valid?
     report_errors.empty?
   end
