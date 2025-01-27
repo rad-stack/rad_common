@@ -37,8 +37,9 @@ RSpec.describe 'Search' do
     before { visit divisions_path }
 
     it 'selects a default value', :js do
-      selector = ".bootstrap-select .dropdown-toggle[data-id='search_owner_id'] .filter-option-inner-inner"
-      expect(page).to have_selector(selector, text: user.to_s)
+      within '.search_division_status' do
+        expect(find('.has-items')).to be_present
+      end
     end
 
     it 'retains search value after applying filters' do
@@ -47,17 +48,12 @@ RSpec.describe 'Search' do
       expect(first('#search_division_status').value).to eq [Division.division_statuses['status_active'].to_s]
     end
 
-    it 'select should have success style when default value is selected' do
-      first('#search_division_status').select('All Statuses')
-      first('button', text: 'Apply Filters').click
-      expect(first('#search_division_status')['data-style']).to eq 'btn btn-light'
-    end
-
     it 'select should have warning style when a value is selected other than default', :js do
-      bootstrap_select 'Inactive', from: 'search_division_status'
+      tom_select 'Inactive', from: 'search_division_status'
+      expect(page).to have_no_css('.filter-active .ts-control')
       find('body').click
       first('button', text: 'Apply Filters').click
-      expect(first('button[data-id="search_division_status"]')['class']).to include 'btn btn-warning'
+      expect(page).to have_css('.filter-active .ts-control')
     end
 
     context 'when ajax select', :js do
@@ -76,13 +72,13 @@ RSpec.describe 'Search' do
         expect(page).to have_content(other_division.name)
 
         # Full Search
-        bootstrap_select category.name, from: 'search_category_id', search: category.name
+        tom_select category.name, from: 'search_category_id', search: category.name
         first('button', text: 'Apply Filters').click
         expect(page).to have_content(division.name)
         expect(page).to have_no_content(other_division.name)
 
         # Partial Search
-        bootstrap_select other_category.name, from: 'search_category_id', search: 'App'
+        tom_select other_category.name, from: 'search_category_id', search: 'App'
         first('button', text: 'Apply Filters').click
         expect(page).to have_content(other_division.name)
       end
@@ -94,7 +90,7 @@ RSpec.describe 'Search' do
           expect(page).to have_content(division.name)
           expect(page).to have_content(other_division.name)
 
-          bootstrap_select category.name, from: 'search_category_id', search: category.name
+          tom_select category.name, from: 'search_category_id', search: category.name
           first('button', text: 'Apply Filters').click
           expect(page).to have_content(division.name)
           expect(page).to have_no_content(other_division.name)
