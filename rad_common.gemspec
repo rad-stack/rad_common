@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'audited'
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
-  s.add_dependency 'bootstrap4-kaminari-views'
+  s.add_dependency 'bootstrap5-kaminari-views'
   s.add_dependency 'cssbundling-rails', '~> 1.4'
   s.add_dependency 'csv'
   s.add_dependency 'devise'
