@@ -9,6 +9,8 @@ class BaseReport
     @params = params
     @report_errors = []
 
+    return unless date_filters?
+
     if params[:report].blank?
       @start_date = start_date_default
       @end_date = end_date_default
@@ -69,10 +71,14 @@ class BaseReport
     # Override default start and end dates in sub classes as needed
 
     def start_date_default
+      return unless date_filters?
+
       beginning_of_last_week
     end
 
     def end_date_default
+      return unless date_filters?
+
       end_of_last_week
     end
 
