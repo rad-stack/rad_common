@@ -215,7 +215,7 @@ Seeder.new.seed!
           base_package = JSON.parse(File.read(base_package_source))
           custom_package = JSON.parse(File.read('custom-dependencies.json'))
 
-          %w[dependencies devDependencies scripts].each do |key|
+          %w[dependencies devDependencies resolutions scripts].each do |key|
             next unless custom_package[key]
 
             base_package[key] ||= {}
@@ -229,7 +229,7 @@ Seeder.new.seed!
           return unless File.exist?('custom-dependencies.json')
 
           contents = JSON.parse(File.read('custom-dependencies.json'))
-          if contents.is_a?(Hash) && (%w[dependencies devDependencies scripts] & contents.keys).none?
+          if contents.is_a?(Hash) && (%w[dependencies devDependencies resolutions scripts] & contents.keys).none?
             new_contents = { 'dependencies' => contents }
             File.write('custom-dependencies.json', JSON.pretty_generate(new_contents) + "\n")
           end
