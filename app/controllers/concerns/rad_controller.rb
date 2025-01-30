@@ -74,4 +74,10 @@ module RadController
       locale = params[:locale] || current_user.try(:locale) || I18n.default_locale
       I18n.with_locale(locale, &)
     end
+
+    def redirect_to_path(record)
+      return params[:redirect_to] if params[:redirect_to].present?
+
+      record
+    end
 end
