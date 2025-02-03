@@ -14,7 +14,7 @@
     "esbuild": "^0.24.0",
     "eslint": "^9.14.0",
     "sass": "^1.83.0",
-    "stylelint": "^13.13.1"
+    "stylelint": "^16.14.1"
   },
   "scripts": {
     "build": "yarn build:js && yarn build:css",
