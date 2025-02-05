@@ -5,6 +5,15 @@ if gem list --no-installed --exact --silent foreman; then
   gem install foreman
 fi
 
+# rad_common development start
+cd ../../js
+yarn install
+yarn link
+
+cd ../spec/dummy
+yarn link rad_common_js
+# rad_common development end
+
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
 

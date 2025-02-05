@@ -113,6 +113,7 @@ module RadCommon
 
         # bin
         directory '../../../../../spec/dummy/bin/', 'bin/'
+        gsub_file 'bin/dev', /\n\s# rad_common development start.*# rad_common development end/m, ''
         gsub_file 'bin/setup', 'dummy', installed_app_name # TODO: Remove in Rails 8
 
         # locales
@@ -207,22 +208,26 @@ Seeder.new.seed!
           migrate_custom_dependencies_file # Temp: Migrate old custom_dependencies.json to new format
 
           dummy_file_path = '../../../../../spec/dummy/package.json'
-          unless File.exist?('custom-dependencies.json')
-            return copy_file dummy_file_path, 'package.json'
+          if File.exist?('custom-dependencies.json')
+            base_package_source = File.expand_path(find_in_source_paths(dummy_file_path))
+            base_package = JSON.parse(File.read(base_package_source))
+            custom_package = JSON.parse(File.read('custom-dependencies.json'))
+
+            %w[dependencies devDependencies resolutions scripts].each do |key|
+              next unless custom_package[key]
+
+              base_package[key] ||= {}
+              base_package[key].merge!(custom_package[key])
+            end
+
+            File.write('package.json', JSON.pretty_generate(base_package) + "\n")
+          else
+            copy_file dummy_file_path, 'package.json'
           end
 
-          base_package_source = File.expand_path(find_in_source_paths(dummy_file_path))
-          base_package = JSON.parse(File.read(base_package_source))
-          custom_package = JSON.parse(File.read('custom-dependencies.json'))
-
-          %w[dependencies devDependencies resolutions scripts].each do |key|
-            next unless custom_package[key]
-
-            base_package[key] ||= {}
-            base_package[key].merge!(custom_package[key])
-          end
-
-          File.write('package.json', JSON.pretty_generate(base_package) + "\n")
+          gemfile_lock = File.read('Gemfile.lock')
+          rc_commit = gemfile_lock.match(/rad_common.git\n\s*revision: (\h{40})/)[1]
+          gsub_file 'package.json', 'file:../../js', "https://github.com/rad-stack/rad_common.git##{rc_commit}"
         end
 
         def migrate_custom_dependencies_file
@@ -420,6 +425,8 @@ Seeder.new.seed!
           remove_file 'babel.config.js'
 
           copy_file '../../../../../spec/dummy/esbuild.config.js', 'esbuild.config.js'
+          gsub_file 'esbuild.config.js', "const path = require('path');\n", ''
+          gsub_file 'esbuild.config.js', /^.*alias: { 'rad_common_js': path\.resolve\(__dirname, '\.\.\/\.\.\/js'\) },.*\n/, ''
           copy_file '../../../../../spec/dummy/Procfile.dev', 'Procfile.dev'
 
           if Dir.exist?('app/javascript/packs')

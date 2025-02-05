@@ -1,0 +1,134 @@
+html {
+  // Bootstrap 4 increased the default font size,
+  // so this just brings it back down so everything is closer to what it was.
+  font-size: 14px;
+}
+
+// We are making all of our labels and legends for checkbox groups slightly bold since BS4 got rid of this
+label, legend {
+  font-weight: 500;
+}
+
+/* to prevent button icons from wrapping*/
+.btn
+{
+  white-space: nowrap;
+}
+
+/* this limits the actions column width so that the action buttons don't look super long */
+th.actions {
+  width: 200px;
+  text-align: center;
+}
+
+/* this is used because the "as: :hidden" option adds a hidden class to the form group, but that class was removed in b4. So for now without this, we're left with extra spacing around a hidden input. */
+.form-group.hidden {
+  display: none;
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+/* TODO: convert all usage of dl-horizontal and then remove class below https://v4-alpha.getbootstrap.com/migration/#typography */
+@media (min-width: 768px) {
+  .dl-horizontal dt {
+    float: left;
+    width: 160px;
+    overflow: hidden;
+    clear: left;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .dl-horizontal dd {
+    margin-left: 180px;
+    margin-bottom: 0;
+  }
+}
+
+.dl-horizontal dd:before,
+.dl-horizontal dd:after {
+  display: table;
+  content: " ";
+}
+
+.dl-horizontal dd:after {
+  clear: both;
+}
+
+//This is to make the action buttons look good on mobile in card headers
+@include media-breakpoint-down(md) {
+  .title-header {
+    width: 100%;
+    display:block !important;
+
+    .title-text {
+      width: 100%;
+    }
+  }
+
+  .action-buttons, .external-actions {
+    display: block !important;
+    .btn, .btn-group {
+      display: block;
+      margin-bottom: 8px;
+    }
+    .btn {
+      padding: 10px;
+    }
+  }
+
+  .external-actions {
+    padding-top: 10px;
+    border-top: solid 1px;
+  }
+
+  .action-buttons {
+    margin-bottom: 10px;
+  }
+}
+
+// This is to add rounded borders around radio button groups so it matches the style of other inputs
+.radio_buttons {
+  display:flex;
+}
+
+.radio_buttons div:last-of-type {
+  border-right: 1px solid #ced4da;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  flex-grow: 1;
+}
+.form-check-inline {
+  border: 1px solid #ced4da;
+  padding: 7px;
+  border-left: none;
+  border-right: none;
+  margin: 0;
+}
+
+.radio_buttons div:first-of-type {
+  border-left: 1px solid #ced4da;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-right: none;
+}
+
+// These are for duplicates display
+.legend-block {
+  display: inline-block;
+}
+
+.legend-label {
+  display: inline-block;
+  margin-bottom: 5px;
+  font-weight: bold;
+
+  .table-success, .table-danger {
+    width: 60px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: bottom;
+  }
+}

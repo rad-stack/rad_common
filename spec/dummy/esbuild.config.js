@@ -1,4 +1,5 @@
 const esbuild = require('esbuild');
+const path = require('path');
 
 async function build() {
   const nodeEnv = process.env.NODE_ENV || 'development';
@@ -10,6 +11,7 @@ async function build() {
     format: 'esm',
     publicPath: '/assets',
     minify: nodeEnv === 'production',
+    alias: { 'rad_common_js': path.resolve(__dirname, '../../js') },
     define: {
       'process.env.SENTRY_DSN': JSON.stringify(process.env.SENTRY_DSN || ''),
       'process.env.NODE_ENV': JSON.stringify(nodeEnv),

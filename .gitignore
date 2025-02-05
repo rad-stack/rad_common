@@ -27,5 +27,10 @@ spec/dummy/config/credentials/development.key
 spec/dummy/app/assets/builds/*
 !spec/dummy/app/assets/builds/.keep
 
+rad_common_js/node_modules
+rad_common_js/yarn.lock
+js/node_modules
+js/yarn.lock
+
 /app/assets/builds/*
 !/app/assets/builds/.keep

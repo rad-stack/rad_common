@@ -1,0 +1,42 @@
+{
+  "name": "rad_common_js",
+  "version": "2.1.8",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "mkdir -p dist && cp -R js/* dist",
+    "prepare": "yarn build"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.12",
+    "@rails/actiontext": "^7.2.2",
+    "@rails/ujs": "^6.0.5",
+    "@sentry/browser": "^8.38.0",
+    "bootstrap": "^4.0.0",
+    "jquery": "^3.3.1",
+    "jquery-ujs": "^1.2.3",
+    "moment": "^2.29.4",
+    "popper.js": "^1.16.1",
+    "postcss": "^8.5.1",
+    "readmore-js": "^2.2.1",
+    "tom-select": "^2.4.1",
+    "trix": "^2.1.12"
+  },
+  "devDependencies": {
+    "eslint": "^9.14.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rad-stack/rad_common.git"
+  },
+  "author": "Eric Bundy <eric.bundy@radicalbear.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rad-stack/rad_common/issues"
+  },
+  "homepage": "https://github.com/rad-stack/rad_common#readme"
+}
