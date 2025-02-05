@@ -2,11 +2,11 @@
   "include": [
     {
       "TEST_ENV_NUMBER": 1,
-      "GROUP": [1, 2]
+      "GROUP": [1, 3]
     },
     {
       "TEST_ENV_NUMBER": 2,
-      "GROUP": [3, 4]
+      "GROUP": [2, 4]
     }
   ]
 }
