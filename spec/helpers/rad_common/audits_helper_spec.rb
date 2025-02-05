@@ -16,14 +16,20 @@ describe RadCommon::AuditsHelper do
     let(:audit) { division.audits.reorder('id DESC').first }
 
     context 'when admin' do
-      let(:security_role) { create :security_role, :admin }
-
       let(:result) do
         "Changed <strong>Notify</strong> to <strong>true</strong>\n" \
           "Changed <strong>Hourly Rate</strong> from <strong>0.0</strong> to <strong>100.0</strong>\n"
       end
 
+      let(:security_role) { create :security_role, :admin }
+
       it { is_expected.to eq result }
+
+      context 'when model was removed from project' do
+        before { audit.update_column :auditable_type, 'FooBar' }
+
+        it { is_expected.to eq result }
+      end
     end
 
     context 'when user' do
