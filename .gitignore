@@ -29,8 +29,8 @@ spec/dummy/app/assets/builds/*
 
 rad_common_js/node_modules
 rad_common_js/yarn.lock
-js/node_modules
-js/yarn.lock
+dist
+node_modules
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
