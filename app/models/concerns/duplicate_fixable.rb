@@ -76,20 +76,20 @@ module DuplicateFixable
       new.duplicate_model_config[:allow_merge_all].nil? ? false : new.duplicate_model_config[:allow_merge_all]
     end
 
-    def additional_duplicate_items # TODO: we'll have to fix apps that have other_weight configured
+    def additional_duplicate_items
       [{ name: 'company_name', label: 'Company Name', type: :levenshtein, display_only: false, weight: 10 },
        { name: 'name', label: 'Name', type: :levenshtein, display_only: false, weight: 10 },
-       { name: 'email', label: 'Email', type: :string, display_only: false, weight: new.duplicate_email_weight },
+       { name: 'email', label: 'Email', type: :string, display_only: false, weight: 20 },
        { name: 'phone_number',
          label: 'Phone #',
          type: :string,
          display_only: false,
-         weight: new.duplicate_phone_weight },
+         weight: new.duplicate_other_weight },
        { name: 'mobile_phone',
          label: 'Mobile Phone',
          type: :string,
          display_only: false,
-         weight: new.duplicate_phone_weight },
+         weight: new.duplicate_other_weight },
        { name: 'fax_number',
          label: 'Fax #',
          type: :string,
@@ -220,14 +220,6 @@ module DuplicateFixable
 
   def duplicate_other_weight
     duplicate_model_config[:other_weight].presence || 20
-  end
-
-  def duplicate_email_weight
-    duplicate_model_config[:email_weight].presence || 20
-  end
-
-  def duplicate_phone_weight
-    duplicate_model_config[:phone_weight].presence || 20
   end
 
   def duplicates_bypass_address?
