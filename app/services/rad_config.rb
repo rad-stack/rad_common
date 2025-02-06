@@ -338,8 +338,7 @@ class RadConfig
     def system_usage_models!
       array_config_item!(:system_usage_models) +
         [['ContactLogRecipient', 'successful', 'Successful Contacts'],
-         ['ContactLogRecipient', 'failed', 'Failed Contacts'],
-         'Notification']
+         ['ContactLogRecipient', 'failed', 'Failed Contacts']]
     end
 
     def global_validity_days!
