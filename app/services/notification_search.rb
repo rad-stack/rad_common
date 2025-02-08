@@ -44,7 +44,7 @@ class NotificationSearch < RadCommon::Search
     end
 
     def notification_type_options
-      NotificationType.joins(:notifications).where(notifications: { user: current_user }).distinct.sorted
+      NotificationType.joins(:notifications).distinct.sorted
     end
 
     def record_type_options
