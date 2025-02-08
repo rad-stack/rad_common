@@ -48,6 +48,6 @@ class NotificationSearch < RadCommon::Search
     end
 
     def record_type_options
-      current_user.notifications.group(:record_type).select(:record_type).order(:record_type).pluck(:record_type)
+      Notification.group(:record_type).select(:record_type).order(:record_type).pluck(:record_type)
     end
 end
