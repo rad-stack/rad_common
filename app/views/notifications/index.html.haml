@@ -11,7 +11,7 @@
         = render 'layouts/sort_headers', search: @notification_search
       - @notifications.each do |record|
         %tr{ class: table_row_style(record, style_class: 'text-danger') }
-          -if current_user.admin?
+          - if current_user.admin?
             %td= secured_link record.user
           %td
             %p= format_datetime(record.created_at)
