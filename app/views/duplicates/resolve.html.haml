@@ -38,8 +38,12 @@
         %td
         %td
         - if @model.use_first_last_name?
-          %td= link_to @record.last_name, @record
-          %td= link_to @record.first_name, @record
+          %td
+            - if @record.last_name.present?
+              = link_to @record.last_name, @record
+          %td
+            - if @record.first_name.present?
+              = link_to @record.first_name, @record
         - if @model.use_birth_date?
           %td= format_date(@record.birth_date)
         - if @model.use_address?
@@ -135,9 +139,11 @@
             %td= record_result[:score]
             - if @model.use_first_last_name?
               %td{ class: duplicate_class(@record.last_name, record.last_name) }
-                = link_to record.last_name, record
+                - if record.last_name.present?
+                  = link_to record.last_name, record
               %td{ class: duplicate_class(@record.first_name, record.first_name) }
-                = link_to record.first_name, record
+                - if record.first_name.present?
+                  = link_to record.first_name, record
             - if @model.use_birth_date?
               %td{ class: duplicate_class(@record.birth_date, record.birth_date) }
                 = format_date(record.birth_date)

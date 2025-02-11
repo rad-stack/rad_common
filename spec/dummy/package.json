@@ -6,41 +6,13 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
-    "follow-redirects": "^1.14.8",
-    "rad_common_js": "https://github.com/rad-stack/rad_common_js#97de5c896888f8bc229cd92ece5aaaf5787557d9",
-    "terser": "^5.14.2"
+    "rad_common_js": "https://github.com/rad-stack/rad_common_js#1198aa778860de1c3fbc8f7ae1bbde915514d221"
   },
   "devDependencies": {
-    "esbuild": "^0.24.0",
-    "eslint": "^9.14.0",
-    "sass": "^1.83.0",
-    "stylelint": "^13.13.1"
-  },
-  "resolutions": {
-    "serialize-javascript": "^3.1.0",
-    "ssri": "^8.0.1",
-    "ws": "^7.4.6",
-    "glob-parent": "^5.1.2",
-    "normalize-url": "^4.5.1",
-    "trim-newlines": "^3.0.1",
-    "tar": "^4.4.18",
-    "set-value": "^4.0.1",
-    "nth-check": "^2.0.1",
-    "ansi-regex": "^5.0.1",
-    "node-forge": "^1.0.0",
-    "follow-redirects": "^1.14.8",
-    "json-schema": "^0.4.0",
-    "url-parse": "^1.5.8",
-    "async": "^2.6.4",
-    "eventsource": "^2.0.2",
-    "moment": "^2.29.4",
-    "loader-utils": "^2.0.3",
-    "terser": "^5.14.2",
-    "jquery-ui": "^1.13.2",
-    "json5": "^2.2.2",
-    "decode-uri-component": "^0.2.1",
-    "dns-packet": "^5.4.0",
-    "browserify-sign": "^4.2.2"
+    "esbuild": "^0.24.2",
+    "eslint": "^9.19.0",
+    "sass": "^1.83.4",
+    "stylelint": "^16.14.1"
   },
   "scripts": {
     "build": "yarn build:js && yarn build:css",

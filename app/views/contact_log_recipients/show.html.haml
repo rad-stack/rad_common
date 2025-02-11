@@ -1,6 +1,7 @@
 .card
   = render 'layouts/card_header',
-           title: safe_join(['Recipient for ', link_to('Contact Log', @contact_log_recipient.contact_log)])
+           title: safe_join(['Recipient for ', link_to('Contact Log', @contact_log_recipient.contact_log)]),
+           no_index_button: true
 
   .card-body
     .row

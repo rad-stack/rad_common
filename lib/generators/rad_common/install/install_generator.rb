@@ -46,7 +46,9 @@ module RadCommon
           copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
         end
 
-        migrate_webpacker_to_esbuild unless RadConfig.react_app?
+        migrate_webpacker_to_esbuild
+
+        migrate_to_tom_select
 
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
@@ -213,7 +215,7 @@ Seeder.new.seed!
           base_package = JSON.parse(File.read(base_package_source))
           custom_package = JSON.parse(File.read('custom-dependencies.json'))
 
-          %w[dependencies devDependencies scripts].each do |key|
+          %w[dependencies devDependencies resolutions scripts].each do |key|
             next unless custom_package[key]
 
             base_package[key] ||= {}
@@ -227,7 +229,7 @@ Seeder.new.seed!
           return unless File.exist?('custom-dependencies.json')
 
           contents = JSON.parse(File.read('custom-dependencies.json'))
-          if contents.is_a?(Hash) && (%w[dependencies devDependencies scripts] & contents.keys).none?
+          if contents.is_a?(Hash) && (%w[dependencies devDependencies resolutions scripts] & contents.keys).none?
             new_contents = { 'dependencies' => contents }
             File.write('custom-dependencies.json', JSON.pretty_generate(new_contents) + "\n")
           end
@@ -460,6 +462,11 @@ Seeder.new.seed!
 
             remove_dir 'app/javascript/css'
           end
+        end
+
+        def migrate_to_tom_select
+          search_and_replace 'bootstrap_select', 'tom_select'
+          search_and_replace 'rad-chosen', 'selectpicker'
         end
 
         def apply_migrations
