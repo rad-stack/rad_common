@@ -18,7 +18,7 @@
           - if audit.action == 'destroy'
             %td #{audit.auditable_type} (#{audit.auditable_id})
           - else
-            %td= audit_model_link(audit, audit.auditable)
+            %td= audit_model_link(audit, safe_auditable(audit))
           %td= audit.auditable_id
           %td= secured_link(audit.user)
           %td= display_audited_action(audit)
