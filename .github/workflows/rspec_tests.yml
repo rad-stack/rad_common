@@ -17,14 +17,14 @@ env:
 
 jobs:
   setup-matrix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       total_groups: ${{ steps.set-matrix.outputs.total_groups }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Read & Parse Matrix Configuration
         id: set-matrix
         run: |
@@ -35,7 +35,7 @@ jobs:
           echo "total_groups=$total_groups" >> $GITHUB_OUTPUT
 
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: setup-matrix
     strategy:
       fail-fast: false
@@ -70,12 +70,6 @@ jobs:
         with:
           ruby-version: ${{ steps.set-ruby-version.outputs.version }}
           bundler-cache: true
-
-      - name: Set up ImageMagick
-        uses: mfinelli/setup-imagemagick@v5
-        with:
-          cache: true
-          install-libfuse2: true
 
       - name: Set up Node
         uses: actions/setup-node@v4
