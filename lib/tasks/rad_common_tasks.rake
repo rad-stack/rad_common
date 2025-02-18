@@ -79,4 +79,8 @@ namespace :rad_common do
       puts item
     end
   end
+
+  task update_s3_cors_settings: :environment do
+    S3CorsSettingsUpdater.new.update!
+  end
 end
