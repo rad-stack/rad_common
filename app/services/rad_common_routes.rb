@@ -55,6 +55,7 @@ module RadCommonRoutes
         resources :user_security_roles, only: :show
         resources :user_clients, only: %i[create destroy]
         resources :json_web_tokens, only: :new
+        resources :valid_attachment_types, only: :index
 
         resources :impersonations, only: [] do
           collection do
