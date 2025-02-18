@@ -234,7 +234,7 @@ class DuplicatesProcessor
 
     def calc_email_weight(record, duplicate_record, weight)
       if email_compare?(record, duplicate_record)
-        weight
+        weight * 2 # TODO: make this an option to double the weight for key contact info
       elsif levenshtein_email_compare?(record, duplicate_record)
         weight / 2
       else
@@ -254,7 +254,7 @@ class DuplicatesProcessor
 
     def calc_mobile_phone_weight(record, duplicate_record, weight)
       if mobile_phone_compare?(record, duplicate_record)
-        weight
+        weight * 2 # TODO: make this an option to double the weight for key contact info
       elsif levenshtein_mobile_phone_compare?(record, duplicate_record)
         weight / 2
       else
