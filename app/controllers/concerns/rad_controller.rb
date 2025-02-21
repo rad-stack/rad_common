@@ -14,7 +14,7 @@ module RadController
       # the application.rb config in the docs to do the same thing doesn't work
       # https://github.com/varvet/pundit#rescuing-a-denied-authorization-in-rails
 
-      Sentry.capture_exception exception if Rails.env.production? || Rails.env.staging?
+      Sentry.capture_exception exception if report_sentry_not_authorized?
       render file: Rails.root.join('public/403.html'), formats: [:html], status: :forbidden, layout: false
     end
 
@@ -48,9 +48,17 @@ module RadController
     end
 
     def sentry_user_name
-      return true_user.to_s if true_user == current_user
+      return true_user.to_s unless impersonating?
 
       "#{true_user} impersonating #{current_user}"
+    end
+
+    def report_sentry_not_authorized?
+      (Rails.env.production? || Rails.env.staging?) && !impersonating?
+    end
+
+    def impersonating?
+      current_user != true_user
     end
 
     def user_time_zone(&)
