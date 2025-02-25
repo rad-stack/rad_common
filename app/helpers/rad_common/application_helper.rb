@@ -259,12 +259,17 @@ module RadCommon
         controller: 'toast' }
     end
 
-    def check_blob_validity(blob)
-      unless RadCommon::VALID_ATTACHMENT_TYPES.include?(blob.content_type)
-        raise "Invalid file type: #{blob.content_type}"
+    def attachment_validation_errors(content_type, size, raise_on_invalid: false)
+      errors = []
+
+      unless RadCommon::VALID_ATTACHMENT_TYPES.include?(content_type)
+        errors << "Invalid attachment type #{content_type}"
       end
 
-      raise "Invalid file size: #{blob.byte_size}" unless blob.byte_size <= 100.megabytes
+      errors << 'Invalid attachment, must be 100 MB or less' if size > 100.megabytes
+      raise errors.to_sentence if errors.any? && raise_on_invalid
+
+      errors
     end
 
     private
