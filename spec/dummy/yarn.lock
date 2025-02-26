@@ -1416,7 +1416,7 @@ queue-microtask@^1.2.2:
 
 "rad_common_js@https://github.com/rad-stack/rad_common_js#rad-7777-action-text-attachments":
   version "2.1.8"
-  resolved "https://github.com/rad-stack/rad_common_js#6df062288f536a872523c48e402a07443f179311"
+  resolved "https://github.com/rad-stack/rad_common_js#91cfd3f466aef9108c3824eae27add9e59b8eb82"
   dependencies:
     "@hotwired/stimulus" "^3.2.2"
     "@hotwired/turbo-rails" "^8.0.12"
