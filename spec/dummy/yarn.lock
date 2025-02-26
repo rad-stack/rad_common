@@ -1414,9 +1414,9 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-"rad_common_js@https://github.com/rad-stack/rad_common_js#rad-7777-action-text-attachments":
+"rad_common_js@https://github.com/rad-stack/rad_common_js#0a6a2b365540b0c10404ba1fbf10a923475940ed":
   version "2.1.8"
-  resolved "https://github.com/rad-stack/rad_common_js#91cfd3f466aef9108c3824eae27add9e59b8eb82"
+  resolved "https://github.com/rad-stack/rad_common_js#0a6a2b365540b0c10404ba1fbf10a923475940ed"
   dependencies:
     "@hotwired/stimulus" "^3.2.2"
     "@hotwired/turbo-rails" "^8.0.12"
