@@ -259,19 +259,6 @@ module RadCommon
         controller: 'toast' }
     end
 
-    def attachment_validation_errors(content_type, size, raise_on_invalid: false)
-      errors = []
-
-      unless RadCommon::VALID_ATTACHMENT_TYPES.include?(content_type)
-        errors << "Invalid attachment type #{content_type}"
-      end
-
-      errors << 'Invalid attachment, must be 100 MB or less' if size > 100.megabytes
-      raise errors.to_sentence if errors.any? && raise_on_invalid
-
-      errors
-    end
-
     private
 
       def size_symbol_to_int(size_as_symbol)
