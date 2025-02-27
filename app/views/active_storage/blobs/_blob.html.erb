@@ -1,4 +1,4 @@
-<% ApplicationController.helpers.check_blob_validity %>
+<% ApplicationController.helpers.check_blob_validity(blob) %>
 
 <figure class="attachment attachment--<%= blob.representable? ? "preview" : "file" %> attachment--<%= blob.filename.extension %>">
   <% if blob.representable? %>
