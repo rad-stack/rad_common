@@ -259,6 +259,14 @@ module RadCommon
         controller: 'toast' }
     end
 
+    def check_blob_validity(blob)
+      unless RadCommon::VALID_ATTACHMENT_TYPES.include?(blob.content_type)
+        raise "Invalid attachment type #{blob.content_type}"
+      end
+
+      raise 'Invalid attachment, must be 100 MB or less' if blob.byte_size > 100.megabytes
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
