@@ -1,4 +1,4 @@
-<% attachment_validation_errors blob.content_type, blob.byte_size, raise_on_invalid: true %>
+<% check_blob_validity %>
 
 <figure class="attachment attachment--<%= blob.representable? ? "preview" : "file" %> attachment--<%= blob.filename.extension %>">
   <% if blob.representable? %>
