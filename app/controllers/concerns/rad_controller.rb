@@ -5,6 +5,7 @@ module RadController
   included do
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     before_action :set_sentry_user_context
+    before_action :check_ip_address_time_zone, if: :user_signed_in?
     around_action :user_time_zone
     around_action :switch_locale, if: :switch_languages?
     after_action :verify_authorized, unless: :devise_controller?
@@ -59,6 +60,19 @@ module RadController
 
     def impersonating?
       current_user != true_user
+    end
+
+    def check_ip_address_time_zone
+      ip_address = request.remote_ip
+      return if ip_address.blank? || current_user.current_sign_in_ip == ip_address # TODO: maybe not use current_sign_in_ip
+
+      # TODO: maybe cache this
+      raw_zone = Geocoder.search(ip_address).first.data['timezone']
+      zone = ActiveSupport::TimeZone.all.find { |tz| tz.tzinfo.name == raw_zone }
+      timezone = zone.name
+      return if timezone == current_user.detected_timezone
+
+      current_user.update! detected_timezone: timezone
     end
 
     def user_time_zone(&)
