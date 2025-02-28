@@ -2,6 +2,8 @@
   .toast.shadow.hide{ 'aria-atomic': 'true', 'aria-live' => 'assertive', role: 'alert' }
     .toast-header.px-3
       %h5.mr-auto.pt-2#toast-nav-title
+      - if flash[:subject_url]
+        = link_to icon('external-link'), flash[:subject_url], target: '_blank', rel: 'noopener', class: 'text-muted'
       %button.ml-2.mb-1.close{ 'aria-label': 'Close', 'data-dismiss': 'toast', type: 'button' }
         %span{ 'aria-hidden': 'true' } ×
     .toast-body
