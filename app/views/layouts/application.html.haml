@@ -12,8 +12,11 @@
     = stylesheet_link_tag 'application', 'data-turbo-track': 'reload'
 
   %body
+    - if RadConfig.boolean_config_item!(:action_cable_enabled) && user_signed_in?
+      = turbo_stream_from "notifications_#{current_user.id}"
     = render 'layouts/navigation'
-    = render 'layouts/toast'
+    #toast-stream-container
+      = render 'layouts/toast'
     .container-fluid.content
       .row
         .col-lg-12

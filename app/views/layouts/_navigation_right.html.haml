@@ -10,8 +10,7 @@
           Signed In as #{current_user}
         - else
           = current_user
-        - if unread_count.positive?
-          %span.badge.alert-danger= unread_count
+        = render 'layouts/unread_badge', unread_badge_id: 'nav-unread-badge', unread_count: unread_count
         = show_nav_avatar
       %ul.dropdown-menu.dropdown-menu-right
         %li
@@ -24,8 +23,7 @@
           %li
             = link_to notifications_path, class: 'dropdown-item' do
               = icon 'bell', 'Notifications'
-              - if unread_count.positive?
-                %span.badge.alert-danger= unread_count
+              = render 'layouts/unread_badge', unread_badge_id: 'menu-unread-badge', unread_count: unread_count
         - if current_user.internal? && policy(NotificationSetting).index?
           %li
             = link_to icon('gear', 'Notification Settings'),
