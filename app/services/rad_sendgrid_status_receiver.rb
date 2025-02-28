@@ -4,13 +4,22 @@ class RadSendgridStatusReceiver
 
   def initialize(content)
     @content = content
-    @notify = true
 
     check_events
   end
 
   def process!
-    return unless host_matches?
+    if host_name.blank?
+      Rails.logger.info "sendgrid status for #{email}: missing host name, ignoring"
+      return
+    end
+
+    if forward?
+      Rails.logger.info "sendgrid status for #{email}: forwarding to #{host_name}"
+      forward!
+      return
+    end
+
     return if missing_contact_log?
 
     process_status
@@ -93,7 +102,12 @@ class RadSendgridStatusReceiver
       # we can also add a uniqueness check to prevent the scenario further upstream
       raise "multiple recipients with same email #{email} for contact log #{contact_log.id}" if recipients.size > 1
 
-      recipients.first.update! email_status: event, sendgrid_reason: reason, notify_on_fail: @notify
+      recipient = recipients.first
+
+      recipient.email_status = event
+      recipient.sendgrid_reason = reason
+      recipient.notify_on_fail = @notify unless @notify.nil?
+      recipient.save!
     end
 
     def contact_log_id
@@ -112,23 +126,41 @@ class RadSendgridStatusReceiver
       raise "unknown event type #{event}" unless all_events.include?(event)
     end
 
-    def host_matches?
-      if host_name.blank?
-        Rails.logger.info "sendgrid status for #{email}: missing host name, ignoring"
-        false
-      elsif host_name == RadConfig.host_name!
-        true
-      else
-        Rails.logger.info "sendgrid status for #{email}: host name doesn't match, ignoring - #{host_name}"
-        false
-      end
-    end
-
     def spam_report?
       event == SPAM_REPORT
     end
 
     def all_events
       SUPPRESSION_EVENTS + %w[open click]
+    end
+
+    def forward?
+      host_name != RadConfig.host_name!
+    end
+
+    def forward!
+      RadRetry.perform_request do
+        response = forward_connection.post('/sendgrid_statuses') do |request|
+          request.body = forward_body
+        end
+
+        raise "forward failed, code: #{response.status}, message: #{response.body}" unless response.status == 200
+      end
+    end
+
+    def forward_connection
+      @forward_connection ||= Faraday.new url: "#{forward_protocol}://#{host_name}", headers: forward_headers
+    end
+
+    def forward_protocol
+      Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
+    end
+
+    def forward_headers
+      { 'Content-Type' => 'application/json' }
+    end
+
+    def forward_body
+      { '_json' => [@content] }.to_json
     end
 end

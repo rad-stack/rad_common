@@ -5,5 +5,7 @@ class UserProfilePolicy < ApplicationPolicy
     record.allow_profile? && (user.permission?(:manage_user) || record == user)
   end
 
-  alias update? show?
+  def update?
+    show?
+  end
 end

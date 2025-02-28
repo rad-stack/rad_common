@@ -236,6 +236,37 @@ module RadCommon
       end
     end
 
+    def rad_wicked_pdf_stylesheet_link_tag(source)
+      # Hack until https://github.com/mileszs/wicked_pdf/pull/1120 is merged
+      protocol = Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
+      stylesheet_link_tag source, host: "#{protocol}://#{RadConfig.host_name!}"
+    end
+
+    def rad_turbo_form_options(template_locals, options = {})
+      options[:data] ||= {}
+      options[:data].merge!(
+        controller: 'remote-form',
+        remote_form_success_message_value: template_locals[:toast_success],
+        remote_form_error_message_value: template_locals[:toast_error],
+        remote_form_target: 'form'
+      )
+      options
+    end
+
+    def rad_toast_data(template_locals)
+      { 'toast-success-message-value': template_locals[:toast_success] || template_locals[:notice],
+        'toast-error-message-value': template_locals[:toast_error],
+        controller: 'toast' }
+    end
+
+    def check_blob_validity(blob)
+      unless RadCommon::VALID_ATTACHMENT_TYPES.include?(blob.content_type)
+        raise "Invalid attachment type #{blob.content_type}"
+      end
+
+      raise 'Invalid attachment, must be 100 MB or less' if blob.byte_size > 100.megabytes
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)

@@ -1,10 +1,8 @@
 class DateFilterDropdownPresenter
-  attr_reader :view, :start_target, :end_target
+  attr_reader :view
 
-  def initialize(view_context, start_target, end_target)
+  def initialize(view_context)
     @view = view_context
-    @start_target = start_target
-    @end_target = end_target
   end
 
   def render
@@ -24,10 +22,7 @@ class DateFilterDropdownPresenter
     end
 
     def dropdown_menu_attrs
-      { class: 'dropdown-menu search-date-filter',
-        'aria-labelledby' => 'date-range-dropdown',
-        'data-filter-target-start' => start_target,
-        'data-filter-target-end' => end_target }
+      { class: 'dropdown-menu', 'aria-labelledby' => 'date-range-dropdown' }
     end
 
     def current_ranges
@@ -42,11 +37,18 @@ class DateFilterDropdownPresenter
     end
 
     def range_tag(range)
-      view.tag.a(range.titleize, href: '#', 'data-range' => range, class: 'dropdown-item')
+      view.tag.a range.titleize,
+                 href: '#',
+                 'data-range' => range,
+                 class: 'dropdown-item',
+                 'data-action' => 'search-date-filter#setRange',
+                 'data-turbo' => 'false'
     end
 
     def clear_option
       view.tag.div(class: 'dropdown-divider') +
-        view.tag.a('Clear', href: '#', class: 'dropdown-item text-danger', 'data-range' => 'clear')
+        view.tag.a('Clear', href: '#', class: 'dropdown-item text-danger',
+                            'data-range' => 'clear', 'data-turbo' => 'false',
+                            'data-action' => 'search-date-filter#setRange')
     end
 end

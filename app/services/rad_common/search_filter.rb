@@ -181,12 +181,10 @@ module RadCommon
     def search_scope_params
       {
         class: 'selectpicker-search',
-        'data-abs-subtext' => show_search_subtext,
-        'data-abs-locale-search-placeholder' => search_scope[:description],
-        'data-abs-ajax-data' => {
-          'global_search_scope' => search_scope[:name],
-          'term' => '{{{q}}}'
-        }.to_json
+        'data-subtext' => show_search_subtext,
+        'data-placeholder' => search_scope[:description],
+        'data-global-search-scope' => search_scope[:name],
+        'data-global-search-mode' => 'searchable_association'
       }
     end
 

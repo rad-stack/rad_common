@@ -3,9 +3,10 @@ require 'rails_helper'
 describe SendgridStatusReceiver, type: :service do
   let(:service) { described_class.new(content) }
   let(:deliveries) { ActionMailer::Base.deliveries }
-  let(:user) { create :user }
+  let(:user_role) { create :security_role, read_attorney: true }
+  let(:user) { create :user, security_roles: [user_role] }
   let(:event_type) { 'bounce' }
-  let(:contact_log) { create :contact_log, :email, record: create(:attorney) }
+  let(:contact_log) { create :contact_log, :email, record: create(:attorney), from_user: user }
   let!(:contact_log_recipient) { create :contact_log_recipient, :email, contact_log: contact_log, email: user.email }
   let(:last_email) { deliveries.last }
   let(:host_name) { RadConfig.host_name! }
@@ -30,6 +31,29 @@ describe SendgridStatusReceiver, type: :service do
   it 'ignores when a contact log was previously deleted' do
     contact_log.destroy!
     expect(service.process!).to be_nil
+  end
+
+  describe 'email changed' do
+    let(:last_contact_log) { ContactLog.last }
+
+    let(:content) do
+      { event: event_type,
+        type: 'block',
+        email: user.email,
+        host_name: RadConfig.host_name!,
+        contact_log_id: last_contact_log.id }
+    end
+
+    before { RadDeviseMailer.email_changed(user).deliver_now }
+
+    it "doesn't notify on failure" do
+      expect(last_contact_log.content).to eq 'Email Changed'
+
+      deliveries.clear
+      described_class.new(content).process!
+
+      expect(last_email).to be_nil
+    end
   end
 
   context 'with matching host name' do
@@ -100,10 +124,20 @@ describe SendgridStatusReceiver, type: :service do
     end
   end
 
-  context 'without matching host name' do
-    let(:host_name) { 'example.com' }
+  context 'with missing host name' do
+    let(:host_name) { nil }
 
     it 'ignores' do
+      expect { service.process! }.not_to change(deliveries, :count)
+    end
+  end
+
+  context 'with non-matching host name' do
+    let(:host_name) { 'example.com' }
+
+    before { allow_any_instance_of(RadSendgridStatusReceiver).to receive(:forward!) }
+
+    it 'forwards' do
       expect { service.process! }.not_to change(deliveries, :count)
     end
   end

@@ -14,8 +14,13 @@ class NotificationSettingPolicy < ApplicationPolicy
     false
   end
 
-  alias index? show?
-  alias destroy? update?
+  def index?
+    show?
+  end
+
+  def destroy?
+    update?
+  end
 
   private
 

@@ -59,6 +59,12 @@ class RadTwilio
     "(#{phone_number[2, 3]}) #{phone_number[5, 3]}-#{phone_number[8, 4]}"
   end
 
+  def self.strip_phone_number(phone_number)
+    return if phone_number.nil?
+
+    phone_number.gsub(/[^0-9a-z\\s]/i, '')
+  end
+
   private
 
     def client
@@ -66,7 +72,7 @@ class RadTwilio
     end
 
     def get_phone_number(attribute, mobile)
-      converted_phone_number = attribute.gsub(/[^0-9a-z\\s]/i, '')
+      converted_phone_number = RadTwilio.strip_phone_number(attribute)
       mobile ? lookup_number(converted_phone_number, 'carrier') : lookup_number(converted_phone_number)
     end
 
