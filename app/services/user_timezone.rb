@@ -12,7 +12,7 @@ class UserTimezone
   end
 
   def check_user!(ip_address)
-    return if ip_address.blank? || ip_address == '127.0.0.1' || ip_address == '::1'
+    return if ip_address.blank? || local_ip_address?(ip_address)
 
     timezone = detected_timezone(ip_address)
     return if timezone == user.detected_timezone
@@ -30,8 +30,12 @@ class UserTimezone
 
   private
 
+    def local_ip_address?(ip_address)
+      %w[127.0.0.1 ::1].include?(ip_address)
+    end
+
     def detected_timezone(ip_address)
-      Rails.cache.fetch("ip_address_time_zone:#{ip_address}", expires_in: 1.hour) do
+      Rails.cache.fetch("ip_address_time_zone:#{ip_address}", expires_in: 1.week) do
         raw_zone = Geocoder.search(ip_address).first.data['timezone']
         ActiveSupport::TimeZone.all.find { |tz| tz.tzinfo.name == raw_zone }.name
       end
