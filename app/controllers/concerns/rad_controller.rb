@@ -64,7 +64,9 @@ module RadController
 
     def check_ip_address_time_zone
       ip_address = request.remote_ip
-      return if ip_address.blank? || current_user.current_sign_in_ip == ip_address # TODO: maybe not use current_sign_in_ip
+
+      # TODO: maybe not use current_sign_in_ip
+      return if ip_address.blank? || current_user.current_sign_in_ip == ip_address
 
       # TODO: maybe cache this
       raw_zone = Geocoder.search(ip_address).first.data['timezone']

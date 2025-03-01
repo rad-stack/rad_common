@@ -1,7 +1,12 @@
 module RadCommon
   module UsersHelper
     def user_show_data(user)
-      items = [:email, :mobile_phone, { label: 'User Status', value: user_status_item(user) }, :timezone, :detected_timezone]
+      items = [:email,
+               :mobile_phone,
+               { label: 'User Status', value: user_status_item(user) },
+               :timezone,
+               :detected_timezone]
+
       items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
 
       items += [:sign_in_count,
