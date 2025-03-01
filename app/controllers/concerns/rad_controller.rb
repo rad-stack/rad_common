@@ -64,7 +64,7 @@ module RadController
 
     def check_ip_address_timezone
       ip_address = request.remote_ip
-      return if ip_address.blank? || ip_address = '127.0.0.1'
+      return if ip_address.blank? || ip_address == '127.0.0.1'
 
       timezone = detected_timezone(ip_address)
       return if timezone == current_user.detected_timezone
