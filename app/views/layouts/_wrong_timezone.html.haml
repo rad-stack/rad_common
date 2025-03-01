@@ -1,4 +1,4 @@
-- if current_user.wrong_timezone?
+- if UserTimezone.new(current_user).wrong_timezone?
   .alert.alert-warning
     .fa.fa-exclamation-triangle
     We've detected a different timezone: #{current_user.detected_timezone}. Want to update your settings?

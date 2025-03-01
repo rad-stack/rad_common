@@ -63,20 +63,7 @@ module RadController
     end
 
     def check_ip_address_timezone
-      ip_address = request.remote_ip
-      return if ip_address.blank? || ip_address == '127.0.0.1'
-
-      timezone = detected_timezone(ip_address)
-      return if timezone == current_user.detected_timezone
-
-      current_user.update! detected_timezone: timezone
-    end
-
-    def detected_timezone(ip_address)
-      Rails.cache.fetch("ip_address_time_zone:#{ip_address}", expires_in: 1.hour) do
-        raw_zone = Geocoder.search(ip_address).first.data['timezone']
-        ActiveSupport::TimeZone.all.find { |tz| tz.tzinfo.name == raw_zone }.name
-      end
+      UserTimezone.new(current_user).check_user!(request.remote_ip)
     end
 
     def user_timezone(&)

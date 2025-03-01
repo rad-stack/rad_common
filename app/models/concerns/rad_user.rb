@@ -248,12 +248,6 @@ module RadUser
     email.end_with? RadConfig.developer_domain!
   end
 
-  def wrong_timezone?
-    return false if timezone.blank? || detected_timezone.blank?
-
-    timezone != detected_timezone && ignored_timezone != detected_timezone
-  end
-
   class_methods do
     def user_approved_message
       "Your account was approved and you can begin using #{RadConfig.app_name!}."

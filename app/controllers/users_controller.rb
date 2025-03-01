@@ -146,12 +146,12 @@ class UsersController < ApplicationController
   end
 
   def update_timezone
-    @user.update! timezone: @user.detected_timezone, ignored_timezone: nil
+    UserTimezone.new(@user).update!
     redirect_back fallback_location: @user, notice: 'User was successfully updated.'
   end
 
   def ignore_timezone
-    @user.update! ignored_timezone: @user.detected_timezone
+    UserTimezone.new(@user).ignore!
     redirect_back fallback_location: @user, notice: 'User was successfully updated.'
   end
 
