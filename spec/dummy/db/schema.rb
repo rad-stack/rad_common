@@ -405,6 +405,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_27_191231) do
     t.date "birth_date"
     t.string "language", default: "en", null: false
     t.string "detected_timezone"
+    t.string "ignored_timezone"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"

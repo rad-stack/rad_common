@@ -5,7 +5,8 @@ module RadCommon
                :mobile_phone,
                { label: 'User Status', value: user_status_item(user) },
                :timezone,
-               :detected_timezone]
+               :detected_timezone,
+               :ignored_timezone]
 
       items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
 

@@ -1,0 +1,9 @@
+- if current_user.wrong_timezone?
+  .alert.alert-warning
+    .fa.fa-exclamation-triangle
+    We've detected a different timezone: #{current_user.detected_timezone}. Want to update your settings?
+    Click
+    = link_to 'here', update_timezone_user_path(current_user), method: :put
+    to update or click
+    = link_to 'here', ignore_timezone_user_path(current_user), method: :put
+    to ignore.
