@@ -294,7 +294,13 @@ class CardPresenter
                     instance_policy.audit?
 
       { label: 'Audit History',
-        link: @view_context.audits_path(search: { single_record: "#{instance.class}:#{instance.id}" }) }
+        link: @view_context.audits_path(search: { single_record: "#{single_record_class_name}:#{instance.id}" }) }
+    end
+
+    def single_record_class_name
+      return instance.class.to_s unless instance.class.to_s.start_with?('Notifications::')
+
+      'NotificationType'
     end
 
     def contact_log_actions
