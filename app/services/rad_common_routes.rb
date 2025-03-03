@@ -21,6 +21,8 @@ module RadCommonRoutes
             put :reactivate
             put :test_email
             put :test_sms
+            put :update_timezone
+            put :ignore_timezone
           end
 
           resources :user_clients, only: :new

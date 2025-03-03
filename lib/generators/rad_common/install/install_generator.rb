@@ -563,6 +563,7 @@ Seeder.new.seed!
           apply_migration '20240803114036_bcc_notify_recipient.rb'
           apply_migration '20240912133320_persist_sms_false_positive.rb'
           apply_migration '20240911184745_fix_last_activity.rb'
+          apply_migration '20250227191231_add_detected_timezone_to_user.rb'
         end
 
         def installed_app_name
