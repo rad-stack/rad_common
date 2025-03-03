@@ -37,7 +37,12 @@ class UserTimezone
     def detected_timezone(ip_address)
       Rails.cache.fetch("ip_address_time_zone:#{ip_address}", expires_in: 1.week) do
         raw_zone = Geocoder.search(ip_address).first.data['timezone']
-        ActiveSupport::TimeZone.all.find { |tz| tz.tzinfo.name == raw_zone }.name
+        return if raw_zone.blank? # TODO: log this?
+
+        matched_zone = ActiveSupport::TimeZone.all.find { |tz| tz.tzinfo.name == raw_zone }
+        return if matched_zone.blank? # TODO: log this?
+
+        matched_zone.name
       end
     end
 end
