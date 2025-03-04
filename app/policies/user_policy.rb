@@ -46,7 +46,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update_timezone?
-    user.admin? && user == record && UserTimezone.new(record).wrong_timezone?
+    user == record && UserTimezone.new(record).wrong_timezone?
   end
 
   def ignore_timezone?
