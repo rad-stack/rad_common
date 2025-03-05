@@ -1,0 +1,8 @@
+name : Custom Actions
+description: 'Override this file to add custom actions'
+runs:
+  using: 'composite'
+  steps:
+    - name : Custom Actions
+      shell: bash
+      run: echo 'No custom actions'
