@@ -23,6 +23,7 @@ PATH
       devise_invitable
       factory_bot_rails
       faker
+      geocoder
       haml-rails
       hashids
       image_processing
@@ -229,6 +230,9 @@ GEM
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
     ffi (1.17.1)
+    geocoder (1.8.5)
+      base64 (>= 0.1.0)
+      csv (>= 3.0.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     haml (6.3.0)

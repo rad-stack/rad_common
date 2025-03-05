@@ -45,6 +45,14 @@ class UserPolicy < ApplicationPolicy
     update?
   end
 
+  def update_timezone?
+    user == record && UserTimezone.new(record).wrong_timezone?
+  end
+
+  def ignore_timezone?
+    update_timezone?
+  end
+
   def impersonate?
     return false unless user.permission?(:admin) && RadConfig.impersonate?
 
