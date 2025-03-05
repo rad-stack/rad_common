@@ -76,7 +76,7 @@ class AttachmentRenderer
       return if no_delete
 
       context.link_to context.tag.i('', class: 'fa fa-times'),
-                      RadCommon::Engine.routes.url_helpers.attachment_path(attachment.id),
+                      context.attachment_path(attachment.id),
                       method: :delete,
                       data: { confirm: 'Are you sure? Attachment cannot be recovered.' },
                       class: 'btn btn-danger ml-5'
