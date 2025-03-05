@@ -1,0 +1,72 @@
+name: Generate Coverage Report
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+  RAILS_ENV: test
+  CI: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: rad_common_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Running custom steps
+        uses: ./.github/actions/custom-action
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ steps.set-ruby-version.outputs.version }}
+          bundler-cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.16.0'
+          cache: 'yarn'
+
+      - name: Yarn install
+        run: yarn install
+
+      - name: Prepare database
+        run: bundle exec rails db:test:prepare
+
+      - name: Compile esbuild assets
+        run: bin/rails assets:precompile
+
+      - name: Load schema
+        run: bundle exec rake db:schema:load
+
+      - name: Run RSpec tests
+        run: bin/rc_rspec
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/

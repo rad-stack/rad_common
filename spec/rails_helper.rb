@@ -91,8 +91,7 @@ RSpec.configure do |config|
     )
 
     Capybara::Selenium::Driver.new app,
-                                   browser: :chrome,
-                                   desired_capabilities: capabilities
+                                   browser: :chrome
   end
 
   Capybara.register_driver :chrome do |app|
@@ -101,8 +100,7 @@ RSpec.configure do |config|
     )
 
     Capybara::Selenium::Driver.new app,
-                                   browser: :chrome,
-                                   desired_capabilities: capabilities
+                                   browser: :chrome
   end
 
   chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome

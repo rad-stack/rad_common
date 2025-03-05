@@ -18,10 +18,10 @@ gem 'devise-twilio-verify', git: 'https://github.com/injuryscripts/twilio-verify
 group :test do
   gem 'capybara-selenium'
   gem 'parallel_tests'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '4.8.0'
   gem 'simplecov', require: false
   gem 'timecop'
-  gem 'webdrivers', '~> 4.6.1'
+  gem 'webdrivers'
 end
 
 group :development, :test do

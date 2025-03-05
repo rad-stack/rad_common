@@ -1,0 +1,121 @@
+name: "RadUpdateBot"
+on:
+  workflow_dispatch:
+    inputs:
+      rad_sniff_token:
+        description: 'Token used to create pull request'
+        required: true
+      rad_user_name:
+        description: 'Name of user who triggered the workflow'
+        required: true
+      rad_user_email:
+        description: 'Email of user who triggered the workflow'
+        required: true
+      rc_branch:
+        description: 'Branch to use for rad_common'
+        required: false
+      rad_task_id:
+        description: 'Rad Task ID'
+        required: false
+      full_bundle_update:
+        description: 'Run full bundle update with custom branch'
+        required: false
+        default: 'false'
+      yarn_upgrade:
+        description: 'Run yarn upgrade'
+        required: false
+        default: 'false'
+      update_rad_update_bot_only:
+        description: 'Only update the rad_update_bot.yml file'
+        required: false
+        default: 'false'
+jobs:
+  test:
+    environment: test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_DB: rad_common_development
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+    env:
+      RAILS_ENV: development
+      RAILS_MASTER_KEY: ${{ secrets.DEV_KEY }}
+      POSTGRES_DB: rad_common_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      CI: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Git status
+        run: git status
+      - name: Running custom steps
+        uses: ./.github/actions/custom-action
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: false # TODO: maybe we can get caching working in future see docs https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+      - name: Set up database schema
+        run: |
+          bundle
+          bin/rails db:create
+          bin/rails db:schema:load
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.16.0'
+          cache: 'yarn'
+
+      - name: Yarn install
+        run: yarn install
+      # Add or replace test runners here
+
+      - name: Update rad_common branch (if provided)
+        run: |
+          sed -i "/^gem 'rad_common'/ s/branch: '[^']*'/branch: '${{ github.event.inputs.rc_branch }}'/" Gemfile
+          if [ "${{ github.event.inputs.full_bundle_update }}" == "true" ]; then
+            bundle update
+          else
+            bundle install
+          fi
+
+      - name: RC Update
+        run: |
+          if [ "${{ github.event.inputs.yarn_upgrade }}" == "true" ]; then
+            bin/rc_update --yarn-upgrade
+          else
+            bin/rc_update
+          fi
+      - name: Capture rad_common version
+        run: |
+          echo "RAD_COMMON_VERSION=$(bundle show rad_common | grep -oE 'rad_common-([[:alnum:]]+)' | cut -d'-' -f2)" >> "$GITHUB_ENV"
+        # UNCOMMENT BELOW LINES TO DEBUG IN TERMINAL...
+        # - name: Setup upterm session
+        # uses: lhotari/action-upterm@v1
+      - name: Checking if only rad_update_bot.yml should be updated
+        if: ${{ github.event.inputs.update_rad_update_bot_only == 'true' }}
+        run: |
+          git stash
+          git checkout stash@{0} -- .github/workflows/rad_update_bot.yml
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          base: main
+          committer: ${{github.event.inputs.rad_user_name}} <${{github.event.inputs.rad_user_email}} >
+          author: ${{github.event.inputs.rad_user_name}} <${{github.event.inputs.rad_user_email}} >
+          token: ${{ github.event.inputs.rad_sniff_token }}
+          branch: "${{ github.event.inputs.rad_task_id && format('rad-{0}-', github.event.inputs.rad_task_id) }}rad_common_update-${{ github.event.inputs.update_rad_update_bot_only == 'true' && 'rad_update_bot_only' || env.RAD_COMMON_VERSION }}"
+          title: "Rad Common Update ${{ github.event.inputs.update_rad_update_bot_only == 'true' && 'rad_update_bot_only' || env.RAD_COMMON_VERSION }}"
+      - name: Check if Pull Request was created
+        if: ${{ steps.cpr.outputs.pull-request-number == '' }}
+        run: |
+          echo "No pull request was created."
+          exit 1
