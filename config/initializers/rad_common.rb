@@ -2,7 +2,7 @@ require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_exten
         '/base/schema_validations'
 
 require 'httpclient'
-require 'rad_config.rb'
+require 'rad_config'
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'SMS'

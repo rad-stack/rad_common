@@ -19,7 +19,6 @@ module RadCommon
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
-        copy_file '../../../../../.hound.yml', '.hound.yml'
         copy_file '../../../../../.eslintrc', '.eslintrc'
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
         copy_file '../rubocop.txt', '.rubocop.yml'
