@@ -1,0 +1,11 @@
+= simple_form_for(@user, url: user_profile_path(@user), method: :put) do |f|
+  = rad_form_errors f
+  .card
+    = render 'layouts/card_header', action_name: 'custom', title: profile_edit_title(@user), icon: 'fa-user'
+    .card-body
+      .form-inputs
+        .row
+          .col-lg-3= f.input :birth_date, as: :date, html5: true, required: true
+
+  .form-actions
+    = f.button :submit, 'Save', class: 'btn btn-primary'

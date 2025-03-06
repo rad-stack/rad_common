@@ -1,0 +1,10 @@
+---
+:concurrency: 10
+:queues:
+  - default
+  - mailers
+  - quickbooks
+  - active_storage_analysis
+  - active_storage_purge
+:limits:
+  quickbooks: 1
