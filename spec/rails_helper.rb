@@ -86,21 +86,26 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   Capybara.register_driver :headless_chrome do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: { args: %w[headless disable-popup-blocking disable-gpu window-size=1400,900], w3c: false }
-    )
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless=new')
+    options.add_argument('--window-size=1400,900')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-gpu')
 
     Capybara::Selenium::Driver.new app,
-                                   browser: :chrome
+                                   browser: :chrome,
+                                   options: options
   end
 
   Capybara.register_driver :chrome do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: { args: %w[disable-popup-blocking disable-gpu window-size=1400,900], w3c: false }
-    )
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--window-size=1400,900')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-gpu')
 
     Capybara::Selenium::Driver.new app,
-                                   browser: :chrome
+                                   browser: :chrome,
+                                   options: options
   end
 
   chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
