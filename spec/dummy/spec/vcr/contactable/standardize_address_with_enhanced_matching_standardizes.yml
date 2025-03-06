@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://us-street.api.smartystreets.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Jacksonville&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=FL&street=6450%20Autumn%20Berry%20Cirlce&street2&urbanization&zipcode=32258
+    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Jacksonville&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=FL&street=6450%20Autumn%20Berry%20Cirlce&street2&urbanization&zipcode=32258
     body:
       encoding: US-ASCII
       string: ''
@@ -12,9 +12,9 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.14.13)
+      - smartystreets (sdk:ruby@5.20.4)
       Host:
-      - us-street.api.smartystreets.com
+      - us-street.api.smarty.com
       Content-Type:
       - application/json
   response:
@@ -25,7 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 22 Sep 2022 09:31:31 GMT
+      - Thu, 06 Mar 2025 14:36:02 GMT
+      X-Request-Id:
+      - '01956be2-8831-7c09-a87e-0d3259092584'
       Transfer-Encoding:
       - chunked
       Vary:
@@ -33,7 +35,9 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"6450 Autumn
-        Berry Cir","last_line":"Jacksonville FL 32258-8417","components":{"primary_number":"6450","street_name":"Autumn
-        Berry","street_suffix":"Cir","city_name":"Jacksonville","default_city_name":"Jacksonville","state_abbreviation":"FL","zipcode":"32258","plus4_code":"8417"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12031","county_name":"Duval","carrier_route":"R057","latitude":30.128640,"longitude":-81.542180,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"N","dpv_footnotes":"AAM3","active":"Y","enhanced_match":"non-postal-match"}}]'
-  recorded_at: Thu, 22 Sep 2022 09:31:31 GMT
-recorded_with: VCR 6.1.0
+        Berry Cir","last_line":"Jacksonville FL 32258-8417","delivery_point_barcode":"322588417505","smarty_key":"595537981","components":{"primary_number":"6450","street_name":"Autumn
+        Berry","street_suffix":"Cir","city_name":"Jacksonville","default_city_name":"Jacksonville","state_abbreviation":"FL","zipcode":"32258","plus4_code":"8417","delivery_point":"50","delivery_point_check_digit":"5"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12031","county_name":"Duval","carrier_route":"R057","congressional_district":"05","rdi":"Residential","elot_sequence":"0001","elot_sort":"A","latitude":30.12864,"longitude":-81.54218,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","footnotes":"N#","enhanced_match":"postal-match"}}]
+
+        '
+  recorded_at: Thu, 06 Mar 2025 14:36:02 GMT
+recorded_with: VCR 6.3.1
