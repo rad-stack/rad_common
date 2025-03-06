@@ -90,7 +90,7 @@ RSpec.describe 'Attorneys', type: :system do
       expect(page).not_to have_content(record_2.first_name)
     end
 
-    it 'allows user to merge duplicate contacts', js: true do
+    it 'allows user to merge duplicate contacts', :gha_specs_only, :js do
       visit index_path
       expect(page).to have_content('(4)')
       expect(page).to have_content(record_2.first_name)
@@ -101,7 +101,7 @@ RSpec.describe 'Attorneys', type: :system do
       expect(page).to have_content(record_1.first_name)
     end
 
-    it 'shows fix duplicates', js: true do
+    it 'shows fix duplicates', :gha_specs_only, :js do
       visit record_1_path
       expect(page).to have_content('Fix Duplicates')
 

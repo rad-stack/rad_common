@@ -21,7 +21,7 @@ RSpec.describe UserSMSSender, type: :service do
         it { is_expected.to be_nil }
       end
 
-      context 'when successful MMS', gha_specs_only: true do
+      context 'when successful MMS' do
         let(:media_url) { 'http://example.com/foo.jpg' }
 
         it { is_expected.to be_nil }

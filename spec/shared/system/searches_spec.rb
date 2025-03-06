@@ -6,7 +6,7 @@ RSpec.describe 'Searches', type: :system do
 
   before { login_as admin, scope: :user }
 
-  context 'with super search', :js do
+  context 'with super search', :gha_specs_only, :js do
     let(:term) { 'Peters' }
 
     let(:prompt) do

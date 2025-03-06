@@ -7,7 +7,7 @@ describe 'Permissions', type: :system do
 
   before { login_as user, scope: :user }
 
-  it 'updates the ui when changed', :js do
+  it 'updates the ui when changed', :gha_specs_only, :js do
     visit "/divisions/#{division.id}"
     expect(page).not_to have_content 'Delete'
 

@@ -137,7 +137,7 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content 'User Status'
       end
 
-      it 'allows updating notification settings', :js do
+      it 'allows updating notification settings', :gha_specs_only, :js do
         expect(page).to have_content 'Notification Settings'
         uncheck 'Enabled'
         wait_for_ajax
@@ -151,7 +151,7 @@ RSpec.describe 'Users', type: :system do
         visit user_path(user)
       end
 
-      it 'can manually confirm a user', js: true, user_confirmable_specs: true do
+      it 'can manually confirm a user', :gha_specs_only, :js, :user_confirmable_specs do
         page.accept_confirm do
           click_link 'Confirm Email'
         end
@@ -170,7 +170,7 @@ RSpec.describe 'Users', type: :system do
       context 'when user is expired' do
         let(:last_activity_at) { (Devise.expire_after + 1.day).ago }
 
-        it 'allows manual reactivation of the user', :js do
+        it 'allows manual reactivation of the user', :gha_specs_only, :js do
           expect(page).to have_content("User's account has been expired due to inactivity")
           page.accept_confirm do
             click_link 'click here'
@@ -209,7 +209,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'sign up', js: true, sign_up_specs: true do
+  describe 'sign up', :gha_specs_only, :js, :sign_up_specs do
     before do
       create :security_role, :external, allow_sign_up: true
       allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return false
