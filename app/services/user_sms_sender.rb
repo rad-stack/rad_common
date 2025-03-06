@@ -10,7 +10,7 @@ class UserSMSSender < PhoneSMSSender
     def handle_blacklist
       to_user.update! mobile_phone: nil
 
-      RadbearMailer.simple_message(to_user,
+      RadMailer.simple_message(to_user,
                                    "SMS Message from #{RadConfig.app_name!} Failed",
                                    error_body,
                                    email_action: email_action).deliver_later

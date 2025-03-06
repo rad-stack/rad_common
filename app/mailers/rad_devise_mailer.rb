@@ -1,8 +1,8 @@
-class RadbearDeviseMailer < Devise::Mailer
+class RadDeviseMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers
   helper RadCommon::ApplicationHelper
 
-  layout 'radbear_mailer'
+  layout 'rad_mailer'
 
   before_action :set_defaults
   default reply_to: RadConfig.admin_email!

@@ -1,4 +1,4 @@
-module RadbearUser
+module RadUser
   extend ActiveSupport::Concern
 
   USER_AUDIT_COLUMNS_DISABLED = %i[password password_confirmation encrypted_password reset_password_token
@@ -183,7 +183,7 @@ module RadbearUser
   end
 
   def test_email!
-    RadbearMailer.simple_message(self, 'Test Email', 'This is a test.').deliver_later
+    RadMailer.simple_message(self, 'Test Email', 'This is a test.').deliver_later
   end
 
   def test_sms!(from_user)
@@ -259,7 +259,7 @@ module RadbearUser
       return unless saved_change_to_user_status_id? && user_status &&
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
-      RadbearMailer.your_account_approved(self).deliver_later
+      RadMailer.your_account_approved(self).deliver_later
       Notifications::UserWasApprovedNotification.main.notify!([self, approved_by]) unless do_not_notify_approved
     end
 

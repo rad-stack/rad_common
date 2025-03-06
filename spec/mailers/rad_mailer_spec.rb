@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'csv'
 
-describe RadbearMailer, type: :mailer do
+describe RadMailer, type: :mailer do
   let(:user) { create :user }
   let(:another_user) { create :user }
   let(:comma_user) { create :user, first_name: 'Foo,' }

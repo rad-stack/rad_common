@@ -14,7 +14,7 @@ end
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
 
 Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
-Rails.application.config.assets.precompile += %w[rad_common/radbear_mailer.css rad_common/radbear_mailer_reset.css]
+Rails.application.config.assets.precompile += %w[rad_common/rad_mailer.css rad_common/rad_mailer_reset.css]
 
 RadConfig.check_validity!
 
@@ -50,7 +50,7 @@ if Rails.env.staging?
 end
 
 Devise.setup do |config|
-  config.mailer = 'RadbearDeviseMailer'
+  config.mailer = 'RadDeviseMailer'
 end
 
 # https://swell.radicalbear.com/tasks/37444

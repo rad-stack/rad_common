@@ -24,7 +24,7 @@ class NotificationType < ApplicationRecord
   end
 
   def mailer_class
-    'RadbearMailer'
+    'RadMailer'
   end
 
   def mailer_method
@@ -131,8 +131,8 @@ class NotificationType < ApplicationRecord
       id_list = notify_user_ids_opted(:email)
       return if id_list.none?
 
-      if mailer_class == 'RadbearMailer' && mailer_method == 'simple_message'
-        RadbearMailer.simple_message(id_list,
+      if mailer_class == 'RadMailer' && mailer_method == 'simple_message'
+        RadMailer.simple_message(id_list,
                                      mailer_subject,
                                      mailer_message,
                                      mailer_options.merge(notification_settings_link: true)).deliver_later

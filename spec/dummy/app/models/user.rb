@@ -3,7 +3,7 @@ class User < ApplicationRecord
          :timeoutable, :password_archivable, :password_expirable, :secure_validatable, :expirable,
          :twilio_verify_authenticatable
 
-  include RadbearUser
+  include RadUser
 
   has_many :divisions, foreign_key: 'owner_id', dependent: :restrict_with_error
 

@@ -125,7 +125,7 @@ class DuplicatesController < ApplicationController
     end
 
     def notify_user(subject, message)
-      RadbearMailer.simple_message(current_user, subject, message, email_options).deliver_later
+      RadMailer.simple_message(current_user, subject, message, email_options).deliver_later
     end
 
     def email_options

@@ -1,8 +1,8 @@
-class RadbearMailer < ActionMailer::Base
+class RadMailer < ActionMailer::Base
   include ActionView::Helpers::TextHelper
   include RadCommon::ApplicationHelper
 
-  layout 'radbear_mailer'
+  layout 'rad_mailer'
   before_action :set_defaults
 
   default from: RadConfig.from_email!

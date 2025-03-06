@@ -1,4 +1,4 @@
-class NotificationMailer < RadbearMailer
+class NotificationMailer < RadMailer
   before_action :enable_settings_link
 
   def new_user_signed_up(recipients, user)

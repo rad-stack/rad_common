@@ -55,7 +55,7 @@ class SystemMessage < ApplicationRecord
   def send!
     recipients.each do |recipient|
       if email?
-        RadbearMailer.simple_message(recipient,
+        RadMailer.simple_message(recipient,
                                      "Important Message From #{RadConfig.app_name!}",
                                      email_message_body,
                                      do_not_format: true).deliver_later
