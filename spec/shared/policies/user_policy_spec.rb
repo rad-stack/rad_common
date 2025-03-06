@@ -17,7 +17,7 @@ RSpec.describe UserPolicy, type: :policy do
         it { is_expected.not_to permit(user, User.new) }
       end
 
-      context 'with client user' do
+      context 'with client user', :user_client_specs do
         it { is_expected.to permit(admin, client_user) }
       end
     end

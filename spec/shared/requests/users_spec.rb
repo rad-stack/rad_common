@@ -24,6 +24,18 @@ RSpec.describe 'Users', type: :request do
         expect(user.security_role_ids).not_to include security_role.id
       end
     end
+
+    describe 'PUT update_timezone' do
+      let(:existing_timezone) { 'Eastern Time (US & Canada)' }
+      let(:new_timezone) { 'Pacific Time (US & Canada)' }
+
+      before { user.update! timezone: existing_timezone, detected_timezone: new_timezone }
+
+      it 'updates' do
+        expect { put "/users/#{user.id}/update_timezone" }
+          .to change { user.reload.timezone }.from(existing_timezone).to(new_timezone)
+      end
+    end
   end
 
   context 'when admin' do

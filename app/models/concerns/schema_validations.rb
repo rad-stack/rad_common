@@ -29,6 +29,7 @@ module SchemaValidations
         datatype = retrieve_data_type(column)
 
         validate_numericality_and_length(name, datatype, column)
+        validate_reasonable_dates(name, datatype)
         validate_presence(column, name, datatype)
       end
     end
@@ -61,6 +62,12 @@ module SchemaValidations
       elsif datatype == :text
         validate_logged :validates_length_of, name, allow_nil: true, maximum: column.limit if column.limit.present?
       end
+    end
+
+    def validate_reasonable_dates(name, datatype)
+      return unless %i[date datetime].include?(datatype)
+
+      validate_logged :validates, name, { reasonable_date_range: true }
     end
 
     def validate_presence(column, name, datatype)

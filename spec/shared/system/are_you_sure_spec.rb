@@ -18,7 +18,7 @@ RSpec.describe 'AreYouSure', type: :system do
   describe 'global super search field' do
     it 'does not warn', :gha_specs_only, :js do
       visit '/'
-      fill_in 'global_search_name', with: 'test'
+      tom_search 'test', from: 'search'
       find('body').click
       visit current_path
 
