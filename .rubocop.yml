@@ -1,1 +1,115 @@
 inherit_from: .shared_rubocop.yml
+
+AllCops:
+  Exclude:
+    - 'db/schema.rb'
+    - 'db/migrate/*'
+    - 'lib/templates/**/*'
+    - 'node_modules/**/*'
+    - 'config/puma.rb'
+    - 'config/initializers/simple_form.rb'
+    - 'config/initializers/simple_form_bootstrap.rb'
+    - 'config/initializers/simple_form_components.rb'
+    - 'spec/spec_helper.rb'
+    - 'spec/dummy/db/schema.rb'
+    - 'spec/dummy/db/migrate/*'
+    - 'spec/dummy/lib/templates/**/*'
+    - 'spec/dummy/node_modules/**/*'
+    - 'spec/dummy/bin/**/*'
+    - 'spec/dummy/config/puma.rb'
+    - 'spec/dummy/config/initializers/simple_form.rb'
+    - 'spec/dummy/config/initializers/simple_form_bootstrap.rb'
+    - 'spec/dummy/config/initializers/simple_form_components.rb'
+    - 'spec/dummy/config.ru'
+    - 'config.ru'
+    - 'lib/generators/rad_common/install/install_generator.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'rad_common.gemspec'
+    - 'spec/**/*_spec.rb'
+    - 'config/routes.rb'
+    - 'config/environments/**/*.rb'
+    - 'spec/dummy/config/environments/**/*.rb'
+    - 'spec/dummy/config/routes.rb'
+    - 'spec/factories/**/*.rb'
+    - 'spec/rails_helper.rb'
+    - 'lib/tasks/temp.rake'
+    - 'lib/generators/rad_common/install/rails_helper.rb'
+
+Rails/Output:
+  Exclude:
+    - 'app/services/rad_seeder.rb'
+    - 'lib/generators/rad_common/install/rails_helper.rb'
+
+Rails/Exit:
+  Exclude:
+    - 'lib/generators/rad_common/install/rails_helper.rb'
+
+Rails/SkipsModelValidations:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+    - 'app/models/concerns/contactable.rb'
+    - 'app/models/concerns/duplicate_fixable.rb'
+    - 'app/services/smarty_address.rb'
+    - 'app/services/heroku_commands.rb'
+    - 'app/services/seeder.rb'
+    - 'lib/tasks/rad_common_tasks.rake'
+    - 'lib/tasks/temp.rake'
+
+Rails/FilePath:
+  Exclude:
+    - 'spec/dummy/config/environments/development.rb'
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  Exclude:
+    - 'spec/dummy/config/environments/production.rb'
+    - 'spec/dummy/config/environments/staging.rb'
+
+Style/GlobalStdStream:
+  Exclude:
+    - 'spec/dummy/config/environments/production.rb'
+    - 'spec/dummy/config/environments/staging.rb'
+
+Style/StringLiterals:
+  Exclude:
+    - 'spec/dummy/config/boot.rb'
+    - 'config/boot.rb'
+    - 'spec/dummy/config/environment.rb'
+    - 'config/environment.rb'
+    - 'spec/dummy/config/application.rb'
+    - 'config/application.rb'
+    - 'spec/dummy/config/initializers/backtrace_silencers.rb'
+    - 'spec/dummy/config/initializers/assets.rb'
+    - 'config/initializers/backtrace_silencers.rb'
+    - 'spec/dummy/config/environments/development.rb'
+    - 'spec/dummy/config/environments/staging.rb'
+    - 'spec/dummy/config/environments/production.rb'
+    - 'spec/dummy/config/environments/test.rb'
+
+Style/SymbolArray:
+  Exclude:
+    - 'spec/dummy/config/initializers/filter_parameter_logging.rb'
+    - 'config/initializers/filter_parameter_logging.rb'
+
+FactoryBot/CreateList:
+  Exclude:
+    - 'spec/dummy/app/services/seeder.rb'
+
+Rails/HttpPositionalArguments:
+  Exclude:
+    - 'spec/dummy/config/routes.rb'
+    - 'config/routes.rb'
+
+Rails/ApplicationController:
+  Exclude:
+    - 'app/controllers/api/basic_app_controller.rb'
+
+Metrics/ParameterLists:
+  Exclude:
+    - 'app/helpers/rad_common/attachments_helper.rb'
+    - 'app/services/attachment_renderer.rb'
+
+Naming/AccessorMethodName:
+  Exclude:
+    - 'app/mailers/rad_mailer.rb'
