@@ -2,7 +2,7 @@
 This is a common set of features and tools tailored for a standard business web application.
 
 ## Server
-To install rad_common, you must run the generator:
+To install rad_common, you must run the generator: 
 
 `rails g rad_common:install`
 

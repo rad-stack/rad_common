@@ -13,7 +13,8 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-gem 'devise-twilio-verify', git: 'https://github.com/injuryscripts/twilio-verify-devise.git'
+gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-devise.git',
+                            branch: 'authy-to-twilio-verify'
 
 group :test do
   gem 'capybara-selenium'
@@ -26,5 +27,4 @@ end
 group :development, :test do
   gem 'bootsnap', require: false
   gem 'pry'
-  gem 'yard'
 end

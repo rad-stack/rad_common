@@ -1,6 +1,7 @@
 GIT
-  remote: https://github.com/injuryscripts/twilio-verify-devise.git
-  revision: e38d4173243387043dfc4a416d0b972d68c4d6bd
+  remote: https://github.com/rad-stack/twilio-verify-devise.git
+  revision: 100fe38b039916b679a2259fba39216be141cba4
+  branch: authy-to-twilio-verify
   specs:
     devise-twilio-verify (1.0.0)
       devise (>= 4.0.0)
@@ -478,7 +479,6 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yard (0.9.37)
     zeitwerk (2.7.2)
 
 PLATFORMS
@@ -504,7 +504,6 @@ DEPENDENCIES
   timecop
   vcr
   webmock
-  yard
 
 BUNDLED WITH
    2.5.23
