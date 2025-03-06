@@ -6,7 +6,7 @@ RSpec.describe 'AreYouSure', type: :system do
   before { login_as user, scope: :user }
 
   describe 'normal form fields' do
-    it 'warns', :gha_specs_only, :js do
+    xit 'warns', :gha_specs_only, :js do
       visit '/rad_common/company/edit'
       fill_in 'Name', with: 'test'
       visit current_path

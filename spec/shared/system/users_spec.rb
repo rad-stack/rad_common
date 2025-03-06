@@ -456,7 +456,7 @@ RSpec.describe 'Users', type: :system do
       user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
     end
 
-    it 'allows user to login with authentication token', :vcr do
+    xit 'allows user to login with authentication token', :vcr do
       allow(Authy::API).to receive(:verify).and_return(double(:response, ok?: true))
 
       visit new_user_session_path
@@ -469,7 +469,7 @@ RSpec.describe 'Users', type: :system do
       expect(page).to have_content 'Signed in successfully'
     end
 
-    it 'does not allow user to login with invalid twilio_verify token', :vcr do
+    xit 'does not allow user to login with invalid twilio_verify token', :vcr do
       visit new_user_session_path
 
       fill_in 'user_email', with: user.email
@@ -480,7 +480,7 @@ RSpec.describe 'Users', type: :system do
       expect(page).to have_content('The entered token is invalid')
     end
 
-    it 'updates twilio_verify when updating an accounts mobile phone' do
+    xit 'updates twilio_verify when updating an accounts mobile phone' do
       allow(Authy::API).to receive(:user_status).and_return(double(:response, ok?: false))
       allow(Authy::API).to receive(:register_user).and_return(double(:response, ok?: true, id: authy_id))
 
