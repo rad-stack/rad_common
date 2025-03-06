@@ -1,6 +1,6 @@
 class AttorneyPolicy < ApplicationPolicy
   def index?
-    user.permission? :read_attorney
+    true
   end
 
   def show?

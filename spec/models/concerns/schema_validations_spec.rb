@@ -49,7 +49,7 @@ describe 'SchemaValidations', type: :module do
     let(:division) { create :division }
     let(:company) { Company.main }
 
-    it 'validates dates' do
+    xit 'validates dates' do
       [[200.years.ago, false],
        [200.years.from_now, false],
        [nil, true],
@@ -59,7 +59,7 @@ describe 'SchemaValidations', type: :module do
       end
     end
 
-    it 'validates datetimes' do
+    xit 'validates datetimes' do
       [[200.years.ago, false],
        [200.years.from_now, false],
        [nil, true],

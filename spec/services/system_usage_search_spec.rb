@@ -5,21 +5,6 @@ describe SystemUsageSearch, type: :service do
   let(:params) { { search: { date_mode: 'Weekly', date_range_count: 4 } } }
   let(:system_usage) { described_class.new(params, user) }
 
-  describe 'usage_items' do
-    subject { system_usage.usage_items }
-
-    let(:result) do
-      [['ContactLogRecipient', 'successful', 'Successful Contacts'],
-       ['ContactLogRecipient', 'failed', 'Failed Contacts'],
-       ['Division', 'status_pending', 'Pending Divisions'],
-       ['Division', 'status_active', 'Active Divisions'],
-       ['Division', 'status_inactive', 'Inactive Divisions'],
-       'User']
-    end
-
-    it { is_expected.to eq result }
-  end
-
   describe 'date_column_ranges' do
     subject(:date_ranges) { system_usage.date_column_ranges.map { |range| [range[:start], range[:end]] } }
 

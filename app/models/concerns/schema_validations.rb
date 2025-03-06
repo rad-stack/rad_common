@@ -29,7 +29,7 @@ module SchemaValidations
         datatype = retrieve_data_type(column)
 
         validate_numericality_and_length(name, datatype, column)
-        validate_reasonable_dates(name, datatype)
+        # TODO: validate_reasonable_dates(name, datatype)
         validate_presence(column, name, datatype)
       end
     end

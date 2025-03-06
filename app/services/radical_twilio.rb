@@ -87,7 +87,7 @@ class RadicalTwilio
     end
 
     def get_phone_number(attribute, mobile)
-      converted_phone_number = RadTwilio.strip_phone_number(attribute)
+      converted_phone_number = attribute.gsub(/[^0-9a-z\\s]/i, '')
       mobile ? lookup_number(converted_phone_number, 'carrier') : lookup_number(converted_phone_number)
     end
 
