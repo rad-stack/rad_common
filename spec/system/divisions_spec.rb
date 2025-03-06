@@ -60,7 +60,7 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('Editing Division')
     end
 
-    it 'displays error for owner field when blank', js: true do
+    it 'displays error for owner field when blank', :gha_specs_only, :js do
       fill_in 'owner_name_search', with: ''
       click_button 'Save'
 
@@ -91,7 +91,7 @@ RSpec.describe 'Divisions', type: :system do
         expect(division.reload.category).to eq(last_category)
       end
 
-      it 'allows selecting create new category', js: true do
+      it 'allows selecting create new category', :gha_specs_only, :js do
         fill_in 'division[category_name]', with: 'Does Not Exist'
         find('.search-label').click
         expect { click_on 'Save' }.to change(Category, :count).by(1)
@@ -105,7 +105,7 @@ RSpec.describe 'Divisions', type: :system do
         expect(division.reload.category).to eq(existing_category)
       end
 
-      it 'allows selecting autocomplete category', js: true do
+      it 'allows selecting autocomplete category', :gha_specs_only, :js do
         fill_in 'division[category_name]', with: 'Existin'
         find('.search-column-value').click
         expect { click_on 'Save' }.not_to change(Category, :count)
@@ -169,7 +169,7 @@ RSpec.describe 'Divisions', type: :system do
         visit division_path(division)
       end
 
-      it 'allows attachment to be deleted', js: true do
+      it 'allows attachment to be deleted', :gha_specs_only, :js do
         expect(ActiveStorage::Attachment.count).to eq 1
 
         page.accept_alert prompt do

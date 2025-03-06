@@ -8,7 +8,7 @@ RSpec.describe 'User Impersonation', type: :system, impersonate_specs: true do
   before { login_as signed_in_user }
 
   context 'with an internal user' do
-    it 'allows an admin to impersonate, but keeps audits as original user', :js do
+    it 'allows an admin to impersonate, but keeps audits as original user', :gha_specs_only, :js do
       visit users_path(search: { user_status_id: nil, external: 'internal' })
       click_on impersonated_user.to_s
       accept_confirm { click_on 'Sign In As' }
@@ -29,7 +29,7 @@ RSpec.describe 'User Impersonation', type: :system, impersonate_specs: true do
       expect(page).to have_content signed_in_user.to_s
     end
 
-    it 'is not allowed for users without the proper permission', :js do
+    it 'is not allowed for users without the proper permission', :gha_specs_only, :js do
       visit user_path(signed_in_user)
       expect(page).not_to have_content 'Sign In As'
 

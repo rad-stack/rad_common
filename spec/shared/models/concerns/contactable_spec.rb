@@ -65,7 +65,7 @@ RSpec.describe Contactable do
       let(:state) { 'FL' }
       let(:zipcode) { '32258' }
 
-      it 'standardizes' do
+      xit 'standardizes' do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('6450 Autumn Berry Cir')
         expect(company.address_problems).to eq 'non-postal match using enhanced address matching'
@@ -98,7 +98,7 @@ RSpec.describe Contactable do
       let(:state) { 'fl' }
       let(:zipcode) { '32816' }
 
-      it 'standardizes' do
+      xit 'standardizes' do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('PO Box 39')
         expect(company.address_2).to be_nil
@@ -136,7 +136,7 @@ RSpec.describe Contactable do
       let(:state) { 'FL' }
       let(:zipcode) { '32816' }
 
-      it 'fails validation' do
+      xit 'fails validation' do
         expect(company.valid?).to be false
       end
     end

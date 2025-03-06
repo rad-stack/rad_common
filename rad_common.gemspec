@@ -35,6 +35,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'image_processing', '~> 1.9'
   s.add_dependency 'kaminari', '~> 1.2.1'
   s.add_dependency 'sassc'
+  s.add_dependency 'sprockets-rails'
 
   # TODO: remove these 3 once the mail gem is up to date, see Task 37200
   s.add_dependency 'net-imap'

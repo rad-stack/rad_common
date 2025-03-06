@@ -28,7 +28,7 @@ RSpec.describe 'Search', type: :system do
     before { visit divisions_path }
 
     unless ENV['CI'] # TODO: this fails on codeship
-      it 'displays a select input', js: true do
+      it 'displays a select input', :gha_specs_only, :js do
         visit divisions_path
         expect(page).to have_selector(".bootstrap-select .dropdown-toggle[data-id='search_owner_id']")
         click_bootstrap_select(from: 'search_owner_id')
@@ -38,7 +38,7 @@ RSpec.describe 'Search', type: :system do
       end
     end
 
-    it 'selects a default value', js: true do
+    it 'selects a default value', :gha_specs_only, :js do
       selector = ".bootstrap-select .dropdown-toggle[data-id='search_owner_id'] .filter-option-inner-inner"
       expect(page).to have_selector(selector, text: user.to_s)
     end
@@ -63,7 +63,7 @@ RSpec.describe 'Search', type: :system do
 
     unless ENV['CI']  # TODO: this fails on codeship
       it 'select should have warning style when a value a blank value is selected on filter without default',
-         js: true do
+         :gha_specs_only, :js do
         expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-light]')
         bootstrap_select 'All Owners', from: 'search_owner_id'
         click_button 'Apply Filters'

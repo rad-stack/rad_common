@@ -19,7 +19,6 @@ module RadCommon
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
-        copy_file '../../../../../.hound.yml', '.hound.yml'
         copy_file '../../../../../.eslintrc', '.eslintrc'
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
         copy_file '../rubocop.txt', '.rubocop.yml'
@@ -60,7 +59,7 @@ module RadCommon
                   'app/models/application_record.rb'
 
         # specs
-        directory '../../../../../spec/rad_common/', 'spec/rad_common/'
+        directory '../../../../../spec/shared/', 'spec/rad_common/'
         directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/', exclude_pattern: /clients.rb/
         copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
 

@@ -13,7 +13,7 @@ describe 'Users', type: :system do
       visit edit_user_path(user)
     end
 
-    context 'when dynamically changing fields', js: true do
+    context 'when dynamically changing fields', :gha_specs_only, :js do
       it 'shows internal roles and hides others' do
         find_field('user_external').set(false)
         expect(page).to have_content 'Security roles'
