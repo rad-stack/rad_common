@@ -19,7 +19,7 @@
   %li= link_to 'Sign In Activity', '/rad_common/login_activities', class: 'dropdown-item'
   %li= link_to 'System Message', RadCommon::Engine.routes.url_helpers.new_system_message_path, class: 'dropdown-item'
   %li= link_to 'System Usage', '/rad_common/system_usages', class: 'dropdown-item'
-  - if RadicalTwilio.new.twilio_enabled?
+  - if RadTwilio.new.twilio_enabled?
     %li= link_to 'Twilio Logs', '/rad_common/twilio_logs', class: 'dropdown-item'
   %li
     = link_to users_path, class: 'dropdown-item' do

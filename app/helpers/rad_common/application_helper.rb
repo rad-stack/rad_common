@@ -121,15 +121,15 @@ module RadCommon
     end
 
     def enum_to_translated_option(record, enum_name)
-      RadicalEnum.new(record.class, enum_name).translated_option(record)
+      RadEnum.new(record.class, enum_name).translated_option(record)
     end
 
     def options_for_enum(klass, enum_name)
-      RadicalEnum.new(klass, enum_name).options
+      RadEnum.new(klass, enum_name).options
     end
 
     def enum_translation(klass, enum_name, value)
-      RadicalEnum.new(klass, enum_name).translation(value)
+      RadEnum.new(klass, enum_name).translation(value)
     end
 
     def bootstrap_flash
@@ -189,7 +189,7 @@ module RadCommon
     end
 
     def verify_sign_up
-      raise RadicallyIntermittentException if RadConfig.disable_sign_up?
+      raise RadIntermittentException if RadConfig.disable_sign_up?
     end
 
     def sign_up_roles
@@ -201,13 +201,13 @@ module RadCommon
     end
 
     def verify_invite
-      raise RadicallyIntermittentException if RadConfig.disable_invite?
+      raise RadIntermittentException if RadConfig.disable_invite?
     end
 
     def verify_manually_create_users
       return if RadConfig.disable_sign_up? && RadConfig.disable_invite?
 
-      raise RadicallyIntermittentException
+      raise RadIntermittentException
     end
 
     def export_button(model_name)

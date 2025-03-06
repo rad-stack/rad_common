@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RadicalRetry, type: :service do
+RSpec.describe RadRetry, type: :service do
   describe '#perform_request' do
     context 'when request fails' do
       let(:request_block) { raise OpenURI::HTTPError.new('foo', 'bar') }
@@ -9,7 +9,7 @@ RSpec.describe RadicalRetry, type: :service do
         expect(described_class).to receive(:exponential_pause).at_least(4).times
         expect {
           described_class.perform_request(no_delay: true) { request_block }
-        }.to raise_error(RadicallyIntermittentException)
+        }.to raise_error(RadIntermittentException)
       end
 
       context 'with retry count specified' do
@@ -17,11 +17,11 @@ RSpec.describe RadicalRetry, type: :service do
           expect(described_class).to receive(:exponential_pause).twice
           expect {
             described_class.perform_request(no_delay: true, retry_count: 3) { request_block }
-          }.to raise_error(RadicallyIntermittentException)
+          }.to raise_error(RadIntermittentException)
         end
       end
 
-      context 'with errors not included in RadicalRetry::RESCUABLE_ERRORS' do
+      context 'with errors not included in RadRetry::RESCUABLE_ERRORS' do
         let(:request_block) { raise ActiveStorage::IntegrityError }
 
         it 'raises the error if not included in additional_erorrs' do
@@ -36,7 +36,7 @@ RSpec.describe RadicalRetry, type: :service do
           expect(described_class).to receive(:exponential_pause)
           expect {
             described_class.perform_request(**args) { request_block }
-          }.to raise_error(RadicallyIntermittentException)
+          }.to raise_error(RadIntermittentException)
         end
       end
     end
@@ -68,11 +68,11 @@ RSpec.describe RadicalRetry, type: :service do
       context 'when false' do
         let(:raise_original) { false }
 
-        it 'raises RadicallyIntermittentException' do
+        it 'raises RadIntermittentException' do
           expect(described_class).to receive(:exponential_pause)
           expect {
             described_class.perform_request(**args) { request_block }
-          }.to raise_error(RadicallyIntermittentException)
+          }.to raise_error(RadIntermittentException)
         end
       end
     end

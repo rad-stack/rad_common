@@ -85,7 +85,7 @@ module RadCommon
           return [] unless mms? && @params['NumMedia'].to_i.positive?
 
           (0..(@params['NumMedia'].to_i - 1)).map do |counter|
-            file = RadicalRetry.perform_request(retry_count: 2) do
+            file = RadRetry.perform_request(retry_count: 2) do
               URI.open(@params["MediaUrl#{counter}"], http_basic_authentication: [RadConfig.twilio_account_sid!,
                                                                                   RadConfig.twilio_auth_token!])
             end

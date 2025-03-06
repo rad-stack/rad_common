@@ -152,7 +152,7 @@ module RadCommon
     end
 
     def user_test_sms_action(user)
-      return unless RadicalTwilio.new.twilio_enabled? && user.mobile_phone.present? && policy(user).test_sms?
+      return unless RadTwilio.new.twilio_enabled? && user.mobile_phone.present? && policy(user).test_sms?
 
       link_to icon(:comments, 'Send Test SMS'),
               test_sms_user_path(user),

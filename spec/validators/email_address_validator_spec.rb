@@ -60,7 +60,7 @@ RSpec.describe EmailAddressValidator, type: :validator do
     let(:bad_email) { 'support@radicalbear.co' }
     let!(:division) { build :division, invoice_email: email }
 
-    before { allow_any_instance_of(RadicalSendGrid).to receive(:sendgrid_enabled?).and_return true }
+    before { allow_any_instance_of(RadSendGrid).to receive(:sendgrid_enabled?).and_return true }
 
     context 'with valid email' do
       let(:email) { good_email }

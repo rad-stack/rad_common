@@ -159,7 +159,7 @@ class UsersController < ApplicationController
     authorize current_user
 
     if current_user.twilio_totp_factor_sid.blank?
-      new_verify = RadicalTwilio.setup_totp_service(current_user)
+      new_verify = RadTwilio.setup_totp_service(current_user)
       if new_verify.status == 'unverified'
         return render json: { qr_code: new_verify.binding['uri'], secret_code: new_verify.binding['secret'] }, status: :ok
       end
@@ -172,7 +172,7 @@ class UsersController < ApplicationController
     authorize current_user
 
     if current_user.twilio_totp_factor_sid.present?
-      new_verify = RadicalTwilio.register_totp_service(current_user, params[:token])
+      new_verify = RadTwilio.register_totp_service(current_user, params[:token])
       if new_verify.status == 'verified'
         render json: { message: 'Successfully registered 2FA.' }, status: :ok
       else

@@ -1,4 +1,4 @@
-class RadicalTwilio
+class RadTwilio
   def send_sms(to:, message:)
     client.messages.create(from: from_number, to: to, body: message)
   end
@@ -12,7 +12,7 @@ class RadicalTwilio
   end
 
   def self.send_verify_sms(mobile_phone)
-    response = RadicalRetry.perform_request(retry_count: 2, raise_original: true) do
+    response = RadRetry.perform_request(retry_count: 2, raise_original: true) do
       TwilioVerifyService.send_sms_token(mobile_phone)
     end
 
@@ -20,13 +20,13 @@ class RadicalTwilio
   end
 
   def self.setup_totp_service(user)
-    RadicalRetry.perform_request(retry_count: 2, raise_original: true) do
+    RadRetry.perform_request(retry_count: 2, raise_original: true) do
       TwilioVerifyService.setup_totp_service(user)
     end
   end
 
   def self.register_totp_service(user, token)
-    RadicalRetry.perform_request(retry_count: 2, raise_original: true) do
+    RadRetry.perform_request(retry_count: 2, raise_original: true) do
       TwilioVerifyService.register_totp_service(user, token)
     end
   end
@@ -94,7 +94,7 @@ class RadicalTwilio
     def lookup_number(number, type = nil)
       lookup_client = Twilio::REST::Client.new(RadConfig.twilio_account_sid!, RadConfig.twilio_auth_token!)
 
-      RadicalRetry.perform_request(retry_count: 2, raise_original: true) do
+      RadRetry.perform_request(retry_count: 2, raise_original: true) do
         if type
           lookup_client.lookups.phone_numbers(number).fetch(type: [type])
         else

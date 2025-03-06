@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'Users API', type: :request do
   let(:division) { create :division }
-  let(:headers) { { HTTP_AUTHORIZATION: RadicalJwtGenerator.new(valid_for_minutes).token } }
+  let(:headers) { { HTTP_AUTHORIZATION: RadJwtGenerator.new(valid_for_minutes).token } }
 
   describe 'show' do
     context 'when success' do

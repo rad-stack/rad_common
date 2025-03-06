@@ -11,12 +11,12 @@ class PhoneSMSSender
     self.from_user_id = from_user_id
     self.to_mobile_phone = to_mobile_phone
     self.media_url = media_url
-    self.twilio = RadicalTwilio.new
+    self.twilio = RadTwilio.new
     self.message = augment_message(message, force_opt_out)
   end
 
   def send!
-    RadicalRetry.perform_request(raise_original: true) do
+    RadRetry.perform_request(raise_original: true) do
       if mms?
         twilio.send_mms to: to_number, message: message, media_url: media_url
       else
@@ -73,7 +73,7 @@ class PhoneSMSSender
     end
 
     def to_number
-      RadicalTwilio.human_to_twilio_format(to_mobile_phone)
+      RadTwilio.human_to_twilio_format(to_mobile_phone)
     end
 
     def opt_out_message_already_sent?
@@ -92,7 +92,7 @@ class PhoneSMSSender
 
       return if @log.media_url.blank?
 
-      file = RadicalRetry.perform_request(retry_count: 2) { URI.open(@log.media_url) }
+      file = RadRetry.perform_request(retry_count: 2) { URI.open(@log.media_url) }
       filename = if file.respond_to?(:meta) && file.meta.has_key?('content-disposition')
                    file.meta['content-disposition'].match(/filename="[^"]+"/).to_s.gsub(/filename=|"/, '')
                  else

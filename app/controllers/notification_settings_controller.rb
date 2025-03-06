@@ -21,7 +21,7 @@ class NotificationSettingsController < ApplicationController
     notification_setting.email = permitted_params[:email] if notification_type.email_enabled?
     notification_setting.feed = permitted_params[:feed] if notification_type.feed_enabled?
 
-    if RadicalTwilio.new.twilio_enabled? && notification_type.sms_enabled?
+    if RadTwilio.new.twilio_enabled? && notification_type.sms_enabled?
       notification_setting.sms = permitted_params[:sms]
     end
 

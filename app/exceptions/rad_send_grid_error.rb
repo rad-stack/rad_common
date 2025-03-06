@@ -1,0 +1,2 @@
+class RadSendGridError < StandardError
+end

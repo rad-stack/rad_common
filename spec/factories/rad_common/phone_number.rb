@@ -4,7 +4,7 @@ FactoryBot.define do
 
     transient do
       phone_number do
-        if RadicalTwilio.new.twilio_enabled?
+        if RadTwilio.new.twilio_enabled?
           RadConfig.test_phone_number!
         else
           Faker::PhoneNumber.phone_number
@@ -14,7 +14,7 @@ FactoryBot.define do
 
     trait :mobile do
       phone_number do
-        if RadicalTwilio.new.twilio_enabled? || RadConfig.twilio_verify_enabled?
+        if RadTwilio.new.twilio_enabled? || RadConfig.twilio_verify_enabled?
           RadConfig.test_mobile_phone!
         else
           Faker::PhoneNumber.cell_phone
@@ -24,7 +24,7 @@ FactoryBot.define do
 
     trait :fax do
       phone_number do
-        if RadicalTwilio.new.twilio_enabled?
+        if RadTwilio.new.twilio_enabled?
           RadConfig.test_fax_number!
         else
           Faker::PhoneNumber.phone_number

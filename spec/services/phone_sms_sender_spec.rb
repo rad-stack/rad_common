@@ -59,7 +59,7 @@ RSpec.describe PhoneSMSSender, type: :service do
           create :twilio_log,
                  opt_out_message_sent: true,
                  success: true,
-                 to_number: RadicalTwilio.human_to_twilio_format(mobile_phone)
+                 to_number: RadTwilio.human_to_twilio_format(mobile_phone)
         end
 
         it { is_expected.to eq "I'm taking your surfboard" }
