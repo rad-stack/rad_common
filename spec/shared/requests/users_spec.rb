@@ -36,6 +36,51 @@ RSpec.describe 'Users', type: :request do
           .to change { user.reload.timezone }.from(existing_timezone).to(new_timezone)
       end
     end
+
+    describe 'PUT ignore_timezone' do
+      let(:existing_timezone) { 'Eastern Time (US & Canada)' }
+      let(:detected_timezone) { 'Pacific Time (US & Canada)' }
+
+      before do
+        user.update!(timezone: existing_timezone, detected_timezone: detected_timezone)
+        put ignore_timezone_user_path(user)
+        user.reload
+      end
+
+      it 'sets ignored_timezone to detected_timezone' do
+        expect(user.ignored_timezone).to eq(detected_timezone)
+      end
+
+      it 'does not display the timezone prompt after ignoring' do
+        get root_path
+        expect(response.body).not_to include("We've detected a different timezone")
+      end
+    end
+
+    describe 'GET root path (checking timezone prompt)' do
+      let(:existing_timezone) { 'Eastern Time (US & Canada)' }
+      let(:detected_timezone) { 'Pacific Time (US & Canada)' }
+
+      before do
+        user.update!(timezone: existing_timezone, detected_timezone: detected_timezone)
+
+        all_permissions = RadPermission.all.index_with { true }
+        admin_role = SecurityRole.find_by(admin: true) ||
+                     create(:security_role, admin: true, name: 'Admin', **all_permissions)
+
+        user.security_roles << admin_role
+
+        allow_any_instance_of(Onboarding).to receive(:onboarded?).and_return(true)
+        allow_any_instance_of(UserTimezone).to receive(:wrong_timezone?).and_return(true)
+
+        get root_path
+        follow_redirect! while response.redirect?
+      end
+
+      it 'displays the timezone prompt when detected timezone differs' do
+        expect(response.body).to match(/We've detected a different timezone:.*Pacific Time \(US &amp; Canada\)/)
+      end
+    end
   end
 
   context 'when admin' do
