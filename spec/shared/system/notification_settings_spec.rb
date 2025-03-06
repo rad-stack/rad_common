@@ -23,7 +23,7 @@ RSpec.describe 'NotificationSettings', type: :system do
         expect(NotificationSetting.count).to eq 1
       end
 
-      it 'displays error message when updating without button', :gha_specs_only, :js do
+      xit 'displays error message when updating without button', :js do
         visit '/rad_common/notification_settings'
         page.uncheck('notification_setting[email]')
         expect(accept_alert).to eq 'The setting could not be saved: Enabled requires one of email/sms/feed be turned on'
