@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm
-                                    test_email test_sms reactivate]
+  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm test_email test_sms reactivate
+                                    update_timezone ignore_timezone]
+
   before_action :remove_blank_passwords, only: :update
 
   def index
@@ -153,6 +154,16 @@ class UsersController < ApplicationController
     end
 
     redirect_to @user
+  end
+
+  def update_timezone
+    UserTimezone.new(@user).update!
+    redirect_back fallback_location: @user, notice: 'User was successfully updated.'
+  end
+
+  def ignore_timezone
+    UserTimezone.new(@user).ignore!
+    redirect_back fallback_location: @user, notice: 'User was successfully updated.'
   end
 
   def setup_totp

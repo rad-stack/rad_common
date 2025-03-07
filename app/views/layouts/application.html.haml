@@ -17,6 +17,7 @@
         .col-lg-12
           - if user_signed_in?
             = render 'layouts/global_search'
+            = render 'layouts/wrong_timezone'
           = bootstrap_flash
           = yield
           = render 'layouts/footer'

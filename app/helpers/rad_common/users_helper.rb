@@ -1,7 +1,16 @@
 module RadCommon
   module UsersHelper
     def user_show_data(user)
-      items = %i[email mobile_phone user_status timezone sign_in_count invitation_accepted_at invited_by]
+      items = [:email,
+               :mobile_phone,
+               { label: 'User Status', value: user_status_item(user) },
+               :timezone,
+               :detected_timezone,
+               :ignored_timezone,
+               :sign_in_count,
+               :invitation_accepted_at,
+               :invited_by]
+
       items += %i[twilio_verify_sms] if RadConfig.twilio_verify_enabled?
       items += %i[current_sign_in_ip current_sign_in_at confirmed_at confirmation_sent_at unconfirmed_email]
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
@@ -12,6 +21,26 @@ module RadCommon
       end
 
       items
+    end
+
+    def user_status_item(user)
+      items = [user.user_status.name, ' ']
+
+      if user.needs_confirmation?
+        items += user_status_icon('fa-circle-question', 'This user has not yet confirmed their email.')
+      end
+
+      if user.needs_accept_invite?
+        items += user_status_icon('fa-envelope', 'This user has not yet accepted their invitation.')
+      end
+
+      if user.needs_reactivate?
+        items += user_status_icon('fa-triangle-exclamation', 'This user is expired due to inactivity.')
+      end
+
+      tag.div do
+        safe_join items
+      end
     end
 
     def my_profile_nav?

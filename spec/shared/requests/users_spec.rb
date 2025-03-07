@@ -31,7 +31,7 @@ RSpec.describe 'Users', type: :request do
 
       before { user.update! timezone: existing_timezone, detected_timezone: new_timezone }
 
-      xit 'updates' do
+      it 'updates' do
         expect { put "/users/#{user.id}/update_timezone" }
           .to change { user.reload.timezone }.from(existing_timezone).to(new_timezone)
       end

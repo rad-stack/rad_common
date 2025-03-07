@@ -11,6 +11,8 @@ class NotificationType < ApplicationRecord
 
   validate :validate_auth
 
+  strip_attributes
+
   def email_enabled?
     true
   end

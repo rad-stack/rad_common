@@ -5,6 +5,7 @@ module RadController
   included do
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     before_action :set_sentry_user_context
+    before_action :check_ip_address_timezone, if: :user_signed_in?
     around_action :user_time_zone, if: :current_user
     after_action :verify_authorized, unless: :devise_controller?
     after_action :verify_policy_scoped, only: :index
@@ -45,9 +46,19 @@ module RadController
     end
 
     def sentry_user_name
-      return true_user.to_s if true_user == current_user
+      return true_user.to_s unless impersonating?
 
       "#{true_user} impersonating #{current_user}"
+    end
+
+    def impersonating?
+      current_user != true_user
+    end
+
+    def check_ip_address_timezone
+      return if impersonating?
+
+      UserTimezone.new(current_user).check_user!(request.remote_ip)
     end
 
     def user_time_zone(&block)
