@@ -359,6 +359,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.jsonb "filter_defaults"
     t.boolean "twilio_verify_sms", default: true, null: false
     t.string "twilio_totp_factor_sid"
+    t.string "detected_timezone"
+    t.string "ignored_timezone"
     t.index ["authy_id"], name: "index_users_on_authy_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
