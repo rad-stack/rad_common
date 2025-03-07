@@ -8,11 +8,7 @@ RSpec.describe UserTimezone, type: :service do
   let(:user_ip) { '192.168.1.1' }
   let(:new_ip) { '203.0.113.45' }
 
-  before do
-    allow_any_instance_of(described_class)
-      .to receive(:local_ip_address?)
-      .and_return(false)
-  end
+  before { allow_any_instance_of(described_class).to receive(:local_ip_address?).and_return(false) }
 
   describe '#check_user!' do
     context 'when IP address changes' do
