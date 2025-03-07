@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise-security', '0.16.0' # locked, see Task 35711
   s.add_dependency 'factory_bot_rails'
   s.add_dependency 'faker'
+  s.add_dependency 'geocoder'
   s.add_dependency 'haml-rails', '~> 2.0'
   s.add_dependency 'httpclient'
   s.add_dependency 'hashids'
