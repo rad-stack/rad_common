@@ -2,13 +2,13 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
+    uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages.json
     body:
       encoding: UTF-8
-      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B16187222169
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&To=%2B16187222169
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
+      - twilio-ruby/5.66.1 (ruby/x86_64-darwin20 2.7.5-p203)
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -16,7 +16,7 @@ http_interactions:
       Accept:
       - application/json
       Authorization:
-      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
+      - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -25,50 +25,50 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Fri, 21 Jun 2024 18:28:00 GMT
+      - Tue, 12 Apr 2022 13:53:20 GMT
       Content-Type:
-      - application/json;charset=utf-8
+      - application/json; charset=utf-8
       Content-Length:
-      - '824'
+      - '823'
       Connection:
       - keep-alive
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ563bc44cad4d4d2692fa02c9b3c80277
+      - RQc07908404cee42d8942dc23d78248c50
       Twilio-Request-Duration:
-      - '0.047'
-      X-Api-Domain:
-      - api.twilio.com
-      Strict-Transport-Security:
-      - max-age=31536000
+      - '0.061'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Headers:
       - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+        If-Unmodified-Since
       Access-Control-Allow-Methods:
-      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      - GET, POST, DELETE, OPTIONS
       Access-Control-Expose-Headers:
-      - ETag, Twilio-Request-Id
+      - ETag
       Access-Control-Allow-Credentials:
       - 'true'
-      X-Shenanigans:
-      - none
       X-Powered-By:
       - AT-5000
+      X-Shenanigans:
+      - none
       X-Home-Region:
       - us1
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
     body:
       encoding: UTF-8
-      string: '{"account_sid": "ACaae98776bde4ed53d0fb1dfcc262558e", "api_version":
-        "2010-04-01", "body": "test message - To no longer receive text messages,
-        text STOP", "date_created": "Fri, 21 Jun 2024 18:28:00 +0000", "date_sent":
-        null, "date_updated": "Fri, 21 Jun 2024 18:28:00 +0000", "direction": "outbound-api",
-        "error_code": null, "error_message": null, "from": "+15005550006", "messaging_service_sid":
-        null, "num_media": "0", "num_segments": "1", "price": null, "price_unit":
-        "USD", "sid": "SM563bc44cad4d4d2692fa02c9b3c80277", "status": "queued", "subresource_uris":
-        {"media": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SM563bc44cad4d4d2692fa02c9b3c80277/Media.json"},
-        "to": "+16187222169", "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SM563bc44cad4d4d2692fa02c9b3c80277.json"}'
-  recorded_at: Fri, 21 Jun 2024 18:28:00 GMT
-recorded_with: VCR 6.2.0
+      string: '{"sid": "SMbf457031f5c846aa8617bb1d2cebcd9a", "date_created": "Tue,
+        12 Apr 2022 13:53:20 +0000", "date_updated": "Tue, 12 Apr 2022 13:53:20 +0000",
+        "date_sent": null, "account_sid": "AC2540a6d0062cb347979e6b695b61ff0a", "to":
+        "+16187222169", "from": "15005550006", "messaging_service_sid": null, "body":
+        "test message - To no longer receive text messages, text STOP", "status":
+        "queued", "num_segments": "1", "num_media": "0", "direction": "outbound-api",
+        "api_version": "2010-04-01", "price": null, "price_unit": "USD", "error_code":
+        null, "error_message": null, "uri": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages/SMbf457031f5c846aa8617bb1d2cebcd9a.json",
+        "subresource_uris": {"media": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Messages/SMbf457031f5c846aa8617bb1d2cebcd9a/Media.json"}}'
+  recorded_at: Tue, 12 Apr 2022 13:53:20 GMT
+recorded_with: VCR 6.1.0

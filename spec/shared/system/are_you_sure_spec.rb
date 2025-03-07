@@ -5,8 +5,18 @@ RSpec.describe 'AreYouSure', type: :system do
 
   before { login_as user, scope: :user }
 
+  describe 'normal form fields' do
+    xit 'warns', :gha_specs_only, :js do
+      visit '/rad_common/company/edit'
+      fill_in 'Name', with: 'test'
+      visit current_path
+
+      expect(confirm_present?).to be true
+    end
+  end
+
   describe 'global super search field' do
-    it 'does not warn', :js, :non_react_specs do
+    xit 'does not warn', :gha_specs_only, :js do
       visit '/'
       tom_search 'test', from: 'search'
       find('body').click
@@ -17,8 +27,8 @@ RSpec.describe 'AreYouSure', type: :system do
   end
 
   describe 'search filter form fields' do
-    it 'does not warn', :js do
-      visit '/login_activities?search%5Bcreated_at_start%5D=2020-11-11&search%5Bcreated_at_end%5D=2020-11-11'
+    it 'does not warn', :gha_specs_only, :js do
+      visit '/rad_common/login_activities?search%5Bcreated_at_start%5D=2020-11-11&search%5Bcreated_at_end%5D=2020-11-11'
       find('body').click
       visit '/'
 

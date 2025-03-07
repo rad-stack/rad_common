@@ -5,8 +5,8 @@
                                   no_back_button: true
 
   .card-body
-    = simple_form_for(@system_message) do |f|
-      = rad_form_errors f
+    = simple_form_for(@system_message, url: '/rad_common/system_messages') do |f|
+      = f.error_notification
 
       .form-inputs
         .row
@@ -14,7 +14,7 @@
           .col-lg-3
             = f.input :send_to, collection: message_send_to_options, include_blank: false
           .col-lg-3
-            = f.association :security_role, collection: SecurityRole.sorted, label: 'Limit To Security Role (optional)'
+            = f.association :security_role, collection: SecurityRole.by_name, label: 'Limit To Security Role (optional)'
           .col-lg-3
             = f.input :from_reply_to, disabled: true, label: 'From / Reply to'
         .row

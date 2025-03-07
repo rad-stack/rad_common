@@ -17,7 +17,7 @@ module Users
           flash[:success] = "We invited '#{resource}' and sent them an email. You can update their settings as " \
                             'needed here.'
 
-          redirect_to users_path
+          redirect_to edit_user_path(resource)
         else
           flash[:error] = "Could not add user: #{user.errors.full_messages.join(', ')}"
         end

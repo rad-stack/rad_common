@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :notification_security_role do
-    security_role
+    association :notification_type
+    association :security_role
   end
 end

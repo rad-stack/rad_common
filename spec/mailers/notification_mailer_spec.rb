@@ -1,23 +1,17 @@
 require 'rails_helper'
 
-describe NotificationMailer do
+describe NotificationMailer, type: :mailer do
   let(:user) { create :user }
   let(:another_user) { create :user }
   let(:email) { user.email }
   let(:another_email) { another_user.email }
   let(:last_email) { ActionMailer::Base.deliveries.last }
-  let(:notification_type) { Notifications::InvalidDataWasFoundNotification.main }
 
-  before do
-    create :admin
-    ActionMailer::Base.deliveries.clear
-  end
+  before { ActionMailer::Base.deliveries.clear }
 
   describe '#global_validity' do
-    let(:payload) { { error_count: 0, error_messages: [] } }
-
     context 'with one user' do
-      before { described_class.global_validity(notification_type, [user], payload).deliver_now }
+      before { described_class.global_validity([user], []).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -27,11 +21,7 @@ describe NotificationMailer do
     end
 
     context 'with multiple users' do
-      before do
-        described_class.global_validity(notification_type,
-                                        User.where(id: [user.id, another_user.id]),
-                                        payload).deliver_now
-      end
+      before { described_class.global_validity(User.where(id: [user.id, another_user.id]), []).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -42,9 +32,7 @@ describe NotificationMailer do
     end
 
     context 'with a problem with a link' do
-      let(:payload) { { error_count: 1, error_messages: [[user, 'foo bar']] } }
-
-      before { described_class.global_validity(notification_type, [user], payload).deliver_now }
+      before { described_class.global_validity([user], [[user, 'foo bar']]).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
@@ -56,15 +44,10 @@ describe NotificationMailer do
 
     context 'with a problem without a link' do
       let(:notification_setting) do
-        create :notification_setting, notification_type: Notifications::InvalidDataWasFoundNotification.main
+        create :notification_setting, notification_type: create(:global_validity_notification)
       end
 
-      let(:payload) { { error_count: 1, error_messages: [[notification_setting, 'foo bar']] } }
-
-      before do
-        create :admin
-        described_class.global_validity(notification_type, [user], payload).deliver_now
-      end
+      before { described_class.global_validity([user], [[notification_setting, 'foo bar']]).deliver_now }
 
       it 'matches as expected' do
         expect(last_email.subject).to include 'Invalid data in'
