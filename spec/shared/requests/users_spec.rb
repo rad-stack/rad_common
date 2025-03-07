@@ -63,14 +63,6 @@ RSpec.describe 'Users', type: :request do
 
       before do
         user.update!(timezone: existing_timezone, detected_timezone: detected_timezone)
-
-        all_permissions = RadPermission.all.index_with { true }
-        admin_role = SecurityRole.find_by(admin: true) ||
-                     create(:security_role, admin: true, name: 'Admin', **all_permissions)
-
-        user.security_roles << admin_role
-
-        allow_any_instance_of(Onboarding).to receive(:onboarded?).and_return(true)
         allow_any_instance_of(UserTimezone).to receive(:wrong_timezone?).and_return(true)
 
         get root_path
