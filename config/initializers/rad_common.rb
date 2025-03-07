@@ -9,6 +9,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'PDF'
   inflect.acronym 'CRM'
   inflect.acronym 'CSV'
+  inflect.acronym 'BCC'
 end
 
 ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
