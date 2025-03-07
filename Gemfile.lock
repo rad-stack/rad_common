@@ -27,6 +27,7 @@ PATH
       httpclient
       image_processing (~> 1.9)
       kaminari (~> 1.2.1)
+      mutex_m
       net-imap
       net-pop
       net-smtp
@@ -277,6 +278,7 @@ GEM
     mini_portile2 (2.8.7)
     minitest (5.25.1)
     msgpack (1.7.5)
+    mutex_m (0.3.0)
     net-http (0.5.0)
       uri
     net-imap (0.5.1)

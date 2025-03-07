@@ -67,6 +67,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'twilio-ruby', '~> 5.74'
   s.add_dependency 'webpacker'
 
+  # see Task 4406 - should be able to remove later
+  s.add_dependency 'mutex_m'
+
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'haml_lint', '0.55.0'
