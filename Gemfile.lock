@@ -57,6 +57,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    Ascii85 (2.0.1)
     actioncable (7.0.8.6)
       actionpack (= 7.0.8.6)
       activesupport (= 7.0.8.6)
@@ -132,6 +133,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
+    afm (0.2.2)
     ast (2.4.2)
     audited (5.8.0)
       activerecord (>= 5.2, < 8.2)
@@ -236,6 +238,7 @@ GEM
       rubocop (>= 1.0)
       sysexits (~> 1.1)
     hashdiff (1.1.2)
+    hashery (2.1.2)
     hashids (1.0.6)
     htmlentities (4.3.4)
     httpclient (2.8.3)
@@ -301,6 +304,12 @@ GEM
     parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
+    pdf-reader (2.14.1)
+      Ascii85 (>= 1.0, < 3.0, != 2.0.0)
+      afm (~> 0.2.1)
+      hashery (~> 2.0)
+      ruby-rc4
+      ttfunk
     pg (1.5.9)
     premailer (1.27.0)
       addressable
@@ -407,6 +416,7 @@ GEM
       rubocop (~> 1.61)
       rubocop-rspec (~> 3, >= 3.0.1)
     ruby-progressbar (1.13.0)
+    ruby-rc4 (0.1.5)
     ruby-vips (2.2.2)
       ffi (~> 1.12)
       logger
@@ -459,6 +469,8 @@ GEM
     tilt (2.4.0)
     timecop (0.9.10)
     timeout (0.4.2)
+    ttfunk (1.8.0)
+      bigdecimal (~> 3.1)
     twilio-ruby (5.77.0)
       faraday (>= 0.9, < 3.0)
       jwt (>= 1.5, < 3.0)
@@ -501,6 +513,7 @@ DEPENDENCIES
   devise-twilio-verify!
   haml_lint (= 0.55.0)
   parallel_tests
+  pdf-reader
   pry
   rad_common!
   rspec-rails
