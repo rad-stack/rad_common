@@ -43,6 +43,10 @@ module RadCommon
       end
     end
 
+    def user_status_icon(icon, tooltip)
+      [icon_tooltip('span', tooltip, icon, html_class: 'text-warning'), ' ']
+    end
+
     def my_profile_nav?
       UserProfilePolicy.new(current_user, current_user).show?
     end
