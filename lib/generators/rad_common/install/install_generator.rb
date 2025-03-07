@@ -9,12 +9,12 @@ module RadCommon
         standardize_date_methods
 
         # misc
-        copy_file '../../../../../spec/dummy/package.json', 'package.json'
-        copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+        # copy_file '../../../../../spec/dummy/package.json', 'package.json'
+        # copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
         copy_file '../gitignore.txt', '.gitignore'
-        copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
+        # copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
-        copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
+        # copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
         directory '../../../../../.bundle', '.bundle'
 
         # code style config
@@ -26,7 +26,7 @@ module RadCommon
         # config
         copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
-        directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
+        # directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
         directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
@@ -36,8 +36,8 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/initializers/simple_form.rb',
                   'config/initializers/simple_form.rb'
 
-        copy_file '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb',
-                 'config/initializers/simple_form_bootstrap.rb'
+        # copy_file '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb',
+        #          'config/initializers/simple_form_bootstrap.rb'
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
                   'config/initializers/simple_form_components.rb'
@@ -59,8 +59,8 @@ module RadCommon
                   'app/models/application_record.rb'
 
         # specs
-        directory '../../../../../spec/shared/', 'spec/rad_common/'
-        directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/', exclude_pattern: /clients.rb/
+        # directory '../../../../../spec/shared/', 'spec/rad_common/'
+        # directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/', exclude_pattern: /clients.rb/
         copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
 
         # templates

@@ -1,0 +1,16 @@
+= render 'layouts/report_header', main_path: client_reports_path, additional_actions: nil
+
+- if @report.valid?
+  .card
+    = render 'layouts/card_header', action_name: 'custom', title: @report.sub_title, icon: 'fa-list'
+    .card-body
+      .table-responsive
+        %table.table.table-striped.table-bordered
+          %thead
+            - @report.headers.each do |header|
+              %th= header
+          %tbody
+            - @report.records.each do |record|
+              %tr
+                %td= secured_link record
+                %td= format_report_boolean record.active?

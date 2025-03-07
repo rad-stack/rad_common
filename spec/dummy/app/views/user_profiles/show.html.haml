@@ -1,0 +1,9 @@
+.card
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: profile_show_title(@user),
+           icon: 'fa-user',
+           additional_actions: [edit_profile_button(@user)]
+
+  .card-body
+    = render 'layouts/show_data_columns', data: user_profile_show_data, resource: @user
