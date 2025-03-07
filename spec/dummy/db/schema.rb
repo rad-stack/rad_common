@@ -164,7 +164,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.string "scope"
     t.string "strategy"
     t.string "identity"
-    t.boolean "success"
+    t.boolean "success", default: false, null: false
     t.string "failure_reason"
     t.string "user_type"
     t.bigint "user_id"

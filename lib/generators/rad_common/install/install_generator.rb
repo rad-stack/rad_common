@@ -262,6 +262,7 @@ end
           apply_migration '20220918194026_refine_smarty.rb'
           apply_migration '20230222162024_migrate_authy_to_twilio_verify.rb'
           apply_migration '20230324202030_make_twilio_logs_from_user_nullable.rb'
+          apply_migration '20240611203430_fix_boolean_nulls_defaults.rb'
           apply_migration '20250227191231_add_detected_timezone_to_user.rb'
         end
     end
