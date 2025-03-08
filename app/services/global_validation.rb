@@ -75,7 +75,7 @@ class GlobalValidation
     def exclude_models
       return [] if @override_model.present?
 
-      RadConfig.global_validity_exclude! + ['TwilioLog']
+      RadConfig.global_validity_exclude! + ['ContactLog', 'ContactLogRecipient']
     end
 
     def check_model(model)
