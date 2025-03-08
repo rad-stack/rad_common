@@ -13,8 +13,8 @@ class ContactLog < ApplicationRecord
 
   scope :associated_with_user, lambda { |user_id|
     query = "(record_type = 'User' AND record_id = #{user_id}) OR " \
-      "from_user_id = #{user_id} OR " \
-      "contact_log_recipients.to_user_id = #{user_id}"
+            "from_user_id = #{user_id} OR " \
+            "contact_log_recipients.to_user_id = #{user_id}"
 
     joins(:contact_log_recipients).where(query).distinct
   }
