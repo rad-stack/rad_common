@@ -1,7 +1,7 @@
 require 'rad_common/engine'
 
 module RadCommon
-  VALID_IMAGE_TYPES = %w[image/png image/jpeg image/jpg image/webp].freeze
+  VALID_IMAGE_TYPES = %w[image/png image/jpeg image/webp].freeze
 
   VALID_VIDEO_TYPES = %w[video/x-msvideo video/mp4 video/mpeg video/3gpp video/quicktime].freeze
 

@@ -43,7 +43,7 @@ class ContactLogRecipient < ApplicationRecord
   validates_with PhoneNumberValidator, fields: [{ field: :phone_number }], skip_twilio: true
   validates_with EmailAddressValidator, fields: [:email], skip_sendgrid: true
 
-  validates :sms_status, presence: true, if: -> { contact_log&.sms? && contact_log&.outgoing? }
+  validates :sms_status, presence: true, if: -> { contact_log&.sms? && contact_log.outgoing? }
   validates :email_status, presence: true, if: -> { contact_log&.email? }
   validates :sms_status, absence: true, if: -> { contact_log&.email? || contact_log&.incoming? }
   validates :email_status, :sendgrid_reason, absence: true, if: -> { contact_log&.sms? }
