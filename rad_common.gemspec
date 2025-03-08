@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.bindir = 'bin'
   s.executables = %w[reset_db migrate_reset rc_update]
 
-  s.add_dependency 'active_storage_validations'
+  s.add_dependency 'active_storage_validations', '1.0.4' # see Task 43068
   s.add_dependency 'audited'
   s.add_dependency 'authtrail'
 
@@ -69,6 +69,9 @@ Gem::Specification.new do |s|
 
   # see Task 4406 - should be able to remove later
   s.add_dependency 'mutex_m'
+
+  # TODO: causes an error, temporary pinning
+  s.add_dependency 'concurrent-ruby', '1.3.4'
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'

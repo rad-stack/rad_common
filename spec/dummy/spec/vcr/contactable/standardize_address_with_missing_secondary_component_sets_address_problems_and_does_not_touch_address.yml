@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Jacksonville&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=FL&street=3615%20Dupont%20Avenue&street2&urbanization&zipcode=32217
+    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Jacksonville&county_source&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=FL&street=3615%20Dupont%20Avenue&street2&urbanization&zipcode=32217
     body:
       encoding: US-ASCII
       string: ''
@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.20.4)
+      - smartystreets (sdk:ruby@5.20.6)
       Host:
       - us-street.api.smarty.com
       Content-Type:
@@ -25,9 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 06 Mar 2025 14:36:03 GMT
+      - Sat, 08 Mar 2025 18:12:00 GMT
       X-Request-Id:
-      - '01956be2-8af2-7c42-b75a-d30787703061'
+      - '019576f4-f622-7657-b2b5-babdd609b581'
       Transfer-Encoding:
       - chunked
       Vary:
@@ -38,5 +38,5 @@ http_interactions:
         Ave","last_line":"Jacksonville FL 32217-2790","delivery_point_barcode":"322172790999","smarty_key":"1162272513","components":{"primary_number":"3615","street_name":"DuPont","street_suffix":"Ave","city_name":"Jacksonville","default_city_name":"Jacksonville","state_abbreviation":"FL","zipcode":"32217","plus4_code":"2790","delivery_point":"99","delivery_point_check_digit":"9"},"metadata":{"record_type":"H","zip_type":"Standard","county_fips":"12031","county_name":"Duval","carrier_route":"C042","congressional_district":"05","building_default_indicator":"Y","rdi":"Commercial","elot_sequence":"0400","elot_sort":"A","latitude":30.2555,"longitude":-81.6241,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"D","dpv_footnotes":"AAN1","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"Y","active":"Y","footnotes":"H#N#","enhanced_match":"postal-match,missing-secondary"}}]
 
         '
-  recorded_at: Thu, 06 Mar 2025 14:36:03 GMT
+  recorded_at: Sat, 08 Mar 2025 18:12:00 GMT
 recorded_with: VCR 6.3.1
