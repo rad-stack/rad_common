@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe GlobalValidation, type: :service do
   let(:global_validity) { described_class.new }
-  let(:admin_security_role) { admin.security_roles.first }
+  let!(:admin_security_role) { admin.security_roles.first }
   let(:company) { Company.main }
-  let!(:admin) { create :admin }
+  let(:admin) { create :admin }
   let(:url) { "http://localhost:3000/security_roles/#{admin_security_role.id}" }
   let(:last_email) { ActionMailer::Base.deliveries.last }
   let(:email_body_text) { last_email.body.parts.first.body.raw_source }
@@ -21,8 +21,10 @@ describe GlobalValidation, type: :service do
     subject { global_validity.send(:models_to_check).map(&:to_s) }
 
     let(:models) do
-      %w[Attorney Category Client Company Division Duplicate Notification NotificationSecurityRole NotificationSetting
-         NotificationType SecurityRole Status SystemMessage User UserClient UserSecurityRole UserStatus]
+      %w[Attorney Category Client Company ContactLog ContactLogRecipient
+         Division Duplicate Notification NotificationSecurityRole NotificationSetting
+         NotificationType SecurityRole Status SystemMessage User
+         UserClient UserSecurityRole UserStatus]
     end
 
     it { is_expected.to eq models }
@@ -84,8 +86,8 @@ describe GlobalValidation, type: :service do
         let(:specific_query) { -> { SecurityRole.where(id: admin_security_role.id) } }
 
         before do
-          allow(RadConfig).to receive(:global_validity_exclude!).and_return ['SecurityRole']
-          allow(RadConfig).to receive(:global_validity_include!).and_return [specific_query]
+          allow(RadConfig).to receive_messages(global_validity_exclude!: ['SecurityRole'],
+                                               global_validity_include!: [specific_query])
         end
 
         it 'sends an email to current user when data is invalid' do

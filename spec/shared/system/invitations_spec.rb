@@ -88,17 +88,6 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
       end
 
       context 'when invalid' do
-        xit 'because of blank email' do
-          # TODO: waiting on bug fix in devise-security, see Task 35144
-          visit new_user_invitation_path
-
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
-          click_button 'Send an invitation'
-
-          expect(page).to have_content "Email can't be blank"
-        end
-
         it 'because of blank first and last name' do
           visit new_user_invitation_path
 
