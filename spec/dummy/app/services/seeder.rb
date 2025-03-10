@@ -8,26 +8,6 @@ class Seeder < RadSeeder
       30.times { FactoryBot.create :division, owner: users.internal.sample }
     end
 
-    if Attorney.count.zero?
-      FactoryBot.create_list :attorney, 20
-
-      display_log 'seeding duplicate attorneys'
-
-      Audited.audit_class.as_user(random_internal_user) do
-        2.times do
-          FactoryBot.build(:attorney,
-                           first_name: 'Bruh',
-                           last_name: 'Bro',
-                           company_name: 'Bruh, Bro and Brah',
-                           city: 'Atlanta',
-                           state: 'GA',
-                           email: 'bruh_bro@example.com').save!(validate: false)
-        end
-      end
-
-      Attorney.find_each { |item| item.process_duplicates(bypass_notifications: true) }
-    end
-
     3.times { FactoryBot.create :client } if Client.count.zero?
 
     return unless ContactLog.count.zero?
@@ -45,4 +25,28 @@ class Seeder < RadSeeder
       end
     end
   end
+
+  private
+
+    def seed_attorneys
+      return if Attorney.exists?
+
+      20.times { FactoryBot.create :attorney }
+
+      display_log 'seeding duplicate attorneys'
+
+      Audited.audit_class.as_user(random_internal_user) do
+        2.times do
+          FactoryBot.build(:attorney,
+                           first_name: 'Bruh',
+                           last_name: 'Bro',
+                           company_name: 'Bruh, Bro and Brah',
+                           city: 'Atlanta',
+                           state: 'GA',
+                           email: 'bruh_bro@example.com').save!(validate: false)
+        end
+      end
+
+      Attorney.find_each { |item| item.process_duplicates(bypass_notifications: true) }
+    end
 end

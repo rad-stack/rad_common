@@ -1,4 +1,10 @@
 class RadSeeder
+  DEV_NOTIFICATION_TYPES = %w[Notifications::DuplicateFoundAdminNotification
+                              Notifications::GlobalValidityRanLongNotification
+                              Notifications::HighDuplicatesNotification
+                              Notifications::InvalidDataWasFoundNotification
+                              Notifications::TwilioErrorThresholdExceededNotification].freeze
+
   attr_accessor :users
 
   def seed!
@@ -221,10 +227,4 @@ class RadSeeder
     def staging?
       Rails.env.staging?
     end
-
-    DEV_NOTIFICATION_TYPES = %w[Notifications::DuplicateFoundAdminNotification
-                                Notifications::GlobalValidityRanLongNotification
-                                Notifications::HighDuplicatesNotification
-                                Notifications::InvalidDataWasFoundNotification
-                                Notifications::TwilioErrorThresholdExceededNotification].freeze
 end
