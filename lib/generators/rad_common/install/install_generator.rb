@@ -6,6 +6,11 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
+        remove_file 'config/initializers/new_framework_defaults_7_0.rb'
+        remove_file 'app/models/application_record.rb'
+        remove_file '.hound.yml'
+        remove_file '.github/pull_request_template.md'
+
         standardize_date_methods
 
         # misc
@@ -53,10 +58,6 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/locales/devise.en.yml', 'config/locales/devise.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/simple_form.en.yml',
                   'config/locales/simple_form.en.yml'
-
-        # models
-        copy_file '../../../../../spec/dummy/app/models/application_record.rb',
-                  'app/models/application_record.rb'
 
         # specs
         # directory '../../../../../spec/shared/', 'spec/rad_common/'
@@ -277,6 +278,8 @@ end
           apply_migration '20240629114200_fix_contact_log_sms_status.rb'
           apply_migration '20240705173121_more_contact_log_fixes.rb'
           apply_migration '20240710175508_fix_contact_to_users.rb'
+          apply_migration '20240912133320_persist_sms_false_positive.rb'
+          apply_migration '20240911184745_fix_last_activity.rb'
           apply_migration '20250227191231_add_detected_timezone_to_user.rb'
         end
     end
