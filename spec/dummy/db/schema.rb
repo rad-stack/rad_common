@@ -128,12 +128,56 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.jsonb "address_metadata"
   end
 
-  create_table "divisions", id: :serial, force: :cascade do |t|
-    t.string "name", null: false
-    t.string "code", null: false
-    t.integer "owner_id", null: false
+  create_table "contact_log_recipients", force: :cascade do |t|
+    t.bigint "contact_log_id", null: false
+    t.bigint "to_user_id"
+    t.string "email"
+    t.string "phone_number"
+    t.integer "email_type"
+    t.integer "sms_status"
+    t.boolean "success", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "email_status"
+    t.string "sendgrid_reason"
+    t.boolean "notify_on_fail", default: true, null: false
+    t.boolean "sms_false_positive", default: false, null: false
+    t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
+    t.index ["email"], name: "index_contact_log_recipients_on_email"
+    t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"
+    t.index ["to_user_id"], name: "index_contact_log_recipients_on_to_user_id"
+  end
+
+  create_table "contact_logs", force: :cascade do |t|
+    t.string "from_number"
+    t.bigint "from_user_id"
+    t.string "sms_media_url"
+    t.boolean "sent", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "sms_opt_out_message_sent", default: false, null: false
+    t.string "sms_message_id"
+    t.integer "sms_log_type"
+    t.string "from_email"
+    t.integer "service_type", default: 0, null: false
+    t.string "record_type"
+    t.bigint "record_id"
+    t.string "content"
+    t.index ["created_at"], name: "index_contact_logs_on_created_at"
+    t.index ["from_number"], name: "index_contact_logs_on_from_number"
+    t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
+    t.index ["record_type", "record_id"], name: "index_contact_logs_on_record"
+    t.index ["sent"], name: "index_contact_logs_on_sent"
+    t.index ["service_type"], name: "index_contact_logs_on_service_type"
+    t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
+  end
+
+  create_table "divisions", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "code", null: false
+    t.bigint "owner_id", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "division_status"
     t.boolean "notify", default: false, null: false
     t.string "timezone"
@@ -269,26 +313,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.index ["user_id"], name: "index_system_messages_on_user_id"
   end
 
-  create_table "twilio_logs", force: :cascade do |t|
-    t.string "from_number", null: false
-    t.string "to_number", null: false
-    t.integer "from_user_id"
-    t.integer "to_user_id"
-    t.string "message", null: false
-    t.string "media_url"
-    t.boolean "success", default: true, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.boolean "opt_out_message_sent", default: false, null: false
-    t.index ["created_at"], name: "index_twilio_logs_on_created_at"
-    t.index ["from_number"], name: "index_twilio_logs_on_from_number"
-    t.index ["from_user_id"], name: "index_twilio_logs_on_from_user_id"
-    t.index ["opt_out_message_sent"], name: "index_twilio_logs_on_opt_out_message_sent"
-    t.index ["success"], name: "index_twilio_logs_on_success"
-    t.index ["to_number"], name: "index_twilio_logs_on_to_number"
-    t.index ["to_user_id"], name: "index_twilio_logs_on_to_user_id"
-  end
-
   create_table "user_clients", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "client_id", null: false
@@ -379,6 +403,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audits", "users"
+  add_foreign_key "contact_log_recipients", "contact_logs"
+  add_foreign_key "contact_log_recipients", "users", column: "to_user_id"
+  add_foreign_key "contact_logs", "users", column: "from_user_id"
   add_foreign_key "divisions", "categories"
   add_foreign_key "divisions", "users", column: "owner_id"
   add_foreign_key "notification_security_roles", "notification_types"
@@ -389,8 +416,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
   add_foreign_key "notifications", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
-  add_foreign_key "twilio_logs", "users", column: "from_user_id"
-  add_foreign_key "twilio_logs", "users", column: "to_user_id"
   add_foreign_key "user_clients", "clients"
   add_foreign_key "user_clients", "users"
   add_foreign_key "user_security_roles", "security_roles"
