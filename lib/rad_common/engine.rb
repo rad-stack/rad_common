@@ -18,7 +18,7 @@ module RadCommon
     require 'geocoder'
     require 'haml-rails'
     require 'hashids'
-    require 'jsbundling-rails'
+    # TODO: make this optional somehow? require 'jsbundling-rails'
     require 'jwt'
     require 'kaminari'
     require 'bootstrap4-kaminari-views'
