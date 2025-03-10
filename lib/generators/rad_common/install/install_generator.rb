@@ -6,6 +6,11 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
+        remove_file 'config/initializers/new_framework_defaults_7_0.rb'
+        remove_file 'app/models/application_record.rb'
+        remove_file '.hound.yml'
+        remove_file '.github/pull_request_template.md'
+
         standardize_date_methods
 
         # misc
@@ -53,10 +58,6 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/locales/devise.en.yml', 'config/locales/devise.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/simple_form.en.yml',
                   'config/locales/simple_form.en.yml'
-
-        # models
-        copy_file '../../../../../spec/dummy/app/models/application_record.rb',
-                  'app/models/application_record.rb'
 
         # specs
         # directory '../../../../../spec/shared/', 'spec/rad_common/'
