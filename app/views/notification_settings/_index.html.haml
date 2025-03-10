@@ -40,7 +40,7 @@
                                                     id: "notification_setting_email_#{setting_id_string}" },
                                       disabled: !notification_setting.notification_type.email_enabled?
 
-                    - if RadTwilio.new.twilio_enabled?
+                    - if RadConfig.twilio_enabled?
                       = f.input :sms, tooltip: 'Enable SMS (text message) notifications.',
                                       input_html: { class: 'ays-ignore',
                                                     id: "notification_setting_sms_#{setting_id_string}" },

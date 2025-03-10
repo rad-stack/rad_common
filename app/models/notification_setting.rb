@@ -66,7 +66,7 @@ class NotificationSetting < ApplicationRecord
     end
 
     def validate_sms_possible_app
-      return if RadTwilio.new.twilio_enabled? || !sms?
+      return if RadConfig.twilio_enabled? || !sms?
 
       errors.add(:sms, 'is not available for this application')
     end

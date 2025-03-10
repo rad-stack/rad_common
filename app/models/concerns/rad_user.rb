@@ -242,7 +242,7 @@ module RadUser
     end
 
     def validate_sms_mobile_phone
-      return if !RadTwilio.new.twilio_enabled? || mobile_phone.present?
+      return if !RadConfig.twilio_enabled? || mobile_phone.present?
       return if notification_settings.enabled.where(sms: true).none?
 
       errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
