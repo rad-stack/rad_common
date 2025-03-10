@@ -6,7 +6,6 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
-        remove_file 'app/views/layouts/_navigation.html.haml'
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
