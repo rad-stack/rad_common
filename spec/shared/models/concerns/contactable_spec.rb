@@ -58,20 +58,6 @@ RSpec.describe Contactable do
       end
     end
 
-    context 'with enhanced matching' do
-      let(:address_1) { '6450 Autumn Berry Cirlce' }
-      let(:address_2) { nil }
-      let(:city) { 'Jacksonville' }
-      let(:state) { 'FL' }
-      let(:zipcode) { '32258' }
-
-      xit 'standardizes' do
-        expect(company.valid?).to be true
-        expect(company.address_1).to eq('6450 Autumn Berry Cir')
-        expect(company.address_problems).to eq 'non-postal match using enhanced address matching'
-      end
-    end
-
     context 'with mixed case address' do
       let(:address_1) { '1376 Macarthur Street' }
       let(:address_2) { nil }
@@ -91,25 +77,6 @@ RSpec.describe Contactable do
       end
     end
 
-    context 'with post office box' do
-      let(:address_1) { 'Post Office Box 39' }
-      let(:address_2) { nil }
-      let(:city) { 'OrLando' }
-      let(:state) { 'fl' }
-      let(:zipcode) { '32816' }
-
-      xit 'standardizes' do
-        expect(company.valid?).to be true
-        expect(company.address_1).to eq('PO Box 39')
-        expect(company.address_2).to be_nil
-        expect(company.city).to eq('Orlando')
-        expect(company.state).to eq('FL')
-        expect(company.zipcode).to eq('32815')
-        expect(company.address_problems).to be_nil
-        expect(company.address_changes).to eq('Post Office Box 39, 32816')
-      end
-    end
-
     context 'with Secondary Address' do
       let(:address_1) { '4000 Central Florida Boulevard' }
       let(:address_2) { 'Suite 1000' }
@@ -126,18 +93,6 @@ RSpec.describe Contactable do
         expect(company.zipcode).to eq('32816')
         expect(company.address_problems).to be_nil
         expect(company.address_changes).to eq('4000 Central Florida Boulevard, Suite 1000')
-      end
-    end
-
-    context 'with not deliverable' do
-      let(:address_1) { '4000 Bro Bruh' }
-      let(:address_2) { nil }
-      let(:city) { 'Mordor' }
-      let(:state) { 'FL' }
-      let(:zipcode) { '32816' }
-
-      xit 'fails validation' do
-        expect(company.valid?).to be false
       end
     end
 
