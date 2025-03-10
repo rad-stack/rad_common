@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=OrLando&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=fl&street=4000%20Central%20Florida%20Boulevard&street2&urbanization&zipcode=32816
+    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=OrLando&county_source&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=fl&street=4000%20Central%20Florida%20Boulevard&street2&urbanization&zipcode=32816
     body:
       encoding: US-ASCII
       string: ''
@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.20.4)
+      - smartystreets (sdk:ruby@5.20.6)
       Host:
       - us-street.api.smarty.com
       Content-Type:
@@ -25,9 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 06 Mar 2025 14:36:02 GMT
+      - Sat, 08 Mar 2025 18:11:58 GMT
       X-Request-Id:
-      - '01956be2-866a-76c9-b7fd-69dbbacb857e'
+      - '019576f4-edde-73d6-8ec1-378fed2a9849'
       Transfer-Encoding:
       - chunked
       Vary:
@@ -39,5 +39,5 @@ http_interactions:
         Florida","street_suffix":"Blvd","city_name":"Orlando","default_city_name":"Orlando","state_abbreviation":"FL","zipcode":"32816","plus4_code":"8005","delivery_point":"00","delivery_point_check_digit":"7"},"metadata":{"record_type":"S","zip_type":"Unique","county_fips":"12095","county_name":"Orange","carrier_route":"C000","congressional_district":"10","rdi":"Commercial","elot_sequence":"0001","elot_sort":"A","latitude":28.59608,"longitude":-81.20403,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AAU1","active":"Y","footnotes":"N#Q#","enhanced_match":"postal-match"}}]
 
         '
-  recorded_at: Thu, 06 Mar 2025 14:36:02 GMT
+  recorded_at: Sat, 08 Mar 2025 18:11:58 GMT
 recorded_with: VCR 6.3.1
