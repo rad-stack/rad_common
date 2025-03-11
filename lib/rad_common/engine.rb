@@ -18,7 +18,7 @@ module RadCommon
     require 'geocoder'
     require 'haml-rails'
     require 'hashids'
-    require 'jsbundling-rails' unless RadConfig.react_app?
+    # require 'jsbundling-rails' unless RadConfig.react_app?
     require 'jwt'
     require 'kaminari'
     require 'bootstrap4-kaminari-views'
@@ -28,7 +28,7 @@ module RadCommon
     require 'prawn/table'
     require 'premailer/rails'
     require 'pretender'
-    require 'propshaft' unless RadConfig.react_app?
+    # require 'propshaft' unless RadConfig.react_app?
     require 'pundit'
     require 'sendgrid-ruby'
     require 'sentry-rails'
