@@ -51,6 +51,16 @@ module RadCommonRoutes
 
       resources :user_profiles, only: %i[show edit update] if RadConfig.user_profiles?
 
+      delete 'attachments/:id(.:format)', to: 'rad_common/attachments#destroy', as: :attachment
+
+      get 'attachments/:class_name/:id(.:format)/:variant(.:format)', to: 'rad_common/attachments#download_variant'
+      get 'attachments/:id(.:format)', to: 'rad_common/attachments#download'
+
+      get 'attachments/:class_name/:id(.:format)/:variant(.:format)/:filename(.:format)',
+          to: 'rad_common/attachments#download_variant'
+
+      get 'attachments/:id(.:format)/:filename(.:format)', to: 'rad_common/attachments#download'
+
       get 'contact_us', to: 'pages#contact_us'
       get 'terms', to: 'pages#terms'
       get 'privacy', to: 'pages#privacy'
