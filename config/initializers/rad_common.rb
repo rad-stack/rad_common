@@ -13,11 +13,6 @@ Rails.application.config.active_storage.variant_processor = :mini_magick
 
 Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
 
-unless RadConfig.react_app?
-  require 'jsbundling-rails'
-  require 'propshaft'
-end
-
 RadConfig.check_validity!
 
 Rails.application.routes.default_url_options[:host] = RadConfig.host_name!
