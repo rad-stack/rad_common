@@ -28,7 +28,6 @@ module RadCommon
     require 'prawn/table'
     require 'premailer/rails'
     require 'pretender'
-    require 'propshaft'
     require 'pundit'
     require 'sendgrid-ruby'
     require 'sentry-rails'
