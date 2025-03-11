@@ -15,7 +15,6 @@ module RadCommon
     require 'devise_invitable'
     require 'faker'
     require 'faraday'
-    require 'geocoder'
     require 'haml-rails'
     require 'hashids'
     require 'jsbundling-rails'
