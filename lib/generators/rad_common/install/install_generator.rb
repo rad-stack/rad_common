@@ -194,8 +194,8 @@ Seeder.new.seed!
 
         unless RadConfig.react_app?
           inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
-  gem 'jsbundling-rails'
-  gem 'propshaft'
+gem 'jsbundling-rails'
+gem 'propshaft'
           RUBY
           end
         end
