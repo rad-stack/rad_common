@@ -102,6 +102,11 @@ module RadCommon
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
                  'config/initializers/devise_security.rb'
 
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/config/initializers/assets.rb',
+                    'config/initializers/assets.rb'
+        end
+
         copy_file '../../../../../spec/dummy/config/initializers/simple_form.rb',
                   'config/initializers/simple_form.rb'
 
