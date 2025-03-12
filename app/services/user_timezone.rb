@@ -36,7 +36,14 @@ class UserTimezone
 
     def detected_timezone(ip_address)
       Rails.cache.fetch("ip_address_time_zone:#{ip_address}", expires_in: 1.week) do
-        raw_zone = Geocoder.search(ip_address).first.data['timezone']
+        geocoder_result = Geocoder.search(ip_address).first
+
+        if geocoder_result.blank?
+          Rails.logger.info "UserTimezone: IP Address lookup failed: #{ip_address}"
+          return
+        end
+
+        raw_zone = geocoder_result.data['timezone']
 
         if raw_zone.blank?
           Rails.logger.info "UserTimezone: IP Address not found: #{ip_address}"
