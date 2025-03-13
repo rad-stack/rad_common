@@ -199,7 +199,7 @@ RSpec.describe Contactable do
       let(:address_2) { nil }
       let(:city) { 'Mordor' }
       let(:state) { 'FL' }
-      let(:zipcode) { '32816' }
+      let(:zipcode) { '32751' }
 
       it 'fails validation' do
         expect(company.valid?).to be false
