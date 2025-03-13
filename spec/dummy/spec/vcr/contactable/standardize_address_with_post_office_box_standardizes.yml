@@ -25,9 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 13 Mar 2025 16:45:46 GMT
+      - Thu, 13 Mar 2025 16:39:39 GMT
       X-Request-Id:
-      - '01959065-d18c-7df9-beca-58e047b1bd27'
+      - '01959060-35dc-7ca3-a9e3-9837c9672abf'
       Transfer-Encoding:
       - chunked
       Vary:
@@ -39,5 +39,5 @@ http_interactions:
         Box","city_name":"Orlando","default_city_name":"Orlando","state_abbreviation":"FL","zipcode":"32815","plus4_code":"1039","delivery_point":"39","delivery_point_check_digit":"6"},"metadata":{"record_type":"P","zip_type":"POBox","county_fips":"12009","county_name":"Brevard","carrier_route":"B001","congressional_district":"10","rdi":"Residential","elot_sequence":"0001","elot_sort":"A","latitude":28.52435,"longitude":-80.65078,"precision":"Zip5","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"Y","dpv_no_stat":"Y","active":"Y","footnotes":"N#","enhanced_match":"postal-match"}}]
 
         '
-  recorded_at: Thu, 13 Mar 2025 16:45:46 GMT
+  recorded_at: Thu, 13 Mar 2025 16:49:27 GMT
 recorded_with: VCR 6.3.1

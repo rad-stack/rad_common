@@ -25,9 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 13 Mar 2025 16:45:47 GMT
+      - Thu, 13 Mar 2025 16:49:27 GMT
       X-Request-Id:
-      - '01959065-d3bd-7ca5-b8e4-aa8811c418a6'
+      - '01959069-317a-75fe-82cf-0e0a1c6a09c3'
       Transfer-Encoding:
       - chunked
       Vary:
@@ -38,5 +38,5 @@ http_interactions:
         St Apt 1","last_line":"Oakland CA 94606-4138","delivery_point_barcode":"946064138216","smarty_key":"890771184","components":{"primary_number":"1921","street_predirection":"E","street_name":"24th","street_suffix":"St","secondary_number":"1","secondary_designator":"Apt","city_name":"Oakland","default_city_name":"Oakland","state_abbreviation":"CA","zipcode":"94606","plus4_code":"4138","delivery_point":"21","delivery_point_check_digit":"6"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"06001","county_name":"Alameda","carrier_route":"C027","congressional_district":"12","rdi":"Residential","elot_sequence":"0116","elot_sort":"A","latitude":37.79321,"longitude":-122.23336,"precision":"Zip9","time_zone":"Pacific","utc_offset":-8,"dst":true},"analysis":{"dpv_match_code":"S","dpv_footnotes":"AABBCC","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","footnotes":"N#","enhanced_match":"postal-match,unknown-secondary,ignored-input"}}]
 
         '
-  recorded_at: Thu, 13 Mar 2025 16:45:47 GMT
+  recorded_at: Thu, 13 Mar 2025 16:49:27 GMT
 recorded_with: VCR 6.3.1

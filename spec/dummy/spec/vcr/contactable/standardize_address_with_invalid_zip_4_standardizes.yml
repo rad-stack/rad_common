@@ -25,9 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 13 Mar 2025 16:45:46 GMT
+      - Thu, 13 Mar 2025 16:48:31 GMT
       X-Request-Id:
-      - '01959065-cf25-7431-a0cc-de54161d595c'
+      - '01959068-54a3-7596-8f18-f9fac0f3a68e'
       Transfer-Encoding:
       - chunked
       Vary:
@@ -39,5 +39,5 @@ http_interactions:
         City","default_city_name":"Panama City","state_abbreviation":"FL","zipcode":"32404","plus4_code":"5273","delivery_point":"10","delivery_point_check_digit":"9"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12005","county_name":"Bay","carrier_route":"R008","congressional_district":"02","rdi":"Residential","elot_sequence":"0071","elot_sort":"A","latitude":30.29684,"longitude":-85.57602,"precision":"Zip9","time_zone":"Central","utc_offset":-6,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","enhanced_match":"postal-match"}}]
 
         '
-  recorded_at: Thu, 13 Mar 2025 16:45:46 GMT
+  recorded_at: Thu, 13 Mar 2025 16:49:26 GMT
 recorded_with: VCR 6.3.1
