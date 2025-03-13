@@ -161,7 +161,7 @@ RSpec.describe Contactable do
       let(:address_2) { nil }
       let(:city) { 'OrLando' }
       let(:state) { 'fl' }
-      let(:zipcode) { '32816' }
+      let(:zipcode) { '32815' }
 
       it 'standardizes' do
         expect(company.valid?).to be true
@@ -171,7 +171,7 @@ RSpec.describe Contactable do
         expect(company.state).to eq('FL')
         expect(company.zipcode).to eq('32815')
         expect(company.address_problems).to be_nil
-        expect(company.address_changes).to eq('Post Office Box 39, 32816')
+        expect(company.address_changes).to eq('Post Office Box 39')
       end
     end
 

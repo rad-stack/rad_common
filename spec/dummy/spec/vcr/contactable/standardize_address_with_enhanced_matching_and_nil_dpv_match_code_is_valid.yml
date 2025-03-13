@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.17.2)
+      - smartystreets (sdk:ruby@5.20.4)
       Host:
       - us-street.api.smarty.com
       Content-Type:
@@ -25,7 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 21 Jun 2024 18:24:45 GMT
+      - Thu, 13 Mar 2025 16:16:41 GMT
+      X-Request-Id:
+      - '0195904b-2f2f-7c85-bc45-ea185f4c57f2'
       Transfer-Encoding:
       - chunked
       Vary:
@@ -33,9 +35,9 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"331 Theater
-        Rd","last_line":"Onalaska WI 54650-8524","delivery_point_barcode":"546508524317","components":{"primary_number":"331","street_name":"Theater","street_suffix":"Rd","city_name":"Onalaska","default_city_name":"Onalaska","state_abbreviation":"WI","zipcode":"54650","plus4_code":"8524","delivery_point":"31","delivery_point_check_digit":"7"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"55063","county_name":"La
-        Crosse","carrier_route":"R017","congressional_district":"03","rdi":"Commercial","elot_sequence":"0184","elot_sort":"A","latitude":43.87811,"longitude":-91.19573,"precision":"Zip9","time_zone":"Central","utc_offset":-6,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","enhanced_match":"postal-match"}}]
+        Rd","last_line":"Onalaska WI 54650-8524","delivery_point_barcode":"546508524317","smarty_key":"256512555","components":{"primary_number":"331","street_name":"Theater","street_suffix":"Rd","city_name":"Onalaska","default_city_name":"Onalaska","state_abbreviation":"WI","zipcode":"54650","plus4_code":"8524","delivery_point":"31","delivery_point_check_digit":"7"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"55063","county_name":"La
+        Crosse","carrier_route":"R018","congressional_district":"03","rdi":"Commercial","elot_sequence":"0131","elot_sort":"A","latitude":43.87811,"longitude":-91.19573,"precision":"Zip9","time_zone":"Central","utc_offset":-6,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","enhanced_match":"postal-match"}}]
 
         '
-  recorded_at: Fri, 21 Jun 2024 18:24:45 GMT
-recorded_with: VCR 6.2.0
+  recorded_at: Thu, 13 Mar 2025 16:17:45 GMT
+recorded_with: VCR 6.3.1

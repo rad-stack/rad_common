@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=OrLando&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=fl&street=Post%20Office%20Box%2039&street2&urbanization&zipcode=32816
+    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=OrLando&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=fl&street=Post%20Office%20Box%2039&street2&urbanization&zipcode=32815
     body:
       encoding: US-ASCII
       string: ''
@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.17.2)
+      - smartystreets (sdk:ruby@5.20.4)
       Host:
       - us-street.api.smarty.com
       Content-Type:
@@ -25,7 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 21 Jun 2024 18:24:46 GMT
+      - Thu, 13 Mar 2025 16:17:45 GMT
+      X-Request-Id:
+      - '0195904c-2968-7c25-9b6a-19bf16d63d4c'
       Transfer-Encoding:
       - chunked
       Vary:
@@ -33,9 +35,9 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"PO Box 39","last_line":"Orlando
-        FL 32815-1039","delivery_point_barcode":"328151039396","components":{"primary_number":"39","street_name":"PO
-        Box","city_name":"Orlando","default_city_name":"Orlando","state_abbreviation":"FL","zipcode":"32815","plus4_code":"1039","delivery_point":"39","delivery_point_check_digit":"6"},"metadata":{"record_type":"P","zip_type":"POBox","county_fips":"12009","county_name":"Brevard","carrier_route":"B001","congressional_district":"10","rdi":"Residential","elot_sequence":"0001","elot_sort":"A","latitude":28.52435,"longitude":-80.65078,"precision":"Zip5","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"Y","dpv_no_stat":"Y","active":"Y","footnotes":"A#N#","enhanced_match":"postal-match"}}]
+        FL 32815-1039","delivery_point_barcode":"328151039396","smarty_key":"2060672047","components":{"primary_number":"39","street_name":"PO
+        Box","city_name":"Orlando","default_city_name":"Orlando","state_abbreviation":"FL","zipcode":"32815","plus4_code":"1039","delivery_point":"39","delivery_point_check_digit":"6"},"metadata":{"record_type":"P","zip_type":"POBox","county_fips":"12009","county_name":"Brevard","carrier_route":"B001","congressional_district":"10","rdi":"Residential","elot_sequence":"0001","elot_sort":"A","latitude":28.52435,"longitude":-80.65078,"precision":"Zip5","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"Y","dpv_no_stat":"Y","active":"Y","footnotes":"N#","enhanced_match":"postal-match"}}]
 
         '
-  recorded_at: Fri, 21 Jun 2024 18:24:46 GMT
-recorded_with: VCR 6.2.0
+  recorded_at: Thu, 13 Mar 2025 16:17:45 GMT
+recorded_with: VCR 6.3.1

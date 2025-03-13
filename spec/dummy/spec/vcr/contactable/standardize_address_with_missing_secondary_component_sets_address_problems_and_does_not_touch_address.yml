@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.17.2)
+      - smartystreets (sdk:ruby@5.20.4)
       Host:
       - us-street.api.smarty.com
       Content-Type:
@@ -25,7 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 21 Jun 2024 18:24:47 GMT
+      - Thu, 13 Mar 2025 16:17:45 GMT
+      X-Request-Id:
+      - '0195904c-2b52-72dd-a064-d2c017602f91'
       Transfer-Encoding:
       - chunked
       Vary:
@@ -33,8 +35,8 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"3615 DuPont
-        Ave","last_line":"Jacksonville FL 32217-2790","delivery_point_barcode":"322172790999","components":{"primary_number":"3615","street_name":"DuPont","street_suffix":"Ave","city_name":"Jacksonville","default_city_name":"Jacksonville","state_abbreviation":"FL","zipcode":"32217","plus4_code":"2790","delivery_point":"99","delivery_point_check_digit":"9"},"metadata":{"record_type":"H","zip_type":"Standard","county_fips":"12031","county_name":"Duval","carrier_route":"C042","congressional_district":"05","building_default_indicator":"Y","rdi":"Commercial","elot_sequence":"0400","elot_sort":"A","latitude":30.2555,"longitude":-81.6241,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"D","dpv_footnotes":"AAN1","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"Y","active":"Y","footnotes":"H#N#","enhanced_match":"postal-match,missing-secondary"}}]
+        Ave","last_line":"Jacksonville FL 32217-2790","delivery_point_barcode":"322172790999","smarty_key":"1162272513","components":{"primary_number":"3615","street_name":"DuPont","street_suffix":"Ave","city_name":"Jacksonville","default_city_name":"Jacksonville","state_abbreviation":"FL","zipcode":"32217","plus4_code":"2790","delivery_point":"99","delivery_point_check_digit":"9"},"metadata":{"record_type":"H","zip_type":"Standard","county_fips":"12031","county_name":"Duval","carrier_route":"C042","congressional_district":"05","building_default_indicator":"Y","rdi":"Commercial","elot_sequence":"0400","elot_sort":"A","latitude":30.2555,"longitude":-81.6241,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"D","dpv_footnotes":"AAN1","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"Y","active":"Y","footnotes":"H#N#","enhanced_match":"postal-match,missing-secondary"}}]
 
         '
-  recorded_at: Fri, 21 Jun 2024 18:24:47 GMT
-recorded_with: VCR 6.2.0
+  recorded_at: Thu, 13 Mar 2025 16:17:45 GMT
+recorded_with: VCR 6.3.1
