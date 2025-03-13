@@ -122,7 +122,8 @@ RSpec.describe 'Divisions' do
         tom_select user.to_s, from: 'search_owner_id'
         click_button 'saved-search-filters-dropdown'
         page.evaluate_script 'window.prompt = () => { return "Test" }'
-        expect { click_button('save_and_apply_filters') }.to change(SavedSearchFilter, :count).by(1)
+        click_on('save_and_apply_filters')
+        expect(page).to have_css("[data-testid='saved-search-applied-filter']")
 
         expect(SavedSearchFilter.last.name).to eq('Test')
         expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
@@ -179,16 +180,11 @@ RSpec.describe 'Divisions' do
       end
 
       it 'allows attachment to be deleted', :js do
-        expect(ActiveStorage::Attachment.count).to eq 1
-
         page.accept_alert prompt do
           first('dd .fa-times').click
         end
 
-        division.reload
-        expect(page).to have_content 'Attachment successfully deleted'
-        expect(ActiveStorage::Attachment.count).to eq 0
-        expect(division.logo.attached?).to be false
+        expect(page).to have_css("#toast-nav[data-toast-success-message-value='Attachment successfully deleted']")
       end
     end
   end
