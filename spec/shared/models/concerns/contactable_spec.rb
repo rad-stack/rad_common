@@ -203,6 +203,7 @@ RSpec.describe Contactable do
 
       it 'fails validation' do
         expect(company.valid?).to be false
+        expect(company.errors.full_messages).to include 'Address 1 is not a valid address'
       end
     end
 
