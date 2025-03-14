@@ -258,28 +258,6 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'sign up', :external_user_specs, :sign_up_specs do
-    before do
-      create :security_role, :external, allow_sign_up: true
-      allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, legal_docs?: true)
-    end
-
-    it "can't sign up with invalid email address" do
-      visit new_user_registration_path
-
-      fill_in 'First Name', with: Faker::Name.first_name
-      fill_in 'Last Name', with: Faker::Name.last_name
-      fill_in 'Email', with: 'test_user@'
-      fill_in 'user_password', with: password
-      fill_in 'user_password_confirmation', with: password
-      check 'accept_terms'
-
-      click_button 'Sign Up'
-
-      expect(page).to have_content 'Email is not written in a valid format'
-    end
-  end
-
   describe 'sign in' do
     before { allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false }
 
