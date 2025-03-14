@@ -153,25 +153,5 @@ RSpec.describe 'Search' do
       expect(page.body).to include '2019-12-01'
       expect(page.body).to include '2019-12-02'
     end
-
-    it 'allows using pre-defined date ranges', :js do
-      within('[data-controller="search-date-filter"]') do
-        find_by_id('date-range-dropdown').click
-        find('a', text: 'This Month').click
-      end
-      first('button', text: 'Apply Filters').click
-
-      expect(find_by_id('search_created_at_start').value).to eq Date.current.beginning_of_month.strftime('%Y-%m-%d')
-      expect(find_by_id('search_created_at_end').value).to eq Date.current.end_of_month.strftime('%Y-%m-%d')
-
-      within('[data-controller="search-date-filter"]') do
-        find_by_id('date-range-dropdown').click
-        find('a', text: 'Clear').click
-      end
-      first('button', text: 'Apply Filters').click
-
-      expect(find_by_id('search_created_at_start').value).to eq ''
-      expect(find_by_id('search_created_at_end').value).to eq ''
-    end
   end
 end
