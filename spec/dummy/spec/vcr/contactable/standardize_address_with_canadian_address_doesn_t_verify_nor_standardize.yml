@@ -1,0 +1,83 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Montreal&county_source&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=QC&street=12200%20Boulevard%20Laurentien&street2&urbanization&zipcode=
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - smartystreets (sdk:ruby@5.20.6)
+      Host:
+      - us-street.api.smarty.com
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 14 Mar 2025 12:27:54 GMT
+      X-Request-Id:
+      - '019594a0-15ac-7487-9eab-3eafbf97d83b'
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"12200 Boulevard
+        Laurentien","last_line":"Montreal","components":{"primary_number":"12200","street_name":"Boulevard
+        Laurentien","city_name":"Montreal"},"metadata":{"precision":"Unknown"},"analysis":{"dpv_footnotes":"A1","active":"Y","footnotes":"C#","enhanced_match":"none"}}]
+
+        '
+  recorded_at: Fri, 14 Mar 2025 12:28:58 GMT
+- request:
+    method: get
+    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=Montreal&county_source&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=QC&street=12200%20Boulevard%20Laurentien&street2&urbanization&zipcode=
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - smartystreets (sdk:ruby@5.20.6)
+      Host:
+      - us-street.api.smarty.com
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 14 Mar 2025 12:28:58 GMT
+      X-Request-Id:
+      - '019594a1-1233-7b52-9a83-d6a1439550b5'
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"12200 Boulevard
+        Laurentien","last_line":"Montreal","components":{"primary_number":"12200","street_name":"Boulevard
+        Laurentien","city_name":"Montreal"},"metadata":{"precision":"Unknown"},"analysis":{"dpv_footnotes":"A1","active":"Y","footnotes":"C#","enhanced_match":"none"}}]
+
+        '
+  recorded_at: Fri, 14 Mar 2025 12:28:58 GMT
+recorded_with: VCR 6.3.1
