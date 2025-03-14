@@ -18,7 +18,10 @@ class LoginActivitySearch < RadCommon::Search
          type: RadCommon::DateFilter },
        { column: 'identity',
          type: RadCommon::LikeFilter },
-       { column: 'success', input_label: 'Success?', type: RadCommon::BooleanFilter },
+       { input_label: 'Login Status',
+         name: :status,
+         scope_values: { Failure: :failure, Success: :successful },
+         blank_value_label: 'All' },
        { input_label: 'Failure Reason',
          column: :failure_reason,
          options: failure_reasons,
@@ -33,18 +36,14 @@ class LoginActivitySearch < RadCommon::Search
     def sort_columns_def
       [{ label: 'When', column: 'created_at', direction: 'desc', default: true },
        { label: 'Identity', column: 'identity' },
-       { label: 'Successful' },
-       { label: 'Failed' },
+       { label: 'Success' },
+       { label: 'Failure' },
        { label: 'IP', column: 'ip' },
        { label: 'Agent', column: 'user_agent' },
        { column: 'referrer' }]
     end
 
     def failure_reasons
-      Pundit.policy_scope!(current_user, LoginActivity)
-            .failed
-            .select(:failure_reason)
-            .group(:failure_reason)
-            .pluck(:failure_reason)
+      Pundit.policy_scope!(current_user, LoginActivity).failure.select(:failure_reason).distinct.map(&:failure_reason)
     end
 end

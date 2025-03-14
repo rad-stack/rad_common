@@ -1,14 +1,13 @@
 class GlobalAutocomplete
   include RadCommon::ApplicationHelper
 
-  attr_reader :params, :search_scopes, :user, :mode
+  attr_reader :params, :search_scopes, :user
   attr_accessor :current_scope
 
-  def initialize(params, search_scopes, user, mode)
+  def initialize(params, search_scopes, user)
     @params = params
     @search_scopes = search_scopes
     @current_scope = selected_scope
-    @mode = mode
     validate_global_search_scope
     @user = user
   end
@@ -33,23 +32,35 @@ class GlobalAutocomplete
     results.uniq { |result| [result[:model_name], result[:id]] }
   end
 
-  def base_autocomplete_collection(scope)
-    return [] unless scope && policy_ok?
-
-    self.current_scope = scope
-    order = scope[:query_order] || 'created_at DESC'
-    query = Pundit.policy_scope!(user, klass)
-    query = query.joins(joins) if joins
-    query.order(order)
+  def self.check_policy_klass(user, klass)
+    if user.portal?
+      [:portal, klass]
+    else
+      klass
+    end
   end
 
   private
 
     def autocomplete_result(scope)
-      query = base_autocomplete_collection(scope)
-      return [] if query.empty?
+      return [] unless scope && Pundit.policy!(user, GlobalAutocomplete.check_policy_klass(user, klass)).global_search?
 
-      query = query.where(where_query, search: "%#{params[:term]}%")
+      self.current_scope = scope
+      order = scope[:query_order] || 'created_at DESC'
+      query = Pundit.policy_scope!(user, GlobalAutocomplete.check_policy_klass(user, klass))
+      query = query.joins(joins) if joins
+      search_scope = case scope[:query_wildcard]
+                     when :beginning
+                       "%#{params[:term]}"
+                     when :end
+                       "#{params[:term]}%"
+                     when :none
+                       params[:term]
+                     else
+                       "%#{params[:term]}%"
+                     end
+
+      query = query.where(where_query, search: search_scope).order(order)
 
       if params[:excluded_ids].present?
         # TODO: this will fail when scope has joins due to ambiguous id column
@@ -57,7 +68,7 @@ class GlobalAutocomplete
         query = query.where.not(id: params[:excluded_ids])
       end
 
-      query = query.limit(params[:limit].presence || 50)
+      query = query.limit(50)
       search_label = scope[:search_label] || :to_s
 
       query.map do |record|
@@ -67,7 +78,6 @@ class GlobalAutocomplete
           id: record.id,
           label: record.send(search_label),
           value: record.to_s,
-          active: !record.respond_to?(:active?) || record.active?,
           scope_description: scope[:description] }
       end
     end
@@ -167,15 +177,5 @@ class GlobalAutocomplete
 
     def scope_with_where?(scope)
       (scope[:columns].present? && scope[:columns].any?) || scope[:query_where].present?
-    end
-
-    def policy_ok?
-      if mode == :global_search
-        Pundit.policy!(user, klass.new).global_search?
-      elsif mode == :searchable_association
-        Pundit.policy!(user, klass.new).searchable_association?
-      else
-        raise "invalid mode: #{mode}"
-      end
     end
 end

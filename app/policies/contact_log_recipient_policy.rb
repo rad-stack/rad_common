@@ -1,2 +1,0 @@
-class ContactLogRecipientPolicy < ContactLogPolicy
-end

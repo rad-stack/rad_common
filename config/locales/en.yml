@@ -1,15 +1,8 @@
 en:
   communication_sms_opt_in: 'Your communication preferences have been changed, we will start sending you text message notifications.'
-  navigation:
-    my_account: My Account
+  communication_mms_failure: 'Sorry we are unable to process your request please contact customer service for assistance.'
   activerecord:
     attributes:
-      company:
-        valid_user_domains: 'Valid User Email Domains'
-      contact_log_recipient:
-        email_types:
-          cc: 'CC'
-          bcc: 'BCC'
       system_message:
         send_tos:
           preview: 'Me (preview)'
@@ -17,10 +10,7 @@ en:
           email: 'Email'
           sms: 'SMS'
       user:
-        external: 'External User?'
-        twilio_verify_enabled: 'Two Factor Auth'
-      security_role:
-        external: 'External User?'
+        external: 'External user?'
   faker:
     phone_number:
       formats: ['(###) ###-####']
