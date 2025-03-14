@@ -245,6 +245,10 @@ class RadConfig
       boolean_config_item! :disable_invite
     end
 
+    def canadian_addresses?
+      false
+    end
+
     def shared_database?
       boolean_config_item! :shared_database
     end
