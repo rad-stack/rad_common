@@ -400,7 +400,12 @@ gem 'propshaft'
         end
 
         def install_github_workflow
-          copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          if RadConfig.react_app?
+            copy_file '../../../../../.github/workflows/rspec_tests_react.yml', '.github/workflows/rspec_tests.yml'
+          else
+            copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          end
+
           copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
           copy_file '../../../../../.github/workflows/generate_coverage_report.yml',
                     '.github/workflows/generate_coverage_report.yml'
@@ -418,11 +423,13 @@ gem 'propshaft'
                       "#{installed_app_name}_development"
           end
 
-          gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
-          gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
-          gsub_file '.github/workflows/rspec_tests.yml',
-                   "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
-                   'bin/rc_parallel_rspec'
+          unless RadConfig.react_app?
+            gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
+            gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
+            gsub_file '.github/workflows/rspec_tests.yml',
+                     "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
+                     'bin/rc_parallel_rspec'
+          end
         end
 
         def migrate_webpacker_to_esbuild
