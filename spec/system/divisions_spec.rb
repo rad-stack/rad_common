@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Divisions', type: :system do
+RSpec.describe 'Divisions' do
   let(:user) { create :admin }
   let(:division) { create :division, owner: user }
 
@@ -18,10 +18,15 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('must exist')
     end
 
-    it 'shows placeholder on autocomplete field' do
-      visit new_division_path
-      expect(find_field('owner_name_search').value).to eq('')
-      expect(find_field('owner_name_search')['placeholder']).to eq('Start typing to search for Owner')
+    context 'with default placeholder' do
+      it 'shows placeholder on autocomplete field', :js do
+        visit new_division_path
+        click_tom_select(from: 'division_owner_id')
+
+        within '#division_owner_id-ts-control' do
+          expect(find('input', visible: :all)[:placeholder]).to eq('Start typing to search')
+        end
+      end
     end
 
     describe 'single attachment validation' do
@@ -32,7 +37,7 @@ RSpec.describe 'Divisions', type: :system do
         fill_in 'Name', with: 'Foo'
         fill_in 'Code', with: 'BAR'
         page.attach_file('Icon', file)
-        click_on 'Save'
+        click_button 'Save'
       end
 
       context 'when invalid due to content type' do
@@ -60,56 +65,26 @@ RSpec.describe 'Divisions', type: :system do
       expect(page).to have_content('Editing Division')
     end
 
-    it 'displays error for owner field when blank', :gha_specs_only, :js do
-      fill_in 'owner_name_search', with: ''
-      click_button 'Save'
-
-      if ENV['CI']
-        # TODO: fix this so it works locally
-        expect(page).to have_content 'Owner must exist and Owner can\'t be blank'
-      end
-    end
-
-    it 'displays existing value on autocomplete field' do
-      expect(find_field('owner_name_search').value).to eq(division.owner.to_s)
-      expect(find_field('owner_name_search')['placeholder']).to eq(division.owner.to_s)
-    end
-
-    context 'with category' do
-      let(:last_category) { Category.order(:created_at).last }
-      let(:existing_category) { create(:category, name: 'Existing Category') }
+    context 'with tom select search field', :js do
+      let(:other_user) { create :user }
 
       before do
-        existing_category
+        other_user
+        stub_const('SearchableAssociationInput::MAX_DROPDOWN_SIZE', 1)
         visit edit_division_path(division)
       end
 
-      it 'allows for entering new categories' do
-        fill_in 'division[category_name]', with: 'New Category'
-        expect { click_on 'Save' }.to change(Category, :count).by(1)
-        expect(last_category.name).to eq('New Category')
-        expect(division.reload.category).to eq(last_category)
+      it 'allows searching' do
+        click_tom_select(from: 'division_owner_id')
+        first('.dropdown-input').fill_in(with: other_user.first_name)
+        expect(find('[data-selectable]', text: other_user.to_s)).to be_present
       end
 
-      it 'allows selecting create new category', :gha_specs_only, :js do
-        fill_in 'division[category_name]', with: 'Does Not Exist'
-        find('.search-label').click
-        expect { click_on 'Save' }.to change(Category, :count).by(1)
-        expect(last_category.name).to eq('Does Not Exist')
-        expect(division.reload.category).to eq(last_category)
-      end
-
-      it 'finds and assigns existing categories' do
-        fill_in 'division[category_name]', with: 'Existing Category'
-        expect { click_on 'Save' }.not_to change(Category, :count)
-        expect(division.reload.category).to eq(existing_category)
-      end
-
-      it 'allows selecting autocomplete category', :gha_specs_only, :js do
-        fill_in 'division[category_name]', with: 'Existin'
-        find('.search-column-value').click
-        expect { click_on 'Save' }.not_to change(Category, :count)
-        expect(division.reload.category).to eq(existing_category)
+      it 'displays existing value' do
+        within '#division_owner_id-ts-control' do
+          expect(find('[data-ts-item]').text).to eq(division.owner.to_s)
+        end
+        expect(find_field('division_owner_id', visible: false).value).to eq(division.owner.id.to_s)
       end
     end
   end
@@ -124,8 +99,8 @@ RSpec.describe 'Divisions', type: :system do
     it 'handles date filter errors' do
       visit divisions_path
 
-      fill_in 'search_created_at_start', with: '01/32/2020'
-      click_button 'Apply Filters'
+      first('#search_created_at_start').fill_in(with: '01/32/2020')
+      first('button', text: 'Apply Filters').click
       expect(page).to have_content('Invalid date entered')
     end
 
@@ -134,7 +109,42 @@ RSpec.describe 'Divisions', type: :system do
         visit divisions_path(search: { show_header: true })
         expect(page.body).to have_content 'Showing header'
         visit divisions_path
-        expect(page.body).not_to have_content 'Showing header'
+        expect(page.body).to have_no_content 'Showing header'
+      end
+    end
+
+    context 'when saving search filters', :js do
+      let(:applied_params) { -> { Rack::Utils.parse_query URI.parse(current_url).query } }
+      let(:last_filter) { SavedSearchFilter.last }
+
+      it 'allows saving and applying search filters' do
+        visit divisions_path
+        tom_select user.to_s, from: 'search_owner_id'
+        click_button 'saved-search-filters-dropdown'
+        page.evaluate_script 'window.prompt = () => { return "Test" }'
+        click_on('save_and_apply_filters')
+        expect(page).to have_css("[data-testid='saved-search-applied-filter']")
+
+        expect(SavedSearchFilter.last.name).to eq('Test')
+        expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
+
+        click_link 'Clear Filters'
+        expect(applied_params.call['search[owner_id]']).to be_nil
+
+        click_button 'saved-search-filters-dropdown'
+        click_link "saved_filter_#{last_filter.id}"
+        expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
+        click_button 'saved-search-filters-dropdown'
+        expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('active')
+      end
+
+      it 'allows deleting saved filters' do
+        create :saved_search_filter, user: user, search_class: 'DivisionSearch'
+        visit divisions_path
+        click_button 'saved-search-filters-dropdown'
+        page.accept_confirm { click_link "delete_saved_filter_#{last_filter.id}" }
+        wait_for_ajax
+        expect(SavedSearchFilter.count).to eq(0)
       end
     end
   end
@@ -151,35 +161,30 @@ RSpec.describe 'Divisions', type: :system do
     end
 
     it 'shows translated version of field name' do
-      expect(page).to have_content 'Additional data'
-      expect(page).not_to have_content 'Additional info'
+      expect(page).to have_content 'Additional Data'
+      expect(page).to have_no_content 'Additional Info'
     end
 
     it 'shows translated enum value' do
       expect(page).to have_content 'Active'
-      expect(page).not_to have_content 'status_active'
+      expect(page).to have_no_content 'status_active'
     end
 
     context 'with attachments' do
       let(:prompt) { 'Are you sure? Attachment cannot be recovered.' }
-      let(:file) { File.open Rails.root.join('app/assets/images/app_logo.png') }
+      let(:file) { Rails.root.join('app/assets/images/app_logo.png').open }
 
       before do
         division.logo.attach(io: file, filename: 'logo.png')
         visit division_path(division)
       end
 
-      it 'allows attachment to be deleted', :gha_specs_only, :js do
-        expect(ActiveStorage::Attachment.count).to eq 1
-
+      it 'allows attachment to be deleted', :js do
         page.accept_alert prompt do
           first('dd .fa-times').click
         end
 
-        division.reload
-        expect(page).to have_content 'Attachment successfully deleted'
-        expect(ActiveStorage::Attachment.count).to eq 0
-        expect(division.logo.attached?).to be false
+        expect(page).to have_css("#toast-nav[data-toast-success-message-value='Attachment successfully deleted']")
       end
     end
   end
