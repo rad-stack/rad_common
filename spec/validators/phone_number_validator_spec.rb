@@ -60,7 +60,7 @@ RSpec.describe PhoneNumberValidator do
     let(:mobile_phone) { create :phone_number, :mobile }
 
     before do
-      allow_any_instance_of(RadTwilio).to receive(:twilio_enabled?).and_return true
+      allow(RadConfig).to receive(:twilio_enabled?).and_return true
 
       allow(RadConfig).to receive(:twilio_phone_number!)
         .and_return RadConfig.secret_config_item!(:twilio_alt_phone_number)

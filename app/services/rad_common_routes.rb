@@ -32,6 +32,8 @@ module RadCommonRoutes
           get :permission, on: :collection
         end
 
+        resources :contact_logs, only: %i[index show]
+        resources :contact_log_recipients, only: :show
         resources :user_security_roles, only: :show
         resources :user_clients, only: %i[create destroy]
       end

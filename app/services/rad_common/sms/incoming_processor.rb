@@ -76,9 +76,9 @@ module RadCommon
         end
 
         def log_sms!
-          @log = TwilioLog.create! to_number: RadConfig.twilio_phone_number!,
-                                   from_number: @phone_number,
-                                   message: @incoming_message
+          @log = ContactLog.create! to_number: RadConfig.twilio_phone_number!,
+                                    from_number: @phone_number,
+                                    message: @incoming_message
         end
 
         def get_attachments
@@ -103,9 +103,9 @@ module RadCommon
         end
 
         def log_mms!
-          @log = TwilioLog.new to_number: RadConfig.twilio_phone_number!,
-                               from_number: @phone_number,
-                               message: @incoming_message.presence || 'MMS'
+          @log = ContactLog.new to_number: RadConfig.twilio_phone_number!,
+                                from_number: @phone_number,
+                                message: @incoming_message.presence || 'MMS'
 
           @attachments.each do |attachment|
             @log.media_url = attachment[:url]
