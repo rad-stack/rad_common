@@ -6,33 +6,97 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
+        remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.react_app?
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
         remove_file '.github/pull_request_template.md'
 
+        add_crawling_config
+        install_procfile
         standardize_date_methods
+        install_database_yml
+        install_github_workflow
+        update_seeder_method
+        replace_webdrivers_gem_with_selenium
+        add_rad_config_setting 'last_first_user', 'false'
+        add_rad_config_setting 'legacy_rails_config', 'false'
+        remove_rad_factories
+
+        search_and_replace '= f.error_notification', '= rad_form_errors f'
+        search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
+        gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
+        gsub_file 'Gemfile', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
+        gsub_file 'Gemfile.lock', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
 
         # misc
-        # copy_file '../../../../../spec/dummy/package.json', 'package.json'
-        # copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
+        merge_package_json unless RadConfig.react_app?
+        copy_custom_github_actions
+        copy_custom_github_matrix
+        copy_file '../../../../../.ruby-version', '.ruby-version'
+        copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
+
+        copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
+        copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
-        # copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
+        copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
-        # copy_file '../../../../../spec/dummy/app/javascript/packs/application.js', 'app/javascript/packs/application.js'
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
+        end
+
+        migrate_webpacker_to_esbuild
+
+        migrate_to_tom_select
+
+        copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
+        copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
+        copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
+                 'public/406-unsupported-browser.html'
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/app/javascript/application.js',
+                    'app/javascript/application.js'
+
+          unless File.exist? 'app/javascript/controllers/app_specific/index.js'
+            copy_file '../../../../../spec/dummy/app/javascript/controllers/app_specific/index.js',
+                     'app/javascript/controllers/app_specific/index.js'
+          end
+          copy_file '../../../../../spec/dummy/app/javascript/controllers/index.js',
+                   'app/javascript/controllers/index.js'
+          copy_file '../../../../../spec/dummy/app/javascript/controllers/application.js',
+                    'app/javascript/controllers/application.js'
+        end
+
         directory '../../../../../.bundle', '.bundle'
 
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
+        copy_file '../../../../../.sniff.yml', '.sniff.yml'
         copy_file '../../../../../.eslintrc', '.eslintrc'
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
-        copy_file '../rubocop.txt', '.rubocop.yml'
 
         # config
-        copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
-        copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
-        # directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
-        directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
+        unless RadConfig.storage_config_override?
+          copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        end
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+          gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
+
+          if !RadConfig.config_item(:legacy_rails_config).nil? && RadConfig.legacy_rails_config?
+            gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
+          end
+        end
+
+        copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
+
+        unless RadConfig.react_app?
+          directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
+        end
+
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
@@ -41,36 +105,35 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/initializers/simple_form.rb',
                   'config/initializers/simple_form.rb'
 
-        # copy_file '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb',
-        #          'config/initializers/simple_form_bootstrap.rb'
+        copy_file '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb',
+                  'config/initializers/simple_form_bootstrap.rb'
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
                   'config/initializers/simple_form_components.rb'
 
         # bin
         directory '../../../../../spec/dummy/bin/', 'bin/'
+        gsub_file 'bin/setup', 'dummy', installed_app_name # TODO: Remove in Rails 8
 
         # locales
         copy_file '../../../../../spec/dummy/config/locales/devise.twilio_verify.en.yml',
-                 'config/locales/devise.twilio_verify.en.yml'
+                  'config/locales/devise.twilio_verify.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/devise_invitable.en.yml',
                   'config/locales/devise_invitable.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/devise.en.yml', 'config/locales/devise.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/simple_form.en.yml',
                   'config/locales/simple_form.en.yml'
 
-        # specs
-        # directory '../../../../../spec/shared/', 'spec/rad_common/'
-        # directory '../../../../../spec/factories/rad_common/', 'spec/factories/rad_common/', exclude_pattern: /clients.rb/
         copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
 
         # templates
 
         # active_record templates
-        copy_file '../../../../../spec/dummy/lib/templates/active_record/model/model.rb',
-                  'lib/templates/active_record/model/model.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/active_record/model/model.rb.tt',
+                  'lib/templates/active_record/model/model.rb.tt'
+        remove_file 'lib/templates/active_record/model/model.rb' # Removed old non-TT file
 
-        # haml` templates
+        # haml templates
         copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/_form.html.haml',
                   'lib/templates/haml/scaffold/_form.html.haml'
 
@@ -87,42 +150,28 @@ module RadCommon
                   'lib/templates/haml/scaffold/show.html.haml'
 
         # rails templates
-        copy_file '../../../../../spec/dummy/lib/templates/rails/scaffold_controller/controller.rb',
-                  'lib/templates/rails/scaffold_controller/controller.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rails/scaffold_controller/controller.rb.tt',
+                  'lib/templates/rails/scaffold_controller/controller.rb.tt'
+        remove_file 'lib/templates/rails/scaffold_controller/controller.rb' # Removed old non-TT file
 
         # rspec templates
-        copy_file '../../../../../spec/dummy/lib/templates/rspec/scaffold/request_spec.rb',
-                  'lib/templates/rspec/scaffold/request_spec.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rspec/scaffold/request_spec.rb.tt',
+                  'lib/templates/rspec/scaffold/request_spec.rb.tt'
+        remove_file 'lib/templates/rspec/scaffold/request_spec.rb' # Removed old non-TT file
 
-        copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb',
-                  'lib/templates/rspec/system/system_spec.rb'
+        copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb.tt',
+                  'lib/templates/rspec/system/system_spec.rb.tt'
+        remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
 
-        gsub_file 'config/environments/production.rb',
-                  '#config.force_ssl = true',
-                  'config.force_ssl = true'
-
-unless RadConfig.shared_database?
-        create_file 'db/seeds.rb' do <<-'RUBY'
+        unless RadConfig.react_app?
+          create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
+require 'rad_rspec/rad_factories'
 
+RadFactories.load!
 Seeder.new.seed!
         RUBY
-        end
-end
-
-        inject_into_class 'config/application.rb', 'Application' do <<-'RUBY'
-    # added by rad_common
-    config.generators do |g|
-      g.helper false
-      g.stylesheets false
-      g.javascripts false
-      g.view_specs false
-      g.helper_specs false
-      g.routing_specs false
-      g.controller_specs false
-    end
-
-        RUBY
+          end
         end
 
         inject_into_file 'config/routes.rb', after: 'Rails.application.routes.draw do' do <<-'RUBY'
@@ -133,6 +182,11 @@ end
         RUBY
         end
 
+        inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do <<-'RUBY'
+  gem 'rubocop-capybara'
+        RUBY
+        end
+
         apply_migrations
 
         check_boolean_fields
@@ -140,7 +194,7 @@ end
 
       def self.next_migration_number(path)
         next_migration_number = current_migration_number(path) + 1
-        if ActiveRecord::Base.timestamped_migrations
+        if ActiveRecord.timestamped_migrations
           [Time.current.utc.strftime('%Y%m%d%H%M%S'), '%.14d' % next_migration_number].max
         else
           '%.3d' % next_migration_number
@@ -149,8 +203,56 @@ end
 
       protected
 
+        def merge_package_json
+          migrate_custom_dependencies_file # Temp: Migrate old custom_dependencies.json to new format
+
+          dummy_file_path = '../../../../../spec/dummy/package.json'
+          unless File.exist?('custom-dependencies.json')
+            return copy_file dummy_file_path, 'package.json'
+          end
+
+          base_package_source = File.expand_path(find_in_source_paths(dummy_file_path))
+          base_package = JSON.parse(File.read(base_package_source))
+          custom_package = JSON.parse(File.read('custom-dependencies.json'))
+
+          %w[dependencies devDependencies resolutions scripts].each do |key|
+            next unless custom_package[key]
+
+            base_package[key] ||= {}
+            base_package[key].merge!(custom_package[key])
+          end
+
+          File.write('package.json', JSON.pretty_generate(base_package) + "\n")
+        end
+
+        def migrate_custom_dependencies_file
+          return unless File.exist?('custom-dependencies.json')
+
+          contents = JSON.parse(File.read('custom-dependencies.json'))
+          if contents.is_a?(Hash) && (%w[dependencies devDependencies resolutions scripts] & contents.keys).none?
+            new_contents = { 'dependencies' => contents }
+            File.write('custom-dependencies.json', JSON.pretty_generate(new_contents) + "\n")
+          end
+        end
+
+        def copy_custom_github_actions
+          dummy_action_path = '../../../../../.github/actions/custom-action/action.yml'
+          new_action_path = '.github/actions/custom-action/action.yml'
+          return if File.exist? new_action_path
+
+          copy_file dummy_action_path, new_action_path
+        end
+
+        def copy_custom_github_matrix
+          dummy_matrix_path = '../../../../../.github/actions/custom_matrix.json'
+          new_matrix_path = '.github/actions/custom_matrix.json'
+          return if File.exist? new_matrix_path
+
+          copy_file dummy_matrix_path, new_matrix_path
+        end
+
         def apply_migration(source)
-          return if RadConfig.shared_database?
+          return if RadConfig.react_app?
 
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
@@ -163,12 +265,65 @@ end
         end
 
         def search_and_replace(search, replace, js: false)
-          system "find . -type f -name \"*.rb\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
-          system "find . -type f -name \"*.haml\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
-          system "find . -type f -name \"*.rake\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          search_and_replace_type search, replace, 'rb'
+          search_and_replace_type search, replace, 'haml'
+          search_and_replace_type search, replace, 'rake'
           return unless js
 
-          system "find . -type f -name \"*.js\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          search_and_replace_type search, replace, 'js'
+        end
+
+        def search_and_replace_type(search, replace, file_type)
+          if ENV['CI']
+            system "find . -type f -name \"*.#{file_type}\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
+          else
+            system "find . -type f -name \"*.#{file_type}\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          end
+        end
+
+        def search_and_replace_file(search, replace, file_name)
+          if ENV['CI']
+            system "find . -type f -name \"#{file_name}\" -print0 | xargs -0 sed -i -e 's/#{search}/#{replace}/g'"
+          else
+            system "find . -type f -name \"#{file_name}\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
+          end
+        end
+
+        def add_crawling_config
+          remove_file 'public/robots.txt'
+
+          add_rad_config_setting 'crawlable_subdomains', '[]'
+          add_rad_config_setting 'always_crawl', 'false'
+          add_rad_config_setting 'allow_crawling', 'false'
+        end
+
+        def install_procfile
+          setting_exists = rad_config_setting_exists?('procfile_override')
+          add_rad_config_setting 'procfile_override', 'false'
+          return if setting_exists && RadConfig.procfile_override?
+
+          copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
+          copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
+        end
+
+        def replace_webdrivers_gem_with_selenium
+          gsub_file 'Gemfile', /\n\s*gem 'webdrivers'.*\n/, "\n"
+          return if File.readlines('Gemfile').grep(/gem 'selenium-webdriver'/).any?
+
+          gsub_file 'Gemfile', /\n\s*gem 'simplecov', require: false\n/, "\n  gem 'selenium-webdriver'\n  gem 'simplecov', require: false\n"
+        end
+
+        def remove_rad_factories
+          Dir['spec/factories/rad_common/*.rb'].each do |factory_file|
+            factory_name = File.basename(factory_file, '.rb')
+            next if factory_name == 'clients'
+
+            remove_file factory_file
+          end
+
+          if Dir.exist?('spec/factories/rad_common') && Dir.empty?('spec/factories/rad_common')
+            Dir.rmdir('spec/factories/rad_common')
+          end
         end
 
         def check_boolean_fields
@@ -178,6 +333,29 @@ end
 
               raise "column #{table}.#{column.name}: null: #{column.null}, default: #{column.default}"
             end
+          end
+        end
+
+        def add_rad_config_setting(setting_name, default_value)
+          standard_config_end = /\n(  system_usage_models:)/
+          new_config = "  #{setting_name}: #{default_value}\n\n"
+
+          unless rad_config_setting_exists?(setting_name)
+            gsub_file RAD_CONFIG_FILE, standard_config_end, "#{new_config}\\1"
+          end
+        end
+
+        def rad_config_setting_exists?(setting_name)
+          File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
+        end
+
+        def update_seeder_method
+          file_path = 'app/services/seeder.rb'
+          if File.exist?(file_path)
+            gsub_file file_path, /def seed!\n\s*super\n?/, 'def seed'
+            say_status('updated', "#{file_path} to use new seed method")
+          else
+            say_status('skipped', "File #{file_path} does not exist")
           end
         end
 
@@ -195,6 +373,100 @@ end
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
+        end
+
+        def install_database_yml
+          setting_exists = rad_config_setting_exists?('database_config_override')
+          add_rad_config_setting 'database_config_override', 'false'
+          return if setting_exists && RadConfig.database_config_override?
+
+          copy_file '../../../../../spec/dummy/config/database.yml', 'config/temp_database.yml'
+          gsub_file 'config/temp_database.yml', 'rad_common_', "#{installed_app_name}_"
+          copy_file Rails.root.join('config/temp_database.yml'), 'config/database.yml'
+          remove_file Rails.root.join('config/temp_database.yml')
+        end
+
+        def install_github_workflow
+          copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
+          copy_file '../../../../../.github/workflows/generate_coverage_report.yml',
+                    '.github/workflows/generate_coverage_report.yml'
+          remove_file '.github/workflows/rc_update.yml'
+          gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
+          gsub_file '.github/workflows/generate_coverage_report.yml', 'rad_common_test', "#{installed_app_name}_test"
+
+          if RadConfig.react_app?
+            gsub_file '.github/workflows/rad_update_bot.yml',
+                      'rad_common_development',
+                      'cannasaver_admin_development'
+          else
+            gsub_file '.github/workflows/rad_update_bot.yml',
+                      'rad_common_development',
+                      "#{installed_app_name}_development"
+          end
+
+          gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
+          gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
+          gsub_file '.github/workflows/rspec_tests.yml',
+                   "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
+                   'bin/rc_parallel_rspec'
+        end
+
+        def migrate_webpacker_to_esbuild
+          remove_dir 'config/webpack'
+          remove_file 'config/webpacker.yml'
+          remove_file 'bin/webpack'
+          remove_file 'bin/webpack-dev-server'
+          remove_file 'babel.config.js'
+
+          copy_file '../../../../../spec/dummy/esbuild.config.js', 'esbuild.config.js'
+          copy_file '../../../../../spec/dummy/Procfile.dev', 'Procfile.dev'
+
+          if Dir.exist?('app/javascript/packs')
+            remove_file 'app/javascript/packs/rad_mailer.js'
+
+            Dir['app/javascript/packs/*'].each do |file|
+              copy_file Rails.root.join(file), "app/javascript/#{File.basename(file)}"
+            end
+
+            remove_dir 'app/javascript/packs'
+          end
+
+          if Dir.exist?('app/javascript/images')
+            Dir['app/javascript/images/*'].each do |file|
+              copy_file Rails.root.join(file), "app/assets/images/#{File.basename(file)}"
+            end
+
+            remove_dir 'app/javascript/images'
+          end
+
+          search_and_replace 'image_pack_tag', 'image_tag'
+          search_and_replace 'javascript_pack_tag', 'javascript_include_tag'
+          search_and_replace 'stylesheet_pack_tag', 'stylesheet_link_tag'
+          search_and_replace 'favicon_pack_tag', 'favicon_link_tag'
+          search_and_replace 'app/javascript/images', 'app/assets/images'
+          search_and_replace "'app', 'javascript', 'images'", "'app', 'assets', 'images'"
+
+          copy_file '../../../../../spec/dummy/app/assets/scss/application.scss',
+                    'app/assets/scss/application.scss'
+          copy_file '../../../../../spec/dummy/app/assets/scss/rad_mailer.scss',
+                    'app/assets/scss/rad_mailer.scss'
+          unless File.exist? 'app/assets/scss/app_specific/main.scss'
+            create_file 'app/assets/scss/app_specific/main.scss'
+          end
+
+          if Dir.exist?('app/javascript/css')
+            Dir['app/javascript/css/*'].each do |file|
+              copy_file Rails.root.join(file), "app/assets/scss/#{File.basename(file)}"
+            end
+
+            remove_dir 'app/javascript/css'
+          end
+        end
+
+        def migrate_to_tom_select
+          search_and_replace 'bootstrap_select', 'tom_select'
+          search_and_replace 'rad-chosen', 'selectpicker'
         end
 
         def apply_migrations
@@ -227,7 +499,6 @@ end
           apply_migration '20190911120012_timezones.rb'
           apply_migration '20190919163914_remove_super_admin.rb'
           apply_migration '20190929125052_notification_auth_mode.rb'
-          apply_migration '20191112111902_devise_lockable.rb'
           apply_migration '20200128185735_make_message_not_required.rb'
           apply_migration '20200203163827_convert_rich_text.rb'
           apply_migration '20200227134827_create_rad_common_notifications.rb'
@@ -238,7 +509,6 @@ end
           apply_migration '20200526144750_convert_filter_defaults_to_json.rb'
           apply_migration '20200810143832_create_login_activities.rb'
           apply_migration '20200903192242_rename_security_roles.rb'
-          apply_migration '20210104154427_remove_current_phone.rb'
           apply_migration '20210111201627_create_twilio_logs.rb'
           apply_migration '20210119145517_external_security_roles.rb'
           apply_migration '20210126120121_require_twilio_user.rb'
@@ -261,11 +531,46 @@ end
           apply_migration '20220901143808_sign_up_roles.rb'
           apply_migration '20220905140634_allow_invite_role.rb'
           apply_migration '20220918194026_refine_smarty.rb'
+          apply_migration '20221021113251_create_saved_search_filters.rb'
+          apply_migration '20221108110620_add_new_audited_changes_to_audits.rb'
+          apply_migration '20221123142522_twilio_log_changes.rb'
+          apply_migration '20221108114020_convert_audited_changes_text_to_json.rb'
+          apply_migration '20221221134935_remove_legacy_audited_changes.rb'
           apply_migration '20230222162024_migrate_authy_to_twilio_verify.rb'
-          apply_migration '20230324202030_make_twilio_logs_from_user_nullable.rb'
+          apply_migration '20230310161506_more_twilio_verify.rb'
+          apply_migration '20230313195243_add_language.rb'
+          apply_migration '20230401113151_fix_sendgrid_notification.rb'
+          apply_migration '20230419121743_twilio_replies.rb'
+          apply_migration '20230420102508_update_twilio_log_number_format.rb'
+          apply_migration '20230425215920_create_twilio_log_attachments.rb'
+          apply_migration '20231205185433_pending_user_status.rb'
+          apply_migration '20240209114718_make_audits_created_at_non_nullable.rb'
+          apply_migration '20240209141219_missing_fks.rb'
+          apply_migration '20240222093233_active_record_doctor_issues.rb'
+          apply_migration '20240313112119_more_active_record_doctor_issues.rb'
+          apply_migration '20240412165055_rename_twilio_logs.rb'
+          apply_migration '20240412175512_create_contact_log_recipients.rb'
+          apply_migration '20240418101832_remove_contact_log_attachments.rb'
+          apply_migration '20240420112825_contact_log_content.rb'
+          apply_migration '20240423100042_rename_contact_fields.rb'
+          apply_migration '20240602130347_contact_log_sendgrid_stuff.rb'
+          apply_migration '20240604194517_more_sendgrid_stuff.rb'
           apply_migration '20240611203430_fix_boolean_nulls_defaults.rb'
+          apply_migration '20240629114200_fix_contact_log_sms_status.rb'
+          apply_migration '20240705173121_more_contact_log_fixes.rb'
+          apply_migration '20240709115421_notify_tool_actions.rb'
+          apply_migration '20240710175508_fix_contact_to_users.rb'
+          apply_migration '20240803114036_bcc_notify_recipient.rb'
+          apply_migration '20240912133320_persist_sms_false_positive.rb'
+          apply_migration '20240911184745_fix_last_activity.rb'
           apply_migration '20250227191231_add_detected_timezone_to_user.rb'
         end
+
+        def installed_app_name
+          ::Rails.application.class.module_parent.to_s.underscore
+        end
+
+        RAD_CONFIG_FILE = 'config/rad_common.yml'.freeze
     end
   end
 end

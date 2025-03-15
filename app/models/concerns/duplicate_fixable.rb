@@ -2,6 +2,8 @@ module DuplicateFixable
   extend ActiveSupport::Concern
 
   included do
+    include CreatedBy
+
     has_one :duplicate, as: :duplicatable, dependent: :destroy
 
     scope :duplicates_to_process, lambda {
@@ -42,6 +44,26 @@ module DuplicateFixable
       new.respond_to?(:birth_date)
     end
 
+    def use_multiples?
+      new.respond_to?(:multiples)
+    end
+
+    def use_email_2?
+      new.respond_to?(:email_2)
+    end
+
+    def use_phone_number?
+      new.respond_to?(:phone_number)
+    end
+
+    def use_phone_number_2?
+      new.respond_to?(:phone_number_2)
+    end
+
+    def use_mobile_phone?
+      new.respond_to?(:mobile_phone)
+    end
+
     def use_address?
       new.respond_to?(:address_1) && !new.duplicates_bypass_address?
     end
@@ -62,12 +84,12 @@ module DuplicateFixable
          type: :string,
          display_only: false,
          weight: new.duplicate_other_weight },
-       { name: :mobile_phone,
+       { name: 'mobile_phone',
          label: 'Mobile Phone',
          type: :string,
          display_only: false,
          weight: new.duplicate_other_weight },
-       { name: :fax_number,
+       { name: 'fax_number',
          label: 'Fax #',
          type: :string,
          display_only: false,

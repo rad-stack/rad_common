@@ -1,10 +1,12 @@
 default: &default
   app_name: Demo Foo
   portal_app_name: Foo Portal
-  language_code: en
   use_avatar: true
+  switch_languages: true
   disable_sign_up: false
   disable_invite: false
+  manually_create_users: false
+  pending_users: true
   secure_sentry: true
   external_users: true
   validate_external_email_domain: true
@@ -13,13 +15,28 @@ default: &default
   impersonate: true
   start_route: attorneys
   user_clients: true
-  user_profiles: false
-  twilio_verify_enabled: true
+  user_profiles: true
   twilio_verify_internal_only: true
   twilio_verify_remember_device: 120 # minutes
   twilio_countries_enabled: 'US'
-  shared_database: false
   enable_super_search: true
+  canadian_addresses: false
+  show_help_menu: true
+  saved_search_filters_enabled: true
+  legal_docs: true
+  twilio_verify_all_users: true
+  twilio_verify_remember_device_days: 7
+  storage_config_override: false
+  database_config_override: false
+  require_mobile_phone: false
+  timeout_hours: 6
+  force_marketing_site: false
+  allow_marketing_site: false
+  allow_crawling: false
+  always_crawl: false
+  crawlable_domains: []
+  procfile_override: false
+  last_first_user: false
 
   system_usage_models:
     -
@@ -37,8 +54,8 @@ default: &default
     - User
 
   duplicates:
-    -
-      name: Attorney
+    - :name: Attorney
+    - :name: User
 
   restricted_audit_attributes:
     -
@@ -46,6 +63,7 @@ default: &default
       attribute: hourly_rate
 
   additional_user_params: []
+  additional_user_profile_params: []
   additional_company_params: []
 
   global_validity_days: 3
@@ -97,6 +115,16 @@ default: &default
       hide_global_nav: true
       columns:
         - name
+    -
+      name: attorney_name
+      model: Attorney
+      description: Search attorney by name
+      min_length: 3
+      columns:
+        - company_name
+        - phone_number
+      query_where: last_name || ', ' || first_name ilike :search OR first_name || ' ' || last_name ilike :search OR company_name ilike :search
+      query_order: last_name ASC, first_name ASC, created_at DESC
 
 development:
   <<: *default
@@ -110,3 +138,4 @@ test:
 
   host_name: localhost:3000
   portal_host_name: portal.localhost:3000
+  twilio_verify_enabled: true
