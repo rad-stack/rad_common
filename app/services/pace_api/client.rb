@@ -1,8 +1,8 @@
 module PaceApi
   class Client
-    def initialize(facilis_import, ssl_verify: true)
+    def initialize(ssl_verify: true, on_error: nil)
       @ssl_verify = ssl_verify
-      @facilis_import = facilis_import
+      @on_error = on_error
     end
 
     def create_object(model_name, attributes)
@@ -29,8 +29,10 @@ module PaceApi
 
       return parsed_response if parsed_response.present?
 
-      @facilis_import.update! error_message: "The following #{type} is missing from Pace: #{xpath}", status: :failed
-      Notifications::MissingRecordInPaceNotification.main(import_record: @facilis_import, type: type).notify!
+
+      report_error("The following #{type} is missing from Pace: #{xpath}")
+      # TODO: make this notification standard?
+      # Notifications::MissingRecordInPaceNotification.main(import_record: @facilis_import, type: type).notify!
       raise "#{type} not found for xpath: #{xpath}"
     end
 
@@ -169,6 +171,12 @@ module PaceApi
       return unless Rails.env.production?
 
       RadConfig.secret_config_item!(:quota_guard_url)
+    end
+
+    def report_error(message)
+      return unless @on_error
+
+      @on_error.call(message)
     end
   end
 end
