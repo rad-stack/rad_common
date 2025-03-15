@@ -1,14 +1,18 @@
 class RadTwilio
   def send_sms(to:, message:)
-    client.messages.create(from: from_number, to: to, body: message)
+    client.messages.create from: from_number, to: to, body: message, status_callback: status_callback_url
   end
 
   def send_mms(to:, message:, media_url:)
-    client.messages.create(from: from_number_mms, to: to, body: message, media_url: media_url)
+    client.messages.create from: from_number,
+                           to: to,
+                           body: message,
+                           media_url: media_url,
+                           status_callback: status_callback_url
   end
 
   def send_robocall(to:, url:)
-    client.calls.create(from: from_number, to: to, url: URI::Parser.new.escape(url))
+    client.calls.create from: from_number, to: to, url: URI::Parser.new.escape(url)
   end
 
   def self.send_verify_sms(mobile_phone)
@@ -31,10 +35,6 @@ class RadTwilio
     end
   end
 
-  def twilio_enabled?
-    RadConfig.twilio_enabled?
-  end
-
   def from_number
     RadConfig.twilio_phone_number!
   end
@@ -44,7 +44,7 @@ class RadTwilio
   end
 
   def validate_phone_number(phone_number, mobile)
-    return unless twilio_enabled?
+    return unless RadConfig.twilio_enabled?
 
     # twilio phone number validations that check whether valid mobile # cost half a penny per request
 
@@ -71,6 +71,10 @@ class RadTwilio
   end
 
   def self.twilio_to_human_format(phone_number)
+    phone_number = phone_number.to_s unless phone_number.is_a?(String)
+    phone_number = "+#{phone_number}" if phone_number.size == 11 && phone_number.first != '+'
+    raise 'invalid twilio number format' unless phone_number.size == 12
+
     "(#{phone_number[2, 3]}) #{phone_number[5, 3]}-#{phone_number[8, 4]}"
   end
 
@@ -87,7 +91,7 @@ class RadTwilio
     end
 
     def get_phone_number(attribute, mobile)
-      converted_phone_number = attribute.gsub(/[^0-9a-z\\s]/i, '')
+      converted_phone_number = RadTwilio.strip_phone_number(attribute)
       mobile ? lookup_number(converted_phone_number, 'carrier') : lookup_number(converted_phone_number)
     end
 
@@ -101,5 +105,17 @@ class RadTwilio
           lookup_client.lookups.phone_numbers(number).fetch
         end
       end
+    end
+
+    def status_callback_url
+      "#{protocol}://#{host_name}/twilio_statuses"
+    end
+
+    def protocol
+      Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
+    end
+
+    def host_name
+      Rails.env.production? || Rails.env.staging? ? RadConfig.host_name! : 'example.com'
     end
 end
