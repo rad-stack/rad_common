@@ -13,15 +13,15 @@ module RadCommon
         remove_file '.github/pull_request_template.md'
 
         add_crawling_config
-        install_procfile
+        # install_procfile
         standardize_date_methods
         install_database_yml
         install_github_workflow
         update_seeder_method
-        replace_webdrivers_gem_with_selenium
+        # replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'legacy_rails_config', 'false'
-        remove_rad_factories
+        # remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
@@ -34,12 +34,12 @@ module RadCommon
         copy_custom_github_actions
         copy_custom_github_matrix
         copy_file '../../../../../.ruby-version', '.ruby-version'
-        copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
+        # copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
 
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
-        copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
+        # copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
 
         unless RadConfig.react_app?
@@ -48,7 +48,7 @@ module RadCommon
 
         migrate_webpacker_to_esbuild
 
-        migrate_to_tom_select
+        # migrate_to_tom_select
 
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
@@ -56,8 +56,8 @@ module RadCommon
                  'public/406-unsupported-browser.html'
 
         unless RadConfig.react_app?
-          copy_file '../../../../../spec/dummy/app/javascript/application.js',
-                    'app/javascript/application.js'
+          # copy_file '../../../../../spec/dummy/app/javascript/application.js',
+          #           'app/javascript/application.js'
 
           unless File.exist? 'app/javascript/controllers/app_specific/index.js'
             copy_file '../../../../../spec/dummy/app/javascript/controllers/app_specific/index.js',
@@ -91,7 +91,7 @@ module RadCommon
           end
         end
 
-        copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
+        # copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
 
         unless RadConfig.react_app?
           directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
@@ -105,14 +105,14 @@ module RadCommon
         copy_file '../../../../../spec/dummy/config/initializers/simple_form.rb',
                   'config/initializers/simple_form.rb'
 
-        copy_file '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb',
-                  'config/initializers/simple_form_bootstrap.rb'
+        # copy_file '../../../../../spec/dummy/config/initializers/simple_form_bootstrap.rb',
+        #           'config/initializers/simple_form_bootstrap.rb'
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form_components.rb',
                   'config/initializers/simple_form_components.rb'
 
         # bin
-        directory '../../../../../spec/dummy/bin/', 'bin/'
+        # directory '../../../../../spec/dummy/bin/', 'bin/'
         gsub_file 'bin/setup', 'dummy', installed_app_name # TODO: Remove in Rails 8
 
         # locales
@@ -290,7 +290,7 @@ Seeder.new.seed!
         end
 
         def add_crawling_config
-          remove_file 'public/robots.txt'
+          # remove_file 'public/robots.txt'
 
           add_rad_config_setting 'crawlable_subdomains', '[]'
           add_rad_config_setting 'always_crawl', 'false'
@@ -387,8 +387,8 @@ Seeder.new.seed!
         end
 
         def install_github_workflow
-          copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
-          copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
+          # copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          # copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
           copy_file '../../../../../.github/workflows/generate_coverage_report.yml',
                     '.github/workflows/generate_coverage_report.yml'
           remove_file '.github/workflows/rc_update.yml'
@@ -413,11 +413,11 @@ Seeder.new.seed!
         end
 
         def migrate_webpacker_to_esbuild
-          remove_dir 'config/webpack'
-          remove_file 'config/webpacker.yml'
-          remove_file 'bin/webpack'
-          remove_file 'bin/webpack-dev-server'
-          remove_file 'babel.config.js'
+          # remove_dir 'config/webpack'
+          # remove_file 'config/webpacker.yml'
+          # remove_file 'bin/webpack'
+          # remove_file 'bin/webpack-dev-server'
+          # remove_file 'babel.config.js'
 
           copy_file '../../../../../spec/dummy/esbuild.config.js', 'esbuild.config.js'
           copy_file '../../../../../spec/dummy/Procfile.dev', 'Procfile.dev'
@@ -425,11 +425,11 @@ Seeder.new.seed!
           if Dir.exist?('app/javascript/packs')
             remove_file 'app/javascript/packs/rad_mailer.js'
 
-            Dir['app/javascript/packs/*'].each do |file|
-              copy_file Rails.root.join(file), "app/javascript/#{File.basename(file)}"
-            end
+            # Dir['app/javascript/packs/*'].each do |file|
+            #   copy_file Rails.root.join(file), "app/javascript/#{File.basename(file)}"
+            # end
 
-            remove_dir 'app/javascript/packs'
+            # remove_dir 'app/javascript/packs'
           end
 
           if Dir.exist?('app/javascript/images')
@@ -441,19 +441,19 @@ Seeder.new.seed!
           end
 
           search_and_replace 'image_pack_tag', 'image_tag'
-          search_and_replace 'javascript_pack_tag', 'javascript_include_tag'
-          search_and_replace 'stylesheet_pack_tag', 'stylesheet_link_tag'
+          # search_and_replace 'javascript_pack_tag', 'javascript_include_tag'
+          # search_and_replace 'stylesheet_pack_tag', 'stylesheet_link_tag'
           search_and_replace 'favicon_pack_tag', 'favicon_link_tag'
           search_and_replace 'app/javascript/images', 'app/assets/images'
           search_and_replace "'app', 'javascript', 'images'", "'app', 'assets', 'images'"
 
-          copy_file '../../../../../spec/dummy/app/assets/scss/application.scss',
-                    'app/assets/scss/application.scss'
-          copy_file '../../../../../spec/dummy/app/assets/scss/rad_mailer.scss',
-                    'app/assets/scss/rad_mailer.scss'
-          unless File.exist? 'app/assets/scss/app_specific/main.scss'
-            create_file 'app/assets/scss/app_specific/main.scss'
-          end
+          # copy_file '../../../../../spec/dummy/app/assets/scss/application.scss',
+          #           'app/assets/scss/application.scss'
+          # copy_file '../../../../../spec/dummy/app/assets/scss/rad_mailer.scss',
+          #           'app/assets/scss/rad_mailer.scss'
+          # unless File.exist? 'app/assets/scss/app_specific/main.scss'
+          #   create_file 'app/assets/scss/app_specific/main.scss'
+          # end
 
           if Dir.exist?('app/javascript/css')
             Dir['app/javascript/css/*'].each do |file|
