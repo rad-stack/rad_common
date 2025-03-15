@@ -16,22 +16,14 @@ module RadUser
     has_many :user_clients, dependent: :destroy
     has_many :clients, through: :user_clients, source: :client
 
-    has_many :twilio_logs_from, class_name: 'TwilioLog',
-                                foreign_key: 'from_user_id',
-                                dependent: :destroy,
-                                inverse_of: :from_user
-
-    has_many :twilio_logs_to, class_name: 'TwilioLog',
-                              foreign_key: 'to_user_id',
-                              dependent: :destroy,
-                              inverse_of: :to_user
-
-    has_many :contact_logs_from, class_name: 'ContactLog',
+    has_many :contact_logs_from,
+             class_name: 'ContactLog',
              foreign_key: 'from_user_id',
              dependent: :destroy,
              inverse_of: :from_user
 
-    has_many :contact_logs_to, class_name: 'ContactLogRecipient',
+    has_many :contact_logs_to,
+             class_name: 'ContactLogRecipient',
              foreign_key: 'to_user_id',
              dependent: :destroy,
              inverse_of: :to_user
@@ -260,7 +252,7 @@ module RadUser
     end
 
     def validate_sms_mobile_phone
-      return if !RadTwilio.new.twilio_enabled? || mobile_phone.present?
+      return if !RadConfig.twilio_enabled? || mobile_phone.present?
       return if notification_settings.enabled.where(sms: true).none?
 
       errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')

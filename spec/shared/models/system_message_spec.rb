@@ -29,7 +29,7 @@ RSpec.describe SystemMessage, type: :model do
         User.update_all(mobile_phone: create(:phone_number, :mobile))
         allow_any_instance_of(RadTwilio).to receive(:send_sms).and_return true
         ActionMailer::Base.deliveries = []
-        system_message.send! if RadTwilio.new.twilio_enabled?
+        system_message.send! if RadConfig.twilio_enabled?
       end
 
       context 'when all users receive message' do
