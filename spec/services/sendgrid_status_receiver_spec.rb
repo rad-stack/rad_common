@@ -81,7 +81,7 @@ describe SendgridStatusReceiver, type: :service do
     context 'with stale user' do
       before { user.update! created_at: 6.months.ago, updated_at: 6.months.ago }
 
-      xit 'deactivates' do
+      it 'deactivates' do
         expect(user.active?).to be true
 
         service.process!
@@ -111,7 +111,7 @@ describe SendgridStatusReceiver, type: :service do
     context 'with spam report' do
       let(:event_type) { 'spamreport' }
 
-      xit 'deactivates' do
+      it 'deactivates' do
         expect(user.active?).to be true
 
         service.process!
