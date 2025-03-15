@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Notifications::UserWasApprovedNotification, type: :model do
-  let(:admin) { create :admin }
+  let!(:admin) { create :admin }
   let(:another) { create :admin }
   let(:user) { create :user }
-  let(:notification_type) { create :user_was_approved_notification, security_roles: [admin.security_roles.first] }
+  let(:notification_type) { described_class.main([user, admin]) }
   let(:mail) { ActionMailer::Base.deliveries.last }
 
   describe '#notify_user_ids_opted' do
@@ -31,7 +31,7 @@ RSpec.describe Notifications::UserWasApprovedNotification, type: :model do
   describe '#notify!' do
     before do
       ActionMailer::Base.deliveries = []
-      notification_type.notify! [user, admin]
+      notification_type.notify!
     end
 
     it 'emails' do

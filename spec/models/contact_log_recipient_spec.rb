@@ -16,14 +16,14 @@ RSpec.describe ContactLogRecipient do
         create :contact_log_recipient, :email, contact_log: contact_log, email: admin.email, to_user: admin
       end
 
-      xit 'raises error when no admins to notify' do
+      it 'raises error when no admins to notify' do
         expect { contact_log_recipient.update! email_status: :bounce }.to raise_error('no users to notify')
       end
 
       context 'when another admin exists' do
         let!(:another_admin) { create :admin, security_roles: [admin_role] }
 
-        xit 'excludes the admin in the notification' do
+        it 'excludes the admin in the notification' do
           expect {
             contact_log_recipient.update! email_status: :bounce
           }.to change(deliveries, :count).by(1)
@@ -45,7 +45,7 @@ RSpec.describe ContactLogRecipient do
       before { create :admin, security_roles: [admin_role] }
 
       context 'when assumed failed' do
-        xit 'notifies' do
+        it 'notifies' do
           expect {
             contact_log_recipient.sms_assume_failed!
           }.to change(deliveries, :count).by(1)
@@ -57,7 +57,7 @@ RSpec.describe ContactLogRecipient do
       context 'when SMS status updated' do
         before { expect(contact_log_recipient.sms_status).to eq 'sent' }
 
-        xit 'notifies' do
+        it 'notifies' do
           expect {
             contact_log_recipient.update! sms_status: :undelivered
           }.to change(deliveries, :count).by(1)

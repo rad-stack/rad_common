@@ -26,13 +26,13 @@ describe 'SendgridStatuses' do
                   contact_log_id: contact_log.id }] }
     end
 
-    xit 'notifies' do
+    it 'notifies' do
       expect {
         post '/sendgrid_statuses', params: params
       }.to change(deliveries, :count).by(1)
     end
 
-    xit 'updates status of contact log' do
+    it 'updates status of contact log' do
       expect {
         post '/sendgrid_statuses', params: params
         contact_log_recipient.reload
