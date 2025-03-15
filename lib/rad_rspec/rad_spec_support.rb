@@ -1,7 +1,7 @@
 class RadSpecSupport
   def self.before_all
     rspec = yield
-    rspec.allow_any_instance_of(RadTwilio).to rspec.receive(:twilio_enabled?).and_return false
+    rspec.allow(RadConfig).to rspec.receive(:twilio_enabled?).and_return false
 
     rspec.allow(Company).to rspec.receive(:main).and_return(Company.main || rspec.create(:company))
 
