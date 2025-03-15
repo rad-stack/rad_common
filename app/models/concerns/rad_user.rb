@@ -26,6 +26,16 @@ module RadUser
                               dependent: :destroy,
                               inverse_of: :to_user
 
+    has_many :contact_logs_from, class_name: 'ContactLog',
+             foreign_key: 'from_user_id',
+             dependent: :destroy,
+             inverse_of: :from_user
+
+    has_many :contact_logs_to, class_name: 'ContactLogRecipient',
+             foreign_key: 'to_user_id',
+             dependent: :destroy,
+             inverse_of: :to_user
+
     has_one_attached :avatar
 
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
@@ -108,6 +118,16 @@ module RadUser
 
   def needs_reactivate?
     RadConfig.user_expirable? && expired?
+  end
+
+  def stale?
+    (updated_at < 4.months.ago) ||
+      (current_sign_in_at.present? && current_sign_in_at < 6.months.ago) ||
+      many_recent_failed_emails?
+  end
+
+  def not_inactive?
+    user_status != UserStatus.default_inactive_status
   end
 
   def formatted_email
