@@ -9,7 +9,7 @@ RSpec.describe 'ContactLogs' do
   before { login_as user, scope: :user }
 
   describe 'index' do
-    xit 'displays the contact_logs' do
+    it 'displays the contact_logs' do
       contact_log_recipient
       visit '/contact_logs'
       expect(page).to have_content(contact_log_recipient.contact_log.content)

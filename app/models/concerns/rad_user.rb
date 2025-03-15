@@ -277,6 +277,17 @@ module RadUser
       self.timezone = Company.main.timezone if new_record? && timezone.blank?
     end
 
+    def many_recent_failed_emails?
+      records = contact_logs_to.joins(:contact_log)
+                               .where(contact_logs: { service_type: :email })
+                               .order(created_at: :desc)
+                               .limit(10)
+
+      return false if records.size < 10
+
+      records.failed.size >= 8
+    end
+
     def notify_user_approved
       return if auto_approve?
 
