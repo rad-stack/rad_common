@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 <% module_namespacing do -%>
-RSpec.describe '<%= class_name.pluralize %>', type: :request do
+RSpec.describe '<%= class_name.pluralize %>' do
   let(:user) { create :admin }
   let(:<%= file_name %>) { create :<%= file_name %> }
   let(:valid_attributes) { { foo: 'foo', bar: 'bar' } }

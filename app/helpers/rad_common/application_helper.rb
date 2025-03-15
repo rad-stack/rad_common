@@ -88,6 +88,13 @@ module RadCommon
       value.strftime('%l:%M%P').strip if value.present?
     end
 
+    def rad_form_errors(form)
+      return form.error_notification if form.object.blank?
+
+      message = "Please review the problems below: #{form.object.errors.full_messages.to_sentence}"
+      form.error_notification message: message
+    end
+
     def format_boolean(value)
       if value
         tag.div(nil, class: 'fa fa-check', 'aria-label' => true)

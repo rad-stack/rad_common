@@ -1,0 +1,18 @@
+= render 'users/devise_layout' do
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Two Factor Authentication',
+           icon: 'fa-mobile-alt',
+           card_style: 'bg-white'
+  .card-body
+    = verify_twilio_verify_form do
+      .d-fle.flex-column
+        = hidden_field_tag :"#{resource_name}_id", @resource.id
+        = text_field_tag :token, '', autocomplete: 'one-time-code', id: 'twilio-verify-token',
+                        autofocus: true, class: 'form-control', placeholder: t('submit_token_title', scope: 'devise')
+        = twilio_verify_request_sms_link class: 'btn btn-link'
+        .mt-3.d-flex.align-items-center
+          = submit_tag I18n.t('submit_token', scope: 'devise'), class: 'btn btn-primary btn-lg'
+          %label
+            = check_box_tag :remember_device, '1', checked: true
+            %span Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}

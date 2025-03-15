@@ -128,6 +128,50 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.jsonb "address_metadata"
   end
 
+  create_table "contact_log_recipients", force: :cascade do |t|
+    t.bigint "contact_log_id", null: false
+    t.bigint "to_user_id"
+    t.string "email"
+    t.string "phone_number"
+    t.integer "email_type"
+    t.integer "sms_status"
+    t.boolean "success", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "email_status"
+    t.string "sendgrid_reason"
+    t.boolean "notify_on_fail", default: true, null: false
+    t.boolean "sms_false_positive", default: false, null: false
+    t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
+    t.index ["email"], name: "index_contact_log_recipients_on_email"
+    t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"
+    t.index ["to_user_id"], name: "index_contact_log_recipients_on_to_user_id"
+  end
+
+  create_table "contact_logs", force: :cascade do |t|
+    t.string "from_number"
+    t.bigint "from_user_id"
+    t.string "sms_media_url"
+    t.boolean "sent", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "sms_opt_out_message_sent", default: false, null: false
+    t.string "sms_message_id"
+    t.integer "sms_log_type"
+    t.string "from_email"
+    t.integer "service_type", default: 0, null: false
+    t.string "record_type"
+    t.bigint "record_id"
+    t.string "content"
+    t.index ["created_at"], name: "index_contact_logs_on_created_at"
+    t.index ["from_number"], name: "index_contact_logs_on_from_number"
+    t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
+    t.index ["record_type", "record_id"], name: "index_contact_logs_on_record"
+    t.index ["sent"], name: "index_contact_logs_on_sent"
+    t.index ["service_type"], name: "index_contact_logs_on_service_type"
+    t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
+  end
+
   create_table "divisions", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.string "code", null: false
@@ -234,6 +278,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.index ["password_archivable_type", "password_archivable_id"], name: "index_password_archivable"
   end
 
+  create_table "saved_search_filters", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "user_id", null: false
+    t.string "search_class", null: false
+    t.jsonb "search_filters", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "name", "search_class"], name: "unique_saved_search_filters", unique: true
+    t.index ["user_id"], name: "index_saved_search_filters_on_user_id"
+  end
+
   create_table "security_roles", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "admin", default: false, null: false
@@ -247,6 +302,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.boolean "manage_user", default: false, null: false
     t.boolean "allow_sign_up", default: false, null: false
     t.boolean "allow_invite", default: false, null: false
+    t.boolean "read_attorney", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 
@@ -359,6 +415,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.jsonb "filter_defaults"
     t.boolean "twilio_verify_sms", default: true, null: false
     t.string "twilio_totp_factor_sid"
+    t.date "birth_date"
+    t.string "language", default: "en", null: false
     t.string "detected_timezone"
     t.string "ignored_timezone"
     t.index ["authy_id"], name: "index_users_on_authy_id"

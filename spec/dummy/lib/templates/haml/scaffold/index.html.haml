@@ -14,21 +14,21 @@
     - if show_actions
           %th.actions Actions
 
-      - @<%= plural_table_name %>.each do |<%= singular_table_name %>|
-        %tr
-          %td= secured_link <%= singular_table_name %>
+      - @<%= plural_table_name %>.each do |record|
+        %tr{ class: table_row_style(record) }
+          %td= secured_link record
     <% for attribute in attributes -%>
-      %td= <%= singular_table_name %>.<%= attribute.name %>
+      %td= record.<%= attribute.name %>
     <% end -%>
       - if show_actions
             %td
-              - if policy(<%= singular_table_name %>).update?
+              - if policy(record).edit?
                 = link_to icon(:pencil, 'Edit'),
-                          edit_<%= singular_table_name %>_path(<%= singular_table_name %>),
+                          edit_<%= singular_table_name %>_path(record),
                           class: 'btn btn-sm btn-secondary btn-block'
-              - if policy(<%= singular_table_name %>).destroy?
+              - if policy(record).destroy?
                 = link_to icon(:times, 'Delete'),
-                          <%= singular_table_name %>,
+                          record,
                           method: :delete,
                           data: { confirm: 'Are you sure?' },
                           class: 'btn btn-danger btn-sm btn-block'

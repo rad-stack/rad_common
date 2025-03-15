@@ -4,8 +4,13 @@ class User < ApplicationRecord
          :twilio_verify_authenticatable
 
   include RadUser
+  include DuplicateFixable
 
   has_many :divisions, foreign_key: 'owner_id', dependent: :restrict_with_error
 
   audited except: USER_AUDIT_COLUMNS_DISABLED
+
+  def allow_profile?
+    !admin?
+  end
 end
