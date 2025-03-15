@@ -292,10 +292,10 @@ module RadUser
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
       RadMailer.your_account_approved(self).deliver_later
-      Notifications::UserWasApprovedNotification.main.notify!([self, approved_by]) unless do_not_notify_approved
+      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify! unless do_not_notify_approved
     end
 
     def notify_user_accepted
-      Notifications::UserAcceptedInvitationNotification.main.notify!(self)
+      Notifications::UserAcceptedInvitationNotification.main(self).notify!
     end
 end
