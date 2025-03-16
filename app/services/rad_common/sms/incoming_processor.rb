@@ -87,7 +87,7 @@ module RadCommon
                                     sms_message_id: sms_message_id,
                                     sent: true
 
-          @log.contact_log_recipients.create! phone_number: RadConfig.twilio_phone_number!
+          @log.contact_log_recipients.create! phone_number: RadTwilio.twilio_to_human_format(RadConfig.twilio_phone_number!)
 
           # TODO: should any of these be populated?
           # create_table "contact_logs", force: :cascade do |t|
@@ -130,6 +130,7 @@ module RadCommon
         end
 
         def log_mms!
+          # TODO: fix this same as above
           @log = ContactLog.new to_number: RadConfig.twilio_phone_number!,
                                 from_number: @phone_number,
                                 message: @incoming_message.presence || 'MMS'
