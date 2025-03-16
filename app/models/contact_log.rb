@@ -24,7 +24,6 @@ class ContactLog < ApplicationRecord
   validates :from_user_id, presence: true, if: -> { outgoing? && sms? }
   validates :sms_message_id, presence: true, if: :incoming?
   validates :content, presence: true, if: :sent?
-  validates :sms_media_url, absence: true, if: :incoming?
   validates :sms_log_type, presence: true, if: :sms?
   validates :sms_log_type, :sms_media_url, :sms_message_id, absence: true, if: :email?
   validate :validate_incoming, if: :incoming?

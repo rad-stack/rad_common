@@ -8,7 +8,10 @@ RSpec.describe UserSMSSender, type: :service do
   let(:sms_sender) { described_class.new(message, from_user.id, user.id, media_url, false) }
   let(:last_email) { ActionMailer::Base.deliveries.last }
 
-  before { allow(RadRetry).to receive(:exponential_pause) }
+  before do
+    allow(RadRetry).to receive(:exponential_pause)
+    allow_any_instance_of(PhoneSMSSender).to receive(:log_attachments)
+  end
 
   describe 'send', :vcr do
     context 'when operating normally' do

@@ -88,5 +88,24 @@ class PhoneSMSSender
                                   phone_number: to_mobile_phone,
                                   to_user: to_user,
                                   sms_status: :sent
+
+      return if @log.sms_media_url.blank?
+
+      log_attachments
+    end
+
+    def log_attachments
+      file = RadRetry.perform_request(retry_count: 2) { URI.open(@log.sms_media_url) }
+
+      filename = if file.respond_to?(:meta) && file.meta.has_key?('content-disposition')
+                   file.meta['content-disposition'].match(/filename="[^"]+"/).to_s.gsub(/filename=|"/, '')
+                 else
+                   File.basename(file.path)
+                 end
+
+      @log.attachments.attach io: file,
+                              content_type: file.content_type,
+                              identify: false,
+                              filename: filename
     end
 end
