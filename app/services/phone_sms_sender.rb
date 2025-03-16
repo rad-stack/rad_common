@@ -2,7 +2,7 @@ class PhoneSMSSender
   OPT_OUT_MESSAGE = 'To no longer receive text messages, text STOP'.freeze
 
   attr_accessor :message, :contact_log_from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio,
-                :opt_out_message_sent, :exception, :contact_log_record
+                :opt_out_message_sent, :exception, :contact_log_record, :log
 
   delegate :from_number, to: :twilio
 
@@ -74,15 +74,15 @@ class PhoneSMSSender
     end
 
     def log_event(sent, message_sid)
-      log = ContactLog.create! sms_log_type: :outgoing,
-                               from_number: RadTwilio.twilio_to_human_format(from_number),
-                               from_user_id: contact_log_from_user_id,
-                               content: message,
-                               sms_media_url: media_url,
-                               sent: sent,
-                               sms_message_id: message_sid,
-                               sms_opt_out_message_sent: opt_out_message_sent,
-                               record: contact_log_record
+      @log = ContactLog.create! sms_log_type: :outgoing,
+                                from_number: RadTwilio.twilio_to_human_format(from_number),
+                                from_user_id: contact_log_from_user_id,
+                                content: message,
+                                sms_media_url: media_url,
+                                sent: sent,
+                                sms_message_id: message_sid,
+                                sms_opt_out_message_sent: opt_out_message_sent,
+                                record: contact_log_record
 
       ContactLogRecipient.create! contact_log: log,
                                   phone_number: to_mobile_phone,
