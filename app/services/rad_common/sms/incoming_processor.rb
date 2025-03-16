@@ -51,8 +51,12 @@ module RadCommon
                              command_matched: false
         end
 
+        def sms_message_id
+          @params['MessageSid']
+        end
+
         def mms?
-          @params['MessageSid']&.starts_with? 'M'
+          sms_message_id&.starts_with? 'M'
         end
 
         def sms_users
@@ -76,9 +80,32 @@ module RadCommon
         end
 
         def log_sms!
-          @log = TwilioLog.create! to_number: RadConfig.twilio_phone_number!,
-                                   from_number: @phone_number,
-                                   message: @incoming_message
+          @log = ContactLog.create! from_number: @phone_number,
+                                    content: @incoming_message,
+                                    service_type: :sms,
+                                    sms_log_type: :incoming,
+                                    sms_message_id: sms_message_id,
+                                    sent: true
+
+          @log.contact_log_recipients.create! phone_number: RadConfig.twilio_phone_number!
+
+          # TODO: should any of these be populated?
+          # create_table "contact_logs", force: :cascade do |t|
+          #   t.bigint "from_user_id"
+          #   t.string "sms_media_url"
+          #   t.boolean "sms_opt_out_message_sent", default: false, null: false
+          #   t.string "record_type"
+          #   t.bigint "record_id"
+          # end
+          # create_table "contact_log_recipients", force: :cascade do |t|
+          #   t.bigint "to_user_id"
+          #   t.integer "sms_status"
+          #   t.boolean "success", default: false, null: false
+          #   t.boolean "notify_on_fail", default: true, null: false
+          #   t.boolean "sms_false_positive", default: false, null: false
+          # end
+
+          @log
         end
 
         def get_attachments
@@ -103,9 +130,9 @@ module RadCommon
         end
 
         def log_mms!
-          @log = TwilioLog.new to_number: RadConfig.twilio_phone_number!,
-                               from_number: @phone_number,
-                               message: @incoming_message.presence || 'MMS'
+          @log = ContactLog.new to_number: RadConfig.twilio_phone_number!,
+                                from_number: @phone_number,
+                                message: @incoming_message.presence || 'MMS'
 
           @attachments.each do |attachment|
             @log.media_url = attachment[:url]

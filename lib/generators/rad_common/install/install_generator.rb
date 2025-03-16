@@ -252,8 +252,6 @@ Seeder.new.seed!
         end
 
         def apply_migration(source)
-          return if RadConfig.react_app?
-
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
           if self.class.migration_exists?('db/migrate', filename)
