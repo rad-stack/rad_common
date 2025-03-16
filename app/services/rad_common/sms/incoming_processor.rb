@@ -131,12 +131,17 @@ module RadCommon
 
         def log_mms!
           # TODO: fix this same as above
-          @log = ContactLog.new to_number: RadConfig.twilio_phone_number!,
-                                from_number: @phone_number,
-                                message: @incoming_message.presence || 'MMS'
+          @log = ContactLog.create! from_number: @phone_number,
+                                    content: @incoming_message.presence || 'MMS',
+                                    service_type: :sms,
+                                    sms_log_type: :incoming,
+                                    sms_message_id: sms_message_id,
+                                    sent: true
+
+          @log.contact_log_recipients.create! phone_number: RadTwilio.twilio_to_human_format(RadConfig.twilio_phone_number!)
 
           @attachments.each do |attachment|
-            @log.media_url = attachment[:url]
+            @log.sms_media_url = attachment[:url]
             @log.attachments.attach io: attachment[:file],
                                     content_type: attachment[:content_type],
                                     identify: false,

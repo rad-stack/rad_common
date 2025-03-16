@@ -19,6 +19,8 @@ class ContactLog < ApplicationRecord
     joins(:contact_log_recipients).where(query).distinct
   }
 
+  has_many_attached :attachments
+
   validates :from_user_id, presence: true, if: -> { outgoing? && sms? }
   validates :sms_message_id, presence: true, if: :incoming?
   validates :content, presence: true, if: :sent?
