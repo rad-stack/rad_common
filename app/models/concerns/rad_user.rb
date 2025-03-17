@@ -15,18 +15,17 @@ module RadUser
     has_many :login_activities, as: :user, dependent: :destroy
     has_many :user_clients, dependent: :destroy
     has_many :clients, through: :user_clients, source: :client
+    has_many :saved_search_filters, dependent: :destroy
 
-    has_many :contact_logs_from,
-             class_name: 'ContactLog',
-             foreign_key: 'from_user_id',
-             dependent: :destroy,
-             inverse_of: :from_user
+    has_many :contact_logs_from, class_name: 'ContactLog',
+                                 foreign_key: 'from_user_id',
+                                 dependent: :destroy,
+                                 inverse_of: :from_user
 
-    has_many :contact_logs_to,
-             class_name: 'ContactLogRecipient',
-             foreign_key: 'to_user_id',
-             dependent: :destroy,
-             inverse_of: :to_user
+    has_many :contact_logs_to, class_name: 'ContactLogRecipient',
+                               foreign_key: 'to_user_id',
+                               dependent: :destroy,
+                               inverse_of: :to_user
 
     has_one_attached :avatar
 
@@ -51,6 +50,7 @@ module RadUser
     scope :recent_first, -> { order('users.created_at DESC') }
     scope :recent_last, -> { order('users.created_at') }
     scope :except_user, ->(user) { where.not(id: user.id) }
+    scope :with_notifications, -> { where('users.id IN (SELECT DISTINCT user_id FROM notifications)') }
 
     scope :by_permission, lambda { |permission_attr|
       joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct
@@ -61,6 +61,7 @@ module RadUser
         .where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)')
     }
 
+    scope :inactive, -> { joins(:user_status).where(user_statuses: { active: false }) }
     scope :not_inactive, -> { where.not(user_status_id: UserStatus.default_inactive_status.id) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
@@ -191,6 +192,10 @@ module RadUser
     end
   end
 
+  def notify_new_user_signed_up
+    Notifications::NewUserSignedUpNotification.main(self).notify!
+  end
+
   def send_devise_notification(notification, *args)
     # background devise emails
     # https://github.com/plataformatec/devise#activejob-integration
@@ -211,11 +216,25 @@ module RadUser
   end
 
   def test_sms!(from_user)
-    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false
+    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false, contact_log_record: self
   end
 
   def reactivate
     update(last_activity_at: nil)
+  end
+
+  def locale
+    User.languages[language]
+  end
+
+  def developer?
+    email.end_with? RadConfig.developer_domain!
+  end
+
+  class_methods do
+    def user_approved_message
+      "Your account was approved and you can begin using #{RadConfig.app_name!}."
+    end
   end
 
   private
@@ -271,6 +290,12 @@ module RadUser
       return unless password.downcase.include?(first_name.downcase) || password.downcase.include?(last_name.downcase)
 
       errors.add(:password, 'cannot contain your name')
+    end
+
+    def validate_last_activity
+      return unless RadConfig.user_expirable? && last_activity_at.blank?
+
+      errors.add :last_activity_at, 'is required'
     end
 
     def set_timezone
