@@ -9,6 +9,7 @@ class NotificationSettingsController < ApplicationController
 
     if notification_type.blank?
       skip_authorization
+      # TODO: convert json to turbo
       render json: { error: 'Invalid parameters' }, status: :unprocessable_entity
       return
     end
@@ -22,8 +23,10 @@ class NotificationSettingsController < ApplicationController
     authorize notification_setting
 
     if notification_setting.save
+      # TODO: convert json to turbo
       render json: { status: 'The setting was successfully saved.' }, status: :ok
     else
+      # TODO: convert json to turbo
       render json: { error:
                          "The setting could not be saved: #{notification_setting.errors.full_messages.join(', ')}" },
              status: :unprocessable_entity

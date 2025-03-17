@@ -10,10 +10,6 @@
         %p Email/SMS/Feed
 
     - settings.each do |record|
-      :ruby
-        setting_id_string = record.notification_type.description.parameterize.underscore
-        collapse_id = "notification-options-#{setting_id_string}"
-        updatable = can_create && policy(record).create?
       %tr{ class: table_row_style(record) }
         %td
           - if can_type
@@ -21,35 +17,6 @@
           - else
             = record.notification_type
         %td.w-50
-          = simple_form_for record, url: notification_settings_path, method: :post do |f|
-            = rad_form_errors f
-            .row
-              .col-lg
-                = f.input :enabled,
-                          tooltip: 'Turn this notification on or off.',
-                          disabled: !updatable,
-                          input_html: { class: 'ays-ignore',
-                                        id: "notification_setting_enabled_#{setting_id_string}",
-                                        'data-bs-toggle': 'collapse', 'data-bs-target': "##{collapse_id}" }
-            .row
-              .col-lg-12{ id: collapse_id, class: record.enabled ? 'collapse show' : 'collapse' }
-                .d-flex.align-items-center.px-3.py-2.bg-light.border.rounded.shadow-sm#notification-settings
-                  = f.input :email, tooltip: 'Enable email notifications.',
-                                    input_html: { class: 'ays-ignore',
-                                                  id: "notification_setting_email_#{setting_id_string}" },
-                                    disabled: !record.notification_type.email_enabled? || !updatable
-
-                  - if RadConfig.twilio_enabled?
-                    = f.input :sms, tooltip: 'Enable SMS (text message) notifications.',
-                                    input_html: { class: 'ays-ignore',
-                                                  id: "notification_setting_sms_#{setting_id_string}" },
-                                    disabled: !record.notification_type.sms_enabled? || !updatable
-
-                  = f.input :feed,
-                            tooltip: 'Show a red badge on the top right navigation when a notification occurs.',
-                            input_html: { class: 'ays-ignore',
-                                          id: "notification_setting_feed_#{setting_id_string}" },
-                            disabled: !record.notification_type.feed_enabled? || !updatable
-
-            = f.association :notification_type, as: :hidden
-            = f.input :user_id, as: :hidden
+          = render 'notification_settings/toggle_enabled',
+                   notification_setting: record,
+                   can_update: can_create && policy(record).create?
