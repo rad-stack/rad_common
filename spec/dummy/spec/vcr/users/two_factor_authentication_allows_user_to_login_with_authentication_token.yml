@@ -1,0 +1,78 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications
+    body:
+      encoding: UTF-8
+      string: Channel=sms&To=%2B1<TEST_MOBILE_PHONE_STRIPPED>
+    headers:
+      User-Agent:
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - application/json
+      Authorization:
+      - Basic QUM4MDNjYzQ4MWZmZTExYmFiMjY4ZmNmYjhmMjQ3ZGQ1OTo1MWQ0NDA3NzYzNzdiNzQ5MWFkNzBlNDc1MzI5MWQxYQ==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '633'
+      Connection:
+      - keep-alive
+      Date:
+      - Thu, 13 Mar 2025 16:50:40 GMT
+      X-Api-Domain:
+      - verify.twilio.com
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag
+      Twilio-Request-Id:
+      - RQ59efea2ad13b9127c95d80bde1c31612
+      Twilio-Request-Duration:
+      - '0.142'
+      Twilio-Concurrent-Requests:
+      - '1'
+      X-Shenanigans:
+      - none
+      X-Powered-By:
+      - AT-5000
+      X-Home-Region:
+      - us1
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 085e5d0eddae26cf37b8dddd5acf11a6.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - TPA52-P2
+      X-Amz-Cf-Id:
+      - gCHz_9IZpxjNQZfHAwSE6bsHvgY-Sx-Cte87qAo7Xy65tTbohdIlog==
+    body:
+      encoding: UTF-8
+      string: '{"status": "pending", "payee": null, "date_updated": "2025-03-13T16:50:40Z",
+        "send_code_attempts": [{"attempt_sid": "VLd817d13b24794f42e04660983026bfef",
+        "channel": "sms", "time": "2025-03-13T16:50:40.649Z"}], "account_sid": "AC803cc481ffe11bab268fcfb8f247dd59",
+        "to": "+1<TEST_MOBILE_PHONE_STRIPPED>", "amount": null, "valid": false, "lookup":
+        {"carrier": null}, "url": "https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications/VE913550067e13154877f1a3f0ca863824",
+        "sid": "VE913550067e13154877f1a3f0ca863824", "date_created": "2025-03-13T16:50:40Z",
+        "service_sid": "<TWILIO_ALT_VERIFY_SERVICE_SID>", "channel": "sms"}'
+  recorded_at: Thu, 13 Mar 2025 16:50:40 GMT
+recorded_with: VCR 6.3.1

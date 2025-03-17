@@ -81,4 +81,4 @@ To run the test suite, run the following command:
 
 When refactoring and modifying code in this project while developing other projects, you may want your other project to point to the local source rather than the remote on Github. In your client project, you can override the gem path like:
 
-`gem 'rad_common', path: '/Users/garyfoster/Projects/rad_common'`
+`gem 'rad_common', path: '/Users/garyfoster/Projects/rad_common_ijs'`

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe '<%= class_name.pluralize %>', <%= type_metatag(:system) %> do
+RSpec.describe '<%= class_name.pluralize %>' do
   let(:user) { create :admin }
   let(:<%= file_name %>) { create :<%= file_name %> }
 

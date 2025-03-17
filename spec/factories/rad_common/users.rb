@@ -31,6 +31,10 @@ FactoryBot.define do
       association :user_status, factory: %i[user_status pending]
     end
 
+    trait :inactive do
+      user_status factory: %i[user_status inactive]
+    end
+
     factory :client_user do |f|
       transient do
         client { nil }

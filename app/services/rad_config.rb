@@ -14,6 +14,10 @@ class RadConfig
       Mail::Address.new(admin_email!).address
     end
 
+    def developer_domain!
+      secret_config_item! :developer_domain
+    end
+
     def from_email!
       secret_config_item! :from_email
     end
@@ -94,6 +98,14 @@ class RadConfig
       secret_config_item! :jwt_secret
     end
 
+    def jwt_enabled?
+      secret_config_item(:jwt_secret).present?
+    end
+
+    def timeout_hours!
+      config_item! :timeout_hours
+    end
+
     def test_phone_number
       secret_config_item :test_phone_number
     end
@@ -152,6 +164,21 @@ class RadConfig
       secret_config_item! :twilio_verify_service_sid
     end
 
+    def twilio_verify_enabled?
+      boolean_config_item! :twilio_verify_enabled
+    end
+
+    def twilio_verify_all_users?
+      boolean_config_item! :twilio_verify_all_users
+    end
+
+    def twilio_verify_internal_only?
+      boolean_config_item! :twilio_verify_internal_only
+    end
+
+    def twilio_verify_remember_device!
+      config_item!(:twilio_verify_remember_device_days).days
+    end
 
     # Config item should be in sync with countries enabled for messaging in twilio account
     # https://console.twilio.com/us1/develop/sms/settings/geo-permissions
@@ -214,19 +241,33 @@ class RadConfig
     end
 
     def impersonate?
+      return true unless Rails.env.production?
+
       boolean_config_item! :impersonate
     end
 
     def avatar?
-      false
+      boolean_config_item! :use_avatar
     end
 
-    def twilio_verify_enabled?
-      boolean_config_item! :twilio_verify_enabled
+    def switch_languages?
+      boolean_config_item! :switch_languages
     end
 
-    def twilio_verify_internal_only?
-      boolean_config_item! :twilio_verify_internal_only
+    def require_mobile_phone?
+      boolean_config_item! :require_mobile_phone
+    end
+
+    def storage_config_override?
+      boolean_config_item! :storage_config_override
+    end
+
+    def database_config_override?
+      boolean_config_item! :database_config_override
+    end
+
+    def procfile_override?
+      boolean_config_item! :procfile_override
     end
 
     def external_users?
@@ -245,8 +286,40 @@ class RadConfig
       boolean_config_item! :disable_invite
     end
 
+    def manually_create_users?
+      boolean_config_item! :manually_create_users
+    end
+
+    def pending_users?
+      boolean_config_item! :pending_users
+    end
+
+    def show_help_menu?
+      boolean_config_item! :show_help_menu
+    end
+
+    def force_marketing_site?
+      boolean_config_item! :force_marketing_site
+    end
+
+    def allow_marketing_site?
+      boolean_config_item! :allow_marketing_site
+    end
+
     def canadian_addresses?
-      false
+      boolean_config_item! :canadian_addresses
+    end
+
+    def saved_search_filters_enabled?
+      boolean_config_item! :saved_search_filters_enabled
+    end
+
+    def legal_docs?
+      boolean_config_item! :legal_docs
+    end
+
+    def react_app?
+      config_item(:react_app).presence || false
     end
 
     def shared_database?
@@ -301,6 +374,10 @@ class RadConfig
       array_config_item! :additional_user_params
     end
 
+    def additional_user_profile_params!
+      array_config_item! :additional_user_profile_params
+    end
+
     def restricted_audit_attributes!
       array_config_item! :restricted_audit_attributes
     end
@@ -348,6 +425,30 @@ class RadConfig
       Devise.mappings[:user].expirable?
     end
 
+    def password_expirable?
+      Devise.mappings[:user].password_expirable?
+    end
+
+    def allow_crawling?
+      boolean_config_item! :allow_crawling
+    end
+
+    def always_crawl?
+      boolean_config_item! :always_crawl
+    end
+
+    def crawlable_subdomains
+      array_config_item! :crawlable_subdomains
+    end
+
+    def last_first_user?
+      boolean_config_item! :last_first_user
+    end
+
+    def legacy_rails_config?
+      boolean_config_item! :legacy_rails_config
+    end
+
     def secret_config_item!(item)
       value = secret_config_item(item)
       raise "required secret config item #{item} is missing" if value.blank?
@@ -387,14 +488,16 @@ class RadConfig
       value
     end
 
+    def enable_super_search?
+      boolean_config_item! :enable_super_search
+    end
+
     def check_validity!
       check_aws!
       check_twilio_verify!
       check_smarty!
-    end
-
-    def enable_super_search?
-      boolean_config_item! :enable_super_search
+      check_marketing!
+      check_external!
     end
 
     private
@@ -424,6 +527,18 @@ class RadConfig
         return if smarty_auth_id.blank? && smarty_auth_token.blank?
 
         raise 'include all or none of smarty_auth_id and smarty_auth_token'
+      end
+
+      def check_marketing!
+        return unless force_marketing_site? && !allow_marketing_site?
+
+        raise 'force_marketing_site not allowed'
+      end
+
+      def check_external!
+        return unless user_clients? && !external_users?
+
+        raise 'user_clients requires external_users'
       end
 
       def override_variable(item)

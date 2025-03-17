@@ -1,0 +1,14 @@
+- if record.new_record?
+  .row
+    .col-lg-12
+      .card.duplicate-card#duplicate-card
+        .card-header
+          %strong Possible Duplicates
+        .card-body
+          .duplicate-data
+        .card-header
+          .create_anyway
+            %label.text-danger#create-anyway-label Create anyway?
+            %input#create-anyway{ type: 'checkbox' }
+
+  = render 'layouts/duplicate_toast', model: record.class
