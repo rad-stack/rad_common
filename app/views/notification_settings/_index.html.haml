@@ -21,11 +21,7 @@
           - else
             = record.notification_type
         %td.w-50
-          = simple_form_for record,
-                            url: notification_settings_path,
-                            method: :post,
-                            html: { class: 'dynamic-updater' } do |f|
-
+          = simple_form_for record, url: notification_settings_path, method: :post do |f|
             = rad_form_errors f
             .row
               .col-lg
