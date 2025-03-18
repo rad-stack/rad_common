@@ -8,7 +8,6 @@ class NotificationType < ApplicationRecord
 
   scope :sorted, -> { order(:type) }
 
-  validates_with EmailAddressValidator, fields: [:bcc_recipient]
   validate :validate_auth
 
   strip_attributes

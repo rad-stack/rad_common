@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'rake_session'
 
 class TestRakeTask
   def name

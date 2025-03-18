@@ -1,12 +1,8 @@
-= render 'users/devise_layout' do
-  = render 'layouts/card_header',
-           action_name: 'custom',
-           title: 'Resend Confirmation Instructions',
-           icon: 'fa-envelope',
-           card_style: 'bg-white'
+.card
+  = render 'layouts/card_header', action_name: 'custom', title: 'Resend Confirmation Instructions', icon: 'fa-envelope'
   .card-body
     = simple_form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f|
-      = rad_form_errors f
+      = f.error_notification
       = f.full_error :confirmation_token
 
       .form-inputs

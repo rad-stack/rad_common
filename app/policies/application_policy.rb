@@ -43,10 +43,6 @@ class ApplicationPolicy
   end
 
   def global_search?
-    index? && show?
-  end
-
-  def searchable_association?
     index?
   end
 
@@ -58,21 +54,11 @@ class ApplicationPolicy
     destroy?
   end
 
-  def not_duplicate?
-    destroy?
-  end
-
-  def reset_duplicates?
-    destroy?
-  end
-
-  def merge_duplicates?
-    destroy?
-  end
-
-  def duplicate_do_later?
-    destroy?
-  end
+  alias not_duplicate? destroy?
+  alias reset_duplicates? destroy?
+  alias merge_duplicates? destroy?
+  alias index_duplicates? index?
+  alias duplicate_do_later? destroy?
 
   class Scope
     attr_reader :user, :scope

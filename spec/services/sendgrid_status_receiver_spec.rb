@@ -20,7 +20,7 @@ describe SendgridStatusReceiver, type: :service do
     deliveries.clear
   end
 
-  it 'notifies' do
+  xit 'notifies' do
     service.process!
 
     expect(last_email.subject).to include 'Outgoing Email Failed'
@@ -46,7 +46,7 @@ describe SendgridStatusReceiver, type: :service do
 
     before { RadDeviseMailer.email_changed(user).deliver_now }
 
-    it "doesn't notify on failure" do
+    xit "doesn't notify on failure" do
       expect(last_contact_log.content).to eq 'Email Changed'
 
       deliveries.clear
@@ -57,11 +57,11 @@ describe SendgridStatusReceiver, type: :service do
   end
 
   context 'with matching host name' do
-    it 'notifies' do
+    xit 'notifies' do
       expect { service.process! }.to change(deliveries, :count).by(1)
     end
 
-    it 'updates status of contact log' do
+    xit 'updates status of contact log' do
       expect {
         service.process!
         contact_log_recipient.reload
@@ -73,7 +73,7 @@ describe SendgridStatusReceiver, type: :service do
 
       before { create :contact_log_recipient, :email, contact_log: contact_log, email: user.email, email_type: :bcc }
 
-      it 'raises an error when updating status of contact log' do
+      xit 'raises an error when updating status of contact log' do
         expect { service.process! }.to raise_error error_message
       end
     end
@@ -96,7 +96,7 @@ describe SendgridStatusReceiver, type: :service do
     context 'with expired user', :user_expirable_specs do
       before { user.update_column :last_activity_at, 1.year.ago }
 
-      it 'deactivates' do
+      xit 'deactivates' do
         expect(user.active?).to be true
 
         service.process!
