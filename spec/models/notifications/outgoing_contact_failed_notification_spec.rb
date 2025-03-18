@@ -30,17 +30,17 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
       context 'with from_user same as to_user' do
         let(:from_user) { to_user }
 
-        xit { is_expected.to eq [from_user.id] }
+        it { is_expected.to eq [from_user.id] }
       end
 
       context 'with from_user different than to_user' do
-        xit { is_expected.to eq [to_user.id].sort }
+        it { is_expected.to eq [to_user.id].sort }
       end
 
       context 'without to_user' do
         let(:to_user) { nil }
 
-        xit { is_expected.to eq [from_user.id] }
+        it { is_expected.to eq [from_user.id] }
       end
     end
   end
@@ -51,13 +51,13 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
     before { expect(mail.subject).to eq "Outgoing Email Failed for #{to_failed} in #{RadConfig.app_name!}" }
 
     describe 'absolute_user_ids' do
-      xit 'is the from_user' do
+      it 'is the from_user' do
         expect(notification_type.absolute_user_ids).to eq [from_user.id]
       end
     end
 
     context 'with from_user' do
-      xit 'emails the from_user' do
+      it 'emails the from_user' do
         expect(mail.to).to include from_user.email
         expect(mail.to).not_to include admin.email
       end
@@ -65,12 +65,12 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
       context 'when same as to_user' do
         let(:from_user) { to_user }
 
-        xit 'emails the admins' do
+        it 'emails the admins' do
           expect(mail.to).not_to include from_user.email
           expect(mail.to).to include admin.email
         end
 
-        xit "doesn't include from_user" do
+        it "doesn't include from_user" do
           expect(mail.text_part.body.to_s).to include(to_user.to_s).once
         end
       end
@@ -79,7 +79,7 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
     context 'without from_user' do
       let(:from_user) { nil }
 
-      xit 'emails the admins' do
+      it 'emails the admins' do
         expect(mail.to).to include admin.email
       end
     end
@@ -88,7 +88,7 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
       context 'when different from to_user' do
         let(:record) { create :user }
 
-        xit 'includes record' do
+        it 'includes record' do
           expect(mail.text_part.body.to_s).to include(to_user.to_s).once
           expect(mail.text_part.body.to_s).to include(record.to_s).once
         end
@@ -97,7 +97,7 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
       context 'when same as to_user' do
         let(:record) { to_user }
 
-        xit "doesn't include record" do
+        it "doesn't include record" do
           expect(mail.text_part.body.to_s).to include(record.to_s).once
         end
       end

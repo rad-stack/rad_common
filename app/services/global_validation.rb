@@ -9,9 +9,10 @@ class GlobalValidation
     return unless needs_to_run?
 
     error_messages = check_global_validity
+    payload = { error_count: error_messages.size, error_messages: error_messages.take(1000) }
 
-    Notifications::InvalidDataWasFoundNotification.main.notify!(error_messages) if error_messages.any?
-    Notifications::GlobalValidityRanLongNotification.main.notify!(@run_stats) if took_too_long?
+    Notifications::InvalidDataWasFoundNotification.main(payload).notify! if error_messages.any?
+    Notifications::GlobalValidityRanLongNotification.main(@run_stats).notify! if took_too_long?
 
     Company.main.global_validity_ran!
   end
@@ -75,14 +76,17 @@ class GlobalValidation
     def exclude_models
       return [] if @override_model.present?
 
-      RadConfig.global_validity_exclude! + ['TwilioLog']
+      RadConfig.global_validity_exclude!
     end
 
     def check_model(model)
       problems = []
       error_count = 0
 
-      model.safe_constantize.find_each do |record|
+      klass = model.safe_constantize
+      raise "unknown model #{model}" if klass.nil?
+
+      klass.find_each do |record|
         error_count += 1 if validate_record(record, problems)
       end
 

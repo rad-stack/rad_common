@@ -9,7 +9,7 @@ RSpec.describe 'Form Errors', type: :system do
     login_as admin, scope: :user
   end
 
-  xit 'displays base errors' do
+  it 'displays base errors' do
     visit "/notification_types/#{notification_type.id}/edit"
     click_button 'Save'
     expect(page).to have_content('invalid without security roles')

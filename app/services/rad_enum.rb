@@ -32,6 +32,14 @@ class RadEnum
     retrieve_options true
   end
 
+  def db_value(enum_value)
+    enum_values[enum_value]
+  end
+
+  def random_value
+    options.sample.last
+  end
+
   private
 
     def enum_exists?
