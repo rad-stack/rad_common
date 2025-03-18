@@ -1,5 +1,3 @@
-require 'rake_session'
-
 namespace :duplicates do
   task process: :environment do |task|
     session = RakeSession.new(task, 58.minutes, 10)
