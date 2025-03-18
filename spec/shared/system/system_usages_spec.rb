@@ -10,7 +10,7 @@ RSpec.describe 'SystemUsages', type: :system do
 
   describe 'index' do
     it 'displays the system usages' do
-      visit '/rad_common/system_usages'
+      visit '/system_usages'
       expect(page).to have_content('5')
     end
   end
