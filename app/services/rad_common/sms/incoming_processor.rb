@@ -80,30 +80,34 @@ module RadCommon
         end
 
         def log_sms!
+          log_contact @incoming_message
+        end
+
+        def log_mms!
+          log_contact @incoming_message.presence || 'MMS'
+
+          @attachments.each do |attachment|
+            @log.sms_media_url = attachment[:url]
+            @log.attachments.attach io: attachment[:file],
+                                    content_type: attachment[:content_type],
+                                    identify: false,
+                                    filename: attachment[:filename]
+          end
+
+          @log.save!
+          @log
+        end
+
+        def log_contact(content)
           @log = ContactLog.create! from_number: @phone_number,
-                                    content: @incoming_message,
+                                    from_user: from_user,
+                                    content: content,
                                     service_type: :sms,
                                     sms_log_type: :incoming,
                                     sms_message_id: sms_message_id,
                                     sent: true
 
-          @log.contact_log_recipients.create! phone_number: RadTwilio.twilio_to_human_format(RadConfig.twilio_phone_number!)
-
-          # TODO: should any of these be populated?
-          # create_table "contact_logs", force: :cascade do |t|
-          #   t.bigint "from_user_id"
-          #   t.string "sms_media_url"
-          #   t.boolean "sms_opt_out_message_sent", default: false, null: false
-          #   t.string "record_type"
-          #   t.bigint "record_id"
-          # end
-          # create_table "contact_log_recipients", force: :cascade do |t|
-          #   t.bigint "to_user_id"
-          #   t.integer "sms_status"
-          #   t.boolean "success", default: false, null: false
-          #   t.boolean "notify_on_fail", default: true, null: false
-          #   t.boolean "sms_false_positive", default: false, null: false
-          # end
+          @log.contact_log_recipients.create! phone_number: to_number
 
           @log
         end
@@ -129,36 +133,20 @@ module RadCommon
           end.compact
         end
 
-        def log_mms!
-          # TODO: fix this same as above
-          @log = ContactLog.create! from_number: @phone_number,
-                                    content: @incoming_message.presence || 'MMS',
-                                    service_type: :sms,
-                                    sms_log_type: :incoming,
-                                    sms_message_id: sms_message_id,
-                                    sent: true
-
-          @log.contact_log_recipients.create! phone_number: RadTwilio.twilio_to_human_format(RadConfig.twilio_phone_number!)
-
-          @attachments.each do |attachment|
-            @log.sms_media_url = attachment[:url]
-            @log.attachments.attach io: attachment[:file],
-                                    content_type: attachment[:content_type],
-                                    identify: false,
-                                    filename: attachment[:filename]
-          end
-
-          unless @log.save
-            @log.attachments = [] if @log.errors.messages.has_key?(:attachments)
-            @log.save
-          end
-
-          @log
-        end
-
         def translate_reply(sms_reply_key, params = {})
           params.merge!(locale: locale)
           I18n.t(sms_reply_key, **params)
+        end
+
+        def to_number
+          @to_number ||= RadTwilio.twilio_to_human_format(RadConfig.twilio_phone_number!)
+        end
+
+        def from_user
+          users = User.where(mobile_phone: @phone_number)
+          return unless users.size == 1
+
+          users.first
         end
     end
   end
