@@ -11,7 +11,7 @@ class PhoneNumberValidator < ActiveModel::Validator
         next
       end
 
-      next unless check_twilio?(record, field)
+      next unless check_twilio?(record, field, options)
 
       mobile = field[:type] && field[:type] == :mobile
       error_message = RadTwilio.new.validate_phone_number(phone_value, mobile)
@@ -37,8 +37,8 @@ class PhoneNumberValidator < ActiveModel::Validator
       record.send(field)
     end
 
-    def check_twilio?(record, field)
-      return false if record.running_global_validity
+    def check_twilio?(record, field, options)
+      return false if record.running_global_validity || options[:skip_twilio]
       return true if record.send("#{field[:field]}_changed?")
 
       # this is a hack to make this work properly for SP, see Task 34650

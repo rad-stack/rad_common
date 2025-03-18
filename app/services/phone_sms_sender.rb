@@ -38,11 +38,6 @@ class PhoneSMSSender
     false
   end
 
-  def blacklisted?
-    # https://www.twilio.com/docs/api/errors/21610
-    exception.message.include?('21610')
-  end
-
   private
 
     def handle_blacklist
@@ -67,6 +62,11 @@ class PhoneSMSSender
 
     def to_number
       RadTwilio.human_to_twilio_format(to_mobile_phone)
+    end
+
+    def blacklisted?
+      # https://www.twilio.com/docs/api/errors/21610
+      exception.message.include?('21610')
     end
 
     def opt_out_message_already_sent?
