@@ -168,9 +168,9 @@ module PaceApi
     end
 
     def proxy_url
-      return unless Rails.env.production?
+      RadConfig.secret_config_item!(:quota_guard_url) if Rails.env.production?
 
-      RadConfig.secret_config_item!(:quota_guard_url)
+      RadConfig.secret_config_item(:quota_guard_url)
     end
 
     def report_error(message)
