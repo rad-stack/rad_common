@@ -20,7 +20,7 @@ describe SendgridStatusReceiver, type: :service do
     deliveries.clear
   end
 
-  xit 'notifies' do
+  it 'notifies' do
     service.process!
 
     expect(last_email.subject).to include 'Outgoing Email Failed'
@@ -57,11 +57,11 @@ describe SendgridStatusReceiver, type: :service do
   end
 
   context 'with matching host name' do
-    xit 'notifies' do
+    it 'notifies' do
       expect { service.process! }.to change(deliveries, :count).by(1)
     end
 
-    xit 'updates status of contact log' do
+    it 'updates status of contact log' do
       expect {
         service.process!
         contact_log_recipient.reload
@@ -73,7 +73,7 @@ describe SendgridStatusReceiver, type: :service do
 
       before { create :contact_log_recipient, :email, contact_log: contact_log, email: user.email, email_type: :bcc }
 
-      xit 'raises an error when updating status of contact log' do
+      it 'raises an error when updating status of contact log' do
         expect { service.process! }.to raise_error error_message
       end
     end

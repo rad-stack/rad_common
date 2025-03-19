@@ -14,6 +14,10 @@ class NotificationSetting < ApplicationRecord
     "#{user} - #{notification_type}"
   end
 
+  def active?
+    enabled?
+  end
+
   def self.settings_for_user(user)
     return [] if user.external?
 
@@ -29,6 +33,12 @@ class NotificationSetting < ApplicationRecord
     end
 
     settings
+  end
+
+  def self.init_for_user(notification_type, user)
+    record = NotificationSetting.find_or_initialize_by(notification_type: notification_type, user: user)
+    record.check_defaults
+    record
   end
 
   def check_defaults
@@ -66,7 +76,7 @@ class NotificationSetting < ApplicationRecord
     end
 
     def validate_sms_possible_app
-      return if RadTwilio.new.twilio_enabled? || !sms?
+      return if RadConfig.twilio_enabled? || !sms?
 
       errors.add(:sms, 'is not available for this application')
     end

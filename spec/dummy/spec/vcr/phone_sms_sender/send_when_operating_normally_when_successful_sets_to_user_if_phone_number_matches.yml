@@ -31,15 +31,15 @@ http_interactions:
       Connection:
       - keep-alive
       Date:
-      - Thu, 13 Mar 2025 16:49:03 GMT
+      - Fri, 14 Mar 2025 17:50:39 GMT
       X-Powered-By:
       - AT-5000
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ0fc3c2fdc1f8d079f36ec7edde5f2304
+      - RQ10b46a7819eeace5976ac09cee397794
       Twilio-Request-Duration:
-      - '0.078'
+      - '0.069'
       X-Home-Region:
       - us1
       X-Api-Domain:
@@ -62,21 +62,21 @@ http_interactions:
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 a76bcba13e5cb08b0c42b2b314a7e412.cloudfront.net (CloudFront)
+      - 1.1 83e7aaf13af313eacb0b03372aad0ab8.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
       - MIA3-P3
       X-Amz-Cf-Id:
-      - O7c9WU7y4BVyA51EeIwTkOfaM15OZAoBHXnnOYTTdP3CPbG84XBPhw==
+      - XqnvX86Io7CfC0dR_5cRGLq-RfKGJ6P-xIM0JIAONhHQaFSQQgIeKQ==
     body:
       encoding: UTF-8
       string: '{"account_sid": "ACaae98776bde4ed53d0fb1dfcc262558e", "api_version":
         "2010-04-01", "body": "test message - To no longer receive text messages,
-        text STOP", "date_created": "Thu, 13 Mar 2025 16:49:03 +0000", "date_sent":
-        null, "date_updated": "Thu, 13 Mar 2025 16:49:03 +0000", "direction": "outbound-api",
+        text STOP", "date_created": "Fri, 14 Mar 2025 17:50:39 +0000", "date_sent":
+        null, "date_updated": "Fri, 14 Mar 2025 17:50:39 +0000", "direction": "outbound-api",
         "error_code": null, "error_message": null, "from": "+15005550006", "messaging_service_sid":
         null, "num_media": "0", "num_segments": "1", "price": null, "price_unit":
-        "USD", "sid": "SM0fc3c2fdc1f8d079f36ec7edde5f2304", "status": "queued", "subresource_uris":
-        {"media": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SM0fc3c2fdc1f8d079f36ec7edde5f2304/Media.json"},
-        "to": "+16187222169", "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SM0fc3c2fdc1f8d079f36ec7edde5f2304.json"}'
-  recorded_at: Thu, 13 Mar 2025 16:49:03 GMT
+        "USD", "sid": "SM10b46a7819eeace5976ac09cee397794", "status": "queued", "subresource_uris":
+        {"media": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SM10b46a7819eeace5976ac09cee397794/Media.json"},
+        "to": "+16187222169", "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SM10b46a7819eeace5976ac09cee397794.json"}'
+  recorded_at: Fri, 14 Mar 2025 17:50:39 GMT
 recorded_with: VCR 6.3.1
