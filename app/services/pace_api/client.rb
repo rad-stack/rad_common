@@ -29,7 +29,6 @@ module PaceApi
 
       return parsed_response if parsed_response.present?
 
-
       report_error("The following #{type} is missing from Pace: #{xpath}")
       # TODO: make this notification standard?
       # Notifications::MissingRecordInPaceNotification.main(import_record: @facilis_import, type: type).notify!
@@ -102,81 +101,80 @@ module PaceApi
 
     private
 
-    def api_client
-      @api_client ||= Faraday.new(url: base_api_url, proxy: proxy_url) do |faraday|
-        faraday.request :authorization, :basic, pace_api_username, pace_api_password
-        faraday.headers['Accept'] = 'application/json'
-        faraday.headers['Content-Type'] = 'application/json'
-        faraday.request :json
-        faraday.response :json, content_type: /\bjson$/
-        faraday.ssl.verify = @ssl_verify
-        faraday.adapter Faraday.default_adapter
-      end
-    end
-
-    def pace_api_username
-      RadConfig.secret_config_item!(:pace_api_username)
-    end
-
-    def pace_api_password
-      RadConfig.secret_config_item!(:pace_api_password)
-    end
-
-    def log_request(action:, body:, method:, url:, query_params: nil)
-      Rails.logger.debug do
-        "#{action}, url: #{url} query params: #{query_params}, method: #{method} body: #{to_formatted_json(body)}"
-      end
-    end
-
-    def to_formatted_json(object)
-      return if object.blank?
-
-      JSON.pretty_generate(JSON.parse(object.to_json))
-    end
-
-    def base_api_url
-      "#{PaceApi::Client.base_url}/rpc/rest/services"
-    end
-
-    def parse_response(response, return_type = nil)
-      str = "Sending Request.... \n"
-      str += "Request Method: #{response.env.method}\n"
-      str += "Request URL: #{response.env.url}"
-      str += "Request Headers: #{response.env.request_headers}\n"
-      str += "Request Body: #{response.env.body}\n"
-
-      str += "Response Status: #{response.status}\n"
-      str += "Response Headers: #{response.headers}\n"
-      str += "Response Body: #{response.body}\n"
-      Rails.logger.info(str)
-      puts str
-
-      unless response.success?
-        raise PaceResponseError, "Request failed with status: #{response.status}, body: #{response.body}"
+      def api_client
+        @api_client ||= Faraday.new(url: base_api_url, proxy: proxy_url) do |faraday|
+          faraday.request :authorization, :basic, pace_api_username, pace_api_password
+          faraday.headers['Accept'] = 'application/json'
+          faraday.headers['Content-Type'] = 'application/json'
+          faraday.request :json
+          faraday.response :json, content_type: /\bjson$/
+          faraday.ssl.verify = @ssl_verify
+          faraday.adapter Faraday.default_adapter
+        end
       end
 
-      parsed_response = return_type.present? ? response.body[return_type] : response.body
-      Rails.logger.debug { "Response: #{to_formatted_json(parsed_response)}" }
-      parsed_response
-    end
+      def pace_api_username
+        RadConfig.secret_config_item!(:pace_api_username)
+      end
 
-    def headers
-      {
-        'Accept' => 'application/json',
-        'Content-Type' => 'application/json'
-      }
-    end
+      def pace_api_password
+        RadConfig.secret_config_item!(:pace_api_password)
+      end
 
-    def proxy_url
-      RadConfig.secret_config_item!(:quota_guard_url) if Rails.env.production?
+      def log_request(action:, body:, method:, url:, query_params: nil)
+        Rails.logger.debug do
+          "#{action}, url: #{url} query params: #{query_params}, method: #{method} body: #{to_formatted_json(body)}"
+        end
+      end
 
-      RadConfig.secret_config_item(:quota_guard_url)
-    end
+      def to_formatted_json(object)
+        return if object.blank?
 
-    def report_error(message)
-      return unless @on_error
+        JSON.pretty_generate(JSON.parse(object.to_json))
+      end
 
-      @on_error.call(message)
-    end
+      def base_api_url
+        "#{PaceApi::Client.base_url}/rpc/rest/services"
+      end
+
+      def parse_response(response, return_type = nil)
+        str = "Sending Request.... \n"
+        str += "Request Method: #{response.env.method}\n"
+        str += "Request URL: #{response.env.url}"
+        str += "Request Headers: #{response.env.request_headers}\n"
+        str += "Request Body: #{response.env.body}\n"
+
+        str += "Response Status: #{response.status}\n"
+        str += "Response Headers: #{response.headers}\n"
+        str += "Response Body: #{response.body}\n"
+        Rails.logger.info(str)
+
+        unless response.success?
+          raise PaceResponseError, "Request failed with status: #{response.status}, body: #{response.body}"
+        end
+
+        parsed_response = return_type.present? ? response.body[return_type] : response.body
+        Rails.logger.debug { "Response: #{to_formatted_json(parsed_response)}" }
+        parsed_response
+      end
+
+      def headers
+        {
+          'Accept' => 'application/json',
+          'Content-Type' => 'application/json'
+        }
+      end
+
+      def proxy_url
+        RadConfig.secret_config_item!(:quota_guard_url) if Rails.env.production?
+
+        RadConfig.secret_config_item(:quota_guard_url)
+      end
+
+      def report_error(message)
+        return unless @on_error
+
+        @on_error.call(message)
+      end
   end
 end
