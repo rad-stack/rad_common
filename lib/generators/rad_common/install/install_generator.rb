@@ -418,6 +418,10 @@ Seeder.new.seed!
           remove_file 'bin/webpack'
           remove_file 'bin/webpack-dev-server'
           remove_file 'babel.config.js'
+          remove_file '.browserslistrc'
+          remove_file 'postcss.config.js'
+          remove_file '.dockerignore'
+          remove_file 'Dockerfile'
 
           copy_file '../../../../../spec/dummy/esbuild.config.js', 'esbuild.config.js'
           copy_file '../../../../../spec/dummy/Procfile.dev', 'Procfile.dev'
