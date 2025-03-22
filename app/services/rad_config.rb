@@ -398,6 +398,10 @@ class RadConfig
       boolean_config_item! :legacy_rails_config
     end
 
+    def timezone_detection?
+      boolean_config_item! :timezone_detection
+    end
+
     def secret_config_item!(item)
       value = secret_config_item(item)
       raise "required secret config item #{item} is missing" if value.blank?
