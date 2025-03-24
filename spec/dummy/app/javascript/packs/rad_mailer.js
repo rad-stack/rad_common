@@ -1,0 +1,1 @@
+import 'rad_common_js/src/css/rad_common/rad_mailer.css';
