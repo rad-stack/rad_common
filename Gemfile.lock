@@ -562,8 +562,10 @@ DEPENDENCIES
   capybara-selenium
   devise-twilio-verify!
   haml_lint (= 0.55.0)
+  jsbundling-rails
   parallel_tests
   pdf-reader
+  propshaft
   pry
   rad_common!
   rspec-rails
