@@ -57,7 +57,7 @@ RSpec.describe 'Users', type: :request do
       end
     end
 
-    describe 'GET root path (checking timezone prompt)' do
+    describe 'GET root path (checking timezone prompt)', :timezone_detection_specs do
       let(:existing_timezone) { 'Eastern Time (US & Canada)' }
       let(:detected_timezone) { 'Pacific Time (US & Canada)' }
 

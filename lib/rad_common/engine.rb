@@ -16,6 +16,7 @@ module RadCommon
     require 'geocoder'
     require 'haml-rails'
     require 'hashids'
+    require 'jwt'
     require 'kaminari'
     require 'bootstrap4-kaminari-views'
     require 'nokogiri'
