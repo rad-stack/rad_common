@@ -57,7 +57,7 @@ RSpec.describe 'Users', type: :request do
       end
     end
 
-    describe 'GET root path (checking timezone prompt)' do
+    describe 'GET root path (checking timezone prompt)', :timezone_detection_specs do
       let(:existing_timezone) { 'Eastern Time (US & Canada)' }
       let(:detected_timezone) { 'Pacific Time (US & Canada)' }
 
@@ -69,7 +69,7 @@ RSpec.describe 'Users', type: :request do
         follow_redirect! while response.redirect?
       end
 
-      it 'displays the timezone prompt when detected timezone differs', :non_react_specs do
+      it 'displays the timezone prompt when detected timezone differs' do
         expect(response.body).to match(/We've detected a different timezone:.*Pacific Time \(US &amp; Canada\)/)
       end
     end
