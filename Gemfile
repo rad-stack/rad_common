@@ -27,7 +27,5 @@ end
 
 group :development, :test do
   gem 'bootsnap', require: false
-  # gem 'jsbundling-rails'
-  gem 'propshaft'
   gem 'pry'
 end
