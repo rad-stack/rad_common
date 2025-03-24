@@ -51,7 +51,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: rad_common_test${{ matrix.TEST_ENV_NUMBER }}
+          POSTGRES_DB: cannasaver_public_test${{ matrix.TEST_ENV_NUMBER }}
         ports:
           - 5432:5432
         options: >-
@@ -79,20 +79,28 @@ jobs:
           cache: 'yarn'
 
       - name: Yarn install
-        working-directory: spec/dummy
         run: yarn install
 
       - name: Prepare database
-        working-directory: spec/dummy
         run: |
           bundle exec rails db:test:prepare
 
-      - name: Compile esbuild assets
-        working-directory: spec/dummy
-        run: bundle exec bin/rails assets:precompile
+      - name: Cache Webpacker packs
+        uses: actions/cache@v4
+        with:
+          path: |
+            spec/dummy/public/packs
+            spec/dummy/public/packs-test
+            spec/dummy/node_modules
+            spec/dummy/tmp/cache/webpacker
+          key: webpacker-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            webpacker-${{ hashFiles('**/yarn.lock') }}-
+
+      - name: Compile Webpacker assets
+        run: bundle exec rails webpacker:compile
 
       - name: Load schema
-        working-directory: spec/dummy
         run: |
           if [ "${{ needs.setup-matrix.outputs.total_groups }}" == "1" ]; then
             bundle exec rake db:schema:load
@@ -105,7 +113,7 @@ jobs:
           if [ "${{ needs.setup-matrix.outputs.total_groups }}" == "1" ]; then
             bin/rc_rspec
           else
-            bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{join(matrix.GROUP, ',')}}
+            bin/rc_parallel_rspec -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{join(matrix.GROUP, ',')}}
           fi
 
       - name: Upload screenshots on failure
