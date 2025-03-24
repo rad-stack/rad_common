@@ -401,7 +401,7 @@ gem 'propshaft'
 
         def install_github_workflow
           if RadConfig.react_app?
-            copy_file '../../../../../.github/workflows/rspec_tests_react.yml', '.github/workflows/rspec_tests.yml'
+            copy_file '../rspec_tests_react.yml', '.github/workflows/rspec_tests.yml'
           else
             copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
           end
