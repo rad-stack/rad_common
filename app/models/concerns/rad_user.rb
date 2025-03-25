@@ -226,6 +226,10 @@ module RadUser
     update(last_activity_at: nil)
   end
 
+  def developer?
+    email.end_with? RadConfig.developer_domain!
+  end
+
   private
 
     def check_defaults

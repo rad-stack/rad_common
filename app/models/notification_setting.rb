@@ -31,6 +31,12 @@ class NotificationSetting < ApplicationRecord
     settings
   end
 
+  def self.init_for_user(notification_type, user)
+    record = NotificationSetting.find_or_initialize_by(notification_type: notification_type, user: user)
+    record.check_defaults
+    record
+  end
+
   def check_defaults
     return if notification_type.blank? || email? || sms? || feed?
 
