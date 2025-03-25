@@ -21,6 +21,7 @@ module RadCommon
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'legacy_rails_config', 'false'
+        add_rad_config_setting 'timezone_detection', 'true'
         remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
@@ -46,7 +47,7 @@ module RadCommon
           copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
         end
 
-        migrate_webpacker_to_esbuild
+        migrate_webpacker_to_esbuild unless RadConfig.react_app?
 
         migrate_to_tom_select
 
@@ -101,6 +102,11 @@ module RadCommon
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
                  'config/initializers/devise_security.rb'
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/config/initializers/assets.rb',
+                    'config/initializers/assets.rb'
+        end
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form.rb',
                   'config/initializers/simple_form.rb'
@@ -185,6 +191,14 @@ Seeder.new.seed!
         inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do <<-'RUBY'
   gem 'rubocop-capybara'
         RUBY
+        end
+
+        unless RadConfig.react_app?
+          inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
+gem 'jsbundling-rails'
+gem 'propshaft'
+          RUBY
+          end
         end
 
         apply_migrations
@@ -387,7 +401,12 @@ Seeder.new.seed!
         end
 
         def install_github_workflow
-          copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          if RadConfig.react_app?
+            copy_file '../rspec_tests_react.yml', '.github/workflows/rspec_tests.yml'
+          else
+            copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          end
+
           copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
           copy_file '../../../../../.github/workflows/generate_coverage_report.yml',
                     '.github/workflows/generate_coverage_report.yml'
@@ -405,11 +424,13 @@ Seeder.new.seed!
                       "#{installed_app_name}_development"
           end
 
-          gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
-          gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
-          gsub_file '.github/workflows/rspec_tests.yml',
-                   "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
-                   'bin/rc_parallel_rspec'
+          unless RadConfig.react_app?
+            gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
+            gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
+            gsub_file '.github/workflows/rspec_tests.yml',
+                     "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
+                     'bin/rc_parallel_rspec'
+          end
         end
 
         def migrate_webpacker_to_esbuild

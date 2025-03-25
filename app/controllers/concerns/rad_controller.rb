@@ -63,6 +63,7 @@ module RadController
     end
 
     def check_ip_address_timezone
+      return unless RadConfig.timezone_detection?
       return if impersonating?
 
       UserTimezone.new(current_user).check_user!(request.remote_ip)
