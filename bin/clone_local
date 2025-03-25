@@ -5,7 +5,8 @@ RadBin.rad_common_not_permitted!
 
 FileUtils.chdir Dir.pwd do
   heroku_app_name = RadBin.get_heroku_app_name(:all)
+  backup_id = RadBin.select_backup_id(heroku_app_name)
 
-  puts "Proceeding with clone local for app: #{heroku_app_name}..."
-  RadBin.system!("bundle exec rails \"heroku:clone_local[#{heroku_app_name}]\"")
+  puts "Proceeding with clone local for app: #{heroku_app_name}... with backup id #{backup_id}"
+  RadBin.system!("bundle exec rails \"heroku:clone_local[#{heroku_app_name}, #{backup_id}]\"")
 end

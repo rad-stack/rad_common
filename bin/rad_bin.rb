@@ -61,4 +61,33 @@ module RadBin
     puts "\nInvalid choice. Exiting..."
     exit 1
   end
+
+  def self.select_backup_id(heroku_app_name)
+    backup_list = parse_backup_list(heroku_app_name)
+
+    puts "\nPlease select a backup id from the following options:"
+
+    backup_list.each_with_index do |backup, index|
+      puts "#{index + 1}. #{backup[:id]} created at (#{backup[:created_at]})"
+    end
+
+    choice = $stdin.gets.chomp.to_i
+    return backup_list[choice - 1][:id] if choice.between?(1, backup_list.size)
+
+    puts "\nInvalid choice. Exiting..."
+    exit 1
+  end
+
+  def self.parse_backup_list(heroku_app_name)
+    backups = `heroku pg:backups --app #{heroku_app_name}`
+    # Extract the "=== Backups" section
+    backups = backups.split('=== Backups').last.split('===').first
+    lines = backups.strip.split("\n")
+    data_rows = lines[4..] # Skip header and separator line
+
+    data_rows.map do |line|
+      values = line.strip.split
+      { id: values[0], created_at: values[1] }
+    end
+  end
 end
