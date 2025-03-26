@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'TwilioLogs', type: :system do
+RSpec.describe 'ContactLogs', type: :system do
   let(:user) { create :admin }
   let(:twilio_log) { create :twilio_log }
 

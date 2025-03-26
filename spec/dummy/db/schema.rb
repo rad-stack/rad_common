@@ -325,7 +325,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.index ["user_id"], name: "index_system_messages_on_user_id"
   end
 
-  create_table "twilio_logs", force: :cascade do |t|
+  create_table "contact_logs", force: :cascade do |t|
     t.string "from_number", null: false
     t.string "to_number", null: false
     t.integer "from_user_id"
@@ -336,13 +336,13 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "opt_out_message_sent", default: false, null: false
-    t.index ["created_at"], name: "index_twilio_logs_on_created_at"
-    t.index ["from_number"], name: "index_twilio_logs_on_from_number"
-    t.index ["from_user_id"], name: "index_twilio_logs_on_from_user_id"
-    t.index ["opt_out_message_sent"], name: "index_twilio_logs_on_opt_out_message_sent"
-    t.index ["success"], name: "index_twilio_logs_on_success"
-    t.index ["to_number"], name: "index_twilio_logs_on_to_number"
-    t.index ["to_user_id"], name: "index_twilio_logs_on_to_user_id"
+    t.index ["created_at"], name: "index_contact_logs_on_created_at"
+    t.index ["from_number"], name: "index_contact_logs_on_from_number"
+    t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
+    t.index ["opt_out_message_sent"], name: "index_contact_logs_on_opt_out_message_sent"
+    t.index ["success"], name: "index_contact_logs_on_success"
+    t.index ["to_number"], name: "index_contact_logs_on_to_number"
+    t.index ["to_user_id"], name: "index_contact_logs_on_to_user_id"
   end
 
   create_table "user_clients", force: :cascade do |t|
@@ -447,8 +447,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
   add_foreign_key "notifications", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
-  add_foreign_key "twilio_logs", "users", column: "from_user_id"
-  add_foreign_key "twilio_logs", "users", column: "to_user_id"
+  add_foreign_key "contact_logs", "users", column: "from_user_id"
+  add_foreign_key "contact_logs", "users", column: "to_user_id"
   add_foreign_key "user_clients", "clients"
   add_foreign_key "user_clients", "users"
   add_foreign_key "user_security_roles", "security_roles"

@@ -16,12 +16,12 @@ module RadUser
     has_many :user_clients, dependent: :destroy
     has_many :clients, through: :user_clients, source: :client
 
-    has_many :twilio_logs_from, class_name: 'TwilioLog',
+    has_many :twilio_logs_from, class_name: 'ContactLog',
                                 foreign_key: 'from_user_id',
                                 dependent: :destroy,
                                 inverse_of: :from_user
 
-    has_many :twilio_logs_to, class_name: 'TwilioLog',
+    has_many :twilio_logs_to, class_name: 'ContactLog',
                               foreign_key: 'to_user_id',
                               dependent: :destroy,
                               inverse_of: :to_user

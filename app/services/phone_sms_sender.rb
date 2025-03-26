@@ -77,18 +77,18 @@ class PhoneSMSSender
     end
 
     def opt_out_message_already_sent?
-      TwilioLog.opt_out_message_sent?(to_number)
+      ContactLog.opt_out_message_sent?(to_number)
     end
 
     def log_event(success)
-      @log = TwilioLog.create! to_number: to_number,
-                               from_number: from_number,
-                               to_user: to_user,
-                               from_user_id: from_user_id,
-                               message: message,
-                               media_url: media_url,
-                               success: success,
-                               opt_out_message_sent: opt_out_message_sent
+      @log = ContactLog.create! to_number: to_number,
+                                from_number: from_number,
+                                to_user: to_user,
+                                from_user_id: from_user_id,
+                                message: message,
+                                media_url: media_url,
+                                success: success,
+                                opt_out_message_sent: opt_out_message_sent
 
       return if @log.media_url.blank?
 

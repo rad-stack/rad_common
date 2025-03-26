@@ -1,8 +1,8 @@
-class TwilioLogSearch < RadCommon::Search
+class ContactLogSearch < RadCommon::Search
   def initialize(params, current_user)
     @current_user = current_user
 
-    super(query: TwilioLog,
+    super(query: ContactLog,
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,

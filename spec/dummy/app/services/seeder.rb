@@ -10,7 +10,7 @@ class Seeder < RadSeeder
 
     3.times { FactoryBot.create :client } if Client.none?
 
-    return unless TwilioLog.none?
+    return unless ContactLog.none?
 
     display_log 'seeding twilio logs'
 
