@@ -21,9 +21,8 @@ module RadCommon
         # replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'legacy_rails_config', 'false'
-        add_rad_config_setting 'timezone_detection', 'true'
+        add_rad_config_setting 'timezone_detection', 'false'
         # remove_rad_factories
-
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
         gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
