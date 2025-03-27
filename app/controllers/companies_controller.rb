@@ -1,5 +1,6 @@
 class CompaniesController < ApplicationController
   before_action :set_company, only: %i[show edit update]
+  include ActiveStorageDownloader
 
   def show; end
 
@@ -22,7 +23,7 @@ class CompaniesController < ApplicationController
 
     def base_params
       [:name, :phone_number, :website, :email, :address_1, :address_2, :city, :state, :zipcode, :validity_checked_at,
-       :timezone, { valid_user_domains: [] }]
+       :timezone, :app_logo, { valid_user_domains: [] }]
     end
 
     def permitted_params

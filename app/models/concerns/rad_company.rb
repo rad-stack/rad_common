@@ -15,6 +15,8 @@ module RadCompany
 
     before_validation :clean_domain_spaces
 
+    has_one_attached :app_logo
+
     strip_attributes
     audited except: %i[quickbooks_token quickbooks_refresh_token github_token]
   end
