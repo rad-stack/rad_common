@@ -1,5 +1,6 @@
 class CompaniesController < ApplicationController
   before_action :set_company, only: %i[show edit update]
+  include ActiveStorageDownloader
 
   def show; end
 
@@ -11,6 +12,10 @@ class CompaniesController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def app_logo
+    serve_file url, 'png', 'image/png', 'app_logo'
   end
 
   private
