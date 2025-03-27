@@ -21,7 +21,7 @@
       .email-header
         .email-row
           .email-col-12.logo-col
-            = link_to image_tag(RadConfig.app_logo_filename!, alt: company_name, title: company_name), website
+            = link_to image_tag(url_for(Company.main.app_logo), alt: company_name, title: company_name), website
 
             - unless logo_includes_name
               %span.logo_text

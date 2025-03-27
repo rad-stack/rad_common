@@ -14,10 +14,6 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def app_logo
-    serve_file url, 'png', 'image/png', 'app_logo'
-  end
-
   private
 
     def set_company
@@ -27,7 +23,7 @@ class CompaniesController < ApplicationController
 
     def base_params
       [:name, :phone_number, :website, :email, :address_1, :address_2, :city, :state, :zipcode, :validity_checked_at,
-       :timezone, { valid_user_domains: [] }]
+       :timezone, :app_logo, { valid_user_domains: [] }]
     end
 
     def permitted_params
