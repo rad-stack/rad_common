@@ -11,6 +11,7 @@ module DivisionsHelper
      { label: 'Icon', value: render_one_attachment(record: division, attachment_name: 'icon', new_tab: true) },
      { label: 'Owner', value: secured_link(division.owner) },
      :category,
+     :tags,
      created_by_show_item(division)]
   end
 end
