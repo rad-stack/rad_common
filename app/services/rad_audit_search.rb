@@ -38,6 +38,8 @@ class RadAuditSearch < RadCommon::Search
       items = [{ start_input_label: 'Start Date',
                  end_input_label: 'End Date',
                  column: :created_at,
+                 default_start_value: default_date,
+                 default_end_value: default_date,
                  type: RadCommon::DateFilter }]
 
       unless single_record?
