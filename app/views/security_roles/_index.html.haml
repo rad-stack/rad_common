@@ -11,28 +11,26 @@
     - if show_actions
       %th.actions Actions
 
-  - security_roles.each do |record|
-    %tr{ class: table_row_style(record) }
-      %td= secured_link record
-      %td
-        %p= pluralize record.users.active.count, 'Active User'
-        %p= pluralize record.users.inactive.count, 'Inactive User'
+  - security_roles.each do |security_role|
+    %tr
+      %td= secured_link security_role
+      %td= security_role.users.size
       - if RadConfig.external_users?
-        %td= format_boolean record.external
+        %td= format_boolean security_role.external
       - unless RadConfig.disable_invite?
-        %td= format_boolean record.allow_invite
+        %td= format_boolean security_role.allow_invite
       - unless RadConfig.disable_sign_up?
-        %td= format_boolean record.allow_sign_up
+        %td= format_boolean security_role.allow_sign_up
       - if show_actions
         %td
-          - if policy(record).update?
+          - if policy(security_role).update?
             = link_to icon(:pencil, 'Edit'),
-                      edit_security_role_path(record),
+                      edit_security_role_path(security_role),
                       class: 'btn btn-sm btn-secondary btn-block'
 
-          - if policy(record).destroy?
+          - if policy(security_role).destroy?
             = link_to icon(:times, 'Delete'),
-                      record,
+                      security_role,
                       method: :delete,
                       data: { confirm: 'Are you sure?' },
                       class: 'btn btn-danger btn-sm btn-block'

@@ -2,7 +2,7 @@ class NotificationMailer < RadMailer
   before_action :enable_settings_link
 
   def simple_message(notification_type, recipient, subject, message, options = {})
-    super(recipient, subject, message, options.merge(bcc: bcc_recipient(notification_type, options)))
+    super(recipient, subject, message, options)
   end
 
   def new_user_signed_up(notification_type, recipients, user)
@@ -99,8 +99,7 @@ class NotificationMailer < RadMailer
 
       mail to: @recipient.map(&:formatted_email),
            subject: subject,
-           cc: options[:cc],
-           bcc: bcc_recipient(notification_type, options)
+           cc: options[:cc]
     end
 
     def bcc_recipient(notification_type, options)

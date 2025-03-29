@@ -1,0 +1,36 @@
+.navbar.navbar-expand-lg.navbar-light.bg-light#navbar
+  .container-fluid
+    = link_to root_path, { class: 'navbar-brand' } do
+      = image_tag RadConfig.app_logo_filename!
+    %button.navbar-toggler{ type: 'button', data: { toggle: 'collapse', target: '#navbar-supported-content' } }
+      %span.navbar-toggler-icon
+    .navbar-collapse.collapse.navbar-responsive-collapse#navbar-supported-content
+      - if user_signed_in?
+        %ul.nav.navbar-nav.navbar-left
+          - if policy(Client).index?
+            %li= link_to 'Clients', clients_path, class: 'nav-link'
+          - if policy(Division).index?
+            %li= link_to 'Divisions', divisions_path(search: { show_header: 'true' }), class: 'nav-link'
+          %li.nav-item= link_to 'Contact', contact_us_path, class: 'nav-link px-3'
+          - if policy(Attorney).index?
+            %li.nav-item.dropdown
+              %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#' }
+                Attorneys
+                = duplicates_badge Attorney
+              %ul.dropdown-menu
+                %li
+                  = link_to attorneys_path, class: 'dropdown-item' do
+                    Attorneys
+                    = duplicates_badge Attorney
+          - if policy(User).index?
+            %li= link_to 'Users', users_path, class: 'nav-link'
+          - if current_user.admin?
+            %li.nav-item.dropdown
+              %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#' }
+                Admin
+              %ul.dropdown-menu
+                %li= link_to 'Divisions', divisions_path, class: 'dropdown-item'
+                = render 'layouts/navigation_admin'
+          %li.global-search-nav
+            = render 'layouts/global_search'
+      = render 'layouts/navigation_right'

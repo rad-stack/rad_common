@@ -7,7 +7,7 @@ RSpec.describe 'LoginActivities', type: :system do
 
   describe 'index' do
     it 'displays the login activities' do
-      visit '/login_activities'
+      visit '/rad_common/login_activities'
       expect(page).to have_content(user.email)
     end
   end

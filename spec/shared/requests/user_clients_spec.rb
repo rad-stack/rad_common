@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'UserClients', :user_client_specs, type: :request do
+RSpec.describe 'UserClients', type: :request, user_client_specs: true do
   let(:admin) { create :admin }
   let(:user) { create :user, :external }
   let(:client_user) { create :client_user, client: client }

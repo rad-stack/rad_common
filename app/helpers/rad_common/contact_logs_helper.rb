@@ -12,7 +12,14 @@ module RadCommon
                :sent]
 
       items += %i[sms_opt_out_message_sent] if contact_log.sms?
-      items + %i[sms_message_id sms_media_url]
+      items += %i[sms_message_id sms_media_url]
+
+      if contact_log.attachments.any?
+        items.push(label: 'Attachments',
+                   value: render_many_attachments(record: contact_log, attachment_name: 'attachments'))
+      end
+
+      items
     end
 
     def contact_log_recipient_show_data(contact_log_recipient)

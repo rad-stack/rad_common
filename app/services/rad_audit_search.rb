@@ -3,7 +3,7 @@ class RadAuditSearch < RadCommon::Search
     @current_user = current_user
     @params = params
 
-    super(query: query_def,
+    super(query: RadAudit,
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
@@ -35,8 +35,7 @@ class RadAuditSearch < RadCommon::Search
     end
 
     def filters_def
-      items = [{ name: 'single_record', type: RadCommon::HiddenFilter },
-               { start_input_label: 'Start Date',
+      items = [{ start_input_label: 'Start Date',
                  end_input_label: 'End Date',
                  column: :created_at,
                  default_start_value: default_date,
@@ -58,7 +57,7 @@ class RadAuditSearch < RadCommon::Search
                  column: :action,
                  options: %w[create update destroy] },
                { column: :remote_address, type: RadCommon::LikeFilter },
-               { column: 'audited_changes::TEXT', type: RadCommon::LikeFilter, name: :audited_changes }]
+               { column: :audited_changes, type: RadCommon::LikeFilter }]
     end
 
     def sort_columns_def

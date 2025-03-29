@@ -1,12 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe 'Notification Settings', type: :request do
-  let(:notification_type) { Notifications::NewUserSignedUpNotification.main }
+  let(:notification_type) { create :new_user_signed_up_notification }
 
-  before do
-    create :admin
-    login_as user, scope: :user
-  end
+  before { login_as user, scope: :user }
 
   describe 'POST create' do
     let(:attributes) do
@@ -27,12 +24,12 @@ RSpec.describe 'Notification Settings', type: :request do
         context 'when valid' do
           it 'creates' do
             expect {
-              post '/notification_settings', params: { notification_setting: attributes }
+              post '/rad_common/notification_settings', params: { notification_setting: attributes }
             }.to change(NotificationSetting, :count).by(1)
           end
 
           it 'responds with success json' do
-            post '/notification_settings', params: { notification_setting: attributes }
+            post '/rad_common/notification_settings', params: { notification_setting: attributes }
             expect(response.body).to include('The setting was successfully saved.')
           end
         end
@@ -42,7 +39,7 @@ RSpec.describe 'Notification Settings', type: :request do
 
           it 'fails' do
             expect {
-              post '/notification_settings', params: { notification_setting: attributes }
+              post '/rad_common/notification_settings', params: { notification_setting: attributes }
             }.not_to change(NotificationSetting, :count)
           end
         end
@@ -53,7 +50,7 @@ RSpec.describe 'Notification Settings', type: :request do
 
         it 'creates' do
           expect {
-            post '/notification_settings', params: { notification_setting: attributes }
+            post '/rad_common/notification_settings', params: { notification_setting: attributes }
           }.to change(NotificationSetting, :count).by(1)
         end
       end
@@ -73,7 +70,7 @@ RSpec.describe 'Notification Settings', type: :request do
         it 'creates' do
           user
           expect {
-            post '/notification_settings', params: { notification_setting: attributes }
+            post '/rad_common/notification_settings', params: { notification_setting: attributes }
           }.to change(NotificationSetting, :count).by(1)
         end
       end
@@ -84,8 +81,8 @@ RSpec.describe 'Notification Settings', type: :request do
         before { user.user_security_roles.delete_all }
 
         it 'denies access' do
-          post '/notification_settings', params: { notification_setting: attributes }
-          expect(response).to have_http_status :forbidden
+          post '/rad_common/notification_settings', params: { notification_setting: attributes }
+          expect(response.code).to eq '403'
         end
       end
     end

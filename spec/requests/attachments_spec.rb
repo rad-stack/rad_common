@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Attachments' do
+RSpec.describe 'Attachments', type: :request do
   let(:user) { create :admin }
   let!(:division) { create :division }
   let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('app/assets/images/app_logo.png')) }

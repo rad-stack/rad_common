@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :system_message do
     send_to { :all_users }
-    user
+    association :user
 
     trait :email do
       message_type { 'email' }

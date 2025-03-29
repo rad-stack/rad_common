@@ -6,16 +6,13 @@ module RadController
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     before_action :set_sentry_user_context
     before_action :check_ip_address_timezone, if: :user_signed_in?
-    around_action :user_timezone
-    around_action :switch_locale, if: :switch_languages?
+    around_action :user_time_zone, if: :current_user
     after_action :verify_authorized, unless: :devise_controller?
     after_action :verify_policy_scoped, only: :index
 
-    rescue_from Pundit::NotAuthorizedError do |exception|
+    rescue_from Pundit::NotAuthorizedError do
       # the application.rb config in the docs to do the same thing doesn't work
       # https://github.com/varvet/pundit#rescuing-a-denied-authorization-in-rails
-
-      Sentry.capture_exception exception if report_sentry_access_denied?
       render file: Rails.root.join('public/403.html'), formats: [:html], status: :forbidden, layout: false
     end
 
@@ -35,7 +32,7 @@ module RadController
     end
 
     def devise_account_params
-      %i[first_name last_name mobile_phone avatar timezone language]
+      %i[first_name last_name mobile_phone avatar timezone]
     end
 
     def devise_invite_params
@@ -54,10 +51,6 @@ module RadController
       "#{true_user} impersonating #{current_user}"
     end
 
-    def report_sentry_access_denied?
-      (Rails.env.production? || Rails.env.staging?) && !impersonating?
-    end
-
     def impersonating?
       current_user != true_user
     end
@@ -69,9 +62,8 @@ module RadController
       UserTimezone.new(current_user).check_user!(request.remote_ip)
     end
 
-    def user_timezone(&)
-      timezone = current_user.present? ? current_user.timezone : Company.main.timezone
-      Time.use_zone(timezone, &)
+    def user_time_zone(&block)
+      Time.use_zone(current_user.timezone, &block)
     end
 
     def search_params
@@ -80,14 +72,5 @@ module RadController
 
     def report_generating_message
       'Your report is generating. An email will be sent when it is ready.'
-    end
-
-    def switch_languages?
-      RadConfig.switch_languages?
-    end
-
-    def switch_locale(&)
-      locale = params[:locale] || current_user.try(:locale) || I18n.default_locale
-      I18n.with_locale(locale, &)
     end
 end

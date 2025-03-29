@@ -32,7 +32,6 @@ module RadCommon
     end
 
     def results
-      maybe_save_filters
       retrieve_results
     end
 
@@ -45,7 +44,7 @@ module RadCommon
     end
 
     def errors
-      @filtering.errors.uniq + saved_filter_errors
+      @filtering.errors.uniq
     end
 
     def error_messages
@@ -64,9 +63,8 @@ module RadCommon
       @sorting.sort_direction
     end
 
-    # TODO: possibly remove this method, see Task 2925
-    def sort_clause(record_class)
-      @sorting.sort_clause record_class
+    def sort_clause
+      @sorting.sort_clause
     end
 
     def search_params?
@@ -74,7 +72,7 @@ module RadCommon
     end
 
     def search_params
-      search_params? ? params.require(:search).permit(permitted_searchable_columns + %i[sort direction]) : {}
+      search_params? ? params.require(:search).permit(permitted_searchable_columns) : {}
     end
 
     def page_size_param
@@ -94,18 +92,8 @@ module RadCommon
       val = selected_value(column)
       return true if val.nil?
       return false if blank?(column)
-      return false if filter.default_value.nil?
-      return default_multi_select_value?(filter, val) if val.is_a?(Array)
 
-      val.to_s == filter.default_value.to_s
-    end
-
-    def default_multi_select_value?(filter, value)
-      value = value.compact_blank
-      default_value = filter.default_value
-      default_value = default_value.is_a?(Array) ? default_value.compact_blank : [default_value.to_s]
-
-      value.sort == default_value.sort
+      val && filter.default_value && val.to_s == filter.default_value.to_s
     end
 
     def skip_default?(name)
@@ -125,20 +113,6 @@ module RadCommon
 
     def filters
       @filtering.filters
-    end
-
-    def saved_filters
-      @saved_filters ||= Pundit.policy_scope(current_user, SavedSearchFilter).where(search_class: self.class.name)
-    end
-
-    def applied_saved_filter
-      return if search_params[:applied_filter].blank?
-
-      @applied_saved_filter ||= SavedSearchFilter.find(search_params[:applied_filter])
-    end
-
-    def saved_filter_errors
-      @saved_filter_errors ||= []
     end
 
     private
@@ -163,44 +137,14 @@ module RadCommon
 
         columns = filters.sort_by { |f| f.respond_to?(:multiple) && f.multiple ? 1 : 0 }
         columns.map { |f|
-          not_filter = "#{f.searchable_name}_not" if f.allow_not
           if f.respond_to?(:multiple) && f.multiple
-            [not_filter, { f.searchable_name => [] }].compact
+            hash = {}
+            hash[f.searchable_name] = []
+            hash
           else
-            [not_filter, f.searchable_name].compact
+            f.searchable_name
           end
-        }.flatten + %i[applied_filter saved_name]
-      end
-
-      def maybe_save_filters
-        filter_name = search_params[:saved_name]
-        return unless RadConfig.saved_search_filters_enabled? && filter_name.present?
-
-        filter = SavedSearchFilter.find_or_initialize_by(name: filter_name,
-                                                         user: current_user,
-                                                         search_class: self.class.name)
-        filter.search_filters = search_params.to_h.compact_blank
-        if filter.save
-          params[:search][:applied_filter] = filter.id
-        else
-          saved_filter_errors << "Filter \"#{filter}\" could not be saved: #{filter.errors.full_messages.to_sentence}"
-        end
-      end
-
-      def created_by_filter
-        { input_label: 'Created By',
-          scope: :for_created_by,
-          options: [['Active', active_users], ['Inactive', inactive_users]],
-          grouped: true,
-          blank_value_label: 'All Users' }
-      end
-
-      def active_users
-        Pundit.policy_scope!(current_user, User).active.sorted
-      end
-
-      def inactive_users
-        Pundit.policy_scope!(current_user, User).inactive.sorted
+        }.flatten
       end
   end
 end
