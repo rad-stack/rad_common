@@ -20,7 +20,7 @@ RSpec.describe UserExport, type: :service do
     let(:exporter) { described_class.new(records: [user, another], current_user: user, format: export_format) }
     let(:file) { exporter.generate }
 
-    context 'when record limit is exceeded' do
+    context 'when hard record limit is exceeded' do
       before { stub_const('Exporter::HARD_RECORD_LIMIT', 1) }
 
       it { expect { file }.to raise_error 'exporter record limit of 1 exceeded with 2' }
