@@ -31,6 +31,7 @@ default: &default
   crawlable_domains: []
   procfile_override: false
   last_first_user: false
+  timezone_detection: true
 
   system_usage_models:
     -
