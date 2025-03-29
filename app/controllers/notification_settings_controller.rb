@@ -23,8 +23,10 @@ class NotificationSettingsController < ApplicationController
     authorize notification_setting
 
     if notification_setting.save
-      # TODO: convert json to turbo
-      render json: { status: 'The setting was successfully saved.' }, status: :ok
+      render partial: 'notification_settings/toggle_enabled',
+             locals: { notification_setting: notification_setting,
+                       can_update: true,
+                       toast_success: 'The setting was successfully saved.' }
     else
       # TODO: convert json to turbo
       render json: { error:
