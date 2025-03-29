@@ -4,7 +4,9 @@
 .row
   .col-lg-12
     = turbo_frame_tag "notification_setting_toggle_enabled_#{notification_setting.id}" do
-      = simple_form_for notification_setting, html: rad_turbo_form_options(local_assigns), url: notification_settings_path, method: :post do |f|
+      = simple_form_for notification_setting,
+                        html: rad_turbo_form_options(local_assigns),
+                        url: notification_settings_path, method: :post do |f|
         .row
           .col-lg
             = f.input :enabled,
@@ -12,7 +14,8 @@
                       disabled: !can_update,
                       input_html: { class: 'ays-ignore',
                                     id: "notification_setting_enabled_#{setting_id_string}",
-                                    data: { action: 'change->remote-form#submitForm', toggle: 'collapse', target: "##{collapse_id}" } }
+                                    data: { action: 'change->remote-form#submitForm',
+                                            toggle: 'collapse', target: "##{collapse_id}" } }
         .row
           .col-lg-12{ id: collapse_id, class: notification_setting.enabled ? 'collapse show' : 'collapse' }
             .form-inline.px-3.py-2.bg-light.border.rounded.shadow-sm#notification-settings
