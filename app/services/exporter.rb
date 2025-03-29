@@ -6,7 +6,7 @@ class Exporter
   attr_reader :records, :current_record, :current_user, :format
 
   DEFAULT_FORMAT = :csv
-  RECORD_LIMIT = 50_000
+  HARD_RECORD_LIMIT = 100_000
 
   def initialize(records:, current_user:, format: DEFAULT_FORMAT)
     @records = records
@@ -14,9 +14,10 @@ class Exporter
     @current_record = nil
     @format = format
 
-    # we'll raise this for now and see what turns up in the wild, then probably change it to limit it let the user know
-    # see Task 6842
-    raise "exporter record limit of #{RECORD_LIMIT} exceeded with #{record_count}" if record_count > RECORD_LIMIT
+    return unless record_count > HARD_RECORD_LIMIT
+
+    # this is an arbitrary limit that could be increased if we start hitting it regularly
+    raise "exporter record limit of #{HARD_RECORD_LIMIT} exceeded with #{record_count}"
   end
 
   def generate
