@@ -101,7 +101,7 @@ module DuplicateFixable
     end
   end
 
-  def process_duplicates
+  def process_duplicates(bypass_notifications: false)
     contacts = []
 
     all_matches.each do |match|
