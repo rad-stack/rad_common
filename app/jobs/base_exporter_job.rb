@@ -22,9 +22,9 @@ class BaseExporterJob < ApplicationJob
   private
 
     def export_limit_body
-      "Your export request for #{report_name} exceeds the #{exporter.soft_record_limit} record limit and can’t be processed. " \
-        'Please refine your query by applying more filters or narrowing the date range, then try again. Let us know ' \
-        'if you need help, we can try increasing the limit.'
+      "Your export request for #{report_name} exceeds the #{exporter.soft_record_limit} record limit and can’t be " \
+        'processed. Please refine your query by applying more filters or narrowing the date range, then try again. ' \
+        'Let us know if you need help, we can try increasing the limit.'
     end
 
     def export
