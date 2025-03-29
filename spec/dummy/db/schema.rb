@@ -252,6 +252,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active", default: true, null: false
+    t.string "bcc_recipient"
     t.index ["type"], name: "index_notification_types_on_type", unique: true
   end
 
@@ -323,26 +324,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.integer "security_role_id"
     t.index ["security_role_id"], name: "index_system_messages_on_security_role_id"
     t.index ["user_id"], name: "index_system_messages_on_user_id"
-  end
-
-  create_table "twilio_logs", force: :cascade do |t|
-    t.string "from_number", null: false
-    t.string "to_number", null: false
-    t.integer "from_user_id"
-    t.integer "to_user_id"
-    t.string "message", null: false
-    t.string "media_url"
-    t.boolean "success", default: true, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.boolean "opt_out_message_sent", default: false, null: false
-    t.index ["created_at"], name: "index_twilio_logs_on_created_at"
-    t.index ["from_number"], name: "index_twilio_logs_on_from_number"
-    t.index ["from_user_id"], name: "index_twilio_logs_on_from_user_id"
-    t.index ["opt_out_message_sent"], name: "index_twilio_logs_on_opt_out_message_sent"
-    t.index ["success"], name: "index_twilio_logs_on_success"
-    t.index ["to_number"], name: "index_twilio_logs_on_to_number"
-    t.index ["to_user_id"], name: "index_twilio_logs_on_to_user_id"
   end
 
   create_table "user_clients", force: :cascade do |t|
@@ -437,6 +418,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audits", "users"
+  add_foreign_key "contact_log_recipients", "contact_logs"
+  add_foreign_key "contact_log_recipients", "users", column: "to_user_id"
+  add_foreign_key "contact_logs", "users", column: "from_user_id"
   add_foreign_key "divisions", "categories"
   add_foreign_key "divisions", "users", column: "owner_id"
   add_foreign_key "notification_security_roles", "notification_types"
@@ -447,8 +431,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
   add_foreign_key "notifications", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
-  add_foreign_key "twilio_logs", "users", column: "from_user_id"
-  add_foreign_key "twilio_logs", "users", column: "to_user_id"
   add_foreign_key "user_clients", "clients"
   add_foreign_key "user_clients", "users"
   add_foreign_key "user_security_roles", "security_roles"

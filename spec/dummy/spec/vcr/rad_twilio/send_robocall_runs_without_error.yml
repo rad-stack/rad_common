@@ -1,82 +1,80 @@
 ---
 http_interactions:
-  - request:
-      method: post
-      uri: https://api.twilio.com/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Calls.json
-      body:
-        encoding: UTF-8
-        string: From=15005550006&To=%28904%29+999-5555&Url=https%3A%2F%2Fexample.com
-      headers:
-        User-Agent:
-          - twilio-ruby/5.66.1 (ruby/x86_64-darwin20 3.0.4-p208)
-        Accept-Charset:
-          - utf-8
-        Content-Type:
-          - application/x-www-form-urlencoded
-        Accept:
-          - application/json
-        Authorization:
-          - Basic QUMyNTQwYTZkMDA2MmNiMzQ3OTc5ZTZiNjk1YjYxZmYwYTplNmZlMWE3ZjAzOTQ3MWU1ZTc2Mjg0ZjJhNTBlNTYwMg==
-        Accept-Encoding:
-          - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-    response:
-      status:
-        code: 201
-        message: Created
-      headers:
-        Date:
-          - Mon, 09 May 2022 13:42:10 GMT
-        Content-Type:
-          - application/json; charset=utf-8
-        Content-Length:
-          - '1798'
-        Connection:
-          - keep-alive
-        Twilio-Concurrent-Requests:
-          - '1'
-        Twilio-Request-Id:
-          - RQ6639f4e553c970e4a871fc1bd1097e6c
-        Twilio-Request-Duration:
-          - '0.017'
-        Access-Control-Allow-Origin:
-          - "*"
-        Access-Control-Allow-Headers:
-          - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-            If-Unmodified-Since
-        Access-Control-Allow-Methods:
-          - GET, POST, DELETE, OPTIONS
-        Access-Control-Expose-Headers:
-          - ETag
-        Access-Control-Allow-Credentials:
-          - 'true'
-        X-Powered-By:
-          - AT-5000
-        X-Shenanigans:
-          - none
-        X-Home-Region:
-          - us1
-        X-Api-Domain:
-          - api.twilio.com
-        Strict-Transport-Security:
-          - max-age=31536000
-      body:
-        encoding: UTF-8
-        string: '{"date_updated": "Mon, 09 May 2022 13:42:10 +0000", "price_unit": "USD",
+- request:
+    method: post
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls.json
+    body:
+      encoding: UTF-8
+      string: From=15005550006&To=%28904%29+999-5555&Url=https%3A%2F%2Fexample.com
+    headers:
+      User-Agent:
+      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - application/json
+      Authorization:
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Fri, 21 Jun 2024 18:27:47 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '1889'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since, Idempotency-Key
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag
+      Twilio-Request-Id:
+      - RQ96d9e04439aa9dc7de249db1f830c75b
+      Twilio-Request-Duration:
+      - '0.020'
+      Twilio-Concurrent-Requests:
+      - '1'
+      X-Shenanigans:
+      - none
+      X-Powered-By:
+      - AT-5000
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - api.twilio.com
+    body:
+      encoding: UTF-8
+      string: '{"date_updated": "Fri, 21 Jun 2024 18:27:47 +0000", "price_unit": "USD",
         "parent_call_sid": null, "caller_name": null, "duration": null, "from": "+15005550006",
-        "to": "+19049995555", "annotation": null, "answered_by": null, "sid": "CA8e4b39793ac0eb4ac50e36158640f4c8",
+        "to": "+19049995555", "annotation": null, "answered_by": null, "sid": "CA95c83721367af52fe38648b0bac3965c",
         "queue_time": "0", "price": null, "api_version": "2010-04-01", "status": "queued",
-        "direction": null, "start_time": null, "date_created": "Mon, 09 May 2022 13:42:10
+        "direction": null, "start_time": null, "date_created": "Fri, 21 Jun 2024 18:27:47
         +0000", "from_formatted": "(500) 555-0006", "group_sid": null, "trunk_sid":
-        null, "forwarded_from": null, "uri": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Calls/CA8e4b39793ac0eb4ac50e36158640f4c8.json",
-        "account_sid": "AC2540a6d0062cb347979e6b695b61ff0a", "end_time": null, "to_formatted":
-        "(904) 999-5555", "phone_number_sid": null, "subresource_uris": {"feedback":
-        "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Calls/CA8e4b39793ac0eb4ac50e36158640f4c8/Feedback.json",
-        "notifications": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Calls/CA8e4b39793ac0eb4ac50e36158640f4c8/Notifications.json",
-        "recordings": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Calls/CA8e4b39793ac0eb4ac50e36158640f4c8/Recordings.json",
-        "streams": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Calls/CA8e4b39793ac0eb4ac50e36158640f4c8/Streams.json",
-        "payments": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Calls/CA8e4b39793ac0eb4ac50e36158640f4c8/Payments.json",
-        "siprec": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Calls/CA8e4b39793ac0eb4ac50e36158640f4c8/Siprec.json",
-        "events": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Calls/CA8e4b39793ac0eb4ac50e36158640f4c8/Events.json",
-        "feedback_summaries": "/2010-04-01/Accounts/AC2540a6d0062cb347979e6b695b61ff0a/Calls/FeedbackSummary.json"}}'
-    recorded_at: Mon, 09 May 2022 13:42:10 GMT
-recorded_with: VCR 6.1.0
+        null, "forwarded_from": null, "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c.json",
+        "account_sid": "ACaae98776bde4ed53d0fb1dfcc262558e", "end_time": null, "to_formatted":
+        "(904) 999-5555", "phone_number_sid": null, "subresource_uris": {"user_defined_messages":
+        "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/UserDefinedMessages.json",
+        "notifications": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/Notifications.json",
+        "recordings": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/Recordings.json",
+        "streams": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/Streams.json",
+        "payments": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/Payments.json",
+        "user_defined_message_subscriptions": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/UserDefinedMessageSubscriptions.json",
+        "siprec": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/Siprec.json",
+        "events": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/Events.json"}}'
+  recorded_at: Fri, 21 Jun 2024 18:27:47 GMT
+recorded_with: VCR 6.2.0

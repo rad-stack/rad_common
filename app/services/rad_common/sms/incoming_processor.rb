@@ -51,8 +51,12 @@ module RadCommon
                              command_matched: false
         end
 
+        def sms_message_id
+          @params['MessageSid']
+        end
+
         def mms?
-          @params['MessageSid']&.starts_with? 'M'
+          sms_message_id&.starts_with? 'M'
         end
 
         def sms_users
@@ -76,9 +80,36 @@ module RadCommon
         end
 
         def log_sms!
-          @log = TwilioLog.create! to_number: RadConfig.twilio_phone_number!,
-                                   from_number: @phone_number,
-                                   message: @incoming_message
+          log_contact @incoming_message
+        end
+
+        def log_mms!
+          log_contact @incoming_message.presence || 'MMS'
+
+          @attachments.each do |attachment|
+            @log.sms_media_url = attachment[:url]
+            @log.attachments.attach io: attachment[:file],
+                                    content_type: attachment[:content_type],
+                                    identify: false,
+                                    filename: attachment[:filename]
+          end
+
+          @log.save!
+          @log
+        end
+
+        def log_contact(content)
+          @log = ContactLog.create! from_number: @phone_number,
+                                    from_user: from_user,
+                                    content: content,
+                                    service_type: :sms,
+                                    sms_log_type: :incoming,
+                                    sms_message_id: sms_message_id,
+                                    sent: true
+
+          @log.contact_log_recipients.create! phone_number: to_number
+
+          @log
         end
 
         def get_attachments
@@ -102,30 +133,20 @@ module RadCommon
           end.compact
         end
 
-        def log_mms!
-          @log = TwilioLog.new to_number: RadConfig.twilio_phone_number!,
-                               from_number: @phone_number,
-                               message: @incoming_message.presence || 'MMS'
-
-          @attachments.each do |attachment|
-            @log.media_url = attachment[:url]
-            @log.attachments.attach io: attachment[:file],
-                                    content_type: attachment[:content_type],
-                                    identify: false,
-                                    filename: attachment[:filename]
-          end
-
-          unless @log.save
-            @log.attachments = [] if @log.errors.messages.has_key?(:attachments)
-            @log.save
-          end
-
-          @log
-        end
-
         def translate_reply(sms_reply_key, params = {})
           params.merge!(locale: locale)
           I18n.t(sms_reply_key, **params)
+        end
+
+        def to_number
+          @to_number ||= RadTwilio.twilio_to_human_format(RadConfig.twilio_phone_number!)
+        end
+
+        def from_user
+          users = User.where(mobile_phone: @phone_number)
+          return unless users.size == 1
+
+          users.first
         end
     end
   end

@@ -265,8 +265,6 @@ gem 'propshaft'
         end
 
         def apply_migration(source)
-          return if RadConfig.react_app?
-
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
           if self.class.migration_exists?('db/migrate', filename)
@@ -555,13 +553,13 @@ gem 'propshaft'
           apply_migration '20220905140634_allow_invite_role.rb'
           apply_migration '20220918194026_refine_smarty.rb'
           apply_migration '20221021113251_create_saved_search_filters.rb'
-          apply_migration '20221108110620_add_new_audited_changes_to_audits.rb'
+          # apply_migration '20221108110620_add_new_audited_changes_to_audits.rb'
           apply_migration '20221123142522_twilio_log_changes.rb'
-          apply_migration '20221108114020_convert_audited_changes_text_to_json.rb'
-          apply_migration '20221221134935_remove_legacy_audited_changes.rb'
+          # apply_migration '20221108114020_convert_audited_changes_text_to_json.rb'
+          # apply_migration '20221221134935_remove_legacy_audited_changes.rb'
           apply_migration '20230222162024_migrate_authy_to_twilio_verify.rb'
-          apply_migration '20230310161506_more_twilio_verify.rb'
-          apply_migration '20230313195243_add_language.rb'
+          # apply_migration '20230310161506_more_twilio_verify.rb'
+          # apply_migration '20230313195243_add_language.rb'
           apply_migration '20230401113151_fix_sendgrid_notification.rb'
           apply_migration '20230419121743_twilio_replies.rb'
           apply_migration '20230420102508_update_twilio_log_number_format.rb'

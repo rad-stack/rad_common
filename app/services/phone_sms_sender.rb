@@ -1,22 +1,25 @@
 class PhoneSMSSender
   OPT_OUT_MESSAGE = 'To no longer receive text messages, text STOP'.freeze
 
-  attr_accessor :message, :from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio, :opt_out_message_sent,
-                :exception, :log
+  attr_accessor :message, :contact_log_from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio,
+                :opt_out_message_sent, :exception, :contact_log_record, :log
 
-  def initialize(message, from_user_id, to_mobile_phone, media_url, force_opt_out)
-    raise "The message from user #{from_user_id} failed: the message is blank." if message.blank?
+  delegate :from_number, to: :twilio
+
+  def initialize(message, contact_log_from_user_id, to_mobile_phone, media_url, force_opt_out, contact_log_record: nil)
+    raise "The message from user #{contact_log_from_user_id} failed: the message is blank." if message.blank?
     raise 'The message failed: the mobile phone number is blank.' if to_mobile_phone.blank?
 
-    self.from_user_id = from_user_id
+    self.contact_log_from_user_id = contact_log_from_user_id
     self.to_mobile_phone = to_mobile_phone
     self.media_url = media_url
     self.twilio = RadTwilio.new
     self.message = augment_message(message, force_opt_out)
+    self.contact_log_record = contact_log_record
   end
 
   def send!
-    RadRetry.perform_request(raise_original: true) do
+    response = RadRetry.perform_request(raise_original: true) do
       if mms?
         twilio.send_mms to: to_number, message: message, media_url: media_url
       else
@@ -24,30 +27,20 @@ class PhoneSMSSender
       end
     end
 
-    log_event true
+    log_event true, response.sid
     true
   rescue Twilio::REST::RestError => e
-    log_event false
     self.exception = e
-    raise e.message unless blacklisted? || unsupported_country?
+    raise e.message unless blacklisted?
 
+    log_event false, nil
     handle_blacklist
     false
   end
 
-  def from_number
-    mms? ? twilio.from_number_mms : twilio.from_number
-  end
-
-
   def blacklisted?
     # https://www.twilio.com/docs/api/errors/21610
     exception.message.include?('21610')
-  end
-
-  def unsupported_country?
-    # https://www.twilio.com/docs/api/errors/21408
-    exception.message.include? '21408'
   end
 
   private
@@ -77,22 +70,33 @@ class PhoneSMSSender
     end
 
     def opt_out_message_already_sent?
-      TwilioLog.opt_out_message_sent?(to_number)
+      ContactLog.opt_out_message_sent?(to_mobile_phone)
     end
 
-    def log_event(success)
-      @log = TwilioLog.create! to_number: to_number,
-                               from_number: from_number,
-                               to_user: to_user,
-                               from_user_id: from_user_id,
-                               message: message,
-                               media_url: media_url,
-                               success: success,
-                               opt_out_message_sent: opt_out_message_sent
+    def log_event(sent, message_sid)
+      @log = ContactLog.create! sms_log_type: :outgoing,
+                                from_number: RadTwilio.twilio_to_human_format(from_number),
+                                from_user_id: contact_log_from_user_id,
+                                content: message,
+                                sms_media_url: media_url,
+                                sent: sent,
+                                sms_message_id: message_sid,
+                                sms_opt_out_message_sent: opt_out_message_sent,
+                                record: contact_log_record
 
-      return if @log.media_url.blank?
+      ContactLogRecipient.create! contact_log: log,
+                                  phone_number: to_mobile_phone,
+                                  to_user: to_user,
+                                  sms_status: :sent
 
-      file = RadRetry.perform_request(retry_count: 2) { URI.open(@log.media_url) }
+      return if @log.sms_media_url.blank?
+
+      log_attachments
+    end
+
+    def log_attachments
+      file = RadRetry.perform_request(retry_count: 2) { URI.open(@log.sms_media_url) }
+
       filename = if file.respond_to?(:meta) && file.meta.has_key?('content-disposition')
                    file.meta['content-disposition'].match(/filename="[^"]+"/).to_s.gsub(/filename=|"/, '')
                  else
