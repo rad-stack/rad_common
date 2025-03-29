@@ -43,7 +43,7 @@ RSpec.describe 'Notification Settings', type: :request do
           it 'fails' do
             expect {
               post '/notification_settings', params: { notification_setting: attributes }
-            }.not_to change(NotificationSetting, :count)
+            }.to raise_error('Invalid parameters')
           end
         end
       end
