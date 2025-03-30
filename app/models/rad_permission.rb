@@ -24,7 +24,7 @@ class RadPermission
   end
 
   def security_roles
-    SecurityRole.where("#{name} = TRUE").by_name
+    SecurityRole.where("#{name} = TRUE").sorted
   end
 
   def users

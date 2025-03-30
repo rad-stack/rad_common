@@ -2,6 +2,8 @@ class RadMailer < ActionMailer::Base
   include ActionView::Helpers::TextHelper
   include RadCommon::ApplicationHelper
 
+  EXPORT_FORMATS = { csv: 'text/csv', pdf: 'application/pdf' }.freeze
+
   layout 'rad_mailer'
   before_action :set_defaults
 

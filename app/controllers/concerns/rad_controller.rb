@@ -10,9 +10,11 @@ module RadController
     after_action :verify_authorized, unless: :devise_controller?
     after_action :verify_policy_scoped, only: :index
 
-    rescue_from Pundit::NotAuthorizedError do
+    rescue_from Pundit::NotAuthorizedError do |exception|
       # the application.rb config in the docs to do the same thing doesn't work
       # https://github.com/varvet/pundit#rescuing-a-denied-authorization-in-rails
+
+      Sentry.capture_exception exception if report_sentry_access_denied?
       render file: Rails.root.join('public/403.html'), formats: [:html], status: :forbidden, layout: false
     end
 
@@ -32,7 +34,7 @@ module RadController
     end
 
     def devise_account_params
-      %i[first_name last_name mobile_phone avatar timezone]
+      %i[first_name last_name mobile_phone avatar timezone language]
     end
 
     def devise_invite_params
@@ -49,6 +51,10 @@ module RadController
       return true_user.to_s unless impersonating?
 
       "#{true_user} impersonating #{current_user}"
+    end
+
+    def report_sentry_access_denied?
+      (Rails.env.production? || Rails.env.staging?) && !impersonating?
     end
 
     def impersonating?
@@ -72,5 +78,14 @@ module RadController
 
     def report_generating_message
       'Your report is generating. An email will be sent when it is ready.'
+    end
+
+    def switch_languages?
+      RadConfig.switch_languages?
+    end
+
+    def switch_locale(&)
+      locale = params[:locale] || current_user.try(:locale) || I18n.default_locale
+      I18n.with_locale(locale, &)
     end
 end

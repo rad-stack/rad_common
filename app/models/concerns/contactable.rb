@@ -72,6 +72,10 @@ module Contactable
       any_address_changes?
     end
 
+    def canadian?
+      state.present? && StateOptions.valid?(state) && StateOptions.canadian?(state)
+    end
+
     def validate_state
       return if city_model_variant?
 

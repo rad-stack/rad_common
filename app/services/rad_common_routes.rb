@@ -32,6 +32,18 @@ module RadCommonRoutes
           get :permission, on: :collection
         end
 
+        resources :duplicates, only: [] do
+          collection do
+            get :resolve
+            get :not
+            put :do_later
+            put :reset
+            put :switch
+            patch :merge
+            post :check_duplicate
+          end
+        end
+
         resources :audits, only: :index
         resources :login_activities, only: :index
         resources :system_messages, only: %i[new create show]

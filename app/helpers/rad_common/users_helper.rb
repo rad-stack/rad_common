@@ -47,6 +47,14 @@ module RadCommon
       [icon_tooltip('span', tooltip, icon, html_class: 'text-warning'), ' ']
     end
 
+    def unconfirmed_email_show_item(user)
+      value = if user.unconfirmed_email.present?
+                content_tag(:span, user.unconfirmed_email, class: 'badge alert-warning')
+              end
+
+      { label: 'Unconfirmed Email', value: value }
+    end
+
     def my_profile_nav?
       UserProfilePolicy.new(current_user, current_user).show?
     end
@@ -157,7 +165,7 @@ module RadCommon
       return unless RadConfig.user_confirmable? && policy(user).update? && !user.confirmed?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
-      link_to icon(:check, 'Confirm Email'),
+      link_to icon('circle-question', 'Confirm Email'),
               confirm_user_path(user),
               method: :put,
               data: { confirm: confirm },
@@ -167,10 +175,10 @@ module RadCommon
     def user_resend_action(user)
       return unless policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
 
-      link_to 'Resend Invitation',
+      link_to icon(:envelope, 'Resend Invitation'),
               resend_invitation_user_path(user),
               method: :put,
-              class: 'btn btn-sm btn-success',
+              class: 'btn btn-sm btn-warning',
               data: { confirm: 'Are you sure?' }
     end
 
@@ -218,6 +226,33 @@ module RadCommon
 
     def require_mobile_phone?
       RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_internal_only?
+    end
+
+    def clients_to_add_to_user(user)
+      policy_scope(RadCommon::AppInfo.new.client_model_class).active.where.not(id: user.clients.pluck(:id)).sorted
+    end
+
+    def show_hide_users_button(users)
+      return if users.inactive.none?
+
+      tag.button 'Show/Hide Inactive',
+                 type: 'button',
+                 class: 'btn btn-sm btn-secondary',
+                 'data-target': '#users-collapse',
+                 'data-toggle': 'collapse'
+    end
+
+    def user_row_class(user, hide_inactive)
+      item = user.display_style
+      return item if !hide_inactive || user.not_inactive?
+
+      "#{item} collapse"
+    end
+
+    def user_row_id(user, hide_inactive)
+      return if !hide_inactive || user.not_inactive?
+
+      'users-collapse'
     end
   end
 end

@@ -25,6 +25,6 @@ class NotificationSettingPolicy < ApplicationPolicy
   private
 
     def notification_types?
-      Pundit.policy_scope!(user, NotificationType).exists?
+      Pundit.policy_scope!(user, NotificationType).count.positive?
     end
 end
