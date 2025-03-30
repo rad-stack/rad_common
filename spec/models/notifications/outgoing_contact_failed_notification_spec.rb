@@ -42,6 +42,12 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
 
         it { is_expected.to eq [from_user.id] }
       end
+
+      context 'with internal from_user to external to_user' do
+        let(:to_user) { create :user, :external }
+
+        it { is_expected.to eq [from_user.id] }
+      end
     end
   end
 
