@@ -53,7 +53,7 @@ class RadAuditSearch < RadCommon::Search
                     input_label: 'Record ID' }]
       end
 
-      items + [{ input_label: 'User', column: :user_id, options: user_array },
+      items + [{ input_label: 'User', column: :user_id, options: user_array, include_nil_option: true },
                { input_label: 'Action',
                  column: :action,
                  options: %w[create update destroy] },
