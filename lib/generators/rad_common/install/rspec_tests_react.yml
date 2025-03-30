@@ -51,7 +51,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: cannasaver_public_test${{ matrix.TEST_ENV_NUMBER }}
+          POSTGRES_DB: injuryscripts_test${{ matrix.TEST_ENV_NUMBER }}
         ports:
           - 5432:5432
         options: >-
@@ -72,6 +72,12 @@ jobs:
           ruby-version: ${{ steps.set-ruby-version.outputs.version }}
           bundler-cache: true
 
+      - name: Set up ImageMagick
+        uses: mfinelli/setup-imagemagick@v5
+        with:
+          cache: true
+          install-libfuse2: true
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -89,13 +95,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            spec/dummy/public/packs
-            spec/dummy/public/packs-test
-            spec/dummy/node_modules
-            spec/dummy/tmp/cache/webpacker
+            public/packs
+            public/packs-test
+            node_modules
+            tmp/cache/webpacker
           key: webpacker-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            webpacker-${{ hashFiles('**/yarn.lock') }}-
 
       - name: Compile Webpacker assets
         run: bundle exec rails webpacker:compile
@@ -111,9 +115,9 @@ jobs:
       - name: Run RSpec tests
         run: |
           if [ "${{ needs.setup-matrix.outputs.total_groups }}" == "1" ]; then
-            bin/rc_rspec
+            rspec spec
           else
-            bin/rc_parallel_rspec -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{join(matrix.GROUP, ',')}}
+            bundle exec parallel_rspec spec -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{join(matrix.GROUP, ',')}}
           fi
 
       - name: Upload screenshots on failure
