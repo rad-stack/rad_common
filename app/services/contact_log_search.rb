@@ -16,7 +16,17 @@ class ContactLogSearch < RadCommon::Search
        { column: :service_type, type: RadCommon::EnumFilter, klass: ContactLog },
        { input_label: 'Log Type', column: :sms_log_type, type: RadCommon::EnumFilter, klass: ContactLog },
        user_filter('From User', 'contact_logs.from_user_id'),
+       { input_label: 'From Number',
+         column: 'contact_logs.from_number',
+         type: RadCommon::LikeFilter },
+       { input_label: 'From Email', column: 'contact_logs.from_email', type: RadCommon::LikeFilter },
        user_filter('To User', 'contact_log_recipients.to_user_id'),
+       { input_label: 'To Number',
+         column: 'contact_log_recipients.phone_number',
+         type: RadCommon::LikeFilter },
+       { input_label: 'To Email',
+         column: 'contact_log_recipients.email',
+         type: RadCommon::LikeFilter },
        { input_label: 'Record Type', column: 'contact_logs.record_type', options: record_type_options },
        { input_label: 'Record ID', column: :record_id, type: RadCommon::EqualsFilter, data_type: :integer },
        { input_label: 'Associated User',
@@ -46,7 +56,12 @@ class ContactLogSearch < RadCommon::Search
     end
 
     def date_filter
-      { start_input_label: 'Start Date', end_input_label: 'End Date', column: :created_at, type: RadCommon::DateFilter }
+      { start_input_label: 'Start Date',
+        end_input_label: 'End Date',
+        column: :created_at,
+        default_start_value: Date.current,
+        default_end_value: Date.current,
+        type: RadCommon::DateFilter }
     end
 
     def user_filter(label, column)
