@@ -5,8 +5,7 @@ VCR.configure do |c|
   c.hook_into :webmock
 
   # see Task 37353, need the example.com item for now
-  c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com', 'googlechromelabs.github.io',
-                 'www.example.com', 'storage.googleapis.com'
+  c.ignore_hosts '127.0.0.1', 'chromedriver.storage.googleapis.com', 'googlechromelabs.github.io', 'www.example.com'
 
   if RadConfig.test_mobile_phone.present?
     c.filter_sensitive_data('<TEST_MOBILE_PHONE>') { RadConfig.test_mobile_phone! }
@@ -30,6 +29,12 @@ VCR.configure do |c|
     c.filter_sensitive_data('<SENDGRID_API_KEY>') { RadConfig.sendgrid_api_key! }
   end
 
+  if RadConfig.secret_config_item(:twilio_alt_verify_service_sid).present?
+    c.filter_sensitive_data('<TWILIO_ALT_VERIFY_SERVICE_SID>') do
+      RadConfig.secret_config_item!(:twilio_alt_verify_service_sid)
+    end
+  end
+
   c.filter_sensitive_data('<SMARTY_AUTH_ID>') { RadConfig.smarty_auth_id! } if RadConfig.smarty_auth_id.present?
 
   if RadConfig.smarty_auth_token.present?
@@ -45,6 +50,10 @@ VCR.configure do |c|
 
   if RadConfig.secret_config_item(:github_access_token).present?
     c.filter_sensitive_data('<GITHUB_ACCESS_TOKEN>') { RadConfig.secret_config_item!(:github_access_token) }
+  end
+
+  if RadConfig.secret_config_item(:sentry_api_token).present?
+    c.filter_sensitive_data('<SENTRY_API_TOKEN>') { RadConfig.secret_config_item!(:sentry_api_token) }
   end
 
   c.filter_sensitive_data('<S3_ACCESS_KEY_ID>') { RadConfig.s3_access_key_id! }
