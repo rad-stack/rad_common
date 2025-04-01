@@ -16,6 +16,12 @@ module RadCommon
       AttachmentUrlGenerator.permanent_attachment_url(Company.main.fav_icon)
     end
 
+    def company_logo(company)
+      return 'app_logo.png' unless company.app_logo.attached?
+
+      url_for(company.app_logo)
+    end
+
     def edit_company_title(company)
       safe_join(['Editing Company: ', link_to(company.name.presence || 'Missing', company_path)])
     end
