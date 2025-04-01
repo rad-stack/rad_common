@@ -70,7 +70,7 @@ class HerokuCommands
 
       write_log 'Clearing certain production data'
       remove_user_avatars
-      remove_accounting_keys
+      remove_encrypted_secrets
       User.update_all twilio_verify_enabled: false
       nil
     end
@@ -83,10 +83,12 @@ class HerokuCommands
           return
         end
 
+        write_log `heroku ps:scale web=0 worker=0 #{app_option(app_name)}`
+        write_log `heroku run rails runner "'Sidekiq.redis(&:flushdb)'" #{app_option(app_name)}`
         write_log `heroku pg:reset DATABASE_URL #{app_option(app_name)} --confirm #{app_name}`
         write_log `heroku run rails db:schema:load #{app_option(app_name)}`
         write_log `heroku run rails db:seed #{app_option(app_name)}`
-        write_log `heroku restart #{app_option(app_name)}`
+        write_log `heroku ps:scale web=1 worker=1 #{app_option(app_name)}`
 
         write_log 'Done.'
       end
@@ -111,76 +113,72 @@ class HerokuCommands
 
     private
 
-    def app_option(app_name)
-      "--app #{app_name}"
-    end
-
-    def heroku_rails_environment(app_name)
-      `heroku config:get RAILS_ENV #{app_option(app_name)}`.strip
-    end
-
-    def backup_dump_file(app_name)
-      "#{dump_folder}/#{app_name}_#{Date.current}.backup"
-    end
-
-    def clone_dump_file
-      'latest.dump'
-    end
-
-    def dump_folder
-      "#{Rails.root}/heroku_backups"
-    end
-
-    def local_host
-      'localhost'
-    end
-
-    def local_user
-      `whoami`.strip!
-    end
-
-    def dbname
-      YAML.load_file('config/database.yml')['development']['database']
-    end
-
-    def check_production!
-      raise 'This is not available in the production environment.' if Rails.env.production?
-    end
-
-    def remove_user_avatars
-      return unless User.new.respond_to?(:avatar)
-
-      User.joins(:avatar_attachment).order(:id).each do |user|
-        user.avatar.purge_later
+      def app_option(app_name)
+        "--app #{app_name}"
       end
-    end
 
-    def remove_accounting_keys
-      company = Company.main
-      return unless company.respond_to?(:quickbooks_access_token)
+      def heroku_rails_environment(app_name)
+        `heroku config:get RAILS_ENV #{app_option(app_name)}`.strip
+      end
 
-      company.quickbooks_company_id = nil
-      company.quickbooks_token = nil
-      company.quickbooks_refresh_token = nil
-      company.refresh_token_by = nil
+      def backup_dump_file(app_name)
+        "#{dump_folder}/#{app_name}_#{Date.current}.backup"
+      end
 
-      company.save!(validate: false)
-    end
+      def clone_dump_file
+        'latest.dump'
+      end
 
-    def write_log(message)
-      puts message
-    end
+      def dump_folder
+        "#{Rails.root}/heroku_backups"
+      end
 
-    def check_valid_app(app_name)
-      _output, error = Open3.capture3("heroku apps:info #{app_option(app_name)}")
+      def local_host
+        'localhost'
+      end
 
-      raise error if valid_error?(error)
-    end
+      def local_user
+        `whoami`.strip!
+      end
 
-    def valid_error?(error)
-      return false if error.blank?
+      def dbname
+        YAML.load_file('config/database.yml')['development']['database']
+      end
 
-      IGNORED_HEROKU_ERRORS.select { |ignored_error| error.include?(ignored_error) }.blank?
-    end
+      def check_production!
+        raise 'This is not available in the production environment.' if Rails.env.production?
+      end
+
+      def remove_user_avatars
+        return unless User.new.respond_to?(:avatar)
+
+        User.joins(:avatar_attachment).order(:id).each do |user|
+          user.avatar.purge_later
+        end
+      end
+
+      def remove_encrypted_secrets
+        [Company, User].each do |klass|
+          klass.encrypted_attributes&.each do |attribute_name|
+            klass.where.not(attribute_name => nil).update_all "#{attribute_name}": nil
+          end
+        end
+      end
+
+      def write_log(message)
+        puts message
+      end
+
+      def check_valid_app(app_name)
+        _output, error = Open3.capture3("heroku apps:info #{app_option(app_name)}")
+
+        raise error if valid_error?(error)
+      end
+
+      def valid_error?(error)
+        return false if error.blank?
+
+        IGNORED_HEROKU_ERRORS.select { |ignored_error| error.include?(ignored_error) }.blank?
+      end
   end
 end

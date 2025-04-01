@@ -67,6 +67,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.string "zipcode", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "active", default: true, null: false
     t.jsonb "address_metadata"
   end
 
