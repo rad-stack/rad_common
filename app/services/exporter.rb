@@ -15,7 +15,7 @@ class Exporter
     @format = format
 
     # we'll raise this for now and see what turns up in the wild, then probably change it to limit it let the user know
-    # see Task
+    # see Task 6842
     raise "exporter record limit of #{RECORD_LIMIT} exceeded with #{record_count}" if record_count > RECORD_LIMIT
   end
 
@@ -44,7 +44,7 @@ class Exporter
     def generate_pdf
       pdf = Prawn::Document.new(page_layout: :landscape, page_size: 'A3', margin: [10, 10, 20, 20])
 
-      pdf.image Rails.root.join('app', 'javascript', 'images', RadConfig.app_logo_filename!),
+      pdf.image Rails.root.join('app', 'assets', 'images', RadConfig.app_logo_filename!),
                 position: :left,
                 width: 150
 

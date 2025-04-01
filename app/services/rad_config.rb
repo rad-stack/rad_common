@@ -338,7 +338,8 @@ class RadConfig
     def system_usage_models!
       array_config_item!(:system_usage_models) +
         [['ContactLogRecipient', 'successful', 'Successful Contacts'],
-         ['ContactLogRecipient', 'failed', 'Failed Contacts']]
+         ['ContactLogRecipient', 'failed', 'Failed Contacts'],
+         'Notification']
     end
 
     def global_validity_days!
@@ -395,6 +396,10 @@ class RadConfig
 
     def legacy_rails_config?
       boolean_config_item! :legacy_rails_config
+    end
+
+    def timezone_detection?
+      boolean_config_item! :timezone_detection
     end
 
     def secret_config_item!(item)

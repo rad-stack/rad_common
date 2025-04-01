@@ -8,10 +8,20 @@ class Seeder < RadSeeder
       30.times { FactoryBot.create :division, owner: users.internal.sample }
     end
 
-    if Attorney.count.zero?
-      FactoryBot.create_list :attorney, 20
+    seed_attorneys
+    seed_contact_logs
 
-      display_log 'seeding duplicate attorneys'
+    3.times { FactoryBot.create :client } if Client.count.zero?
+  end
+
+  private
+
+    def seed_attorneys
+      return if Attorney.exists?
+
+      display_log 'seeding attorneys'
+
+      20.times { FactoryBot.create :attorney }
 
       Audited.audit_class.as_user(random_internal_user) do
         2.times do
@@ -28,21 +38,20 @@ class Seeder < RadSeeder
       Attorney.find_each { |item| item.process_duplicates(bypass_notifications: true) }
     end
 
-    3.times { FactoryBot.create :client } if Client.count.zero?
+    def seed_contact_logs
+      return unless ContactLog.count.zero?
 
-    return unless ContactLog.count.zero?
+      display_log 'seeding contact logs'
 
-    display_log 'seeding contact logs'
+      30.times do
+        from_user = random_internal_user
+        to_user = [1, 2].sample == 1 ? users.sample : nil
 
-    30.times do
-      from_user = random_internal_user
-      to_user = [1, 2].sample == 1 ? users.sample : nil
-
-      if [1, 2].sample == 1
-        FactoryBot.create :contact_log, from_user: from_user, to_user: to_user
-      else
-        FactoryBot.create :contact_log, :email, from_user: from_user, to_user: to_user
+        if [1, 2].sample == 1
+          FactoryBot.create :contact_log, from_user: from_user, to_user: to_user
+        else
+          FactoryBot.create :contact_log, :email, from_user: from_user, to_user: to_user
+        end
       end
     end
-  end
 end

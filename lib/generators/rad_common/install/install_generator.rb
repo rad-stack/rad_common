@@ -21,6 +21,7 @@ module RadCommon
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'legacy_rails_config', 'false'
+        add_rad_config_setting 'timezone_detection', 'false'
         remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
@@ -36,10 +37,6 @@ module RadCommon
         copy_file '../../../../../.ruby-version', '.ruby-version'
         copy_file '../../../../../spec/dummy/Rakefile', 'Rakefile'
 
-        unless RadConfig.react_app?
-          copy_file '../../../../../spec/dummy/babel.config.js', 'babel.config.js'
-        end
-
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
@@ -50,18 +47,28 @@ module RadCommon
           copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
         end
 
+        migrate_webpacker_to_esbuild unless RadConfig.react_app?
+
+        migrate_to_tom_select
+
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
         copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
                  'public/406-unsupported-browser.html'
 
         unless RadConfig.react_app?
-          copy_file '../../../../../spec/dummy/app/javascript/packs/application.js',
-                    'app/javascript/packs/application.js'
-        end
+          copy_file '../../../../../spec/dummy/app/javascript/application.js',
+                    'app/javascript/application.js'
 
-        copy_file '../../../../../spec/dummy/app/javascript/packs/rad_mailer.js',
-                  'app/javascript/packs/rad_mailer.js'
+          unless File.exist? 'app/javascript/controllers/app_specific/index.js'
+            copy_file '../../../../../spec/dummy/app/javascript/controllers/app_specific/index.js',
+                     'app/javascript/controllers/app_specific/index.js'
+          end
+          copy_file '../../../../../spec/dummy/app/javascript/controllers/index.js',
+                   'app/javascript/controllers/index.js'
+          copy_file '../../../../../spec/dummy/app/javascript/controllers/application.js',
+                    'app/javascript/controllers/application.js'
+        end
 
         directory '../../../../../.bundle', '.bundle'
 
@@ -83,21 +90,23 @@ module RadCommon
           if !RadConfig.config_item(:legacy_rails_config).nil? && RadConfig.legacy_rails_config?
             gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
           end
-
-          copy_file '../../../../../spec/dummy/config/webpacker.yml', 'config/webpacker.yml'
         end
 
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
 
         unless RadConfig.react_app?
           directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
-          directory '../../../../../spec/dummy/config/webpack/', 'config/webpack/'
         end
 
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
                  'config/initializers/devise_security.rb'
+
+        unless RadConfig.react_app?
+          copy_file '../../../../../spec/dummy/config/initializers/assets.rb',
+                    'config/initializers/assets.rb'
+        end
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form.rb',
                   'config/initializers/simple_form.rb'
@@ -184,6 +193,14 @@ Seeder.new.seed!
         RUBY
         end
 
+        unless RadConfig.react_app?
+          inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
+gem 'jsbundling-rails'
+gem 'propshaft'
+          RUBY
+          end
+        end
+
         apply_migrations
 
         check_boolean_fields
@@ -201,16 +218,35 @@ Seeder.new.seed!
       protected
 
         def merge_package_json
-          dummy_file_path = '../../../../../spec/dummy/package.json'
-          return copy_file dummy_file_path, 'package.json' unless File.exist? 'custom-dependencies.json'
+          migrate_custom_dependencies_file # Temp: Migrate old custom_dependencies.json to new format
 
-          custom_dependencies = JSON.parse(File.read('custom-dependencies.json'))
-          package_source = File.expand_path(find_in_source_paths(dummy_file_path))
-          package = JSON.parse(File.read(package_source))
-          dependencies = package['dependencies']
-          dependencies = dependencies.merge(custom_dependencies)
-          package['dependencies'] = dependencies
-          File.write('package.json', JSON.pretty_generate(package) + "\n")
+          dummy_file_path = '../../../../../spec/dummy/package.json'
+          unless File.exist?('custom-dependencies.json')
+            return copy_file dummy_file_path, 'package.json'
+          end
+
+          base_package_source = File.expand_path(find_in_source_paths(dummy_file_path))
+          base_package = JSON.parse(File.read(base_package_source))
+          custom_package = JSON.parse(File.read('custom-dependencies.json'))
+
+          %w[dependencies devDependencies resolutions scripts].each do |key|
+            next unless custom_package[key]
+
+            base_package[key] ||= {}
+            base_package[key].merge!(custom_package[key])
+          end
+
+          File.write('package.json', JSON.pretty_generate(base_package) + "\n")
+        end
+
+        def migrate_custom_dependencies_file
+          return unless File.exist?('custom-dependencies.json')
+
+          contents = JSON.parse(File.read('custom-dependencies.json'))
+          if contents.is_a?(Hash) && (%w[dependencies devDependencies resolutions scripts] & contents.keys).none?
+            new_contents = { 'dependencies' => contents }
+            File.write('custom-dependencies.json', JSON.pretty_generate(new_contents) + "\n")
+          end
         end
 
         def copy_custom_github_actions
@@ -365,7 +401,12 @@ Seeder.new.seed!
         end
 
         def install_github_workflow
-          copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          if RadConfig.react_app?
+            copy_file '../rspec_tests_react.yml', '.github/workflows/rspec_tests.yml'
+          else
+            copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          end
+
           copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
           copy_file '../../../../../.github/workflows/generate_coverage_report.yml',
                     '.github/workflows/generate_coverage_report.yml'
@@ -383,11 +424,74 @@ Seeder.new.seed!
                       "#{installed_app_name}_development"
           end
 
-          gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
-          gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
-          gsub_file '.github/workflows/rspec_tests.yml',
-                   "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
-                   'bin/rc_parallel_rspec'
+          unless RadConfig.react_app?
+            gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
+            gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
+            gsub_file '.github/workflows/rspec_tests.yml',
+                     "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
+                     'bin/rc_parallel_rspec'
+          end
+        end
+
+        def migrate_webpacker_to_esbuild
+          remove_dir 'config/webpack'
+          remove_file 'config/webpacker.yml'
+          remove_file 'bin/webpack'
+          remove_file 'bin/webpack-dev-server'
+          remove_file 'babel.config.js'
+          remove_file '.browserslistrc'
+          remove_file 'postcss.config.js'
+          remove_file '.dockerignore'
+          remove_file 'Dockerfile'
+
+          copy_file '../../../../../spec/dummy/esbuild.config.js', 'esbuild.config.js'
+          copy_file '../../../../../spec/dummy/Procfile.dev', 'Procfile.dev'
+
+          if Dir.exist?('app/javascript/packs')
+            remove_file 'app/javascript/packs/rad_mailer.js'
+
+            Dir['app/javascript/packs/*'].each do |file|
+              copy_file Rails.root.join(file), "app/javascript/#{File.basename(file)}"
+            end
+
+            remove_dir 'app/javascript/packs'
+          end
+
+          if Dir.exist?('app/javascript/images')
+            Dir['app/javascript/images/*'].each do |file|
+              copy_file Rails.root.join(file), "app/assets/images/#{File.basename(file)}"
+            end
+
+            remove_dir 'app/javascript/images'
+          end
+
+          search_and_replace 'image_pack_tag', 'image_tag'
+          search_and_replace 'javascript_pack_tag', 'javascript_include_tag'
+          search_and_replace 'stylesheet_pack_tag', 'stylesheet_link_tag'
+          search_and_replace 'favicon_pack_tag', 'favicon_link_tag'
+          search_and_replace 'app/javascript/images', 'app/assets/images'
+          search_and_replace "'app', 'javascript', 'images'", "'app', 'assets', 'images'"
+
+          copy_file '../../../../../spec/dummy/app/assets/scss/application.scss',
+                    'app/assets/scss/application.scss'
+          copy_file '../../../../../spec/dummy/app/assets/scss/rad_mailer.scss',
+                    'app/assets/scss/rad_mailer.scss'
+          unless File.exist? 'app/assets/scss/app_specific/main.scss'
+            create_file 'app/assets/scss/app_specific/main.scss'
+          end
+
+          if Dir.exist?('app/javascript/css')
+            Dir['app/javascript/css/*'].each do |file|
+              copy_file Rails.root.join(file), "app/assets/scss/#{File.basename(file)}"
+            end
+
+            remove_dir 'app/javascript/css'
+          end
+        end
+
+        def migrate_to_tom_select
+          search_and_replace 'bootstrap_select', 'tom_select'
+          search_and_replace 'rad-chosen', 'selectpicker'
         end
 
         def apply_migrations
@@ -484,6 +588,7 @@ Seeder.new.seed!
           apply_migration '20240803114036_bcc_notify_recipient.rb'
           apply_migration '20240912133320_persist_sms_false_positive.rb'
           apply_migration '20240911184745_fix_last_activity.rb'
+          apply_migration '20250227191231_add_detected_timezone_to_user.rb'
         end
 
         def installed_app_name

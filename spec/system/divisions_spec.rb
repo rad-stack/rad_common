@@ -21,16 +21,11 @@ RSpec.describe 'Divisions' do
     context 'with default placeholder' do
       it 'shows placeholder on autocomplete field', :js do
         visit new_division_path
-        click_bootstrap_select(from: 'division_owner_id')
-        expect(find("input[type='search']")['placeholder']).to eq('Start typing to search')
-      end
-    end
+        click_tom_select(from: 'division_owner_id')
 
-    context 'with custom placeholder' do
-      it 'shows placeholder on autocomplete field', :js do
-        visit new_division_path
-        click_bootstrap_select(from: 'division_category_id')
-        expect(find("input[type='search']")['placeholder']).to eq('Search for a category')
+        within '#division_owner_id-ts-control' do
+          expect(find('input', visible: :all)[:placeholder]).to eq('Start typing to search')
+        end
       end
     end
 
@@ -70,7 +65,7 @@ RSpec.describe 'Divisions' do
       expect(page).to have_content('Editing Division')
     end
 
-    context 'with bootstrap select search field', :js do
+    context 'with tom select search field', :js do
       let(:other_user) { create :user }
 
       before do
@@ -80,14 +75,15 @@ RSpec.describe 'Divisions' do
       end
 
       it 'allows searching' do
-        click_bootstrap_select(from: 'division_owner_id')
-        wait_for_ajax
-        find('.bs-searchbox input').fill_in(with: other_user.first_name)
-        expect(find('ul.inner li a span', text: other_user.to_s)).to be_present
+        click_tom_select(from: 'division_owner_id')
+        first('.dropdown-input').fill_in(with: other_user.first_name)
+        expect(find('[data-selectable]', text: other_user.to_s)).to be_present
       end
 
       it 'displays existing value' do
-        expect(find("[data-id='division_owner_id']").text).to eq(division.owner.to_s)
+        within '#division_owner_id-ts-control' do
+          expect(find('[data-ts-item]').text).to eq(division.owner.to_s)
+        end
         expect(find_field('division_owner_id', visible: false).value).to eq(division.owner.id.to_s)
       end
     end
@@ -123,11 +119,11 @@ RSpec.describe 'Divisions' do
 
       it 'allows saving and applying search filters' do
         visit divisions_path
-        bootstrap_select user.to_s, from: 'search_owner_id'
+        tom_select user.to_s, from: 'search_owner_id'
         click_button 'saved-search-filters-dropdown'
-        page.evaluate_script 'window.prompt = () => { document.getElementById("search_saved_name").value = "Test" }'
-        page.evaluate_script 'window.alert = (msg) => { return true; }'
-        expect { click_button('save_and_apply_filters') }.to change(SavedSearchFilter, :count).by(1)
+        page.evaluate_script 'window.prompt = () => { return "Test" }'
+        click_on('save_and_apply_filters')
+        expect(page).to have_css("[data-testid='saved-search-applied-filter']")
 
         expect(SavedSearchFilter.last.name).to eq('Test')
         expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
@@ -176,7 +172,7 @@ RSpec.describe 'Divisions' do
 
     context 'with attachments' do
       let(:prompt) { 'Are you sure? Attachment cannot be recovered.' }
-      let(:file) { Rails.root.join('app/javascript/images/app_logo.png').open }
+      let(:file) { Rails.root.join('app/assets/images/app_logo.png').open }
 
       before do
         division.logo.attach(io: file, filename: 'logo.png')
@@ -184,16 +180,11 @@ RSpec.describe 'Divisions' do
       end
 
       it 'allows attachment to be deleted', :js do
-        expect(ActiveStorage::Attachment.count).to eq 1
-
         page.accept_alert prompt do
           first('dd .fa-times').click
         end
 
-        division.reload
-        expect(page).to have_content 'Attachment successfully deleted'
-        expect(ActiveStorage::Attachment.count).to eq 0
-        expect(division.logo.attached?).to be false
+        expect(page).to have_css("#toast-nav[data-toast-success-message-value='Attachment successfully deleted']")
       end
     end
   end

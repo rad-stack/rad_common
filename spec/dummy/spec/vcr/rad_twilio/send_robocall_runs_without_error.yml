@@ -8,7 +8,7 @@ http_interactions:
       string: From=15005550006&To=%28904%29+999-5555&Url=https%3A%2F%2Fexample.com
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -24,57 +24,61 @@ http_interactions:
       code: 201
       message: Created
     headers:
-      Date:
-      - Fri, 21 Jun 2024 18:27:47 GMT
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json;charset=utf-8
       Content-Length:
-      - '1889'
+      - '2027'
       Connection:
       - keep-alive
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Allow-Headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQ96d9e04439aa9dc7de249db1f830c75b
-      Twilio-Request-Duration:
-      - '0.020'
+      Date:
+      - Thu, 13 Mar 2025 16:49:15 GMT
+      Location:
+      - http://localhost:8520/v2/Accounts/CA4fdc48fc59678f0985f2082c1bb5b35e
       Twilio-Concurrent-Requests:
       - '1'
-      X-Shenanigans:
-      - none
-      X-Powered-By:
-      - AT-5000
+      Twilio-Request-Id:
+      - RQ7bb9fdea75226b634214cdcdfdf7817f
+      Twilio-Request-Duration:
+      - '0.019'
       X-Home-Region:
       - us1
       X-Api-Domain:
       - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 9700dbefcaf4a5da8ff0c118308f25e6.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P3
+      X-Amz-Cf-Id:
+      - iUBqGM4q6_JrtVuTaIGXzPWevxbkgghyLm9_rIaoCZGvSGHnZF0Jeg==
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
+      Vary:
+      - Origin
     body:
       encoding: UTF-8
-      string: '{"date_updated": "Fri, 21 Jun 2024 18:27:47 +0000", "price_unit": "USD",
-        "parent_call_sid": null, "caller_name": null, "duration": null, "from": "+15005550006",
-        "to": "+19049995555", "annotation": null, "answered_by": null, "sid": "CA95c83721367af52fe38648b0bac3965c",
-        "queue_time": "0", "price": null, "api_version": "2010-04-01", "status": "queued",
-        "direction": null, "start_time": null, "date_created": "Fri, 21 Jun 2024 18:27:47
-        +0000", "from_formatted": "(500) 555-0006", "group_sid": null, "trunk_sid":
-        null, "forwarded_from": null, "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c.json",
-        "account_sid": "ACaae98776bde4ed53d0fb1dfcc262558e", "end_time": null, "to_formatted":
-        "(904) 999-5555", "phone_number_sid": null, "subresource_uris": {"user_defined_messages":
-        "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/UserDefinedMessages.json",
-        "notifications": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/Notifications.json",
-        "recordings": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/Recordings.json",
-        "streams": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/Streams.json",
-        "payments": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/Payments.json",
-        "user_defined_message_subscriptions": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/UserDefinedMessageSubscriptions.json",
-        "siprec": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/Siprec.json",
-        "events": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA95c83721367af52fe38648b0bac3965c/Events.json"}}'
-  recorded_at: Fri, 21 Jun 2024 18:27:47 GMT
-recorded_with: VCR 6.2.0
+      string: '{"account_sid": "ACaae98776bde4ed53d0fb1dfcc262558e", "annotation":
+        null, "answered_by": null, "api_version": "2010-04-01", "caller_name": null,
+        "date_created": "Thu, 13 Mar 2025 16:49:15 +0000", "date_updated": "Thu, 13
+        Mar 2025 16:49:15 +0000", "direction": null, "duration": null, "end_time":
+        null, "forwarded_from": null, "from": "+15005550006", "from_formatted": "(500)
+        555-0006", "group_sid": null, "parent_call_sid": null, "phone_number_sid":
+        null, "price": null, "price_unit": "USD", "queue_time": "0", "sid": "CA4fdc48fc59678f0985f2082c1bb5b35e",
+        "start_time": null, "status": "queued", "subresource_uris": {"events": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA4fdc48fc59678f0985f2082c1bb5b35e/Events.json",
+        "notifications": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA4fdc48fc59678f0985f2082c1bb5b35e/Notifications.json",
+        "payments": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA4fdc48fc59678f0985f2082c1bb5b35e/Payments.json",
+        "recordings": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA4fdc48fc59678f0985f2082c1bb5b35e/Recordings.json",
+        "siprec": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA4fdc48fc59678f0985f2082c1bb5b35e/Siprec.json",
+        "streams": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA4fdc48fc59678f0985f2082c1bb5b35e/Streams.json",
+        "transcriptions": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA4fdc48fc59678f0985f2082c1bb5b35e/Transcriptions.json",
+        "user_defined_message_subscriptions": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA4fdc48fc59678f0985f2082c1bb5b35e/UserDefinedMessageSubscriptions.json",
+        "user_defined_messages": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA4fdc48fc59678f0985f2082c1bb5b35e/UserDefinedMessages.json"},
+        "to": "+19049995555", "to_formatted": "(904) 999-5555", "trunk_sid": null,
+        "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Calls/CA4fdc48fc59678f0985f2082c1bb5b35e.json"}'
+  recorded_at: Thu, 13 Mar 2025 16:49:15 GMT
+recorded_with: VCR 6.3.1

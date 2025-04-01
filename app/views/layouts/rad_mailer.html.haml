@@ -11,14 +11,17 @@
 
 !!!
 %head
-  = stylesheet_pack_tag 'rad_mailer', media: 'all'
+  - if RadConfig.react_app?
+    = stylesheet_pack_tag 'rad_mailer', media: 'all'
+  - else
+    = stylesheet_link_tag 'rad_mailer', media: 'all'
 %body
   .email-bg
     .email-container
       .email-header
         .email-row
           .email-col-12.logo-col
-            = link_to image_pack_tag(RadConfig.app_logo_filename!, alt: company_name, title: company_name), website
+            = link_to image_tag(RadConfig.app_logo_filename!, alt: company_name, title: company_name), website
 
             - unless logo_includes_name
               %span.logo_text

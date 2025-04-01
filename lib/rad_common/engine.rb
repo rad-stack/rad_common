@@ -15,6 +15,7 @@ module RadCommon
     require 'devise_invitable'
     require 'faker'
     require 'faraday'
+    require 'geocoder'
     require 'haml-rails'
     require 'hashids'
     require 'jwt'
@@ -36,8 +37,8 @@ module RadCommon
     require 'smartystreets_ruby_sdk'
     require 'strip_attributes'
     require 'text'
+    require 'turbo-rails'
     require 'twilio-ruby'
-    require 'webpacker'
     require 'wicked_pdf'
   end
 end

@@ -33,6 +33,29 @@ describe SendgridStatusReceiver, type: :service do
     expect(service.process!).to be_nil
   end
 
+  describe 'email changed' do
+    let(:last_contact_log) { ContactLog.last }
+
+    let(:content) do
+      { event: event_type,
+        type: 'block',
+        email: user.email,
+        host_name: RadConfig.host_name!,
+        contact_log_id: last_contact_log.id }
+    end
+
+    before { RadDeviseMailer.email_changed(user).deliver_now }
+
+    it "doesn't notify on failure" do
+      expect(last_contact_log.content).to eq 'Email Changed'
+
+      deliveries.clear
+      described_class.new(content).process!
+
+      expect(last_email).to be_nil
+    end
+  end
+
   context 'with matching host name' do
     it 'notifies' do
       expect { service.process! }.to change(deliveries, :count).by(1)
