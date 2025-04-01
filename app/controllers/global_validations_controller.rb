@@ -11,7 +11,7 @@ class GlobalValidationsController < ApplicationController
     flash[:success] = "We're checking the validity of your company's data. You will get an email with " \
                       'the results. This may take a while.'
 
-    redirect_to '/rad_common/global_validations/new'
+    redirect_to '/global_validations/new'
   end
 
   private

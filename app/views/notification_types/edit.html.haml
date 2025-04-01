@@ -1,10 +1,10 @@
 .card
   = render 'layouts/card_header', no_delete_button: true,
                                   no_show_link: true,
-                                  index_path: '/rad_common/notification_types'
+                                  index_path: '/notification_types'
 
   .card-body
-    = simple_form_for @notification_type, url: "/rad_common/notification_types/#{@notification_type.id}",
+    = simple_form_for @notification_type, url: "/notification_types/#{@notification_type.id}",
                                           method: :put do |f|
       = f.error_notification
       = base_errors(f)

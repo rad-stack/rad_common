@@ -32,7 +32,7 @@ module RadCommonRoutes
           get :permission, on: :collection
         end
 
-        resources :duplicates, only: [] do
+        resources :duplicates, only: :index do
           collection do
             get :resolve
             get :not
@@ -57,17 +57,24 @@ module RadCommonRoutes
         resources :user_security_roles, only: :show
         resources :user_clients, only: %i[create destroy]
         resources :json_web_tokens, only: :new
+
+        resources :impersonations, only: [] do
+          collection do
+            post :start
+            delete :stop
+          end
+        end
+
+        get 'company/edit', to: 'companies#edit'
+        put 'company/update', to: 'companies#update'
+      end
+
+      authenticate :user, ->(u) { u.external? } do
+        resources :users, only: %i[index show]
       end
 
       authenticate :user, ->(u) { u.admin? } do
         mount Sidekiq::Web => '/sidekiq'
-      end
-
-      resources :users, only: [] do
-        member do
-          get :setup_totp
-          put :register_totp
-        end
       end
 
       resources :notifications, only: :index
@@ -88,11 +95,15 @@ module RadCommonRoutes
 
       get 'attachments/:id(.:format)/:filename(.:format)', to: 'rad_common/attachments#download'
 
-      get 'contact_us', to: 'pages#contact_us'
+      get 'global_search', to: 'search#global_search'
+      get 'global_search_result', to: 'search#global_search_result'
+      get 'company', to: 'companies#show'
       get 'terms', to: 'pages#terms'
       get 'privacy', to: 'pages#privacy'
 
       root to: 'pages#home'
+
+      get '/robots.:format', to: 'robots#robots'
     end
   end
 end

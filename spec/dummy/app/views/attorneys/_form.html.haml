@@ -1,5 +1,5 @@
 = simple_form_for(@attorney) do |f|
-  = f.error_notification
+  = rad_form_errors f
 
   .form-inputs
     .row
@@ -25,9 +25,13 @@
         = f.input :zipcode
     .row
       .col-lg-3
-        = f.input :phone_number
-      .col-lg-3
         = f.input :email
+      .col-lg-3
+        = f.input :phone_number
+    .row
+      .col-lg-3
+        = f.input :active
 
   .form-actions
+    = render 'layouts/duplicate_check', record: @attorney
     = f.button :submit, 'Save', class: 'btn btn-primary'

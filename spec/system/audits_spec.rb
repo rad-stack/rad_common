@@ -13,7 +13,7 @@ describe 'Audits', type: :system do
         open_status.update!(name: 'Foo')
       end
 
-      visit "/rad_common/audits/?#{{ search: { user_id: admin.id } }.to_query}"
+      visit "/audits/?#{{ search: { user_id: admin.id } }.to_query}"
       expect(page).to have_content 'Status - Foo'
     end
   end

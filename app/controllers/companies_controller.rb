@@ -7,7 +7,7 @@ class CompaniesController < ApplicationController
 
   def update
     if @company.update(permitted_params)
-      redirect_to '/rad_common/company', notice: 'Settings were successfully updated.'
+      redirect_to '/company', notice: 'Settings were successfully updated.'
     else
       render :edit
     end

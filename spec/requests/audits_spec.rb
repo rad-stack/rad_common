@@ -6,7 +6,7 @@ RSpec.describe 'Audits', type: :request do
   before { login_as user, scope: :user }
 
   describe 'index' do
-    before { get '/rad_common/audits', params: { auditable_type: 'Division', auditable_id: division.id } }
+    before { get '/audits', params: { auditable_type: 'Division', auditable_id: division.id } }
 
     context 'when admin' do
       let(:user) { create :admin }

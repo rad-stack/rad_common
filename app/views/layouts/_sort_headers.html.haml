@@ -11,9 +11,9 @@
 
       - case search.class.to_s
       - when 'RadAuditSearch'
-        = link_to label, "/rad_common/audits?#{search_params.to_query}"
+        = link_to label, "/audits?#{search_params.to_query}"
       - when 'LoginActivitySearch'
-        = link_to label, "/rad_common/login_activities?#{search_params.to_query}"
+        = link_to label, "/login_activities?#{search_params.to_query}"
       - else
         = link_to label, search_params
 

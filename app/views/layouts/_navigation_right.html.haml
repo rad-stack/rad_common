@@ -18,17 +18,17 @@
           %li= link_to 'My Profile', "/user_profiles/#{current_user.id}", class: 'dropdown-item'
         - if current_user.internal? && policy(Notification).index?
           %li
-            = link_to '/rad_common/notifications', class: 'dropdown-item' do
+            = link_to '/notifications', class: 'dropdown-item' do
               Notifications
               - if unread_count.positive?
                 %span.badge.alert-danger= unread_count
         - if current_user.internal? && policy(NotificationSetting).index?
-          %li= link_to 'Notification Settings', '/rad_common/notification_settings', class: 'dropdown-item'
+          %li= link_to 'Notification Settings', '/notification_settings', class: 'dropdown-item'
 
         - if impersonating?
           %li
             = link_to "Sign Out from #{current_user}",
-                      '/rad_common/impersonations/stop',
+                      '/impersonations/stop',
                       method: 'delete',
                       class: "dropdown-item #{impersonate_style}"
 

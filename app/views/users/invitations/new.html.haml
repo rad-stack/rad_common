@@ -30,7 +30,7 @@
               * Valid Domains for Internal Users: #{Company.main.valid_user_domains.join(', ')}
             %p
               You can add more valid domains in
-              = link_to 'Company Settings', '/rad_common/company/edit'
+              = link_to 'Company Settings', '/company/edit'
         .row
           .col-lg-4= f.input :mobile_phone, required: require_mobile_phone?
       .form-actions

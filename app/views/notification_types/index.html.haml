@@ -10,7 +10,7 @@
         %th.actions Actions
       - @notification_types.each do |notification_type|
         %tr
-          %td= link_to notification_type, "/rad_common/notification_types/#{notification_type.id}/edit"
+          %td= link_to notification_type, "/notification_types/#{notification_type.id}/edit"
           %td= notification_type.auth_mode_name
           %td
             - if notification_type.absolute_users?
@@ -21,5 +21,5 @@
           %td= format_boolean notification_type.active?
           %td
             = link_to icon(:pencil, 'Edit'),
-                      "/rad_common/notification_types/#{notification_type.id}/edit",
+                      "/notification_types/#{notification_type.id}/edit",
                       class: 'btn btn-sm btn-secondary btn-block'

@@ -24,9 +24,9 @@ RSpec.describe 'Notification Types', type: :request do
       end
 
       it 'redirects to the notification_type' do
-        put "/rad_common/notification_types/#{notification_type.to_param}",
+        put "/notification_types/#{notification_type.to_param}",
             params: { notifications_new_user_signed_up_notification: valid_attributes }
-        expect(response).to redirect_to('/rad_common/notification_types')
+        expect(response).to redirect_to('/notification_types')
       end
     end
 

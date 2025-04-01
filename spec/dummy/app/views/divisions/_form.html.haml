@@ -1,5 +1,5 @@
 = simple_form_for(@division) do |f|
-  = f.error_notification
+  = rad_form_errors f
 
   .form-inputs
     = f.input :name
@@ -12,14 +12,14 @@
       = f.input :logo
     = f.input :icon
 
-    = render 'layouts/simple_autocomplete', search_path: '/rad_common/global_search?global_search_scope=user_name',
+    = render 'layouts/simple_autocomplete', search_path: '/global_search?global_search_scope=user_name',
                                             initial_value: @division.owner.to_s,
                                             base_object: :division,
                                             association: :owner,
                                             required: true,
                                             f: f
 
-    = render 'layouts/simple_autocomplete', search_path: '/rad_common/global_search?global_search_scope=category_name',
+    = render 'layouts/simple_autocomplete', search_path: '/global_search?global_search_scope=category_name',
                                             initial_value: @division.category&.name.presence || @division.category_name,
                                             base_object: :division,
                                             association: :category,

@@ -15,13 +15,13 @@
         %td
           - if can_type
             = link_to notification_setting.notification_type,
-                      "/rad_common/notification_types/#{notification_setting.notification_type_id}/edit"
+                      "/notification_types/#{notification_setting.notification_type_id}/edit"
           - else
             = notification_setting.notification_type
         %td
           - if can_create && policy(notification_setting).create?
             = simple_form_for notification_setting,
-                              url: '/rad_common/notification_settings',
+                              url: '/notification_settings',
                               method: :post,
                               html: { class: 'dynamic-updater' } do |f|
 
