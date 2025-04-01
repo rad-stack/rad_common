@@ -33,7 +33,7 @@ module RadCompany
   end
 
   def pdf_app_logo
-    return  Rails.root.join("app/assets/images/app_logo.png") unless app_logo.attached?
+    return  Rails.root.join('app/assets/images/app_logo.png') unless app_logo.attached?
 
     url = ApplicationController.helpers.company_logo(self)
     URI.parse(url).open
