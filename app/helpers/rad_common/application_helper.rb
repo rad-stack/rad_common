@@ -206,11 +206,11 @@ module RadCommon
     end
 
     def sign_up_roles
-      SecurityRole.allow_sign_up.by_name
+      SecurityRole.allow_sign_up.sorted
     end
 
     def invite_roles
-      SecurityRole.allow_invite.by_name
+      SecurityRole.allow_invite.sorted
     end
 
     def verify_invite
@@ -233,6 +233,30 @@ module RadCommon
 
     def portal_domain?
       request.host_with_port == RadConfig.portal_host_name!
+    end
+
+    def onboarded?
+      Onboarding.new(current_user).onboarded?
+    end
+
+    def pdf_output?
+      return true if request.nil?
+
+      request.format.pdf?
+    end
+
+    def created_by_show_item(record)
+      { label: 'Created By', value: secured_link(record.created_by) }
+    end
+
+    def translated_attribute_label(record, attribute)
+      translation = I18n.t "activerecord.attributes.#{record.class.to_s.underscore}.#{attribute}"
+
+      if translation.downcase.include?('translation missing')
+        attribute.to_s.titlecase
+      else
+        translation
+      end
     end
 
     def rad_wicked_pdf_stylesheet_link_tag(source)

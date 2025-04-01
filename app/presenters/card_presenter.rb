@@ -128,6 +128,19 @@ class CardPresenter
     raise 'missing card header icon'
   end
 
+  def card_style
+    return local_assigns[:card_style] if local_assigns[:card_style].present?
+
+    unless %w[show edit].include?(action_name) &&
+           instance.present? &&
+           instance.respond_to?(:active?) &&
+           !instance.active?
+      return
+    end
+
+    'alert-danger'
+  end
+
   def output_title
     return title if title.present?
     return "New #{object_label}" if action_name == 'new' || action_name == 'create'

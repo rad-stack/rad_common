@@ -123,6 +123,15 @@ module RadCommon
         audit_text
       end
 
+      def formatted_audit_value(audit, attribute, raw_value)
+        return raw_value unless auditable_exists?(audit)
+
+        record = audit.auditable
+        return raw_value unless record&.defined_enums&.has_key?(attribute)
+
+        RadEnum.new(record.class, attribute).raw_translation(raw_value)
+      end
+
       def classify_foreign_key(audit_column, audit_type)
         reflections = if audit_type.respond_to?(:reflect_on_all_associations)
                         audit_type.reflect_on_all_associations(:belongs_to).select { |r| r.foreign_key == audit_column }
@@ -144,7 +153,7 @@ module RadCommon
         return false if current_user.admin?
 
         restricted_attributes = RadConfig.restricted_audit_attributes!
-        return if restricted_attributes.none?
+        return if restricted_attributes.count.zero?
 
         matches = restricted_attributes.select do |item|
           item[:model] == audit.auditable_type && item[:attribute] == changed_attribute

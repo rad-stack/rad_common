@@ -5,11 +5,13 @@ class RadSpecSupport
 
     rspec.allow(Company).to rspec.receive(:main).and_return(Company.main || rspec.create(:company))
 
-    pending_status = UserStatus.default_pending_status
+    if RadConfig.pending_users?
+      pending_status = UserStatus.default_pending_status
 
-    rspec.allow(UserStatus).to rspec.receive(:default_pending_status).and_return pending_status || rspec.create(
-      :user_status, :pending, name: 'Pending'
-    )
+      rspec.allow(UserStatus).to rspec.receive(:default_pending_status).and_return pending_status || rspec.create(
+        :user_status, :pending, name: 'Pending'
+      )
+    end
 
     active_status = UserStatus.default_active_status
 
@@ -37,10 +39,18 @@ class RadSpecSupport
   end
 
   def self.hooks(config, driver)
-    config.after(:each, type: :system, js: true) do
-      errors = page.driver.browser.logs.get(:browser)
-      errors = errors.reject { |error| error.level == 'WARNING' }
-      expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
+    unless RadConfig.react_app?
+      config.after(:each, type: :system, js: true) do |example|
+        unless example.metadata[:ignore_browser_errors]
+          errors = page.driver.browser.logs.get(:browser)
+          errors = errors.reject { |error| error.level == 'WARNING' }
+          expect(errors.presence).to be_nil, errors.map(&:message).join(', ')
+        end
+      end
+    end
+
+    config.after(:each) do
+      Rails.cache.clear
     end
 
     config.before(:example, type: :system) do

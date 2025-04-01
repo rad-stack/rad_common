@@ -23,4 +23,12 @@ class PagesController < ApplicationController
   def privacy
     skip_authorization
   end
+
+  private
+
+    def marketing_site?
+      return true if RadConfig.force_marketing_site?
+
+      RadConfig.allow_marketing_site? && request.host.start_with?('www.')
+    end
 end

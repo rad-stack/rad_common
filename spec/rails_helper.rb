@@ -2,18 +2,17 @@
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 
-if ENV['COVERAGE'] == 'true'
-  require 'simplecov'
-  SimpleCov.start 'rails' do
-    add_filter 'lib/templates'
-    add_filter 'install_generator.rb'
+require 'simplecov'
+SimpleCov.start 'rails' do
+  add_filter 'lib/templates'
+  add_filter 'install_generator.rb'
+  add_filter 'install/rails_helper.rb'
 
-    add_group 'Services', 'app/services'
-    add_group 'Policies', 'app/policies'
+  add_group 'Services', 'app/services'
+  add_group 'Policies', 'app/policies'
 
-    groups.delete('Libraries')
-    groups.delete('Channels')
-  end
+  groups.delete('Libraries')
+  groups.delete('Channels')
 end
 
 require File.expand_path('dummy/config/environment.rb', __dir__)
@@ -58,7 +57,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  # config.fixture_paths = [Rails.root.join('spec/fixtures').to_s]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -111,6 +110,16 @@ RSpec.configure do |config|
   chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
   Capybara.javascript_driver = chrome_driver
 
+  config.before(:suite) do
+    rad_factories = "#{Gem.loaded_specs['rad_common'].full_gem_path}/spec/factories/rad_common"
+    Dir["#{rad_factories}/*.rb"].each do |factory_file|
+      factory_name = File.basename(factory_file, '.rb')
+      next if FactoryBot.factories.registered?(factory_name.singularize.to_sym)
+
+      # require factory_file
+    end
+  end
+
   config.before do
     # TODO: workaround for this issue:
     # https://github.com/rails/rails/issues/37270
@@ -128,9 +137,10 @@ RSpec.configure do |config|
   config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
   config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
   config.filter_run_excluding(sign_up_specs: true) if RadConfig.disable_sign_up?
+  config.filter_run_excluding(pending_user_specs: true) unless RadConfig.pending_users?
   config.filter_run_excluding(external_user_specs: true) unless RadConfig.external_users?
   config.filter_run_excluding(user_client_specs: true) unless RadConfig.user_clients?
-  config.filter_run_excluding(devise_paranoid_specs: true) unless Devise.paranoid
+  config.filter_run_excluding(devise_timeoutable_specs: true) unless Devise.mappings[:user].timeoutable?
   config.filter_run_excluding(smarty_specs: true) unless RadConfig.smarty_enabled?
   config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
   config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
@@ -141,4 +151,6 @@ RSpec.configure do |config|
 
   include Warden::Test::Helpers
   config.include Capybara::DSL
+
+  Sidekiq.logger.level = Logger::WARN
 end

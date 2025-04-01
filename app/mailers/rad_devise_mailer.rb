@@ -5,6 +5,7 @@ class RadDeviseMailer < Devise::Mailer
   layout 'rad_mailer'
 
   before_action :set_defaults
+
   default reply_to: RadConfig.admin_email!
 
   def confirmation_instructions(record, token, opts = {})

@@ -7,7 +7,7 @@ RSpec.describe 'Audits', type: :request do
   before { login_as user, scope: :user }
 
   describe 'index' do
-    before { get '/rad_common/audits', params: { search: { auditable_type: 'User' } } }
+    before { get '/audits', params: { search: { auditable_type: 'User' } } }
 
     context 'when admin' do
       let(:user) { create :admin }
@@ -21,7 +21,7 @@ RSpec.describe 'Audits', type: :request do
       let(:user) { create :user }
 
       it 'denies access' do
-        expect(response.code).to eq '403'
+        expect(response).to have_http_status :forbidden
       end
     end
   end

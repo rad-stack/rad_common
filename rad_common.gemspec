@@ -6,22 +6,20 @@ Gem::Specification.new do |s|
   s.name = 'rad_common'
   s.version = RadCommon::VERSION
   s.authors = ['Gary Foster']
-  s.email = ['gary@radicalbear.com']
-  s.homepage = 'https://www.radicalbear.com/'
   s.summary = 'A library of common functions for a rad bear app'
-  s.description = 'A library of common functions for a standard business web app, developed by Radical Bear'
+  s.description = 'A library of common functions for a standard business web app'
   s.license = 'MIT'
   s.metadata['rubygems_mfa_required'] = 'true'
-  s.required_ruby_version = '>= 3.3.1'
+  s.required_ruby_version = '>= 3.2.2'
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   s.bindir = 'bin'
-  s.executables = %w[reset_db migrate_reset rc_update]
+  s.executables = %w[reset_db migrate_reset rc_update rc_rspec rc_parallel_rspec
+                     local_backup clone_local reset_staging creds]
 
   s.add_dependency 'active_storage_validations', '1.0.4' # see Task 43068
   s.add_dependency 'audited'
   s.add_dependency 'authtrail'
-
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
   s.add_dependency 'devise'
@@ -72,6 +70,9 @@ Gem::Specification.new do |s|
 
   # TODO: causes an error, temporary pinning
   s.add_dependency 'concurrent-ruby', '1.3.4'
+
+  # Test Group
+  s.add_dependency 'selenium-webdriver', '~> 4.18.1'
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'

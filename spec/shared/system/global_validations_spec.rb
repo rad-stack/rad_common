@@ -7,19 +7,19 @@ RSpec.describe 'Companies', type: :system do
   before do
     login_as user, scope: :user
     Company.main.update_column :valid_user_domains, ['foo.com'] # trigger invalid data
-    visit '/rad_common/global_validations/new'
+    visit '/global_validations/new'
   end
 
   context 'when full database' do
     it 'runs' do
-      click_on 'Validate Full Database'
+      click_link 'Validate Full Database'
       expect(page).to have_content(result)
     end
   end
 
   context 'when single item' do
     it 'runs' do
-      click_on 'Company'
+      click_link 'Company'
       expect(page).to have_content(result)
     end
   end

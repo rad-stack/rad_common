@@ -52,4 +52,9 @@ class UserSearch < RadCommon::Search
     def can_update?
       Pundit.policy!(current_user, User.new).update?
     end
+
+    def clients
+      Pundit.policy_scope!(current_user, RadCommon::AppInfo.new.client_model_class)
+            .where('id IN (SELECT client_id FROM user_clients)').sorted
+    end
 end

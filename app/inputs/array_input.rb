@@ -19,4 +19,11 @@ class ArrayInput < SimpleForm::Inputs::StringInput
   def input_html_classes
     super.push("array-field mb-2 form-control#{errors.any? ? ' is-invalid' : ''}")
   end
+
+  private
+
+    def button_tag
+      tag.button "Add #{ActiveRecord::Base.human_attribute_name(attribute_name).singularize.downcase}",
+                 class: 'btn btn-primary btn-sm array-add-btn', type: 'button'
+    end
 end
