@@ -32,6 +32,13 @@ module RadCompany
     update! validity_checked_at: Time.current
   end
 
+  def pdf_app_logo
+    return  Rails.root.join("app/assets/images/#{RadConfig.app_logo_filename!}") unless app_logo.attached?
+
+    url = ApplicationController.helpers.company_logo(self)
+    URI.parse(url).open
+  end
+
   private
 
     def clean_domain_spaces
