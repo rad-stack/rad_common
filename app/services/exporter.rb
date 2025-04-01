@@ -45,7 +45,7 @@ class Exporter
       pdf = Prawn::Document.new(page_layout: :landscape, page_size: 'A3', margin: [10, 10, 20, 20])
 
       # TODO: fix this to use company main logo
-      pdf.image Rails.root.join('app', 'assets', 'images', RadConfig.app_logo_filename!),
+      pdf.image Rails.root.join('app', 'assets', 'images', ApplicationController.helpers.company_logo(Company.main)),
                 position: :left,
                 width: 150
 
