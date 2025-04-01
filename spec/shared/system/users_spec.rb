@@ -198,13 +198,15 @@ RSpec.describe 'Users', type: :system do
 
     describe 'show' do
       it 'does not allow' do
-        expect { visit user_path(user) }.to raise_error ActionController::RoutingError
+        visit user_path(user)
+        expect(page.status_code).to eq 403
       end
     end
 
     describe 'index' do
       it 'does not allow' do
-        expect { visit users_path }.to raise_error ActionController::RoutingError
+        visit users_path
+        expect(page.status_code).to eq 403
       end
     end
   end

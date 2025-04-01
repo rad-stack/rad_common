@@ -11,7 +11,7 @@
             %li= link_to 'Clients', clients_path, class: 'nav-link'
           - if policy(Division).index?
             %li= link_to 'Divisions', divisions_path(search: { show_header: 'true' }), class: 'nav-link'
-          %li.nav-item= link_to 'Contact', contact_us_path, class: 'nav-link px-3'
+          %li.nav-item= link_to 'Contact', new_company_contact_path, class: 'nav-link px-3'
           - if policy(Attorney).index?
             %li.nav-item.dropdown
               %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#' }

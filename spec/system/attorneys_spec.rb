@@ -38,7 +38,7 @@ RSpec.describe 'Attorneys', type: :system do
   describe 'duplicates' do
     let(:user) { create :admin }
     let(:model_name) { 'Attorney' }
-    let(:index_path) { "/rad_common/duplicates?model=#{model_name}" }
+    let(:index_path) { "/duplicates?model=#{model_name}" }
     let(:record_1_path) { attorney_path(record_1) }
     let!(:record_1) { create :attorney, first_name: 'Fred123', last_name: 'Flintstone' }
     let!(:record_2) { create :attorney, first_name: 'John456', last_name: 'Smith' }
@@ -114,7 +114,7 @@ RSpec.describe 'Attorneys', type: :system do
       visit record_1_path
       expect(page).not_to have_content('Fix Duplicates')
 
-      visit "/rad_common/duplicates?model=#{model_name}&id=#{record_1.id}"
+      visit "/duplicates?model=#{model_name}&id=#{record_1.id}"
       expect(page).to have_content('Congratulations, there are no more duplicates found!')
     end
   end

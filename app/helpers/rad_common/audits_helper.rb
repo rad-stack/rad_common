@@ -13,11 +13,11 @@ module RadCommon
     def audit_history_link(auditable = nil)
       auditable ||= current_instance_variable
 
-      "/rad_common/audits/?auditable_type=#{auditable.class}&auditable_id=#{auditable.id}"
+      "/audits/?auditable_type=#{auditable.class}&auditable_id=#{auditable.id}"
     end
 
     def user_audit_history_link(user)
-      "/rad_common/audits/?#{{ search: { user_id: user.id } }.to_query}"
+      "/audits/?#{{ search: { user_id: user.id } }.to_query}"
     end
 
     def display_audited_changes(audit)

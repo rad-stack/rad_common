@@ -13,20 +13,20 @@ RSpec.describe 'Companies', type: :request do
       let(:new_attributes) { { name: 'bar' } }
 
       it 'updates the requested company' do
-        put '/rad_common/company/update', params: { company: new_attributes }
+        put '/company/update', params: { company: new_attributes }
         company.reload
         expect(company.name).to eq('bar')
       end
 
       it 'redirects to the company' do
-        put '/rad_common/company/update', params: { company: new_attributes }
-        expect(response).to redirect_to('/rad_common/company')
+        put '/company/update', params: { company: new_attributes }
+        expect(response).to redirect_to('/company')
       end
     end
 
     describe 'with invalid params' do
       it 're-renders the edit template' do
-        put '/rad_common/company/update', params: { company: invalid_attributes }
+        put '/company/update', params: { company: invalid_attributes }
         expect(response.body).to include 'Please review the problems below'
       end
     end

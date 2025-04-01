@@ -9,7 +9,7 @@
                     nil
                   else
                     link_to tag.i('', class: 'fa fa-times'),
-                            RadCommon::Engine.routes.url_helpers.attachment_path(record.send(attachment_name).id),
+                            attachment_path(record.send(attachment_name).id),
                             method: :delete,
                             data: { confirm: 'Are you sure? Attachment cannot be recovered.' },
                             class: 'btn btn-danger ml-5'

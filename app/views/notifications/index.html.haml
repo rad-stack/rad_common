@@ -3,7 +3,7 @@
   .card-body
 
     -# see kaminari monkey patch on initializers/rad_common.rb
-    = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+    = paginate @notifications, theme: 'twitter-bootstrap-4'
 
     %table.table.table-striped.table-bordered
       %tr
@@ -27,6 +27,6 @@
                 %p= secured_link notification.record, new_tab: true
 
     -# see kaminari monkey patch on initializers/rad_common.rb
-    = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+    = paginate @notifications, theme: 'twitter-bootstrap-4'
 
 - current_user.read_notifications!

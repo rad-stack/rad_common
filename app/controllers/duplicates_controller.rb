@@ -140,7 +140,7 @@ class DuplicatesController < ApplicationController
   private
 
     def index_path
-      "/rad_common/duplicates?model=#{model}"
+      "/duplicates?model=#{model}"
     end
 
     def gather_record

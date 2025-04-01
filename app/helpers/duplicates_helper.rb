@@ -3,7 +3,7 @@ module DuplicatesHelper
     return unless policy(record).destroy? && !params["#{model.to_s.downcase}_id"]
 
     [link_to(icon('arrow-right', 'Skip for now, review later'),
-             "/rad_common/duplicates/do_later?model=#{record.class}&id=#{record.id}",
+             "/duplicates/do_later?model=#{record.class}&id=#{record.id}",
              method: :put,
              class: 'btn btn-warning btn-sm')]
   end
@@ -12,7 +12,7 @@ module DuplicatesHelper
     return unless record.duplicate.present? && record.duplicate.score.present? && policy(record).show?
 
     link_to(icon(:cubes, 'Fix Duplicates'),
-            "/rad_common/duplicates?model=#{record.class}&id=#{record.id}",
+            "/duplicates?model=#{record.class}&id=#{record.id}",
             class: 'btn btn-info btn-sm')
   end
 
@@ -39,23 +39,23 @@ module DuplicatesHelper
   end
 
   def not_duplicate_path(record, master_record)
-    "/rad_common/duplicates/not?model=#{record.class}&id=#{record.id}&master_record=#{master_record.id}"
+    "/duplicates/not?model=#{record.class}&id=#{record.id}&master_record=#{master_record.id}"
   end
 
   def index_duplicates_path_record(record)
-    "/rad_common/duplicates?model=#{record.class}&id=#{record.id}"
+    "/duplicates?model=#{record.class}&id=#{record.id}"
   end
 
   def index_duplicates_path(model)
-    "/rad_common/duplicates?model=#{model}"
+    "/duplicates?model=#{model}"
   end
 
   def merge_duplicates_path(record)
-    "/rad_common/duplicates/merge?model=#{record.class}&id=#{record.id}"
+    "/duplicates/merge?model=#{record.class}&id=#{record.id}"
   end
 
   def reset_duplicates_path(record)
-    "/rad_common/duplicates/reset?model=#{record.class}&id=#{record.id}"
+    "/duplicates/reset?model=#{record.class}&id=#{record.id}"
   end
 
   def duplicate_class(global_field_value, current_field_value)

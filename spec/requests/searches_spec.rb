@@ -8,7 +8,7 @@ describe 'Searches', type: :request do
   before { login_as user, scope: :user }
 
   context 'when super search' do
-    let(:search_path) { "/rad_common/global_search?term=#{search_term}&super_search=1" }
+    let(:search_path) { "/global_search?term=#{search_term}&super_search=1" }
     let!(:division) { create :division, name: search_term }
 
     it 'can search for results across multiple tables' do

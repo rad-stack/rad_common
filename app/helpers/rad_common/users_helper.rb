@@ -146,7 +146,7 @@ module RadCommon
       return unless policy(user).impersonate?
 
       link_to icon('right-to-bracket', 'Sign In As'),
-              "/rad_common/impersonations/start?id=#{user.id}",
+              "/impersonations/start?id=#{user.id}",
               method: :post,
               data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to ' \
                                'your original user.' },
