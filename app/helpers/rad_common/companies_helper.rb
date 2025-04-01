@@ -10,6 +10,12 @@ module RadCommon
          :address_requests_made]
     end
 
+    def company_fav_icon(company)
+      return 'favicon.ico' unless company.fav_icon.attached?
+
+      AttachmentUrlGenerator.permanent_attachment_url(Company.main.fav_icon)
+    end
+
     def edit_company_title(company)
       safe_join(['Editing Company: ', link_to(company.name.presence || 'Missing', company_path)])
     end
