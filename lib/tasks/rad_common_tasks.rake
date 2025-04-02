@@ -31,7 +31,15 @@ namespace :rad_common do
     Timeout.timeout(session.time_limit) do
       RadCommon::AppInfo.new.duplicate_models.each do |model_name|
         session.reset_status
-        model_name.constantize.process_duplicates(session)
+        records = model_name.constantize.duplicates_to_process
+        count = records.count
+
+        records.each do |record|
+          break if session.check_status("checking #{model_name} records for duplicates", count)
+
+          record.process_duplicates
+        end
+
         break if session.timing_out?
       end
 
@@ -82,19 +90,5 @@ namespace :rad_common do
 
   task update_s3_cors_settings: :environment do
     S3CorsSettingsUpdater.new.update!
-  end
-
-  task :global_validity, [:override_model] => :environment do |task, args|
-    session = RakeSession.new(task, 24.hours, 1)
-
-    Timeout.timeout(session.time_limit) do
-      session.reset_status
-
-      global_validity = GlobalValidation.new
-      global_validity.override_model = args[:override_model]
-      global_validity.run
-
-      session.finished
-    end
   end
 end
