@@ -3,10 +3,15 @@ class AttorneysController < ApplicationController
 
   def index
     authorize Attorney
-    @attorneys = policy_scope(Attorney).by_name.page(params[:page])
+    @attorneys = policy_scope(Attorney).sorted.page(params[:page])
   end
 
-  def show; end
+  def show
+    respond_to do |format|
+      format.html
+      format.pdf { render pdf: @attorney.to_s }
+    end
+  end
 
   def new
     @attorney = Attorney.new
@@ -38,7 +43,7 @@ class AttorneysController < ApplicationController
     destroyed = @attorney.destroy
 
     if destroyed
-      flash[:success] = 'Attorney was successfully deleted.'
+      flash[:notice] = 'Attorney was successfully deleted.'
     else
       flash[:error] = @attorney.errors.full_messages.join(', ')
     end
@@ -60,7 +65,7 @@ class AttorneysController < ApplicationController
     end
 
     def permitted_params
-      params.require(:attorney).permit(:first_name, :last_name, :middle_name, :company_name, :phone_number, :email,
-                                       :address_1, :address_2, :city, :state, :zipcode)
+      params.require(:attorney).permit(:first_name, :last_name, :middle_name, :company_name, :mobile_phone,
+                                       :phone_number, :email, :address_1, :address_2, :city, :state, :zipcode, :active)
     end
 end
