@@ -11,13 +11,12 @@ class NotificationTypesController < ApplicationController
 
   def update
     @notification_type.active = params[type_param_name][:active]
+    @notification_type.bcc_recipient = params[type_param_name][:bcc_recipient]
     @notification_type.security_roles = resolve_roles(params[type_param_name][:security_roles])
 
     if @notification_type.save
-      flash[:success] = 'Notification Type updated.'
-      redirect_to '/notification_types'
+      redirect_to notification_types_path, notice: 'Notification Type updated.'
     else
-      flash[:error] = "Unable to update notification type: #{@notification_type.errors.full_messages.join(',')}"
       render :edit
     end
   end

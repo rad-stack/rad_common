@@ -50,13 +50,13 @@ RSpec.describe NotificationType do
     context 'when enabled' do
       let(:bcc_recipient) { Faker::Internet.email }
 
-      xit { is_expected.to eq [bcc_recipient] }
+      it { is_expected.to eq [bcc_recipient] }
     end
 
     context 'when disabled' do
       let(:bcc_recipient) { nil }
 
-      xit { is_expected.to be_nil }
+      it { is_expected.to be_nil }
     end
   end
 

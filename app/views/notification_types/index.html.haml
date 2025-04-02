@@ -6,20 +6,24 @@
         %th Name
         %th Auth Mode
         %th Roles to Notify
+        %th BCC Recipient
+        %th Notifications
         %th Active
         %th.actions Actions
-      - @notification_types.each do |notification_type|
-        %tr
-          %td= link_to notification_type, "/notification_types/#{notification_type.id}/edit"
-          %td= notification_type.auth_mode_name
+      - @notification_types.each do |record|
+        %tr{ class: table_row_style(record) }
+          %td= link_to record, edit_notification_type_path(record)
+          %td= record.auth_mode_name
           %td
-            - if notification_type.absolute_users?
+            - if record.absolute_users?
               n/a
-            - notification_type.security_roles.each do |security_role|
+            - record.security_roles.each do |security_role|
               = secured_link(security_role)
               %p
-          %td= format_boolean notification_type.active?
+          %td= record.bcc_recipient
+          %td= record.notifications.size
+          %td= format_boolean record.active?
           %td
             = link_to icon(:pencil, 'Edit'),
-                      "/notification_types/#{notification_type.id}/edit",
+                      edit_notification_type_path(record),
                       class: 'btn btn-sm btn-secondary btn-block'
