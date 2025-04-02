@@ -15,6 +15,9 @@ module RadCompany
 
     before_validation :clean_domain_spaces
 
+    has_one_attached :app_logo
+    has_one_attached :fav_icon
+
     strip_attributes
     audited except: %i[quickbooks_token quickbooks_refresh_token github_token]
   end
@@ -27,6 +30,13 @@ module RadCompany
 
   def global_validity_ran!
     update! validity_checked_at: Time.current
+  end
+
+  def pdf_app_logo
+    return  Rails.root.join('app/assets/images/app_logo.png') unless app_logo.attached?
+
+    url = ApplicationController.helpers.company_logo(self)
+    URI.parse(url).open
   end
 
   private
