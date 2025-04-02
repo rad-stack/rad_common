@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
+ActiveRecord::Schema[7.0].define(version: 2025_04_02_083306) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -20,8 +20,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.text "body"
     t.string "record_type", null: false
     t.bigint "record_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
@@ -30,7 +30,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -41,8 +41,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.string "content_type"
     t.text "metadata"
     t.bigint "byte_size", null: false
-    t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.string "checksum"
+    t.datetime "created_at", precision: nil, null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
@@ -58,34 +58,35 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.string "last_name", null: false
     t.string "middle_name"
     t.string "company_name", null: false
-    t.string "phone_number", null: false
+    t.string "phone_number"
     t.string "email", null: false
     t.string "address_1", null: false
     t.string "address_2"
     t.string "city", null: false
     t.string "state", null: false
     t.string "zipcode", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "active", default: true, null: false
+    t.string "mobile_phone"
     t.jsonb "address_metadata"
   end
 
-  create_table "audits", id: :serial, force: :cascade do |t|
+  create_table "audits", force: :cascade do |t|
     t.integer "auditable_id"
     t.string "auditable_type"
     t.integer "associated_id"
     t.string "associated_type"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.string "user_type"
     t.string "username"
     t.string "action"
-    t.text "audited_changes"
     t.integer "version", default: 0
     t.string "comment"
     t.string "remote_address"
     t.string "request_uuid"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.jsonb "audited_changes"
     t.index ["associated_id", "associated_type"], name: "associated_index"
     t.index ["auditable_id", "auditable_type", "version"], name: "auditable_index"
     t.index ["created_at"], name: "index_audits_on_created_at"
@@ -95,8 +96,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
 
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["name"], name: "index_categories_on_name", unique: true
   end
 
@@ -104,25 +105,25 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.string "name", null: false
     t.boolean "active", default: true, null: false
     t.text "valid_user_domains", default: [], null: false, array: true
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "email", null: false
     t.index ["name"], name: "index_clients_on_name"
   end
 
-  create_table "companies", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255, null: false
-    t.string "phone_number", limit: 255, null: false
-    t.string "website", limit: 255, null: false
-    t.string "email", limit: 255, null: false
-    t.string "address_1", limit: 255, null: false
-    t.string "address_2", limit: 255
-    t.string "city", limit: 255, null: false
-    t.string "state", limit: 255, null: false
-    t.string "zipcode", limit: 255, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "validity_checked_at"
+  create_table "companies", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "phone_number", null: false
+    t.string "website", null: false
+    t.string "email", null: false
+    t.string "address_1", null: false
+    t.string "address_2"
+    t.string "city", null: false
+    t.string "state", null: false
+    t.string "zipcode", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "validity_checked_at", precision: nil
     t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
     t.integer "address_requests_made", default: 0, null: false
@@ -170,15 +171,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.index ["record_type", "record_id"], name: "index_contact_logs_on_record"
     t.index ["sent"], name: "index_contact_logs_on_sent"
     t.index ["service_type"], name: "index_contact_logs_on_service_type"
+    t.index ["sms_message_id"], name: "index_contact_logs_on_sms_message_id"
     t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
   end
 
-  create_table "divisions", id: :serial, force: :cascade do |t|
+  create_table "divisions", force: :cascade do |t|
     t.string "name", null: false
     t.string "code", null: false
-    t.integer "owner_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.bigint "owner_id", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "division_status"
     t.boolean "notify", default: false, null: false
     t.string "timezone"
@@ -199,9 +201,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.text "duplicates_not"
     t.integer "score"
     t.integer "sort", default: 500, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "processed_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "processed_at", precision: nil, null: false
     t.index ["duplicatable_type", "duplicatable_id"], name: "index_duplicates_on_duplicatable_type_and_duplicatable_id", unique: true
   end
 
@@ -222,50 +224,54 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.string "country"
     t.float "latitude"
     t.float "longitude"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["identity"], name: "index_login_activities_on_identity"
     t.index ["ip"], name: "index_login_activities_on_ip"
     t.index ["user_type", "user_id"], name: "index_login_activities_on_user_type_and_user_id"
   end
 
   create_table "notification_security_roles", force: :cascade do |t|
-    t.integer "security_role_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "notification_type_id", null: false
+    t.bigint "security_role_id", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.bigint "notification_type_id", null: false
     t.index ["notification_type_id", "security_role_id"], name: "unique_notification_roles", unique: true
+    t.index ["notification_type_id"], name: "index_notification_security_roles_on_notification_type_id"
+    t.index ["security_role_id"], name: "index_notification_security_roles_on_security_role_id"
   end
 
   create_table "notification_settings", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.boolean "enabled", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "notification_type_id", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.bigint "notification_type_id", null: false
     t.boolean "email", default: false, null: false
     t.boolean "feed", default: false, null: false
     t.boolean "sms", default: false, null: false
     t.index ["notification_type_id", "user_id"], name: "index_notification_settings_on_notification_type_id_and_user_id", unique: true
+    t.index ["notification_type_id"], name: "index_notification_settings_on_notification_type_id"
+    t.index ["user_id"], name: "index_notification_settings_on_user_id"
   end
 
   create_table "notification_types", force: :cascade do |t|
     t.string "type", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "active", default: true, null: false
     t.string "bcc_recipient"
     t.index ["type"], name: "index_notification_types_on_type", unique: true
   end
 
   create_table "notifications", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "notification_type_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "notification_type_id", null: false
     t.string "content", null: false
     t.boolean "unread", default: true, null: false
     t.string "record_type"
     t.bigint "record_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["notification_type_id"], name: "index_notifications_on_notification_type_id"
     t.index ["record_type", "record_id"], name: "index_notifications_on_record_type_and_record_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
@@ -276,7 +282,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.string "password_archivable_type", null: false
     t.integer "password_archivable_id", null: false
     t.string "password_salt"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["password_archivable_type", "password_archivable_id"], name: "index_password_archivable"
   end
 
@@ -291,11 +297,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
     t.index ["user_id"], name: "index_saved_search_filters_on_user_id"
   end
 
-  create_table "security_roles", id: :serial, force: :cascade do |t|
+  create_table "security_roles", force: :cascade do |t|
     t.string "name", null: false
     t.boolean "admin", default: false, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "create_division", default: false, null: false
     t.boolean "read_division", default: false, null: false
     t.boolean "update_division", default: false, null: false
@@ -310,98 +316,97 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
 
   create_table "statuses", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["name"], name: "index_statuses_on_name", unique: true
   end
 
   create_table "system_messages", force: :cascade do |t|
     t.text "sms_message_body"
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.integer "send_to", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "message_type", null: false
-    t.integer "security_role_id"
+    t.bigint "security_role_id"
     t.index ["security_role_id"], name: "index_system_messages_on_security_role_id"
     t.index ["user_id"], name: "index_system_messages_on_user_id"
   end
 
   create_table "user_clients", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "client_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id", "client_id"], name: "index_user_clients_on_user_id_and_client_id", unique: true
-  end
-
-  create_table "user_security_roles", id: :serial, force: :cascade do |t|
-    t.integer "security_role_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "client_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_user_clients_on_client_id"
+    t.index ["user_id", "client_id"], name: "index_user_clients_on_user_id_and_client_id", unique: true
+    t.index ["user_id"], name: "index_user_clients_on_user_id"
+  end
+
+  create_table "user_security_roles", force: :cascade do |t|
+    t.bigint "security_role_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["security_role_id", "user_id"], name: "index_user_security_roles_on_security_role_id_and_user_id", unique: true
     t.index ["security_role_id"], name: "index_user_security_roles_on_security_role_id"
     t.index ["user_id"], name: "index_user_security_roles_on_user_id"
   end
 
-  create_table "user_statuses", id: :serial, force: :cascade do |t|
+  create_table "user_statuses", force: :cascade do |t|
     t.string "name", null: false
     t.boolean "active", default: false, null: false
     t.boolean "validate_email_phone", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["name"], name: "index_user_statuses_on_name", unique: true
   end
 
-  create_table "users", id: :serial, force: :cascade do |t|
-    t.string "email", limit: 255, default: "", null: false
-    t.string "encrypted_password", limit: 255, default: "", null: false
-    t.string "reset_password_token", limit: 255
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip", limit: 255
-    t.string "last_sign_in_ip", limit: 255
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "confirmation_token", limit: 255
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string "unconfirmed_email", limit: 255
-    t.string "first_name", limit: 255, null: false
-    t.string "last_name", limit: 255, null: false
-    t.string "mobile_phone", limit: 255
-    t.string "timezone", limit: 255, null: false
-    t.string "global_search_default", limit: 255
-    t.integer "user_status_id", null: false
-    t.string "authy_id"
-    t.datetime "last_sign_in_with_twilio_verify"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "confirmation_token"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
+    t.string "unconfirmed_email"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "mobile_phone"
+    t.string "timezone", null: false
+    t.string "global_search_default"
+    t.bigint "user_status_id", null: false
+    t.datetime "last_sign_in_with_twilio_verify", precision: nil
     t.boolean "twilio_verify_enabled", default: true, null: false
     t.string "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
+    t.datetime "invitation_created_at", precision: nil
+    t.datetime "invitation_sent_at", precision: nil
+    t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
-    t.integer "invited_by_id"
+    t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.boolean "external", default: false, null: false
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
-    t.datetime "locked_at"
-    t.datetime "password_changed_at"
-    t.datetime "last_activity_at"
-    t.datetime "expired_at"
+    t.datetime "locked_at", precision: nil
+    t.datetime "password_changed_at", precision: nil
+    t.datetime "last_activity_at", precision: nil
+    t.datetime "expired_at", precision: nil
     t.jsonb "filter_defaults"
-    t.boolean "twilio_verify_sms", default: true, null: false
-    t.string "twilio_totp_factor_sid"
+    t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
     t.string "language", default: "en", null: false
     t.string "detected_timezone"
     t.string "ignored_timezone"
-    t.index ["authy_id"], name: "index_users_on_authy_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"
@@ -430,6 +435,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_191231) do
   add_foreign_key "notification_settings", "users"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
+  add_foreign_key "saved_search_filters", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
   add_foreign_key "user_clients", "clients"
