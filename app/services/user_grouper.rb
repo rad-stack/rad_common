@@ -9,7 +9,7 @@ class UserGrouper
   end
 
   def call
-    [me_item, internal_user_item, client_user_item, inactive_user_item].compact
+    [me_item, internal_user_item, inactive_user_item].compact
   end
 
   private
@@ -24,12 +24,6 @@ class UserGrouper
       return if internal_users.none?
 
       ['Users', format_collection(internal_users)]
-    end
-
-    def client_user_item
-      return if client_users.none?
-
-      ['Clients', format_collection(client_users)]
     end
 
     def inactive_user_item
