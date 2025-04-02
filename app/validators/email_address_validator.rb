@@ -15,7 +15,7 @@ class EmailAddressValidator < ActiveModel::Validator
         next
       end
 
-      next unless check_sendgrid?(record, field, options)
+      next unless check_sendgrid?(record, field)
 
       error_message = RadSendGrid.new.validate_email(email_value)
       record.errors.add(field, error_message) if error_message.present?
@@ -31,8 +31,9 @@ class EmailAddressValidator < ActiveModel::Validator
         email !~ /^#/
     end
 
-    def check_sendgrid?(record, field, options)
-      return false if record.running_global_validity || options[:skip_sendgrid]
+    def check_sendgrid?(record, field)
+      return false unless record.respond_to?(:running_global_validity)
+      return false if record.running_global_validity
 
       record.send("#{field}_changed?")
     end

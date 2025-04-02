@@ -6,24 +6,18 @@ module RadCommon
                { label: 'User Status', value: user_status_item(user) },
                :timezone,
                :detected_timezone,
-               :ignored_timezone]
+               :ignored_timezone,
+               :sign_in_count,
+               :invitation_accepted_at,
+               :invited_by]
 
-      items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
-
-      items += [:sign_in_count,
-                :invitation_accepted_at,
-                :invited_by,
-                :current_sign_in_ip,
-                :current_sign_in_at,
-                :confirmed_at,
-                :confirmation_sent_at,
-                unconfirmed_email_show_item(user)]
-
+      items += %i[twilio_verify_sms] if RadConfig.twilio_verify_enabled?
+      items += %i[current_sign_in_ip current_sign_in_at confirmed_at confirmation_sent_at unconfirmed_email]
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
 
       if RadConfig.avatar? && user.avatar.attached?
         items.push(label: 'Avatar',
-                   value: render_one_attachment(record: user, attachment_name: 'avatar', new_tab: true))
+                   value: render('layouts/attachment', record: user, attachment_name: 'avatar', new_tab: true))
       end
 
       items
@@ -65,15 +59,13 @@ module RadCommon
       UserProfilePolicy.new(current_user, current_user).show?
     end
 
-    def show_nav_avatar
-      return unless RadConfig.avatar?
+    def next_profile_action(user)
+      onboarding = Onboarding.new(user)
 
-      # there is a complicated bug that requires this - Task 35304
-      return if RadConfig.password_expirable? && current_user.password_expired?
+      next_step = onboarding.next_step
+      return unless next_step
 
-      return unless current_user.avatar.attached?
-
-      image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
+      link_to(icon(:forward, next_step.label), next_step.path, class: 'btn btn-primary btn-lg')
     end
 
     def users_actions
@@ -87,9 +79,13 @@ module RadCommon
     end
 
     def new_user_action
-      return unless policy(User.new).new? && RadConfig.manually_create_users?
+      return unless policy(User.new).new? && manually_create_users?
 
       link_to(icon('plus-square', 'New User'), new_user_path, class: 'btn btn-success btn-sm')
+    end
+
+    def manually_create_users?
+      RadConfig.disable_invite? && RadConfig.disable_sign_up?
     end
 
     def user_actions(user)
@@ -150,7 +146,7 @@ module RadCommon
       return unless policy(user).impersonate?
 
       link_to icon('right-to-bracket', 'Sign In As'),
-              start_impersonations_path(id: user.id),
+              "/impersonations/start?id=#{user.id}",
               method: :post,
               data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to ' \
                                'your original user.' },
@@ -166,7 +162,7 @@ module RadCommon
     end
 
     def user_confirm_action(user)
-      return unless user.needs_confirmation? && policy(user).update?
+      return unless RadConfig.user_confirmable? && policy(user).update? && !user.confirmed?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
       link_to icon('circle-question', 'Confirm Email'),
@@ -177,7 +173,7 @@ module RadCommon
     end
 
     def user_resend_action(user)
-      return unless policy(User.new).create? && user.needs_accept_invite?
+      return unless policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
 
       link_to icon(:envelope, 'Resend Invitation'),
               resend_invitation_user_path(user),
@@ -221,7 +217,7 @@ module RadCommon
     end
 
     def reactivate_user_warning(user)
-      return unless user.needs_reactivate? && policy(user).update?
+      return unless RadConfig.user_expirable? && policy(user).update? && user.expired?
 
       link = link_to 'click here', reactivate_user_path(user), method: :put, data: { confirm: 'Are you sure?' }
       message = safe_join(["User's account has been expired due to inactivity, to re-activate the user, ", link, '.'])
@@ -229,7 +225,7 @@ module RadCommon
     end
 
     def require_mobile_phone?
-      RadConfig.require_mobile_phone? || (RadConfig.twilio_verify_enabled? && RadConfig.twilio_verify_all_users?)
+      RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_internal_only?
     end
 
     def clients_to_add_to_user(user)

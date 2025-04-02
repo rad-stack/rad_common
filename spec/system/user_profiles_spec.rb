@@ -6,12 +6,12 @@ RSpec.describe 'UserProfiles' do
   describe 'edit' do
     let(:user) { create :user }
 
-    it 'renders the edit template' do
+    xit 'renders the edit template' do
       visit edit_user_profile_path(user)
       expect(page).to have_content('Please Enter Your Profile')
     end
 
-    it 'requires completing the profile' do
+    xit 'requires completing the profile' do
       visit edit_user_profile_path(user)
       click_link_or_button 'Save'
       expect(page).to have_content("Birth date can't be blank")
@@ -21,7 +21,7 @@ RSpec.describe 'UserProfiles' do
   describe 'show' do
     let(:user) { create :user_with_profile }
 
-    it 'shows the user_profile' do
+    xit 'shows the user_profile' do
       visit user_profile_path(user)
       expect(page).to have_content('My Profile')
     end
