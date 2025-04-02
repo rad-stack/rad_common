@@ -1,17 +1,18 @@
 .card
-  = render 'layouts/card_header', no_delete_button: true,
-                                  no_show_link: true,
-                                  index_path: '/notification_types'
+  = render 'layouts/card_header', no_delete_button: true, no_show_link: true
 
   .card-body
-    = simple_form_for @notification_type, url: "/notification_types/#{@notification_type.id}",
-                                          method: :put do |f|
-      = f.error_notification
-      = base_errors(f)
+    = simple_form_for @notification_type, url: notification_type_path(@notification_type), method: :put do |f|
+      = rad_form_errors f
+
       .form-inputs
         .row
-          .col-lg-12
-            = f.input :active
+          .col-lg-3= f.input :active
+        .row
+          .col-lg-3
+            = f.input :bcc_recipient,
+                      tooltip: 'Send a copy of any email notifications to this email address (not available for SMS)'
+
         - unless @notification_type.absolute_users?
           .row
             .col-lg-12
