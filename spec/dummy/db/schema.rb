@@ -86,7 +86,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_02_083306) do
     t.string "remote_address"
     t.string "request_uuid"
     t.datetime "created_at", precision: nil, null: false
-    t.jsonb "audited_changes"
+    t.text "audited_changes"
     t.index ["associated_id", "associated_type"], name: "associated_index"
     t.index ["auditable_id", "auditable_type", "version"], name: "auditable_index"
     t.index ["created_at"], name: "index_audits_on_created_at"
@@ -407,6 +407,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_02_083306) do
     t.string "language", default: "en", null: false
     t.string "detected_timezone"
     t.string "ignored_timezone"
+    t.boolean "twilio_verify_sms", default: true, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"
