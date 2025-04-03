@@ -72,6 +72,7 @@ module RadCommon
       @default_value = default_value
       @grouped = grouped
       @required = required
+      @search_scope_name = search_scope_name
       @search_scope = RadConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
       @show_search_subtext = show_search_subtext
       @allow_not = allow_not
@@ -81,6 +82,14 @@ module RadCommon
     # @return [String] the name of the view to be used to render the filter input
     def filter_view
       'select'
+    end
+
+    def search_only?
+      search_scope.present? && options.size > SearchableAssociationInput::MAX_DROPDOWN_SIZE
+    end
+
+    def searchable_association_options
+      { show_subtext: show_search_subtext, search_scope: @search_scope_name }
     end
 
     def searchable_name
@@ -125,9 +134,9 @@ module RadCommon
     end
 
     def input_options_with_current_selection(search)
-      return input_options if search_scope.blank?
+      return input_options if search_scope.blank? || search_only?
 
-      input_options + search_scope[:model].constantize.where(id: selected_value(search)).to_a
+      search_scope[:model].constantize.where(id: selected_value(search)).to_a
     end
 
     # @return the method that simple form should use to determine the label of the select option

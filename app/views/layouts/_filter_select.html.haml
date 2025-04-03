@@ -1,6 +1,6 @@
 - filter_class = search.default_value?(filter.searchable_name) ? '' : 'filter-active'
-- input_html = filter.search_scope.present? ? filter.search_scope_params : { class: 'selectpicker' }
-
+- input_html = SearchableAssociationInput.default_input_html_options(filter.search_only?,
+                                                                     filter.searchable_association_options)
 .row.align-items-center
   .col
     = f.label filter.input_label, required: false

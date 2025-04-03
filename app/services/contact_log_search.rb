@@ -70,8 +70,9 @@ class ContactLogSearch < RadCommon::Search
     def user_filter(label, column)
       { input_label: label,
         column: column,
-        grouped: true,
-        options: UserGrouper.new(current_user).call,
-        blank_value_label: 'All Users' }
+        include_blank: false,
+        search_scope_name: 'user_name',
+        options: Pundit.policy_scope!(current_user, User).active.sorted,
+        show_search_subtext: true }
     end
 end

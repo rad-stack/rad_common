@@ -12,25 +12,26 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
                                input_options, merged_input_options)
   end
 
+  def self.search_options(options)
+    {
+      class: 'selectpicker-search',
+      'data-subtext' => options[:show_subtext],
+      'data-global-search-scope' => options[:search_scope],
+      'data-global-search-mode' => 'searchable_association',
+      'data-excluded-ids' => options[:excluded_ids]
+    }
+  end
+
+  def self.default_input_html_options(search_only, options)
+    return SearchableAssociationInput.search_options(options) if search_only
+
+    { class: :selectpicker }
+  end
+
   private
 
     def add_default_options
-      if search_only?
-        input_html_options.merge!(search_options)
-      else
-        input_html_options[:class].push(:selectpicker)
-      end
-      options[:include_blank] = 'None' if options[:include_blank].nil?
-    end
-
-    def search_options
-      {
-        class: 'selectpicker-search',
-        'data-subtext' => options[:show_subtext],
-        'data-global-search-scope' => options[:search_scope],
-        'data-global-search-mode' => 'searchable_association',
-        'data-excluded-ids' => options[:excluded_ids]
-      }
+      input_html_options.merge!(SearchableAssociationInput.default_input_html_options(search_only?, options))
     end
 
     def records
