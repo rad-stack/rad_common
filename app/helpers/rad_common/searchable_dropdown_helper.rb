@@ -14,5 +14,9 @@ module RadCommon
     def max_dropdown_size_exceeded?(records)
       records.size > MAX_DROPDOWN_SIZE
     end
+
+    def max_dropdown_size
+      MAX_DROPDOWN_SIZE
+    end
   end
 end

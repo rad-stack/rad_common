@@ -49,7 +49,7 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
     end
 
     def global_autocomplete_params
-      { limit: MAX_DROPDOWN_SIZE, global_search_scope: options[:search_scope], excluded_ids: options[:excluded_ids] }
+      { limit: max_dropdown_size, global_search_scope: options[:search_scope], excluded_ids: options[:excluded_ids] }
     end
 
     def selected_search_option
