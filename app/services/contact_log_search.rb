@@ -32,7 +32,7 @@ class ContactLogSearch < RadCommon::Search
        { input_label: 'Associated User',
          column: 'associated_with_user',
          grouped: true,
-         options: UserGrouper.new(current_user).call,
+         options: UserGrouper.new(current_user, include_client_users: false).call,
          scope: :associated_with_user,
          blank_value_label: 'All Users' },
        { input_label: 'Content', column: 'content', type: RadCommon::LikeFilter },
@@ -68,7 +68,7 @@ class ContactLogSearch < RadCommon::Search
       { input_label: label,
         column: column,
         grouped: true,
-        options: UserGrouper.new(current_user).call,
+        options: UserGrouper.new(current_user, include_client_users: false).call,
         blank_value_label: 'All Users' }
     end
 end

@@ -1,15 +1,16 @@
 class UserGrouper
-  attr_accessor :current_user, :always_include, :scopes, :with_ids
+  attr_accessor :current_user, :always_include, :scopes, :with_ids, :include_client_users
 
-  def initialize(current_user, always_include: nil, scopes: [], with_ids: false)
+  def initialize(current_user, always_include: nil, scopes: [], with_ids: false, include_client_users: true)
     self.current_user = current_user
     self.always_include = always_include
     self.scopes = scopes
     self.with_ids = with_ids
+    self.include_client_users = include_client_users
   end
 
   def call
-    [me_item, internal_user_item, inactive_user_item].compact
+    [me_item, internal_user_item, client_user_item, inactive_user_item].compact
   end
 
   private
@@ -24,6 +25,12 @@ class UserGrouper
       return if internal_users.none?
 
       ['Users', format_collection(internal_users)]
+    end
+
+    def client_user_item
+      return if !include_client_users || client_users.none?
+
+      ['Clients', format_collection(client_users)]
     end
 
     def inactive_user_item
