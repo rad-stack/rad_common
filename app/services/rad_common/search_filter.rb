@@ -2,6 +2,7 @@ module RadCommon
   ##
   # This is used to generate dropdown filter containing options to be filtered on
   class SearchFilter
+    include RadCommon::InputHelper
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :not_scope,
                 :default_value, :errors, :include_blank,
                 :search_scope, :show_search_subtext, :allow_not
@@ -84,12 +85,10 @@ module RadCommon
       'select'
     end
 
-    def search_only?
-      search_scope.present? && options.size > SearchableAssociationInput::MAX_DROPDOWN_SIZE
-    end
+    def searchable_scope?
+      return false if options.nil?
 
-    def searchable_association_options
-      { show_subtext: show_search_subtext, search_scope: @search_scope_name }
+      search_scope.present? && max_dropdown_size_exceeded?(options)
     end
 
     def searchable_name
@@ -134,7 +133,7 @@ module RadCommon
     end
 
     def input_options_with_current_selection(search)
-      return input_options if search_scope.blank? || search_only?
+      return input_options if search_scope.blank? || !searchable_scope?
 
       search_scope[:model].constantize.where(id: selected_value(search)).to_a
     end
@@ -188,13 +187,9 @@ module RadCommon
     end
 
     def search_scope_params
-      {
-        class: 'selectpicker-search',
-        'data-subtext' => show_search_subtext,
-        'data-placeholder' => search_scope[:description],
-        'data-global-search-scope' => search_scope[:name],
-        'data-global-search-mode' => 'searchable_association'
-      }
+      return { class: 'selectpicker' } unless searchable_scope?
+
+      searchable_scope_options(show_subtext: show_search_subtext, search_scope: @search_scope_name)
     end
 
     def not_value?(search_params)

@@ -71,8 +71,8 @@ class ContactLogSearch < RadCommon::Search
       { input_label: label,
         column: column,
         include_blank: false,
+        options: Pundit.policy_scope!(current_user, User).sorted,
         search_scope_name: 'user_name',
-        options: Pundit.policy_scope!(current_user, User).active.sorted,
         show_search_subtext: true }
     end
 end
