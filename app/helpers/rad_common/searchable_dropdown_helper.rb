@@ -1,6 +1,6 @@
 module RadCommon
   MAX_DROPDOWN_SIZE = 300
-  module InputHelper
+  module SearchableDropdownHelper
     def searchable_scope_options(search_scope:, show_subtext: false, excluded_ids: nil)
       {
         class: 'selectpicker-search',

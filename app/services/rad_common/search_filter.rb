@@ -2,7 +2,7 @@ module RadCommon
   ##
   # This is used to generate dropdown filter containing options to be filtered on
   class SearchFilter
-    include RadCommon::InputHelper
+    include RadCommon::SearchableDropdownHelper
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :not_scope,
                 :default_value, :errors, :include_blank,
                 :search_scope, :show_search_subtext, :allow_not
