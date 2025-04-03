@@ -86,7 +86,7 @@ module RadCommon
     end
 
     def searchable_scope?
-      return false if options.nil?
+      return true if options.nil?
 
       search_scope.present? && max_dropdown_size_exceeded?(options)
     end
