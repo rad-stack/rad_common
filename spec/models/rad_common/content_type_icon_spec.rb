@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RadCommon::ContentTypeIcon, type: :model do
+RSpec.describe RadCommon::ContentTypeIcon do
   describe '#icon' do
     subject { described_class.new(content_type).icon }
 

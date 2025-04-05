@@ -16,7 +16,7 @@ RSpec.describe Contactable do
   private
 
     def check_zipcode(zipcode, valid)
-      record = build(:attorney, zipcode: zipcode)
+      record = build :attorney, zipcode: zipcode
       expect(record.valid?).to be valid
     end
 end

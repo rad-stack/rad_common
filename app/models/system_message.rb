@@ -2,8 +2,8 @@ class SystemMessage < ApplicationRecord
   belongs_to :user
   belongs_to :security_role, optional: true
 
-  enum send_to: { internal_users: 0, external_users: 1, all_users: 2, preview: 3 }
-  enum message_type: { email: 0, sms: 1 }
+  enum :send_to, { internal_users: 0, external_users: 1, all_users: 2, preview: 3 }
+  enum :message_type, { email: 0, sms: 1 }
 
   scope :recent_first, -> { order(id: :desc) }
 
@@ -49,16 +49,17 @@ class SystemMessage < ApplicationRecord
   end
 
   def html_message
-    sms? ? sms_message_body.html_safe : email_message_body
+    sms? ? sms_message_body : email_message_body
   end
 
   def send!
     recipients.each do |recipient|
       if email?
         RadMailer.simple_message(recipient,
-                                     "Important Message From #{RadConfig.app_name!}",
-                                     email_message_body,
-                                     do_not_format: true).deliver_later
+                                 "Important Message From #{RadConfig.app_name!}",
+                                 email_message_body,
+                                 do_not_format: true,
+                                 contact_log_from_user: user).deliver_later
       else
         UserSMSSenderJob.perform_later(sms_message_body, user.id, recipient.id, nil, false)
       end

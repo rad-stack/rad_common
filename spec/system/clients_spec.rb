@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Clients', type: :system do
+RSpec.describe 'Clients' do
   let(:user) { create :admin }
   let(:client) { create :client }
 

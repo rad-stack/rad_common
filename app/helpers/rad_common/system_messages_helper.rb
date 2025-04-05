@@ -18,7 +18,7 @@ module RadCommon
     end
 
     def system_message_show_data(system_message)
-      [{ label: 'Message', value: system_message.html_message }, :message_type, :security_role]
+      [{ label: 'Message', value: system_message.html_message.body.to_s }, :message_type, :security_role]
     end
   end
 end

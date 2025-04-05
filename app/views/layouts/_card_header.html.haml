@@ -1,5 +1,5 @@
 - card_presenter(local_assigns) do |card|
-  .card-header
+  .card-header{ class: card.card_style }
     .title-header
       %div{ class: "title-text #{card.title_class}" }
         - if card.output_icon.present?
