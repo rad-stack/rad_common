@@ -4,6 +4,8 @@ class Exporter
   include RadCommon::ApplicationHelper
   attr_reader :records, :current_record, :current_user
 
+  DEFAULT_FORMAT = :csv
+
   def initialize(records:, current_user:)
     @records = records
     @current_user = current_user
