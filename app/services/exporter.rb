@@ -6,7 +6,7 @@ class Exporter
 
   DEFAULT_FORMAT = :csv
 
-  def initialize(records:, current_user:)
+  def initialize(records:, current_user:, format: DEFAULT_FORMAT)
     @records = records
     @current_user = current_user
     @current_record = nil
