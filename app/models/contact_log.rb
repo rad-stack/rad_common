@@ -19,6 +19,7 @@ class ContactLog < ApplicationRecord
     joins(:contact_log_recipients).where(query).distinct
   }
 
+  # TODO: this was added for IJS but need to finish the feature for general use - Task 8671
   has_many_attached :attachments
 
   validates :from_user_id, presence: true, if: -> { outgoing? && sms? }
