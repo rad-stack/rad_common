@@ -32,7 +32,7 @@ class EmailAddressValidator < ActiveModel::Validator
     end
 
     def check_sendgrid?(record, field, options)
-      return false if record.running_global_validity || options[:skip_sendgrid]
+      return false if options[:skip_sendgrid]
 
       record.send("#{field}_changed?")
     end
