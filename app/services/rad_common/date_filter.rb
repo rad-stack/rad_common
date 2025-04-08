@@ -2,7 +2,7 @@ module RadCommon
   ##
   # This is used to generate a date filter input, which filters a date column between a start date and end date range.
   class DateFilter
-    attr_reader :column, :errors, :default_start_value, :default_end_value, :group_label, :col_class
+    attr_reader :column, :errors, :default_start_value, :default_end_value, :group_label, :col_class, :allow_nil
 
     ##
     # @param [Symbol] column the database column that is being filtered
