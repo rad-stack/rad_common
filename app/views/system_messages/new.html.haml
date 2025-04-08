@@ -5,8 +5,8 @@
                                   no_back_button: true
 
   .card-body
-    = simple_form_for(@system_message, url: '/system_messages') do |f|
-      = f.error_notification
+    = simple_form_for(@system_message) do |f|
+      = rad_form_errors f
 
       .form-inputs
         .row

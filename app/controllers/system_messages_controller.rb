@@ -15,7 +15,7 @@ class SystemMessagesController < ApplicationController
 
     if @system_message.save
       @system_message.send!
-      redirect_to "/system_messages/#{@system_message.id}", notice: 'The message was successfully sent.'
+      redirect_to @system_message, notice: 'The message was successfully sent.'
     else
       render :new
     end

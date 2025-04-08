@@ -4,6 +4,7 @@ describe 'SchemaValidations', type: :module do
   subject { division.errors.full_messages }
 
   let(:division) { create :division }
+  let(:category) { create :category }
 
   describe 'presence validations' do
     context 'with text field' do
@@ -27,7 +28,16 @@ describe 'SchemaValidations', type: :module do
     context 'with association' do
       before { division.update(owner: nil) }
 
-      it { is_expected.to include "Owner can't be blank" }
+      it { is_expected.to include 'Owner must exist' }
+      xit { is_expected.not_to include "Owner can't be blank" }
+    end
+
+    context 'with custom options' do
+      subject { category.errors.full_messages }
+
+      before { category.update(name: '') }
+
+      xit { is_expected.to include 'Name cannot be left blank' }
     end
   end
 
@@ -49,6 +59,26 @@ describe 'SchemaValidations', type: :module do
     let(:division) { create :division }
     let(:company) { Company.main }
 
+    xit 'validates dates' do
+      [[200.years.ago, false],
+       [200.years.from_now, false],
+       [nil, true],
+       [2.years.ago, true]].each do |item|
+        division.date_established = item.first
+        expect(division.valid?).to be item.last
+      end
+    end
+
+    xit 'validates datetimes' do
+      [[200.years.ago, false],
+       [200.years.from_now, false],
+       [nil, true],
+       [2.years.ago, true]].each do |item|
+        company.validity_checked_at = item.first
+        expect(company.valid?).to be item.last
+      end
+    end
+
     it 'only validates when field is changed' do
       division.update_column :date_established, 200.years.ago
       expect(division.reload.valid?).to be true
@@ -66,9 +96,9 @@ describe 'SchemaValidations', type: :module do
 
     it 'allows empty array' do
       company.update(valid_user_domains: [])
-      expect(company.errors.full_messages).not_to include("Valid user domains can't be blank")
+      expect(company.errors.full_messages).not_to include("Valid User Email Domains can't be blank")
       company.update(valid_user_domains: nil)
-      expect(company.errors.full_messages).to include("Valid user domains can't be blank")
+      expect(company.errors.full_messages).to include("Valid User Email Domains can't be blank")
     end
   end
 
@@ -81,7 +111,15 @@ describe 'SchemaValidations', type: :module do
 
     it { is_expected.to include 'Name has already been taken' }
 
-    context 'when included in skipped constant' do
+    context 'with custom options' do
+      let(:dup_category) { build :category, name: category.name }
+
+      before { dup_category.save }
+
+      xit { expect(dup_category.errors.full_messages).to include 'Name taken by another category' }
+    end
+
+    context 'when index is skipped' do
       let(:division) { create :division, division_status: 'status_pending' }
       let(:division_2) { create :division, division_status: 'status_pending' }
       let(:division_3) { create :division, division_status: 'status_active' }

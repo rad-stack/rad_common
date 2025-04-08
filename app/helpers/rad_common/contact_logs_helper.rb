@@ -12,14 +12,24 @@ module RadCommon
                :sent]
 
       items += %i[sms_opt_out_message_sent] if contact_log.sms?
-      items += %i[sms_message_id sms_media_url]
+      items += [{ label: 'SMS Message ID', value: twilio_log_link(contact_log) }, :sms_media_url]
 
+      # TODO: this was added for IJS but need to finish the feature for general use - Task 8671
       if contact_log.attachments.any?
         items.push(label: 'Attachments',
                    value: render_many_attachments(record: contact_log, attachment_name: 'attachments'))
       end
 
       items
+    end
+
+    def twilio_log_link(contact_log)
+      return if contact_log.sms_message_id.blank?
+
+      link_to contact_log.sms_message_id,
+              "https://console.twilio.com/us1/monitor/logs/sms?pageSize=50&sid=#{contact_log.sms_message_id}",
+              target: '_blank',
+              rel: 'noopener'
     end
 
     def contact_log_recipient_show_data(contact_log_recipient)

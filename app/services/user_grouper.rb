@@ -1,11 +1,12 @@
 class UserGrouper
-  attr_accessor :current_user, :always_include, :scopes, :with_ids
+  attr_accessor :current_user, :always_include, :scopes, :with_ids, :include_client_users
 
-  def initialize(current_user, always_include: nil, scopes: [], with_ids: false)
+  def initialize(current_user, always_include: nil, scopes: [], with_ids: false, include_client_users: true)
     self.current_user = current_user
     self.always_include = always_include
     self.scopes = scopes
     self.with_ids = with_ids
+    self.include_client_users = include_client_users
   end
 
   def call
@@ -27,7 +28,7 @@ class UserGrouper
     end
 
     def client_user_item
-      return if client_users.none?
+      return if !include_client_users || client_users.none?
 
       ['Clients', format_collection(client_users)]
     end

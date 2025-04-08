@@ -1,21 +1,21 @@
 .card
   = render 'layouts/card_header', title: "Sign In Activity (#{@login_activities.total_count})"
   .card-body
-    = render 'layouts/filter', search: @login_activity_search, path: '/login_activities'
+    = render 'layouts/filter', search: @login_activity_search, path: login_activities_path
     = paginate @login_activities, theme: 'twitter-bootstrap-4'
 
     %table.table.table-bordered
       %tr
         = render 'layouts/sort_headers', search: @login_activity_search
 
-      - @login_activities.each do |login_activity|
-        %tr{ class: login_activity.success ? '' : 'alert-danger' }
-          %td= format_datetime(login_activity.created_at)
-          %td= login_activity.identity
-          %td= format_boolean(login_activity.success)
-          %td= login_activity.failure_reason
-          %td= login_activity.ip
-          %td= login_activity.user_agent
-          %td= login_activity.referrer
+      - @login_activities.each do |record|
+        %tr{ class: table_row_style(record) }
+          %td= format_datetime(record.created_at)
+          %td= record.identity
+          %td= format_boolean(record.success)
+          %td= record.failure_reason
+          %td= record.ip
+          %td= record.user_agent
+          %td= record.referrer
 
     = paginate @login_activities, theme: 'twitter-bootstrap-4'
