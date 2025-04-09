@@ -6,6 +6,8 @@ en:
     attributes:
       company:
         valid_user_domains: 'Valid User Email Domains'
+      contact_log:
+        sms_message_id: 'SMS Message ID'
       contact_log_recipient:
         email_types:
           cc: 'CC'

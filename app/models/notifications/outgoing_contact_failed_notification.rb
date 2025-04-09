@@ -8,7 +8,7 @@ module Notifications
       ids = maybe_add_from_user
 
       if contact_log.sms?
-        ids.push(to_user.id) if to_user.present?
+        ids.push(to_user.id) if to_user.present? && to_user.internal?
       else
         ids.delete(to_user.id) if to_user.present?
         ids = SecurityRole.admin_role.users.active.pluck(:id) if ids.blank?
@@ -83,7 +83,7 @@ module Notifications
 
       def maybe_add_from_user
         return [] if from_user.blank?
-        return [] if contact_log.sms? && to_user.present?
+        return [] if contact_log.sms? && to_user.present? && to_user.internal?
 
         [from_user.id]
       end
