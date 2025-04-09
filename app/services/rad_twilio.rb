@@ -23,18 +23,6 @@ class RadTwilio
     response.status == 'pending'
   end
 
-  def self.setup_totp_service(user)
-    RadRetry.perform_request(retry_count: 2, raise_original: true) do
-      TwilioVerifyService.setup_totp_service(user)
-    end
-  end
-
-  def self.register_totp_service(user, token)
-    RadRetry.perform_request(retry_count: 2, raise_original: true) do
-      TwilioVerifyService.register_totp_service(user, token)
-    end
-  end
-
   def from_number
     RadConfig.twilio_phone_number!
   end
