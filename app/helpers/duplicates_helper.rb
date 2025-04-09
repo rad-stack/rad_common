@@ -10,7 +10,7 @@ module DuplicatesHelper
 
   def duplicates_badge_count(model_name)
     unless RadCommon::AppInfo.new.duplicates_enabled?(model_name) &&
-      policy(model_name.constantize.new).resolve_duplicates?
+           policy(model_name.constantize.new).resolve_duplicates?
       return 0
     end
 
