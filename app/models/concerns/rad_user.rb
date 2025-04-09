@@ -227,6 +227,9 @@ module RadUser
     User.languages[language]
   end
 
+  # TODO: this should be a db attribute when we enable the TOTP feature
+  def twilio_totp_factor_sid; end
+
   def developer?
     email.end_with? RadConfig.developer_domain!
   end

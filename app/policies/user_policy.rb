@@ -13,12 +13,6 @@ class UserPolicy < ApplicationPolicy
     record != user
   end
 
-  def setup_totp?
-    return false unless RadConfig.twilio_verify_enabled? && user.twilio_verify_enabled?
-
-    record == user
-  end
-
   alias show? create?
   alias update? create?
   alias destroy? create?
@@ -27,7 +21,6 @@ class UserPolicy < ApplicationPolicy
   alias test_email? update?
   alias test_sms? update?
   alias reactivate? update?
-  alias register_totp? setup_totp?
 
   def update_timezone?
     user == record && UserTimezone.new(record).wrong_timezone?
