@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_02_083306) do
+ActiveRecord::Schema[7.0].define(version: 2025_04_02_083306) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -68,7 +68,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_02_083306) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active", default: true, null: false
-    t.string "mobile_phone"
     t.jsonb "address_metadata"
   end
 
@@ -86,7 +85,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_02_083306) do
     t.string "remote_address"
     t.string "request_uuid"
     t.datetime "created_at", precision: nil, null: false
-    t.jsonb "audited_changes"
+    t.text "audited_changes"
     t.index ["associated_id", "associated_type"], name: "associated_index"
     t.index ["auditable_id", "auditable_type", "version"], name: "auditable_index"
     t.index ["created_at"], name: "index_audits_on_created_at"
@@ -303,13 +302,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_02_083306) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "create_division", default: false, null: false
+    t.boolean "read_division", default: false, null: false
+    t.boolean "update_division", default: false, null: false
+    t.boolean "delete_division", default: false, null: false
     t.boolean "external", default: false, null: false
     t.boolean "manage_user", default: false, null: false
     t.boolean "allow_sign_up", default: false, null: false
     t.boolean "allow_invite", default: false, null: false
-    t.boolean "read_division", default: false, null: false
-    t.boolean "update_division", default: false, null: false
-    t.boolean "delete_division", default: false, null: false
     t.boolean "read_attorney", default: false, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
@@ -407,6 +406,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_02_083306) do
     t.string "language", default: "en", null: false
     t.string "detected_timezone"
     t.string "ignored_timezone"
+    t.boolean "twilio_verify_sms", default: true, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"

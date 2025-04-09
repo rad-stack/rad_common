@@ -20,14 +20,12 @@
       .col-lg-6
         = f.input :city
       .col-lg-3
-        = f.input :state, as: :state
+        = f.input :state, collection: StateOptions.options
       .col-lg-3
         = f.input :zipcode
     .row
       .col-lg-3
         = f.input :email
-      .col-lg-3
-        = f.input :mobile_phone
       .col-lg-3
         = f.input :phone_number
     .row

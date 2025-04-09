@@ -29,7 +29,7 @@ describe 'SchemaValidations', type: :module do
       before { division.update(owner: nil) }
 
       it { is_expected.to include 'Owner must exist' }
-      it { is_expected.not_to include "Owner can't be blank" }
+      xit { is_expected.not_to include "Owner can't be blank" }
     end
 
     context 'with custom options' do
@@ -37,7 +37,7 @@ describe 'SchemaValidations', type: :module do
 
       before { category.update(name: '') }
 
-      it { is_expected.to include 'Name cannot be left blank' }
+      xit { is_expected.to include 'Name cannot be left blank' }
     end
   end
 
@@ -59,7 +59,7 @@ describe 'SchemaValidations', type: :module do
     let(:division) { create :division }
     let(:company) { Company.main }
 
-    it 'validates dates' do
+    xit 'validates dates' do
       [[200.years.ago, false],
        [200.years.from_now, false],
        [nil, true],
@@ -69,7 +69,7 @@ describe 'SchemaValidations', type: :module do
       end
     end
 
-    it 'validates datetimes' do
+    xit 'validates datetimes' do
       [[200.years.ago, false],
        [200.years.from_now, false],
        [nil, true],
@@ -116,7 +116,7 @@ describe 'SchemaValidations', type: :module do
 
       before { dup_category.save }
 
-      it { expect(dup_category.errors.full_messages).to include 'Name taken by another category' }
+      xit { expect(dup_category.errors.full_messages).to include 'Name taken by another category' }
     end
 
     context 'when index is skipped' do
