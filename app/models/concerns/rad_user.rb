@@ -237,9 +237,6 @@ module RadUser
     User.languages[language]
   end
 
-  # TODO: this should be a db attribute when we enable the TOTP feature
-  def twilio_totp_factor_sid; end
-
   def timeout_in
     external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
   end
