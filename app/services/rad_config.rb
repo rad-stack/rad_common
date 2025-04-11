@@ -276,10 +276,6 @@ class RadConfig
       override_variable(:favicon_filename) || 'favicon.ico'
     end
 
-    def app_logo_filename!
-      override_variable(:app_logo_filename) || 'app_logo.png'
-    end
-
     def app_logo_includes_name?
       boolean_config_item! :app_logo_includes_name
     end
