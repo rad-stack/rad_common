@@ -206,7 +206,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'Email Changed' do
+  describe 'Email Changed', :shared_database_specs do
     subject { ActionMailer::Base.deliveries[ActionMailer::Base.deliveries.length - 2].subject }
 
     let!(:user) { create :user }
