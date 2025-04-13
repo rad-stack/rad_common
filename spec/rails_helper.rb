@@ -146,7 +146,8 @@ RSpec.configure do |config|
   config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
   config.filter_run_excluding(gha_specs_only: true) unless ENV['CI']
   config.filter_run_excluding(password_expirable_specs: true) unless RadConfig.password_expirable?
-  config.filter_run_excluding(non_react_specs: true) if RadConfig.react_app?
+  config.filter_run_excluding(legacy_asset_specs: true) if RadConfig.legacy_assets?
+  config.filter_run_excluding(shared_database_specs: true) if RadConfig.shared_database?
   config.filter_run_excluding(timezone_detection_specs: true) unless RadConfig.timezone_detection?
 
   include Warden::Test::Helpers
