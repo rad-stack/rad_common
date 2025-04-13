@@ -159,7 +159,7 @@ module RadCommon
                   'lib/templates/rspec/system/system_spec.rb.tt'
         remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
 
-        unless RadConfig.shared_database?
+        unless true || RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 require 'rad_rspec/rad_factories'
