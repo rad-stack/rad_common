@@ -21,7 +21,7 @@ module RadCommon
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'timezone_detection', 'false'
-        remove_rad_factories
+        # remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
