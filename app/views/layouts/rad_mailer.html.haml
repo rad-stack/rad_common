@@ -11,7 +11,7 @@
 
 !!!
 %head
-  - if RadConfig.react_app?
+  - if RadConfig.legacy_assets?
     = stylesheet_pack_tag 'rad_mailer', media: 'all'
   - else
     = stylesheet_link_tag 'rad_mailer', media: 'all'
