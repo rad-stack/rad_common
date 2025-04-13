@@ -213,7 +213,7 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content 'User Status'
       end
 
-      it 'allows updating notification settings', :js, :non_react_specs do
+      it 'allows updating notification settings', :js, :legacy_asset_specs do
         expect(page).to have_content 'Notification Settings'
         uncheck 'Enabled'
         wait_for_ajax
