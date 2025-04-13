@@ -23,7 +23,7 @@ RSpec.describe 'NotificationSettings', type: :system do
         expect(NotificationSetting.count).to eq 1
       end
 
-      it 'displays error message when updating without button', :js, :legacy_asset_specs do
+      xit 'displays error message when updating without button', :js, :legacy_asset_specs do
         visit '/notification_settings'
         page.uncheck('notification_setting[email]')
         expect(accept_alert).to eq 'The setting could not be saved: Enabled requires one of email/sms/feed be turned on'

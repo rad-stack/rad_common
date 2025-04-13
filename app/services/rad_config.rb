@@ -326,10 +326,6 @@ class RadConfig
       config_item(:shared_database).presence || false
     end
 
-    def shared_database?
-      boolean_config_item! :shared_database
-    end
-
     def favicon_filename!
       override_variable(:favicon_filename) || 'favicon.ico'
     end
