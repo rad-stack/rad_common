@@ -68,7 +68,7 @@ RSpec.describe 'Users', type: :system do
       context 'when switching languages' do
         before { allow(RadConfig).to receive(:switch_languages?).and_return true }
 
-        it 'updates registration', :non_react_specs do
+        it 'updates registration', :shared_database_specs do
           visit edit_user_registration_path
           expect(page).to have_content 'My Account'
           select 'Spanish', from: 'Language'
@@ -175,7 +175,7 @@ RSpec.describe 'Users', type: :system do
         expect(user.security_roles.count).to eq 2
       end
 
-      it 'requires mobile phone when twilio verify enabled', :non_react_specs do
+      it 'requires mobile phone when twilio verify enabled', :shared_database_specs do
         allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
 
         visit edit_user_path(user)
