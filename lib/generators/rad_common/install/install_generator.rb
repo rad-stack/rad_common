@@ -84,7 +84,6 @@ module RadCommon
 
         copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
         gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
-        gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
 
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
@@ -481,6 +480,8 @@ gem 'propshaft'
         end
 
         def migrate_to_tom_select
+          return if RadConfig.legacy_assets?
+
           search_and_replace 'bootstrap_select', 'tom_select'
           search_and_replace 'rad-chosen', 'selectpicker'
         end
