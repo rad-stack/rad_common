@@ -6,7 +6,7 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
-        remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.react_app?
+        remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.shared_database?
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
@@ -20,7 +20,6 @@ module RadCommon
         update_seeder_method
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
-        add_rad_config_setting 'legacy_rails_config', 'false'
         add_rad_config_setting 'timezone_detection', 'false'
         remove_rad_factories
 
@@ -31,7 +30,7 @@ module RadCommon
         gsub_file 'Gemfile.lock', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
 
         # misc
-        merge_package_json unless RadConfig.react_app?
+        merge_package_json unless RadConfig.legacy_assets?
         copy_custom_github_actions
         copy_custom_github_matrix
         copy_file '../../../../../.ruby-version', '.ruby-version'
@@ -43,11 +42,11 @@ module RadCommon
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
 
-        unless RadConfig.react_app?
+        unless RadConfig.shared_database?
           copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
         end
 
-        migrate_webpacker_to_esbuild unless RadConfig.react_app?
+        migrate_webpacker_to_esbuild unless RadConfig.legacy_assets?
 
         migrate_to_tom_select
 
@@ -56,7 +55,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
                  'public/406-unsupported-browser.html'
 
-        unless RadConfig.react_app?
+        unless RadConfig.legacy_assets?
           copy_file '../../../../../spec/dummy/app/javascript/application.js',
                     'app/javascript/application.js'
 
@@ -83,27 +82,19 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
-        unless RadConfig.react_app?
-          copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
-          gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
-
-          if !RadConfig.config_item(:legacy_rails_config).nil? && RadConfig.legacy_rails_config?
-            gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
-          end
-        end
+        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+        gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
+        gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
 
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
-
-        unless RadConfig.react_app?
-          directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
-        end
+        directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
 
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
                  'config/initializers/devise_security.rb'
 
-        unless RadConfig.react_app?
+        unless RadConfig.legacy_assets?
           copy_file '../../../../../spec/dummy/config/initializers/assets.rb',
                     'config/initializers/assets.rb'
         end
@@ -169,7 +160,7 @@ module RadCommon
                   'lib/templates/rspec/system/system_spec.rb.tt'
         remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
 
-        unless RadConfig.react_app?
+        unless RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 require 'rad_rspec/rad_factories'
@@ -193,7 +184,7 @@ Seeder.new.seed!
         RUBY
         end
 
-        unless RadConfig.react_app?
+        unless RadConfig.legacy_assets?
           inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
 gem 'jsbundling-rails'
 gem 'propshaft'
@@ -266,7 +257,7 @@ gem 'propshaft'
         end
 
         def apply_migration(source)
-          return if RadConfig.react_app?
+          return if RadConfig.shared_database?
 
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
@@ -401,8 +392,8 @@ gem 'propshaft'
         end
 
         def install_github_workflow
-          if RadConfig.react_app?
-            copy_file '../rspec_tests_react.yml', '.github/workflows/rspec_tests.yml'
+          if RadConfig.legacy_assets?
+            copy_file '../rspec_tests_legacy.yml', '.github/workflows/rspec_tests.yml'
           else
             copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
           end
@@ -414,7 +405,7 @@ gem 'propshaft'
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
           gsub_file '.github/workflows/generate_coverage_report.yml', 'rad_common_test', "#{installed_app_name}_test"
 
-          if RadConfig.react_app?
+          if RadConfig.shared_database?
             gsub_file '.github/workflows/rad_update_bot.yml',
                       'rad_common_development',
                       'cannasaver_admin_development'
@@ -424,7 +415,7 @@ gem 'propshaft'
                       "#{installed_app_name}_development"
           end
 
-          unless RadConfig.react_app?
+          unless RadConfig.legacy_assets?
             gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
             gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
             gsub_file '.github/workflows/rspec_tests.yml',
