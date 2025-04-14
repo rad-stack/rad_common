@@ -39,7 +39,7 @@ class RadSpecSupport
   end
 
   def self.hooks(config, driver)
-    unless RadConfig.react_app?
+    unless RadConfig.legacy_assets?
       config.after(:each, type: :system, js: true) do |example|
         unless example.metadata[:ignore_browser_errors]
           errors = page.driver.browser.logs.get(:browser)
