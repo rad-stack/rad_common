@@ -1,8 +1,7 @@
 module PaceApi
   class Client
-    def initialize(ssl_verify: true, on_error: nil)
+    def initialize(ssl_verify: true)
       @ssl_verify = ssl_verify
-      @on_error = on_error
     end
 
     def create_object(model_name, attributes)
@@ -15,7 +14,24 @@ module PaceApi
       parse_response(response)
     end
 
+    def find_objects!(type, xpath)
+      find_objects(type, xpath, raise_error: true)
+    end
+
     def find_object(type, xpath)
+      find_objects(type, xpath, raise_error: false).first
+    end
+
+    def find_object!(type, xpath)
+      objects = find_objects(type, xpath, raise_error: true)
+      if objects.size > 1
+        raise PaceApi::MultipleObjectError.new("More than one #{type} found in Pace for #{xpath}", type)
+      end
+
+      objects.first
+    end
+
+    def find_objects(type, xpath, raise_error: false)
       raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
       raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
 
@@ -29,10 +45,7 @@ module PaceApi
 
       return parsed_response if parsed_response.present?
 
-      report_error("The following #{type} is missing from Pace: #{xpath}")
-      # TODO: make this notification standard?
-      # Notifications::MissingRecordInPaceNotification.main(import_record: @facilis_import, type: type).notify!
-      raise "#{type} not found for xpath: #{xpath}"
+      raise PaceApi::MissingObjectError.new("Missing #{type} in Pace for #{xpath}", type) if raise_error
     end
 
     def read_object(type, primary_key)
@@ -147,7 +160,7 @@ module PaceApi
         str += "Response Status: #{response.status}\n"
         str += "Response Headers: #{response.headers}\n"
         str += "Response Body: #{response.body}\n"
-        Rails.logger.info(str)
+        Rails.logger.debug(str)
 
         unless response.success?
           raise PaceResponseError, "Request failed with status: #{response.status}, body: #{response.body}"
@@ -166,15 +179,7 @@ module PaceApi
       end
 
       def proxy_url
-        RadConfig.secret_config_item!(:quota_guard_url) if Rails.env.production?
-
         RadConfig.secret_config_item(:quota_guard_url)
-      end
-
-      def report_error(message)
-        return unless @on_error
-
-        @on_error.call(message)
       end
   end
 end
