@@ -1,16 +1,15 @@
-class ReportExporterJob < ApplicationJob
-  queue_as :default
+class ReportExporterJob < BaseExporterJob
+  private
 
-  def perform(params, user_id, format: Exporter::DEFAULT_FORMAT)
-    user = User.find(user_id)
-    report = report_class.new(user, nil, params)
-    exporter = export_class.new(report: report, current_user: user, format: format)
-    export = exporter.generate
+    def exporter
+      @exporter ||= export_class.new(report: report, current_user: user, format: format)
+    end
 
-    RadMailer.email_report(user, export, exporter.report_name, report_options(params).merge(format: format)).deliver_now
-  end
+    def report
+      @report ||= report_class.new(user, nil, params)
+    end
 
-  def report_options(_params)
-    {}
-  end
+    def report_name
+      exporter.report_name
+    end
 end
