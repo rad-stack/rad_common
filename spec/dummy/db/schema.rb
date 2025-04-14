@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_02_120429) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_02_083306) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -171,6 +171,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_02_120429) do
     t.index ["record_type", "record_id"], name: "index_contact_logs_on_record"
     t.index ["sent"], name: "index_contact_logs_on_sent"
     t.index ["service_type"], name: "index_contact_logs_on_service_type"
+    t.index ["sms_message_id"], name: "index_contact_logs_on_sms_message_id"
     t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
   end
 
@@ -404,6 +405,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_02_120429) do
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
     t.string "language", default: "en", null: false
+    t.string "detected_timezone"
+    t.string "ignored_timezone"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"

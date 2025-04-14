@@ -42,6 +42,7 @@ module RadUser
     scope :recent_first, -> { order('users.created_at DESC') }
     scope :recent_last, -> { order('users.created_at') }
     scope :except_user, ->(user) { where.not(id: user.id) }
+    scope :with_notifications, -> { where('users.id IN (SELECT DISTINCT user_id FROM notifications)') }
 
     scope :sorted, lambda {
       if RadConfig.last_first_user?

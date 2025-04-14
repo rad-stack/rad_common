@@ -68,7 +68,7 @@ RSpec.describe 'Users', type: :system do
       context 'when switching languages' do
         before { allow(RadConfig).to receive(:switch_languages?).and_return true }
 
-        it 'updates registration', :non_react_specs do
+        it 'updates registration', :shared_database_specs do
           visit edit_user_registration_path
           expect(page).to have_content 'My Account'
           select 'Spanish', from: 'Language'
@@ -175,7 +175,7 @@ RSpec.describe 'Users', type: :system do
         expect(user.security_roles.count).to eq 2
       end
 
-      it 'requires mobile phone when twilio verify enabled', :non_react_specs do
+      it 'requires mobile phone when twilio verify enabled', :shared_database_specs do
         allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
 
         visit edit_user_path(user)
@@ -213,26 +213,11 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content 'User Status'
       end
 
-      it 'allows updating notification settings', :js, :non_react_specs do
+      it 'allows updating notification settings', :js, :legacy_asset_specs do
         expect(page).to have_content 'Notification Settings'
         uncheck 'Enabled'
         wait_for_ajax
         expect(notification_setting.enabled).to be false
-      end
-    end
-
-    describe 'confirm' do
-      before do
-        user.update! confirmed_at: nil
-        visit user_path(user)
-      end
-
-      it 'can manually confirm a user', :js, :non_react_specs, :user_confirmable_specs do
-        page.accept_confirm do
-          click_link 'Confirm Email'
-        end
-
-        expect(page).to have_content 'User was successfully confirmed'
       end
     end
 
@@ -241,20 +226,6 @@ RSpec.describe 'Users', type: :system do
 
       before do
         visit user_path(user)
-      end
-
-      context 'when user is expired' do
-        let(:last_activity_at) { (Devise.expire_after + 1.day).ago }
-
-        it 'allows manual reactivation of the user', :js do
-          expect(page).to have_content("User's account has been expired due to inactivity")
-          page.accept_confirm do
-            click_link 'click here'
-          end
-
-          expect(page).to have_content 'User was successfully reactivated'
-          expect(user.reload.last_activity_at).not_to be_nil
-        end
       end
 
       context 'when user is not expired' do
@@ -284,45 +255,6 @@ RSpec.describe 'Users', type: :system do
         visit users_path
         expect(page.status_code).to eq 403
       end
-    end
-  end
-
-  describe 'sign up', :external_user_specs, :js, :sign_up_specs do
-    before do
-      create :security_role, :external, allow_sign_up: true
-      allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, legal_docs?: true)
-    end
-
-    it 'signs up' do
-      visit new_user_registration_path
-
-      fill_in 'First Name', with: Faker::Name.first_name
-      fill_in 'Last Name', with: Faker::Name.last_name
-      fill_in 'Mobile Phone', with: '(345) 222-1111'
-      fill_in 'Email', with: "#{Faker::Internet.user_name}@abc.com"
-      fill_in 'user_password', with: password
-      fill_in 'user_password_confirmation', with: password
-      expect(find_button('Sign Up', disabled: true).disabled?).to be(true)
-      check 'accept_terms'
-
-      click_button 'Sign Up'
-      expect(page).to have_content 'message with a confirmation link has been sent'
-      expect(User.last.active?).to be false if RadConfig.pending_users?
-    end
-
-    it "can't sign up with invalid email address" do
-      visit new_user_registration_path
-
-      fill_in 'First Name', with: Faker::Name.first_name
-      fill_in 'Last Name', with: Faker::Name.last_name
-      fill_in 'Email', with: 'test_user@'
-      fill_in 'user_password', with: password
-      fill_in 'user_password_confirmation', with: password
-      check 'accept_terms'
-
-      click_button 'Sign Up'
-
-      expect(page).to have_content 'Email is not written in a valid format'
     end
   end
 

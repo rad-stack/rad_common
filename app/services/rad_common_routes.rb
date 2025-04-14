@@ -21,6 +21,8 @@ module RadCommonRoutes
             put :reactivate
             put :test_email
             put :test_sms
+            put :update_timezone
+            put :ignore_timezone
           end
 
           resources :user_clients, only: :new
@@ -82,6 +84,16 @@ module RadCommonRoutes
       resources :twilio_replies, only: :create
       resources :sendgrid_statuses, only: :create
       resources :company_contacts, only: %i[new create]
+
+      delete 'attachments/:id(.:format)', to: 'rad_common/attachments#destroy', as: :attachment
+
+      get 'attachments/:class_name/:id(.:format)/:variant(.:format)', to: 'rad_common/attachments#download_variant'
+      get 'attachments/:id(.:format)', to: 'rad_common/attachments#download'
+
+      get 'attachments/:class_name/:id(.:format)/:variant(.:format)/:filename(.:format)',
+          to: 'rad_common/attachments#download_variant'
+
+      get 'attachments/:id(.:format)/:filename(.:format)', to: 'rad_common/attachments#download'
 
       get 'global_search', to: 'search#global_search'
       get 'global_search_result', to: 'search#global_search_result'

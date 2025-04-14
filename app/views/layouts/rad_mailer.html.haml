@@ -11,7 +11,10 @@
 
 !!!
 %head
-  = stylesheet_link_tag 'rad_mailer', media: 'all'
+  - if RadConfig.legacy_assets?
+    = stylesheet_pack_tag 'rad_mailer', media: 'all'
+  - else
+    = stylesheet_link_tag 'rad_mailer', media: 'all'
 %body
   .email-bg
     .email-container

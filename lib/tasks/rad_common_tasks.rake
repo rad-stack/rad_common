@@ -7,8 +7,8 @@ namespace :rad_common do
 
       Rails.cache.delete_matched('views/*')
 
-      unless RadConfig.react_app?
-        Duplicate.where.not(sort: 500).update_all sort: 500 if Date.current.wday == 1
+      unless RadConfig.shared_database?
+        Duplicate.where.not(sort: 500).update_all sort: 500
 
         RadCommon::AppInfo.new.duplicate_models.each do |model_name|
           model_name.constantize.notify_high_duplicates
@@ -78,5 +78,9 @@ namespace :rad_common do
     RadPermission.unused_all_users.each do |item|
       puts item
     end
+  end
+
+  task update_s3_cors_settings: :environment do
+    S3CorsSettingsUpdater.new.update!
   end
 end

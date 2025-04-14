@@ -21,7 +21,7 @@
 
   - if RadConfig.saved_search_filters_enabled? && !mobile
     - if search.applied_saved_filter.present?
-      .text-muted.mt-1 Applied Filter: #{search.applied_saved_filter}
+      .text-muted.mt-1{ 'data-testid' => 'saved-search-applied-filter' } Applied Filter: #{search.applied_saved_filter}
     = f.hidden_field :saved_name, data: { 'search-target': 'savedNameInput' }
   - else
     %br
