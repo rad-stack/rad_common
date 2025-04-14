@@ -40,6 +40,5 @@ module RadCommon
     require 'turbo-rails'
     require 'twilio-ruby'
     require 'wicked_pdf'
-    require 'tty-prompt'
   end
 end
