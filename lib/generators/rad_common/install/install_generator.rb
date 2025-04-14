@@ -188,18 +188,7 @@ Seeder.new.seed!
         RUBY
         end
 
-        inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do <<-'RUBY'
-  gem 'rubocop-capybara'
-        RUBY
-        end
-
-        unless RadConfig.react_app?
-          inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
-gem 'jsbundling-rails'
-gem 'propshaft'
-          RUBY
-          end
-        end
+        add_project_gems   
 
         apply_migrations
 
@@ -492,6 +481,25 @@ gem 'propshaft'
         def migrate_to_tom_select
           search_and_replace 'bootstrap_select', 'tom_select'
           search_and_replace 'rad-chosen', 'selectpicker'
+        end
+
+        def add_project_gems
+          inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do <<-'RUBY'
+            gem 'rubocop-capybara'
+                  RUBY
+          end
+          inject_into_file 'Gemfile', after: "gem 'better_errors'" do <<-'RUBY'
+            gem 'tty-prompt'
+                  RUBY
+          end
+          
+          unless RadConfig.react_app?
+            inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
+              gem 'jsbundling-rails'
+              gem 'propshaft'
+                        RUBY
+            end
+          end
         end
 
         def apply_migrations
