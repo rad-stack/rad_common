@@ -481,7 +481,7 @@ gem 'rubocop-capybara'
           RUBY
           end
           inject_into_file 'Gemfile', after: "gem 'better_errors'\n" do <<-'RUBY'
-gem 'tty-prompt'
+  gem 'tty-prompt'
         RUBY
           end
           
