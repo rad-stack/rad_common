@@ -85,7 +85,7 @@ class ContactLogRecipient < ApplicationRecord
   private
 
     def check_success
-      return if contact_log.blank?
+      return if running_global_validity || contact_log.blank?
 
       if contact_log.incoming?
         self.success = true
@@ -97,14 +97,14 @@ class ContactLogRecipient < ApplicationRecord
     end
 
     def check_sms_false_positive
-      return if contact_log.blank?
+      return if running_global_validity || contact_log.blank?
 
       self.sms_false_positive =
         !success? && contact_log.sms? && contact_log.outgoing? && to_user.present? && sms_mostly_successful?
     end
 
     def assign_to_user
-      return if to_user.present?
+      return if running_global_validity || to_user.present?
 
       if email.present?
         self.to_user = User.find_by(email: email)

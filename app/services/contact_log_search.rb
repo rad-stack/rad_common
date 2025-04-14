@@ -39,6 +39,7 @@ class ContactLogSearch < RadCommon::Search
          scope: :associated_with_user,
          blank_value_label: 'All Users' },
        { input_label: 'Content', column: 'content', type: RadCommon::LikeFilter },
+       { input_label: 'SMS Message ID', column: 'sms_message_id', type: RadCommon::LikeFilter },
        { column: 'contact_log_recipients.success', input_label: 'Success?', type: RadCommon::BooleanFilter }]
     end
 
@@ -59,7 +60,12 @@ class ContactLogSearch < RadCommon::Search
     end
 
     def date_filter
-      { start_input_label: 'Start Date', end_input_label: 'End Date', column: :created_at, type: RadCommon::DateFilter }
+      { start_input_label: 'Start Date',
+        end_input_label: 'End Date',
+        column: :created_at,
+        default_start_value: Date.current,
+        default_end_value: Date.current,
+        type: RadCommon::DateFilter }
     end
 
     def user_filter(label, column)
