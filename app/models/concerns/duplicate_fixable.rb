@@ -99,6 +99,10 @@ module DuplicateFixable
     def applicable_duplicate_items
       additional_duplicate_items.select { |item| new.respond_to?(item[:name]) }
     end
+
+    def notify_high_duplicates
+      # TODO: supress the notifications when this is implemented
+    end
   end
 
   def process_duplicates(bypass_notifications: false)

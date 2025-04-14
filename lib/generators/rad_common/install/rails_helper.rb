@@ -83,26 +83,34 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   Capybara.register_driver :headless_chrome do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: { args: %w[headless disable-popup-blocking disable-gpu window-size=1400,900], w3c: false }
-    )
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--no-sandbox')
+    options.add_argument('--headless=new')
+    options.add_argument('--window-size=1400,900')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-gpu')
 
     Capybara::Selenium::Driver.new app,
                                    browser: :chrome,
-                                   desired_capabilities: capabilities
+                                   options: options
   end
 
   Capybara.register_driver :chrome do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: { args: %w[disable-popup-blocking disable-gpu window-size=1400,900], w3c: false }
-    )
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--disable-logging')
+    options.add_argument('--disable-extensions')
+    options.add_argument('--window-size=1400,900')
+    options.add_argument('--disable-popup-blocking')
 
     Capybara::Selenium::Driver.new app,
                                    browser: :chrome,
-                                   desired_capabilities: capabilities
+                                   options: options
   end
 
-  chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
+  chrome_driver = ENV['SHOW_BROWSER'] ? :chrome : :headless_chrome
   Capybara.javascript_driver = chrome_driver
 
   config.before do
@@ -118,6 +126,11 @@ RSpec.configure do |config|
 
   SpecSupport.hooks(config, chrome_driver)
 
+  # This is already in current version of rad common
+  config.before do
+    Rails.cache.clear
+  end
+
   config.filter_run_excluding(twilio_verify_specs: true) unless RadConfig.twilio_verify_enabled?
   config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
   config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
@@ -129,7 +142,8 @@ RSpec.configure do |config|
   config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
   config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
   config.filter_run_excluding(password_expirable_specs: true) unless RadConfig.password_expirable?
-  config.filter_run_excluding(non_react_specs: true) if RadConfig.react_app?
+  config.filter_run_excluding(legacy_asset_specs: true) if RadConfig.legacy_assets?
+  config.filter_run_excluding(shared_database_specs: true) if RadConfig.shared_database?
   config.filter_run_excluding(timezone_detection_specs: true) unless RadConfig.timezone_detection?
 
   include Warden::Test::Helpers
