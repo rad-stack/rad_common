@@ -5,7 +5,6 @@ RSpec.describe PaceApi::Client, type: :service do
   let(:house_customer) { client.read_object('Customer', 'HOUSE') }
 
   describe '#read_object' do
-
     it 'reads an object', :vcr do
       expect(house_customer['custName']).to eq('Profitable Printing Company')
     end
