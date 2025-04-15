@@ -268,8 +268,12 @@ class RadConfig
       boolean_config_item! :legal_docs
     end
 
-    def react_app?
-      config_item(:react_app).presence || false
+    def legacy_assets?
+      config_item(:legacy_assets).presence || false
+    end
+
+    def shared_database?
+      config_item(:shared_database).presence || false
     end
 
     def favicon_filename!
@@ -392,10 +396,6 @@ class RadConfig
 
     def last_first_user?
       boolean_config_item! :last_first_user
-    end
-
-    def legacy_rails_config?
-      boolean_config_item! :legacy_rails_config
     end
 
     def timezone_detection?

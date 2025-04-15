@@ -34,6 +34,7 @@ class ContactLogSearch < RadCommon::Search
        { input_label: 'Record ID', column: :record_id, type: RadCommon::EqualsFilter, data_type: :integer },
        user_filter('Associated User', 'associated_with_user', :associated_with_user),
        { input_label: 'Content', column: 'content', type: RadCommon::LikeFilter },
+       { input_label: 'SMS Message ID', column: 'sms_message_id', type: RadCommon::LikeFilter },
        { column: 'contact_log_recipients.success', input_label: 'Success?', type: RadCommon::BooleanFilter }]
     end
 
