@@ -1,5 +1,6 @@
 require 'English'
 require 'fileutils'
+require 'tty-prompt'
 
 module RadBin
   def self.system!(*args)
