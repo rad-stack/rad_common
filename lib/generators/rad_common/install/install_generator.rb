@@ -492,8 +492,6 @@ gem 'propshaft'
             RUBY
             end
           end
-
-          system 'bundle install'
         end
 
         def apply_migrations
