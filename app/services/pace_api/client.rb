@@ -1,12 +1,25 @@
 module PaceApi
   class Client
+    attr_reader :transaction_id
+
     def initialize(ssl_verify: true)
       @ssl_verify = ssl_verify
       @transaction_id = nil
     end
 
+    def self.transaction
+      client = new
+      client.start_transaction
+      yield(client)
+      client.commit_transaction
+    rescue StandardError => e
+      client.rollback_transaction if client.transaction_id
+      raise e
+    end
+
     def create_object(model_name, attributes)
       url = "/rpc/rest/services/CreateObject/create#{model_name}"
+      url += "?txnId=#{@transaction_id}" if @transaction_id
       log_request(action: "CreateObject: #{model_name}", body: attributes, method: 'POST', url: url)
       response = api_client.post(url) do |req|
         req.body = attributes.to_json
@@ -20,7 +33,7 @@ module PaceApi
     end
 
     def find_object(type, xpath)
-      find_objects(type, xpath, raise_error: false).first
+      find_objects(type, xpath, raise_error: false)&.first
     end
 
     def find_object!(type, xpath)
