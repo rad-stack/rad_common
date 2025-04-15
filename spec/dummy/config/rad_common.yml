@@ -132,3 +132,5 @@ test:
 
   host_name: localhost:3000
   twilio_verify_enabled: true
+  pace_api:
+    host: 'radstackmis.myprintdesk.net'

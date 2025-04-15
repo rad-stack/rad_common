@@ -2,6 +2,7 @@ module PaceApi
   class Client
     def initialize(ssl_verify: true)
       @ssl_verify = ssl_verify
+      @transaction_id = nil
     end
 
     def create_object(model_name, attributes)
@@ -60,8 +61,45 @@ module PaceApi
       end
     end
 
+    def start_transaction(timeout_in_minutes: 5)
+      raise 'Transaction already started' if @transaction_id
+
+      url = '/rpc/rest/services/TransactionService/startTransaction'
+      query_params = { timeOutInMinutes: timeout_in_minutes }
+      log_request(action: "Start Transaction: timeOutInMinutes: #{timeout_in_minutes}}",
+                  query_params: query_params, body: {}, method: 'GET', url: url)
+      response = api_client.get(url, query_params) do |req|
+        req.headers['Accept'] = 'text/plain'
+      end
+      @transaction_id = parse_response(response)
+    end
+
+    def rollback_transaction
+      raise 'No Transaction to rollback' unless @transaction_id
+
+      url = '/rpc/rest/services/TransactionService/rollback'
+      query_params = { txnId: @transaction_id }
+      log_request(action: "Rollback Transaction: txnId: #{@transaction_id}",
+                  query_params: query_params, body: {}, method: 'GET', url: url)
+      response = api_client.get(url, query_params)
+      parse_response(response)
+    end
+
+    def commit_transaction
+      raise 'No Transaction to commit' unless @transaction_id
+
+      url = '/rpc/rest/services/TransactionService/commit'
+      query_params = { txnId: @transaction_id }
+      log_request(action: "Commit Transaction: txnId: #{@transaction_id}",
+                  query_params: query_params, body: {}, method: 'GET', url: url)
+      response = api_client.get(url, query_params)
+      @transaction_id = nil
+      parse_response(response)
+    end
+
     def update_object(model_name, attributes)
       url = "/rpc/rest/services/UpdateObject/update#{model_name}"
+      url += "?txnId=#{@transaction_id}" if @transaction_id
       log_request(action: "UpdateObject: #{model_name}", body: attributes, method: 'POST', url: url)
       response = api_client.post(url) do |req|
         req.body = attributes.to_json
