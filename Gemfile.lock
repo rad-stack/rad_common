@@ -312,6 +312,7 @@ GEM
     parser (3.3.7.4)
       ast (~> 2.4.1)
       racc
+    pdf-core (0.10.0)
     pdf-reader (2.14.1)
       Ascii85 (>= 1.0, < 3.0, != 2.0.0)
       afm (~> 0.2.1)
@@ -488,6 +489,22 @@ GEM
     timeout (0.4.3)
     ttfunk (1.8.0)
       bigdecimal (~> 3.1)
+<<<<<<< HEAD
+=======
+    tty-color (0.6.0)
+    tty-cursor (0.7.1)
+    tty-prompt (0.23.1)
+      pastel (~> 0.8)
+      tty-reader (~> 0.8)
+    tty-reader (0.9.0)
+      tty-cursor (~> 0.7)
+      tty-screen (~> 0.8)
+      wisper (~> 2.0)
+    tty-screen (0.8.2)
+    turbo-rails (2.0.13)
+      actionpack (>= 7.1.0)
+      railties (>= 7.1.0)
+>>>>>>> main
     twilio-ruby (5.77.0)
       faraday (>= 0.9, < 3.0)
       jwt (>= 1.5, < 3.0)
@@ -516,6 +533,12 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+<<<<<<< HEAD
+=======
+    wicked_pdf (2.6.3)
+      activesupport
+    wisper (2.0.1)
+>>>>>>> main
     wkhtmltopdf-binary (0.12.6.8)
     xpath (3.2.0)
       nokogiri (~> 1.8)
@@ -545,6 +568,7 @@ DEPENDENCIES
   selenium-webdriver
   simplecov
   timecop
+  tty-prompt
   vcr
   webmock
   wkhtmltopdf-binary
