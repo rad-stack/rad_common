@@ -23,15 +23,6 @@ class HerokuCommands
       write_log `psql -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public" -h #{local_host} -U #{local_user} -d #{dbname}`
       write_log 'Restoring dump file to local'
       write_log `pg_restore --verbose --clean --no-acl --no-owner -h #{local_host} -U #{local_user} -d #{dbname} #{file_name}`
-    end
-
-    def dump(file_name = '')
-      dump_file_name = file_name.presence || 'your_data.dump'
-      write_log 'Dumping your local database'
-      write_log `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
-
-      write_log 'Migrating database'
-      write_log `skip_on_db_migrate=1 rake db:migrate`
 
       write_log 'Changing passwords'
       new_password = User.new.send(:password_digest, 'password')
@@ -45,6 +36,15 @@ class HerokuCommands
       remove_encrypted_secrets
       User.update_all twilio_verify_enabled: false
       nil
+    end
+
+    def dump(file_name = '')
+      dump_file_name = file_name.presence || 'your_data.dump'
+      write_log 'Dumping your local database'
+      write_log `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
+
+      write_log 'Migrating database'
+      write_log `skip_on_db_migrate=1 rake db:migrate`
     end
 
     def clone(app_name, backup_id)
