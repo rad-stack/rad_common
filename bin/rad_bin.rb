@@ -68,7 +68,7 @@ module RadBin
     backups = `heroku pg:backups --app #{heroku_app_name}`
     backups = backups.split('=== Backups').last.split('===').first
     lines = backups.strip.split("\n")
-    data_rows = lines[4..]
+    data_rows = lines[2..]
 
     data_rows.map do |line|
       values = line.strip.split
