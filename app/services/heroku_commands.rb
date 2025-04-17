@@ -29,6 +29,22 @@ class HerokuCommands
       dump_file_name = file_name.presence || 'your_data.dump'
       write_log 'Dumping your local database'
       write_log `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
+
+      write_log 'Migrating database'
+      write_log `skip_on_db_migrate=1 rake db:migrate`
+
+      write_log 'Changing passwords'
+      new_password = User.new.send(:password_digest, 'password')
+      User.update_all(encrypted_password: new_password)
+
+      write_log 'Changing Active Storage service to local'
+      ActiveStorage::Blob.update_all service_name: 'local'
+
+      write_log 'Clearing certain production data'
+      remove_user_avatars
+      remove_encrypted_secrets
+      User.update_all twilio_verify_enabled: false
+      nil
     end
 
     def clone(app_name, backup_id)
@@ -58,20 +74,6 @@ class HerokuCommands
       write_log 'Deleting temporary dump file'
       write_log `rm #{clone_dump_file}`
 
-      write_log 'Migrating database'
-      write_log `skip_on_db_migrate=1 rake db:migrate`
-
-      write_log 'Changing passwords'
-      new_password = User.new.send(:password_digest, 'password')
-      User.update_all(encrypted_password: new_password)
-
-      write_log 'Changing Active Storage service to local'
-      ActiveStorage::Blob.update_all service_name: 'local'
-
-      write_log 'Clearing certain production data'
-      remove_user_avatars
-      remove_encrypted_secrets
-      User.update_all twilio_verify_enabled: false
       nil
     end
 
