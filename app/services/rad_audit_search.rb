@@ -3,7 +3,7 @@ class RadAuditSearch < RadCommon::Search
     @current_user = current_user
     @params = params
 
-    super(query: query_def,
+    super(query: RadAudit,
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
@@ -35,8 +35,7 @@ class RadAuditSearch < RadCommon::Search
     end
 
     def filters_def
-      items = [{ name: 'single_record', type: RadCommon::HiddenFilter },
-               { start_input_label: 'Start Date',
+      items = [{ start_input_label: 'Start Date',
                  end_input_label: 'End Date',
                  column: :created_at,
                  default_start_value: default_date,
@@ -53,12 +52,16 @@ class RadAuditSearch < RadCommon::Search
                     input_label: 'Record ID' }]
       end
 
-      items + [{ input_label: 'User', column: :user_id, options: user_array },
+      items + [{ input_label: 'User',
+                 column: :user_id,
+                 grouped: true,
+                 options: UserGrouper.new(current_user, include_client_users: false).call,
+                 blank_value_label: 'All Users' },
                { input_label: 'Action',
                  column: :action,
                  options: %w[create update destroy] },
                { column: :remote_address, type: RadCommon::LikeFilter },
-               { column: 'audited_changes::TEXT', type: RadCommon::LikeFilter, name: :audited_changes }]
+               { column: :audited_changes, type: RadCommon::LikeFilter }]
     end
 
     def sort_columns_def
@@ -70,9 +73,5 @@ class RadAuditSearch < RadCommon::Search
        { label: 'Remote Address', column: 'remote_address' },
        { label: 'Audit ID', column: 'audits.id' },
        { label: 'Changes' }]
-    end
-
-    def user_array
-      Pundit.policy_scope!(current_user, User).sorted.pluck(Arel.sql("first_name || ' ' || last_name"), :id)
     end
 end

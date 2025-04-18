@@ -6,7 +6,7 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
-        remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.shared_database?
+        # remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.shared_database?
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
@@ -21,7 +21,7 @@ module RadCommon
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'timezone_detection', 'false'
-        remove_rad_factories
+        # remove_rad_factories
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
@@ -82,7 +82,7 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
-        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+        # copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
         gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
 
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
@@ -159,7 +159,7 @@ module RadCommon
                   'lib/templates/rspec/system/system_spec.rb.tt'
         remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
 
-        unless RadConfig.shared_database?
+        unless true || RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 require 'rad_rspec/rad_factories'
@@ -283,7 +283,7 @@ Seeder.new.seed!
         end
 
         def add_crawling_config
-          remove_file 'public/robots.txt'
+          # remove_file 'public/robots.txt'
 
           add_rad_config_setting 'crawlable_subdomains', '[]'
           add_rad_config_setting 'always_crawl', 'false'
@@ -557,13 +557,13 @@ gem 'propshaft'
           apply_migration '20220905140634_allow_invite_role.rb'
           apply_migration '20220918194026_refine_smarty.rb'
           apply_migration '20221021113251_create_saved_search_filters.rb'
-          apply_migration '20221108110620_add_new_audited_changes_to_audits.rb'
+          # apply_migration '20221108110620_add_new_audited_changes_to_audits.rb'
           apply_migration '20221123142522_twilio_log_changes.rb'
-          apply_migration '20221108114020_convert_audited_changes_text_to_json.rb'
-          apply_migration '20221221134935_remove_legacy_audited_changes.rb'
+          # apply_migration '20221108114020_convert_audited_changes_text_to_json.rb'
+          # apply_migration '20221221134935_remove_legacy_audited_changes.rb'
           apply_migration '20230222162024_migrate_authy_to_twilio_verify.rb'
-          apply_migration '20230310161506_more_twilio_verify.rb'
-          apply_migration '20230313195243_add_language.rb'
+          # apply_migration '20230310161506_more_twilio_verify.rb'
+          # apply_migration '20230313195243_add_language.rb'
           apply_migration '20230401113151_fix_sendgrid_notification.rb'
           apply_migration '20230419121743_twilio_replies.rb'
           apply_migration '20230420102508_update_twilio_log_number_format.rb'

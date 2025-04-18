@@ -1,5 +1,5 @@
 class DuplicatesController < ApplicationController
-  def resolve
+  def index
     skip_policy_scope
 
     @model = model
@@ -12,7 +12,7 @@ class DuplicatesController < ApplicationController
       return
     end
 
-    authorize @record, :resolve_duplicates?
+    authorize @record, :index_duplicates?
 
     @records = []
     @duplicates_count = model.relevant_duplicates.count
@@ -83,18 +83,19 @@ class DuplicatesController < ApplicationController
 
     max = Duplicate.where(duplicatable_type: model.name).maximum(:sort)
     sort = (max ? max + 1 : 1)
-    @record.create_or_update_metadata!({ sort: sort })
+    @record.create_or_update_metadata! sort: sort
 
     if @record.duplicate.present? && @record.duplicate.score.present?
       dupes = @record.duplicates
 
       if dupes.count == 1
         record = dupes.first[:record]
-        record.create_or_update_metadata!({ sort: sort })
+        record.create_or_update_metadata! sort: sort
       end
     end
 
-    redirect_to index_path, notice: "#{model} was successfully updated."
+    flash[:notice] = "#{model} was successfully updated."
+    redirect_to index_path
   end
 
   def reset
@@ -139,7 +140,7 @@ class DuplicatesController < ApplicationController
   private
 
     def index_path
-      resolve_duplicates_path model: model
+      "/duplicates?model=#{model}"
     end
 
     def gather_record
@@ -163,8 +164,8 @@ class DuplicatesController < ApplicationController
     end
 
     def email_options
-      { email_action: { message: 'Click here to view the details.', button_text: 'View', button_url: url_for(@record) },
-        contact_log_from_user: current_user,
-        contact_log_record: @record }
+      { email_action: { message: 'Click here to view the details.',
+                        button_text: 'View',
+                        button_url: url_for(@record) } }
     end
 end

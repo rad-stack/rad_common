@@ -2,6 +2,8 @@ module Hashable
   extend ActiveSupport::Concern
 
   def encoded_id
+    return if id.nil?
+
     Hashable.hashids.encode(id)
   end
 
@@ -10,11 +12,21 @@ module Hashable
   end
 
   class_methods do
-    def find_decoded(encoded_id)
-      ids = Hashable.hashids.decode(encoded_id)
-      raise Hashids::InputError, "Couldn't decode: #{encoded_id}" if ids.empty?
+    def find_decoded(encoded_id, col = :id)
+      return unless encoded_id.present?
 
-      find(ids[0]) if ids && ids.count == 1 && ids[0]
+      encoded_id = encoded_id.gsub(/[^a-zA-Z\d]/, '')
+
+      begin
+        ids = Hashable.hashids.decode encoded_id
+      rescue Hashids::InputError => e
+        raise e if col == :id
+        ids = []
+      end
+
+      return unless ids && ids.count == 1 && ids[0]
+
+      col == :id ? find(ids[0]) : find_by(col => ids[0])
     end
   end
 end
