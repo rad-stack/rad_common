@@ -1,14 +1,4 @@
 - if user_signed_in?
-  - if show_reset_duplicates_link?
-    .row
-      .col-lg-12
-        .float-right
-          - confirm_message = 'This will reset non-duplicates and regenerate possible matches for this record, proceed?'
-
-          = link_to 'Reset Duplicates',
-                    reset_duplicates_path(current_instance_variable),
-                    method: :put,
-                    data: { confirm: confirm_message }
   - if show_auditing?
     .float-right
       = link_to 'Show History', audit_history_link

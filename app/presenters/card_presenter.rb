@@ -258,25 +258,26 @@ class CardPresenter
       action_name == 'show' &&
         RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
         instance.duplicate.present? &&
-        instance.duplicate.score.present?
+        instance.duplicate.score.present? &&
+        instance_policy.resolve_duplicates?
     end
 
     def duplicate_action
       @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                            "/duplicates?model=#{instance.class}&id=#{instance.id}",
+                            @view_context.resolve_duplicates_path(model: instance.class, id: instance.id),
                             class: 'btn btn-warning btn-sm')
     end
 
     def include_duplicates_action?
       action_name == 'index' &&
         RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
-        Pundit.policy!(current_user, klass.new).index_duplicates? &&
+        class_policy.resolve_duplicates? &&
         klass.high_duplicates.size.positive?
     end
 
     def duplicates_action
       @view_context.link_to(@view_context.icon(:cubes, 'Fix Duplicates'),
-                            "/duplicates?model=#{klass}",
+                            @view_context.resolve_duplicates_path(model: klass),
                             class: 'btn btn-warning btn-sm')
     end
 
@@ -287,6 +288,23 @@ class CardPresenter
         current_user &&
         Pundit.policy!(current_user, check_policy_klass).destroy? &&
         Pundit.policy!(current_user, check_policy_instance).destroy?
+    end
+
+    def reset_duplicates_action
+      return unless @view_context.user_signed_in? &&
+        current_user.internal? &&
+        instance.present? &&
+        instance.respond_to?(:persisted?) &&
+        instance.persisted? &&
+        RadCommon::AppInfo.new.duplicates_enabled?(instance.class.name) &&
+        instance_policy.reset_duplicates?
+
+      confirm_message = 'This will reset non-duplicates and regenerate possible matches for this record, proceed?'
+
+      { label: 'Reset Duplicates',
+        link: @view_context.reset_duplicates_path(model: instance.class, id: instance.id),
+        method: :put,
+        data: { confirm: confirm_message } }
     end
 
     def delete_action
@@ -308,5 +326,13 @@ class CardPresenter
 
     def no_records?
       Pundit.policy_scope!(current_user, klass).none?
+    end
+
+    def class_policy
+      @class_policy ||= Pundit.policy!(current_user, klass.new)
+    end
+
+    def instance_policy
+      @instance_policy ||= Pundit.policy!(current_user, instance)
     end
 end

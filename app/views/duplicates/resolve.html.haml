@@ -1,4 +1,4 @@
-- show_actions = policy(@record.class.new).destroy?
+- show_actions = show_actions?(@record.class)
 
 .card
   = render 'layouts/card_header', action_name: 'custom',
@@ -57,6 +57,11 @@
         %td= format_date(@record.created_at)
         - if show_actions
           %td
+            - if policy(@record).edit?
+              = link_to icon(:pencil, 'Edit'),
+                        "/#{@record.class.table_name}/#{@record.id}/edit",
+                        class: 'btn btn-sm btn-secondary btn-block'
+
             - if policy(@record).destroy?
               = link_to icon(:times, 'Delete'),
                             @record,
@@ -64,7 +69,7 @@
                             data: { confirm: 'Are you sure?' },
                             class: 'btn btn-danger btn-sm btn-block'
 
-= simple_form_for(@record, url: merge_duplicates_path(@record)) do
+= simple_form_for(@record, url: merge_duplicates_path(model: @record.class, id: @record.id)) do
   .card
     .card-header
       .title-header
@@ -120,11 +125,15 @@
             %td
               - if policy(record).destroy?
                 = link_to icon(:times, 'Not a duplicate'),
-                          not_duplicate_path(record, @record),
+                          not_duplicates_path(model: record.class, id: record.id, master_record: @record.id),
                           class: 'btn btn-sm btn-warning btn-block'
 
               = link_to icon('arrow-up', 'Switch to Current'),
-                        index_duplicates_path_record(record),
+                        switch_duplicates_path(model: record.class,
+                                               id: record.id,
+                                               other_model: @record.class,
+                                               other_id: @record.id),
+                        method: :put,
                         class: 'btn btn-sm btn-success btn-block'
 
             %td= record_result[:score]
@@ -156,6 +165,11 @@
               = format_date(record.created_at)
             - if show_actions
               %td
+                - if policy(record).edit?
+                  = link_to icon(:pencil, 'Edit'),
+                            "/#{record.class.table_name}/#{record.id}/edit",
+                            class: 'btn btn-sm btn-secondary btn-block'
+
                 - if policy(record).destroy?
                   = link_to icon(:times, 'Delete'),
                                 record,
