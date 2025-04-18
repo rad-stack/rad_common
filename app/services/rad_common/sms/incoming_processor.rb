@@ -84,21 +84,10 @@ module RadCommon
         end
 
         def log_mms!
-          log_contact @incoming_message.presence || 'MMS'
-
-          @attachments.each do |attachment|
-            @log.sms_media_url = attachment[:url]
-            @log.attachments.attach io: attachment[:file],
-                                    content_type: attachment[:content_type],
-                                    identify: false,
-                                    filename: attachment[:filename]
-          end
-
-          @log.save!
-          @log
+          log_contact(@incoming_message.presence || 'MMS', mms: true)
         end
 
-        def log_contact(content)
+        def log_contact(content, mms: false)
           @log = ContactLog.create! from_number: @phone_number,
                                     from_user: from_user,
                                     content: content,
@@ -108,8 +97,22 @@ module RadCommon
                                     sent: true
 
           @log.contact_log_recipients.create! phone_number: to_number
+          log_attachment(@log) if mms
 
           @log
+        end
+
+        def log_attachment(log)
+          @attachments.each do |attachment|
+            log.sms_media_url = attachment[:url]
+            log.attachments.attach io: attachment[:file],
+                                    content_type: attachment[:content_type],
+                                    identify: false,
+                                    filename: attachment[:filename]
+          end
+
+          log.save!
+          log
         end
 
         def get_attachments
