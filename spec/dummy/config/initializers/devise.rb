@@ -5,7 +5,7 @@
 Devise.setup do |config|
   # ==> Devise Twilio Verify Extension
   # How long should the user's device be remembered for.
-  config.twilio_verify_remember_device = RadConfig.config_item!(:twilio_verify_remember_device)&.to_i&.minutes || 7.days
+  config.twilio_verify_remember_device = RadConfig.twilio_verify_remember_device!
 
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
@@ -231,6 +231,8 @@ Devise.setup do |config|
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
+  # We are overriding this in the timeout_in method of the RadUser concern for internal users,
+  # external users use this setting configured here
   config.timeout_in = 3.hours
 
   # ==> Configuration for :lockable
