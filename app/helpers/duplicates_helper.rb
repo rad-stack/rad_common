@@ -3,9 +3,18 @@ module DuplicatesHelper
     return unless policy(record).destroy? && !params["#{model.to_s.downcase}_id"]
 
     [link_to(icon('arrow-right', 'Skip for now, review later'),
-             "/duplicates/do_later?model=#{record.class}&id=#{record.id}",
+             do_later_duplicates_path(model: record.class, id: record.id),
              method: :put,
              class: 'btn btn-warning btn-sm')]
+  end
+
+  def duplicates_badge_count(model_name)
+    unless RadCommon::AppInfo.new.duplicates_enabled?(model_name) &&
+           policy(model_name.constantize.new).resolve_duplicates?
+      return 0
+    end
+
+    model_name.constantize.high_duplicates.count
   end
 
   def fix_duplicates_action(record)

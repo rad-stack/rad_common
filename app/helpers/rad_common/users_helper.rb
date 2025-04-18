@@ -6,18 +6,24 @@ module RadCommon
                { label: 'User Status', value: user_status_item(user) },
                :timezone,
                :detected_timezone,
-               :ignored_timezone,
-               :sign_in_count,
-               :invitation_accepted_at,
-               :invited_by]
+               :ignored_timezone]
 
-      items += %i[twilio_verify_sms] if RadConfig.twilio_verify_enabled?
-      items += %i[current_sign_in_ip current_sign_in_at confirmed_at confirmation_sent_at unconfirmed_email]
+      items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
+
+      items += [:sign_in_count,
+                :invitation_accepted_at,
+                :invited_by,
+                :current_sign_in_ip,
+                :current_sign_in_at,
+                :confirmed_at,
+                :confirmation_sent_at,
+                unconfirmed_email_show_item(user)]
+
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
 
       if RadConfig.avatar? && user.avatar.attached?
         items.push(label: 'Avatar',
-                   value: render('layouts/attachment', record: user, attachment_name: 'avatar', new_tab: true))
+                   value: render_one_attachment(record: user, attachment_name: 'avatar', new_tab: true))
       end
 
       items
@@ -57,6 +63,17 @@ module RadCommon
 
     def my_profile_nav?
       UserProfilePolicy.new(current_user, current_user).show?
+    end
+
+    def show_nav_avatar
+      return unless RadConfig.avatar?
+
+      # there is a complicated bug that requires this - Task 35304
+      return if RadConfig.password_expirable? && current_user.password_expired?
+
+      return unless current_user.avatar.attached?
+
+      image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
     end
 
     def next_profile_action(user)
@@ -146,7 +163,7 @@ module RadCommon
       return unless policy(user).impersonate?
 
       link_to icon('right-to-bracket', 'Sign In As'),
-              "/impersonations/start?id=#{user.id}",
+              start_impersonations_path(id: user.id),
               method: :post,
               data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to ' \
                                'your original user.' },
