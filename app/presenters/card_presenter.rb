@@ -292,12 +292,12 @@ class CardPresenter
 
     def reset_duplicates_action
       return unless @view_context.user_signed_in? &&
-        current_user.internal? &&
-        instance.present? &&
-        instance.respond_to?(:persisted?) &&
-        instance.persisted? &&
-        RadCommon::AppInfo.new.duplicates_enabled?(instance.class.name) &&
-        instance_policy.reset_duplicates?
+                    current_user.internal? &&
+                    instance.present? &&
+                    instance.respond_to?(:persisted?) &&
+                    instance.persisted? &&
+                    RadCommon::AppInfo.new.duplicates_enabled?(instance.class.name) &&
+                    instance_policy.reset_duplicates?
 
       confirm_message = 'This will reset non-duplicates and regenerate possible matches for this record, proceed?'
 
