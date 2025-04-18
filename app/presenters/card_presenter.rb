@@ -175,6 +175,7 @@ class CardPresenter
     actions.push(duplicate_action) if include_duplicate_action?
     actions.push(duplicates_action) if include_duplicates_action?
     actions.push(delete_action) if include_delete_action?
+    actions.push(tools_button) if include_tools_button?
 
     actions
   end
@@ -290,6 +291,66 @@ class CardPresenter
         Pundit.policy!(current_user, check_policy_instance).destroy?
     end
 
+    def include_tools_button?
+      tool_actions.any?
+    end
+
+    def tools_button
+      @view_context.render 'layouts/card_tools_button', actions: tool_actions
+    end
+
+    def tool_actions
+      @tool_actions ||= ([show_history_action] + contact_log_actions + [reset_duplicates_action]).compact
+    end
+
+    def show_history_action
+      return unless @view_context.user_signed_in? &&
+                    current_user.internal? &&
+                    instance.present? &&
+                    instance.class.name != 'ActiveStorage::Attachment' &&
+                    instance.respond_to?(:audits) &&
+                    instance.persisted? &&
+                    instance_policy.audit?
+
+      { label: 'Audit History',
+        link: @view_context.audits_path(search: { single_record: "#{instance.class}:#{instance.id}" }) }
+    end
+
+    def contact_log_actions
+      return [] unless action_name == 'show' &&
+                       instance&.persisted? &&
+                       current_user &&
+                       Pundit.policy!(current_user, ContactLog.new).index? &&
+                       contact_logs?
+
+      return user_contact_log_actions if instance.is_a?(User)
+
+      [{ label: 'Contact Logs', link: contact_log_record_action }]
+    end
+
+    def user_contact_log_actions
+      [{ label: 'Contact Logs to User',
+         link: @view_context.contact_logs_path(search: { 'contact_log_recipients.to_user_id': instance.id }) },
+       { label: 'Contact Logs from User',
+         link: @view_context.contact_logs_path(search: { 'contact_logs.from_user_id': instance.id }) },
+       { label: 'Contact Logs w/ User as Subject', link: contact_log_record_action },
+       { label: 'All Associated Contact Logs',
+         link: @view_context.contact_logs_path(search: { associated_with_user: instance.id }) }]
+    end
+
+    def contact_log_record_action
+      @view_context.contact_logs_path(search: { 'contact_logs.record_type': instance.class.name,
+                                                record_id_equals: instance.id })
+    end
+
+    def contact_logs?
+      # TODO: need to make sure these queries are very fast since it's gonna hit on every show action
+      # return ContactLog.associated_with_user(instance.id).limit(1).exists? if instance.is_a?(User)
+      return true if instance.is_a?(User) # TODO: temporary hack until query optimization is verified
+
+      ContactLog.where(record: instance).limit(1).exists?
+    end
+
     def reset_duplicates_action
       return unless @view_context.user_signed_in? &&
                     current_user.internal? &&
@@ -325,7 +386,7 @@ class CardPresenter
     end
 
     def no_records?
-      Pundit.policy_scope!(current_user, klass).none?
+      Pundit.policy_scope!(current_user, klass).count.zero?
     end
 
     def class_policy
