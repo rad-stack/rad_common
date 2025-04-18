@@ -24,6 +24,7 @@ end
 
 namespace :local do
   task :restore_from_backup, [:file_name] => :environment do |_t, args|
+    # run like rails "local:restore_from_backup[heroku_backups/foo_project_2025-04-15.backup]"
     HerokuCommands.restore_from_backup args[:file_name]
   end
 
