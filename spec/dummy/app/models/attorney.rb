@@ -2,13 +2,17 @@ class Attorney < ApplicationRecord
   include Contactable
   include DuplicateFixable
 
-  scope :by_name, -> { order(:first_name, :last_name) }
+  scope :sorted, -> { order(:first_name, :last_name) }
+
   scope :created_between, lambda { |start_date, end_date|
     where('created_at >= ? and created_at <= ?', start_date, end_date)
   }
 
-  validates_with PhoneNumberValidator, fields: [{ field: :phone_number }]
-  validates_with EmailAddressValidator, fields: %i[email]
+  scope :with_cities, ->(cities) { where(city: cities) }
+  scope :without_cities, ->(cities) { where.not(city: cities) }
+
+  validates_with PhoneNumberValidator, fields: [{ field: :mobile_phone, type: :mobile }, { field: :phone_number }]
+  validates_with EmailAddressValidator, fields: [:email]
 
   strip_attributes
   audited

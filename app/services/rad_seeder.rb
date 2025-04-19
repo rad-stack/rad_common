@@ -142,7 +142,7 @@ class RadSeeder
     def seed_user_statuses
       return if UserStatus.count.positive?
 
-      UserStatus.create! name: 'Pending', active: false, validate_email_phone: true
+      UserStatus.create! name: 'Pending', active: false, validate_email_phone: true if RadConfig.pending_users?
 
       UserStatus.create! name: 'Active', active: true, validate_email_phone: true
       UserStatus.create! name: 'Inactive', active: false, validate_email_phone: false

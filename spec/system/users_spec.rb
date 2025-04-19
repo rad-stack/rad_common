@@ -16,13 +16,13 @@ describe 'Users', type: :system do
     context 'when dynamically changing fields', :gha_specs_only, :js do
       it 'shows internal roles and hides others' do
         find_field('user_external').set(false)
-        expect(page).to have_content 'Security roles'
+        expect(page).to have_content 'Security Roles'
         expect(page).to have_content internal_role.name
       end
 
       it 'shows external roles and hides others' do
         find_field('user_external').set(true)
-        expect(page).to have_content 'Security roles'
+        expect(page).to have_content 'Security Roles'
         expect(page).to have_content external_role.name
       end
     end

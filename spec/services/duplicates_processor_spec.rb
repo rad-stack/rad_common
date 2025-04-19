@@ -43,7 +43,7 @@ RSpec.describe DuplicatesProcessor do
              email: email
     end
 
-    xit { is_expected.to eq [{ id: attorney_2.id, score: 28 }] }
+    it { is_expected.to eq [{ id: attorney_2.id, score: 28 }] }
   end
 
   context 'when matching on standard plus additional items' do
@@ -61,12 +61,12 @@ RSpec.describe DuplicatesProcessor do
              email: email
     end
 
-    xit { is_expected.to eq [{ id: attorney_2.id, score: 40 }] }
+    it { is_expected.to eq [{ id: attorney_2.id, score: 40 }] }
 
     context 'with personal contact multiplier' do
       before { allow_any_instance_of(described_class).to receive(:personal_contact_multiplier).and_return(2) }
 
-      xit { is_expected.to eq [{ id: attorney_2.id, score: 53 }] }
+      it { is_expected.to eq [{ id: attorney_2.id, score: 53 }] }
     end
   end
 
@@ -85,7 +85,7 @@ RSpec.describe DuplicatesProcessor do
              email: '222@xyz.com'
     end
 
-    xit { is_expected.to eq [{ id: attorney_2.id, score: 43 }] }
+    it { is_expected.to eq [{ id: attorney_2.id, score: 43 }] }
   end
 
   context 'when matching on phone numbers' do
@@ -104,7 +104,7 @@ RSpec.describe DuplicatesProcessor do
                email: '222@xyz.edu'
       end
 
-      xit { is_expected.to eq [{ id: attorney_2.id, score: 56 }] }
+      it { is_expected.to eq [{ id: attorney_2.id, score: 56 }] }
     end
 
     context 'with phone number matching mobile phone' do
@@ -122,7 +122,7 @@ RSpec.describe DuplicatesProcessor do
                email: '222@xyz.edu'
       end
 
-      xit { is_expected.to eq [{ id: attorney_2.id, score: 56 }] }
+      it { is_expected.to eq [{ id: attorney_2.id, score: 56 }] }
     end
   end
 end

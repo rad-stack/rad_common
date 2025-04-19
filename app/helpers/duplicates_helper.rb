@@ -17,54 +17,8 @@ module DuplicatesHelper
     model_name.constantize.high_duplicates.count
   end
 
-  def fix_duplicates_action(record)
-    return unless record.duplicate.present? && record.duplicate.score.present? && policy(record).show?
-
-    link_to(icon(:cubes, 'Fix Duplicates'),
-            "/duplicates?model=#{record.class}&id=#{record.id}",
-            class: 'btn btn-info btn-sm')
-  end
-
-  def show_reset_duplicates_link?
-    return false if current_user.external?
-
-    record = current_instance_variable
-    record.present? && RadCommon::AppInfo.new.duplicates_enabled?(record.class.name) && policy(record).reset_duplicates?
-  end
-
-  def duplicates_badge(klass)
-    return unless RadCommon::AppInfo.new.duplicates_enabled?(klass.name) && policy(klass.new).index_duplicates?
-
-    count = klass.high_duplicates.count
-    return unless count.positive?
-
-    tag.span(class: 'badge alert-warning') do
-      count.to_s
-    end
-  end
-
   def pluralize_model_string(model_string)
     model_string.pluralize(2)
-  end
-
-  def not_duplicate_path(record, master_record)
-    "/duplicates/not?model=#{record.class}&id=#{record.id}&master_record=#{master_record.id}"
-  end
-
-  def index_duplicates_path_record(record)
-    "/duplicates?model=#{record.class}&id=#{record.id}"
-  end
-
-  def index_duplicates_path(model)
-    "/duplicates?model=#{model}"
-  end
-
-  def merge_duplicates_path(record)
-    "/duplicates/merge?model=#{record.class}&id=#{record.id}"
-  end
-
-  def reset_duplicates_path(record)
-    "/duplicates/reset?model=#{record.class}&id=#{record.id}"
   end
 
   def duplicate_class(global_field_value, current_field_value)
@@ -89,7 +43,8 @@ module DuplicatesHelper
 
   def show_duplicate_item(item, record)
     return secured_link(record.send(item[:name].to_s.gsub('_id', ''))) if item[:type] == :association
+    return if record.send(item[:name]).blank?
 
-    record.send item[:name]
+    link_to record.send(item[:name]), record
   end
 end

@@ -1,2 +1,4 @@
 es:
   communication_sms_opt_in: 'Usted ha cambiado su metodo de comunicación, comenzarémos a enviar las notificaciones por mensajes de texto.'
+  navigation:
+    my_account: Mi Cuenta

@@ -35,18 +35,18 @@ RSpec.describe 'SystemMessages', type: :system do
       end
 
       it 'sets the message type based on the previous system message' do
-        expect(find_field('Message type').value).to eq 'email'
+        expect(find_field('Message Type').value).to eq 'email'
         create :system_message, :sms, user: user
         visit '/system_messages/new'
-        expect(find_field('Message type').value).to eq 'sms'
+        expect(find_field('Message Type').value).to eq 'sms'
       end
 
-      context 'when dynamically changing fields', :gha_specs_only, :js do
-        it 'shows and hides trix editor based on message type' do
+      context 'when dynamically changing fields', :js do
+        it 'shows and hides trix editor based on message type', :legacy_asset_specs do
           find('body').click
           expect(page).to have_css('.email-message', visible: :visible)
           expect(page).to have_css('.sms-message', visible: :hidden)
-          select 'SMS', from: 'Message type'
+          select 'SMS', from: 'Message Type'
           expect(page).to have_css('.email-message', visible: :hidden)
           expect(page).to have_css('.sms-message', visible: :visible)
         end
