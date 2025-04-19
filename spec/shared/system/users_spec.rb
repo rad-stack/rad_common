@@ -236,8 +236,8 @@ RSpec.describe 'Users', type: :system do
     it "can't sign up with invalid email address" do
       visit new_user_registration_path
 
-      fill_in 'First name', with: Faker::Name.first_name
-      fill_in 'Last name', with: Faker::Name.last_name
+      fill_in 'First Name', with: Faker::Name.first_name
+      fill_in 'Last Name', with: Faker::Name.last_name
       fill_in 'Email', with: 'test_user@'
       fill_in 'user_password', with: password
       fill_in 'user_password_confirmation', with: password
