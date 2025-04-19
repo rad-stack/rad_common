@@ -220,9 +220,9 @@ RSpec.describe 'Users', type: :system do
     it 'signs up' do
       visit new_user_registration_path
 
-      fill_in 'First name', with: Faker::Name.first_name
-      fill_in 'Last name', with: Faker::Name.last_name
-      fill_in 'Mobile phone', with: '(345) 222-1111'
+      fill_in 'First Name', with: Faker::Name.first_name
+      fill_in 'Last Name', with: Faker::Name.last_name
+      fill_in 'Mobile Phone', with: '(345) 222-1111'
       fill_in 'Email', with: "#{Faker::Internet.user_name}@abc.com"
       fill_in 'user_password', with: password
       fill_in 'user_password_confirmation', with: password

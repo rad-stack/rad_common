@@ -15,7 +15,7 @@ RSpec.describe 'User Impersonation', :impersonate_specs, type: :system do
       expect(page).to have_content "Signed In as #{impersonated_user}"
       visit edit_user_path(edited_user)
 
-      fill_in 'First name', with: 'Foo Bro'
+      fill_in 'First Name', with: 'Foo Bro'
       click_button 'Save'
       click_on 'Show History'
 

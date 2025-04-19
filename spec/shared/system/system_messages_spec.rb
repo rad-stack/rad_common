@@ -46,7 +46,7 @@ RSpec.describe 'SystemMessages', type: :system do
           find('body').click
           expect(page).to have_css('.email-message', visible: :visible)
           expect(page).to have_css('.sms-message', visible: :hidden)
-          select 'SMS', from: 'Message type'
+          select 'SMS', from: 'Message Type'
           expect(page).to have_css('.email-message', visible: :hidden)
           expect(page).to have_css('.sms-message', visible: :visible)
         end
