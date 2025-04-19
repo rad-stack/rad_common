@@ -1,7 +1,0 @@
-- if user_signed_in?
-  - if show_auditing?
-    .float-right
-      = link_to 'Show History', audit_history_link
-      - if current_instance_variable.is_a?(User)
-        %br
-        = link_to "Show Changes Made by #{@user}", user_audit_history_link(@user)

@@ -3,7 +3,7 @@ class RadAuditSearch < RadCommon::Search
     @current_user = current_user
     @params = params
 
-    super(query: RadAudit,
+    super(query: query_def,
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
