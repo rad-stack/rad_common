@@ -52,11 +52,7 @@ class RadAuditSearch < RadCommon::Search
                     input_label: 'Record ID' }]
       end
 
-      items + [{ input_label: 'User',
-                 column: :user_id,
-                 grouped: true,
-                 options: UserGrouper.new(current_user, include_client_users: false).call,
-                 blank_value_label: 'All Users' },
+      items + [{ input_label: 'User', column: :user_id, options: user_array },
                { input_label: 'Action',
                  column: :action,
                  options: %w[create update destroy] },
@@ -73,5 +69,9 @@ class RadAuditSearch < RadCommon::Search
        { label: 'Remote Address', column: 'remote_address' },
        { label: 'Audit ID', column: 'audits.id' },
        { label: 'Changes' }]
+    end
+
+    def user_array
+      Pundit.policy_scope!(current_user, User).sorted.pluck(Arel.sql("first_name || ' ' || last_name"), :id)
     end
 end

@@ -44,10 +44,10 @@ RSpec.describe 'Users', type: :system do
     describe 'registration' do
       it 'updates registration' do
         visit edit_user_registration_path
-        expect(find_field('First name').value).to eq user.first_name
+        expect(find_field('First Name').value).to eq user.first_name
         new_name = Faker::Name.first_name
-        fill_in 'First name', with: new_name
-        fill_in 'Current password', with: password
+        fill_in 'First Name', with: new_name
+        fill_in 'Current Password', with: password
         click_button 'Save'
         user.reload
         expect(user.first_name).to eq new_name
@@ -111,7 +111,7 @@ RSpec.describe 'Users', type: :system do
     it 'updates the user' do
       visit edit_user_path(admin)
       new = 'foo'
-      fill_in 'First name', with: new
+      fill_in 'First Name', with: new
       click_button 'Save'
       expect(page).to have_content new
     end
@@ -349,14 +349,14 @@ RSpec.describe 'Users', type: :system do
       expect(user.security_roles.count).to eq 1
 
       visit edit_user_path(user)
-      fill_in 'Last name', with: ''
+      fill_in 'Last Name', with: ''
       check security_role.name
       click_button 'Save'
 
       user.reload
       expect(user.security_roles.count).to eq 1
 
-      fill_in 'Last name', with: 'Foo'
+      fill_in 'Last Name', with: 'Foo'
       click_button 'Save'
 
       user.reload

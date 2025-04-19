@@ -35,10 +35,10 @@ RSpec.describe 'SystemMessages', type: :system do
       end
 
       it 'sets the message type based on the previous system message' do
-        expect(find_field('Message type').value).to eq 'email'
+        expect(find_field('Message Type').value).to eq 'email'
         create :system_message, :sms, user: user
         visit '/system_messages/new'
-        expect(find_field('Message type').value).to eq 'sms'
+        expect(find_field('Message Type').value).to eq 'sms'
       end
 
       context 'when dynamically changing fields', :gha_specs_only, :js do

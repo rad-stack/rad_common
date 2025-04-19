@@ -10,7 +10,7 @@ RSpec.describe 'AuditHistory', type: :system do
     old_name = user.last_name
     new_name = 'foo'
     visit edit_user_path(user)
-    fill_in 'First name', with: new_name
+    fill_in 'First Name', with: new_name
     click_button 'Save'
 
     click_link 'Show History'
@@ -22,7 +22,7 @@ RSpec.describe 'AuditHistory', type: :system do
     allow(RadConfig).to receive(:avatar?).and_return(true)
 
     visit edit_user_registration_path
-    fill_in 'Current password', with: 'cOmpl3x_p@55w0rd'
+    fill_in 'Current Password', with: 'cOmpl3x_p@55w0rd'
     page.attach_file('Avatar', 'spec/fixtures/test_photo.png')
     click_on 'Save'
     expect(page).to have_content 'account has been updated successfully'
