@@ -23,6 +23,22 @@ class HerokuCommands
       write_log `psql -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public" -h #{local_host} -U #{local_user} -d #{dbname}`
       write_log 'Restoring dump file to local'
       write_log `pg_restore --verbose --clean --no-acl --no-owner -h #{local_host} -U #{local_user} -d #{dbname} #{file_name}`
+
+      write_log 'Migrating database'
+      write_log `skip_on_db_migrate=1 rake db:migrate`
+
+      write_log 'Changing passwords'
+      new_password = User.new.send(:password_digest, 'password')
+      User.update_all(encrypted_password: new_password)
+
+      write_log 'Changing Active Storage service to local'
+      ActiveStorage::Blob.update_all service_name: 'local'
+
+      write_log 'Clearing certain production data'
+      remove_user_avatars
+      remove_encrypted_secrets
+      User.update_all twilio_verify_enabled: false
+      nil
     end
 
     def dump(file_name = '')
@@ -58,20 +74,6 @@ class HerokuCommands
       write_log 'Deleting temporary dump file'
       write_log `rm #{clone_dump_file}`
 
-      write_log 'Migrating database'
-      write_log `skip_on_db_migrate=1 rake db:migrate`
-
-      write_log 'Changing passwords'
-      new_password = User.new.send(:password_digest, 'password')
-      User.update_all(encrypted_password: new_password)
-
-      write_log 'Changing Active Storage service to local'
-      ActiveStorage::Blob.update_all service_name: 'local'
-
-      write_log 'Clearing certain production data'
-      remove_user_avatars
-      remove_encrypted_secrets
-      User.update_all twilio_verify_enabled: false
       nil
     end
 
