@@ -33,6 +33,6 @@ class UserPolicy < ApplicationPolicy
   def impersonate?
     return false unless user.permission?(:admin) && RadConfig.impersonate?
 
-    user != record
+    record.active? && user != record
   end
 end

@@ -68,6 +68,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_02_083306) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active", default: true, null: false
+    t.string "mobile_phone"
     t.jsonb "address_metadata"
   end
 

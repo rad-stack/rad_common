@@ -11,7 +11,7 @@ class Attorney < ApplicationRecord
   scope :with_cities, ->(cities) { where(city: cities) }
   scope :without_cities, ->(cities) { where.not(city: cities) }
 
-  validates_with PhoneNumberValidator, fields: [{ field: :phone_number }]
+  validates_with PhoneNumberValidator, fields: [{ field: :mobile_phone, type: :mobile }, { field: :phone_number }]
   validates_with EmailAddressValidator, fields: [:email]
 
   strip_attributes

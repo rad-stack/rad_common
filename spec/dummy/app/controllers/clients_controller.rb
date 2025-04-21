@@ -38,7 +38,7 @@ class ClientsController < ApplicationController
     destroyed = @client.destroy
 
     if destroyed
-      flash[:success] = 'Client was successfully deleted.'
+      flash[:notice] = 'Client was successfully deleted.'
     else
       flash[:error] = @client.errors.full_messages.join(', ')
     end
@@ -60,6 +60,6 @@ class ClientsController < ApplicationController
     end
 
     def permitted_params
-      params.require(:client).permit(:name, :email, :active)
+      params.require(:client).permit(:name, :email, :active, { valid_user_domains: [] })
     end
 end

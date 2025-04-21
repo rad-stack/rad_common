@@ -22,17 +22,7 @@ class NotificationSetting < ApplicationRecord
     return [] if user.external?
 
     types = Pundit.policy_scope!(user, NotificationType).sorted
-    settings = []
-
-    types.each do |notification_type|
-      setting = NotificationSetting.find_or_initialize_by(notification_type: notification_type,
-                                                          user_id: user.id)
-
-      setting.check_defaults
-      settings.push setting
-    end
-
-    settings
+    types.map { |notification_type| NotificationSetting.init_for_user(notification_type, user) }
   end
 
   def self.init_for_user(notification_type, user)
