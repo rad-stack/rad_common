@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+port = ENV['PORT'] || '3000'
+
+puts "Checking for Ruby processes using TCP port #{port}..."
+
+pids = `lsof -i tcp:#{port} -t`.strip
+
+if pids.empty?
+  puts "No Ruby processes are blocking port #{port}."
+  exit 0
+end
+
+puts "Killing processes: #{pids}"
+system("kill -9 #{pids}")
+
+puts "Successfully killed Ruby processes on port #{port}."
