@@ -22,6 +22,7 @@ module RadCommon
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'timezone_detection', 'false'
         remove_rad_factories
+        remove_legacy_rails_config_setting
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
@@ -340,6 +341,17 @@ Seeder.new.seed!
 
         def rad_config_setting_exists?(setting_name)
           File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
+        end
+
+        def remove_legacy_rails_config_setting
+          return unless File.exist?(RAD_CONFIG_FILE)
+
+          content = File.read(RAD_CONFIG_FILE)
+
+          if content.match?(/^\s*legacy_rails_config:\s*.*\n/)
+            say_status :remove, 'legacy_rails_config from rad_common.yml'
+            gsub_file RAD_CONFIG_FILE, /^\s*legacy_rails_config:\s*.*\n/, ''
+          end
         end
 
         def update_seeder_method
