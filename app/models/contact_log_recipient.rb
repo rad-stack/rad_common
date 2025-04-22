@@ -115,7 +115,7 @@ class ContactLogRecipient < ApplicationRecord
     end
 
     def validate_incoming_fields
-      return if contact_log.blank? || contact_log.outgoing? || contact_log.email?
+      return if contact_log.blank? || contact_log.outgoing? || contact_log.email? || contact_log.voice?
 
       errors.add(:to_user_id, 'must be blank') if to_user_id.present?
       errors.add(:success, 'must be true') unless success?
