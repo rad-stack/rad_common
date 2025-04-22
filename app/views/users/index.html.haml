@@ -1,4 +1,6 @@
-- if policy(User.new).update?
+- pending_users = RadConfig.pending_users? && policy(User.new).update?
+
+- if pending_users
   .card
     = render 'layouts/card_header', action_name: 'custom',
                                     title: "Pending Users (#{@pending.total_count})",
@@ -9,7 +11,11 @@
       = render 'users/index', users: @pending, page_param_name: :pending_page
 
 .card
-  = render 'layouts/card_header', no_new_button: true, additional_actions: [export_button('User')]
+  = render 'layouts/card_header',
+           no_new_button: true,
+           additional_actions: export_buttons('User'),
+           additional_external_actions: pending_users ? [] : users_actions
+
   .card-body
     = render 'layouts/filter', search: @user_search, path: users_path
     = render 'users/index', users: @users, sort_columns: true
