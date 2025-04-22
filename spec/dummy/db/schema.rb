@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_02_083306) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_18_211716) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -145,6 +145,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_02_083306) do
     t.boolean "notify_on_fail", default: true, null: false
     t.boolean "sms_false_positive", default: false, null: false
     t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
+    t.index ["created_at"], name: "index_contact_log_recipients_on_created_at"
     t.index ["email"], name: "index_contact_log_recipients_on_email"
     t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"
     t.index ["to_user_id"], name: "index_contact_log_recipients_on_to_user_id"
@@ -273,6 +274,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_02_083306) do
     t.bigint "record_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_notifications_on_created_at"
     t.index ["notification_type_id"], name: "index_notifications_on_notification_type_id"
     t.index ["record_type", "record_id"], name: "index_notifications_on_record_type_and_record_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
@@ -409,6 +411,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_02_083306) do
     t.string "detected_timezone"
     t.string "ignored_timezone"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"
     t.index ["first_name"], name: "index_users_on_first_name"
