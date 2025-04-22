@@ -344,14 +344,10 @@ Seeder.new.seed!
         end
 
         def remove_legacy_rails_config_setting
-          return unless File.exist?(RAD_CONFIG_FILE)
+          return unless rad_config_setting_exists?('legacy_rails_config')
 
-          content = File.read(RAD_CONFIG_FILE)
-
-          if content.match?(/^\s*legacy_rails_config:\s*.*\n/)
-            say_status :remove, 'legacy_rails_config from rad_common.yml'
-            gsub_file RAD_CONFIG_FILE, /^\s*legacy_rails_config:\s*.*\n/, ''
-          end
+          say_status :remove, 'legacy_rails_config from rad_common.yml'
+          gsub_file RAD_CONFIG_FILE, /^\s*legacy_rails_config:\s*.*\n/, ''
         end
 
         def update_seeder_method
@@ -496,7 +492,7 @@ gem 'rubocop-capybara'
   gem 'tty-prompt'
         RUBY
           end
-          
+
           unless RadConfig.legacy_assets?
             inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
 gem 'jsbundling-rails'
