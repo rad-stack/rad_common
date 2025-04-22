@@ -3,6 +3,8 @@ class Division < ApplicationRecord
   include Hashable
   include CreatedBy
 
+  TAG_OPTIONS = %w[Finance Marketing Sales HR IT Operations Support R&D].freeze
+
   belongs_to :owner, class_name: 'User'
   belongs_to :category, optional: true
 
@@ -15,6 +17,8 @@ class Division < ApplicationRecord
   enum division_status: %i[status_pending status_active status_inactive]
 
   scope :sorted, -> { order(:name) }
+
+  before_validation :sanitize_tags
 
   validates :name, uniqueness: { message: 'has already been taken for a pending division' }, if: -> { status_pending? }
   validates :logo, content_type: { in: RadCommon::VALID_IMAGE_TYPES, message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
@@ -48,5 +52,9 @@ class Division < ApplicationRecord
       return if category.present? || category_name.blank?
 
       self.category = Category.find_or_create_by!(name: category_name.strip)
+    end
+
+    def sanitize_tags
+      self.tags = tags.map(&:strip).compact_blank if tags.present?
     end
 end
