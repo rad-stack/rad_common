@@ -492,7 +492,7 @@ gem 'rubocop-capybara'
   gem 'tty-prompt'
         RUBY
           end
-
+          
           unless RadConfig.legacy_assets?
             inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
 gem 'jsbundling-rails'
