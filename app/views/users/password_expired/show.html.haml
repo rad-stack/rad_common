@@ -1,5 +1,9 @@
-.card
-  = render 'layouts/card_header', action_name: 'custom', title: 'Renew Your Password', icon: 'fa-lock'
+= render 'users/devise_layout' do
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Renew Your Password',
+           icon: 'fa-lock',
+           card_style: 'bg-white'
   .card-body
     = simple_form_for(resource, as: resource_name, url: [resource_name, :password_expired], html: { method: :put }) do |f|
       = render partial: 'devise/shared/error_messages'
@@ -14,8 +18,8 @@
                              hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
                              input_html: { autocomplete: 'new-password' }
 
-        = f.input :password_confirmation, label: 'Confirm your new password',
-                                          equired: true,
+        = f.input :password_confirmation, label: 'Confirm Your New Password',
+                                          required: true,
                                           input_html: { autocomplete: 'new-password' }
 
       .form-actions

@@ -104,7 +104,7 @@ RSpec.describe RadCommon::Search, type: :service do
 
     context 'when a filter has a default value' do
       let(:query) { Division }
-      let(:filters) { [{ column: :owner_id, options: User.by_name, default_value: user.id }] }
+      let(:filters) { [{ column: :owner_id, options: User.sorted, default_value: user.id }] }
       let(:user) { create :admin }
       let!(:other_division) { create(:division, created_at: 2.days.ago) }
       let!(:default_division) { create(:division, owner: user) }
@@ -143,7 +143,7 @@ RSpec.describe RadCommon::Search, type: :service do
 
     describe 'authorized' do
       let(:query) { Division }
-      let(:filters) { [{ input_label: 'Owner', column: :owner_id, options: User.by_name }] }
+      let(:filters) { [{ input_label: 'Owner', column: :owner_id, options: User.sorted }] }
       let(:params) { ActionController::Parameters.new }
 
       context 'when authorized' do
@@ -337,12 +337,12 @@ RSpec.describe RadCommon::Search, type: :service do
 
     context 'when using mixed scope_values' do
       let(:query) { Division }
-      let(:filters) { [{ column: :owner_id, options: User.by_name, scope_values: { 'Pending Values': :pending } }] }
+      let(:filters) { [{ column: :owner_id, options: User.sorted, scope_values: { 'Pending Values': :pending } }] }
       let(:params) { ActionController::Parameters.new }
 
       it 'has both scope and normal options' do
         expect(search.first.input_options).to include ['Pending Values', 'Pending Values']
-        expect(search.first.input_options).to include [User.by_name.first.to_s, User.by_name.first.id]
+        expect(search.first.input_options).to include [User.sorted.first.to_s, User.sorted.first.id]
       end
     end
 
@@ -361,8 +361,8 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:filters) do
         [{ column: :owner_id, input_label: 'Users', grouped: true,
            options: [['...', [user, { scope_value: :unassigned }]],
-                     ['Active', User.active.by_name],
-                     ['Inactive', User.inactive.by_name]] }]
+                     ['Active', User.active.sorted],
+                     ['Inactive', User.inactive.sorted]] }]
       end
       let(:params) { ActionController::Parameters.new }
       let(:group_values) { search.first.input_options.map(&:last) }
