@@ -29,6 +29,8 @@ module RadUser
 
     has_one_attached :avatar
 
+    enum :language, { English: 'en', Spanish: 'es' }
+
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
     scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
