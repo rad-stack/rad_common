@@ -19,6 +19,8 @@ class HerokuCommands
     end
 
     def restore_from_backup(file_name)
+      start_time = Time.current
+
       write_log 'Dropping existing database schema'
       write_log `psql -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public" -h #{local_host} -U #{local_user} -d #{dbname}`
 
@@ -27,13 +29,8 @@ class HerokuCommands
       write_log 'Generating filtered restore list without audits table'
       write_log `pg_restore -l #{file_name} | grep -v 'TABLE DATA public audits' > #{restore_list_file}`
 
-      start_time = Time.current
-
       write_log 'Restoring dump file to local'
       write_log `pg_restore --verbose --clean --no-acl --no-owner -L #{restore_list_file} -h #{local_host} -U #{local_user} -d #{dbname} #{file_name}`
-
-      duration = Time.current - start_time
-      write_log "Restore complete in #{duration.round(2)} seconds"
 
       write_log 'Deleting restore list'
       FileUtils.rm_f restore_list_file
@@ -52,6 +49,10 @@ class HerokuCommands
       remove_user_avatars
       remove_encrypted_secrets
       User.update_all twilio_verify_enabled: false
+
+      duration = Time.current - start_time
+      write_log "Restore complete in #{duration.round(2)} seconds"
+
       nil
     end
 
