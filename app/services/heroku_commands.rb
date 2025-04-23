@@ -21,8 +21,17 @@ class HerokuCommands
     def restore_from_backup(file_name)
       write_log 'Dropping existing database schema'
       write_log `psql -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public" -h #{local_host} -U #{local_user} -d #{dbname}`
+
+      restore_list_file = 'restore_list.txt'
+
+      write_log 'Generating filtered restore list without audits table'
+      write_log `pg_restore -l #{file_name} | grep -v 'TABLE DATA public audits' > #{restore_list_file}`
+
       write_log 'Restoring dump file to local'
-      write_log `pg_restore --verbose --clean --no-acl --no-owner -h #{local_host} -U #{local_user} -d #{dbname} #{file_name}`
+      write_log `pg_restore --verbose --clean --no-acl --no-owner -L #{restore_list_file} -h #{local_host} -U #{local_user} -d #{dbname} #{file_name}`
+
+      write_log 'Deleting restore list'
+      FileUtils.rm_f restore_list_file
 
       write_log 'Migrating database'
       write_log `skip_on_db_migrate=1 rake db:migrate`
