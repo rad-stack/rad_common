@@ -1,16 +1,20 @@
 - verify_invite
 
 .card
-  = render 'layouts/card_header', action_name: 'custom', title: t('devise.invitations.new.header'), icon: 'fa-plus'
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: t('devise.invitations.new.header'),
+           icon: 'fa-plus',
+           card_style: 'bg-white'
   .card-body
     = simple_form_for(resource, as: resource_name, url: invitation_path(resource_name), html: { method: :post }) do |f|
-      = f.error_notification
+      = rad_form_errors f
       .form-inputs
         .row
           .col-lg-4
             - if invite_roles.size > 1
               = f.input :initial_security_role_id,
-                        label: 'Initial security role',
+                        label: 'Initial Security Role',
                         collection: invite_roles,
                         include_blank: true
 
@@ -18,9 +22,9 @@
               = f.input :initial_security_role_id, as: :hidden, input_html: { value: invite_roles.first.id }
         .row
           .col-lg-4
-            = f.input :first_name, label: 'First name', required: true
+            = f.input :first_name, required: true
           .col-lg-8
-            = f.input :last_name, label: 'Last name', required: true
+            = f.input :last_name, required: true
         .row
           .col-lg-4
             - resource.class.invite_key_fields.each do |field|
@@ -30,7 +34,7 @@
               * Valid Domains for Internal Users: #{Company.main.valid_user_domains.join(', ')}
             %p
               You can add more valid domains in
-              = link_to 'Company Settings', '/company/edit'
+              = link_to 'Company Settings', company_edit_path
         .row
           .col-lg-4= f.input :mobile_phone, required: require_mobile_phone?
       .form-actions
