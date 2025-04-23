@@ -212,7 +212,7 @@ module RadCommon
       end
 
       def query_column(results)
-        return searchable_name if searchable_name.respond_to?(:split) && searchable_name.split('.').length > 1
+        return searchable_name if searchable_name.to_s.split('.').length > 1
 
         "#{results.table_name}.#{searchable_name}"
       end
