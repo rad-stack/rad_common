@@ -42,10 +42,10 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
         it 'invites a user' do
           visit new_user_invitation_path
 
-          select internal_role.name, from: 'Initial security role'
+          select internal_role.name, from: 'Initial Security Role'
           fill_in 'Email', with: valid_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
           fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send'
 
@@ -57,10 +57,10 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
         it 'invites an external user', external_user_specs: true do
           visit new_user_invitation_path
 
-          select external_role.name, from: 'Initial security role'
+          select external_role.name, from: 'Initial Security Role'
           fill_in 'Email', with: external_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
           fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send'
 
@@ -75,10 +75,10 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
 
           visit new_user_invitation_path
 
-          select initial_role.name, from: 'Initial security role'
+          select initial_role.name, from: 'Initial Security Role'
           fill_in 'Email', with: external_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
           fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send'
 
@@ -103,8 +103,8 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
 
           bad_email = 'j@g.com'
           fill_in 'Email', with: bad_email
-          fill_in 'First name', with: first_name
-          fill_in 'Last name', with: last_name
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
           fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send an invitation'
 
@@ -115,8 +115,8 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
           visit new_user_invitation_path
 
           fill_in 'Email', with: valid_email
-          fill_in 'First name', with: 'f'
-          fill_in 'Last name', with: 'b'
+          fill_in 'First Name', with: 'f'
+          fill_in 'Last Name', with: 'b'
           fill_in 'Mobile Phone', with: '(999) 231-1111'
           click_button 'Send an invitation'
 
@@ -130,8 +130,8 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
         visit new_user_invitation_path
 
         fill_in 'Email', with: valid_email
-        fill_in 'First name', with: first_name
-        fill_in 'Last name', with: last_name
+        fill_in 'First Name', with: first_name
+        fill_in 'Last Name', with: last_name
         fill_in 'Mobile Phone', with: '(999) 231-1111'
         click_button 'Send'
 
