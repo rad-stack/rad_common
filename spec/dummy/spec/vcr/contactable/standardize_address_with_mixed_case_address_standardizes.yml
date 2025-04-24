@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=JacksonvillE&county_source&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=fL&street=1376%20Macarthur%20Street&street2&urbanization&zipcode=32205
+    uri: https://us-street.api.smarty.com/street-address?addressee&auth-id=<SMARTY_AUTH_ID>&auth-token=<SMARTY_AUTH_TOKEN>&candidates=1&city=JacksonvillE&format&input_id&lastline&license=us-core-cloud&match=enhanced&secondary&state=fL&street=1376%20Macarthur%20Street&street2&urbanization&zipcode=32205
     body:
       encoding: US-ASCII
       string: ''
@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.20.6)
+      - smartystreets (sdk:ruby@5.20.4)
       Host:
       - us-street.api.smarty.com
       Content-Type:
@@ -25,9 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 14 Mar 2025 12:28:57 GMT
+      - Thu, 13 Mar 2025 16:48:38 GMT
       X-Request-Id:
-      - '019594a1-0c5c-7da7-b018-cf44fba00fef'
+      - '01959068-71d1-785a-b3bf-2a77c74daa69'
       Transfer-Encoding:
       - chunked
       Vary:
@@ -38,5 +38,5 @@ http_interactions:
         St","last_line":"Jacksonville FL 32205-8914","delivery_point_barcode":"322058914763","smarty_key":"888194794","components":{"primary_number":"1376","street_name":"MacArthur","street_suffix":"St","city_name":"Jacksonville","default_city_name":"Jacksonville","state_abbreviation":"FL","zipcode":"32205","plus4_code":"8914","delivery_point":"76","delivery_point_check_digit":"3"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12031","county_name":"Duval","carrier_route":"C007","congressional_district":"04","rdi":"Residential","elot_sequence":"0061","elot_sort":"A","latitude":30.29979,"longitude":-81.7172,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","footnotes":"N#","enhanced_match":"postal-match"}}]
 
         '
-  recorded_at: Fri, 14 Mar 2025 12:28:57 GMT
+  recorded_at: Thu, 13 Mar 2025 16:49:26 GMT
 recorded_with: VCR 6.3.1

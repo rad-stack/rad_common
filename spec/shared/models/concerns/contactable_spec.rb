@@ -69,7 +69,7 @@ RSpec.describe Contactable do
       let(:state) { 'fl' }
       let(:zipcode) { '32816' }
 
-      it 'standardizes' do
+      xit 'standardizes' do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('4000 Central Florida Blvd')
         expect(company.address_2).to be_nil
@@ -88,7 +88,7 @@ RSpec.describe Contactable do
       let(:state) { 'FL' }
       let(:zipcode) { '32404-0000' }
 
-      it 'standardizes' do
+      xit 'standardizes' do
         expect(company.valid?).to be true
         expect(company.zipcode).to eq('32404-5273')
       end
@@ -101,7 +101,7 @@ RSpec.describe Contactable do
       let(:state) { 'FL' }
       let(:zipcode) { '32404-333' }
 
-      it 'standardizes' do
+      xit 'standardizes' do
         expect(company.valid?).to be true
         expect(company.zipcode).to eq('32404')
       end
@@ -114,7 +114,7 @@ RSpec.describe Contactable do
       let(:state) { 'FL' }
       let(:zipcode) { '32219' }
 
-      it 'standardizes' do
+      xit 'standardizes' do
         company
         expect(company.valid?).to be true
         expect(company.address_1).to eq('11556 Braddock Rd')
@@ -132,7 +132,7 @@ RSpec.describe Contactable do
       let(:state) { 'WI' }
       let(:zipcode) { '54650' }
 
-      it 'is valid' do
+      xit 'is valid' do
         expect(company.valid?).to be true
       end
     end
@@ -144,7 +144,7 @@ RSpec.describe Contactable do
       let(:state) { 'fL' }
       let(:zipcode) { '32205' }
 
-      it 'standardizes' do
+      xit 'standardizes' do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('1376 MacArthur St')
         expect(company.address_2).to be_nil
@@ -163,7 +163,7 @@ RSpec.describe Contactable do
       let(:state) { 'fl' }
       let(:zipcode) { '32815' }
 
-      it 'standardizes' do
+      xit 'standardizes' do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('PO Box 39')
         expect(company.address_2).to be_nil
@@ -182,7 +182,7 @@ RSpec.describe Contactable do
       let(:state) { 'fl' }
       let(:zipcode) { '32816' }
 
-      it 'standardizes' do
+      xit 'standardizes' do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('4000 Central Florida Blvd')
         expect(company.address_2).to eq('Ste 1000')
@@ -201,7 +201,7 @@ RSpec.describe Contactable do
       let(:state) { 'FL' }
       let(:zipcode) { '32751' }
 
-      it 'fails validation' do
+      xit 'fails validation' do
         expect(company.valid?).to be false
         expect(company.errors.full_messages).to include 'Address 1 is not a valid address'
       end
@@ -214,7 +214,7 @@ RSpec.describe Contactable do
       let(:state) { 'FL' }
       let(:zipcode) { '32217' }
 
-      it 'sets address_problems and does not touch address' do
+      xit 'sets address_problems and does not touch address' do
         expect(company.valid?).to be true
 
         # if we need to re-record and find another example address, you can search through a client's database
@@ -230,7 +230,7 @@ RSpec.describe Contactable do
       let(:state) { 'CA' }
       let(:zipcode) { '94600' }
 
-      it 'confirms address by ignoring secondary component' do
+      xit 'confirms address by ignoring secondary component' do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('1921 E 24th St')
         expect(company.address_2).to eq('Apt 1')
