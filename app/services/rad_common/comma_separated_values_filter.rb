@@ -31,5 +31,9 @@ module RadCommon
 
       results.where(column => values)
     end
+
+    def allow_not
+      false
+    end
   end
 end
