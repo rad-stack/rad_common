@@ -46,7 +46,7 @@ describe SendgridStatusReceiver, type: :service do
 
     before { RadDeviseMailer.email_changed(user).deliver_now }
 
-    xit "doesn't notify on failure" do
+    it "doesn't notify on failure" do
       expect(last_contact_log.content).to eq 'Email Changed'
 
       deliveries.clear
@@ -96,7 +96,7 @@ describe SendgridStatusReceiver, type: :service do
     context 'with expired user', :user_expirable_specs do
       before { user.update_column :last_activity_at, 1.year.ago }
 
-      xit 'deactivates' do
+      it 'deactivates' do
         expect(user.active?).to be true
 
         service.process!
