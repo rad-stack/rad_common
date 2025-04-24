@@ -48,7 +48,7 @@ class UserPolicy < ApplicationPolicy
 
     def base_attributes
       items = %i[user_status_id first_name last_name mobile_phone last_activity_at password password_confirmation
-                   external timezone avatar language]
+                 external timezone avatar language]
 
       items.push(:email) if allow_email_change?
 
