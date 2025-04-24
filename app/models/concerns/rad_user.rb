@@ -33,20 +33,10 @@ module RadUser
 
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
-    scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
-
-    scope :admins, lambda {
-      active.where('users.id IN (' \
-                   'SELECT user_id FROM user_security_roles ' \
-                   'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
-                   'WHERE security_roles.admin = TRUE)')
-    }
-
+    scope :active, -> { joins(:user_status).where(user_statuses: { active: true }) }
+    scope :admins, -> { active.by_permission 'admin' }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
-    scope :by_name, -> { order(:first_name, :last_name) }
     scope :by_id, -> { order(:id) }
-    scope :by_last, -> { order(:last_name, :first_name) }
-    scope :sorted, -> { by_name }
     scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
     scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
     scope :recent_first, -> { order('users.created_at DESC') }
@@ -54,13 +44,21 @@ module RadUser
     scope :except_user, ->(user) { where.not(id: user.id) }
     scope :with_notifications, -> { where('users.id IN (SELECT DISTINCT user_id FROM notifications)') }
 
-    scope :by_permission, lambda { |permission_attr|
-      joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct
+    scope :sorted, lambda {
+      if RadConfig.last_first_user?
+        order(:last_name, :first_name)
+      else
+        order(:first_name, :last_name)
+      end
     }
 
-    scope :inactive, lambda {
-      joins(:user_status)
-        .where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)')
+    scope :by_permission, lambda { |permission|
+      raise "missing permission column: #{permission}" unless RadPermission.exists?(permission)
+
+      where('users.id IN (' \
+            'SELECT user_id FROM user_security_roles ' \
+            'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
+            "WHERE security_roles.#{permission} = TRUE)")
     }
 
     scope :inactive, -> { joins(:user_status).where(user_statuses: { active: false }) }
@@ -69,10 +67,13 @@ module RadUser
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
-    validate :validate_sms_mobile_phone, on: :update
-    validate :validate_2fa_mobile_phone
+    validate :validate_internal, on: :update
+    validate :validate_mobile_phone
     validate :password_excludes_name
-    validates :security_roles, presence: true, if: :active?
+    validate :validate_last_activity
+
+    # this should be changed to "if: :active?" at some point, see Task 2024
+    validates :security_roles, presence: true, if: :active_for_authentication?
 
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
                                        message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
@@ -84,23 +85,22 @@ module RadUser
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
-    after_save :notify_user_approved
-
+    after_commit :notify_user_approved, only: :update
     after_invitation_accepted :notify_user_accepted
 
     strip_attributes
   end
 
   def to_s
-    "#{first_name} #{last_name}"
-  end
-
-  def active
-    active_for_authentication?
+    if RadConfig.last_first_user?
+      "#{last_name}, #{first_name}"
+    else
+      "#{first_name} #{last_name}"
+    end
   end
 
   def active?
-    active
+    user_status&.active?
   end
 
   def needs_confirmation?
@@ -134,6 +134,8 @@ module RadUser
   end
 
   def permission?(permission)
+    raise "missing permission column: #{permission}" unless RadPermission.exists?(permission)
+
     security_roles.select { |x| x[permission] }.length.positive?
   end
 
@@ -167,7 +169,7 @@ module RadUser
   end
 
   def display_style
-    if user_status.active || user_status == UserStatus.default_pending_status
+    if active? || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
       external? ? 'table-warning' : ''
     else
       'table-danger'
@@ -183,11 +185,11 @@ module RadUser
   end
 
   def active_for_authentication?
-    super && user_status && user_status.active
+    super && active?
   end
 
   def inactive_message
-    if user_status.active
+    if active?
       super
     else
       :not_approved
@@ -206,15 +208,29 @@ module RadUser
   end
 
   def send_reset_password_instructions
-    if invited_to_sign_up?
-      errors.add :email, :not_found
-    else
-      super
+    if needs_accept_invite?
+      Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
+      return
     end
+
+    super
   end
 
-  def test_email!
-    RadMailer.simple_message(self, 'Test Email', 'This is a test.').deliver_later
+  def pending_any_confirmation
+    if needs_accept_invite?
+      Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
+      return
+    end
+
+    super
+  end
+
+  def test_email!(from_user)
+    RadMailer.simple_message(self,
+                             'Test Email',
+                             'This is a test.',
+                             contact_log_from_user: from_user,
+                             contact_log_record: self).deliver_later
   end
 
   def test_sms!(from_user)
@@ -222,7 +238,7 @@ module RadUser
   end
 
   def reactivate
-    update(last_activity_at: nil)
+    update last_activity_at: Time.current
   end
 
   def locale
@@ -231,6 +247,10 @@ module RadUser
 
   # TODO: this should be a db attribute when we enable the TOTP feature
   def twilio_totp_factor_sid; end
+
+  def timeout_in
+    external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
+  end
 
   def developer?
     email.end_with? RadConfig.developer_domain!
@@ -252,8 +272,18 @@ module RadUser
         self.external = security_roles.first.external
       end
 
-      status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
-      self.user_status = status if new_record? && !user_status
+      self.user_status = default_user_status if new_record? && !user_status
+      return unless new_record?
+
+      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && (RadConfig.twilio_verify_all_users? || admin?)
+      self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
+    end
+
+    def default_user_status
+      return UserStatus.default_active_status unless RadConfig.pending_users?
+      return UserStatus.default_active_status if invited_by.present?
+
+      UserStatus.default_pending_status
     end
 
     def initial_security_role
@@ -265,28 +295,40 @@ module RadUser
     end
 
     def validate_email_address
-      return if email.blank? || external? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
+      return if email.blank? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
 
       domains = Company.main.valid_user_domains
       components = email.split('@')
       match_domains = components.count == 2 && domains.include?(components[1])
-      return if internal? && match_domains
+      return if (internal? && match_domains) || (external? && !match_domains)
 
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
 
-    def validate_sms_mobile_phone
-      return if !RadConfig.twilio_enabled? || mobile_phone.present?
-      return if notification_settings.enabled.where(sms: true).none?
+    def validate_internal
+      return if external? || user_clients.none?
 
-      errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
+      errors.add :external, 'not allowed when clients are assigned to this user'
     end
 
-    def validate_2fa_mobile_phone
-      return if !RadConfig.twilio_verify_enabled? || mobile_phone.present?
-      return if external? && RadConfig.twilio_verify_internal_only?
+    def validate_mobile_phone
+      return if mobile_phone.present? || user_status.blank? || !user_status.validate_email_phone?
 
-      errors.add(:mobile_phone, 'is required for two factor authentication')
+      if RadConfig.require_mobile_phone?
+        errors.add(:mobile_phone, "can't be blank")
+      elsif require_mobile_phone_sms?
+        errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
+      elsif require_mobile_phone_two_factor?
+        errors.add(:mobile_phone, 'is required for two factor authentication')
+      end
+    end
+
+    def require_mobile_phone_sms?
+      RadConfig.twilio_enabled? && persisted? && notification_settings.enabled.where(sms: true).count.positive?
+    end
+
+    def require_mobile_phone_two_factor?
+      RadConfig.twilio_verify_enabled? && twilio_verify_enabled?
     end
 
     def password_excludes_name
@@ -319,13 +361,34 @@ module RadUser
     end
 
     def notify_user_approved
-      return if auto_approve?
+      return unless RadConfig.pending_users?
+      return if invited_to_sign_up?
 
-      return unless saved_change_to_user_status_id? && user_status &&
-                    user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
+      return unless user_status_id_previously_changed?(from: UserStatus.default_pending_status.id,
+                                                       to: UserStatus.default_active_status.id)
 
-      RadMailer.your_account_approved(self).deliver_later
-      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify! unless do_not_notify_approved
+      notify_user_approved_user
+      notify_user_approved_admins
+    end
+
+    def notify_user_approved_user
+      raise 'missing approved_by' if approved_by.blank?
+
+      RadMailer.your_account_approved(self, approved_by).deliver_later
+      return unless RadConfig.twilio_enabled? && mobile_phone.present?
+
+      UserSMSSenderJob.perform_later(User.user_approved_message,
+                                     approved_by.id,
+                                     id,
+                                     nil,
+                                     false,
+                                     contact_log_record: self)
+    end
+
+    def notify_user_approved_admins
+      return if do_not_notify_approved
+
+      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify!
     end
 
     def notify_user_accepted
