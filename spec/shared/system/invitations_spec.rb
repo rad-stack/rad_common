@@ -153,7 +153,7 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
                    initial_security_role_id: internal_role.id)
     end
 
-    xit 'does not allow invitee to reset password after invite expires' do
+    it 'does not allow invitee to reset password after invite expires' do
       expect(invitee.errors.count).to eq(0)
       invitee.invitation_created_at = 3.weeks.ago
       invitee.invitation_sent_at = 3.weeks.ago
@@ -176,7 +176,7 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
       expect(mail.to).to include admin.email
     end
 
-    xit "doesn't let unaccepted invitee reset password" do
+    it "doesn't let unaccepted invitee reset password" do
       ActionMailer::Base.deliveries = []
 
       visit new_user_password_path
