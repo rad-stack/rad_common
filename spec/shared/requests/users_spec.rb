@@ -79,12 +79,7 @@ RSpec.describe 'Users', type: :request do
     let(:signed_in_user) { create :admin }
 
     describe 'POST create' do
-      before do
-        allow(RadConfig).to receive(:disable_sign_up?).and_return true
-        allow(RadConfig).to receive(:disable_invite?).and_return true
-
-        allow_any_instance_of(User).to receive(:twilio_verify_enabled?).and_return false
-      end
+      before { allow(RadConfig).to receive(:manually_create_users?).and_return true }
 
       describe 'with valid params' do
         let(:valid_attributes) do
@@ -152,7 +147,7 @@ RSpec.describe 'Users', type: :request do
       it 'can not delete if user created audits', :shared_database_specs do
         another
         Audited::Audit.as_user(another) { user.update!(first_name: 'Foo') }
-        expect(another.other_audits_created.exists?).to be true
+        expect(another.other_audits_created.count.positive?).to be true
 
         expect {
           delete "/users/#{another.id}", headers: { HTTP_REFERER: users_path }
@@ -160,6 +155,14 @@ RSpec.describe 'Users', type: :request do
 
         follow_redirect!
         expect(flash[:error]).to include 'User has audit history'
+      end
+    end
+
+    describe 'export' do
+      it 'exports' do
+        get '/users/export', params: { format: :pdf }
+        expect(response).to have_http_status :redirect
+        expect(flash[:notice]).to include 'Your report is generating'
       end
     end
   end

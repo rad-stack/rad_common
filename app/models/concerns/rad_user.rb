@@ -361,14 +361,13 @@ module RadUser
     end
 
     def notify_user_approved
-      return unless RadConfig.pending_users?
-      return if invited_to_sign_up?
+      return if auto_approve?
 
-      return unless user_status_id_previously_changed?(from: UserStatus.default_pending_status.id,
-                                                       to: UserStatus.default_active_status.id)
+      return unless saved_change_to_user_status_id? && user_status &&
+                    user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
-      notify_user_approved_user
-      notify_user_approved_admins
+      RadMailer.your_account_approved(self).deliver_later
+      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify! unless do_not_notify_approved
     end
 
     def notify_user_approved_user
