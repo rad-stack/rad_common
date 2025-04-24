@@ -208,8 +208,6 @@ module RadUser
   end
 
   def send_reset_password_instructions
-    return # TODO: fix
-
     if needs_accept_invite?
       Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
       return
