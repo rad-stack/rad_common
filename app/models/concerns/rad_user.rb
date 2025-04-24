@@ -68,7 +68,7 @@ module RadUser
 
     validate :validate_email_address
     validate :validate_internal, on: :update
-    validate :validate_mobile_phone
+    # validate :validate_mobile_phone
     validate :password_excludes_name
     validate :validate_last_activity
 
