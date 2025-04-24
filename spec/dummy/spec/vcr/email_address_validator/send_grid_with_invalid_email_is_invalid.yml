@@ -1,75 +1,82 @@
 ---
 http_interactions:
-  - request:
-      method: post
-      uri: https://api.sendgrid.com/v3/validations/email
-      body:
-        encoding: UTF-8
-        string: '{"email":"support@radicalbear.co"}'
-      headers:
-        Accept-Encoding:
-          - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-        Accept:
-          - application/json
-        User-Agent:
-          - sendgrid/6.6.2;ruby
-        Authorization:
-          - Bearer <SENDGRID_API_KEY>
-        Content-Type:
-          - application/json
-    response:
-      status:
-        code: 200
-        message: OK
-      headers:
-        Server:
-          - nginx
-        Date:
-          - Tue, 12 Apr 2022 13:55:18 GMT
-        Content-Type:
-          - application/json
-        Content-Length:
-          - '387'
-        Connection:
-          - keep-alive
-        X-Amzn-Requestid:
-          - 479773ee-7473-46f1-a413-f863a093cdf5
-        X-Amz-Apigw-Id:
-          - QeGvBFjBiYcFi8g=
-        X-Amzn-Trace-Id:
-          - Root=1-625584c6-65b2ce803b9124641dc23533;Sampled=0
-        Access-Control-Allow-Methods:
-          - HEAD, GET, PUT, POST, DELETE, OPTIONS, PATCH
-        Access-Control-Max-Age:
-          - '21600'
-        Access-Control-Expose-Headers:
-          - Link, Location
-        Access-Control-Allow-Origin:
-          - "*"
-        Access-Control-Allow-Headers:
-          - AUTHORIZATION, Content-Type, On-behalf-of, x-sg-elas-acl, X-Recaptcha, X-Request-Source,
-            Browser-Fingerprint
-        Content-Security-Policy:
-          - default-src https://api.sendgrid.com; frame-src 'none'; object-src 'none'
-        X-Content-Type-Options:
-          - nosniff
-        Strict-Transport-Security:
-          - max-age=31536000
-          - max-age=600; includeSubDomains
-        X-Client-Ff:
-          - '1000'
-        X-Ratelimit-Remaining:
-          - '6'
-        X-Ratelimit-Limit:
-          - '7'
-        X-Ratelimit-Reset:
-          - '1649771719'
-        Twilio-Request-Id:
-          - RQ27hUGtisMXOghB8U1niY9l6hGaK
-        Powered-By:
-          - Mako
-      body:
-        encoding: UTF-8
-        string: '{"result":{"email":"support@radicalbear.co","verdict":"Invalid","score":0,"local":"support","host":"radicalbear.co","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":false,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"67.190.197.70"}}'
-    recorded_at: Tue, 12 Apr 2022 13:55:18 GMT
-recorded_with: VCR 6.1.0
+- request:
+    method: post
+    uri: https://api.sendgrid.com/v3/validations/email
+    body:
+      encoding: UTF-8
+      string: '{"email":"support@rubygems.co"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - sendgrid/6.7.0;ruby
+      Authorization:
+      - Bearer <SENDGRID_API_KEY>
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Thu, 13 Mar 2025 16:50:42 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '381'
+      Connection:
+      - keep-alive
+      X-Amzn-Requestid:
+      - 53d1f23c-df73-4d91-814a-fc81ab5f2a51
+      X-Amz-Apigw-Id:
+      - HX7zeGG5iYcED1w=
+      X-Amzn-Trace-Id:
+      - Root=1-67d30ce2-0ef8aeb71389475c508904de;Parent=26ca4d0636ceb086;Sampled=0;Lineage=1:3bae0364:0
+      Access-Control-Allow-Methods:
+      - HEAD, GET, PUT, POST, DELETE, OPTIONS, PATCH
+      Access-Control-Max-Age:
+      - '21600'
+      Access-Control-Expose-Headers:
+      - Link, Location
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - AUTHORIZATION, Content-Type, On-behalf-of, x-sg-elas-acl, X-Recaptcha, X-Request-Source,
+        Browser-Fingerprint
+      Content-Security-Policy:
+      - default-src https://api.sendgrid.com; frame-src 'none'; object-src 'none'
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Client-Ff:
+      - '1000'
+      X-Ratelimit-Remaining:
+      - '5'
+      X-Ratelimit-Limit:
+      - '7'
+      X-Ratelimit-Reset:
+      - '1741884643'
+      Twilio-Request-Id:
+      - RQ2uGpD4oOPKeqNcapO4T0fRYpfss
+      X-Envoy-Upstream-Service-Time:
+      - '300'
+      Powered-By:
+      - Mako
+      Cache-Control:
+      - no-cache
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+    body:
+      encoding: UTF-8
+      string: '{"result":{"email":"support@rubygems.co","verdict":"Invalid","score":0,"local":"support","host":"rubygems.co","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":false,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"38.85.154.237"}}'
+  recorded_at: Thu, 13 Mar 2025 16:50:42 GMT
+recorded_with: VCR 6.3.1
