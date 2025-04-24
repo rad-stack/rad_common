@@ -14,10 +14,10 @@ module RadCommon
     end
 
     def audited_models
-      (application_models.select do |model|
+      (application_models.select { |model|
         model_class = model.safe_constantize
         model_class.respond_to?(:auditing_enabled) && model_class.auditing_enabled
-      end + ['ActiveStorage::Attachment']).sort
+      } + ['ActiveStorage::Attachment']).sort
     end
 
     def duplicate_models
