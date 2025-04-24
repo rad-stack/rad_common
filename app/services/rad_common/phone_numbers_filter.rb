@@ -34,6 +34,10 @@ module RadCommon
       results.where(column => value)
     end
 
+    def allow_not
+      false
+    end
+
     private
 
       def phone_numbers_array(params)

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe RadCommon::Search, type: :service do
-  let(:user) { create(:user) }
+  let(:user) { create :user }
 
   describe 'results' do
     subject(:search) do
@@ -15,11 +15,40 @@ RSpec.describe RadCommon::Search, type: :service do
     let!(:division) { create :division }
 
     context 'when using a like filter' do
-      let!(:role_1) { create(:security_role, name: 'foo') }
-      let!(:role_2) { create(:security_role, name: 'bar') }
+      let!(:role_1) { create :security_role, name: 'foo' }
+      let!(:role_2) { create :security_role, name: 'bar' }
       let(:query) { SecurityRole }
       let(:filters) { [{ column: :name, type: RadCommon::LikeFilter }] }
       let(:params) { ActionController::Parameters.new(search: { name_like: 'foo' }) }
+
+      it 'filters results' do
+        expect(search).to include role_1
+        expect(search).not_to include role_2
+      end
+
+      context 'when input transform is provided' do
+        let!(:role_1) { create :security_role, name: '9045555555' }
+        let!(:role_2) { create :security_role, name: '1029323213' }
+        let(:filters) do
+          [{ column: :name,
+             type: RadCommon::LikeFilter,
+             input_transform: ->(value) { value.tr('^0-9', '') } }]
+        end
+        let(:params) { ActionController::Parameters.new(search: { name_like: '(904) - 5' }) }
+
+        it 'filters results' do
+          expect(search).to include role_1
+          expect(search).not_to include role_2
+        end
+      end
+    end
+
+    context 'when using a phone number filter' do
+      let!(:role_1) { create :security_role, name: '9045555555' }
+      let!(:role_2) { create :security_role, name: '1029323213' }
+      let(:query) { SecurityRole }
+      let(:filters) { [{ column: :name, type: RadCommon::PhoneNumberFilter }] }
+      let(:params) { ActionController::Parameters.new(search: { name_like: '((904)) 555' }) }
 
       it 'filters results' do
         expect(search).to include role_1
@@ -106,8 +135,8 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:query) { Division }
       let(:filters) { [{ column: :owner_id, options: User.sorted, default_value: user.id }] }
       let(:user) { create :admin }
-      let!(:other_division) { create(:division, created_at: 2.days.ago) }
-      let!(:default_division) { create(:division, owner: user) }
+      let!(:other_division) { create :division, created_at: 2.days.ago }
+      let!(:default_division) { create :division, owner: user }
 
       context 'when in a blank query' do
         let(:params) { ActionController::Parameters.new }
@@ -332,7 +361,7 @@ RSpec.describe RadCommon::Search, type: :service do
                           filters: filters,
                           search_name: 'divisions_search',
                           current_user: user,
-                          params: params).filters
+                          params: params)
     end
 
     context 'when using mixed scope_values' do
@@ -341,8 +370,73 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:params) { ActionController::Parameters.new }
 
       it 'has both scope and normal options' do
-        expect(search.first.input_options).to include ['Pending Values', 'Pending Values']
-        expect(search.first.input_options).to include [User.sorted.first.to_s, User.sorted.first.id]
+        expect(search.filters.first.input_options).to include ['Pending Values', 'Pending Values']
+        expect(search.filters.first.input_options).to include [User.sorted.first.to_s, User.sorted.first.id]
+      end
+    end
+
+    context 'when using multiple select string values' do
+      let(:query) { Division }
+      let(:divisions) do
+        [create(:division, code: 'A', owner_id: user.id),
+         create(:division, code: 'B', owner_id: user.id),
+         create(:division, code: 'C', owner_id: user.id)]
+      end
+      let(:filters) do
+        [{ column: :code, options: divisions.map(&:code), multiple: true, input_label: 'Codes' }]
+      end
+      let(:params) { ActionController::Parameters.new(search: { code: %w[A B] }) }
+
+      it 'filters selected codes' do
+        expect(search.results.count).to eq 2
+      end
+    end
+
+    context 'when using not_scope' do
+      let(:query) { Attorney }
+      let(:filters) do
+        [{ scope: :with_cities, not_scope: :without_cities, options: Attorney.pluck(:city),
+           multiple: true, allow_not: true, input_label: 'Cities' }]
+      end
+      let(:params) { ActionController::Parameters.new(search: { with_cities: ['City A'], with_cities_not: '1' }) }
+
+      before do
+        create :attorney, city: 'City A'
+        create :attorney, city: 'City B'
+        create :attorney, city: 'City C'
+      end
+
+      it 'filters selected cities' do
+        expect(search.results.count).to eq 2
+        expect(search.results.pluck(:city)).to eq ['City B', 'City C']
+      end
+    end
+
+    context 'when using multiple/mixed/grouped scope_values' do
+      let(:query) { Division }
+      let(:filters) do
+        [{ column: :owner_id, options: [['Users', User.sorted],
+                                        ['Scopes', [{ scope_value: :status_pending }]]],
+           multiple: true, grouped: true, input_label: 'Divisions' }]
+      end
+      let(:user) { create :user }
+      let(:params) { ActionController::Parameters.new(search: { owner_id: [user.id.to_s, 'status_pending'] }) }
+
+      it 'has both scope and normal options' do
+        expect(search.filters.first.input_options.second.second).to include ['Status Pending', 'status_pending']
+        expect(search.filters.first.input_options.first.second).to include [User.sorted.first.to_s,
+                                                                            User.sorted.first.id]
+      end
+
+      it 'returns results when record matches combined filters' do
+        create :division, owner_id: user.id, division_status: :status_pending
+        expect(search.results.count).to eq 1
+        expect(search.results.first.owner_id).to eq user.id
+      end
+
+      it 'returns no results when record matches only one filter' do
+        create :division, owner_id: create(:user).id, division_status: :status_pending
+        expect(search.results.count).to eq 0
       end
     end
 
@@ -352,7 +446,7 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:params) { ActionController::Parameters.new }
 
       it 'has both scope options' do
-        expect(search.first.input_options.map(&:first)).to eq %w[Internal External]
+        expect(search.filters.first.input_options.map(&:first)).to eq %w[Internal External]
       end
     end
 
@@ -365,7 +459,7 @@ RSpec.describe RadCommon::Search, type: :service do
                      ['Inactive', User.inactive.sorted]] }]
       end
       let(:params) { ActionController::Parameters.new }
-      let(:group_values) { search.first.input_options.map(&:last) }
+      let(:group_values) { search.filters.first.input_options.map(&:last) }
 
       it 'has both scope and normal options' do
         expect(group_values).to include [[user.to_s, user.id], %w[Unassigned unassigned]]
@@ -383,8 +477,8 @@ RSpec.describe RadCommon::Search, type: :service do
     end
 
     let(:query) { Division }
-    let!(:user_1) { create(:user) }
-    let!(:user_2) { create(:user) }
+    let!(:user_1) { create :user }
+    let!(:user_2) { create :user }
     let(:filters) do
       [{ column: :owner_id, input_label: 'Users', options: User.all, default_value: user_1.id }]
     end

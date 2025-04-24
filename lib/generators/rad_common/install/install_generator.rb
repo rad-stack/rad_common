@@ -22,7 +22,7 @@ module RadCommon
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'timezone_detection', 'false'
         # remove_rad_factories
-
+        remove_legacy_rails_config_setting
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
         gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
@@ -342,6 +342,13 @@ Seeder.new.seed!
           File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
         end
 
+        def remove_legacy_rails_config_setting
+          return unless rad_config_setting_exists?('legacy_rails_config')
+
+          say_status :remove, 'legacy_rails_config from rad_common.yml'
+          gsub_file RAD_CONFIG_FILE, /^\s*legacy_rails_config:\s*.*\n/, ''
+        end
+
         def update_seeder_method
           file_path = 'app/services/seeder.rb'
           if File.exist?(file_path)
@@ -484,7 +491,7 @@ gem 'rubocop-capybara'
   gem 'tty-prompt'
         RUBY
           end
-          
+
           unless RadConfig.legacy_assets?
             inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
 gem 'jsbundling-rails'
