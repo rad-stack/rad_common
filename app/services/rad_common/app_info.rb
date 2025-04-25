@@ -20,6 +20,11 @@ module RadCommon
       } + ['ActiveStorage::Attachment']).sort
     end
 
+    def associated_audited_models
+      audited_models + %w[ActiveStorage::Blob ActiveStorage::VariantRecord ActionMailbox::InboundEmail
+                          ActionText::RichText]
+    end
+
     def duplicate_models
       RadConfig.duplicates!.pluck(:name)
     end

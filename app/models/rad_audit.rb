@@ -9,10 +9,10 @@ class RadAudit < Audited::Audit
   }
 
   scope :missing_associated_models, lambda {
-    where.not(associated_type: RadCommon::AppInfo.new.audited_models)
+    where.not(associated_type: RadCommon::AppInfo.new.associated_audited_models)
          .group(:associated_type)
          .select(:associated_type)
-         .pluck(:associated_type) - %w[ActiveStorage::Blob ActiveStorage::VariantRecord]
+         .pluck(:associated_type)
   }
 
   def self.missing_audited_models
