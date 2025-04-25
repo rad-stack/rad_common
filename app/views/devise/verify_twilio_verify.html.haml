@@ -5,9 +5,7 @@
       = hidden_field_tag :"#{resource_name}_id", @resource.id
       = text_field_tag :token, '', autocomplete: :off, id: 'twilio-verify-token', autofocus: true
       = submit_tag I18n.t('submit_token', scope: 'devise'), class: 'btn btn-primary btn-lg'
-
-      - if @resource.twilio_verify_sms?
-        = twilio_verify_request_sms_link
+      = twilio_verify_request_sms_link
 
   %label
     = check_box_tag :remember_device
