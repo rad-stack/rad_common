@@ -21,7 +21,8 @@ module RadCommon
     end
 
     def associated_audited_models
-      audited_models + %w[ActiveStorage::Blob ActiveStorage::VariantRecord ActionMailbox::InboundEmail]
+      audited_models + %w[ActiveStorage::Blob ActiveStorage::VariantRecord ActionMailbox::InboundEmail
+                          PatientLedger::Entry PatientLedger::Installment PatientLedger::Transaction]
     end
 
     def duplicate_models
