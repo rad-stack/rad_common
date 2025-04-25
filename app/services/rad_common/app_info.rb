@@ -17,7 +17,8 @@ module RadCommon
       (application_models.select { |model|
         model_class = model.safe_constantize
         model_class.respond_to?(:auditing_enabled) && model_class.auditing_enabled
-      } + %w[ActiveStorage::Attachment ActionText::RichText]).sort
+      } + %w[ActiveStorage::Attachment ActionText::RichText PatientLedger::Entry PatientLedger::Installment
+             PatientLedger::Transaction]).sort
     end
 
     def associated_audited_models
