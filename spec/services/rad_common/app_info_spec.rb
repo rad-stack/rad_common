@@ -33,8 +33,9 @@ RSpec.describe RadCommon::AppInfo, type: :service do
     subject { service.audited_models }
 
     let(:result) do
-      %w[ActiveStorage::Attachment Attorney Category Client Company ContactLog ContactLogRecipient Division
-         NotificationSecurityRole NotificationSetting SavedSearchFilter SecurityRole Status User UserClient
+      %w[ActionText::RichText ActiveStorage::Attachment Attorney Category Client Company ContactLog ContactLogRecipient Division
+         NotificationSecurityRole NotificationSetting PatientLedger::Entry PatientLedger::Installment
+         PatientLedger::Transaction SavedSearchFilter SecurityRole Status User UserClient
          UserSecurityRole]
     end
 
