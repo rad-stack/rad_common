@@ -408,6 +408,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_25_120906) do
     t.string "language", default: "en", null: false
     t.string "detected_timezone"
     t.string "ignored_timezone"
+    t.boolean "twilio_verify_sms", default: true, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"
