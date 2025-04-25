@@ -1,4 +1,4 @@
-class FixSomeRenamedAuditModels < ActiveRecord::Migration[7.2]
+class FixSomeRenamedAuditModels < ActiveRecord::Migration[7.0]
   def change
     return unless RadAudit.exists?
 
