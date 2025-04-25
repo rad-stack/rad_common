@@ -12,7 +12,7 @@ class RadAudit < Audited::Audit
     where.not(associated_type: RadCommon::AppInfo.new.audited_models)
          .group(:associated_type)
          .select(:associated_type)
-         .pluck(:associated_type)
+         .pluck(:associated_type) - %w[ActiveStorage::Blob ActiveStorage::VariantRecord]
   }
 
   def self.missing_audited_models
