@@ -16,8 +16,11 @@ namespace :rad_common do
 
         RadCommon::TwilioErrorThresholdChecker.new.check_threshold
 
-        missing_audit_models = RadAudit.missing_models
-        Notifications::MissingAuditModelsNotification.main(missing_audit_models).notify! if missing_audit_models.any?
+        missing_audited_models = RadAudit.missing_audited_models
+
+        if missing_audited_models.any?
+          Notifications::MissingAuditModelsNotification.main(missing_audited_models).notify!
+        end
 
         global_validity = GlobalValidation.new
         global_validity.override_model = args[:override_model]
