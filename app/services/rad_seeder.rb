@@ -3,7 +3,8 @@ class RadSeeder
                               Notifications::GlobalValidityRanLongNotification
                               Notifications::HighDuplicatesNotification
                               Notifications::InvalidDataWasFoundNotification
-                              Notifications::TwilioErrorThresholdExceededNotification].freeze
+                              Notifications::TwilioErrorThresholdExceededNotification
+                              Notifications::MissingAuditModelsNotification].freeze
 
   attr_accessor :users
 
