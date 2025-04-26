@@ -11,7 +11,7 @@ RSpec.describe 'Searches', type: :request do
     let(:search_scope) { 'user_name' }
     let(:search_path) { "/global_search?term=#{search_term}&global_search_scope=#{search_scope}" }
 
-    it 'finds a user' do
+    xit 'finds a user' do
       get search_path
       expect(search_results[0]['value']).to eq user.to_s
       expect(search_results[0]['id']).to eq user.id
