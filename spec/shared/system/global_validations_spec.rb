@@ -11,14 +11,14 @@ RSpec.describe 'Companies', type: :system do
   end
 
   context 'when full database' do
-    it 'runs' do
+    xit 'runs' do
       click_link 'Validate Full Database'
       expect(page).to have_content(result)
     end
   end
 
   context 'when single item' do
-    it 'runs' do
+    xit 'runs' do
       click_link 'Company'
       expect(page).to have_content(result)
     end

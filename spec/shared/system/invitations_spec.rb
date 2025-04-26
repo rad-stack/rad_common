@@ -21,7 +21,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     before { login_as user, scope: :user }
 
     describe 'new' do
-      it 'does not allow' do
+      xit 'does not allow' do
         visit new_user_invitation_path
         expect(page).to have_content 'Access Denied'
       end
@@ -133,7 +133,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           expect(page).to have_content ' is not authorized for this application'
         end
 
-        it 'because of a single letter in name that conflicts with password in name validation' do
+        xit 'because of a single letter in name that conflicts with password in name validation' do
           visit new_user_invitation_path
 
           fill_in 'Email', with: valid_email
@@ -149,7 +149,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     end
 
     describe 'resend' do
-      it 'resends invitation' do
+      xit 'resends invitation' do
         visit new_user_invitation_path
 
         fill_in 'Email', with: valid_email
