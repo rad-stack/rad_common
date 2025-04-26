@@ -24,7 +24,7 @@ FactoryBot.define do
     end
 
     factory :admin do
-      security_roles { [create(:security_role, :admin)] }
+      security_roles { [SecurityRole.find_by(admin: true).presence || create(:security_role, :admin)] }
     end
 
     factory :pending do
