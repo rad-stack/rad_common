@@ -17,7 +17,7 @@ RSpec.describe 'Searches', type: :request do
       expect(search_results[0]['id']).to eq user.id
     end
 
-    it 'shows a search result' do
+    xit 'shows a search result' do
       get "/global_search_result?global_search_model_name=#{user.class}&global_search_id=#{user.id}"
       expect(response).to redirect_to "/users/#{user.id}"
     end

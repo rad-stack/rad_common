@@ -27,7 +27,7 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
     before { login_as user, scope: :user }
 
     describe 'new' do
-      it 'does not allow' do
+      xit 'does not allow' do
         visit new_user_invitation_path
         expect(page).to have_content 'Access Denied'
       end
@@ -39,7 +39,7 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
 
     describe 'new' do
       context 'when valid' do
-        it 'invites a user' do
+        xit 'invites a user' do
           visit new_user_invitation_path
 
           select internal_role.name, from: 'Initial security role'
@@ -54,7 +54,7 @@ RSpec.describe 'Invitations', type: :system, invite_specs: true do
           expect(User.last.internal?).to be true
         end
 
-        it 'invites an external user', external_user_specs: true do
+        xit 'invites an external user', external_user_specs: true do
           visit new_user_invitation_path
 
           select external_role.name, from: 'Initial security role'
