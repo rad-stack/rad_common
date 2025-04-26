@@ -7,10 +7,9 @@ FactoryBot.define do
     password { Rails.env.development? ? 'password' : 'cOmpl3x_p@55w0rd' }
     password_confirmation { Rails.env.development? ? 'password' : 'cOmpl3x_p@55w0rd' }
     confirmed_at { Time.current }
-    user_status factory: %i[user_status active]
+    user_status { UserStatus.default_active_status.presence || create(:user_status, :active) }
     do_not_notify_approved { true }
     security_roles { [create(:security_role)] }
-    twilio_verify_enabled { false }
     timezone { 'Eastern Time (US & Canada)' }
 
     trait :external do
@@ -45,7 +44,7 @@ FactoryBot.define do
       external { true }
 
       f.after(:create) do |user, evaluator|
-        this_client = evaluator.client.presence || create(:client)
+        this_client = evaluator.client.presence || (create :client)
         UserClient.create! user: user, client_id: this_client.id
       end
     end
