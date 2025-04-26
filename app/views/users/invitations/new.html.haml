@@ -10,7 +10,7 @@
           .col-lg-4
             - if invite_roles.size > 1
               = f.input :initial_security_role_id,
-                        label: 'Initial security role',
+                        label: 'Initial Security Role',
                         collection: invite_roles,
                         include_blank: true
 
@@ -18,9 +18,9 @@
               = f.input :initial_security_role_id, as: :hidden, input_html: { value: invite_roles.first.id }
         .row
           .col-lg-4
-            = f.input :first_name, label: 'First name', required: true
+            = f.input :first_name, required: true
           .col-lg-8
-            = f.input :last_name, label: 'Last name', required: true
+            = f.input :last_name, required: true
         .row
           .col-lg-4
             - resource.class.invite_key_fields.each do |field|
