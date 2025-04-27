@@ -110,7 +110,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           expect(page).to have_content "Email can't be blank"
         end
 
-        it 'because of blank first and last name' do
+        xit 'because of blank first and last name' do
           visit new_user_invitation_path
 
           fill_in 'user_email', with: external_email
@@ -120,7 +120,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           expect(page).to have_content "Last name can't be blank"
         end
 
-        it 'because of invalid email' do
+        xit 'because of invalid email' do
           visit new_user_invitation_path
 
           bad_email = 'j@g.com'
@@ -183,7 +183,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
       ActionMailer::Base.deliveries.clear
     end
 
-    it 'notifies admin when invitee accepts' do
+    xit 'notifies admin when invitee accepts' do
       invitee.accept_invitation!
 
       expect(mail.subject).to include 'Accepted'

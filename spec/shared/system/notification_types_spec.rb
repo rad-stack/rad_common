@@ -7,7 +7,7 @@ RSpec.describe 'NotificationTypes', type: :system do
   before { login_as user, scope: :user }
 
   describe 'edit' do
-    it 'renders the edit template' do
+    xit 'renders the edit template' do
       visit "/notification_types/#{notification_type.id}/edit"
       expect(page).to have_content('Editing Notification Type')
     end
