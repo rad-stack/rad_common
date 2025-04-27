@@ -21,7 +21,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     before { login_as user, scope: :user }
 
     describe 'new' do
-      xit 'does not allow' do
+      it 'does not allow' do
         visit new_user_invitation_path
         expect(page).to have_content 'Access Denied'
       end
@@ -110,7 +110,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           expect(page).to have_content "Email can't be blank"
         end
 
-        xit 'because of blank first and last name' do
+        it 'because of blank first and last name' do
           visit new_user_invitation_path
 
           fill_in 'user_email', with: external_email
@@ -120,7 +120,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           expect(page).to have_content "Last name can't be blank"
         end
 
-        xit 'because of invalid email' do
+        it 'because of invalid email' do
           visit new_user_invitation_path
 
           bad_email = 'j@g.com'
@@ -133,7 +133,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           expect(page).to have_content ' is not authorized for this application'
         end
 
-        xit 'because of a single letter in name that conflicts with password in name validation' do
+        it 'because of a single letter in name that conflicts with password in name validation' do
           visit new_user_invitation_path
 
           fill_in 'Email', with: valid_email
@@ -149,7 +149,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     end
 
     describe 'resend' do
-      xit 'resends invitation' do
+      it 'resends invitation' do
         visit new_user_invitation_path
 
         fill_in 'Email', with: valid_email
@@ -183,7 +183,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
       ActionMailer::Base.deliveries.clear
     end
 
-    xit 'notifies admin when invitee accepts' do
+    it 'notifies admin when invitee accepts' do
       invitee.accept_invitation!
 
       expect(mail.subject).to include 'Accepted'
