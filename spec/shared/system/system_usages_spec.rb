@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'SystemUsages', type: :system do
-  let(:user) { create :admin }
+  let(:admin_role) { SecurityRole.find_by(admin: true).presence || create(:security_role, :admin) }
+  let(:user) { create :admin, security_roles: [admin_role] }
 
   before do
     create_list :user, 4
