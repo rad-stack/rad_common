@@ -24,6 +24,7 @@ require 'capybara/rails'
 require 'selenium/webdriver'
 require 'pundit/rspec'
 require 'factory_bot_rails'
+require 'rad_rspec/rad_factories'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -55,7 +56,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = [Rails.root.join('spec/fixtures').to_s]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -84,7 +85,6 @@ RSpec.configure do |config|
 
   Capybara.register_driver :headless_chrome do |app|
     options = Selenium::WebDriver::Chrome::Options.new
-    options.add_argument('--no-sandbox')
     options.add_argument('--headless=new')
     options.add_argument('--window-size=1400,900')
     options.add_argument('--disable-popup-blocking')
@@ -97,21 +97,27 @@ RSpec.configure do |config|
 
   Capybara.register_driver :chrome do |app|
     options = Selenium::WebDriver::Chrome::Options.new
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--disable-logging')
-    options.add_argument('--disable-extensions')
     options.add_argument('--window-size=1400,900')
     options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-gpu')
 
     Capybara::Selenium::Driver.new app,
                                    browser: :chrome,
                                    options: options
   end
 
-  chrome_driver = ENV['SHOW_BROWSER'] ? :chrome : :headless_chrome
+  chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
   Capybara.javascript_driver = chrome_driver
+
+  config.before(:suite) do
+    RadFactories.load!
+  end
+
+  config.after(:each, :js) do
+    page.find('body').click # Gesture to fix beforeunload error
+  rescue Selenium::WebDriver::Error::ElementNotInteractableError, Selenium::WebDriver::Error::UnexpectedAlertOpenError
+    # Ignore
+  end
 
   config.before do
     # TODO: workaround for this issue:
@@ -126,18 +132,14 @@ RSpec.configure do |config|
 
   SpecSupport.hooks(config, chrome_driver)
 
-  # This is already in current version of rad common
-  config.before do
-    Rails.cache.clear
-  end
-
   config.filter_run_excluding(twilio_verify_specs: true) unless RadConfig.twilio_verify_enabled?
   config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
   config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
   config.filter_run_excluding(sign_up_specs: true) if RadConfig.disable_sign_up?
+  config.filter_run_excluding(pending_user_specs: true) unless RadConfig.pending_users?
   config.filter_run_excluding(external_user_specs: true) unless RadConfig.external_users?
   config.filter_run_excluding(user_client_specs: true) unless RadConfig.user_clients?
-  config.filter_run_excluding(devise_paranoid_specs: true) unless Devise.paranoid
+  config.filter_run_excluding(devise_timeoutable_specs: true) unless Devise.mappings[:user].timeoutable?
   config.filter_run_excluding(smarty_specs: true) unless RadConfig.smarty_enabled?
   config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
   config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
@@ -148,4 +150,6 @@ RSpec.configure do |config|
 
   include Warden::Test::Helpers
   config.include Capybara::DSL
+
+  Sidekiq.logger.level = Logger::WARN
 end

@@ -23,11 +23,7 @@ VCR.configure do |c|
     end
   end
 
-  c.filter_sensitive_data('<AUTHY_API_KEY>') { '' }
-
-  if RadConfig.sendgrid_api_key.present?
-    c.filter_sensitive_data('<SENDGRID_API_KEY>') { RadConfig.sendgrid_api_key! }
-  end
+  c.filter_sensitive_data('<SENDGRID_API_KEY>') { RadConfig.sendgrid_api_key! } if RadConfig.sendgrid_api_key.present?
 
   if RadConfig.secret_config_item(:twilio_alt_verify_service_sid).present?
     c.filter_sensitive_data('<TWILIO_ALT_VERIFY_SERVICE_SID>') do
