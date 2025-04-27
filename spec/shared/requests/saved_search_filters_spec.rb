@@ -9,14 +9,14 @@ RSpec.describe 'Saved Search Filters', type: :request do
   before { login_as user, scope: :user }
 
   describe 'DELETE destroy' do
-    xit 'destroys the requested saved_search_filter' do
+    it 'destroys the requested saved_search_filter' do
       saved_search_filter
       expect {
         delete "/saved_search_filters/#{saved_search_filter.id}", headers: { HTTP_REFERER: users_path }
       }.to change(SavedSearchFilter, :count).by(-1)
     end
 
-    xit 'redirects to the saved_search_filters list' do
+    it 'redirects to the saved_search_filters list' do
       delete "/saved_search_filters/#{saved_search_filter.id}", headers: { HTTP_REFERER: users_path }
       expect(response).to redirect_to(users_path)
     end
@@ -24,7 +24,7 @@ RSpec.describe 'Saved Search Filters', type: :request do
     context 'when saved filter user is not the current user' do
       before { saved_search_filter.update!(user: create(:user)) }
 
-      xit 'redirects to unauthorized' do
+      it 'redirects to unauthorized' do
         delete "/saved_search_filters/#{saved_search_filter.id}", headers: { HTTP_REFERER: users_path }
         expect(response).to have_http_status(:forbidden)
         expect(response.body).to include('Access Denied')
