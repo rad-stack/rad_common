@@ -57,7 +57,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  # config.fixture_paths = [Rails.root.join('spec/fixtures').to_s]
+  config.fixture_path = [Rails.root.join('spec/fixtures').to_s]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -116,7 +116,7 @@ RSpec.configure do |config|
       factory_name = File.basename(factory_file, '.rb')
       next if FactoryBot.factories.registered?(factory_name.singularize.to_sym)
 
-      # require factory_file
+      require factory_file
     end
   end
 
@@ -144,7 +144,6 @@ RSpec.configure do |config|
   config.filter_run_excluding(smarty_specs: true) unless RadConfig.smarty_enabled?
   config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
   config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
-  config.filter_run_excluding(gha_specs_only: true) unless ENV['CI']
   config.filter_run_excluding(password_expirable_specs: true) unless RadConfig.password_expirable?
   config.filter_run_excluding(legacy_asset_specs: true) if RadConfig.legacy_assets?
   config.filter_run_excluding(shared_database_specs: true) if RadConfig.shared_database?
