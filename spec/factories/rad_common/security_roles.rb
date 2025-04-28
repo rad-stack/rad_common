@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :security_role do
-    sequence(:name) { |n| "Role #{n}#{rand(10000)}" }
+    sequence(:name) { |n| "Role #{n}" }
 
     trait :admin do |item|
       item.after(:build) do |role|
