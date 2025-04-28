@@ -28,7 +28,7 @@ RSpec.describe UserPolicy, type: :policy do
       end
 
       context 'with inactive user' do
-        xit { is_expected.not_to permit(admin, inactive_user) }
+        it { is_expected.not_to permit(admin, inactive_user) }
       end
     end
   end

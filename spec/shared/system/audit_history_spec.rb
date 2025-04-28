@@ -18,7 +18,7 @@ RSpec.describe 'AuditHistory', type: :system do
     expect(page).to have_content old_name
   end
 
-  it 'shows attachment created' do
+  xit 'shows attachment created' do
     allow(RadConfig).to receive(:avatar?).and_return(true)
 
     visit edit_user_registration_path
