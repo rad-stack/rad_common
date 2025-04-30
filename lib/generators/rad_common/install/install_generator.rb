@@ -40,7 +40,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
-        copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
+        # copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
 
         unless RadConfig.shared_database?
@@ -389,7 +389,7 @@ Seeder.new.seed!
 
         def install_github_workflow
           if RadConfig.legacy_assets?
-            copy_file '../rspec_tests_legacy.yml', '.github/workflows/rspec_tests.yml'
+            # copy_file '../rspec_tests_legacy.yml', '.github/workflows/rspec_tests.yml'
           else
             copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
           end
