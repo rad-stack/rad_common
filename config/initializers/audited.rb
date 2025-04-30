@@ -18,13 +18,13 @@ module ActionTextRichTextAuditing
     end
 
     def _stringify_body_attribute(attributes)
-      attributes.tap do |attributes|
-        if attributes.include? 'body'
-          attributes['body'] =
-            if attributes['body'].is_a? Array
-              attributes['body'].collect &:to_s
+      attributes.tap do |items|
+        if items.include? 'body'
+          items['body'] =
+            if items['body'].is_a? Array
+              items['body'].collect(&:to_s)
             else
-              attributes['body'].to_s
+              items['body'].to_s
             end
         end
       end
@@ -32,5 +32,5 @@ module ActionTextRichTextAuditing
 end
 
 ActiveSupport.on_load(:action_text_rich_text) do
-  ActionText::RichText.prepend ActionTextRichTextAuditing
+  ActiveSupport.on_load(:action_text_rich_text) { prepend ActionTextRichTextAuditing }
 end
