@@ -6,7 +6,7 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
-        # remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.shared_database?
+        remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.shared_database?
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
@@ -21,8 +21,9 @@ module RadCommon
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'timezone_detection', 'false'
-        # remove_rad_factories
+        remove_rad_factories
         remove_legacy_rails_config_setting
+
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
         gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
@@ -39,7 +40,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
-        # copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
+        copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
 
         unless RadConfig.shared_database?
@@ -82,7 +83,7 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
-        # copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
         gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
 
         # copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
@@ -159,7 +160,7 @@ module RadCommon
                   'lib/templates/rspec/system/system_spec.rb.tt'
         remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
 
-        unless true || RadConfig.shared_database?
+        unless RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 require 'rad_rspec/rad_factories'

@@ -14,7 +14,6 @@ env:
   RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
   RAILS_ENV: test
   CI: true
-  NODE_OPTIONS: --openssl-legacy-provider # Remove when webpacker is replaced
 
 jobs:
   setup-matrix:
@@ -65,6 +64,7 @@ jobs:
 
       - name: Running custom steps
         uses: ./.github/actions/custom-action
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -86,21 +86,9 @@ jobs:
         run: |
           bundle exec rails db:test:prepare
 
-      - name: Cache Webpacker packs
-        uses: actions/cache@v4
-        with:
-          path: |
-            spec/dummy/public/packs
-            spec/dummy/public/packs-test
-            spec/dummy/node_modules
-            spec/dummy/tmp/cache/webpacker
-          key: webpacker-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            webpacker-${{ hashFiles('**/yarn.lock') }}-
-
-      - name: Compile Webpacker assets
+      - name: Compile esbuild assets
         working-directory: spec/dummy
-        run: bundle exec rails webpacker:compile
+        run: bundle exec bin/rails assets:precompile
 
       - name: Load schema
         working-directory: spec/dummy

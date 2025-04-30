@@ -63,7 +63,7 @@ jobs:
         run: bundle exec rake db:schema:load
 
       - name: Run RSpec tests
-        run: bundle exec rspec
+        run: bin/rc_rspec
 
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
