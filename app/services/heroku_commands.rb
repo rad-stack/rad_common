@@ -152,7 +152,7 @@ class HerokuCommands
       end
 
       def dump_folder
-        Rails.root.join('heroku_backups').to_s
+        "#{Rails.root}/heroku_backups"
       end
 
       def local_host
