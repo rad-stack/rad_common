@@ -83,7 +83,7 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
-        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+        # copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
         gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
 
         # copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
