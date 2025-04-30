@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :user_status do
-    sequence(:name) { |n| "Status #{n}" }
+    sequence(:name) { |n| "Status #{n}#{rand(10000)}" }
 
     trait :pending do
       active { false }
