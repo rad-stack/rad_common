@@ -44,11 +44,7 @@ module RadCommon
     end
 
     def audit_model_link(audit, record)
-      label = if record.present? && record.respond_to?(:to_s)
-                "#{record.class} - #{record}"
-              else
-                "#{audit.auditable_type} (#{audit.auditable_id})"
-              end
+      label = audit_link_label(audit, record)
 
       return label if audit.nil? && record.nil?
       return link_to(label, record) if record.present? && show_route_exists_for?(record) && policy(record).show?
@@ -57,6 +53,16 @@ module RadCommon
     end
 
     private
+
+      def audit_link_label(audit, record)
+        if record.present? && record.is_a?(ActionText::RichText)
+          "Rich Text for #{record.record.class} #{record.record_id}"
+        elsif record.present? && record.respond_to?(:to_s)
+          "#{record.class} - #{record}"
+        else
+          "#{audit.auditable_type} (#{audit.auditable_id})"
+        end
+      end
 
       def formatted_audited_changes(audit)
         return 'deleted record' if audit.action == 'destroy' && audit.associated.blank?
