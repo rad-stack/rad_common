@@ -9,7 +9,7 @@ FactoryBot.define do
     confirmed_at { Time.current }
     user_status { UserStatus.default_active_status.presence || create(:user_status, :active) }
     do_not_notify_approved { true }
-    security_roles { [create(:security_role)] }
+    security_roles { [SecurityRole.find_by(admin: false).presence || create(:security_role)] }
     timezone { 'Eastern Time (US & Canada)' }
 
     trait :external do
