@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   s.bindir = 'bin'
   s.executables = %w[reset_db migrate_reset rc_update rc_rspec rc_parallel_rspec
-                     local_backup clone_local reset_staging creds]
+                     local_backup clone_local reset_staging creds kill_ruby]
 
   s.add_dependency 'active_storage_validations', '1.0.4' # see Task 43068
   s.add_dependency 'audited'
@@ -82,4 +82,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'vcr'
   s.add_development_dependency 'webmock'
   s.add_development_dependency 'wkhtmltopdf-binary'
+  s.add_development_dependency 'tty-prompt'
 end
