@@ -103,7 +103,7 @@ Rails.application.configure do
   config.action_mailbox.ingress = :sendgrid
 
   Rails.application.configure do
-    production_id = ENV.fetch('RAD_PRODUCTION_ID', 0)
+    production_id = ENV.fetch('RAD_PRODUCTION_ID', '0').to_i
 
     credentials_file = if production_id.zero?
                          'production.yml.enc'
