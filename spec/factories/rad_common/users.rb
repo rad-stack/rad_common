@@ -3,13 +3,13 @@ FactoryBot.define do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     mobile_phone { create :phone_number, :mobile }
-    sequence(:email) { |n| "example#{n}@example.com" }
+    sequence(:email) { |n| "example#{n}#{rand(10000)}@example.com" }
     password { Rails.env.development? ? 'password' : 'cOmpl3x_p@55w0rd' }
     password_confirmation { Rails.env.development? ? 'password' : 'cOmpl3x_p@55w0rd' }
     confirmed_at { Time.current }
     user_status { UserStatus.default_active_status.presence || create(:user_status, :active) }
     do_not_notify_approved { true }
-    security_roles { [SecurityRole.find_by(admin: false).presence || create(:security_role)] }
+    security_roles { [create(:security_role)] }
     timezone { 'Eastern Time (US & Canada)' }
 
     trait :external do
@@ -23,7 +23,7 @@ FactoryBot.define do
     end
 
     factory :admin do
-      security_roles { [SecurityRole.find_by(admin: true).presence || create(:security_role, :admin)] }
+      security_roles { [create(:security_role, :admin)] }
     end
 
     factory :pending do
