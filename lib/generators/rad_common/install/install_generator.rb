@@ -181,6 +181,8 @@ Seeder.new.seed!
 
         add_project_gems
 
+        gsub_file 'Gemfile', "gem 'jsbundling-rails'\n", ''
+
         apply_migrations
 
         check_boolean_fields
