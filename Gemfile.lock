@@ -57,8 +57,11 @@ PATH
       sprockets-rails
       strip_attributes
       text
+      turbo-rails
       twilio-ruby
       webpacker
+      wicked_pdf (= 2.6.3)
+      wkhtmltopdf-heroku (= 2.12.6.1.pre.jammy)
 
 GEM
   remote: https://rubygems.org/
@@ -523,6 +526,9 @@ GEM
       tty-screen (~> 0.8)
       wisper (~> 2.0)
     tty-screen (0.8.2)
+    turbo-rails (2.0.12)
+      actionpack (>= 6.0.0)
+      railties (>= 6.0.0)
     twilio-ruby (5.77.0)
       faraday (>= 0.9, < 3.0)
       jwt (>= 1.5, < 3.0)
@@ -551,8 +557,11 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    wicked_pdf (2.6.3)
+      activesupport
     wisper (2.0.1)
     wkhtmltopdf-binary (0.12.6.8)
+    wkhtmltopdf-heroku (2.12.6.1.pre.jammy)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.2)
