@@ -59,17 +59,14 @@ Gem::Specification.new do |s|
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
-  s.add_dependency 'sidekiq', '~> 6.4.1'
+  s.add_dependency 'sidekiq', '~> 7.1'
   s.add_dependency 'sidekiq-failures'
   s.add_dependency 'simple_form'
   s.add_dependency 'smartystreets_ruby_sdk', '5.20.4'
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
-  s.add_dependency 'twilio-ruby', '~> 5.74'
+  s.add_dependency 'twilio-ruby'
   s.add_dependency 'webpacker'
-
-  # see Task 4406 - should be able to remove later
-  s.add_dependency 'mutex_m'
 
   # TODO: causes an error, temporary pinning
   s.add_dependency 'concurrent-ruby', '1.3.4'
