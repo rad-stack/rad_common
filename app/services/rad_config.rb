@@ -268,16 +268,12 @@ class RadConfig
       boolean_config_item! :legal_docs
     end
 
-    def react_app?
-      config_item(:react_app).presence || false
+    def legacy_assets?
+      config_item(:legacy_assets).presence || false
     end
 
-    def favicon_filename!
-      override_variable(:favicon_filename) || 'favicon.ico'
-    end
-
-    def app_logo_filename!
-      override_variable(:app_logo_filename) || 'app_logo.png'
+    def shared_database?
+      config_item(:shared_database).presence || false
     end
 
     def app_logo_includes_name?
@@ -394,8 +390,8 @@ class RadConfig
       boolean_config_item! :last_first_user
     end
 
-    def legacy_rails_config?
-      boolean_config_item! :legacy_rails_config
+    def timezone_detection?
+      boolean_config_item! :timezone_detection
     end
 
     def secret_config_item!(item)

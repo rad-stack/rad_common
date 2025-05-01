@@ -57,7 +57,7 @@ RSpec.describe 'Users', type: :request do
       end
     end
 
-    describe 'GET root path (checking timezone prompt)' do
+    describe 'GET root path (checking timezone prompt)', :timezone_detection_specs do
       let(:existing_timezone) { 'Eastern Time (US & Canada)' }
       let(:detected_timezone) { 'Pacific Time (US & Canada)' }
 
@@ -144,7 +144,7 @@ RSpec.describe 'Users', type: :request do
         expect(response).to redirect_to(users_url)
       end
 
-      it 'can not delete if user created audits', :non_react_specs do
+      it 'can not delete if user created audits', :shared_database_specs do
         another
         Audited::Audit.as_user(another) { user.update!(first_name: 'Foo') }
         expect(another.other_audits_created.count.positive?).to be true

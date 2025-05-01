@@ -45,7 +45,7 @@ class ContactLogRecipient < ApplicationRecord
 
   validates :sms_status, presence: true, if: -> { contact_log&.sms? && contact_log.outgoing? }
   validates :email_status, presence: true, if: -> { contact_log&.email? }
-  validates :sms_status, absence: true, if: -> { contact_log&.email? || contact_log&.incoming? }
+  validates :sms_status, absence: true, if: -> { contact_log&.email? || contact_log&.voice? || contact_log&.incoming? }
   validates :email_status, :sendgrid_reason, absence: true, if: -> { contact_log&.sms? }
 
   validate :validate_service_type
@@ -85,7 +85,7 @@ class ContactLogRecipient < ApplicationRecord
   private
 
     def check_success
-      return if contact_log.blank?
+      return if running_global_validity || contact_log.blank?
 
       if contact_log.incoming?
         self.success = true
@@ -97,14 +97,14 @@ class ContactLogRecipient < ApplicationRecord
     end
 
     def check_sms_false_positive
-      return if contact_log.blank?
+      return if running_global_validity || contact_log.blank?
 
       self.sms_false_positive =
         !success? && contact_log.sms? && contact_log.outgoing? && to_user.present? && sms_mostly_successful?
     end
 
     def assign_to_user
-      return if to_user.present?
+      return if running_global_validity || to_user.present?
 
       if email.present?
         self.to_user = User.find_by(email: email)
@@ -115,7 +115,7 @@ class ContactLogRecipient < ApplicationRecord
     end
 
     def validate_incoming_fields
-      return if contact_log.blank? || contact_log.outgoing? || contact_log.email?
+      return if contact_log.blank? || contact_log.outgoing? || contact_log.email? || contact_log.voice?
 
       errors.add(:to_user_id, 'must be blank') if to_user_id.present?
       errors.add(:success, 'must be true') unless success?
@@ -124,7 +124,7 @@ class ContactLogRecipient < ApplicationRecord
     def validate_service_type
       return if contact_log.blank?
 
-      if contact_log.sms?
+      if contact_log.sms? || contact_log.voice?
         errors.add(:email, 'must be blank') if email.present?
         errors.add(:phone_number, 'must be present') if phone_number.blank?
       else

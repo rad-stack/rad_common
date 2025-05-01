@@ -2,6 +2,8 @@ class Attorney < ApplicationRecord
   include Contactable
   include DuplicateFixable
 
+  has_rich_text :notes
+
   scope :sorted, -> { order(:first_name, :last_name) }
 
   scope :created_between, lambda { |start_date, end_date|

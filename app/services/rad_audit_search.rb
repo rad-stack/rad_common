@@ -30,11 +30,17 @@ class RadAuditSearch < RadCommon::Search
       end
     end
 
+    def default_date
+      single_record? ? nil : Date.current
+    end
+
     def filters_def
       items = [{ name: 'single_record', type: RadCommon::HiddenFilter },
                { start_input_label: 'Start Date',
                  end_input_label: 'End Date',
                  column: :created_at,
+                 default_start_value: default_date,
+                 default_end_value: default_date,
                  type: RadCommon::DateFilter }]
 
       unless single_record?

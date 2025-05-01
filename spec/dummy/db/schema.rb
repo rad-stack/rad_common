@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_27_191231) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_25_120906) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -171,6 +171,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_27_191231) do
     t.index ["record_type", "record_id"], name: "index_contact_logs_on_record"
     t.index ["sent"], name: "index_contact_logs_on_sent"
     t.index ["service_type"], name: "index_contact_logs_on_service_type"
+    t.index ["sms_message_id"], name: "index_contact_logs_on_sms_message_id"
     t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
   end
 
@@ -188,6 +189,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_27_191231) do
     t.date "date_established"
     t.string "invoice_email"
     t.bigint "category_id"
+    t.string "tags", default: [], null: false, array: true
     t.index ["category_id"], name: "index_divisions_on_category_id"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
