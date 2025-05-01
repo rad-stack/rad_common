@@ -33,6 +33,16 @@ module RadCommon
       safe_join(['Audits for ', audit_model_link(nil, record), " (#{audits.total_count})"])
     end
 
+    def safe_auditable(audit)
+      return unless auditable_exists?(audit)
+
+      audit.auditable
+    end
+
+    def auditable_exists?(audit)
+      Module.const_defined?(audit.auditable_type)
+    end
+
     def audit_model_link(audit, record)
       label = if record.present? && record.respond_to?(:to_s)
                 "#{record.class} - #{record}"
@@ -105,6 +115,8 @@ module RadCommon
       end
 
       def formatted_audit_value(audit, attribute, raw_value)
+        return raw_value unless auditable_exists?(audit)
+
         record = audit.auditable
         return raw_value unless record&.defined_enums&.has_key?(attribute)
 

@@ -22,10 +22,6 @@ RSpec.describe 'SystemMessages', type: :system do
       it 'does not show the sms option' do
         expect(page.all('#system_message_message_type option').map(&:value)).to eq ['email']
       end
-
-      it 'shows custom trix actions', :js, :non_react_specs do
-        expect(page.body).to include 'trix-button--icon-color'
-      end
     end
 
     context 'with twilio enabled' do

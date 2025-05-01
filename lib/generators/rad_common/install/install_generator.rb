@@ -48,6 +48,8 @@ module RadCommon
 
         migrate_webpacker_to_esbuild
 
+        migrate_to_tom_select
+
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
         copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
@@ -213,7 +215,7 @@ Seeder.new.seed!
           base_package = JSON.parse(File.read(base_package_source))
           custom_package = JSON.parse(File.read('custom-dependencies.json'))
 
-          %w[dependencies devDependencies scripts].each do |key|
+          %w[dependencies devDependencies resolutions scripts].each do |key|
             next unless custom_package[key]
 
             base_package[key] ||= {}
@@ -227,7 +229,7 @@ Seeder.new.seed!
           return unless File.exist?('custom-dependencies.json')
 
           contents = JSON.parse(File.read('custom-dependencies.json'))
-          if contents.is_a?(Hash) && (%w[dependencies devDependencies scripts] & contents.keys).none?
+          if contents.is_a?(Hash) && (%w[dependencies devDependencies resolutions scripts] & contents.keys).none?
             new_contents = { 'dependencies' => contents }
             File.write('custom-dependencies.json', JSON.pretty_generate(new_contents) + "\n")
           end
@@ -416,6 +418,10 @@ Seeder.new.seed!
           remove_file 'bin/webpack'
           remove_file 'bin/webpack-dev-server'
           remove_file 'babel.config.js'
+          remove_file '.browserslistrc'
+          remove_file 'postcss.config.js'
+          remove_file '.dockerignore'
+          remove_file 'Dockerfile'
 
           copy_file '../../../../../spec/dummy/esbuild.config.js', 'esbuild.config.js'
           copy_file '../../../../../spec/dummy/Procfile.dev', 'Procfile.dev'
@@ -460,6 +466,11 @@ Seeder.new.seed!
 
             remove_dir 'app/javascript/css'
           end
+        end
+
+        def migrate_to_tom_select
+          search_and_replace 'bootstrap_select', 'tom_select'
+          search_and_replace 'rad-chosen', 'selectpicker'
         end
 
         def apply_migrations
@@ -556,6 +567,7 @@ Seeder.new.seed!
           apply_migration '20240803114036_bcc_notify_recipient.rb'
           apply_migration '20240912133320_persist_sms_false_positive.rb'
           apply_migration '20240911184745_fix_last_activity.rb'
+          apply_migration '20250227191231_add_detected_timezone_to_user.rb'
         end
 
         def installed_app_name

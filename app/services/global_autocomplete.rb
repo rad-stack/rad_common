@@ -67,6 +67,7 @@ class GlobalAutocomplete
           id: record.id,
           label: record.send(search_label),
           value: record.to_s,
+          active: !record.respond_to?(:active?) || record.active?,
           scope_description: scope[:description] }
       end
     end

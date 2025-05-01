@@ -20,20 +20,21 @@
     .card-body
       = simple_form_for :report, url: main_path, method: :get do |f|
         .form-inputs
-          .row{ 'data-controller': 'search-date-filter' }
-            .col-lg-2
-              = f.input :start_date,
-                        as: :date,
-                        html5: true,
-                        required: true,
-                        inline: false,
-                        input_html: { value: @report.start_date,
-                                      data: { 'search-date-filter-target' => 'startInput' } }
-            .my-auto.pt-2.px-1= date_filter_dropdown_label
-            .col-lg-2
-              = f.input :end_date, as: :date, html5: true, required: true,
-                                   input_html: { value: @report.end_date,
-                                                 data: { 'search-date-filter-target' => 'endInput' } }
+          - if @report.date_filters?
+            .row{ 'data-controller': 'search-date-filter' }
+              .col-lg-2
+                = f.input :start_date,
+                          as: :date,
+                          html5: true,
+                          required: true,
+                          inline: false,
+                          input_html: { value: @report.start_date,
+                                        data: { 'search-date-filter-target' => 'startInput' } }
+              .my-auto.pt-2.px-1= date_filter_dropdown_label
+              .col-lg-2
+                = f.input :end_date, as: :date, html5: true, required: true,
+                                     input_html: { value: @report.end_date,
+                                                   data: { 'search-date-filter-target' => 'endInput' } }
           - if lookup_context.exists?('report_form', controller_name, true)
             = render partial: "#{controller_name}/report_form", locals: { f: f }
         .form-actions
