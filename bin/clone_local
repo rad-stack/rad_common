@@ -8,8 +8,8 @@ options = {}
 OptionParser.new { |opts|
   opts.banner = 'Usage: bin/clone_local [options]'
 
-  opts.on('-b', '--backup [BACKUP_ID]', 'Specify a backup ID or select interactively if no value is provided') do |backup_id|
-    options[:backup] = backup_id || true
+  opts.on('-i', '--interactive [BACKUP_ID]', 'Interactive mode: choose between remote or local backup restore') do |backup_id|
+    options[:interactive] = backup_id || true
   end
 
   opts.on('-h', '--help', 'Show this help message') do
@@ -21,9 +21,9 @@ OptionParser.new { |opts|
 FileUtils.chdir Dir.pwd do
   heroku_app_name = RadBin.get_heroku_app_name(:all)
 
-  backup_id = if options[:backup].is_a?(String)
-                options[:backup]
-              elsif options[:backup]
+  backup_id = if options[:interactive].is_a?(String)
+                options[:interactive]
+              elsif options[:interactive]
                 RadBin.select_backup_id(heroku_app_name)
               end
 
