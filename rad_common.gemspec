@@ -21,7 +21,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'audited'
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
-  s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0.1'
+  s.add_dependency 'bootstrap4-kaminari-views'
+  s.add_dependency 'csv'
   s.add_dependency 'devise'
   s.add_dependency 'devise_invitable'
   s.add_dependency 'devise-security', '0.16.0' # locked, see Task 35711

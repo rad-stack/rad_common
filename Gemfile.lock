@@ -15,8 +15,9 @@ PATH
       audited
       authtrail
       aws-sdk-s3
-      bootstrap4-kaminari-views (~> 1.0.1)
+      bootstrap4-kaminari-views
       concurrent-ruby (= 1.3.4)
+      csv
       devise
       devise-security (= 0.16.0)
       devise_invitable
