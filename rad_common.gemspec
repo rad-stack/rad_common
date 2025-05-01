@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap4-kaminari-views'
+  s.add_dependency 'cssbundling-rails', '~> 1.4'
   s.add_dependency 'csv'
   s.add_dependency 'devise'
   s.add_dependency 'devise_invitable'
@@ -38,11 +39,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'kaminari'
   s.add_dependency 'sassc'
   s.add_dependency 'sprockets-rails'
-
-  # TODO: remove these 3 once the mail gem is up to date, see Task 37200
-  s.add_dependency 'net-imap'
-  s.add_dependency 'net-pop'
-  s.add_dependency 'net-smtp'
+  s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
 
   s.add_dependency 'nokogiri'
   s.add_dependency 'pg'
