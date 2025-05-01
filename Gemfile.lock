@@ -24,11 +24,11 @@ PATH
       factory_bot_rails
       faker
       geocoder
-      haml-rails (~> 2.0)
+      haml-rails
       hashids
       httpclient
-      image_processing (~> 1.9)
-      kaminari (~> 1.2.1)
+      image_processing
+      kaminari
       mutex_m
       net-imap
       net-pop
