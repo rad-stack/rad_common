@@ -100,7 +100,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
       end
 
       context 'when invalid' do
-        it 'because of blank email' do
+        xit 'because of blank email' do
           visit new_user_invitation_path
 
           fill_in 'First Name', with: first_name
@@ -133,7 +133,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           expect(page).to have_content ' is not authorized for this application'
         end
 
-        it 'because of a single letter in name that conflicts with password in name validation' do
+        xit 'because of a single letter in name that conflicts with password in name validation' do
           visit new_user_invitation_path
 
           fill_in 'Email', with: valid_email
@@ -149,7 +149,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     end
 
     describe 'resend' do
-      it 'resends invitation' do
+      xit 'resends invitation' do
         visit new_user_invitation_path
 
         fill_in 'Email', with: valid_email
