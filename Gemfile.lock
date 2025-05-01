@@ -331,6 +331,11 @@ GEM
     pretender (0.5.0)
       actionpack (>= 6.1)
     prism (1.4.0)
+    propshaft (1.1.0)
+      actionpack (>= 7.0.0)
+      activesupport (>= 7.0.0)
+      rack
+      railties (>= 7.0.0)
     pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -547,6 +552,7 @@ DEPENDENCIES
   haml_lint (= 0.55.0)
   parallel_tests
   pdf-reader
+  propshaft
   pry
   rad_common!
   rspec-rails
