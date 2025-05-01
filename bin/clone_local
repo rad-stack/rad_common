@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'optparse'
 require_relative 'rad_bin'
+require_relative '../app/services/heroku_commands'
 
 RadBin.rad_common_not_permitted!
 
@@ -8,7 +9,8 @@ options = {}
 OptionParser.new { |opts|
   opts.banner = 'Usage: bin/clone_local [options]'
 
-  opts.on('-i', '--interactive [BACKUP_ID]', 'Interactive mode: choose between remote or local backup restore') do |backup_id|
+  opts.on('-i', '--interactive [BACKUP_ID]',
+          'Interactive mode: choose between remote or local backup restore') do |backup_id|
     options[:interactive] = backup_id || true
   end
 
@@ -19,15 +21,54 @@ OptionParser.new { |opts|
 }.parse!
 
 FileUtils.chdir Dir.pwd do
+  prompt = TTY::Prompt.new
+
+  if options[:interactive]
+    restore_source = prompt.select('How would you like to restore your database?') do |menu|
+      menu.choice 'From a remote Heroku backup', :remote
+      menu.choice 'From a local backup file (/heroku_backups)', :local
+    end
+
+    profile = prompt.select('Which restore profile would you like to use?') do |menu|
+      menu.choice 'Full (include all tables)', 'full'
+      menu.choice 'Exclude audits only', 'exclude_audits'
+      menu.choice 'Minimal (excludes audits, contact logs, and recipients)', 'minimal'
+    end
+
+    if restore_source == :remote
+      heroku_app_name = RadBin.get_heroku_app_name(:all)
+      backup_id = if options[:interactive].is_a?(String)
+                    options[:interactive]
+                  else
+                    RadBin.select_backup_id(heroku_app_name)
+                  end
+
+      args = [heroku_app_name, profile, backup_id].compact
+      puts "Cloning from remote Heroku backup with profile '#{profile}'"
+      RadBin.system!("bundle exec rails \"heroku:clone_local[#{args.join(', ')}]\"")
+    else
+      backup_dir = "#{Dir.pwd}/heroku_backups"
+      files = Dir.glob("#{backup_dir}/*.backup").reverse
+
+      if files.empty?
+        puts 'No backup files found in /heroku_backups.'
+        exit(1)
+      end
+
+      display_names = files.map do |path|
+        "#{File.basename(path)}"
+      end
+      choice = prompt.select('Select a local backup file to restore:', display_names)
+      selected_file = files[display_names.index(choice)]
+
+      puts "Restoring from local file: #{selected_file}"
+      RadBin.system!("bundle exec rails \"local:restore_from_backup[#{selected_file},#{profile}]\"")
+    end
+
+    exit
+  end
+
   heroku_app_name = RadBin.get_heroku_app_name(:all)
-
-  backup_id = if options[:interactive].is_a?(String)
-                options[:interactive]
-              elsif options[:interactive]
-                RadBin.select_backup_id(heroku_app_name)
-              end
-
-  options = [heroku_app_name, backup_id].compact.join(', ')
-  puts "Proceeding with clone local with options: #{options}"
-  RadBin.system!("bundle exec rails \"heroku:clone_local[#{options}]\"")
+  puts "Proceeding with default clone_local for app: #{heroku_app_name}"
+  RadBin.system!("bundle exec rails \"heroku:clone_local[#{heroku_app_name}]\"")
 end
