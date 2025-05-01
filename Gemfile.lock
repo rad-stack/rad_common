@@ -41,6 +41,7 @@ PATH
       prawn-table
       premailer-rails
       pretender
+      propshaft
       puma
       pundit
       rails (~> 7.0.8)
@@ -52,8 +53,8 @@ PATH
       sentry-ruby
       sidekiq (~> 6.4.1)
       sidekiq-failures
-      simple_form (~> 5.0)
-      smartystreets_ruby_sdk
+      simple_form
+      smartystreets_ruby_sdk (= 5.20.4)
       sprockets-rails
       strip_attributes
       text
@@ -491,7 +492,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.13.1)
     simplecov_json_formatter (0.1.4)
-    smartystreets_ruby_sdk (5.20.6)
+    smartystreets_ruby_sdk (5.20.4)
     sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
       logger
