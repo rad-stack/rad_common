@@ -27,7 +27,7 @@ RSpec.describe Company, type: :model do
     end
 
     context 'with address 2' do
-      xit { is_expected.to eq 'Address 1, Address 2, City, HI 96818' }
+      it { is_expected.to eq 'Address 1, Address 2, City, HI 96818' }
     end
 
     context 'without address 2' do

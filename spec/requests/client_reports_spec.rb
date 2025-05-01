@@ -11,7 +11,7 @@ RSpec.describe 'ClientReports' do
   before { login_as user, scope: :user }
 
   context 'with CSV' do
-    xit 'emails the file' do
+    it 'emails the file' do
       get '/client_reports', params: params, headers: { HTTP_REFERER: '/' }
       expect(last_email.subject).to include('Client Report Export')
       expect(csv_attachment.content_type).to start_with('text/csv')
