@@ -19,7 +19,7 @@ RSpec.describe 'Divisions' do
     end
 
     context 'with default placeholder' do
-      xit 'shows placeholder on autocomplete field', :js do
+      it 'shows placeholder on autocomplete field', :js do
         visit new_division_path
         click_tom_select(from: 'division_owner_id')
 
@@ -74,13 +74,13 @@ RSpec.describe 'Divisions' do
         visit edit_division_path(division)
       end
 
-      xit 'allows searching' do
+      it 'allows searching' do
         click_tom_select(from: 'division_owner_id')
         first('.dropdown-input').fill_in(with: other_user.first_name)
         expect(find('[data-selectable]', text: other_user.to_s)).to be_present
       end
 
-      xit 'displays existing value' do
+      it 'displays existing value' do
         within '#division_owner_id-ts-control' do
           expect(find('[data-ts-item]').text).to eq(division.owner.to_s)
         end
@@ -117,7 +117,7 @@ RSpec.describe 'Divisions' do
       let(:applied_params) { -> { Rack::Utils.parse_query URI.parse(current_url).query } }
       let(:last_filter) { SavedSearchFilter.last }
 
-      xit 'allows saving and applying search filters' do
+      it 'allows saving and applying search filters' do
         visit divisions_path
         tom_select user.to_s, from: 'search_owner_id'
         click_button 'saved-search-filters-dropdown'
@@ -138,7 +138,7 @@ RSpec.describe 'Divisions' do
         expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('active')
       end
 
-      xit 'allows deleting saved filters' do
+      it 'allows deleting saved filters' do
         create :saved_search_filter, user: user, search_class: 'DivisionSearch'
         visit divisions_path
         click_button 'saved-search-filters-dropdown'
@@ -160,7 +160,7 @@ RSpec.describe 'Divisions' do
       expect(page).to have_content('Right Button')
     end
 
-    xit 'shows translated version of field name' do
+    it 'shows translated version of field name' do
       expect(page).to have_content 'Additional Data'
       expect(page).to have_no_content 'Additional Info'
     end
@@ -179,7 +179,7 @@ RSpec.describe 'Divisions' do
         visit division_path(division)
       end
 
-      xit 'allows attachment to be deleted', :js do
+      it 'allows attachment to be deleted', :js do
         page.accept_alert prompt do
           first('dd .fa-times').click
         end
