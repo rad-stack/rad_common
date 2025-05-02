@@ -175,7 +175,7 @@ RSpec.describe 'Users', type: :system do
         expect(user.security_roles.count).to eq 2
       end
 
-      xit 'requires mobile phone when twilio verify enabled', :shared_database_specs do
+      it 'requires mobile phone when twilio verify enabled', :shared_database_specs do
         allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
 
         visit edit_user_path(user)
