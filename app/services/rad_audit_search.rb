@@ -57,7 +57,7 @@ class RadAuditSearch < RadCommon::Search
                { input_label: 'Action',
                  column: :action,
                  options: %w[create update destroy],
-                 col_class: 'col-lg-2'},
+                 col_class: 'col-lg-2' },
                { column: :remote_address, type: RadCommon::LikeFilter },
                { column: 'audited_changes::TEXT', type: RadCommon::LikeFilter, name: :audited_changes }]
     end
