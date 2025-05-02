@@ -118,10 +118,16 @@ module RadCommon
                         else
                           @scope_values.keys.map { |option| [option.to_s, option.to_s] }
                         end
-        scope_options += options.map { |option| [option.to_s, option.id] } if options.present?
+        scope_options += options.map { |opt| [opt.to_s, opt.id, inactive_data_attr(opt)] } if options.present?
         scope_options
       else
-        options.presence || []
+        return [] if options.blank?
+
+        if @grouped
+          options.map { |option| [option.first, option.second.map { |opt| option_array(opt) }] }
+        else
+          options.map { |option| option_array(option) }
+        end
       end
     end
 
@@ -206,13 +212,34 @@ module RadCommon
           if scope_value_option?(option)
             [option[:scope_value].to_s.titleize, option[:scope_value].to_s]
           else
-            [option.to_s, option.id]
+            [option.to_s, option.id, inactive_data_attr(option)]
           end
         end
       end
 
+      def option_array(option)
+        [*option_label_and_value(option), inactive_data_attr(option)]
+      end
+
+      def inactive_data_attr(option)
+        { 'data-inactive' => option.respond_to?(:active?) && !option.active? }
+      end
+
+      def option_label_and_value(option)
+        case option
+        when Array
+          [option.first, option.last]
+        when String, Integer
+          [option, option]
+        when NilClass
+          [nil, nil]
+        else
+          [option.public_send(label_method), option.id]
+        end
+      end
+
       def query_column(results)
-        return searchable_name if searchable_name.to_s.split('.').length > 1
+        return searchable_name if searchable_name.respond_to?(:split) && searchable_name.split('.').length > 1
 
         "#{results.table_name}.#{searchable_name}"
       end
@@ -230,10 +257,7 @@ module RadCommon
 
       def filter_value(search_params)
         search_empty = (search_params.blank? || !search_params.has_key?(searchable_name))
-
-        # TODO: return @default_value.to_s if search_empty && @default_value
-        return @default_value.to_s if search_params.blank? && @default_value
-        # TODO: fix above
+        return @default_value.to_s if search_empty && @default_value
 
         search_params[searchable_name]
       end
