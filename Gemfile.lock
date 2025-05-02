@@ -150,7 +150,7 @@ GEM
       railties (>= 7)
       warden
     aws-eventstream (1.3.2)
-    aws-partitions (1.1096.0)
+    aws-partitions (1.1097.0)
     aws-sdk-core (3.223.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
