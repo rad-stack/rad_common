@@ -181,6 +181,8 @@ Seeder.new.seed!
 
         add_project_gems
 
+        gsub_file 'Gemfile', "gem 'jsbundling-rails'\n", ''
+
         apply_migrations
 
         check_boolean_fields
@@ -495,7 +497,6 @@ gem 'rubocop-capybara'
 
           unless RadConfig.legacy_assets?
             inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
-gem 'jsbundling-rails'
 gem 'propshaft'
             RUBY
             end
