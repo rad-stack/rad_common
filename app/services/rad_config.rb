@@ -172,10 +172,6 @@ class RadConfig
       boolean_config_item! :twilio_verify_all_users
     end
 
-    def twilio_verify_internal_only?
-      boolean_config_item! :twilio_verify_internal_only
-    end
-
     def twilio_verify_remember_device!
       config_item!(:twilio_verify_remember_device_days).days
     end

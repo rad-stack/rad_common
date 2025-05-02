@@ -63,18 +63,14 @@ module RadUser
         .where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)')
     }
 
-    scope :for_security_role, lambda { |security_role_id|
-      joins(:security_roles).where(security_roles: { id: security_role_id }).distinct
-    }
-
     scope :inactive, -> { joins(:user_status).where(user_statuses: { active: false }) }
     scope :not_inactive, -> { where.not(user_status_id: UserStatus.default_inactive_status.id) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
-    validate :validate_sms_mobile_phone, on: :update
-    validate :validate_2fa_mobile_phone
+    validate :validate_twilio_verify
+    validate :validate_mobile_phone
     validate :password_excludes_name
     validates :security_roles, presence: true, if: :active?
 
@@ -258,6 +254,9 @@ module RadUser
 
       status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
       self.user_status = status if new_record? && !user_status
+      return unless new_record?
+
+      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && (RadConfig.twilio_verify_all_users? || admin?)
     end
 
     def initial_security_role
@@ -279,6 +278,20 @@ module RadUser
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
 
+    def validate_internal
+      return if external? || user_clients.none?
+
+      errors.add :external, 'not allowed when clients are assigned to this user'
+    end
+
+    def validate_twilio_verify
+      return unless RadConfig.twilio_verify_enabled?
+      return if twilio_verify_enabled? || user_status.blank? || !user_status.validate_email_phone?
+      return unless RadConfig.twilio_verify_all_users? || admin?
+
+      errors.add(:twilio_verify_enabled, 'is required')
+    end
+
     def validate_mobile_phone
       return if mobile_phone.present? || user_status.blank? || !user_status.validate_email_phone?
 
@@ -297,20 +310,6 @@ module RadUser
 
     def require_mobile_phone_two_factor?
       RadConfig.twilio_verify_enabled? && twilio_verify_enabled?
-    end
-
-    def validate_sms_mobile_phone
-      return if !RadConfig.twilio_enabled? || mobile_phone.present?
-      return if notification_settings.enabled.where(sms: true).none?
-
-      errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
-    end
-
-    def validate_2fa_mobile_phone
-      return if !RadConfig.twilio_verify_enabled? || mobile_phone.present?
-      return if external? && RadConfig.twilio_verify_internal_only?
-
-      errors.add(:mobile_phone, 'is required for two factor authentication')
     end
 
     def password_excludes_name
