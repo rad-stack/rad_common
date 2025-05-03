@@ -15,7 +15,7 @@
           .col-lg-6= f.input :first_name, required: true
           .col-lg-6= f.input :last_name, required: true
         .row
-          .col-lg-6= f.input :mobile_phone
+          .col-lg-6= f.input :mobile_phone, required: require_mobile_phone?
           - if RadConfig.avatar?
             .col-lg-3= f.input :avatar
         .row
