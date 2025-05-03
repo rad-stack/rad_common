@@ -90,7 +90,7 @@ describe UserGrouper do
       let(:inactive_user) { create :user, :inactive, mobile_phone: nil }
       let(:result) { [['Me', [current_user]], ['Users', [user, another_user]], ['Inactive', [inactive_user]]] }
 
-      xit { is_expected.to eq result }
+      it { is_expected.to eq result }
     end
 
     context 'with active scope' do
