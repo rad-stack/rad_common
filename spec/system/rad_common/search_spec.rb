@@ -1,84 +1,116 @@
 require 'rails_helper'
 
-RSpec.describe 'Search', type: :system do
+RSpec.describe 'Search' do
   let(:user) { create :admin }
   let(:division) { create :division }
 
   before do
     create :admin, user_status: UserStatus.default_inactive_status
-    create_list(:user, 3)
+    create_list :user, 3
     login_as user, scope: :user
   end
 
   describe 'like filter' do
     it 'displays a text input' do
       visit divisions_path
-      expect(page).to have_selector("input[type='text']#search_name_like")
+      expect(page).to have_css("input[type='text']#search_name_like")
     end
 
     it 'retains search value after applying filters' do
       visit divisions_path
-      fill_in 'search_name_like', with: 'Foo'
-      click_button 'Apply Filters'
-      expect(page).to have_selector("input[value='Foo']#search_name_like")
+      first('#search_name_like').fill_in(with: 'Foo')
+      first('button', text: 'Apply Filters').click
+      expect(page).to have_css("input[value='Foo']#search_name_like")
+    end
+
+    context 'with name not matching column name' do
+      it 'queries specified column' do
+        visit '/audits'
+        first('#search_audited_changes_like').fill_in(with: 'query')
+        first('button', text: 'Apply Filters').click
+        expect(current_url).to include('search[audited_changes_like]=query')
+      end
     end
   end
 
   describe 'select filter' do
     before { visit divisions_path }
 
-    unless ENV['CI'] # TODO: this fails on codeship
-      it 'displays a select input', :gha_specs_only, :js do
-        visit divisions_path
-        expect(page).to have_selector(".bootstrap-select .dropdown-toggle[data-id='search_owner_id']")
-        click_bootstrap_select(from: 'search_owner_id')
-        expect(page).to have_css('.dropdown-header.optgroup-1 span', text: 'Active')
-        expect(page).to have_selector('.dropdown-header.optgroup-2 span', text: 'Inactive')
-        expect(page).to have_selector(".bootstrap-select .dropdown-toggle[data-id='search_division_status']")
+    it 'selects a default value', :js do
+      within '.search_division_status' do
+        expect(find('.has-items')).to be_present
       end
     end
 
-    it 'selects a default value', :gha_specs_only, :js do
-      selector = ".bootstrap-select .dropdown-toggle[data-id='search_owner_id'] .filter-option-inner-inner"
-      expect(page).to have_selector(selector, text: user.to_s)
-    end
-
     it 'retains search value after applying filters' do
-      select 'Active', from: 'search_division_status'
-      click_button 'Apply Filters'
-      expect(find_field('search_division_status').value).to eq Division.division_statuses['status_active'].to_s
+      first('#search_division_status').select('Active')
+      first('button', text: 'Apply Filters').click
+      expect(first('#search_division_status').value).to eq [Division.division_statuses['status_active'].to_s]
     end
 
-    it 'select should have success style when default value is selected' do
-      select 'All Statuses', from: 'search_division_status'
-      click_button 'Apply Filters'
-      expect(find_field('search_division_status')['data-style']).to eq 'btn btn-light'
+    it 'select should have warning style when a value is selected other than default', :js do
+      tom_select 'Inactive', from: 'search_division_status'
+      expect(page).to have_no_css('.filter-active .ts-control')
+      find('body').click
+      first('button', text: 'Apply Filters').click
+      expect(page).to have_css('.filter-active .ts-control')
     end
 
-    it 'select should have warning style when a value is selected other than default' do
-      select 'Active', from: 'search_division_status'
-      click_button 'Apply Filters'
-      expect(find_field('search_division_status')['data-style']).to eq 'btn btn-warning'
-    end
+    context 'when ajax select', :js do
+      let(:category) { create :category, name: 'Appliance' }
+      let(:other_category) { create :category, name: 'Applications' }
+      let!(:other_division) { create :division, category: other_category, owner: user }
 
-    unless ENV['CI']  # TODO: this fails on codeship
-      it 'select should have warning style when a value a blank value is selected on filter without default',
-         :gha_specs_only, :js do
-        expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-light]')
-        bootstrap_select 'All Owners', from: 'search_owner_id'
-        click_button 'Apply Filters'
-        expect(page).to have_selector('button[data-id=search_owner_id][class*=btn-warning]')
+      before do
+        division.update!(category: category, owner: user)
+      end
+
+      it 'allows searching and selecting filter option' do
+        first('button', text: 'Apply Filters').click
+
+        expect(page).to have_content(division.name)
+        expect(page).to have_content(other_division.name)
+
+        # Full Search
+        tom_select category.name, from: 'search_category_id', search: category.name
+        first('button', text: 'Apply Filters').click
+        expect(page).to have_content(division.name)
+        expect(page).to have_no_content(other_division.name)
+
+        # Partial Search
+        tom_select other_category.name, from: 'search_category_id', search: 'App'
+        first('button', text: 'Apply Filters').click
+        expect(page).to have_content(other_division.name)
+      end
+
+      context 'when exclude is checked' do
+        it 'filters out selected options' do
+          first('button', text: 'Apply Filters').click
+
+          expect(page).to have_content(division.name)
+          expect(page).to have_content(other_division.name)
+
+          tom_select category.name, from: 'search_category_id', search: category.name
+          first('button', text: 'Apply Filters').click
+          expect(page).to have_content(division.name)
+          expect(page).to have_no_content(other_division.name)
+
+          first('#search_category_id_not').check
+          first('button', text: 'Apply Filters').click
+
+          expect(page).to have_no_content(division.name)
+          expect(page).to have_content(other_division.name)
+        end
       end
     end
 
     it 'shows required field error' do
-      visit divisions_path
-      click_button 'Apply Filters'
+      visit divisions_path(search: { division_status: [''] })
+      first('button', text: 'Apply Filters').click
       expect(page).to have_content 'Status is required'
 
-      select 'Active', from: 'search_division_status'
-      click_button 'Apply Filters'
-      expect(page).not_to have_content 'Status is required'
+      visit divisions_path(search: { division_status: [Division.division_statuses[:status_active]] })
+      expect(page).to have_no_content 'Status is required'
     end
   end
 
@@ -96,9 +128,9 @@ RSpec.describe 'Search', type: :system do
     end
 
     it 'retains search value after applying filters' do
-      fill_in 'search_created_at_start', with: '01/01/2020'
-      click_button 'Apply Filters'
-      expect(find_field('search_created_at_start').value).to eq '01/01/2020'
+      first('#search_created_at_start').fill_in(with: '01/01/2020')
+      first('button', text: 'Apply Filters').click
+      expect(first('#search_created_at_start').value).to eq '01/01/2020'
     end
 
     it 'displays error message when invalid date entered' do
@@ -111,7 +143,7 @@ RSpec.describe 'Search', type: :system do
       expect(page).to have_content 'Invalid date entered for created_at'
       visit '/'
       visit divisions_path
-      expect(page).not_to have_content 'Invalid date entered for created_at'
+      expect(page).to have_no_content 'Invalid date entered for created_at'
     end
 
     it 'does save valid date to users.filter_defaults' do
