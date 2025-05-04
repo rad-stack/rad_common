@@ -3,7 +3,7 @@ module RadCommon
   # This is used to generate dropdown filter containing options to be filtered on
   class SearchFilter
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :not_scope,
-                :default_value, :errors, :include_blank,
+                :default_value, :errors, :include_blank, :col_class,
                 :search_scope, :show_search_subtext, :allow_not
 
     ##
@@ -45,7 +45,7 @@ module RadCommon
     #   [{ column: :owner_id, options: User.sorted, scope_values: { 'Pending Values': :pending } }]
     def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil,
                    input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, not_scope: nil,
-                   multiple: false, required: false, include_blank: true, search_scope_name: nil,
+                   multiple: false, required: false, include_blank: true, col_class: nil, search_scope_name: nil,
                    show_search_subtext: false, allow_not: false)
       if input_label.blank? && !options.respond_to?(:table_name)
         raise 'Input label is required when options are not active record objects'
@@ -72,6 +72,7 @@ module RadCommon
       @default_value = default_value
       @grouped = grouped
       @required = required
+      @col_class = col_class
       @search_scope = RadConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
       @show_search_subtext = show_search_subtext
       @allow_not = allow_not
