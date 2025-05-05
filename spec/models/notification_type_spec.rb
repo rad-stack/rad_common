@@ -20,7 +20,7 @@ RSpec.describe NotificationType do
     context "when notification has it's own mailer" do
       before { Notifications::UserWasApprovedNotification.main([another_user, user]).notify! }
 
-      xit 'sets contact_log record and contact_log from_user' do
+      it 'sets contact_log record and contact_log from_user' do
         expect(contact_log.record).to eq another_user
         expect(contact_log.from_user).to eq user
       end
@@ -29,7 +29,7 @@ RSpec.describe NotificationType do
     context 'when notification uses simpler mailer' do
       before { Notifications::DuplicateFoundUserNotification.main(division).notify! }
 
-      xit 'sets contact_log record and contact_log from_user' do
+      it 'sets contact_log record and contact_log from_user' do
         expect(contact_log.record).to eq division
         expect(contact_log.from_user).to eq another_user
       end

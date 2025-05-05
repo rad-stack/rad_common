@@ -46,7 +46,7 @@ describe SendgridStatusReceiver, type: :service do
 
     before { RadDeviseMailer.email_changed(user).deliver_now }
 
-    xit "doesn't notify on failure" do
+    it "doesn't notify on failure" do
       expect(last_contact_log.content).to eq 'Email Changed'
 
       deliveries.clear

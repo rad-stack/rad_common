@@ -160,7 +160,7 @@ RSpec.describe 'Divisions' do
       expect(page).to have_content('Right Button')
     end
 
-    xit 'shows translated version of field name' do
+    it 'shows translated version of field name' do
       expect(page).to have_content 'Additional Data'
       expect(page).to have_no_content 'Additional Info'
     end
@@ -179,7 +179,7 @@ RSpec.describe 'Divisions' do
         visit division_path(division)
       end
 
-      xit 'allows attachment to be deleted', :js do
+      it 'allows attachment to be deleted', :js do
         page.accept_alert prompt do
           first('dd .fa-times').click
         end
