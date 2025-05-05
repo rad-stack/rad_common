@@ -16,7 +16,6 @@
     .col-lg-3
       = f.input :valid_user_domains, as: :array,
                                      input_html: { type: :string },
-                                     label: 'Valid user email domains',
                                      placeholder: 'Enter a domain, for example: abc.com',
                                      tooltip: t('tooltip.valid_user_domains')
 
@@ -25,5 +24,6 @@
     .col-lg-3= f.input :app_logo
     .col-lg-3= f.input :fav_icon
 
+  = render 'form_custom', f: f
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'
