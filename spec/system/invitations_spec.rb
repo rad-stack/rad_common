@@ -16,7 +16,7 @@ RSpec.describe 'Invitations' do
   context 'when twilio_verify_all_users is disabled' do
     before { allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false) }
 
-    xit 'invites an admin and enabled two factor auth' do
+    it 'invites an admin and enabled two factor auth' do
       visit new_user_invitation_path
 
       select admin_role.name, from: 'Initial Security Role'

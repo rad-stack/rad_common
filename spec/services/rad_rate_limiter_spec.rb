@@ -13,7 +13,7 @@ RSpec.describe RadRateLimiter, type: :service do
     context 'when requests in period are greater than limit' do
       before { 5.times { rate_limiter.run { 'foo' } } }
 
-      xit 'raises error' do
+      it 'raises error' do
         expect { rate_limiter.run { 'foo' } }.to raise_error(described_class::RateLimitExceededError)
       end
     end
@@ -21,7 +21,7 @@ RSpec.describe RadRateLimiter, type: :service do
     context 'when requests in period are less than limit' do
       before { 4.times { rate_limiter.run { 'foo' } } }
 
-      xit 'raises error' do
+      it 'raises error' do
         expect { rate_limiter.run { 'foo' } }.not_to raise_error
       end
     end
