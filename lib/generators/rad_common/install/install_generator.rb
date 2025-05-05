@@ -6,7 +6,7 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
-        # remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.shared_database?
+        remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.shared_database?
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
@@ -21,8 +21,9 @@ module RadCommon
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'timezone_detection', 'false'
-        # remove_rad_factories
+        remove_rad_factories
         remove_legacy_rails_config_setting
+
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
         gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
@@ -39,7 +40,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
-        copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
+        # copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
 
         unless RadConfig.shared_database?
@@ -88,7 +89,7 @@ module RadCommon
         # copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
         # directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
 
-        template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
+        # template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
                  'config/initializers/devise_security.rb'
@@ -159,7 +160,7 @@ module RadCommon
                   'lib/templates/rspec/system/system_spec.rb.tt'
         remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
 
-        unless true || RadConfig.shared_database?
+        unless RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 require 'rad_rspec/rad_factories'
@@ -179,6 +180,8 @@ Seeder.new.seed!
         end
 
         add_project_gems
+
+        gsub_file 'Gemfile', "gem 'jsbundling-rails'\n", ''
 
         apply_migrations
 
@@ -388,7 +391,7 @@ Seeder.new.seed!
 
         def install_github_workflow
           if RadConfig.legacy_assets?
-            copy_file '../rspec_tests_legacy.yml', '.github/workflows/rspec_tests.yml'
+            # copy_file '../rspec_tests_legacy.yml', '.github/workflows/rspec_tests.yml'
           else
             copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
           end
@@ -494,7 +497,6 @@ gem 'rubocop-capybara'
 
           unless RadConfig.legacy_assets?
             inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
-gem 'jsbundling-rails'
 gem 'propshaft'
             RUBY
             end

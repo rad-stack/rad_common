@@ -7,7 +7,7 @@
     %link{ rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }
     %title= content_for?(:title) ? yield(:title) : RadConfig.app_name!
     = csrf_meta_tags
-    = favicon_link_tag RadConfig.favicon_filename!, rel: 'shortcut icon'
+    = favicon_link_tag company_fav_icon(Company.main), rel: 'shortcut icon'
     = javascript_pack_tag 'application'
     = stylesheet_pack_tag 'application'
 

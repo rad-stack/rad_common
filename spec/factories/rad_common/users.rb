@@ -10,7 +10,6 @@ FactoryBot.define do
     user_status { UserStatus.default_active_status.presence || create(:user_status, :active) }
     do_not_notify_approved { true }
     security_roles { [create(:security_role)] }
-    twilio_verify_enabled { false }
     timezone { 'Eastern Time (US & Canada)' }
 
     trait :external do
@@ -24,7 +23,7 @@ FactoryBot.define do
     end
 
     factory :admin do
-      security_roles { [SecurityRole.find_by(admin: true).presence || create(:security_role, :admin)] }
+      security_roles { [create(:security_role, :admin)] }
     end
 
     factory :pending do

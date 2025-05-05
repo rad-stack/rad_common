@@ -21,7 +21,7 @@
           - if @override_logo
             = link_to image_tag(@override_logo, alt: company_name, title: company_name), website
           - else
-            = link_to image_tag(RadConfig.app_logo_filename!, alt: company_name, title: company_name), website
+            = link_to image_tag('app_logo.png', alt: company_name, title: company_name), website
 
           - unless logo_includes_name
             %span.logo_text

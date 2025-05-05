@@ -55,7 +55,8 @@ class RadAuditSearch < RadCommon::Search
       items + [{ input_label: 'User', column: :user_id, options: user_array },
                { input_label: 'Action',
                  column: :action,
-                 options: %w[create update destroy] },
+                 options: %w[create update destroy],
+                 col_class: 'col-lg-2' },
                { column: :remote_address, type: RadCommon::LikeFilter },
                { column: :audited_changes, type: RadCommon::LikeFilter }]
     end
