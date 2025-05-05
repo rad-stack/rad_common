@@ -33,7 +33,7 @@ RSpec.describe 'AuditHistory', type: :system do
     expect(page).to have_content 'create attachment'
   end
 
-  xit 'shows when the security role was created in history' do
+  it 'shows when the security role was created in history' do
     visit new_security_role_path
     fill_in 'Name', with: 'Foo'
 
