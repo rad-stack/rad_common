@@ -2,7 +2,7 @@ module RadCommon
   ##
   # This is used to generate a date filter input, which filters a date column between a start date and end date range.
   class DateFilter
-    attr_reader :column, :errors, :default_start_value, :default_end_value, :group_label
+    attr_reader :column, :errors, :default_start_value, :default_end_value, :group_label, :col_class
 
     ##
     # @param [Symbol] column the database column that is being filtered
@@ -21,7 +21,7 @@ module RadCommon
     #   { column: :created_at, type: RadCommon::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
     def initialize(column:, start_input_label: nil, end_input_label: nil, custom: false,
                    start_required: true, end_required: true,
-                   default_start_value: nil, default_end_value: nil, group_label: nil, scope: nil)
+                   default_start_value: nil, default_end_value: nil, group_label: nil, scope: nil, col_class: nil)
       @column = column
       @start_required = start_required
       @end_required = end_required
@@ -31,6 +31,7 @@ module RadCommon
       @default_start_value = default_start_value
       @default_end_value = default_end_value
       @custom = custom
+      @col_class = col_class
       @errors = []
       @scope = scope
     end
