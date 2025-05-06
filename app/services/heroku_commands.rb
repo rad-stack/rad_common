@@ -48,6 +48,7 @@ class HerokuCommands
       write_log 'Clearing certain production data'
       remove_user_avatars
       remove_encrypted_secrets
+      User.update_all twilio_verify_enabled: false
       reset_sensitive_local_data
 
       duration = Time.now.utc - start_time
@@ -240,8 +241,6 @@ class HerokuCommands
 
         write_log 'Changing Active Storage service to local'
         ActiveStorage::Blob.update_all service_name: 'local'
-
-        User.update_all twilio_verify_enabled: false
       end
   end
 end
