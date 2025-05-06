@@ -64,13 +64,14 @@ class RadMailer < ActionMailer::Base
          template_name: 'global_validity'
   end
 
-  def email_report(user, csv, report_name, options = {})
+  def email_report(user, file, report_name, options = {})
     validate_email_report_options options
 
     @contact_log_from_user = user
 
     start_date = options[:start_date]
     end_date   = options[:end_date]
+    export_format = options[:format].presence || Exporter::DEFAULT_FORMAT
 
     message_date_string = ''
     message_date_string += " for #{format_datetime(start_date, include_zone: true)}" if start_date.present?
@@ -86,7 +87,8 @@ class RadMailer < ActionMailer::Base
 
     @recipient = user
     @message = "Attached is the #{report_name}#{message_date_string}."
-    attachments["#{report_name}#{attachment_date_string}.csv"] = { mime_type: 'text/csv', content: csv }
+    filename = "#{report_name}#{attachment_date_string}.#{export_format}"
+    attachments[filename] = { mime_type: EXPORT_FORMATS[export_format], content: file }
 
     mail to: @recipient.formatted_email, subject: "#{report_name}#{subject_date_string}"
   end
