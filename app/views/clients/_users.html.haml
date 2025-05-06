@@ -3,6 +3,11 @@
 
   - if users.any?
     .card
-      = render 'layouts/card_header', action_name: 'custom', title: 'Users', icon: 'fa-users'
+      = render 'layouts/card_header',
+               action_name: 'custom',
+               title: "Users (#{users.count})",
+               icon: 'fa-users',
+               additional_actions: [show_hide_users_button(users)]
+
       .card-body
-        = render 'users/index', users: users, show_roles: false
+        = render 'users/index', users: users, hide_inactive: true

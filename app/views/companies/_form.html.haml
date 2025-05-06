@@ -7,7 +7,7 @@
     .col-lg-6= f.input :address_2
   .row
     .col-lg-5= f.input :city
-    .col-lg-1= f.input :state, collection: StateOptions.options
+    .col-lg-1= f.input :state, as: :state
     .col-lg-2= f.input :zipcode
     .col-lg-2= f.input :email
     .col-lg-2= f.input :phone_number
@@ -16,7 +16,6 @@
     .col-lg-3
       = f.input :valid_user_domains, as: :array,
                                      input_html: { type: :string },
-                                     label: 'Valid user email domains',
                                      placeholder: 'Enter a domain, for example: abc.com',
                                      tooltip: t('tooltip.valid_user_domains')
 
@@ -25,5 +24,6 @@
     .col-lg-3= f.input :app_logo
     .col-lg-3= f.input :fav_icon
 
+  = render 'form_custom', f: f
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'

@@ -1,9 +1,7 @@
 - if RadConfig.user_clients? && @user.external?
-  - if @user_clients.none?
+  - if @user_clients.count.zero?
     .alert.alert-danger Add at least one client to this user to give them access to their data
   .card
-    - can_update = policy(@user).update?
-
     = render 'layouts/card_header',
              action_name: 'custom',
              title: "#{RadCommon::AppInfo.new.client_model_label}s (#{@user_clients.count})",
@@ -14,12 +12,12 @@
       %table.table.table-striped.table-bordered
         %tr
           %th Name
-          - if can_update
+          - if policy(UserClient.new(user: @user)).destroy?
             %th.actions Actions
         - @user_clients.each do |record|
           %tr
             %td= secured_link record.client
-            - if can_update
+            - if policy(record).destroy?
               %td
                 - if policy(record).destroy?
                   = link_to icon(:times, 'Remove from User'),
