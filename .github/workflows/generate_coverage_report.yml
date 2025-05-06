@@ -57,7 +57,9 @@ jobs:
         run: bundle exec rails db:test:prepare
 
       - name: Compile esbuild assets
-        run: bin/rails assets:precompile
+        run: |
+          yarn build
+          bundle exec bin/rails assets:precompile
 
       - name: Load schema
         run: bundle exec rake db:schema:load
