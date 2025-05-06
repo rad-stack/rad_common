@@ -88,7 +88,9 @@ jobs:
 
       - name: Compile esbuild assets
         working-directory: spec/dummy
-        run: bundle exec bin/rails assets:precompile
+        run: |
+          yarn build
+          bundle exec bin/rails assets:precompile
 
       - name: Load schema
         working-directory: spec/dummy
@@ -102,9 +104,9 @@ jobs:
       - name: Run RSpec tests
         run: |
           if [ "${{ needs.setup-matrix.outputs.total_groups }}" == "1" ]; then
-            bin/rc_rspec
+            script -q -e -c "bin/rc_rspec" /dev/null
           else
-            bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{join(matrix.GROUP, ',')}}
+            script -q -e -c "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{join(matrix.GROUP, ',')}}" /dev/null
           fi
 
       - name: Upload screenshots on failure
