@@ -1,10 +1,14 @@
 - verify_invite
 
 .card
-  = render 'layouts/card_header', action_name: 'custom', title: t('devise.invitations.new.header'), icon: 'fa-plus'
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: t('devise.invitations.new.header'),
+           icon: 'fa-plus',
+           card_style: 'bg-white'
   .card-body
     = simple_form_for(resource, as: resource_name, url: invitation_path(resource_name), html: { method: :post }) do |f|
-      = f.error_notification
+      = rad_form_errors f
       .form-inputs
         .row
           .col-lg-4
@@ -30,7 +34,7 @@
               * Valid Domains for Internal Users: #{Company.main.valid_user_domains.join(', ')}
             %p
               You can add more valid domains in
-              = link_to 'Company Settings', '/company/edit'
+              = link_to 'Company Settings', company_edit_path
         .row
           .col-lg-4= f.input :mobile_phone, required: require_mobile_phone?
       .form-actions
