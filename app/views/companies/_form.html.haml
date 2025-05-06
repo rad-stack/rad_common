@@ -7,7 +7,7 @@
     .col-lg-6= f.input :address_2
   .row
     .col-lg-5= f.input :city
-    .col-lg-1= f.input :state, collection: StateOptions.options
+    .col-lg-1= f.input :state, as: :state
     .col-lg-2= f.input :zipcode
     .col-lg-2= f.input :email
     .col-lg-2= f.input :phone_number

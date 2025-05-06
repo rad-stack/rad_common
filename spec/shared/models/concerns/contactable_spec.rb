@@ -248,7 +248,7 @@ RSpec.describe Contactable do
       let(:state) { 'QC' }
       let(:zipcode) { 'H4K 1M9' }
 
-      xit "doesn't verify nor standardize" do
+      it "doesn't verify nor standardize" do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('12200 Boulevard Laurentien')
         expect(company.address_problems).to be_nil
