@@ -28,6 +28,11 @@ yarn-debug.log*
 
 /config/credentials/development.key
 /config/credentials/production.key
+/config/credentials/production_1.key
+/config/credentials/production_2.key
+/config/credentials/production_3.key
+/config/credentials/production_4.key
+/config/credentials/production_5.key
 /config/credentials/test.key
 /config/credentials/staging.key
 
