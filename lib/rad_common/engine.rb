@@ -8,6 +8,7 @@ module RadCommon
     require 'active_storage_validations'
     require 'audited'
     require 'authtrail'
+    require 'csv'
     require 'devise'
     require 'devise-twilio-verify'
     require 'devise-security'
@@ -21,6 +22,8 @@ module RadCommon
     require 'bootstrap4-kaminari-views'
     require 'nokogiri'
     require 'pg'
+    require 'prawn'
+    require 'prawn/table'
     require 'premailer/rails'
     require 'pretender'
     require 'pundit'
@@ -35,5 +38,6 @@ module RadCommon
     require 'text'
     require 'twilio-ruby'
     require 'webpacker'
+    require 'wicked_pdf'
   end
 end
