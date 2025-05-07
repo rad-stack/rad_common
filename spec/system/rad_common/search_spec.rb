@@ -147,7 +147,8 @@ RSpec.describe 'Search' do
     end
 
     it 'does save valid date to users.filter_defaults' do
-      visit divisions_path(search: { created_at_start: '2019-12-01', created_at_end: '2019-12-02', division_status: 1 })
+      visit divisions_path(search: { created_at_start: '2019-12-01', created_at_end: '2019-12-02',
+                                     division_status: [1] })
       visit '/'
       visit divisions_path
       expect(page.body).to include '2019-12-01'
