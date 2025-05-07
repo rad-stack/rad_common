@@ -14,18 +14,33 @@ class DivisionSearch < RadCommon::Search
     [{ input_label: 'Owner',
        column: :owner_id,
        default_value: current_user.id,
-       options: [['Active', User.active.by_name],
-                 ['Inactive', User.inactive.by_name]],
+       options: [['Active', User.active.sorted],
+                 ['Inactive', User.inactive.sorted]],
        grouped: true },
-     { input_label: 'Status', column: :division_status,
-       options: RadEnum.new(Division, :division_status).db_options,
-       required: true },
+     { input_label: 'Status', column: :division_status, type: RadCommon::EnumFilter, klass: Division,
+       multiple: true, required: true, default_value: Division.division_statuses[:status_active] },
+     {
+       input_label: 'Category',
+       column: :category_id,
+       include_blank: false,
+       search_scope_name: 'category_name',
+       multiple: true,
+       allow_not: true
+     },
+     created_by_filter,
      { column: :name, type: RadCommon::LikeFilter },
      { column: :created_at, type: RadCommon::DateFilter,
        start_input_label: 'Division Created At Start',
        end_input_label: 'Division Created At End',
        default_start_value: Date.current, default_end_value: Date.current },
-     { name: 'show_header', type: RadCommon::HiddenFilter }]
+     { column: :notify, type: RadCommon::BooleanFilter },
+     { name: 'show_header', type: RadCommon::HiddenFilter },
+     { input_label: 'Tags',
+       column: :tags,
+       options: Division::TAG_OPTIONS,
+       type: RadCommon::ArrayFilter,
+       multiple: true,
+       match_type: :any }]
   end
 
   def show_header?

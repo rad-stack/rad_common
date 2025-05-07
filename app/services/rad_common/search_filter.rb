@@ -256,13 +256,7 @@ module RadCommon
       end
 
       def filter_value(search_params)
-        # TODO: fix this
-        # rad_common (main branch)
-        # search_empty = (search_params.blank? || !search_params.has_key?(searchable_name))
-        #
-        # rad_common (IJS branch)
-        search_empty = search_params.blank?
-
+        search_empty = (search_params.blank? || !search_params.has_key?(searchable_name))
         return @default_value.to_s if search_empty && @default_value
 
         search_params[searchable_name]
