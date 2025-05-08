@@ -166,10 +166,6 @@ module RadCommon
       style_class
     end
 
-    def base_errors(form)
-      form.error :base, class: 'alert alert-danger' if form.object.errors[:base].present?
-    end
-
     def secured_link_style(record)
       return unless record.present? && record.respond_to?(:active?) && !record.active?
 
