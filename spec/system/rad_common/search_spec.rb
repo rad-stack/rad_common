@@ -71,6 +71,15 @@ RSpec.describe 'Search' do
         expect(page).to have_content(division.name)
         expect(page).to have_content(other_division.name)
 
+        # Without Search max options not exceeded
+        tom_select category.name, from: 'search_category_id'
+        first('button', text: 'Apply Filters').click
+        expect(page).to have_content(division.name)
+        expect(page).to have_no_content(other_division.name)
+
+        create_list :category, 300
+        visit divisions_path
+
         # Full Search
         tom_select category.name, from: 'search_category_id', search: category.name
         first('button', text: 'Apply Filters').click
