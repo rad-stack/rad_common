@@ -58,10 +58,8 @@ class UsersController < ApplicationController
       authorize @user
 
       if @user.save
-        flash[:success] = 'User updated.'
-        redirect_to @user
+        redirect_to @user, notice: 'User was successfully updated.'
       else
-        flash[:error] = "Unable to update user: #{@user.errors.full_messages.join(',')}"
         render :edit
         raise ActiveRecord::Rollback
       end
@@ -77,11 +75,11 @@ class UsersController < ApplicationController
       return
     end
 
-    if @user.other_audits_created.exists?
+    if @user.other_audits_created.count.positive?
       flash[:error] = "User has audit history, can't delete"
       redirect_back(fallback_location: users_path)
       return
-    elsif @user.audits_created.exists?
+    elsif @user.audits_created.count.positive?
       @user.audits_created.delete_all
     end
 

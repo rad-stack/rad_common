@@ -29,6 +29,8 @@ module RadUser
 
     has_one_attached :avatar
 
+    enum :language, { English: 'en', Spanish: 'es' }
+
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
     scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
@@ -271,6 +273,26 @@ module RadUser
       return if internal? && match_domains
 
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
+    end
+
+    def validate_mobile_phone
+      return if mobile_phone.present? || user_status.blank? || !user_status.validate_email_phone?
+
+      if RadConfig.require_mobile_phone?
+        errors.add(:mobile_phone, "can't be blank")
+      elsif require_mobile_phone_sms?
+        errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
+      elsif require_mobile_phone_two_factor?
+        errors.add(:mobile_phone, 'is required for two factor authentication')
+      end
+    end
+
+    def require_mobile_phone_sms?
+      RadConfig.twilio_enabled? && persisted? && notification_settings.enabled.where(sms: true).count.positive?
+    end
+
+    def require_mobile_phone_two_factor?
+      RadConfig.twilio_verify_enabled? && twilio_verify_enabled?
     end
 
     def validate_sms_mobile_phone

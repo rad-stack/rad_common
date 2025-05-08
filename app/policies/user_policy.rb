@@ -35,4 +35,8 @@ class UserPolicy < ApplicationPolicy
 
     record.active? && user != record
   end
+
+  def allow_email_change?
+    record.new_record? || !record.admin?
+  end
 end
