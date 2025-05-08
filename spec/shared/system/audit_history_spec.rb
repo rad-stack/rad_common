@@ -18,7 +18,7 @@ RSpec.describe 'AuditHistory', type: :system do
     expect(page).to have_content old_name
   end
 
-  xit 'shows attachment created' do
+  it 'shows attachment created' do
     allow(RadConfig).to receive(:avatar?).and_return(true)
 
     visit edit_user_registration_path
@@ -33,7 +33,7 @@ RSpec.describe 'AuditHistory', type: :system do
     expect(page).to have_content 'create attachment'
   end
 
-  xit 'shows when the security role was created in history' do
+  it 'shows when the security role was created in history' do
     visit new_security_role_path
     fill_in 'Name', with: 'Foo'
 

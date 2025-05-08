@@ -9,7 +9,7 @@ RSpec.describe 'Audits', type: :system do
 
     before { login_as user, scope: :user }
 
-    xit 'searches by record type' do
+    it 'searches by record type' do
       security_role.update! name: new_name
 
       visit '/audits'
@@ -19,7 +19,7 @@ RSpec.describe 'Audits', type: :system do
       expect(page).to have_content new_name
     end
 
-    xit 'finds deleted audits' do
+    it 'finds deleted audits' do
       security_role.destroy!
 
       visit '/audits'

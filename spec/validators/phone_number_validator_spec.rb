@@ -31,9 +31,7 @@ RSpec.describe PhoneNumberValidator do
   end
 
   it 'formats phone numbers before validating' do
-    numbers = ['1233211234', '123-321-1234', '123 321 1234', ' 123 321 1234 ']
-
-    numbers.each do |phone_number|
+    valid_phone_formats.each do |phone_number|
       model = TestPhoneModel.new
       model.phone_number = phone_number
 

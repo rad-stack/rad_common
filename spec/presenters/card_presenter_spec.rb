@@ -56,8 +56,7 @@ describe CardPresenter do
     let(:controller_name) { 'a_controller' }
 
     before do
-      allow(view_context).to receive(:controller_name).and_return(controller_name)
-      allow(view_context).to receive(:params).and_return(id: id)
+      allow(view_context).to receive_messages(controller_name: controller_name, params: { id: id })
     end
 
     context 'without edit_url param' do
@@ -101,10 +100,9 @@ describe CardPresenter do
     let(:klass) { 'Class' }
 
     before do
-      allow(view_context).to receive(:controller).and_return(controller)
       allow(controller).to receive(:instance_variable_get).and_return('something')
 
-      allow(view_context).to receive(:controller_name).and_return(controller_name)
+      allow(view_context).to receive_messages(controller: controller, controller_name: controller_name)
       allow(controller_name).to receive(:classify).and_return(klass)
       allow(klass).to receive(:underscore).and_return('whatever')
     end
