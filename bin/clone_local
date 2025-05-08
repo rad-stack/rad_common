@@ -5,11 +5,17 @@ require_relative 'rad_bin'
 RadBin.rad_common_not_permitted!
 
 options = {}
+include_audits_flag = false
+
 OptionParser.new { |opts|
   opts.banner = 'Usage: bin/clone_local [options]'
 
   opts.on('-b', '--backup [BACKUP_ID]', 'Specify a backup ID or select interactively if no value is provided') do |backup_id|
     options[:backup] = backup_id || true
+  end
+
+  opts.on('--include-audits', 'Restore audits table') do
+    include_audits_flag = true
   end
 
   opts.on('-h', '--help', 'Show this help message') do
@@ -27,7 +33,11 @@ FileUtils.chdir Dir.pwd do
                 RadBin.select_backup_id(heroku_app_name)
               end
 
-  options = [heroku_app_name, backup_id].compact.join(', ')
-  puts "Proceeding with clone local with options: #{options}"
-  RadBin.system!("bundle exec rails \"heroku:clone_local[#{options}]\"")
+  args = [heroku_app_name]
+  args << 'true' if include_audits_flag
+  args << backup_id if backup_id && !backup_id.empty?
+
+  options_str = args.join(', ')
+  puts "Proceeding with clone local with options: #{options_str}"
+  RadBin.system!("bundle exec rails \"heroku:clone_local[#{options_str}]\"")
 end
