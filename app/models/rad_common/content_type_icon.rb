@@ -9,29 +9,22 @@ module RadCommon
     end
 
     def icon
-      if content_type.starts_with? 'image'
-        'fa-file-image'
-      elsif content_type.starts_with? 'video'
-        'fa-file-video'
-      elsif content_type.starts_with? 'audio'
-        'fa-file-audio'
-      else
-        types = {
-          'application/msword' => 'fa-file-word',
-          'application/pdf' => 'fa-file-pdf',
-          'application/vnd.ms-excel.sheet.macroenabled.12' => 'fa-file-excel',
-          'application/vnd.ms-excel' => 'fa-file-excel',
-          'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'fa-tv',
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fa-table',
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'fa-file-alt',
-          'application/zip' => 'fa-file-archive',
-          'text/csv' => 'fa-file-csv',
-          'text/html' => 'fa-file-code',
-          'text/plain' => 'fa-file-alt'
-        }
+      types = {
+        'application/msword' => 'fa-file-word',
+        'application/pdf' => 'fa-file-pdf',
+        'application/vnd.ms-excel.sheet.macroenabled.12' => 'fa-file-excel',
+        'application/vnd.ms-excel' => 'fa-file-excel',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'fa-tv',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'fa-table',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'fa-file-lines',
+        'application/zip' => 'fa-file-zipper',
+        'text/csv' => 'fa-table',
+        'text/html' => 'fa-code',
+        'text/plain' => 'fa-file',
+        'video/quicktime' => 'fa-file-video'
+      }
 
-        types[content_type].presence || 'fa-paperclip'
-      end
+      types[content_type].presence || 'fa-paperclip'
     end
   end
 end
