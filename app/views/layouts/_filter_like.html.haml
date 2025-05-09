@@ -1,2 +1,16 @@
-= f.input filter.like_input, label: filter.input_label, input_html: { value: search.search_params[filter.like_input] },
-                             required: false
+.row.align-items-center
+  .col
+    = f.label filter.like_input, required: false
+  - if filter.allow_not
+    .col-auto
+      = f.input "#{filter.searchable_name}_not",
+                as: :boolean,
+                label: 'Exclude',
+                input_html: { checked: filter.not_value?(params[:search]) },
+                wrapper_html: { class: 'text-right mb-0' },
+                tooltip: "Exclude results that match #{filter.input_label}"
+
+= f.input filter.searchable_name, 
+          label: false,
+          input_html: { value: search.search_params[filter.like_input] },
+          required: false
