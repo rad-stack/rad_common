@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :category do
-    name { Faker::Company.industry }
+    sequence(:name) { |n| "#{Faker::Company.industry} #{n + 1}" }
   end
 end
