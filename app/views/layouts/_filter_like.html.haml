@@ -1,6 +1,6 @@
 .row.align-items-center
   .col
-    = f.label filter.like_input, required: false
+    = f.label filter.input_label, required: false
   - if filter.allow_not
     .col-auto
       = f.input "#{filter.searchable_name}_not",
@@ -10,7 +10,7 @@
                 wrapper_html: { class: 'text-right mb-0' },
                 tooltip: "Exclude results that match #{filter.input_label}"
 
-= f.input filter.searchable_name,
+= f.input filter.like_input,
           label: false,
           input_html: { value: search.search_params[filter.like_input] },
           required: false

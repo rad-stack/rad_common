@@ -28,7 +28,7 @@ class DivisionSearch < RadCommon::Search
        allow_not: true
      },
      created_by_filter,
-     { column: :name, input_label: 'Name', type: RadCommon::LikeFilter, allow_not: true },
+     { column: :name, input_label: 'Name Like', type: RadCommon::LikeFilter, allow_not: true },
      { column: :created_at, type: RadCommon::DateFilter,
        start_input_label: 'Division Created At Start',
        end_input_label: 'Division Created At End',
