@@ -2,6 +2,7 @@ module RadCommon
   ##
   # This is used to generate dropdown filter containing options to be filtered on
   class SearchFilter
+    include RadCommon::SearchableDropdownHelper
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :not_scope,
                 :default_value, :errors, :include_blank, :col_class,
                 :search_scope, :show_search_subtext, :allow_not
@@ -72,6 +73,7 @@ module RadCommon
       @default_value = default_value
       @grouped = grouped
       @required = required
+      @search_scope_name = search_scope_name
       @col_class = col_class
       @search_scope = RadConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
       @show_search_subtext = show_search_subtext
@@ -82,6 +84,12 @@ module RadCommon
     # @return [String] the name of the view to be used to render the filter input
     def filter_view
       'select'
+    end
+
+    def searchable_scope?
+      return true if options.nil? && @search_scope_name
+
+      search_scope.present? && max_dropdown_size_exceeded?(options)
     end
 
     def searchable_name
@@ -132,9 +140,9 @@ module RadCommon
     end
 
     def input_options_with_current_selection(search)
-      return input_options if search_scope.blank?
+      return input_options if search_scope.blank? || !searchable_scope?
 
-      input_options + search_scope[:model].constantize.where(id: selected_value(search)).to_a
+      search_scope[:model].constantize.where(id: selected_value(search)).to_a
     end
 
     # @return the method that simple form should use to determine the label of the select option
@@ -186,13 +194,9 @@ module RadCommon
     end
 
     def search_scope_params
-      {
-        class: 'selectpicker-search',
-        'data-subtext' => show_search_subtext,
-        'data-placeholder' => search_scope[:description],
-        'data-global-search-scope' => search_scope[:name],
-        'data-global-search-mode' => 'searchable_association'
-      }
+      return { class: 'selectpicker' } unless searchable_scope?
+
+      searchable_scope_options(show_subtext: show_search_subtext, search_scope: @search_scope_name)
     end
 
     def not_value?(search_params)
