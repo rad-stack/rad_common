@@ -1,19 +1,23 @@
 = simple_form_for(@user) do |f|
-  = f.error_notification
-  = base_errors(f)
+  = rad_form_errors f
+
   .form-inputs
     .row
       .col-lg-6= f.input :first_name
       .col-lg-6= f.input :last_name
     .row
       .col-lg-6= f.input :mobile_phone
-      .col-lg-6= f.input :email, disabled: !@user.new_record?
+      .col-lg-6= f.input :email, disabled: !policy(@user).allow_email_change?
     .row
       .col-lg-6= f.association :user_status, collection: UserStatus.by_id
-      .col-lg-6= f.input :timezone, as: :time_zone, priority: timezone_us_filter
+      - if RadConfig.switch_languages?
+        .col-lg-3= f.input :language, collection: options_for_enum(User, :language)
+      .col-lg-3= f.input :timezone, as: :time_zone, priority: timezone_us_filter
     .row
       - if RadConfig.external_users?
         .col-lg-3= f.input :external
+      - if RadConfig.twilio_verify_enabled?
+        .col-lg-3= f.input :twilio_verify_enabled
     .row
       -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
       .col-lg-6= f.input :password, autocomplete: 'off', input_html: { autocomplete: 'new-password' }
@@ -38,6 +42,6 @@
                                      item_wrapper_class: 'col-lg-3 security-role-checkboxes',
                                      collection: security_role_collection(:external),
                                      checked: @user.security_roles.ids
-
+    = render 'users/form_custom', f: f
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'
