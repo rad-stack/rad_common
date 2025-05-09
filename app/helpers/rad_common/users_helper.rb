@@ -242,7 +242,7 @@ module RadCommon
     end
 
     def require_mobile_phone?
-      RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_internal_only?
+      RadConfig.require_mobile_phone? || (RadConfig.twilio_verify_enabled? && RadConfig.twilio_verify_all_users?)
     end
 
     def clients_to_add_to_user(user)

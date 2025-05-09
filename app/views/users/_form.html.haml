@@ -6,7 +6,7 @@
       .col-lg-6= f.input :first_name
       .col-lg-6= f.input :last_name
     .row
-      .col-lg-6= f.input :mobile_phone
+      .col-lg-6= f.input :mobile_phone, required: require_mobile_phone?
       .col-lg-6= f.input :email, disabled: !policy(@user).allow_email_change?
     .row
       .col-lg-6= f.association :user_status, collection: UserStatus.by_id
@@ -16,7 +16,7 @@
     .row
       - if RadConfig.external_users?
         .col-lg-3= f.input :external
-      - if RadConfig.twilio_verify_enabled?
+      - if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
         .col-lg-3= f.input :twilio_verify_enabled
     .row
       -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
