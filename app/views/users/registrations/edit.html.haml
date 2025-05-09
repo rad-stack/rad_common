@@ -1,9 +1,9 @@
 .card
-  = render 'layouts/card_header', action_name: 'custom', title: 'My Account', icon: 'fa-file'
+  = render 'layouts/card_header', action_name: 'custom', title: 'My Account', icon: 'fa-address-card'
   .card-body
     = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
-      = f.error_notification
-      = base_errors(f)
+      = rad_form_errors f
+
       .form-inputs
         .row
           .col-lg-6= f.input :email, required: true, autofocus: true
@@ -20,6 +20,9 @@
             .col-lg-3= f.input :avatar
         .row
           .col-lg-6= f.input :timezone, as: :time_zone, priority: timezone_us_filter
+        - if RadConfig.switch_languages?
+          .row
+            .col-lg-6= f.input :language, collection: options_for_enum(User, :language)
         .row
           .col-lg-6= f.input :password, label: 'New Password', hint: "leave it blank if you don't want to change it", required: false, input_html: { autocomplete: 'new-password' }
           .col-lg-6= f.input :password_confirmation, label: 'New Password Confirmation', required: false, input_html: { autocomplete: 'new-password' }
