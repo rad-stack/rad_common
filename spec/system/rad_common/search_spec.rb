@@ -83,7 +83,7 @@ RSpec.describe 'Search' do
         expect(page).to have_content(other_division.name)
       end
 
-      context 'when exclude is checked' do
+      context 'when exclude is checked for select filter' do
         it 'filters out selected options' do
           first('button', text: 'Apply Filters').click
 
@@ -96,6 +96,26 @@ RSpec.describe 'Search' do
           expect(page).to have_no_content(other_division.name)
 
           first('#search_category_id_not').check
+          first('button', text: 'Apply Filters').click
+
+          expect(page).to have_no_content(division.name)
+          expect(page).to have_content(other_division.name)
+        end
+      end
+
+      context 'when exclude is checked for like filter' do
+        it 'filters out selected options' do
+          first('button', text: 'Apply Filters').click
+
+          expect(page).to have_content(division.name)
+          expect(page).to have_content(other_division.name)
+
+          first('#search_name_like').fill_in(with: division.name)
+          first('button', text: 'Apply Filters').click
+          expect(page).to have_content(division.name)
+          expect(page).to have_no_content(other_division.name)
+
+          first('#search_name_like_not').check
           first('button', text: 'Apply Filters').click
 
           expect(page).to have_no_content(division.name)
