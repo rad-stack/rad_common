@@ -2,22 +2,26 @@ module RadCommon
   module ApplicationHelper
     ALERT_TYPES = %i[success info warning danger].freeze unless const_defined?(:ALERT_TYPES)
 
-    def secured_link(record, format: nil)
-      return unless record
+    def secured_link(resource, format: nil, new_tab: false)
+      return unless resource
 
-      style = secured_link_style(record)
-
-      if Pundit.policy!(current_user, record).show?
-        link_to record, record, format: format, class: style
-      elsif style.present?
-        content_tag :span, record, class: style
+      if Pundit.policy!(current_user, resource).show?
+        if new_tab
+          link_to resource_name(resource), resource, format: format, target: '_blank', rel: 'noopener'
+        else
+          link_to resource_name(resource), resource, format: format
+        end
       else
-        record.to_s
+        resource_name(resource)
       end
     end
 
     def show_route_exists_for?(record)
       Rails.application.routes.url_helpers.respond_to? "#{record.class.table_name.singularize}_path"
+    end
+
+    def current_instance_variable
+      instance_variable_get("@#{controller_name.classify.underscore}")
     end
 
     def avatar_image(user, size)
@@ -73,7 +77,7 @@ module RadCommon
     def format_datetime(value, options = {})
       return nil if value.blank?
 
-      format_string = '%-m/%-d/%Y %-l:%M'
+      format_string = '%-m/%-d/%Y %l:%M'
       format_string += ':%S' if options[:include_seconds]
       format_string += ' %p'
       format_string += ' %Z' if options[:include_zone]
@@ -93,10 +97,16 @@ module RadCommon
 
     def format_boolean(value)
       if value
-        tag.div(nil, class: 'fa fa-check')
+        tag.div(nil, class: 'fa fa-check', 'aria-label' => true)
       else
-        tag.div(nil, class: 'fa fa-regular fa-circle')
+        tag.div(nil, class: 'fa fa-regular fa-circle', 'aria-label' => false)
       end
+    end
+
+    def format_state(abbreviation)
+      return if abbreviation.blank?
+
+      StateOptions.full_name(abbreviation)
     end
 
     def formatted_decimal_hours(total_minutes)
@@ -115,6 +125,18 @@ module RadCommon
       regex_str.gsub!(')', '\\)')
       regex_str = "(#{regex_str})"
       Regexp.new regex_str
+    end
+
+    def enum_to_translated_option(record, enum_name)
+      RadEnum.new(record.class, enum_name).translated_option(record)
+    end
+
+    def options_for_enum(klass, enum_name)
+      RadEnum.new(klass, enum_name).options
+    end
+
+    def enum_translation(klass, enum_name, value)
+      RadEnum.new(klass, enum_name).translation(value)
     end
 
     def bootstrap_flash
@@ -138,6 +160,7 @@ module RadCommon
     def bootstrap_flash_type(type)
       type = type.to_sym
 
+      type = :success if type == :notice
       type = :danger  if type == :alert
       type = :danger  if type == :error
 
@@ -154,10 +177,13 @@ module RadCommon
       style_class
     end
 
-    def secured_link_style(record)
-      return unless record.present? && record.respond_to?(:active?) && !record.active?
+    def base_errors(form)
+      form.error :base, class: 'alert alert-danger' if form.object.errors[:base].present?
+    end
 
-      'text-danger'
+    def form_errors_alert(form)
+      form.error_notification message: "#{I18n.t('simple_form.error_notification.default_message')} " \
+                                       "#{form.object.errors.full_messages.join('. ')}"
     end
 
     def icon(icon, text = nil, options = {})
@@ -192,7 +218,7 @@ module RadCommon
     end
 
     def verify_manually_create_users
-      return if RadConfig.manually_create_users?
+      return if RadConfig.disable_sign_up? && RadConfig.disable_invite?
 
       raise RadIntermittentException
     end
@@ -210,6 +236,10 @@ module RadCommon
 
     def export_buttons(model_name, **options)
       %i[csv pdf].map { |format| export_button(model_name, format: format, **options) }.compact
+    end
+
+    def portal_domain?
+      request.host_with_port == RadConfig.portal_host_name!
     end
 
     def onboarded?
@@ -273,6 +303,10 @@ module RadCommon
         { small: 25,
           medium: 50,
           large: 200 }[size_as_symbol]
+      end
+
+      def resource_name(resource)
+        resource.to_s
       end
   end
 end

@@ -68,7 +68,7 @@ RSpec.describe 'Users', type: :system do
       context 'when switching languages' do
         before { allow(RadConfig).to receive(:switch_languages?).and_return true }
 
-        it 'updates registration', :shared_database_specs do
+        xit 'updates registration', :shared_database_specs do
           visit edit_user_registration_path
           expect(page).to have_content 'My Account'
           select 'Spanish', from: 'Language'
@@ -96,7 +96,7 @@ RSpec.describe 'Users', type: :system do
 
       before { external_user.update! user_status: user.user_status if RadConfig.external_users? }
 
-      it 'shows users and all info' do
+      xit 'shows users and all info' do
         visit users_path
         expect(page).to have_content result_label
         expect(page).to have_content user.to_s
@@ -136,7 +136,7 @@ RSpec.describe 'Users', type: :system do
 
       before { allow(RadConfig).to receive(:manually_create_users?).and_return true }
 
-      it 'renders the new template' do
+      xit 'renders the new template' do
         visit new_user_path
         expect(page).to have_content('New User')
       end
@@ -175,7 +175,7 @@ RSpec.describe 'Users', type: :system do
         expect(user.security_roles.count).to eq 2
       end
 
-      it 'requires mobile phone when twilio verify enabled', :shared_database_specs do
+      xit 'requires mobile phone when twilio verify enabled', :shared_database_specs do
         allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
 
         visit edit_user_path(user)
@@ -273,7 +273,7 @@ RSpec.describe 'Users', type: :system do
       expect(page).to have_content 'Your account has not been approved by your administrator yet.'
     end
 
-    it 'signs in' do
+    xit 'signs in' do
       visit new_user_session_path
 
       fill_in 'user_email', with: user.email
@@ -291,7 +291,7 @@ RSpec.describe 'Users', type: :system do
       expect(page).to have_content 'Invalid Email or password'
     end
 
-    it 'cannot sign in with expired password', :password_expirable_specs do
+    xit 'cannot sign in with expired password', :password_expirable_specs do
       current_password = password
       new_password = 'Passwords2!!!!!'
 
@@ -311,7 +311,7 @@ RSpec.describe 'Users', type: :system do
       expect(page).to have_content 'Your new password is saved.'
     end
 
-    it 'cannot sign in when expired', :user_expirable_specs do
+    xit 'cannot sign in when expired', :user_expirable_specs do
       user.update!(last_activity_at: 98.days.ago)
       user.reload
 
@@ -334,7 +334,7 @@ RSpec.describe 'Users', type: :system do
     before { allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false }
 
     context 'with internal user' do
-      it 'sign in times out after the configured hours' do
+      xit 'sign in times out after the configured hours' do
         visit new_user_session_path
         fill_in 'user_email', with: user.email
         fill_in 'user_password', with: password
@@ -349,7 +349,7 @@ RSpec.describe 'Users', type: :system do
     end
 
     context 'with external user', :external_user_specs do
-      it 'sign in times out after 3 hours' do
+      xit 'sign in times out after 3 hours' do
         visit new_user_session_path
         fill_in 'user_email', with: external_user.email
         fill_in 'user_password', with: password

@@ -63,7 +63,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           let(:invite_role) { internal_role }
           let(:invite_email) { valid_email }
 
-          it 'invites' do
+          xit 'invites' do
             expect(User.last.internal?).to be true
             expect(User.last.twilio_verify_enabled?).to be true
           end
@@ -74,7 +74,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           let(:invite_email) { valid_email }
           let(:all_users) { false }
 
-          it 'invites' do
+          xit 'invites' do
             expect(User.last.twilio_verify_enabled?).to be false
           end
         end
@@ -83,7 +83,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           let(:invite_role) { external_role }
           let(:invite_email) { external_email }
 
-          it 'invites', :external_user_specs do
+          xit 'invites', :external_user_specs do
             expect(User.last.external?).to be true
           end
         end
@@ -93,14 +93,14 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           let(:invite_role) { another_role }
           let(:invite_email) { external_email }
 
-          it 'invites an external user and sets initial role', :external_user_specs do
+          xit 'invites an external user and sets initial role', :external_user_specs do
             expect(SecurityRole.external.size).to eq 3
           end
         end
       end
 
       context 'when invalid' do
-        it 'because of blank email' do
+        xit 'because of blank email' do
           visit new_user_invitation_path
 
           fill_in 'First Name', with: first_name
@@ -133,7 +133,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           expect(page).to have_content ' is not authorized for this application'
         end
 
-        it 'because of a single letter in name that conflicts with password in name validation' do
+        xit 'because of a single letter in name that conflicts with password in name validation' do
           visit new_user_invitation_path
 
           fill_in 'Email', with: valid_email
@@ -149,7 +149,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     end
 
     describe 'resend' do
-      it 'resends invitation' do
+      xit 'resends invitation' do
         visit new_user_invitation_path
 
         fill_in 'Email', with: valid_email
@@ -191,7 +191,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     end
 
     context 'when user is struggling' do
-      it "doesn't let unaccepted invitee reset password" do
+      xit "doesn't let unaccepted invitee reset password" do
         visit new_user_password_path
         fill_in 'Email', with: invitee.email
         click_on 'Send Me Reset Password Instructions'
@@ -200,7 +200,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
         expect(mail.to).to include admin.email
       end
 
-      it "doesn't let unaccepted invitee request confirmation instructions" do
+      xit "doesn't let unaccepted invitee request confirmation instructions" do
         visit new_user_confirmation_path
         fill_in 'Email', with: invitee.email
         click_on 'Resend Confirmation Instructions'

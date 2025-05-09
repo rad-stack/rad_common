@@ -2,7 +2,7 @@ class PhoneSMSSender
   OPT_OUT_MESSAGE = 'To no longer receive text messages, text STOP'.freeze
 
   attr_accessor :message, :contact_log_from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio,
-                :opt_out_message_sent, :exception, :contact_log_record
+                :opt_out_message_sent, :exception, :contact_log_record, :log
 
   delegate :from_number, to: :twilio
 
@@ -38,6 +38,11 @@ class PhoneSMSSender
     false
   end
 
+  def blacklisted?
+    # https://www.twilio.com/docs/api/errors/21610
+    exception.message.include?('21610')
+  end
+
   private
 
     def handle_blacklist
@@ -64,29 +69,43 @@ class PhoneSMSSender
       RadTwilio.human_to_twilio_format(to_mobile_phone)
     end
 
-    def blacklisted?
-      # https://www.twilio.com/docs/api/errors/21610
-      exception.message.include?('21610')
-    end
-
     def opt_out_message_already_sent?
       ContactLog.opt_out_message_sent?(to_mobile_phone)
     end
 
     def log_event(sent, message_sid)
-      log = ContactLog.create! sms_log_type: :outgoing,
-                               from_number: RadTwilio.twilio_to_human_format(from_number),
-                               from_user_id: contact_log_from_user_id,
-                               content: message,
-                               sms_media_url: media_url,
-                               sent: sent,
-                               sms_message_id: message_sid,
-                               sms_opt_out_message_sent: opt_out_message_sent,
-                               record: contact_log_record
+      @log = ContactLog.create! sms_log_type: :outgoing,
+                                from_number: RadTwilio.twilio_to_human_format(from_number),
+                                from_user_id: contact_log_from_user_id,
+                                content: message,
+                                sms_media_url: media_url,
+                                sent: sent,
+                                sms_message_id: message_sid,
+                                sms_opt_out_message_sent: opt_out_message_sent,
+                                record: contact_log_record
 
       ContactLogRecipient.create! contact_log: log,
                                   phone_number: to_mobile_phone,
                                   to_user: to_user,
                                   sms_status: :sent
+
+      return if @log.sms_media_url.blank?
+
+      log_attachments
+    end
+
+    def log_attachments
+      file = RadRetry.perform_request(retry_count: 2) { URI.open(@log.sms_media_url) }
+
+      filename = if file.respond_to?(:meta) && file.meta.has_key?('content-disposition')
+                   file.meta['content-disposition'].match(/filename="[^"]+"/).to_s.gsub(/filename=|"/, '')
+                 else
+                   File.basename(file.path)
+                 end
+
+      @log.attachments.attach io: file,
+                              content_type: file.content_type,
+                              identify: false,
+                              filename: filename
     end
 end

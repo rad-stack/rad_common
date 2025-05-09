@@ -1,6 +1,6 @@
 :ruby
+  show_roles = true if local_assigns[:show_roles].nil?
   show_actions = true if local_assigns[:show_actions].nil?
-  hide_inactive = false if local_assigns[:hide_inactive].nil?
   show_actions &&= show_actions?(User)
   sort_columns = false if local_assigns[:sort_columns].nil?
   page_param_name = :page if local_assigns[:page_param_name].nil?
@@ -22,7 +22,8 @@
             %th Signed In
             %th Created
           %th Status
-          %th Roles
+          - if show_roles && show_actions
+            %th Roles
           - if RadConfig.external_users?
             %th #{RadCommon::AppInfo.new.client_model_label}s
         - if show_actions
@@ -30,9 +31,8 @@
 
       - users.each do |user|
         - can_show = policy(user).show?
-        - show_actions_record = policy(user).update? || policy(user).destroy?
 
-        %tr{ class: user_row_class(user, hide_inactive), id: user_row_id(user, hide_inactive) }
+        %tr{ class: user.display_style }
           %td= secured_link(user)
           %td
             - if can_show
@@ -46,15 +46,11 @@
               - else
                 = user.mobile_phone
           - if show_actions
+            %td= format_datetime(user.current_sign_in_at)
+            %td= format_date(user.created_at)
+          %td= user.user_status
+          - if show_roles && show_actions
             %td
-              - if show_actions_record
-                = format_datetime(user.current_sign_in_at)
-            %td
-              - if show_actions_record
-                = format_date(user.created_at)
-          %td= user_status_item user
-          %td
-            - if show_actions_record
               - user.security_roles.each do |security_role|
                 = secured_link(security_role)
                 %p
@@ -67,9 +63,8 @@
                 = format_boolean(user.external?)
           - if show_actions
             %td
-              - if show_actions_record
-                - user_index_actions(user).each do |action|
-                  = action
+              - user_index_actions(user).each do |action|
+                = action
 
     - if users.respond_to?(:current_page)
       = paginate users, param_name: page_param_name, theme: 'twitter-bootstrap-4'

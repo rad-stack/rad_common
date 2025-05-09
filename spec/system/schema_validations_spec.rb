@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Divisions' do
+RSpec.describe 'Divisions', type: :system do
   let(:user) { create :admin }
 
   before { login_as user, scope: :user }
@@ -12,10 +12,9 @@ RSpec.describe 'Divisions' do
 
   it 'loads validations when edit form renders' do
     Object.send(:remove_const, :Division)
-    load Rails.root.join('app/models/division.rb')
-
+    load 'division.rb'
     Division.schema_validations_loaded = true
-    division = create :division
+    division = create(:division)
     Division.schema_validations_loaded = false
     visit edit_division_path(division)
     expect(page).to have_css '.string.required'

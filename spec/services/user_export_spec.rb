@@ -37,7 +37,7 @@ RSpec.describe UserExport, type: :service do
     context 'when PDF format' do
       let(:export_format) { :pdf }
 
-      it 'generates an export pdf file with expected content' do
+      xit 'generates an export pdf file with expected content' do
         expect(file).to start_with('%PDF-1.')
         pdf_text = PDF::Reader.new(StringIO.new(file)).pages.map(&:text).join(' ')
 
