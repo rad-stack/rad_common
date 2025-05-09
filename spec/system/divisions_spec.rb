@@ -70,7 +70,7 @@ RSpec.describe 'Divisions' do
 
       before do
         other_user
-        stub_const('SearchableAssociationInput::MAX_DROPDOWN_SIZE', 1)
+        stub_const('RadCommon::SearchableDropdownHelper::MAX_DROPDOWN_SIZE', 1)
         visit edit_division_path(division)
       end
 

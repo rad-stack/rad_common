@@ -1,5 +1,5 @@
 class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
-  MAX_DROPDOWN_SIZE = 300
+  include RadCommon::SearchableDropdownHelper
 
   delegate :current_user, to: :template
 
@@ -16,21 +16,13 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
 
     def add_default_options
       if search_only?
-        input_html_options.merge!(search_options)
+        input_html_options.merge!(searchable_scope_options(show_subtext: options[:show_subtext],
+                                                           search_scope: options[:search_scope],
+                                                           excluded_ids: options[:excluded_ids]))
       else
         input_html_options[:class].push(:selectpicker)
       end
       options[:include_blank] = 'None' if options[:include_blank].nil?
-    end
-
-    def search_options
-      {
-        class: 'selectpicker-search',
-        'data-subtext' => options[:show_subtext],
-        'data-global-search-scope' => options[:search_scope],
-        'data-global-search-mode' => 'searchable_association',
-        'data-excluded-ids' => options[:excluded_ids]
-      }
     end
 
     def records
@@ -46,7 +38,7 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
     end
 
     def search_only?
-      options[:search_only] || records.size > MAX_DROPDOWN_SIZE
+      options[:search_only] || max_dropdown_size_exceeded?(records)
     end
 
     def global_autocomplete
@@ -57,7 +49,7 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
     end
 
     def global_autocomplete_params
-      { limit: MAX_DROPDOWN_SIZE, global_search_scope: options[:search_scope], excluded_ids: options[:excluded_ids] }
+      { limit: max_dropdown_size, global_search_scope: options[:search_scope], excluded_ids: options[:excluded_ids] }
     end
 
     def selected_search_option
