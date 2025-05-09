@@ -9,9 +9,9 @@ module RadCommon
 
       if Pundit.policy!(current_user, record).show?
         if new_tab
-          link_to record, record, format: format, class: style, target: '_blank', rel: 'noopener'
+          link_to record.to_s, record, format: format, class: style, target: '_blank', rel: 'noopener'
         else
-          link_to record, record, format: format, class: style
+          link_to record.to_s, record, format: format, class: style
         end
       elsif style.present?
         content_tag :span, record, class: style
