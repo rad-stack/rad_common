@@ -278,6 +278,12 @@ module RadUser
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
 
+    def validate_internal
+      return if external? || user_clients.none?
+
+      errors.add :external, 'not allowed when clients are assigned to this user'
+    end
+
     def validate_twilio_verify
       return unless RadConfig.twilio_verify_enabled?
       return if twilio_verify_enabled? || user_status.blank? || !user_status.validate_email_phone?
