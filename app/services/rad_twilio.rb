@@ -17,7 +17,9 @@ class RadTwilio
 
   def self.send_verify_sms(mobile_phone)
     response = RadRetry.perform_request(retry_count: 2, raise_original: true) do
-      TwilioVerifyService.send_sms_token(mobile_phone)
+      RadRateLimiter.new(limit: 500, period: 5.minutes, key: 'twilio_verify').run do
+        TwilioVerifyService.send_sms_token(mobile_phone)
+      end
     end
 
     response.status == 'pending'
@@ -27,10 +29,6 @@ class RadTwilio
     RadConfig.twilio_phone_number!
   end
 
-  def from_number_mms
-    RadConfig.twilio_mms_phone_number!
-  end
-
   def validate_phone_number(phone_number, mobile)
     return unless RadConfig.twilio_enabled?
 
@@ -38,12 +36,7 @@ class RadTwilio
 
     begin
       response = get_phone_number(phone_number, mobile)
-
-      if mobile && response.carrier['type'] != 'mobile'
-        return 'does not appear to be a valid mobile phone number'
-      elsif mobile && !response.country_code.in?(RadConfig.twilio_countries_enabled!)
-        return 'country is not supported'
-      end
+      return 'does not appear to be a valid mobile phone number' if mobile && response.carrier['type'] != 'mobile'
 
       response.phone_number
     rescue Twilio::REST::RestError, NoMethodError => e

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Attorneys', type: :request do
+RSpec.describe 'Attorneys' do
   let(:user) { create :admin }
   let(:attorney) { create :attorney }
   let(:invalid_attributes) { { first_name: Faker::Name.first_name, last_name: nil } }
@@ -20,6 +20,16 @@ RSpec.describe 'Attorneys', type: :request do
   before do
     allow_any_instance_of(Attorney).to receive(:bypass_address_validation?).and_return(true)
     login_as user, scope: :user
+  end
+
+  describe 'index' do
+    context 'when pdf format' do
+      xit 'generates a pdf' do
+        get "/attorneys/#{attorney.id}", params: { format: 'pdf' }
+
+        expect(response.content_type).to eq('application/pdf')
+      end
+    end
   end
 
   describe 'POST create' do

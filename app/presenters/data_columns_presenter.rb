@@ -52,13 +52,7 @@ class DataColumnsPresenter
     when Hash
       item[:label].presence || item[:value]
     when Symbol
-      translation = I18n.t "activerecord.attributes.#{resource.class.to_s.underscore}.#{item}"
-
-      if translation.downcase.include?('translation missing')
-        item.to_s.titlecase
-      else
-        translation
-      end
+      @view_context.translated_attribute_label(resource, item)
     end
   end
 
