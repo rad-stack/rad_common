@@ -63,7 +63,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           let(:invite_role) { internal_role }
           let(:invite_email) { valid_email }
 
-          xit 'invites' do
+          it 'invites' do
             expect(User.last.internal?).to be true
             expect(User.last.twilio_verify_enabled?).to be true
           end
@@ -74,7 +74,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           let(:invite_email) { valid_email }
           let(:all_users) { false }
 
-          xit 'invites' do
+          it 'invites' do
             expect(User.last.twilio_verify_enabled?).to be false
           end
         end
@@ -83,7 +83,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           let(:invite_role) { external_role }
           let(:invite_email) { external_email }
 
-          xit 'invites', :external_user_specs do
+          it 'invites', :external_user_specs do
             expect(User.last.external?).to be true
           end
         end
@@ -93,7 +93,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           let(:invite_role) { another_role }
           let(:invite_email) { external_email }
 
-          xit 'invites an external user and sets initial role', :external_user_specs do
+          it 'invites an external user and sets initial role', :external_user_specs do
             expect(SecurityRole.external.size).to eq 3
           end
         end
@@ -191,7 +191,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     end
 
     context 'when user is struggling' do
-      xit "doesn't let unaccepted invitee reset password" do
+      it "doesn't let unaccepted invitee reset password" do
         visit new_user_password_path
         fill_in 'Email', with: invitee.email
         click_on 'Send Me Reset Password Instructions'
@@ -200,7 +200,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
         expect(mail.to).to include admin.email
       end
 
-      xit "doesn't let unaccepted invitee request confirmation instructions" do
+      it "doesn't let unaccepted invitee request confirmation instructions" do
         visit new_user_confirmation_path
         fill_in 'Email', with: invitee.email
         click_on 'Resend Confirmation Instructions'

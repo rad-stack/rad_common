@@ -68,7 +68,7 @@ RSpec.describe 'Users', type: :system do
       context 'when switching languages' do
         before { allow(RadConfig).to receive(:switch_languages?).and_return true }
 
-        xit 'updates registration', :shared_database_specs do
+        it 'updates registration', :shared_database_specs do
           visit edit_user_registration_path
           expect(page).to have_content 'My Account'
           select 'Spanish', from: 'Language'
@@ -136,7 +136,7 @@ RSpec.describe 'Users', type: :system do
 
       before { allow(RadConfig).to receive(:manually_create_users?).and_return true }
 
-      xit 'renders the new template' do
+      it 'renders the new template' do
         visit new_user_path
         expect(page).to have_content('New User')
       end
