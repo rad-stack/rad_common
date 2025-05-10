@@ -54,10 +54,6 @@ Devise.setup do |config|
   config.mailer = 'RadDeviseMailer'
 end
 
-# https://swell.radicalbear.com/tasks/37444
-# https://github.com/collectiveidea/audited/issues/631
-Rails.configuration.active_record.use_yaml_unsafe_load = true
-
 Audited.current_user_method = :true_user
 Audited.ignored_attributes += ['address_changes']
 
@@ -78,5 +74,18 @@ module Kaminari
         (@options[:routes_proxy] || @template).url_for @params.merge(@param_name => (page <= 1 ? nil : page))
       end
     end
+  end
+end
+
+# Temporary monkey patch for setting new audited changes while migration runs
+module Audited
+  class Audit
+    before_save :set_legacy_audited_changes
+
+    private
+
+      def set_legacy_audited_changes
+        self.legacy_audited_changes = ActiveRecord::Coders::YAMLColumn.new(Object).dump(audited_changes)
+      end
   end
 end
