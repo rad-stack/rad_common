@@ -1,7 +1,8 @@
 namespace :rad_common do
-  # Temporary task - remove when all project audits are converted to json
   task update_audits_json: :environment do
-    session = RakeSession.new(task, 6.hours, 10_000)
+    # TODO: Temporary task - remove when all project audits are converted to json
+
+    session = RakeSession.new(task, 18.hours, 10_000)
     Timeout.timeout(session.time_limit) do
       session.reset_status
 
