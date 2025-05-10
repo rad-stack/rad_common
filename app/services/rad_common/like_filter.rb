@@ -2,6 +2,8 @@ module RadCommon
   ##
   # This is used to generate an input used for a SQL like filter
   class LikeFilter
+    MATCH_TYPES = %w[contains exact starts_with ends_with does_not_contain does_not_start_with does_not_end_with].freeze
+
     attr_reader :column, :input_label, :col_class, :name, :input_transform
 
     ##
@@ -30,12 +32,30 @@ module RadCommon
       value = like_value(params)
       value = input_transform.call(value) if input_transform.present? && value.present?
 
+      # Implement the logic for each match type
+
       results = results.where("#{column} ilike ?", "%#{value}%") if value.present?
       results
     end
 
     def allow_not
       false
+    end
+
+    def match_types
+      MATCH_TYPES
+    end
+
+    def match_param
+      # Implement
+    end
+
+    def default_value
+      # Implement
+    end
+
+    def default_match_type
+      # Implement
     end
 
     private
