@@ -61,6 +61,10 @@ module RadUser
             "WHERE security_roles.#{permission} = TRUE)")
     }
 
+    scope :for_security_role, lambda { |security_role_id|
+      joins(:security_roles).where(security_roles: { id: security_role_id }).distinct
+    }
+
     scope :inactive, -> { joins(:user_status).where(user_statuses: { active: false }) }
     scope :not_inactive, -> { where.not(user_status_id: UserStatus.default_inactive_status.id) }
     scope :internal, -> { where(external: false) }
