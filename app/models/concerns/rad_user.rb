@@ -71,14 +71,14 @@ module RadUser
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
+    validate :validate_initial_security_role, on: :create, if: :active?
     validate :validate_internal, on: :update
     validate :validate_twilio_verify
     validate :validate_mobile_phone
     validate :password_excludes_name
     validate :validate_last_activity
 
-    # this should be changed to "if: :active?" at some point, see Task 2024
-    validates :security_roles, presence: true, if: :active_for_authentication?
+    validates :security_roles, presence: true, if: :active?
 
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
                                        message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
@@ -299,6 +299,12 @@ module RadUser
       return if (internal? && match_domains) || (external? && !match_domains)
 
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
+    end
+
+    def validate_initial_security_role
+      return if initial_security_role_id.present? || security_role_ids.present?
+
+      errors.add :initial_security_role_id, 'is required'
     end
 
     def validate_internal

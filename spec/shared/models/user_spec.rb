@@ -164,6 +164,8 @@ RSpec.describe User, type: :model do
   end
 
   describe 'external user' do
+    let(:external_role) { create :security_role, :external }
+
     let(:attributes) do
       { first_name: 'Example',
         last_name: 'User',
@@ -171,7 +173,8 @@ RSpec.describe User, type: :model do
         password: 'cH@ngem3',
         password_confirmation: 'cH@ngem3',
         user_status: active_status,
-        external: true }
+        external: true,
+        security_roles: [external_role] }
     end
 
     before { Company.main.update! valid_user_domains: %w[example.com rubygems.org] }
