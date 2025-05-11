@@ -1,4 +1,22 @@
 namespace :rad_common do
+  task update_audits_json: :environment do
+    # TODO: Temporary task - remove when all project audits are converted to json
+
+    session = RakeSession.new(task, 18.hours, 10_000)
+    Timeout.timeout(session.time_limit) do
+      session.reset_status
+
+      records = Audited::Audit.where(new_audited_changes: nil)
+      count = records.count
+      records.select(:id, :audited_changes, :new_audited_changes).find_each(order: :desc) do |audit|
+        break if session.check_status('migrating audited changes from YAML to JSONB', count)
+
+        audit.update_column(:new_audited_changes, audit.audited_changes)
+      end
+      session.finished
+    end
+  end
+
   task :daily, [:override_model] => :environment do |task, args|
     session = RakeSession.new(task, 24.hours, 1)
 
