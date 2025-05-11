@@ -13,37 +13,14 @@ class RadUserPolicy < ApplicationPolicy
     record != user
   end
 
-  def show?
-    create?
-  end
-
-  def update?
-    create?
-  end
-
-  def destroy?
-    create?
-  end
-
-  def resend_invitation?
-    create?
-  end
-
-  def confirm?
-    update?
-  end
-
-  def test_email?
-    update?
-  end
-
-  def test_sms?
-    update?
-  end
-
-  def reactivate?
-    update?
-  end
+  alias show? create?
+  alias update? create?
+  alias destroy? create?
+  alias resend_invitation? create?
+  alias confirm? update?
+  alias test_email? update?
+  alias test_sms? update?
+  alias reactivate? update?
 
   def update_timezone?
     user == record && UserTimezone.new(record).wrong_timezone?
