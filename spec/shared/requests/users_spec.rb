@@ -99,7 +99,7 @@ RSpec.describe 'Users', type: :request do
       end
 
       describe 'with invalid params' do
-        xit 're-renders the new template' do
+        it 're-renders the new template' do
           post '/users', params: { user: invalid_attributes }
           expect(response.body).to include 'Please review the problems below'
         end

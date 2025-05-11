@@ -10,7 +10,7 @@ class RadPermission
   end
 
   def short_label(category_name)
-    return label if label == category_name || !label.end_with?(category_name)
+    return label if label == category_name
 
     label.gsub(category_name, '').strip
   end
@@ -28,7 +28,22 @@ class RadPermission
   end
 
   def users
-    User.by_permission(name).by_name
+    User.active.by_permission(name).sorted
+  end
+
+  def unused_no_users?
+    return false if name == 'admin'
+
+    where_clause = 'users.id NOT IN (SELECT user_security_roles.user_id FROM user_security_roles ' \
+                   'WHERE user_security_roles.security_role_id = ?)'
+
+    User.active.where(where_clause, SecurityRole.admin_role.id).by_permission(name).count < 1
+  end
+
+  def unused_all_users?
+    return false if name == 'admin'
+
+    users.count == User.active.count
   end
 
   class << self
@@ -36,8 +51,8 @@ class RadPermission
       (SecurityRole.attribute_names - %w[id name created_at updated_at external allow_invite allow_sign_up]).sort
     end
 
-    def only_standard?
-      all.size == 2
+    def exists?(permission_name)
+      all.include? permission_name.to_s
     end
 
     def security_role_categories(security_role)
@@ -75,7 +90,15 @@ class RadPermission
           value: user.permission?(item) }
       end
 
-      categories.group_by { |item| item[:category_name] }
+      categories.group_by { |item| item[:category_name] }.sort_by(&:first)
+    end
+
+    def unused_no_users
+      RadPermission.all.select { |item| RadPermission.new(item).unused_no_users? }
+    end
+
+    def unused_all_users
+      RadPermission.all.select { |item| RadPermission.new(item).unused_all_users? }
     end
 
     private
@@ -83,12 +106,8 @@ class RadPermission
       def permission_category_name(model_category_names, permission_name)
         return 'Admin' if permission_name == 'admin'
 
-        model_category_names.each do |category|
+        model_category_names.sort_by(&:size).reverse.each do |category|
           return category.titleize if permission_name.end_with?(category)
-        end
-
-        model_category_names.reverse.each do |category|
-          return category.titleize if permission_name.include?(category)
         end
 
         'Other'

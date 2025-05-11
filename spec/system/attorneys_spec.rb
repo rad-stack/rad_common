@@ -21,8 +21,8 @@ RSpec.describe 'Attorneys' do
       visit new_attorney_path
       expect(page).to have_content('New Attorney')
 
-      fill_in 'First name', with: attorney.first_name
-      fill_in 'Last name', with: attorney.last_name
+      fill_in 'First Name', with: attorney.first_name
+      fill_in 'Last Name', with: attorney.last_name
       fill_in 'attorney_phone_number', with: attorney.phone_number
       fill_in 'attorney_email', with: attorney.email
 
