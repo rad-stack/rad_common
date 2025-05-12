@@ -18,7 +18,10 @@ RSpec.describe 'Users', type: :system do
     before { login_as user, scope: :user }
 
     describe 'index' do
-      before { visit users_path }
+      before do
+        allow_any_instance_of(UserPolicy).to receive(:update?).and_return(false)
+        visit users_path
+      end
 
       it 'shows users and limited info' do
         expect(page).to have_content 'Users (1)'
@@ -136,7 +139,7 @@ RSpec.describe 'Users', type: :system do
 
       before { allow(RadConfig).to receive(:manually_create_users?).and_return true }
 
-      xit 'renders the new template' do
+      it 'renders the new template' do
         visit new_user_path
         expect(page).to have_content('New User')
       end

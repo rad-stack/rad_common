@@ -73,6 +73,7 @@ module RadUser
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
+    validate :validate_initial_security_role, on: :create, if: :active?
     validate :validate_twilio_verify
     validate :validate_mobile_phone
     validate :password_excludes_name
@@ -260,7 +261,23 @@ module RadUser
       self.user_status = status if new_record? && !user_status
       return unless new_record?
 
-      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && (RadConfig.twilio_verify_all_users? || admin?)
+      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? &&
+                                   (RadConfig.twilio_verify_all_users? || two_factor_security_role?)
+
+      self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
+    end
+
+    def two_factor_security_role?
+      return initial_security_role.two_factor_auth? if initial_security_role_id.present?
+
+      security_roles.any?(&:two_factor_auth?)
+    end
+
+    def default_user_status
+      return UserStatus.default_active_status unless RadConfig.pending_users?
+      return UserStatus.default_active_status if invited_by.present?
+
+      UserStatus.default_pending_status
     end
 
     def initial_security_role
@@ -282,6 +299,12 @@ module RadUser
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
 
+    def validate_initial_security_role
+      return if initial_security_role_id.present? || security_role_ids.present?
+
+      errors.add :initial_security_role_id, 'is required'
+    end
+
     def validate_internal
       return if external? || user_clients.none?
 
@@ -291,7 +314,7 @@ module RadUser
     def validate_twilio_verify
       return unless RadConfig.twilio_verify_enabled?
       return if twilio_verify_enabled? || user_status.blank? || !user_status.validate_email_phone?
-      return unless RadConfig.twilio_verify_all_users? || admin?
+      return unless RadConfig.twilio_verify_all_users? || two_factor_security_role?
 
       errors.add(:twilio_verify_enabled, 'is required')
     end
