@@ -58,7 +58,7 @@ module RadBin
     sorted_backup_list = parse_backup_list(heroku_app_name)
 
     backup_hash = sorted_backup_list.to_h { |b| ["#{b[:id]} created at (#{b[:created_at]})", b[:id]] }
-    choices = sorted_backup_list.map { |b| "#{b[:id]} created at (#{b[:created_at]})" }
+    choices = ['Generate new backup'] + backup_hash.keys
     prompt = TTY::Prompt.new
     choice = prompt.select('Please select a backup id from the following options:', choices)
     backup_hash[choice]
