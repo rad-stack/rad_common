@@ -87,7 +87,8 @@ RSpec.describe 'Users', type: :request do
             last_name: Faker::Name.last_name,
             mobile_phone: create(:phone_number, :mobile),
             password: 'cOmpl3x_p@55w0rd',
-            email: 'example000@example.com' }
+            email: 'example000@example.com',
+            security_roles: [security_role.id] }
         end
 
         it 'creates the user and redirects' do

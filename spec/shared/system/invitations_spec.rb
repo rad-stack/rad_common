@@ -44,7 +44,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
         it 'invites' do
           visit new_user_invitation_path
 
-          select invite_role.name, from: 'Initial Security Role' if RadConfig.external_users?
+          select invite_role.name, from: 'Initial Security Role'
           fill_in 'Email', with: invite_email
           fill_in 'First Name', with: first_name
           fill_in 'Last Name', with: last_name
@@ -149,7 +149,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
         it 'because of a single letter in name that conflicts with password in name validation' do
           visit new_user_invitation_path
 
-          select internal_role.name, from: 'Initial Security Role'
+          select internal_role.name, from: 'Initial Security Role' if RadConfig.external_users?
           fill_in 'Email', with: valid_email
           fill_in 'First Name', with: 'f'
           fill_in 'Last Name', with: 'b'
@@ -166,7 +166,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
       it 'resends invitation' do
         visit new_user_invitation_path
 
-        select internal_role.name, from: 'Initial Security Role'
+        select internal_role.name, from: 'Initial Security Role' if RadConfig.external_users?
         fill_in 'Email', with: valid_email
         fill_in 'First Name', with: first_name
         fill_in 'Last Name', with: last_name

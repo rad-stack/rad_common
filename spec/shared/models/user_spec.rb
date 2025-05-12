@@ -16,7 +16,8 @@ RSpec.describe User, type: :model do
       mobile_phone: create(:phone_number, :mobile),
       email: 'user@example.com',
       password: 'cOmpl3x_p@55w0rd',
-      password_confirmation: 'cOmpl3x_p@55w0rd' }
+      password_confirmation: 'cOmpl3x_p@55w0rd',
+      security_roles: [security_role] }
   end
 
   describe 'notify_user_approved', :pending_user_specs do
@@ -163,7 +164,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'external user' do
+  describe 'external user', :external_user_specs do
     let(:external_role) { create :security_role, :external }
 
     let(:attributes) do
