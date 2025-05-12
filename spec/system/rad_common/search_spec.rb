@@ -71,6 +71,15 @@ RSpec.describe 'Search' do
         expect(page).to have_content(division.name)
         expect(page).to have_content(other_division.name)
 
+        # Without Search max options not exceeded
+        tom_select category.name, from: 'search_category_id'
+        first('button', text: 'Apply Filters').click
+        expect(page).to have_content(division.name)
+        expect(page).to have_no_content(other_division.name)
+
+        create_list :category, 300
+        visit divisions_path
+
         # Full Search
         tom_select category.name, from: 'search_category_id', search: category.name
         first('button', text: 'Apply Filters').click
@@ -146,8 +155,9 @@ RSpec.describe 'Search' do
       expect(page).to have_no_content 'Invalid date entered for created_at'
     end
 
-    it 'does save valid date to users.filter_defaults' do
-      visit divisions_path(search: { created_at_start: '2019-12-01', created_at_end: '2019-12-02', division_status: 1 })
+    it 'does save valid date to users.filter_defaults', :js do
+      visit divisions_path(search: { created_at_start: '2019-12-01', created_at_end: '2019-12-02',
+                                     division_status: [1] })
       visit '/'
       visit divisions_path
       expect(page.body).to include '2019-12-01'

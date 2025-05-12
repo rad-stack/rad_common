@@ -23,6 +23,7 @@ class DivisionSearch < RadCommon::Search
        input_label: 'Category',
        column: :category_id,
        include_blank: false,
+       options: Category.all,
        search_scope_name: 'category_name',
        multiple: true,
        allow_not: true
