@@ -45,11 +45,11 @@ class HerokuCommands
       write_log 'Migrating database'
       write_log `skip_on_db_migrate=1 rake db:migrate`
 
+      reset_sensitive_local_data
       write_log 'Clearing certain production data'
       remove_user_avatars
       remove_encrypted_secrets
       User.update_all twilio_verify_enabled: false
-      reset_sensitive_local_data
 
       duration = Time.now.utc - start_time
       write_log "Restore complete in #{duration.round(2)} seconds"
