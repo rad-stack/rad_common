@@ -88,7 +88,9 @@ jobs:
 
       - name: Compile esbuild assets
         working-directory: spec/dummy
-        run: bundle exec bin/rails assets:precompile
+        run: |
+          yarn build
+          bundle exec bin/rails assets:precompile
 
       - name: Load schema
         working-directory: spec/dummy
