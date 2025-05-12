@@ -271,7 +271,9 @@ module RadUser
       self.user_status = default_user_status if new_record? && !user_status
       return unless new_record?
 
-      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && (RadConfig.twilio_verify_all_users? || two_factor_security_role?)
+      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? &&
+                                   (RadConfig.twilio_verify_all_users? || two_factor_security_role?)
+
       self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
     end
 
