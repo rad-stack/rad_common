@@ -4,6 +4,6 @@ class TwoFactorAuthUpdates < ActiveRecord::Migration[7.2]
     return if SecurityRole.none?
 
     SecurityRole.where(admin: true).update_all two_factor_auth: true
-    SecurityRole.all.update_all two_factor_auth: true if RadConfig.twilio_verify_all_users?
+    SecurityRole.all.update_all two_factor_auth: true if RadConfig.twilio_enabled? && RadConfig.twilio_verify_all_users?
   end
 end
