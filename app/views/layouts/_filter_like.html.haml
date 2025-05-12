@@ -1,10 +1,10 @@
 .row.align-items-center{ data: { controller: 'search-like-filter' } }
-  - match_type_value = search.search_params[filter.match_param] || filter.default_match_type
+  - match_type_value = search.search_params[filter.match_type_param] || filter.default_match_type
   .col
     = f.label filter.like_input, filter.input_label, required: false
   .col-auto
     .dropdown
-      = f.hidden_field filter.match_param, value: match_type_value, data: { search_like_filter_target: 'input' }
+      = f.hidden_field filter.match_type_param, value: match_type_value, data: { search_like_filter_target: 'input' }
       %span.dropdown-toggle{ type: 'button', data: { toggle: 'dropdown' } }
         %i.fa.fa-filter
       %ul.dropdown-menu.dropdown-menu-right{ data: { search_like_filter_target: 'menu' } }
@@ -16,8 +16,7 @@
                 = type.titleize
                 %i.fa.fa-check.text-muted.px-2{ class: (type == match_type_value ? '' : 'd-none') }
       %span.text-muted.ml-2{ data: { search_like_filter_target: 'label' } }
-        -# TODO: Uncomment when implemented default
-        -# = match_type_value.titleize
+        = match_type_value.titleize
 
 = f.input filter.searchable_name,
           label: false,
