@@ -35,6 +35,10 @@ module RadCommon
 
       return if value.blank?
 
+      build_query(results, value, match_type)
+    end
+
+    def build_query(results, value, match_type)
       case match_type
       when 'contains'
         results.where("#{column} ilike ?", "%#{value}%")
