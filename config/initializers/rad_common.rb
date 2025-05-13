@@ -76,16 +76,3 @@ module Kaminari
     end
   end
 end
-
-# Temporary monkey patch for setting new audited changes while migration runs
-module Audited
-  class Audit
-    before_save :set_new_audited_changes
-
-    private
-
-      def set_new_audited_changes
-        self.new_audited_changes = audited_changes
-      end
-  end
-end
