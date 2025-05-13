@@ -69,12 +69,8 @@ module RadCommon
       "#{searchable_name}_match_type"
     end
 
-    def default_value
-      0
-    end
-
     def default_match_type
-      MATCH_TYPES[default_value]
+      'contains'
     end
 
     private

@@ -65,7 +65,7 @@ module RadCommon
     end
 
     # TODO: possibly remove this method, see Task 2925
-    def sort_clause
+    def sort_clause(record_class)
       @sorting.sort_clause record_class
     end
 
@@ -162,14 +162,10 @@ module RadCommon
         # permit to work
         columns = filters.sort_by { |f| f.respond_to?(:multiple) && f.multiple ? 1 : 0 }
         columns.map { |f|
-          # binding.pry
-
           not_filter = "#{f.searchable_name}_not" if f.allow_not
           match_type = f.match_type_param if f.is_a? LikeFilter
           if f.respond_to?(:multiple) && f.multiple
             [not_filter, match_type, { f.searchable_name => [] }].compact
-          # binding.pry
-
           else
             [not_filter, match_type, f.searchable_name].compact
           end
