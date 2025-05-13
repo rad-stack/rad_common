@@ -52,14 +52,22 @@ module RadCommon
       errors.join(', ')
     end
 
-    delegate :sort_columns, to: :@sorting
+    def sort_columns
+      @sorting.sort_columns
+    end
 
-    delegate :sort_column, to: :@sorting
+    def sort_column
+      @sorting.sort_column
+    end
 
-    delegate :sort_direction, to: :@sorting
+    def sort_direction
+      @sorting.sort_direction
+    end
 
     # TODO: possibly remove this method, see Task 2925
-    delegate :sort_clause, to: :@sorting
+    def sort_clause
+      @sorting.sort_clause record_class
+    end
 
     def search_params?
       params.has_key? :search
@@ -115,7 +123,9 @@ module RadCommon
       searchable_columns.map(&:to_s)
     end
 
-    delegate :filters, to: :@filtering
+    def filters
+      @filtering.filters
+    end
 
     def saved_filters
       @saved_filters ||= Pundit.policy_scope(current_user, SavedSearchFilter).where(search_class: self.class.name)
@@ -150,18 +160,18 @@ module RadCommon
       def permitted_searchable_columns
         # we need to make sure any params that are an array value ( multiple select ) go to the bottom for
         # permit to work
-
         columns = filters.sort_by { |f| f.respond_to?(:multiple) && f.multiple ? 1 : 0 }
         columns.map { |f|
+          # binding.pry
+
           not_filter = "#{f.searchable_name}_not" if f.allow_not
           match_type = f.match_type_param if f.is_a? LikeFilter
           if f.respond_to?(:multiple) && f.multiple
-            [not_filter, { f.searchable_name => [] }].compact
-            [match_type, { f.searchable_name => [] }].compact
-          else
-            [not_filter, f.searchable_name].compact
-            [match_type, f.searchable_name].compact
+            [not_filter, match_type, { f.searchable_name => [] }].compact
+          # binding.pry
 
+          else
+            [not_filter, match_type, f.searchable_name].compact
           end
         }.flatten + %i[applied_filter saved_name]
       end
