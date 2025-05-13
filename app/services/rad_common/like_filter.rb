@@ -28,7 +28,6 @@ module RadCommon
     end
 
     def apply_filter(results, search_params)
-      # binding.pry
       value = like_value(search_params)
       value = input_transform.call(value) if input_transform.present? && value.present?
       match_type = (search_params[match_type_param] || default_match_type).to_s
