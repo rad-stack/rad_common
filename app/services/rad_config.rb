@@ -199,8 +199,6 @@ class RadConfig
         config_item! :portal_app_name
       elsif user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
         config_item! :prescriber_portal_app_name
-      elsif user.respond_to?(:portal_attorney?) && user.portal_attorney?
-        config_item! :attorney_portal_app_name
       else
         config_item! :portal_app_name
       end
@@ -225,8 +223,6 @@ class RadConfig
         config_item! :portal_host_name
       elsif user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
         config_item! :prescriber_portal_host_name
-      elsif user.respond_to?(:portal_attorney?) && user.portal_attorney?
-        config_item! :attorney_portal_host_name
       else
         config_item! :portal_host_name
       end
