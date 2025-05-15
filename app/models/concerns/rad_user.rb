@@ -43,10 +43,7 @@ module RadUser
     }
 
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
-    scope :by_name, -> { order(:first_name, :last_name) }
     scope :by_id, -> { order(:id) }
-    scope :by_last, -> { order(:last_name, :first_name) }
-    scope :sorted, -> { by_name }
     scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
     scope :without_mobile_phone, -> { where(mobile_phone: ['', nil]) }
     scope :recent_first, -> { order('users.created_at DESC') }
@@ -54,8 +51,21 @@ module RadUser
     scope :except_user, ->(user) { where.not(id: user.id) }
     scope :with_notifications, -> { where('users.id IN (SELECT DISTINCT user_id FROM notifications)') }
 
-    scope :by_permission, lambda { |permission_attr|
-      joins(:security_roles).where("#{permission_attr} = TRUE").active.distinct
+    scope :sorted, lambda {
+      if RadConfig.last_first_user?
+        order(:last_name, :first_name)
+      else
+        order(:first_name, :last_name)
+      end
+    }
+
+    scope :by_permission, lambda { |permission|
+      raise "missing permission column: #{permission}" unless RadPermission.exists?(permission)
+
+      where('users.id IN (' \
+            'SELECT user_id FROM user_security_roles ' \
+            'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
+            "WHERE security_roles.#{permission} = TRUE)")
     }
 
     scope :inactive, lambda {
@@ -74,11 +84,10 @@ module RadUser
 
     validate :validate_email_address
     validate :validate_initial_security_role, on: :create, if: :active?
-
+    validate :validate_internal, on: :update
     validate :validate_twilio_verify
     validate :validate_mobile_phone
     validate :password_excludes_name
-    validate :validate_internal, on: :update
     validate :validate_last_activity
 
     validates :security_roles, presence: true, if: :active?
@@ -101,7 +110,11 @@ module RadUser
   end
 
   def to_s
-    "#{first_name} #{last_name}"
+    if RadConfig.last_first_user?
+      "#{last_name}, #{first_name}"
+    else
+      "#{first_name} #{last_name}"
+    end
   end
 
   def active
@@ -143,6 +156,8 @@ module RadUser
   end
 
   def permission?(permission)
+    raise "missing permission column: #{permission}" unless RadPermission.exists?(permission)
+
     security_roles.select { |x| x[permission] }.length.positive?
   end
 
@@ -222,8 +237,12 @@ module RadUser
     end
   end
 
-  def test_email!
-    RadMailer.simple_message(self, 'Test Email', 'This is a test.').deliver_later
+  def test_email!(from_user)
+    RadMailer.simple_message(self,
+                             'Test Email',
+                             'This is a test.',
+                             contact_log_from_user: from_user,
+                             contact_log_record: self).deliver_later
   end
 
   def test_sms!(from_user)

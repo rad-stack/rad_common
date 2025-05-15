@@ -2,10 +2,6 @@ require 'mail'
 
 class RadConfig
   class << self
-    def default_language_code!
-      config_item! :language_code
-    end
-
     def admin_email!
       secret_config_item! :admin_email
     end
@@ -148,10 +144,6 @@ class RadConfig
       secret_config_item! :twilio_phone_number
     end
 
-    def twilio_mms_phone_number!
-      secret_config_item(:twilio_mms_phone_number).presence || twilio_phone_number!
-    end
-
     def twilio_account_sid!
       secret_config_item! :twilio_account_sid
     end
@@ -174,12 +166,6 @@ class RadConfig
 
     def twilio_verify_remember_device!
       config_item!(:twilio_verify_remember_device_days).days
-    end
-
-    # Config item should be in sync with countries enabled for messaging in twilio account
-    # https://console.twilio.com/us1/develop/sms/settings/geo-permissions
-    def twilio_countries_enabled!
-      config_item!(:twilio_countries_enabled).split(' ')
     end
 
     def seeded_users!
