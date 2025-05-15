@@ -18,6 +18,9 @@ module RadSecurityRole
     validate :validate_standard_permissions
     validate :validate_rules
     validate :validate_external_security_role
+    validate :validate_two_factor
+
+    before_validation :check_defaults
 
     strip_attributes
     audited
@@ -67,5 +70,26 @@ module RadSecurityRole
       return unless external? && !RadConfig.external_users?
 
       errors.add(:external, 'cannot be true when external users setting is off')
+    end
+
+    def validate_two_factor
+      if RadConfig.twilio_verify_enabled?
+        return if two_factor_auth?
+
+        errors.add(:two_factor_auth, 'is required for admin role') if admin?
+        return unless RadConfig.twilio_verify_all_users?
+
+        errors.add :two_factor_auth, 'must be enabled'
+      else
+        return unless two_factor_auth?
+
+        errors.add :two_factor_auth, 'must be disabled'
+      end
+    end
+
+    def check_defaults
+      return if RadConfig.twilio_verify_enabled?
+
+      self.two_factor_auth = false
     end
 end

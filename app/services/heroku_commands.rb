@@ -49,6 +49,7 @@ class HerokuCommands
       write_log 'Clearing certain production data'
       remove_user_avatars
       remove_encrypted_secrets
+      SecurityRole.update_all two_factor_auth: false
       User.update_all twilio_verify_enabled: false
 
       duration = Time.now.utc - start_time
