@@ -104,7 +104,7 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def default_url_options
-    if @resource.portal?
+    if @resource.external?
       { host: portal_host_name(@resource) }
     else
       { host: RadConfig.host_name! }
@@ -118,7 +118,7 @@ class RadDeviseMailer < Devise::Mailer
     end
 
     def app_name
-      @resource.portal? ? portal_app_name(@resource) : RadConfig.app_name!
+      @resource.external? ? portal_app_name(@resource) : RadConfig.app_name!
     end
 
     def installed_app_name
@@ -126,11 +126,7 @@ class RadDeviseMailer < Devise::Mailer
     end
 
     def portal_app_name(user)
-      return "#{installed_app_name} Portal" if user.blank?
-
-      if user.respond_to?(:portal_patient?) && user.portal_patient?
-        "#{installed_app_name} Patient Portal"
-      elsif user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
+      if user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
         "#{installed_app_name} Prescriber Portal"
       else
         "#{installed_app_name} Patient Portal"
@@ -138,11 +134,7 @@ class RadDeviseMailer < Devise::Mailer
     end
 
     def portal_host_name(user)
-      return RadConfig.host_name!.gsub('tracker', 'patient') if user.blank?
-
-      if user.respond_to?(:portal_patient?) && user.portal_patient?
-        RadConfig.host_name!.gsub('tracker', 'patient')
-      elsif user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
+      if user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
         RadConfig.config_item!(:portal_host_name).gsub('patient', 'prescriber')
       else
         RadConfig.host_name!.gsub('tracker', 'patient')

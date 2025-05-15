@@ -6,7 +6,8 @@ module RadController
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     before_action :set_sentry_user_context
     before_action :check_ip_address_timezone, if: :user_signed_in?
-    around_action :user_time_zone, if: :current_user
+    around_action :user_timezone
+    around_action :switch_locale, if: :switch_languages?
     after_action :verify_authorized, unless: :devise_controller?
     after_action :verify_policy_scoped, only: :index
 
@@ -68,8 +69,9 @@ module RadController
       UserTimezone.new(current_user).check_user!(request.remote_ip)
     end
 
-    def user_time_zone(&block)
-      Time.use_zone(current_user.timezone, &block)
+    def user_timezone(&)
+      timezone = current_user.present? ? current_user.timezone : Company.main.timezone
+      Time.use_zone(timezone, &)
     end
 
     def search_params

@@ -11,7 +11,7 @@ default: &default
   validate_external_email_domain: true
   app_logo_includes_name: true
   impersonate: true
-  start_route: attorneys
+  start_route: onboardings
   user_clients: true
   user_profiles: true
   canadian_addresses: false

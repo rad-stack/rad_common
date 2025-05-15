@@ -97,7 +97,7 @@ class RadMailer < ActionMailer::Base
     # this won't work for links called using the route helpers outside of the mailer context
     # this won't detect when to use the portal host unless @recipient is a User
 
-    return { host: RadConfig.portal_host_name!(@recipient) } if @recipient.is_a?(User) && @recipient.portal?
+    return { host: RadConfig.portal_host_name!(@recipient) } if @recipient.is_a?(User) && @recipient.external?
 
     { host: RadConfig.host_name! }
   end
@@ -145,7 +145,7 @@ class RadMailer < ActionMailer::Base
     end
 
     def app_name(user)
-      user.portal? ? RadConfig.portal_app_name!(user) : RadConfig.app_name!
+      user.external? ? RadConfig.portal_app_name!(user) : RadConfig.app_name!
     end
 
     def escape_name(recipient_name)

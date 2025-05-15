@@ -198,10 +198,6 @@ module RadUser
     end
   end
 
-  def portal?
-    external?
-  end
-
   def read_notifications!
     notifications.unread.update_all unread: false
   end

@@ -7,7 +7,7 @@ module Notifications
     private
 
       def app_name
-        payload.portal? ? RadConfig.portal_app_name!(payload) : RadConfig.app_name!
+        payload.external? ? RadConfig.portal_app_name!(payload) : RadConfig.app_name!
       end
   end
 end
