@@ -41,7 +41,7 @@ RSpec.describe 'Divisions' do
       end
 
       context 'when invalid due to content type' do
-        xit 'validates' do
+        it 'validates' do
           expect(page).to have_content 'Icon has an invalid content type of application/pdf, must be PNG'
           expect(division.icon.attached?).to be false
         end
