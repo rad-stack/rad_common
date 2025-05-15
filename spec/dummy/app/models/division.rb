@@ -1,20 +1,21 @@
 class Division < ApplicationRecord
-  SKIP_SCHEMA_VALIDATION_INDEXES = [:index_divisions_on_name].freeze
   include Hashable
   include CreatedBy
 
   TAG_OPTIONS = %w[Finance Marketing Sales HR IT Operations Support R&D].freeze
 
+  schema_validation_options do
+    index :index_divisions_on_name, skip: true
+  end
+
   belongs_to :owner, class_name: 'User'
   belongs_to :category, optional: true
-
-  attr_accessor :category_name
 
   has_one_attached :logo
   has_one_attached :icon
 
   alias_attribute :to_s, :name
-  enum division_status: %i[status_pending status_active status_inactive]
+  enum :division_status, %i[status_pending status_active status_inactive]
 
   scope :sorted, -> { order(:name) }
 
@@ -31,12 +32,12 @@ class Division < ApplicationRecord
   validates_with EmailAddressValidator, fields: [:invoice_email]
   validates_with InternalUserValidator, fields: [:owner]
 
-  before_validation :set_category
+  # before_validation :set_category
 
   strip_attributes
   audited
 
-  after_update :notify_owner
+  after_commit :notify_owner
 
   def logo_variant
     logo.variant(resize: '290x218>')
@@ -46,12 +47,6 @@ class Division < ApplicationRecord
 
     def notify_owner
       Notifications::DivisionUpdatedNotification.main(self).notify!
-    end
-
-    def set_category
-      return if category.present? || category_name.blank?
-
-      self.category = Category.find_or_create_by!(name: category_name.strip)
     end
 
     def sanitize_tags

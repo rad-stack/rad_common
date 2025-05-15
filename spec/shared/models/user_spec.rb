@@ -248,7 +248,7 @@ RSpec.describe User, type: :model do
       Timecop.travel(91.days.from_now) { expect(user.expired?).to be(true) }
     end
 
-    xit 'expires for a new user without activity' do
+    it 'expires for a new user without activity' do
       expect(user.expired?).to be(false)
 
       Timecop.travel(91.days.from_now) { expect(user.expired?).to be(true) }
