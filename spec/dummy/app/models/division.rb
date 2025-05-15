@@ -11,6 +11,8 @@ class Division < ApplicationRecord
   belongs_to :owner, class_name: 'User'
   belongs_to :category, optional: true
 
+  attr_accessor :category_name
+
   has_one_attached :logo
   has_one_attached :icon
 
@@ -32,7 +34,7 @@ class Division < ApplicationRecord
   validates_with EmailAddressValidator, fields: [:invoice_email]
   validates_with InternalUserValidator, fields: [:owner]
 
-  # before_validation :set_category
+  before_validation :set_category
 
   strip_attributes
   audited
@@ -47,6 +49,12 @@ class Division < ApplicationRecord
 
     def notify_owner
       Notifications::DivisionUpdatedNotification.main(self).notify!
+    end
+
+    def set_category
+      return if category.present? || category_name.blank?
+
+      self.category = Category.find_or_create_by!(name: category_name.strip)
     end
 
     def sanitize_tags

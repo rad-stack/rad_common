@@ -7,12 +7,12 @@ RSpec.describe 'Divisions' do
   before { login_as user, scope: :user }
 
   describe 'new' do
-    xit 'renders the new template' do
+    it 'renders the new template' do
       visit new_division_path
       expect(page).to have_content('New Division')
     end
 
-    xit 'shows presence error on autocomplete field' do
+    it 'shows presence error on autocomplete field' do
       visit new_division_path
       click_button 'Save'
       expect(page).to have_content('must exist')
@@ -50,7 +50,7 @@ RSpec.describe 'Divisions' do
       context 'when invalid due to file size' do
         let(:file) { 'spec/fixtures/large_logo.png' }
 
-        xit 'validates' do
+        it 'validates' do
           expect(page).to have_content 'Icon must be less than 50 KB'
           expect(division.icon.attached?).to be false
         end
@@ -61,7 +61,7 @@ RSpec.describe 'Divisions' do
   describe 'edit' do
     before { visit edit_division_path(division) }
 
-    xit 'renders the edit template' do
+    it 'renders the edit template' do
       expect(page).to have_content('Editing Division')
     end
 
