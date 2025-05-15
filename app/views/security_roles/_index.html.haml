@@ -8,6 +8,8 @@
       %th Allow Invite
     - unless RadConfig.disable_sign_up?
       %th Allow Sign Up
+    - if RadConfig.twilio_verify_enabled?
+      %th Two Factor Auth
     - if show_actions
       %th.actions Actions
 
@@ -23,6 +25,8 @@
         %td= format_boolean record.allow_invite
       - unless RadConfig.disable_sign_up?
         %td= format_boolean record.allow_sign_up
+      - if RadConfig.twilio_verify_enabled?
+        %td= format_boolean record.two_factor_auth?
       - if show_actions
         %td
           - if policy(record).update?

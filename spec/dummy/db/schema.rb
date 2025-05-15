@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_25_120906) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -312,6 +312,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_25_120906) do
     t.boolean "update_division", default: false, null: false
     t.boolean "delete_division", default: false, null: false
     t.boolean "read_attorney", default: false, null: false
+    t.boolean "two_factor_auth", default: true, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 
