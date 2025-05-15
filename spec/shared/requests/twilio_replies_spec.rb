@@ -40,7 +40,7 @@ RSpec.describe 'TwilioReplies', type: :request do
     end
 
     describe 'with invalid params' do
-      xit 'raises an error' do
+      it 'raises an error' do
         expect { post '/twilio_replies', params: invalid_attributes }.to raise_error(StandardError)
       end
     end

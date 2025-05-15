@@ -28,8 +28,8 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
   config.cache_store = :memory_store
 
-  # Raise exceptions instead of rendering exception templates.
-  config.action_dispatch.show_exceptions = false
+  # Render exception templates for rescuable exceptions and raise for other exceptions.
+  config.action_dispatch.show_exceptions = :none
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
@@ -75,5 +75,5 @@ Rails.application.configure do
   end
 
   # Raise error when a before_action's only/except options reference missing actions
-  # config.action_controller.raise_on_missing_callback_actions = false
+  config.action_controller.raise_on_missing_callback_actions = false
 end
