@@ -19,12 +19,9 @@ describe RadDeviseMailer, type: :mailer do
     context 'when external' do
       let(:user) { create :user, :external }
 
-      before do
-        allow(RadConfig).to receive(:portal?).and_return true
-        user.invite!
-      end
+      before { user.invite! }
 
-      it { is_expected.to include 'Someone has invited you to Foo Portal' }
+      it { is_expected.to include 'Someone has invited you to Dummy Patient Portal' }
     end
   end
 

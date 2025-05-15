@@ -199,7 +199,7 @@ module RadUser
   end
 
   def portal?
-    external? && RadConfig.portal?
+    external?
   end
 
   def read_notifications!

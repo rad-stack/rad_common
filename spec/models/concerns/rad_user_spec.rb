@@ -30,4 +30,13 @@ RSpec.describe RadUser, type: :module do
       it { is_expected.to be false }
     end
   end
+
+  describe 'unknown permission' do
+    let(:user) { create :user }
+    let(:permission) { :foo_bar_bro_bruh }
+
+    it 'raises an exception' do
+      expect { user.permission?(permission) }.to raise_error 'missing permission column: foo_bar_bro_bruh'
+    end
+  end
 end

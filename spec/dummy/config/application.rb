@@ -46,13 +46,6 @@ module Dummy
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
-    # https://swell.radicalbear.com/tasks/37444
-    # https://github.com/collectiveidea/audited/issues/631
-    Rails.configuration.active_record.use_yaml_unsafe_load = true
-    Rails.configuration.active_record.yaml_column_permitted_classes = [
-      ActiveSupport::HashWithIndifferentAccess, ActiveSupport::TimeWithZone, ActiveSupport::TimeZone, Date, Time,
-      String, Integer, NilClass, Float, FalseClass, Hash, Array, DateTime, TrueClass, BigDecimal
-    ]
     # Don't generate system test files.
     config.generators.system_tests = nil
   end

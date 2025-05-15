@@ -22,8 +22,6 @@
                                 'min-length' => scope[:min_length] },
                                 'data-type' => scope[:data_type] }
                         = scope[:description]
-            - if RadConfig.enable_super_search?
-              %input.super_search{ type: 'hidden', name: 'super_search', value: false }
             %input.global_search_id{ type: 'hidden', name: 'global_search_id' }
             %input.global_search_model_name{ type: 'hidden', name: 'global_search_model_name' }
             %input.global_search_scope{ type: 'hidden', name: 'global_search_scope' }
@@ -43,10 +41,3 @@
                   size: '50',
                   type: 'text',
                   autocomplete: 'off' }
-          - if RadConfig.enable_super_search?
-            .input-group-append
-              %span.input-group-text
-                %span{ class: 'fa fa-globe',
-                       data: { toggle: 'tooltip', placement: 'top' },
-                       title: 'Super search takes longer than scoped search.' }
-                %input.super_search.ml-2{ type: 'checkbox', name: 'super_search' }
