@@ -1,8 +1,4 @@
-require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record" \
-        '/base/schema_validations'
-
-require 'httpclient'
-require 'rad_config'
+require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/app/services/rad_config.rb"
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'SMS'
@@ -12,10 +8,10 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'BCC'
 end
 
-ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
+# see Task 25
+Rails.application.config.active_storage.variant_processor = :mini_magick
 
 Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
-Rails.application.config.assets.precompile += %w[rad_common/rad_mailer.css rad_common/rad_mailer_reset.css]
 
 RadConfig.check_validity!
 
@@ -61,31 +57,9 @@ Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
 end
 
+Rails.application.config.after_initialize do
+  default_allowed_tags = Class.new.include(ActionText::ContentHelper).new.sanitizer_allowed_attributes
+  ActionText::ContentHelper.allowed_attributes = default_allowed_tags.add('style')
+end
+
 AuthTrail.geocode = false
-
-module Kaminari
-  # monkey patch to fix paging on engine routes
-  # https://github.com/radicalbear/rad_common/pull/211/files
-  # https://github.com/kaminari/kaminari/issues/457
-
-  module Helpers
-    class Tag
-      def page_url_for(page)
-        (@options[:routes_proxy] || @template).url_for @params.merge(@param_name => (page <= 1 ? nil : page))
-      end
-    end
-  end
-end
-
-# Temporary monkey patch for setting new audited changes while migration runs
-module Audited
-  class Audit
-    before_save :set_new_audited_changes
-
-    private
-
-      def set_new_audited_changes
-        self.new_audited_changes = audited_changes
-      end
-  end
-end
