@@ -16,8 +16,6 @@ default: &default
   start_route: attorneys
   user_clients: true
   user_profiles: true
-  twilio_verify_internal_only: true
-  twilio_verify_remember_device: 120 # minutes
   twilio_countries_enabled: 'US'
   enable_super_search: true
   canadian_addresses: false
