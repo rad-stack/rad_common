@@ -139,7 +139,7 @@ RSpec.describe 'Users', type: :system do
 
       before { allow(RadConfig).to receive(:manually_create_users?).and_return true }
 
-      xit 'renders the new template' do
+      it 'renders the new template' do
         visit new_user_path
         expect(page).to have_content('New User')
       end
