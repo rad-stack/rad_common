@@ -31,6 +31,20 @@ RSpec.describe 'Search' do
         expect(current_url).to include('search[audited_changes_like]=query')
       end
     end
+
+    context 'with name match type select' do
+      it 'changes object match_type', :js do
+        visit divisions_path
+        expect(first('#search_name_like_match_type', visible: :all).value).to eq('contains')
+
+        within first('[data-controller="search-like-filter"]') do
+          first('.dropdown-toggle').click
+          first('[data-match-type="exact"]').click
+        end
+        first('button', text: 'Apply Filters').click
+        expect(first('#search_name_like_match_type', visible: :all).value).to eq('exact')
+      end
+    end
   end
 
   describe 'select filter' do

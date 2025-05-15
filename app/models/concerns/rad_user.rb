@@ -74,9 +74,13 @@ module RadUser
 
     validate :validate_email_address
     validate :validate_initial_security_role, on: :create, if: :active?
+
     validate :validate_twilio_verify
     validate :validate_mobile_phone
     validate :password_excludes_name
+    validate :validate_internal, on: :update
+    validate :validate_last_activity
+
     validates :security_roles, presence: true, if: :active?
 
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
