@@ -66,7 +66,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'text'
   s.add_dependency 'turbo-rails'
   s.add_dependency 'twilio-ruby'
-  s.add_dependency 'webpacker'
   s.add_dependency 'wicked_pdf', '2.6.3'
   s.add_dependency 'wkhtmltopdf-heroku', '2.12.6.1.pre.jammy'
 
