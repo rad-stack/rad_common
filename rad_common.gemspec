@@ -34,10 +34,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
-  s.add_dependency 'jsbundling-rails'
   s.add_dependency 'kaminari'
-  s.add_dependency 'sassc'
-  s.add_dependency 'sprockets-rails'
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
 
   s.add_dependency 'nokogiri'
@@ -58,8 +55,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
-  s.add_dependency 'sidekiq', '6.4.2' # pinning this arbitrarily to reduce risk
-  s.add_dependency 'sidekiq-failures'
+  s.add_dependency 'sidekiq', '~> 7.1'
   s.add_dependency 'simple_form'
   s.add_dependency 'smartystreets_ruby_sdk', '5.20.4'
   s.add_dependency 'strip_attributes'
