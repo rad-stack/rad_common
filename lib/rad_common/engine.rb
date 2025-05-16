@@ -32,13 +32,13 @@ module RadCommon
     require 'sentry-rails'
     require 'sentry-ruby'
     require 'sidekiq'
-    require 'sidekiq/web'
+    require 'sidekiq-failures'
     require 'simple_form'
     require 'smartystreets_ruby_sdk'
     require 'strip_attributes'
     require 'text'
-    require 'turbo-rails'
     require 'twilio-ruby'
+    require 'webpacker'
     require 'wicked_pdf'
   end
 end

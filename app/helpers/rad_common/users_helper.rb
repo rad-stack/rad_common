@@ -166,7 +166,7 @@ module RadCommon
     end
 
     def user_confirm_action(user)
-      return unless user.needs_confirmation? && policy(user).update?
+      return unless RadConfig.user_confirmable? && policy(user).update? && !user.confirmed?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
       link_to icon('circle-question', 'Confirm Email'),
@@ -177,7 +177,7 @@ module RadCommon
     end
 
     def user_resend_action(user)
-      return unless policy(User.new).create? && user.needs_accept_invite?
+      return unless policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
 
       link_to icon(:envelope, 'Resend Invitation'),
               resend_invitation_user_path(user),
@@ -221,7 +221,7 @@ module RadCommon
     end
 
     def reactivate_user_warning(user)
-      return unless user.needs_reactivate? && policy(user).update?
+      return unless RadConfig.user_expirable? && policy(user).update? && user.expired?
 
       link = link_to 'click here', reactivate_user_path(user), method: :put, data: { confirm: 'Are you sure?' }
       message = safe_join(["User's account has been expired due to inactivity, to re-activate the user, ", link, '.'])

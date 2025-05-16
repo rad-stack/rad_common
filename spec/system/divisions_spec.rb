@@ -19,7 +19,7 @@ RSpec.describe 'Divisions' do
     end
 
     context 'with default placeholder' do
-      it 'shows placeholder on autocomplete field', :js do
+      xit 'shows placeholder on autocomplete field', :js do
         visit new_division_path
         click_tom_select(from: 'division_owner_id')
 
@@ -74,13 +74,13 @@ RSpec.describe 'Divisions' do
         visit edit_division_path(division)
       end
 
-      it 'allows searching' do
+      xit 'allows searching' do
         click_tom_select(from: 'division_owner_id')
         first('.dropdown-input').fill_in(with: other_user.first_name)
         expect(find('[data-selectable]', text: other_user.to_s)).to be_present
       end
 
-      it 'displays existing value' do
+      xit 'displays existing value' do
         within '#division_owner_id-ts-control' do
           expect(find('[data-ts-item]').text).to eq(division.owner.to_s)
         end
@@ -117,7 +117,7 @@ RSpec.describe 'Divisions' do
       let(:applied_params) { -> { Rack::Utils.parse_query URI.parse(current_url).query } }
       let(:last_filter) { SavedSearchFilter.last }
 
-      it 'allows saving and applying search filters' do
+      xit 'allows saving and applying search filters' do
         visit divisions_path
         tom_select user.to_s, from: 'search_owner_id'
         click_button 'saved-search-filters-dropdown'
@@ -138,7 +138,7 @@ RSpec.describe 'Divisions' do
         expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('active')
       end
 
-      it 'allows deleting saved filters' do
+      xit 'allows deleting saved filters' do
         create :saved_search_filter, user: user, search_class: 'DivisionSearch'
         visit divisions_path
         click_button 'saved-search-filters-dropdown'

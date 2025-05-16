@@ -1,4 +1,4 @@
-class TwoFactorAuthUpdates < ActiveRecord::Migration[7.2]
+class TwoFactorAuthUpdates < ActiveRecord::Migration[7.0]
   def change
     add_column :security_roles, :two_factor_auth, :boolean, null: false, default: true
     return if SecurityRole.none?

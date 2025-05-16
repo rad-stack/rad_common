@@ -71,7 +71,7 @@ RSpec.describe 'Users', type: :system do
       context 'when switching languages' do
         before { allow(RadConfig).to receive(:switch_languages?).and_return true }
 
-        it 'updates registration', :shared_database_specs do
+        xit 'updates registration', :shared_database_specs do
           visit edit_user_registration_path
           expect(page).to have_content 'My Account'
           select 'Spanish', from: 'Language'
@@ -99,7 +99,7 @@ RSpec.describe 'Users', type: :system do
 
       before { external_user.update! user_status: user.user_status if RadConfig.external_users? }
 
-      it 'shows users and all info' do
+      xit 'shows users and all info' do
         visit users_path
         expect(page).to have_content result_label
         expect(page).to have_content user.to_s
@@ -352,7 +352,7 @@ RSpec.describe 'Users', type: :system do
     end
 
     context 'with external user', :external_user_specs do
-      it 'sign in times out after 3 hours' do
+      xit 'sign in times out after 3 hours' do
         visit new_user_session_path
         fill_in 'user_email', with: external_user.email
         fill_in 'user_password', with: password

@@ -33,8 +33,15 @@ module RadUser
 
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
-    scope :active, -> { joins(:user_status).where(user_statuses: { active: true }) }
-    scope :admins, -> { active.by_permission 'admin' }
+    scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
+
+    scope :admins, lambda {
+      active.where('users.id IN (' \
+                   'SELECT user_id FROM user_security_roles ' \
+                   'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
+                   'WHERE security_roles.admin = TRUE)')
+    }
+
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
     scope :by_id, -> { order(:id) }
     scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
@@ -59,6 +66,11 @@ module RadUser
             'SELECT user_id FROM user_security_roles ' \
             'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
             "WHERE security_roles.#{permission} = TRUE)")
+    }
+
+    scope :inactive, lambda {
+      joins(:user_status)
+        .where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)')
     }
 
     scope :for_security_role, lambda { |security_role_id|
@@ -90,7 +102,8 @@ module RadUser
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
-    after_commit :notify_user_approved, only: :update
+    after_save :notify_user_approved
+
     after_invitation_accepted :notify_user_accepted
 
     strip_attributes
@@ -104,8 +117,12 @@ module RadUser
     end
   end
 
+  def active
+    active_for_authentication?
+  end
+
   def active?
-    user_status&.active?
+    active
   end
 
   def needs_confirmation?
@@ -156,6 +173,11 @@ module RadUser
     permission?(:admin)
   end
 
+  def auto_approve?
+    # override this as needed in model
+    false
+  end
+
   def greeting
     "Hello #{first_name}"
   end
@@ -169,11 +191,15 @@ module RadUser
   end
 
   def display_style
-    if active? || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
+    if user_status.active || user_status == UserStatus.default_pending_status
       external? ? 'table-warning' : ''
     else
       'table-danger'
     end
+  end
+
+  def portal?
+    external? && RadConfig.portal?
   end
 
   def read_notifications!
@@ -181,11 +207,11 @@ module RadUser
   end
 
   def active_for_authentication?
-    super && active?
+    super && user_status && user_status.active
   end
 
   def inactive_message
-    if active?
+    if user_status.active
       super
     else
       :not_approved
@@ -204,21 +230,11 @@ module RadUser
   end
 
   def send_reset_password_instructions
-    if needs_accept_invite?
-      Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
-      return
+    if invited_to_sign_up?
+      errors.add :email, :not_found
+    else
+      super
     end
-
-    super
-  end
-
-  def pending_any_confirmation
-    if needs_accept_invite?
-      Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
-      return
-    end
-
-    super
   end
 
   def test_email!(from_user)
@@ -234,7 +250,7 @@ module RadUser
   end
 
   def reactivate
-    update last_activity_at: Time.current
+    update(last_activity_at: nil)
   end
 
   def locale
@@ -243,10 +259,6 @@ module RadUser
 
   # TODO: this should be a db attribute when we enable the TOTP feature
   def twilio_totp_factor_sid; end
-
-  def timeout_in
-    external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
-  end
 
   def developer?
     email.end_with? RadConfig.developer_domain!
@@ -268,7 +280,8 @@ module RadUser
         self.external = security_roles.first.external
       end
 
-      self.user_status = default_user_status if new_record? && !user_status
+      status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
+      self.user_status = status if new_record? && !user_status
       return unless new_record?
 
       self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? &&
@@ -299,12 +312,12 @@ module RadUser
     end
 
     def validate_email_address
-      return if email.blank? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
+      return if email.blank? || external? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
 
       domains = Company.main.valid_user_domains
       components = email.split('@')
       match_domains = components.count == 2 && domains.include?(components[1])
-      return if (internal? && match_domains) || (external? && !match_domains)
+      return if internal? && match_domains
 
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
@@ -379,34 +392,13 @@ module RadUser
     end
 
     def notify_user_approved
-      return unless RadConfig.pending_users?
-      return if invited_to_sign_up?
+      return if auto_approve?
 
-      return unless user_status_id_previously_changed?(from: UserStatus.default_pending_status.id,
-                                                       to: UserStatus.default_active_status.id)
+      return unless saved_change_to_user_status_id? && user_status &&
+                    user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
-      notify_user_approved_user
-      notify_user_approved_admins
-    end
-
-    def notify_user_approved_user
-      raise 'missing approved_by' if approved_by.blank?
-
-      RadMailer.your_account_approved(self, approved_by).deliver_later
-      return unless RadConfig.twilio_enabled? && mobile_phone.present?
-
-      UserSMSSenderJob.perform_later(User.user_approved_message,
-                                     approved_by.id,
-                                     id,
-                                     nil,
-                                     false,
-                                     contact_log_record: self)
-    end
-
-    def notify_user_approved_admins
-      return if do_not_notify_approved
-
-      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify!
+      RadMailer.your_account_approved(self).deliver_later
+      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify! unless do_not_notify_approved
     end
 
     def notify_user_accepted

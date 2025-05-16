@@ -1,10 +1,8 @@
 class Category < ApplicationRecord
-  has_many :divisions, dependent: :restrict_with_error
+  audited
+  strip_attributes
 
-  schema_validation_options do
-    index :index_categories_on_name, message: 'taken by another category'
-    column :name, message: 'cannot be left blank'
-  end
+  has_many :divisions, dependent: :restrict_with_error
 
   alias_attribute :to_s, :name
 

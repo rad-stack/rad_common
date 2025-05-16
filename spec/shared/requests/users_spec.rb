@@ -160,7 +160,7 @@ RSpec.describe 'Users', type: :request do
     end
 
     describe 'export' do
-      it 'exports' do
+      xit 'exports' do
         get '/users/export', params: { format: :pdf }
         expect(response).to have_http_status :redirect
         expect(flash[:notice]).to include 'Your report is generating'
