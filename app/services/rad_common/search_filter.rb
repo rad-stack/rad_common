@@ -194,7 +194,7 @@ module RadCommon
     end
 
     def search_scope_params
-      return { class: 'selectpicker' } unless searchable_scope?
+      return { class: 'selectpicker ays-ignore' } unless searchable_scope?
 
       searchable_scope_options(show_subtext: show_search_subtext, search_scope: @search_scope_name)
     end
