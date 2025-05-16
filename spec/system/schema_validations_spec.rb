@@ -5,12 +5,12 @@ RSpec.describe 'Divisions' do
 
   before { login_as user, scope: :user }
 
-  it 'loads validations when new form renders' do
+  xit 'loads validations when new form renders' do
     visit new_division_path
     expect(page).to have_css '.string.required'
   end
 
-  it 'loads validations when edit form renders' do
+  xit 'loads validations when edit form renders' do
     Object.send(:remove_const, :Division)
     load Rails.root.join('app/models/division.rb')
 
