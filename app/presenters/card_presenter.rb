@@ -227,7 +227,7 @@ class CardPresenter
     end
 
     def check_policy_klass
-      if current_user.portal?
+      if current_user.external?
         [:portal, klass.new]
       else
         klass.new
@@ -235,7 +235,7 @@ class CardPresenter
     end
 
     def check_policy_instance
-      if current_user.portal?
+      if current_user.external?
         [:portal, instance]
       else
         instance

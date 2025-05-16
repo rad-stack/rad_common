@@ -2,4 +2,4 @@
 @use "rad_common_js/src/scss/main" as *;
 
 // Import app-specific scss
-@use "../../javascript/packs/main" as *;
+@use "./app_specific/main" as *;

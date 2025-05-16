@@ -38,7 +38,6 @@ module RadCommon
     require 'strip_attributes'
     require 'text'
     require 'twilio-ruby'
-    require 'webpacker'
     require 'wicked_pdf'
   end
 end

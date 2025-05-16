@@ -43,6 +43,10 @@ class ApplicationPolicy
   end
 
   def global_search?
+    index? && show?
+  end
+
+  def searchable_association?
     index?
   end
 

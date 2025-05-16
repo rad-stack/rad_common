@@ -30,7 +30,7 @@ class SearchController < ApplicationController
       end
 
       if the_object
-        if current_user.portal?
+        if current_user.external?
           redirect_to [:portal, the_object]
         else
           redirect_to the_object

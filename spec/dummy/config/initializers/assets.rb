@@ -1,14 +1,27 @@
-# Be sure to restart your server when you modify this file.
+Rails.application.config.assets.paths << Rails.root.join('app/assets/builds')
+Rails.application.config.assets.excluded_paths << Rails.root.join('app/assets/scss')
+Rails.application.config.assets.paths << Rails.root.join('node_modules/@fortawesome/fontawesome-free/webfonts')
 
-# Version of your assets, change this if you want to expire all your assets.
-Rails.application.config.assets.version = '1.0'
+if Rake::Task.task_defined?('assets:precompile')
+  Rake::Task['assets:precompile'].enhance do
+    assembly = Rails.application.assets
+    output_path = assembly.config.output_path
 
-# Add additional assets to the asset load path.
-# Rails.application.config.assets.paths << Emoji.images_path
-# Add Yarn node_modules folder to the asset load path.
-Rails.application.config.assets.paths << Rails.root.join('node_modules')
+    assembly.load_path.assets.each do |asset|
+      next unless asset.logical_path.to_s.end_with?('.css', '.js')
 
-# Precompile additional assets.
-# application.js, application.css, and all non-JS/CSS in the app/assets
-# folder are already added.
-# Rails.application.config.assets.precompile += %w( admin.js admin.css )
+      asset_path = output_path.join(asset.digested_path)
+      compressed_path = output_path.join("#{asset.digested_path}.gz")
+
+      next if compressed_path.exist?
+
+      Rails.logger.info "Compressing #{asset.digested_path}"
+
+      Zlib::GzipWriter.open(compressed_path, Zlib::BEST_COMPRESSION) do |gz|
+        gz.mtime = File.mtime(asset_path)
+        gz.orig_name = asset_path.basename.to_s
+        gz.write File.binread(asset_path)
+      end
+    end
+  end
+end

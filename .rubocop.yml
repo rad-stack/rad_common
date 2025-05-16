@@ -113,6 +113,3 @@ Metrics/ParameterLists:
 Naming/AccessorMethodName:
   Exclude:
     - 'app/mailers/rad_mailer.rb'
-
-RSpec/PendingWithoutReason:
-  Enabled: false

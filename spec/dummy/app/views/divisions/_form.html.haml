@@ -13,21 +13,8 @@
     = f.input :icon
     = f.input :tags, collection: Division::TAG_OPTIONS, multiple: true, input_html: { class: 'selectpicker' }
 
-    = render 'layouts/simple_autocomplete', search_path: '/global_search?global_search_scope=user_name',
-                                            initial_value: @division.owner.to_s,
-                                            base_object: :division,
-                                            association: :owner,
-                                            required: true,
-                                            f: f
-
-    = render 'layouts/simple_autocomplete', search_path: '/global_search?global_search_scope=category_name',
-                                            initial_value: @division.category&.name.presence || @division.category_name,
-                                            base_object: :division,
-                                            association: :category,
-                                            required: false,
-                                            allow_new: true,
-                                            search_placeholder: 'Search for a category or add a new one',
-                                            f: f
+    = f.association :owner, as: :searchable_association, search_scope: 'user_name'
+    = f.association :category, as: :searchable_association, search_scope: 'category_name'
 
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'

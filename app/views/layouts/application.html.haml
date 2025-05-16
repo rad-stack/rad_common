@@ -8,8 +8,8 @@
     %title= content_for?(:title) ? yield(:title) : RadConfig.app_name!
     = csrf_meta_tags
     = favicon_link_tag company_fav_icon(Company.main), rel: 'shortcut icon'
-    = javascript_pack_tag 'application'
-    = stylesheet_pack_tag 'application'
+    = javascript_include_tag 'application', 'data-turbo-track': 'reload', type: 'module'
+    = stylesheet_link_tag 'application', 'data-turbo-track': 'reload'
 
   %body
     = render 'layouts/navigation'
