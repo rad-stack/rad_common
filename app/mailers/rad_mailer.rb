@@ -49,7 +49,12 @@ class RadMailer < ActionMailer::Base
 
     maybe_attach options
 
-    mail(to: to_address, subject: subject, cc: options[:cc], bcc: options[:bcc])
+    mail to: to_address,
+         subject: subject,
+         cc: options[:cc],
+         bcc: options[:bcc],
+         template_path: 'rad_mailer',
+         template_name: 'simple_message'
   end
 
   def global_validity_on_demand(recipient, problems)

@@ -1,5 +1,0 @@
-- association_input_presenter(local_assigns) do |input|
-  - if input.search_only?
-    = render 'layouts/simple_autocomplete', input.search_options
-  - else
-    = input.form.association input.association, input.collection_options
