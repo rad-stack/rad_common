@@ -40,7 +40,7 @@ PATH
       propshaft
       puma
       pundit
-      rails (<= 7.2.2.1)
+      rails (~> 7.2.2)
       redis
       selenium-webdriver (~> 4.18.1)
       sendgrid-ruby
