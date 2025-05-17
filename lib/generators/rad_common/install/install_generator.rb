@@ -87,7 +87,7 @@ module RadCommon
         gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
 
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
-        directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
+        # directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
 
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
