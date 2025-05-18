@@ -13,6 +13,7 @@ RSpec.describe UserSMSSender, type: :service do
   end
 
   before do
+    allow_any_instance_of(PhoneSMSSender).to receive(:log_attachments).and_return true
     allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false
     allow(RadRetry).to receive(:exponential_pause)
     allow_any_instance_of(PhoneSMSSender).to receive(:log_attachments)
