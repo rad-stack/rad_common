@@ -17,7 +17,7 @@ RSpec.describe 'Attorneys' do
       expect(page).to have_no_content('Reset Duplicates')
     end
 
-    xit 'triggers duplicates detection when entering', :js do
+    it 'triggers duplicates detection when entering', :js do
       visit new_attorney_path
       expect(page).to have_content('New Attorney')
 
