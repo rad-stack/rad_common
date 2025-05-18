@@ -88,7 +88,7 @@ module RadUser
     validate :validate_twilio_verify
     validate :validate_mobile_phone
     validate :password_excludes_name
-    validate :validate_last_activity
+    # TODO: validate :validate_last_activity
 
     validates :security_roles, presence: true, if: :active?
 
