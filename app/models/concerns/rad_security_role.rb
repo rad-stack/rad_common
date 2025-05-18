@@ -2,8 +2,6 @@ module RadSecurityRole
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor :two_factor_auth
-
     has_many :user_security_roles, dependent: :restrict_with_error
     has_many :users, through: :user_security_roles, dependent: :destroy
     has_many :notification_security_roles, dependent: :destroy
