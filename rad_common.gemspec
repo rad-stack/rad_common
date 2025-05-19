@@ -35,8 +35,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
   s.add_dependency 'kaminari'
-  s.add_dependency 'sassc'
-  s.add_dependency 'sprockets-rails'
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
 
   s.add_dependency 'nokogiri'
