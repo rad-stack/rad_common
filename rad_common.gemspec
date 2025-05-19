@@ -34,7 +34,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
-  s.add_dependency 'jsbundling-rails'
   s.add_dependency 'kaminari'
   s.add_dependency 'sassc'
   s.add_dependency 'sprockets-rails'
