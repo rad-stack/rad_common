@@ -73,5 +73,5 @@ Rails.application.configure do
   config.active_job.queue_adapter = :inline
 
   # Raise error when a before_action's only/except options reference missing actions.
-  # config.action_controller.raise_on_missing_callback_actions = false
+  config.action_controller.raise_on_missing_callback_actions = false
 end

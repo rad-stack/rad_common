@@ -178,18 +178,6 @@ class RadConfig
       config_item! :app_name
     end
 
-    def portal_app_name!(user = nil)
-      return config_item!(:portal_app_name) if user.blank?
-
-      if user.respond_to?(:portal_patient?) && user.portal_patient?
-        config_item! :portal_app_name
-      elsif user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
-        config_item! :prescriber_portal_app_name
-      else
-        config_item! :portal_app_name
-      end
-    end
-
     def host_name!
       config_item! :host_name
     end
@@ -200,22 +188,6 @@ class RadConfig
 
     def client_table_name!
       config_item(:client_table_name) || 'clients'
-    end
-
-    def portal_host_name!(user = nil)
-      return config_item!(:portal_host_name) if user.blank?
-
-      if user.respond_to?(:portal_patient?) && user.portal_patient?
-        config_item! :portal_host_name
-      elsif user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
-        config_item! :prescriber_portal_host_name
-      else
-        config_item! :portal_host_name
-      end
-    end
-
-    def portal?
-      boolean_config_item! :portal
     end
 
     def impersonate?
@@ -459,10 +431,6 @@ class RadConfig
       raise "required config item #{item} is missing" if value.nil?
 
       value
-    end
-
-    def enable_super_search?
-      boolean_config_item! :enable_super_search
     end
 
     def check_validity!

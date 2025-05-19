@@ -1,6 +1,5 @@
 default: &default
   app_name: Demo Foo
-  portal_app_name: Foo Portal
   use_avatar: true
   switch_languages: true
   disable_sign_up: false
@@ -11,13 +10,10 @@ default: &default
   external_users: true
   validate_external_email_domain: true
   app_logo_includes_name: true
-  portal: false
   impersonate: true
-  start_route: attorneys
+  start_route: onboardings
   user_clients: true
   user_profiles: true
-  twilio_countries_enabled: 'US'
-  enable_super_search: true
   canadian_addresses: false
   show_help_menu: true
   saved_search_filters_enabled: true
@@ -129,12 +125,10 @@ development:
   <<: *default
 
   host_name: localhost:3000
-  portal_host_name: portal.localhost:3000
   twilio_verify_enabled: false
 
 test:
   <<: *default
 
   host_name: localhost:3000
-  portal_host_name: portal.localhost:3000
   twilio_verify_enabled: true

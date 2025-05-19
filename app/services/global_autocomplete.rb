@@ -33,7 +33,7 @@ class GlobalAutocomplete
   end
 
   def self.check_policy_klass(user, klass)
-    if user.portal?
+    if user.external?
       [:portal, klass]
     else
       klass

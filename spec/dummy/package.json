@@ -1,36 +1,23 @@
 {
   "license": "UNLICENSED",
   "private": true,
+  "engines": {
+    "node": "20.16.0"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
-    "@rails/actiontext": "^6.0.2-1",
-    "@rails/webpacker": "5.4.3",
-    "rad_common_js": "https://github.com/radicalbear/rad_common_js#d409dac1d57a36e5a4d5c0e896ac1d558b6b8754"
+    "rad_common_js": "https://github.com/rad-stack/rad_common_js#0905184ce452d10997e015eeaf9e986176d5fc3e"
   },
   "devDependencies": {
-    "webpack": "^4.41.2",
-    "webpack-dev-server": "^3.10.1",
-    "eslint": "^6.3.0",
-    "stylelint": "^13.13.1"
+    "esbuild": "^0.25.0",
+    "eslint": "^9.19.0",
+    "sass": "^1.83.4",
+    "stylelint": "^16.14.1"
   },
-  "resolutions": {
-    "serialize-javascript": "^3.1.0",
-    "ssri": "^8.0.1",
-    "dns-packet": "^5.2.2",
-    "ws": "^7.4.6",
-    "glob-parent": "^5.1.2",
-    "normalize-url": "^4.5.1",
-    "trim-newlines": "^3.0.1",
-    "tar": "^4.4.18",
-    "set-value": "^4.0.1",
-    "nth-check": "^2.0.1",
-    "ansi-regex": "^5.0.1",
-    "node-forge": "^1.0.0",
-    "follow-redirects": "^1.14.8",
-    "json-schema": "^0.4.0",
-    "url-parse": "^1.5.8",
-    "async": "^2.6.4",
-    "eventsource": "^2.0.2",
-    "moment": "^2.29.4"
+  "scripts": {
+    "build": "yarn build:js && yarn build:css",
+    "build:dev": "yarn build:js --watch && yarn build:css --watch",
+    "build:js": "node esbuild.config.js",
+    "build:css": "sass ./app/assets/scss/application.scss:./app/assets/builds/application.css ./app/assets/scss/rad_mailer.scss:./app/assets/builds/rad_mailer.css --no-source-map --load-path=node_modules --style=compressed --quiet-deps"
   }
 }

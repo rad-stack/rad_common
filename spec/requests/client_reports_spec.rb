@@ -32,7 +32,7 @@ RSpec.describe 'ClientReports' do
   end
 
   context 'with pdf' do
-    xit 'generates a pdf' do
+    it 'generates a pdf' do
       get '/client_reports', params: { format: 'pdf' }
       expect(response.content_type).to eq('application/pdf')
     end

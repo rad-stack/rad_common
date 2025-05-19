@@ -31,7 +31,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'faker'
   s.add_dependency 'geocoder'
   s.add_dependency 'haml-rails'
-  s.add_dependency 'httpclient'
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
@@ -54,7 +53,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'propshaft'
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
-  s.add_dependency 'rails', '~> 7.0.8'
+  s.add_dependency 'rails', '<= 7.2.2.1'
   s.add_dependency 'redis'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
@@ -67,11 +66,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'text'
   s.add_dependency 'turbo-rails'
   s.add_dependency 'twilio-ruby'
-  s.add_dependency 'webpacker'
-
-  # TODO: causes an error, temporary pinning
-  s.add_dependency 'concurrent-ruby', '1.3.4'
-
   s.add_dependency 'wicked_pdf', '2.6.3'
   s.add_dependency 'wkhtmltopdf-heroku', '2.12.6.1.pre.jammy'
 
