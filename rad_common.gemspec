@@ -59,7 +59,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
   s.add_dependency 'sidekiq', '~> 7.1'
-  s.add_dependency 'sidekiq-failures'
   s.add_dependency 'simple_form'
   s.add_dependency 'smartystreets_ruby_sdk', '5.20.4'
   s.add_dependency 'strip_attributes'

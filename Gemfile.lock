@@ -49,7 +49,6 @@ PATH
       sentry-rails
       sentry-ruby
       sidekiq (~> 7.1)
-      sidekiq-failures
       simple_form
       smartystreets_ruby_sdk (= 5.20.4)
       sprockets-rails
@@ -505,8 +504,6 @@ GEM
       logger
       rack (>= 2.2.4)
       redis-client (>= 0.22.2)
-    sidekiq-failures (1.0.4)
-      sidekiq (>= 4.0.0)
     simple_form (5.3.1)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
