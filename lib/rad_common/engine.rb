@@ -32,7 +32,7 @@ module RadCommon
     require 'sentry-rails'
     require 'sentry-ruby'
     require 'sidekiq'
-    require 'sidekiq-failures'
+    require 'sidekiq/web'
     require 'simple_form'
     require 'smartystreets_ruby_sdk'
     require 'strip_attributes'

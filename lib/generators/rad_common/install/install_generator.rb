@@ -40,7 +40,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
-        # copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
+        copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
 
         unless RadConfig.shared_database?
@@ -83,11 +83,11 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
-        # copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
         gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
 
-        # copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
-        # directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
+        copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
+        directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
 
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
@@ -286,7 +286,7 @@ Seeder.new.seed!
         end
 
         def add_crawling_config
-          # remove_file 'public/robots.txt'
+          remove_file 'public/robots.txt'
 
           add_rad_config_setting 'crawlable_subdomains', '[]'
           add_rad_config_setting 'always_crawl', 'false'
@@ -391,7 +391,7 @@ Seeder.new.seed!
 
         def install_github_workflow
           if RadConfig.legacy_assets?
-            # copy_file '../rspec_tests_legacy.yml', '.github/workflows/rspec_tests.yml'
+            copy_file '../rspec_tests_legacy.yml', '.github/workflows/rspec_tests.yml'
           else
             copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
           end
@@ -572,7 +572,7 @@ gem 'propshaft'
           apply_migration '20221221134935_remove_legacy_audited_changes.rb'
           apply_migration '20230222162024_migrate_authy_to_twilio_verify.rb'
           apply_migration '20230310161506_more_twilio_verify.rb'
-          # apply_migration '20230313195243_add_language.rb'
+          apply_migration '20230313195243_add_language.rb'
           apply_migration '20230401113151_fix_sendgrid_notification.rb'
           apply_migration '20230419121743_twilio_replies.rb'
           apply_migration '20230420102508_update_twilio_log_number_format.rb'
