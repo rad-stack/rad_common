@@ -221,7 +221,7 @@ module RadCommon
     end
 
     def reactivate_user_warning(user)
-      return unless RadConfig.user_expirable? && policy(user).update? && user.expired?
+      return unless user.needs_reactivate? && policy(user).update?
 
       link = link_to 'click here', reactivate_user_path(user), method: :put, data: { confirm: 'Are you sure?' }
       message = safe_join(["User's account has been expired due to inactivity, to re-activate the user, ", link, '.'])

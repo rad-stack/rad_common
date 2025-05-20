@@ -102,10 +102,11 @@ class RadMailer < ActionMailer::Base
     # this won't work for links called using the route helpers outside of the mailer context
     # this won't detect when to use the portal host unless @recipient is a User
 
-    # TODO: this should crash but I can't seem to trigger it
-    return { host: RadConfig.portal_host_name!(@recipient) } if @recipient.is_a?(User) && @recipient.external?
-
-    { host: RadConfig.host_name! }
+    if @recipient.is_a?(User) && @recipient.external?
+      { host: portal_host_name(@recipient) }
+    else
+      { host: RadConfig.host_name! }
+    end
   end
 
   private
@@ -113,6 +114,14 @@ class RadMailer < ActionMailer::Base
     def set_defaults
       @include_yield = true
       rad_headers
+    end
+
+    def portal_host_name(user)
+      if user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
+        RadConfig.config_item!(:portal_host_name).gsub('patient', 'prescriber')
+      else
+        RadConfig.host_name!.gsub('tracker', 'patient')
+      end
     end
 
     def parse_recipients_array(recipients)
