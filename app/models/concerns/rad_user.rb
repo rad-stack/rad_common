@@ -246,7 +246,7 @@ module RadUser
   end
 
   def reactivate
-    update(last_activity_at: nil)
+    update last_activity_at: Time.current
   end
 
   def locale
