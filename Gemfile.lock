@@ -565,7 +565,7 @@ GEM
     wkhtmltopdf-heroku (2.12.6.1.pre.jammy)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.7.2)
+    zeitwerk (2.7.3)
 
 PLATFORMS
   ruby
