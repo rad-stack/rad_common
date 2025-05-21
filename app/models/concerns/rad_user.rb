@@ -33,15 +33,8 @@ module RadUser
 
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
-    scope :active, -> { joins(:user_status).where('user_statuses.active = TRUE') }
-
-    scope :admins, lambda {
-      active.where('users.id IN (' \
-                   'SELECT user_id FROM user_security_roles ' \
-                   'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
-                   'WHERE security_roles.admin = TRUE)')
-    }
-
+    scope :active, -> { joins(:user_status).where(user_statuses: { active: true }) }
+    scope :admins, -> { active.by_permission 'admin' }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
     scope :by_id, -> { order(:id) }
     scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
@@ -66,11 +59,6 @@ module RadUser
             'SELECT user_id FROM user_security_roles ' \
             'INNER JOIN security_roles ON user_security_roles.security_role_id = security_roles.id ' \
             "WHERE security_roles.#{permission} = TRUE)")
-    }
-
-    scope :inactive, lambda {
-      joins(:user_status)
-        .where('user_statuses.active = FALSE OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)')
     }
 
     scope :for_security_role, lambda { |security_role_id|

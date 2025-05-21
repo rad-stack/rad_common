@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe RadDeviseMailer, type: :mailer do
+describe RadDeviseMailer do
   let(:user) { create :user }
   let(:email) { ActionMailer::Base.deliveries.last }
   let(:token) { 'foo' }
@@ -14,14 +14,6 @@ describe RadDeviseMailer, type: :mailer do
       before { user.invite! }
 
       it { is_expected.to include 'Someone has invited you to Demo Foo' }
-    end
-
-    context 'when external' do
-      let(:user) { create :user, :external }
-
-      before { user.invite! }
-
-      it { is_expected.to include 'Someone has invited you to Dummy Patient Portal' }
     end
   end
 

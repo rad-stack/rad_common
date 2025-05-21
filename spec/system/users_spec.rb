@@ -28,17 +28,26 @@ describe 'Users' do
       end
     end
 
-    context 'when dynamically changing fields', :gha_specs_only, :js do
-      it 'shows internal roles and hides others' do
-        find_field('user_external').set(false)
-        expect(page).to have_content 'Security Roles'
-        expect(page).to have_content internal_role.name
+    context 'when user is not an admin' do
+      context 'when dynamically changing fields', :js do
+        it 'shows internal roles and hides others' do
+          find_field('user_external').set(false)
+          expect(page).to have_content 'Security Roles'
+          expect(page).to have_content internal_role.name
+        end
+
+        it 'shows external roles and hides others' do
+          find_field('user_external').set(true)
+          expect(page).to have_content 'Security Roles'
+          expect(page).to have_content external_role.name
+        end
       end
 
-      it 'shows external roles and hides others' do
-        find_field('user_external').set(true)
-        expect(page).to have_content 'Security Roles'
-        expect(page).to have_content external_role.name
+      it 'allows changing email' do
+        fill_in 'user_email', with: "foo_#{user.email}"
+        click_link_or_button 'Save'
+        expect(page).to have_content 'User was successfully updated.'
+        expect(first_email.subject).to include 'Confirmation instructions'
       end
     end
   end
@@ -79,6 +88,23 @@ describe 'Users' do
       fill_in 'twilio-verify-token', with: '123456'
       click_on 'Verify and Sign in'
       expect(page).to have_content('The entered token is invalid')
+    end
+  end
+
+  describe 'edit user registration' do
+    before do
+      login_as admin, scope: :user
+      visit edit_user_registration_path
+    end
+
+    it "can change user's own email address" do
+      visit edit_user_registration_path
+
+      fill_in 'user_email', with: "new_#{admin.email}"
+      fill_in 'Current Password', with: password
+      click_on 'Save'
+
+      expect(page).to have_content 'You updated your account successfully, but we need to verify your new email address'
     end
   end
 end
