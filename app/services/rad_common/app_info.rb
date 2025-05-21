@@ -17,13 +17,11 @@ module RadCommon
       (application_models.select { |model|
         model_class = model.safe_constantize
         model_class.respond_to?(:auditing_enabled) && model_class.auditing_enabled
-      } + %w[ActiveStorage::Attachment ActionText::RichText PatientLedger::Entry PatientLedger::Installment
-             PatientLedger::Transaction]).sort
+      } + %w[ActiveStorage::Attachment ActionText::RichText]).sort
     end
 
     def associated_audited_models
-      audited_models + %w[ActiveStorage::Blob ActiveStorage::VariantRecord ActionMailbox::InboundEmail
-                          PatientLedger::Entry PatientLedger::Installment PatientLedger::Transaction]
+      audited_models + %w[ActiveStorage::Blob ActiveStorage::VariantRecord ActionMailbox::InboundEmail]
     end
 
     def duplicate_models
