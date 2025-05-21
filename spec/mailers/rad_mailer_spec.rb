@@ -39,15 +39,21 @@ describe RadMailer do
       end
 
       context 'when to a user' do
+        let(:recipient) { user }
+
+        it { is_expected.to eq [email] }
+      end
+
+      context 'when user has comma in name' do
         let(:recipient) { comma_user }
 
         it { is_expected.to eq [comma_email] }
       end
 
-      context 'when user has comma in name' do
-        let(:recipient) { user }
+      context 'when user has symbol in name' do
+        let(:recipient) { symbol_user }
 
-        it { is_expected.to eq [email] }
+        xit { is_expected.to eq [symbol_email] }
       end
 
       context 'when to multiple users' do

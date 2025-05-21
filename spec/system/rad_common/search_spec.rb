@@ -50,7 +50,7 @@ RSpec.describe 'Search' do
   describe 'select filter' do
     before { visit divisions_path }
 
-    it 'selects a default value', :js, skip: 'Skip until Tomselect Support is added' do
+    it 'selects a default value', :js do
       within '.search_division_status' do
         expect(find('.has-items')).to be_present
       end
@@ -62,8 +62,7 @@ RSpec.describe 'Search' do
       expect(first('#search_division_status').value).to eq [Division.division_statuses['status_active'].to_s]
     end
 
-    it 'select should have warning style when a value is selected other than default', :js,
-       skip: 'Skip until Tomselect Support is added' do
+    it 'select should have warning style when a value is selected other than default', :js do
       tom_select 'Inactive', from: 'search_division_status'
       expect(page).to have_no_css('.filter-active .ts-control')
       find('body').click
@@ -80,7 +79,7 @@ RSpec.describe 'Search' do
         division.update!(category: category, owner: user)
       end
 
-      it 'allows searching and selecting filter option', skip: 'Skip until Tomselect Support is added' do
+      it 'allows searching and selecting filter option' do
         first('button', text: 'Apply Filters').click
 
         expect(page).to have_content(division.name)
@@ -108,7 +107,7 @@ RSpec.describe 'Search' do
       end
 
       context 'when exclude is checked' do
-        it 'filters out selected options', skip: 'Skip until Tomselect Support is added' do
+        it 'filters out selected options' do
           first('button', text: 'Apply Filters').click
 
           expect(page).to have_content(division.name)
