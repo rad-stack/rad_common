@@ -33,7 +33,7 @@ RSpec.describe 'Search' do
     end
 
     context 'with name match type select' do
-      xit 'changes object match_type', :js do
+      it 'changes object match_type', :js do
         visit divisions_path
         expect(first('#search_name_like_match_type', visible: :all).value).to eq('contains')
 

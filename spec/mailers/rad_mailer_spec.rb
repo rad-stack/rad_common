@@ -53,7 +53,7 @@ describe RadMailer do
       context 'when user has symbol in name' do
         let(:recipient) { symbol_user }
 
-        xit { is_expected.to eq [symbol_email] }
+        it { is_expected.to eq [symbol_email] }
       end
 
       context 'when to multiple users' do

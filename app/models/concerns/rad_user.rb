@@ -381,7 +381,7 @@ module RadUser
       return unless saved_change_to_user_status_id? && user_status &&
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
-      RadMailer.your_account_approved(self).deliver_later
+      RadMailer.your_account_approved(self, nil).deliver_later
       Notifications::UserWasApprovedNotification.main([self, approved_by]).notify! unless do_not_notify_approved
     end
 
