@@ -90,7 +90,7 @@ module RadUser
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
-    after_save :notify_user_approved
+    after_commit :notify_user_approved, only: :update
 
     after_invitation_accepted :notify_user_accepted
 
@@ -243,6 +243,10 @@ module RadUser
 
   # TODO: this should be a db attribute when we enable the TOTP feature
   def twilio_totp_factor_sid; end
+
+  def timeout_in
+    external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
+  end
 
   def developer?
     email.end_with? RadConfig.developer_domain!
