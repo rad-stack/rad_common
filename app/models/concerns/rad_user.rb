@@ -91,7 +91,6 @@ module RadUser
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
     after_commit :notify_user_approved, only: :update
-
     after_invitation_accepted :notify_user_accepted
 
     strip_attributes
