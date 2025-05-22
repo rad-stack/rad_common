@@ -385,6 +385,26 @@ module RadUser
       Notifications::UserWasApprovedNotification.main([self, approved_by]).notify! unless do_not_notify_approved
     end
 
+    def notify_user_approved_user
+      raise 'missing approved_by' if approved_by.blank?
+
+      RadMailer.your_account_approved(self, approved_by).deliver_later
+      return unless RadConfig.twilio_enabled? && mobile_phone.present?
+
+      UserSMSSenderJob.perform_later(User.user_approved_message,
+                                     approved_by.id,
+                                     id,
+                                     nil,
+                                     false,
+                                     contact_log_record: self)
+    end
+
+    def notify_user_approved_admins
+      return if do_not_notify_approved
+
+      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify!
+    end
+
     def notify_user_accepted
       Notifications::UserAcceptedInvitationNotification.main(self).notify!
     end
