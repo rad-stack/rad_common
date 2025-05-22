@@ -94,7 +94,7 @@ describe RadMailer do
 
       let(:attachment) { { raw_file: 'foo', filename: 'bar', content_type: 'baz' } }
 
-      xit { is_expected.to eq 1 }
+      it { is_expected.to eq 1 }
     end
 
     describe 'contact logs' do

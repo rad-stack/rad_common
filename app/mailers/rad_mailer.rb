@@ -132,10 +132,14 @@ class RadMailer < ActionMailer::Base
     def maybe_attach(options)
       return if options[:attachment].blank?
 
-      attachment = options[:attachment][:record].send(options[:attachment][:method])
-      return unless attachment.attached?
-
-      attachments[attachment.filename.to_s] = { mime_type: attachment.content_type, content: attachment.blob.download }
+      attachment = options[:attachment]
+      if attachment[:record].present?
+        attach_from_record(attachment)
+      elsif attachment[:raw_file].present?
+        attach_raw_file(attachment)
+      else
+        raise 'attachment must include record or raw_file'
+      end
     end
 
     def attach_from_record(attachment)

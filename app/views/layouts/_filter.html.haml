@@ -1,6 +1,6 @@
 - if search.search_params? && search.invalid?
   - flash.now[:error] = search.error_messages
-= simple_form_for :search, url: path, method: (defined?(form_method) ? form_method : :get) do |f|
+= simple_form_for :search, url: path, method: :get do |f|
   -# TODO: Set up permanent page size selection solution
   - if params[:page_size].present?
     = hidden_field_tag :page_size, params[:page_size]
@@ -14,6 +14,8 @@
     = f.button :button, class: 'btn btn-success' do
       %i.fa.fa-filter
       Apply Filters
+    - if RadConfig.saved_search_filters_enabled?
+      = render 'layouts/saved_filters_dropdown', search: search, f: f, path: path
     \
     = link_to "#{path}?clear_filters=true", class: 'btn btn-danger' do
       %i.fa.fa-times

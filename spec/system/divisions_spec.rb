@@ -138,7 +138,7 @@ RSpec.describe 'Divisions' do
         expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('active')
       end
 
-      xit 'allows deleting saved filters' do
+      it 'allows deleting saved filters' do
         create :saved_search_filter, user: user, search_class: 'DivisionSearch'
         visit divisions_path
         click_button 'saved-search-filters-dropdown'
