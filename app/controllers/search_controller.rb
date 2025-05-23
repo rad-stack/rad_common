@@ -35,7 +35,12 @@ class SearchController < ApplicationController
       end
 
       if the_object
-        redirect_to the_object
+        if current_user.external?
+          raise 'portal' # TODO: I don't think global search is used on the portal
+          redirect_to [:portal, the_object]
+        else
+          redirect_to the_object
+        end
       else
         flash[:error] = 'Could not find record, please try your search again.'
         redirect_to root_path
