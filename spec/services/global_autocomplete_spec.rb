@@ -15,7 +15,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     context 'when searching users' do
       before { allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true) }
 
-      xit 'returns results from selected scope' do
+      it 'returns results from selected scope' do
         scope = auto_complete.send(:selected_scope)
         expect(auto_complete.global_autocomplete_result).to eq(auto_complete.send(:autocomplete_result, scope))
       end
@@ -23,7 +23,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       context 'when search scopes empty' do
         let(:auto_complete) { described_class.new(params, [], user, :searchable_association) }
 
-        xit 'returns empty array' do
+        it 'returns empty array' do
           expect(auto_complete.global_autocomplete_result).to eq([])
         end
       end
@@ -36,7 +36,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       context 'when admin' do
         let(:user) { create :admin }
 
-        xit 'returns results' do
+        it 'returns results' do
           user
           expect(result.count).to eq(1)
           expect(result.first[:id]).to eq division.id
@@ -48,14 +48,14 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
         before { user.security_roles.first.update! read_division: true }
 
-        xit 'returns results' do
+        it 'returns results' do
           expect(result.count).to eq(1)
           expect(result.first[:id]).to eq division.id
         end
       end
 
       context 'when user non owner' do
-        xit 'returns results' do
+        it 'returns results' do
           expect(result.count).to eq(0)
         end
       end
@@ -85,7 +85,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
       let(:result) { auto_complete.send(:autocomplete_result, scope) }
 
-      xit 'finds the records exluding some' do
+      it 'finds the records exluding some' do
         expect(result.count).to eq(1)
         expect(result.first[:model_name].constantize.find(result.first[:id])).to eq division_1
       end
@@ -124,13 +124,13 @@ RSpec.describe GlobalAutocomplete, type: :service do
     context 'when invalid global_search_scope param' do
       let(:params) { ActionController::Parameters.new(term: term, global_search_scope: 'foobar') }
 
-      xit 'raises an exception' do
+      it 'raises an exception' do
         expect(&method(:auto_complete)).to raise_exception 'Invalid global scope foobar'
       end
     end
 
     context 'when user cannot read class' do
-      xit 'returns empty array' do
+      it 'returns empty array' do
         allow_any_instance_of(UserPolicy).to receive(:index?).and_return(false)
         expect(auto_complete.send(:autocomplete_result, scope)).to eq([])
       end
@@ -157,7 +157,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       expect(result[1][:value]).to eq(term)
     end
 
-    xit 'excludes duplicates' do
+    it 'excludes duplicates' do
       result = auto_complete.global_super_search_result
       records = result.map { |item| { id: item[:id], model_name: item[:model_name] } }
       expect(records.uniq.length).to eq(records.length)
@@ -176,7 +176,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     context "when excluding id's" do
       let(:params) { ActionController::Parameters.new(term: term, excluded_ids: [999]) }
 
-      xit 'is not applicable and raises an exception' do
+      it 'is not applicable and raises an exception' do
         expect { auto_complete.global_super_search_result }.to raise_error RuntimeError
       end
     end
@@ -188,7 +188,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     let(:methods) { [:user_status] }
     let(:result) { [user.email, user.last_name, user.user_status.name] }
 
-    xit 'returns array of record fields' do
+    it 'returns array of record fields' do
       expect(auto_complete.send(:get_columns_values, columns, methods, user)).to eq(result)
     end
   end
@@ -199,27 +199,27 @@ RSpec.describe GlobalAutocomplete, type: :service do
     let(:string) { 'foobar' }
 
     context 'when value blank' do
-      xit 'returns empty string' do
+      it 'returns empty string' do
         expect(auto_complete.send(:format_column_value, blank)).to eq('')
       end
     end
 
     context 'when value date' do
-      xit 'returns formatted date' do
+      it 'returns formatted date' do
         date = Date.current
         expect(auto_complete.send(:format_column_value, date)).to eq(format_date(date))
       end
     end
 
     context 'when value datetime' do
-      xit 'returns formatted datetime' do
+      it 'returns formatted datetime' do
         datetime = Time.current
         expect(auto_complete.send(:format_column_value, datetime)).to eq(format_datetime(datetime))
       end
     end
 
     context 'when value not a date' do
-      xit 'returns value as is' do
+      it 'returns value as is' do
         expect(auto_complete.send(:format_column_value, string)).to eq(string)
       end
     end
@@ -229,7 +229,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     context 'when global search scope not present' do
       let(:params) { ActionController::Parameters.new(global_search_scope: '') }
 
-      xit 'returns first search scope name' do
+      it 'returns first search scope name' do
         expect(auto_complete.send(:scope_name)).to eq(search_scopes.first[:name])
       end
     end
@@ -237,7 +237,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
 
   describe '#selected_scope' do
     context 'when search scopes not empty' do
-      xit 'returns scopes matching scope name' do
+      it 'returns scopes matching scope name' do
         name = auto_complete.send(:scope_name)
         result = auto_complete.send(:selected_scope)
         expect(result[:name]).to eq(name)
@@ -247,7 +247,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     context 'when search scopes empty' do
       let(:auto_complete) { described_class.new(params, [], user, :searchable_association) }
 
-      xit 'returns nil' do
+      it 'returns nil' do
         expect(auto_complete.send(:selected_scope)).to be_nil
       end
     end
@@ -256,7 +256,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
   describe '#where_query' do
     let(:params) { ActionController::Parameters.new(global_search_scope: 'user_name') }
 
-    xit 'returns query where from scope' do
+    it 'returns query where from scope' do
       query_where = search_scopes.first[:query_where]
       expect(auto_complete.send(:where_query)).to eq(query_where)
     end

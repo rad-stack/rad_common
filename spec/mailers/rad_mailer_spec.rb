@@ -53,7 +53,7 @@ describe RadMailer do
       context 'when user has symbol in name' do
         let(:recipient) { symbol_user }
 
-        xit { is_expected.to eq [symbol_email] }
+        it { is_expected.to eq [symbol_email] }
       end
 
       context 'when to multiple users' do
@@ -94,7 +94,7 @@ describe RadMailer do
 
       let(:attachment) { { raw_file: 'foo', filename: 'bar', content_type: 'baz' } }
 
-      xit { is_expected.to eq 1 }
+      it { is_expected.to eq 1 }
     end
 
     describe 'contact logs' do

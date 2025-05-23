@@ -90,8 +90,7 @@ module RadUser
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
-    after_save :notify_user_approved
-
+    after_commit :notify_user_approved, only: :update
     after_invitation_accepted :notify_user_accepted
 
     strip_attributes
@@ -244,6 +243,10 @@ module RadUser
   # TODO: this should be a db attribute when we enable the TOTP feature
   def twilio_totp_factor_sid; end
 
+  def timeout_in
+    external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
+  end
+
   def developer?
     email.end_with? RadConfig.developer_domain!
   end
@@ -381,8 +384,28 @@ module RadUser
       return unless saved_change_to_user_status_id? && user_status &&
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
-      RadMailer.your_account_approved(self).deliver_later
+      RadMailer.your_account_approved(self, nil).deliver_later
       Notifications::UserWasApprovedNotification.main([self, approved_by]).notify! unless do_not_notify_approved
+    end
+
+    def notify_user_approved_user
+      raise 'missing approved_by' if approved_by.blank?
+
+      RadMailer.your_account_approved(self, approved_by).deliver_later
+      return unless RadConfig.twilio_enabled? && mobile_phone.present?
+
+      UserSMSSenderJob.perform_later(User.user_approved_message,
+                                     approved_by.id,
+                                     id,
+                                     nil,
+                                     false,
+                                     contact_log_record: self)
+    end
+
+    def notify_user_approved_admins
+      return if do_not_notify_approved
+
+      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify!
     end
 
     def notify_user_accepted
