@@ -166,7 +166,7 @@ module RadCommon
     end
 
     def user_confirm_action(user)
-      return unless RadConfig.user_confirmable? && policy(user).update? && !user.confirmed?
+      return unless user.needs_confirmation? && policy(user).update?
 
       confirm = "This will manually confirm the user's email address and bypass this verification step. Are you sure?"
       link_to icon('circle-question', 'Confirm Email'),
@@ -177,7 +177,7 @@ module RadCommon
     end
 
     def user_resend_action(user)
-      return unless policy(User.new).create? && user.invitation_sent_at.present? && user.invitation_accepted_at.blank?
+      return unless policy(User.new).create? && user.needs_accept_invite?
 
       link_to icon(:envelope, 'Resend Invitation'),
               resend_invitation_user_path(user),

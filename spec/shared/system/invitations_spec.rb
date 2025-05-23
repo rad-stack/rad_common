@@ -206,7 +206,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     end
 
     context 'when user is struggling' do
-      xit "doesn't let unaccepted invitee reset password" do
+      it "doesn't let unaccepted invitee reset password" do
         visit new_user_password_path
         fill_in 'Email', with: invitee.email
         click_on 'Send Me Reset Password Instructions'
