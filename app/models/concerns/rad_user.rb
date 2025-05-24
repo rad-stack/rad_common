@@ -178,7 +178,7 @@ module RadUser
   end
 
   def display_style
-    if user_status.active || user_status == UserStatus.default_pending_status
+    if active? || (RadConfig.pending_users? && user_status == UserStatus.default_pending_status)
       external? ? 'table-warning' : ''
     else
       'table-danger'
@@ -213,11 +213,12 @@ module RadUser
   end
 
   def send_reset_password_instructions
-    if invited_to_sign_up?
-      errors.add :email, :not_found
-    else
-      super
+    if needs_accept_invite?
+      Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
+      return
     end
+
+    super
   end
 
   def test_email!(from_user)

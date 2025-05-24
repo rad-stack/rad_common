@@ -2,8 +2,10 @@ module Users
   class ConfirmationsController < Devise::ConfirmationsController
     def show
       super
-      Notifications::NewUserSignedUpNotification.main(resource).notify! if resource.errors.empty?
-      resource.update(invitation_accepted_at: resource.confirmed_at, invitation_token: nil) unless resource.invitation_accepted?
+
+      raise "There is an open invitation for this user: #{resource.email}" if resource.needs_accept_invite?
+
+      resource.notify_new_user_signed_up if resource.errors.empty? && !confirming_email_change?
     end
 
     private

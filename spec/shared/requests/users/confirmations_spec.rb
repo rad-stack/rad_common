@@ -48,7 +48,7 @@ RSpec.describe 'User Confirmations', type: :request do
         get user_confirmation_path, params: { confirmation_token: user.confirmation_token }
       end
 
-      xit "doesn't send a new user sign up email", :user_confirmable_specs do
+      it "doesn't send a new user sign up email", :user_confirmable_specs do
         expect(deliveries.size).to eq 0
       end
     end
