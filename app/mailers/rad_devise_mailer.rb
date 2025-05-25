@@ -105,8 +105,8 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def default_url_options
-    if @resource.external?
-      { host: portal_host_name(@resource) }
+    if @resource.external? && RadConfig.portal?
+      { host: @resource.portal_host_name }
     else
       { host: RadConfig.host_name! }
     end
@@ -116,29 +116,10 @@ class RadDeviseMailer < Devise::Mailer
 
     def set_defaults
       @include_yield = false
+      rad_headers
     end
 
     def app_name
-      @resource.external? ? portal_app_name(@resource) : RadConfig.app_name!
-    end
-
-    def installed_app_name
-      ::Rails.application.class.module_parent
-    end
-
-    def portal_app_name(user)
-      if user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
-        "#{installed_app_name} Prescriber Portal"
-      else
-        "#{installed_app_name} Patient Portal"
-      end
-    end
-
-    def portal_host_name(user)
-      if user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
-        RadConfig.config_item!(:portal_host_name).gsub('patient', 'prescriber')
-      else
-        RadConfig.host_name!.gsub('tracker', 'patient')
-      end
+      @resource.external? && RadConfig.portal? ? @resource.portal_app_name : RadConfig.app_name!
     end
 end

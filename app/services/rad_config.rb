@@ -288,6 +288,10 @@ class RadConfig
       boolean_config_item! :user_profiles
     end
 
+    def portal?
+      boolean_config_item! :portal
+    end
+
     def secure_sentry?
       boolean_config_item! :secure_sentry
     end
