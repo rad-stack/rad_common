@@ -185,7 +185,7 @@ class CardPresenter
     actions += external_actions
 
     if (action_name == 'edit' || action_name == 'update' || action_name == 'show') &&
-       !no_new_button && current_user && Pundit.policy!(current_user, check_policy_klass).new?
+       !no_new_button && current_user && class_policy.new?
 
       actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"),
                                          new_url,
@@ -199,9 +199,7 @@ class CardPresenter
                                          class: 'btn btn-secondary btn-sm'))
     end
 
-    if action_name == 'index' && !no_new_button && current_user &&
-       Pundit.policy!(current_user, check_policy_klass).new?
-
+    if action_name == 'index' && !no_new_button && current_user && class_policy.new?
       actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"),
                                          new_url,
                                          class: 'btn btn-success btn-sm',
@@ -225,29 +223,13 @@ class CardPresenter
       klass.model_name.human.titleize
     end
 
-    def check_policy_klass
-      if current_user.external?
-        [:portal, klass.new]
-      else
-        klass.new
-      end
-    end
-
-    def check_policy_instance
-      if current_user.external?
-        [:portal, instance]
-      else
-        instance
-      end
-    end
-
     def include_edit_action?
       action_name == 'show' &&
         !no_edit_button &&
         instance&.persisted? &&
         current_user &&
-        Pundit.policy!(current_user, check_policy_klass).update? &&
-        Pundit.policy!(current_user, check_policy_instance).update?
+        class_policy.update? &&
+        instance_policy.update?
     end
 
     def edit_action
@@ -286,8 +268,8 @@ class CardPresenter
         !no_delete_button &&
         instance&.persisted? &&
         current_user &&
-        Pundit.policy!(current_user, check_policy_klass).destroy? &&
-        Pundit.policy!(current_user, check_policy_instance).destroy?
+        class_policy.destroy? &&
+        instance_policy.destroy?
     end
 
     def include_tools_button?
@@ -378,7 +360,7 @@ class CardPresenter
     def show_index_button?
       return false if no_index_button
       return false unless %w[show edit update new create].include?(action_name)
-      return false unless current_user && Pundit.policy!(current_user, check_policy_klass).index?
+      return false unless current_user && class_policy.index?
       return false if no_records?
 
       true
@@ -389,10 +371,26 @@ class CardPresenter
     end
 
     def class_policy
-      @class_policy ||= Pundit.policy!(current_user, klass.new)
+      @class_policy ||= Pundit.policy!(current_user, check_policy_klass)
     end
 
     def instance_policy
-      @instance_policy ||= Pundit.policy!(current_user, instance)
+      @instance_policy ||= Pundit.policy!(current_user, check_policy_instance)
+    end
+
+    def check_policy_klass
+      if current_user.external? && RadConfig.portal?
+        [:portal, klass.new]
+      else
+        klass.new
+      end
+    end
+
+    def check_policy_instance
+      if current_user.external? && RadConfig.portal?
+        [:portal, instance]
+      else
+        instance
+      end
     end
 end
