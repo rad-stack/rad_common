@@ -195,9 +195,9 @@ class GlobalAutocomplete
 
     def check_policy_klass
       if user.external? && RadConfig.portal?
-        [:portal, klass.new]
+        [:portal, klass]
       else
-        klass.new
+        klass
       end
     end
 end
