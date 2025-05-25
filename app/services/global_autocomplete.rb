@@ -171,11 +171,19 @@ class GlobalAutocomplete
 
     def policy_ok?
       if mode == :global_search
-        Pundit.policy!(user, klass.new).global_search?
+        Pundit.policy!(user, check_policy_klass).global_search?
       elsif mode == :searchable_association
-        Pundit.policy!(user, klass.new).searchable_association?
+        Pundit.policy!(user, check_policy_klass).searchable_association?
       else
         raise "invalid mode: #{mode}"
+      end
+    end
+
+    def check_policy_klass
+      if user.external? && RadConfig.portal?
+        [:portal, klass.new]
+      else
+        klass.new
       end
     end
 end
