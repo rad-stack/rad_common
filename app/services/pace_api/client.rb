@@ -28,16 +28,16 @@ module PaceApi
       parse_response(response)
     end
 
-    def find_objects!(type, xpath)
-      find_objects(type, xpath, raise_error: true)
+    def find_objects!(type, xpath, cached: false)
+      find_objects(type, xpath, raise_error: true, cached: cached)
     end
 
-    def find_object(type, xpath)
-      find_objects(type, xpath, raise_error: false)&.first
+    def find_object(type, xpath, cached: false)
+      find_objects(type, xpath, raise_error: false, cached: cached)&.first
     end
 
-    def find_object!(type, xpath)
-      objects = find_objects(type, xpath, raise_error: true)
+    def find_object!(type, xpath, cached: false)
+      objects = find_objects(type, xpath, raise_error: true, cached: cached)
       if objects.size > 1
         raise PaceApi::MultipleObjectError.new("More than one #{type} found in Pace for #{xpath}", type)
       end
@@ -45,16 +45,25 @@ module PaceApi
       objects.first
     end
 
-    def find_objects(type, xpath, raise_error: false)
+    def find_objects(type, xpath, raise_error: false, cached: false)
       raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
       raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
 
       query_params = { type: type, xpath: xpath }
+      cache_key = "pace_api_find_objects_#{type}_#{xpath}"
 
       url = '/rpc/rest/services/FindObjects/find'
       log_request(action: "FindObject: type: #{type} xpath: #{xpath}",
                   query_params: query_params, body: {}, method: 'GET', url: url)
-      response = api_client.get(url, query_params)
+      cache_expires_in_hours = RadConfig.config_item(:pace_cache_expires_in_hours) || 1
+
+      response = if cached
+                   Rails.cache.fetch(cache_key, expires_in: cache_expires_in_hours.hours) do
+                     api_client.get(url, query_params)
+                   end
+                 else
+                   api_client.get(url, query_params)
+                 end
       parsed_response = parse_response(response)
 
       return parsed_response if parsed_response.present?
