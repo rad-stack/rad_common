@@ -1,15 +1,15 @@
 require 'rails_helper'
 
-describe 'Permissions', type: :system do
+describe 'Permissions' do
   let(:user) { create :user, security_roles: [security_role] }
   let(:security_role) { create :security_role, read_division: true }
   let(:division) { create :division }
 
   before { login_as user, scope: :user }
 
-  it 'updates the ui when changed', :gha_specs_only, :js do
+  it 'updates the ui when changed', :js do
     visit "/divisions/#{division.id}"
-    expect(page).not_to have_content 'Delete'
+    expect(page).to have_no_content 'Delete'
 
     user.security_roles.update_all delete_division: true
 

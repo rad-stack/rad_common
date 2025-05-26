@@ -19,7 +19,7 @@ RSpec.describe 'Divisions' do
     end
 
     context 'with default placeholder' do
-      xit 'shows placeholder on autocomplete field', :js do
+      it 'shows placeholder on autocomplete field', :js do
         visit new_division_path
         click_tom_select(from: 'division_owner_id')
 
@@ -70,17 +70,17 @@ RSpec.describe 'Divisions' do
 
       before do
         other_user
-        stub_const('SearchableAssociationInput::MAX_DROPDOWN_SIZE', 1)
+        stub_const('RadCommon::SearchableDropdownHelper::MAX_DROPDOWN_SIZE', 1)
         visit edit_division_path(division)
       end
 
-      xit 'allows searching' do
+      it 'allows searching' do
         click_tom_select(from: 'division_owner_id')
         first('.dropdown-input').fill_in(with: other_user.first_name)
         expect(find('[data-selectable]', text: other_user.to_s)).to be_present
       end
 
-      xit 'displays existing value' do
+      it 'displays existing value' do
         within '#division_owner_id-ts-control' do
           expect(find('[data-ts-item]').text).to eq(division.owner.to_s)
         end
@@ -138,7 +138,7 @@ RSpec.describe 'Divisions' do
         expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('active')
       end
 
-      xit 'allows deleting saved filters' do
+      it 'allows deleting saved filters' do
         create :saved_search_filter, user: user, search_class: 'DivisionSearch'
         visit divisions_path
         click_button 'saved-search-filters-dropdown'

@@ -87,7 +87,8 @@ RSpec.describe 'Users', type: :request do
             last_name: Faker::Name.last_name,
             mobile_phone: create(:phone_number, :mobile),
             password: 'cOmpl3x_p@55w0rd',
-            email: 'example000@example.com' }
+            email: 'example000@example.com',
+            security_roles: [security_role.id] }
         end
 
         it 'creates the user and redirects' do
@@ -99,7 +100,7 @@ RSpec.describe 'Users', type: :request do
       end
 
       describe 'with invalid params' do
-        xit 're-renders the new template' do
+        it 're-renders the new template' do
           post '/users', params: { user: invalid_attributes }
           expect(response.body).to include 'Please review the problems below'
         end
@@ -159,7 +160,7 @@ RSpec.describe 'Users', type: :request do
     end
 
     describe 'export' do
-      xit 'exports' do
+      it 'exports' do
         get '/users/export', params: { format: :pdf }
         expect(response).to have_http_status :redirect
         expect(flash[:notice]).to include 'Your report is generating'

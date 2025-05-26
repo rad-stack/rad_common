@@ -31,12 +31,26 @@ RSpec.describe 'Search' do
         expect(current_url).to include('search[audited_changes_like]=query')
       end
     end
+
+    context 'with name match type select' do
+      it 'changes object match_type', :js do
+        visit divisions_path
+        expect(first('#search_name_like_match_type', visible: :all).value).to eq('contains')
+
+        within first('[data-controller="search-like-filter"]') do
+          first('.dropdown-toggle').click
+          first('[data-match-type="exact"]').click
+        end
+        first('button', text: 'Apply Filters').click
+        expect(first('#search_name_like_match_type', visible: :all).value).to eq('exact')
+      end
+    end
   end
 
   describe 'select filter' do
     before { visit divisions_path }
 
-    it 'selects a default value', :js, skip: 'Skip until Tomselect Support is added' do
+    it 'selects a default value', :js do
       within '.search_division_status' do
         expect(find('.has-items')).to be_present
       end
@@ -48,8 +62,7 @@ RSpec.describe 'Search' do
       expect(first('#search_division_status').value).to eq [Division.division_statuses['status_active'].to_s]
     end
 
-    it 'select should have warning style when a value is selected other than default', :js,
-       skip: 'Skip until Tomselect Support is added' do
+    it 'select should have warning style when a value is selected other than default', :js do
       tom_select 'Inactive', from: 'search_division_status'
       expect(page).to have_no_css('.filter-active .ts-control')
       find('body').click
@@ -66,11 +79,20 @@ RSpec.describe 'Search' do
         division.update!(category: category, owner: user)
       end
 
-      it 'allows searching and selecting filter option', skip: 'Skip until Tomselect Support is added' do
+      it 'allows searching and selecting filter option' do
         first('button', text: 'Apply Filters').click
 
         expect(page).to have_content(division.name)
         expect(page).to have_content(other_division.name)
+
+        # Without Search max options not exceeded
+        tom_select category.name, from: 'search_category_id'
+        first('button', text: 'Apply Filters').click
+        expect(page).to have_content(division.name)
+        expect(page).to have_no_content(other_division.name)
+
+        create_list :category, 300
+        visit divisions_path
 
         # Full Search
         tom_select category.name, from: 'search_category_id', search: category.name
@@ -85,7 +107,7 @@ RSpec.describe 'Search' do
       end
 
       context 'when exclude is checked' do
-        it 'filters out selected options', skip: 'Skip until Tomselect Support is added' do
+        it 'filters out selected options' do
           first('button', text: 'Apply Filters').click
 
           expect(page).to have_content(division.name)

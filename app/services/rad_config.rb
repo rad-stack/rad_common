@@ -2,10 +2,6 @@ require 'mail'
 
 class RadConfig
   class << self
-    def default_language_code!
-      config_item! :language_code
-    end
-
     def admin_email!
       secret_config_item! :admin_email
     end
@@ -148,10 +144,6 @@ class RadConfig
       secret_config_item! :twilio_phone_number
     end
 
-    def twilio_mms_phone_number!
-      secret_config_item(:twilio_mms_phone_number).presence || twilio_phone_number!
-    end
-
     def twilio_account_sid!
       secret_config_item! :twilio_account_sid
     end
@@ -172,18 +164,8 @@ class RadConfig
       boolean_config_item! :twilio_verify_all_users
     end
 
-    def twilio_verify_internal_only?
-      boolean_config_item! :twilio_verify_internal_only
-    end
-
     def twilio_verify_remember_device!
       config_item!(:twilio_verify_remember_device_days).days
-    end
-
-    # Config item should be in sync with countries enabled for messaging in twilio account
-    # https://console.twilio.com/us1/develop/sms/settings/geo-permissions
-    def twilio_countries_enabled!
-      config_item!(:twilio_countries_enabled).split(' ')
     end
 
     def seeded_users!
@@ -196,20 +178,6 @@ class RadConfig
       config_item! :app_name
     end
 
-    def portal_app_name!(user = nil)
-      return config_item!(:portal_app_name) if user.blank?
-
-      if user.respond_to?(:portal_patient?) && user.portal_patient?
-        config_item! :portal_app_name
-      elsif user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
-        config_item! :prescriber_portal_app_name
-      elsif user.respond_to?(:portal_attorney?) && user.portal_attorney?
-        config_item! :attorney_portal_app_name
-      else
-        config_item! :portal_app_name
-      end
-    end
-
     def host_name!
       config_item! :host_name
     end
@@ -220,24 +188,6 @@ class RadConfig
 
     def client_table_name!
       config_item(:client_table_name) || 'clients'
-    end
-
-    def portal_host_name!(user = nil)
-      return config_item!(:portal_host_name) if user.blank?
-
-      if user.respond_to?(:portal_patient?) && user.portal_patient?
-        config_item! :portal_host_name
-      elsif user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
-        config_item! :prescriber_portal_host_name
-      elsif user.respond_to?(:portal_attorney?) && user.portal_attorney?
-        config_item! :attorney_portal_host_name
-      else
-        config_item! :portal_host_name
-      end
-    end
-
-    def portal?
-      boolean_config_item! :portal
     end
 
     def impersonate?
@@ -481,10 +431,6 @@ class RadConfig
       raise "required config item #{item} is missing" if value.nil?
 
       value
-    end
-
-    def enable_super_search?
-      boolean_config_item! :enable_super_search
     end
 
     def check_validity!

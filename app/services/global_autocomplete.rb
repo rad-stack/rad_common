@@ -1,13 +1,14 @@
 class GlobalAutocomplete
   include RadCommon::ApplicationHelper
 
-  attr_reader :params, :search_scopes, :user
+  attr_reader :params, :search_scopes, :user, :mode
   attr_accessor :current_scope
 
-  def initialize(params, search_scopes, user)
+  def initialize(params, search_scopes, user, mode)
     @params = params
     @search_scopes = search_scopes
     @current_scope = selected_scope
+    @mode = mode
     validate_global_search_scope
     @user = user
   end
@@ -32,8 +33,18 @@ class GlobalAutocomplete
     results.uniq { |result| [result[:model_name], result[:id]] }
   end
 
+  def base_autocomplete_collection(scope)
+    return [] unless scope && policy_ok?
+
+    self.current_scope = scope
+    order = scope[:query_order] || 'created_at DESC'
+    query = Pundit.policy_scope!(user, klass)
+    query = query.joins(joins) if joins
+    query.order(order)
+  end
+
   def self.check_policy_klass(user, klass)
-    if user.portal?
+    if user.external?
       [:portal, klass]
     else
       klass
@@ -68,7 +79,7 @@ class GlobalAutocomplete
         query = query.where.not(id: params[:excluded_ids])
       end
 
-      query = query.limit(50)
+      query = query.limit(params[:limit].presence || 50)
       search_label = scope[:search_label] || :to_s
 
       query.map do |record|
@@ -78,6 +89,7 @@ class GlobalAutocomplete
           id: record.id,
           label: record.send(search_label),
           value: record.to_s,
+          active: !record.respond_to?(:active?) || record.active?,
           scope_description: scope[:description] }
       end
     end
@@ -177,5 +189,15 @@ class GlobalAutocomplete
 
     def scope_with_where?(scope)
       (scope[:columns].present? && scope[:columns].any?) || scope[:query_where].present?
+    end
+
+    def policy_ok?
+      if mode == :global_search
+        Pundit.policy!(user, klass.new).global_search?
+      elsif mode == :searchable_association
+        Pundit.policy!(user, klass.new).searchable_association?
+      else
+        raise "invalid mode: #{mode}"
+      end
     end
 end

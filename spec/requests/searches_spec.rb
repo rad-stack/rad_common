@@ -1,14 +1,14 @@
 require 'rails_helper'
 
-describe 'Searches', type: :request do
+describe 'Searches' do
   let(:user) { create :admin }
   let(:search_term) { user.last_name }
-  let(:search_results) { JSON.parse(response.body) }
+  let(:search_results) { response.parsed_body }
 
   before { login_as user, scope: :user }
 
   context 'when super search' do
-    let(:search_path) { "/global_search?term=#{search_term}&super_search=1" }
+    let(:search_path) { "/global_search?term=#{search_term}&super_search=true" }
     let!(:division) { create :division, name: search_term }
 
     it 'can search for results across multiple tables' do

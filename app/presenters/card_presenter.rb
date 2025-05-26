@@ -152,16 +152,15 @@ class CardPresenter
     end
 
     if action_name == 'edit' || action_name == 'update'
-      the_title = "Editing #{object_label}:"
+      title_items = ["Editing #{object_label}:"]
 
-      if no_show_link
-        the_title += " #{instance_label}"
-      else
-        the_title += " #{@view_context.link_to(instance_label, instance)}"
-        the_title = the_title.html_safe
-      end
+      title_items += if no_show_link
+                       [' ', instance_label]
+                     else
+                       [' ', @view_context.link_to(instance_label, instance)]
+                     end
 
-      return the_title
+      return @view_context.safe_join(title_items)
     end
 
     raise 'missing card header title'
@@ -227,7 +226,7 @@ class CardPresenter
     end
 
     def check_policy_klass
-      if current_user.portal?
+      if current_user.external?
         [:portal, klass.new]
       else
         klass.new
@@ -235,7 +234,7 @@ class CardPresenter
     end
 
     def check_policy_instance
-      if current_user.portal?
+      if current_user.external?
         [:portal, instance]
       else
         instance

@@ -20,8 +20,8 @@ RSpec.describe UserExport, type: :service do
     let(:exporter) { described_class.new(records: [user, another], current_user: user, format: export_format) }
     let(:file) { exporter.generate }
 
-    context 'when record limit is exceeded' do
-      before { stub_const('Exporter::RECORD_LIMIT', 1) }
+    context 'when hard record limit is exceeded' do
+      before { stub_const('Exporter::HARD_RECORD_LIMIT', 1) }
 
       it { expect { file }.to raise_error 'exporter record limit of 1 exceeded with 2' }
     end
@@ -37,7 +37,7 @@ RSpec.describe UserExport, type: :service do
     context 'when PDF format' do
       let(:export_format) { :pdf }
 
-      xit 'generates an export pdf file with expected content' do
+      it 'generates an export pdf file with expected content' do
         expect(file).to start_with('%PDF-1.')
         pdf_text = PDF::Reader.new(StringIO.new(file)).pages.map(&:text).join(' ')
 

@@ -11,64 +11,68 @@
 
 !!!
 %head
-  = stylesheet_pack_tag 'rad_mailer_reset', media: 'all'
-  = stylesheet_pack_tag 'rad_mailer', media: 'all'
+  - if RadConfig.legacy_assets?
+    = stylesheet_pack_tag 'rad_mailer', media: 'all'
+  - else
+    = stylesheet_link_tag 'rad_mailer', media: 'all'
 %body
-  .email-container
-    .email-header
-      .email-row
-        .email-col-12.logo-col
-          - if @override_logo
-            = link_to image_tag(@override_logo, alt: company_name, title: company_name), website
-          - else
-            = link_to image_tag('app_logo.png', alt: company_name, title: company_name), website
+  .email-bg
+    .email-container
+      .email-header
+        .email-row
+          .email-col-12.logo-col
+            - company_logo = ApplicationController.helpers.company_logo(Company.main)
+            = link_to image_tag(company_logo, alt: company_name, title: company_name), website
 
-          - unless logo_includes_name
-            %span.logo_text
-              = company_name
-    .email-body
-      - if @recipient
-        .greeting-row
-          .greeting
-            .text
-              - if @recipient.respond_to?(:greeting)
-                #{@recipient.greeting},
-              - elsif @recipient.is_a?(String)
-                Hello #{@recipient},
-              - elsif @recipient.respond_to?(:count)
-                Hello all,
-              - else
-                - raise "please set up greeting method in #{@recipient.class} before using this mailer"
-      .email-row
-        .email-col-12
-          %br
-          - if has_avatar
-            = image_tag(@sender.avatar.variant(resize: '25x25'), alt: @sender.to_s, title: @sender.to_s)
-          = @message
+            - unless logo_includes_name
+              %span.logo_text
+                = company_name
+      .email-body
+        - if @recipient
+          .greeting-row
+            .greeting
+              .text
+                - if @recipient.respond_to?(:greeting)
+                  #{@recipient.greeting},
+                - elsif @recipient.is_a?(String)
+                  Hello #{@recipient},
+                - elsif @recipient.respond_to?(:count)
+                  - if @recipient.count == 1 && @recipient.first.respond_to?(:greeting)
+                    #{@recipient.first.greeting},
+                  - else
+                    Hello all,
+                - else
+                  - raise "please set up greeting method in #{@recipient.class} before using this mailer"
+        .email-row
+          .email-col-12
+            %br
+            - if has_avatar
+              = image_tag(@sender.avatar.variant(resize: '25x25'), alt: @sender.to_s, title: @sender.to_s)
+            = @message
 
-      - if @include_yield
-        = yield
+        - if @include_yield
+          = yield
 
-      - if @email_action
-        = render 'layouts/email_action',
-                 message: @email_action[:message],
-                 button_text: @email_action[:button_text],
-                 button_url: @email_action[:button_url]
+        - if @email_action
+          = render 'layouts/email_action',
+                  message: @email_action[:message],
+                  button_text: @email_action[:button_text],
+                  button_url: @email_action[:button_url]
 
-    .email-header
-      .email-row
-        .email-col-12.text-align-center
-          - if @notification_settings_link
+      .email-header
+        .email-row
+          .email-col-12.text-align-center
+            - if @notification_settings_link
+              .footer
+                .footer-item
+                  Click
+                  = link_to 'here', "#{protocol}://#{RadConfig.host_name!}/notification_settings"
+                  to change your notification settings.
             .footer
-              .footer-item
-                Click
-                = link_to 'here', "#{protocol}://#{RadConfig.host_name!}/notification_settings"
-                to opt out or change your notification settings.
-          .footer
-            .footer-item= company_name
-            - if company_full_address.present?
-              .footer-item= company_full_address
-            - if company_phone_number.present?
-              .footer-item= link_to company_phone_number, "tel:#{company_phone_number}"
-            .footer-item= link_to website, website
-            .footer-item= link_to @footer_email || admin_email, "mailto:#{@footer_email || admin_email}"
+              .footer-item= company_name
+              - if company_full_address.present?
+                .footer-item= company_full_address
+              - if company_phone_number.present?
+                .footer-item= link_to company_phone_number, "tel:#{company_phone_number}"
+              .footer-item= link_to website, website
+              .footer-item= link_to @footer_email || admin_email, "mailto:#{@footer_email || admin_email}"

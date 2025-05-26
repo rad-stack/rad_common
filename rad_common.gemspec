@@ -31,14 +31,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'faker'
   s.add_dependency 'geocoder'
   s.add_dependency 'haml-rails'
-  s.add_dependency 'httpclient'
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
-  s.add_dependency 'jsbundling-rails'
   s.add_dependency 'kaminari'
-  s.add_dependency 'sassc'
-  s.add_dependency 'sprockets-rails'
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
 
   s.add_dependency 'nokogiri'
@@ -54,24 +50,18 @@ Gem::Specification.new do |s|
   s.add_dependency 'propshaft'
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
-  s.add_dependency 'rails', '~> 7.0.8'
+  s.add_dependency 'rails', '>= 7.0.8.7', '< 8.0.0' # TODO: temp backwards compatibility, see Task 9342
   s.add_dependency 'redis'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'
-  s.add_dependency 'sidekiq', '6.4.2' # pinning this arbitrarily to reduce risk
-  s.add_dependency 'sidekiq-failures'
+  s.add_dependency 'sidekiq', '~> 7.1'
   s.add_dependency 'simple_form'
   s.add_dependency 'smartystreets_ruby_sdk', '5.20.4'
   s.add_dependency 'strip_attributes'
   s.add_dependency 'text'
   s.add_dependency 'turbo-rails'
   s.add_dependency 'twilio-ruby'
-  s.add_dependency 'webpacker'
-
-  # TODO: causes an error, temporary pinning
-  s.add_dependency 'concurrent-ruby', '1.3.4'
-
   s.add_dependency 'wicked_pdf', '2.6.3'
   s.add_dependency 'wkhtmltopdf-heroku', '2.12.6.1.pre.jammy'
 

@@ -11,14 +11,14 @@ class RadMailer < ActionMailer::Base
   default from: RadConfig.from_email!
   default reply_to: RadConfig.admin_email!
 
-  def your_account_approved(user)
+  def your_account_approved(user, approved_by)
     @contact_log_record = user
+    @contact_log_from_user = approved_by
 
-    @email_action = { button_text: 'Get Started',
-                      button_url: root_url }
+    @email_action = { button_text: 'Get Started', button_url: get_started_link }
 
     @recipient = user
-    @message = "Your account was approved and you can begin using #{RadConfig.app_name!}."
+    @message = User.user_approved_message
     mail to: @recipient.formatted_email, subject: 'Your Account Was Approved'
   end
 
@@ -45,11 +45,15 @@ class RadMailer < ActionMailer::Base
 
     @message = options[:do_not_format] ? message : simple_format(message)
     @email_action = options[:email_action] if options[:email_action]
-    enable_settings_link if options[:notification_settings_link]
 
     maybe_attach options
 
-    mail(to: to_address, subject: subject, cc: options[:cc], bcc: options[:bcc])
+    mail to: to_address,
+         subject: subject,
+         cc: options[:cc],
+         bcc: options[:bcc],
+         template_path: 'rad_mailer',
+         template_name: 'simple_message'
   end
 
   def global_validity_on_demand(recipient, problems)
@@ -97,9 +101,11 @@ class RadMailer < ActionMailer::Base
     # this won't work for links called using the route helpers outside of the mailer context
     # this won't detect when to use the portal host unless @recipient is a User
 
-    return { host: RadConfig.portal_host_name!(@recipient) } if @recipient.is_a?(User) && @recipient.portal?
-
-    { host: RadConfig.host_name! }
+    if @recipient.is_a?(User) && @recipient.external?
+      { host: portal_host_name(@recipient) }
+    else
+      { host: RadConfig.host_name! }
+    end
   end
 
   private
@@ -107,6 +113,14 @@ class RadMailer < ActionMailer::Base
     def set_defaults
       @include_yield = true
       rad_headers
+    end
+
+    def portal_host_name(user)
+      if user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
+        RadConfig.config_item!(:portal_host_name).gsub('patient', 'prescriber')
+      else
+        RadConfig.host_name!.gsub('tracker', 'patient')
+      end
     end
 
     def parse_recipients_array(recipients)
@@ -118,10 +132,35 @@ class RadMailer < ActionMailer::Base
     def maybe_attach(options)
       return if options[:attachment].blank?
 
-      attachment = options[:attachment][:record].send(options[:attachment][:method])
-      return unless attachment.attached?
+      attachment = options[:attachment]
+      if attachment[:record].present?
+        attach_from_record(attachment)
+      elsif attachment[:raw_file].present?
+        attach_raw_file(attachment)
+      else
+        raise 'attachment must include record or raw_file'
+      end
+    end
 
-      attachments[attachment.filename.to_s] = { mime_type: attachment.content_type, content: attachment.blob.download }
+    def attach_from_record(attachment)
+      record_attachment = attachment[:record].send(attachment[:method])
+      return unless record_attachment.attached?
+
+      attachments[record_attachment.filename.to_s] = {
+        mime_type: record_attachment.content_type,
+        content: record_attachment.blob.download
+      }
+    end
+
+    def attach_raw_file(attachment)
+      attachments[attachment[:filename]] = {
+        mime_type: attachment[:content_type],
+        content: attachment[:raw_file]
+      }
+    end
+
+    def escape_name(recipient_name)
+      recipient_name.gsub(/[<>]/, '').gsub(',', ' ').strip
     end
 
     def validate_simple_message_options(options)
@@ -144,15 +183,9 @@ class RadMailer < ActionMailer::Base
       raise "unknown options: #{unknown_keys}"
     end
 
-    def app_name(user)
-      user.portal? ? RadConfig.portal_app_name!(user) : RadConfig.app_name!
-    end
+    def get_started_link
+      return RadConfig.config_item!(:get_started_link) if RadConfig.config_item(:get_started_link).present?
 
-    def escape_name(recipient_name)
-      recipient_name.gsub(',', ' ')
-    end
-
-    def enable_settings_link
-      @notification_settings_link = true
+      root_url
     end
 end
