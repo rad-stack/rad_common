@@ -1,26 +1,21 @@
-- if search.search_params? && search.invalid?
+- if (search.search_params? && search.invalid?) || search.saved_filter_errors.present?
   - flash.now[:error] = search.error_messages
-= simple_form_for :search, url: path, method: :get do |f|
-  -# TODO: Set up permanent page size selection solution
-  - if params[:page_size].present?
-    = hidden_field_tag :page_size, params[:page_size]
-  - search.filters.each_slice(5) do |filters|
-    .row
-      - col_class = filters.count > 2 ? 'col-lg' : 'col-lg-4'
-      - filters.each do |filter|
-        %div{ class: "#{col_class} #{filter_col_class(filter)}" }
-          = render "layouts/filter_#{filter.filter_view}", filter: filter, search: search, f: f
-  .form-actions
-    = f.button :button, class: 'btn btn-success' do
-      %i.fa.fa-filter
-      Apply Filters
-    - if RadConfig.saved_search_filters_enabled?
-      = render 'layouts/saved_filters_dropdown', search: search, f: f, path: path
-    \
-    = link_to "#{path}?clear_filters=true", class: 'btn btn-danger' do
-      %i.fa.fa-times
-      Clear Filters
-    %br
-    %br
-    - if defined? paged_results
-      = render 'layouts/paging', paged_results: paged_results, f: f, search: search
+
+.d-block.d-md-none.text-right.mb-2.sticky-top.bg-white.py-2.border-bottom.border-secondary
+  %button.btn.btn-block{ class: search.search_params? ? 'btn-warning' : 'btn-primary',
+                         type: 'button',
+                         data: { toggle: 'modal', target: '#mobile-filters-modal' } }
+    = icon 'filter', 'Filters'
+.modal.fade#mobile-filters-modal{ tabindex: '-1', role: 'dialog' }
+  .modal-dialog{ role: 'document' }
+    .modal-content
+      .modal-header.bg-light.sticky-top
+        %h4.modal-title= icon 'filter', 'Filters'
+        %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: 'Close' } }
+          %span{ aria: { hidden: 'true' } }
+          = icon 'times'
+      .modal-body
+        = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: true
+
+.d-none.d-md-block{ data: { controller: 'search' } }
+  = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: false

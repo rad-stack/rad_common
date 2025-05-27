@@ -268,8 +268,7 @@ module RadUser
         self.external = security_roles.first.external
       end
 
-      status = external? ? UserStatus.default_active_status : UserStatus.default_pending_status
-      self.user_status = status if new_record? && !user_status
+      self.user_status = default_user_status if new_record? && !user_status
       return unless new_record?
 
       self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? &&
@@ -286,7 +285,7 @@ module RadUser
 
     def default_user_status
       return UserStatus.default_active_status unless RadConfig.pending_users?
-      return UserStatus.default_active_status if invited_by.present?
+      return UserStatus.default_active_status if external?
 
       UserStatus.default_pending_status
     end
