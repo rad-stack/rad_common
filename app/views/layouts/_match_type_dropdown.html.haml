@@ -1,0 +1,26 @@
+.row.align-items-center{ data: { controller: 'search-match-type-filter' } }
+  - match_type_value = search.search_params[filter.match_type_param] || filter.default_match_type
+  .col
+    - if filter.is_a?(RadCommon::ArrayFilter)
+      = f.label filter.array_input, filter.input_label, required: false
+    - if filter.is_a?(RadCommon::LikeFilter)
+      = f.label filter.like_input, filter.input_label, required: false
+
+  .col-auto
+    .dropdown
+    = f.hidden_field filter.match_type_param, value: match_type_value,
+                                              data: { search_match_type_filter_target: 'input' }
+    %span.dropdown-toggle{ type: 'button', data: { toggle: 'dropdown' } }
+      %i.fa.fa-filter
+    %ul.dropdown-menu.dropdown-menu-right{ data: { search_match_type_filter_target: 'menu' } }
+      - filter.match_types.each do |type|
+        %li
+          - data = { action: 'click->search-match-type-filter#select',
+                     match_type: type,
+                     match_type_label: type.titleize }
+          %a.dropdown-item{ href: '#', data: data }
+            .d-flex.align-items-center.justify-content-between
+              = type.titleize
+              %i.fa.fa-check.text-muted.px-2{ class: (type == match_type_value ? '' : 'd-none') }
+    %span.text-muted.ml-2{ data: { search_match_type_filter_target: 'label' } }
+      = match_type_value.titleize

@@ -37,12 +37,27 @@ RSpec.describe 'Search' do
         visit divisions_path
         expect(first('#search_name_like_match_type', visible: :all).value).to eq('contains')
 
-        within first('[data-controller="search-like-filter"]') do
+        within first('[data-controller="search-match-type-filter"]') do
           first('.dropdown-toggle').click
           first('[data-match-type="exact"]').click
         end
         first('button', text: 'Apply Filters').click
         expect(first('#search_name_like_match_type', visible: :all).value).to eq('exact')
+      end
+    end
+
+    context 'with tag match type dropdown' do
+      it 'changes match_type', :js do
+        visit divisions_path
+        expect(first('#search_tags_array_match_type', visible: :all).value).to eq('any')
+        # presumably will not work because division name like has the same data controller. Find out how to access next
+        # binding.pry
+        within first('[data-testid="tags_array_match_type_match_dropdown"]', visible: :all) do
+          first('.dropdown-toggle', visible: :all).click
+          first('[data-match-type="all"]').click
+        end
+        first('button', text: 'Apply Filters').click
+        expect(first('#search_tags_array_match_type').value).to eq('all')
       end
     end
   end

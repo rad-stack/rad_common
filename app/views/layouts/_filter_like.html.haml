@@ -1,3 +1,5 @@
+-# = render 'layouts/match_type_dropdown', search: search, filter: filter, f: f
+
 .row.align-items-center{ data: { controller: 'search-match-type-filter' } }
   - match_type_value = search.search_params[filter.match_type_param] || filter.default_match_type
   .col
