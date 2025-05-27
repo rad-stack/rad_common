@@ -104,12 +104,8 @@ module RadUser
     end
   end
 
-  def active
-    active_for_authentication?
-  end
-
   def active?
-    active
+    active_for_authentication?
   end
 
   def needs_confirmation?
@@ -158,11 +154,6 @@ module RadUser
 
   def admin?
     permission?(:admin)
-  end
-
-  def auto_approve?
-    # override this as needed in model
-    false
   end
 
   def greeting
@@ -268,7 +259,7 @@ module RadUser
         self.external = security_roles.first.external
       end
 
-      status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
+      status = external? ? UserStatus.default_active_status : UserStatus.default_pending_status
       self.user_status = status if new_record? && !user_status
       return unless new_record?
 
@@ -380,7 +371,7 @@ module RadUser
     end
 
     def notify_user_approved
-      return if auto_approve?
+      return if external?
 
       return unless saved_change_to_user_status_id? && user_status &&
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
