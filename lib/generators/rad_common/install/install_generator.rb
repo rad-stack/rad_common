@@ -21,6 +21,7 @@ module RadCommon
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'timezone_detection', 'false'
+        add_rad_config_setting 'portal', 'false'
         remove_rad_factories
         remove_legacy_rails_config_setting
 
