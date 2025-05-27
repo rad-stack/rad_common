@@ -1,16 +1,16 @@
 module RadCommon
   class ArrayFilter < SearchFilter
-    MATCH_TYPES = %w[exact all any].freeze
+    MATCH_TYPES = %w[any all exact].freeze
 
     def initialize(column:, options:, input_label: nil, multiple: false)
       super(column: column, input_label: input_label, multiple: multiple, options: options)
     end
 
     def searchable_name
-      array_input
+      input_name
     end
 
-    def array_input
+    def input_name
       "#{column}_array"
     end
 
@@ -50,7 +50,7 @@ module RadCommon
     private
 
       def array_value(params)
-        value = params[array_input]
+        value = params[input_name]
         return if value.blank?
 
         value = value.split(',') if value.is_a?(String)

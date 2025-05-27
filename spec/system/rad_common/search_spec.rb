@@ -50,8 +50,7 @@ RSpec.describe 'Search' do
       it 'changes match_type', :js do
         visit divisions_path
         expect(first('#search_tags_array_match_type', visible: :all).value).to eq('any')
-        # presumably will not work because division name like has the same data controller. Find out how to access next
-        # binding.pry
+
         within first('[data-testid="tags_array_match_type_match_dropdown"]') do
           first('.dropdown-toggle').click
           first('[data-match-type="all"]').click
