@@ -163,7 +163,7 @@ module RadCommon
         columns = filters.sort_by { |f| f.respond_to?(:multiple) && f.multiple ? 1 : 0 }
         columns.map { |f|
           not_filter = "#{f.searchable_name}_not" if f.allow_not
-          match_type = f.match_type_param if f.is_a? LikeFilter
+          match_type = f.match_type_param if f.is_a?(LikeFilter) || f.is_a?(ArrayFilter)
           if f.respond_to?(:multiple) && f.multiple
             [not_filter, match_type, { f.searchable_name => [] }].compact
           else
