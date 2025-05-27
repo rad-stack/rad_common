@@ -97,7 +97,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       let(:params) { ActionController::Parameters.new(term: term, global_search_scope: 'user_by_division_name') }
       let(:result) { auto_complete.send(:autocomplete_result, scope) }
 
-      xit 'finds results on joined table' do
+      it 'finds results on joined table' do
         expect(result.count).to eq(1)
         expect(result.first[:model_name].constantize.find(result.first[:id])).to eq division.owner
       end
@@ -106,7 +106,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     context 'when scope has query where' do
       let(:result) { auto_complete.send(:autocomplete_result, scope) }
 
-      xit 'performs search based on specified query' do
+      it 'performs search based on specified query' do
         expect(result.count).to eq(2)
         expect(result.first[:columns]).to eq([search_user.email, search_user.user_status.to_s])
         expect(result.first[:model_name]).to eq('User')
@@ -116,7 +116,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
         expect(result[1][:label]).to eq(another_search_user.to_s)
       end
 
-      xit 'has scope description' do
+      it 'has scope description' do
         expect(result.first[:scope_description]).to eq(scope[:description])
       end
     end
@@ -148,7 +148,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true)
     end
 
-    xit 'includes results from multiple scopes' do
+    it 'includes results from multiple scopes' do
       result = auto_complete.global_super_search_result
       expect(result.count).to eq(2)
       expect(result.first[:model_name]).to eq('User')
@@ -164,7 +164,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     end
 
     context 'when super_search_exclude' do
-      xit 'excludes scopes with super_search_exclude marked true' do
+      it 'excludes scopes with super_search_exclude marked true' do
         scopes = search_scopes.dup
         scopes[2][:super_search_exclude] = true
         auto_complete = described_class.new(params, scopes, user, :searchable_association)

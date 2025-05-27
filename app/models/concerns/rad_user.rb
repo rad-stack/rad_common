@@ -300,12 +300,12 @@ module RadUser
     end
 
     def validate_email_address
-      return if email.blank? || external? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
+      return if email.blank? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
 
       domains = Company.main.valid_user_domains
       components = email.split('@')
       match_domains = components.count == 2 && domains.include?(components[1])
-      return if internal? && match_domains
+      return if (internal? && match_domains) || (external? && !match_domains)
 
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
@@ -385,8 +385,8 @@ module RadUser
       return unless saved_change_to_user_status_id? && user_status &&
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
-      RadMailer.your_account_approved(self, nil).deliver_later
-      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify! unless do_not_notify_approved
+      notify_user_approved_user
+      notify_user_approved_admins
     end
 
     def notify_user_approved_user
