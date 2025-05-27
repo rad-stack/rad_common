@@ -35,7 +35,7 @@ module RadCommon
 
       case match_type
       when 'exact' # The array must exactly match the provided array
-        results.where("ARRAY[?]::VARCHAR[] = #{column}", value)
+        results.where("#{column} @> ARRAY[?]::VARCHAR[] AND #{column} <@ ARRAY[?]::VARCHAR[]", value, value)
       when 'all' # The record’s array must include all provided items (but can have additional items)
         results.where("#{column} @> ARRAY[?]::VARCHAR[]", value)
       when 'any' # The record’s array must include at least one of the provided items
