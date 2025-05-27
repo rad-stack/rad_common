@@ -99,10 +99,9 @@ class RadMailer < ActionMailer::Base
 
   def default_url_options
     # this won't work for links called using the route helpers outside of the mailer context
-    # this won't detect when to use the portal host unless @recipient is a User
 
-    if @recipient.is_a?(User) && @recipient.external?
-      { host: portal_host_name(@recipient) }
+    if @recipient.is_a?(User) && @recipient.external? && RadConfig.portal?
+      { host: @recipient.portal_host_name }
     else
       { host: RadConfig.host_name! }
     end
@@ -113,14 +112,6 @@ class RadMailer < ActionMailer::Base
     def set_defaults
       @include_yield = true
       rad_headers
-    end
-
-    def portal_host_name(user)
-      if user.respond_to?(:portal_prescriber?) && user.portal_prescriber?
-        RadConfig.config_item!(:portal_host_name).gsub('patient', 'prescriber')
-      else
-        RadConfig.host_name!.gsub('tracker', 'patient')
-      end
     end
 
     def parse_recipients_array(recipients)

@@ -35,8 +35,7 @@ class SearchController < ApplicationController
       end
 
       if the_object
-        if current_user.external?
-          raise 'portal' # TODO: I don't think global search is used on the portal
+        if current_user.external? && RadConfig.portal?
           redirect_to [:portal, the_object]
         else
           redirect_to the_object

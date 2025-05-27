@@ -13,11 +13,7 @@ class GlobalSearch
   def scopes
     raw_scopes = RadConfig.global_search_scopes!
     raw_scopes = raw_scopes.select { |item| item[:show_in_portal] } if current_user.external?
-
-    raw_scopes = raw_scopes.select do |item|
-      Pundit.policy!(current_user,
-                     GlobalAutocomplete.check_policy_klass(current_user, item[:model].constantize)).global_search?
-    end
+    raw_scopes = raw_scopes.select { |item| policy_ok?(item) }
 
     if current_user.global_search_default.blank?
       scopes = raw_scopes
@@ -48,11 +44,19 @@ class GlobalSearch
 
     def policy_ok?(item)
       if mode == :global_search
-        Pundit.policy!(current_user, item[:model].constantize.new).global_search?
+        Pundit.policy!(current_user, check_policy_klass(item)).global_search?
       elsif mode == :searchable_association
-        Pundit.policy!(current_user, item[:model].constantize.new).searchable_association?
+        Pundit.policy!(current_user, check_policy_klass(item)).searchable_association?
       else
         raise "invalid mode: #{mode}"
+      end
+    end
+
+    def check_policy_klass(item)
+      if current_user.external? && RadConfig.portal?
+        [:portal, item[:model].constantize.new]
+      else
+        item[:model].constantize.new
       end
     end
 end
