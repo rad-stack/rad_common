@@ -29,7 +29,7 @@ RSpec.describe Hashable do
     context 'when value cannot be decoded' do
       let(:decoded_id) { 'dmqali' }
 
-      xit { expect { decoded }.to raise_error "Couldn't decode: dmqali" }
+      it { expect { decoded }.to raise_error "Couldn't decode: dmqali" }
     end
   end
 end

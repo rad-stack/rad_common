@@ -104,12 +104,8 @@ module RadUser
     end
   end
 
-  def active
-    active_for_authentication?
-  end
-
   def active?
-    active
+    active_for_authentication?
   end
 
   def needs_confirmation?
@@ -158,11 +154,6 @@ module RadUser
 
   def admin?
     permission?(:admin)
-  end
-
-  def auto_approve?
-    # override this as needed in model
-    false
   end
 
   def greeting
@@ -221,6 +212,15 @@ module RadUser
     super
   end
 
+  def pending_any_confirmation
+    if needs_accept_invite?
+      Notifications::UserHasOpenInvitationNotification.main(user: self, method_name: __method__).notify!
+      return
+    end
+
+    super
+  end
+
   def test_email!(from_user)
     RadMailer.simple_message(self,
                              'Test Email',
@@ -268,8 +268,7 @@ module RadUser
         self.external = security_roles.first.external
       end
 
-      status = auto_approve? ? UserStatus.default_active_status : UserStatus.default_pending_status
-      self.user_status = status if new_record? && !user_status
+      self.user_status = default_user_status if new_record? && !user_status
       return unless new_record?
 
       self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? &&
@@ -286,7 +285,7 @@ module RadUser
 
     def default_user_status
       return UserStatus.default_active_status unless RadConfig.pending_users?
-      return UserStatus.default_active_status if invited_by.present?
+      return UserStatus.default_active_status if external?
 
       UserStatus.default_pending_status
     end
@@ -300,12 +299,12 @@ module RadUser
     end
 
     def validate_email_address
-      return if email.blank? || external? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
+      return if email.blank? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
 
       domains = Company.main.valid_user_domains
       components = email.split('@')
       match_domains = components.count == 2 && domains.include?(components[1])
-      return if internal? && match_domains
+      return if (internal? && match_domains) || (external? && !match_domains)
 
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
@@ -380,13 +379,13 @@ module RadUser
     end
 
     def notify_user_approved
-      return if auto_approve?
+      return if external?
 
       return unless saved_change_to_user_status_id? && user_status &&
                     user_status.active && (!respond_to?(:invited_to_sign_up?) || !invited_to_sign_up?)
 
-      RadMailer.your_account_approved(self, nil).deliver_later
-      Notifications::UserWasApprovedNotification.main([self, approved_by]).notify! unless do_not_notify_approved
+      notify_user_approved_user
+      notify_user_approved_admins
     end
 
     def notify_user_approved_user

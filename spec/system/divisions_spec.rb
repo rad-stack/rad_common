@@ -117,7 +117,7 @@ RSpec.describe 'Divisions' do
       let(:applied_params) { -> { Rack::Utils.parse_query URI.parse(current_url).query } }
       let(:last_filter) { SavedSearchFilter.last }
 
-      xit 'allows saving and applying search filters' do
+      it 'allows saving and applying search filters' do
         visit divisions_path
         tom_select user.to_s, from: 'search_owner_id'
         click_button 'saved-search-filters-dropdown'

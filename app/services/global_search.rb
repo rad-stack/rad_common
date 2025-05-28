@@ -11,9 +11,7 @@ class GlobalSearch
   end
 
   def scopes
-    raw_scopes = RadConfig.global_search_scopes!
-    raw_scopes = raw_scopes.select { |item| item[:show_in_portal] } if current_user.external?
-    raw_scopes = raw_scopes.select { |item| policy_ok?(item) }
+    raw_scopes = RadConfig.global_search_scopes!.select { |item| policy_ok?(item) }
 
     if current_user.global_search_default.blank?
       scopes = raw_scopes
