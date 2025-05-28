@@ -105,7 +105,7 @@ module RadUser
   end
 
   def active?
-    active_for_authentication?
+    user_status&.active?
   end
 
   def needs_confirmation?
@@ -181,11 +181,11 @@ module RadUser
   end
 
   def active_for_authentication?
-    super && user_status && user_status.active
+    super && active?
   end
 
   def inactive_message
-    if user_status.active
+    if active?
       super
     else
       :not_approved
