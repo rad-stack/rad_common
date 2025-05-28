@@ -18,7 +18,7 @@ class UserGrouper
     default_options[:scope] = scope if scope
     return searchable_options(default_options) if max_dropdown_size_exceeded?(base_users)
 
-    { options: call }.merge(default_options)
+    { options: call, grouped: true, include_blank: true }.merge(default_options)
   end
 
   private
