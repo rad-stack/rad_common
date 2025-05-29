@@ -56,11 +56,11 @@ module RadCommon
 
     private
 
-      def equals_value(params)
+      def equals_value(search_params)
         search_empty = (search_params.blank? || !search_params.has_key?(searchable_name))
         return @default_value.to_s if search_empty && @default_value
 
-        params[equals_input]
+        search_params[equals_input]
       end
 
       def supported_data_types
