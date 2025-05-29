@@ -285,7 +285,7 @@ module RadUser
 
     def default_user_status
       return UserStatus.default_active_status unless RadConfig.pending_users?
-      return UserStatus.default_active_status if external?
+      return UserStatus.default_active_status if invited_by.present?
 
       UserStatus.default_pending_status
     end
