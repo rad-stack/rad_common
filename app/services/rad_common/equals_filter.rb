@@ -9,7 +9,7 @@ module RadCommon
     # @param [Symbol] data_type controls what the input type is based on data type of column
     # @param [Symbol] scope the name of an active record scope to be used for the filter on the corresponding model
     # @param [String optional] input_label by default the input label for the field is determined by the column name
-    def initialize(column:, data_type:, scope: nil, input_label: nil, col_class: nil)
+    def initialize(column:, data_type:, scope: nil, input_label: nil, col_class: nil, default_value: nil)
       raise 'data_type must be either :integer or :string' if supported_data_types.exclude?(data_type)
 
       @column = column
@@ -17,6 +17,7 @@ module RadCommon
       @scope = scope
       @input_label = input_label
       @col_class = col_class
+      @default_value = default_value
     end
 
     def filter_view
@@ -55,8 +56,11 @@ module RadCommon
 
     private
 
-      def equals_value(params)
-        params[equals_input]
+      def equals_value(search_params)
+        search_empty = (search_params.blank? || !search_params.has_key?(searchable_name))
+        return @default_value.to_s if search_empty && @default_value
+
+        search_params[equals_input]
       end
 
       def supported_data_types
