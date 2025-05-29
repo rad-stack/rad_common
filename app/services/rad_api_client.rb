@@ -28,7 +28,7 @@ class RadApiClient
 
   def connection(params: {})
     Faraday.new(
-      url: HOST,
+      url: @host,
       params: params,
       headers: default_headers
     )
