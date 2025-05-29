@@ -20,7 +20,7 @@ class RadApiClient
   end
 
   def get(url:, params: {})
-    RadRetry.perform_request(additional_errors: [UnsuccessfulRequest]) do
+    RadRetry.perform_request(additional_errors: [UnsuccessfulRequest], raise_original: true) do
       process_response(connection(params: params).get(url))
     end
   end
