@@ -1,5 +1,6 @@
 class RadApiClient
   class UnsuccessfulRequest < StandardError; end
+  STATUS_CODES_TO_NOT_RETRY = [404].freeze
 
   def initialize(host:, token: nil)
     @token = token
@@ -43,7 +44,9 @@ class RadApiClient
   end
 
   def process_response(response)
-    raise UnsuccessfulRequest, response.body unless response.success?
+    unless response.success? || STATUS_CODES_TO_NOT_RETRY.include?(response.status)
+      raise UnsuccessfulRequest, response.body
+    end
 
     JSON.parse(response.body) if response.body.present?
   end
