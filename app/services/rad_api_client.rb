@@ -27,26 +27,26 @@ class RadApiClient
 
   private
 
-  def connection(params: {})
-    Faraday.new(
-      url: @host,
-      params: params,
-      headers: default_headers
-    )
-  end
+    def connection(params: {})
+      Faraday.new(
+        url: @host,
+        params: params,
+        headers: default_headers
+      )
+    end
 
-  def default_headers
-    headers = {}
-    headers[:Authorization] = "Bearer #{@token}"
-    headers[:Accept] = 'application/json'
-    headers['Content-Type'] = 'application/json'
-    headers
-  end
+    def default_headers
+      headers = {}
+      headers[:Authorization] = "Bearer #{@token}"
+      headers[:Accept] = 'application/json'
+      headers['Content-Type'] = 'application/json'
+      headers
+    end
 
-  def process_response(response)
-    raise NotFound if response.status == 404
-    raise UnsuccessfulRequest, response.body unless response.success?
+    def process_response(response)
+      raise NotFound if response.status == 404
+      raise UnsuccessfulRequest, response.body unless response.success?
 
-    JSON.parse(response.body) if response.body.present?
-  end
+      JSON.parse(response.body) if response.body.present?
+    end
 end
