@@ -51,7 +51,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: cannasaver_public_test${{ matrix.TEST_ENV_NUMBER }}
+          POSTGRES_DB: rad_common_test${{ matrix.TEST_ENV_NUMBER }}
         ports:
           - 5432:5432
         options: >-

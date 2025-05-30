@@ -32,6 +32,7 @@ default: &default
   procfile_override: false
   last_first_user: false
   timezone_detection: true
+  portal: false
 
   system_usage_models:
     -
