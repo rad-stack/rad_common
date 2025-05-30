@@ -21,6 +21,7 @@ module RadCommon
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'timezone_detection', 'false'
+        add_rad_config_setting 'portal', 'false'
         remove_rad_factories
         remove_legacy_rails_config_setting
 
@@ -84,7 +85,7 @@ module RadCommon
         end
 
         copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
-        gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
+        gsub_file 'config/application.rb', 'Dummy', installed_app_name.split('_').map(&:capitalize).join
 
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
         directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
@@ -600,6 +601,7 @@ gem 'propshaft'
           apply_migration '20250227191231_add_detected_timezone_to_user.rb'
           apply_migration '20250402083306_add_sms_message_id_index.rb'
           apply_migration '20250425120906_fix_some_renamed_audit_models.rb'
+          apply_migration '20250512115245_two_factor_auth_updates.rb'
         end
 
         def installed_app_name

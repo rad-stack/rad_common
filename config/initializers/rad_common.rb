@@ -58,8 +58,10 @@ Rails.configuration.to_prepare do
 end
 
 Rails.application.config.after_initialize do
-  default_allowed_tags = Class.new.include(ActionText::ContentHelper).new.sanitizer_allowed_attributes
-  ActionText::ContentHelper.allowed_attributes = default_allowed_tags.add('style')
+  unless RadConfig.legacy_assets?
+    default_allowed_tags = Class.new.include(ActionText::ContentHelper).new.sanitizer_allowed_attributes
+    ActionText::ContentHelper.allowed_attributes = default_allowed_tags.add('style')
+  end
 end
 
 AuthTrail.geocode = false

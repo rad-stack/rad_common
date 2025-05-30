@@ -38,7 +38,7 @@ class GlobalAutocomplete
 
     self.current_scope = scope
     order = scope[:query_order] || 'created_at DESC'
-    query = Pundit.policy_scope!(user, klass)
+    query = Pundit.policy_scope!(user, check_policy_klass(klass))
     query = query.joins(joins) if joins
     query.order(order)
   end
@@ -171,11 +171,19 @@ class GlobalAutocomplete
 
     def policy_ok?
       if mode == :global_search
-        Pundit.policy!(user, klass.new).global_search?
+        Pundit.policy!(user, check_policy_klass(klass.new)).global_search?
       elsif mode == :searchable_association
-        Pundit.policy!(user, klass.new).searchable_association?
+        Pundit.policy!(user, check_policy_klass(klass.new)).searchable_association?
       else
         raise "invalid mode: #{mode}"
+      end
+    end
+
+    def check_policy_klass(context)
+      if user.external? && RadConfig.portal?
+        [:portal, context]
+      else
+        context
       end
     end
 end
