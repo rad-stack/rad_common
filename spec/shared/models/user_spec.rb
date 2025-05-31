@@ -256,13 +256,13 @@ RSpec.describe User, type: :model do
   end
 
   describe 'Email Changed', :shared_database_specs do
-    subject { ActionMailer::Base.deliveries[ActionMailer::Base.deliveries.length - 1].subject }
+    subject { ActionMailer::Base.deliveries.map(&:subject).sort }
 
     let!(:user) { create :user }
 
     before { user.update!(email: 'foobar@example.com') }
 
-    it { is_expected.to eq('Email Changed') }
+    it { is_expected.to eq(['Confirmation instructions', 'Email Changed']) }
   end
 
   describe 'Password Changed' do
