@@ -40,8 +40,7 @@ class DivisionSearch < RadCommon::Search
        column: :tags,
        options: Division::TAG_OPTIONS,
        type: RadCommon::ArrayFilter,
-       multiple: true,
-       match_type: :any }]
+       multiple: true }]
   end
 
   def show_header?

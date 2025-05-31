@@ -1,31 +1,44 @@
 module RadCommon
   class ArrayFilter < SearchFilter
-    attr_reader :match_type
+    MATCH_TYPES = %w[any all exact].freeze
 
-    def initialize(column:, options:, input_label: nil, multiple: false, match_type: :exact)
+    def initialize(column:, options:, input_label: nil, multiple: false)
       super(column: column, input_label: input_label, multiple: multiple, options: options)
-      @match_type = match_type
-      raise ArgumentError, "Invalid match_type: #{match_type}" unless %i[exact all any].include?(match_type)
     end
 
     def searchable_name
-      array_input
+      input_name
     end
 
-    def array_input
+    def input_name
       "#{column}_array"
     end
 
-    def apply_filter(results, params)
-      value = array_value(params)
+    def match_types
+      MATCH_TYPES
+    end
+
+    def match_type_param
+      "#{searchable_name}_match_type"
+    end
+
+    def default_match_type
+      'any'
+    end
+
+    def apply_filter(results, search_params)
+      value = array_value(search_params)
+      match_type = (search_params[match_type_param] || default_match_type).to_s
+      raise ArgumentError, "Invalid match_type: #{match_type}" unless match_type.in?(MATCH_TYPES)
+
       return results if value.blank?
 
       case match_type
-      when :exact # The array must exactly match the provided array
-        results.where(column => value)
-      when :all # The record’s array must include all provided items (but can have additional items)
+      when 'exact' # The array must exactly match the provided array
+        results.where("#{column} @> ARRAY[?]::VARCHAR[] AND #{column} <@ ARRAY[?]::VARCHAR[]", value, value)
+      when 'all' # The record’s array must include all provided items (but can have additional items)
         results.where("#{column} @> ARRAY[?]::VARCHAR[]", value)
-      when :any # The record’s array must include at least one of the provided items
+      when 'any' # The record’s array must include at least one of the provided items
         results.where("#{column} && ARRAY[?]::VARCHAR[]", value)
       end
     end
@@ -37,7 +50,7 @@ module RadCommon
     private
 
       def array_value(params)
-        value = params[array_input]
+        value = params[input_name]
         return if value.blank?
 
         value = value.split(',') if value.is_a?(String)
