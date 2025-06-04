@@ -4,6 +4,10 @@ module Notifications
       :absolute_users
     end
 
+    def default_notification_methods
+      %i[email sms]
+    end
+
     def absolute_user_ids
       payload[:recipient_ids]
     end
