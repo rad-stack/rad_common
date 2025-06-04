@@ -42,11 +42,19 @@ class GlobalSearch
 
     def policy_ok?(item)
       if mode == :global_search
-        Pundit.policy!(current_user, item[:model].constantize.new).global_search?
+        Pundit.policy!(current_user, check_policy_klass(item)).global_search?
       elsif mode == :searchable_association
-        Pundit.policy!(current_user, item[:model].constantize.new).searchable_association?
+        Pundit.policy!(current_user, check_policy_klass(item)).searchable_association?
       else
         raise "invalid mode: #{mode}"
+      end
+    end
+
+    def check_policy_klass(item)
+      if current_user.external? && RadConfig.portal?
+        [:portal, item[:model].constantize.new]
+      else
+        item[:model].constantize.new
       end
     end
 end

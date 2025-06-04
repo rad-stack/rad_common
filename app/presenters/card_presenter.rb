@@ -371,10 +371,26 @@ class CardPresenter
     end
 
     def class_policy
-      @class_policy ||= Pundit.policy!(current_user, klass.new)
+      @class_policy ||= Pundit.policy!(current_user, check_policy_klass)
     end
 
     def instance_policy
-      @instance_policy ||= Pundit.policy!(current_user, instance)
+      @instance_policy ||= Pundit.policy!(current_user, check_policy_instance)
+    end
+
+    def check_policy_klass
+      if current_user.external? && RadConfig.portal?
+        [:portal, klass.new]
+      else
+        klass.new
+      end
+    end
+
+    def check_policy_instance
+      if current_user.external? && RadConfig.portal?
+        [:portal, instance]
+      else
+        instance
+      end
     end
 end
