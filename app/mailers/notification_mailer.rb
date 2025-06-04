@@ -5,7 +5,9 @@ class NotificationMailer < RadMailer
     super(recipient, subject, message, options.merge(bcc: bcc_recipient(notification_type, options)))
   end
 
-  def new_user_signed_up(notification_type, recipients, user)
+  def new_user_signed_up(notification_type, recipients, payload)
+    user = payload[:user]
+
     @contact_log_from_user = user
     @contact_log_record = user
     user_is_active = user.active?

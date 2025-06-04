@@ -86,7 +86,7 @@ RSpec.describe 'Users', type: :system do
 
   describe 'admin' do
     let!(:notification_type) do
-      Notifications::NewUserSignedUpNotification.create! security_roles: [user.security_roles.first]
+      Notifications::NewUserSignedUpNotification.create!
     end
 
     let(:notification_setting) { NotificationSetting.find_by(user: user, notification_type: notification_type) }

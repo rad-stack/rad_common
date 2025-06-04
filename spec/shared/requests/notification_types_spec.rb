@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Notification Types', type: :request do
   let(:user) { create :admin }
   let(:another_role) { create :security_role }
-  let(:notification_type) { Notifications::NewUserSignedUpNotification.main }
+  let(:notification_type) { Notifications::HighDuplicatesNotification.main }
 
   before { login_as user, scope: :user }
 
@@ -18,14 +18,14 @@ RSpec.describe 'Notification Types', type: :request do
       it 'updates the requested notification_type' do
         expect(notification_type.security_roles.count).to eq 1
         put "/notification_types/#{notification_type.to_param}",
-            params: { notifications_new_user_signed_up_notification: valid_attributes }
+            params: { notifications_high_duplicates_notification: valid_attributes }
         notification_type.reload
         expect(notification_type.security_roles.count).to eq 2
       end
 
       it 'redirects to the notification_type' do
         put "/notification_types/#{notification_type.to_param}",
-            params: { notifications_new_user_signed_up_notification: valid_attributes }
+            params: { notifications_high_duplicates_notification: valid_attributes }
         expect(response).to redirect_to('/notification_types')
       end
     end
@@ -33,7 +33,7 @@ RSpec.describe 'Notification Types', type: :request do
     describe 'with invalid params' do
       it 're-renders the edit template' do
         put "/notification_types/#{notification_type.to_param}",
-            params: { notifications_new_user_signed_up_notification: invalid_attributes }
+            params: { notifications_high_duplicates_notification: invalid_attributes }
         expect(response.body).to include 'Please review the problems below'
       end
     end

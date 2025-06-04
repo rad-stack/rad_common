@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Notifications::NewUserSignedUpNotification, type: :model do
   let(:user) { create :user }
-  let(:notification_type) { described_class.main(user) }
+  let(:notification_type) { described_class.main(user: user, recipient_ids: User.active.admins.pluck(:id)) }
   let(:mail) { ActionMailer::Base.deliveries.last }
 
   before do
