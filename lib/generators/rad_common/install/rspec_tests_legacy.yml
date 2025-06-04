@@ -72,6 +72,12 @@ jobs:
           ruby-version: ${{ steps.set-ruby-version.outputs.version }}
           bundler-cache: true
 
+      - name: Set up ImageMagick # needed for IJS, see Task 9465
+        uses: mfinelli/setup-imagemagick@v5
+        with:
+          cache: true
+          install-libfuse2: true
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
