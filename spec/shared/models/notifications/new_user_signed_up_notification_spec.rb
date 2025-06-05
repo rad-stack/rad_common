@@ -17,7 +17,7 @@ RSpec.describe Notifications::NewUserSignedUpNotification, type: :model do
     end
 
     it 'emails' do
-      expect(mail.subject).to eq "New User Signed Up on #{RadConfig.app_name!}"
+      expect(mail.subject).to eq "#{user} Signed Up on #{RadConfig.app_name!}"
     end
   end
 end
