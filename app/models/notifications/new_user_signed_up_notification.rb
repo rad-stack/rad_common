@@ -29,7 +29,7 @@ module Notifications
     end
 
     def feed_content
-      user.new_user_signed_up_subject
+      user.new_user_signed_up_sms
     end
 
     private

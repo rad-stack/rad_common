@@ -203,9 +203,9 @@ module RadUser
   end
 
   def new_user_signed_up_sms
-    return "#{self} Signed up" if active?
+    return "#{self} signed up" if active?
 
-    "#{self} Signed up and is awaiting approval"
+    "#{self} signed up and is awaiting approval"
   end
 
   def send_devise_notification(notification, *args)
