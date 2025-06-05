@@ -202,6 +202,12 @@ module RadUser
     "#{self} Signed Up on #{RadConfig.app_name!} - Awaiting Approval"
   end
 
+  def new_user_signed_up_sms
+    return "#{self} Signed up" if active?
+
+    "#{self} Signed up and is awaiting approval"
+  end
+
   def send_devise_notification(notification, *args)
     # background devise emails
     # https://github.com/plataformatec/devise#activejob-integration

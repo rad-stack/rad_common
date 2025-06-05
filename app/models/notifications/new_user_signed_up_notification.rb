@@ -25,11 +25,11 @@ module Notifications
     end
 
     def sms_content
-      user.new_user_signed_up_subject
+      "#{user.new_user_signed_up_sms}: #{subject_url}"
     end
 
     def feed_content
-      sms_content
+      user.new_user_signed_up_subject
     end
 
     private
