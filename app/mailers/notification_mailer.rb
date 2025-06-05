@@ -22,7 +22,7 @@ class NotificationMailer < RadMailer
     @message = "#{user} has signed up on #{RadConfig.app_name!}"
     @message += user_is_active ? '.' : ' and is awaiting approval.'
 
-    send_notification_mail notification_type, recipients, new_user_signed_up_subject(user_is_active)
+    send_notification_mail notification_type, recipients, user.new_user_signed_up_subject
   end
 
   def user_was_approved(notification_type, recipients, user_and_approver)
@@ -109,12 +109,6 @@ class NotificationMailer < RadMailer
       items = options[:bcc] || []
       items.push(notification_type.bcc_recipient) if notification_type.bcc_recipient.present?
       items.empty? ? nil : items.uniq
-    end
-
-    def new_user_signed_up_subject(user_is_active)
-      return "New User Signed Up on #{RadConfig.app_name!}" if user_is_active
-
-      "New User Signed Up on #{RadConfig.app_name!} - Awaiting Approval"
     end
 
     def global_validity_message(payload)

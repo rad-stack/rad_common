@@ -13,7 +13,7 @@ module Notifications
     end
 
     def subject_record
-      payload[:user]
+      user
     end
 
     def mailer_class
@@ -23,5 +23,19 @@ module Notifications
     def mailer_method
       'new_user_signed_up'
     end
+
+    def sms_content
+      user.new_user_signed_up_subject
+    end
+
+    def feed_content
+      sms_content
+    end
+
+    private
+
+      def user
+        payload[:user]
+      end
   end
 end

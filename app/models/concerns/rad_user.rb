@@ -196,6 +196,12 @@ module RadUser
     Notifications::NewUserSignedUpNotification.main(user: self, recipient_ids: User.active.admins.pluck(:id)).notify!
   end
 
+  def new_user_signed_up_subject
+    return "#{self} Signed Up on #{RadConfig.app_name!}" if active?
+
+    "#{self} Signed Up on #{RadConfig.app_name!} - Awaiting Approval"
+  end
+
   def send_devise_notification(notification, *args)
     # background devise emails
     # https://github.com/plataformatec/devise#activejob-integration
