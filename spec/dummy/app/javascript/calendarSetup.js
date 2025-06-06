@@ -5,7 +5,7 @@ export class CalendarSetup {
     if ($('#calendar').length) {
       let calendarEl = $('#calendar')
       let calendar = new Calendar(calendarEl, {
-        events: '/courses/calendar.json' + window.location.search,
+        events: '/divisions/calendar.json' + window.location.search,
         header: {
           left: 'prev,next today',
           center: 'title',
