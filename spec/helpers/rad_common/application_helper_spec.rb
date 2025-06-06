@@ -133,6 +133,28 @@ describe RadCommon::ApplicationHelper do
     end
   end
 
+  describe 'show_route_exists?' do
+    subject { helper.show_route_exists? record }
+
+    context 'when route exists' do
+      let(:record) { create :attorney }
+
+      it { is_expected.to be true }
+    end
+
+    context "when route doesn't exist" do
+      let(:record) { create :saved_search_filter }
+
+      it { is_expected.to be false }
+    end
+
+    context "when another route doesn't exist" do
+      let(:record) { create :duplicate }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe '#format_date_long' do
     it 'formats' do
       expect(helper.format_date_long(Time.zone.parse(timestamp))).to eq('June 15, 2018')
