@@ -12,6 +12,11 @@ module RadCommon
         remove_file '.hound.yml'
         remove_file '.github/pull_request_template.md'
 
+        unless RadConfig.legacy_assets?
+          remove_dir 'public/packs'
+          remove_dir 'public/packs-test'
+        end
+
         add_crawling_config
         install_procfile
         standardize_date_methods
