@@ -978,6 +978,11 @@ flatted@^3.2.9, flatted@^3.3.2:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.3.2.tgz#adba1448a9841bec72b42c532ea23dbbedef1a27"
   integrity sha512-AiwGJM8YcNOaobumgtng+6NHuOqC3A7MixFeDafM3X9cIUM+xUXoS5Vfgf+OihAYe20fxqNM9yPBXJzRtZ/4eA==
 
+fullcalendar@^3.9.0:
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/fullcalendar/-/fullcalendar-3.10.5.tgz#57a3a64d7d744181582bb9e1be32d1846e1db53a"
+  integrity sha512-JGWpECKgza/344bbF5QT0hBJpx04DZ/7QGPlR1ZbAwrG6Yz6mWEkQd+NnZUh1sK6HCBIPnPRW2x53aJxeLGvvQ==
+
 glob-parent@^5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
@@ -1414,9 +1419,9 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-"rad_common_js@https://github.com/rad-stack/rad_common_js#0905184ce452d10997e015eeaf9e986176d5fc3e":
+"rad_common_js@https://github.com/rad-stack/rad_common_js#34315f0ccf3e74a7a0b50595facc1ba9364d9797":
   version "2.1.8"
-  resolved "https://github.com/rad-stack/rad_common_js#0905184ce452d10997e015eeaf9e986176d5fc3e"
+  resolved "https://github.com/rad-stack/rad_common_js#34315f0ccf3e74a7a0b50595facc1ba9364d9797"
   dependencies:
     "@hotwired/stimulus" "^3.2.2"
     "@hotwired/turbo-rails" "^8.0.12"

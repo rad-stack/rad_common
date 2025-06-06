@@ -53,6 +53,29 @@ class DivisionsController < ApplicationController
     end
   end
 
+  def calendar
+    authorize Division
+
+    @division_search = DivisionSearch.new(params, current_user)
+    @divisions = policy_scope(@division_search.results)
+
+    today = Time.zone.today
+    respond_to do |format|
+      format.html
+      format.json do
+        events = @divisions.each do |division|
+          {
+            title: 'Division z',
+            description: 'divison x',
+            start: today.to_time.change(hour: 16),
+            end: today.to_time.change(hour: 17)
+          }
+        end
+        render json: events
+      end
+    end
+  end
+
   private
 
     def set_division
