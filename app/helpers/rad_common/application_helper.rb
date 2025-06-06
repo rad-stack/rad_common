@@ -21,10 +21,22 @@ module RadCommon
     end
 
     def show_route_exists_for?(record)
-      Rails.application.routes.recognize_path("/#{record.class.table_name}/#{record.id}", method: :get)
-      true
-    rescue ActionController::RoutingError
-      false
+      return false unless record.respond_to?(:to_param)
+
+      route_key = record.model_name.route_key
+      controller = route_key
+      action = 'show'
+
+      Rails.application.routes.routes.any? do |route|
+        verb_match = route.verb&.match(/^GET$/)
+
+        controller_match = route.defaults[:controller] == controller
+        action_match = route.defaults[:action] == action
+
+        path_match = route.path.spec.to_s.include?('/:id')
+
+        verb_match && controller_match && action_match && path_match
+      end
     end
 
     def avatar_image(user, size)
