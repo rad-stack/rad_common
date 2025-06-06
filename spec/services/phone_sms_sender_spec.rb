@@ -2,10 +2,11 @@ require 'rails_helper'
 
 RSpec.describe PhoneSMSSender, type: :service do
   let(:from_user) { create :user }
-  let(:mobile_phone) { '(618) 722-2169' }
+  let(:to_user) { create :user, mobile_phone: '(618) 722-2169' }
+  let(:mobile_phone) { to_user.mobile_phone }
   let(:message) { 'test message' }
   let(:client) { create :client }
-  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, record: client) }
+  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, contact_log_record: client) }
 
   before { allow(RadRetry).to receive(:exponential_pause) }
 
@@ -19,6 +20,18 @@ RSpec.describe PhoneSMSSender, type: :service do
           expect(result).to be(true)
           expect(ContactLog.last.from_user).to eq from_user
           expect(ContactLog.last.record).to eq client
+        end
+
+        it 'sets to user if phone number matches' do
+          expect { result }.to change(ContactLogRecipient, :count).by(1)
+          expect(ContactLogRecipient.last.to_user).to eq to_user
+        end
+
+        it "doesn't set to user if more than one user has the phone number" do
+          create :user, mobile_phone: mobile_phone
+
+          expect { result }.to change(ContactLogRecipient, :count).by(1)
+          expect(ContactLogRecipient.last.to_user).to be_nil
         end
       end
 

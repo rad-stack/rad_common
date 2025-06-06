@@ -1,5 +1,5 @@
 class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
-  MAX_DROPDOWN_SIZE = 300
+  include RadCommon::SearchableDropdownHelper
 
   delegate :current_user, to: :template
 
@@ -15,29 +15,14 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
   private
 
     def add_default_options
-      input_html_options[:class].push(:selectpicker)
-      input_html_options.merge!(
-        'data-live-search' => true,
-        'data-live-search-placeholder' => options[:search_placeholder].presence || 'Start typing to search'
-      )
-      return unless search_only?
-
-      input_html_options.merge!(search_options)
-      options[:include_blank] = false
-    end
-
-    def search_options
-      {
-        class: 'selectpicker-search',
-        'data-abs-template' => { clear_option: 'None' }.to_json,
-        'data-abs-subtext' => options[:show_subtext],
-        'data-abs-locale-search-placeholder' => options[:search_placeholder],
-        'data-abs-ajax-data' => {
-          'global_search_scope' => options[:search_scope],
-          'excluded_ids' => options[:excluded_ids],
-          'term' => '{{{q}}}'
-        }.to_json
-      }
+      if search_only?
+        input_html_options.merge!(searchable_scope_options(show_subtext: options[:show_subtext],
+                                                           search_scope: options[:search_scope],
+                                                           excluded_ids: options[:excluded_ids]))
+      else
+        input_html_options[:class].push(:selectpicker)
+      end
+      options[:include_blank] = 'None' if options[:include_blank].nil?
     end
 
     def records
@@ -53,17 +38,18 @@ class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
     end
 
     def search_only?
-      options[:search_only] || records.size > MAX_DROPDOWN_SIZE
+      options[:search_only] || max_dropdown_size_exceeded?(records)
     end
 
     def global_autocomplete
       @global_autocomplete ||= GlobalAutocomplete.new(global_autocomplete_params,
-                                                      GlobalSearch.new(current_user).scopes,
-                                                      current_user)
+                                                      GlobalSearch.new(current_user, :searchable_association).scopes,
+                                                      current_user,
+                                                      :searchable_association)
     end
 
     def global_autocomplete_params
-      { limit: MAX_DROPDOWN_SIZE, global_search_scope: options[:search_scope], excluded_ids: options[:excluded_ids] }
+      { limit: max_dropdown_size, global_search_scope: options[:search_scope], excluded_ids: options[:excluded_ids] }
     end
 
     def selected_search_option

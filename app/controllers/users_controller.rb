@@ -1,7 +1,9 @@
 class UsersController < ApplicationController
   include Exportable
 
-  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm test_email test_sms reactivate]
+  before_action :set_user, only: %i[show edit update destroy resend_invitation confirm test_email test_sms reactivate
+                                    update_timezone ignore_timezone]
+
   before_action :remove_blank_passwords, only: :update
 
   def index
@@ -33,7 +35,8 @@ class UsersController < ApplicationController
   def edit; end
 
   def create
-    @user = User.new(permitted_params)
+    @user = User.new
+    @user.assign_attributes permitted_attributes(@user)
 
     if policy(@user).update_security_roles? && !params[:user][:security_roles].nil?
       @user.security_roles = SecurityRole.resolve_roles(params[:user][:security_roles])
@@ -50,7 +53,7 @@ class UsersController < ApplicationController
 
   def update
     ActiveRecord::Base.transaction do
-      @user.assign_attributes(permitted_params)
+      @user.assign_attributes permitted_attributes(@user)
       @user.approved_by = true_user
 
       if policy(@user).update_security_roles? && !params[:user][:security_roles].nil?
@@ -60,8 +63,7 @@ class UsersController < ApplicationController
       authorize @user
 
       if @user.save
-        flash[:success] = 'User updated.'
-        redirect_to @user
+        redirect_to @user, notice: 'User was successfully updated.'
       else
         render :edit
         raise ActiveRecord::Rollback
@@ -93,7 +95,7 @@ class UsersController < ApplicationController
                  end
 
     if @user.destroy
-      flash[:success] = 'User deleted.'
+      flash[:notice] = 'User deleted.'
       destroyed = true
     else
       flash[:error] = @user.errors.full_messages.join(', ')
@@ -115,36 +117,42 @@ class UsersController < ApplicationController
 
   def resend_invitation
     @user.invite!(current_user)
-    flash[:success] = 'We resent the invitation to the user.'
-    redirect_back(fallback_location: root_path)
+    redirect_back fallback_location: root_path, notice: 'We resent the invitation to the user.'
   end
 
   def confirm
     @user.confirm
-    flash[:success] = 'User was successfully confirmed.'
-    redirect_to @user
+    redirect_to @user, notice: 'User was successfully confirmed.'
   end
 
   def test_email
-    @user.test_email!
-    flash[:success] = 'A test email was sent to the user.'
-    redirect_to @user
+    @user.test_email! current_user
+    redirect_to @user, notice: 'A test email was sent to the user.'
   end
 
   def test_sms
     @user.test_sms! current_user
-    flash[:success] = 'A test SMS was sent to the user.'
-    redirect_to @user
+    redirect_to @user, notice: 'A test SMS was sent to the user.'
   end
 
   def reactivate
     if @user.reactivate
-      flash[:success] = 'User was successfully reactivated.'
+      flash[:notice] = 'User was successfully reactivated.'
     else
       flash[:error] = "User could not be reactivated: #{@user.errors.full_messages.to_sentence}"
     end
 
     redirect_to @user
+  end
+
+  def update_timezone
+    UserTimezone.new(@user).update!
+    redirect_back fallback_location: @user, notice: 'User was successfully updated.'
+  end
+
+  def ignore_timezone
+    UserTimezone.new(@user).ignore!
+    redirect_back fallback_location: @user, notice: 'User was successfully updated.'
   end
 
   private
@@ -159,21 +167,6 @@ class UsersController < ApplicationController
 
       params[:user].delete(:password)
       params[:user].delete(:password_confirmation)
-    end
-
-    def base_params
-      %i[email user_status_id first_name last_name mobile_phone last_activity_at password password_confirmation external
-         timezone avatar language]
-    end
-
-    def permitted_params
-      params.require(:user).permit(base_params + twilio_verify_params + RadConfig.additional_user_params!)
-    end
-
-    def twilio_verify_params
-      return [:twilio_verify_enabled] if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
-
-      []
     end
 
     def duplicates_enabled?

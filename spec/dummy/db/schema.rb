@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_11_203430) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -141,11 +141,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_11_203430) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "email_status"
-    t.string "sendgrid_event"
-    t.string "sendgrid_type"
-    t.string "bounce_classification"
     t.string "sendgrid_reason"
     t.boolean "notify_on_fail", default: true, null: false
+    t.boolean "sms_false_positive", default: false, null: false
     t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
     t.index ["email"], name: "index_contact_log_recipients_on_email"
     t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"
@@ -173,6 +171,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_11_203430) do
     t.index ["record_type", "record_id"], name: "index_contact_logs_on_record"
     t.index ["sent"], name: "index_contact_logs_on_sent"
     t.index ["service_type"], name: "index_contact_logs_on_service_type"
+    t.index ["sms_message_id"], name: "index_contact_logs_on_sms_message_id"
     t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
   end
 
@@ -190,6 +189,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_11_203430) do
     t.date "date_established"
     t.string "invoice_email"
     t.bigint "category_id"
+    t.string "tags", default: [], null: false, array: true
     t.index ["category_id"], name: "index_divisions_on_category_id"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
@@ -260,6 +260,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_11_203430) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "active", default: true, null: false
+    t.string "bcc_recipient"
     t.index ["type"], name: "index_notification_types_on_type", unique: true
   end
 
@@ -310,6 +311,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_11_203430) do
     t.boolean "read_division", default: false, null: false
     t.boolean "update_division", default: false, null: false
     t.boolean "delete_division", default: false, null: false
+    t.boolean "read_attorney", default: false, null: false
+    t.boolean "two_factor_auth", default: true, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 
@@ -404,6 +407,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_11_203430) do
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
     t.string "language", default: "en", null: false
+    t.string "detected_timezone"
+    t.string "ignored_timezone"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"

@@ -5,11 +5,19 @@ module Notifications
     end
 
     def absolute_user_ids
-      records = SecurityRole.admin_role.users.active
-      records = records.where.not(id: user.id) if user.present?
-      raise 'no users to notify' if records.blank?
+      ids = maybe_add_from_user
 
-      records.pluck(:id)
+      if contact_log.sms?
+        ids.push(to_user.id) if to_user.present? && to_user.internal?
+      else
+        ids.delete(to_user.id) if to_user.present?
+        ids = SecurityRole.admin_role.users.active.pluck(:id) if ids.blank?
+        ids.delete(to_user.id) if to_user.present?
+      end
+
+      raise 'no users to notify' if ids.blank?
+
+      ids.uniq
     end
 
     def mailer_class
@@ -25,20 +33,35 @@ module Notifications
     end
 
     def subject_record
-      user
+      return contact_log if can_show?(contact_log)
+      return contact_log.record if contact_log.record.present? && can_show?(contact_log.record)
+
+      raise "missing subject for #{contact_log.id} - see Task 5211"
+    end
+
+    def sms_enabled?
+      false
     end
 
     private
 
       def feed_content_item
-        user.presence || email.presence || phone_number.presence
+        to_user.presence || email.presence || phone_number.presence
       end
 
       def contact_description
-        RadEnum.new(ContactLog, 'service_type').translation(payload.contact_log.service_type)
+        RadEnum.new(ContactLog, 'service_type').translation(contact_log.service_type)
       end
 
-      def user
+      def contact_log
+        payload.contact_log
+      end
+
+      def from_user
+        contact_log.from_user
+      end
+
+      def to_user
         payload.to_user
       end
 
@@ -48,6 +71,21 @@ module Notifications
 
       def phone_number
         payload.phone_number
+      end
+
+      def can_show?(record)
+        notify_user_ids_all.each do |user_id|
+          return true if Pundit.policy!(User.find(user_id), record).show?
+        end
+
+        false
+      end
+
+      def maybe_add_from_user
+        return [] if from_user.blank?
+        return [] if contact_log.sms? && to_user.present? && to_user.internal?
+
+        [from_user.id]
       end
   end
 end

@@ -94,8 +94,18 @@ module RadCommon
       val = selected_value(column)
       return true if val.nil?
       return false if blank?(column)
+      return false if filter.default_value.nil?
+      return default_multi_select_value?(filter, val) if val.is_a?(Array)
 
-      val && filter.default_value && val.to_s == filter.default_value.to_s
+      val.to_s == filter.default_value.to_s
+    end
+
+    def default_multi_select_value?(filter, value)
+      value = value.compact_blank
+      default_value = filter.default_value
+      default_value = default_value.is_a?(Array) ? default_value.compact_blank : [default_value.to_s]
+
+      value.sort == default_value.sort
     end
 
     def skip_default?(name)
@@ -150,14 +160,14 @@ module RadCommon
       def permitted_searchable_columns
         # we need to make sure any params that are an array value ( multiple select ) go to the bottom for
         # permit to work
-
         columns = filters.sort_by { |f| f.respond_to?(:multiple) && f.multiple ? 1 : 0 }
         columns.map { |f|
           not_filter = "#{f.searchable_name}_not" if f.allow_not
+          match_type = f.match_type_param if f.is_a? LikeFilter
           if f.respond_to?(:multiple) && f.multiple
-            [not_filter, { f.searchable_name => [] }].compact
+            [not_filter, match_type, { f.searchable_name => [] }].compact
           else
-            [not_filter, f.searchable_name].compact
+            [not_filter, match_type, f.searchable_name].compact
           end
         }.flatten + %i[applied_filter saved_name]
       end
@@ -191,12 +201,6 @@ module RadCommon
 
       def inactive_users
         Pundit.policy_scope!(current_user, User).inactive.sorted
-      end
-
-      def enum_scopes(model, enum)
-        model.public_send(enum.to_s.pluralize).keys.index_by { |record|
-          RadEnum.new(model, enum).translation(record)
-        }.transform_values(&:to_sym)
       end
   end
 end

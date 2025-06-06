@@ -1,4 +1,11 @@
 class RadSeeder
+  DEV_NOTIFICATION_TYPES = %w[Notifications::DuplicateFoundAdminNotification
+                              Notifications::GlobalValidityRanLongNotification
+                              Notifications::HighDuplicatesNotification
+                              Notifications::InvalidDataWasFoundNotification
+                              Notifications::TwilioErrorThresholdExceededNotification
+                              Notifications::MissingAuditModelsNotification].freeze
+
   attr_accessor :users
 
   def seed!
@@ -9,9 +16,10 @@ class RadSeeder
     seed_user_statuses
     seed_company
     seed_users
-    mute_staging_notifications if staging?
-
     @users = User.all
+    seed_contact_logs
+
+    mute_staging_notifications if staging?
 
     seed
   ensure
@@ -29,7 +37,7 @@ class RadSeeder
     end
 
     def seed_users
-      return if User.count.positive?
+      return if User.exists?
 
       display_log 'seeding users'
 
@@ -50,22 +58,35 @@ class RadSeeder
       end
     end
 
+    def seed_contact_logs
+      return if ContactLog.exists?
+
+      display_log 'seeding contact logs'
+
+      30.times do
+        from_user = random_internal_user
+        to_user = [1, 2].sample == 1 ? users.sample : nil
+
+        if [1, 2].sample == 1
+          FactoryBot.create :contact_log, from_user: from_user, to_user: to_user
+        else
+          FactoryBot.create :contact_log, :email, from_user: from_user, to_user: to_user
+        end
+      end
+    end
+
     def mute_staging_notifications
       DEV_NOTIFICATION_TYPES.each do |notification_type_class|
         notification_type = notification_type_class.constantize.main
 
         notification_type.security_roles.each do |security_role|
           security_role.users.active.each do |user|
-            next if developer_user?(user)
+            next if user.developer?
 
             NotificationSetting.init_for_user(notification_type, user).update! enabled: false
           end
         end
       end
-    end
-
-    def developer_user?(user)
-      user.email.include?('radstack.com')
     end
 
     def seed_security_roles
@@ -225,10 +246,4 @@ class RadSeeder
     def staging?
       Rails.env.staging?
     end
-
-    DEV_NOTIFICATION_TYPES = %w[Notifications::DuplicateFoundAdminNotification
-                                Notifications::GlobalValidityRanLongNotification
-                                Notifications::HighDuplicatesNotification
-                                Notifications::InvalidDataWasFoundNotification
-                                Notifications::TwilioErrorThresholdExceededNotification].freeze
 end

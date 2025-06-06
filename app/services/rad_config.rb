@@ -10,6 +10,10 @@ class RadConfig
       Mail::Address.new(admin_email!).address
     end
 
+    def developer_domain!
+      secret_config_item! :developer_domain
+    end
+
     def from_email!
       secret_config_item! :from_email
     end
@@ -264,12 +268,12 @@ class RadConfig
       boolean_config_item! :legal_docs
     end
 
-    def favicon_filename!
-      override_variable(:favicon_filename) || 'favicon.ico'
+    def legacy_assets?
+      config_item(:legacy_assets).presence || false
     end
 
-    def app_logo_filename!
-      override_variable(:app_logo_filename) || 'app_logo.png'
+    def shared_database?
+      config_item(:shared_database).presence || false
     end
 
     def app_logo_includes_name?
@@ -282,6 +286,10 @@ class RadConfig
 
     def user_profiles?
       boolean_config_item! :user_profiles
+    end
+
+    def portal?
+      boolean_config_item! :portal
     end
 
     def secure_sentry?
@@ -330,7 +338,8 @@ class RadConfig
     def system_usage_models!
       array_config_item!(:system_usage_models) +
         [['ContactLogRecipient', 'successful', 'Successful Contacts'],
-         ['ContactLogRecipient', 'failed', 'Failed Contacts']]
+         ['ContactLogRecipient', 'failed', 'Failed Contacts'],
+         'Notification']
     end
 
     def global_validity_days!
@@ -385,8 +394,8 @@ class RadConfig
       boolean_config_item! :last_first_user
     end
 
-    def legacy_rails_config?
-      boolean_config_item! :legacy_rails_config
+    def timezone_detection?
+      boolean_config_item! :timezone_detection
     end
 
     def secret_config_item!(item)
@@ -433,6 +442,7 @@ class RadConfig
       check_twilio_verify!
       check_smarty!
       check_marketing!
+      check_external!
     end
 
     private
@@ -468,6 +478,12 @@ class RadConfig
         return unless force_marketing_site? && !allow_marketing_site?
 
         raise 'force_marketing_site not allowed'
+      end
+
+      def check_external!
+        return unless user_clients? && !external_users?
+
+        raise 'user_clients requires external_users'
       end
 
       def override_variable(item)

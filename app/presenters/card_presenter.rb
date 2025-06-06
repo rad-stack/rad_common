@@ -174,6 +174,7 @@ class CardPresenter
     actions.push(duplicate_action) if include_duplicate_action?
     actions.push(duplicates_action) if include_duplicates_action?
     actions.push(delete_action) if include_delete_action?
+    actions.push(tools_button) if include_tools_button?
 
     actions
   end
@@ -184,7 +185,7 @@ class CardPresenter
     actions += external_actions
 
     if (action_name == 'edit' || action_name == 'update' || action_name == 'show') &&
-       !no_new_button && current_user && Pundit.policy!(current_user, klass.new).new?
+       !no_new_button && current_user && class_policy.new?
 
       actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"),
                                          new_url,
@@ -198,9 +199,7 @@ class CardPresenter
                                          class: 'btn btn-secondary btn-sm'))
     end
 
-    if action_name == 'index' && !no_new_button && current_user &&
-       Pundit.policy!(current_user, klass.new).new?
-
+    if action_name == 'index' && !no_new_button && current_user && class_policy.new?
       actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"),
                                          new_url,
                                          class: 'btn btn-success btn-sm',
@@ -229,8 +228,8 @@ class CardPresenter
         !no_edit_button &&
         instance&.persisted? &&
         current_user &&
-        Pundit.policy!(current_user, klass.new).update? &&
-        Pundit.policy!(current_user, instance).update?
+        class_policy.update? &&
+        instance_policy.update?
     end
 
     def edit_action
@@ -241,7 +240,8 @@ class CardPresenter
       action_name == 'show' &&
         RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
         instance.duplicate.present? &&
-        instance.duplicate.score.present?
+        instance.duplicate.score.present? &&
+        instance_policy.resolve_duplicates?
     end
 
     def duplicate_action
@@ -253,7 +253,7 @@ class CardPresenter
     def include_duplicates_action?
       action_name == 'index' &&
         RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
-        Pundit.policy!(current_user, klass.new).resolve_duplicates? &&
+        class_policy.resolve_duplicates? &&
         klass.high_duplicates.size.positive?
     end
 
@@ -268,8 +268,85 @@ class CardPresenter
         !no_delete_button &&
         instance&.persisted? &&
         current_user &&
-        Pundit.policy!(current_user, klass.new).destroy? &&
-        Pundit.policy!(current_user, instance).destroy?
+        class_policy.destroy? &&
+        instance_policy.destroy?
+    end
+
+    def include_tools_button?
+      tool_actions.any?
+    end
+
+    def tools_button
+      @view_context.render 'layouts/card_tools_button', actions: tool_actions
+    end
+
+    def tool_actions
+      @tool_actions ||= ([show_history_action] + contact_log_actions + [reset_duplicates_action]).compact
+    end
+
+    def show_history_action
+      return unless @view_context.user_signed_in? &&
+                    current_user.internal? &&
+                    instance.present? &&
+                    instance.class.name != 'ActiveStorage::Attachment' &&
+                    instance.respond_to?(:audits) &&
+                    instance.persisted? &&
+                    instance_policy.audit?
+
+      { label: 'Audit History',
+        link: @view_context.audits_path(search: { single_record: "#{instance.class}:#{instance.id}" }) }
+    end
+
+    def contact_log_actions
+      return [] unless action_name == 'show' &&
+                       instance&.persisted? &&
+                       current_user &&
+                       Pundit.policy!(current_user, ContactLog.new).index? &&
+                       contact_logs?
+
+      return user_contact_log_actions if instance.is_a?(User)
+
+      [{ label: 'Contact Logs', link: contact_log_record_action }]
+    end
+
+    def user_contact_log_actions
+      [{ label: 'Contact Logs to User',
+         link: @view_context.contact_logs_path(search: { 'contact_log_recipients.to_user_id': instance.id }) },
+       { label: 'Contact Logs from User',
+         link: @view_context.contact_logs_path(search: { 'contact_logs.from_user_id': instance.id }) },
+       { label: 'Contact Logs w/ User as Subject', link: contact_log_record_action },
+       { label: 'All Associated Contact Logs',
+         link: @view_context.contact_logs_path(search: { associated_with_user: instance.id }) }]
+    end
+
+    def contact_log_record_action
+      @view_context.contact_logs_path(search: { 'contact_logs.record_type': instance.class.name,
+                                                record_id_equals: instance.id })
+    end
+
+    def contact_logs?
+      # TODO: need to make sure these queries are very fast since it's gonna hit on every show action
+      # return ContactLog.associated_with_user(instance.id).limit(1).exists? if instance.is_a?(User)
+      return true if instance.is_a?(User) # TODO: temporary hack until query optimization is verified
+
+      ContactLog.where(record: instance).limit(1).exists?
+    end
+
+    def reset_duplicates_action
+      return unless @view_context.user_signed_in? &&
+                    current_user.internal? &&
+                    instance.present? &&
+                    instance.respond_to?(:persisted?) &&
+                    instance.persisted? &&
+                    RadCommon::AppInfo.new.duplicates_enabled?(instance.class.name) &&
+                    instance_policy.reset_duplicates?
+
+      confirm_message = 'This will reset non-duplicates and regenerate possible matches for this record, proceed?'
+
+      { label: 'Reset Duplicates',
+        link: @view_context.reset_duplicates_path(model: instance.class, id: instance.id),
+        method: :put,
+        data: { confirm: confirm_message } }
     end
 
     def delete_action
@@ -283,7 +360,7 @@ class CardPresenter
     def show_index_button?
       return false if no_index_button
       return false unless %w[show edit update new create].include?(action_name)
-      return false unless current_user && Pundit.policy!(current_user, klass.new).index?
+      return false unless current_user && class_policy.index?
       return false if no_records?
 
       true
@@ -291,5 +368,29 @@ class CardPresenter
 
     def no_records?
       Pundit.policy_scope!(current_user, klass).count.zero?
+    end
+
+    def class_policy
+      @class_policy ||= Pundit.policy!(current_user, check_policy_klass)
+    end
+
+    def instance_policy
+      @instance_policy ||= Pundit.policy!(current_user, check_policy_instance)
+    end
+
+    def check_policy_klass
+      if current_user.external? && RadConfig.portal?
+        [:portal, klass.new]
+      else
+        klass.new
+      end
+    end
+
+    def check_policy_instance
+      if current_user.external? && RadConfig.portal?
+        [:portal, instance]
+      else
+        instance
+      end
     end
 end

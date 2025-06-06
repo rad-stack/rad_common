@@ -11,9 +11,17 @@ class SavedSearchFilterPolicy < ApplicationPolicy
     false
   end
 
-  alias new? update?
-  alias show? update?
-  alias index? update?
+  def new?
+    update?
+  end
+
+  def show?
+    update?
+  end
+
+  def index?
+    update?
+  end
 
   class Scope < Scope
     def resolve

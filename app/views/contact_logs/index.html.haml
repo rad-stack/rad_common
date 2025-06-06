@@ -3,28 +3,5 @@
   .card-body
     = render 'layouts/filter', search: @contact_log_search, path: contact_logs_path
     = paginate @contact_logs, theme: 'twitter-bootstrap-4'
-
-    %table.table.table-bordered
-      %tr
-        = render 'layouts/sort_headers', search: @contact_log_search
-
-      - @contact_logs.each do |record|
-        %tr{ class: table_row_style(record) }
-          %td= link_to format_datetime(record.created_at), record.contact_log
-          - if RadConfig.twilio_enabled?
-            %td= enum_to_translated_option record.contact_log, :service_type
-            %td= enum_to_translated_option record.contact_log, :sms_log_type
-          - if RadConfig.twilio_enabled?
-            %td= record.contact_log.from_number
-            %td= record.phone_number
-          %td= record.contact_log.from_email
-          %td= record.email
-          %td= secured_link record.contact_log.from_user
-          %td= secured_link record.to_user
-          %td= secured_link record.contact_log.record
-          %td= record.contact_log.content
-          - if RadConfig.twilio_enabled?
-            %td= format_boolean record.contact_log.sms_opt_out_message_sent
-          %td= format_boolean record.success
-
+    = render 'contact_logs/index', contact_logs: @contact_logs, sort_columns: true
     = paginate @contact_logs, theme: 'twitter-bootstrap-4'

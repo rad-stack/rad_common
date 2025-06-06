@@ -8,7 +8,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -24,22 +24,100 @@ http_interactions:
       code: 400
       message: Bad Request
     headers:
-      Date:
-      - Fri, 21 Jun 2024 18:28:04 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '150'
       Connection:
       - keep-alive
+      Date:
+      - Thu, 13 Mar 2025 16:49:24 GMT
+      X-Powered-By:
+      - AT-5000
       X-Twilio-Error-Code:
       - '21614'
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQfabc88732925b7cb5587a4f12ec9b9b0
+      - RQ723bb8759fc6cfa8333add673e502f4e
+      Twilio-Request-Duration:
+      - '0.065'
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
+        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
+      Access-Control-Allow-Methods:
+      - GET, POST, PATCH, PUT, DELETE, OPTIONS
+      Access-Control-Expose-Headers:
+      - ETag, Twilio-Request-Id
+      Access-Control-Allow-Credentials:
+      - 'true'
+      X-Shenanigans:
+      - none
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 9700dbefcaf4a5da8ff0c118308f25e6.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P3
+      X-Amz-Cf-Id:
+      - JWuPKB7-AwnoKe3CSuHXM1U5J81UD9xLW6RyLGKNwBY4V4vZ87xMYA==
+    body:
+      encoding: UTF-8
+      string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
+        mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
+  recorded_at: Thu, 13 Mar 2025 16:49:24 GMT
+- request:
+    method: post
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
+    body:
+      encoding: UTF-8
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
+    headers:
+      User-Agent:
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
+      Accept-Charset:
+      - utf-8
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - application/json
+      Authorization:
+      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '150'
+      Connection:
+      - keep-alive
+      Date:
+      - Thu, 13 Mar 2025 16:49:24 GMT
+      X-Powered-By:
+      - AT-5000
+      X-Twilio-Error-Code:
+      - '21614'
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQ5eb9aff7957e9d7459302285722860a2
       Twilio-Request-Duration:
       - '0.049'
+      X-Home-Region:
+      - us1
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -57,15 +135,19 @@ http_interactions:
       - 'true'
       X-Shenanigans:
       - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 fe8af35c363442c3ecc406bdb489733e.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P3
+      X-Amz-Cf-Id:
+      - tJ_6ArjaMYx3zak0deQ5O3GZa5OKL1bFvpk9D1Dx3Ax_STrVPRtbXg==
     body:
       encoding: UTF-8
       string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
         mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
-  recorded_at: Fri, 21 Jun 2024 18:28:04 GMT
+  recorded_at: Thu, 13 Mar 2025 16:49:24 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -74,7 +156,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -90,22 +172,26 @@ http_interactions:
       code: 400
       message: Bad Request
     headers:
-      Date:
-      - Fri, 21 Jun 2024 18:28:04 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '150'
       Connection:
       - keep-alive
+      Date:
+      - Thu, 13 Mar 2025 16:49:24 GMT
+      X-Powered-By:
+      - AT-5000
       X-Twilio-Error-Code:
       - '21614'
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQaec411fa7825b21c6f3fbc53c6ae0416
+      - RQb641d3bcfed43f51f39ee3a51aefaf2a
       Twilio-Request-Duration:
       - '0.043'
+      X-Home-Region:
+      - us1
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -123,15 +209,19 @@ http_interactions:
       - 'true'
       X-Shenanigans:
       - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 92b0aae16555572f654690c9e7efa280.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P3
+      X-Amz-Cf-Id:
+      - X9cJDzQniLNX0xR-qdhXtvrGvWwID2fw-9CVxeR7U7TTqeeAs0Ur3A==
     body:
       encoding: UTF-8
       string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
         mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
-  recorded_at: Fri, 21 Jun 2024 18:28:04 GMT
+  recorded_at: Thu, 13 Mar 2025 16:49:24 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -140,7 +230,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -156,22 +246,26 @@ http_interactions:
       code: 400
       message: Bad Request
     headers:
-      Date:
-      - Fri, 21 Jun 2024 18:28:05 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '150'
       Connection:
       - keep-alive
+      Date:
+      - Thu, 13 Mar 2025 16:49:24 GMT
+      X-Powered-By:
+      - AT-5000
       X-Twilio-Error-Code:
       - '21614'
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ90cdf9def62d21d25497c009a51829ae
+      - RQ324188b66dce32b1bd6c5e34d0ab01ae
       Twilio-Request-Duration:
-      - '0.063'
+      - '0.058'
+      X-Home-Region:
+      - us1
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -189,15 +283,19 @@ http_interactions:
       - 'true'
       X-Shenanigans:
       - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 e759cef9ef04dc6632a71818dfac3a76.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P3
+      X-Amz-Cf-Id:
+      - YmSX8yHgpoRpbYsxatuZa5XG-0XD7v6U7I-kpiNh7AmSuTKjlth6Dw==
     body:
       encoding: UTF-8
       string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
         mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
-  recorded_at: Fri, 21 Jun 2024 18:28:05 GMT
+  recorded_at: Thu, 13 Mar 2025 16:49:24 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -206,7 +304,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -222,22 +320,26 @@ http_interactions:
       code: 400
       message: Bad Request
     headers:
-      Date:
-      - Fri, 21 Jun 2024 18:28:05 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '150'
       Connection:
       - keep-alive
+      Date:
+      - Thu, 13 Mar 2025 16:49:25 GMT
+      X-Powered-By:
+      - AT-5000
       X-Twilio-Error-Code:
       - '21614'
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQfa639632a46cdfd644d0a2ea5b07b70b
+      - RQ4aa10ede928ad9bb936eb78494c56985
       Twilio-Request-Duration:
-      - '0.033'
+      - '0.030'
+      X-Home-Region:
+      - us1
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -255,79 +357,17 @@ http_interactions:
       - 'true'
       X-Shenanigans:
       - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 fb4c985c6e0ddb6f82a2dffdde62d23e.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P3
+      X-Amz-Cf-Id:
+      - cvRL8KhlDDtUmKyC6Ppc93n9oUbzg_IqFfO0oRqi28sormKLZwY3YQ==
     body:
       encoding: UTF-8
       string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
         mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
-  recorded_at: Fri, 21 Jun 2024 18:28:05 GMT
-- request:
-    method: post
-    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
-    body:
-      encoding: UTF-8
-      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550009
-    headers:
-      User-Agent:
-      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
-      Accept-Charset:
-      - utf-8
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Accept:
-      - application/json
-      Authorization:
-      - Basic QUNhYWU5ODc3NmJkZTRlZDUzZDBmYjFkZmNjMjYyNTU4ZTo5ZDY1YTY4Y2Y3ZjliMTZjMzBjYmNjMjFmYTdiZThiYg==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 400
-      message: Bad Request
-    headers:
-      Date:
-      - Fri, 21 Jun 2024 18:28:05 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '150'
-      Connection:
-      - keep-alive
-      X-Twilio-Error-Code:
-      - '21614'
-      Twilio-Concurrent-Requests:
-      - '1'
-      Twilio-Request-Id:
-      - RQbc79fa4d95d4ee7d3361a36a3ef514a5
-      Twilio-Request-Duration:
-      - '0.050'
-      X-Api-Domain:
-      - api.twilio.com
-      Strict-Transport-Security:
-      - max-age=31536000
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Allow-Headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key, X-Pre-Auth-Context, X-Target-Region
-      Access-Control-Allow-Methods:
-      - GET, POST, PATCH, PUT, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag, Twilio-Request-Id
-      Access-Control-Allow-Credentials:
-      - 'true'
-      X-Shenanigans:
-      - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
-    body:
-      encoding: UTF-8
-      string: '{"code":21614,"message":"''To'' number: +1500555XXXX, is not a valid
-        mobile number","more_info":"https://www.twilio.com/docs/errors/21614","status":400}'
-  recorded_at: Fri, 21 Jun 2024 18:28:05 GMT
-recorded_with: VCR 6.2.0
+  recorded_at: Thu, 13 Mar 2025 16:49:25 GMT
+recorded_with: VCR 6.3.1

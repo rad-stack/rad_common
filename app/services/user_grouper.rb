@@ -1,4 +1,5 @@
 class UserGrouper
+  include RadCommon::SearchableDropdownHelper
   attr_accessor :current_user, :always_include, :scopes, :with_ids
 
   def initialize(current_user, always_include: nil, scopes: [], with_ids: false)
@@ -12,7 +13,19 @@ class UserGrouper
     [me_item, internal_user_item, client_user_item, inactive_user_item].compact
   end
 
+  def user_filter(label, column, scope = nil)
+    default_options = { input_label: label, column: column, include_blank: false, blank_value_label: 'All Users' }
+    default_options[:scope] = scope if scope
+    return searchable_options(default_options) if max_dropdown_size_exceeded?(base_users)
+
+    { options: call }.merge(default_options).merge({ grouped: true, include_blank: true })
+  end
+
   private
+
+    def searchable_options(default_options)
+      { search_scope_name: 'user_name', show_search_subtext: true }.merge(default_options)
+    end
 
     def me_item
       return if me_users.none?

@@ -1,28 +1,59 @@
+require 'yaml'
+
 class HerokuCommands
   IGNORED_HEROKU_ERRORS = ['free Heroku Dynos will'].freeze
 
   class << self
     def backup(app_name)
-      check_production do
-        check_valid_app(app_name)
-        FileUtils.mkdir_p dump_folder
+      check_production!
 
-        Bundler.with_unbundled_env do
-          url_output = `heroku pg:backups public-url #{app_option(app_name)}`
-          backup_url = "\"#{url_output.strip}\""
+      check_valid_app(app_name)
+      FileUtils.mkdir_p dump_folder
 
-          write_log backup_url
-          write_log 'Downloading last backup file:'
-          write_log `curl -o #{backup_dump_file(app_name)} #{backup_url}`
-        end
+      Bundler.with_unbundled_env do
+        url_output = `heroku pg:backups:url #{app_option(app_name)}`
+        backup_url = "\"#{url_output.strip}\""
+
+        write_log backup_url
+        write_log 'Downloading last backup file:'
+        write_log `curl -o #{backup_dump_file(app_name)} #{backup_url}`
       end
     end
 
-    def restore_from_backup(file_name)
+    def restore_from_backup(file_name, profile = 'full')
+      start_time = Time.now.utc
+
       write_log 'Dropping existing database schema'
-      write_log `psql -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public" -h #{local_host} -U #{local_user} -d #{dbname}`
+      command = [
+        'psql -c',
+        '"DROP SCHEMA public CASCADE; CREATE SCHEMA public"',
+        "-h #{local_host}",
+        "-U #{local_user}",
+        "-d #{dbname}"
+      ].join(' ')
+      write_log `#{command}`
+
+      restore_list_file = 'restore_list.txt'
+      generate_restore_list(file_name, profile, restore_list_file)
+
       write_log 'Restoring dump file to local'
-      write_log `pg_restore --verbose --clean --no-acl --no-owner -h #{local_host} -U #{local_user} -d #{dbname} #{file_name}`
+      write_log restore_command(file_name, restore_list_file)
+
+      write_log 'Deleting restore list'
+      FileUtils.rm_f restore_list_file
+
+      write_log 'Migrating database'
+      write_log `skip_on_db_migrate=1 rake db:migrate`
+
+      reset_sensitive_local_data
+      write_log 'Clearing certain production data'
+      remove_user_avatars
+      remove_encrypted_secrets
+      SecurityRole.update_all two_factor_auth: false
+      User.update_all twilio_verify_enabled: false
+
+      duration = Time.now.utc - start_time
+      write_log "Restore complete in #{duration.round(2)} seconds"
     end
 
     def dump(file_name = '')
@@ -31,47 +62,32 @@ class HerokuCommands
       write_log `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
     end
 
-    def clone(app_name, backup_id)
-      check_production do
-        Bundler.with_unbundled_env do
-          check_valid_app(app_name)
-          if backup_id.blank?
-            write_log 'Running backup on Heroku...'
-            `heroku pg:backups capture #{app_option(app_name)}`
-          end
+    def clone(app_name, profile = 'full', backup_id = nil)
+      check_production!
 
-          url_output = if backup_id.present?
-                         `heroku pg:backups public-url #{backup_id} #{app_option(app_name)}`
-                       else
-                         `heroku pg:backups public-url #{app_option(app_name)}`
-                       end
-
-          backup_url = "\"#{url_output.strip}\""
-
-          write_log 'Downloading dump file:'
-          write_log `curl -o #{clone_dump_file} #{backup_url}`
+      Bundler.with_unbundled_env do
+        check_valid_app(app_name)
+        if backup_id.blank?
+          write_log 'Running backup on Heroku...'
+          `heroku pg:backups:capture #{app_option(app_name)}`
         end
 
-        restore_from_backup(clone_dump_file)
+        url_output = if backup_id.present?
+                       `heroku pg:backups:url #{backup_id} #{app_option(app_name)}`
+                     else
+                       `heroku pg:backups:url #{app_option(app_name)}`
+                     end
 
-        write_log 'Deleting temporary dump file'
-        write_log `rm #{clone_dump_file}`
+        backup_url = "\"#{url_output.strip}\""
 
-        write_log 'Migrating database'
-        write_log `skip_on_db_migrate=1 rake db:migrate`
-
-        write_log 'Changing passwords'
-        new_password = User.new.send(:password_digest, 'password')
-        User.update_all(encrypted_password: new_password)
-
-        write_log 'Changing Active Storage service to local'
-        ActiveStorage::Blob.update_all service_name: 'local'
-
-        write_log 'Clearing certain production data'
-        remove_user_avatars
-        remove_accounting_keys
-        User.update_all twilio_verify_enabled: false
+        write_log 'Downloading dump file:'
+        write_log `curl -o #{clone_dump_file} #{backup_url}`
       end
+
+      restore_from_backup(clone_dump_file, profile)
+
+      write_log 'Deleting temporary dump file'
+      write_log `rm #{clone_dump_file}`
     end
 
     def reset_staging(app_name)
@@ -82,10 +98,12 @@ class HerokuCommands
           return
         end
 
+        write_log `heroku ps:scale web=0 worker=0 #{app_option(app_name)}`
+        write_log `heroku run rails runner "'Sidekiq.redis(&:flushdb)'" #{app_option(app_name)}`
         write_log `heroku pg:reset DATABASE_URL #{app_option(app_name)} --confirm #{app_name}`
         write_log `heroku run rails db:schema:load #{app_option(app_name)}`
         write_log `heroku run rails db:seed #{app_option(app_name)}`
-        write_log `heroku restart #{app_option(app_name)}`
+        write_log `heroku ps:scale web=1 worker=1 #{app_option(app_name)}`
 
         write_log 'Done.'
       end
@@ -109,6 +127,22 @@ class HerokuCommands
     end
 
     private
+
+      def restore_command(file_name, restore_list_file)
+        command = [
+          'pg_restore',
+          '--verbose',
+          '--clean',
+          '--no-acl',
+          '--no-owner',
+          "-L #{restore_list_file}",
+          "-h #{local_host}",
+          "-U #{local_user}",
+          "-d #{dbname}",
+          file_name
+        ].join(' ')
+        `#{command}`
+      end
 
       def app_option(app_name)
         "--app #{app_name}"
@@ -142,12 +176,8 @@ class HerokuCommands
         YAML.load_file('config/database.yml')['development']['database']
       end
 
-      def check_production
-        if Rails.env.production?
-          write_log 'This is not available in the production environment.'
-        else
-          yield
-        end
+      def check_production!
+        raise 'This is not available in the production environment.' if Rails.env.production?
       end
 
       def remove_user_avatars
@@ -158,16 +188,12 @@ class HerokuCommands
         end
       end
 
-      def remove_accounting_keys
-        company = Company.main
-        return unless company.respond_to?(:quickbooks_access_token)
-
-        company.quickbooks_company_id = nil
-        company.quickbooks_token = nil
-        company.quickbooks_refresh_token = nil
-        company.refresh_token_by = nil
-
-        company.save!(validate: false)
+      def remove_encrypted_secrets
+        [Company, User].each do |klass|
+          klass.encrypted_attributes&.each do |attribute_name|
+            klass.where.not(attribute_name => nil).update_all "#{attribute_name}": nil
+          end
+        end
       end
 
       def write_log(message)
@@ -184,6 +210,38 @@ class HerokuCommands
         return false if error.blank?
 
         IGNORED_HEROKU_ERRORS.select { |ignored_error| error.include?(ignored_error) }.blank?
+      end
+
+      def generate_restore_list(file_name, profile, restore_list_file)
+        case profile.to_s
+        when 'full'
+          write_log 'Generating full restore list (include all tables)'
+          write_log `pg_restore -l #{file_name} > #{restore_list_file}`
+        when 'exclude_audits'
+          write_log 'Generating restore list excluding audits table'
+          write_log `pg_restore -l #{file_name} | grep -v 'TABLE DATA public audits' > #{restore_list_file}`
+        when 'minimal'
+          write_log 'Generating minimal restore list (excluding audits, contact logs, and recipients)'
+          command = [
+            "pg_restore -l #{file_name}",
+            "| grep -v 'TABLE DATA public audits'",
+            "| grep -v 'TABLE DATA public contact_logs'",
+            "| grep -v 'TABLE DATA public recipients'",
+            "> #{restore_list_file}"
+          ].join(' ')
+          `#{command}`
+        else
+          raise "Unknown restore profile: #{profile}"
+        end
+      end
+
+      def reset_sensitive_local_data
+        write_log 'Changing passwords'
+        new_password = User.new.send(:password_digest, 'password')
+        User.update_all(encrypted_password: new_password)
+
+        write_log 'Changing Active Storage service to local'
+        ActiveStorage::Blob.update_all service_name: 'local'
       end
   end
 end

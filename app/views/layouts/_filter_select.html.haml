@@ -1,5 +1,5 @@
-- data_style = "btn #{search.default_value?(filter.searchable_name) ? 'btn-light' : 'btn-warning'}"
-- input_html = filter.search_scope.present? ? filter.search_scope_params : { class: 'selectpicker' }
+- filter_class = search.default_value?(filter.searchable_name) ? '' : 'filter-active'
+- input_html = filter.search_scope_params
 
 .row.align-items-center
   .col
@@ -21,7 +21,5 @@
           as: filter.input_type,
           group_method: :last,
           required: false,
-          label_method: filter.label_method,
-          input_html: { multiple: filter.multiple,
-                        'data-live-search': true,
-                        'data-style': data_style }.merge(input_html)
+          wrapper_html: { class: filter_class },
+          input_html: { multiple: filter.multiple, 'data-placeholder': filter.blank_value_label }.merge(input_html)

@@ -20,7 +20,7 @@ RSpec.describe 'Robots' do
       get '/robots.txt'
       expect(response).to have_http_status(:ok)
       expect(response.body).to include('User-Agent: *')
-      expect(response.body).to include('Noindex: /')
+      expect(response.body).to include('Disallow: /')
     end
   end
 end

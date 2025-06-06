@@ -25,10 +25,24 @@ RSpec.describe 'Search' do
 
     context 'with name not matching column name' do
       it 'queries specified column' do
-        visit '/rad_common/audits'
+        visit '/audits'
         first('#search_audited_changes_like').fill_in(with: 'query')
         first('button', text: 'Apply Filters').click
         expect(current_url).to include('search[audited_changes_like]=query')
+      end
+    end
+
+    context 'with name match type select' do
+      it 'changes object match_type', :js do
+        visit divisions_path
+        expect(first('#search_name_like_match_type', visible: :all).value).to eq('contains')
+
+        within first('[data-controller="search-like-filter"]') do
+          first('.dropdown-toggle').click
+          first('[data-match-type="exact"]').click
+        end
+        first('button', text: 'Apply Filters').click
+        expect(first('#search_name_like_match_type', visible: :all).value).to eq('exact')
       end
     end
   end
@@ -37,26 +51,23 @@ RSpec.describe 'Search' do
     before { visit divisions_path }
 
     it 'selects a default value', :js do
-      selector = ".bootstrap-select .dropdown-toggle[data-id='search_owner_id'] .filter-option-inner-inner"
-      expect(page).to have_selector(selector, text: user.to_s)
+      within '.search_division_status' do
+        expect(find('.has-items')).to be_present
+      end
     end
 
     it 'retains search value after applying filters' do
       first('#search_division_status').select('Active')
       first('button', text: 'Apply Filters').click
-      expect(first('#search_division_status').value).to eq Division.division_statuses['status_active'].to_s
+      expect(first('#search_division_status').value).to eq [Division.division_statuses['status_active'].to_s]
     end
 
-    it 'select should have success style when default value is selected' do
-      first('#search_division_status').select('All Statuses')
+    it 'select should have warning style when a value is selected other than default', :js do
+      tom_select 'Inactive', from: 'search_division_status'
+      expect(page).to have_no_css('.filter-active .ts-control')
+      find('body').click
       first('button', text: 'Apply Filters').click
-      expect(first('#search_division_status')['data-style']).to eq 'btn btn-light'
-    end
-
-    it 'select should have warning style when a value is selected other than default' do
-      first('#search_division_status').select('Active')
-      first('button', text: 'Apply Filters').click
-      expect(first('#search_division_status')['data-style']).to eq 'btn btn-warning'
+      expect(page).to have_css('.filter-active .ts-control')
     end
 
     context 'when ajax select', :js do
@@ -69,33 +80,40 @@ RSpec.describe 'Search' do
       end
 
       it 'allows searching and selecting filter option' do
-        bootstrap_select 'Active', from: 'search_division_status'
         first('button', text: 'Apply Filters').click
 
         expect(page).to have_content(division.name)
         expect(page).to have_content(other_division.name)
 
+        # Without Search max options not exceeded
+        tom_select category.name, from: 'search_category_id'
+        first('button', text: 'Apply Filters').click
+        expect(page).to have_content(division.name)
+        expect(page).to have_no_content(other_division.name)
+
+        create_list :category, 300
+        visit divisions_path
+
         # Full Search
-        bootstrap_select category.name, from: 'search_category_id', search: category.name
+        tom_select category.name, from: 'search_category_id', search: category.name
         first('button', text: 'Apply Filters').click
         expect(page).to have_content(division.name)
         expect(page).to have_no_content(other_division.name)
 
         # Partial Search
-        bootstrap_select other_category.name, from: 'search_category_id', search: 'App'
+        tom_select other_category.name, from: 'search_category_id', search: 'App'
         first('button', text: 'Apply Filters').click
         expect(page).to have_content(other_division.name)
       end
 
       context 'when exclude is checked' do
         it 'filters out selected options' do
-          bootstrap_select 'Active', from: 'search_division_status'
           first('button', text: 'Apply Filters').click
 
           expect(page).to have_content(division.name)
           expect(page).to have_content(other_division.name)
 
-          bootstrap_select category.name, from: 'search_category_id', search: category.name
+          tom_select category.name, from: 'search_category_id', search: category.name
           first('button', text: 'Apply Filters').click
           expect(page).to have_content(division.name)
           expect(page).to have_no_content(other_division.name)
@@ -110,12 +128,11 @@ RSpec.describe 'Search' do
     end
 
     it 'shows required field error' do
-      visit divisions_path
+      visit divisions_path(search: { division_status: [''] })
       first('button', text: 'Apply Filters').click
       expect(page).to have_content 'Status is required'
 
-      first('#search_division_status').select('Active')
-      first('button', text: 'Apply Filters').click
+      visit divisions_path(search: { division_status: [Division.division_statuses[:status_active]] })
       expect(page).to have_no_content 'Status is required'
     end
   end
@@ -152,8 +169,9 @@ RSpec.describe 'Search' do
       expect(page).to have_no_content 'Invalid date entered for created_at'
     end
 
-    it 'does save valid date to users.filter_defaults' do
-      visit divisions_path(search: { created_at_start: '2019-12-01', created_at_end: '2019-12-02', division_status: 1 })
+    it 'does save valid date to users.filter_defaults', :js do
+      visit divisions_path(search: { created_at_start: '2019-12-01', created_at_end: '2019-12-02',
+                                     division_status: [1] })
       visit '/'
       visit divisions_path
       expect(page.body).to include '2019-12-01'

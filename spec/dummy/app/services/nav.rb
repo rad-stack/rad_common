@@ -11,8 +11,8 @@ class Nav < RadNav::Nav
 
     def client_items
       [dropdown_menu_index_item('Client'),
-       dropdown_menu_item('Add Client', view_context.new_client_path),
-       dropdown_menu_item('Client Report', view_context.client_reports_path)]
+       dropdown_menu_item('Add Client', view_context.new_client_path, permission: policy(Client.new).new?),
+       dropdown_menu_item('Client Report', view_context.client_reports_path, permission: policy(Client.new).report?)]
     end
 
     def attorneys_menu

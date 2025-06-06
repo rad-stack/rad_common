@@ -56,7 +56,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = [Rails.root.join('spec/fixtures').to_s]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -144,7 +144,12 @@ RSpec.configure do |config|
   config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
   config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
   config.filter_run_excluding(password_expirable_specs: true) unless RadConfig.password_expirable?
+  config.filter_run_excluding(legacy_asset_specs: true) if RadConfig.legacy_assets?
+  config.filter_run_excluding(shared_database_specs: true) if RadConfig.shared_database?
+  config.filter_run_excluding(timezone_detection_specs: true) unless RadConfig.timezone_detection?
 
   include Warden::Test::Helpers
   config.include Capybara::DSL
+
+  Sidekiq.logger.level = Logger::WARN
 end

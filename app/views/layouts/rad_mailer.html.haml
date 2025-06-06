@@ -11,14 +11,18 @@
 
 !!!
 %head
-  = stylesheet_pack_tag 'rad_mailer', media: 'all'
+  - if RadConfig.legacy_assets?
+    = stylesheet_pack_tag 'rad_mailer', media: 'all'
+  - else
+    = stylesheet_link_tag 'rad_mailer', media: 'all'
 %body
   .email-bg
     .email-container
       .email-header
         .email-row
           .email-col-12.logo-col
-            = link_to image_pack_tag(RadConfig.app_logo_filename!, alt: company_name, title: company_name), website
+            - company_logo = ApplicationController.helpers.company_logo(Company.main)
+            = link_to image_tag(company_logo, alt: company_name, title: company_name), website
 
             - unless logo_includes_name
               %span.logo_text
@@ -33,7 +37,10 @@
                 - elsif @recipient.is_a?(String)
                   Hello #{@recipient},
                 - elsif @recipient.respond_to?(:count)
-                  Hello all,
+                  - if @recipient.count == 1 && @recipient.first.respond_to?(:greeting)
+                    #{@recipient.first.greeting},
+                  - else
+                    Hello all,
                 - else
                   - raise "please set up greeting method in #{@recipient.class} before using this mailer"
         .email-row
@@ -59,8 +66,8 @@
               .footer
                 .footer-item
                   Click
-                  = link_to 'here', "#{protocol}://#{RadConfig.host_name!}/rad_common/notification_settings"
-                  to opt out or change your notification settings.
+                  = link_to 'here', "#{protocol}://#{RadConfig.host_name!}/notification_settings"
+                  to change your notification settings.
             .footer
               .footer-item= company_name
               - if company_full_address.present?

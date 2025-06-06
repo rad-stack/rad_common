@@ -14,6 +14,7 @@
         %th Name
         %th Code
         %th Owner
+        %th Tags
         %th Logo
         - if show_actions
           %th.actions Actions
@@ -23,6 +24,7 @@
           %td= secured_link record
           %td= record.code
           %td= secured_link(record.owner)
+          %td= safe_join(record.tags.map { |tag| content_tag(:span, tag, class: 'badge badge-info mr-1') })
           %td= render_one_attachment record: record, attachment_name: 'logo', new_tab: true
           - if show_actions
             %td

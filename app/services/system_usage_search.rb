@@ -18,6 +18,7 @@ class SystemUsageSearch < RadCommon::Search
     @usage_data ||=
       usage_items.map do |item|
         data = []
+        current_count = nil
 
         date_column_ranges.each do |header|
           case item.class.to_s
@@ -33,7 +34,11 @@ class SystemUsageSearch < RadCommon::Search
             raise "invalid option: #{item.class}"
           end
 
-          data.push(name: name, value: result.where(created_at: header[:start]..header[:end]).count)
+          current_count = result.count if current_count.blank?
+
+          data.push(name: name,
+                    current_count: current_count,
+                    value: result.where(created_at: header[:start]..header[:end]).count)
         end
 
         data
@@ -59,7 +64,12 @@ class SystemUsageSearch < RadCommon::Search
   end
 
   def usage_items
-    @usage_items ||=
+    @usage_items ||= prepare_usage_items.sort_by { |item| item.is_a?(String) ? item : item.first }
+  end
+
+  private
+
+    def prepare_usage_items
       RadConfig.system_usage_models!.map { |item|
         case item.class.to_s
         when 'String'
@@ -73,9 +83,7 @@ class SystemUsageSearch < RadCommon::Search
 
         item
       }.compact
-  end
-
-  private
+    end
 
     def filters_def
       [{ input_label: 'Date Mode',

@@ -40,7 +40,7 @@ class DivisionsController < ApplicationController
     destroyed = @division.destroy
 
     if destroyed
-      flash[:success] = 'Division was successfully deleted.'
+      flash[:notice] = 'Division was successfully deleted.'
     else
       flash[:error] = @division.errors.full_messages.join(', ')
     end
@@ -62,6 +62,6 @@ class DivisionsController < ApplicationController
 
     def permitted_params
       params.require(:division).permit(:name, :code, :notify, :timezone, :owner_id, :hourly_rate, :division_status,
-                                       :icon, :logo, :category_id, :category_name)
+                                       :icon, :logo, :category_id, :category_name, tags: [])
     end
 end
