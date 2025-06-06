@@ -27,6 +27,7 @@ module RadNav
          sidekiq,
          DropdownMenuItem.new(view_context, 'Company Info', view_context.company_edit_path),
          generate_jwt,
+         calendar,
          DropdownMenuIndexItem.new(view_context, 'NotificationType'),
          DropdownMenuIndexItem.new(view_context, 'SecurityRole'),
          sentry_test,
@@ -49,6 +50,10 @@ module RadNav
                              'Background Jobs',
                              '/sidekiq',
                              link_options: { target: '_blank', rel: :noopener })
+      end
+
+      def calendar
+        DropdownMenuItem.new(view_context, 'Calendar', view_context.calendar_divisions_path)
       end
 
       def generate_jwt
