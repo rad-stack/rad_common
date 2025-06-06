@@ -133,8 +133,8 @@ describe RadCommon::ApplicationHelper do
     end
   end
 
-  describe 'show_route_exists_for?' do
-    subject { helper.show_route_exists_for? record }
+  describe 'show_route_exists?' do
+    subject { helper.show_route_exists? record }
 
     context 'when route exists' do
       let(:record) { create :attorney }

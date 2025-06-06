@@ -20,22 +20,25 @@ module RadCommon
       end
     end
 
-    def show_route_exists_for?(record)
+    def show_route_exists?(record)
       return false unless record.respond_to?(:to_param)
 
-      route_key = record.model_name.route_key
-      controller = route_key
-      action = 'show'
+      model_class = record.class
+      cache_key = "routes_helper/show_route_exists/#{model_class.name.underscore}"
 
-      Rails.application.routes.routes.any? do |route|
-        verb_match = route.verb&.match(/^GET$/)
+      Rails.cache.fetch(cache_key, expires_in: 5.minutes) do
+        route_key = record.model_name.route_key
+        controller = route_key
+        action = 'show'
 
-        controller_match = route.defaults[:controller] == controller
-        action_match = route.defaults[:action] == action
+        Rails.application.routes.routes.any? do |route|
+          verb_match = route.verb&.match(/^GET$/)
+          controller_match = route.defaults[:controller] == controller
+          action_match = route.defaults[:action] == action
+          path_match = route.path.spec.to_s.include?("/:id")
 
-        path_match = route.path.spec.to_s.include?('/:id')
-
-        verb_match && controller_match && action_match && path_match
+          verb_match && controller_match && action_match && path_match
+        end
       end
     end
 

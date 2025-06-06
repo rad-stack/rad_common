@@ -47,7 +47,7 @@ module RadCommon
       label = audit_link_label(audit, record)
 
       return label if audit.nil? && record.nil?
-      return link_to(label, record) if record.present? && show_route_exists_for?(record) && policy(record).show?
+      return link_to(label, record) if record.present? && show_route_exists?(record) && policy(record).show?
 
       label
     end
