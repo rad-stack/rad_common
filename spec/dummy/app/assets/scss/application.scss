@@ -3,3 +3,5 @@
 
 // Import app-specific scss
 @use "./app_specific/main" as *;
+
+@import 'fullcalendar/dist/fullcalendar.min';

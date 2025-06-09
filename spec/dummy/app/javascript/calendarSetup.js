@@ -3,7 +3,7 @@ import { Calendar } from 'fullcalendar/dist/fullcalendar.min';
 export class CalendarSetup {
   static setup() {
     if ($('#calendar').length) {
-      let calendarEl = $('#calendar')
+      let calendarEl = $('#calendar');
       let calendar = new Calendar(calendarEl, {
         events: '/divisions/calendar.json' + window.location.search,
         header: {
@@ -11,9 +11,7 @@ export class CalendarSetup {
           center: 'title',
           right: 'month,agendaWeek,agendaDay'
         },
-        loading(isLoading, view){
-          CalendarSetup.updateLoadingStatus(isLoading);
-        },
+        loading: (isLoading) => CalendarSetup.updateLoadingStatus(isLoading),
         views: {
           month: {
             displayEventEnd: true
