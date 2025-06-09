@@ -8,7 +8,7 @@
               %th
                 - item_label = "#{record.class.to_s.titleize} #{record.id} (#{record}):"
 
-                - if ApplicationController.helpers.show_route_exists_for?(record)
+                - if ApplicationController.helpers.show_route_exists?(record)
                   = link_to item_label, url_for(record)
                 - else
                   = item_label
