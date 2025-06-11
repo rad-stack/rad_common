@@ -53,6 +53,27 @@ class DivisionsController < ApplicationController
     end
   end
 
+  def calendar
+    authorize Division
+
+    @divisions = Division.all
+
+    respond_to do |format|
+      format.html
+      format.json do
+        events = @divisions.map do |division|
+          {
+            title: division.to_s,
+            description: 'divison',
+            start: division.created_at.to_time.change(hour: 16).iso8601,
+            end: division.created_at.to_time.change(hour: 17).iso8601
+          }
+        end
+        render json: events
+      end
+    end
+  end
+
   private
 
     def set_division
