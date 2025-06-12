@@ -1,6 +1,21 @@
-- route = local_assigns[:calendar_path]
+- calendar_view_path = local_assigns[:calendar_path]
+- list_view_path = local_assigns[:list_path]
 
-.card{ 'data-controller' => 'rad-calendar', 'data-rad-calendar-event-url-value' => route }
+- if list_view_path
+  %ul.nav.nav-tabs
+    %li.nav-item
+      %a{ class: "nav-link #{list_view_path}", href: list_view_path }
+        List View
+    %li.nav-item
+      %a#calendar-view-tab{ class: "nav-link #{calendar_view_path}", href: calendar_view_path }
+        .loading
+          .spinner-border.spinner-border-sm
+            %span.sr-only Loading...
+          Calendar View Loading
+        .loaded
+          Calendar View
+
+.card{ 'data-controller' => 'rad-calendar', 'data-rad-calendar-event-url-value' => calendar_view_path }
   .card-body
     %div{ 'data-rad-calendar-target' => 'loading' }
       .text-center
