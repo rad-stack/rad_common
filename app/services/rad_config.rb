@@ -398,6 +398,14 @@ class RadConfig
       boolean_config_item! :timezone_detection
     end
 
+    def blocked_ip_addresses?
+      secret_config_item(:blocked_ip_addresses).present?
+    end
+
+    def blocked_ip_addresses!
+      secret_config_item!(:blocked_ip_addresses).split(',')
+    end
+
     def secret_config_item!(item)
       value = secret_config_item(item)
       raise "required secret config item #{item} is missing" if value.blank?
