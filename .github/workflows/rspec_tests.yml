@@ -14,18 +14,17 @@ env:
   RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
   RAILS_ENV: test
   CI: true
-  NODE_OPTIONS: --openssl-legacy-provider # Remove when webpacker is replaced
 
 jobs:
   setup-matrix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       total_groups: ${{ steps.set-matrix.outputs.total_groups }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Read & Parse Matrix Configuration
         id: set-matrix
         run: |
@@ -36,7 +35,7 @@ jobs:
           echo "total_groups=$total_groups" >> $GITHUB_OUTPUT
 
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: setup-matrix
     strategy:
       fail-fast: false
@@ -65,6 +64,7 @@ jobs:
 
       - name: Running custom steps
         uses: ./.github/actions/custom-action
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -86,21 +86,11 @@ jobs:
         run: |
           bundle exec rails db:test:prepare
 
-      - name: Cache Webpacker packs
-        uses: actions/cache@v4
-        with:
-          path: |
-            spec/dummy/public/packs
-            spec/dummy/public/packs-test
-            spec/dummy/node_modules
-            spec/dummy/tmp/cache/webpacker
-          key: webpacker-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            webpacker-${{ hashFiles('**/yarn.lock') }}-
-
-      - name: Compile Webpacker assets
+      - name: Compile esbuild assets
         working-directory: spec/dummy
-        run: bundle exec rails webpacker:compile
+        run: |
+          yarn build
+          bundle exec bin/rails assets:precompile
 
       - name: Load schema
         working-directory: spec/dummy
@@ -114,9 +104,9 @@ jobs:
       - name: Run RSpec tests
         run: |
           if [ "${{ needs.setup-matrix.outputs.total_groups }}" == "1" ]; then
-            bin/rc_rspec
+            script -q -e -c "bin/rc_rspec" /dev/null
           else
-            bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{join(matrix.GROUP, ',')}}
+            script -q -e -c "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{join(matrix.GROUP, ',')}}" /dev/null
           fi
 
       - name: Upload screenshots on failure

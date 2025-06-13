@@ -11,13 +11,14 @@ class RadMailer < ActionMailer::Base
   default from: RadConfig.from_email!
   default reply_to: RadConfig.admin_email!
 
-  def your_account_approved(user)
+  def your_account_approved(user, approved_by)
     @contact_log_record = user
-    @email_action = { button_text: 'Get Started',
-                      button_url: root_url }
+    @contact_log_from_user = approved_by
+
+    @email_action = { button_text: 'Get Started', button_url: get_started_link }
 
     @recipient = user
-    @message = "Your account was approved and you can begin using #{RadConfig.app_name!}."
+    @message = User.user_approved_message
     mail to: @recipient.formatted_email, subject: 'Your Account Was Approved'
   end
 
@@ -98,7 +99,12 @@ class RadMailer < ActionMailer::Base
 
   def default_url_options
     # this won't work for links called using the route helpers outside of the mailer context
-    { host: RadConfig.host_name! }
+
+    if @recipient.is_a?(User) && @recipient.external? && RadConfig.portal?
+      { host: @recipient.portal_host_name }
+    else
+      { host: RadConfig.host_name! }
+    end
   end
 
   private
@@ -145,7 +151,7 @@ class RadMailer < ActionMailer::Base
     end
 
     def escape_name(recipient_name)
-      recipient_name.gsub(',', ' ')
+      recipient_name.gsub(/[<>]/, '').gsub(',', ' ').strip
     end
 
     def validate_simple_message_options(options)
@@ -166,5 +172,11 @@ class RadMailer < ActionMailer::Base
       return if unknown_keys.empty?
 
       raise "unknown options: #{unknown_keys}"
+    end
+
+    def get_started_link
+      return RadConfig.config_item!(:get_started_link) if RadConfig.config_item(:get_started_link).present?
+
+      root_url
     end
 end

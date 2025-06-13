@@ -4,8 +4,6 @@ module RadUser
   USER_AUDIT_COLUMNS_DISABLED = %i[password password_confirmation encrypted_password reset_password_token
                                    confirmation_token unlock_token remember_created_at].freeze
 
-  RAD_DOMAIN = 'radstack.com'.freeze
-
   included do
     belongs_to :user_status
 
@@ -44,6 +42,7 @@ module RadUser
     scope :recent_first, -> { order('users.created_at DESC') }
     scope :recent_last, -> { order('users.created_at') }
     scope :except_user, ->(user) { where.not(id: user.id) }
+    scope :with_notifications, -> { where('users.id IN (SELECT DISTINCT user_id FROM notifications)') }
 
     scope :sorted, lambda {
       if RadConfig.last_first_user?
@@ -62,20 +61,24 @@ module RadUser
             "WHERE security_roles.#{permission} = TRUE)")
     }
 
+    scope :for_security_role, lambda { |security_role_id|
+      joins(:security_roles).where(security_roles: { id: security_role_id }).distinct
+    }
+
     scope :inactive, -> { joins(:user_status).where(user_statuses: { active: false }) }
     scope :not_inactive, -> { where.not(user_status_id: UserStatus.default_inactive_status.id) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
+    validate :validate_initial_security_role, on: :create, if: :active?
     validate :validate_internal, on: :update
     validate :validate_twilio_verify
     validate :validate_mobile_phone
     validate :password_excludes_name
     validate :validate_last_activity
 
-    # this should be changed to "if: :active?" at some point, see Task 2024
-    validates :security_roles, presence: true, if: :active_for_authentication?
+    validates :security_roles, presence: true, if: :active?
 
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
                                        message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
@@ -245,8 +248,14 @@ module RadUser
     external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
   end
 
-  def rad_developer?
-    email.end_with? RAD_DOMAIN
+  def developer?
+    email.end_with? RadConfig.developer_domain!
+  end
+
+  class_methods do
+    def user_approved_message
+      "Your account was approved and you can begin using #{RadConfig.app_name!}."
+    end
   end
 
   private
@@ -262,8 +271,16 @@ module RadUser
       self.user_status = default_user_status if new_record? && !user_status
       return unless new_record?
 
-      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && (RadConfig.twilio_verify_all_users? || admin?)
+      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? &&
+                                   (RadConfig.twilio_verify_all_users? || two_factor_security_role?)
+
       self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
+    end
+
+    def two_factor_security_role?
+      return initial_security_role.two_factor_auth? if initial_security_role_id.present?
+
+      security_roles.any?(&:two_factor_auth?)
     end
 
     def default_user_status
@@ -292,6 +309,12 @@ module RadUser
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
 
+    def validate_initial_security_role
+      return if initial_security_role_id.present? || security_role_ids.present?
+
+      errors.add :initial_security_role_id, 'is required'
+    end
+
     def validate_internal
       return if external? || user_clients.none?
 
@@ -301,7 +324,7 @@ module RadUser
     def validate_twilio_verify
       return unless RadConfig.twilio_verify_enabled?
       return if twilio_verify_enabled? || user_status.blank? || !user_status.validate_email_phone?
-      return unless RadConfig.twilio_verify_all_users? || admin?
+      return unless RadConfig.twilio_verify_all_users? || two_factor_security_role?
 
       errors.add(:twilio_verify_enabled, 'is required')
     end
@@ -367,7 +390,17 @@ module RadUser
     end
 
     def notify_user_approved_user
-      RadMailer.your_account_approved(self).deliver_later
+      raise 'missing approved_by' if approved_by.blank?
+
+      RadMailer.your_account_approved(self, approved_by).deliver_later
+      return unless RadConfig.twilio_enabled? && mobile_phone.present?
+
+      UserSMSSenderJob.perform_later(User.user_approved_message,
+                                     approved_by.id,
+                                     id,
+                                     nil,
+                                     false,
+                                     contact_log_record: self)
     end
 
     def notify_user_approved_admins

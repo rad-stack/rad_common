@@ -17,11 +17,13 @@ class DivisionSearch < RadCommon::Search
        options: [['Active', User.active.sorted],
                  ['Inactive', User.inactive.sorted]],
        grouped: true },
-     { input_label: 'Status', column: :division_status, type: RadCommon::EnumFilter, klass: Division, required: true },
+     { input_label: 'Status', column: :division_status, type: RadCommon::EnumFilter, klass: Division,
+       multiple: true, required: true, default_value: Division.division_statuses[:status_active] },
      {
        input_label: 'Category',
        column: :category_id,
        include_blank: false,
+       options: Category.all,
        search_scope_name: 'category_name',
        multiple: true,
        allow_not: true
@@ -33,7 +35,13 @@ class DivisionSearch < RadCommon::Search
        end_input_label: 'Division Created At End',
        default_start_value: Date.current, default_end_value: Date.current },
      { column: :notify, type: RadCommon::BooleanFilter },
-     { name: 'show_header', type: RadCommon::HiddenFilter }]
+     { name: 'show_header', type: RadCommon::HiddenFilter },
+     { input_label: 'Tags',
+       column: :tags,
+       options: Division::TAG_OPTIONS,
+       type: RadCommon::ArrayFilter,
+       multiple: true,
+       match_type: :any }]
   end
 
   def show_header?

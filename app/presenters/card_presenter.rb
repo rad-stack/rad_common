@@ -185,7 +185,7 @@ class CardPresenter
     actions += external_actions
 
     if (action_name == 'edit' || action_name == 'update' || action_name == 'show') &&
-       !no_new_button && current_user && Pundit.policy!(current_user, klass.new).new?
+       !no_new_button && current_user && class_policy.new?
 
       actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"),
                                          new_url,
@@ -199,9 +199,7 @@ class CardPresenter
                                          class: 'btn btn-secondary btn-sm'))
     end
 
-    if action_name == 'index' && !no_new_button && current_user &&
-       Pundit.policy!(current_user, klass.new).new?
-
+    if action_name == 'index' && !no_new_button && current_user && class_policy.new?
       actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"),
                                          new_url,
                                          class: 'btn btn-success btn-sm',
@@ -230,8 +228,8 @@ class CardPresenter
         !no_edit_button &&
         instance&.persisted? &&
         current_user &&
-        Pundit.policy!(current_user, klass.new).update? &&
-        Pundit.policy!(current_user, instance).update?
+        class_policy.update? &&
+        instance_policy.update?
     end
 
     def edit_action
@@ -242,7 +240,8 @@ class CardPresenter
       action_name == 'show' &&
         RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
         instance.duplicate.present? &&
-        instance.duplicate.score.present?
+        instance.duplicate.score.present? &&
+        instance_policy.resolve_duplicates?
     end
 
     def duplicate_action
@@ -254,7 +253,7 @@ class CardPresenter
     def include_duplicates_action?
       action_name == 'index' &&
         RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
-        Pundit.policy!(current_user, klass.new).resolve_duplicates? &&
+        class_policy.resolve_duplicates? &&
         klass.high_duplicates.size.positive?
     end
 
@@ -269,8 +268,8 @@ class CardPresenter
         !no_delete_button &&
         instance&.persisted? &&
         current_user &&
-        Pundit.policy!(current_user, klass.new).destroy? &&
-        Pundit.policy!(current_user, instance).destroy?
+        class_policy.destroy? &&
+        instance_policy.destroy?
     end
 
     def include_tools_button?
@@ -282,7 +281,7 @@ class CardPresenter
     end
 
     def tool_actions
-      @tool_actions ||= [show_history_action] + contact_log_actions + [reset_duplicates_action].compact
+      @tool_actions ||= ([show_history_action] + contact_log_actions + [reset_duplicates_action]).compact
     end
 
     def show_history_action
@@ -292,7 +291,7 @@ class CardPresenter
                     instance.class.name != 'ActiveStorage::Attachment' &&
                     instance.respond_to?(:audits) &&
                     instance.persisted? &&
-                    Pundit.policy!(current_user, instance).audit?
+                    instance_policy.audit?
 
       { label: 'Audit History',
         link: @view_context.audits_path(search: { single_record: "#{instance.class}:#{instance.id}" }) }
@@ -340,7 +339,7 @@ class CardPresenter
                     instance.respond_to?(:persisted?) &&
                     instance.persisted? &&
                     RadCommon::AppInfo.new.duplicates_enabled?(instance.class.name) &&
-                    Pundit.policy!(current_user, instance).reset_duplicates?
+                    instance_policy.reset_duplicates?
 
       confirm_message = 'This will reset non-duplicates and regenerate possible matches for this record, proceed?'
 
@@ -361,7 +360,7 @@ class CardPresenter
     def show_index_button?
       return false if no_index_button
       return false unless %w[show edit update new create].include?(action_name)
-      return false unless current_user && Pundit.policy!(current_user, klass.new).index?
+      return false unless current_user && class_policy.index?
       return false if no_records?
 
       true
@@ -369,5 +368,29 @@ class CardPresenter
 
     def no_records?
       Pundit.policy_scope!(current_user, klass).count.zero?
+    end
+
+    def class_policy
+      @class_policy ||= Pundit.policy!(current_user, check_policy_klass)
+    end
+
+    def instance_policy
+      @instance_policy ||= Pundit.policy!(current_user, check_policy_instance)
+    end
+
+    def check_policy_klass
+      if current_user.external? && RadConfig.portal?
+        [:portal, klass.new]
+      else
+        klass.new
+      end
+    end
+
+    def check_policy_instance
+      if current_user.external? && RadConfig.portal?
+        [:portal, instance]
+      else
+        instance
+      end
     end
 end

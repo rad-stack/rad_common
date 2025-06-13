@@ -1,7 +1,13 @@
 module RadCommon
   module UsersHelper
     def user_show_data(user)
-      items = [:email, :mobile_phone, { label: 'User Status', value: user_status_item(user) }, :timezone]
+      items = [:email,
+               :mobile_phone,
+               { label: 'User Status', value: user_status_item(user) },
+               :timezone,
+               :detected_timezone,
+               :ignored_timezone]
+
       items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
 
       items += [:sign_in_count,
@@ -11,8 +17,7 @@ module RadCommon
                 :current_sign_in_at,
                 :confirmed_at,
                 :confirmation_sent_at,
-                { label: 'Unconfirmed Email',
-                  value: content_tag(:span, user.unconfirmed_email, class: 'badge alert-warning') }]
+                unconfirmed_email_show_item(user)]
 
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
 
@@ -46,6 +51,14 @@ module RadCommon
 
     def user_status_icon(icon, tooltip)
       [icon_tooltip('span', tooltip, icon, html_class: 'text-warning'), ' ']
+    end
+
+    def unconfirmed_email_show_item(user)
+      value = if user.unconfirmed_email.present?
+                content_tag(:span, user.unconfirmed_email, class: 'badge alert-warning')
+              end
+
+      { label: 'Unconfirmed Email', value: value }
     end
 
     def my_profile_nav?

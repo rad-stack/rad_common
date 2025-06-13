@@ -6,7 +6,6 @@ AllCops:
     - 'db/migrate/*'
     - 'lib/templates/**/*'
     - 'node_modules/**/*'
-    - 'bin/**/*'
     - 'config/puma.rb'
     - 'config/initializers/simple_form.rb'
     - 'config/initializers/simple_form_bootstrap.rb'
@@ -110,3 +109,7 @@ Metrics/ParameterLists:
   Exclude:
     - 'app/helpers/rad_common/attachments_helper.rb'
     - 'app/services/attachment_renderer.rb'
+
+Naming/AccessorMethodName:
+  Exclude:
+    - 'app/mailers/rad_mailer.rb'

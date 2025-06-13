@@ -9,50 +9,9 @@ describe 'Users' do
   let(:admin) { create :admin }
   let(:password) { 'cOmpl3x_p@55w0rd' }
   let(:deliveries) { ActionMailer::Base.deliveries }
-  let(:last_email) { deliveries.last }
+  let(:first_email) { deliveries.first }
 
   before { Rails.cache.write('rate_limit:twilio_verify', 0, expires_in: 5.minutes) }
-
-  describe 'sign up', :js do
-    before do
-      create :security_role, :external, allow_sign_up: true
-      allow(RadConfig).to receive_messages(twilio_verify_enabled?: false, legal_docs?: true)
-    end
-
-    context 'with duplicate' do
-      let!(:first_name) { Faker::Name.first_name }
-      let!(:last_name) { Faker::Name.last_name }
-      let!(:mobile_phone) { '(345) 222-1111' }
-
-      before do
-        admin
-        allow(User).to receive(:score_upper_threshold).and_return(10)
-        create :user, :external, first_name: first_name, last_name: last_name, mobile_phone: mobile_phone
-      end
-
-      it 'notifies admins but not the user signing up' do
-        visit new_user_registration_path
-
-        fill_in 'First Name', with: first_name
-        fill_in 'Last Name', with: last_name
-        fill_in 'Mobile Phone', with: mobile_phone
-        fill_in 'Email', with: "#{Faker::Internet.user_name}@abc.com"
-        fill_in 'user_password', with: password
-        fill_in 'user_password_confirmation', with: password
-        expect(find_button('Sign Up', disabled: true).disabled?).to be(true)
-        check 'accept_terms'
-
-        click_button 'Sign Up'
-        expect(page).to have_content 'message with a confirmation link has been sent'
-
-        deliveries.clear
-        user = User.last
-        user.process_duplicates
-        expect(deliveries.size).to eq 1
-        expect(last_email.subject).to include "Possible Duplicate User (#{user}) Signed Up"
-      end
-    end
-  end
 
   describe 'edit' do
     before do
@@ -88,7 +47,7 @@ describe 'Users' do
         fill_in 'user_email', with: "foo_#{user.email}"
         click_link_or_button 'Save'
         expect(page).to have_content 'User was successfully updated.'
-        expect(last_email.subject).to include 'Confirmation instructions'
+        expect(first_email.subject).to include 'Confirmation instructions'
       end
     end
   end

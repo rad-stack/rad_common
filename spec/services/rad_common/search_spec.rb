@@ -371,7 +371,9 @@ RSpec.describe RadCommon::Search, type: :service do
 
       it 'has both scope and normal options' do
         expect(search.filters.first.input_options).to include ['Pending Values', 'Pending Values']
-        expect(search.filters.first.input_options).to include [User.sorted.first.to_s, User.sorted.first.id]
+        expect(search.filters.first.input_options).to include [
+          User.sorted.first.to_s, User.sorted.first.id, { 'data-inactive' => false }
+        ]
       end
     end
 
@@ -424,8 +426,9 @@ RSpec.describe RadCommon::Search, type: :service do
 
       it 'has both scope and normal options' do
         expect(search.filters.first.input_options.second.second).to include ['Status Pending', 'status_pending']
-        expect(search.filters.first.input_options.first.second).to include [User.sorted.first.to_s,
-                                                                            User.sorted.first.id]
+        expect(search.filters.first.input_options.first.second).to include [
+          User.sorted.first.to_s, User.sorted.first.id, { 'data-inactive' => false }
+        ]
       end
 
       it 'returns results when record matches combined filters' do
@@ -462,7 +465,7 @@ RSpec.describe RadCommon::Search, type: :service do
       let(:group_values) { search.filters.first.input_options.map(&:last) }
 
       it 'has both scope and normal options' do
-        expect(group_values).to include [[user.to_s, user.id], %w[Unassigned unassigned]]
+        expect(group_values).to include [[user.to_s, user.id, { 'data-inactive' => false }], %w[Unassigned unassigned]]
       end
     end
   end
