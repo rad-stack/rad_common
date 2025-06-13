@@ -62,11 +62,12 @@ class DivisionsController < ApplicationController
       format.html
       format.json do
         events = @divisions.map do |division|
+          start_time = rand(1.month.ago.beginning_of_day..1.month.from_now.end_of_day).change(hour: rand(7..18))
           {
             title: division.to_s,
             description: 'divison',
-            start: division.created_at.to_time.change(hour: 16).iso8601,
-            end: division.created_at.to_time.change(hour: 17).iso8601
+            start: start_time,
+            end: start_time + 1.hour
           }
         end
         render json: events
