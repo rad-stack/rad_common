@@ -65,7 +65,7 @@ class DivisionsController < ApplicationController
           start_time = rand(1.month.ago.beginning_of_day..1.month.from_now.end_of_day).change(hour: rand(7..18))
           {
             title: division.to_s,
-            description: 'divison',
+            description: division.additional_info,
             start: start_time,
             end: start_time + 1.hour
           }
