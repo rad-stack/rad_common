@@ -6,7 +6,9 @@ Rails.application.routes.draw do
 
   resources :attorneys
   resources :clients
-  resources :divisions
+  resources :divisions do
+    get :calendar, on: :collection
+  end
 
   resources :client_reports, only: :index
 
