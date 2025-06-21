@@ -50,7 +50,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'propshaft'
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
-  s.add_dependency 'rails', '>= 7.0.8.7', '< 8.0.0' # TODO: temp backwards compatibility, see Task 9342
+  s.add_dependency 'rack-attack'
+  s.add_dependency 'rails', '~> 7.2.2'
   s.add_dependency 'redis'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'

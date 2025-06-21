@@ -20,10 +20,10 @@ module RadCommon
     end
 
     def searchable_name
-      like_input
+      input_name
     end
 
-    def like_input
+    def input_name
       "#{name}_like"
     end
 
@@ -76,7 +76,7 @@ module RadCommon
     private
 
       def like_value(params)
-        params[like_input]
+        params[input_name]
       end
   end
 end
