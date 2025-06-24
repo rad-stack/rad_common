@@ -29,7 +29,12 @@ class NotificationSearch < RadCommon::Search
                { column: 'notification_type_id', options: notification_type_options },
                { column: 'content', type: RadCommon::LikeFilter },
                { input_label: 'Record Type', column: 'record_type', options: record_type_options },
-               { input_label: 'Record ID', column: 'record_id', type: RadCommon::EqualsFilter, data_type: :integer }]
+               { input_label: 'Record ID', column: 'record_id', type: RadCommon::EqualsFilter, data_type: :integer },
+               { input_label: 'Status',
+                 name: :status,
+                 scope_values: %i[unread],
+                 blank_value_label: 'All Notifications',
+                 default_value: :unread }]
     end
 
     def sort_columns_def
@@ -40,7 +45,8 @@ class NotificationSearch < RadCommon::Search
       items + [{ label: 'When', column: 'notifications.created_at', direction: 'desc', default: true },
                { label: 'Type', column: 'notification_types.type' },
                { column: 'Content' },
-               { label: 'Subject' }]
+               { label: 'Subject' },
+               { label: 'Actions' }]
     end
 
     def notification_type_options
