@@ -58,6 +58,12 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      sftp:
+          image: atmoz/sftp
+          env:
+              SFTP_USERS: "sftp_user:password:::sftp_user"
+          ports:
+              - 2222:22
 
     steps:
       - uses: actions/checkout@v4
