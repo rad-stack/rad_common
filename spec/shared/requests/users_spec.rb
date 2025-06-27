@@ -29,7 +29,9 @@ RSpec.describe 'Users', type: :request do
       let(:existing_timezone) { 'Eastern Time (US & Canada)' }
       let(:new_timezone) { 'Pacific Time (US & Canada)' }
 
-      before { user.update! timezone: existing_timezone, detected_timezone: new_timezone }
+      before do
+        user.update! timezone: existing_timezone, detected_timezone: new_timezone, detected_timezone_js: new_timezone
+      end
 
       it 'updates' do
         expect { put "/users/#{user.id}/update_timezone" }
@@ -42,7 +44,10 @@ RSpec.describe 'Users', type: :request do
       let(:detected_timezone) { 'Pacific Time (US & Canada)' }
 
       before do
-        user.update!(timezone: existing_timezone, detected_timezone: detected_timezone)
+        user.update! timezone: existing_timezone,
+                     detected_timezone: detected_timezone,
+                     detected_timezone_js: detected_timezone
+
         put ignore_timezone_user_path(user)
         user.reload
       end
@@ -62,7 +67,7 @@ RSpec.describe 'Users', type: :request do
       let(:detected_timezone) { 'Pacific Time (US & Canada)' }
 
       before do
-        user.update!(timezone: existing_timezone, detected_timezone: detected_timezone)
+        user.update!(timezone: existing_timezone, detected_timezone: detected_timezone, detected_timezone_js: detected_timezone)
         allow_any_instance_of(UserTimezone).to receive(:wrong_timezone?).and_return(true)
 
         get root_path
