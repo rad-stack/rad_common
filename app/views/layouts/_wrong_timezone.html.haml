@@ -1,6 +1,6 @@
 - if RadConfig.timezone_detection?
   - if UserTimezone.new(current_user).needs_js_timezone?
-    #needs-js-timezone
+    %div{ data: { controller: 'timezone-detection' } }
   - elsif UserTimezone.new(current_user).wrong_timezone?
     .alert.alert-warning
       .fa.fa-exclamation-triangle
