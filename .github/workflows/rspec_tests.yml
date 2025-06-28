@@ -71,14 +71,14 @@ jobs:
       - name: Running custom steps
         uses: ./.github/actions/custom-action
 
-      - name: Set up Vips
-        run: sudo apt-get update && sudo apt-get install -y libvips libvips-dev build-essential
-
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ steps.set-ruby-version.outputs.version }}
           bundler-cache: true
+
+      - name: Set up Vips
+        run: sudo apt-get update && sudo apt-get install -y libvips
 
       - name: Set up Node
         uses: actions/setup-node@v4
