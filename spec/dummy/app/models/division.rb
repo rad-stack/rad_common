@@ -38,7 +38,7 @@ class Division < ApplicationRecord
   after_commit :notify_owner
 
   def logo_variant
-    logo.variant(resize: '290x218>')
+    logo.variant(resize_to_limit: [290, 218])
   end
 
   private

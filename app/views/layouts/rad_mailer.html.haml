@@ -47,7 +47,7 @@
           .email-col-12
             %br
             - if has_avatar
-              = image_tag(@sender.avatar.variant(resize: '25x25'), alt: @sender.to_s, title: @sender.to_s)
+              = image_tag(@sender.avatar.variant(resize_to_fit: [25, 25]), alt: @sender.to_s, title: @sender.to_s)
             = @message
 
         - if @include_yield
