@@ -73,7 +73,7 @@ module RadCommon
 
       return unless current_user.avatar.attached?
 
-      image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
+      image_tag current_user.avatar.variant(resize_to_fit: [100, 100]), class: 'user-icon'
     end
 
     def users_actions
