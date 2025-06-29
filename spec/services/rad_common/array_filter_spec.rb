@@ -9,7 +9,7 @@ RSpec.describe RadCommon::ArrayFilter, type: :model do
     let!(:division_3) { create :division, tags: %w[Sales Marketing] }
     let(:column) { 'tags' }
     let(:options) { Division::TAG_OPTIONS }
-    let(:filter) { described_class.new(column: column, options: options, match_type: match_type, input_label: 'Tags') }
+    let(:filter) { described_class.new(column: column, options: options, input_label: 'Tags') }
 
     before do
       create :division
@@ -24,7 +24,10 @@ RSpec.describe RadCommon::ArrayFilter, type: :model do
     end
 
     context 'when the filter value is provided as a comma-separated string' do
-      let(:params) { ActionController::Parameters.new(filter.searchable_name => 'Finance, Sales') }
+      let(:params) do
+        ActionController::Parameters.new(filter.searchable_name => 'Finance, Sales',
+                                         filter.match_type_param => match_type)
+      end
 
       context 'with match_type :exact' do
         let(:match_type) { :exact }
@@ -47,7 +50,10 @@ RSpec.describe RadCommon::ArrayFilter, type: :model do
 
     context 'when the filter value is provided as an array with blank elements' do
       let(:match_type) { :exact }
-      let(:params) { ActionController::Parameters.new(filter.searchable_name => ['Finance', '  ', 'Sales', '']) }
+      let(:params) do
+        ActionController::Parameters.new(filter.searchable_name => ['Finance', '  ', 'Sales', ''],
+                                         filter.match_type_param => match_type)
+      end
 
       it { is_expected.to eq([division_1.id]) }
     end

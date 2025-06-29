@@ -1,0 +1,12 @@
+- calendar_view_path = local_assigns[:calendar_path]
+
+.card{ 'data-controller' => 'rad-calendar', 'data-rad-calendar-event-url-value' => calendar_view_path }
+  .card-body
+    %div{ 'data-rad-calendar-target' => 'loading' }
+      .text-center
+        %h3.my-4
+          %i.fa.fa-spinner.fa-spin
+          %span Loading calendar...
+    %div{ 'data-rad-calendar-target' => 'loaded' }
+      .mt-2
+        %div{ 'data-rad-calendar-target' => 'calendar' }
