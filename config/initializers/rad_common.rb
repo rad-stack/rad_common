@@ -1,4 +1,7 @@
 require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/app/services/rad_config.rb"
+require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/app/services/rad_common/app_info.rb"
+
+SHOW_ROUTES = RadCommon::AppInfo.new.show_routes.freeze
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'SMS'
