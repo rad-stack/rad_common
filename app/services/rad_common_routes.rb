@@ -67,6 +67,7 @@ module RadCommonRoutes
 
         get 'company/edit', to: 'companies#edit'
         put 'company/update', to: 'companies#update'
+        put 'set_js_timezone', to: 'users#set_js_timezone'
       end
 
       authenticate :user, ->(u) { u.external? } do
