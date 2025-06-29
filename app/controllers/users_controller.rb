@@ -147,7 +147,7 @@ class UsersController < ApplicationController
 
   def set_js_timezone
     skip_authorization
-    UserTimezone.new(current_user).set_js_timezone!(params[:timezone])
+    UserTimezone.new(current_user).set_js_timezone!(params[:timezone]) unless impersonating?
     render json: nil, status: :ok
   end
 
