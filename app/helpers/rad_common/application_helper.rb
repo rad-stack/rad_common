@@ -35,7 +35,7 @@ module RadCommon
           verb_match = route.verb&.match(/^GET$/)
           controller_match = route.defaults[:controller] == controller
           action_match = route.defaults[:action] == action
-          path_match = route.path.spec.to_s.include?("/:id")
+          path_match = route.path.spec.to_s.include?('/:id')
 
           verb_match && controller_match && action_match && path_match
         end
