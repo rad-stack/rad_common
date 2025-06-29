@@ -48,11 +48,31 @@ module RadCommon
       RadConfig.client_table_name!.classify.constantize
     end
 
+    def show_routes
+      model_names = application_models
+
+      Rails.application.routes.routes.map { |route|
+        next unless show_route?(route)
+
+        matches = model_names.map { |item|
+          route.defaults[:controller] == item.constantize.model_name.route_key ? item : nil
+        }.compact
+
+        next unless matches.any?
+
+        matches.first
+      }.compact.uniq.sort
+    end
+
     private
 
       def exclude_tables
         %w[active_storage_attachments active_storage_variant_records active_storage_blobs action_text_rich_texts
            action_mailbox_inbound_emails ar_internal_metadata audits schema_migrations old_passwords login_activities]
+      end
+
+      def show_route?(route)
+        route.defaults[:action] == 'show' && route.path.spec.to_s.include?('/:id') && route.verb&.match(/^GET$/)
       end
   end
 end
