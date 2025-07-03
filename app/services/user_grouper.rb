@@ -1,16 +1,17 @@
 class UserGrouper
   include RadCommon::SearchableDropdownHelper
-  attr_accessor :current_user, :always_include, :scopes, :with_ids
+  attr_accessor :current_user, :always_include, :scopes, :with_ids, :include_unassigned
 
-  def initialize(current_user, always_include: nil, scopes: [], with_ids: false)
+  def initialize(current_user, always_include: nil, scopes: [], with_ids: false, include_unassigned: false)
     self.current_user = current_user
     self.always_include = always_include
     self.scopes = scopes
     self.with_ids = with_ids
+    self.include_unassigned = include_unassigned
   end
 
   def call
-    [me_item, internal_user_item, client_user_item, inactive_user_item].compact
+    [unassigned_item, me_item, internal_user_item, client_user_item, inactive_user_item].compact
   end
 
   def user_filter(label, column, scope = nil)
@@ -31,6 +32,12 @@ class UserGrouper
       return if me_users.none?
 
       ['Me', format_collection(me_users)]
+    end
+
+    def unassigned_item
+      return unless include_unassigned
+
+      ['Unassigned', format_collection( [{ scope_value: :unassigned }])]
     end
 
     def internal_user_item
