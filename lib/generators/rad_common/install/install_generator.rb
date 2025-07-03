@@ -607,6 +607,7 @@ gem 'propshaft'
           apply_migration '20250402083306_add_sms_message_id_index.rb'
           apply_migration '20250425120906_fix_some_renamed_audit_models.rb'
           apply_migration '20250512115245_two_factor_auth_updates.rb'
+          apply_migration '20250622203947_user_js_timezone.rb'
         end
 
         def installed_app_name
