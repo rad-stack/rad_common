@@ -37,7 +37,7 @@ class UserGrouper
     def unassigned_item
       return unless include_unassigned
 
-      ['Unassigned', format_collection( [{ scope_value: :unassigned }])]
+      ['Unassigned', format_collection([{ scope_value: :unassigned }])]
     end
 
     def internal_user_item
