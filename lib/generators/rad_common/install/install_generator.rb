@@ -6,11 +6,16 @@ module RadCommon
       desc 'Used to install the rad_common depencency files and create migrations.'
 
       def create_initializer_file
-        remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.react_app?
+        remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.shared_database?
         remove_file 'config/initializers/new_framework_defaults_7_0.rb'
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
         remove_file '.github/pull_request_template.md'
+
+        unless RadConfig.legacy_assets?
+          remove_dir 'public/packs'
+          remove_dir 'public/packs-test'
+        end
 
         add_crawling_config
         install_procfile
@@ -20,8 +25,10 @@ module RadCommon
         update_seeder_method
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
-        add_rad_config_setting 'legacy_rails_config', 'false'
+        add_rad_config_setting 'timezone_detection', 'false'
+        add_rad_config_setting 'portal', 'false'
         remove_rad_factories
+        remove_legacy_rails_config_setting
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
@@ -30,7 +37,7 @@ module RadCommon
         gsub_file 'Gemfile.lock', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
 
         # misc
-        merge_package_json unless RadConfig.react_app?
+        merge_package_json unless RadConfig.legacy_assets?
         copy_custom_github_actions
         copy_custom_github_matrix
         copy_file '../../../../../.ruby-version', '.ruby-version'
@@ -42,11 +49,11 @@ module RadCommon
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
 
-        unless RadConfig.react_app?
+        unless RadConfig.shared_database?
           copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
         end
 
-        migrate_webpacker_to_esbuild
+        migrate_webpacker_to_esbuild unless RadConfig.legacy_assets?
 
         migrate_to_tom_select
 
@@ -55,7 +62,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
                  'public/406-unsupported-browser.html'
 
-        unless RadConfig.react_app?
+        unless RadConfig.legacy_assets?
           copy_file '../../../../../spec/dummy/app/javascript/application.js',
                     'app/javascript/application.js'
 
@@ -82,25 +89,21 @@ module RadCommon
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
 
-        unless RadConfig.react_app?
-          copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
-          gsub_file 'config/application.rb', 'Dummy', installed_app_name.classify
-
-          if !RadConfig.config_item(:legacy_rails_config).nil? && RadConfig.legacy_rails_config?
-            gsub_file 'config/application.rb', 'config.load_defaults 7.0', 'config.load_defaults 6.1'
-          end
-        end
+        copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
+        gsub_file 'config/application.rb', 'Dummy', installed_app_name.split('_').map(&:capitalize).join
 
         copy_file '../../../../../spec/dummy/config/puma.rb', 'config/puma.rb'
-
-        unless RadConfig.react_app?
-          directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
-        end
+        directory '../../../../../spec/dummy/config/environments/', 'config/environments/'
 
         template '../../../../../spec/dummy/config/initializers/devise.rb', 'config/initializers/devise.rb'
 
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
                  'config/initializers/devise_security.rb'
+
+        unless RadConfig.legacy_assets?
+          copy_file '../../../../../spec/dummy/config/initializers/assets.rb',
+                    'config/initializers/assets.rb'
+        end
 
         copy_file '../../../../../spec/dummy/config/initializers/simple_form.rb',
                   'config/initializers/simple_form.rb'
@@ -163,7 +166,7 @@ module RadCommon
                   'lib/templates/rspec/system/system_spec.rb.tt'
         remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
 
-        unless RadConfig.react_app?
+        unless RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
 require 'rad_rspec/rad_factories'
@@ -182,10 +185,9 @@ Seeder.new.seed!
         RUBY
         end
 
-        inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do <<-'RUBY'
-  gem 'rubocop-capybara'
-        RUBY
-        end
+        add_project_gems
+
+        gsub_file 'Gemfile', "gem 'jsbundling-rails'\n", ''
 
         apply_migrations
 
@@ -252,7 +254,7 @@ Seeder.new.seed!
         end
 
         def apply_migration(source)
-          return if RadConfig.react_app?
+          return if RadConfig.shared_database?
 
           filename = source.split('_').drop(1).join('_').gsub('.rb', '')
 
@@ -349,6 +351,13 @@ Seeder.new.seed!
           File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
         end
 
+        def remove_legacy_rails_config_setting
+          return unless rad_config_setting_exists?('legacy_rails_config')
+
+          say_status :remove, 'legacy_rails_config from rad_common.yml'
+          gsub_file RAD_CONFIG_FILE, /^\s*legacy_rails_config:\s*.*\n/, ''
+        end
+
         def update_seeder_method
           file_path = 'app/services/seeder.rb'
           if File.exist?(file_path)
@@ -387,7 +396,12 @@ Seeder.new.seed!
         end
 
         def install_github_workflow
-          copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          if RadConfig.legacy_assets?
+            copy_file '../rspec_tests_legacy.yml', '.github/workflows/rspec_tests.yml'
+          else
+            copy_file '../../../../../.github/workflows/rspec_tests.yml', '.github/workflows/rspec_tests.yml'
+          end
+
           copy_file '../../../../../.github/workflows/rad_update_bot.yml', '.github/workflows/rad_update_bot.yml'
           copy_file '../../../../../.github/workflows/generate_coverage_report.yml',
                     '.github/workflows/generate_coverage_report.yml'
@@ -395,7 +409,7 @@ Seeder.new.seed!
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
           gsub_file '.github/workflows/generate_coverage_report.yml', 'rad_common_test', "#{installed_app_name}_test"
 
-          if RadConfig.react_app?
+          if RadConfig.shared_database?
             gsub_file '.github/workflows/rad_update_bot.yml',
                       'rad_common_development',
                       'cannasaver_admin_development'
@@ -405,11 +419,13 @@ Seeder.new.seed!
                       "#{installed_app_name}_development"
           end
 
-          gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
-          gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
-          gsub_file '.github/workflows/rspec_tests.yml',
-                   "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
-                   'bin/rc_parallel_rspec'
+          unless RadConfig.legacy_assets?
+            gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
+            gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
+            gsub_file '.github/workflows/rspec_tests.yml',
+                     "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
+                     'bin/rc_parallel_rspec'
+          end
         end
 
         def migrate_webpacker_to_esbuild
@@ -418,6 +434,10 @@ Seeder.new.seed!
           remove_file 'bin/webpack'
           remove_file 'bin/webpack-dev-server'
           remove_file 'babel.config.js'
+          remove_file '.browserslistrc'
+          remove_file 'postcss.config.js'
+          remove_file '.dockerignore'
+          remove_file 'Dockerfile'
 
           copy_file '../../../../../spec/dummy/esbuild.config.js', 'esbuild.config.js'
           copy_file '../../../../../spec/dummy/Procfile.dev', 'Procfile.dev'
@@ -465,8 +485,28 @@ Seeder.new.seed!
         end
 
         def migrate_to_tom_select
+          return if RadConfig.legacy_assets?
+
           search_and_replace 'bootstrap_select', 'tom_select'
           search_and_replace 'rad-chosen', 'selectpicker'
+        end
+
+        def add_project_gems
+          inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do <<-'RUBY'
+gem 'rubocop-capybara'
+          RUBY
+          end
+          inject_into_file 'Gemfile', after: "gem 'better_errors'\n" do <<-'RUBY'
+  gem 'tty-prompt'
+        RUBY
+          end
+
+          unless RadConfig.legacy_assets?
+            inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
+gem 'propshaft'
+            RUBY
+            end
+          end
         end
 
         def apply_migrations
@@ -563,6 +603,11 @@ Seeder.new.seed!
           apply_migration '20240803114036_bcc_notify_recipient.rb'
           apply_migration '20240912133320_persist_sms_false_positive.rb'
           apply_migration '20240911184745_fix_last_activity.rb'
+          apply_migration '20250227191231_add_detected_timezone_to_user.rb'
+          apply_migration '20250402083306_add_sms_message_id_index.rb'
+          apply_migration '20250425120906_fix_some_renamed_audit_models.rb'
+          apply_migration '20250512115245_two_factor_auth_updates.rb'
+          apply_migration '20250622203947_user_js_timezone.rb'
         end
 
         def installed_app_name

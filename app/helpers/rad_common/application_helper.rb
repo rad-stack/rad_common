@@ -2,13 +2,17 @@ module RadCommon
   module ApplicationHelper
     ALERT_TYPES = %i[success info warning danger].freeze unless const_defined?(:ALERT_TYPES)
 
-    def secured_link(record, format: nil)
+    def secured_link(record, format: nil, new_tab: false)
       return unless record
 
       style = secured_link_style(record)
 
       if Pundit.policy!(current_user, record).show?
-        link_to record, record, format: format, class: style
+        if new_tab
+          link_to record.to_s, record, format: format, class: style, target: '_blank', rel: 'noopener'
+        else
+          link_to record.to_s, record, format: format, class: style
+        end
       elsif style.present?
         content_tag :span, record, class: style
       else
@@ -138,6 +142,7 @@ module RadCommon
     def bootstrap_flash_type(type)
       type = type.to_sym
 
+      type = :success if type == :notice && RadConfig.legacy_assets?
       type = :danger  if type == :alert
       type = :danger  if type == :error
 
@@ -257,6 +262,14 @@ module RadCommon
       { 'toast-success-message-value': template_locals[:toast_success] || template_locals[:notice],
         'toast-error-message-value': template_locals[:toast_error],
         controller: 'toast' }
+    end
+
+    def check_blob_validity(blob)
+      unless RadCommon::VALID_ATTACHMENT_TYPES.include?(blob.content_type)
+        raise "Invalid attachment type #{blob.content_type}"
+      end
+
+      raise 'Invalid attachment, must be 100 MB or less' if blob.byte_size > 100.megabytes
     end
 
     private

@@ -17,7 +17,7 @@ RSpec.describe 'Searches', type: :system do
     before { create :user, last_name: term }
 
     context 'when asking the user if they want to use' do
-      it 'clears checkbox if dismissed', :js, :non_react_specs do
+      it 'clears checkbox if dismissed', :js, :legacy_asset_specs do
         visit '/'
         page.dismiss_confirm prompt do
           check 'super_search'
@@ -25,7 +25,7 @@ RSpec.describe 'Searches', type: :system do
         expect(find('[aria-controls="search-ts-dropdown"]')[:placeholder]).to eq 'Search user by name'
       end
 
-      it 'uses if confirmed', :js, :non_react_specs do
+      it 'uses if confirmed', :js, :legacy_asset_specs do
         visit '/'
         page.accept_confirm prompt do
           check 'super_search'

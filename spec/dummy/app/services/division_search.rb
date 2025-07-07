@@ -23,6 +23,7 @@ class DivisionSearch < RadCommon::Search
        input_label: 'Category',
        column: :category_id,
        include_blank: false,
+       options: Category.all,
        search_scope_name: 'category_name',
        multiple: true,
        allow_not: true
@@ -34,7 +35,12 @@ class DivisionSearch < RadCommon::Search
        end_input_label: 'Division Created At End',
        default_start_value: Date.current, default_end_value: Date.current },
      { column: :notify, type: RadCommon::BooleanFilter },
-     { name: 'show_header', type: RadCommon::HiddenFilter }]
+     { name: 'show_header', type: RadCommon::HiddenFilter },
+     { input_label: 'Tags',
+       column: :tags,
+       options: Division::TAG_OPTIONS,
+       type: RadCommon::ArrayFilter,
+       multiple: true }]
   end
 
   def show_header?

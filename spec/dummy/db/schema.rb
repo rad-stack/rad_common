@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_02_120429) do
+ActiveRecord::Schema[7.2].define(version: 2025_06_22_203947) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -171,6 +171,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_02_120429) do
     t.index ["record_type", "record_id"], name: "index_contact_logs_on_record"
     t.index ["sent"], name: "index_contact_logs_on_sent"
     t.index ["service_type"], name: "index_contact_logs_on_service_type"
+    t.index ["sms_message_id"], name: "index_contact_logs_on_sms_message_id"
     t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
   end
 
@@ -188,6 +189,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_02_120429) do
     t.date "date_established"
     t.string "invoice_email"
     t.bigint "category_id"
+    t.string "tags", default: [], null: false, array: true
     t.index ["category_id"], name: "index_divisions_on_category_id"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
@@ -310,6 +312,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_02_120429) do
     t.boolean "update_division", default: false, null: false
     t.boolean "delete_division", default: false, null: false
     t.boolean "read_attorney", default: false, null: false
+    t.boolean "two_factor_auth", default: true, null: false
     t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 
@@ -404,6 +407,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_02_120429) do
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
     t.string "language", default: "en", null: false
+    t.string "detected_timezone"
+    t.string "ignored_timezone"
+    t.string "detected_timezone_js"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"

@@ -1,5 +1,5 @@
 // Rad Common + Bootstrap with Overrides
-@import "rad_common_js/src/scss/main";
+@use "rad_common_js/src/scss/main" as *;
 
 // Import app-specific scss
-@import "./app_specific/main";
+@use "./app_specific/main" as *;

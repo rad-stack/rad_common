@@ -39,6 +39,9 @@ FileUtils.chdir directory do
     system! 'yarn install'
   end
 
+  puts '== Running bundle incase of Gemfile update =='
+  system! 'bundle install'
+
   puts '== Running DB Migrate =='
   system! 'bundle exec rails db:migrate'
 end

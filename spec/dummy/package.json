@@ -6,15 +6,13 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
-    "follow-redirects": "^1.14.8",
-    "rad_common_js": "https://github.com/rad-stack/rad_common_js#8033d2957b90f35e320c1b1fdb89b2550801a1d9",
-    "terser": "^5.14.2"
+    "rad_common_js": "https://github.com/rad-stack/rad_common_js#6482cef4c7b432cf0335033430bee49d4496a251"
   },
   "devDependencies": {
-    "esbuild": "^0.24.0",
-    "eslint": "^9.14.0",
-    "sass": "^1.83.0",
-    "stylelint": "^13.13.1"
+    "esbuild": "^0.25.0",
+    "eslint": "^9.19.0",
+    "sass": "^1.83.4",
+    "stylelint": "^16.14.1"
   },
   "scripts": {
     "build": "yarn build:js && yarn build:css",

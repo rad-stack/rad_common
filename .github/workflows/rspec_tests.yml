@@ -17,14 +17,14 @@ env:
 
 jobs:
   setup-matrix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       total_groups: ${{ steps.set-matrix.outputs.total_groups }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Read & Parse Matrix Configuration
         id: set-matrix
         run: |
@@ -35,7 +35,7 @@ jobs:
           echo "total_groups=$total_groups" >> $GITHUB_OUTPUT
 
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: setup-matrix
     strategy:
       fail-fast: false
@@ -46,7 +46,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:latest
+        image: pgvector/pgvector:pg17
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -58,6 +58,12 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      sftp:
+          image: atmoz/sftp
+          env:
+              SFTP_USERS: "sftp_user:password:::sftp_user"
+          ports:
+              - 2222:22
 
     steps:
       - uses: actions/checkout@v4
@@ -70,12 +76,6 @@ jobs:
         with:
           ruby-version: ${{ steps.set-ruby-version.outputs.version }}
           bundler-cache: true
-
-      - name: Set up ImageMagick
-        uses: mfinelli/setup-imagemagick@v5
-        with:
-          cache: true
-          install-libfuse2: true
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -94,7 +94,9 @@ jobs:
 
       - name: Compile esbuild assets
         working-directory: spec/dummy
-        run: bundle exec bin/rails assets:precompile
+        run: |
+          yarn build
+          bundle exec bin/rails assets:precompile
 
       - name: Load schema
         working-directory: spec/dummy
@@ -108,9 +110,9 @@ jobs:
       - name: Run RSpec tests
         run: |
           if [ "${{ needs.setup-matrix.outputs.total_groups }}" == "1" ]; then
-            bin/rc_rspec
+            script -q -e -c "bin/rc_rspec" /dev/null
           else
-            bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{join(matrix.GROUP, ',')}}
+            script -q -e -c "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*' -n ${{ needs.setup-matrix.outputs.total_groups }} --only-group ${{join(matrix.GROUP, ',')}}" /dev/null
           fi
 
       - name: Upload screenshots on failure

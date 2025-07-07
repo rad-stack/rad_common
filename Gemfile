@@ -27,5 +27,6 @@ end
 
 group :development, :test do
   gem 'bootsnap', require: false
+  gem 'propshaft'
   gem 'pry'
 end

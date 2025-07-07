@@ -22,12 +22,20 @@ class UserSearch < RadCommon::Search
     def filters_def
       items = [{ column: 'users.first_name', type: RadCommon::LikeFilter, input_label: 'First Name' },
                { column: 'users.last_name', type: RadCommon::LikeFilter, input_label: 'Last Name' },
-               { column: 'email', type: RadCommon::LikeFilter, input_label: 'Email' },
-               { column: 'mobile_phone', type: RadCommon::LikeFilter, input_label: 'Mobile Phone' },
-               { input_label: 'Status',
-                 column: :user_status_id,
-                 options: RadConfig.pending_users? ? UserStatus.not_pending.by_id : UserStatus.by_id,
-                 default_value: UserStatus.default_active_status.id }]
+               { column: 'users.email', type: RadCommon::LikeFilter, input_label: 'Email' },
+               { column: 'mobile_phone', type: RadCommon::LikeFilter, input_label: 'Mobile Phone' }]
+
+      if can_update?
+        items.push({ input_label: 'Security Role',
+                     scope: :for_security_role,
+                     options: SecurityRole.sorted,
+                     blank_value_label: 'All Users' })
+      end
+
+      items.push({ input_label: 'Status',
+                   column: :user_status_id,
+                   options: RadConfig.pending_users? ? UserStatus.not_pending.by_id : UserStatus.by_id,
+                   default_value: UserStatus.default_active_status.id })
 
       if RadConfig.external_users? && current_user.internal?
         items.push(input_label: 'Type', name: :external, scope_values: %i[internal external])
@@ -43,7 +51,7 @@ class UserSearch < RadCommon::Search
 
     def sort_columns_def
       items = [{ label: 'Name', column: 'users.first_name, users.last_name', default: !can_update? },
-               { column: 'email' },
+               { label: 'Email', column: 'users.email' },
                { column: 'mobile_phone' }]
 
       if can_update?

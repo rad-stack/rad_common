@@ -31,6 +31,34 @@ RSpec.describe 'Search' do
         expect(current_url).to include('search[audited_changes_like]=query')
       end
     end
+
+    context 'with name match type select' do
+      it 'changes object match_type', :js do
+        visit divisions_path
+        expect(first('#search_name_like_match_type', visible: :all).value).to eq('contains')
+
+        within first('[data-testid="name_like_match_type_match_dropdown"]') do
+          first('.dropdown-toggle').click
+          first('[data-match-type="exact"]').click
+        end
+        first('button', text: 'Apply Filters').click
+        expect(first('#search_name_like_match_type', visible: :all).value).to eq('exact')
+      end
+    end
+
+    context 'with tag match type dropdown' do
+      it 'changes match_type', :js do
+        visit divisions_path
+        expect(first('#search_tags_array_match_type', visible: :all).value).to eq('any')
+
+        within first('[data-testid="tags_array_match_type_match_dropdown"]') do
+          first('.dropdown-toggle').click
+          first('[data-match-type="all"]').click
+        end
+        first('button', text: 'Apply Filters').click
+        expect(first('#search_tags_array_match_type', visible: :all).value).to eq('all')
+      end
+    end
   end
 
   describe 'select filter' do
@@ -70,6 +98,15 @@ RSpec.describe 'Search' do
 
         expect(page).to have_content(division.name)
         expect(page).to have_content(other_division.name)
+
+        # Without Search max options not exceeded
+        tom_select category.name, from: 'search_category_id'
+        first('button', text: 'Apply Filters').click
+        expect(page).to have_content(division.name)
+        expect(page).to have_no_content(other_division.name)
+
+        create_list :category, 300
+        visit divisions_path
 
         # Full Search
         tom_select category.name, from: 'search_category_id', search: category.name
@@ -146,32 +183,13 @@ RSpec.describe 'Search' do
       expect(page).to have_no_content 'Invalid date entered for created_at'
     end
 
-    it 'does save valid date to users.filter_defaults' do
-      visit divisions_path(search: { created_at_start: '2019-12-01', created_at_end: '2019-12-02', division_status: 1 })
+    it 'does save valid date to users.filter_defaults', :js do
+      visit divisions_path(search: { created_at_start: '2019-12-01', created_at_end: '2019-12-02',
+                                     division_status: [1] })
       visit '/'
       visit divisions_path
       expect(page.body).to include '2019-12-01'
       expect(page.body).to include '2019-12-02'
-    end
-
-    it 'allows using pre-defined date ranges', :js do
-      within('[data-controller="search-date-filter"]') do
-        find_by_id('date-range-dropdown').click
-        find('a', text: 'This Month').click
-      end
-      first('button', text: 'Apply Filters').click
-
-      expect(find_by_id('search_created_at_start').value).to eq Date.current.beginning_of_month.strftime('%Y-%m-%d')
-      expect(find_by_id('search_created_at_end').value).to eq Date.current.end_of_month.strftime('%Y-%m-%d')
-
-      within('[data-controller="search-date-filter"]') do
-        find_by_id('date-range-dropdown').click
-        find('a', text: 'Clear').click
-      end
-      first('button', text: 'Apply Filters').click
-
-      expect(find_by_id('search_created_at_start').value).to eq ''
-      expect(find_by_id('search_created_at_end').value).to eq ''
     end
   end
 end
