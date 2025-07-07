@@ -1472,9 +1472,9 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-"rad_common_js@https://github.com/rad-stack/rad_common_js#532c3b3e24eda0bd3e5e9a08a43a8418f1ad23ea":
+"rad_common_js@https://github.com/rad-stack/rad_common_js#b96c0a58949774fe3ffe172c52b9aeb37d4f8c1b":
   version "2.1.8"
-  resolved "https://github.com/rad-stack/rad_common_js#532c3b3e24eda0bd3e5e9a08a43a8418f1ad23ea"
+  resolved "https://github.com/rad-stack/rad_common_js#b96c0a58949774fe3ffe172c52b9aeb37d4f8c1b"
   dependencies:
     "@fullcalendar/bootstrap" "^6.1.11"
     "@hotwired/stimulus" "^3.2.2"
