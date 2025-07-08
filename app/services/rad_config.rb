@@ -208,6 +208,10 @@ class RadConfig
       boolean_config_item! :require_mobile_phone
     end
 
+    def validate_user_domains?
+      boolean_config_item! :validate_user_domains
+    end
+
     def storage_config_override?
       boolean_config_item! :storage_config_override
     end

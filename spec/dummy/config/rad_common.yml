@@ -1,6 +1,7 @@
 default: &default
   app_name: Demo Foo
   use_avatar: true
+  validate_user_domains: true
   switch_languages: true
   disable_sign_up: false
   disable_invite: false
