@@ -134,6 +134,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
         end
 
         it 'because of invalid email' do
+          return unless RadConfig.validate_user_domains?
           visit new_user_invitation_path
 
           bad_email = 'j@g.com'
