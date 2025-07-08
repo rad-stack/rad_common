@@ -134,17 +134,18 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
         end
 
         it 'because of invalid email' do
-          return unless RadConfig.validate_user_domains?
-          visit new_user_invitation_path
+          if RadConfig.validate_user_domains?
+            visit new_user_invitation_path
 
-          bad_email = 'j@g.com'
-          fill_in 'Email', with: bad_email
-          fill_in 'First Name', with: first_name
-          fill_in 'Last Name', with: last_name
-          fill_in 'Mobile Phone', with: '(999) 231-1111'
-          click_button 'Send an invitation'
+            bad_email = 'j@g.com'
+            fill_in 'Email', with: bad_email
+            fill_in 'First Name', with: first_name
+            fill_in 'Last Name', with: last_name
+            fill_in 'Mobile Phone', with: '(999) 231-1111'
+            click_button 'Send an invitation'
 
-          expect(page).to have_content ' is not authorized for this application'
+            expect(page).to have_content ' is not authorized for this application'
+          end
         end
 
         it 'because of a single letter in name that conflicts with password in name validation' do
