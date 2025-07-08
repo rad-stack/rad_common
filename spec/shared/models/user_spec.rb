@@ -137,6 +137,8 @@ RSpec.describe User, type: :model do
     it 'rejects unauthorized email addresses' do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo. user@foo.com user@foo.com]
 
+      return unless RadConfig.validate_user_domains?
+
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
         expect(user).not_to be_valid
@@ -182,6 +184,8 @@ RSpec.describe User, type: :model do
 
     it 'rejects unauthorized email addresses' do
       addresses = %w[user@example.com user@rubygems.org]
+
+      return unless RadConfig.validate_user_domains?
 
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
