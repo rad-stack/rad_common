@@ -1,0 +1,70 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readCustomer?primaryKey=HOUSE
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.12.2
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 15 Apr 2025 02:40:36 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"ioID":null,"sourceOrganizationCompany":null,"templateLine":0,"tags":null,"aging2Percent":0,"agingTotal":0,"unpostedPaymentBalance":0,"aging4Percent":0,"aging1Percent":0,"aging3Percent":0,"customerTypeAgingTotalPercent":0,"jobNotes":null,"onCreditHold":false,"id":"HOUSE","state":"FL","language":0,"country":1,"description":null,"profileToken":"36172110","address2":null,"shipVia":1,"sharedSecret":null,"email":null,"csr":1,"salesPerson":1,"emailPunchoutAdmin":null,"password":null,"address1":"1902
+        2nd Ave North","city":"Jacksonville Beach","zip":"32250","networkLocation":0,"custName":"Profitable
+        Printing Company","defaultContact":0,"billRate":0,"jobDifficulty":0,"salesCategory":1,"discountPercent":0,"priceList":5001,"defaultCurrency":"USD","dateSetup":"2012-04-24","terms":1,"revenueType":0,"crmId":null,"altSalutation":0,"salesTax2":null,"altZip":null,"useAlternateText":false,"sourceType":0,"altState":null,"webSite":null,"altAddress3":null,"altAddress1":null,"altAddress2":null,"salesTax":"OS0000","businessIdNumber":null,"altCountry":0,"shippingAcctNum":null,"shipBillToContact":0,"salutation":0,"altCity":null,"address3":null,"taxableCode":1,"vatidNumber":null,"mapSiteURL":null,"stateKey":null,"altStateKey":null,"dsfEntity":0,"dsfShared":false,"export":null,"creditCardProcessingEnabled":false,"lookAndFeel":0,"phoneNumber":"(123)
+        456-7890","faxNumber":"(123) 456-7891","manufacturingLocation":0,"customerGroup":0,"bankAccountID":null,"eserviceMessage":null,"printStreamShared":false,"contactFirstName":"Internal","shipToContact":5001,"contactLastName":"Customer","shipmentMessage":null,"agingCurrent":0.00,"phoneExtension":null,"allowableOvers":0,"dateLastPayment":null,"valueAddedMarkup":0,"agingServiceCharge1":0.00,"contactNum":0,"agingServiceCharge2":0.00,"agingServiceCharge3":0.00,"agingServiceCharge4":0.00,"applyDiscountToInvoice":true,"quota":0,"statementCycle":"5","defaultEcommerceShipMethod":0,"plantManagerId":1,"enterInvoicePORequired":null,"salesLastYear":0,"pageflexDeployment":null,"outsidePurchaseMarkup":0,"ibanAccountID":null,"iwayCustomerID":null,"alternatePhoneNumber":null,"dsfCustomer":false,"cartMessage":null,"shipInNameOf":"1","avgPaymentDays":0.0,"defaultDsfContact":0,"defaultDaysUntilJobDue":1,"shippingMarkup":0,"parentCustomer":null,"alternatePhoneExtension":null,"defaultPaymentMethod":0,"includeTaxInDiscount":false,"certificationAuthority":0,"pointOfTitleTransfer":null,"accountTitle":null,"jobProductInvoiceLineDescription":null,"usePriceListPricing":false,"jobPartInvoiceLineDescription":null,"statementDeliveryMethod":"Print","nonValueAddedMarkup":0,"ecommerceCheckOutNote":null,"sage200AccountingEnabled":false,"jobPartItemInvoiceLineDescription":null,"taxNum":null,"printStreamCustomer":false,"billToContact":0,"dunningLetterDeliveryMethod":"Print","highestBalance":7.50,"deliveryZone":null,"faxExtension":null,"ioID1":0,"overallSellMarkup":0,"agingServiceChargeCurrent":0.00,"nextServiceChargeDate":"2012-04-24","employeeCountType":0,"overallMarkup":0,"registrationNumber":null,"jobMaterialInvoiceLineDescription":null,"accountBalance":7.50,"punchoutIdentity":null,"swiftNumber":null,"punchoutHubId":null,"proofContact":0,"defaultProductGroup":null,"certificationLevel":0,"calculateTax":false,"printableToken":null,"salesYTD":2708.18,"legalEntity":0,"customerType":1,"contactTitle":null,"autoAddContact":true,"customerLegalName":null,"bsbID":null,"creditLimit":999999999.99,"financeCharge":0,"allowFailedFreightCheckout":false,"sage50AccountingEnabled":false,"calculateFreight":false,"wipBalance":26390299.46,"sicNumber":null,"enterJobPORequired":null,"billToAlt":false,"invoiceDeliveryMethod":"Print","taxCategory":0,"taxIDexpires":null,"consolidateInvoices":null,"jobInvoiceLineDescription":null,"printableInventoryToken":null,"paymentMethod":null,"processPrintStreamItems":null,"shipBillToAlt":false,"orderAlert":false,"defaultQuoteLetterType":2,"shipToAlt":false,"defaultJob":null,"customerStatus":"O","creditCheck":null,"aging2":0.00,"industryType":0,"aging3":0.00,"displayPrice":true,"salesPersonAlt":0,"requireBillOfLadingPerJob":false,"aging1":0.00,"aging4":7.50,"defaultAlt":false,"printableJobTicketToken":null,"dateHighBalance":"2015-04-23","printNumInvoices":0,"dateLastInvoice":"2024-04-01","shipToFormat":"C","paperMarkup":0,"invoiceMessage":null,"printableCompanyID":null,"vendorNumber":null,"jeevesAccountingEnabled":false,"probability":0}'
+  recorded_at: Tue, 15 Apr 2025 02:40:36 GMT
+recorded_with: VCR 6.3.1

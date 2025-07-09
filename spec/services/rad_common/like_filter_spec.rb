@@ -13,7 +13,7 @@ RSpec.describe RadCommon::LikeFilter, type: :service do
     let(:search_term) { 'Division 1' }
 
     let(:params) do
-      { filter.match_type_param => match_type, filter.like_input => search_term }
+      { filter.match_type_param => match_type, filter.input_name => search_term }
     end
 
     context 'when match type is exact' do

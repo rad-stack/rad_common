@@ -12,6 +12,11 @@ module RadCommon
         remove_file '.hound.yml'
         remove_file '.github/pull_request_template.md'
 
+        unless RadConfig.legacy_assets?
+          remove_dir 'public/packs'
+          remove_dir 'public/packs-test'
+        end
+
         add_crawling_config
         install_procfile
         standardize_date_methods
@@ -602,6 +607,7 @@ gem 'propshaft'
           apply_migration '20250402083306_add_sms_message_id_index.rb'
           apply_migration '20250425120906_fix_some_renamed_audit_models.rb'
           apply_migration '20250512115245_two_factor_auth_updates.rb'
+          apply_migration '20250622203947_user_js_timezone.rb'
         end
 
         def installed_app_name

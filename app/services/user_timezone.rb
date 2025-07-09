@@ -5,8 +5,20 @@ class UserTimezone
     @user = user
   end
 
+  def needs_js_timezone?
+    user.detected_timezone.present? && user.detected_timezone_js != user.detected_timezone &&
+      (user.ignored_timezone.blank? || user.ignored_timezone != user.detected_timezone)
+  end
+
+  def set_js_timezone!(timezone)
+    return if timezone == user.detected_timezone_js
+
+    user.update! detected_timezone_js: convert_timezone(timezone).name
+  end
+
   def wrong_timezone?
-    return false if user.timezone.blank? || user.detected_timezone.blank?
+    return false if user.timezone.blank? || user.detected_timezone.blank? || user.detected_timezone_js.blank?
+    return false unless user.detected_timezone == user.detected_timezone_js
 
     user.timezone != user.detected_timezone && user.ignored_timezone != user.detected_timezone
   end
@@ -50,7 +62,7 @@ class UserTimezone
           return
         end
 
-        matched_zone = ActiveSupport::TimeZone.all.find { |tz| tz.tzinfo.name == raw_zone }
+        matched_zone = convert_timezone(raw_zone)
 
         if matched_zone.blank?
           Rails.logger.info "UserTimezone: Timezone not found for #{ip_address}: #{raw_zone}"
@@ -59,5 +71,9 @@ class UserTimezone
 
         matched_zone.name
       end
+    end
+
+    def convert_timezone(raw_zone)
+      ActiveSupport::TimeZone.all.find { |tz| tz.tzinfo.name == raw_zone }
     end
 end
