@@ -1,6 +1,15 @@
 - calendar_view_path = local_assigns[:calendar_path]
 
 .card{ 'data-controller' => 'rad-calendar', 'data-rad-calendar-event-url-value' => calendar_view_path }
+  .card-header
+    .row
+      .col-md-3.d-flex.align-items-center
+        = label_tag :date, 'Jump to Date:', class: 'mr-3 mb-0'
+        %span
+          = date_field_tag :date,
+                           nil,
+                           class: 'form-control',
+                           data: { rad_calendar_target: 'datepicker', action: 'change->rad-calendar#datepickerChanged' }
   .card-body
     %div{ 'data-rad-calendar-target' => 'loading' }
       .text-center
