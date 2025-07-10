@@ -408,7 +408,7 @@ Seeder.new.seed!
           remove_file '.github/workflows/rc_update.yml'
           gsub_file '.github/workflows/rspec_tests.yml', 'rad_common_test', "#{installed_app_name}_test"
           gsub_file '.github/workflows/generate_coverage_report.yml', 'rad_common_test', "#{installed_app_name}_test"
-          gsub_file '.github/workflows/rspec_tests.yml', /^([ \t]*)sftp:\n(?:^\1[ \t]+.*\n)*/, '' if installed_app_name == 'eps_pace'
+          gsub_file '.github/workflows/rspec_tests.yml', /^([ \t]*)sftp:\n(?:^\1[ \t]+.*\n)*/, '' unless installed_app_name == 'eps_pace'
 
           if RadConfig.shared_database?
             gsub_file '.github/workflows/rad_update_bot.yml',
