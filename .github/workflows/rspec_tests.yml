@@ -17,7 +17,7 @@ env:
 
 jobs:
   setup-matrix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       total_groups: ${{ steps.set-matrix.outputs.total_groups }}
@@ -35,7 +35,7 @@ jobs:
           echo "total_groups=$total_groups" >> $GITHUB_OUTPUT
 
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: setup-matrix
     strategy:
       fail-fast: false
