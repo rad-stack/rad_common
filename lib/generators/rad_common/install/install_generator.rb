@@ -27,6 +27,7 @@ module RadCommon
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'timezone_detection', 'false'
         add_rad_config_setting 'portal', 'false'
+        add_rad_config_setting 'validate_user_domains', 'true'
         remove_rad_factories
         remove_legacy_rails_config_setting
 
