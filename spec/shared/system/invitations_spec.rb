@@ -133,19 +133,17 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           expect(page).to have_content "Last name can't be blank"
         end
 
-        it 'because of invalid email' do
-          if RadConfig.validate_user_domains?
-            visit new_user_invitation_path
+        it 'because of invalid email', :valid_user_domain_specs do
+          visit new_user_invitation_path
 
-            bad_email = 'j@g.com'
-            fill_in 'Email', with: bad_email
-            fill_in 'First Name', with: first_name
-            fill_in 'Last Name', with: last_name
-            fill_in 'Mobile Phone', with: '(999) 231-1111'
-            click_button 'Send an invitation'
+          bad_email = 'j@g.com'
+          fill_in 'Email', with: bad_email
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
+          click_button 'Send an invitation'
 
-            expect(page).to have_content ' is not authorized for this application'
-          end
+          expect(page).to have_content ' is not authorized for this application'
         end
 
         it 'because of a single letter in name that conflicts with password in name validation' do

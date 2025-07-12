@@ -147,6 +147,7 @@ RSpec.configure do |config|
   config.filter_run_excluding(legacy_asset_specs: true) if RadConfig.legacy_assets?
   config.filter_run_excluding(shared_database_specs: true) if RadConfig.shared_database?
   config.filter_run_excluding(timezone_detection_specs: true) unless RadConfig.timezone_detection?
+  config.filter_run_excluding(valid_user_domain_specs: true) unless RadConfig.validate_user_domain?
 
   include Warden::Test::Helpers
   config.include Capybara::DSL
