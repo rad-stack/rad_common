@@ -133,8 +133,6 @@ RSpec.configure do |config|
 
   SpecSupport.hooks(config, chrome_driver)
 
-  config.filter_run_excluding(twilio_verify_specs: true) unless RadConfig.twilio_verify_enabled?
-  config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
   config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
   config.filter_run_excluding(sign_up_specs: true) if RadConfig.disable_sign_up?
   config.filter_run_excluding(pending_user_specs: true) unless RadConfig.pending_users?
