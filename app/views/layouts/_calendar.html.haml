@@ -1,6 +1,7 @@
 - calendar_view_path = local_assigns[:calendar_path]
+- initial_view = local_assigns[:initial_view] if local_assigns[:initial_view].present?
 
-.card{ 'data-controller' => 'rad-calendar', 'data-rad-calendar-event-url-value' => calendar_view_path }
+.card{ 'data-controller' => 'rad-calendar', 'data-rad-calendar-event-url-value' => calendar_view_path, 'data-rad-calendar-initial-view-value' => initial_view }
   .card-header
     .row
       .col-md-3.d-flex.align-items-center
