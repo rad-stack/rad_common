@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:latest
+        image: pgvector/pgvector:pg17
         ports:
           - "5432:5432"
         env:
