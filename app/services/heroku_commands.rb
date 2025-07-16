@@ -51,6 +51,8 @@ class HerokuCommands
       remove_encrypted_secrets
       SecurityRole.update_all two_factor_auth: false
       User.update_all twilio_verify_enabled: false
+      Company.main.app_logo.purge if Company.main.app_logo.attached?
+      Company.main.fav_icon.purge if Company.main.fav_icon.attached?
 
       duration = Time.now.utc - start_time
       write_log "Restore complete in #{duration.round(2)} seconds"
