@@ -22,6 +22,13 @@ RSpec.describe 'Attachments' do
         expect(response).to have_http_status :ok
       end
     end
+
+    context 'with static option' do
+      it 'allows navigation' do
+        get '/attachments/static/jkzedq.png'
+        expect(response).to have_http_status :ok
+      end
+    end
   end
 
   context 'with permanent attachment variant url' do
