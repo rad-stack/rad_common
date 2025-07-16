@@ -19,7 +19,7 @@ module RadCommon
     def company_logo(company)
       return 'app_logo.png' unless company.app_logo.attached?
 
-      AttachmentUrlGenerator.permanent_attachment_url(company.app_logo, static: true)
+      AttachmentUrlGenerator.permanent_attachment_url(company.app_logo)
     end
 
     def edit_company_title(company)
