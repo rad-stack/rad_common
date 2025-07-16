@@ -21,6 +21,6 @@ class ApplicationController < ActionController::Base
     end
 
     def www_host_name
-      "www.#{root_host_name}"
+      "#{RadConfig.marketing_subdomain}.#{root_host_name}"
     end
 end
