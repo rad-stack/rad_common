@@ -10,20 +10,14 @@ module RadCommon
     def download
       skip_authorization
 
-      attachment = find_attachment
+      # TODO: refactor this with Hashable
+      ids = Hashable.hashids.decode(params[:id])
+      attachment_id = ids[0]
+
+      attachment = ActiveStorage::Attachment.find_by(id: attachment_id)
+
       if attachment.present?
         serve_active_storage_file(attachment, attachment.name)
-      else
-        render json: 'Attachment not found'
-      end
-    end
-
-    def download_static
-      skip_authorization
-
-      attachment = find_attachment
-      if attachment.present?
-        serve_active_storage_file(attachment, attachment.name, static: true)
       else
         render json: 'Attachment not found'
       end
@@ -67,14 +61,6 @@ module RadCommon
         rescue NoMethodError
           @variant = nil
         end
-      end
-
-      def find_attachment
-        # TODO: refactor this with Hashable
-        ids = Hashable.hashids.decode(params[:id])
-        attachment_id = ids[0]
-
-        ActiveStorage::Attachment.find_by(id: attachment_id)
       end
   end
 end

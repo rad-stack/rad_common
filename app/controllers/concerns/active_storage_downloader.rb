@@ -5,13 +5,13 @@ module ActiveStorageDownloader
 
   private
 
-    def serve_active_storage_file(attachment, filename, static: false)
+    def serve_active_storage_file(attachment, filename)
       # TODO: refactor this to use single method for production and development, may need to wait until Rails 6
       if Rails.env.production? || Rails.env.staging?
         serve_file attachment.url,
                    attachment.blob.filename.extension_with_delimiter,
                    attachment.blob.content_type,
-                   filename, static
+                   filename
       else
         @blob = attachment.blob
         download_and_serve_file attachment.blob.filename.extension_with_delimiter,
@@ -27,13 +27,9 @@ module ActiveStorageDownloader
       end
     end
 
-    def serve_file(url, ext, content_type, filename, static)
+    def serve_file(url, ext, content_type, filename)
       # crashes locally, only use for production
-      data = RadRetry.perform_request(retry_count: 2) { URI.parse(url).open }.read
-      if static
-        response.headers['Cache-Control'] = 'public, max-age=2592000'
-        response.headers['ETag'] = Digest::MD5.hexdigest(data)
-      end
-      send_data data, filename: "#{filename}.#{ext}", type: content_type, disposition: 'inline'
+      data = RadRetry.perform_request(retry_count: 2) { URI.parse(url).open }
+      send_data data.read, filename: "#{filename}.#{ext}", type: content_type, disposition: 'inline'
     end
 end

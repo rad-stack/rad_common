@@ -94,7 +94,6 @@ module RadCommonRoutes
       get 'attachments/:class_name/:id(.:format)/:variant(.:format)/:filename(.:format)',
           to: 'rad_common/attachments#download_variant'
 
-      get 'attachments/static/:id(.:format)', to: 'rad_common/attachments#download_static'
       get 'attachments/:id(.:format)/:filename(.:format)', to: 'rad_common/attachments#download'
 
       get 'global_search', to: 'search#global_search'
