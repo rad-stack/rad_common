@@ -25,6 +25,8 @@ class PagesController < ApplicationController
   private
 
     def marketing_site?
+      return true if RadConfig.force_marketing_site?
+
       RadConfig.allow_marketing_site? && request.host.start_with?("#{RadConfig.marketing_subdomain}.")
     end
 end
