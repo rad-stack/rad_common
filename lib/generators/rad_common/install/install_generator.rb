@@ -30,7 +30,7 @@ module RadCommon
         add_rad_config_setting 'portal', 'false'
         add_rad_config_setting 'validate_user_domains', 'true'
         remove_rad_factories
-        remove_legacy_rails_config_setting
+        remove_legacy_config_settings
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
@@ -353,11 +353,13 @@ Seeder.new.seed!
           File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
         end
 
-        def remove_legacy_rails_config_setting
-          return unless rad_config_setting_exists?('legacy_rails_config')
+        def remove_legacy_config_settings
+          %w[legacy_rails_config force_marketing_site].each do |item|
+            next unless rad_config_setting_exists?(item)
 
-          say_status :remove, 'legacy_rails_config from rad_common.yml'
-          gsub_file RAD_CONFIG_FILE, /^\s*legacy_rails_config:\s*.*\n/, ''
+            say_status :remove, "#{item} from rad_common.yml"
+            gsub_file RAD_CONFIG_FILE, /^\s*#{item}:\s*.*\n/, ''
+          end
         end
 
         def update_seeder_method
