@@ -9,10 +9,11 @@ class AttachmentUrlGenerator
     "#{item}/#{URI::Parser.new.escape(record.logo_variant.filename.to_s)}"
   end
 
-  def self.permanent_attachment_url(attachment, include_filename: false, host: RadConfig.host_name!)
+  def self.permanent_attachment_url(attachment, include_filename: false, host: RadConfig.host_name!, static: false)
     protocol = Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
     record_id = Hashable.hashids.encode(attachment.id)
-    item = "#{protocol}://#{host}/attachments/#{record_id}"
+    base_path = static ? 'static/attachments' : 'attachments'
+    item = "#{protocol}://#{host}/#{base_path}/#{record_id}"
     return item unless include_filename
 
     "#{item}/#{URI::Parser.new.escape(attachment.filename.to_s)}"
