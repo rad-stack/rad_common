@@ -3,13 +3,13 @@ module RadCommon
     def company_show_data(company)
       items = address_show_data(company)
 
-      items +=  [{ label: 'Phone Number', value: (link_to company.phone_number, "tel:#{company.phone_number}") },
-                 { label: 'Website',
-                   value: (link_to company.website, company.website, target: :_blank, rel: :noopener) },
-                 { label: 'Email', value: (mail_to company.email) },
-                 :timezone,
-                 :validity_checked_at,
-                 :address_requests_made]
+      items += [{ label: 'Phone Number', value: (link_to company.phone_number, "tel:#{company.phone_number}") },
+                { label: 'Website',
+                  value: (link_to company.website, company.website, target: :_blank, rel: :noopener) },
+                { label: 'Email', value: (mail_to company.email) },
+                :timezone,
+                :validity_checked_at,
+                :address_requests_made]
 
       if company.app_logo.attached?
         items.push(label: 'Logo',
