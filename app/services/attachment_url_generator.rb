@@ -12,7 +12,7 @@ class AttachmentUrlGenerator
   def self.permanent_attachment_url(attachment, include_filename: false, host: RadConfig.host_name!, static: false)
     protocol = Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
     record_id = Hashable.hashids.encode(attachment.id)
-    base_path = static ? 'static/attachments' : 'attachments'
+    base_path = static ? 'attachments/static' : 'attachments'
     item = "#{protocol}://#{host}/#{base_path}/#{record_id}"
     return item unless include_filename
 
