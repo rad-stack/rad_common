@@ -299,6 +299,7 @@ module RadUser
     end
 
     def validate_email_address
+      return unless RadConfig.validate_user_domains?
       return if email.blank? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
 
       domains = Company.main.valid_user_domains
