@@ -21,25 +21,7 @@ module RadCommon
     end
 
     def show_route_exists?(record)
-      return false unless record.respond_to?(:to_param)
-
-      model_class = record.class
-      cache_key = "routes_helper/show_route_exists/#{model_class.name.underscore}"
-
-      Rails.cache.fetch(cache_key, expires_in: 5.minutes) do
-        route_key = record.model_name.route_key
-        controller = route_key
-        action = 'show'
-
-        Rails.application.routes.routes.any? do |route|
-          verb_match = route.verb&.match(/^GET$/)
-          controller_match = route.defaults[:controller] == controller
-          action_match = route.defaults[:action] == action
-          path_match = route.path.spec.to_s.include?('/:id')
-
-          verb_match && controller_match && action_match && path_match
-        end
-      end
+      RadCommon::ApplicationHelper.show_routes.include?(record.class.name)
     end
 
     def avatar_image(user, size)
@@ -288,6 +270,12 @@ module RadCommon
       end
 
       raise 'Invalid attachment, must be 100 MB or less' if blob.byte_size > 100.megabytes
+    end
+
+    class << self
+      def show_routes
+        @show_routes ||= RadCommon::AppInfo.new.show_routes
+      end
     end
 
     private
