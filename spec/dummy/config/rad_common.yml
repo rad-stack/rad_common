@@ -34,6 +34,7 @@ default: &default
   last_first_user: false
   timezone_detection: true
   portal: false
+  action_cable_enabled: true
 
   system_usage_models:
     -
@@ -128,6 +129,7 @@ development:
 
   host_name: localhost:3000
   twilio_verify_enabled: false
+  action_cable_enabled: false
 
 test:
   <<: *default

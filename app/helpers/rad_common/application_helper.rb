@@ -261,6 +261,8 @@ module RadCommon
     def rad_toast_data(template_locals)
       { 'toast-success-message-value': template_locals[:toast_success] || template_locals[:notice],
         'toast-error-message-value': template_locals[:toast_error],
+        'toast-header-value': template_locals[:toast_header],
+        'toast-url-value': template_locals[:subject_url],
         controller: 'toast' }
     end
 

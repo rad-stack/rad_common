@@ -1,0 +1,5 @@
+%li.nav-item{ 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Notifications', id: 'nav-unread-badge' }
+  = link_to notifications_path, class: 'nav-link' do
+    = icon('bell', '', class: unread_count.positive? ? 'text-success' : '')
+    - if unread_count.positive?
+      %span.badge.alert-success= unread_count
