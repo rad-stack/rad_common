@@ -1,5 +1,8 @@
-- filter_class = search.default_value?(filter.searchable_name) ? '' : 'filter-active'
-- input_html = filter.search_scope_params
+:ruby
+  filter_class = search.default_value?(filter.searchable_name) ? '' : 'filter-active'
+  input_html = filter.search_scope_params
+  input_html = input_html.merge('data-autosubmit': true) if filter.autosubmit
+
 - if filter.is_a?(RadCommon::ArrayFilter)
   = render 'layouts/match_type_dropdown', filter: filter, search: search, f: f
 - else
@@ -23,5 +26,4 @@
           group_method: :last,
           required: false,
           wrapper_html: { class: filter_class },
-          input_html: { multiple: filter.multiple, 'data-placeholder': filter.blank_value_label,
-                        'data-autosubmit': true }.merge(input_html)
+          input_html: { multiple: filter.multiple, 'data-placeholder': filter.blank_value_label }.merge(input_html)
