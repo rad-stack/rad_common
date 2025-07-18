@@ -133,7 +133,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           expect(page).to have_content "Last name can't be blank"
         end
 
-        it 'because of invalid email' do
+        it 'because of invalid email', :valid_user_domain_specs do
           visit new_user_invitation_path
 
           bad_email = 'j@g.com'
