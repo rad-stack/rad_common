@@ -11,6 +11,7 @@ module RadCommon
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
         remove_file '.github/pull_request_template.md'
+        remove_file 'app/controllers/application_controller.rb'
 
         unless RadConfig.legacy_assets?
           remove_dir 'public/packs'

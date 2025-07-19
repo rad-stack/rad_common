@@ -16,4 +16,8 @@
               = item
             %li.global-search-nav
               = render 'layouts/global_search'
+        - elsif @marketing_site
+          %ul.nav.navbar-nav.navbar-left
+            - rad_nav.marketing_content.each do |item|
+              = item
         = render 'layouts/navigation_right'

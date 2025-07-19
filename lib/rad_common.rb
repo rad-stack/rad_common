@@ -30,7 +30,6 @@ module RadCommon
                                application/vnd.apple.numbers
                                image/bmp
                                image/gif
-                               image/heic
                                image/tiff
                                image/vnd.adobe.photoshop
                                message/rfc822
