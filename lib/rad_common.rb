@@ -1,7 +1,7 @@
 require 'rad_common/engine'
 
 module RadCommon
-  VALID_IMAGE_TYPES = %w[image/png image/jpeg image/webp].freeze
+  VALID_IMAGE_TYPES = %w[image/png image/jpeg image/webp image/heic].freeze
 
   VALID_VIDEO_TYPES = %w[video/x-msvideo video/mp4 video/mpeg video/3gpp video/quicktime].freeze
 
@@ -30,7 +30,6 @@ module RadCommon
                                application/vnd.apple.numbers
                                image/bmp
                                image/gif
-                               image/heic
                                image/tiff
                                image/vnd.adobe.photoshop
                                message/rfc822
