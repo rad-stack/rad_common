@@ -260,6 +260,10 @@ class RadConfig
       boolean_config_item! :allow_marketing_site
     end
 
+    def marketing_subdomain
+      config_item(:marketing_subdomain).presence || 'www'
+    end
+
     def canadian_addresses?
       boolean_config_item! :canadian_addresses
     end
