@@ -45,14 +45,20 @@ module PaceApi
       objects.first
     end
 
-    def find_objects(type, xpath, raise_error: false, cached: false)
+    def find_objects(type, xpath, raise_error: false, cached: false, page_size: nil, page_number: nil)
       raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
       raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
 
       query_params = { type: type, xpath: xpath }
+      if page_size && page_number
+        query_params[:limit] = page_size
+        page_multiplier = page_number - 1
+        query_params[:offset] = (page_multiplier * page_size).to_i
+      end
       cache_key = "pace_api_find_objects_#{type}_#{xpath}"
 
-      url = '/rpc/rest/services/FindObjects/find'
+      find_method = page_size && page_number ? 'findSortAndLimit' : 'find'
+      url = "/rpc/rest/services/FindObjects/#{find_method}"
       log_request(action: "FindObject: type: #{type} xpath: #{xpath}",
                   query_params: query_params, body: {}, method: 'GET', url: url)
       cache_expires_in_hours = RadConfig.config_item(:pace_cache_expires_in_hours) || 1
@@ -138,6 +144,25 @@ module PaceApi
       url = "/rpc/rest/services/InvokeAction/#{action}"
 
       log_request(action: "Invoking action: #{action}",
+                  query_params: query_params, body: body, method: 'POST', url: url)
+      RadRetry.perform_request(additional_errors: additional_errors) do
+        response = api_client.post(url, query_params) do |req|
+          req.params = query_params if query_params.present?
+          req.body = body.to_json if body
+        end
+
+        parse_response(response, model)
+      end
+    end
+
+    def invoke_process(process:, model: nil, primary_key_attr: nil, primary_key_value: nil, body: nil,
+                       retry_pace_errors: false)
+      query_params = {}
+      query_params[primary_key_attr] = primary_key_value if primary_key_attr.present?
+      additional_errors = retry_pace_errors ? [PaceApi::PaceResponseError] : []
+      url = "/rpc/rest/services/InvokeProcess/#{process}"
+
+      log_request(action: "Invoking process: #{process}",
                   query_params: query_params, body: body, method: 'POST', url: url)
       RadRetry.perform_request(additional_errors: additional_errors) do
         response = api_client.post(url, query_params) do |req|
