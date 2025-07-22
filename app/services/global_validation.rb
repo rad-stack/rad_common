@@ -122,11 +122,16 @@ class GlobalValidation
     end
 
     def add_stats(item_name, start_time, end_time, error_count)
+      run_seconds = (end_time - start_time).round
+
       @run_stats.push(item_name: item_name,
                       start_time: start_time,
                       end_time: end_time,
-                      run_seconds: (end_time - start_time).round,
+                      run_seconds: run_seconds,
                       error_count: error_count)
+
+      Rails.logger.info "global validity ran for #{item_name} in " \
+                        "#{Time.at(run_seconds).utc.strftime('%H:%M:%S')}"
     end
 
     def took_too_long?
