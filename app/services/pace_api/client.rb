@@ -45,7 +45,7 @@ module PaceApi
       objects.first
     end
 
-    def find_sort_and_limit_objects(type, xpath, page_size:, page_number:, raise_error: false, cached: false)
+    def find_sort_and_limit_objects(type, xpath, page_size:, page_number:, sort:, raise_error: false, cached: false)
       raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
       raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
 
@@ -62,12 +62,12 @@ module PaceApi
       response = if cached
                    Rails.cache.fetch(cache_key, expires_in: cache_expires_in_hours.hours) do
                      api_client.post(url) do |req|
-                       req.body = {}
+                       req.body = sort.to_json
                      end
                    end
                  else
                    api_client.post(url) do |req|
-                     req.body = {}
+                     req.body = sort.to_json
                    end
                  end
       parsed_response = parse_response(response)
@@ -77,13 +77,13 @@ module PaceApi
       raise PaceApi::MissingObjectError.new("Missing #{type} in Pace for #{xpath}", type) if raise_error
     end
 
-    def find_objects(type, xpath, raise_error: false, cached: false, page_size: nil, page_number: nil)
+    def find_objects(type, xpath, raise_error: false, cached: false, page_size: nil, page_number: nil, sort: nil)
       raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
       raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
 
       if page_size && page_number
         return find_sort_and_limit_objects(type, xpath, raise_error: raise_error, cached: cached,
-                                                        page_size: page_size, page_number: page_number)
+                                                        page_size: page_size, page_number: page_number, sort: sort)
       end
 
       query_params = { type: type, xpath: xpath }
