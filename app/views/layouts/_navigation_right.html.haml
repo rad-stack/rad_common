@@ -1,11 +1,11 @@
-%ul.nav.navbar-nav.ml-auto
+%ul.nav.navbar-nav.ms-auto
   - if user_signed_in?
     - unread_count = current_user.notifications.unread.count
 
     = render 'layouts/message_indicator'
 
     %li.nav-item.dropdown
-      %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#', class: impersonate_style }
+      %a.nav-link.dropdown-toggle{ 'data-bs-toggle': 'dropdown', href: '#', class: impersonate_style }
         - if impersonating?
           Signed In as #{current_user}
         - else
@@ -13,7 +13,7 @@
         - if unread_count.positive?
           %span.badge.alert-danger= unread_count
         = show_nav_avatar
-      %ul.dropdown-menu.dropdown-menu-right
+      %ul.dropdown-menu.dropdown-menu-end
         %li
           = link_to icon('address-card', t('navigation.my_account')),
                     edit_user_registration_path,

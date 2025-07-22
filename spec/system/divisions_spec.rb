@@ -135,7 +135,7 @@ RSpec.describe 'Divisions' do
         click_link "saved_filter_#{last_filter.id}"
         expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
         click_button 'saved-search-filters-dropdown'
-        expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('active')
+        expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('text-success')
       end
 
       it 'allows deleting saved filters' do

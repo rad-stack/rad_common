@@ -59,6 +59,8 @@ module RadCommon
 
         migrate_to_tom_select
 
+        migrate_to_bootstrap5
+
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
         copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
@@ -507,6 +509,37 @@ gem 'propshaft'
             RUBY
             end
           end
+        end
+
+        def migrate_to_bootstrap5
+          search_and_replace 'ml-', 'ms-'
+          search_and_replace 'mr-', 'me-'
+          search_and_replace 'pl-', 'ps-'
+          search_and_replace 'pr-', 'pe-'
+          search_and_replace 'float-left', 'float-start'
+          search_and_replace 'float-right', 'float-end'
+          search_and_replace 'data-toggle', 'data-bs-toggle'
+          search_and_replace 'data-placement', 'data-bs-placement'
+          search_and_replace 'data-dismiss', 'data-bs-dismiss'
+          search_and_replace 'data-target', 'data-bs-target'
+          search_and_replace "data: { placement: 'top', toggle: 'tooltip' }",
+                             "data: { 'bs-placement': 'top', 'bs-toggle': 'tooltip' }"
+          search_and_replace 'form-group', 'mb-3'
+          search_and_replace 'form-inline', 'd-flex align-items-center'
+          search_and_replace 'badge-pill', 'rounded-pill'
+          search_and_replace 'badge-primary', 'bg-primary'
+          search_and_replace 'badge-warning', 'bg-warning'
+          search_and_replace 'badge-danger', 'bg-danger'
+          search_and_replace 'badge-info', 'bg-info'
+          search_and_replace 'badge-success', 'bg-success'
+          search_and_replace 'badge-secondary', 'bg-secondary'
+
+          search_and_replace 'dropdown-menu-right', 'dropdown-menu-end'
+          search_and_replace 'dropdown-menu-left', 'dropdown-menu-start'
+          search_and_replace 'input-group-prepend', 'input-group-text'
+          search_and_replace 'input-group-append', 'input-group-text'
+
+          search_and_replace 'twitter-bootstrap-4', 'bootstrap-5'
         end
 
         def apply_migrations
