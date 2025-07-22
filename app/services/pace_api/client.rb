@@ -45,20 +45,51 @@ module PaceApi
       objects.first
     end
 
+    def find_sort_and_limit_objects(type, xpath, page_size:, page_number:, raise_error: false, cached: false)
+      raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
+      raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
+
+      query_params = { type: type, xpath: xpath, limit: page_size }
+      page_multiplier = page_number - 1
+      query_params[:offset] = (page_multiplier * page_size).to_i
+      cache_key = "pace_api_find_objects_#{type}_#{xpath}"
+
+      url = "/rpc/rest/services/FindObjects/findSortAndLimit?#{query_params.to_query}"
+      log_request(action: "FindObject: type: #{type} xpath: #{xpath}",
+                  query_params: query_params, body: {}, method: 'POST', url: url)
+      cache_expires_in_hours = RadConfig.config_item(:pace_cache_expires_in_hours) || 1
+
+      response = if cached
+                   Rails.cache.fetch(cache_key, expires_in: cache_expires_in_hours.hours) do
+                     api_client.post(url) do |req|
+                       req.body = {}
+                     end
+                   end
+                 else
+                   api_client.post(url) do |req|
+                     req.body = {}
+                   end
+                 end
+      parsed_response = parse_response(response)
+
+      return parsed_response if parsed_response.present?
+
+      raise PaceApi::MissingObjectError.new("Missing #{type} in Pace for #{xpath}", type) if raise_error
+    end
+
     def find_objects(type, xpath, raise_error: false, cached: false, page_size: nil, page_number: nil)
       raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
       raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
 
-      query_params = { type: type, xpath: xpath }
       if page_size && page_number
-        query_params[:limit] = page_size
-        page_multiplier = page_number - 1
-        query_params[:offset] = (page_multiplier * page_size).to_i
+        return find_sort_and_limit_objects(type, xpath, raise_error: raise_error, cached: cached,
+                                                        page_size: page_size, page_number: page_number)
       end
+
+      query_params = { type: type, xpath: xpath }
       cache_key = "pace_api_find_objects_#{type}_#{xpath}"
 
-      find_method = page_size && page_number ? 'findSortAndLimit' : 'find'
-      url = "/rpc/rest/services/FindObjects/#{find_method}"
+      url = '/rpc/rest/services/FindObjects/find'
       log_request(action: "FindObject: type: #{type} xpath: #{xpath}",
                   query_params: query_params, body: {}, method: 'GET', url: url)
       cache_expires_in_hours = RadConfig.config_item(:pace_cache_expires_in_hours) || 1
