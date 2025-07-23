@@ -77,9 +77,44 @@ module PaceApi
       raise PaceApi::MissingObjectError.new("Missing #{type} in Pace for #{xpath}", type) if raise_error
     end
 
+    def load_value_objects(type, fields:, id:, sorts:, xpath:, children: [], offset: 0, limit: 0)
+      raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
+      raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
+
+      cache_key = "pace_api_load_value_objects_#{type}_#{xpath}"
+
+      body = { fields: fields, offset: offset, limit: limit, xpathSorts: sorts, children: children, primaryKey: id }
+
+      url = '/rpc/rest/services/FindObjects/loadValueObjects'
+      log_request(action: "FindObject load_value_objects: type: #{type} xpath: #{xpath}",
+                  query_params: query_params, body: {}, method: 'POST', url: url)
+      cache_expires_in_hours = RadConfig.config_item(:pace_cache_expires_in_hours) || 1
+
+      response = if cached
+                   Rails.cache.fetch(cache_key, expires_in: cache_expires_in_hours.hours) do
+                     api_client.post(url) do |req|
+                       req.body = body.to_json
+                     end
+                   end
+                 else
+                   api_client.post(url) do |req|
+                     req.body = sort.to_json
+                   end
+                 end
+      parsed_response = parse_response(response)
+
+      return parsed_response if parsed_response.present?
+
+      raise PaceApi::MissingObjectError.new("Missing #{type} in Pace for #{xpath}", type) if raise_error
+    end
+
     def find_objects(type, xpath, raise_error: false, cached: false, page_size: nil, page_number: nil, sort: nil)
       raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
       raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
+
+      if [page_size, page_number, sort].any?(&:present?) && [page_size, page_number, sort].any?(&:blank?)
+        raise ArgumentError, 'must defined page_size, page_number, and sort all at same time'
+      end
 
       if page_size && page_number
         return find_sort_and_limit_objects(type, xpath, raise_error: raise_error, cached: cached,
