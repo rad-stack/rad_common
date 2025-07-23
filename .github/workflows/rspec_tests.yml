@@ -71,16 +71,16 @@ jobs:
       - name: Running custom steps
         uses: ./.github/actions/custom-action
 
-      - name: Install ImageMagick
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y imagemagick   
-
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ steps.set-ruby-version.outputs.version }}
           bundler-cache: true
+
+      - name: Set up Vips
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libvips-dev pkg-config
 
       - name: Set up Node
         uses: actions/setup-node@v4
