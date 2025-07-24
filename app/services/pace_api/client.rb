@@ -77,7 +77,7 @@ module PaceApi
       raise PaceApi::MissingObjectError.new("Missing #{type} in Pace for #{xpath}", type) if raise_error
     end
 
-    def load_value_objects(type, fields:, id:, sorts:, xpath:, children: [], offset: 0, limit: 0)
+    def load_value_objects(type, fields:, id:, sorts:, xpath:, children: [], offset: 0, limit: 0, cached: false)
       raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
       raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
 
@@ -99,7 +99,7 @@ module PaceApi
                    end
                  else
                    api_client.post(url) do |req|
-                     req.body = sort.to_json
+                     req.body = body.to_json
                    end
                  end
       parsed_response = parse_response(response)
