@@ -9,8 +9,8 @@
     "rad_common_js": "https://github.com/rad-stack/rad_common_js#2cf33b07a4b7ebc80e964fdc7f54b759f2716eb4"
   },
   "devDependencies": {
-    "esbuild": "^0.25.0",
-    "eslint": "^9.19.0",
+    "esbuild": "^0.25.8",
+    "eslint": "^9.31.0",
     "sass": "^1.83.4",
     "stylelint": "^16.14.1"
   },

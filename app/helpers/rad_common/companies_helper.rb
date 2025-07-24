@@ -1,13 +1,27 @@
 module RadCommon
   module CompaniesHelper
     def company_show_data(company)
-      address_show_data(company) +
-        [{ label: 'Phone Number', value: (link_to company.phone_number, "tel:#{company.phone_number}") },
-         { label: 'Website', value: (link_to company.website, company.website, target: :_blank, rel: :noopener) },
-         { label: 'Email', value: (mail_to company.email) },
-         :timezone,
-         :validity_checked_at,
-         :address_requests_made]
+      items = address_show_data(company)
+
+      items += [{ label: 'Phone Number', value: (link_to company.phone_number, "tel:#{company.phone_number}") },
+                { label: 'Website',
+                  value: (link_to company.website, company.website, target: :_blank, rel: :noopener) },
+                { label: 'Email', value: (mail_to company.email) },
+                :timezone,
+                :validity_checked_at,
+                :address_requests_made]
+
+      if company.app_logo.attached?
+        items.push(label: 'Logo',
+                   value: render_one_attachment(record: company, attachment_name: 'app_logo', new_tab: true))
+      end
+
+      if company.fav_icon.attached?
+        items.push(label: 'Favicon',
+                   value: render_one_attachment(record: company, attachment_name: 'fav_icon', new_tab: true))
+      end
+
+      items
     end
 
     def company_fav_icon(company)
