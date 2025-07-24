@@ -23,4 +23,12 @@ class ApplicationController < ActionController::Base
     def www_host_name
       "#{RadConfig.marketing_subdomain}.#{root_host_name}"
     end
+
+    def troubleshooting_policy_error
+      Rails.logger.info troubleshooting_policy_error_message
+    end
+
+    def troubleshooting_policy_error_message
+      "troubleshooting_policy_error: #{helpers.format_datetime(Time.current)} #{current_user} - #{action_name}"
+    end
 end
