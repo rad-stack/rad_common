@@ -31,7 +31,7 @@
       .row.internal
         .col-lg-12
           = f.input :security_roles, as: :check_boxes,
-                                     item_wrapper_class: 'col-lg-3 security-role-checkboxes',
+                                     item_wrapper_class: 'col-lg-3 security-role-checkboxes form-check',
                                      collection: security_role_collection(:internal),
                                      checked: @user.security_roles.ids
 
@@ -39,7 +39,7 @@
       .row.external
         .col-lg-12
           = f.input :security_roles, as: :check_boxes,
-                                     item_wrapper_class: 'col-lg-3 security-role-checkboxes',
+                                     item_wrapper_class: 'col-lg-3 security-role-checkboxes form-check',
                                      collection: security_role_collection(:external),
                                      checked: @user.security_roles.ids
     = render 'users/form_custom', f: f

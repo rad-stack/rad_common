@@ -110,7 +110,7 @@ module RadCommon
     end
 
     def icon_tag(icon, text)
-      tag.i('', class: "mr-2 #{icon}") + text
+      tag.i('', class: "me-2 #{icon}") + text
     end
 
     def timezone_us_filter
@@ -132,7 +132,8 @@ module RadCommon
         next unless ALERT_TYPES.include?(type)
 
         Array(message).each do |msg|
-          flash_messages << tag.div(bootstrap_flash_close_button + msg, class: "alert in alert-#{type}") if msg
+          alert_class = "alert alert-dismissible in alert-#{type}"
+          flash_messages << tag.div(bootstrap_flash_close_button + msg, class: alert_class) if msg
         end
       end
 
@@ -150,7 +151,7 @@ module RadCommon
     end
 
     def bootstrap_flash_close_button
-      tag.button(sanitize('&times;'), type: 'button', class: 'close', 'data-dismiss': 'alert')
+      tag.button('', type: 'button', class: 'btn-close me-2', 'data-bs-dismiss': 'alert')
     end
 
     def table_row_style(record, style_class: 'table-danger')
@@ -173,7 +174,7 @@ module RadCommon
         raise ArgumentError, "Invalid Font Awesome style: '#{style}'. Allowed styles are: #{allowed_styles.join(', ')}"
       end
 
-      text_class = text.present? ? 'mr-2' : nil
+      text_class = text.present? ? 'me-2' : nil
       capture do
         concat tag.i('', class: "#{style} fa-#{icon} #{text_class} #{options[:class]}".strip)
         concat text
@@ -213,8 +214,8 @@ module RadCommon
               class: 'btn btn-secondary btn-sm')
     end
 
-    def export_buttons(model_name, **options)
-      %i[csv pdf].map { |format| export_button(model_name, format: format, **options) }.compact
+    def export_buttons(model_name, **)
+      %i[csv pdf].map { |format| export_button(model_name, format: format, **) }.compact
     end
 
     def onboarded?
