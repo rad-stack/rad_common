@@ -226,7 +226,7 @@ module Pace
         :'gl_register_number' => :'glRegisterNumber',
         :'customer' => :'customer',
         :'orginal_batch_id' => :'orginalBatchId',
-        :'date_time_setup' => :'dateTimeSetup',
+        # :'date_time_setup' => :'dateTimeSetup',
         :'reversal' => :'reversal',
         :'gl_accounting_period' => :'glAccountingPeriod',
         :'original_id' => :'originalId',
