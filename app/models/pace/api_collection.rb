@@ -56,14 +56,20 @@ module Pace
       self
     end
 
+    def offset
+      return 0 if current_page == 1
+
+      (current_page * @page_size) - 1
+    end
+
     def objects
       @objects ||= load_objects
     end
 
     def load_objects
       data = pace_client.load_value_objects(@object_class.pace_object_name,
-                                            xpath: @xpath, id: nil, sorts: [],
-                                            fields: field_info, limit: 1000)
+                                            xpath: @xpath, id: nil, sorts: [], offset: offset,
+                                            fields: field_info, limit: @page_size)
       object_data_list = data['valueObjects'].map do |object_data|
         hash = {}
         object_data['fields'].each do |field_data|
