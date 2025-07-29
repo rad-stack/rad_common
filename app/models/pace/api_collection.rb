@@ -5,7 +5,7 @@ module Pace
     def initialize(object_class, xpath, limit: 1000)
       @object_class = object_class
       @xpath = xpath
-      @page_size = 25
+      @page_size = nil
       @page_number = nil
       @sort_xpath = nil
       @sort_direction = 'asc'
@@ -50,11 +50,14 @@ module Pace
     end
 
     def page(page_number)
+      @page_size ||= 25
       @page_number = page_number || 1
       self
     end
 
     def total_pages
+      return 1 if @page_number.nil?
+
       (total_count / @page_size.to_i).to_i
     end
 
