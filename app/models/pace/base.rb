@@ -6,7 +6,6 @@ module Pace
     def initialize(object_data)
       @object_data = object_data
       load_object
-      puts 'done'
     end
 
     def self.initialize_from_id(id)
