@@ -23,7 +23,6 @@ AllCops:
     - 'spec/dummy/config.ru'
     - 'config.ru'
     - 'lib/generators/rad_common/install/install_generator.rb'
-    - 'app/models/pace/*.rb'
 
 Metrics/BlockLength:
   Exclude:

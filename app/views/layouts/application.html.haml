@@ -10,7 +10,6 @@
     = favicon_link_tag company_fav_icon(Company.main), rel: 'shortcut icon'
     = javascript_include_tag 'application', 'data-turbo-track': 'reload', type: 'module'
     = stylesheet_link_tag 'application', 'data-turbo-track': 'reload'
-    %script{ type: 'text/javascript', scr: 'https://js.stripe.com/basil/stripe.js' }
 
   %body
     = render 'layouts/navigation'
