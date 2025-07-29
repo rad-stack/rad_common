@@ -149,7 +149,7 @@ SimpleForm.setup do |config|
     b.optional :readonly
     b.use :label, class: 'form-label'
     b.wrapper class: 'd-flex flex-row justify-content-between align-items-center' do |ba|
-      ba.use :input, class: 'form-control mx-1', error_class: 'is-invalid', valid_class: ''
+      ba.use :input, class: 'form-select form-control mx-1', error_class: 'is-invalid', valid_class: ''
     end
     b.use :icon
     b.use :full_error, wrap_with: { class: 'invalid-feedback d-block' }
@@ -395,6 +395,7 @@ SimpleForm.setup do |config|
     radio_buttons: :vertical_collection,
     range:         :vertical_range,
     time:          :vertical_multi_select,
-    select:        :vertical_select
+    select:        :vertical_select,
+    grouped_select: :vertical_select
   }
 end
