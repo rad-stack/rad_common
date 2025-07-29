@@ -17,6 +17,14 @@ module Pace
       objects.each(&)
     end
 
+    def group_by(&)
+      objects.group_by(&)
+    end
+
+    def sum(&)
+      objects.sum(&)
+    end
+
     def select(attributes)
       @selected_attributes += attributes
       self
