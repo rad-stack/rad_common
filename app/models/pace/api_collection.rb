@@ -2,13 +2,14 @@ module Pace
   class ApiCollection
     delegate :count, :first, to: :objects
 
-    def initialize(object_class, xpath)
+    def initialize(object_class, xpath, limit: 1000)
       @object_class = object_class
       @xpath = xpath
       @page_size = 25
       @page_number = nil
       @sort_xpath = nil
       @sort_direction = 'asc'
+      @limit = limit
     end
 
     def each(&)
@@ -89,7 +90,7 @@ module Pace
     def paging_info
       @paging_info ||= pace_client.load_value_objects(@object_class.pace_object_name,
                                                       xpath: @xpath, id: nil, sorts: [],
-                                                      fields: [], limit: 1000)
+                                                      fields: [], limit: @limit)
     end
 
     def limit_value

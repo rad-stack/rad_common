@@ -85,7 +85,7 @@ module Pace
         :'gl_department' => :'glDepartment',
         :'template_line' => :'templateLine',
         :'gl_location' => :'glLocation',
-        :'job_part_key' => :'jobPartKey',
+        # :'job_part_key' => :'jobPartKey',
         :'job_part' => :'jobPart',
         :'job' => :'job',
         :'sales_category' => :'salesCategory',
