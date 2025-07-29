@@ -108,13 +108,9 @@ module Pace
       ids = pace_client.find_objects(@object_class.pace_object_name, @xpath,
                                      page_size: @page_size, page_number: @page_number, sort: sort_param)
 
-      ids.map { |id| @object_class.new(pace_client.read_object(@object_class.pace_object_name, id)) }
-    end
+      return [] if ids.blank?
 
-    def field_info
-      @object_class.attribute_map.map do |ruby_attr, pace_attr|
-        { xpath: "@#{pace_attr}", name: pace_attr.to_s }
-      end
+      ids.map { |id| @object_class.new(pace_client.read_object(@object_class.pace_object_name, id)) }
     end
 
     def field_info_select

@@ -11,6 +11,14 @@ RSpec.describe Pace::Base do
       expect(results.count).to be_positive
       expect(results.total_pages).to eq 1
     end
+
+    context 'when no records exist' do
+      let(:xpath) { '@id = 99999' }
+
+      it 'returns an empty collection', :vcr do
+        expect(results.count).to eq 0
+      end
+    end
   end
 
   describe '#page_and_sort' do
