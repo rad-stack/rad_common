@@ -31,8 +31,46 @@ module Pace
       to_a.sum(&)
     end
 
-    def find(&)
-      to_a.find(&)
+    def find(id)
+      raise ArgumentError, 'ID must be provided' if id.blank?
+
+      if xpath.present?
+        id_xpath = "@id = #{id}"
+        full_xpath = [xpath, id_xpath].compact.join(' and ')
+
+        ids = pace_client.find_objects(
+          object_class.pace_object_name,
+          full_xpath,
+          page_size: 1,
+          page_number: 1,
+          sort: [{ xpath: '@id', descending: false }]
+        )
+
+        raise ActiveRecord::RecordNotFound, "Record not found with id: #{id}" if ids.blank?
+
+        id = ids.first
+      end
+
+      object_class.new(pace_client.read_object(object_class.pace_object_name, id))
+    end
+
+    def find_by(attributes = {})
+      return nil if attributes.blank?
+
+      xpath_conditions = attributes.map { |key, value| "@#{key} = #{value}" }.join(' and ')
+      full_xpath = [xpath, xpath_conditions].compact_blank.join(' and ')
+
+      ids = pace_client.find_objects(
+        object_class.pace_object_name,
+        full_xpath,
+        page_size: 1,
+        page_number: 1,
+        sort: [{ xpath: '@id', descending: false }]
+      )
+
+      return nil if ids.blank?
+
+      object_class.new(pace_client.read_object(object_class.pace_object_name, ids.first))
     end
 
     def where(extra_xpath)
