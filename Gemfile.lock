@@ -579,6 +579,7 @@ DEPENDENCIES
   bootsnap
   capybara
   capybara-selenium
+  chartkick
   devise-twilio-verify!
   haml_lint (= 0.55.0)
   parallel_tests
