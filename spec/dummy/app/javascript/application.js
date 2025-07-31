@@ -10,5 +10,6 @@ import 'rad_common/jqueryAreYouSure';
 import { RadCommon } from 'rad_common/radCommon';
 RadCommon.setup();
 
+import 'chartkick/chart.js';
 import './app_specific.js';
 import './controllers';

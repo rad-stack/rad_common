@@ -596,6 +596,7 @@ DEPENDENCIES
   bootsnap
   capybara
   capybara-selenium
+  chartkick
   haml_lint
   parallel_tests
   pdf-reader
