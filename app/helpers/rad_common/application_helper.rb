@@ -26,7 +26,7 @@ module RadCommon
 
     def avatar_image(user, size)
       if RadConfig.avatar? && user.avatar.attached?
-        image_tag(user.avatar.variant(resize: '50x50'))
+        image_tag(user.avatar.variant(resize_to_limit: [50, 50]))
       else
         image_tag(gravatar_for(user, size))
       end
