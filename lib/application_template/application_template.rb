@@ -63,6 +63,10 @@ after_bundle do
   copy_github_file 'lib/application_template/credentials/test.yml.enc',
                    'config/credentials/test.yml.enc'
 
+  remove_file 'app/views/layouts/application.html.erb'
+  remove_file 'app/views/layouts/mailer.html.erb'
+  remove_file 'app/views/layouts/mailer.text.erb'
+
   generate 'devise:install'
   generate 'devise', 'User'
 
