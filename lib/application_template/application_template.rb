@@ -126,6 +126,9 @@ after_bundle do
 
   remove_file 'app/models/user.rb'
 
+  # TODO: do we need a README? if so, need the app name to be like others but seems silly
+  remove_file 'README.md'
+
   create_file 'app/models/user.rb', <<~RUBY.strip
     class User < ApplicationRecord
       include RadDeviseHigh
