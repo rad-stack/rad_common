@@ -542,6 +542,7 @@ gem 'propshaft'
           search_and_replace 'input-group-append', 'input-group-text'
 
           search_and_replace 'twitter-bootstrap-4', 'bootstrap-5'
+          search_and_replace 'badge alert-', 'badge bg-opacity-75 bg-'
         end
 
         def apply_migrations
