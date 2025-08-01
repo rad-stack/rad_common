@@ -11,7 +11,7 @@
         - else
           = current_user
         - if unread_count.positive?
-          %span.badge.bg-danger.bg-opacity-50= unread_count
+          %span.badge.bg-danger.bg-opacity-75= unread_count
         = show_nav_avatar
       %ul.dropdown-menu.dropdown-menu-end
         %li
@@ -25,7 +25,7 @@
             = link_to notifications_path, class: 'dropdown-item' do
               = icon 'bell', 'Notifications'
               - if unread_count.positive?
-                %span.bg-danger.bg-opacity-50= unread_count
+                %span.bg-danger.bg-opacity-75= unread_count
         - if current_user.internal? && policy(NotificationSetting).index?
           %li
             = link_to icon('gear', 'Notification Settings'),
