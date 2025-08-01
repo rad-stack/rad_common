@@ -56,7 +56,7 @@ module RadCommon
 
     def unconfirmed_email_show_item(user)
       value = if user.unconfirmed_email.present?
-                content_tag(:span, user.unconfirmed_email, class: 'badge alert-warning')
+                content_tag(:span, user.unconfirmed_email, class: 'badge bg-warning bg-opacity-75')
               end
 
       { label: 'Unconfirmed Email', value: value }
