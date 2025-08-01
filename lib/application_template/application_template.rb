@@ -120,9 +120,6 @@ after_bundle do
 
   remove_file 'app/models/user.rb'
 
-  # TODO: do we need a README? if so, need the app name to be like others but seems silly
-  remove_file 'README.md'
-
   create_file 'app/models/user.rb', <<~RUBY.strip
     class User < ApplicationRecord
       include RadDeviseHigh
@@ -140,6 +137,14 @@ after_bundle do
     end
   RUBY
 
+  remove_file 'README.md'
+
+  create_file 'README.md', <<~RUBY.strip
+    # #{app_name.titleize}
+
+  RUBY
+
+  gsub_file 'config/rad_common.yml', 'app_name: New Rails App', "app_name: #{app_name.titleize}"
   fix_routes
 
   generate 'rad_common:install', '--force'
