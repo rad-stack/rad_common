@@ -155,5 +155,7 @@ after_bundle do
 
   rails_command 'db:seed'
 
+  run 'chmod u+x bin/dev'
+
   say 'Rails application with rad_common setup complete!', :green
 end
