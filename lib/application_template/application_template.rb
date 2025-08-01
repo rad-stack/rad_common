@@ -109,11 +109,12 @@ after_bundle do
   # remove_file 'app/views/layouts/application.html.erb'
 
   # Update User model
-  gsub_file 'app/models/user.rb', /devise :.*/, ''
-  gsub_file 'app/models/user.rb', /class User < ApplicationRecord/, <<~RUBY.strip
+  remove_file 'app/models/user.rb'
+  create_file 'app/models/user.rb', <<~RUBY.strip
     class User < ApplicationRecord
       include RadDeviseHigh
       include RadUser
+    end
   RUBY
 
   # Update ApplicationController
