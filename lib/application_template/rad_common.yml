@@ -6,11 +6,11 @@ default: &default
   manually_create_users: false
   pending_users: false
   secure_sentry: false
-  external_users: true
+  external_users: false
   app_logo_includes_name: true
   impersonate: true
   start_route: users
-  user_clients: true
+  user_clients: false
   user_profiles: false
   show_help_menu: false
   canadian_addresses: false
