@@ -34,10 +34,10 @@
                           disabled: !updatable,
                           input_html: { class: 'ays-ignore',
                                         id: "notification_setting_enabled_#{setting_id_string}",
-                                        data: { toggle: 'collapse', target: "##{collapse_id}" } }
+                                        'data-bs-toggle': 'collapse', 'data-bs-target': "##{collapse_id}" }
             .row
               .col-lg-12{ id: collapse_id, class: record.enabled ? 'collapse show' : 'collapse' }
-                .form-inline.px-3.py-2.bg-light.border.rounded.shadow-sm#notification-settings
+                .d-flex.align-items-center.px-3.py-2.bg-light.border.rounded.shadow-sm#notification-settings
                   = f.input :email, tooltip: 'Enable email notifications.',
                                     input_html: { class: 'ays-ignore',
                                                   id: "notification_setting_email_#{setting_id_string}" },
