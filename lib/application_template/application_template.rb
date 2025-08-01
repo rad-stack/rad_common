@@ -2,6 +2,17 @@ def copy_github_file(source, destination)
   get "https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/#{source}", destination
 end
 
+def fix_routes
+  remove_file 'config/routes.rb'
+
+  create_file 'config/routes.rb', <<~RUBY
+    Rails.application.routes.draw do
+      mount RadCommon::Engine => '/rad_common'
+      extend RadCommonRoutes
+    end
+  RUBY
+end
+
 # TODO: are these comments still relevant?
 # Skip importmap installation
 # skip_option :javascript
@@ -64,17 +75,18 @@ after_bundle do
     uncomment_lines devise_migration, /sign_in_count/
     uncomment_lines devise_migration, /last_sign_in_ip/
     uncomment_lines devise_migration, /confirmation_token/
+    uncomment_lines devise_migration, /confirmed_at/
     uncomment_lines devise_migration, /confirmation_sent_at/
     uncomment_lines devise_migration, /unconfirmed_email/
     uncomment_lines devise_migration, /failed_attempts/
     uncomment_lines devise_migration, /unlock_token/
+    uncomment_lines devise_migration, /locked_at/
   end
   generate 'audited:install'
 
   rails_command 'active_storage:install'
 
   rails_command 'db:create'
-  rails_command 'db:migrate'
 
   run 'bundle binstubs rad_common --force'
 
@@ -130,13 +142,13 @@ after_bundle do
     end
   RUBY
 
-  remove_file 'config/routes.rb'
-  create_file 'config/routes.rb', <<~RUBY
-    Rails.application.routes.draw do
-      mount RadCommon::Engine => '/rad_common'
-      extend RadCommonRoutes
-    end
-  RUBY
+  fix_routes
+
+  generate 'rad_common:install', '--force'
+
+  fix_routes
+
+  run 'bin/migrate_reset'
 
   run 'yarn install'
   run 'yarn build'
