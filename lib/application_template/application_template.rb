@@ -6,38 +6,18 @@
 # Ensure we're using the correct Ruby version
 # create_file '.ruby-version', '3.3.1'
 
+remove_file "Gemfile"
+run "touch Gemfile"
+add_source 'https://rubygems.org'
 # Add gems to Gemfile
-gem_group :default do
-  gem 'bootsnap', require: false
-  gem 'propshaft'
-  gem 'rad_common', git: 'https://github.com/rad-stack/rad_common.git', branch: 'main'
+gem 'bootsnap', require: false
+gem 'propshaft'
+gem 'rad_common', git: 'https://github.com/rad-stack/rad_common.git', branch: 'main'
 
-  # TODO: remove this when possible
-  gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-devise.git',
-      branch: 'authy-to-twilio-verify'
+# TODO: remove this when possible
+gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-devise.git',
+    branch: 'authy-to-twilio-verify'
 
-  # project specific gems
-  gem 'acts-as-taggable-on'
-  gem 'bootstrap-select-rails'
-  gem 'faraday-retry' # https://app.radstack.com/tasks/20
-  gem 'haml_lint', '0.55.0'
-  gem 'holidays'
-  gem 'jbuilder'
-  gem 'octokit'
-  gem 'omniauth-github'
-  gem 'omniauth-rails_csrf_protection'
-  gem 'pathspec'
-  gem 'quickbooks-ruby'
-  gem 'recaptcha'
-  gem 'rexml'
-  gem 'rubocop'
-  gem 'rubocop-capybara'
-  gem 'rubocop-factory_bot'
-  gem 'rubocop-rails'
-  gem 'rubocop-rspec'
-  gem 'sidekiq-limit_fetch'
-  gem 'stripe', '~> 5.17.0'
-end
 
 gem_group :development do
   gem 'active_record_doctor'
@@ -98,7 +78,7 @@ after_bundle do
   run 'bundle binstubs rad_common --force'
 
   # Generate rad_common install
-  generate 'rad_common:install'
+  generate 'rad_common:install', '--skip'
 
   # Create seeder service
   create_file 'app/services/seeder.rb', <<~RUBY
@@ -122,11 +102,11 @@ after_bundle do
   RUBY
 
   # Copy assets
-  get 'https://github.com/rad-stack/rad_common/blob/rad-10334-app-templates/spec/dummy/app/assets/images/app_logo.png?raw=true', 'app/assets/images/app_logo.png'
-  get 'https://github.com/rad-stack/rad_common/blob/rad-10334-app-templates/spec/dummy/app/assets/images/favicon.ico.png?raw=true', 'app/assets/images/favicon.ico'
+  # get 'https://github.com/rad-stack/rad_common/blob/rad-10334-app-templates/spec/dummy/app/assets/images/app_logo.png?raw=true', 'app/assets/images/app_logo.png'
+  # get 'https://github.com/rad-stack/rad_common/blob/rad-10334-app-templates/spec/dummy/app/assets/images/favicon.ico.png?raw=true', 'app/assets/images/favicon.ico'
 
   # Remove default layout (we'll use rad_common's)
-  remove_file 'app/views/layouts/application.html.erb'
+  # remove_file 'app/views/layouts/application.html.erb'
 
   # Update User model
   gsub_file 'app/models/user.rb', /devise :.*/, ''
@@ -137,7 +117,7 @@ after_bundle do
   RUBY
 
   # Update ApplicationController
-  gsub_file 'app/controllers/application_controller.rb', /class ApplicationController < ActionController::Base/, <<~RUBY.strip
+  create_file 'app/controllers/application_controller.rb', <<~RUBY.strip
     class ApplicationController < ActionController::Base
       include RadController
   RUBY
