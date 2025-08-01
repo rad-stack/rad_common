@@ -6,8 +6,8 @@
 # Ensure we're using the correct Ruby version
 # create_file '.ruby-version', '3.3.1'
 
-remove_file "Gemfile"
-run "touch Gemfile"
+remove_file 'Gemfile'
+run 'touch Gemfile'
 add_source 'https://rubygems.org'
 # Add gems to Gemfile
 gem 'bootsnap', require: false
@@ -16,8 +16,7 @@ gem 'rad_common', git: 'https://github.com/rad-stack/rad_common.git', branch: 'm
 
 # TODO: remove this when possible
 gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-devise.git',
-    branch: 'authy-to-twilio-verify'
-
+                            branch: 'authy-to-twilio-verify'
 
 gem_group :development do
   gem 'active_record_doctor'
@@ -45,13 +44,16 @@ end
 # Run bundle install
 after_bundle do
   # Copy rad_common config
-  get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/spec/dummy/config/rad_common.yml', 'config/rad_common.yml'
+  get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/spec/dummy/config/rad_common.yml',
+      'config/rad_common.yml'
 
   # Copy base credentials
   copy_file '~/.rad_common_setup/test.key', 'config/credentials/test.key'
   copy_file '~/.rad_common_setup/development.key', 'config/credentials/development.key'
-  get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/lib/application_template/credentials/development.yml.enc', 'config/credentials/development.yml.enc'
-  get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/lib/application_template/credentials/test.yml.enc', 'config/credentials/test.yml.enc'
+  get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/lib/application_template/credentials/development.yml.enc',
+      'config/credentials/development.yml.enc'
+  get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/lib/application_template/credentials/test.yml.enc',
+      'config/credentials/test.yml.enc'
 
   # Generate devise
   generate 'devise:install'
