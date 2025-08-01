@@ -56,12 +56,19 @@ after_bundle do
   generate 'devise', 'User'
 
   devise_migration = Dir['db/migrate/*devise_create_users.rb'].first
-
   if devise_migration
-    uncomment_lines devise_migration, /^\s*#\s*t\./
-    uncomment_lines devise_migration, /^\s*#\s*add_index/
+    uncomment_lines devise_migration, /sign_in_count/
+    uncomment_lines devise_migration, /current_sign_in_at/
+    uncomment_lines devise_migration, /last_sign_in_at/
+    uncomment_lines devise_migration, /current_sign_in_ip/
+    uncomment_lines devise_migration, /sign_in_count/
+    uncomment_lines devise_migration, /last_sign_in_ip/
+    uncomment_lines devise_migration, /confirmation_token/
+    uncomment_lines devise_migration, /confirmation_sent_at/
+    uncomment_lines devise_migration, /unconfirmed_email/
+    uncomment_lines devise_migration, /failed_attempts/
+    uncomment_lines devise_migration, /unlock_token/
   end
-
   generate 'audited:install'
 
   rails_command 'active_storage:install'
