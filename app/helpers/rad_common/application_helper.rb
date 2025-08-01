@@ -46,21 +46,22 @@ module RadCommon
       items = [{ label: 'Address', value: record.full_address }]
 
       if record.bypass_address_validation?
-        items.push({ label: 'Address Info',
-                     value: content_tag(:span, 'address validation bypassed', class: 'badge alert-warning') })
-
+        items.push(
+          { label: 'Address Info',
+            value: content_tag(:span, 'address validation bypassed', class: 'badge bg-warning bg-opacity-75') }
+        )
       end
 
       if record.address_changes.present?
         items.push({ label: 'Address Changed',
-                     value: content_tag(:span, record.address_changes, class: 'badge alert-warning') })
+                     value: content_tag(:span, record.address_changes, class: 'badge bg-warning bg-opacity-75') })
 
         record.clear_address_changes!
       end
 
       if record.address_problems.present?
         items.push({ label: 'Address Problems',
-                     value: content_tag(:span, record.address_problems, class: 'badge alert-danger') })
+                     value: content_tag(:span, record.address_problems, class: 'badge bg-danger bg-opacity-75') })
       end
 
       items
