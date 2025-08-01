@@ -96,9 +96,7 @@ after_bundle do
 
   create_file 'app/services/seeder.rb', <<~RUBY
     class Seeder < RadSeeder
-      def seed
-        # Add initial data here
-      end
+      def seed; end
     end
   RUBY
 
@@ -122,9 +120,12 @@ after_bundle do
 
   create_file 'app/models/user.rb', <<~RUBY.strip
     class User < ApplicationRecord
-      include RadDeviseHigh
+      include RadDeviseMedium
       include RadUser
+
+      audited except: USER_AUDIT_COLUMNS_DISABLED
     end
+
   RUBY
 
   create_file 'app/controllers/application_controller.rb', <<~RUBY.strip
@@ -146,10 +147,18 @@ after_bundle do
 
   gsub_file 'config/rad_common.yml', 'app_name: New Rails App', "app_name: #{app_name.titleize}"
   fix_routes
-
   generate 'rad_common:install', '--force'
-
   fix_routes
+  remove_file '.github/workflows/ci.yml'
+  remove_file '.github/workflows/dependabot.yml'
+  remove_dir 'app/assets/config'
+  remove_dir 'app/assets/stylesheets'
+  remove_file 'app/assets/images/.keep'
+  remove_dir 'app/channels'
+  remove_file 'app/helpers/application_helper.rb'
+  remove_file 'app/jobs/application_job.rb'
+  remove_dir 'app/mailers'
+  remove_dir 'app/views/pwa'
 
   run 'bin/migrate_reset'
 
