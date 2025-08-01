@@ -70,8 +70,8 @@ after_bundle do
   # Copy base credentials
   copy_file '~/.rad_common_setup/test.key', 'config/credentials/test.key'
   copy_file '~/.rad_common_setup/development.key', 'config/credentials/development.key'
-  get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/lib/application_template/credentials/development.yml.enc', 'config/credentials/development.enc'
-  get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/lib/application_template/credentials/test.yml.enc', 'config/credentials/test.enc'
+  get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/lib/application_template/credentials/development.yml.enc', 'config/credentials/development.yml.enc'
+  get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/lib/application_template/credentials/test.yml.enc', 'config/credentials/test.yml.enc'
 
   # Generate devise
   generate 'devise:install'
@@ -100,9 +100,6 @@ after_bundle do
   # Generate rad_common install
   generate 'rad_common:install'
 
-  # Copy development credentials key
-  copy_file 'examples/development.key', 'config/credentials/development.key'
-
   # Create seeder service
   create_file 'app/services/seeder.rb', <<~RUBY
     class Seeder < RadSeeder
@@ -125,8 +122,8 @@ after_bundle do
   RUBY
 
   # Copy assets
-  copy_file 'examples/app_logo.png', 'app/assets/images/app_logo.png'
-  copy_file 'examples/favicon.ico', 'app/assets/images/favicon.ico'
+  get 'https://github.com/rad-stack/rad_common/blob/rad-10334-app-templates/spec/dummy/app/assets/images/app_logo.png?raw=true', 'app/assets/images/app_logo.png'
+  get 'https://github.com/rad-stack/rad_common/blob/rad-10334-app-templates/spec/dummy/app/assets/images/favicon.ico.png?raw=true', 'app/assets/images/favicon.ico'
 
   # Remove default layout (we'll use rad_common's)
   remove_file 'app/views/layouts/application.html.erb'
