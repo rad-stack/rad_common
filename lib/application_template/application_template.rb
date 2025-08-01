@@ -13,10 +13,6 @@ def fix_routes
   RUBY
 end
 
-# TODO: are these comments still relevant?
-# Skip importmap installation
-# skip_option :javascript
-
 remove_file 'Gemfile'
 run 'touch Gemfile'
 add_source 'https://rubygems.org'
@@ -121,8 +117,6 @@ after_bundle do
       'app/assets/images/app_logo.png'
   get 'https://github.com/rad-stack/rad_common/raw/refs/heads/rad-10334-app-templates/spec/dummy/app/assets/images/favicon.ico',
       'app/assets/images/favicon.ico'
-
-  # remove_file 'app/views/layouts/application.html.erb'
 
   remove_file 'app/models/user.rb'
 
