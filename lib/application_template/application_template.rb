@@ -1,5 +1,11 @@
 # Rails Application Template for rad_common setup
 
+# Skip importmap installation
+# skip_option :javascript
+
+# Ensure we're using the correct Ruby version
+# create_file '.ruby-version', '3.3.1'
+
 # Add gems to Gemfile
 gem_group :default do
   gem 'bootsnap', require: false
@@ -60,6 +66,12 @@ end
 after_bundle do
   # Copy rad_common config
   get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/spec/dummy/config/rad_common.yml', 'config/rad_common.yml'
+
+  # Copy base credentials
+  copy_file '~/.rad_common_setup/test.key', 'config/credentials/test.key'
+  copy_file '~/.rad_common_setup/development.key', 'config/credentials/development.key'
+  get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/lib/application_template/credentials/development.yml.enc', 'config/credentials/development.enc'
+  get 'https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/lib/application_template/credentials/test.yml.enc', 'config/credentials/test.enc'
 
   # Generate devise
   generate 'devise:install'
