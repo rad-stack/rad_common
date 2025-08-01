@@ -157,6 +157,9 @@ after_bundle do
   gsub_file 'config/rad_common.yml', 'external_users: true', 'external_users: false'
   gsub_file 'config/rad_common.yml', 'user_clients: true', 'user_clients: false'
   gsub_file 'config/rad_common.yml', 'start_route: onboardings', 'start_route: users'
+  gsub_file 'config/rad_common.yml', 'duplicates:', 'duplicates: []'
+  gsub_file 'config/rad_common.yml', '    - :name: Attorney', ''
+  gsub_file 'config/rad_common.yml', '    - :name: User', ''
 
   say 'Rails application with rad_common setup complete!', :green
 end
