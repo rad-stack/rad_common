@@ -111,10 +111,10 @@ after_bundle do
   RUBY
 
   # Copy assets
-  # copy_github_file 'spec/dummy/app/assets/images/app_logo.png?raw=true',
-  #                  'app/assets/images/app_logo.png'
-  # copy_github_file 'spec/dummy/app/assets/images/favicon.ico.png?raw=true',
-  #                  'app/assets/images/favicon.ico'
+  get 'https://github.com/rad-stack/rad_common/raw/refs/heads/rad-10334-app-templates/spec/dummy/app/assets/images/app_logo.png',
+      'app/assets/images/app_logo.png'
+  get 'https://github.com/rad-stack/rad_common/raw/refs/heads/rad-10334-app-templates/spec/dummy/app/assets/images/favicon.ico',
+      'app/assets/images/favicon.ico'
 
   # remove_file 'app/views/layouts/application.html.erb'
 
