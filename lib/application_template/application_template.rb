@@ -67,6 +67,7 @@ after_bundle do
   generate 'devise', 'User'
 
   devise_migration = Dir['db/migrate/*devise_create_users.rb'].first
+
   if devise_migration
     uncomment_lines devise_migration, /sign_in_count/
     uncomment_lines devise_migration, /current_sign_in_at/
@@ -82,6 +83,7 @@ after_bundle do
     uncomment_lines devise_migration, /unlock_token/
     uncomment_lines devise_migration, /locked_at/
   end
+
   generate 'audited:install'
 
   rails_command 'active_storage:install'
@@ -137,11 +139,6 @@ after_bundle do
     end
   RUBY
 
-  create_file 'app/policies/application_policy.rb', <<~RUBY
-    class ApplicationPolicy < RadPolicy
-    end
-  RUBY
-
   fix_routes
 
   generate 'rad_common:install', '--force'
@@ -156,6 +153,10 @@ after_bundle do
   rails_command 'db:seed'
 
   run 'chmod u+x bin/dev'
+
+  gsub_file 'config/rad_common.yml', 'external_users: true', 'external_users: false'
+  gsub_file 'config/rad_common.yml', 'user_clients: true', 'user_clients: false'
+  gsub_file 'config/rad_common.yml', 'start_route: onboardings', 'start_route: users'
 
   say 'Rails application with rad_common setup complete!', :green
 end
