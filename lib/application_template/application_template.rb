@@ -118,10 +118,23 @@ after_bundle do
   create_file 'app/controllers/application_controller.rb', <<~RUBY.strip
     class ApplicationController < ActionController::Base
       include RadController
+
+      before_action :authenticate_user!
+
+      protect_from_forgery prepend: true, with: :exception
+    end
   RUBY
 
   create_file 'app/policies/application_policy.rb', <<~RUBY
     class ApplicationPolicy < RadPolicy
+    end
+  RUBY
+
+  remove_file 'config/routes.rb'
+  create_file 'config/routes.rb', <<~RUBY
+    Rails.application.routes.draw do
+      mount RadCommon::Engine => '/rad_common'
+      extend RadCommonRoutes
     end
   RUBY
 
