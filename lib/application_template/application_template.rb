@@ -1,4 +1,5 @@
 RAD_COMMON_BRANCH = 'rad-10334-app-templates'.freeze # TODO: switch this to use main branch when merged
+RAD_COMMON_DIRECTORY = '~/Projects/rad_common'.freeze # TODO: how to handle other machines
 
 def quiet_mode?
   ARGV.include?('--quiet') || ARGV.include?('-q')
@@ -28,6 +29,135 @@ def fix_routes
       # add your routes here
     end
   RUBY
+end
+
+def rails_secret
+  `rails secret`.strip
+end
+
+def rad_common_credential(name)
+  inside("#{RAD_COMMON_DIRECTORY}/spec/dummy") do
+    `RAILS_ENV=test bundle exec rails runner "puts Rails.application.credentials.#{name}"`.strip
+  end
+end
+
+def development_credentials
+  <<~YAML
+    secret_key_base: #{rails_secret}
+
+    admin_email: System Admin <admin@example.com>
+    from_email: System Admin <admin@example.com>
+
+    s3_region: n/a
+    s3_access_key_id: n/a
+    s3_secret_access_key: n/a
+    s3_bucket: n/a
+
+    hash_key: foobar
+    hash_alphabet: abcdefghijklmnopqrstuvwxyz
+
+    seeded_users:
+      -
+        factory: admin
+        email: admin@example.com
+        first_name: Test
+        last_name: Admin
+        security_role: Admin
+      -
+        factory: user
+        email: user@example.com
+        first_name: Test
+        last_name: User
+        security_role: User
+  YAML
+end
+
+def test_credentials
+  <<~YAML
+    admin_email: System Admin <admin@example.com>
+    from_email: System Admin <admin@example.com>
+
+    s3_region: n/a
+    s3_access_key_id: n/a
+    s3_secret_access_key: n/a
+    s3_bucket: n/a
+
+    twilio_phone_number: #{rad_common_credential('twilio_phone_number')}
+    twilio_account_sid: #{rad_common_credential('twilio_account_sid')}
+    twilio_auth_token: #{rad_common_credential('twilio_auth_token')}
+
+    test_mobile_phone: #{rad_common_credential('test_mobile_phone')}
+
+    seeded_users:
+      -
+        factory: admin
+        email: admin@example.com
+        first_name: Test
+        last_name: Admin
+        security_role: Admin
+      -
+        factory: user
+        email: user@example.com
+        first_name: Test
+        last_name: User
+        security_role: User
+  YAML
+end
+
+def production_credentials
+  <<~YAML
+    admin_email: insert-value-here
+    from_email: insert-value-here
+
+    sendgrid_api_key: insert-value-here
+
+    smtp_username: apikey
+    smtp_password: insert-value-here
+
+    s3_region: insert-value-here
+    s3_access_key_id: insert-value-here
+    s3_secret_access_key: insert-value-here
+    s3_bucket: insert-value-here
+
+    twilio_phone_number: insert-value-here
+    twilio_account_sid: insert-value-here
+    twilio_auth_token: insert-value-here
+    twilio_verify_service_sid: insert-value-here
+
+    smarty_auth_id: insert-value-here
+    smarty_auth_token: insert-value-here
+
+    test_phone_number: insert-value-here
+
+    seeded_users:
+      -
+        factory: admin
+        email: insert-value-here
+        mobile_phone: insert-value-here
+        first_name: insert-value-here
+        last_name: insert-value-here
+        security_role: Admin
+      -
+        factory: admin
+        email: insert-value-here
+        mobile_phone: insert-value-here
+        first_name: insert-value-here
+        last_name: insert-value-here
+        security_role: Admin
+      -
+        factory: admin
+        email: insert-value-here
+        mobile_phone: insert-value-here
+        first_name: insert-value-here
+        last_name: insert-value-here
+        security_role: Admin
+  YAML
+end
+
+def create_credentials(environment)
+  create_file 'temp_credentials.yml', send("#{environment}_credentials")
+  run "EDITOR='cp temp_credentials.yml' rails credentials:edit --environment #{environment}"
+  remove_file 'temp_credentials.yml'
 end
 
 remove_file 'Gemfile'
@@ -70,11 +200,9 @@ after_bundle do
   copy_file '~/.rad_common_setup/test.key', 'config/credentials/test.key'
   copy_file '~/.rad_common_setup/development.key', 'config/credentials/development.key'
 
-  copy_github_file 'lib/application_template/credentials/development.yml.enc',
-                   'config/credentials/development.yml.enc'
-
-  copy_github_file 'lib/application_template/credentials/test.yml.enc',
-                   'config/credentials/test.yml.enc'
+  create_credentials 'development'
+  create_credentials 'test'
+  create_credentials 'production'
 
   remove_file '.rubocop.yml'
 
