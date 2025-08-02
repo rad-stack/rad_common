@@ -147,7 +147,7 @@ after_bundle do
 
   fix_routes
   remove_file 'spec/rails_helper.rb'
-  generate 'rspec:install', 'create .rspec create spec create spec/spec_helper.rb create spec/rails_helper.rb'
+  generate 'rspec:install', "#{quiet_flag} create .rspec create spec create spec/spec_helper.rb create spec/rails_helper.rb".strip
 
   create_file 'spec/support/spec_support.rb', <<~RUBY
     require 'rad_rspec/rad_spec_support'
