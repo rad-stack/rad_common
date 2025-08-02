@@ -197,8 +197,8 @@ end
 after_bundle do
   copy_github_file 'lib/application_template/rad_common.yml', 'config/rad_common.yml'
 
-  copy_file '~/.rad_common_setup/test.key', 'config/credentials/test.key'
-  copy_file '~/.rad_common_setup/development.key', 'config/credentials/development.key'
+  copy_file "#{RAD_COMMON_DIRECTORY}/spec/dummy/config/credentials/test.key", 'config/credentials/test.key'
+  copy_file "#{RAD_COMMON_DIRECTORY}/spec/dummy/config/credentials/development.key", 'config/credentials/development.key'
 
   create_credentials 'development'
   create_credentials 'test'
@@ -206,7 +206,7 @@ after_bundle do
 
   remove_file '.rubocop.yml'
 
-  create_file '.rubycop.yml', <<~YML
+  create_file '.rubocop.yml', <<~YML
     inherit_gem:
       rad_common: .shared_rubocop.yml
   YML
@@ -325,7 +325,7 @@ after_bundle do
 
   # TODO: these should also be removed from existing applications
   remove_file '.github/workflows/ci.yml'
-  remove_file '.github/workflows/dependabot.yml'
+  remove_file '.github/dependabot.yml'
   remove_dir 'app/assets/config'
   remove_dir 'app/assets/stylesheets'
   remove_file 'app/assets/images/.keep'
