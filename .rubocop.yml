@@ -36,6 +36,7 @@ Metrics/BlockLength:
     - 'spec/rails_helper.rb'
     - 'lib/tasks/temp.rake'
     - 'lib/generators/rad_common/install/rails_helper.rb'
+    - 'lib/application_template/application_template.rb'
 
 Rails/Output:
   Exclude:
