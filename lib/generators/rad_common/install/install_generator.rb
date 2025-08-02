@@ -3,7 +3,7 @@ module RadCommon
     class InstallGenerator < Rails::Generators::Base
       include Rails::Generators::Migration
       source_root File.expand_path('templates', __dir__)
-      desc 'Used to install the rad_common depencency files and create migrations.'
+      desc 'Used to install the rad_common dependency files and create migrations.'
 
       def create_initializer_file
         remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.shared_database?
