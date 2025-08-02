@@ -78,7 +78,7 @@ test:
 production:
   <<: *default
 
-  host_name: new-rails-app.radstack.com
+  host_name: new-rails-app.example.com
   twilio_verify_enabled: true
   twilio_verify_remember_device_days: 7
   twilio_verify_all_users: false

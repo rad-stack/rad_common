@@ -198,7 +198,9 @@ after_bundle do
   copy_github_file 'lib/application_template/rad_common.yml', 'config/rad_common.yml'
 
   copy_file "#{RAD_COMMON_DIRECTORY}/spec/dummy/config/credentials/test.key", 'config/credentials/test.key'
-  copy_file "#{RAD_COMMON_DIRECTORY}/spec/dummy/config/credentials/development.key", 'config/credentials/development.key'
+
+  copy_file "#{RAD_COMMON_DIRECTORY}/spec/dummy/config/credentials/development.key",
+            'config/credentials/development.key'
 
   create_credentials 'development'
   create_credentials 'test'
