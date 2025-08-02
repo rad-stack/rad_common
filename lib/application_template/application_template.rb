@@ -1,3 +1,11 @@
+def quiet_mode?
+  ARGV.include?('--quiet') || ARGV.include?('-q')
+end
+
+def quiet_flag
+  quiet_mode? ? '--quiet' : nil
+end
+
 def copy_github_file(source, destination)
   # TODO: switch this to use main branch when ready
   get "https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/#{source}", destination
@@ -79,10 +87,10 @@ after_bundle do
   remove_file 'app/views/layouts/mailer.html.erb'
   remove_file 'app/views/layouts/mailer.text.erb'
 
-  generate 'simple_form:install', '--bootstrap'
-  generate 'devise:install'
-  generate 'devise', 'User'
-  generate 'devise_invitable:install'
+  generate 'simple_form:install', "--bootstrap #{quiet_flag}".strip
+  generate 'devise:install', quiet_flag
+  generate 'devise', "User #{quiet_flag}".strip
+  generate 'devise_invitable:install', quiet_flag
 
   devise_migration = Dir['db/migrate/*devise_create_users.rb'].first
 
@@ -102,19 +110,19 @@ after_bundle do
     uncomment_lines devise_migration, /locked_at/
   end
 
-  generate 'audited:install'
+  generate 'audited:install', quiet_flag
 
-  rails_command 'active_storage:install'
-  rails_command 'action_text:install'
+  rails_command 'active_storage:install', abort_on_failure: true, capture: quiet_mode?
+  rails_command 'action_text:install', abort_on_failure: true, capture: quiet_mode?
 
   remove_dir 'app/views/active_storage'
   remove_dir 'app/views/layouts/action_text'
 
-  rails_command 'db:create'
+  rails_command 'db:create', abort_on_failure: true, capture: quiet_mode?
 
   run 'bundle binstubs rad_common --force'
 
-  generate 'rad_common:install', '--skip'
+  generate 'rad_common:install', "--skip #{quiet_flag}".strip
 
   create_file 'app/services/seeder.rb', <<~RUBY
     class Seeder < RadSeeder
@@ -183,7 +191,7 @@ after_bundle do
 
   gsub_file 'config/rad_common.yml', 'app_name: New Rails App', "app_name: #{app_name.titleize}"
   fix_routes
-  generate 'rad_common:install', '--force'
+  generate 'rad_common:install', "--force #{quiet_flag}".strip
   fix_routes
 
   # TODO: these should also be removed from existing applications
@@ -209,12 +217,14 @@ after_bundle do
   remove_file '.gitattributes'
   remove_dir 'vendor'
 
-  run 'bin/migrate_reset'
+  rails_command 'db:drop', abort_on_failure: true, capture: quiet_mode?
+  rails_command 'db:create', abort_on_failure: true, capture: quiet_mode?
+  rails_command 'db:migrate', abort_on_failure: true, capture: quiet_mode?
 
   run 'yarn install'
   run 'yarn build'
 
-  rails_command 'db:seed'
+  rails_command 'db:seed', abort_on_failure: true, capture: quiet_mode?
 
   run 'chmod u+x bin/dev'
 
