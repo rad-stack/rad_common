@@ -1,5 +1,12 @@
 def copy_github_file(source, destination)
+  # TODO: switch this to use main branch when ready
   get "https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/#{source}", destination
+end
+
+def copy_image_file(filename)
+  # TODO: switch this to use main branch when ready
+  get "https://github.com/rad-stack/rad_common/raw/refs/heads/rad-10334-app-templates/spec/dummy/app/assets/images/#{filename}",
+      "app/assets/images/#{filename}"
 end
 
 def fix_routes
@@ -9,6 +16,8 @@ def fix_routes
     Rails.application.routes.draw do
       mount RadCommon::Engine => '/rad_common'
       extend RadCommonRoutes
+
+      # add your routes here
     end
   RUBY
 end
@@ -59,12 +68,21 @@ after_bundle do
   copy_github_file 'lib/application_template/credentials/test.yml.enc',
                    'config/credentials/test.yml.enc'
 
+  remove_file '.rubocop.yml'
+
+  create_file '.rubycop.yml', <<~YML
+    inherit_gem:
+      rad_common: .shared_rubocop.yml
+  YML
+
   remove_file 'app/views/layouts/application.html.erb'
   remove_file 'app/views/layouts/mailer.html.erb'
   remove_file 'app/views/layouts/mailer.text.erb'
 
+  generate 'simple_form:install', '--bootstrap'
   generate 'devise:install'
   generate 'devise', 'User'
+  generate 'devise_invitable:install'
 
   devise_migration = Dir['db/migrate/*devise_create_users.rb'].first
 
@@ -87,6 +105,10 @@ after_bundle do
   generate 'audited:install'
 
   rails_command 'active_storage:install'
+  rails_command 'action_text:install'
+
+  remove_dir 'app/views/active_storage'
+  remove_dir 'app/views/layouts/action_text'
 
   rails_command 'db:create'
 
@@ -106,17 +128,21 @@ after_bundle do
 
   create_file 'app/services/nav.rb', <<~RUBY
     class Nav < RadNav::Nav
-      def top_nav_items
-        [top_nav_item('Home', '/')]
-      end
+      private
+
+        def top_nav_items
+          [admin_menu(true)]
+        end
     end
+
   RUBY
 
-  # Copy assets
-  get 'https://github.com/rad-stack/rad_common/raw/refs/heads/rad-10334-app-templates/spec/dummy/app/assets/images/app_logo.png',
-      'app/assets/images/app_logo.png'
-  get 'https://github.com/rad-stack/rad_common/raw/refs/heads/rad-10334-app-templates/spec/dummy/app/assets/images/favicon.ico',
-      'app/assets/images/favicon.ico'
+  fix_routes
+  remove_file 'spec/rails_helper.rb'
+  generate 'rspec:install', 'create .rspec create spec create spec/spec_helper.rb create spec/rails_helper.rb'
+
+  copy_image_file 'app_logo.png'
+  copy_image_file 'favicon.ico'
 
   remove_file 'app/models/user.rb'
   remove_file 'spec/models/user_spec.rb'
@@ -173,6 +199,8 @@ after_bundle do
   remove_file 'public/apple-touch-icon.png'
   remove_file 'public/icon.png'
   remove_file 'public/icon.svg'
+  remove_file '.gitattributes'
+  remove_dir 'vendor'
 
   run 'bin/migrate_reset'
 
