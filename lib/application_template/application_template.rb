@@ -141,6 +141,13 @@ after_bundle do
   remove_file 'spec/rails_helper.rb'
   generate 'rspec:install', 'create .rspec create spec create spec/spec_helper.rb create spec/rails_helper.rb'
 
+  create_file 'spec/support/spec_support.rb', <<~RUBY
+    require 'rad_rspec/rad_spec_support'
+    class SpecSupport < RadSpecSupport
+    end
+
+  RUBY
+
   copy_image_file 'app_logo.png'
   copy_image_file 'favicon.ico'
 
