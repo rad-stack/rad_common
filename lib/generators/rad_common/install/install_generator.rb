@@ -466,8 +466,6 @@ Seeder.new.seed!
           search_and_replace 'javascript_pack_tag', 'javascript_include_tag'
           search_and_replace 'stylesheet_pack_tag', 'stylesheet_link_tag'
           search_and_replace 'favicon_pack_tag', 'favicon_link_tag'
-          search_and_replace 'app/javascript/images', 'app/assets/images'
-          search_and_replace "'app', 'javascript', 'images'", "'app', 'assets', 'images'"
 
           copy_file '../../../../../spec/dummy/app/assets/scss/application.scss',
                     'app/assets/scss/application.scss'
