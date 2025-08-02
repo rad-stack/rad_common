@@ -101,6 +101,8 @@ after_bundle do
   RUBY
 
   create_file 'app/javascript/app_specific.js', ''
+  remove_file 'config/locales/en.yml'
+  create_file 'config/locales/en.yml', 'en:'
 
   create_file 'app/services/nav.rb', <<~RUBY
     class Nav < RadNav::Nav
@@ -117,6 +119,7 @@ after_bundle do
       'app/assets/images/favicon.ico'
 
   remove_file 'app/models/user.rb'
+  remove_file 'spec/models/user_spec.rb'
 
   create_file 'app/models/user.rb', <<~RUBY.strip
     class User < ApplicationRecord
@@ -149,6 +152,8 @@ after_bundle do
   fix_routes
   generate 'rad_common:install', '--force'
   fix_routes
+
+  # TODO: these should also be removed from existing applications
   remove_file '.github/workflows/ci.yml'
   remove_file '.github/workflows/dependabot.yml'
   remove_dir 'app/assets/config'
@@ -159,6 +164,15 @@ after_bundle do
   remove_file 'app/jobs/application_job.rb'
   remove_dir 'app/mailers'
   remove_dir 'app/views/pwa'
+  remove_file 'bin/brakeman'
+  remove_file 'bin/docker-entrypoint'
+  remove_file 'config/cable.yml'
+  remove_file 'config/credentials.yml.enc'
+  remove_file 'config/master.key'
+  remove_dir 'lib/assets'
+  remove_file 'public/apple-touch-icon.png'
+  remove_file 'public/icon.png'
+  remove_file 'public/icon.svg'
 
   run 'bin/migrate_reset'
 
