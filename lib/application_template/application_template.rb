@@ -1,3 +1,5 @@
+RAD_COMMON_BRANCH = 'rad-10334-app-templates'.freeze # TODO: switch this to use main branch when merged
+
 def quiet_mode?
   ARGV.include?('--quiet') || ARGV.include?('-q')
 end
@@ -7,13 +9,11 @@ def quiet_flag
 end
 
 def copy_github_file(source, destination)
-  # TODO: switch this to use main branch when ready
-  get "https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/rad-10334-app-templates/#{source}", destination
+  get "https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/#{RAD_COMMON_BRANCH}/#{source}", destination
 end
 
 def copy_image_file(filename)
-  # TODO: switch this to use main branch when ready
-  get "https://github.com/rad-stack/rad_common/raw/refs/heads/rad-10334-app-templates/spec/dummy/app/assets/images/#{filename}",
+  get "https://github.com/rad-stack/rad_common/raw/refs/heads/#{RAD_COMMON_BRANCH}/spec/dummy/app/assets/images/#{filename}",
       "app/assets/images/#{filename}"
 end
 
@@ -36,7 +36,7 @@ add_source 'https://rubygems.org'
 
 gem 'bootsnap', require: false
 gem 'propshaft'
-gem 'rad_common', git: 'https://github.com/rad-stack/rad_common.git', branch: 'main'
+gem 'rad_common', git: 'https://github.com/rad-stack/rad_common.git', branch: RAD_COMMON_BRANCH
 
 gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-devise.git',
                             branch: 'authy-to-twilio-verify'
@@ -147,7 +147,8 @@ after_bundle do
 
   fix_routes
   remove_file 'spec/rails_helper.rb'
-  generate 'rspec:install', "#{quiet_flag} create .rspec create spec create spec/spec_helper.rb create spec/rails_helper.rb".strip
+  generate 'rspec:install',
+           "#{quiet_flag} create .rspec create spec create spec/spec_helper.rb create spec/rails_helper.rb".strip
 
   create_file 'spec/support/spec_support.rb', <<~RUBY
     require 'rad_rspec/rad_spec_support'
