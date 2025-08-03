@@ -1,5 +1,5 @@
-RAD_COMMON_BRANCH = 'rad-10334-app-templates'.freeze # TODO: switch this to use main branch when merged
-RAD_COMMON_DIRECTORY = '~/Projects/rad_common'.freeze # TODO: how to handle other machines
+DEFAULT_RAD_COMMON_BRANCH = 'rad-10334-app-templates'.freeze # TODO: switch this to use main branch when merged
+DEFAULT_RAD_COMMON_DIRECTORY = '~/Projects/rad_common'.freeze
 
 def quiet_mode?
   ARGV.include?('--quiet') || ARGV.include?('-q')
@@ -10,11 +10,11 @@ def quiet_flag
 end
 
 def copy_github_file(source, destination)
-  get "https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/#{RAD_COMMON_BRANCH}/#{source}", destination
+  get "https://raw.githubusercontent.com/rad-stack/rad_common/refs/heads/#{@rad_common_branch}/#{source}", destination
 end
 
 def copy_image_file(filename)
-  get "https://github.com/rad-stack/rad_common/raw/refs/heads/#{RAD_COMMON_BRANCH}/spec/dummy/app/assets/images/#{filename}",
+  get "https://github.com/rad-stack/rad_common/raw/refs/heads/#{@rad_common_branch}/spec/dummy/app/assets/images/#{filename}",
       "app/assets/images/#{filename}"
 end
 
@@ -36,7 +36,7 @@ def rails_secret
 end
 
 def rad_common_credential(name)
-  inside("#{RAD_COMMON_DIRECTORY}/spec/dummy") do
+  inside("#{@rad_common_directory}/spec/dummy") do
     `RAILS_ENV=test bundle exec rails runner "puts Rails.application.credentials.#{name}"`.strip
   end
 end
@@ -184,13 +184,19 @@ def create_credentials(environment)
   remove_file 'temp_credentials.yml'
 end
 
+@rad_common_branch = ask 'What branch of rad_common do you want to use? Hit return to accept the default.',
+                         default: DEFAULT_RAD_COMMON_BRANCH
+
+@rad_common_directory = ask 'Where is your local project directory for rad_common? Hit return to accept the default.',
+                            default: DEFAULT_RAD_COMMON_DIRECTORY
+
 remove_file 'Gemfile'
 run 'touch Gemfile'
 add_source 'https://rubygems.org'
 
 gem 'bootsnap', require: false
 gem 'propshaft'
-gem 'rad_common', git: 'https://github.com/rad-stack/rad_common.git', branch: RAD_COMMON_BRANCH
+gem 'rad_common', git: 'https://github.com/rad-stack/rad_common.git', branch: @rad_common_branch
 
 gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-devise.git',
                             branch: 'authy-to-twilio-verify'
@@ -229,9 +235,9 @@ end
 after_bundle do
   copy_github_file 'lib/application_template/rad_common.yml', 'config/rad_common.yml'
 
-  copy_file "#{RAD_COMMON_DIRECTORY}/spec/dummy/config/credentials/test.key", 'config/credentials/test.key'
+  copy_file "#{@rad_common_directory}/spec/dummy/config/credentials/test.key", 'config/credentials/test.key'
 
-  copy_file "#{RAD_COMMON_DIRECTORY}/spec/dummy/config/credentials/development.key",
+  copy_file "#{@rad_common_directory}/spec/dummy/config/credentials/development.key",
             'config/credentials/development.key'
 
   create_credentials 'development'
@@ -362,7 +368,6 @@ after_bundle do
 
   fix_gemfile
 
-  # TODO: these should also be removed from existing applications
   remove_file '.github/workflows/ci.yml'
   remove_file '.github/dependabot.yml'
   remove_dir 'app/assets/config'
