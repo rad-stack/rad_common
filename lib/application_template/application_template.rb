@@ -174,8 +174,15 @@ gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-dev
 gem_group :development do
   gem 'active_record_doctor'
   gem 'better_errors'
-  gem 'tty-prompt'
   gem 'binding_of_caller'
+  gem 'haml_lint', '0.55.0', require: false
+  gem 'rubocop', require: false
+  gem 'rubocop-capybara'
+  gem 'rubocop-factory_bot'
+  gem 'rubocop-rails'
+  gem 'rubocop-rspec'
+  gem 'rubocop-rspec_rails'
+  gem 'tty-prompt'
 end
 
 gem_group :test do
@@ -192,6 +199,7 @@ end
 gem_group :development, :test do
   gem 'pry-rails'
   gem 'rspec-rails'
+  gem 'wkhtmltopdf-binary'
 end
 
 after_bundle do
