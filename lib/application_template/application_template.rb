@@ -216,6 +216,8 @@ after_bundle do
   remove_file 'app/views/layouts/application.html.erb'
   remove_file 'app/views/layouts/mailer.html.erb'
   remove_file 'app/views/layouts/mailer.text.erb'
+  remove_dir 'app/helpers'
+  remove_dir 'app/jobs'
 
   generate 'simple_form:install', "--bootstrap #{quiet_flag}".strip
   generate 'devise:install', quiet_flag
@@ -246,7 +248,8 @@ after_bundle do
   rails_command 'action_text:install', abort_on_failure: true, capture: quiet_mode?
 
   remove_dir 'app/views/active_storage'
-  remove_dir 'app/views/layouts/action_text'
+  remove_dir 'app/views/layouts'
+  remove_dir 'spec/models'
 
   rails_command 'db:create', abort_on_failure: true, capture: quiet_mode?
 
