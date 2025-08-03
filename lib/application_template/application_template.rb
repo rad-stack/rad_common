@@ -41,6 +41,30 @@ def rad_common_credential(name)
   end
 end
 
+def fix_gemfile
+  gsub_file 'Gemfile', /"/, "'"
+
+  add_git_source_and_ruby_version
+
+  gsub_file 'Gemfile', /gem 'bootsnap'/, <<~GEMS.chomp
+    # standard gems
+    gem 'bootsnap'
+  GEMS
+
+  gsub_file 'Gemfile', /gem 'image_processing', '~> 1\.14'\n/, ''
+end
+
+def add_git_source_and_ruby_version
+  insert_into_file 'Gemfile', after: /source 'https:\/\/rubygems\.org'\n/ do
+    <<~CONTENT
+      git_source(:github) { |repo| "https://github.com/\#{repo}.git" }
+
+      ruby '3.3.1'
+
+    CONTENT
+  end
+end
+
 def development_credentials
   <<~YAML
     secret_key_base: #{rails_secret}
@@ -336,6 +360,8 @@ after_bundle do
   generate 'rad_common:install', "--force #{quiet_flag}".strip
   fix_routes
 
+  fix_gemfile
+
   # TODO: these should also be removed from existing applications
   remove_file '.github/workflows/ci.yml'
   remove_file '.github/dependabot.yml'
@@ -369,6 +395,4 @@ after_bundle do
   rails_command 'db:seed', abort_on_failure: true, capture: quiet_mode?
 
   run 'chmod u+x bin/dev'
-
-  say 'Rails application with rad_common setup complete!', :green
 end
