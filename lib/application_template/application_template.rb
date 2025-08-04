@@ -1,4 +1,4 @@
-DEFAULT_RAD_COMMON_BRANCH = 'rad-10334-app-templates'.freeze # TODO: switch this to use main branch when merged
+DEFAULT_RAD_COMMON_BRANCH = 'main'.freeze
 DEFAULT_RAD_COMMON_DIRECTORY = '~/Projects/rad_common'.freeze
 
 def quiet_mode?
