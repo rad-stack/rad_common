@@ -88,7 +88,7 @@ module PaceApi
 
       url = '/rpc/rest/services/FindObjects/loadValueObjects'
       log_request(action: "FindObject load_value_objects: type: #{type} xpath: #{xpath}",
-                  query_params: {}, body: {}, method: 'POST', url: url)
+                  query_params: {}, body: body, method: 'POST', url: url)
       cache_expires_in_hours = RadConfig.config_item(:pace_cache_expires_in_hours) || 1
 
       response = if cached

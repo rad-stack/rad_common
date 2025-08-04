@@ -149,10 +149,11 @@ module Pace
       end
 
       def load_objects_from_select
+        # TODO: need to figure out how to handle limit
         data = pace_client.load_value_objects(
           object_class.pace_object_name,
           xpath: xpath, id: nil, sorts: sort_param, offset: offset,
-          fields: field_info_select, limit: page_size
+          fields: field_info_select, limit: 1000
         )
         data['valueObjects']
           .map { |obj| obj['fields'].each_with_object({}) { |f, h| h[f['name']] = f['value'] } }
@@ -174,9 +175,10 @@ module Pace
       end
 
       def paging_info
+        # TODO: need to figure how to handle limit
         @paging_info ||= pace_client.load_value_objects(
           object_class.pace_object_name,
-          xpath: xpath, id: nil, sorts: [], fields: [], limit: limit
+          xpath: xpath, id: nil, sorts: [], fields: [], limit: 1000
         )
       end
 
