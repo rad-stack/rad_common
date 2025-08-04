@@ -519,6 +519,7 @@ gem 'propshaft'
           search_and_replace 'float-left', 'float-start'
           search_and_replace 'float-right', 'float-end'
           search_and_replace 'data-toggle', 'data-bs-toggle'
+          search_and_replace "data: { toggle: 'collapse'", "data: { 'bs-toggle': 'collapse'"
           search_and_replace 'data-placement', 'data-bs-placement'
           search_and_replace 'data-dismiss', 'data-bs-dismiss'
           search_and_replace 'data-target', 'data-bs-target'
