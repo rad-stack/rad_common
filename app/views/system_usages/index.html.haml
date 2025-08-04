@@ -14,11 +14,24 @@
           - @system_usage_search.date_column_ranges.each do |item|
             %th= item[:label]
           %th Total
-
+          %th Trend
+        - data = []
         - @system_usage_search.usage_items.each_with_index do |_item, item_index|
           %tr
             %td= @system_usage_search.usage_data[item_index].first[:name]
             %td= @system_usage_search.usage_data[item_index].first[:current_count]
-            - @system_usage_search.date_column_ranges.each_with_index do |_header, header_index|
+            - @system_usage_search.date_column_ranges.each_with_index do |header, header_index|
               %td= @system_usage_search.usage_data[item_index][header_index][:value]
+              - data << [header[:label], @system_usage_search.usage_data[item_index][header_index][:value]]
             %td= @system_usage_search.total item_index
+            %td
+              // Note: In BS5 this will need to change to add d-grid, remove btn-block and use bs_toggle and bs_target
+              %button.btn.btn-sm.btn-success.btn-block{
+                type: 'button', data: { toggle: 'collapse', target: "#chart-#{item_index}" }
+              }
+                Show
+              // It would be nice to be able to change this from 'show' to 'close' when the aria is expanded
+          %tbody.collapse{ id: "chart-#{item_index}" }
+            %tr
+              %td{ colspan: @system_usage_search.date_column_ranges.count + 4 }
+                = line_chart(data)
