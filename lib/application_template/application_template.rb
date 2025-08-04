@@ -55,7 +55,7 @@ def fix_gemfile
 end
 
 def add_git_source_and_ruby_version
-  insert_into_file 'Gemfile', after: /source 'https:\/\/rubygems\.org'\n/ do
+  insert_into_file 'Gemfile', after: %r{source 'https://rubygems\.org'\n} do
     <<~CONTENT
       git_source(:github) { |repo| "https://github.com/\#{repo}.git" }
 
