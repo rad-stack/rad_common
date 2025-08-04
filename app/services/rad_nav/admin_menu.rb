@@ -3,6 +3,7 @@ module RadNav
     attr_accessor :view_context, :additional_items, :include_users
 
     delegate :current_user, :render, :tag, to: :view_context
+    delegate :developer?, to: :current_user
 
     def initialize(view_context, include_users, additional_items: [])
       @view_context = view_context
@@ -48,17 +49,24 @@ module RadNav
         DropdownMenuItem.new(view_context,
                              'Background Jobs',
                              '/sidekiq',
-                             link_options: { target: '_blank', rel: :noopener })
+                             link_options: { target: '_blank', rel: :noopener },
+                             permission: developer?)
       end
 
       def generate_jwt
         return unless RadConfig.jwt_enabled?
 
-        DropdownMenuItem.new(view_context, 'Generate JWT Token', view_context.new_json_web_token_path)
+        DropdownMenuItem.new(view_context,
+                             'Generate JWT Token',
+                             view_context.new_json_web_token_path,
+                             permission: developer?)
       end
 
       def sentry_test
-        DropdownMenuItem.new(view_context, 'Sentry Test', view_context.new_sentry_test_path)
+        DropdownMenuItem.new(view_context,
+                             'Sentry Test',
+                             view_context.new_sentry_test_path,
+                             permission: developer?)
       end
 
       def system_messages
@@ -72,7 +80,10 @@ module RadNav
       end
 
       def validate_database
-        DropdownMenuItem.new(view_context, 'Validate Database', view_context.new_global_validation_path)
+        DropdownMenuItem.new(view_context,
+                             'Validate Database',
+                             view_context.new_global_validation_path,
+                             permission: developer?)
       end
 
       def include_users?
