@@ -65,6 +65,10 @@ def add_git_source_and_ruby_version
   end
 end
 
+def s3_bucket_name
+  app_name.gsub('_', '-')
+end
+
 def development_credentials
   <<~YAML
     secret_key_base: #{rails_secret}
@@ -138,10 +142,10 @@ def production_credentials
     smtp_username: apikey
     smtp_password: insert-value-here
 
-    s3_region: insert-value-here
-    s3_access_key_id: insert-value-here
-    s3_secret_access_key: insert-value-here
-    s3_bucket: insert-value-here
+    s3_region: us-east-1
+    s3_access_key_id: n/a
+    s3_secret_access_key: n/a
+    s3_bucket: #{s3_bucket_name}
 
     twilio_phone_number: insert-value-here
     twilio_account_sid: insert-value-here
