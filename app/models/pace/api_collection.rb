@@ -5,30 +5,20 @@ module Pace
     attr_reader :object_class, :xpath, :page_size, :page_number,
                 :sort_xpath, :sort_direction, :limit, :selected_attributes
 
-    delegate :count, :first, to: :to_a
+    delegate :count, :first, :each, :group_by, :sum,  to: :to_a
 
-    def initialize(object_class, xpath, limit: 1000, page_size: nil, page_number: nil,
-                   sort_xpath: nil, sort_direction: 'asc', selected_attributes: [])
+    def initialize(object_class, xpath, options)
+      default_options = {  limit: 1000, page_size: nil, page_number: nil,
+                           sort_xpath: nil, sort_direction: 'asc', selected_attributes: [] }
+      @options = default_options.merge(options)
       @object_class = object_class
       @xpath = xpath
-      @limit = limit
-      @page_size = page_size
-      @page_number = page_number
-      @sort_xpath = sort_xpath
-      @sort_direction = sort_direction
-      @selected_attributes = selected_attributes
-    end
-
-    def each(&)
-      to_a.each(&)
-    end
-
-    def group_by(&)
-      to_a.group_by(&)
-    end
-
-    def sum(&)
-      to_a.sum(&)
+      @limit = @options[:limit]
+      @page_size = @options[:page_size]
+      @page_number = @options[:page_number]
+      @sort_xpath = @options[:sort_xpath]
+      @sort_direction = @options[:sort_direction]
+      @selected_attributes = @options[:selected_attributes]
     end
 
     def find(id)
@@ -128,20 +118,8 @@ module Pace
     private
 
       def build(attrs = {})
-        opts = to_h.merge(attrs)
-        self.class.new(object_class, opts.delete(:xpath), **opts)
-      end
-
-      def to_h
-        {
-          xpath: xpath,
-          page_size: page_size,
-          page_number: page_number,
-          sort_xpath: sort_xpath,
-          sort_direction: sort_direction,
-          limit: limit,
-          selected_attributes: selected_attributes
-        }
+        opts = @options.merge(attrs)
+        self.class.new(object_class, opts.delete(:xpath), opts)
       end
 
       def load_objects

@@ -45,11 +45,11 @@ module Pace
     end
 
     def self.where(xpath)
-      ApiCollection.new(self, xpath)
+      ApiCollection.new(self, xpath, {})
     end
 
     def self.all
-      ApiCollection.new(self, '')
+      ApiCollection.new(self, '', {})
     end
 
     def self.cache_key(id)
