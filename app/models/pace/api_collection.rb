@@ -119,7 +119,7 @@ module Pace
 
       def build(attrs = {})
         opts = @options.merge(attrs)
-        self.class.new(object_class, opts.delete(:xpath), opts)
+        self.class.new(object_class, @xpath, opts)
       end
 
       def load_objects
