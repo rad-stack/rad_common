@@ -62,7 +62,6 @@ RSpec.describe Pace::Base do
       periods.to_a.find { |period| date.between?(parse_date(period.startDate), parse_date(period.endDate)) }
     end
 
-
     it 'creates a new record', :vcr do
       period
       # TODO: maybe support parsing date objects directly
