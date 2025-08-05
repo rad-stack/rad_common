@@ -27,6 +27,20 @@ module Rspec
         template Rails.root.join('lib/templates/pundit/policy_spec.rb.tt'),
                   File.join('spec/policies', class_path, "#{file_name}.rb")
       end
+
+      private
+
+        def attributes_names
+          @attributes_names ||= if respond_to?(:attributes)
+                                  attributes.reject(&:reference?).map(&:name)
+                                else
+                                  []
+                                end
+        end
+
+        def policy_methods
+          %w[index? show? create? new? update? edit? destroy?]
+        end
     end
   end
 end
