@@ -12,6 +12,7 @@ RSpec.describe <%= class_name %>Policy, type: :policy do
         it { is_expected.not_to permit(nil, <%= class_name %>.new) }
       end
     end
+
 <% end -%>
   end
 end
