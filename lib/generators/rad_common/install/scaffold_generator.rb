@@ -1,7 +1,6 @@
-require 'rails/generators'
-require 'rails/generators/actions'
+require 'generators/rspec'
 
-module RSpec
+module Rspec
   module Generators
     class ScaffoldGenerator < Rails::Generators::NamedBase
       include Rails::Generators::ResourceHelpers
