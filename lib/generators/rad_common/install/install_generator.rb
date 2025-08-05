@@ -104,6 +104,8 @@ module RadCommon
         template '../../../../../spec/dummy/config/initializers/devise_security.rb',
                  'config/initializers/devise_security.rb'
 
+        copy_file '../rad_rspec/scaffold_generator.rb', 'lib/generators/rspec/scaffold/scaffold_generator.rb'
+
         unless RadConfig.legacy_assets?
           copy_file '../../../../../spec/dummy/config/initializers/assets.rb',
                     'config/initializers/assets.rb'
