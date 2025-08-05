@@ -26,11 +26,6 @@ module Rspec
                  File.join('app/policies', class_path, "#{file_name}_policy.rb")
       end
 
-      def create_policy_spec
-        template Rails.root.join('lib/templates/pundit/policy_spec.rb.tt'),
-                 File.join('spec/policies', class_path, "#{file_name}_policy_spec.rb")
-      end
-
       private
 
         def attributes_names
