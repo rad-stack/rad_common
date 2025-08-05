@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe <%= class_name %>Policy, type: :policy do
   subject { described_class }
+
   let(:user) { create :user }
 
   describe 'permissions' do
