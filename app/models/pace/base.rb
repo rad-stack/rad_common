@@ -40,12 +40,16 @@ module Pace
       new(fetch_object_data(id, cached: cached))
     end
 
+    def self.find_by(attributes = {})
+      all.find_by(attributes)
+    end
+
     def self.where(xpath)
-      ApiCollection.new(self, xpath)
+      ApiCollection.new(self, xpath, {})
     end
 
     def self.all
-      ApiCollection.new(self, '')
+      ApiCollection.new(self, '', {})
     end
 
     def self.cache_key(id)

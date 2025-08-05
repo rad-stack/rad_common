@@ -1,0 +1,1025 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/FindObjects/find?type=GLAccountingPeriod&xpath=@glPeriodStatus%20=%20%27O%27%20and%20@fiscalYear%20=%202025
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:47 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Content-Length:
+      - '92'
+    body:
+      encoding: ASCII-8BIT
+      string: '["5202","5203","5204","5205","5206","5207","5208","5209","5210","5211","5212","5213","5214"]'
+  recorded_at: Tue, 05 Aug 2025 18:16:47 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5202
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:47 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"01","id":5202,"month":null,"startDate":"2025-01-01","notes":null,"glPeriodStatus":"O","closingPeriod":false,"endDate":"2025-01-31","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":1,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:47 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5203
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:47 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"02","id":5203,"month":null,"startDate":"2025-02-01","notes":null,"glPeriodStatus":"O","closingPeriod":false,"endDate":"2025-02-28","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":2,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:47 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5204
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:48 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"03","id":5204,"month":null,"startDate":"2025-03-01","notes":null,"glPeriodStatus":"O","closingPeriod":false,"endDate":"2025-03-31","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":3,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:48 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5205
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:48 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Content-Length:
+      - '304'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"04","id":5205,"month":null,"startDate":"2025-04-01","notes":null,"glPeriodStatus":"O","closingPeriod":false,"endDate":"2025-04-30","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":4,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:48 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5206
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:48 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"05","id":5206,"month":null,"startDate":"2025-05-01","notes":null,"glPeriodStatus":"O","closingPeriod":false,"endDate":"2025-05-31","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":5,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:48 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5207
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:48 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Content-Length:
+      - '304'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"06","id":5207,"month":null,"startDate":"2025-06-01","notes":null,"glPeriodStatus":"O","closingPeriod":false,"endDate":"2025-06-30","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":6,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:48 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5208
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:48 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"07","id":5208,"month":null,"startDate":"2025-07-01","notes":null,"glPeriodStatus":"O","closingPeriod":false,"endDate":"2025-07-31","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":7,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:48 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5209
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:48 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"08","id":5209,"month":null,"startDate":"2025-08-01","notes":null,"glPeriodStatus":"O","closingPeriod":false,"endDate":"2025-08-31","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":8,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:48 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5210
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:49 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"09","id":5210,"month":null,"startDate":"2025-09-01","notes":null,"glPeriodStatus":"O","closingPeriod":false,"endDate":"2025-09-30","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":9,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:49 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5211
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:49 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"10","id":5211,"month":null,"startDate":"2025-10-01","notes":null,"glPeriodStatus":"O","closingPeriod":false,"endDate":"2025-10-31","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":10,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:49 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5212
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:49 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"11","id":5212,"month":null,"startDate":"2025-11-01","notes":null,"glPeriodStatus":"O","closingPeriod":false,"endDate":"2025-11-30","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":11,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:49 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5213
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:49 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"12","id":5213,"month":null,"startDate":"2025-12-01","notes":null,"glPeriodStatus":"O","closingPeriod":false,"endDate":"2025-12-31","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":12,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:49 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readGLAccountingPeriod?primaryKey=5214
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:49 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"periodString":"13","id":5214,"month":null,"startDate":"2025-12-31","notes":null,"glPeriodStatus":"O","closingPeriod":true,"endDate":"2025-12-31","periodTitle":null,"mustRunTBPeriod":false,"accountingPeriod":13,"fiscalYear":2025}'
+  recorded_at: Tue, 05 Aug 2025 18:16:49 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/CreateObject/createPaymentBatch
+    body:
+      encoding: UTF-8
+      string: '{"date":"2025-01-02","description":"Testing batch creation","glAccountingPeriod":5202}'
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:49 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"balanceRemaining":0,"paymentTotal":0,"paymentCount":0,"posted":false,"id":5461,"date":"2025-01-01","description":"Testing
+        batch creation","status":"0","glRegisterNumber":null,"balanced":false,"manual":true,"glAccountingPeriod":5202,"enteredBy":"RadStack","approved":false,"postingMethod":"M","postedDate":null,"originalBatchId":0,"reversal":0,"bankAccount":1,"paymentReversalNote":null,"legacyBatch":false}'
+  recorded_at: Tue, 05 Aug 2025 18:16:49 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readPaymentBatch?primaryKey=5461
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 18:16:50 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"balanceRemaining":0,"paymentTotal":0,"paymentCount":0,"posted":false,"id":5461,"date":"2025-01-01","description":"Testing
+        batch creation","status":"0","glRegisterNumber":null,"balanced":false,"manual":true,"glAccountingPeriod":5202,"enteredBy":"RadStack","approved":false,"postingMethod":"M","postedDate":null,"originalBatchId":0,"reversal":0,"bankAccount":1,"paymentReversalNote":null,"legacyBatch":false}'
+  recorded_at: Tue, 05 Aug 2025 18:16:50 GMT
+recorded_with: VCR 6.3.1
