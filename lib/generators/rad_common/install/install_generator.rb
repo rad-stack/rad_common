@@ -608,6 +608,7 @@ gem 'propshaft'
           apply_migration '20250425120906_fix_some_renamed_audit_models.rb'
           apply_migration '20250512115245_two_factor_auth_updates.rb'
           apply_migration '20250622203947_user_js_timezone.rb'
+          apply_migration '20250805133953_add_omniauth_to_users.rb'
         end
 
         def installed_app_name
