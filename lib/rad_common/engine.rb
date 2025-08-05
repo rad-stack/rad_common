@@ -17,7 +17,6 @@ module RadCommon
     require 'faraday'
     require 'geocoder'
     require 'omniauth-google-oauth2'
-    require 'omniauth-rails_csrf_protection'
     require 'haml-rails'
     require 'hashids'
     require 'jwt'

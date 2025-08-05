@@ -39,7 +39,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'nokogiri'
   s.add_dependency 'omniauth-google-oauth2'
-  s.add_dependency 'omniauth-rails_csrf_protection'
 
   # this needs to match the ruby version to avoid warnings, see Task 40504
   s.add_dependency 'parser', '~> 3.3.1.0'
