@@ -150,19 +150,20 @@ GEM
       railties (>= 7.1)
       warden
     aws-eventstream (1.4.0)
-    aws-partitions (1.1138.0)
-    aws-sdk-core (3.227.0)
+    aws-partitions (1.1140.0)
+    aws-sdk-core (3.228.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
       base64
+      bigdecimal
       jmespath (~> 1, >= 1.6.1)
       logger
-    aws-sdk-kms (1.108.0)
-      aws-sdk-core (~> 3, >= 3.227.0)
+    aws-sdk-kms (1.109.0)
+      aws-sdk-core (~> 3, >= 3.228.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.194.0)
-      aws-sdk-core (~> 3, >= 3.227.0)
+    aws-sdk-s3 (1.195.0)
+      aws-sdk-core (~> 3, >= 3.228.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.12.1)
@@ -319,7 +320,7 @@ GEM
       racc (~> 1.4)
     orm_adapter (0.5.0)
     parallel (1.27.0)
-    parallel_tests (5.3.1)
+    parallel_tests (5.4.0)
       parallel
     parser (3.3.1.0)
       ast (~> 2.4.1)
@@ -333,7 +334,7 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
-    pg (1.6.0)
+    pg (1.6.1)
     pp (0.6.2)
       prettyprint
     prawn (2.5.0)
@@ -364,7 +365,7 @@ GEM
       date
       stringio
     public_suffix (6.0.2)
-    puma (6.6.0)
+    puma (6.6.1)
       nio4r (~> 2.0)
     pundit (2.5.0)
       activesupport (>= 3.0.0)
@@ -417,7 +418,7 @@ GEM
       redis-client (>= 0.22.0)
     redis-client (0.25.1)
       connection_pool
-    regexp_parser (2.10.0)
+    regexp_parser (2.11.0)
     reline (0.6.2)
       io-console (~> 0.5)
     responders (3.1.1)

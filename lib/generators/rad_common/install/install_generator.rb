@@ -3,7 +3,7 @@ module RadCommon
     class InstallGenerator < Rails::Generators::Base
       include Rails::Generators::Migration
       source_root File.expand_path('templates', __dir__)
-      desc 'Used to install the rad_common depencency files and create migrations.'
+      desc 'Used to install the rad_common dependency files and create migrations.'
 
       def create_initializer_file
         remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.shared_database?
@@ -468,8 +468,6 @@ Seeder.new.seed!
           search_and_replace 'javascript_pack_tag', 'javascript_include_tag'
           search_and_replace 'stylesheet_pack_tag', 'stylesheet_link_tag'
           search_and_replace 'favicon_pack_tag', 'favicon_link_tag'
-          search_and_replace 'app/javascript/images', 'app/assets/images'
-          search_and_replace "'app', 'javascript', 'images'", "'app', 'assets', 'images'"
 
           copy_file '../../../../../spec/dummy/app/assets/scss/application.scss',
                     'app/assets/scss/application.scss'
