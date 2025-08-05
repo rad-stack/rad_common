@@ -21,6 +21,19 @@ RSpec.describe Pace::Base do
     end
   end
 
+  describe '#select' do
+    let(:base_object) { Pace::Customer }
+    let(:xpath) { "@salesPerson = #{house_sales_person.id}" }
+    let(:house_sales_person) { Pace::SalesPerson.find_by(name: 'House Account') }
+    let(:selected_attributes) { [:id, :custName, { xpath: 'salesPerson/@name', name: 'salesPersonName' }] }
+    let(:results) { base_object.where(xpath).select(selected_attributes) }
+
+    it 'selects specific fields', :vcr do
+      expect(results.count).to be_positive
+      expect(results.first.salesPersonName).to eq('House Account')
+    end
+  end
+
   describe '#page_and_sort' do
     let(:results) { base_object.where(xpath).page_and_sort(page: 1, sort_xpath: '@id', sort_direction: 'desc') }
 

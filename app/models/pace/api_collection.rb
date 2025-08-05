@@ -45,20 +45,16 @@ module Pace
     def find_by(attributes = {})
       return nil if attributes.blank?
 
-      xpath_conditions = attributes.map { |key, value| "@#{key} = #{value}" }.join(' and ')
+      xpath_conditions = attributes.map { |key, value|
+        value = "'#{value}'" if value.is_a?(String)
+        "@#{key} = #{value}"
+      }.join(' and ')
       full_xpath = [xpath, xpath_conditions].compact_blank.join(' and ')
+      id = pace_client.find_object(object_class.pace_object_name, full_xpath)
 
-      ids = pace_client.find_objects(
-        object_class.pace_object_name,
-        full_xpath,
-        page_size: 1,
-        page_number: 1,
-        sort: [{ xpath: '@id', descending: false }]
-      )
+      return nil if id.blank?
 
-      return nil if ids.blank?
-
-      object_class.new(pace_client.read_object(object_class.pace_object_name, ids.first))
+      object_class.new(pace_client.read_object(object_class.pace_object_name, id))
     end
 
     def where(extra_xpath)

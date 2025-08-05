@@ -66,12 +66,16 @@ module Pace
         @pace_client ||= PaceApi::Client.new
       end
 
+      def primary_key_attribute
+        'id'
+      end
+
       def pace_object_name
         self.class.name.demodulize
       end
 
       def updated_object_data
-        data = { id: @original_object_data['id'] }
+        data = { id: @original_object_data[primary_key_attribute] }
         @original_object_data.each_key do |key|
           current_value = send(key)
           data[key.to_sym] = current_value if current_value != @original_object_data[key]
