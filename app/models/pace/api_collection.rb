@@ -171,7 +171,13 @@ module Pace
       end
 
       def field_info_select
-        selected_attributes.map { |attr| { xpath: "@#{attr}", name: attr.to_s } }
+        selected_attributes.map do |attr|
+          if attr.is_a?(Hash)
+            attr
+          else
+            { xpath: "@#{attr}", name: attr.to_s }
+          end
+        end
       end
 
       def paging_info
