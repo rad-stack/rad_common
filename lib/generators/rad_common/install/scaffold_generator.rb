@@ -14,24 +14,18 @@ module Rspec
       end
 
       def create_factory
-        if defined?(FactoryBot)
-          template Rails.root.join('lib/templates/factory_bot/factory.rb.tt'),
-                   File.join('spec/factories', class_path, "#{file_name.pluralize}.rb")
-        end
+        template Rails.root.join('lib/templates/factory_bot/factory.rb.tt'),
+                  File.join('spec/factories', class_path, "#{file_name.pluralize}.rb")
       end
 
       def create_policy
-        if defined?(Pundit)
-          template Rails.root.join('lib/templates/pundit/policy.rb.tt'),
-                   File.join('app/policies', class_path, "#{file_name}.rb")
-        end
+        template Rails.root.join('lib/templates/pundit/policy.rb.tt'),
+                  File.join('app/policies', class_path, "#{file_name}.rb")
       end
     
       def create_policy_spec
-        if defined?(Pundit)
-          template Rails.root.join('lib/templates/pundit/policy_spec.rb.tt'),
-                   File.join('spec/policies', class_path, "#{file_name}.rb")
-        end
+        template Rails.root.join('lib/templates/pundit/policy_spec.rb.tt'),
+                  File.join('spec/policies', class_path, "#{file_name}.rb")
       end
     end
   end
