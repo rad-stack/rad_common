@@ -1,7 +1,5 @@
 module Pace
   class ApiCollection
-    include Enumerable
-
     attr_reader :object_class, :xpath, :page_size, :page_number,
                 :sort_xpath, :sort_direction, :limit, :selected_attributes
 
