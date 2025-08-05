@@ -4,13 +4,13 @@ RSpec.describe <%= class_name %>Policy, type: :policy do
   let(:user) { User.new }
 
   subject { described_class }
-
+  describe 'permissions' do
 <% policy_methods.each do |method| -%>
-  permissions :<%= method %> do
-    it "denies access if user is blank" do
-      expect(subject).not_to permit(nil, <%= class_name %>.new)
+    permissions :<%= method %> do
+      context 'when user is blank' do
+        it { is_expected.not_to permit(nil, <%= class_name %>.new )}
+      end
     end
   end
-
 <% end -%>
 end

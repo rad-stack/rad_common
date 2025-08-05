@@ -15,28 +15,20 @@ module Rspec
 
       def create_factory
         template Rails.root.join('lib/templates/factory_bot/factory.rb.tt'),
-                  File.join('spec/factories', class_path, "#{file_name.pluralize}.rb")
+                 File.join('spec/factories', class_path, "#{file_name.pluralize}.rb")
       end
 
       def create_policy
         template Rails.root.join('lib/templates/pundit/policy.rb.tt'),
-                  File.join('app/policies', class_path, "#{file_name}.rb")
+                 File.join('app/policies', class_path, "#{file_name}.rb")
       end
-    
+
       def create_policy_spec
         template Rails.root.join('lib/templates/pundit/policy_spec.rb.tt'),
-                  File.join('spec/policies', class_path, "#{file_name}.rb")
+                 File.join('spec/policies', class_path, "#{file_name}_spec.rb")
       end
 
       private
-
-        def attributes_names
-          @attributes_names ||= if respond_to?(:attributes)
-                                  attributes.reject(&:reference?).map(&:name)
-                                else
-                                  []
-                                end
-        end
 
         def policy_methods
           %w[index? show? create? new? update? edit? destroy?]

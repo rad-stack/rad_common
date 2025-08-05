@@ -3,6 +3,5 @@ class <%= class_name %>Policy < ApplicationPolicy
   def <%= method %>
     false
   end
-
 <% end -%>
 end

@@ -1,7 +1,5 @@
 FactoryBot.define do
   factory :<%= file_name %> do
-<% attributes_names.each do |attr| -%>
-    <%= attr %> { "MyString" }
-<% end -%>
+    # Add attributes
   end
 end
