@@ -356,5 +356,6 @@ Devise.setup do |config|
 
   config.omniauth :google_oauth2,
                   RadConfig.secret_config_item!(:google_client_id),
-                  RadConfig.secret_config_item!(:google_client_secret)
+                  RadConfig.secret_config_item!(:google_client_secret),
+                  {}
 end

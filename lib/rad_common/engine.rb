@@ -16,6 +16,7 @@ module RadCommon
     require 'faker'
     require 'faraday'
     require 'geocoder'
+    require 'omniauth-google-oauth2'
     require 'haml-rails'
     require 'hashids'
     require 'jwt'
