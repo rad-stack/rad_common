@@ -342,6 +342,9 @@ GEM
     omniauth-oauth2 (1.8.0)
       oauth2 (>= 1.4, < 3)
       omniauth (~> 2.0)
+    omniauth-rails_csrf_protection (1.0.2)
+      actionpack (>= 4.2)
+      omniauth (~> 2.0)
     orm_adapter (0.5.0)
     parallel (1.27.0)
     parallel_tests (5.4.0)
@@ -611,6 +614,7 @@ DEPENDENCIES
   capybara-selenium
   devise-twilio-verify!
   haml_lint (= 0.55.0)
+  omniauth-rails_csrf_protection
   parallel_tests
   pdf-reader
   propshaft
