@@ -30,7 +30,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'factory_bot_rails'
   s.add_dependency 'faker'
   s.add_dependency 'geocoder'
-  s.add_dependency 'omniauth-google-oauth2'
   s.add_dependency 'haml-rails'
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
@@ -39,6 +38,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
 
   s.add_dependency 'nokogiri'
+  s.add_dependency 'omniauth-google-oauth2'
+  s.add_dependency 'omniauth-rails_csrf_protection'
 
   # this needs to match the ruby version to avoid warnings, see Task 40504
   s.add_dependency 'parser', '~> 3.3.1.0'
