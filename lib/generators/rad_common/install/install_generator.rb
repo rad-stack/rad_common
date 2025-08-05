@@ -49,7 +49,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
-        copy_file '../scaffold_generator.rb', 'lib/generators/rspec/scaffold/scaffold_generator.rb'
+        copy_file '../../../rspec/scaffold/scaffold_generator.rb', 'lib/generators/rspec/scaffold/scaffold_generator.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
 
         unless RadConfig.shared_database?
