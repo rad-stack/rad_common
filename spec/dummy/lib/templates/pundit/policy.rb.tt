@@ -1,0 +1,8 @@
+class <%= class_name %>Policy < ApplicationPolicy
+<% policy_methods.each do |method| -%>
+  def <%= method %>
+    false
+  end
+
+<% end -%>
+end
