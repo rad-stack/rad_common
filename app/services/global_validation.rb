@@ -31,6 +31,7 @@ class GlobalValidation
       end_time = Time.current
       add_stats model, start_time, end_time, error_count
       total_error_count += error_count
+      Rails.logger("#{model} took #{(end_time - start_time).round} seconds to validate")
     end
 
     if @override_model.blank?
