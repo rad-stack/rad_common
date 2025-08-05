@@ -1,5 +1,6 @@
 .mt-3.overflow-auto
   = link_to "Sign in with Google", user_google_oauth2_omniauth_authorize_path, method: :post
+  %br
 
   - if controller_name != 'sessions'
     = link_to icon('sign-in-alt', 'Sign In'), new_user_session_path, class: 'btn btn-link px-0'
