@@ -64,9 +64,7 @@ class AttachmentRenderer
       link = (override_path.presence || context.url_for(attachment))
       target = new_tab ? '_blank' : nil
 
-      converted_image = attachment.content_type == 'image/heic' ? attachment.variant(format: :jpg) : attachment
-
-      attachment_label = label_override.presence || context.image_tag(converted_image,
+      attachment_label = label_override.presence || context.image_tag(attachment,
                                                                       class: 'img-fluid rounded',
                                                                       id: 'attachment_layout')
 
