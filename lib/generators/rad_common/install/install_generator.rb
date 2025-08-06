@@ -568,10 +568,6 @@ gem 'propshaft'
             end
           end
 
-          if matching_files.empty?
-            exit
-          end
-
           matching_files.each do |file_path|
             gsub_file(file_path, search_pattern, replacement_string)
           end
