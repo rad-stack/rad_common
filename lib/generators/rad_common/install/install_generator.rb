@@ -522,7 +522,7 @@ gem 'propshaft'
 
           gsub_from_file_content(search_pattern: /data: \{ toggle: 'collapse',(\s*)target:/,
                                replacement_string: "data: { 'bs-toggle': 'collapse',\\1'bs-target':")
-          gsub_from_file_content(search_pattern: /data: { placement: '([^']*)',(\s*)toggle:/,
+          gsub_from_file_content(search_pattern: /data: \{ placement: '([^']*)',(\s*)toggle:/,
                                  replacement_string: "data: { 'bs-placement': '\\1',\\2'bs-toggle':")
           search_and_replace 'data-placement', 'data-bs-placement'
           search_and_replace 'data-dismiss', 'data-bs-dismiss'
