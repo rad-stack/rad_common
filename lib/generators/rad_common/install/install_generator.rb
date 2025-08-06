@@ -519,7 +519,11 @@ gem 'propshaft'
           search_and_replace 'float-left', 'float-start'
           search_and_replace 'float-right', 'float-end'
           search_and_replace 'data-toggle', 'data-bs-toggle'
-          search_and_replace "data: { toggle: 'collapse'", "data: { 'bs-toggle': 'collapse'"
+
+          gsub_from_file_content(search_pattern: /data: \{ toggle: 'collapse',(\s*)target:/,
+                               replacement_string: "data: { 'bs-toggle': 'collapse',\\1'bs-target':")
+          gsub_from_file_content(search_pattern: /data: { placement: '([^']*)',(\s*)toggle:/,
+                                 replacement_string: "data: { 'bs-placement': '\\1',\\2'bs-toggle':")
           search_and_replace 'data-placement', 'data-bs-placement'
           search_and_replace 'data-dismiss', 'data-bs-dismiss'
           search_and_replace 'data-target', 'data-bs-target'
@@ -543,6 +547,34 @@ gem 'propshaft'
           search_and_replace 'twitter-bootstrap-4', 'bootstrap-5'
           search_and_replace 'badge alert-', 'badge bg-opacity-75 bg-'
           search_and_replace 'badge.alert-', 'badge.bg-opacity-75.bg-'
+        end
+
+        def gsub_from_file_content(search_pattern:, replacement_string:)
+          project_root = Dir.pwd
+          matching_files = []
+
+          Find.find(project_root) do |path|
+            next if File.directory?(path)
+            next unless path.include?('/app/')
+            next if path.include?('/assets/')
+
+            begin
+              content = File.read(path)
+              if content.match?(search_pattern)
+                matching_files << path
+              end
+            rescue => e
+              puts "Error reading #{path}: #{e.message}"
+            end
+          end
+
+          if matching_files.empty?
+            exit
+          end
+
+          matching_files.each do |file_path|
+            gsub_file(file_path, search_pattern, replacement_string)
+          end
         end
 
         def apply_migrations
