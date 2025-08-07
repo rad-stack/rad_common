@@ -55,7 +55,7 @@ module RadCommon
         next unless show_route?(route)
 
         model_names.detect do |item|
-          model = item.safe_constantize
+          model = item.safe_constantize # this will return nil on namespaced models, see Task 10500
           next if model.nil?
 
           route.defaults[:controller] == model.model_name.route_key
