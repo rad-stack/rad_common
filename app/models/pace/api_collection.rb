@@ -121,6 +121,7 @@ module Pace
       end
 
       def load_objects_from_select
+        binding.pry
         # TODO: need to figure out how to handle limit
         data = pace_client.load_value_objects(
           object_class.pace_object_name,
@@ -139,7 +140,12 @@ module Pace
         )
         return [] if ids.blank?
 
-        ids.map { |id| object_class.new(pace_client.read_object(object_class.pace_object_name, id)) }
+        data_map = ids.map do |id|
+          puts "Reading object with id: #{id}"
+          pace_client.read_object(object_class.pace_object_name, id)
+        end
+        binding.pry
+        data_map.map { |data| object_class.new(data) }
       end
 
       def field_info_select

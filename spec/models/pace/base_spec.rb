@@ -19,6 +19,15 @@ RSpec.describe Pace::Base do
         expect(results.count).to eq 0
       end
     end
+
+    context 'when chaining multiple where clauses' do
+      let(:additional_xpath) { "@customer = 'HOUSE'" }
+      let(:new_results) { base_object.where(xpath).where(additional_xpath) }
+
+      it 'returns records matching both conditions', :vcr do
+        expect(new_results.count).to be < results.count
+      end
+    end
   end
 
   describe '#select' do
