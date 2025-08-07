@@ -54,13 +54,12 @@ module RadCommon
       Rails.application.routes.routes.map { |route|
         next unless show_route?(route)
 
-        matches = model_names.map { |item|
-          route.defaults[:controller] == item.constantize.model_name.route_key ? item : nil
-        }.compact
+        model_names.detect do |item|
+          model = item.safe_constantize
+          next if model.nil?
 
-        next unless matches.any?
-
-        matches.first
+          route.defaults[:controller] == model.model_name.route_key
+        end
       }.compact.uniq.sort
     end
 
