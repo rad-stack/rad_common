@@ -17,7 +17,7 @@ class DateFilterDropdownPresenter
 
     def icon_attrs
       { class: 'fa fa-arrow-right btn btn-sm btn-secondary',
-        id: 'date-range-dropdown', 'data-toggle' => 'dropdown',
+        id: 'date-range-dropdown', 'data-bs-toggle' => 'dropdown',
         'aria-haspopup' => 'true', 'aria-expanded' => 'false' }
     end
 

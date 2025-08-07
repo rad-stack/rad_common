@@ -4,7 +4,7 @@
            icon: 'fa-bell'
   .card-body
     = render 'layouts/filter', search: @notification_search, path: notifications_path
-    = paginate @notifications, theme: 'twitter-bootstrap-4'
+    = paginate @notifications, theme: 'bootstrap-5'
 
     %table.table.table-striped.table-bordered
       %tr
@@ -22,6 +22,6 @@
             - if record.record.present?
               %p= secured_link record.record
 
-    = paginate @notifications, theme: 'twitter-bootstrap-4'
+    = paginate @notifications, theme: 'bootstrap-5'
 
 - current_user.read_notifications!

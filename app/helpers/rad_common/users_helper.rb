@@ -56,7 +56,7 @@ module RadCommon
 
     def unconfirmed_email_show_item(user)
       value = if user.unconfirmed_email.present?
-                content_tag(:span, user.unconfirmed_email, class: 'badge alert-warning')
+                content_tag(:span, user.unconfirmed_email, class: 'badge bg-warning bg-opacity-75')
               end
 
       { label: 'Unconfirmed Email', value: value }
@@ -130,10 +130,10 @@ module RadCommon
     def user_index_actions(user)
       items = []
 
-      items.push(add_user_client_action(user, true))
+      items.push(add_user_client_action(user))
 
       if policy(user).update?
-        items.push(link_to(icon(:pencil, 'Edit'), edit_user_path(user), class: 'btn btn-secondary btn-sm btn-block'))
+        items.push(link_to(icon(:pencil, 'Edit'), edit_user_path(user), class: 'btn btn-secondary btn-sm'))
       end
 
       if policy(user).destroy?
@@ -141,7 +141,7 @@ module RadCommon
                            user,
                            method: :delete,
                            data: { confirm: 'Are you sure?' },
-                           class: 'btn btn-danger btn-sm btn-block'))
+                           class: 'btn btn-danger btn-sm'))
       end
 
       items
@@ -208,17 +208,15 @@ module RadCommon
     end
 
     def user_client_actions(user)
-      [add_user_client_action(user, false)]
+      [add_user_client_action(user)]
     end
 
-    def add_user_client_action(user, index_page)
+    def add_user_client_action(user)
       return unless RadConfig.user_clients? && user.external? && policy(UserClient.new(user: user)).new?
-
-      link_class = index_page ? 'btn btn-sm btn-success btn-block' : 'btn btn-sm btn-success'
 
       link_to(icon(:plus, "Add #{RadCommon::AppInfo.new.client_model_label} to User"),
               [:new, user, :user_client],
-              class: link_class)
+              class: 'btn btn-sm btn-success')
     end
 
     def reactivate_user_warning(user)
@@ -244,7 +242,7 @@ module RadCommon
                  type: 'button',
                  class: 'btn btn-sm btn-secondary',
                  'data-target': '#users-collapse',
-                 'data-toggle': 'collapse'
+                 'data-bs-toggle': 'collapse'
     end
 
     def user_row_class(user, hide_inactive)
