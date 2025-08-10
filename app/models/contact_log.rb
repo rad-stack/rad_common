@@ -4,8 +4,8 @@ class ContactLog < ApplicationRecord
 
   has_many :contact_log_recipients, dependent: :destroy
 
-  enum sms_log_type: { outgoing: 0, incoming: 1 }
-  enum service_type: { sms: 0, email: 1 }
+  enum :sms_log_type, { outgoing: 0, incoming: 1 }
+  enum :service_type, { sms: 0, email: 1, voice: 2 }
 
   scope :sorted, -> { order(created_at: :desc, id: :desc) }
   scope :failed, -> { where(contact_log_recipients: { success: false }) }
@@ -19,10 +19,12 @@ class ContactLog < ApplicationRecord
     joins(:contact_log_recipients).where(query).distinct
   }
 
+  # TODO: this was added for IJS but need to finish the feature for general use - Task 8671
+  has_many_attached :attachments
+
   validates :from_user_id, presence: true, if: -> { outgoing? && sms? }
   validates :sms_message_id, presence: true, if: :incoming?
   validates :content, presence: true, if: :sent?
-  validates :sms_media_url, absence: true, if: :incoming?
   validates :sms_log_type, presence: true, if: :sms?
   validates :sms_log_type, :sms_media_url, :sms_message_id, absence: true, if: :email?
   validate :validate_incoming, if: :incoming?
@@ -58,6 +60,22 @@ class ContactLog < ApplicationRecord
     return if card_style.blank?
 
     card_style.gsub('alert', 'table')
+  end
+
+  def from_user_is_to_user?
+    return false if from_user.blank?
+
+    enum_value = RadEnum.new(ContactLogRecipient, 'email_type').db_value(:to)
+
+    contact_log_recipients.where('email_type IS NULL OR email_type = ?', enum_value)
+                          .pluck(:to_user_id)
+                          .include?(from_user_id)
+  end
+
+  def record_is_to_user?
+    return false unless record.present? && record.is_a?(User)
+
+    contact_log_recipients.pluck(:to_user_id).include?(record_id)
   end
 
   private

@@ -6,13 +6,14 @@ class Nav < RadNav::Nav
        attorneys_menu,
        top_nav_item('Contact', view_context.new_company_contact_path, badge: nav_badge(:danger, 9)),
        top_nav_users,
-       admin_menu(false, additional_items: [division_item])]
+       dropdown_menu('Divisions', division_items),
+       admin_menu(false)]
     end
 
     def client_items
       [dropdown_menu_index_item('Client'),
-       dropdown_menu_item('Add Client', view_context.new_client_path),
-       dropdown_menu_item('Client Report', view_context.client_reports_path)]
+       dropdown_menu_item('Add Client', view_context.new_client_path, permission: policy(Client.new).new?),
+       dropdown_menu_item('Client Report', view_context.client_reports_path, permission: policy(Client.new).report?)]
     end
 
     def attorneys_menu
@@ -28,7 +29,8 @@ class Nav < RadNav::Nav
        dropdown_menu_item('Add Attorney', view_context.new_attorney_path)]
     end
 
-    def division_item
-      dropdown_menu_index_item('Division', path: view_context.divisions_path(search: { show_header: 'true' }))
+    def division_items
+      [dropdown_menu_index_item('Division', path: view_context.divisions_path(search: { show_header: 'true' })),
+       dropdown_menu_index_item('Division', path: view_context.calendar_divisions_path, label: 'Calendar')]
     end
 end

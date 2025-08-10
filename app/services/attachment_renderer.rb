@@ -19,7 +19,7 @@ class AttachmentRenderer
     return unless record.persisted?
 
     attachment = record.send(attachment_name)
-    return unless !attachment.respond_to?(:attached?) || attachment.attached?
+    return unless !attachment.respond_to?(:attached?) || (attachment.attached? && attachment.persisted?)
 
     render_attachment_object attachment
   end
@@ -30,7 +30,7 @@ class AttachmentRenderer
     attachments = record.send(attachment_name)
     return if attachments.blank?
 
-    context.safe_join(record.send(attachment_name).map do |attachment|
+    context.safe_join(attachments.select(&:persisted?).map do |attachment|
       render_attachment_object attachment
     end)
   end
@@ -76,7 +76,7 @@ class AttachmentRenderer
       return if no_delete
 
       context.link_to context.tag.i('', class: 'fa fa-times'),
-                      RadCommon::Engine.routes.url_helpers.attachment_path(attachment.id),
+                      context.attachment_path(attachment.id),
                       method: :delete,
                       data: { confirm: 'Are you sure? Attachment cannot be recovered.' },
                       class: 'btn btn-danger ml-5'

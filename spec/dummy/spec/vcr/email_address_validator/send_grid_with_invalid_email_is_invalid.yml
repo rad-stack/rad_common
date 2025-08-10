@@ -25,7 +25,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Fri, 21 Jun 2024 18:29:39 GMT
+      - Thu, 13 Mar 2025 16:50:42 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -33,11 +33,11 @@ http_interactions:
       Connection:
       - keep-alive
       X-Amzn-Requestid:
-      - d58d9b31-bbc0-4d34-9e90-b1558326fc13
+      - 53d1f23c-df73-4d91-814a-fc81ab5f2a51
       X-Amz-Apigw-Id:
-      - Zuv3IEogiYcENng=
+      - HX7zeGG5iYcED1w=
       X-Amzn-Trace-Id:
-      - Root=1-6675c693-6b8d0a5d26034b7c41720b7b;Parent=1759060922952727;Sampled=0;lineage=3bae0364:0
+      - Root=1-67d30ce2-0ef8aeb71389475c508904de;Parent=26ca4d0636ceb086;Sampled=0;Lineage=1:3bae0364:0
       Access-Control-Allow-Methods:
       - HEAD, GET, PUT, POST, DELETE, OPTIONS, PATCH
       Access-Control-Max-Age:
@@ -55,7 +55,8 @@ http_interactions:
       - nosniff
       Strict-Transport-Security:
       - max-age=31536000
-      - max-age=600; includeSubDomains
+      X-Robots-Tag:
+      - noindex, nofollow
       X-Client-Ff:
       - '1000'
       X-Ratelimit-Remaining:
@@ -63,15 +64,19 @@ http_interactions:
       X-Ratelimit-Limit:
       - '7'
       X-Ratelimit-Reset:
-      - '1718994580'
+      - '1741884643'
       Twilio-Request-Id:
-      - RQ2iCVWlzKNOQD0emZ55xrNOKaE7k
+      - RQ2uGpD4oOPKeqNcapO4T0fRYpfss
       X-Envoy-Upstream-Service-Time:
-      - '240'
+      - '300'
       Powered-By:
       - Mako
+      Cache-Control:
+      - no-cache
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
     body:
       encoding: UTF-8
-      string: '{"result":{"email":"support@rubygems.co","verdict":"Invalid","score":0,"local":"support","host":"rubygems.co","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":false,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"38.85.141.230"}}'
-  recorded_at: Fri, 21 Jun 2024 18:29:39 GMT
-recorded_with: VCR 6.2.0
+      string: '{"result":{"email":"support@rubygems.co","verdict":"Invalid","score":0,"local":"support","host":"rubygems.co","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":false,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"38.85.154.237"}}'
+  recorded_at: Thu, 13 Mar 2025 16:50:42 GMT
+recorded_with: VCR 6.3.1

@@ -6,10 +6,14 @@ RSpec.describe UserSMSSender, type: :service do
   let(:message) { 'test message' }
   let(:media_url) { nil }
   let(:division) { create :division }
-  let(:sms_sender) { described_class.new(message, from_user.id, user.id, media_url, false, record: division) }
   let(:last_email) { ActionMailer::Base.deliveries.last }
 
+  let(:sms_sender) do
+    described_class.new(message, from_user.id, user.id, media_url, false, contact_log_record: division)
+  end
+
   before do
+    allow_any_instance_of(PhoneSMSSender).to receive(:log_attachments).and_return true
     allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false
     allow(RadRetry).to receive(:exponential_pause)
   end

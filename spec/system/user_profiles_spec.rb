@@ -13,7 +13,7 @@ RSpec.describe 'UserProfiles' do
 
     it 'requires completing the profile' do
       visit edit_user_profile_path(user)
-      click_button 'Save'
+      click_link_or_button 'Save'
       expect(page).to have_content("Birth date can't be blank")
     end
   end

@@ -26,26 +26,43 @@ module RadCommon
       action.gsub('destroy', 'delete')
     end
 
-    def audits_title(audits, show_search, resource)
-      return "Audits (#{audits.total_count})" if show_search
+    def audits_title(audits, audit_search)
+      return "Audits (#{audits.total_count})" unless audit_search.single_record?
 
-      safe_join(['Audits for ', audit_model_link(nil, resource), " (#{audits.total_count})"])
+      record = audit_search.single_record
+      safe_join(['Audits for ', audit_model_link(nil, record), " (#{audits.total_count})"])
+    end
+
+    def safe_auditable(audit)
+      return unless auditable_exists?(audit)
+
+      audit.auditable
+    end
+
+    def auditable_exists?(audit)
+      Module.const_defined?(audit.auditable_type)
     end
 
     def audit_model_link(audit, record)
-      label = if record.present? && record.respond_to?(:to_s)
-                "#{record.class} - #{record}"
-              else
-                "#{audit.auditable_type} (#{audit.auditable_id})"
-              end
+      label = audit_link_label(audit, record)
 
       return label if audit.nil? && record.nil?
-      return link_to(label, record) if record.present? && show_route_exists_for?(record) && policy(record).show?
+      return link_to(label, record) if record.present? && show_route_exists?(record) && policy(record).show?
 
       label
     end
 
     private
+
+      def audit_link_label(audit, record)
+        if record.present? && record.is_a?(ActionText::RichText)
+          "Rich Text for #{record.record.class} #{record.record_id}"
+        elsif record.present? && record.respond_to?(:to_s)
+          "#{record.class} - #{record}"
+        else
+          "#{audit.auditable_type} (#{audit.auditable_id})"
+        end
+      end
 
       def formatted_audited_changes(audit)
         return 'deleted record' if audit.action == 'destroy' && audit.associated.blank?
@@ -60,11 +77,11 @@ module RadCommon
           changed_attribute = change.first
 
           if change[1].instance_of?(Array)
-            from_value = change[1][0]
-            to_value = change[1][1]
+            from_value = formatted_audit_value(audit, changed_attribute, change[1][0])
+            to_value = formatted_audit_value(audit, changed_attribute, change[1][1])
           else
             from_value = nil
-            to_value = change[1]
+            to_value = formatted_audit_value(audit, changed_attribute, change[1])
           end
 
           next if (from_value.blank? && to_value.blank?) || (from_value.to_s == to_value.to_s)
@@ -101,6 +118,15 @@ module RadCommon
         end
 
         audit_text
+      end
+
+      def formatted_audit_value(audit, attribute, raw_value)
+        return raw_value unless auditable_exists?(audit)
+
+        record = audit.auditable
+        return raw_value unless record&.defined_enums&.has_key?(attribute)
+
+        RadEnum.new(record.class, attribute).raw_translation(raw_value)
       end
 
       def classify_foreign_key(audit_column, audit_type)

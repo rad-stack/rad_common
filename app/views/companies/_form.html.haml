@@ -13,13 +13,17 @@
     .col-lg-2= f.input :phone_number
   .row
     .col-lg-6= f.input :timezone, as: :time_zone, priority: timezone_us_filter
-    .col-lg-3
-      = f.input :valid_user_domains, as: :array,
-                                     input_html: { type: :string },
-                                     placeholder: 'Enter a domain, for example: abc.com',
-                                     tooltip: t('tooltip.valid_user_domains')
+    - if RadConfig.validate_user_domains?
+      .col-lg-3
+        = f.input :valid_user_domains, as: :array,
+                                       input_html: { type: :string },
+                                       placeholder: 'Enter a domain, for example: abc.com',
+                                       tooltip: t('tooltip.valid_user_domains')
 
     .col-lg-3= f.input :validity_checked_at, as: :date, html5: true
+  .row
+    .col-lg-3= f.input :app_logo
+    .col-lg-3= f.input :fav_icon
 
   = render 'form_custom', f: f
   .form-actions

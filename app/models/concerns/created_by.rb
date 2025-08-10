@@ -13,4 +13,8 @@ module CreatedBy
   def created_by
     audits.where(action: 'create').where.not(user_id: nil).first&.user
   end
+
+  def modified_by
+    audits.where.not(user_id: nil).first&.user
+  end
 end

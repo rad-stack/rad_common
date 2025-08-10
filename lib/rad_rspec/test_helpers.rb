@@ -3,17 +3,21 @@ module TestHelpers
     Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/test_photo.png'), 'image/png')
   end
 
-  def bootstrap_select(value, attrs)
-    click_bootstrap_select(attrs)
-    if attrs[:search].present?
-      wait_for_ajax
-      find('.bs-searchbox input').fill_in(with: attrs[:search])
-    end
-    find('ul.inner li a span', text: value).click
+  def tom_select(value, attrs)
+    tom_search(value, attrs)
+    find('.ts-dropdown .option', text: value).click
   end
 
-  def click_bootstrap_select(attrs)
-    find(".bootstrap-select .dropdown-toggle[data-id='#{attrs[:from]}']").click
+  def tom_search(value, attrs)
+    click_tom_select(attrs)
+    return if attrs[:search].blank?
+
+    find('.ts-dropdown input').fill_in(with: attrs[:search])
+    wait_for_ajax
+  end
+
+  def click_tom_select(attrs)
+    find_by_id("#{attrs[:from]}-ts-control").click
   end
 
   def confirm_present?

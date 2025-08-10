@@ -2,7 +2,7 @@ class ContactLogSearch < RadCommon::Search
   def initialize(params, current_user)
     @current_user = current_user
 
-    super(query: ContactLog.joins(:contact_log_recipients).includes(:contact_log_recipients).distinct,
+    super(query: ContactLog.left_joins(:contact_log_recipients).includes(:contact_log_recipients).distinct,
           filters: filters_def,
           sort_columns: sort_columns_def,
           params: params,
@@ -13,8 +13,8 @@ class ContactLogSearch < RadCommon::Search
 
     def filters_def
       [date_filter,
-       { input_label: 'Service Type', name: :service_type, scope_values: enum_scopes(ContactLog, :service_type) },
-       { input_label: 'Log Type', name: :log_type, scope_values: enum_scopes(ContactLog, :sms_log_type) },
+       { column: :service_type, type: RadCommon::EnumFilter, klass: ContactLog },
+       { input_label: 'Log Type', column: :sms_log_type, type: RadCommon::EnumFilter, klass: ContactLog },
        user_filter('From User', 'contact_logs.from_user_id'),
        { input_label: 'From Number',
          column: 'contact_logs.from_number',
@@ -32,14 +32,10 @@ class ContactLogSearch < RadCommon::Search
          name: :to_email },
        { input_label: 'Record Type', column: 'contact_logs.record_type', options: record_type_options },
        { input_label: 'Record ID', column: :record_id, type: RadCommon::EqualsFilter, data_type: :integer },
-       { input_label: 'Associated User',
-         column: 'associated_with_user',
-         grouped: true,
-         options: UserGrouper.new(current_user).call,
-         scope: :associated_with_user,
-         blank_value_label: 'All Users' },
+       user_filter('Associated User', 'associated_with_user', :associated_with_user),
        { input_label: 'Content', column: 'content', type: RadCommon::LikeFilter },
-       { input_label: 'Success', name: :status, scope_values: %i[failed successful], blank_value_label: 'All Records' }]
+       { input_label: 'SMS Message ID', column: 'sms_message_id', type: RadCommon::LikeFilter },
+       { column: 'contact_log_recipients.success', input_label: 'Success?', type: RadCommon::BooleanFilter }]
     end
 
     def sort_columns_def
@@ -59,14 +55,15 @@ class ContactLogSearch < RadCommon::Search
     end
 
     def date_filter
-      { start_input_label: 'Start Date', end_input_label: 'End Date', column: :created_at, type: RadCommon::DateFilter }
+      { start_input_label: 'Start Date',
+        end_input_label: 'End Date',
+        column: :created_at,
+        default_start_value: Date.current,
+        default_end_value: Date.current,
+        type: RadCommon::DateFilter }
     end
 
-    def user_filter(label, column)
-      { input_label: label,
-        column: column,
-        grouped: true,
-        options: UserGrouper.new(current_user).call,
-        blank_value_label: 'All Users' }
+    def user_filter(label, column, scope = nil)
+      UserGrouper.new(current_user).user_filter(label, column, scope)
     end
 end

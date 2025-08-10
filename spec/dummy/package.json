@@ -2,44 +2,22 @@
   "license": "UNLICENSED",
   "private": true,
   "engines": {
-    "node": "16.20.2"
+    "node": "20.16.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
-    "@rails/actiontext": "^6.0.2-1",
-    "@rails/webpacker": "5.4.3",
-    "rad_common_js": "https://github.com/rad-stack/rad_common_js#49ea19c6835f8a30aa779c932bba30b541e9400e"
+    "rad_common_js": "https://github.com/rad-stack/rad_common_js#2cf33b07a4b7ebc80e964fdc7f54b759f2716eb4"
   },
   "devDependencies": {
-    "webpack": "^4.41.2",
-    "webpack-dev-server": "^3.10.1",
-    "eslint": "^6.3.0",
-    "stylelint": "^13.13.1"
+    "esbuild": "^0.25.8",
+    "eslint": "^9.31.0",
+    "sass": "^1.83.4",
+    "stylelint": "^16.14.1"
   },
-  "resolutions": {
-    "serialize-javascript": "^3.1.0",
-    "ssri": "^8.0.1",
-    "ws": "^7.4.6",
-    "glob-parent": "^5.1.2",
-    "normalize-url": "^4.5.1",
-    "trim-newlines": "^3.0.1",
-    "tar": "^4.4.18",
-    "set-value": "^4.0.1",
-    "nth-check": "^2.0.1",
-    "ansi-regex": "^5.0.1",
-    "node-forge": "^1.0.0",
-    "follow-redirects": "^1.14.8",
-    "json-schema": "^0.4.0",
-    "url-parse": "^1.5.8",
-    "async": "^2.6.4",
-    "eventsource": "^2.0.2",
-    "moment": "^2.29.4",
-    "loader-utils": "^2.0.3",
-    "terser": "^5.14.2",
-    "jquery-ui": "^1.13.2",
-    "json5": "^2.2.2",
-    "decode-uri-component": "^0.2.1",
-    "dns-packet": "^5.4.0",
-    "browserify-sign": "^4.2.2"
+  "scripts": {
+    "build": "yarn build:js && yarn build:css",
+    "build:dev": "yarn build:js --watch && yarn build:css --watch",
+    "build:js": "node esbuild.config.js",
+    "build:css": "sass ./app/assets/scss/application.scss:./app/assets/builds/application.css ./app/assets/scss/rad_mailer.scss:./app/assets/builds/rad_mailer.css --no-source-map --load-path=node_modules --style=compressed --quiet-deps"
   }
 }

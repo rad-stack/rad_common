@@ -12,7 +12,8 @@ RSpec.describe 'Divisions' do
 
   it 'loads validations when edit form renders' do
     Object.send(:remove_const, :Division)
-    load 'division.rb'
+    load Rails.root.join('app/models/division.rb')
+
     Division.schema_validations_loaded = true
     division = create :division
     Division.schema_validations_loaded = false

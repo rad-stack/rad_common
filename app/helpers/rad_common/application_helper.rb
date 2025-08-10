@@ -2,23 +2,31 @@ module RadCommon
   module ApplicationHelper
     ALERT_TYPES = %i[success info warning danger].freeze unless const_defined?(:ALERT_TYPES)
 
-    def secured_link(resource, format: nil)
-      return unless resource
+    def secured_link(record, format: nil, new_tab: false)
+      return unless record
 
-      if Pundit.policy!(current_user, resource).show?
-        link_to(resource_name(resource), resource, format: format)
+      style = secured_link_style(record)
+
+      if Pundit.policy!(current_user, record).show?
+        if new_tab
+          link_to record.to_s, record, format: format, class: style, target: '_blank', rel: 'noopener'
+        else
+          link_to record.to_s, record, format: format, class: style
+        end
+      elsif style.present?
+        content_tag :span, record, class: style
       else
-        resource_name(resource)
+        record.to_s
       end
     end
 
-    def show_route_exists_for?(record)
-      Rails.application.routes.url_helpers.respond_to? "#{record.class.table_name.singularize}_path"
+    def show_route_exists?(record)
+      RadCommon::ApplicationHelper.show_routes.include?(record.class.name)
     end
 
     def avatar_image(user, size)
       if RadConfig.avatar? && user.avatar.attached?
-        image_tag(user.avatar.variant(resize: '50x50'))
+        image_tag(user.avatar.variant(resize_to_limit: [50, 50]))
       else
         image_tag(gravatar_for(user, size))
       end
@@ -134,7 +142,7 @@ module RadCommon
     def bootstrap_flash_type(type)
       type = type.to_sym
 
-      type = :success if type == :notice
+      type = :success if type == :notice && RadConfig.legacy_assets?
       type = :danger  if type == :alert
       type = :danger  if type == :error
 
@@ -151,10 +159,23 @@ module RadCommon
       style_class
     end
 
+    def secured_link_style(record)
+      return unless record.present? && record.respond_to?(:active?) && !record.active?
+
+      'text-danger'
+    end
+
     def icon(icon, text = nil, options = {})
+      allowed_styles = %w[fa fab far fas fal]
+      style = options.fetch(:style, 'fa')
+
+      unless allowed_styles.include?(style)
+        raise ArgumentError, "Invalid Font Awesome style: '#{style}'. Allowed styles are: #{allowed_styles.join(', ')}"
+      end
+
       text_class = text.present? ? 'mr-2' : nil
       capture do
-        concat tag.i('', class: "fa fa-#{icon} #{text_class} #{options[:class]}".strip)
+        concat tag.i('', class: "#{style} fa-#{icon} #{text_class} #{options[:class]}".strip)
         concat text
       end
     end
@@ -220,16 +241,49 @@ module RadCommon
       end
     end
 
+    def rad_wicked_pdf_stylesheet_link_tag(source)
+      # Hack until https://github.com/mileszs/wicked_pdf/pull/1120 is merged
+      protocol = Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
+      stylesheet_link_tag source, host: "#{protocol}://#{RadConfig.host_name!}"
+    end
+
+    def rad_turbo_form_options(template_locals, options = {})
+      options[:data] ||= {}
+      options[:data].merge!(
+        controller: 'remote-form',
+        remote_form_success_message_value: template_locals[:toast_success],
+        remote_form_error_message_value: template_locals[:toast_error],
+        remote_form_target: 'form'
+      )
+      options
+    end
+
+    def rad_toast_data(template_locals)
+      { 'toast-success-message-value': template_locals[:toast_success] || template_locals[:notice],
+        'toast-error-message-value': template_locals[:toast_error],
+        controller: 'toast' }
+    end
+
+    def check_blob_validity(blob)
+      unless RadCommon::VALID_ATTACHMENT_TYPES.include?(blob.content_type)
+        raise "Invalid attachment type #{blob.content_type}"
+      end
+
+      raise 'Invalid attachment, must be 100 MB or less' if blob.byte_size > 100.megabytes
+    end
+
+    class << self
+      def show_routes
+        @show_routes ||= RadCommon::AppInfo.new.show_routes
+      end
+    end
+
     private
 
       def size_symbol_to_int(size_as_symbol)
         { small: 25,
           medium: 50,
           large: 200 }[size_as_symbol]
-      end
-
-      def resource_name(resource)
-        resource.to_s
       end
   end
 end

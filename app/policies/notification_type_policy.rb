@@ -3,7 +3,9 @@ class NotificationTypePolicy < ApplicationPolicy
     false
   end
 
-  alias destroy? create?
+  def destroy?
+    create?
+  end
 
   class Scope < Scope
     def resolve

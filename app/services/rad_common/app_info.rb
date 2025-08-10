@@ -14,10 +14,14 @@ module RadCommon
     end
 
     def audited_models
-      application_models.select do |model|
+      (application_models.select { |model|
         model_class = model.safe_constantize
         model_class.respond_to?(:auditing_enabled) && model_class.auditing_enabled
-      end
+      } + %w[ActiveStorage::Attachment ActionText::RichText]).sort
+    end
+
+    def associated_audited_models
+      audited_models + %w[ActiveStorage::Blob ActiveStorage::VariantRecord ActionMailbox::InboundEmail]
     end
 
     def duplicate_models
@@ -44,11 +48,30 @@ module RadCommon
       RadConfig.client_table_name!.classify.constantize
     end
 
+    def show_routes
+      model_names = application_models
+
+      Rails.application.routes.routes.map { |route|
+        next unless show_route?(route)
+
+        model_names.detect do |item|
+          model = item.safe_constantize # this will return nil on namespaced models, see Task 10500
+          next if model.nil?
+
+          route.defaults[:controller] == model.model_name.route_key
+        end
+      }.compact.uniq.sort
+    end
+
     private
 
       def exclude_tables
         %w[active_storage_attachments active_storage_variant_records active_storage_blobs action_text_rich_texts
-           ar_internal_metadata audits schema_migrations old_passwords login_activities]
+           action_mailbox_inbound_emails ar_internal_metadata audits schema_migrations old_passwords login_activities]
+      end
+
+      def show_route?(route)
+        route.defaults[:action] == 'show' && route.path.spec.to_s.include?('/:id') && route.verb&.match(/^GET$/)
       end
   end
 end

@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.17.2)
+      - smartystreets (sdk:ruby@5.20.4)
       Host:
       - us-street.api.smarty.com
       Content-Type:
@@ -25,7 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 21 Jun 2024 18:24:47 GMT
+      - Thu, 13 Mar 2025 16:48:22 GMT
+      X-Request-Id:
+      - '01959068-3226-749d-b9da-094e4cee7d42'
       Transfer-Encoding:
       - chunked
       Vary:
@@ -33,9 +35,9 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"4000 Central
-        Florida Blvd Ste 1000","last_line":"Orlando FL 32816-8005","delivery_point_barcode":"328168005007","components":{"primary_number":"4000","street_name":"Central
-        Florida","street_suffix":"Blvd","secondary_number":"1000","secondary_designator":"Ste","city_name":"Orlando","default_city_name":"Orlando","state_abbreviation":"FL","zipcode":"32816","plus4_code":"8005","delivery_point":"00","delivery_point_check_digit":"7"},"metadata":{"record_type":"S","zip_type":"Unique","county_fips":"12095","county_name":"Orange","carrier_route":"C000","congressional_district":"10","rdi":"Commercial","elot_sequence":"0001","elot_sort":"A","latitude":28.59608,"longitude":-81.20403,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AAU1","active":"Y","footnotes":"N#Q#","enhanced_match":"postal-match"}}]
+        Florida Blvd Ste 1000","last_line":"Orlando FL 32816-8005","delivery_point_barcode":"328168005007","smarty_key":"766350516","components":{"primary_number":"4000","street_name":"Central
+        Florida","street_suffix":"Blvd","secondary_number":"1000","secondary_designator":"Ste","city_name":"Orlando","default_city_name":"Orlando","state_abbreviation":"FL","zipcode":"32816","plus4_code":"8005","delivery_point":"00","delivery_point_check_digit":"7"},"metadata":{"record_type":"S","zip_type":"Unique","county_fips":"12095","county_name":"Orange","carrier_route":"C000","congressional_district":"10","rdi":"Commercial","elot_sequence":"0001","elot_sort":"A","latitude":28.59608,"longitude":-81.20403,"precision":"Zip9","time_zone":"Eastern","utc_offset":-5,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AAU1","active":"Y","footnotes":"N#Q#","enhanced_match":"postal-match,unknown-secondary,ignored-input"}}]
 
         '
-  recorded_at: Fri, 21 Jun 2024 18:24:47 GMT
-recorded_with: VCR 6.2.0
+  recorded_at: Thu, 13 Mar 2025 16:49:27 GMT
+recorded_with: VCR 6.3.1

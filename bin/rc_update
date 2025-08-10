@@ -5,6 +5,9 @@ def system!(*args)
   system(*args) || abort("\n== Command #{args} failed ==")
 end
 
+regenerate_lockfile = ARGV.include?('--regenerate-lockfile')
+yarn_upgrade = ARGV.include?('--yarn-upgrade')
+
 directory = Dir.pwd.include?('rad_common') ? "#{Dir.pwd}/spec/dummy" : Dir.pwd
 FileUtils.chdir directory do
   puts "\n== Removing old logs and tempfiles =="
@@ -23,8 +26,21 @@ FileUtils.chdir directory do
   puts "== Running RC Generator =="
   system! "bin/rails g rad_common:install --force"
 
-  puts '== Running Yarn Install =='
-  system! 'yarn install'
+  if regenerate_lockfile
+    puts '== Deleting yarn.lock =='
+    system! 'rm yarn.lock'
+  end
+
+  if yarn_upgrade
+    puts '== Running Yarn Upgrade =='
+    system! 'yarn upgrade'
+  else
+    puts '== Running Yarn Install =='
+    system! 'yarn install'
+  end
+
+  puts '== Running bundle incase of Gemfile update =='
+  system! 'bundle install'
 
   puts '== Running DB Migrate =='
   system! 'bundle exec rails db:migrate'

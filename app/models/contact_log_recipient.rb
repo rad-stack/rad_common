@@ -2,19 +2,19 @@ class ContactLogRecipient < ApplicationRecord
   belongs_to :contact_log
   belongs_to :to_user, class_name: 'User', optional: true
 
-  enum email_type: { to: 0, cc: 1, bcc: 2 }
+  enum :email_type, { to: 0, cc: 1, bcc: 2 }
 
-  enum sms_status: { accepted: 0,
-                     scheduled: 1,
-                     queued: 2,
-                     sending: 3,
-                     sent: 4,
-                     receiving: 5,
-                     delivered: 6,
-                     undelivered: 7,
-                     failed: 8 }, _prefix: true
+  enum :sms_status, { accepted: 0,
+                      scheduled: 1,
+                      queued: 2,
+                      sending: 3,
+                      sent: 4,
+                      receiving: 5,
+                      delivered: 6,
+                      undelivered: 7,
+                      failed: 8 }, prefix: true
 
-  enum email_status: { delivered: 0, dropped: 1, bounce: 2, spamreport: 3 }, _prefix: true
+  enum :email_status, { delivered: 0, dropped: 1, bounce: 2, spamreport: 3 }, prefix: true
 
   scope :sms, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }) }
   scope :failed, -> { joins(:contact_log).where(success: false) }
@@ -43,15 +43,16 @@ class ContactLogRecipient < ApplicationRecord
   validates_with PhoneNumberValidator, fields: [{ field: :phone_number }], skip_twilio: true
   validates_with EmailAddressValidator, fields: [:email], skip_sendgrid: true
 
-  validates :sms_status, presence: true, if: -> { contact_log&.sms? && contact_log&.outgoing? }
+  validates :sms_status, presence: true, if: -> { contact_log&.sms? && contact_log.outgoing? }
   validates :email_status, presence: true, if: -> { contact_log&.email? }
-  validates :sms_status, absence: true, if: -> { contact_log&.email? || contact_log&.incoming? }
+  validates :sms_status, absence: true, if: -> { contact_log&.email? || contact_log&.voice? || contact_log&.incoming? }
   validates :email_status, :sendgrid_reason, absence: true, if: -> { contact_log&.sms? }
 
   validate :validate_service_type
   validate :validate_incoming_fields
 
   before_validation :check_success
+  before_validation :check_sms_false_positive
   after_validation :assign_to_user
   after_commit :notify!, only: :update, if: :notify_failure?
 
@@ -62,8 +63,15 @@ class ContactLogRecipient < ApplicationRecord
     success?
   end
 
+  def to_s
+    "Contact Log Recipient #{id}"
+  end
+
   def sms_assume_failed!
     update! sms_status: :failed
+
+    Rails.logger.info "sms_assume_failed for #{id}"
+
     return unless notify_on_fail?
     return if sms_false_positive?
 
@@ -77,7 +85,7 @@ class ContactLogRecipient < ApplicationRecord
   private
 
     def check_success
-      return if contact_log.blank?
+      return if running_global_validity || contact_log.blank?
 
       if contact_log.incoming?
         self.success = true
@@ -88,8 +96,15 @@ class ContactLogRecipient < ApplicationRecord
       end
     end
 
+    def check_sms_false_positive
+      return if running_global_validity || contact_log.blank?
+
+      self.sms_false_positive =
+        !success? && contact_log.sms? && contact_log.outgoing? && to_user.present? && sms_mostly_successful?
+    end
+
     def assign_to_user
-      return if to_user.present?
+      return if running_global_validity || to_user.present?
 
       if email.present?
         self.to_user = User.find_by(email: email)
@@ -100,7 +115,7 @@ class ContactLogRecipient < ApplicationRecord
     end
 
     def validate_incoming_fields
-      return if contact_log.blank? || contact_log.outgoing? || contact_log.email?
+      return if contact_log.blank? || contact_log.outgoing? || contact_log.email? || contact_log.voice?
 
       errors.add(:to_user_id, 'must be blank') if to_user_id.present?
       errors.add(:success, 'must be true') unless success?
@@ -109,7 +124,7 @@ class ContactLogRecipient < ApplicationRecord
     def validate_service_type
       return if contact_log.blank?
 
-      if contact_log.sms?
+      if contact_log.sms? || contact_log.voice?
         errors.add(:email, 'must be blank') if email.present?
         errors.add(:phone_number, 'must be present') if phone_number.blank?
       else
@@ -126,11 +141,7 @@ class ContactLogRecipient < ApplicationRecord
       return false unless notify_on_fail?
       return success_previously_changed?(from: true, to: false) if contact_log.email?
 
-      sms_status_previously_changed? && sms_status_undelivered?
-    end
-
-    def sms_false_positive?
-      !success? && contact_log.sms? && contact_log.outgoing? && to_user.present? && sms_mostly_successful?
+      sms_status_previously_changed? && sms_status_undelivered? && !sms_false_positive?
     end
 
     def sms_mostly_successful?
@@ -153,9 +164,9 @@ class ContactLogRecipient < ApplicationRecord
     end
 
     def recent_sms_logs_to_user
-      @recent_sms_logs_to_user ||= to_user.contact_logs_to.joins(:contact_log)
-                                          .where(contact_logs: { service_type: :sms, sms_log_type: :outgoing })
-                                          .where(created_at: 30.days.ago..)
-                                          .sorted
+      to_user.contact_logs_to.joins(:contact_log)
+             .where(contact_logs: { service_type: :sms, sms_log_type: :outgoing })
+             .where(created_at: 30.days.ago..)
+             .sorted
     end
 end
