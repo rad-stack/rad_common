@@ -29,6 +29,10 @@ class NotificationType < ApplicationRecord
     true
   end
 
+  def default_notification_methods
+    [:email]
+  end
+
   def mailer_class
     'NotificationMailer'
   end
@@ -247,13 +251,17 @@ class NotificationType < ApplicationRecord
     end
 
     def enabled_for_method?(user_id, notification_method)
-      setting = notification_settings.find_by(user_id: user_id)
+      user = User.find(user_id)
+      setting = notification_settings.find_by(user: user)
 
-      if notification_method == :email
-        return true if setting.blank?
+      if setting.blank?
+        raise 'default_notification_methods must include :email' unless default_notification_methods.include?(:email)
 
-        setting.enabled? && setting.email?
-      elsif setting.blank? || !setting.enabled
+        return false unless default_notification_methods.include?(notification_method)
+        return true unless notification_method == :sms
+
+        RadConfig.twilio_enabled? && user.mobile_phone.present?
+      elsif !setting.enabled
         false
       else
         setting.send(notification_method)
