@@ -20,8 +20,8 @@ module RadCommon
       end
     end
 
-    def show_route_exists_for?(record)
-      Rails.application.routes.url_helpers.respond_to? "#{record.class.table_name.singularize}_path"
+    def show_route_exists?(record)
+      RadCommon::ApplicationHelper.show_routes.include?(record.class.name)
     end
 
     def avatar_image(user, size)
@@ -270,6 +270,12 @@ module RadCommon
       end
 
       raise 'Invalid attachment, must be 100 MB or less' if blob.byte_size > 100.megabytes
+    end
+
+    class << self
+      def show_routes
+        @show_routes ||= RadCommon::AppInfo.new.show_routes
+      end
     end
 
     private
