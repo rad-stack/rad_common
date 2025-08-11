@@ -196,6 +196,10 @@ class RadConfig
       boolean_config_item! :impersonate
     end
 
+    def show_sign_in_marketing?
+      boolean_config_item! :show_sign_in_marketing
+    end
+
     def avatar?
       boolean_config_item! :use_avatar
     end
