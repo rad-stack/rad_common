@@ -23,13 +23,13 @@ module RadCommon
         standardize_date_methods
         install_database_yml
         install_github_workflow
-        install_show_sign_in_marketing_setting
         update_seeder_method
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'timezone_detection', 'true'
         add_rad_config_setting 'portal', 'false'
         add_rad_config_setting 'validate_user_domains', 'true'
+        add_rad_config_setting 'show_sign_in_marketing', 'false'
         remove_rad_factories
         remove_legacy_rails_config_setting
 
@@ -399,12 +399,6 @@ Seeder.new.seed!
           copy_file Rails.root.join('config/temp_database.yml'), 'config/database.yml'
           remove_file Rails.root.join('config/temp_database.yml')
         end
-
-      def install_show_sign_in_marketing_setting
-        return if rad_config_setting_exists?('show_sign_in_marketing')
-
-        add_rad_config_setting 'show_sign_in_marketing', 'false'
-      end
 
         def install_github_workflow
           if RadConfig.legacy_assets?
