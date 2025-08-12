@@ -15,8 +15,8 @@
             %th= item[:label]
           %th Total
           %th Trend
-        - data = []
         - @system_usage_search.usage_items.each_with_index do |_item, item_index|
+          - data = []
           %tr
             %td= @system_usage_search.usage_data[item_index].first[:name]
             %td= @system_usage_search.usage_data[item_index].first[:current_count]
@@ -26,11 +26,21 @@
             %td= @system_usage_search.total item_index
             %td
               .d-grid.gap-2
-                %button.btn.btn-sm.btn-success.btn-block{
+                %button.btn.btn-sm.btn-success{
                   type: 'button', data: { 'bs-toggle': 'collapse', 'bs-target': "#chart-#{item_index}" }
                 }
-                  Show
-          %tbody.collapse{ id: "chart-#{item_index}" }
-            %tr
+                  %i.fa.fa-light.fa-chart-line
+                  View Trend
+            %tr.collapse{ id: "chart-#{item_index}" }
               %td{ colspan: @system_usage_search.date_column_ranges.count + 4 }
-                = line_chart(data)
+                .chart-container{ data: { chart_data: data.to_json } }
+
+:javascript
+  document.addEventListener('shown.bs.collapse', function (event) {
+    const container = event.target.querySelector('.chart-container');
+    if (container) {
+      const data = JSON.parse(container.dataset.chartData);
+      container.innerHTML = '';
+      new Chartkick.LineChart(container, data);
+    }
+  });
