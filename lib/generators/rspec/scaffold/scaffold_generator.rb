@@ -31,10 +31,6 @@ module Rspec
         def attributes_names
           @attributes_names ||= attributes.reject(&:reference?).map(&:name)
         end
-
-        def policy_methods
-          %w[index? show? create? new? update? edit? destroy?]
-        end
     end
   end
 end
