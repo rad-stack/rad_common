@@ -29,6 +29,7 @@ module RadCommon
         add_rad_config_setting 'timezone_detection', 'true'
         add_rad_config_setting 'portal', 'false'
         add_rad_config_setting 'validate_user_domains', 'true'
+        add_rad_config_setting 'show_sign_in_marketing', 'false'
         remove_rad_factories
         remove_legacy_rails_config_setting
 
