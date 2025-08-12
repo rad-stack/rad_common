@@ -23,6 +23,7 @@ module RadCommon
         standardize_date_methods
         install_database_yml
         install_github_workflow
+        install_show_sign_in_marketing_setting
         update_seeder_method
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
