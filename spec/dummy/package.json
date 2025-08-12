@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
-    "rad_common_js": "https://github.com/rad-stack/rad_common_js#7dcedb8873f6ba4473e38ce4d6761b6eedb56533"
+    "rad_common_js": "https://github.com/rad-stack/rad_common_js#bd0e5b54424096bfa163a93e26b78a8bfb6d98bb"
   },
   "devDependencies": {
     "esbuild": "^0.25.8",
