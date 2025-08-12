@@ -21,6 +21,7 @@ module RadCommon
     require 'audited'
     require 'authtrail'
     require 'csv'
+    require 'chartkick'
     require 'devise'
     require 'devise-twilio-verify'
     require 'devise-security'
