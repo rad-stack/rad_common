@@ -406,6 +406,12 @@ Seeder.new.seed!
           remove_file Rails.root.join('config/temp_database.yml')
         end
 
+      def install_show_sign_in_marketing_setting
+        return if rad_config_setting_exists?('show_sign_in_marketing')
+
+        add_rad_config_setting 'show_sign_in_marketing', 'false'
+      end
+
         def install_github_workflow
           if RadConfig.legacy_assets?
             copy_file '../rspec_tests_legacy.yml', '.github/workflows/rspec_tests.yml'
