@@ -30,5 +30,3 @@ group :development, :test do
   gem 'propshaft'
   gem 'pry'
 end
-
-gem 'chartkick'
