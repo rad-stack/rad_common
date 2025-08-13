@@ -526,17 +526,27 @@ gem 'propshaft'
           search_and_replace 'pr-', 'pe-'
           search_and_replace 'float-left', 'float-start'
           search_and_replace 'float-right', 'float-end'
+          search_and_replace 'text-left', 'text-start'
+          search_and_replace 'text-right', 'text-end'
           search_and_replace 'data-toggle', 'data-bs-toggle'
 
-          gsub_from_file_content(search_pattern: /data: \{ toggle: 'collapse',(\s*)target:/,
-                               replacement_string: "data: { 'bs-toggle': 'collapse',\\1'bs-target':")
+          # data: { toggle: 'str', target:
+          gsub_from_file_content(search_pattern: /data: \{ toggle: '([^']*)',(\s*)target:/,
+                               replacement_string: "data: { 'bs-toggle': '\\1',\\2'bs-target':")
+          # data: { placement: 'str', toggle:
           gsub_from_file_content(search_pattern: /data: \{ placement: '([^']*)',(\s*)toggle:/,
                                  replacement_string: "data: { 'bs-placement': '\\1',\\2'bs-toggle':")
+          # data: { toggle: 'str', placement: }
+          gsub_from_file_content(search_pattern: /data: \{ toggle: '([^']*)',(\s*)placement:/,
+                                 replacement_string: "data: { 'bs-toggle': '\\1',\\2'bs-placement':")
+          # data: { toggle: 
+          gsub_from_file_content(search_pattern: /data: \{ toggle:/,
+                                 replacement_string: "data: { 'bs-toggle':")
+
           search_and_replace 'data-placement', 'data-bs-placement'
           search_and_replace 'data-dismiss', 'data-bs-dismiss'
           search_and_replace 'data-target', 'data-bs-target'
-          search_and_replace "data: { placement: 'top', toggle: 'tooltip' }",
-                             "data: { 'bs-placement': 'top', 'bs-toggle': 'tooltip' }"
+
           search_and_replace 'form-group', 'mb-3'
           search_and_replace 'form-inline', 'd-flex align-items-center'
           search_and_replace 'badge-pill', 'rounded-pill'
