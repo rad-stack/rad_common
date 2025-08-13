@@ -542,6 +542,9 @@ gem 'propshaft'
           # data: { toggle: 
           gsub_from_file_content(search_pattern: /data: \{ toggle:/,
                                  replacement_string: "data: { 'bs-toggle':")
+          # data: { target: 
+          gsub_from_file_content(search_pattern: /data: \{ target:/,
+                                 replacement_string: "data: { 'bs-target':")
 
           search_and_replace 'data-placement', 'data-bs-placement'
           search_and_replace 'data-dismiss', 'data-bs-dismiss'
