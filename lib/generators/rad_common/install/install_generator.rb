@@ -524,10 +524,18 @@ gem 'propshaft'
           search_and_replace 'mr-', 'me-'
           search_and_replace 'pl-', 'ps-'
           search_and_replace 'pr-', 'pe-'
+
           search_and_replace 'float-left', 'float-start'
-          search_and_replace 'float-right', 'float-end'
           search_and_replace 'text-left', 'text-start'
+          search_and_replace 'text-sm-left', 'text-sm-start'
+          search_and_replace 'text-md-left', 'text-md-start'
+          search_and_replace 'text-lg-left', 'text-lg-start'
+
+          search_and_replace 'float-right', 'float-end'
           search_and_replace 'text-right', 'text-end'
+          search_and_replace 'text-sm-right', 'text-sm-end'
+          search_and_replace 'text-md-right', 'text-md-end'
+          search_and_replace 'text-lg-right', 'text-lg-end'
           search_and_replace 'data-toggle', 'data-bs-toggle'
 
           # data: { toggle: 'str', target:
