@@ -373,18 +373,16 @@ Seeder.new.seed!
         end
 
         def update_credentials
+          return if ENV['CI']
+
+          new_value = ask 'Enter the developer domain.'
+
           %w[development test staging production].each do |environment|
             credentials_path = Rails.root.join("config/credentials/#{environment}.yml.enc")
             key_path = Rails.root.join("config/credentials/#{environment}.key")
             decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
             current_credentials = YAML.safe_load(decrypted_content) || {}
             next if current_credentials.key?('developer_domain')
-
-            new_value = if ENV['CI']
-                          ENV['DEVELOPER_DOMAIN']
-                        else
-                          ask 'Enter the developer domain.'
-                        end
 
             new_line = "\n\ndeveloper_domain: #{new_value}"
             updated_content = decrypted_content.chomp + new_line + "\n"
