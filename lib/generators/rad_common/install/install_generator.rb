@@ -379,6 +379,8 @@ Seeder.new.seed!
 
           %w[development test staging production].each do |environment|
             credentials_path = Rails.root.join("config/credentials/#{environment}.yml.enc")
+            next unless File.exist?(credentials_path)
+
             key_path = Rails.root.join("config/credentials/#{environment}.key")
             decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
             current_credentials = YAML.safe_load(decrypted_content) || {}
