@@ -540,10 +540,10 @@ gem 'propshaft'
           # data: { toggle: 'str', placement: }
           gsub_from_file_content(search_pattern: /data: \{ toggle: '([^']*)',(\s*)placement:/,
                                  replacement_string: "data: { 'bs-toggle': '\\1',\\2'bs-placement':")
-          # data: { toggle: 
+          # data: { toggle:
           gsub_from_file_content(search_pattern: /data: \{ toggle:/,
                                  replacement_string: "data: { 'bs-toggle':")
-          # data: { target: 
+          # data: { target:
           gsub_from_file_content(search_pattern: /data: \{ target:/,
                                  replacement_string: "data: { 'bs-target':")
 
@@ -579,6 +579,7 @@ gem 'propshaft'
             next if File.directory?(path)
             next unless path.include?('/app/')
             next if path.include?('/assets/')
+            next if path.downcase.include?('.ds_store')
 
             begin
               content = File.read(path)
