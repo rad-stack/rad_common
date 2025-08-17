@@ -32,6 +32,7 @@ module RadCommon
         add_rad_config_setting 'show_sign_in_marketing', 'false'
         remove_rad_factories
         remove_legacy_rails_config_setting
+        update_credentials
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
@@ -369,6 +370,26 @@ Seeder.new.seed!
 
           say_status :remove, 'legacy_rails_config from rad_common.yml'
           gsub_file RAD_CONFIG_FILE, /^\s*legacy_rails_config:\s*.*\n/, ''
+        end
+
+        def update_credentials
+          %w[development test staging production].each do |environment|
+            credentials_path = Rails.root.join("config/credentials/#{environment}.yml.enc")
+            key_path = Rails.root.join("config/credentials/#{environment}.key")
+            decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
+            current_credentials = YAML.safe_load(decrypted_content) || {}
+            next if current_credentials.key?('developer_domain')
+
+            new_value = if ENV['CI']
+                          ENV['DEVELOPER_DOMAIN']
+                        else
+                          ask 'Enter the developer domain.'
+                        end
+
+            new_line = "\n\ndeveloper_domain: #{new_value}"
+            updated_content = decrypted_content.chomp + new_line + "\n"
+            Rails.application.encrypted(credentials_path, key_path: key_path).write(updated_content)
+          end
         end
 
         def update_seeder_method
