@@ -117,6 +117,10 @@ module SchemaValidations
         options = {}
         options[:allow_nil] = true
         options[:scope] = columns[1..-1].map(&:to_sym) if columns.count > 1
+        unless index.nulls_not_distinct
+          sql_conditions = columns.map{ |column| "#{column} IS NULL"}
+          options[:conditions] = -> { where(sql_conditions.join(' OR ')) }
+        end
         options.merge! index_options(index.name.to_sym)
         validate_logged :validates_uniqueness_of, first_column, options
       end
