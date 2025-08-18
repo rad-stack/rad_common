@@ -138,7 +138,7 @@ class CardPresenter
       return
     end
 
-    'alert-danger'
+    'bg-danger bg-opacity-25'
   end
 
   def output_title

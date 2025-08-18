@@ -6,7 +6,7 @@ class ArrayInput < SimpleForm::Inputs::StringInput
 
     array_elements = object.public_send(attribute_name)
     array_elements = [] << '' if array_elements.blank?
-
+    input_html_classes.push("array-field mb-2 form-control#{errors.any? ? ' is-invalid' : ''}")
     html_items = Array(array_elements).map do |array_el|
       @builder.text_field(nil, input_html_options.merge(value: array_el, name: "#{object_name}[#{attribute_name}][]"))
     end
@@ -18,10 +18,6 @@ class ArrayInput < SimpleForm::Inputs::StringInput
 
   def input_type
     :number
-  end
-
-  def input_html_classes
-    super.push("array-field mb-2 form-control#{errors.any? ? ' is-invalid' : ''}")
   end
 
   private

@@ -25,8 +25,8 @@ module RadCommon
       return if tooltip.blank?
 
       tag.i('',
-            class: 'fa fa-circle-question custom-tooltip tooltip-pad mr-2 align-self-center',
-            'data-toggle': 'tooltip',
+            class: 'fa fa-circle-question custom-tooltip tooltip-pad me-2 align-self-center',
+            'data-bs-toggle': 'tooltip',
             title: tooltip)
     end
   end

@@ -25,7 +25,7 @@ describe RadCommon::TooltipHelper do
 
     it 'defaults tooltip placement to top' do
       tooltip = icon_tooltip(html_tag, title)
-      expect(tooltip).to include('data-placement="top"')
+      expect(tooltip).to include('data-bs-placement="top"')
     end
 
     it 'changes the tooltip icon with 3rd argument' do

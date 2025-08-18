@@ -5,7 +5,7 @@
 
   .card-body
     = render 'layouts/filter', search: @audit_search, path: audits_path
-    = paginate @audits, theme: 'twitter-bootstrap-4'
+    = paginate @audits, theme: 'bootstrap-5'
 
     %table.table.table-striped.table-bordered
       %tr
@@ -25,4 +25,4 @@
           %td= audit.remote_address
           %td= audit.id
           %td= simple_format(display_audited_changes(audit))
-    = paginate @audits, theme: 'twitter-bootstrap-4'
+    = paginate @audits, theme: 'bootstrap-5'
