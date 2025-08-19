@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_22_203947) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_19_201611) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -70,6 +70,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_22_203947) do
     t.boolean "active", default: true, null: false
     t.string "mobile_phone"
     t.jsonb "address_metadata"
+    t.index ["first_name", "last_name", "mobile_phone"], name: "index_attorneys_on_first_name_and_last_name_and_mobile_phone", unique: true
   end
 
   create_table "audits", force: :cascade do |t|

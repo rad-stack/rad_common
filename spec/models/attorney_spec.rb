@@ -12,4 +12,21 @@ RSpec.describe Attorney do
       expect(rich_text_audit.audited_changes['body']).to include('<div class="trix-content">')
     end
   end
+
+  describe 'validations' do
+    let(:first_name) { 'John' }
+    let(:last_name) { 'Smith' }
+    let(:mobile_phone) { '(999) 999-9999' }
+
+    before { create :attorney, first_name: first_name, last_name: last_name, mobile_phone: mobile_phone }
+
+    it 'allows multiple attorneys same first and last name, without mobile phone' do
+      create :attorney, first_name: first_name, last_name: last_name, mobile_phone: nil
+      expect(build(:attorney, first_name: first_name, last_name: last_name, mobile_phone: nil)).to be_valid
+    end
+
+    it "doesn't allow multiple attorneys with the same first, last, and mobile phone" do
+      expect(build(:attorney, first_name: first_name, last_name: last_name, mobile_phone: mobile_phone)).not_to be_valid
+    end
+  end
 end
