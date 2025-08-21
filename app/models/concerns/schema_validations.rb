@@ -125,7 +125,7 @@ module SchemaValidations
     def add_null_values_conditions?(index)
       # The default postgres unique index behavior is "NULL DISTINCT" which means if any columns are null in the index
       # that row is considered completely unique, no matter what other duplicate values are in other columns.
-      # This means we should completely skip the unique check.
+      # This means we should completely skip the unique check if there are any null values.
       # You can set a unique index as "NULLS NOT DISTINCT" which would consider combinations of columns with values
       # that contain null values as null, then standard unique validation would work without further modification
       !index.nulls_not_distinct
