@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_19_201611) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_21_144438) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -54,8 +54,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_19_201611) do
   end
 
   create_table "attorneys", force: :cascade do |t|
-    t.string "first_name", null: false
-    t.string "last_name", null: false
+    t.string "first_name"
+    t.string "last_name"
     t.string "middle_name"
     t.string "company_name", null: false
     t.string "phone_number"
@@ -109,6 +109,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_19_201611) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email", null: false
+    t.string "business_type"
+    t.index ["name", "business_type"], name: "index_clients_on_name_and_business_type", unique: true, nulls_not_distinct: true
     t.index ["name"], name: "index_clients_on_name"
   end
 

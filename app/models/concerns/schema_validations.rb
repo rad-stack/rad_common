@@ -115,15 +115,30 @@ module SchemaValidations
         columns = index.columns
         first_column = columns.first.to_sym
         options = {}
-        options[:allow_nil] = true
         options[:scope] = columns[1..-1].map(&:to_sym) if columns.count > 1
-        unless index.nulls_not_distinct
-          sql_conditions = columns.map { |column| "#{column} IS NOT NULL" }
-          options[:conditions] = -> { where(sql_conditions.join(' AND ')) }
-        end
+        options[:conditions] = unique_conditions_for_index(index)
         options.merge! index_options(index.name.to_sym)
         validate_logged :validates_uniqueness_of, first_column, options
       end
+    end
+
+    def add_null_values_conditions?(index)
+      # The default postgres unique index behavior is "NULL DISTINCT" which means if any columns are null in the index
+      # that row is considered completely unique, no matter what other duplicate values are in other columns.
+      # This means we should completely skip the unique check.
+      # You can set a unique index as "NULLS NOT DISTINCT" which would consider combinations of columns with values
+      # that contain null values as null, then standard unique validation would work without further modification
+      !index.nulls_not_distinct
+    end
+
+    def unique_conditions_for_index(index)
+      index_condition_skip_rows_containing_nulls(index) if add_null_values_conditions?(index)
+    end
+
+    def index_condition_skip_rows_containing_nulls(index)
+      columns = index.columns
+      sql_conditions = columns.map { |column| "#{column} IS NOT NULL" }
+      -> { where(sql_conditions.join(' AND ')) }
     end
 
     def validate_logged(method, arg, opts = {})
