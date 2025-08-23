@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 describe DuplicateFixable do
-  let(:attorney) { create :attorney }
+  let(:super_long_name) { 50.times.map { Faker::Name.first_name }.join(' ') }
+  let(:attorney) { create :attorney, first_name: super_long_name }
   let(:created_by) { create :user }
   let!(:admin) { create :admin }
   let(:bypass_notifications) { false }
