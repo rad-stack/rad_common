@@ -171,6 +171,14 @@ module RadCommon
                   'lib/templates/rspec/system/system_spec.rb.tt'
         remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
 
+        # pundit template
+        copy_file '../../../../../spec/dummy/lib/templates/pundit/policy.rb.tt',
+                  'lib/templates/pundit/policy.rb.tt'
+
+        # factory bot
+        copy_file '../../../../../spec/dummy/lib/templates/factory_bot/factory.rb.tt',
+                  'lib/templates/factory_bot/factory.rb.tt'
+
         unless RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
