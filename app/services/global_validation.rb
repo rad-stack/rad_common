@@ -25,6 +25,7 @@ class GlobalValidation
     models_to_check.each do |model|
       next if exclude_models.include?(model)
 
+      puts "checking #{model}"
       start_time = Time.current
       model_errors, error_count = check_model(model)
       error_messages.concat(model_errors) if model_errors.present?
@@ -37,6 +38,7 @@ class GlobalValidation
       specific_queries = RadConfig.global_validity_include!
 
       specific_queries.each do |query|
+        puts "checking specific query #{query}"
         start_time = Time.current
         query_errors, error_count = check_query_records(query)
         error_messages.concat(query_errors) if query_errors.present?
@@ -130,7 +132,7 @@ class GlobalValidation
                       run_seconds: run_seconds,
                       error_count: error_count)
 
-      Rails.logger.info "global validity ran for #{item_name} in " \
+      puts "global validity ran for #{item_name} in " \
                         "#{Time.at(run_seconds).utc.strftime('%H:%M:%S')}"
     end
 
