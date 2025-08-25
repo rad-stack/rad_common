@@ -1,0 +1,14 @@
+%th
+  - if sort_column[:column]
+    :ruby
+      direction = sort_column[:column] == search.sort_column && search.sort_direction == 'asc' ? 'desc' : 'asc'
+      label = sort_column[:label] || sort_column[:column].titleize
+      search_params = { search: search.search_params.merge({ sort: sort_column[:column], direction: direction }) }
+
+    = link_to label, search_params
+
+    - if sort_column[:column] == search.sort_column
+      - icon = search.sort_direction == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'
+      = tag.i '', class: "#{icon} ms-1"
+  - else
+    = sort_column[:label]

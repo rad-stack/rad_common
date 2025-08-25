@@ -7,7 +7,7 @@
       .col-lg-6= f.input :last_name
     .row
       .col-lg-6= f.input :mobile_phone, required: require_mobile_phone?
-      .col-lg-6= f.input :email, disabled: !@user.new_record?
+      .col-lg-6= f.input :email, disabled: !policy(@user).allow_email_change?
     .row
       .col-lg-6= f.association :user_status, collection: UserStatus.by_id
       - if RadConfig.switch_languages?
@@ -31,7 +31,7 @@
       .row.internal
         .col-lg-12
           = f.input :security_roles, as: :check_boxes,
-                                     item_wrapper_class: 'col-lg-3 security-role-checkboxes',
+                                     item_wrapper_class: 'col-lg-3 security-role-checkboxes form-check',
                                      collection: security_role_collection(:internal),
                                      checked: @user.security_roles.ids
 
@@ -39,7 +39,7 @@
       .row.external
         .col-lg-12
           = f.input :security_roles, as: :check_boxes,
-                                     item_wrapper_class: 'col-lg-3 security-role-checkboxes',
+                                     item_wrapper_class: 'col-lg-3 security-role-checkboxes form-check',
                                      collection: security_role_collection(:external),
                                      checked: @user.security_roles.ids
     = render 'users/form_custom', f: f

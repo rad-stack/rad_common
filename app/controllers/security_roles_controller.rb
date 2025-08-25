@@ -48,7 +48,7 @@ class SecurityRolesController < ApplicationController
     destroyed = @security_role.destroy
 
     if destroyed
-      flash[:success] = 'Security role was successfully deleted.'
+      flash[:notice] = 'Security role was successfully deleted.'
     else
       flash[:error] = @security_role.errors.full_messages.join(', ')
     end
@@ -79,7 +79,7 @@ class SecurityRolesController < ApplicationController
     end
 
     def permitted_params
-      params.require(:security_role).permit(%i[name external allow_invite allow_sign_up] +
+      params.require(:security_role).permit(%i[name external allow_invite allow_sign_up two_factor_auth] +
                                               RadPermission.all.map(&:to_sym))
     end
 end

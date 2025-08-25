@@ -1,11 +1,24 @@
 module RadCommon
   module UsersHelper
     def user_show_data(user)
-      items = [:email, :mobile_phone, { label: 'User Status', value: user_status_item(user) }, :timezone]
+      items = [:email,
+               :mobile_phone,
+               { label: 'User Status', value: user_status_item(user) },
+               :timezone,
+               :detected_timezone,
+               :detected_timezone_js,
+               :ignored_timezone]
+
       items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
 
-      items += %i[sign_in_count invitation_accepted_at invited_by current_sign_in_ip current_sign_in_at confirmed_at
-                  confirmation_sent_at unconfirmed_email]
+      items += [:sign_in_count,
+                :invitation_accepted_at,
+                :invited_by,
+                :current_sign_in_ip,
+                :current_sign_in_at,
+                :confirmed_at,
+                :confirmation_sent_at,
+                unconfirmed_email_show_item(user)]
 
       items.push(:last_activity_at) if user.respond_to?(:last_activity_at)
 
@@ -41,6 +54,14 @@ module RadCommon
       [icon_tooltip('span', tooltip, icon, html_class: 'text-warning'), ' ']
     end
 
+    def unconfirmed_email_show_item(user)
+      value = if user.unconfirmed_email.present?
+                content_tag(:span, user.unconfirmed_email, class: 'badge bg-warning bg-opacity-75')
+              end
+
+      { label: 'Unconfirmed Email', value: value }
+    end
+
     def my_profile_nav?
       UserProfilePolicy.new(current_user, current_user).show?
     end
@@ -53,7 +74,7 @@ module RadCommon
 
       return unless current_user.avatar.attached?
 
-      image_tag current_user.avatar.variant(resize: '100x100'), class: 'user-icon'
+      image_tag current_user.avatar.variant(resize_to_limit: [100, 100]), class: 'user-icon'
     end
 
     def users_actions
@@ -109,10 +130,10 @@ module RadCommon
     def user_index_actions(user)
       items = []
 
-      items.push(add_user_client_action(user, true))
+      items.push(add_user_client_action(user))
 
       if policy(user).update?
-        items.push(link_to(icon(:pencil, 'Edit'), edit_user_path(user), class: 'btn btn-secondary btn-sm btn-block'))
+        items.push(link_to(icon(:pencil, 'Edit'), edit_user_path(user), class: 'btn btn-secondary btn-sm'))
       end
 
       if policy(user).destroy?
@@ -120,7 +141,7 @@ module RadCommon
                            user,
                            method: :delete,
                            data: { confirm: 'Are you sure?' },
-                           class: 'btn btn-danger btn-sm btn-block'))
+                           class: 'btn btn-danger btn-sm'))
       end
 
       items
@@ -130,7 +151,7 @@ module RadCommon
       return unless policy(user).impersonate?
 
       link_to icon('right-to-bracket', 'Sign In As'),
-              "/rad_common/impersonations/start?id=#{user.id}",
+              start_impersonations_path(id: user.id),
               method: :post,
               data: { confirm: 'Sign in as this user? Note that any audit trail records will still be associated to ' \
                                'your original user.' },
@@ -187,17 +208,15 @@ module RadCommon
     end
 
     def user_client_actions(user)
-      [add_user_client_action(user, false)]
+      [add_user_client_action(user)]
     end
 
-    def add_user_client_action(user, index_page)
+    def add_user_client_action(user)
       return unless RadConfig.user_clients? && user.external? && policy(UserClient.new(user: user)).new?
-
-      link_class = index_page ? 'btn btn-sm btn-success btn-block' : 'btn btn-sm btn-success'
 
       link_to(icon(:plus, "Add #{RadCommon::AppInfo.new.client_model_label} to User"),
               [:new, user, :user_client],
-              class: link_class)
+              class: 'btn btn-sm btn-success')
     end
 
     def reactivate_user_warning(user)
@@ -223,7 +242,7 @@ module RadCommon
                  type: 'button',
                  class: 'btn btn-sm btn-secondary',
                  'data-target': '#users-collapse',
-                 'data-toggle': 'collapse'
+                 'data-bs-toggle': 'collapse'
     end
 
     def user_row_class(user, hide_inactive)

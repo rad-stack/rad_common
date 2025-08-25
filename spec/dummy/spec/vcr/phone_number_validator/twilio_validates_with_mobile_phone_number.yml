@@ -8,7 +8,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Accept:
@@ -23,52 +23,45 @@ http_interactions:
       message: OK
     headers:
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json;charset=utf-8
       Content-Length:
       - '331'
       Connection:
       - keep-alive
       Date:
-      - Tue, 07 May 2024 15:23:29 GMT
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Allow-Headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQcc6228faead2109b4d5a909a28ead348
-      Twilio-Request-Duration:
-      - '0.032'
+      - Thu, 13 Mar 2025 16:50:43 GMT
       Twilio-Concurrent-Requests:
       - '1'
-      X-Shenanigans:
-      - none
-      X-Powered-By:
-      - AT-5000
+      Twilio-Request-Id:
+      - RQc6d909f0addc3d09dbbfffc482d14b97
+      Twilio-Request-Duration:
+      - '0.047'
       X-Home-Region:
       - us1
       X-Api-Domain:
       - lookups.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      Vary:
+      - Accept-Encoding
+      - Origin
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 3fd17c31689f793aac4732078b019056.cloudfront.net (CloudFront)
+      - 1.1 09bd981fa2f1f158d4c9bdff1b08aea2.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
-      - MIA3-P8
+      - MIA50-P4
       X-Amz-Cf-Id:
-      - ynemOAhsayRh2V_o2SJJypJLFb8Lk2OrZCI0zHCBYJz040kdH7lulw==
+      - m2O6AYMkJWxl6dzj1abaqz4ZQnnKaHaT7pBMeHGpx3aaWbK4-PeWwA==
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
     body:
-      encoding: UTF-8
-      string: '{"phone_number": "+1<TEST_MOBILE_PHONE_STRIPPED>", "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_MOBILE_PHONE_STRIPPED>",
-        "caller_name": null, "national_format": "<TEST_MOBILE_PHONE>", "country_code":
-        "US", "carrier": {"name": "AT&T Wireless", "type": "mobile", "error_code":
-        null, "mobile_country_code": "311", "mobile_network_code": "180"}, "add_ons":
-        null}'
-  recorded_at: Tue, 07 May 2024 15:23:29 GMT
-recorded_with: VCR 6.2.0
+      encoding: ASCII-8BIT
+      string: '{"add_ons": null, "caller_name": null, "carrier": {"error_code": null,
+        "mobile_country_code": "311", "mobile_network_code": "180", "name": "AT&T
+        Wireless", "type": "mobile"}, "country_code": "US", "national_format": "<TEST_MOBILE_PHONE>",
+        "phone_number": "+1<TEST_MOBILE_PHONE_STRIPPED>", "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_MOBILE_PHONE_STRIPPED>"}'
+  recorded_at: Thu, 13 Mar 2025 16:50:43 GMT
+recorded_with: VCR 6.3.1

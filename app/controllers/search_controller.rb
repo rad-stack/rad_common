@@ -1,11 +1,16 @@
 class SearchController < ApplicationController
+  before_action :set_global_search_mode, only: :global_search
+
   def global_search
     # authorization is checked within the global_autocomplete_result
     skip_authorization
 
-    global_autocomplete = GlobalAutocomplete.new(params, GlobalSearch.new(current_user).scopes, current_user)
+    global_autocomplete = GlobalAutocomplete.new(params,
+                                                 GlobalSearch.new(current_user, @global_search_mode).scopes,
+                                                 current_user,
+                                                 @global_search_mode)
 
-    if params['super_search'].to_i == 1
+    if params['super_search'] == 'true'
       render json: global_autocomplete.global_super_search_result
     else
       render json: global_autocomplete.global_autocomplete_result
@@ -30,11 +35,27 @@ class SearchController < ApplicationController
       end
 
       if the_object
-        redirect_to the_object
+        if current_user.external? && RadConfig.portal?
+          redirect_to [:portal, the_object]
+        else
+          redirect_to the_object
+        end
       else
         flash[:error] = 'Could not find record, please try your search again.'
         redirect_to root_path
       end
     end
   end
+
+  private
+
+    def set_global_search_mode
+      @global_search_mode = if params[:global_search_mode].blank?
+                              :global_search
+                            elsif params[:global_search_mode].to_sym == :searchable_association
+                              :searchable_association
+                            else
+                              raise "Invalid mode #{params[:global_search_mode]}"
+                            end
+    end
 end

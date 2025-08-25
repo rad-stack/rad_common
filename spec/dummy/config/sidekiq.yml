@@ -3,8 +3,8 @@
 :queues:
   - default
   - mailers
-  - quickbooks
+  - non_concurrent
   - active_storage_analysis
   - active_storage_purge
 :limits:
-  quickbooks: 1
+  non_concurrent: 1

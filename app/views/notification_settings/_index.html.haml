@@ -17,13 +17,12 @@
       %tr{ class: table_row_style(record) }
         %td
           - if can_type
-            = link_to record.notification_type,
-                      "/rad_common/notification_types/#{record.notification_type_id}/edit"
+            = link_to record.notification_type, edit_notification_type_path(record.notification_type)
           - else
             = record.notification_type
         %td.w-50
           = simple_form_for record,
-                            url: '/rad_common/notification_settings',
+                            url: notification_settings_path,
                             method: :post,
                             html: { class: 'dynamic-updater' } do |f|
 
@@ -35,10 +34,10 @@
                           disabled: !updatable,
                           input_html: { class: 'ays-ignore',
                                         id: "notification_setting_enabled_#{setting_id_string}",
-                                        data: { toggle: 'collapse', target: "##{collapse_id}" } }
+                                        'data-bs-toggle': 'collapse', 'data-bs-target': "##{collapse_id}" }
             .row
               .col-lg-12{ id: collapse_id, class: record.enabled ? 'collapse show' : 'collapse' }
-                .form-inline.px-3.py-2.bg-light.border.rounded.shadow-sm#notification-settings
+                .d-flex.align-items-center.px-3.py-2.bg-light.border.rounded.shadow-sm#notification-settings
                   = f.input :email, tooltip: 'Enable email notifications.',
                                     input_html: { class: 'ays-ignore',
                                                   id: "notification_setting_email_#{setting_id_string}" },

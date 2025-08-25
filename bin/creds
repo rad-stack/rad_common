@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+VALID_ENVIRONMENTS = %w[test development staging production].freeze
+
+def prompt_environment
+  puts "\nPlease select an environment from the following options:"
+  VALID_ENVIRONMENTS.each_with_index do |env, index|
+    puts "#{index + 1}. #{env}"
+  end
+  choice = STDIN.gets.chomp.to_i
+
+  if choice.between?(1, VALID_ENVIRONMENTS.size)
+    VALID_ENVIRONMENTS[choice - 1]
+  else
+    puts "\nInvalid choice. Exiting..."
+    exit 1
+  end
+end
+
+def available_production_credentials
+  Dir.glob('config/credentials/production*.yml.enc')
+     .map { |path| File.basename(path, '.yml.enc') }
+     .sort_by do |name|
+       name == 'production' ? 0 : name.split('_').last.to_i
+     end
+end
+
+def prompt_production_choice(options)
+  puts "\nWhich production credentials file would you like to edit?"
+  options.each_with_index do |opt, i|
+    puts "#{i + 1}. #{opt}.yml.enc"
+  end
+
+  choice = $stdin.gets.chomp.to_i
+  unless choice.between?(1, options.size)
+    puts "\nInvalid choice. Exiting..."
+    exit 1
+  end
+
+  selected = options[choice - 1]
+  selected == 'production' ? nil : selected.split('_').last
+end
+
+environment = ARGV[0]
+
+unless VALID_ENVIRONMENTS.include?(environment)
+  puts "\nInvalid or missing environment."
+  environment = prompt_environment
+end
+
+production_id = nil
+if environment == 'production'
+  production_options = available_production_credentials
+  production_id = prompt_production_choice(production_options) if production_options.size > 1
+end
+
+directory = Dir.pwd.include?('rad_common') ? "#{Dir.pwd}/spec/dummy" : Dir.pwd
+FileUtils.chdir directory do
+  env_prefix = production_id ? "RAD_PRODUCTION_ID=#{production_id} " : ''
+  # Hack: Redis is currently required in staging/production envuronments
+  system!("#{env_prefix}REDIS_URL='' bundle exec rails credentials:edit -e #{environment}")
+end

@@ -1,28 +1,27 @@
 .card
   = render 'layouts/card_header',
-           title: "Notifications (#{current_user.notifications.unread.count} unread)",
+           title: "Notifications (#{@notifications.total_count}) (#{@notifications.unread.count} unread)",
            icon: 'fa-bell'
   .card-body
-
-    -# see kaminari monkey patch on initializers/rad_common.rb
-    = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+    = render 'layouts/filter', search: @notification_search, path: notifications_path
+    = paginate @notifications, theme: 'bootstrap-5'
 
     %table.table.table-striped.table-bordered
       %tr
-        %th When
-        %th Content
-        %th Subject
+        = render 'layouts/sort_headers', search: @notification_search
       - @notifications.each do |record|
         %tr{ class: table_row_style(record, style_class: 'text-danger') }
+          - if current_user.admin?
+            %td= secured_link record.user
           %td
             %p= format_datetime(record.created_at)
             %p #{distance_of_time_in_words_to_now(record.created_at)} ago
+          %td= record.notification_type
           %td= sanitize record.content
           %td
             - if record.record.present?
-              %p= secured_link(record.record)
+              %p= secured_link record.record
 
-    -# see kaminari monkey patch on initializers/rad_common.rb
-    = paginate @notifications, theme: 'twitter-bootstrap-4', routes_proxy: rad_common_engine
+    = paginate @notifications, theme: 'bootstrap-5'
 
 - current_user.read_notifications!

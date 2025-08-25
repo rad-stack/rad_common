@@ -1,0 +1,7 @@
+.btn-group
+  %a.btn.dropdown-toggle.btn-lg.btn-secondary.btn-sm{ 'data-bs-toggle': 'dropdown', href: '#' }
+    = icon :gear, ''
+  %ul.dropdown-menu
+    %li
+      - actions.each do |item|
+        = link_to item[:label], item[:link], method: item[:method], data: item[:data], class: 'dropdown-item'

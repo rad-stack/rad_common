@@ -22,7 +22,7 @@ RSpec.describe RadRateLimiter, type: :service do
       before { 4.times { rate_limiter.run { 'foo' } } }
 
       it 'raises error' do
-        expect { rate_limiter.run { 'foo' } }.not_to raise_error(described_class::RateLimitExceededError)
+        expect { rate_limiter.run { 'foo' } }.not_to raise_error
       end
     end
   end

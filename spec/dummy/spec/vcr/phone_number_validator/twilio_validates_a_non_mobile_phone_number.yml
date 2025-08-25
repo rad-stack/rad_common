@@ -8,7 +8,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Accept:
@@ -23,50 +23,44 @@ http_interactions:
       message: OK
     headers:
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json;charset=utf-8
       Content-Length:
       - '212'
       Connection:
       - keep-alive
       Date:
-      - Tue, 07 May 2024 15:23:30 GMT
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Allow-Headers:
-      - Accept, Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match,
-        If-Unmodified-Since, Idempotency-Key
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, DELETE, OPTIONS
-      Access-Control-Expose-Headers:
-      - ETag
-      Twilio-Request-Id:
-      - RQb2bc9d84edc72d95c4cca8afd9596d1f
-      Twilio-Request-Duration:
-      - '0.020'
+      - Thu, 13 Mar 2025 16:50:44 GMT
+      Vary:
+      - Accept-Encoding
+      - Origin
       Twilio-Concurrent-Requests:
       - '1'
-      X-Shenanigans:
-      - none
-      X-Powered-By:
-      - AT-5000
+      Twilio-Request-Id:
+      - RQ5dca13ea2dcf4d14e455079d1fdf4a41
+      Twilio-Request-Duration:
+      - '0.037'
       X-Home-Region:
       - us1
       X-Api-Domain:
       - lookups.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 15ee105a0023d36792571b758757e06c.cloudfront.net (CloudFront)
+      - 1.1 021fba1d76ee4d682a0085fba422390e.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
-      - MIA3-P8
+      - MIA50-P4
       X-Amz-Cf-Id:
-      - HN3P11QPkHRnEg5y8kRnBAXSCM4jy1Rex3V06usT3RBkYZmd-r42Og==
+      - XLoCMQRXfhIIO6o5tdXXdSRIpqCVr9wPwTKUhP7ySZbS54w4GRS9GA==
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
     body:
       encoding: UTF-8
-      string: '{"caller_name": null, "country_code": "US", "phone_number": "+1<TEST_PHONE_NUMBER_STRIPPED>",
-        "national_format": "<TEST_PHONE_NUMBER>", "carrier": null, "add_ons": null,
+      string: '{"add_ons": null, "caller_name": null, "carrier": null, "country_code":
+        "US", "national_format": "<TEST_PHONE_NUMBER>", "phone_number": "+1<TEST_PHONE_NUMBER_STRIPPED>",
         "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_PHONE_NUMBER_STRIPPED>"}'
-  recorded_at: Tue, 07 May 2024 15:23:29 GMT
-recorded_with: VCR 6.2.0
+  recorded_at: Thu, 13 Mar 2025 16:50:44 GMT
+recorded_with: VCR 6.3.1

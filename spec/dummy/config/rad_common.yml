@@ -1,6 +1,7 @@
 default: &default
   app_name: Demo Foo
   use_avatar: true
+  validate_user_domains: true
   switch_languages: true
   disable_sign_up: false
   disable_invite: false
@@ -31,6 +32,8 @@ default: &default
   crawlable_domains: []
   procfile_override: false
   last_first_user: false
+  timezone_detection: true
+  portal: false
 
   system_usage_models:
     -
@@ -131,3 +134,5 @@ test:
 
   host_name: localhost:3000
   twilio_verify_enabled: true
+  pace_api:
+    host: 'radstackmis.myprintdesk.net'

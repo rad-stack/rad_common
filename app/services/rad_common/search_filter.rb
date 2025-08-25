@@ -2,9 +2,10 @@ module RadCommon
   ##
   # This is used to generate dropdown filter containing options to be filtered on
   class SearchFilter
+    include RadCommon::SearchableDropdownHelper
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :not_scope,
-                :default_value, :errors, :include_blank,
-                :search_scope, :show_search_subtext, :allow_not
+                :default_value, :errors, :include_blank, :col_class,
+                :search_scope, :show_search_subtext, :allow_not, :autosubmit
 
     ##
     # @param [Symbol optional] column the database column that is being filtered
@@ -45,8 +46,8 @@ module RadCommon
     #   [{ column: :owner_id, options: User.sorted, scope_values: { 'Pending Values': :pending } }]
     def initialize(column: nil, name: nil, options: nil, grouped: false, scope_values: nil, joins: nil,
                    input_label: nil, default_value: nil, blank_value_label: nil, scope: nil, not_scope: nil,
-                   multiple: false, required: false, include_blank: true, search_scope_name: nil,
-                   show_search_subtext: false, allow_not: false)
+                   multiple: false, required: false, include_blank: true, col_class: nil, search_scope_name: nil,
+                   show_search_subtext: false, allow_not: false, autosubmit: false)
       if input_label.blank? && !options.respond_to?(:table_name)
         raise 'Input label is required when options are not active record objects'
       end
@@ -72,15 +73,24 @@ module RadCommon
       @default_value = default_value
       @grouped = grouped
       @required = required
+      @search_scope_name = search_scope_name
+      @col_class = col_class
       @search_scope = RadConfig.global_search_scopes!.find { |s| s[:name] == search_scope_name }
       @show_search_subtext = show_search_subtext
       @allow_not = allow_not
+      @autosubmit = autosubmit
       @errors = []
     end
 
     # @return [String] the name of the view to be used to render the filter input
     def filter_view
       'select'
+    end
+
+    def searchable_scope?
+      return true if options.nil? && @search_scope_name
+
+      search_scope.present? && max_dropdown_size_exceeded?(options)
     end
 
     def searchable_name
@@ -117,17 +127,23 @@ module RadCommon
                         else
                           @scope_values.keys.map { |option| [option.to_s, option.to_s] }
                         end
-        scope_options += options.map { |option| [option.to_s, option.id] } if options.present?
+        scope_options += options.map { |opt| [opt.to_s, opt.id, inactive_data_attr(opt)] } if options.present?
         scope_options
       else
-        options.presence || []
+        return [] if options.blank?
+
+        if @grouped
+          options.map { |option| [option.first, option.second.map { |opt| option_array(opt) }] }
+        else
+          options.map { |option| option_array(option) }
+        end
       end
     end
 
     def input_options_with_current_selection(search)
-      return input_options if search_scope.blank?
+      return input_options if search_scope.blank? || !searchable_scope?
 
-      input_options + search_scope[:model].constantize.where(id: selected_value(search)).to_a
+      search_scope[:model].constantize.where(id: selected_value(search)).to_a
     end
 
     # @return the method that simple form should use to determine the label of the select option
@@ -168,24 +184,20 @@ module RadCommon
     end
 
     def validate_params(params)
-      if @required && filter_value(params).blank?
-        @errors = ["#{input_label} is required"]
-        false
-      else
-        true
-      end
+      return true unless @required
+
+      value = filter_value(params)
+      value = value.compact_blank if value.is_a?(Array)
+      return true if value.present?
+
+      @errors = ["#{input_label} is required"]
+      false
     end
 
     def search_scope_params
-      {
-        class: 'selectpicker-search',
-        'data-abs-subtext' => show_search_subtext,
-        'data-abs-locale-search-placeholder' => search_scope[:description],
-        'data-abs-ajax-data' => {
-          'global_search_scope' => search_scope[:name],
-          'term' => '{{{q}}}'
-        }.to_json
-      }
+      return { class: 'selectpicker ays-ignore' } unless searchable_scope?
+
+      searchable_scope_options(show_subtext: show_search_subtext, search_scope: @search_scope_name)
     end
 
     def not_value?(search_params)
@@ -205,8 +217,29 @@ module RadCommon
           if scope_value_option?(option)
             [option[:scope_value].to_s.titleize, option[:scope_value].to_s]
           else
-            [option.to_s, option.id]
+            [option.to_s, option.id, inactive_data_attr(option)]
           end
+        end
+      end
+
+      def option_array(option)
+        [*option_label_and_value(option), inactive_data_attr(option)]
+      end
+
+      def inactive_data_attr(option)
+        { 'data-inactive' => option.respond_to?(:active?) && !option.active? }
+      end
+
+      def option_label_and_value(option)
+        case option
+        when Array
+          [option.first, option.last]
+        when String, Integer
+          [option, option]
+        when NilClass
+          [nil, nil]
+        else
+          [option.public_send(label_method), option.id]
         end
       end
 

@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - smartystreets (sdk:ruby@5.17.0)
+      - smartystreets (sdk:ruby@5.20.4)
       Host:
       - us-street.api.smarty.com
       Content-Type:
@@ -25,7 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Tue, 07 May 2024 15:20:54 GMT
+      - Thu, 13 Mar 2025 16:48:39 GMT
+      X-Request-Id:
+      - '01959068-727b-784e-9a7d-78e735339fdf'
       Transfer-Encoding:
       - chunked
       Vary:
@@ -33,9 +35,9 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"8110 Mittie
-        Ave","last_line":"Panama City FL 32404-5273","delivery_point_barcode":"324045273109","components":{"primary_number":"8110","street_name":"Mittie","street_suffix":"Ave","city_name":"Panama
-        City","default_city_name":"Panama City","state_abbreviation":"FL","zipcode":"32404","plus4_code":"5273","delivery_point":"10","delivery_point_check_digit":"9"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12005","county_name":"Bay","carrier_route":"R008","congressional_district":"02","rdi":"Residential","elot_sequence":"0103","elot_sort":"A","latitude":30.29684,"longitude":-85.57602,"precision":"Zip9","time_zone":"Central","utc_offset":-6,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","enhanced_match":"postal-match"}}]
+        Ave","last_line":"Panama City FL 32404-5273","delivery_point_barcode":"324045273109","smarty_key":"1597826421","components":{"primary_number":"8110","street_name":"Mittie","street_suffix":"Ave","city_name":"Panama
+        City","default_city_name":"Panama City","state_abbreviation":"FL","zipcode":"32404","plus4_code":"5273","delivery_point":"10","delivery_point_check_digit":"9"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"12005","county_name":"Bay","carrier_route":"R008","congressional_district":"02","rdi":"Residential","elot_sequence":"0071","elot_sort":"A","latitude":30.29684,"longitude":-85.57602,"precision":"Zip9","time_zone":"Central","utc_offset":-6,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","enhanced_match":"postal-match"}}]
 
         '
-  recorded_at: Tue, 07 May 2024 15:20:54 GMT
-recorded_with: VCR 6.2.0
+  recorded_at: Thu, 13 Mar 2025 16:49:25 GMT
+recorded_with: VCR 6.3.1

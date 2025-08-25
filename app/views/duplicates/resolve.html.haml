@@ -1,0 +1,178 @@
+- show_actions = show_actions?(@record.class)
+
+.card
+  = render 'layouts/card_header', action_name: 'custom',
+                                  title: "Fixing #{pluralize_model_string(@model.to_s)} (#{@duplicates_count})",
+                                  icon: 'fa-cubes'
+
+.card
+  = render 'layouts/card_header', action_name: 'custom',
+                                  title: "Current #{@model}",
+                                  icon: 'fa-file',
+                                  additional_actions: duplicate_actions(@record, @model)
+
+  .card-body
+    %table.table.table-striped.table-bordered#current-duplicate-table
+      %tr
+        %th
+        %th
+        %th
+        - if @model.use_first_last_name?
+          %th Last Name
+          %th First Name
+        - if @model.use_birth_date?
+          %th Birth Date
+        - if @model.use_address?
+          %th Address 1
+          %th Address 2
+          %th City
+          %th State
+          %th Zipcode
+        - @model.applicable_duplicate_items.each do |item|
+          %th= item[:label]
+        %th Entered
+        - if show_actions
+          %th Actions
+      %tr
+        %td
+        %td
+        %td
+        - if @model.use_first_last_name?
+          %td
+            - if @record.last_name.present?
+              = link_to @record.last_name, @record
+          %td
+            - if @record.first_name.present?
+              = link_to @record.first_name, @record
+        - if @model.use_birth_date?
+          %td= format_date(@record.birth_date)
+        - if @model.use_address?
+          %td= @record.address_1
+          %td= @record.address_2
+          %td= @record.city
+          %td= @record.state
+          %td= @record.zipcode
+        - @model.applicable_duplicate_items.each do |item|
+          %td= show_duplicate_item item, @record
+        %td= format_date(@record.created_at)
+        - if show_actions
+          %td
+            - if policy(@record).edit?
+              = link_to icon(:pencil, 'Edit'),
+                        "/#{@record.class.table_name}/#{@record.id}/edit",
+                        class: 'btn btn-sm btn-secondary btn-block'
+
+            - if policy(@record).destroy?
+              = link_to icon(:times, 'Delete'),
+                            @record,
+                            method: :delete,
+                            data: { confirm: 'Are you sure?' },
+                            class: 'btn btn-danger btn-sm btn-block'
+
+= simple_form_for(@record, url: merge_duplicates_path(model: @record.class, id: @record.id)) do
+  .card
+    .card-header
+      .title-header
+        .title-text
+          .fa.fa-list
+          Possible Matches (#{@records.size})
+        - if policy(@record).merge_duplicates?
+          - confirm_text = 'This process can not be reversed, are you sure you want to proceed?'
+          .action-buttons
+            %button.btn.btn-success.btn-sm{ type: 'submit', data: { confirm: confirm_text } }
+              %i.fa.fa-level-down
+              Merge Selected
+            - if @model.allow_merge_all?
+              %button.btn.btn-success.btn-sm#merge-all{ data: { confirm: confirm_text } }
+                %i.fa.fa-level-down
+                Merge All
+        .external-actions
+          .legend-block.mt-2
+            .legend-label
+              Matched
+              .table-success
+            .legend-label
+              Different
+              .table-danger
+
+    .card-body
+      %table.table.table-striped.table-bordered#other-duplicates-table
+        %tr
+          %th Merge?
+          %th.actions Actions
+          %th Score
+          - if @model.use_first_last_name?
+            %th Last Name
+            %th First Name
+          - if @model.use_birth_date?
+            %th Birth Date
+          - if @model.use_address?
+            %th Address 1
+            %th Address 2
+            %th City
+            %th State
+            %th Zipcode
+          - @model.applicable_duplicate_items.each do |item|
+            %th= item[:label]
+          %th Entered
+          - if show_actions
+            %th Actions
+        - @records.each_with_index do |record_result, _index|
+          - record = record_result[:record]
+          %tr
+            %td
+              %input.merge_data{ name: "merge_data[#{record.id}]", type: 'checkbox' }
+            %td
+              - if policy(record).destroy?
+                = link_to icon(:times, 'Not a duplicate'),
+                          not_duplicates_path(model: record.class, id: record.id, master_record: @record.id),
+                          class: 'btn btn-sm btn-warning btn-block'
+
+              = link_to icon('arrow-up', 'Switch to Current'),
+                        switch_duplicates_path(model: record.class,
+                                               id: record.id,
+                                               other_model: @record.class,
+                                               other_id: @record.id),
+                        method: :put,
+                        class: 'btn btn-sm btn-success btn-block'
+
+            %td= record_result[:score]
+            - if @model.use_first_last_name?
+              %td{ class: duplicate_class(@record.last_name, record.last_name) }
+                - if record.last_name.present?
+                  = link_to record.last_name, record
+              %td{ class: duplicate_class(@record.first_name, record.first_name) }
+                - if record.first_name.present?
+                  = link_to record.first_name, record
+            - if @model.use_birth_date?
+              %td{ class: duplicate_class(@record.birth_date, record.birth_date) }
+                = format_date(record.birth_date)
+            - if @model.use_address?
+              %td{ class: duplicate_class(@record.address_1, record.address_1) }
+                = record.address_1
+              %td{ class: duplicate_class(@record.address_2, record.address_2) }
+                = record.address_2
+              %td{ class: duplicate_class(@record.city, record.city) }
+                = record.city
+              %td{ class: duplicate_class(@record.state, record.state) }
+                = record.state
+              %td{ class: duplicate_class(@record.zipcode, record.zipcode) }
+                = record.zipcode
+            - @model.applicable_duplicate_items.each do |item|
+              %td{ class: duplicate_class(@record.send(item[:name]), record.send(item[:name])) }
+                = show_duplicate_item item, record
+            %td
+              = format_date(record.created_at)
+            - if show_actions
+              %td
+                - if policy(record).edit?
+                  = link_to icon(:pencil, 'Edit'),
+                            "/#{record.class.table_name}/#{record.id}/edit",
+                            class: 'btn btn-sm btn-secondary btn-block'
+
+                - if policy(record).destroy?
+                  = link_to icon(:times, 'Delete'),
+                                record,
+                                method: :delete,
+                                data: { confirm: 'Are you sure?' },
+                                class: 'btn btn-danger btn-sm btn-block'

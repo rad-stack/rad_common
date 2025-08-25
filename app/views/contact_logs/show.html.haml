@@ -1,10 +1,9 @@
 .card
-  = render 'layouts/card_header'
+  = render 'layouts/card_header', title: 'Contact Log', card_style: @contact_log.card_style
   .card-body
     = render 'layouts/show_data_columns',
              data: contact_log_show_data(@contact_log),
-             resource: @contact_log,
-             no_timestamps: true
+             resource: @contact_log
 
 .card
   = render 'layouts/card_header',
@@ -19,17 +18,37 @@
         - if @contact_log.email?
           %th Email
           %th Email Type
+          %th Email Status
+          %th SendGrid Reason
         - if @contact_log.sms?
           %th Phone #
+          %th SMS False Positive
           %th SMS Status
-          %th SMS Success
+        %th Success?
       - @contact_log_recipients.each do |record|
         %tr{ class: table_row_style(record) }
-          %td= secured_link record.to_user
+          %td
+            - if record.to_user.present?
+              = link_to record.to_user, record
           - if @contact_log.email?
-            %td= record.email
-            %td= enum_to_translated_option(record, :email_type)
+            %td
+              - if record.email.present?
+                = link_to record.email, record
+            %td
+              - if record.email_type.present?
+                = link_to enum_to_translated_option(record, :email_type), record
+            %td
+              - if record.email_status.present?
+                = link_to enum_to_translated_option(record, :email_status), record
+            %td
+              - if record.sendgrid_reason.present?
+                = link_to record.sendgrid_reason, record
           - if @contact_log.sms?
-            %td= record.phone_number
-            %td= enum_to_translated_option(record, :sms_status)
-            %td= format_boolean record.sms_success
+            %td
+              - if record.phone_number.present?
+                = link_to record.phone_number, record
+            %td= link_to format_boolean(record.sms_false_positive), record
+            %td
+              - if record.sms_status.present?
+                = link_to enum_to_translated_option(record, :sms_status), record
+          %td= link_to format_boolean(record.success), record

@@ -1,18 +1,14 @@
 require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/app/services/rad_config.rb"
 
-require "#{Gem::Specification.find_by_name('rad_common').gem_dir}/lib/core_extensions/active_record" \
-        '/base/schema_validations'
-
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'SMS'
   inflect.acronym 'PDF'
   inflect.acronym 'CRM'
   inflect.acronym 'CSV'
+  inflect.acronym 'BCC'
 end
 
-ActiveRecord::Base.prepend CoreExtensions::ActiveRecord::Base::SchemaValidations
-
-# https://app.radstack.com/tasks/25
+# see Task 25
 Rails.application.config.active_storage.variant_processor = :mini_magick
 
 Rails.application.config.rad_common = Rails.application.config_for(:rad_common)
@@ -61,22 +57,21 @@ Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
 end
 
+if RadConfig.blocked_ip_addresses?
+  Rack::Attack.enabled = true
+
+  Rack::Attack.blocklist 'block suspicious requests' do |request|
+    RadConfig.blocked_ip_addresses!.include?(request.ip)
+  end
+else
+  Rack::Attack.enabled = false
+end
+
 Rails.application.config.after_initialize do
-  ActionText::ContentHelper.allowed_attributes << 'style'
+  unless RadConfig.legacy_assets?
+    default_allowed_tags = Class.new.include(ActionText::ContentHelper).new.sanitizer_allowed_attributes
+    ActionText::ContentHelper.allowed_attributes = default_allowed_tags.add('style')
+  end
 end
 
 AuthTrail.geocode = false
-
-module Kaminari
-  # monkey patch to fix paging on engine routes
-  # https://github.com/rad-stack/rad_common/pull/211/files
-  # https://github.com/kaminari/kaminari/issues/457
-
-  module Helpers
-    class Tag
-      def page_url_for(page)
-        (@options[:routes_proxy] || @template).url_for @params.merge(@param_name => (page <= 1 ? nil : page))
-      end
-    end
-  end
-end

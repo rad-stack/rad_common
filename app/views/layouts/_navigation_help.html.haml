@@ -1,11 +1,11 @@
 - if RadConfig.show_help_menu?
   - if RadConfig.legal_docs?
     %li.nav-item.dropdown
-      %a.nav-link.dropdown-toggle{ 'data-toggle': 'dropdown', href: '#' }
+      %a.nav-link.dropdown-toggle{ 'data-bs-toggle': 'dropdown', href: '#' }
         Help
-      %ul.dropdown-menu.dropdown-menu-right
-        %li= link_to 'Contact', contact_us_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
+      %ul.dropdown-menu.dropdown-menu-end
+        %li= link_to 'Contact', new_company_contact_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
         %li= link_to 'Terms & Conditions', terms_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
         %li= link_to 'Privacy Policy', privacy_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
   - else
-    %li= link_to 'Help', contact_us_path, class: 'nav-link'
+    %li= link_to 'Help', new_company_contact_path, class: 'nav-link'

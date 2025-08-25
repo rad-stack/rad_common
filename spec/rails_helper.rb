@@ -57,7 +57,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = [Rails.root.join('spec/fixtures').to_s]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -133,19 +133,8 @@ RSpec.configure do |config|
 
   SpecSupport.hooks(config, chrome_driver)
 
-  config.filter_run_excluding(twilio_verify_specs: true) unless RadConfig.twilio_verify_enabled?
-  config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
-  config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
-  config.filter_run_excluding(sign_up_specs: true) if RadConfig.disable_sign_up?
-  config.filter_run_excluding(pending_user_specs: true) unless RadConfig.pending_users?
-  config.filter_run_excluding(external_user_specs: true) unless RadConfig.external_users?
-  config.filter_run_excluding(user_client_specs: true) unless RadConfig.user_clients?
-  config.filter_run_excluding(devise_timeoutable_specs: true) unless Devise.mappings[:user].timeoutable?
-  config.filter_run_excluding(smarty_specs: true) unless RadConfig.smarty_enabled?
-  config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
-  config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
-  config.filter_run_excluding(password_expirable_specs: true) unless RadConfig.password_expirable?
-
   include Warden::Test::Helpers
   config.include Capybara::DSL
+
+  Sidekiq.logger.level = Logger::WARN
 end

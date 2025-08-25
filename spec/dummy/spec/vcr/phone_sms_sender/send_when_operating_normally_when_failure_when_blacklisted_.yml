@@ -8,7 +8,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -24,22 +24,26 @@ http_interactions:
       code: 400
       message: Bad Request
     headers:
-      Date:
-      - Tue, 07 May 2024 15:22:14 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '136'
       Connection:
       - keep-alive
+      Date:
+      - Thu, 13 Mar 2025 16:49:03 GMT
+      X-Powered-By:
+      - AT-5000
       X-Twilio-Error-Code:
       - '21610'
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ049c86ff73d1c621626bf38281dd20a0
+      - RQ139557ea570e186b7eff61acc0da603c
       Twilio-Request-Duration:
-      - '51'
+      - '0.056'
+      X-Home-Region:
+      - us1
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -57,14 +61,18 @@ http_interactions:
       - 'true'
       X-Shenanigans:
       - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 c660b45685a603ac641111b8246d2ffe.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P3
+      X-Amz-Cf-Id:
+      - boFsSJ7UvqxXneFJTJVXRZf7nQHJUsu1cr5ec_jlvZF7drB6rVOKKQ==
     body:
       encoding: UTF-8
       string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
-  recorded_at: Tue, 07 May 2024 15:22:14 GMT
+  recorded_at: Thu, 13 Mar 2025 16:49:03 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -73,7 +81,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -89,22 +97,26 @@ http_interactions:
       code: 400
       message: Bad Request
     headers:
-      Date:
-      - Tue, 07 May 2024 15:22:14 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '136'
       Connection:
       - keep-alive
+      Date:
+      - Thu, 13 Mar 2025 16:49:04 GMT
+      X-Powered-By:
+      - AT-5000
       X-Twilio-Error-Code:
       - '21610'
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQada7250b610c3907dff2d399498ec4e8
+      - RQb65f3c42c3086b6188e1dcc26ce89f63
       Twilio-Request-Duration:
-      - '56'
+      - '0.056'
+      X-Home-Region:
+      - us1
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -122,14 +134,18 @@ http_interactions:
       - 'true'
       X-Shenanigans:
       - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 5bdd98ddd9cf035068669b86d054ff48.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P3
+      X-Amz-Cf-Id:
+      - GXMX14DIUtiVfYO2d4cowQyRk1ygb7dKNhh47AKDWvMXDSwvX3R4ug==
     body:
       encoding: UTF-8
       string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
-  recorded_at: Tue, 07 May 2024 15:22:14 GMT
+  recorded_at: Thu, 13 Mar 2025 16:49:04 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -138,7 +154,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -154,22 +170,26 @@ http_interactions:
       code: 400
       message: Bad Request
     headers:
-      Date:
-      - Tue, 07 May 2024 15:22:14 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '136'
       Connection:
       - keep-alive
+      Date:
+      - Thu, 13 Mar 2025 16:49:04 GMT
+      X-Powered-By:
+      - AT-5000
       X-Twilio-Error-Code:
       - '21610'
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ35262aa4b35968acb6ec69cc1e2e82f1
+      - RQ6233c64b50f0dd0c241226d142e26163
       Twilio-Request-Duration:
-      - '50'
+      - '0.050'
+      X-Home-Region:
+      - us1
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -187,14 +207,18 @@ http_interactions:
       - 'true'
       X-Shenanigans:
       - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 cd176b1c7c0c4b1cbc5ba1674a2fda64.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P3
+      X-Amz-Cf-Id:
+      - qkgrybmlzUh-A_lj3tb-wC6fFu5aaazbmjgel5Oyn96xeAASKNBXPg==
     body:
       encoding: UTF-8
       string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
-  recorded_at: Tue, 07 May 2024 15:22:14 GMT
+  recorded_at: Thu, 13 Mar 2025 16:49:04 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -203,7 +227,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -219,22 +243,26 @@ http_interactions:
       code: 400
       message: Bad Request
     headers:
-      Date:
-      - Tue, 07 May 2024 15:22:14 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '136'
       Connection:
       - keep-alive
+      Date:
+      - Thu, 13 Mar 2025 16:49:04 GMT
+      X-Powered-By:
+      - AT-5000
       X-Twilio-Error-Code:
       - '21610'
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ6d3416bdbd61ede8ccbe9f18af8ee47c
+      - RQe2c897f8941f2206116aa16781ac87b9
       Twilio-Request-Duration:
-      - '46'
+      - '0.056'
+      X-Home-Region:
+      - us1
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -252,14 +280,18 @@ http_interactions:
       - 'true'
       X-Shenanigans:
       - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 6b7ad8ccaccc133c5734389e742609a4.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P3
+      X-Amz-Cf-Id:
+      - MRM2HufpR0gaju2nsvlblNGLrg2b2OQPQUtYhGvnMMYXa8WBNEKsuA==
     body:
       encoding: UTF-8
       string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
-  recorded_at: Tue, 07 May 2024 15:22:14 GMT
+  recorded_at: Thu, 13 Mar 2025 16:49:04 GMT
 - request:
     method: post
     uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
@@ -268,7 +300,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B15005550004
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -284,22 +316,26 @@ http_interactions:
       code: 400
       message: Bad Request
     headers:
-      Date:
-      - Tue, 07 May 2024 15:22:15 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '136'
       Connection:
       - keep-alive
+      Date:
+      - Thu, 13 Mar 2025 16:49:04 GMT
+      X-Powered-By:
+      - AT-5000
       X-Twilio-Error-Code:
       - '21610'
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQc4e8c0079402052c6a1805ecda07dd0c
+      - RQfe4447b3c79bb212aba90282d9fcd8a1
       Twilio-Request-Duration:
-      - '48'
+      - '0.059'
+      X-Home-Region:
+      - us1
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -317,12 +353,16 @@ http_interactions:
       - 'true'
       X-Shenanigans:
       - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 92b0aae16555572f654690c9e7efa280.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P3
+      X-Amz-Cf-Id:
+      - gm8wrsOtWlQ_VxjRPSKRQ3xYCKvxzZTreoLpVnyVbsSlu4gTYL7ESg==
     body:
       encoding: UTF-8
       string: '{"code":21610,"message":"Attempt to send to unsubscribed recipient","more_info":"https://www.twilio.com/docs/errors/21610","status":400}'
-  recorded_at: Tue, 07 May 2024 15:22:15 GMT
-recorded_with: VCR 6.2.0
+  recorded_at: Thu, 13 Mar 2025 16:49:04 GMT
+recorded_with: VCR 6.3.1

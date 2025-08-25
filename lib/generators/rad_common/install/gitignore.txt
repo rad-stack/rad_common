@@ -18,6 +18,7 @@ latest.dump
 # TODO: we are ignoring vendor because GHA populates this folder during rad_update_bot.yml
 # we should probably figure out a better way to handle this in case we need to use this folder in future
 /vendor/
+CLAUDE.md
 
 /public/packs
 /public/packs-test
@@ -28,5 +29,13 @@ yarn-debug.log*
 
 /config/credentials/development.key
 /config/credentials/production.key
+/config/credentials/production_1.key
+/config/credentials/production_2.key
+/config/credentials/production_3.key
+/config/credentials/production_4.key
+/config/credentials/production_5.key
 /config/credentials/test.key
 /config/credentials/staging.key
+
+/app/assets/builds/*
+!/app/assets/builds/.keep

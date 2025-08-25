@@ -29,12 +29,13 @@
           .col-lg-4
             - resource.class.invite_key_fields.each do |field|
               = f.input field, required: true
-          .col-lg-4
-            %span
-              * Valid Domains for Internal Users: #{Company.main.valid_user_domains.join(', ')}
-            %p
-              You can add more valid domains in
-              = link_to 'Company Settings', '/rad_common/company/edit'
+          - if RadConfig.validate_user_domains?
+            .col-lg-4
+              %span
+                * Valid Domains for Internal Users: #{Company.main.valid_user_domains.join(', ')}
+              %p
+                You can add more valid domains in
+                = link_to 'Company Settings', company_edit_path
         .row
           .col-lg-4= f.input :mobile_phone, required: require_mobile_phone?
       .form-actions

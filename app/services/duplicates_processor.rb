@@ -195,9 +195,18 @@ class DuplicatesProcessor
     def duplicate_field_score(duplicate_record, attribute, weight)
       return 0 if record.send(attribute).blank?
       return calc_string_weight(record, duplicate_record, attribute, weight) if record.send(attribute).is_a?(String)
+      return calc_birth_date_weight(record, duplicate_record, weight) if attribute == 'birth_date'
       return weight if record.send(attribute) == duplicate_record.send(attribute)
 
       0
+    end
+
+    def calc_birth_date_weight(record, duplicate_record, weight)
+      return 0 unless record.birth_date == duplicate_record.birth_date
+      return weight unless model_klass.use_multiples?
+      return 0 if record.multiples? && duplicate_record.multiples?
+
+      weight
     end
 
     def calc_string_weight(record, duplicate_record, field_name, weight)
@@ -225,7 +234,7 @@ class DuplicatesProcessor
 
     def calc_email_weight(record, duplicate_record, weight)
       if email_compare?(record, duplicate_record)
-        weight
+        weight * personal_contact_multiplier
       elsif levenshtein_email_compare?(record, duplicate_record)
         weight / 2
       else
@@ -245,7 +254,7 @@ class DuplicatesProcessor
 
     def calc_mobile_phone_weight(record, duplicate_record, weight)
       if mobile_phone_compare?(record, duplicate_record)
-        weight
+        weight * personal_contact_multiplier
       elsif levenshtein_mobile_phone_compare?(record, duplicate_record)
         weight / 2
       else
@@ -343,6 +352,10 @@ class DuplicatesProcessor
 
     def duplicate_last_name_weight
       record.duplicate_model_config[:last_name_weight].presence || 10
+    end
+
+    def personal_contact_multiplier
+      record.duplicate_model_config[:personal_contact_multiplier].presence || 1
     end
 
     def model_klass

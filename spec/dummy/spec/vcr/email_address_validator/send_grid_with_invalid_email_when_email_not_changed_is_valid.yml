@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.sendgrid.com/v3/validations/email
     body:
       encoding: UTF-8
-      string: '{"email":"example1023@example.com"}'
+      string: '{"email":"example1279@example.com"}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -25,7 +25,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Tue, 07 May 2024 15:23:29 GMT
+      - Thu, 13 Mar 2025 16:50:43 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -33,11 +33,11 @@ http_interactions:
       Connection:
       - keep-alive
       X-Amzn-Requestid:
-      - 327ac394-ebe8-46f1-a1f9-b6eb9537737f
+      - afc68b22-f008-4764-b668-6cdef201aa51
       X-Amz-Apigw-Id:
-      - XaAZwF2qCYcElrQ=
+      - HX7zjGG5CYcEJvQ=
       X-Amzn-Trace-Id:
-      - Root=1-663a4771-1dcdb6395adbb5063b195986;Parent=0caa782a8a658404;Sampled=0;lineage=3bae0364:0
+      - Root=1-67d30ce3-0afddd986b066ab12651099d;Parent=434ed57f953a0403;Sampled=0;Lineage=1:3bae0364:0
       Access-Control-Allow-Methods:
       - HEAD, GET, PUT, POST, DELETE, OPTIONS, PATCH
       Access-Control-Max-Age:
@@ -55,7 +55,8 @@ http_interactions:
       - nosniff
       Strict-Transport-Security:
       - max-age=31536000
-      - max-age=600; includeSubDomains
+      X-Robots-Tag:
+      - noindex, nofollow
       X-Client-Ff:
       - '1000'
       X-Ratelimit-Remaining:
@@ -63,15 +64,19 @@ http_interactions:
       X-Ratelimit-Limit:
       - '7'
       X-Ratelimit-Reset:
-      - '1715095410'
+      - '1741884644'
       Twilio-Request-Id:
-      - RQ2g92KbcSEDLgKLixrXe0Pbw3IwW
+      - RQ2uGpDEWju9FcEjhcbQTzuqiwOzy
       X-Envoy-Upstream-Service-Time:
-      - '213'
+      - '285'
       Powered-By:
       - Mako
+      Cache-Control:
+      - no-cache
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
     body:
       encoding: UTF-8
-      string: '{"result":{"email":"example1023@example.com","verdict":"Valid","score":0.90883,"local":"example1023","host":"example.com","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":true,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"38.85.141.230"}}'
-  recorded_at: Tue, 07 May 2024 15:23:29 GMT
-recorded_with: VCR 6.2.0
+      string: '{"result":{"email":"example1279@example.com","verdict":"Valid","score":0.89902,"local":"example1279","host":"example.com","checks":{"domain":{"has_valid_address_syntax":true,"has_mx_or_a_record":true,"is_suspected_disposable_address":false},"local_part":{"is_suspected_role_address":false},"additional":{"has_known_bounces":false,"has_suspected_bounces":false}},"ip_address":"38.85.154.237"}}'
+  recorded_at: Thu, 13 Mar 2025 16:50:43 GMT
+recorded_with: VCR 6.3.1

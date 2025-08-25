@@ -4,19 +4,19 @@
   = render 'layouts/card_header', action_name: 'custom', title: 'Validate Database', icon: 'fa-check'
   .card-body
     = link_to icon(:check, 'Validate Full Database'),
-              '/rad_common/global_validations',
+              global_validations_path,
               method: :post,
               data: { confirm: 'Are you sure?' },
               class: 'btn btn-danger btn-lg'
 
     .btn-group
-      %a.btn.dropdown-toggle.btn-lg.btn-warning{ 'data-toggle': 'dropdown', href: '#' }
+      %a.btn.dropdown-toggle.btn-lg.btn-warning{ 'data-bs-toggle': 'dropdown', href: '#' }
         = icon(:check, 'Validate Single Item')
       %ul.dropdown-menu
         - GlobalValidation.available_models.each do |item|
           %li
             = link_to item,
-                      "/rad_common/global_validations?single_model=#{item}",
+                      global_validations_path(single_model: item),
                       method: :post,
                       data: { confirm: 'Are you sure?' },
                       class: 'dropdown-item'

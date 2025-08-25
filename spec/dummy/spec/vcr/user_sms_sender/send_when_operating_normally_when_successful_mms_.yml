@@ -8,7 +8,7 @@ http_interactions:
       string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&MediaUrl=http%3A%2F%2Fexample.com%2Ffoo.jpg&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B16187222169
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin22 x86_64) Ruby/3.2.2
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Content-Type:
@@ -24,20 +24,24 @@ http_interactions:
       code: 201
       message: Created
     headers:
-      Date:
-      - Tue, 07 May 2024 15:22:33 GMT
       Content-Type:
       - application/json;charset=utf-8
       Content-Length:
       - '824'
       Connection:
       - keep-alive
+      Date:
+      - Thu, 13 Mar 2025 16:49:22 GMT
+      X-Powered-By:
+      - AT-5000
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQ6b908ff1f2befdf9ee2b8ea5106ec384
+      - RQ3831ffa649dc79172b80018475ce9279
       Twilio-Request-Duration:
-      - '60'
+      - '0.064'
+      X-Home-Region:
+      - us1
       X-Api-Domain:
       - api.twilio.com
       Strict-Transport-Security:
@@ -55,20 +59,24 @@ http_interactions:
       - 'true'
       X-Shenanigans:
       - none
-      X-Powered-By:
-      - AT-5000
-      X-Home-Region:
-      - us1
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 5bdd98ddd9cf035068669b86d054ff48.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P3
+      X-Amz-Cf-Id:
+      - cy9zqtsJNeEZYbBo4y4kUAUe-GmRLeUhTthVOEK7cAl8hGnTftx3hw==
     body:
       encoding: UTF-8
       string: '{"account_sid": "ACaae98776bde4ed53d0fb1dfcc262558e", "api_version":
         "2010-04-01", "body": "test message - To no longer receive text messages,
-        text STOP", "date_created": "Tue, 07 May 2024 15:22:33 +0000", "date_sent":
-        null, "date_updated": "Tue, 07 May 2024 15:22:33 +0000", "direction": "outbound-api",
+        text STOP", "date_created": "Thu, 13 Mar 2025 16:49:22 +0000", "date_sent":
+        null, "date_updated": "Thu, 13 Mar 2025 16:49:22 +0000", "direction": "outbound-api",
         "error_code": null, "error_message": null, "from": "+15005550006", "messaging_service_sid":
         null, "num_media": "0", "num_segments": "1", "price": null, "price_unit":
-        "USD", "sid": "MM6b908ff1f2befdf9ee2b8ea5106ec384", "status": "queued", "subresource_uris":
-        {"media": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/MM6b908ff1f2befdf9ee2b8ea5106ec384/Media.json"},
-        "to": "+16187222169", "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/MM6b908ff1f2befdf9ee2b8ea5106ec384.json"}'
-  recorded_at: Tue, 07 May 2024 15:22:33 GMT
-recorded_with: VCR 6.2.0
+        "USD", "sid": "MM3831ffa649dc79172b80018475ce9279", "status": "queued", "subresource_uris":
+        {"media": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/MM3831ffa649dc79172b80018475ce9279/Media.json"},
+        "to": "+16187222169", "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/MM3831ffa649dc79172b80018475ce9279.json"}'
+  recorded_at: Thu, 13 Mar 2025 16:49:22 GMT
+recorded_with: VCR 6.3.1

@@ -3,6 +3,7 @@ module RadNav
     attr_accessor :view_context, :additional_items, :include_users
 
     delegate :current_user, :render, :tag, to: :view_context
+    delegate :developer?, to: :current_user
 
     def initialize(view_context, include_users, additional_items: [])
       @view_context = view_context
@@ -23,16 +24,16 @@ module RadNav
       end
 
       def standard_items
-        [DropdownMenuItem.new(view_context, 'Audit Search', '/rad_common/audits'),
+        [DropdownMenuItem.new(view_context, 'Audit Search', view_context.audits_path),
          sidekiq,
-         DropdownMenuItem.new(view_context, 'Company Info', '/rad_common/company/edit'),
+         DropdownMenuItem.new(view_context, 'Company Info', view_context.company_edit_path),
          generate_jwt,
-         DropdownMenuItem.new(view_context, 'Notification Types', '/rad_common/notification_types'),
+         DropdownMenuIndexItem.new(view_context, 'NotificationType'),
          DropdownMenuIndexItem.new(view_context, 'SecurityRole'),
          sentry_test,
-         DropdownMenuItem.new(view_context, 'Sign In Activity', '/rad_common/login_activities'),
+         DropdownMenuIndexItem.new(view_context, 'LoginActivity', label: 'Sign In Activity'),
          system_messages,
-         DropdownMenuItem.new(view_context, 'System Usage', '/rad_common/system_usages'),
+         DropdownMenuItem.new(view_context, 'System Usage', view_context.system_usages_path),
          DropdownMenuIndexItem.new(view_context, 'ContactLog'),
          users,
          validate_database].compact.sort_by(&:label)
@@ -48,25 +49,28 @@ module RadNav
         DropdownMenuItem.new(view_context,
                              'Background Jobs',
                              '/sidekiq',
-                             link_options: { target: '_blank', rel: :noopener })
+                             link_options: { target: '_blank', rel: :noopener },
+                             permission: developer?)
       end
 
       def generate_jwt
         return unless RadConfig.jwt_enabled?
 
-        DropdownMenuItem.new(view_context, 'Generate JWT Token', view_context.new_json_web_token_path)
+        DropdownMenuItem.new(view_context,
+                             'Generate JWT Token',
+                             view_context.new_json_web_token_path,
+                             permission: developer?)
       end
 
       def sentry_test
         DropdownMenuItem.new(view_context,
                              'Sentry Test',
-                             RadCommon::Engine.routes.url_helpers.edit_sentry_test_path(current_user))
+                             view_context.new_sentry_test_path,
+                             permission: developer?)
       end
 
       def system_messages
-        DropdownMenuItem.new(view_context,
-                             'System Message',
-                             RadCommon::Engine.routes.url_helpers.new_system_message_path)
+        DropdownMenuItem.new(view_context, 'System Message', view_context.new_system_message_path)
       end
 
       def users
@@ -76,7 +80,10 @@ module RadNav
       end
 
       def validate_database
-        DropdownMenuItem.new(view_context, 'Validate Database', '/rad_common/global_validations/new')
+        DropdownMenuItem.new(view_context,
+                             'Validate Database',
+                             view_context.new_global_validation_path,
+                             permission: developer?)
       end
 
       def include_users?
