@@ -15,7 +15,7 @@ PATH
       audited
       authtrail
       aws-sdk-s3
-      bootstrap4-kaminari-views
+      bootstrap5-kaminari-views
       cssbundling-rails (~> 1.4)
       csv
       devise
@@ -175,7 +175,7 @@ GEM
     bigdecimal (3.2.2)
     bootsnap (1.18.6)
       msgpack (~> 1.2)
-    bootstrap4-kaminari-views (1.0.1)
+    bootstrap5-kaminari-views (0.0.1)
       kaminari (>= 0.13)
       rails (>= 3.1)
     builder (3.3.0)

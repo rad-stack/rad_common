@@ -29,8 +29,10 @@ module RadCommon
         add_rad_config_setting 'timezone_detection', 'true'
         add_rad_config_setting 'portal', 'false'
         add_rad_config_setting 'validate_user_domains', 'true'
+        add_rad_config_setting 'show_sign_in_marketing', 'false'
         remove_rad_factories
         remove_legacy_rails_config_setting
+        update_credentials
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
@@ -58,6 +60,8 @@ module RadCommon
         migrate_webpacker_to_esbuild unless RadConfig.legacy_assets?
 
         migrate_to_tom_select
+
+        migrate_to_bootstrap5
 
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
@@ -167,6 +171,14 @@ module RadCommon
         copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb.tt',
                   'lib/templates/rspec/system/system_spec.rb.tt'
         remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
+
+        # pundit template
+        copy_file '../../../../../spec/dummy/lib/templates/pundit/policy.rb.tt',
+                  'lib/templates/pundit/policy.rb.tt'
+
+        # factory bot
+        copy_file '../../../../../spec/dummy/lib/templates/factory_bot/factory.rb.tt',
+                  'lib/templates/factory_bot/factory.rb.tt'
 
         unless RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
@@ -360,6 +372,26 @@ Seeder.new.seed!
           gsub_file RAD_CONFIG_FILE, /^\s*legacy_rails_config:\s*.*\n/, ''
         end
 
+        def update_credentials
+          return if ENV['CI']
+
+          new_value = ask 'Enter the developer domain.'
+
+          %w[development test staging production].each do |environment|
+            credentials_path = Rails.root.join("config/credentials/#{environment}.yml.enc")
+            next unless File.exist?(credentials_path)
+
+            key_path = Rails.root.join("config/credentials/#{environment}.key")
+            decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
+            current_credentials = YAML.safe_load(decrypted_content) || {}
+            next if current_credentials.key?('developer_domain')
+
+            new_line = "\n\ndeveloper_domain: #{new_value}"
+            updated_content = decrypted_content.chomp + new_line + "\n"
+            Rails.application.encrypted(credentials_path, key_path: key_path).write(updated_content)
+          end
+        end
+
         def update_seeder_method
           file_path = 'app/services/seeder.rb'
           if File.exist?(file_path)
@@ -506,6 +538,90 @@ gem 'rubocop-capybara'
 gem 'propshaft'
             RUBY
             end
+          end
+        end
+
+        def migrate_to_bootstrap5
+          search_and_replace 'ml-', 'ms-'
+          search_and_replace 'mr-', 'me-'
+          search_and_replace 'pl-', 'ps-'
+          search_and_replace 'pr-', 'pe-'
+
+          search_and_replace 'float-left', 'float-start'
+          search_and_replace 'text-left', 'text-start'
+          search_and_replace 'text-sm-left', 'text-sm-start'
+          search_and_replace 'text-md-left', 'text-md-start'
+          search_and_replace 'text-lg-left', 'text-lg-start'
+
+          search_and_replace 'float-right', 'float-end'
+          search_and_replace 'text-right', 'text-end'
+          search_and_replace 'text-sm-right', 'text-sm-end'
+          search_and_replace 'text-md-right', 'text-md-end'
+          search_and_replace 'text-lg-right', 'text-lg-end'
+          search_and_replace 'data-toggle', 'data-bs-toggle'
+
+          # data: { toggle: 'str', target:
+          gsub_from_file_content(search_pattern: /data: \{ toggle: '([^']*)',(\s*)target:/,
+                               replacement_string: "data: { 'bs-toggle': '\\1',\\2'bs-target':")
+          # data: { placement: 'str', toggle:
+          gsub_from_file_content(search_pattern: /data: \{ placement: '([^']*)',(\s*)toggle:/,
+                                 replacement_string: "data: { 'bs-placement': '\\1',\\2'bs-toggle':")
+          # data: { toggle: 'str', placement: }
+          gsub_from_file_content(search_pattern: /data: \{ toggle: '([^']*)',(\s*)placement:/,
+                                 replacement_string: "data: { 'bs-toggle': '\\1',\\2'bs-placement':")
+          # data: { toggle:
+          gsub_from_file_content(search_pattern: /data: \{ toggle:/,
+                                 replacement_string: "data: { 'bs-toggle':")
+          # data: { target:
+          gsub_from_file_content(search_pattern: /data: \{ target:/,
+                                 replacement_string: "data: { 'bs-target':")
+
+          search_and_replace 'data-placement', 'data-bs-placement'
+          search_and_replace 'data-dismiss', 'data-bs-dismiss'
+          search_and_replace 'data-target', 'data-bs-target'
+
+          search_and_replace 'form-group', 'mb-3'
+          search_and_replace 'form-inline', 'd-flex align-items-center'
+          search_and_replace 'badge-pill', 'rounded-pill'
+          search_and_replace 'badge-primary', 'bg-primary'
+          search_and_replace 'badge-warning', 'bg-warning'
+          search_and_replace 'badge-danger', 'bg-danger'
+          search_and_replace 'badge-info', 'bg-info'
+          search_and_replace 'badge-success', 'bg-success'
+          search_and_replace 'badge-secondary', 'bg-secondary'
+
+          search_and_replace 'dropdown-menu-right', 'dropdown-menu-end'
+          search_and_replace 'dropdown-menu-left', 'dropdown-menu-start'
+          search_and_replace 'input-group-prepend', 'input-group-text'
+          search_and_replace 'input-group-append', 'input-group-text'
+
+          search_and_replace 'twitter-bootstrap-4', 'bootstrap-5'
+          search_and_replace 'badge alert-', 'badge bg-opacity-75 bg-'
+          search_and_replace 'badge.alert-', 'badge.bg-opacity-75.bg-'
+        end
+
+        def gsub_from_file_content(search_pattern:, replacement_string:)
+          project_root = Dir.pwd
+          matching_files = []
+
+          Find.find(project_root) do |path|
+            next if File.directory?(path)
+            next unless path.include?('/app/')
+            next if path.include?('/assets/')
+            next if path.downcase.include?('.ds_store')
+
+            begin
+              content = File.read(path)
+              if content.match?(search_pattern)
+                matching_files << path
+              end
+            rescue => e
+              puts "Error reading #{path}: #{e.message}"
+            end
+          end
+
+          matching_files.each do |file_path|
+            gsub_file(file_path, search_pattern, replacement_string)
           end
         end
 

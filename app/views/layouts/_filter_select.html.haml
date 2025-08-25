@@ -7,7 +7,7 @@
   = render 'layouts/match_type_dropdown', filter: filter, search: search, f: f
 - else
   .row.align-items-center
-    .col
+    .col.mb-2
       = f.label filter.input_label, required: false
     - if filter.allow_not
       .col-auto
@@ -15,7 +15,7 @@
                   as: :boolean,
                   label: 'Exclude',
                   input_html: { checked: filter.not_value?(params[:search]) },
-                  wrapper_html: { class: 'text-right mb-0' },
+                  wrapper_html: { class: 'text-right mb-auto' },
                   tooltip: "Exclude results that match selected #{filter.input_label}"
 = f.input filter.searchable_name,
           collection: filter.input_options_with_current_selection(search),
