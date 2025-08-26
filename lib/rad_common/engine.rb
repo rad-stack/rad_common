@@ -20,7 +20,7 @@ module RadCommon
     require 'hashids'
     require 'jwt'
     require 'kaminari'
-    require 'bootstrap4-kaminari-views'
+    require 'bootstrap5-kaminari-views'
     require 'nokogiri'
     require 'pg'
     require 'prawn'
