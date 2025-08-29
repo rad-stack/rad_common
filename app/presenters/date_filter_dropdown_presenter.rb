@@ -1,14 +1,15 @@
 class DateFilterDropdownPresenter
-  attr_reader :view
+  attr_reader :view, :filter
 
-  def initialize(view_context)
+  def initialize(view_context, filter = nil)
     @view = view_context
+    @filter = filter
   end
 
   def render
     view.tag.label(class: 'mb-0') do
       view.tag.a(**icon_attrs) + view.tag.div(**dropdown_menu_attrs) do
-        current_ranges + previous_ranges + clear_option
+        current_ranges + previous_ranges + custom_ranges + clear_option
       end
     end
   end
@@ -34,6 +35,25 @@ class DateFilterDropdownPresenter
       view.tag.div(class: 'dropdown-divider') +
         view.tag.div(class: 'dropdown-header font-weight-bold') { 'Previous' } +
         range_tag('yesterday') + range_tag('last_week') + range_tag('last_month') + range_tag('last_year')
+    end
+
+    def custom_ranges
+      return view.tag.div('') unless filter&.custom_options&.any?
+
+      view.tag.div(class: 'dropdown-divider') +
+        view.tag.div(class: 'dropdown-header font-weight-bold') { 'Custom' } +
+        view.safe_join(filter.custom_options.map { |option| custom_range_tag(option) })
+    end
+
+    def custom_range_tag(option)
+      view.tag.a option[:label],
+                 href: '#',
+                 'data-range' => 'custom',
+                 'data-start' => option[:start_value],
+                 'data-end' => option[:end_value],
+                 class: 'dropdown-item',
+                 'data-action' => 'search-date-filter#setRange',
+                 'data-turbo' => 'false'
     end
 
     def range_tag(range)
