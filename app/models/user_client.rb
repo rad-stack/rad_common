@@ -1,8 +1,8 @@
 class UserClient < ApplicationRecord
   belongs_to :user
-  belongs_to :client, class_name: RadCommon::AppInfo.new.client_model_class_name
+  belongs_to :client, class_name: AppInfo.new.client_model_class_name
 
-  scope :sorted, -> { joins(:client).merge(RadCommon::AppInfo.new.client_model_class.sorted) }
+  scope :sorted, -> { joins(:client).merge(AppInfo.new.client_model_class.sorted) }
 
   validate :validate_user
   validate :validate_email_domain
