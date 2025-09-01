@@ -149,7 +149,7 @@ module AuditsHelper
       return false if current_user.admin?
 
       restricted_attributes = RadConfig.restricted_audit_attributes!
-      return if restricted_attributes.count.zero?
+      return false if restricted_attributes.count.zero?
 
       matches = restricted_attributes.select do |item|
         item[:model] == audit.auditable_type && item[:attribute] == changed_attribute

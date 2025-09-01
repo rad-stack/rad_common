@@ -1,7 +1,6 @@
 module AttachmentsHelper
   def render_one_attachment(attachment_name:, record:, override_label: nil, show_filename: nil,
                             no_delete_button: nil, override_path: nil, new_tab: nil)
-
     AttachmentRenderer.new(current_user,
                            self,
                            attachment_name: attachment_name,
@@ -15,7 +14,6 @@ module AttachmentsHelper
 
   def render_many_attachments(attachment_name:, record:, override_label: nil, show_filename: nil,
                               no_delete_button: nil, override_path: nil, new_tab: nil)
-
     AttachmentRenderer.new(current_user,
                            self,
                            attachment_name: attachment_name,
