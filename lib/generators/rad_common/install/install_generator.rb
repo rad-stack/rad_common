@@ -61,7 +61,8 @@ module RadCommon
 
         migrate_to_tom_select
 
-        migrate_to_bootstrap5
+        # enable this as needed
+        # migrate_to_bootstrap5
 
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
