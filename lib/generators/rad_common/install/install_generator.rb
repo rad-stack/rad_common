@@ -391,6 +391,19 @@ Seeder.new.seed!
             updated_content = decrypted_content.chomp + new_line + "\n"
             Rails.application.encrypted(credentials_path, key_path: key_path).write(updated_content)
           end
+
+          %w[development test].each do |environment|
+            credentials_path = Rails.root.join("config/credentials/#{environment}.yml.enc")
+            next unless File.exist?(credentials_path)
+
+            key_path = Rails.root.join("config/credentials/#{environment}.key")
+            decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
+            current_credentials = YAML.safe_load(decrypted_content) || {}
+            next if current_credentials['developer_domain'] == 'example.com'
+
+            updated_content = decrypted_content.gsub("developer_domain: #{new_value}", 'developer_domain: example.com')
+            Rails.application.encrypted(credentials_path, key_path: key_path).write(updated_content)
+          end
         end
 
         def update_seeder_method
