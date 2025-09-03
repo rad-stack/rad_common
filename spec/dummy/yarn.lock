@@ -243,45 +243,45 @@
   integrity sha512-ALIk/MOh5gYe1TG/ieS5mVUsk7VUIJTJKPMK9rFFqOgfp0Q3d5QiBXbcOMwUvs37fyZVCz46YjOE6IFeOAXCHA==
 
 "@fullcalendar/bootstrap5@^6.1.11":
-  version "6.1.18"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap5/-/bootstrap5-6.1.18.tgz#79cbc3cfe7584d4671dabdd40302cd2e3466aecd"
-  integrity sha512-IL+vBpYdho18G2rU+1zLA66Tlm2gkO2aBiESCxNJ+PqWPyZdNN2KRnClBLO+fw0zdR9NOJWvNfStKP2KPnlPQw==
+  version "6.1.19"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap5/-/bootstrap5-6.1.19.tgz#77bba1d2ece30ae81aa7ade12e450dd023fd7c72"
+  integrity sha512-YJQ/MuGZu865Mw3v9IDyvviVQVjpK3r5NW3NlsfqW8LOxNcIZLCviSgpe1x1rmBTAyFI9AyNLkG89SdEKZknrw==
 
 "@fullcalendar/core@~6.1.17":
-  version "6.1.17"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-6.1.17.tgz#faaffa100f020636a9b4c900462bdc6d652b58ef"
-  integrity sha512-0W7lnIrv18ruJ5zeWBeNZXO8qCWlzxDdp9COFEsZnyNjiEhUVnrW/dPbjRKYpL0edGG0/Lhs0ghp1z/5ekt8ZA==
+  version "6.1.19"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-6.1.19.tgz#60379111ba0cfb9fd9bc6594fee47cf855fc77b2"
+  integrity sha512-z0aVlO5e4Wah6p6mouM0UEqtRf1MZZPt4mwzEyU6kusaNL+dlWQgAasF2cK23hwT4cmxkEmr4inULXgpyeExdQ==
   dependencies:
     preact "~10.12.1"
 
-"@fullcalendar/daygrid@~6.1.17":
-  version "6.1.17"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-6.1.17.tgz#3ff9d8d99da872631b661bf9ca5a47ed849421cf"
-  integrity sha512-K7m+pd7oVJ9fW4h7CLDdDGJbc9szJ1xDU1DZ2ag+7oOo1aCNLv44CehzkkknM6r8EYlOOhgaelxQpKAI4glj7A==
+"@fullcalendar/daygrid@~6.1.17", "@fullcalendar/daygrid@~6.1.19":
+  version "6.1.19"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-6.1.19.tgz#1d70a7f3f4cc13d3f27f55ed6880aae09a1a367b"
+  integrity sha512-IAAfnMICnVWPjpT4zi87i3FEw0xxSza0avqY/HedKEz+l5MTBYvCDPOWDATpzXoLut3aACsjktIyw9thvIcRYQ==
 
 "@fullcalendar/interaction@~6.1.17":
-  version "6.1.17"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-6.1.17.tgz#f0d14cb6f6c3cb7e2b20299dfb39a866232e2976"
-  integrity sha512-AudvQvgmJP2FU89wpSulUUjeWv24SuyCx8FzH2WIPVaYg+vDGGYarI7K6PcM3TH7B/CyaBjm5Rqw9lXgnwt5YA==
+  version "6.1.19"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-6.1.19.tgz#48d85601a4203ede7cb400323fe5a9c163e28804"
+  integrity sha512-GOciy79xe8JMVp+1evAU3ytdwN/7tv35t5i1vFkifiuWcQMLC/JnLg/RA2s4sYmQwoYhTw/p4GLcP0gO5B3X5w==
 
 "@fullcalendar/list@~6.1.17":
-  version "6.1.17"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/list/-/list-6.1.17.tgz#0111df515e662f2372bc50e56b90c3a5c2dc8ce0"
-  integrity sha512-fkyK49F9IxwlGUBVhJGsFpd/LTi/vRVERLIAe1HmBaGkjwpxnynm8TMLb9mZip97wvDk3CmZWduMe6PxscAlow==
+  version "6.1.19"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/list/-/list-6.1.19.tgz#060bc8ee1895c172d28689475b8e567e166a9828"
+  integrity sha512-knZHpAVF0LbzZpSJSUmLUUzF0XlU/MRGK+Py2s0/mP93bCtno1k2L3XPs/kzh528hSjehwLm89RgKTSfW1P6cA==
 
 "@fullcalendar/multimonth@~6.1.17":
-  version "6.1.17"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/multimonth/-/multimonth-6.1.17.tgz#5a40e72a8b41ff365d54461d25893094a3733582"
-  integrity sha512-ZxA9mkTzKayCdxR5je9P9++qqhSeSbuvXmvZ6doZw6omv8K52cD7XJii+P7gvxATXxtI6hg4i+DuMyOHxP1E2g==
+  version "6.1.19"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/multimonth/-/multimonth-6.1.19.tgz#9a125ece3c2161fcabc30350a3eb9d9d985ff7c5"
+  integrity sha512-YYP8o/tjNLFRKhelwiq5ja3Jm3WDf3bfOUHf32JvAWwfotCvZjD7tYv66Nj02mQ8OWWJINa2EQGJxFHgIs14aA==
   dependencies:
-    "@fullcalendar/daygrid" "~6.1.17"
+    "@fullcalendar/daygrid" "~6.1.19"
 
 "@fullcalendar/timegrid@~6.1.17":
-  version "6.1.17"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-6.1.17.tgz#c88f19a1417ca314545d28a2fe23b33330e086dd"
-  integrity sha512-K4PlA3L3lclLOs3IX8cvddeiJI9ZVMD7RA9IqaWwbvac771971foc9tFze9YY+Pqesf6S+vhS2dWtEVlERaGlQ==
+  version "6.1.19"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-6.1.19.tgz#bb4b2e3039c995b61284ee5b76ad9dcc696b71ce"
+  integrity sha512-OuzpUueyO9wB5OZ8rs7TWIoqvu4v3yEqdDxZ2VcsMldCpYJRiOe7yHWKr4ap5Tb0fs7Rjbserc/b6Nt7ol6BRg==
   dependencies:
-    "@fullcalendar/daygrid" "~6.1.17"
+    "@fullcalendar/daygrid" "~6.1.19"
 
 "@hotwired/stimulus@^3.2.2":
   version "3.2.2"
@@ -1503,9 +1503,9 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-"rad_common_js@https://github.com/rad-stack/rad_common_js#5813541f6979e0a9acd53ef0c1156768aff47d41":
+"rad_common_js@https://github.com/rad-stack/rad_common_js#8ffa41a72d80db55ee9d4150197021af643090c5":
   version "2.1.8"
-  resolved "https://github.com/rad-stack/rad_common_js#5813541f6979e0a9acd53ef0c1156768aff47d41"
+  resolved "https://github.com/rad-stack/rad_common_js#8ffa41a72d80db55ee9d4150197021af643090c5"
   dependencies:
     "@fullcalendar/bootstrap5" "^6.1.11"
     "@hotwired/stimulus" "^3.2.2"
