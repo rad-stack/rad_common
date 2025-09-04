@@ -26,7 +26,7 @@
               = icon 'bell', 'Notifications'
               - if unread_count.positive?
                 %span.bg-danger.bg-opacity-75= unread_count
-        - if current_user.internal? && policy(NotificationSetting).index?
+        - if policy(NotificationSetting).index?
           %li
             = link_to icon('gear', 'Notification Settings'),
                       notification_settings_path,
