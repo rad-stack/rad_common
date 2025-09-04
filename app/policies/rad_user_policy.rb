@@ -9,6 +9,7 @@ class RadUserPolicy < ApplicationPolicy
 
   def update_security_roles?
     return true if user.permission?(:admin)
+    return false unless user.permission?(:manage_user) && user.internal?
 
     record != user
   end

@@ -12,22 +12,6 @@ module RadCommonRoutes
       devise_for :users, path: 'auth', controllers: devise_controllers, path_names: devise_paths
 
       authenticate :user, ->(u) { u.internal? } do
-        resources :users do
-          get :export, on: :collection
-
-          member do
-            put :resend_invitation
-            put :confirm
-            put :reactivate
-            put :test_email
-            put :test_sms
-            put :update_timezone
-            put :ignore_timezone
-          end
-
-          resources :user_clients, only: :new
-        end
-
         resources :security_roles do
           get :permission, on: :collection
         end
@@ -70,12 +54,24 @@ module RadCommonRoutes
         put 'set_js_timezone', to: 'users#set_js_timezone'
       end
 
-      authenticate :user, ->(u) { u.external? } do
-        resources :users, only: %i[index show]
-      end
-
       authenticate :user, ->(u) { u.admin? } do
         mount Sidekiq::Web => '/sidekiq'
+      end
+
+      resources :users do
+        get :export, on: :collection
+
+        member do
+          put :resend_invitation
+          put :confirm
+          put :reactivate
+          put :test_email
+          put :test_sms
+          put :update_timezone
+          put :ignore_timezone
+        end
+
+        resources :user_clients, only: :new
       end
 
       resources :notifications, only: :index

@@ -35,7 +35,7 @@
                                      collection: security_role_collection(:internal),
                                      checked: @user.security_roles.ids
 
-    - if RadConfig.external_users? && security_role_collection(:external).any?
+    - if RadConfig.external_users? && policy(@user).update_security_roles? && security_role_collection(:external).any?
       .row.external
         .col-lg-12
           = f.input :security_roles, as: :check_boxes,
