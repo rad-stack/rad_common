@@ -1,4 +1,4 @@
-module CompaniesHelper
+module RadCompaniesHelper
   def company_show_data(company)
     items = address_show_data(company)
 
