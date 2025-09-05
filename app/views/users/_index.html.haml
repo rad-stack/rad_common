@@ -24,7 +24,7 @@
           %th Status
           %th Roles
           - if RadConfig.external_users?
-            %th #{RadCommon::AppInfo.new.client_model_label}s
+            %th #{AppInfo.new.client_model_label}s
         - if show_actions
           %th.text-center Actions
 

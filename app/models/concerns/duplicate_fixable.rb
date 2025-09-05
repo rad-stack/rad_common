@@ -227,7 +227,7 @@ module DuplicateFixable
   end
 
   def duplicate_model_config
-    RadCommon::AppInfo.new.duplicate_model_config(self.class.name)
+    AppInfo.new.duplicate_model_config(self.class.name)
   end
 
   def merge_duplicates(duplicate_keys, user)

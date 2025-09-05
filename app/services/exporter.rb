@@ -1,5 +1,5 @@
 class Exporter
-  include RadCommon::ApplicationHelper
+  include RadHelper
   include EnumsHelper
   include ActionView::Helpers::NumberHelper
 

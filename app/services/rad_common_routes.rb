@@ -86,15 +86,15 @@ module RadCommonRoutes
       resources :sendgrid_statuses, only: :create
       resources :company_contacts, only: %i[new create]
 
-      delete 'attachments/:id(.:format)', to: 'rad_common/attachments#destroy', as: :attachment
+      delete 'attachments/:id(.:format)', to: 'attachments#destroy', as: :attachment
 
-      get 'attachments/:class_name/:id(.:format)/:variant(.:format)', to: 'rad_common/attachments#download_variant'
-      get 'attachments/:id(.:format)', to: 'rad_common/attachments#download'
+      get 'attachments/:class_name/:id(.:format)/:variant(.:format)', to: 'attachments#download_variant'
+      get 'attachments/:id(.:format)', to: 'attachments#download'
 
       get 'attachments/:class_name/:id(.:format)/:variant(.:format)/:filename(.:format)',
-          to: 'rad_common/attachments#download_variant'
+          to: 'attachments#download_variant'
 
-      get 'attachments/:id(.:format)/:filename(.:format)', to: 'rad_common/attachments#download'
+      get 'attachments/:id(.:format)/:filename(.:format)', to: 'attachments#download'
 
       get 'global_search', to: 'search#global_search'
       get 'global_search_result', to: 'search#global_search_result'
