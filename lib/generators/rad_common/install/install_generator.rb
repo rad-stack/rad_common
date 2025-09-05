@@ -61,7 +61,8 @@ module RadCommon
 
         migrate_to_tom_select
 
-        migrate_to_bootstrap5
+        # enable this as needed
+        # migrate_to_bootstrap5
 
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
@@ -373,7 +374,24 @@ Seeder.new.seed!
         end
 
         def update_credentials
+          # TODO: this entire method could use some refactor next time we need to udpate credentials
           return if ENV['CI']
+
+          need_credentials_update = false
+
+          %w[development test staging production].each do |environment|
+            credentials_path = Rails.root.join("config/credentials/#{environment}.yml.enc")
+            next unless File.exist?(credentials_path)
+
+            key_path = Rails.root.join("config/credentials/#{environment}.key")
+            decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
+            current_credentials = YAML.safe_load(decrypted_content) || {}
+            next if current_credentials.key?('developer_domain')
+
+            need_credentials_update = true
+          end
+
+          return unless need_credentials_update
 
           new_value = ask 'Enter the developer domain.'
 
@@ -388,6 +406,19 @@ Seeder.new.seed!
 
             new_line = "\n\ndeveloper_domain: #{new_value}"
             updated_content = decrypted_content.chomp + new_line + "\n"
+            Rails.application.encrypted(credentials_path, key_path: key_path).write(updated_content)
+          end
+
+          %w[development test].each do |environment|
+            credentials_path = Rails.root.join("config/credentials/#{environment}.yml.enc")
+            next unless File.exist?(credentials_path)
+
+            key_path = Rails.root.join("config/credentials/#{environment}.key")
+            decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
+            current_credentials = YAML.safe_load(decrypted_content) || {}
+            next if current_credentials['developer_domain'] == 'example.com'
+
+            updated_content = decrypted_content.gsub("developer_domain: #{new_value}", 'developer_domain: example.com')
             Rails.application.encrypted(credentials_path, key_path: key_path).write(updated_content)
           end
         end
