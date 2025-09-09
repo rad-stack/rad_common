@@ -39,7 +39,6 @@ module RadCommonRoutes
         resources :contact_log_recipients, only: :show
         resources :saved_search_filters, only: :destroy
         resources :user_security_roles, only: :show
-        resources :user_clients, only: %i[create destroy]
         resources :json_web_tokens, only: :new
 
         resources :impersonations, only: [] do
@@ -81,6 +80,7 @@ module RadCommonRoutes
       resources :twilio_replies, only: :create
       resources :sendgrid_statuses, only: :create
       resources :company_contacts, only: %i[new create]
+      resources :user_clients, only: %i[create destroy]
 
       delete 'attachments/:id(.:format)', to: 'rad_common/attachments#destroy', as: :attachment
 
