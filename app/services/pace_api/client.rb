@@ -36,6 +36,10 @@ module PaceApi
       find_objects(type, xpath, raise_error: false, cached: cached)&.first
     end
 
+    def pace_version
+      raw_api_client.get('/rpc/rest/services/Version/getVersion').body
+    end
+
     def find_object!(type, xpath, cached: false)
       objects = find_objects(type, xpath, raise_error: true, cached: cached)
       if objects.size > 1
@@ -181,6 +185,14 @@ module PaceApi
           faraday.headers['Content-Type'] = 'application/json'
           faraday.request :json
           faraday.response :json, content_type: /\bjson$/
+          faraday.ssl.verify = @ssl_verify
+          faraday.adapter Faraday.default_adapter
+        end
+      end
+
+      def raw_api_client
+        @raw_api_client ||= Faraday.new(url: base_api_url, proxy: proxy_url) do |faraday|
+          faraday.request :authorization, :basic, pace_api_username, pace_api_password
           faraday.ssl.verify = @ssl_verify
           faraday.adapter Faraday.default_adapter
         end
