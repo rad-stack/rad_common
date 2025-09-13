@@ -22,8 +22,10 @@
 
     .col-lg-3= f.input :validity_checked_at, as: :date, html5: true
   .row
-    .col-lg-3= f.input :app_logo
-    .col-lg-3= f.input :fav_icon
+    .col-lg-3
+      = f.input :app_logo, hint: render_one_attachment(record: @company, attachment_name: 'app_logo', new_tab: true)
+    .col-lg-3
+      = f.input :fav_icon, hint: render_one_attachment(record: @company, attachment_name: 'fav_icon', new_tab: true)
 
   = render 'form_custom', f: f
   .form-actions
