@@ -18,6 +18,7 @@ module RadCommon
           remove_dir 'public/packs-test'
         end
 
+        fix_namespacing
         add_crawling_config
         install_procfile
         standardize_date_methods
@@ -306,6 +307,25 @@ Seeder.new.seed!
           end
         end
 
+        def fix_namespacing
+          search_and_replace 'RadCommon::AppInfo', 'AppInfo'
+          search_and_replace 'RadCommon::ApplicationHelper', 'RadHelper'
+
+          search_and_replace 'RadCommon::ArrayFilter', 'RadSearch::ArrayFilter'
+          search_and_replace 'RadCommon::BooleanFilter', 'RadSearch::BooleanFilter'
+          search_and_replace 'RadCommon::DateFilter', 'RadSearch::DateFilter'
+          search_and_replace 'RadCommon::EnumFilter', 'RadSearch::EnumFilter'
+          search_and_replace 'RadCommon::EqualsFilter', 'RadSearch::EqualsFilter'
+          search_and_replace 'RadCommon::FilterDefaulting', 'RadSearch::FilterDefaulting'
+          search_and_replace 'RadCommon::Filtering', 'RadSearch::Filtering'
+          search_and_replace 'RadCommon::HiddenFilter', 'RadSearch::HiddenFilter'
+          search_and_replace 'RadCommon::LikeFilter', 'RadSearch::LikeFilter'
+          search_and_replace 'RadCommon::PhoneNumberFilter', 'RadSearch::PhoneNumberFilter'
+          search_and_replace 'RadCommon::Search', 'RadSearch::Search'
+          search_and_replace 'RadCommon::SearchFilter', 'RadSearch::SearchFilter'
+          search_and_replace 'RadCommon::Sorting', 'RadSearch::Sorting'
+        end
+
         def add_crawling_config
           remove_file 'public/robots.txt'
 
@@ -374,7 +394,24 @@ Seeder.new.seed!
         end
 
         def update_credentials
+          # TODO: this entire method could use some refactor next time we need to udpate credentials
           return if ENV['CI']
+
+          need_credentials_update = false
+
+          %w[development test staging production].each do |environment|
+            credentials_path = Rails.root.join("config/credentials/#{environment}.yml.enc")
+            next unless File.exist?(credentials_path)
+
+            key_path = Rails.root.join("config/credentials/#{environment}.key")
+            decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
+            current_credentials = YAML.safe_load(decrypted_content) || {}
+            next if current_credentials.key?('developer_domain')
+
+            need_credentials_update = true
+          end
+
+          return unless need_credentials_update
 
           new_value = ask 'Enter the developer domain.'
 

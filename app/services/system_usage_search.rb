@@ -1,4 +1,4 @@
-class SystemUsageSearch < RadCommon::Search
+class SystemUsageSearch < RadSearch::Search
   DATE_MODE_OPTIONS = %w[Yearly Monthly Weekly Daily].freeze
   DEFAULT_DATE_MODE = 'Weekly'.freeze
 

@@ -238,7 +238,7 @@ class CardPresenter
 
     def include_duplicate_action?
       action_name == 'show' &&
-        RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
+        AppInfo.new.duplicates_enabled?(klass.name) &&
         instance.duplicate.present? &&
         instance.duplicate.score.present? &&
         instance_policy.resolve_duplicates?
@@ -252,7 +252,7 @@ class CardPresenter
 
     def include_duplicates_action?
       action_name == 'index' &&
-        RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
+        AppInfo.new.duplicates_enabled?(klass.name) &&
         class_policy.resolve_duplicates? &&
         klass.high_duplicates.size.positive?
     end
@@ -338,7 +338,7 @@ class CardPresenter
                     instance.present? &&
                     instance.respond_to?(:persisted?) &&
                     instance.persisted? &&
-                    RadCommon::AppInfo.new.duplicates_enabled?(instance.class.name) &&
+                    AppInfo.new.duplicates_enabled?(instance.class.name) &&
                     instance_policy.reset_duplicates?
 
       confirm_message = 'This will reset non-duplicates and regenerate possible matches for this record, proceed?'

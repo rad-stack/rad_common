@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Attorneys' do
   let(:user) { create :admin }
   let(:attorney) { create :attorney }
-  let(:invalid_attributes) { { first_name: Faker::Name.first_name, last_name: nil } }
+  let(:invalid_attributes) { { first_name: Faker::Name.first_name, company_name: nil } }
 
   let(:valid_attributes) do
     { first_name: Faker::Name.first_name,
