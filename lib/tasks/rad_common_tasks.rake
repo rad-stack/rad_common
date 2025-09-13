@@ -13,12 +13,12 @@ namespace :rad_common do
         Duplicate.where.not(sort: 500).update_all sort: 500
 
         puts 'notifying high duplicates'
-        RadCommon::AppInfo.new.duplicate_models.each do |model_name|
+        AppInfo.new.duplicate_models.each do |model_name|
           model_name.constantize.notify_high_duplicates
         end
 
         puts 'checking twilio error threshold'
-        RadCommon::TwilioErrorThresholdChecker.new.check_threshold
+        TwilioErrorThresholdChecker.new.check_threshold
 
         puts 'checking for missing audited models'
         missing_audited_models = RadAudit.missing_audited_models
@@ -41,7 +41,7 @@ namespace :rad_common do
     session = RakeSession.new(task, 58.minutes, 10)
 
     Timeout.timeout(session.time_limit) do
-      RadCommon::AppInfo.new.duplicate_models.each do |model_name|
+      AppInfo.new.duplicate_models.each do |model_name|
         session.reset_status
         model_name.constantize.process_duplicates(session)
         break if session.timing_out?

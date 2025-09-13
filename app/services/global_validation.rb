@@ -61,7 +61,7 @@ class GlobalValidation
   def models_to_check
     return [@override_model] if @override_model.present?
 
-    RadCommon::AppInfo.new.application_models - exclude_models
+    AppInfo.new.application_models - exclude_models
   end
 
   private
