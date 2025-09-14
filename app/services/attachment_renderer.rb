@@ -61,7 +61,7 @@ class AttachmentRenderer
     end
 
     def render_attachment_image(attachment:, label_override:, no_delete:)
-      link = (override_path.presence || context.url_for(attachment))
+      link = override_path.presence || context.url_for(attachment)
       target = new_tab ? '_blank' : nil
 
       attachment_label = label_override.presence || context.image_tag(attachment,
@@ -76,14 +76,14 @@ class AttachmentRenderer
       return if no_delete
 
       context.link_to context.tag.i('', class: 'fa fa-times'),
-                      RadCommon::Engine.routes.url_helpers.attachment_path(attachment.id),
+                      context.attachment_path(attachment.id),
                       method: :delete,
                       data: { confirm: 'Are you sure? Attachment cannot be recovered.' },
-                      class: 'btn btn-danger ml-5'
+                      class: 'btn btn-danger ms-5'
     end
 
     def render_attachment_link(attachment:, no_delete:, label_override:, filename_label:)
-      default_label = context.tag.i('', class: "fa #{RadCommon::ContentTypeIcon.new(attachment.content_type)}") +
+      default_label = context.tag.i('', class: "fa #{ContentTypeIcon.new(attachment.content_type)}") +
                       filename_label
 
       attachment_label = label_override.presence || default_label

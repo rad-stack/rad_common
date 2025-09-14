@@ -53,6 +53,28 @@ class DivisionsController < ApplicationController
     end
   end
 
+  def calendar
+    authorize Division
+
+    @divisions = Division.all
+
+    respond_to do |format|
+      format.html
+      format.json do
+        events = @divisions.map do |division|
+          start_time = rand(1.month.ago.beginning_of_day..1.month.from_now.end_of_day).change(hour: rand(7..18))
+          {
+            title: division.to_s,
+            description: division.additional_info,
+            start: start_time,
+            end: start_time + 1.hour
+          }
+        end
+        render json: events
+      end
+    end
+  end
+
   private
 
     def set_division
@@ -62,6 +84,6 @@ class DivisionsController < ApplicationController
 
     def permitted_params
       params.require(:division).permit(:name, :code, :notify, :timezone, :owner_id, :hourly_rate, :division_status,
-                                       :icon, :logo, :category_id, :category_name)
+                                       :icon, :logo, :category_id, :category_name, tags: [])
     end
 end

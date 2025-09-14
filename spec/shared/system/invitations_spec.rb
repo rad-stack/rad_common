@@ -32,14 +32,37 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     before { login_as admin, scope: :user }
 
     describe 'new' do
+      context 'with twilio verify off' do
+        let(:invite_role) { create :security_role, allow_invite: true, two_factor_auth: false }
+        let(:invite_email) { valid_email }
+
+        before do
+          allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false)
+          invite_role
+        end
+
+        it 'invites' do
+          visit new_user_invitation_path
+
+          select invite_role.name, from: 'Initial Security Role'
+          fill_in 'Email', with: invite_email
+          fill_in 'First Name', with: first_name
+          fill_in 'Last Name', with: last_name
+          fill_in 'Mobile Phone', with: '(999) 231-1111'
+          click_button 'Send'
+
+          expect(page).to have_content "We invited '#{name_display}'"
+          expect(User.last.security_roles.first).to eq invite_role
+          expect(User.last.active?).to be true
+          expect(User.last.twilio_verify_enabled?).to be false
+        end
+      end
+
       context 'when valid' do
         let(:another_role) { create :security_role, :external, allow_invite: true }
         let(:multiple_roles) { false }
-        let(:all_users) { true }
 
         before do
-          allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(all_users)
-
           if multiple_roles
             another_role
             create :security_role, :external, allow_invite: true
@@ -66,16 +89,6 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           it 'invites' do
             expect(User.last.internal?).to be true
             expect(User.last.twilio_verify_enabled?).to be true
-          end
-        end
-
-        context 'with twilio verify off' do
-          let(:invite_role) { internal_role }
-          let(:invite_email) { valid_email }
-          let(:all_users) { false }
-
-          it 'invites' do
-            expect(User.last.twilio_verify_enabled?).to be false
           end
         end
 
@@ -120,7 +133,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           expect(page).to have_content "Last name can't be blank"
         end
 
-        it 'because of invalid email' do
+        it 'because of invalid email', :valid_user_domain_specs do
           visit new_user_invitation_path
 
           bad_email = 'j@g.com'
@@ -136,6 +149,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
         it 'because of a single letter in name that conflicts with password in name validation' do
           visit new_user_invitation_path
 
+          select internal_role.name, from: 'Initial Security Role' if RadConfig.external_users?
           fill_in 'Email', with: valid_email
           fill_in 'First Name', with: 'f'
           fill_in 'Last Name', with: 'b'
@@ -152,6 +166,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
       it 'resends invitation' do
         visit new_user_invitation_path
 
+        select internal_role.name, from: 'Initial Security Role' if RadConfig.external_users?
         fill_in 'Email', with: valid_email
         fill_in 'First Name', with: first_name
         fill_in 'Last Name', with: last_name

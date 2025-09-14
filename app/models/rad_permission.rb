@@ -48,7 +48,8 @@ class RadPermission
 
   class << self
     def all
-      (SecurityRole.attribute_names - %w[id name created_at updated_at external allow_invite allow_sign_up]).sort
+      (SecurityRole.attribute_names -
+        %w[id name created_at updated_at external allow_invite allow_sign_up two_factor_auth]).sort
     end
 
     def exists?(permission_name)
@@ -58,7 +59,7 @@ class RadPermission
     def security_role_categories(security_role)
       # would be good to refactor this with user_categories
 
-      items = RadCommon::AppInfo.new.application_models.map(&:underscore)
+      items = AppInfo.new.application_models.map(&:underscore)
 
       categories = all.map do |item|
         permission = RadPermission.new(item)
@@ -77,7 +78,7 @@ class RadPermission
     def user_categories(user)
       # would be good to refactor this with security_role_categories
 
-      items = RadCommon::AppInfo.new.application_models.map(&:underscore)
+      items = AppInfo.new.application_models.map(&:underscore)
 
       categories = all.map do |item|
         permission = RadPermission.new(item)

@@ -1,18 +1,22 @@
-- filter_class = search.default_value?(filter.searchable_name) ? '' : 'filter-active'
-- input_html = filter.search_scope.present? ? filter.search_scope_params : { class: 'selectpicker' }
+:ruby
+  filter_class = search.default_value?(filter.searchable_name) ? '' : 'filter-active'
+  input_html = filter.search_scope_params
+  input_html = input_html.merge('data-autosubmit': true) if filter.autosubmit
 
-.row.align-items-center
-  .col
-    = f.label filter.input_label, required: false
-  - if filter.allow_not
-    .col-auto
-      = f.input "#{filter.searchable_name}_not",
-                as: :boolean,
-                label: 'Exclude',
-                input_html: { checked: filter.not_value?(params[:search]) },
-                wrapper_html: { class: 'text-right mb-0' },
-                tooltip: "Exclude results that match selected #{filter.input_label}"
-
+- if filter.is_a?(RadSearch::ArrayFilter)
+  = render 'layouts/match_type_dropdown', filter: filter, search: search, f: f
+- else
+  .row.align-items-center
+    .col.mb-2
+      = f.label filter.input_label, required: false
+    - if filter.allow_not
+      .col-auto
+        = f.input "#{filter.searchable_name}_not",
+                  as: :boolean,
+                  label: 'Exclude',
+                  input_html: { checked: filter.not_value?(params[:search]), class: 'ays-ignore' },
+                  wrapper_html: { class: 'text-right mb-auto' },
+                  tooltip: "Exclude results that match selected #{filter.input_label}"
 = f.input filter.searchable_name,
           collection: filter.input_options_with_current_selection(search),
           label: false,
@@ -21,6 +25,5 @@
           as: filter.input_type,
           group_method: :last,
           required: false,
-          label_method: filter.label_method,
           wrapper_html: { class: filter_class },
           input_html: { multiple: filter.multiple, 'data-placeholder': filter.blank_value_label }.merge(input_html)

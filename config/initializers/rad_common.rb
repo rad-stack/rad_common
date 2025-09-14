@@ -57,9 +57,21 @@ Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
 end
 
+if RadConfig.blocked_ip_addresses?
+  Rack::Attack.enabled = true
+
+  Rack::Attack.blocklist 'block suspicious requests' do |request|
+    RadConfig.blocked_ip_addresses!.include?(request.ip)
+  end
+else
+  Rack::Attack.enabled = false
+end
+
 Rails.application.config.after_initialize do
-  default_allowed_tags = Class.new.include(ActionText::ContentHelper).new.sanitizer_allowed_attributes
-  ActionText::ContentHelper.allowed_attributes = default_allowed_tags.add('style')
+  unless RadConfig.legacy_assets?
+    default_allowed_tags = Class.new.include(ActionText::ContentHelper).new.sanitizer_allowed_attributes
+    ActionText::ContentHelper.allowed_attributes = default_allowed_tags.add('style')
+  end
 end
 
 AuthTrail.geocode = false

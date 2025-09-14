@@ -1,2 +1,6 @@
-= f.input filter.like_input, label: filter.input_label, input_html: { value: search.search_params[filter.like_input] },
-                             required: false
+= render 'layouts/match_type_dropdown', filter: filter, search: search, f: f
+
+= f.input filter.searchable_name,
+          label: false,
+          input_html: { value: search.search_params[filter.input_name], class: 'ays-ignore' },
+          required: false

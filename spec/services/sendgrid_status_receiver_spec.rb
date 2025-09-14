@@ -93,7 +93,7 @@ describe SendgridStatusReceiver, type: :service do
       end
     end
 
-    context 'with expired user', :user_expirable_specs do
+    context 'with expired user' do
       before { user.update_column :last_activity_at, 1.year.ago }
 
       it 'deactivates' do

@@ -2,6 +2,8 @@ class Division < ApplicationRecord
   include Hashable
   include CreatedBy
 
+  TAG_OPTIONS = %w[Finance Marketing Sales HR IT Operations Support R&D].freeze
+
   schema_validation_options do
     index :index_divisions_on_name, skip: true
   end
@@ -16,6 +18,8 @@ class Division < ApplicationRecord
   enum :division_status, %i[status_pending status_active status_inactive]
 
   scope :sorted, -> { order(:name) }
+
+  before_validation :sanitize_tags
 
   validates :name, uniqueness: { message: 'has already been taken for a pending division' }, if: -> { status_pending? }
   validates :logo, content_type: { in: RadCommon::VALID_IMAGE_TYPES, message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
@@ -34,12 +38,16 @@ class Division < ApplicationRecord
   after_commit :notify_owner
 
   def logo_variant
-    logo.variant(resize: '290x218>')
+    logo.variant(resize_to_limit: [290, 218])
   end
 
   private
 
     def notify_owner
       Notifications::DivisionUpdatedNotification.main(self).notify!
+    end
+
+    def sanitize_tags
+      self.tags = tags.map(&:strip).compact_blank if tags.present?
     end
 end

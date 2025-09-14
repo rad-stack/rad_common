@@ -25,10 +25,14 @@ class EmailAddressValidator < ActiveModel::Validator
   private
 
     def valid_email?(email)
-      email =~ URI::MailTo::EMAIL_REGEXP && email !~ /[A-Z]/
+      email =~ URI::MailTo::EMAIL_REGEXP &&
+        email !~ /[A-Z]/ &&
+        email !~ %r{^[^@]+/} &&
+        email !~ /^#/
     end
 
     def check_sendgrid?(record, field, options)
+      return false unless record.respond_to?(:running_global_validity)
       return false if record.running_global_validity || options[:skip_sendgrid]
 
       record.send("#{field}_changed?")

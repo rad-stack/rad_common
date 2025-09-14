@@ -9,6 +9,6 @@
 
     - if sort_column[:column] == search.sort_column
       - icon = search.sort_direction == 'asc' ? 'fa fa-arrow-up' : 'fa fa-arrow-down'
-      = tag.i '', class: "#{icon} ml-1"
+      = tag.i '', class: "#{icon} ms-1"
   - else
     = sort_column[:label]

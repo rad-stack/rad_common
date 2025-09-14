@@ -1,4 +1,11 @@
 class RadSeeder
+  DEV_NOTIFICATION_TYPES = %w[Notifications::DuplicateFoundAdminNotification
+                              Notifications::GlobalValidityRanLongNotification
+                              Notifications::HighDuplicatesNotification
+                              Notifications::InvalidDataWasFoundNotification
+                              Notifications::TwilioErrorThresholdExceededNotification
+                              Notifications::MissingAuditModelsNotification].freeze
+
   attr_accessor :users
 
   def seed!
@@ -9,9 +16,10 @@ class RadSeeder
     seed_user_statuses
     seed_company
     seed_users
-    mute_staging_notifications if staging?
-
     @users = User.all
+    seed_contact_logs if development?
+
+    mute_staging_notifications if staging?
 
     seed
   ensure
@@ -29,7 +37,7 @@ class RadSeeder
     end
 
     def seed_users
-      return if User.count.positive?
+      return if User.exists?
 
       display_log 'seeding users'
 
@@ -46,6 +54,23 @@ class RadSeeder
           FactoryBot.create seeded_user[:factory], seeded_user[:trait], attributes
         else
           FactoryBot.create seeded_user[:factory], attributes
+        end
+      end
+    end
+
+    def seed_contact_logs
+      return if ContactLog.exists?
+
+      display_log 'seeding contact logs'
+
+      30.times do
+        from_user = random_internal_user
+        to_user = [1, 2].sample == 1 ? users.sample : nil
+
+        if [1, 2].sample == 1
+          FactoryBot.create :contact_log, from_user: from_user, to_user: to_user
+        else
+          FactoryBot.create :contact_log, :email, from_user: from_user, to_user: to_user
         end
       end
     end
@@ -135,9 +160,7 @@ class RadSeeder
     end
 
     def seeded_user_mobile_phone(seeded_user)
-      if (Rails.env.development? || Rails.env.test?) && seeded_user[:mobile_phone].blank?
-        return FactoryBot.create(:phone_number, :mobile)
-      end
+      return FactoryBot.create(:phone_number, :mobile) if (development? || test?) && seeded_user[:mobile_phone].blank?
 
       seeded_user[:mobile_phone]
     end
@@ -222,9 +245,11 @@ class RadSeeder
       Rails.env.staging?
     end
 
-    DEV_NOTIFICATION_TYPES = %w[Notifications::DuplicateFoundAdminNotification
-                                Notifications::GlobalValidityRanLongNotification
-                                Notifications::HighDuplicatesNotification
-                                Notifications::InvalidDataWasFoundNotification
-                                Notifications::TwilioErrorThresholdExceededNotification].freeze
+    def development?
+      Rails.env.development?
+    end
+
+    def test?
+      Rails.env.test?
+    end
 end

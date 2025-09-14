@@ -1,5 +1,6 @@
 require 'English'
 require 'fileutils'
+require 'tty-prompt'
 
 module RadBin
   def self.system!(*args)
@@ -49,16 +50,29 @@ module RadBin
   def self.select_heroku_app(heroku_app_names)
     return heroku_app_names.first if heroku_app_names.length == 1
 
-    puts "\nPlease select a Heroku app from the following options:"
+    prompt = TTY::Prompt.new
+    prompt.select('Please select a Heroku app from the following options:', heroku_app_names)
+  end
 
-    heroku_app_names.each_with_index do |app_name, index|
-      puts "#{index + 1}. #{app_name}"
+  def self.select_backup_id(heroku_app_name)
+    sorted_backup_list = parse_backup_list(heroku_app_name)
+
+    backup_hash = sorted_backup_list.to_h { |b| ["#{b[:id]} created at (#{b[:created_at]})", b[:id]] }
+    choices = ['Generate new backup'] + backup_hash.keys
+    prompt = TTY::Prompt.new
+    choice = prompt.select('Please select a backup id from the following options:', choices)
+    backup_hash[choice]
+  end
+
+  def self.parse_backup_list(heroku_app_name)
+    backups = `heroku pg:backups --app #{heroku_app_name}`
+    backups = backups.split('=== Backups').last.split('===').first
+    lines = backups.strip.split("\n")
+    data_rows = lines[2..]
+
+    data_rows.map do |line|
+      values = line.strip.split
+      { id: values[0], created_at: values[1] }
     end
-
-    choice = $stdin.gets.chomp.to_i
-    return heroku_app_names[choice - 1] if choice.between?(1, heroku_app_names.size)
-
-    puts "\nInvalid choice. Exiting..."
-    exit 1
   end
 end

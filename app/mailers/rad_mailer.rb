@@ -1,7 +1,7 @@
 class RadMailer < ActionMailer::Base
   include RadContactMailer
   include ActionView::Helpers::TextHelper
-  include RadCommon::ApplicationHelper
+  include RadHelper
 
   EXPORT_FORMATS = { csv: 'text/csv', pdf: 'application/pdf' }.freeze
 
@@ -99,7 +99,12 @@ class RadMailer < ActionMailer::Base
 
   def default_url_options
     # this won't work for links called using the route helpers outside of the mailer context
-    { host: RadConfig.host_name! }
+
+    if @recipient.is_a?(User) && @recipient.external? && RadConfig.portal?
+      { host: @recipient.portal_host_name }
+    else
+      { host: RadConfig.host_name! }
+    end
   end
 
   private

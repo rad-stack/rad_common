@@ -7,14 +7,20 @@ namespace :rad_common do
 
       Rails.cache.delete_matched('views/*')
 
-      unless RadConfig.react_app?
-        Duplicate.where.not(sort: 500).update_all sort: 500 if Date.current.wday == 1
+      unless RadConfig.shared_database?
+        Duplicate.where.not(sort: 500).update_all sort: 500
 
-        RadCommon::AppInfo.new.duplicate_models.each do |model_name|
+        AppInfo.new.duplicate_models.each do |model_name|
           model_name.constantize.notify_high_duplicates
         end
 
-        RadCommon::TwilioErrorThresholdChecker.new.check_threshold
+        TwilioErrorThresholdChecker.new.check_threshold
+
+        missing_audited_models = RadAudit.missing_audited_models
+
+        if missing_audited_models.any?
+          Notifications::MissingAuditModelsNotification.main(missing_audited_models).notify!
+        end
 
         global_validity = GlobalValidation.new
         global_validity.override_model = args[:override_model]
@@ -29,7 +35,7 @@ namespace :rad_common do
     session = RakeSession.new(task, 58.minutes, 10)
 
     Timeout.timeout(session.time_limit) do
-      RadCommon::AppInfo.new.duplicate_models.each do |model_name|
+      AppInfo.new.duplicate_models.each do |model_name|
         session.reset_status
         model_name.constantize.process_duplicates(session)
         break if session.timing_out?
