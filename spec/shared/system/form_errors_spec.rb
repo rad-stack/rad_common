@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Form Errors', type: :system do
   let!(:admin) { create :admin }
-  let(:notification_type) { Notifications::InvalidDataWasFoundNotification.main }
+  let(:notification_type) { Notifications::DuplicateFoundAdminNotification.main }
 
   before do
     notification_type.security_roles.delete_all

@@ -50,15 +50,15 @@ describe GlobalValidation, type: :service do
       admin_security_role.save!(validate: false)
     end
 
-    context 'without admin' do
+    context 'without developer' do
       subject(:result) { global_validity.run }
 
-      before { admin.update!(security_roles: [create(:security_role)]) }
+      before { User.admins.destroy_all }
 
       it 'raises an exception' do
         expect {
           result
-        }.to raise_error(RuntimeError, 'no users to notify: Notifications::InvalidDataWasFoundNotification')
+        }.to raise_error(RuntimeError, 'no users to notify')
       end
     end
 

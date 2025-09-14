@@ -35,6 +35,7 @@ module RadUser
 
     scope :active, -> { joins(:user_status).where(user_statuses: { active: true }) }
     scope :admins, -> { active.by_permission 'admin' }
+    scope :developers, -> { admins.where('email ILIKE ?', "%@#{RadConfig.developer_domain!}") }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
     scope :by_id, -> { order(:id) }
     scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
@@ -249,7 +250,7 @@ module RadUser
   end
 
   def developer?
-    email.end_with? RadConfig.developer_domain!
+    email.end_with? "@#{RadConfig.developer_domain!}"
   end
 
   class_methods do
