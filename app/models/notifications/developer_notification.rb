@@ -5,7 +5,10 @@ module Notifications
     end
 
     def absolute_user_ids
-      [User.developers.pluck(:id)]
+      ids = User.developers.pluck(:id)
+      raise 'no users to notify' if ids.blank?
+
+      ids
     end
   end
 end
