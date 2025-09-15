@@ -2,7 +2,7 @@ module RadSearch
   ##
   # This is used to generate a date filter input, which filters a date column between a start date and end date range.
   class DateFilter
-    attr_reader :column, :errors, :default_start_value, :default_end_value, :group_label, :col_class
+    attr_reader :column, :errors, :default_start_value, :default_end_value, :group_label, :col_class, :custom_options
 
     ##
     # @param [Symbol] column the database column that is being filtered
@@ -16,12 +16,15 @@ module RadSearch
     # @param [Date optional] default_end_value default end at value for the date filter
     # @param [Symbol] scope the name of an active record scope to be used for the filter on the corresponding model
     # @param [String optional] group_label The label displayed when we want to show dates grouped together
+    # @param [Array optional] custom_options An array of hashes containing custom date range options
+    #   Each hash should have :name, :label, and optionally :start_value and :end_value keys
     #
     # @example
     #   { column: :created_at, type: RadSearch::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
     def initialize(column:, start_input_label: nil, end_input_label: nil, custom: false,
                    start_required: true, end_required: true,
-                   default_start_value: nil, default_end_value: nil, group_label: nil, scope: nil, col_class: nil)
+                   default_start_value: nil, default_end_value: nil, group_label: nil, scope: nil, col_class: nil,
+                   custom_options: [])
       @column = column
       @start_required = start_required
       @end_required = end_required
@@ -34,6 +37,7 @@ module RadSearch
       @col_class = col_class
       @errors = []
       @scope = scope
+      @custom_options = custom_options
     end
 
     def filter_view

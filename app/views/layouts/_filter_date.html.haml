@@ -12,7 +12,7 @@
                 required: false,
                 label_html: { class: filter.start_label_class },
                 input_html: { value: default_value, data: input_data, class: 'ays-ignore' }
-    .my-auto.pt-2.px-1= date_filter_dropdown_label
+    .my-auto.pt-2.px-1= date_filter_dropdown_label(filter)
     .flex-grow-1
       - default_value = search.search_params[filter.end_input] || filter.default_end_value.to_s
       - input_data = { default: default_value, 'search-date-filter-target' => 'endInput' }
