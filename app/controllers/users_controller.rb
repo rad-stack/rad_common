@@ -176,6 +176,6 @@ class UsersController < ApplicationController
     end
 
     def duplicates_enabled?
-      RadCommon::AppInfo.new.duplicates_enabled?('User')
+      AppInfo.new.duplicates_enabled?('User')
     end
 end

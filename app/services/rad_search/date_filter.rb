@@ -20,7 +20,7 @@ module RadSearch
     #   Each hash should have :name, :label, and optionally :start_value and :end_value keys
     #
     # @example
-    #   { column: :created_at, type: RadCommon::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
+    #   { column: :created_at, type: RadSearch::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
     def initialize(column:, start_input_label: nil, end_input_label: nil, custom: false,
                    start_required: true, end_required: true,
                    default_start_value: nil, default_end_value: nil, group_label: nil, scope: nil, col_class: nil,
