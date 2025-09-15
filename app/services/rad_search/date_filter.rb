@@ -1,4 +1,4 @@
-module RadCommon
+module RadSearch
   ##
   # This is used to generate a date filter input, which filters a date column between a start date and end date range.
   class DateFilter
