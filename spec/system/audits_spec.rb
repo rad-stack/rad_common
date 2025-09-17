@@ -3,6 +3,7 @@ require 'rails_helper'
 describe 'Audits' do
   let(:admin) { create :admin }
   let(:contact_log_recipient) { create :contact_log_recipient }
+  let(:notification_type) { Notifications::InvalidDataWasFoundNotification.main }
 
   before { login_as admin, scope: :user }
 
@@ -27,6 +28,14 @@ describe 'Audits' do
       expect(page).to have_content 'Audits for'
       expect(page).to have_content '(2)'
       expect(page).to have_content 'Queued'
+    end
+
+    it 'audits notification types' do
+      visit "/notification_types/#{notification_type.id}/edit"
+
+      click_link_or_button 'Audit History'
+      expect(page).to have_content 'Audits for'
+      expect(page).to have_content '(1)'
     end
 
     describe 'show_routes' do
