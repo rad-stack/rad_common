@@ -34,10 +34,3 @@
             %tr.collapse{ id: "chart-#{item_index}" }
               %td{ colspan: @system_usage_search.date_column_ranges.count + 4 }
                 = line_chart data, id: "line-chart-#{item_index}"
-
-:javascript
-  document.addEventListener('shown.bs.collapse', function (event) {
-    const chartId = "line-" + event.target.id
-    const chart = Chartkick.charts[chartId]
-    if (chart) chart.redraw()
-  });
