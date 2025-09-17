@@ -137,7 +137,7 @@ module SchemaValidations
 
     def index_condition_skip_rows_containing_nulls(index)
       columns = index.columns
-      sql_conditions = columns.map { |column| "#{column} IS NOT NULL" }
+      sql_conditions = columns.map { |column| "\"#{column}\" IS NOT NULL" }
       -> { where(sql_conditions.join(' AND ')) }
     end
 

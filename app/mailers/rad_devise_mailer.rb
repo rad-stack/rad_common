@@ -1,7 +1,7 @@
 class RadDeviseMailer < Devise::Mailer
   include RadContactMailer
   include Devise::Controllers::UrlHelpers
-  helper RadCommon::ApplicationHelper
+  helper RadHelper
 
   layout 'rad_mailer'
 

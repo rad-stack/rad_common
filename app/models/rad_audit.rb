@@ -2,14 +2,14 @@ class RadAudit < Audited::Audit
   scope :system_generated, -> { where(user_id: nil) }
 
   scope :missing_auditable_models, lambda {
-    where.not(auditable_type: RadCommon::AppInfo.new.audited_models)
+    where.not(auditable_type: AppInfo.new.audited_models)
          .group(:auditable_type)
          .select(:auditable_type)
          .pluck(:auditable_type)
   }
 
   scope :missing_associated_models, lambda {
-    where.not(associated_type: RadCommon::AppInfo.new.associated_audited_models)
+    where.not(associated_type: AppInfo.new.associated_audited_models)
          .group(:associated_type)
          .select(:associated_type)
          .pluck(:associated_type)

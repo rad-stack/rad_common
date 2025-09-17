@@ -41,14 +41,14 @@ RSpec.describe 'Attachments' do
   context 'with legacy URLs' do
     context 'with permanent attachment url' do
       it 'allows navigation' do
-        get '/rad_common/attachments/jkzedq'
+        get '/attachments/jkzedq'
         expect(response).to have_http_status :ok
       end
     end
 
     context 'with permanent attachment variant url' do
       it 'allows navigation' do
-        get '/rad_common/attachments/divisions/kvperk/logo_variant'
+        get '/attachments/divisions/kvperk/logo_variant'
         expect(response).to have_http_status :ok
       end
     end

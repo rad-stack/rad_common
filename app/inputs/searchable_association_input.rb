@@ -1,5 +1,5 @@
 class SearchableAssociationInput < SimpleForm::Inputs::CollectionSelectInput
-  include RadCommon::SearchableDropdownHelper
+  include SearchableDropdownHelper
 
   delegate :current_user, to: :template
 

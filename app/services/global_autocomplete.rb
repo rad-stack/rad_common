@@ -1,5 +1,5 @@
 class GlobalAutocomplete
-  include RadCommon::ApplicationHelper
+  include RadHelper
 
   attr_reader :params, :search_scopes, :user, :mode
   attr_accessor :current_scope

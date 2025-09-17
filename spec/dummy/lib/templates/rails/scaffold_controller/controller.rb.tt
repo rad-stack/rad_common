@@ -41,7 +41,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   end
 
   def destroy
-    destroyed = @<%= orm_instance.destroy %>
+    destroyed = @<%= singular_table_name %>.destroy
 
     if destroyed
       flash[:notice] = <%= "'#{human_name} was successfully deleted.'" %>

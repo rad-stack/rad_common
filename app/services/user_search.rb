@@ -1,4 +1,4 @@
-class UserSearch < RadCommon::Search
+class UserSearch < RadSearch::Search
   def initialize(params, current_user)
     @current_user = current_user
 
@@ -20,10 +20,10 @@ class UserSearch < RadCommon::Search
     end
 
     def filters_def
-      items = [{ column: 'users.first_name', type: RadCommon::LikeFilter, input_label: 'First Name' },
-               { column: 'users.last_name', type: RadCommon::LikeFilter, input_label: 'Last Name' },
-               { column: 'users.email', type: RadCommon::LikeFilter, input_label: 'Email' },
-               { column: 'mobile_phone', type: RadCommon::LikeFilter, input_label: 'Mobile Phone' }]
+      items = [{ column: 'users.first_name', type: RadSearch::LikeFilter, input_label: 'First Name' },
+               { column: 'users.last_name', type: RadSearch::LikeFilter, input_label: 'Last Name' },
+               { column: 'users.email', type: RadSearch::LikeFilter, input_label: 'Email' },
+               { column: 'mobile_phone', type: RadSearch::LikeFilter, input_label: 'Mobile Phone' }]
 
       if can_update?
         items.push({ input_label: 'Security Role',
@@ -42,7 +42,7 @@ class UserSearch < RadCommon::Search
       end
 
       if RadConfig.user_clients?
-        items.push(input_label: RadCommon::AppInfo.new.client_model_label,
+        items.push(input_label: AppInfo.new.client_model_label,
                    column: "#{RadConfig.client_table_name!}.id", options: clients)
       end
 
@@ -63,7 +63,7 @@ class UserSearch < RadCommon::Search
       items.push({ label: 'Roles' }) if can_update?
 
       if RadConfig.external_users?
-        items.push(label: "#{RadCommon::AppInfo.new.client_model_label}s",
+        items.push(label: "#{AppInfo.new.client_model_label}s",
                    column: RadConfig.user_clients? ? nil : 'users.external')
       end
 
@@ -75,7 +75,7 @@ class UserSearch < RadCommon::Search
     end
 
     def clients
-      Pundit.policy_scope!(current_user, RadCommon::AppInfo.new.client_model_class)
+      Pundit.policy_scope!(current_user, AppInfo.new.client_model_class)
             .where('id IN (SELECT client_id FROM user_clients)').sorted
     end
 end
