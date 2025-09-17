@@ -33,14 +33,11 @@
                   View Trend
             %tr.collapse{ id: "chart-#{item_index}" }
               %td{ colspan: @system_usage_search.date_column_ranges.count + 4 }
-                .chart-container{ data: { chart_data: data.to_json } }
+                = line_chart data, id: "line-chart-#{item_index}"
 
 :javascript
   document.addEventListener('shown.bs.collapse', function (event) {
-    const container = event.target.querySelector('.chart-container');
-    if (container) {
-      const data = JSON.parse(container.dataset.chartData);
-      container.innerHTML = '';
-      new Chartkick.LineChart(container, data);
-    }
+    const chartId = "line-" + event.target.id
+    const chart = Chartkick.charts[chartId]
+    if (chart) chart.redraw()
   });
