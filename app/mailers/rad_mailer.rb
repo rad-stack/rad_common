@@ -1,7 +1,7 @@
 class RadMailer < ActionMailer::Base
   include RadContactMailer
   include ActionView::Helpers::TextHelper
-  include RadCommon::ApplicationHelper
+  include RadHelper
 
   EXPORT_FORMATS = { csv: 'text/csv', pdf: 'application/pdf' }.freeze
 

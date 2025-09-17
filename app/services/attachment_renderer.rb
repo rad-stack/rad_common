@@ -83,7 +83,7 @@ class AttachmentRenderer
     end
 
     def render_attachment_link(attachment:, no_delete:, label_override:, filename_label:)
-      default_label = context.tag.i('', class: "fa #{RadCommon::ContentTypeIcon.new(attachment.content_type)}") +
+      default_label = context.tag.i('', class: "fa #{ContentTypeIcon.new(attachment.content_type)}") +
                       filename_label
 
       attachment_label = label_override.presence || default_label
