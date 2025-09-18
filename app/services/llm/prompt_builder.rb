@@ -70,7 +70,7 @@ module LLM
     private
 
       def openai_client
-        @openai_client ||= OpenAI::Client.new(access_token: RadConfig.secret_config_item!(:open_ai_api_key))
+        @openai_client ||= OpenAI::Client.new(access_token: RadConfig.open_ai_api_key!)
       end
   end
 end
