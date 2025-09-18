@@ -16,7 +16,7 @@ module LLM
       messages = []
       messages << build_system_prompt if previous_messages.empty?
       messages += previous_messages
-      messages << build_user_message(content) if content
+      messages << PromptBuilder.build_user_message(content) if content
       r = openai_client.chat(
         parameters: {
           model: @model,
@@ -36,10 +36,6 @@ module LLM
 
     def build_system_prompt
       PromptBuilder.build_message(role: SYSTEM_ROLE, content: @system_prompt)
-    end
-
-    def build_user_message(content)
-      PromptBuilder.build_user_message(content)
     end
 
     def build_messages(content)

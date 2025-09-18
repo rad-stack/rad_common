@@ -1,5 +1,4 @@
 module LLMChatsHelper
-
   VISIBLE_ROLES = %w[user assistant].freeze
 
   def ask_basic_question_btn
@@ -10,6 +9,7 @@ module LLMChatsHelper
                'data-bs-target' => '#basic-question-modal',
                'data-bs-toggle' => 'offcanvas')
   end
+
   def llm_chat_logs(llm_chat)
     return [] if llm_chat.log.blank?
 
@@ -27,30 +27,7 @@ module LLMChatsHelper
   end
 
   def llm_chat_text_sanitize(text)
-    text = insert_user_data(text)
-    text = remove_context_data(text)
-    text
-
-    # allowed_tags = Rails::Html::SafeListSanitizer.allowed_tags
-    # allowed_tags += %w[table thead tbody tfoot tr td th caption colgroup col]
-    # allowed_attributes = Rails::Html::SafeListSanitizer.allowed_attributes
-    # allowed_attributes += %w[colspan rowspan scope headers style]
-    #
-    # sanitize(text, tags: allowed_tags, attributes: allowed_attributes)
-  end
-
-  def insert_user_data(text)
-    new_string = text
-    pattern = /\$\{USER_ID:(\d+)\}/
-    ids = text.scan(pattern).flatten
-
-    ids.each do |id|
-      user = User.where(id: id).first
-      next if user.blank?
-
-      new_string.gsub!("${USER_ID:#{id}}", user.to_s)
-    end
-    new_string
+    remove_context_data(text)
   end
 
   def remove_context_data(text)
