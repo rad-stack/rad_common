@@ -82,6 +82,14 @@ class RadConfig
       secret_config_item! :smarty_auth_token
     end
 
+    def open_ai_api_key!
+      secret_config_item! :open_ai_api_key
+    end
+
+    def open_ai_api_key
+      secret_config_item :open_ai_api_key
+    end
+
     def hash_key!
       secret_config_item! :hash_key
     end
