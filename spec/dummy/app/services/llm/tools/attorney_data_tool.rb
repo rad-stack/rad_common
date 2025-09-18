@@ -6,7 +6,21 @@ module LLM
         It provides the contact information for attorneys.
       EXAMPLES
       def call
-        Embedding.search([retrieve_argument('attorney_name')], type: 'Attorney').as_json.to_s
+        attorney.as_json.to_s
+      end
+
+      def attorney_name_embedding
+        @attorney_name_embedding ||= EmbeddingService.generate(retrieve_argument('attorney_name'))
+      end
+
+      def attorney
+        return 'No Data Found' if embedding.blank?
+
+        embedding.first.embeddable
+      end
+
+      def embedding
+        @embedding ||= Embedding.search(attorney_name_embedding, type: 'Attorney')
       end
 
       def required_params
