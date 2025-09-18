@@ -30,7 +30,7 @@ module RadCommon
     require 'pretender'
     require 'pundit'
     require 'rack/attack'
-    require 'ruby-openai'
+    require 'openai'
     require 'sendgrid-ruby'
     require 'sentry-rails'
     require 'sentry-ruby'
