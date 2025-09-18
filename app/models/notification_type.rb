@@ -11,7 +11,12 @@ class NotificationType < ApplicationRecord
   validates_with EmailAddressValidator, fields: [:bcc_recipient]
   validate :validate_auth
 
+  audited
   strip_attributes
+
+  def self.policy_class
+    NotificationTypePolicy
+  end
 
   def to_s
     description
