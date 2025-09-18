@@ -2,7 +2,7 @@ require 'openai'
 
 class EmbeddingService
   def self.generate(text)
-    client = OpenAI::Client.new(access_token: RadConfig.secret_config_item!(:open_ai_api_key))
+    client = OpenAI::Client.new(access_token: RadConfig.open_ai_api_key!)
 
     response = client.embeddings(
       parameters: {
@@ -14,6 +14,6 @@ class EmbeddingService
   end
 
   def self.enabled?
-    RadConfig.secret_config_item(:open_ai_api_key).present?
+    RadConfig.open_ai_api_key.present?
   end
 end
