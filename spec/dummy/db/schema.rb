@@ -224,6 +224,22 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
     t.index ["metadata"], name: "index_embeddings_on_metadata", using: :gin
   end
 
+  create_table "llm_chats", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.jsonb "log"
+    t.string "contextable_type"
+    t.bigint "contextable_id"
+    t.string "chat_scope_type"
+    t.bigint "chat_scope_id"
+    t.integer "status", default: 1, null: false
+    t.string "chat_type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_scope_type", "chat_scope_id"], name: "index_llm_chats_on_chat_scope"
+    t.index ["contextable_type", "contextable_id"], name: "index_llm_chats_on_contextable"
+    t.index ["user_id"], name: "index_llm_chats_on_user_id"
+  end
+
   create_table "login_activities", force: :cascade do |t|
     t.string "scope"
     t.string "strategy"
@@ -448,6 +464,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
   add_foreign_key "contact_logs", "users", column: "from_user_id"
   add_foreign_key "divisions", "categories"
   add_foreign_key "divisions", "users", column: "owner_id"
+  add_foreign_key "llm_chats", "users"
   add_foreign_key "notification_security_roles", "notification_types"
   add_foreign_key "notification_security_roles", "security_roles"
   add_foreign_key "notification_settings", "notification_types"
