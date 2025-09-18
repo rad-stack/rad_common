@@ -5,9 +5,7 @@ module LLM
 
       ASSISTANT_NAME = 'Assistant'.freeze
 
-      COMMON_QUESTIONS = [LLM::CommonQuestions::UserPreferenceQuestion,
-                          LLM::CommonQuestions::MallowScoreQuestion,
-                          LLM::CommonQuestions::CaseHistoryQuestion].freeze
+      COMMON_QUESTIONS = [LLM::CommonQuestions::AttorneyPhoneNumberQuestion].freeze
 
       SYSTEM_PROMPT = <<~EXAMPLES.freeze
         You are a helpful assistant.

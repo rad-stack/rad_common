@@ -24,13 +24,11 @@
               %strong Questions For :
             .col-10
               = f.input :contextable_id,
-                        as: :grouped_select,
-                        collection: UserGrouper.new(current_user, scopes: [:active]),
-                        group_method: :last,
-                        include_blank: 'Select a user',
+                        collection: Attorney.sorted,
+                        include_blank: 'Select an attorney',
                         label: false,
                         input_html: { class: 'selectpicker' }
-              = f.input :contextable_type, as: :hidden, input_html: { value: 'User' }
+              = f.input :contextable_type, as: :hidden, input_html: { value: 'Attorney' }
         .card-body
           .row
             .col-12

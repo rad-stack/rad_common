@@ -6,10 +6,8 @@ module LLM
       delegate :tool_definition, to: :tool
 
       def initialize(params: {}, context: nil)
-        @params = params
-        @arguments_raw = params['arguments']
-        @arguments = {}
-        @arguments = JSON.parse(@arguments_raw) if @arguments_raw.present?
+        @params = params.symbolize_keys
+        @arguments_raw = params[:arguments]
         @context = context
       end
 
@@ -18,12 +16,28 @@ module LLM
                               parameters: parameters)
       end
 
+      def arguments
+        @arguments ||= if @arguments_raw.blank?
+                         {}
+                       elsif @arguments_raw.is_a?(String)
+                         JSON.parse(@arguments_raw).symbolize_keys
+                       else
+                         @arguments_raw.symbolize_keys
+                       end
+      end
+
       def required_params
         []
       end
 
       def retrieve_argument(name)
-        @arguments[name]
+        arguments[name.to_sym]
+      end
+
+      def retrieve_required_params
+        required_params.map do |param|
+          arguments[param]
+        end
       end
 
       def parameters
