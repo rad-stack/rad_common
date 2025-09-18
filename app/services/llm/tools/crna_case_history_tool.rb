@@ -1,6 +1,6 @@
 module LLM
   module Tools
-    class CRNACaseHistoryTool < BaseCRNAUserDataTool
+    class CrnaCaseHistoryTool < BaseCrnaUserDataTool
       TOOL_DESCRIPTION = <<~EXAMPLES.freeze
         This tool is designed to provide the CRNA user recent case history.
         This tool lists recent cases worked by the user, including the case type, room, start, and end times.

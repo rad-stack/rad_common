@@ -1,6 +1,6 @@
 module LLM
   module Tools
-    class BaseCRNAUserDataTool < Base
+    class BaseCrnaUserDataTool < Base
       include RadHelper
       def call
         build_prompt
