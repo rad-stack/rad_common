@@ -1,7 +1,6 @@
 class Division < ApplicationRecord
   include Hashable
   include CreatedBy
-  include Embeddable
 
   TAG_OPTIONS = %w[Finance Marketing Sales HR IT Operations Support R&D].freeze
 
@@ -42,16 +41,6 @@ class Division < ApplicationRecord
     logo.variant(resize_to_limit: [290, 218])
   end
 
-  def update_embedding!
-    content = generate_embedding_content
-
-    embedding_vector = EmbeddingService.generate(content)
-    return unless embedding_vector
-
-    embedding_record = embedding || build_embedding
-    embedding_record.update! embedding: embedding_vector, metadata: embedding_metadata
-  end
-
   private
 
     def notify_owner
@@ -60,13 +49,5 @@ class Division < ApplicationRecord
 
     def sanitize_tags
       self.tags = tags.map(&:strip).compact_blank if tags.present?
-    end
-
-    def embedding_metadata
-      { division_id: id }
-    end
-
-    def generate_embedding_content
-      [name, code].compact.join("\n")
     end
 end
