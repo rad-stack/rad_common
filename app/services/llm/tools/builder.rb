@@ -1,7 +1,8 @@
 module LLM
   module Tools
     class Builder
-      TOOLS = [CRNAUserPreferenceDataTool, CRNAUserMallowScoreTool].freeze
+      # TODO: this needs to be definable per app
+      TOOLS = [AttorneyDataTool].freeze
 
       def initialize(name:, description:, required_params: [], parameters: {})
         @name = name
