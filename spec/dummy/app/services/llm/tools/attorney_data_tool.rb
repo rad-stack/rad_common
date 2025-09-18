@@ -5,10 +5,24 @@ module LLM
         This tool is designed to provide basic data about attorneys.
         It provides the contact information for attorneys.
       EXAMPLES
-
-      include RadHelper
       def call
-        Attorney.all.as_json.to_s
+        Embedding.search([retrieve_argument('attorney_name')], type: 'Attorney').as_json.to_s
+      end
+
+      def required_params
+        ['attorney_name']
+      end
+
+      def parameters
+        {
+          type: 'object',
+          properties: {
+            attorney_name: {
+              type: 'string',
+              description: 'The full name of the attorney'
+            }
+          }
+        }
       end
 
       def description
