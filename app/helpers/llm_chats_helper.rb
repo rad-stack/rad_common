@@ -22,19 +22,26 @@ module LLMChatsHelper
     direction = log[:role] == 'user' ? 'left' : 'right'
     user_name = log[:role] == 'user' ? current_user.to_s : llm_chat.assistant_name
     template = "llm_chats/chat_message_#{direction}"
-    message = llm_chat.format_text(log[:content])
+    message = llm_chat.format_message(log[:content])
     { direction: direction, user_name: user_name, template: template, message: message,
       chat_date: log[:chat_date], user: User.first }
   end
 
   def llm_chat_text_sanitize(text)
     text = remove_context_data(text)
+    text = disable_turbo_links(text)
     allowed_tags = Rails::Html::SafeListSanitizer.allowed_tags
     allowed_tags += %w[a]
     allowed_attributes = Rails::Html::SafeListSanitizer.allowed_attributes
     allowed_attributes += %w[href]
 
     sanitize(text, tags: allowed_tags, attributes: allowed_attributes)
+  end
+
+  def disable_turbo_links(text)
+    doc = Nokogiri::HTML::DocumentFragment.parse(text)
+    doc.css('a').each { |a| a['data-turbo'] = 'false' }
+    doc.to_html.to_s
   end
 
   def remove_context_data(text)
