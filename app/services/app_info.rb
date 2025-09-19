@@ -22,7 +22,7 @@ class AppInfo
   def embeddable_models
     (application_models.select { |model|
       model_class = model.safe_constantize
-      model_class.new.respond_to?(:update_embedding!)
+      model_class.respond_to?(:new) && model_class.new.respond_to?(:update_embedding!)
     }).sort
   end
 
