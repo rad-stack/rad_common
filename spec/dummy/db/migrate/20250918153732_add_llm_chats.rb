@@ -1,4 +1,4 @@
-class AddLlmChats < ActiveRecord::Migration[7.2]
+class AddLLMChats < ActiveRecord::Migration[7.2]
   def change
     create_table :llm_chats do |t|
       t.references :user, null: false, foreign_key: true
