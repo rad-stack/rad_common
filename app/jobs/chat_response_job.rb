@@ -3,23 +3,22 @@ class ChatResponseJob < ApplicationJob
 
   def perform(llm_chat_id, message)
     llm_chat = LLMChat.find(llm_chat_id)
-    chat_class = llm_chat.chat_type_class
-    service = chat_class.new(llm_chat)
-
+    service = llm_chat.chat_instance
     begin
       _, messages = service.basic_question(message)
       llm_chat.update!(log: messages, status: 'completed', current_message: nil)
     rescue Faraday::BadRequestError => e
-      Sentry.capture_exception(e) if Rails.env.production?
-      error_messages = llm_chat.log ||= []
-      error_messages << { role: 'assistant', content: 'An unexpected error occurred' }
-      error_messages << { role: 'error reporter', content: e.response.body }
-      llm_chat.update!(log: error_messages, status: :failed, current_message: nil)
+      capture_and_log_error(llm_chat, e.response[:body], e)
     rescue StandardError => e
-      Sentry.capture_exception(e) if Rails.env.production?
-      error_messages = llm_chat.log ||= []
-      error_messages << { role: 'assistant', content: 'An unexpected error occurred' }
-      llm_chat.update!(log: error_messages, status: :failed, current_message: nil)
+      capture_and_log_error(llm_chat, e.message, e)
     end
+  end
+
+  def capture_and_log_error(llm_chat, message, error)
+    Sentry.capture_exception(error)
+    error_messages = llm_chat.log ||= []
+    error_messages << { role: 'assistant', content: 'An unexpected error occurred' }
+    error_messages << { role: 'error reporter', content: message }
+    llm_chat.update!(log: error_messages, status: :failed, current_message: nil)
   end
 end
