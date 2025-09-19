@@ -22,6 +22,10 @@ module LLM
         false
       end
 
+      def format_message(text)
+        text
+      end
+
       def grouped_select?
         true
       end

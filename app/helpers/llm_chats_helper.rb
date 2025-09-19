@@ -22,7 +22,8 @@ module LLMChatsHelper
     direction = log[:role] == 'user' ? 'left' : 'right'
     user_name = log[:role] == 'user' ? current_user.to_s : llm_chat.assistant_name
     template = "llm_chats/chat_message_#{direction}"
-    { direction: direction, user_name: user_name, template: template, message: log[:content],
+    message = llm_chat.format_text(log[:content])
+    { direction: direction, user_name: user_name, template: template, message: message,
       chat_date: log[:chat_date], user: User.first }
   end
 
