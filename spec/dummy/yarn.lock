@@ -1505,7 +1505,7 @@ queue-microtask@^1.2.2:
 
 "rad_common_js@https://github.com/rad-stack/rad_common_js#rad-11188-llm-framework":
   version "2.1.8"
-  resolved "https://github.com/rad-stack/rad_common_js#f76563fa7386abf44f983e4002c6f8c82750a4a5"
+  resolved "https://github.com/rad-stack/rad_common_js#2c52b15c028b0e2d573c41b5662386c467c8c402"
   dependencies:
     "@fullcalendar/bootstrap5" "^6.1.11"
     "@hotwired/stimulus" "^3.2.2"
