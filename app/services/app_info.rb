@@ -19,6 +19,13 @@ class AppInfo
     } + %w[ActiveStorage::Attachment ActionText::RichText]).sort
   end
 
+  def embeddable_models
+    (application_models.select { |model|
+      model_class = model.safe_constantize
+      model_class.respond_to?(:new) && model_class.new.respond_to?(:update_embedding!)
+    }).sort
+  end
+
   def associated_audited_models
     audited_models + %w[ActiveStorage::Blob ActiveStorage::VariantRecord ActionMailbox::InboundEmail]
   end
