@@ -91,7 +91,7 @@ namespace :rad_common do
   end
 
   task embed_existing_data: :environment do |task|
-    session = RakeSession.new(task, 5.minutes, 100)
+    session = RakeSession.new(task, 5.minutes, 1)
 
     Timeout.timeout(session.time_limit) do
       AppInfo.new.embeddable_models.each do |model_name|
