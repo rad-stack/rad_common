@@ -12,26 +12,13 @@ class LLMChatsController < ApplicationController
     @reset_chat = false
 
     if params['reset_chat'].present?
-      @reset_chat = true
-      @llm_chat.update!(status: 'processing', current_message: nil, log: [])
+      reset_chat
     elsif permitted_params[:current_message].blank?
-      @last_log = LLM::PromptBuilder.build_assistant_message('Message is missing, please try again')
-      @llm_chat.log ||= []
-      @llm_chat.log << @last_log
-      @llm_chat.save
+      missing_message
     elsif permitted_params[:contextable_id].blank?
-      @last_log = LLM::PromptBuilder.build_assistant_message('User is missing, please try again')
-      @llm_chat.log ||= []
-      @llm_chat.log << @last_log
-      @llm_chat.save
+      missing_user
     else
-      @response_id = "#{@llm_chat.id}-#{Time.current.to_i}"
-      @llm_chat.assign_attributes(permitted_params)
-      @llm_chat.status = 'processing'
-      @llm_chat.log ||= []
-      @last_log = LLM::PromptBuilder.build_user_message(@llm_chat.current_message)
-
-      ChatResponseJob.perform_later(@llm_chat.id, @llm_chat.current_message) if @llm_chat.save
+      handle_update
     end
 
     respond_to do |format|
@@ -64,5 +51,34 @@ class LLMChatsController < ApplicationController
     def permitted_params
       params.require(:llm_chat).permit(:user_id, :log, :context_id, :context_type, :current_message,
                                        :contextable_id, :contextable_type)
+    end
+
+    def reset_chat
+      @reset_chat = true
+      @llm_chat.update!(status: 'processing', current_message: nil, log: [])
+    end
+
+    def missing_message
+      @last_log = LLM::PromptBuilder.build_assistant_message('Message is missing, please try again')
+      @llm_chat.log ||= []
+      @llm_chat.log << @last_log
+      @llm_chat.save
+    end
+
+    def missing_user
+      @last_log = LLM::PromptBuilder.build_assistant_message('User is missing, please try again')
+      @llm_chat.log ||= []
+      @llm_chat.log << @last_log
+      @llm_chat.save
+    end
+
+    def handle_update
+      @response_id = "#{@llm_chat.id}-#{Time.current.to_i}"
+      @llm_chat.assign_attributes(permitted_params)
+      @llm_chat.status = 'processing'
+      @llm_chat.log ||= []
+      @last_log = LLM::PromptBuilder.build_user_message(@llm_chat.current_message)
+
+      ChatResponseJob.perform_later(@llm_chat.id, @llm_chat.current_message) if @llm_chat.save
     end
 end

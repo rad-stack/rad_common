@@ -1,7 +1,6 @@
 module LLM
   module CommonQuestions
     class AttorneyPhoneNumberQuestion < Base
-
       USER_QUESTION = 'What is the attorneys phone number?'.freeze
 
       def self.question
