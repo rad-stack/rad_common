@@ -1,9 +1,7 @@
 module LLM
   module ChatTypes
-    class BasicChat < BaseChat
+    class AttorneyChat < BaseChat
       include RadHelper
-
-      ASSISTANT_NAME = 'Assistant'.freeze
 
       COMMON_QUESTIONS = [LLM::CommonQuestions::AttorneyPhoneNumberQuestion].freeze
 
@@ -21,6 +19,18 @@ module LLM
 
       def system_prompt
         SYSTEM_PROMPT
+      end
+
+      def input_collection(_view_context)
+        Attorney.all.sorted
+      end
+
+      def grouped_select?
+        false
+      end
+
+      def context_type
+        'Attorney'
       end
 
       private

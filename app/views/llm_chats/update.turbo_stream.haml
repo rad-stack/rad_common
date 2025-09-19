@@ -3,15 +3,15 @@
 
 - if @reset_chat
   = turbo_stream.update id do
-    = render 'llm_chats/initial_chat_message'
+    = render 'llm_chats/initial_chat_message', llm_chat: @llm_chat
   = turbo_stream.action :scroll_bottom, 'scroll-container'
 - else
   = turbo_stream.append id, partial: 'llm_chats/chat_message_left',
-                            locals: llm_chat_log_data(@last_log)
+                            locals: llm_chat_log_data(@llm_chat, @last_log)
 
   = turbo_stream.append id do
     - url = check_response_llm_chat_path(@llm_chat, response_id: @response_id)
     = turbo_frame_tag "chat-response-#{@response_id}",
                       data: { controller: 'chat-polling', chat_polling_url_value: url } do
-      = render 'llm_chats/loading_message'
+      = render 'llm_chats/loading_message', llm_chat: @llm_chat
       = turbo_stream.action :scroll_bottom, 'scroll-container'

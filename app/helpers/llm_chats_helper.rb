@@ -17,10 +17,10 @@ module LLMChatsHelper
     raw_data.select { |message| VISIBLE_ROLES.include?(message['role']) && message['content'].present? }
   end
 
-  def llm_chat_log_data(log)
+  def llm_chat_log_data(llm_chat, log)
     log.symbolize_keys!
     direction = log[:role] == 'user' ? 'left' : 'right'
-    user_name = log[:role] == 'user' ? current_user.to_s : LLM::ChatTypes::BasicChat::ASSISTANT_NAME
+    user_name = log[:role] == 'user' ? current_user.to_s : llm_chat.assistant_name
     template = "llm_chats/chat_message_#{direction}"
     { direction: direction, user_name: user_name, template: template, message: log[:content],
       chat_date: log[:chat_date], user: User.first }

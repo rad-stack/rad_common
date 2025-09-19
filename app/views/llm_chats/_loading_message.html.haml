@@ -5,6 +5,6 @@
   .chat-avatar.me-3
     %i.fa.fa-user-tie.shadow
     .chat-name.m-2
-      = LLM::ChatTypes::BasicChat::ASSISTANT_NAME
+      = llm_chat.assistant_name
       %br
       %strong= format_time(DateTime.current)

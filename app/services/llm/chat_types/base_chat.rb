@@ -3,9 +3,27 @@ module LLM
     class BaseChat
       include RadHelper
 
+      ASSISTANT_NAME = 'Assistant'.freeze
+
       def initialize(llm_chat)
         @llm_chat = llm_chat
         @common_question = false
+      end
+
+      def assistant_name
+        ASSISTANT_NAME
+      end
+
+      def input_collection(view_context)
+        UserGrouper.new(view_context.current_user, scopes: [:active])
+      end
+
+      def grouped_select?
+        true
+      end
+
+      def context_type
+        'User'
       end
 
       def basic_question(question)
