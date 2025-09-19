@@ -18,6 +18,7 @@ class ChatResponseJob < ApplicationJob
 
   def capture_and_log_error(llm_chat, message, error)
     raise error if Rails.env.development?
+
     Sentry.capture_exception(error)
     error_messages = llm_chat.log ||= []
     error_messages << { role: 'assistant', content: 'An unexpected error occurred' }
