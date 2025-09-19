@@ -10,7 +10,7 @@ class LLMChat < ApplicationRecord
 
   attr_accessor :current_message
 
-  delegate :assistant_name, to: :chat_instance
+  delegate :assistant_name, :context_object?, to: :chat_instance
 
   def self.basic_chat(user, scope = nil)
     LLMChat.find_or_create_by!(user: user, chat_type: LLM::Tools::ToolList.default_chat_type, chat_scope: scope)

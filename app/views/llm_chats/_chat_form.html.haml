@@ -18,23 +18,18 @@
                                 html: { data: { controller: 'llm-chat-form',
                                                 'llm-chat-form-target': 'form' } } do |f|
       .card
-        .card-header
-          .row
-            .col-2
-              %strong Questions For :
-            .col-10= render 'llm_chats/context_picker_input', f: f, llm_chat: llm_chat
+        -if llm_chat.context_object?
+          .card-header
+            .row
+              .col-2
+                %strong Questions For :
+              .col-10= render 'llm_chats/context_picker_input', f: f, llm_chat: llm_chat
         .card-body
           .row
             .col-12
               .d-flex.flex-row
                 .input-group
-                  = f.button :button, type: :button, class: 'btn btn-secondary dropdown-toggle',
-                                      'data-bs-toggle': 'dropdown' do
-                    = icon('person-circle-question', 'Common Questions')
-                  %ul.dropdown-menu
-                    - llm_chat.common_questions.each do |question|
-                      %li
-                        %buton.dropdown-item{ data: { action: 'click->llm-chat-form#updateCurrentMessage' } }= question
+                  = render 'llm_chats/common_questions_dropdown', llm_chat: llm_chat
                   %input.form-control.ays-ignore{ name: 'llm_chat[current_message]',
                                                   placeholder: 'Ask a question...',
                                                   type: 'text',

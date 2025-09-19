@@ -18,6 +18,10 @@ module LLM
         UserGrouper.new(view_context.current_user, scopes: [:active])
       end
 
+      def context_object?
+        false
+      end
+
       def grouped_select?
         true
       end

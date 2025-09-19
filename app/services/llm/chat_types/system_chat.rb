@@ -3,14 +3,12 @@ module LLM
     class SystemChat < BaseChat
       include RadHelper
 
-      COMMON_QUESTIONS = [LLM::CommonQuestions::AttorneyPhoneNumberQuestion].freeze
-
       SYSTEM_PROMPT = <<~EXAMPLES.freeze
         You are a helpful assistant.
       EXAMPLES
 
       def self.common_questions
-        COMMON_QUESTIONS
+        []
       end
 
       def system_prompt
