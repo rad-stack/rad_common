@@ -33,7 +33,7 @@ module RadCommon
         add_rad_config_setting 'show_sign_in_marketing', 'false'
         remove_rad_factories
         remove_legacy_rails_config_setting
-        update_credentials
+        # update_credentials
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
@@ -776,6 +776,7 @@ gem 'propshaft'
           apply_migration '20250512115245_two_factor_auth_updates.rb'
           apply_migration '20250622203947_user_js_timezone.rb'
           apply_migration '20250918160535_create_vector_embeddings.rb'
+          apply_migration '20250918153732_add_llm_chats.rb'
         end
 
         def installed_app_name

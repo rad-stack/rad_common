@@ -1,0 +1,4 @@
+= turbo_frame_tag "chat-response-#{params[:response_id]}" do
+  - if @bot_response
+    = render 'llm_chats/chat_message_right', llm_chat_log_data(@llm_chat, @bot_response)
+    = turbo_stream.action :scroll_bottom, 'scroll-container'
