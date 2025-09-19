@@ -18,7 +18,7 @@
                                 html: { data: { controller: 'llm-chat-form',
                                                 'llm-chat-form-target': 'form' } } do |f|
       .card
-        -if llm_chat.context_object?
+        - if llm_chat.context_object?
           .card-header
             .row
               .col-2

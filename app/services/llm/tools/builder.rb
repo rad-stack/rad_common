@@ -1,7 +1,6 @@
 module LLM
   module Tools
     class Builder
-
       def initialize(name:, description:, required_params: [], parameters: {})
         @name = name
         @description = description

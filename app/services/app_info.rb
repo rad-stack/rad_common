@@ -20,10 +20,10 @@ class AppInfo
   end
 
   def embeddable_models
-    (application_models.select { |model|
+    (application_models.select do |model|
       model_class = model.safe_constantize
       model_class.respond_to?(:new) && model_class.new.respond_to?(:update_embedding!)
-    }).sort
+    end).sort
   end
 
   def associated_audited_models
