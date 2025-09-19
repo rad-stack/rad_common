@@ -29,7 +29,7 @@
             .col-12
               .d-flex.flex-row
                 .input-group
-                  = render 'llm_chats/common_questions_dropdown', llm_chat: llm_chat
+                  = render 'llm_chats/common_questions_dropdown', llm_chat: llm_chat, f: f
                   %input.form-control.ays-ignore{ name: 'llm_chat[current_message]',
                                                   placeholder: 'Ask a question...',
                                                   type: 'text',
