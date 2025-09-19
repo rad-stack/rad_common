@@ -1,8 +1,6 @@
 module LLM
   module Tools
     class Builder
-      # TODO: this needs to be definable per app
-      TOOLS = [AttorneyDataTool].freeze
 
       def initialize(name:, description:, required_params: [], parameters: {})
         @name = name
@@ -22,7 +20,7 @@ module LLM
       end
 
       def self.tools
-        @tools ||= TOOLS.index_by { |class_object| tool_name(class_object) }
+        @tools ||= ToolList.tools.index_by { |class_object| tool_name(class_object) }
       end
 
       def self.tool_name(class_object)

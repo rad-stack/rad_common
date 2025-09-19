@@ -7,7 +7,7 @@ module LLM
 
       def initialize(params: {}, context: nil)
         @params = params.symbolize_keys
-        @arguments_raw = params[:arguments]
+        @arguments_raw = @params[:arguments]
         @context = context
       end
 
