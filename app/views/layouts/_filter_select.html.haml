@@ -15,7 +15,7 @@
                   as: :boolean,
                   label: 'Exclude',
                   input_html: { checked: filter.not_value?(params[:search]) },
-                  wrapper_html: { class: 'text-right mb-auto' },
+                  wrapper_html: { class: 'text-end mb-auto' },
                   tooltip: "Exclude results that match selected #{filter.input_label}"
 = f.input filter.searchable_name,
           collection: filter.input_options_with_current_selection(search),

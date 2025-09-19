@@ -57,17 +57,18 @@
         %td= format_date(@record.created_at)
         - if show_actions
           %td
-            - if policy(@record).edit?
-              = link_to icon(:pencil, 'Edit'),
-                        "/#{@record.class.table_name}/#{@record.id}/edit",
-                        class: 'btn btn-sm btn-secondary btn-block'
+            .d-grid.gap-2
+              - if policy(@record).edit?
+                = link_to icon(:pencil, 'Edit'),
+                          "/#{@record.class.table_name}/#{@record.id}/edit",
+                          class: 'btn btn-sm btn-secondary'
 
-            - if policy(@record).destroy?
-              = link_to icon(:times, 'Delete'),
-                            @record,
-                            method: :delete,
-                            data: { confirm: 'Are you sure?' },
-                            class: 'btn btn-danger btn-sm btn-block'
+              - if policy(@record).destroy?
+                = link_to icon(:times, 'Delete'),
+                          @record,
+                          method: :delete,
+                          data: { confirm: 'Are you sure?' },
+                          class: 'btn btn-danger btn-sm'
 
 = simple_form_for(@record, url: merge_duplicates_path(model: @record.class, id: @record.id)) do
   .card
@@ -123,18 +124,19 @@
             %td
               %input.merge_data{ name: "merge_data[#{record.id}]", type: 'checkbox' }
             %td
-              - if policy(record).destroy?
-                = link_to icon(:times, 'Not a duplicate'),
-                          not_duplicates_path(model: record.class, id: record.id, master_record: @record.id),
-                          class: 'btn btn-sm btn-warning btn-block'
+              .d-grid.gap-2
+                - if policy(record).destroy?
+                  = link_to icon(:times, 'Not a duplicate'),
+                            not_duplicates_path(model: record.class, id: record.id, master_record: @record.id),
+                            class: 'btn btn-sm btn-warning'
 
-              = link_to icon('arrow-up', 'Switch to Current'),
-                        switch_duplicates_path(model: record.class,
-                                               id: record.id,
-                                               other_model: @record.class,
-                                               other_id: @record.id),
-                        method: :put,
-                        class: 'btn btn-sm btn-success btn-block'
+                = link_to icon('arrow-up', 'Switch to Current'),
+                          switch_duplicates_path(model: record.class,
+                                                id: record.id,
+                                                other_model: @record.class,
+                                                other_id: @record.id),
+                          method: :put,
+                          class: 'btn btn-sm btn-success'
 
             %td= record_result[:score]
             - if @model.use_first_last_name?
@@ -165,14 +167,15 @@
               = format_date(record.created_at)
             - if show_actions
               %td
-                - if policy(record).edit?
-                  = link_to icon(:pencil, 'Edit'),
-                            "/#{record.class.table_name}/#{record.id}/edit",
-                            class: 'btn btn-sm btn-secondary btn-block'
+                .d-grid.gap-2
+                  - if policy(record).edit?
+                    = link_to icon(:pencil, 'Edit'),
+                              "/#{record.class.table_name}/#{record.id}/edit",
+                              class: 'btn btn-sm btn-secondary'
 
-                - if policy(record).destroy?
-                  = link_to icon(:times, 'Delete'),
-                                record,
-                                method: :delete,
-                                data: { confirm: 'Are you sure?' },
-                                class: 'btn btn-danger btn-sm btn-block'
+                  - if policy(record).destroy?
+                    = link_to icon(:times, 'Delete'),
+                              record,
+                              method: :delete,
+                              data: { confirm: 'Are you sure?' },
+                              class: 'btn btn-danger btn-sm'
