@@ -8,15 +8,15 @@ class ChatResponseJob < ApplicationJob
       _, messages = service.basic_question(message)
       llm_chat.update!(log: messages, status: 'completed', current_message: nil)
     rescue Faraday::BadRequestError => e
-      capture_and_log_error(llm_chat, e.response[:body], e)
+      capture_and_log_error(llm_chat, e)
     rescue StandardError => e
       raise e if Rails.env.development?
 
-      capture_and_log_error(llm_chat, e.message, e)
+      capture_and_log_error(llm_chat, e)
     end
   end
 
-  def capture_and_log_error(llm_chat, message, error)
+  def capture_and_log_error(llm_chat, error)
     raise error if Rails.env.development?
 
     Sentry.capture_exception(error)
