@@ -27,7 +27,13 @@ module LLMChatsHelper
   end
 
   def llm_chat_text_sanitize(text)
-    remove_context_data(text)
+    text = remove_context_data(text)
+    allowed_tags = Rails::Html::SafeListSanitizer.allowed_tags
+    allowed_tags += %w[a]
+    allowed_attributes = Rails::Html::SafeListSanitizer.allowed_attributes
+    allowed_attributes += %w[href]
+
+    sanitize(text, tags: allowed_tags, attributes: allowed_attributes)
   end
 
   def remove_context_data(text)
