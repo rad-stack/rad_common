@@ -6,8 +6,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
-    "rad_common_js": "https://github.com/rad-stack/rad_common_js#rad-11188-llm-framework",
-    "@hotwired/turbo-rails": "^8.0.12"
+    "rad_common_js": "https://github.com/rad-stack/rad_common_js#rad-11188-llm-framework"
   },
   "devDependencies": {
     "esbuild": "^0.25.8",
