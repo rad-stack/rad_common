@@ -15,7 +15,7 @@ class LLMChatsController < ApplicationController
       reset_chat
     elsif permitted_params[:current_message].blank?
       missing_message
-    elsif @llm_chats.context_object? && permitted_params[:contextable_id].blank?
+    elsif @llm_chat.context_object? && permitted_params[:contextable_id].blank?
       missing_user
     else
       handle_update
