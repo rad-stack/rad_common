@@ -33,6 +33,6 @@ class Attorney < ApplicationRecord
     end
 
     def generate_embedding_content
-      [first_name, last_name].compact.join("\n")
+      { first_name: first_name, last_name: last_name }
     end
 end

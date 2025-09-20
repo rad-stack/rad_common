@@ -10,7 +10,7 @@ module LLM
       end
 
       def attorney_name_embedding
-        @attorney_name_embedding ||= EmbeddingService.generate(retrieve_argument('attorney_name'))
+        @attorney_name_embedding ||= EmbeddingService.new(retrieve_argument('attorney_name').generate)
       end
 
       def attorney
