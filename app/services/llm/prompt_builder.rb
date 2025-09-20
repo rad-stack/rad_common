@@ -26,7 +26,7 @@ module LLM
       )
       response = ChatResponse.new(r)
       if response.tool_call?
-        return chat(previous_messages: LLM::Tools::Builder.respond_to_tool_call(response, @context, messages))
+        return chat(previous_messages: LLM::Tools::Builder.respond_to_tool_calls(response, @context, messages))
       end
 
       assistant_message = r.dig('choices', 0, 'message')

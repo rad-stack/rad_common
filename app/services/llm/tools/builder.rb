@@ -8,14 +8,18 @@ module LLM
         @parameters = parameters
       end
 
-      def self.respond_to_tool_call(response, context, messages)
-        tool_class = LLM::Tools::Builder.tools[response.tool_name]
-        tool_instance = tool_class.new(params: response.tool_data, context: context)
-        result = tool_instance.call
+      def self.respond_to_tool_calls(response, context, messages)
+        tool_messages = response.tool_calls.map { |tool_call| respond_to_tool_call(tool_call, response, context) }
         tool_message = response.message
-        result_message = LLM::PromptBuilder.build_message(role: :tool, content: result,
-                                                          tool_call_id: response.tool_call_id)
-        messages + [tool_message, result_message]
+        messages + [tool_message] + tool_messages
+      end
+
+      def self.respond_to_tool_call(tool_call, response, context)
+        tool_class = LLM::Tools::Builder.tools[response.tool_name(tool_call)]
+        tool_instance = tool_class.new(params: response.tool_data(tool_call), context: context)
+        result = tool_instance.call
+        LLM::PromptBuilder.build_message(role: :tool, content: result,
+                                         tool_call_id: response.tool_call_id(tool_call))
       end
 
       def self.tools
