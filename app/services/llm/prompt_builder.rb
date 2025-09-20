@@ -17,13 +17,13 @@ module LLM
       messages << build_system_prompt if previous_messages.empty?
       messages += previous_messages
       messages << PromptBuilder.build_user_message(content) if content
-      r = openai_client.chat(
-        parameters: {
-          model: @model,
-          messages: messages,
-          tools: @tools
-        }
-      )
+
+      r = RadRetry.perform_request do
+        openai_client.chat(parameters: { model: @model, messages: messages, tools: @tools })
+      rescue Faraday::BadRequestError => e
+        raise e.response[:body]['error']['message']
+      end
+
       response = ChatResponse.new(r)
       if response.tool_call?
         return chat(previous_messages: LLM::Tools::Builder.respond_to_tool_call(response, @context, messages))
