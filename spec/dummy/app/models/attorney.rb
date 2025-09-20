@@ -26,16 +26,6 @@ class Attorney < ApplicationRecord
     the_name
   end
 
-  def update_embedding!
-    content = generate_embedding_content
-
-    embedding_vector = EmbeddingService.generate(content)
-    return unless embedding_vector
-
-    embedding_record = embedding || build_embedding
-    embedding_record.update! embedding: embedding_vector, metadata: embedding_metadata
-  end
-
   private
 
     def embedding_metadata
@@ -43,6 +33,6 @@ class Attorney < ApplicationRecord
     end
 
     def generate_embedding_content
-      [first_name, last_name].compact.join("\n")
+      { first_name: first_name, last_name: last_name }
     end
 end
