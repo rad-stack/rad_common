@@ -15,14 +15,26 @@ class EmbeddingService
 
   def initialize(generate_embedding_content)
     @generate_embedding_content = generate_embedding_content
-    raise 'wrong type' unless generate_embedding_content.is_a?(Hash)
   end
 
   def generate
+    raise 'wrong type' unless generate_embedding_content.is_a?(Hash)
+
     # TODO: what's this slice doing?
 
     response = RadRetry.perform_request do
       client.embeddings(parameters: { model: 'text-embedding-3-small', input: summarized_content.slice(0, 8192) })
+    end
+
+    response.dig('data', 0, 'embedding')
+  end
+
+  def generate_question
+    # TODO: what's this slice doing?
+    # TODO: refactor generate and generate_question
+
+    response = RadRetry.perform_request do
+      client.embeddings(parameters: { model: 'text-embedding-3-small', input: generate_embedding_content.slice(0, 8192) })
     end
 
     response.dig('data', 0, 'embedding')
