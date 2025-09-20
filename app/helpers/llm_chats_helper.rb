@@ -33,14 +33,14 @@ module LLMChatsHelper
     allowed_tags = Rails::Html::SafeListSanitizer.allowed_tags
     allowed_tags += %w[a]
     allowed_attributes = Rails::Html::SafeListSanitizer.allowed_attributes
-    allowed_attributes += %w[href]
+    allowed_attributes += %w[href data-turbo]
 
     sanitize(text, tags: allowed_tags, attributes: allowed_attributes)
   end
 
   def disable_turbo_links(text)
     doc = Nokogiri::HTML::DocumentFragment.parse(text)
-    doc.css('a').each { |a| a['data-turbo'] = 'false' }
+    doc.css('a').each { |a| a.set_attribute('data-turbo', 'false') }
     doc.to_html.to_s
   end
 
