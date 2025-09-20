@@ -1,6 +1,7 @@
 class Attorney < ApplicationRecord
   include Contactable
   include DuplicateFixable
+  include Embeddable
 
   has_rich_text :notes
 
@@ -24,4 +25,24 @@ class Attorney < ApplicationRecord
     the_name = "#{the_name} #{middle_name}" if middle_name.present?
     the_name
   end
+
+  def update_embedding!
+    content = generate_embedding_content
+
+    embedding_vector = EmbeddingService.generate(content)
+    return unless embedding_vector
+
+    embedding_record = embedding || build_embedding
+    embedding_record.update! embedding: embedding_vector, metadata: embedding_metadata
+  end
+
+  private
+
+    def embedding_metadata
+      { attorney_id: id }
+    end
+
+    def generate_embedding_content
+      [first_name, last_name].compact.join("\n")
+    end
 end

@@ -1,0 +1,16 @@
+.card
+  = render 'layouts/card_header', no_new_button: true, no_delete_button: true, no_edit_button: true
+
+  .card-body
+    .card-body.bg-secondary
+    %table.table.table-striped.table-bordered
+      %tr
+        %th Date
+        %th Role
+        %th Content
+      - @llm_chat.log.each do |log|
+        - log.symbolize_keys!
+        %tr
+          %td= log[:chat_date]
+          %td= log[:role]
+          %td= log[:content]
