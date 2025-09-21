@@ -12,16 +12,16 @@ module LLM
       tool_calls.present?
     end
 
-    def tool_name
-      @tool_name ||= tool_data['name']
+    def tool_name(tool_call)
+      tool_data(tool_call)['name']
     end
 
-    def tool_call_id
-      @tool_call_id ||= tool_calls.first&.dig('id')
+    def tool_call_id(tool_call)
+      tool_call['id']
     end
 
-    def tool_data
-      @tool_data ||= tool_calls.first&.dig('function')
+    def tool_data(tool_call)
+      tool_call['function']
     end
 
     def tool_calls
