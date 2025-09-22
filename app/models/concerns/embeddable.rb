@@ -14,6 +14,6 @@ module Embeddable
     return unless embedding_vector
 
     embedding_record = embedding || build_embedding
-    embedding_record.update! embedding: embedding_vector, metadata: embedding_metadata
+    embedding_record.update! embedding: embedding_vector, metadata: embedding_metadata.compact
   end
 end
