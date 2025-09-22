@@ -4,7 +4,7 @@ module RadCommonRoutes
       devise_controllers = { confirmations: 'users/confirmations',
                              devise_twilio_verify: 'users/devise_twilio_verify',
                              invitations: 'users/invitations',
-                             omniauth_callbacks: 'users/omniauth_callbacks'}
+                             omniauth_callbacks: 'users/omniauth_callbacks' }
 
       devise_paths = { verify_twilio_verify: '/verify-token',
                        enable_twilio_verify: '/enable-two-factor',
