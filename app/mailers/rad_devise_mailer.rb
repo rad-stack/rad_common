@@ -105,7 +105,7 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def default_url_options
-    if @resource.external? && RadConfig.portal?
+    if RadConfig.portal? && @resource.portal_user?
       { host: @resource.portal_host_name }
     else
       { host: RadConfig.host_name! }
@@ -120,6 +120,6 @@ class RadDeviseMailer < Devise::Mailer
     end
 
     def app_name
-      @resource.external? && RadConfig.portal? ? @resource.portal_app_name : RadConfig.app_name!
+      RadConfig.portal? && @resource.portal_user? ? @resource.portal_app_name : RadConfig.app_name!
     end
 end
