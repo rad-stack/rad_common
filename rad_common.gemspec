@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
 
   s.add_dependency 'nokogiri'
+  s.add_dependency 'omniauth-google-oauth2'
 
   # this needs to match the ruby version to avoid warnings, see Task 40504
   s.add_dependency 'parser', '~> 3.3.1.0'

@@ -16,6 +16,8 @@ gemspec
 gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-devise.git',
                             branch: 'authy-to-twilio-verify'
 
+gem 'omniauth-rails_csrf_protection'
+
 group :test do
   gem 'capybara-selenium'
   gem 'parallel_tests'
