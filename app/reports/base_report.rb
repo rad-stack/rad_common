@@ -1,5 +1,5 @@
 class BaseReport
-  include RadCommon::ApplicationHelper
+  include RadHelper
 
   attr_accessor :current_user, :view_context, :params, :start_date, :end_date, :report_errors
 

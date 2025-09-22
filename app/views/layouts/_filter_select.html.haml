@@ -3,7 +3,7 @@
   input_html = filter.search_scope_params
   input_html = input_html.merge('data-autosubmit': true) if filter.autosubmit
 
-- if filter.is_a?(RadCommon::ArrayFilter)
+- if filter.is_a?(RadSearch::ArrayFilter)
   = render 'layouts/match_type_dropdown', filter: filter, search: search, f: f
 - else
   .row.align-items-center

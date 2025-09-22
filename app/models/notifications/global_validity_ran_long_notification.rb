@@ -1,5 +1,5 @@
 module Notifications
-  class GlobalValidityRanLongNotification < ::NotificationType
+  class GlobalValidityRanLongNotification < DeveloperNotification
     def mailer_class
       'NotificationMailer'
     end
