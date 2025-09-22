@@ -1,7 +1,7 @@
 - if (search.search_params? && search.invalid?) || search.saved_filter_errors.present?
   - flash.now[:error] = search.error_messages
 
-.d-block.d-md-none.text-right.mb-2.sticky-top.bg-white.py-2.border-bottom.border-secondary
+.d-block.d-md-none.text-end.mb-2.sticky-top.bg-white.py-2.border-bottom.border-secondary
   %button.btn.w-100{ class: search.search_params? ? 'btn-warning' : 'btn-primary',
                      type: 'button',
                      data: { bs_toggle: 'modal', bs_target: '#mobile-filters-modal' } }
