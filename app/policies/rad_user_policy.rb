@@ -23,7 +23,7 @@ class RadUserPolicy < ApplicationPolicy
   end
 
   def destroy?
-    create?
+    create? && user.internal?
   end
 
   def resend_invitation?
@@ -31,7 +31,7 @@ class RadUserPolicy < ApplicationPolicy
   end
 
   def confirm?
-    update?
+    update? && user.internal?
   end
 
   def test_email?
@@ -43,7 +43,7 @@ class RadUserPolicy < ApplicationPolicy
   end
 
   def reactivate?
-    update?
+    update? && user.internal?
   end
 
   def update_timezone?

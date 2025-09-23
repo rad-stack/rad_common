@@ -12,6 +12,15 @@ module RadCommonRoutes
       devise_for :users, path: 'auth', controllers: devise_controllers, path_names: devise_paths
 
       authenticate :user, ->(u) { u.internal? } do
+        resources :users, only: :destroy do
+          get :export, on: :collection
+
+          member do
+            put :confirm
+            put :reactivate
+          end
+        end
+
         resources :security_roles do
           get :permission, on: :collection
         end
@@ -57,13 +66,9 @@ module RadCommonRoutes
         mount Sidekiq::Web => '/sidekiq'
       end
 
-      resources :users do
-        get :export, on: :collection
-
+      resources :users, except: :destroy do
         member do
           put :resend_invitation
-          put :confirm
-          put :reactivate
           put :test_email
           put :test_sms
           put :update_timezone
