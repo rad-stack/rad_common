@@ -12,20 +12,13 @@ module RadCommonRoutes
       devise_for :users, path: 'auth', controllers: devise_controllers, path_names: devise_paths
 
       authenticate :user, ->(u) { u.internal? } do
-        resources :users do
+        resources :users, only: :destroy do
           get :export, on: :collection
 
           member do
-            put :resend_invitation
             put :confirm
             put :reactivate
-            put :test_email
-            put :test_sms
-            put :update_timezone
-            put :ignore_timezone
           end
-
-          resources :user_clients, only: :new
         end
 
         resources :security_roles do
@@ -55,7 +48,6 @@ module RadCommonRoutes
         resources :contact_log_recipients, only: :show
         resources :saved_search_filters, only: :destroy
         resources :user_security_roles, only: :show
-        resources :user_clients, only: %i[create destroy]
         resources :json_web_tokens, only: :new
 
         resources :impersonations, only: [] do
@@ -70,12 +62,20 @@ module RadCommonRoutes
         put 'set_js_timezone', to: 'users#set_js_timezone'
       end
 
-      authenticate :user, ->(u) { u.external? } do
-        resources :users, only: %i[index show]
-      end
-
       authenticate :user, ->(u) { u.admin? } do
         mount Sidekiq::Web => '/sidekiq'
+      end
+
+      resources :users, except: :destroy do
+        member do
+          put :resend_invitation
+          put :test_email
+          put :test_sms
+          put :update_timezone
+          put :ignore_timezone
+        end
+
+        resources :user_clients, only: :new
       end
 
       resources :notifications, only: :index
@@ -85,6 +85,7 @@ module RadCommonRoutes
       resources :twilio_replies, only: :create
       resources :sendgrid_statuses, only: :create
       resources :company_contacts, only: %i[new create]
+      resources :user_clients, only: %i[create destroy]
 
       delete 'attachments/:id(.:format)', to: 'attachments#destroy', as: :attachment
 
