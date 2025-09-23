@@ -18,6 +18,7 @@ module RadCommon
           remove_dir 'public/packs-test'
         end
 
+        fix_namespacing
         add_crawling_config
         install_procfile
         standardize_date_methods
@@ -304,6 +305,25 @@ Seeder.new.seed!
           else
             system "find . -type f -name \"#{file_name}\" -print0 | xargs -0 sed -i '' -e 's/#{search}/#{replace}/g'"
           end
+        end
+
+        def fix_namespacing
+          search_and_replace 'RadCommon::AppInfo', 'AppInfo'
+          search_and_replace 'RadCommon::ApplicationHelper', 'RadHelper'
+
+          search_and_replace 'RadCommon::ArrayFilter', 'RadSearch::ArrayFilter'
+          search_and_replace 'RadCommon::BooleanFilter', 'RadSearch::BooleanFilter'
+          search_and_replace 'RadCommon::DateFilter', 'RadSearch::DateFilter'
+          search_and_replace 'RadCommon::EnumFilter', 'RadSearch::EnumFilter'
+          search_and_replace 'RadCommon::EqualsFilter', 'RadSearch::EqualsFilter'
+          search_and_replace 'RadCommon::FilterDefaulting', 'RadSearch::FilterDefaulting'
+          search_and_replace 'RadCommon::Filtering', 'RadSearch::Filtering'
+          search_and_replace 'RadCommon::HiddenFilter', 'RadSearch::HiddenFilter'
+          search_and_replace 'RadCommon::LikeFilter', 'RadSearch::LikeFilter'
+          search_and_replace 'RadCommon::PhoneNumberFilter', 'RadSearch::PhoneNumberFilter'
+          search_and_replace 'RadCommon::Search', 'RadSearch::Search'
+          search_and_replace 'RadCommon::SearchFilter', 'RadSearch::SearchFilter'
+          search_and_replace 'RadCommon::Sorting', 'RadSearch::Sorting'
         end
 
         def add_crawling_config
@@ -755,6 +775,7 @@ gem 'propshaft'
           apply_migration '20250425120906_fix_some_renamed_audit_models.rb'
           apply_migration '20250512115245_two_factor_auth_updates.rb'
           apply_migration '20250622203947_user_js_timezone.rb'
+          apply_migration '20250914154915_fix_developer_notifications.rb'
         end
 
         def installed_app_name
