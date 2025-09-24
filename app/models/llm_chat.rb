@@ -1,0 +1,2 @@
+class LLMChat < ApplicationRecord
+end
