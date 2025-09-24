@@ -1,0 +1,22 @@
+class <%= class_name %>Search < RadCommon::Search
+  def initialize(params, current_user)
+    @current_user = current_user
+
+    super(query: <%= class_name %>,
+          filters: filters_def,
+          sort_columns: sort_columns_def,
+          params: params,
+          current_user: current_user)
+  end
+
+  private
+
+    def filters_def
+      # @TODO - Add desired filters
+      []
+    end
+
+    def sort_columns_def
+      # @TODO - Add columns to sort by
+    end
+end

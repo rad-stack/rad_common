@@ -11,7 +11,8 @@ module Rspec
         super + [
           Rails.root.join('lib/templates/rspec/system').to_s,
           Rails.root.join('lib/templates/factory_bot').to_s,
-          Rails.root.join('lib/templates/pundit').to_s
+          Rails.root.join('lib/templates/pundit').to_s,
+          Rails.root.join('lib/templates/services').to_s
         ]
       end
 
@@ -33,6 +34,11 @@ module Rspec
       def create_policy
         template 'policy.rb.tt',
                  File.join('app/policies', class_path, "#{file_name}_policy.rb")
+      end
+
+      def create_search
+        template 'search.rb.tt',
+                 File.join('app/services', class_path, "#{file_name}_search.rb")
       end
 
       private
