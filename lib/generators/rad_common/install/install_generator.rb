@@ -775,6 +775,8 @@ gem 'propshaft'
           apply_migration '20250425120906_fix_some_renamed_audit_models.rb'
           apply_migration '20250512115245_two_factor_auth_updates.rb'
           apply_migration '20250622203947_user_js_timezone.rb'
+          apply_migration '20250918160535_create_vector_embeddings.rb'
+          apply_migration '20250918153732_add_large_language_model_chats.rb'
           apply_migration '20250914154915_fix_developer_notifications.rb'
         end
 
