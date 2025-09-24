@@ -85,7 +85,7 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
     context 'without from_user' do
       let(:from_user) { nil }
 
-      xit 'emails the admins' do
+      it 'emails the admins' do
         expect(mail.to).to include admin.email
       end
     end
