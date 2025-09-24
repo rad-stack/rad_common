@@ -1,0 +1,23 @@
+.card
+  = render 'layouts/card_header', action_name: 'custom', title: "Setup Authenticator", icon: 'fa-user'
+  .card-body
+    .row
+      .col-lg-4
+      .col-lg-4
+        %table.table
+          %tr
+            %th 1. Locate Authenticator App On Your Phone
+          %tr
+            %th 2. Scan Code
+          %tr
+            %th.text-center
+              != two_factor_qr_code(@user)
+          %tr
+            %th 3. Verify Code
+          %tr
+            %th
+              = simple_form_for(:verify_authenticator, url: verify_authenticator_users_path) do |f|
+                = f.input :code
+                = f.button :submit, 'Verify Code', class: 'btn btn-primary'
+
+

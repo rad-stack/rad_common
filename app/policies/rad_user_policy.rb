@@ -38,6 +38,10 @@ class RadUserPolicy < ApplicationPolicy
     update?
   end
 
+  def authenticator_setup?
+    update?
+  end
+
   def test_sms?
     update?
   end
