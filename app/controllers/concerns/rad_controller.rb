@@ -39,7 +39,7 @@ module RadController
     end
 
     def devise_invite_params
-      %i[first_name last_name mobile_phone initial_security_role_id]
+      %i[first_name last_name mobile_phone initial_security_role_id] + RadConfig.additional_user_params!
     end
 
     def set_sentry_user_context
