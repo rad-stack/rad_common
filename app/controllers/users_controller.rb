@@ -146,9 +146,11 @@ class UsersController < ApplicationController
   end
 
   def verify_authenticator
+    @user = current_user
+    authorize @user
     code = params[:verify_authenticator][:code]
 
-    if TwilioVerifyService.verify_totp_token(current_user, code)
+    if TwilioVerifyService.verify_totp_token(@user, code)
       redirect_to :root, notice: 'Authenticator verified.'
     else
       flash[:error] = 'Authenticator verification failed.'
