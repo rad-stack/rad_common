@@ -1,7 +1,6 @@
 module ActionDispatch
   module Routing
     class Mapper
-
       protected
 
         def devise_twilio_verify(mapping, controllers)
