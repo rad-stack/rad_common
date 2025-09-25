@@ -467,7 +467,7 @@ RSpec.describe 'Users', type: :system do
     end
 
     it 'does not allow user to login with invalid twilio verify token' do
-      allow(TwilioVerifyService).to receive(:verify_sms_token).and_return(double(status: 'pending'))
+      allow(TwilioVerifyService).to receive(:verify_sms_token).and_return(false)
 
       visit new_user_session_path
 
