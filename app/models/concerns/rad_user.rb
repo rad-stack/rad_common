@@ -257,6 +257,10 @@ module RadUser
     email.end_with? "@#{RadConfig.developer_domain!}"
   end
 
+  def with_twilio_verify_authentication?(_request)
+    twilio_verify_enabled?
+  end
+
   class_methods do
     def user_approved_message
       "Your account was approved and you can begin using #{RadConfig.app_name!}."
