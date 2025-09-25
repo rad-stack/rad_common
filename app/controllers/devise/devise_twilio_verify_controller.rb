@@ -27,10 +27,14 @@ class Devise::DeviseTwilioVerifyController < DeviseController
       return handle_invalid_token :verify_twilio_verify, :invalid_token
     end
 
-    begin
-      verification_check = TwilioVerifyService.verify_sms_token(@resource.mobile_phone, params[:token])
-    rescue Twilio::REST::RestError
-      verification_check = false
+    verification_check = false
+
+    if @resource.twilio_totp_factor_sid.blank?
+      begin
+        verification_check = TwilioVerifyService.verify_sms_token(@resource.mobile_phone, params[:token])
+      rescue Twilio::REST::RestError
+        verification_check = false
+      end
     end
 
     # Hack to reproduce authy functionality of being able to verify 2FA via SMS or TOTP
