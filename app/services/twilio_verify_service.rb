@@ -6,10 +6,15 @@ class TwilioVerifyService
   end
 
   def self.verify_sms_token(phone_number, token)
-    new.twilio_verify_service.verification_checks.create(to: e164_format(phone_number), code: token)
+    verification_check = new.twilio_verify_service.verification_checks
+                            .create(to: e164_format(phone_number), code: token)
+    verification_check.status == 'approved'
+  rescue StandardError => e
+    Sentry.capture_exception(e)
+    false
   end
 
-  def self.verify_totp_token(user, token)
+  def self.verify_totp_setup(user, token)
     updated_factor = new.twilio_verify_service.entities([Rails.env, user.id].join('-'))
                         .factors(user.twilio_totp_factor_sid)
                         .update(auth_payload: token)
@@ -20,6 +25,20 @@ class TwilioVerifyService
     end
 
     false
+  rescue StandardError => e
+    Sentry.capture_exception(e)
+    false
+  end
+
+  def self.verify_totp_token(user, token)
+    return nil unless user.twilio_totp_verified?
+
+    challenge = new.twilio_verify_service
+                   .entities([Rails.env, user.id].join('-'))
+                   .challenges
+                   .create(factor_sid: user.twilio_totp_factor_sid, auth_payload: token)
+
+    challenge.status == 'approved'
   rescue StandardError => e
     Sentry.capture_exception(e)
     false
