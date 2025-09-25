@@ -2,11 +2,11 @@ class TwilioVerifyService
   attr_reader :twilio_client, :twilio_account_sid, :twilio_auth_token, :twilio_verify_service_sid
 
   def self.send_sms_token(phone_number)
-    new.twilio_verify_service.verifications.create(to: e164_format(phone_number), channel: 'sms')
+    new.twilio_verify_service_version_2.verifications.create(to: e164_format(phone_number), channel: 'sms')
   end
 
   def self.verify_sms_token(phone_number, token)
-    verification_check = new.twilio_verify_service.verification_checks
+    verification_check = new.twilio_verify_service_version_2.verification_checks
                             .create(to: e164_format(phone_number), code: token)
     verification_check.status == 'approved'
   rescue StandardError => e
@@ -15,7 +15,7 @@ class TwilioVerifyService
   end
 
   def self.verify_totp_setup(user, token)
-    updated_factor = new.twilio_verify_service.entities([Rails.env, user.id].join('-'))
+    updated_factor = new.twilio_verify_service_version_2.entities([Rails.env, user.id].join('-'))
                         .factors(user.twilio_totp_factor_sid)
                         .update(auth_payload: token)
 
@@ -33,7 +33,7 @@ class TwilioVerifyService
   def self.verify_totp_token(user, token)
     return nil unless user.twilio_totp_verified?
 
-    challenge = new.twilio_verify_service
+    challenge = new.twilio_verify_service_version_2
                    .entities([Rails.env, user.id].join('-'))
                    .challenges
                    .create(factor_sid: user.twilio_totp_factor_sid, auth_payload: token)
@@ -57,15 +57,6 @@ class TwilioVerifyService
     new_factor
   end
 
-  def self.register_totp_service(user, token)
-    # After user adds the app to their authenticator app, register the user by having them confirm a token
-    # if this returns factor.status == 'verified', the user has been properly setup
-    new.twilio_verify_service_version_2
-       .entities([Rails.env, user.id].join('-'))
-       .factors(user.twilio_totp_factor_sid)
-       .update(auth_payload: token)
-  end
-
   def self.e164_format(phone_number)
     "+1#{phone_number.gsub(/[^0-9a-z\\s]/i, '')}"
   end
@@ -80,10 +71,6 @@ class TwilioVerifyService
     raise 'Missing Twilio credentials' unless @twilio_account_sid && @twilio_auth_token && @twilio_verify_service_sid
 
     @twilio_client = Twilio::REST::Client.new(@twilio_account_sid, @twilio_auth_token)
-  end
-
-  def twilio_verify_service
-    twilio_client.verify.services(twilio_verify_service_sid)
   end
 
   def twilio_verify_service_version_2
