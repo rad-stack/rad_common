@@ -39,11 +39,12 @@ class RadUserPolicy < ApplicationPolicy
   end
 
   def authenticator_setup?
-    update?
+    verify_authenticator?
   end
 
   def verify_authenticator?
-    update?
+    # TODO: thinking we always want this always true, I have it setup so you can only update current_user
+    true
   end
 
   def test_sms?
