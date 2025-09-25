@@ -8,7 +8,6 @@ module Users
       else
         flash.now[:error] = 'The verification code failed to send. Please click "Resend Text".'
       end
-
       super
     end
   end
