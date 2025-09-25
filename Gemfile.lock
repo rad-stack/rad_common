@@ -34,6 +34,7 @@ PATH
       rack-attack
       rails (~> 7.2.2)
       redis
+      rqrcode (= 3.1.0)
       selenium-webdriver (~> 4.18.1)
       sendgrid-ruby
       sentry-rails
@@ -181,6 +182,7 @@ GEM
     capybara-selenium (0.0.6)
       capybara
       selenium-webdriver
+    chunky_png (1.4.0)
     coderay (1.1.3)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.3)
@@ -416,6 +418,10 @@ GEM
       actionpack (>= 5.2)
       railties (>= 5.2)
     rexml (3.4.1)
+    rqrcode (3.1.0)
+      chunky_png (~> 1.0)
+      rqrcode_core (~> 2.0)
+    rqrcode_core (2.0.0)
     rspec-core (3.13.5)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)

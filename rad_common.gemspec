@@ -65,6 +65,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'twilio-ruby'
   s.add_dependency 'wicked_pdf', '2.6.3'
   s.add_dependency 'wkhtmltopdf-heroku', '2.12.6.1.pre.jammy'
+  s.add_dependency 'rqrcode', '3.1.0'
 
   # Test Group
   s.add_dependency 'selenium-webdriver', '~> 4.18.1'
