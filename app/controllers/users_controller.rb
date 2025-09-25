@@ -139,10 +139,7 @@ class UsersController < ApplicationController
     @user = current_user
     authorize @user
 
-    if @user.twilio_totp_url.blank?
-      factor = TwilioVerifyService.setup_totp_service(@user)
-      @user.update!(twilio_totp_url: factor.binding['uri'])
-    end
+    @user.setup_totp!
   end
 
   def verify_authenticator

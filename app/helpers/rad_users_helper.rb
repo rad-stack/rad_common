@@ -34,7 +34,8 @@ module RadUsersHelper
     qrcode.as_svg(
       color: '000',
       shape_rendering: 'crispEdges',
-      module_size: 5)
+      module_size: 5
+    )
   end
 
   def setup_authenticator_btn

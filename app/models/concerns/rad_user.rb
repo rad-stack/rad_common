@@ -242,8 +242,12 @@ module RadUser
     User.languages[language]
   end
 
-  # TODO: this should be a db attribute when we enable the TOTP feature
-  # def twilio_totp_factor_sid; end
+  def setup_totp!
+    return if twilio_totp_url.present?
+
+    factor = TwilioVerifyService.setup_totp_service(self)
+    update!(twilio_totp_url: factor.binding['uri'])
+  end
 
   def timeout_in
     external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
