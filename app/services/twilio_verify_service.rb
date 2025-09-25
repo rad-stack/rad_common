@@ -46,9 +46,9 @@ class TwilioVerifyService
 
   def self.setup_totp_service(user)
     new_factor = new.twilio_verify_service_v2
-      .entities([Rails.env, user.id].join('-'))
-      .new_factors
-      .create(friendly_name: user.to_s, factor_type: 'totp')
+                    .entities([Rails.env, user.id].join('-'))
+                    .new_factors
+                    .create(friendly_name: user.to_s, factor_type: 'totp')
 
     user.update(twilio_totp_factor_sid: new_factor.sid)
 
@@ -61,9 +61,9 @@ class TwilioVerifyService
     # After user adds the app to their authenticator app, register the user by having them confirm a token
     # if this returns factor.status == 'verified', the user has been properly setup
     new.twilio_verify_service_v2
-      .entities([Rails.env, user.id].join('-'))
-      .factors(user.twilio_totp_factor_sid)
-      .update(auth_payload: token)
+       .entities([Rails.env, user.id].join('-'))
+       .factors(user.twilio_totp_factor_sid)
+       .update(auth_payload: token)
   end
 
   def self.e164_format(phone_number)
@@ -71,9 +71,11 @@ class TwilioVerifyService
   end
 
   def initialize
-    @twilio_account_sid = Rails.application.credentials.twilio_account_sid || ENV['TWILIO_ACCOUNT_SID']
-    @twilio_auth_token = Rails.application.credentials.twilio_auth_token || ENV['TWILIO_AUTH_TOKEN']
-    @twilio_verify_service_sid = Rails.application.credentials.twilio_verify_service_sid || ENV['TWILIO_VERIFY_SERVICE_SID']
+    @twilio_account_sid = Rails.application.credentials.twilio_account_sid || ENV.fetch('TWILIO_ACCOUNT_SID', nil)
+    @twilio_auth_token = Rails.application.credentials.twilio_auth_token || ENV.fetch('TWILIO_AUTH_TOKEN', nil)
+    @twilio_verify_service_sid = Rails.application.credentials.twilio_verify_service_sid || ENV.fetch(
+      'TWILIO_VERIFY_SERVICE_SID', nil
+    )
 
     raise 'Missing Twilio credentials' unless @twilio_account_sid && @twilio_auth_token && @twilio_verify_service_sid
 
@@ -88,7 +90,5 @@ class TwilioVerifyService
     twilio_client.verify.v2.services(twilio_verify_service_sid)
   end
 
-  def e164_format(phone_number)
-    self.class.e164_format(phone_number)
-  end
+  delegate :e164_format, to: :class
 end
