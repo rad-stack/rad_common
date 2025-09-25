@@ -29,7 +29,6 @@ class Devise::DeviseTwilioVerifyController < DeviseController
 
     begin
       verification_check = TwilioVerifyService.verify_sms_token(@resource.mobile_phone, params[:token])
-      verification_check = verification_check.status == 'approved'
     rescue Twilio::REST::RestError
       verification_check = false
     end
@@ -38,7 +37,6 @@ class Devise::DeviseTwilioVerifyController < DeviseController
     # not ideal as there could be network delays, but there is currently no alternative
     if !verification_check && @resource.twilio_totp_factor_sid.present?
       verification_check = TwilioVerifyService.verify_totp_token(@resource, params[:token])
-      verification_check = verification_check.status == 'approved'
     end
 
     if verification_check
@@ -50,9 +48,9 @@ class Devise::DeviseTwilioVerifyController < DeviseController
       handle_invalid_token :verify_twilio_verify, :invalid_token
     end
   end
-  
+
   def GET_enable_twilio_verify
-    render :enable_twilio_verify  
+    render :enable_twilio_verify
   end
 
   # enable 2fa
