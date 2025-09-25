@@ -4,8 +4,8 @@ module Devise
     module TwilioVerifyAuthenticatable
       extend ActiveSupport::Concern
 
-      def with_twilio_verify_authentication?(request)
-        self.twilio_verify_enabled?
+      def with_twilio_verify_authentication?(_request)
+        twilio_verify_enabled?
       end
 
       module ClassMethods
@@ -18,4 +18,3 @@ module Devise
     end
   end
 end
-
