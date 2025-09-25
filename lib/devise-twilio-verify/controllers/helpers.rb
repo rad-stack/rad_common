@@ -64,15 +64,19 @@ module DeviseTwilioVerify
             return_to = session["#{resource_name}_return_to"]
             sign_out
 
-            session["#{resource_name}_id"] = id
-            # this is safe to put in the session because the cookie is signed
-            session["#{resource_name}_password_checked"] = true
-            session["#{resource_name}_remember_me"] = remember_me
-            session["#{resource_name}_return_to"] = return_to if return_to
+            set_session_info(id, remember_me, return_to)
 
             redirect_to verify_twilio_verify_path_for(resource_name)
             nil
           end
+        end
+
+        def set_session_info(id, remember_me, return_to)
+          session["#{resource_name}_id"] = id
+          # this is safe to put in the session because the cookie is signed
+          session["#{resource_name}_password_checked"] = true
+          session["#{resource_name}_remember_me"] = remember_me
+          session["#{resource_name}_return_to"] = return_to if return_to
         end
 
         def verify_twilio_verify_path_for(resource_or_scope = nil)
