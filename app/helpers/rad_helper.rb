@@ -66,6 +66,18 @@ module RadHelper
     items
   end
 
+  def datetime_in_words(datetime)
+    safe_join([tag.p { format_datetime datetime },
+               tag.p { "#{distance_of_time_in_words_to_now(datetime)} ago" }])
+  end
+
+  def date_in_words(date)
+    return if date.blank?
+
+    safe_join([tag.p(class: 'mb-0') { format_date date },
+               tag.small(class: 'text-muted') { "#{distance_of_time_in_words_to_now(date)} ago" }])
+  end
+
   def format_date(value)
     value.strftime('%-m/%-d/%Y') if value.present?
   end

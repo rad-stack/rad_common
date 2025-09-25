@@ -100,7 +100,7 @@ class RadMailer < ActionMailer::Base
   def default_url_options
     # this won't work for links called using the route helpers outside of the mailer context
 
-    if @recipient.is_a?(User) && @recipient.external? && RadConfig.portal?
+    if @recipient.is_a?(User) && RadConfig.portal? && @recipient.portal_user?
       { host: @recipient.portal_host_name }
     else
       { host: RadConfig.host_name! }

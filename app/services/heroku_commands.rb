@@ -240,7 +240,7 @@ class HerokuCommands
       def reset_sensitive_local_data
         write_log 'Changing passwords'
         new_password = User.new.send(:password_digest, 'password')
-        User.update_all(encrypted_password: new_password)
+        User.update_all(encrypted_password: new_password, password_changed_at: DateTime.current)
 
         write_log 'Changing Active Storage service to local'
         ActiveStorage::Blob.update_all service_name: 'local'
