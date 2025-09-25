@@ -1,12 +1,9 @@
 module Devise
-
   module Models
-
     # Handles blocking a user access after a certain number of attempts.
     # Requires proper configuration of the Devise::Models::Lockable module.
     #
     module TwilioVerifyLockable
-
       extend ActiveSupport::Concern
 
       # Public: Determine if this is a lockable resource, via Devise::Models::Lockable.
@@ -14,6 +11,7 @@ module Devise
       # Raises an error if the Devise::Models::Lockable module is not configured.
       def lockable?
         raise 'Devise lockable extension required' unless respond_to? :lock_access!
+
         Devise.lock_strategy == :failed_attempts
       end
 
@@ -35,9 +33,6 @@ module Devise
           false
         end
       end
-
     end
-
   end
-
 end
