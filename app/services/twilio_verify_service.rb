@@ -1,6 +1,4 @@
 class TwilioVerifyService
-  attr_reader :twilio_client, :twilio_account_sid, :twilio_auth_token, :twilio_verify_service_sid
-
   def self.send_sms_token(phone_number)
     new.twilio_verify_service_version_2.verifications.create(to: e164_format(phone_number), channel: 'sms')
   end
@@ -51,9 +49,6 @@ class TwilioVerifyService
                     .create(friendly_name: user.to_s, factor_type: 'totp')
 
     user.update(twilio_totp_factor_sid: new_factor.sid)
-
-    # Now in your app, take the new_factor.binding.uri
-    # and generate a qr code to present to the user to scan to add the app to their authenticator app
     new_factor
   end
 
@@ -61,16 +56,12 @@ class TwilioVerifyService
     "+1#{phone_number.gsub(/[^0-9a-z\\s]/i, '')}"
   end
 
-  def initialize
-    @twilio_account_sid = Rails.application.credentials.twilio_account_sid || ENV.fetch('TWILIO_ACCOUNT_SID', nil)
-    @twilio_auth_token = Rails.application.credentials.twilio_auth_token || ENV.fetch('TWILIO_AUTH_TOKEN', nil)
-    @twilio_verify_service_sid = Rails.application.credentials.twilio_verify_service_sid || ENV.fetch(
-      'TWILIO_VERIFY_SERVICE_SID', nil
-    )
+  def twilio_client
+    @twilio_client ||= Twilio::REST::Client.new(RadConfig.twilio_account_sid!, RadConfig.twilio_auth_token!)
+  end
 
-    raise 'Missing Twilio credentials' unless @twilio_account_sid && @twilio_auth_token && @twilio_verify_service_sid
-
-    @twilio_client = Twilio::REST::Client.new(@twilio_account_sid, @twilio_auth_token)
+  def twilio_verify_service_sid
+    @twilio_verify_service_sid ||= RadConfig.twilio_verify_service_sid!
   end
 
   def twilio_verify_service_version_2
