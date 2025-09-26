@@ -1,5 +1,6 @@
 .card
-  = render 'layouts/card_header', action_name: 'custom', title: 'My Account', icon: 'fa-address-card'
+  = render 'layouts/card_header', action_name: 'custom', title: 'My Account', icon: 'fa-address-card',
+                                  additional_actions: [setup_authenticator_btn]
   .card-body
     = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
       = rad_form_errors f
@@ -31,3 +32,15 @@
 
       .form-actions
         = f.button :submit, 'Save', class: 'btn btn-primary'
+.card
+  = render 'layouts/card_header', action_name: 'custom', title: 'Multi-Factor Authentication', icon: 'fa-shield-halved'
+  .card-body
+    %table.table
+      %tr
+        %th Method
+        %th Status
+        %th Action
+      %tr
+        %td Authenticator App
+        %td= multi_factor_status
+        %td= setup_authenticator_btn

@@ -41,5 +41,6 @@ module RadCommon
     require 'turbo-rails'
     require 'twilio-ruby'
     require 'wicked_pdf'
+    require 'rqrcode'
   end
 end

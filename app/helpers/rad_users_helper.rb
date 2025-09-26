@@ -29,6 +29,25 @@ module RadUsersHelper
     items
   end
 
+  def two_factor_qr_code(user)
+    qrcode = RQRCode::QRCode.new(user.twilio_totp_url)
+    qrcode.as_svg(
+      color: '000',
+      shape_rendering: 'crispEdges',
+      module_size: 5
+    )
+  end
+
+  def setup_authenticator_btn
+    text = current_user.twilio_totp_verified ? 'Manage' : 'Setup'
+    link_to icon('shield-halved', "#{text} Authenticator"), authenticator_setup_users_path, class: 'btn btn-primary'
+  end
+
+  def multi_factor_status
+    text = current_user.twilio_totp_verified ? 'Setup' : 'Not Setup'
+    icon(:check, "Multi-Factor #{text}")
+  end
+
   def user_status_item(user)
     items = [user.user_status.name, ' ']
 

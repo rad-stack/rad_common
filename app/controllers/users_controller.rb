@@ -135,6 +135,26 @@ class UsersController < ApplicationController
     redirect_to @user, notice: 'A test SMS was sent to the user.'
   end
 
+  def authenticator_setup
+    @user = current_user
+    authorize @user
+
+    @user.setup_totp!
+  end
+
+  def verify_authenticator
+    @user = current_user
+    authorize @user
+    code = params[:verify_authenticator][:code]
+
+    if TwilioVerifyService.verify_totp_setup(@user, code)
+      redirect_to :root, notice: 'Authenticator verified.'
+    else
+      flash[:error] = 'Authenticator verification failed.'
+      redirect_to :root
+    end
+  end
+
   def reactivate
     if @user.reactivate
       flash[:notice] = 'User was successfully reactivated.'

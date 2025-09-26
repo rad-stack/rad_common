@@ -75,6 +75,11 @@ module RadCommonRoutes
           put :ignore_timezone
         end
 
+        collection do
+          get :authenticator_setup
+          post :verify_authenticator
+        end
+
         resources :user_clients, only: :new
       end
 
