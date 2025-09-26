@@ -19,7 +19,7 @@ module Notifications
       User.all.each do |user|
         log += "User: #{user.to_s} Security Roles #{user.security_roles.map(&:to_s).join(', ')}#{user}\n"
       end
-      raise "no users to notify current_users: #{User.all.pluck(:id)}" if ids.blank?
+      raise "no users to notify current_users: #{log}" if ids.blank?
 
       ids.uniq
     end
