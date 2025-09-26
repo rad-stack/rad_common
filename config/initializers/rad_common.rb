@@ -6,6 +6,8 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'CRM'
   inflect.acronym 'CSV'
   inflect.acronym 'BCC'
+  inflect.acronym 'AI'
+  inflect.acronym 'LLM'
 end
 
 # see Task 25
