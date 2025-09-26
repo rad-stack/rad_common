@@ -14,7 +14,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
-  enable_extension "vector"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -210,18 +209,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
     t.datetime "updated_at", null: false
     t.datetime "processed_at", precision: nil, null: false
     t.index ["duplicatable_type", "duplicatable_id"], name: "index_duplicates_on_duplicatable_type_and_duplicatable_id", unique: true
-  end
-
-  create_table "embeddings", force: :cascade do |t|
-    t.string "embeddable_type", null: false
-    t.bigint "embeddable_id", null: false
-    t.vector "embedding", limit: 1536, null: false
-    t.jsonb "metadata", default: {}, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["embeddable_type", "embeddable_id"], name: "index_embeddings_on_embeddable_type_and_embeddable_id", unique: true
-    t.index ["embedding"], name: "index_embeddings_on_embedding", opclass: :vector_cosine_ops, using: :hnsw
-    t.index ["metadata"], name: "index_embeddings_on_metadata", using: :gin
   end
 
   create_table "llm_chats", force: :cascade do |t|
