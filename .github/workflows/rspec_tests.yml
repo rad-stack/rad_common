@@ -111,7 +111,9 @@ jobs:
           else
             bundle exec rake parallel:load_schema
           fi
-
+        # UNCOMMENT BELOW LINES TO DEBUG IN TERMINAL...
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
       - name: Run RSpec tests
         run: |
           if [ "${{ needs.setup-matrix.outputs.total_groups }}" == "1" ]; then
