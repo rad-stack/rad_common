@@ -15,7 +15,7 @@ module Notifications
         ids.delete(to_user.id) if to_user.present?
       end
 
-      raise 'no users to notify' if ids.blank?
+      raise "no users to notify current_users: #{User.all.pluck(:id)}" if ids.blank?
 
       ids.uniq
     end
