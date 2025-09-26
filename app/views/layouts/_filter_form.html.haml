@@ -11,15 +11,16 @@
         %div{ class: "#{col_class} #{filter_col_class(filter)}" }
           = render "layouts/filter_#{filter.filter_view}", filter: filter, search: search, f: f
   .form-actions{ class: mobile ? 'd-grid gap-1' : '' }
-    = f.button :button, class: "btn btn-success #{mobile ? 'mt-2' : ''}" do
-      %i.fa.fa-filter
-      Apply Filters
-    - if RadConfig.saved_search_filters_enabled? && !mobile
-      = render 'layouts/saved_filters_dropdown', search: search, f: f, path: path
-    \
-    = link_to "#{path}?clear_filters=true", class: "btn btn-danger #{mobile ? 'mt-2' : ''}" do
-      %i.fa.fa-times
-      Clear Filters
+    - unless search.filters.empty?
+      = f.button :button, class: "btn btn-success #{mobile ? 'mt-2' : ''}" do
+        %i.fa.fa-filter
+        Apply Filters
+      - if RadConfig.saved_search_filters_enabled? && !mobile
+        = render 'layouts/saved_filters_dropdown', search: search, f: f, path: path
+      \
+      = link_to "#{path}?clear_filters=true", class: "btn btn-danger #{mobile ? 'mt-2' : ''}" do
+        %i.fa.fa-times
+        Clear Filters
 
   - if RadConfig.saved_search_filters_enabled? && !mobile
     - if search.applied_saved_filter.present?
