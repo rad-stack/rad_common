@@ -6,7 +6,8 @@ module Notifications
 
     def absolute_user_ids
       ids = maybe_add_from_user
-
+      log = "ids : #{ids}\n"
+      log += "contact_log.sms? #{contact_log.sms?} \n"
       if contact_log.sms?
         ids.push(to_user.id) if to_user.present? && to_user.internal?
       else
@@ -15,6 +16,9 @@ module Notifications
         ids.delete(to_user.id) if to_user.present?
       end
 
+      User.all.each do |user|
+        log += "User: #{user.to_s} Security Roles #{user.security_roles.map(&:to_s).join(', ')}#{user}\n"
+      end
       raise "no users to notify current_users: #{User.all.pluck(:id)}" if ids.blank?
 
       ids.uniq
