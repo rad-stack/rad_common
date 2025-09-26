@@ -1,4 +1,4 @@
-class <%= class_name %>Search < RadCommon::Search
+class <%= class_name %>Search < RadSearch::Search
   def initialize(params, current_user)
     @current_user = current_user
 
@@ -18,5 +18,6 @@ class <%= class_name %>Search < RadCommon::Search
 
     def sort_columns_def
       # @TODO - Add columns to sort by
+      []
     end
 end

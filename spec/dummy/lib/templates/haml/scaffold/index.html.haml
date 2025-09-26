@@ -3,9 +3,12 @@
 .card
   = render 'layouts/card_header'
   .card-body
+    = render 'layouts/filter', search: @<%= singular_table_name %>_search, path: <%= plural_table_name %>_path
     = paginate @<%= plural_table_name %>, theme: 'bootstrap-5'
 
     %table.table.table-striped.table-bordered
+      %tr
+        = render 'layouts/sort_headers', search: @<%= singular_table_name %>_search
       %tr
         %th Name
     <% for attribute in attributes -%>
