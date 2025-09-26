@@ -13,7 +13,9 @@ class AssistantSession < ApplicationRecord
   delegate :assistant_name, :context_object?, :format_message, to: :chat_instance
 
   def self.basic_chat(user, scope = nil)
-    AssistantSession.find_or_create_by!(user: user, chat_type: LLM::Tools::ToolList.default_chat_type, chat_scope: scope)
+    AssistantSession.find_or_create_by! user: user,
+                                        chat_type: LLM::Tools::ToolList.default_chat_type,
+                                        chat_scope: scope
   end
 
   def chat_type_class

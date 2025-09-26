@@ -3,20 +3,24 @@
     %ul.chat-box.chatContainerScroll{ id: dom_id(assistant_session, 'chat') }
       = render 'assistant_sessions/chat_messages', assistant_session: assistant_session
       - if assistant_session.processing? && assistant_session.current_message.present?
-        = render 'assistant_sessions/chat_message_left', assistant_session_log_data(assistant_session, assistant_session.log.last)
+        = render 'assistant_sessions/chat_message_left',
+                 assistant_session_log_data(assistant_session, assistant_session.log.last)
 
-        - response_id = "#{assistant_session.id}-#{Time.current.to_i}"
-        = turbo_frame_tag "chat-response-#{response_id}",
-                          data: { controller: 'chat-polling',
-                                  chat_polling_url_value: check_response_assistant_session_path(assistant_session,
-                                                                                       response_id: response_id) } do
+        :ruby
+          response_id = "#{assistant_session.id}-#{Time.current.to_i}"
+
+          data_args = { controller: 'chat-polling',
+                        chat_polling_url_value: check_response_assistant_session_path(assistant_session,
+                                                                                      response_id: response_id) }
+
+        = turbo_frame_tag "chat-response-#{response_id}", data: data_args do
           = render 'assistant_sessions/loading_message', assistant_session: assistant_session
 
 .border-top.pt-3.pb-4.px-4.bg-white
   = turbo_frame_tag 'chat-form' do
-    = simple_form_for assistant_session, url: assistant_session_path(assistant_session),
-                                html: { data: { controller: 'llm-chat-form',
-                                                'llm-chat-form-target': 'form' } } do |f|
+    = simple_form_for assistant_session,
+                      url: assistant_session_path(assistant_session),
+                      html: { data: { controller: 'llm-chat-form', 'llm-chat-form-target': 'form' } } do |f|
       .card
         - if assistant_session.context_object?
           .card-header

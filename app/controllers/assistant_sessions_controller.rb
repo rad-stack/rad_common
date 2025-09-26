@@ -50,7 +50,7 @@ class AssistantSessionsController < ApplicationController
 
     def permitted_params
       params.require(:assistant_session).permit(:user_id, :log, :context_id, :context_type, :current_message,
-                                       :contextable_id, :contextable_type)
+                                                :contextable_id, :contextable_type)
     end
 
     def reset_chat
@@ -78,7 +78,8 @@ class AssistantSessionsController < ApplicationController
       @assistant_session.status = 'processing'
       @assistant_session.log ||= []
       @last_log = LLM::PromptBuilder.build_user_message(@assistant_session.current_message)
+      return unless @assistant_session.save
 
-      ChatResponseJob.perform_later(@assistant_session.id, @assistant_session.current_message) if @assistant_session.save
+      ChatResponseJob.perform_later(@assistant_session.id, @assistant_session.current_message)
     end
 end
