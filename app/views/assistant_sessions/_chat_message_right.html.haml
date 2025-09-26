@@ -1,6 +1,6 @@
 %li.chat-right.justify-content-end.mb-3.d-flex.w-100
   .chat-text.shadow
-    %pre= llm_chat_text_sanitize(message)
+    %pre= assistant_session_text_sanitize(message)
   .chat-avatar.me-3
     %i.fa.fa-user-tie.shadow
     .chat-name.m-2

@@ -8,7 +8,7 @@ RSpec.describe AppInfo, type: :service do
 
     let(:result) do
       %w[attorneys categories clients companies contact_log_recipients contact_logs
-         divisions duplicates embeddings llm_chats notification_security_roles notification_settings
+         divisions duplicates embeddings assistant_sessions notification_security_roles notification_settings
          notification_types notifications saved_search_filters security_roles statuses system_messages
          user_clients user_security_roles user_statuses users]
     end
@@ -21,7 +21,7 @@ RSpec.describe AppInfo, type: :service do
 
     let(:result) do
       %w[Attorney Category Client Company ContactLog ContactLogRecipient
-         Division Duplicate Embedding LLMChat Notification NotificationSecurityRole NotificationSetting
+         Division Duplicate Embedding AssistantSession Notification NotificationSecurityRole NotificationSetting
          NotificationType SavedSearchFilter SecurityRole Status SystemMessage
          User UserClient UserSecurityRole UserStatus]
     end
@@ -34,7 +34,7 @@ RSpec.describe AppInfo, type: :service do
 
     let(:result) do
       %w[ActionText::RichText ActiveStorage::Attachment Attorney Category Client Company ContactLog ContactLogRecipient
-         Division LLMChat NotificationSecurityRole NotificationSetting NotificationType SavedSearchFilter SecurityRole
+         Division AssistantSession NotificationSecurityRole NotificationSetting NotificationType SavedSearchFilter SecurityRole
          Status User UserClient UserSecurityRole]
     end
 

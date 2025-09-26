@@ -37,7 +37,7 @@ module RadCommonRoutes
           end
         end
 
-        resources :llm_chats, only: %i[show update index] do
+        resources :assistant_sessions, only: %i[show update index] do
           member do
             patch :chat_response
             get :check_response

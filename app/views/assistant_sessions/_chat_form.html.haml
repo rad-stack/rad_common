@@ -1,39 +1,39 @@
 .flex-grow-1.chat-scroll-panel#scroll-container
   .chat-container.mt-3
-    %ul.chat-box.chatContainerScroll{ id: dom_id(llm_chat, 'chat') }
-      = render 'llm_chats/chat_messages', llm_chat: llm_chat
-      - if llm_chat.processing? && llm_chat.current_message.present?
-        = render 'llm_chats/chat_message_left', llm_chat_log_data(llm_chat, llm_chat.log.last)
+    %ul.chat-box.chatContainerScroll{ id: dom_id(assistant_session, 'chat') }
+      = render 'assistant_sessions/chat_messages', assistant_session: assistant_session
+      - if assistant_session.processing? && assistant_session.current_message.present?
+        = render 'assistant_sessions/chat_message_left', assistant_session_log_data(assistant_session, assistant_session.log.last)
 
-        - response_id = "#{llm_chat.id}-#{Time.current.to_i}"
+        - response_id = "#{assistant_session.id}-#{Time.current.to_i}"
         = turbo_frame_tag "chat-response-#{response_id}",
                           data: { controller: 'chat-polling',
-                                  chat_polling_url_value: check_response_llm_chat_path(llm_chat,
+                                  chat_polling_url_value: check_response_assistant_session_path(assistant_session,
                                                                                        response_id: response_id) } do
-          = render 'llm_chats/loading_message', llm_chat: llm_chat
+          = render 'assistant_sessions/loading_message', assistant_session: assistant_session
 
 .border-top.pt-3.pb-4.px-4.bg-white
   = turbo_frame_tag 'chat-form' do
-    = simple_form_for llm_chat, url: llm_chat_path(llm_chat),
+    = simple_form_for assistant_session, url: assistant_session_path(assistant_session),
                                 html: { data: { controller: 'llm-chat-form',
                                                 'llm-chat-form-target': 'form' } } do |f|
       .card
-        - if llm_chat.context_object?
+        - if assistant_session.context_object?
           .card-header
             .row
               .col-2
                 %strong Questions For :
-              .col-10= render 'llm_chats/context_picker_input', f: f, llm_chat: llm_chat
+              .col-10= render 'assistant_sessions/context_picker_input', f: f, assistant_session: assistant_session
         .card-body
           .row
             .col-12
               .d-flex.flex-row
                 .input-group
-                  = render 'llm_chats/common_questions_dropdown', llm_chat: llm_chat, f: f
-                  %input.form-control.ays-ignore{ name: 'llm_chat[current_message]',
+                  = render 'assistant_sessions/common_questions_dropdown', assistant_session: assistant_session, f: f
+                  %input.form-control.ays-ignore{ name: 'assistant_session[current_message]',
                                                   placeholder: 'Ask a question...',
                                                   type: 'text',
-                                                  id: 'llm_chat_current_message',
+                                                  id: 'assistant_session_current_message',
                                                   data: { 'llm-chat-form-target': 'currentMessage' } }
                   = f.button :button, type: :submit, class: 'btn btn-secondary', id: 'chat-submit-btn' do
                     = icon('paper-plane')

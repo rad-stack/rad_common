@@ -778,6 +778,7 @@ gem 'propshaft'
           apply_migration '20250918160535_create_vector_embeddings.rb'
           apply_migration '20250918153732_add_large_language_model_chats.rb'
           apply_migration '20250914154915_fix_developer_notifications.rb'
+          apply_migration '20250926165217_rename_llm_chats_to_assistant_sessions.rb'
         end
 
         def installed_app_name
