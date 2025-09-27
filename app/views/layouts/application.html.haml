@@ -12,14 +12,25 @@
     = stylesheet_link_tag 'application', 'data-turbo-track': 'reload'
 
   %body
-    = render 'layouts/navigation'
-    = render 'layouts/toast'
-    .container-fluid.content
-      .row
-        .col-lg-12
-          - if user_signed_in?
-            = render 'layouts/global_search'
-            = render 'layouts/wrong_timezone'
-          = render 'layouts/header'
-          = bootstrap_flash
-          = yield
+    - if portal_subdomain? || !user_signed_in? || current_user.portal_user?
+      = render 'layouts/navigation_portal'
+      = render 'layouts/toast'
+      .container-fluid.content
+        .row
+          .col-lg-12
+            - if user_signed_in?
+              = render 'layouts/user_notifications'
+            .hidden-print#flash-messages= bootstrap_flash
+            = yield
+    - else
+      = render 'layouts/navigation'
+      = render 'layouts/toast'
+      .container-fluid.content
+        .row
+          .col-lg-12
+            - if user_signed_in?
+              = render 'layouts/global_search'
+              = render 'layouts/wrong_timezone'
+            = render 'layouts/header'
+            = bootstrap_flash
+            = yield

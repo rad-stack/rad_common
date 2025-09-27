@@ -285,6 +285,13 @@ module RadHelper
     raise 'Invalid attachment, must be 100 MB or less' if blob.byte_size > 100.megabytes
   end
 
+  def portal_subdomain?
+    # TODO: temp hack for IJS project
+    return false unless RadConfig.portal?
+
+    request.subdomain == 'patient' || request.subdomain.starts_with?('patient-staging')
+  end
+
   class << self
     def show_routes
       @show_routes ||= AppInfo.new.show_routes
