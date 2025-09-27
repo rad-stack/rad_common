@@ -1,8 +1,8 @@
 .card
   = render 'layouts/card_header', no_new_button: true, external_actions: [ask_basic_question_btn]
   .card-body
-    = render 'llm_chats/chat_offcanvas', chat_class: 'basic', chat_scope: nil
-    = paginate @llm_chats, theme: 'bootstrap-5'
+    = render 'assistant_sessions/chat_offcanvas', chat_class: 'basic', chat_scope: nil
+    = paginate @assistant_sessions, theme: 'bootstrap-5'
     %table.table.table-striped.table-bordered
       %tr
         %th Created
@@ -10,11 +10,11 @@
         %th Scope
         %th Context
 
-      - @llm_chats.each do |record|
+      - @assistant_sessions.each do |record|
         %tr{ class: table_row_style(record) }
-          %td= link_to format_date(record.created_at), llm_chat_path(record)
+          %td= link_to format_date(record.created_at), assistant_session_path(record)
           %td= secured_link record.user
           %td= secured_link record.chat_scope
           %td= secured_link record.contextable
 
-    = paginate @llm_chats, theme: 'bootstrap-5'
+    = paginate @assistant_sessions, theme: 'bootstrap-5'
