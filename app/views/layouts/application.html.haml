@@ -12,7 +12,7 @@
     = stylesheet_link_tag 'application', 'data-turbo-track': 'reload'
 
   %body
-    - if portal_subdomain? || !user_signed_in? || current_user.portal_user?
+    - if RadConfig.portal? && (portal_subdomain? || !user_signed_in? || current_user.portal_user?)
       = render 'layouts/navigation_portal'
       = render 'layouts/toast'
       .container-fluid.content
