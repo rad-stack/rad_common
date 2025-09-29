@@ -1,4 +1,4 @@
-%div{ class: filter.group_label ? 'form-group grouped-dates' : '' }
+%div{ class: filter.group_label ? 'mb-3 grouped-dates' : '' }
   - if filter.group_label
     %label= filter.group_label
   .d-flex.jusify-space-between{ 'data-controller': 'search-date-filter' }
@@ -11,7 +11,7 @@
                 label: filter.start_input_label,
                 required: false,
                 label_html: { class: filter.start_label_class },
-                input_html: { value: default_value, data: input_data }
+                input_html: { value: default_value, data: input_data, class: 'ays-ignore' }
     .my-auto.pt-2.px-1= date_filter_dropdown_label
     .flex-grow-1
       - default_value = search.search_params[filter.end_input] || filter.default_end_value.to_s
@@ -23,4 +23,4 @@
                 label: filter.end_input_label,
                 required: false,
                 label_html: { class: filter.end_label_class },
-                input_html: { value: default_value, data: input_data }
+                input_html: { value: default_value, data: input_data, class: 'ays-ignore' }

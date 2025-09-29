@@ -1,19 +1,17 @@
 - if (search.search_params? && search.invalid?) || search.saved_filter_errors.present?
   - flash.now[:error] = search.error_messages
 
-.d-block.d-md-none.text-right.mb-2.sticky-top.bg-white.py-2.border-bottom.border-secondary
-  %button.btn.btn-block{ class: search.search_params? ? 'btn-warning' : 'btn-primary',
-                         type: 'button',
-                         data: { toggle: 'modal', target: '#mobile-filters-modal' } }
+.d-block.d-md-none.text-end.mb-2.sticky-top.bg-white.py-2.border-bottom.border-secondary
+  %button.btn.w-100{ class: search.search_params? ? 'btn-warning' : 'btn-primary',
+                     type: 'button',
+                     data: { bs_toggle: 'modal', bs_target: '#mobile-filters-modal' } }
     = icon 'filter', 'Filters'
 .modal.fade#mobile-filters-modal{ tabindex: '-1', role: 'dialog' }
   .modal-dialog{ role: 'document' }
     .modal-content
       .modal-header.bg-light.sticky-top
         %h4.modal-title= icon 'filter', 'Filters'
-        %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: 'Close' } }
-          %span{ aria: { hidden: 'true' } }
-          = icon 'times'
+        %button.btn-close{ type: 'button', data: { bs_dismiss: 'modal' }, aria: { label: 'Close' } }
       .modal-body
         = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: true
 

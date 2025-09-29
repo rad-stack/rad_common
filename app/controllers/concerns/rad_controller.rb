@@ -39,7 +39,7 @@ module RadController
     end
 
     def devise_invite_params
-      %i[first_name last_name mobile_phone initial_security_role_id]
+      %i[first_name last_name mobile_phone initial_security_role_id] + RadConfig.additional_user_params!
     end
 
     def set_sentry_user_context
@@ -89,5 +89,11 @@ module RadController
     def switch_locale(&)
       locale = params[:locale] || current_user.try(:locale) || I18n.default_locale
       I18n.with_locale(locale, &)
+    end
+
+    def redirect_to_path(record)
+      return params[:redirect_to] if params[:redirect_to].present?
+
+      record
     end
 end

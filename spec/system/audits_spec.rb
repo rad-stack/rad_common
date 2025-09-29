@@ -3,6 +3,7 @@ require 'rails_helper'
 describe 'Audits' do
   let(:admin) { create :admin }
   let(:contact_log_recipient) { create :contact_log_recipient }
+  let(:notification_type) { Notifications::InvalidDataWasFoundNotification.main }
 
   before { login_as admin, scope: :user }
 
@@ -27,6 +28,27 @@ describe 'Audits' do
       expect(page).to have_content 'Audits for'
       expect(page).to have_content '(2)'
       expect(page).to have_content 'Queued'
+    end
+
+    it 'audits notification types' do
+      visit "/notification_types/#{notification_type.id}/edit"
+
+      click_link_or_button 'Audit History'
+      expect(page).to have_content 'Audits for'
+      expect(page).to have_content '(1)'
+    end
+
+    describe 'show_routes' do
+      before { RadHelper.instance_variable_set(:@show_routes, nil) }
+
+      it 'is cached at startup and runs only once' do
+        expect_any_instance_of(AppInfo).to receive(:show_routes).exactly(1).time.and_call_original
+        admin.update!(first_name: 'John')
+
+        visit audits_path
+        expect(page).to have_content('Changed First Name')
+        expect(page).to have_content('Changed Last Sign In')
+      end
     end
   end
 end

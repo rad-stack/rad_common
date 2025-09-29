@@ -196,6 +196,10 @@ class RadConfig
       boolean_config_item! :impersonate
     end
 
+    def show_sign_in_marketing?
+      boolean_config_item! :show_sign_in_marketing
+    end
+
     def avatar?
       boolean_config_item! :use_avatar
     end
@@ -206,6 +210,10 @@ class RadConfig
 
     def require_mobile_phone?
       boolean_config_item! :require_mobile_phone
+    end
+
+    def validate_user_domains?
+      boolean_config_item! :validate_user_domains
     end
 
     def storage_config_override?
@@ -254,6 +262,10 @@ class RadConfig
 
     def allow_marketing_site?
       boolean_config_item! :allow_marketing_site
+    end
+
+    def marketing_subdomain
+      config_item(:marketing_subdomain).presence || 'www'
     end
 
     def canadian_addresses?
