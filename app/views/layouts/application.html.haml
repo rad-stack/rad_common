@@ -5,7 +5,7 @@
     %meta{ 'http-equiv': 'X-UA-Compatible', content: 'IE=Edge,chrome=1' }
     %meta{ name: 'viewport', content: 'width=device-width, initial-scale=1.0' }
     %link{ rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }
-    %title= content_for?(:title) ? yield(:title) : RadConfig.app_name!
+    %title= content_for?(:title) ? yield(:title) : application_app_name
     = csrf_meta_tags
     = favicon_link_tag company_fav_icon(Company.main), rel: 'shortcut icon'
     = javascript_include_tag 'application', 'data-turbo-track': 'reload', type: 'module'

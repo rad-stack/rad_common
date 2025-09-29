@@ -292,6 +292,19 @@ module RadHelper
     request.subdomain == 'patient' || request.subdomain.starts_with?('patient-staging')
   end
 
+  def application_page_title
+    # TODO: temp hack for IJS project
+    return RadConfig.app_name! unless RadConfig.portal?
+
+    if request.subdomain.starts_with? 'patient'
+      RadConfig.config_item!(:portal_app_name)
+    elsif request.subdomain.starts_with? 'prescriber'
+      RadConfig.config_item!(:portal_app_name).gsub('Patient', 'Prescriber')
+    else
+      RadConfig.app_name!
+    end
+  end
+
   class << self
     def show_routes
       @show_routes ||= AppInfo.new.show_routes
