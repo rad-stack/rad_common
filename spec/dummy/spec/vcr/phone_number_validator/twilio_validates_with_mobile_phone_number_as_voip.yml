@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://lookups.twilio.com/v1/PhoneNumbers/<TEST_PHONE_NUMBER_STRIPPED>
+    uri: https://lookups.twilio.com/v1/PhoneNumbers/8508771806?Type=carrier
     body:
       encoding: US-ASCII
       string: ''
@@ -25,42 +25,43 @@ http_interactions:
       Content-Type:
       - application/json;charset=utf-8
       Content-Length:
-      - '212'
+      - '344'
       Connection:
       - keep-alive
       Date:
-      - Tue, 30 Sep 2025 12:46:20 GMT
-      Vary:
-      - Accept-Encoding
-      - Origin
+      - Tue, 30 Sep 2025 12:46:19 GMT
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQd730ded45d9cd20bac1eb70855eaf8a7
+      - RQ8310fbbf451741d595136866c4960759
       Twilio-Request-Duration:
-      - '0.029'
+      - '0.034'
       X-Home-Region:
       - us1
       X-Api-Domain:
       - lookups.twilio.com
       Strict-Transport-Security:
       - max-age=31536000
+      Vary:
+      - Accept-Encoding
+      - Origin
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 da32b45f2cc22dc818960285c4e91b66.cloudfront.net (CloudFront)
+      - 1.1 566cc276dff9847158a5a9854be4df42.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
       - SEA900-P10
       X-Amz-Cf-Id:
-      - mFH_1SyEx7us6h7Zeg66ArEUTomDbsP-zmqlXfwpgsA-jUQvFV8GJA==
+      - "-9R6COCmj6lEuxEMljSkF4eH1Kb91aKXBLAOcGoEjC9AGiIfIc1kog=="
       X-Powered-By:
       - AT-5000
       X-Shenanigans:
       - none
     body:
-      encoding: UTF-8
-      string: '{"add_ons": null, "caller_name": null, "carrier": null, "country_code":
-        "US", "national_format": "<TEST_PHONE_NUMBER>", "phone_number": "+1<TEST_PHONE_NUMBER_STRIPPED>",
-        "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_PHONE_NUMBER_STRIPPED>"}'
-  recorded_at: Tue, 30 Sep 2025 12:46:20 GMT
+      encoding: ASCII-8BIT
+      string: '{"add_ons": null, "caller_name": null, "carrier": {"error_code": null,
+        "mobile_country_code": "311", "mobile_network_code": "910", "name": "Google
+        (Grand Central) - SVR", "type": "voip"}, "country_code": "US", "national_format":
+        "(850) 877-1806", "phone_number": "+18508771806", "url": "https://lookups.twilio.com/v1/PhoneNumbers/+18508771806"}'
+  recorded_at: Tue, 30 Sep 2025 12:46:19 GMT
 recorded_with: VCR 6.3.1

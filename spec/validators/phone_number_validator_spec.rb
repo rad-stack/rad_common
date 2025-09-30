@@ -64,6 +64,7 @@ RSpec.describe PhoneNumberValidator do
 
   describe 'twilio', :vcr do
     let(:mobile_phone) { create :phone_number, :mobile }
+    let(:voip_phone) { '(850) 877-1806' }
     let(:twilio_alt_phone_number) { RadConfig.secret_config_item!(:twilio_alt_phone_number) }
     let(:twilio_alt_account_sid) { RadConfig.secret_config_item!(:twilio_alt_account_sid) }
     let(:twilio_alt_auth_token) { RadConfig.secret_config_item!(:twilio_alt_auth_token) }
@@ -78,6 +79,12 @@ RSpec.describe PhoneNumberValidator do
     it 'validates with mobile phone number' do
       model = TestPhoneModel.new
       model.mobile_phone = mobile_phone
+      expect(model.valid?).to be(true)
+    end
+
+    it 'validates with mobile phone number as voip' do
+      model = TestPhoneModel.new
+      model.mobile_phone = voip_phone
       expect(model.valid?).to be(true)
     end
 
