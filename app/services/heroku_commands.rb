@@ -50,7 +50,7 @@ class HerokuCommands
       remove_user_avatars
       remove_encrypted_secrets
       SecurityRole.update_all two_factor_auth: false
-      User.update_all twilio_verify_enabled: false
+      User.update_all otp_required_for_login: false
       Company.main.app_logo.purge if Company.main.app_logo.attached?
       Company.main.fav_icon.purge if Company.main.fav_icon.attached?
 

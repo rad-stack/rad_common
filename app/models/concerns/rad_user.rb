@@ -272,8 +272,8 @@ module RadUser
       self.user_status = default_user_status if new_record? && !user_status
       return unless new_record?
 
-      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? &&
-                                   (RadConfig.twilio_verify_all_users? || two_factor_security_role?)
+      self.otp_required_for_login = RadConfig.twilio_verify_enabled? &&
+                                    (RadConfig.twilio_verify_all_users? || two_factor_security_role?)
 
       self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
     end
@@ -325,10 +325,10 @@ module RadUser
 
     def validate_twilio_verify
       return unless RadConfig.twilio_verify_enabled?
-      return if twilio_verify_enabled? || user_status.blank? || !user_status.validate_email_phone?
+      return if otp_required_for_login? || user_status.blank? || !user_status.validate_email_phone?
       return unless RadConfig.twilio_verify_all_users? || two_factor_security_role?
 
-      errors.add(:twilio_verify_enabled, 'is required')
+      errors.add(:otp_required_for_login, 'is required')
     end
 
     def validate_mobile_phone
@@ -348,7 +348,7 @@ module RadUser
     end
 
     def require_mobile_phone_two_factor?
-      RadConfig.twilio_verify_enabled? && twilio_verify_enabled?
+      RadConfig.twilio_verify_enabled? && otp_required_for_login?
     end
 
     def password_excludes_name
