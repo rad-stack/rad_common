@@ -92,6 +92,10 @@ class RadTwilio
       return true if response.carrier['type'] == 'mobile'
       return true if response.carrier['type'] == 'voip' && response.carrier['name'] == 'Google (Grand Central) - SVR'
 
+      if response.carrier['type'] == 'voip' && response.carrier['name'] == 'Bandwidth/RingCentral Messaging - Sinch'
+        return true
+      end
+
       false
     end
 
