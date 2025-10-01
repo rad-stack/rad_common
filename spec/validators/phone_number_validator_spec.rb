@@ -64,6 +64,7 @@ RSpec.describe PhoneNumberValidator do
 
   describe 'twilio', :vcr do
     let(:mobile_phone) { create :phone_number, :mobile }
+    let(:barbados_number) { '(246) 622-6313' }
     let(:voip_phones) { ['(850) 877-1806', '(678) 528-2763'] }
     let(:twilio_alt_phone_number) { RadConfig.secret_config_item!(:twilio_alt_phone_number) }
     let(:twilio_alt_account_sid) { RadConfig.secret_config_item!(:twilio_alt_account_sid) }
@@ -99,6 +100,13 @@ RSpec.describe PhoneNumberValidator do
     it 'invalidates mobile number with a non-mobile number' do
       model = TestPhoneModel.new
       model.mobile_phone = phone_number
+      expect(model.valid?).to be(false)
+      expect(model.errors.full_messages.first).to eq('Mobile phone does not appear to be a valid mobile phone number')
+    end
+
+    it 'invalidates mobile number with a Barbados number' do
+      model = TestPhoneModel.new
+      model.mobile_phone = barbados_number
       expect(model.valid?).to be(false)
       expect(model.errors.full_messages.first).to eq('Mobile phone does not appear to be a valid mobile phone number')
     end
