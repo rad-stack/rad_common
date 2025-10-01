@@ -8,7 +8,7 @@ module RadUsersHelper
              :detected_timezone_js,
              :ignored_timezone]
 
-    items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
+    items.push(:otp_required_for_login) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
 
     items += [:sign_in_count,
               :invitation_accepted_at,
