@@ -9,10 +9,6 @@
     %table.table.table-striped.table-bordered
       %tr
         = render 'layouts/sort_headers', search: @<%= singular_table_name %>_search
-        %th Name
-    <% for attribute in attributes -%>
-    %th <%= attribute.human_name %>
-    <% end -%>
     - if show_actions
           %th.actions Actions
 

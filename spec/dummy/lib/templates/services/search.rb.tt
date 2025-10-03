@@ -13,11 +13,38 @@ class <%= class_name %>Search < RadSearch::Search
 
     def filters_def
       # @TODO - Add desired filters
-      []
+      [
+<% attributes.each_with_index do |attribute, index| -%>
+<% if attribute.type == :date || attribute.type == :datetime -%>
+        { column: '<%= plural_table_name %>.<%= attribute.name %>',
+          start_input_label: '<%= attribute.human_name.capitalize %> Start Date',
+          end_input_label: '<%= attribute.human_name.capitalize %> End Date',
+          default_start_value: Date.current - 14.days,
+          default_end_value: Date.current + 14.days,
+          type: RadSearch::DateFilter }<%= ',' unless index == attributes.length - 1 %>
+<% elsif attribute.type == :string || attribute.type == :text -%>
+        { input_label: '<%= attribute.human_name.capitalize %>',
+          column: '<%= plural_table_name %>.<%= attribute.name %>',
+          type: RadSearch::LikeFilter,
+          name: :<%= attribute.name %> }<%= ',' unless index == attributes.length - 1 %>
+<% elsif attribute.type == :boolean -%>
+        { column: '<%= plural_table_name %>.<%= attribute.name %>',
+          input_label: '<%= attribute.human_name.capitalize %>?',
+          type: RadSearch::BooleanFilter }<%= ',' unless index == attributes.length - 1 %>
+<% end -%>
+<% end -%>
+      ]
     end
 
     def sort_columns_def
       # @TODO - Add columns to sort by
-      []
+      [
+<% attributes.each_with_index do |attribute, index| -%>
+        { label: '<%= attribute.human_name.capitalize %>',
+          column: '<%= plural_table_name %>.<%=attribute.name %>',
+          direction: 'desc',
+          default: true }<%= ',' unless index == attributes.length - 1 %>
+<% end -%>
+      ]
     end
 end
