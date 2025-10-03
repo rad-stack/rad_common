@@ -9,7 +9,21 @@ class SinchFaxClient
   end
 
   def fax_body(to_number:, files:)
-    { to: RadTwilio.human_to_twilio_format(to_number), from: SinchFaxClient.from_number, files: file_objects(files) }
+    { to: RadTwilio.human_to_twilio_format(to_number),
+      from: SinchFaxClient.from_number, files: file_objects(files),
+      callbackUrl: status_callback_url, callbackUrlContentType: 'application/json' }
+  end
+
+  def status_callback_url
+    "#{protocol}://#{host_name}/sinch_statuses"
+  end
+
+  def protocol
+    Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
+  end
+
+  def host_name
+    Rails.env.production? || Rails.env.staging? ? RadConfig.host_name! : 'example.com'
   end
 
   def self.from_number
