@@ -9,7 +9,7 @@ class SinchStatusesController < ApplicationController
 
     if @contact_log.present?
       @contact_log.contact_log_recipients.each do |recipient|
-        recipient.update! fax_status: params['status'].downcase.to_sym
+        recipient.update! fax_status: params.dig('fax', 'status').downcase.to_sym
       end
     end
 
@@ -19,6 +19,6 @@ class SinchStatusesController < ApplicationController
   private
 
     def set_contact_log
-      @contact_log = ContactLog.fax.find_by(fax_message_id: params['id'])
+      @contact_log = ContactLog.fax.find_by(fax_message_id: params.dig('fax', 'id'))
     end
 end
