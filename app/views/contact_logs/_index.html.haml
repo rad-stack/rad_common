@@ -24,7 +24,7 @@
         - else
           = format_datetime record.created_at
       %td= enum_to_translated_option record, :service_type
-      %td= enum_to_translated_option record, :sms_log_type
+      %td= enum_to_translated_option record, :direction
       %td
         - if record.from_user.present?
           %p= secured_link record.from_user

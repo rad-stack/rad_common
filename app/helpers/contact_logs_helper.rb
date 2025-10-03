@@ -1,7 +1,7 @@
 module ContactLogsHelper
   def contact_log_show_data(contact_log)
     items = [:service_type,
-             :sms_log_type,
+             :direction,
              :from_number,
              :from_email,
              { label: 'From User', value: secured_link(contact_log.from_user) },

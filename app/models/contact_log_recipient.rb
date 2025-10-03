@@ -28,7 +28,7 @@ class ContactLogRecipient < ApplicationRecord
 
   scope :sms_assumed_failed, lambda {
     joins(:contact_log)
-      .where(sms_status: :sent, contact_logs: { sms_log_type: :outgoing, service_type: :sms, sent: true })
+      .where(sms_status: :sent, contact_logs: { direction: :outgoing, service_type: :sms, sent: true })
       .where(created_at: ..3.hours.ago)
       .order(:id)
   }
@@ -37,8 +37,8 @@ class ContactLogRecipient < ApplicationRecord
     scope service_type, -> { joins(:contact_log).where(contact_logs: { service_type: service_type }) }
   end
 
-  ContactLog.sms_log_types.each_key do |sms_log_type|
-    scope sms_log_type, -> { joins(:contact_log).where(contact_logs: { sms_log_type: sms_log_type }) }
+  ContactLog.directions.each_key do |direction|
+    scope direction, -> { joins(:contact_log).where(contact_logs: { direction: direction }) }
   end
 
   validates_with PhoneNumberValidator, fields: [{ field: :phone_number }], skip_twilio: true
@@ -166,7 +166,7 @@ class ContactLogRecipient < ApplicationRecord
 
     def recent_sms_logs_to_user
       to_user.contact_logs_to.joins(:contact_log)
-             .where(contact_logs: { service_type: :sms, sms_log_type: :outgoing })
+             .where(contact_logs: { service_type: :sms, direction: :outgoing })
              .where(created_at: 30.days.ago..)
              .sorted
     end
