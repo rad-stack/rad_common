@@ -15,6 +15,7 @@ class ContactLogRecipient < ApplicationRecord
                       failed: 8 }, prefix: true
 
   enum :email_status, { delivered: 0, dropped: 1, bounce: 2, spamreport: 3 }, prefix: true
+  enum :fax_status, { queued: 0, in_progress: 1, completed: 2, failure: 3 }, prefix: true
 
   scope :sms, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }) }
   scope :failed, -> { joins(:contact_log).where(success: false) }

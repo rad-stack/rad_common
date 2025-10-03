@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_14_154915) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_03_162830) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
+  enable_extension "vector"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -147,6 +148,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_14_154915) do
     t.string "sendgrid_reason"
     t.boolean "notify_on_fail", default: true, null: false
     t.boolean "sms_false_positive", default: false, null: false
+    t.integer "fax_status"
     t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
     t.index ["email"], name: "index_contact_log_recipients_on_email"
     t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"
@@ -162,12 +164,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_14_154915) do
     t.datetime "updated_at", null: false
     t.boolean "sms_opt_out_message_sent", default: false, null: false
     t.string "sms_message_id"
-    t.integer "sms_log_type"
+    t.integer "direction"
     t.string "from_email"
     t.integer "service_type", default: 0, null: false
     t.string "record_type"
     t.bigint "record_id"
     t.string "content"
+    t.string "fax_message_id"
     t.index ["created_at"], name: "index_contact_logs_on_created_at"
     t.index ["from_number"], name: "index_contact_logs_on_from_number"
     t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
@@ -413,6 +416,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_14_154915) do
     t.string "detected_timezone"
     t.string "ignored_timezone"
     t.string "detected_timezone_js"
+    t.string "twilio_totp_factor_sid"
+    t.string "twilio_totp_url"
+    t.boolean "twilio_totp_verified", default: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"
