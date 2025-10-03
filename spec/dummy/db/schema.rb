@@ -170,7 +170,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_03_162830) do
     t.bigint "record_id"
     t.string "content"
     t.string "fax_message_id"
-    t.string "fex_error_message"
+    t.string "fax_error_message"
     t.index ["created_at"], name: "index_contact_logs_on_created_at"
     t.index ["from_number"], name: "index_contact_logs_on_from_number"
     t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
