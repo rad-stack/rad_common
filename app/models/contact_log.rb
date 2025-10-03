@@ -23,8 +23,9 @@ class ContactLog < ApplicationRecord
   has_many_attached :attachments
 
   validates :from_user_id, presence: true, if: -> { outgoing? && sms? }
-  validates :sms_message_id, presence: true, if: :incoming?
-  validates :content, presence: true, if: :sent?
+  validates :sms_message_id, presence: true, if: -> { incoming? && sms? }
+  validates :content, presence: true, if: -> { sent? && !fax? }
+  validates :content, absence: true, if: :fax?
   validates :direction, presence: true, if: :sms?
   validates :direction, :sms_media_url, :sms_message_id, absence: true, if: :email?
   validate :validate_incoming, if: :incoming?

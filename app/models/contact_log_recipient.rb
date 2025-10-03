@@ -109,7 +109,7 @@ class ContactLogRecipient < ApplicationRecord
 
       if email.present?
         self.to_user = User.find_by(email: email)
-      elsif phone_number.present?
+      elsif phone_number.present? && !contact_log.fax?
         users = User.where(mobile_phone: phone_number)
         self.to_user = users.first if users.size == 1
       end
@@ -125,7 +125,7 @@ class ContactLogRecipient < ApplicationRecord
     def validate_service_type
       return if contact_log.blank?
 
-      if contact_log.sms? || contact_log.voice?
+      if contact_log.sms? || contact_log.voice? || contact_log.fax?
         errors.add(:email, 'must be blank') if email.present?
         errors.add(:phone_number, 'must be present') if phone_number.blank?
       else
