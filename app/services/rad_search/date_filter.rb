@@ -100,19 +100,19 @@ module RadSearch
         end
       else
         if start_at.present?
-          if allow_nil
-            results = results.where("#{query_column(results)} >= ? OR #{query_column(results)} IS NULL", start_at)
-          else
-            results = results.where("#{query_column(results)} >= ?", start_at)
-          end
+          results = if allow_nil
+                      results.where("#{query_column(results)} >= ? OR #{query_column(results)} IS NULL", start_at)
+                    else
+                      results.where("#{query_column(results)} >= ?", start_at)
+                    end
         end
 
         if end_at.present?
-          if allow_nil
-            results = results.where("#{query_column(results)} <= ? OR #{query_column(results)} IS NULL", end_at)
-          else
-            results = results.where("#{query_column(results)} <= ?", end_at)
-          end
+          results = if allow_nil
+                      results.where("#{query_column(results)} <= ? OR #{query_column(results)} IS NULL", end_at)
+                    else
+                      results.where("#{query_column(results)} <= ?", end_at)
+                    end
         end
       end
 
