@@ -15,15 +15,7 @@ class SinchFaxClient
   end
 
   def status_callback_url
-    "#{protocol}://#{host_name}/sinch_statuses"
-  end
-
-  def protocol
-    Rails.env.production? || Rails.env.staging? ? 'https' : 'http'
-  end
-
-  def host_name
-    Rails.env.production? || Rails.env.staging? ? RadConfig.host_name! : 'example.com'
+    Rails.application.routes.url_helpers.sinch_statuses_url
   end
 
   def self.from_number
