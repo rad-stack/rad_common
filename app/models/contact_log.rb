@@ -80,6 +80,12 @@ class ContactLog < ApplicationRecord
     contact_log_recipients.pluck(:to_user_id).include?(record_id)
   end
 
+  def self.create_fax_log_and_send!(to_number:, attachments:, to_user: nil, from_user_id: nil, associated_record: nil)
+    log = create_fax_log!(to_number: to_number, attachments: attachments, from_user_id: from_user_id,
+                          associated_record: associated_record)
+    FaxSenderJob.perform_later(log)
+  end
+
   def self.create_fax_log!(to_number:, attachments:, to_user: nil, from_user_id: nil, associated_record: nil)
     log = ContactLog.create! service_type: :fax,
                              direction: :outgoing,
