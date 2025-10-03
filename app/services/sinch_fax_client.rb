@@ -4,21 +4,12 @@ class SinchFaxClient
 
   delegate :get, :post, to: :api_client
 
-  def initialize(to_number:, files:)
-    @to_number = RadTwilio.human_to_twilio_format(to_number)
-    @files = files
+  def send_fax!(to_number:, files:)
+    post(url: 'faxes', payload: fax_body(to_number: to_number, files: files))
   end
 
-  def send_fax!
-    post(url: 'faxes', payload: fax_body)
-  end
-
-  def fax_body
-    { to: @to_number, from: SinchFaxClient.from_number, files: file_objects }
-  end
-
-  def file_objects
-    @file_objects ||= @files.map { |file| { file: Base64.strict_encode64(file), fileType: 'PDF' } }
+  def fax_body(to_number:, files:)
+    { to: RadTwilio.human_to_twilio_format(to_number), from: SinchFaxClient.from_number, files: file_objects(files) }
   end
 
   def self.from_number
@@ -29,6 +20,10 @@ class SinchFaxClient
 
     def api_client
       @api_client ||= RadApiClient.new(host: host_url, basic_auth: { username: access_key, password: secret_key })
+    end
+
+    def file_objects(files)
+      files.map { |file| { file: Base64.strict_encode64(file), fileType: 'PDF' } }
     end
 
     def host_url

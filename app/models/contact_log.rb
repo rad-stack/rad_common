@@ -80,13 +80,13 @@ class ContactLog < ApplicationRecord
     contact_log_recipients.pluck(:to_user_id).include?(record_id)
   end
 
-  def self.create_and_send_fax(to_number:, attachments:, to_user: nil, from_user_id: nil)
+  def self.create_fax_log!(to_number:, attachments:, to_user: nil, from_user_id: nil, associated_record: nil)
     log = ContactLog.create! service_type: :fax,
                              direction: :outgoing,
                              from_number: SinchFaxClient.from_number,
                              from_user_id: from_user_id,
                              sent: false,
-                             record: contact_log_record
+                             record: associated_record
 
     ContactLogRecipient.create! contact_log: log,
                                 phone_number: to_number,
@@ -94,13 +94,13 @@ class ContactLog < ApplicationRecord
                                 sms_status: :sent
 
     attachments.each do |attachment|
-      contact_log.files.attach(
+      log.attachments.attach(
         io: StringIO.new(attachment),
         filename: "fax_#{Time.current.to_i}.pdf",
         content_type: 'application/pdf'
       )
     end
-    FaxSenderJob.perform_later(log)
+    log
   end
 
   private

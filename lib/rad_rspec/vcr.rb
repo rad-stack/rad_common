@@ -23,6 +23,15 @@ VCR.configure do |c|
     end
   end
 
+  if RadConfig.secret_config_item!(:sinch_access_key).present?
+    c.filter_sensitive_data('<SINCH_ACCESS_KEY>') { RadConfig.secret_config_item! :sinch_access_key }
+    c.filter_sensitive_data('<SINCH_PROJECT_ID>') { RadConfig.secret_config_item! :sinch_project_id }
+    c.filter_sensitive_data('<SINCH_SECRET_KEY>') { RadConfig.secret_config_item! :sinch_secret_key }
+    c.filter_sensitive_data('<AUTH_TOKEN>') do |interaction|
+      interaction.request.headers['Authorization']&.first
+    end
+  end
+
   c.filter_sensitive_data('<SENDGRID_API_KEY>') { RadConfig.sendgrid_api_key! } if RadConfig.sendgrid_api_key.present?
 
   if RadConfig.secret_config_item(:twilio_alt_verify_service_sid).present?
