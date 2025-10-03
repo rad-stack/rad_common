@@ -9,7 +9,7 @@
     %table.table.table-striped.table-bordered
       %tr
         = render 'layouts/sort_headers', search: @<%= singular_table_name %>_search
-    - if show_actions
+        - if show_actions
           %th.actions Actions
 
       - @<%= plural_table_name %>.each do |record|
