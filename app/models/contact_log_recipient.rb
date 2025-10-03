@@ -94,6 +94,8 @@ class ContactLogRecipient < ApplicationRecord
         self.success = sms_status_delivered?
       elsif contact_log.email?
         self.success = email_status_delivered?
+      elsif contact_log.fax?
+        self.success = fax_status_completed?
       end
     end
 
