@@ -23,7 +23,7 @@ VCR.configure do |c|
     end
   end
 
-  if RadConfig.secret_config_item!(:sinch_access_key).present?
+  if RadConfig.secret_config_item(:sinch_access_key).present?
     c.filter_sensitive_data('<SINCH_ACCESS_KEY>') { RadConfig.secret_config_item! :sinch_access_key }
     c.filter_sensitive_data('<SINCH_PROJECT_ID>') { RadConfig.secret_config_item! :sinch_project_id }
     c.filter_sensitive_data('<SINCH_SECRET_KEY>') { RadConfig.secret_config_item! :sinch_secret_key }
