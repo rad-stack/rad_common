@@ -36,7 +36,7 @@ class RadTwilio
 
     begin
       response = get_phone_number(phone_number, mobile)
-      return 'does not appear to be a valid mobile phone number' if mobile && response.carrier['type'] != 'mobile'
+      return 'does not appear to be a valid mobile phone number' if mobile && !mobile_carrier?(response)
 
       response.phone_number
     rescue Twilio::REST::RestError, NoMethodError => e
@@ -86,6 +86,18 @@ class RadTwilio
           lookup_client.lookups.phone_numbers(number).fetch
         end
       end
+    end
+
+    def mobile_carrier?(response)
+      return false if response.phone_number.starts_with?('+1246') # Barbados
+      return true if response.carrier['type'] == 'mobile'
+      return true if response.carrier['type'] == 'voip' && response.carrier['name'] == 'Google (Grand Central) - SVR'
+
+      if response.carrier['type'] == 'voip' && response.carrier['name'] == 'Bandwidth/RingCentral Messaging - Sinch'
+        return true
+      end
+
+      false
     end
 
     def status_callback_url

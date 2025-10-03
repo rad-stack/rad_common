@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://lookups.twilio.com/v1/PhoneNumbers/<TEST_PHONE_NUMBER_STRIPPED>
+    uri: https://lookups.twilio.com/v1/PhoneNumbers/2466226313?Type=carrier
     body:
       encoding: US-ASCII
       string: ''
@@ -25,42 +25,44 @@ http_interactions:
       Content-Type:
       - application/json;charset=utf-8
       Content-Length:
-      - '212'
+      - '361'
       Connection:
       - keep-alive
       Date:
-      - Tue, 30 Sep 2025 12:46:20 GMT
-      Vary:
-      - Accept-Encoding
-      - Origin
+      - Wed, 01 Oct 2025 14:51:36 GMT
       Twilio-Concurrent-Requests:
       - '1'
       Twilio-Request-Id:
-      - RQd730ded45d9cd20bac1eb70855eaf8a7
+      - RQ6623e5a9860fe4f418c42b043e51d98f
       Twilio-Request-Duration:
-      - '0.029'
+      - '0.030'
       X-Home-Region:
       - us1
       X-Api-Domain:
       - lookups.twilio.com
       Strict-Transport-Security:
       - max-age=31536000
+      Vary:
+      - Accept-Encoding
+      - Origin
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 da32b45f2cc22dc818960285c4e91b66.cloudfront.net (CloudFront)
+      - 1.1 3dfc597166aceab1992de27c93d723e6.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
-      - SEA900-P10
+      - ATL59-P9
       X-Amz-Cf-Id:
-      - mFH_1SyEx7us6h7Zeg66ArEUTomDbsP-zmqlXfwpgsA-jUQvFV8GJA==
+      - c8POfqVZ-Fk3pp2mYjMHATnqhNE26GajQntlQhtv-NSszSxGxin_Dg==
       X-Powered-By:
       - AT-5000
       X-Shenanigans:
       - none
     body:
-      encoding: UTF-8
-      string: '{"add_ons": null, "caller_name": null, "carrier": null, "country_code":
-        "US", "national_format": "<TEST_PHONE_NUMBER>", "phone_number": "+1<TEST_PHONE_NUMBER_STRIPPED>",
-        "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_PHONE_NUMBER_STRIPPED>"}'
-  recorded_at: Tue, 30 Sep 2025 12:46:20 GMT
+      encoding: ASCII-8BIT
+      string: '{"add_ons": null, "caller_name": null, "carrier": {"error_code": null,
+        "mobile_country_code": "342", "mobile_network_code": "600", "name": "Cable
+        & Wireless BARTEL Limited - BB - FLOW", "type": "mobile"}, "country_code":
+        "BB", "national_format": "(246) 622-6313", "phone_number": "+12466226313",
+        "url": "https://lookups.twilio.com/v1/PhoneNumbers/+12466226313"}'
+  recorded_at: Wed, 01 Oct 2025 14:51:36 GMT
 recorded_with: VCR 6.3.1
