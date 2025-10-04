@@ -1,0 +1,7 @@
+- logs = assistant_session_logs(assistant_session)
+- if logs.present?
+  - logs.each do |log|
+    - log_data = assistant_session_log_data(assistant_session, log)
+    = render log_data[:template], log_data
+- else
+  = render 'assistant_sessions/initial_chat_message', assistant_session: assistant_session
