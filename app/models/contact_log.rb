@@ -4,8 +4,8 @@ class ContactLog < ApplicationRecord
 
   has_many :contact_log_recipients, dependent: :destroy
 
-  enum :sms_log_type, { outgoing: 0, incoming: 1 }
-  enum :service_type, { sms: 0, email: 1, voice: 2 }
+  enum :direction, { outgoing: 0, incoming: 1 }
+  enum :service_type, { sms: 0, email: 1, voice: 2, fax: 3 }
 
   scope :sorted, -> { order(created_at: :desc, id: :desc) }
   scope :failed, -> { where(contact_log_recipients: { success: false }) }
@@ -23,10 +23,11 @@ class ContactLog < ApplicationRecord
   has_many_attached :attachments
 
   validates :from_user_id, presence: true, if: -> { outgoing? && sms? }
-  validates :sms_message_id, presence: true, if: :incoming?
-  validates :content, presence: true, if: :sent?
-  validates :sms_log_type, presence: true, if: :sms?
-  validates :sms_log_type, :sms_media_url, :sms_message_id, absence: true, if: :email?
+  validates :sms_message_id, presence: true, if: -> { incoming? && sms? }
+  validates :content, presence: true, if: -> { sent? && !fax? }
+  validates :content, absence: true, if: :fax?
+  validates :direction, presence: true, if: :sms?
+  validates :direction, :sms_media_url, :sms_message_id, absence: true, if: :email?
   validate :validate_incoming, if: :incoming?
   validate :validate_sms_only_booleans, if: :email?
 
@@ -77,6 +78,35 @@ class ContactLog < ApplicationRecord
     return false unless record.present? && record.is_a?(User)
 
     contact_log_recipients.pluck(:to_user_id).include?(record_id)
+  end
+
+  def self.create_fax_log_and_send!(to_number:, attachments:, to_user: nil, from_user_id: nil, associated_record: nil)
+    log = create_fax_log!(to_number: to_number, attachments: attachments, from_user_id: from_user_id,
+                          associated_record: associated_record)
+    FaxSenderJob.perform_later(log)
+  end
+
+  def self.create_fax_log!(to_number:, attachments:, to_user: nil, from_user_id: nil, associated_record: nil)
+    log = ContactLog.create! service_type: :fax,
+                             direction: :outgoing,
+                             from_number: SinchFaxClient.from_number,
+                             from_user_id: from_user_id,
+                             sent: false,
+                             record: associated_record
+
+    ContactLogRecipient.create! contact_log: log,
+                                phone_number: to_number,
+                                to_user: to_user,
+                                sms_status: :sent
+
+    attachments.each do |attachment|
+      log.attachments.attach(
+        io: StringIO.new(attachment),
+        filename: "fax_#{Time.current.to_i}.pdf",
+        content_type: 'application/pdf'
+      )
+    end
+    log
   end
 
   private
