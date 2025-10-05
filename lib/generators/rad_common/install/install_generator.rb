@@ -182,6 +182,10 @@ module RadCommon
         copy_file '../../../../../spec/dummy/lib/templates/factory_bot/factory.rb.tt',
                   'lib/templates/factory_bot/factory.rb.tt'
 
+        # search template
+        copy_file '../../../../../spec/dummy/lib/templates/services/search.rb.tt',
+                  'lib/templates/services/search.rb.tt'
+
         unless RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
