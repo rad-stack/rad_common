@@ -1,0 +1,35 @@
+class <%= class_name %>Search < RadSearch::Search
+  def initialize(params, current_user)
+    @current_user = current_user
+
+    super(query: <%= class_name %>,
+          filters: filters_def,
+          sort_columns: sort_columns_def,
+          params: params,
+          current_user: current_user)
+  end
+
+  private
+
+    def filters_def
+      [<% attributes.each_with_index do |attribute, index| -%>
+<% if attribute.type == :date || attribute.type == :datetime -%>
+{ column: '<%= attribute.name %>',
+         type: RadSearch::DateFilter }<%= ',' unless index == attributes.length - 1 %>
+<% elsif attribute.type == :string || attribute.type == :text -%>
+{ column: '<%= attribute.name %>',
+         type: RadSearch::LikeFilter,
+         name: :<%= attribute.name %> }<%= ',' unless index == attributes.length - 1 %>
+<% elsif attribute.type == :boolean -%>
+{ column: '<%= attribute.name %>',
+ type: RadSearch::BooleanFilter }<%= ',' unless index == attributes.length - 1 %>
+<% end -%>
+       <% end -%>]
+    end
+
+    def sort_columns_def
+      [<% attributes.each_with_index do |attribute, index| -%>
+{ column: '<%=attribute.name %>' }<%= ',' unless index == attributes.length - 1 %>
+       <% end -%>]
+    end
+end
