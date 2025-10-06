@@ -80,7 +80,7 @@ class RadUserPolicy < ApplicationPolicy
     end
 
     def twilio_verify_attributes
-      return [:twilio_verify_enabled] if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
+      return [:otp_required_for_login] if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
 
       []
     end
