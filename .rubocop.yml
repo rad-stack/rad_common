@@ -110,6 +110,7 @@ Metrics/ParameterLists:
   Exclude:
     - 'app/helpers/rad_common/attachments_helper.rb'
     - 'app/services/attachment_renderer.rb'
+    - 'app/services/rad_search/search.rb'
 
 Naming/AccessorMethodName:
   Exclude:

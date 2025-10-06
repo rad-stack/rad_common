@@ -1,4 +1,4 @@
-#filters.collapse{ class: search.filter_collapse_class }
+.collapse#filters{ class: search.filter_collapse_class }
   = simple_form_for :search, url: path, method: :get, html: { data: { 'search-target': 'form' } } do |f|
     -# TODO: Set up permanent page size selection solution
     - if params[:page_size].present?
@@ -24,7 +24,8 @@
 
     - if RadConfig.saved_search_filters_enabled? && !mobile
       - if search.applied_saved_filter.present?
-        .text-muted.mt-1{ 'data-testid' => 'saved-search-applied-filter' } Applied Filter: #{search.applied_saved_filter}
+        .text-muted.mt-1{ 'data-testid' => 'saved-search-applied-filter' }
+          Applied Filter: #{search.applied_saved_filter}
       = f.hidden_field :saved_name, data: { 'search-target': 'savedNameInput' }
     - else
       %br

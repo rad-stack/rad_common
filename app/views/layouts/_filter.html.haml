@@ -1,5 +1,8 @@
-= link_to icon(:filter, 'Toggle Filters'), '#filters', data: { 'bs-toggle': 'collapse' },
+= link_to icon(:filter, 'Toggle Filters'),
+          '#filters',
+          data: { 'bs-toggle': 'collapse' },
           class: 'btn btn-primary btn-sm mb-2'
+
 - if (search.search_params? && search.invalid?) || search.saved_filter_errors.present?
   - flash.now[:error] = search.error_messages
 
