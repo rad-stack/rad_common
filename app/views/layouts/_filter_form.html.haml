@@ -1,32 +1,34 @@
-= simple_form_for :search, url: path, method: :get, html: { data: { 'search-target': 'form' } } do |f|
-  -# TODO: Set up permanent page size selection solution
-  - if params[:page_size].present?
-    = hidden_field_tag :page_size, params[:page_size]
-  = f.input :sort, as: :hidden, input_html: { value: search.search_params[:sort] }
-  = f.input :direction, as: :hidden, input_html: { value: search.search_params[:direction] }
-  - search.filters.each_slice(5) do |filters|
-    .row
-      - col_class = filters.count > 2 ? 'col-lg' : 'col-lg-4'
-      - filters.each do |filter|
-        %div{ class: "#{col_class} #{filter_col_class(filter)}" }
-          = render "layouts/filter_#{filter.filter_view}", filter: filter, search: search, f: f
-  .form-actions{ class: mobile ? 'd-grid gap-1' : '' }
-    = f.button :button, class: "btn btn-success #{mobile ? 'mt-2' : ''}" do
-      %i.fa.fa-filter
-      Apply Filters
-    - if RadConfig.saved_search_filters_enabled? && !mobile
-      = render 'layouts/saved_filters_dropdown', search: search, f: f, path: path
-    \
-    = link_to "#{path}?clear_filters=true", class: "btn btn-danger #{mobile ? 'mt-2' : ''}" do
-      %i.fa.fa-times
-      Clear Filters
+.collapse#filters{ class: search.filter_collapse_class }
+  = simple_form_for :search, url: path, method: :get, html: { data: { 'search-target': 'form' } } do |f|
+    -# TODO: Set up permanent page size selection solution
+    - if params[:page_size].present?
+      = hidden_field_tag :page_size, params[:page_size]
+    = f.input :sort, as: :hidden, input_html: { value: search.search_params[:sort] }
+    = f.input :direction, as: :hidden, input_html: { value: search.search_params[:direction] }
+    - search.filters.each_slice(5) do |filters|
+      .row
+        - col_class = filters.count > 2 ? 'col-lg' : 'col-lg-4'
+        - filters.each do |filter|
+          %div{ class: "#{col_class} #{filter_col_class(filter)}" }
+            = render "layouts/filter_#{filter.filter_view}", filter: filter, search: search, f: f
+    .form-actions{ class: mobile ? 'd-grid gap-1' : '' }
+      = f.button :button, class: "btn btn-success #{mobile ? 'mt-2' : ''}" do
+        %i.fa.fa-filter
+        Apply Filters
+      - if RadConfig.saved_search_filters_enabled? && !mobile
+        = render 'layouts/saved_filters_dropdown', search: search, f: f, path: path
+      \
+      = link_to "#{path}?clear_filters=true", class: "btn btn-danger #{mobile ? 'mt-2' : ''}" do
+        %i.fa.fa-times
+        Clear Filters
 
-  - if RadConfig.saved_search_filters_enabled? && !mobile
-    - if search.applied_saved_filter.present?
-      .text-muted.mt-1{ 'data-testid' => 'saved-search-applied-filter' } Applied Filter: #{search.applied_saved_filter}
-    = f.hidden_field :saved_name, data: { 'search-target': 'savedNameInput' }
-  - else
+    - if RadConfig.saved_search_filters_enabled? && !mobile
+      - if search.applied_saved_filter.present?
+        .text-muted.mt-1{ 'data-testid' => 'saved-search-applied-filter' }
+          Applied Filter: #{search.applied_saved_filter}
+      = f.hidden_field :saved_name, data: { 'search-target': 'savedNameInput' }
+    - else
+      %br
     %br
-  %br
-  - if paged_results.present?
-    = render 'layouts/paging', paged_results: paged_results, f: f, search: search
+    - if paged_results.present?
+      = render 'layouts/paging', paged_results: paged_results, f: f, search: search
