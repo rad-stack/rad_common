@@ -12,12 +12,14 @@ module RadSearch
     # @param [Hash] params the url params from the current url
     # @param [String optional] search_name an identifying named used for storing user defaults. Only required when user defaults enabled and not using a custom search class
     # @param [Boolean optional] turns on sticky filters (aka FilterDefaulting) so that user filter selections are remembered
-    def initialize(query:, filters:, sort_columns: nil, current_user:, params:, search_name: nil, sticky_filters: false)
+    def initialize(query:, filters:, sort_columns: nil, current_user:, params:, search_name: nil, sticky_filters: false,
+                   auto_hide: false)
       if sticky_filters && search_name.nil? && self.class.to_s == 'RadSearch::Search'
         raise 'search_name is required when not using a custom search class'
       end
 
       @results = query
+      @auto_hide = auto_hide
       @current_user = current_user
       @params = params
       @search_name = search_name
@@ -38,6 +40,10 @@ module RadSearch
 
     def valid?
       @filtering.validate_params
+    end
+
+    def filter_collapse_class
+      @auto_hide ? '' : 'show'
     end
 
     def invalid?
