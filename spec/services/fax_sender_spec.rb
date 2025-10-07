@@ -18,6 +18,11 @@ RSpec.describe FaxSender, type: :service do
 
     it 'sends fax' do
       expect(result).to be true
+      expect(contact_log.from_user).to eq user
+      expect(contact_log.record).to eq division
+      expect(contact_log.contact_log_recipients.count).to eq 1
+      expect(contact_log.contact_log_recipients.first.phone_number).to eq to_number
+      expect(contact_log.attachments.count).to eq 1
     end
   end
 end

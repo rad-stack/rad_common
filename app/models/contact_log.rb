@@ -31,6 +31,7 @@ class ContactLog < ApplicationRecord
   validates :direction, :sms_media_url, :sms_message_id, absence: true, if: :email?
   validates :fax_message_id, absence: true, unless: -> { fax? }
   validate :validate_incoming, if: :incoming?
+  validate :validate_attachments_exists, if: :fax?
   validate :validate_sms_only_booleans, if: :email?
 
   validates_with PhoneNumberValidator, fields: [{ field: :from_number }], skip_twilio: true
@@ -89,17 +90,12 @@ class ContactLog < ApplicationRecord
   end
 
   def self.create_fax_log!(to_number:, attachments:, associated_record:, from_user_id:, to_user: nil)
-    log = ContactLog.create! service_type: :fax,
-                             direction: :outgoing,
-                             from_number: SinchFaxClient.from_number,
-                             from_user_id: from_user_id,
-                             sent: false,
-                             record: associated_record
-
-    ContactLogRecipient.create! contact_log: log,
-                                phone_number: to_number,
-                                to_user: to_user,
-                                fax_status: :in_progress
+    log = ContactLog.new service_type: :fax,
+                         direction: :outgoing,
+                         from_number: SinchFaxClient.from_number,
+                         from_user_id: from_user_id,
+                         sent: false,
+                         record: associated_record
 
     attachments.each do |attachment|
       log.attachments.attach(
@@ -108,6 +104,13 @@ class ContactLog < ApplicationRecord
         content_type: 'application/pdf'
       )
     end
+    log.save!
+
+    ContactLogRecipient.create! contact_log: log,
+                                phone_number: to_number,
+                                to_user: to_user,
+                                fax_status: :in_progress
+
     log
   end
 
@@ -120,5 +123,9 @@ class ContactLog < ApplicationRecord
 
     def validate_sms_only_booleans
       errors.add(:sms_opt_out_message_sent, 'must be false') if sms_opt_out_message_sent?
+    end
+
+    def validate_attachments_exists
+      errors.add(:attachments, 'must have at least one attachment') if attachments.blank?
     end
 end
