@@ -1,7 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe FaxSender, type: :service do
-  let(:contact_log) { ContactLog.create_fax_log!(to_number: to_number, attachments: [file]) }
+  let(:user) { create :user }
+  let(:division) { create :division }
+  let(:contact_log) do
+    ContactLog.create_fax_log!(to_number: to_number, attachments: [file], from_user_id: user.id,
+                               associated_record: division)
+  end
   let(:file) { Rails.root.join('spec/fixtures/test.pdf').binread }
   let(:to_number) { SinchFaxClient::DEFAULT_TEST_NUMBER }
   let(:fax_sender) { described_class.new(contact_log) }
@@ -13,6 +18,11 @@ RSpec.describe FaxSender, type: :service do
 
     it 'sends fax' do
       expect(result).to be true
+      expect(contact_log.from_user).to eq user
+      expect(contact_log.record).to eq division
+      expect(contact_log.contact_log_recipients.count).to eq 1
+      expect(contact_log.contact_log_recipients.first.phone_number).to eq to_number
+      expect(contact_log.attachments.count).to eq 1
     end
   end
 end

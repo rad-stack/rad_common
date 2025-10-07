@@ -781,6 +781,7 @@ gem 'propshaft'
           apply_migration '20250622203947_user_js_timezone.rb'
           apply_migration '20250914154915_fix_developer_notifications.rb'
           apply_migration '20251003162830_add_fax_contact_log_fields.rb'
+          apply_migration '20251007153435_move_fax_error_message.rb'
         end
 
         def installed_app_name
