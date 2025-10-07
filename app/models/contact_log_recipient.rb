@@ -48,7 +48,11 @@ class ContactLogRecipient < ApplicationRecord
   validates :email_status, presence: true, if: -> { contact_log&.email? }
   validates :fax_status, presence: true, if: -> { contact_log&.fax? }
   validates :fax_status, absence: true, if: -> { contact_log&.email? || contact_log&.voice? || contact_log&.sms? }
-  validates :sms_status, absence: true, if: -> { contact_log&.email? || contact_log&.voice? || contact_log&.fax? || contact_log&.incoming? }
+
+  validates :sms_status,
+            absence: true,
+            if: -> { contact_log&.email? || contact_log&.voice? || contact_log&.fax? || contact_log&.incoming? }
+
   validates :email_status, :sendgrid_reason, absence: true, if: -> { contact_log&.sms? }
 
   validate :validate_service_type
