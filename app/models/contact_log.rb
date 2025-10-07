@@ -22,12 +22,14 @@ class ContactLog < ApplicationRecord
   # TODO: this was added for IJS but need to finish the feature for general use - Task 8671
   has_many_attached :attachments
 
-  validates :from_user_id, presence: true, if: -> { outgoing? && sms? }
+  validates :from_user_id, presence: true, if: -> { outgoing? && (sms? || fax?) }
   validates :sms_message_id, presence: true, if: -> { incoming? && sms? }
+  validates :fax_message_id, :record_type, :record_id, presence: true, if: -> { fax? }
   validates :content, presence: true, if: -> { sent? && !fax? }
   validates :content, absence: true, if: :fax?
-  validates :direction, presence: true, if: :sms?
+  validates :direction, presence: true, if: -> { sms? || fax? }
   validates :direction, :sms_media_url, :sms_message_id, absence: true, if: :email?
+  validates :fax_message_id, absence: true, unless: :fax?
   validate :validate_incoming, if: :incoming?
   validate :validate_sms_only_booleans, if: :email?
 
