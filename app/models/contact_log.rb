@@ -24,7 +24,7 @@ class ContactLog < ApplicationRecord
 
   validates :from_user_id, presence: true, if: -> { outgoing? && (sms? || fax?) }
   validates :sms_message_id, presence: true, if: -> { incoming? && sms? }
-  validates :fax_message_id, :record_type, :record_id, presence: true, if: -> { fax? }
+  validates :fax_message_id, :record_type, :record_id, presence: true, if: -> { fax? && sent? }
   validates :content, presence: true, if: -> { sent? && !fax? }
   validates :content, absence: true, if: :fax?
   validates :direction, presence: true, if: -> { sms? || fax? }
