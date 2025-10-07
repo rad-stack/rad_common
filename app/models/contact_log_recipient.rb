@@ -47,7 +47,8 @@ class ContactLogRecipient < ApplicationRecord
   validates :sms_status, presence: true, if: -> { contact_log&.sms? && contact_log.outgoing? }
   validates :email_status, presence: true, if: -> { contact_log&.email? }
   validates :fax_status, presence: true, if: -> { contact_log&.fax? }
-  validates :fax_status, absence: true, if: -> { contact_log&.email? || contact_log&.voice? || contact_log&.sms? }
+  validates :fax_error_message, presence: true, if: -> { contact_log&.fax? && fax_status_failure? }
+  validates :fax_status, :fax_error_message, absence: true, if: -> { contact_log&.email? || contact_log&.voice? || contact_log&.sms? }
 
   validates :sms_status,
             absence: true,

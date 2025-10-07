@@ -29,7 +29,7 @@ class ContactLog < ApplicationRecord
   validates :content, absence: true, if: :fax?
   validates :direction, presence: true, if: -> { sms? || fax? }
   validates :direction, :sms_media_url, :sms_message_id, absence: true, if: :email?
-  validates :fax_message_id, :fax_error_message, absence: true, unless: -> { fax? }
+  validates :fax_message_id, absence: true, unless: -> { fax? }
   validate :validate_incoming, if: :incoming?
   validate :validate_sms_only_booleans, if: :email?
 
