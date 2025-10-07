@@ -11,6 +11,7 @@ module ContactLogsHelper
              :sent]
 
     items += %i[sms_opt_out_message_sent] if contact_log.sms?
+    items += [:fax_message_id]
     items += [{ label: 'SMS Message ID', value: twilio_log_link(contact_log) }, :sms_media_url]
 
     # TODO: this was added for IJS but need to finish the feature for general use - Task 8671
