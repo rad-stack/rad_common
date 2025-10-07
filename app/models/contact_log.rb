@@ -83,7 +83,7 @@ class ContactLog < ApplicationRecord
     contact_log_recipients.pluck(:to_user_id).include?(record_id)
   end
 
-  def self.create_fax_log_and_send!(to_number:, attachments:, from_user_id:, associated_record:, to_user: nil)
+  def self.create_fax_log_and_send!(to_number:, attachments:, from_user_id:, associated_record:)
     log = create_fax_log!(to_number: to_number, attachments: attachments, from_user_id: from_user_id,
                           associated_record: associated_record)
     FaxSenderJob.perform_later(log)
