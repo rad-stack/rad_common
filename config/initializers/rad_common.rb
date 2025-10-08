@@ -71,6 +71,8 @@ Rails.application.config.after_initialize do
   unless RadConfig.legacy_assets?
     default_allowed_tags = Class.new.include(ActionText::ContentHelper).new.sanitizer_allowed_attributes
     ActionText::ContentHelper.allowed_attributes = default_allowed_tags.add('style')
+    ActionText::ContentHelper.allowed_tags ||= []
+    ActionText::ContentHelper.allowed_tags += %w[u]
   end
 end
 
