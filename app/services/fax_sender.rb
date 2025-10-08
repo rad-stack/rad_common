@@ -35,7 +35,7 @@ class FaxSender
 
   def update_log_failed!(message)
     contact_log.contact_log_recipients.each do |contact_log_recipient|
-      contact_log_recipient.update!(fax_status: failure, fax_error_message: message)
+      contact_log_recipient.update!(fax_status: 'failure', fax_error_message: message)
     end
   end
 
