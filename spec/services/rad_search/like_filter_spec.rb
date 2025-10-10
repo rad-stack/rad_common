@@ -64,5 +64,17 @@ RSpec.describe RadSearch::LikeFilter, type: :service do
 
       it { is_expected.not_to include division_3.id }
     end
+
+    context 'when like filter field is created' do
+      let(:filter_with_label) { described_class.new(column: :name, input_label: 'Custom Label') }
+
+      it 'has the column name as the label' do
+        expect(filter.input_label).to eq(:name.to_s.titleize)
+      end
+
+      it 'has the input label as the label' do
+        expect(filter_with_label.input_label).to eq('Custom Label')
+      end
+    end
   end
 end
