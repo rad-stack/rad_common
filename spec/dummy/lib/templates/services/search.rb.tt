@@ -15,21 +15,21 @@ class <%= class_name %>Search < RadSearch::Search
       [<% attributes.each_with_index do |attribute, index| -%>
 <% if attribute.type == :date || attribute.type == :datetime -%>
 { column: '<%= attribute.name %>',
-         type: RadSearch::DateFilter }<%= ',' unless index == attributes.length - 1 %>
+         type: RadSearch::DateFilter }<%= index == attributes.length - 1 ? "]\n" : ",\n       " -%>
 <% elsif attribute.type == :string || attribute.type == :text -%>
 { column: '<%= attribute.name %>',
          type: RadSearch::LikeFilter,
-         name: :<%= attribute.name %> }<%= ',' unless index == attributes.length - 1 %>
+         name: :<%= attribute.name %> }<%= index == attributes.length - 1 ? "]\n" : ",\n       " -%>
 <% elsif attribute.type == :boolean -%>
 { column: '<%= attribute.name %>',
- type: RadSearch::BooleanFilter }<%= ',' unless index == attributes.length - 1 %>
+         type: RadSearch::BooleanFilter }<%= index == attributes.length - 1 ? "]\n" : ",\n       " -%>
 <% end -%>
-       <% end -%>]
+<% end -%>
     end
 
     def sort_columns_def
       [<% attributes.each_with_index do |attribute, index| -%>
-{ column: '<%=attribute.name %>' }<%= ',' unless index == attributes.length - 1 %>
-       <% end -%>]
+{ column: '<%=attribute.name %>' }<%= index == attributes.length - 1 ? "]\n" : ",\n       " -%>
+<% end -%>
     end
 end
