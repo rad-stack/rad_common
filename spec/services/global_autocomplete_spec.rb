@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe GlobalAutocomplete, type: :service do
-  include RadCommon::ApplicationHelper
+  include RadHelper
 
   let!(:user) { create :user }
   let!(:search_user) { create :user, first_name: 'Alex', last_name: 'Smith' }

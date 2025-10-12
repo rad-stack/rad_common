@@ -138,7 +138,7 @@ class CardPresenter
       return
     end
 
-    'alert-danger'
+    'bg-danger bg-opacity-25'
   end
 
   def output_title
@@ -238,7 +238,7 @@ class CardPresenter
 
     def include_duplicate_action?
       action_name == 'show' &&
-        RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
+        AppInfo.new.duplicates_enabled?(klass.name) &&
         instance.duplicate.present? &&
         instance.duplicate.score.present? &&
         instance_policy.resolve_duplicates?
@@ -252,7 +252,7 @@ class CardPresenter
 
     def include_duplicates_action?
       action_name == 'index' &&
-        RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
+        AppInfo.new.duplicates_enabled?(klass.name) &&
         class_policy.resolve_duplicates? &&
         klass.high_duplicates.size.positive?
     end
@@ -294,7 +294,13 @@ class CardPresenter
                     instance_policy.audit?
 
       { label: 'Audit History',
-        link: @view_context.audits_path(search: { single_record: "#{instance.class}:#{instance.id}" }) }
+        link: @view_context.audits_path(search: { single_record: "#{single_record_class_name}:#{instance.id}" }) }
+    end
+
+    def single_record_class_name
+      return instance.class.to_s unless instance.class.to_s.start_with?('Notifications::')
+
+      'NotificationType'
     end
 
     def contact_log_actions
@@ -338,7 +344,7 @@ class CardPresenter
                     instance.present? &&
                     instance.respond_to?(:persisted?) &&
                     instance.persisted? &&
-                    RadCommon::AppInfo.new.duplicates_enabled?(instance.class.name) &&
+                    AppInfo.new.duplicates_enabled?(instance.class.name) &&
                     instance_policy.reset_duplicates?
 
       confirm_message = 'This will reset non-duplicates and regenerate possible matches for this record, proceed?'
@@ -371,10 +377,26 @@ class CardPresenter
     end
 
     def class_policy
-      @class_policy ||= Pundit.policy!(current_user, klass.new)
+      @class_policy ||= Pundit.policy!(current_user, check_policy_klass)
     end
 
     def instance_policy
-      @instance_policy ||= Pundit.policy!(current_user, instance)
+      @instance_policy ||= Pundit.policy!(current_user, check_policy_instance)
+    end
+
+    def check_policy_klass
+      if RadConfig.portal? && current_user.portal_user?
+        [:portal, klass.new]
+      else
+        klass.new
+      end
+    end
+
+    def check_policy_instance
+      if RadConfig.portal? && current_user.portal_user?
+        [:portal, instance]
+      else
+        instance
+      end
     end
 end

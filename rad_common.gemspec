@@ -15,13 +15,13 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   s.bindir = 'bin'
   s.executables = %w[reset_db migrate_reset rc_update rc_rspec rc_parallel_rspec
-                     local_backup clone_local reset_staging creds kill_ruby]
+                     rc_rspec_shared local_backup clone_local reset_staging creds kill_ruby]
 
   s.add_dependency 'active_storage_validations', '1.0.4' # see Task 43068
   s.add_dependency 'audited'
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
-  s.add_dependency 'bootstrap4-kaminari-views'
+  s.add_dependency 'bootstrap5-kaminari-views'
   s.add_dependency 'cssbundling-rails', '~> 1.4'
   s.add_dependency 'csv'
   s.add_dependency 'devise'
@@ -34,7 +34,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
-  s.add_dependency 'jsbundling-rails'
   s.add_dependency 'kaminari'
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
 
@@ -51,6 +50,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'propshaft'
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
+  s.add_dependency 'rack-attack'
   s.add_dependency 'rails', '~> 7.2.2'
   s.add_dependency 'redis'
   s.add_dependency 'sendgrid-ruby'

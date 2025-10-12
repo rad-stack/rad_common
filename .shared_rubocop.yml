@@ -1,9 +1,15 @@
-require:
+plugins:
   - rubocop-rails
   - rubocop-rspec
   - rubocop-capybara
   - rubocop-factory_bot
   - rubocop-rspec_rails
+
+require:
+  - rubocop/cop/custom/prohibit_alias_in_policy
+
+Custom/ProhibitAliasInPolicy:
+  Enabled: true
 
 AllCops:
   NewCops: enable

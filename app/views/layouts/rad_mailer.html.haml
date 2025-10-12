@@ -21,7 +21,8 @@
       .email-header
         .email-row
           .email-col-12.logo-col
-            = link_to image_tag(RadConfig.app_logo_filename!, alt: company_name, title: company_name), website
+            - company_logo = ApplicationController.helpers.company_logo(Company.main)
+            = link_to image_tag(company_logo, alt: company_name, title: company_name), website
 
             - unless logo_includes_name
               %span.logo_text
@@ -46,7 +47,7 @@
           .email-col-12
             %br
             - if has_avatar
-              = image_tag(@sender.avatar.variant(resize: '25x25'), alt: @sender.to_s, title: @sender.to_s)
+              = image_tag(@sender.avatar.variant(resize_to_limit: [25, 25]), alt: @sender.to_s, title: @sender.to_s)
             = @message
 
         - if @include_yield

@@ -133,22 +133,6 @@ RSpec.configure do |config|
 
   SpecSupport.hooks(config, chrome_driver)
 
-  config.filter_run_excluding(twilio_verify_specs: true) unless RadConfig.twilio_verify_enabled?
-  config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
-  config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
-  config.filter_run_excluding(sign_up_specs: true) if RadConfig.disable_sign_up?
-  config.filter_run_excluding(pending_user_specs: true) unless RadConfig.pending_users?
-  config.filter_run_excluding(external_user_specs: true) unless RadConfig.external_users?
-  config.filter_run_excluding(user_client_specs: true) unless RadConfig.user_clients?
-  config.filter_run_excluding(devise_timeoutable_specs: true) unless Devise.mappings[:user].timeoutable?
-  config.filter_run_excluding(smarty_specs: true) unless RadConfig.smarty_enabled?
-  config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
-  config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
-  config.filter_run_excluding(password_expirable_specs: true) unless RadConfig.password_expirable?
-  config.filter_run_excluding(legacy_asset_specs: true) if RadConfig.legacy_assets?
-  config.filter_run_excluding(shared_database_specs: true) if RadConfig.shared_database?
-  config.filter_run_excluding(timezone_detection_specs: true) unless RadConfig.timezone_detection?
-
   include Warden::Test::Helpers
   config.include Capybara::DSL
 

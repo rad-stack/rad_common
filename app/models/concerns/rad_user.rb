@@ -35,6 +35,7 @@ module RadUser
 
     scope :active, -> { joins(:user_status).where(user_statuses: { active: true }) }
     scope :admins, -> { active.by_permission 'admin' }
+    scope :developers, -> { admins.where('email ILIKE ?', "%@#{RadConfig.developer_domain!}") }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
     scope :by_id, -> { order(:id) }
     scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
@@ -61,20 +62,24 @@ module RadUser
             "WHERE security_roles.#{permission} = TRUE)")
     }
 
+    scope :for_security_role, lambda { |security_role_id|
+      joins(:security_roles).where(security_roles: { id: security_role_id }).distinct
+    }
+
     scope :inactive, -> { joins(:user_status).where(user_statuses: { active: false }) }
     scope :not_inactive, -> { where.not(user_status_id: UserStatus.default_inactive_status.id) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
+    validate :validate_initial_security_role, on: :create, if: :active?
     validate :validate_internal, on: :update
     validate :validate_twilio_verify
     validate :validate_mobile_phone
     validate :password_excludes_name
     validate :validate_last_activity
 
-    # this should be changed to "if: :active?" at some point, see Task 2024
-    validates :security_roles, presence: true, if: :active_for_authentication?
+    validates :security_roles, presence: true, if: :active?
 
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
                                        message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
@@ -245,7 +250,7 @@ module RadUser
   end
 
   def developer?
-    email.end_with? RadConfig.developer_domain!
+    email.end_with? "@#{RadConfig.developer_domain!}"
   end
 
   class_methods do
@@ -267,8 +272,16 @@ module RadUser
       self.user_status = default_user_status if new_record? && !user_status
       return unless new_record?
 
-      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && (RadConfig.twilio_verify_all_users? || admin?)
+      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? &&
+                                   (RadConfig.twilio_verify_all_users? || two_factor_security_role?)
+
       self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
+    end
+
+    def two_factor_security_role?
+      return initial_security_role.two_factor_auth? if initial_security_role_id.present?
+
+      security_roles.any?(&:two_factor_auth?)
     end
 
     def default_user_status
@@ -287,6 +300,7 @@ module RadUser
     end
 
     def validate_email_address
+      return unless RadConfig.validate_user_domains?
       return if email.blank? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
 
       domains = Company.main.valid_user_domains
@@ -295,6 +309,12 @@ module RadUser
       return if (internal? && match_domains) || (external? && !match_domains)
 
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
+    end
+
+    def validate_initial_security_role
+      return if initial_security_role_id.present? || security_role_ids.present?
+
+      errors.add :initial_security_role_id, 'is required'
     end
 
     def validate_internal
@@ -306,7 +326,7 @@ module RadUser
     def validate_twilio_verify
       return unless RadConfig.twilio_verify_enabled?
       return if twilio_verify_enabled? || user_status.blank? || !user_status.validate_email_phone?
-      return unless RadConfig.twilio_verify_all_users? || admin?
+      return unless RadConfig.twilio_verify_all_users? || two_factor_security_role?
 
       errors.add(:twilio_verify_enabled, 'is required')
     end
@@ -357,7 +377,7 @@ module RadUser
 
       return false if records.size < 10
 
-      records.failed.size >= 8
+      records.count { |item| !item.success? } >= 8
     end
 
     def notify_user_approved

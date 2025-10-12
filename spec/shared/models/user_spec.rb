@@ -16,7 +16,8 @@ RSpec.describe User, type: :model do
       mobile_phone: create(:phone_number, :mobile),
       email: 'user@example.com',
       password: 'cOmpl3x_p@55w0rd',
-      password_confirmation: 'cOmpl3x_p@55w0rd' }
+      password_confirmation: 'cOmpl3x_p@55w0rd',
+      security_roles: [security_role] }
   end
 
   describe 'notify_user_approved', :pending_user_specs do
@@ -133,9 +134,8 @@ RSpec.describe User, type: :model do
   describe 'validate email address' do
     before { Company.main.update! valid_user_domains: %w[example.com rubygems.org] }
 
-    it 'rejects unauthorized email addresses' do
+    it 'rejects unauthorized email addresses', :valid_user_domain_specs do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo. user@foo.com user@foo.com]
-
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
         expect(user).not_to be_valid
@@ -163,7 +163,9 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'external user' do
+  describe 'external user', :external_user_specs do
+    let(:external_role) { create :security_role, :external }
+
     let(:attributes) do
       { first_name: 'Example',
         last_name: 'User',
@@ -171,14 +173,14 @@ RSpec.describe User, type: :model do
         password: 'cH@ngem3',
         password_confirmation: 'cH@ngem3',
         user_status: active_status,
-        external: true }
+        external: true,
+        security_roles: [external_role] }
     end
 
     before { Company.main.update! valid_user_domains: %w[example.com rubygems.org] }
 
-    it 'rejects unauthorized email addresses' do
+    it 'rejects unauthorized email addresses', :valid_user_domain_specs do
       addresses = %w[user@example.com user@rubygems.org]
-
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
         expect(user).not_to be_valid
@@ -252,13 +254,13 @@ RSpec.describe User, type: :model do
   end
 
   describe 'Email Changed', :shared_database_specs do
-    subject { ActionMailer::Base.deliveries[ActionMailer::Base.deliveries.length - 1].subject }
+    subject { ActionMailer::Base.deliveries.map(&:subject).sort }
 
     let!(:user) { create :user }
 
     before { user.update!(email: 'foobar@example.com') }
 
-    it { is_expected.to eq('Email Changed') }
+    it { is_expected.to eq(['Confirmation instructions', 'Email Changed']) }
   end
 
   describe 'Password Changed' do

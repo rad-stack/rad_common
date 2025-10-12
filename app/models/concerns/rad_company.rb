@@ -10,10 +10,20 @@ module RadCompany
 
     validates_with EmailAddressValidator, fields: %i[email]
     validates_with PhoneNumberValidator
+
+    validates :app_logo,
+              content_type: { in: RadCommon::VALID_IMAGE_TYPES, message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
+
+    validates :fav_icon,
+              content_type: { in: RadCommon::VALID_FAVICON_TYPES, message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
+
     validate :validate_only_one, on: :create
     validate :validate_domains
 
     before_validation :clean_domain_spaces
+
+    has_one_attached :app_logo
+    has_one_attached :fav_icon
 
     strip_attributes
     audited except: %i[quickbooks_token quickbooks_refresh_token github_token]
@@ -27,6 +37,13 @@ module RadCompany
 
   def global_validity_ran!
     update! validity_checked_at: Time.current
+  end
+
+  def pdf_app_logo
+    return  Rails.root.join('app/assets/images/app_logo.png') unless app_logo.attached?
+
+    url = ApplicationController.helpers.company_logo(self)
+    URI.parse(url).open
   end
 
   private
