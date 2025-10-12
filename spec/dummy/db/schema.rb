@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_14_154915) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_12_174238) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -195,6 +195,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_14_154915) do
     t.bigint "category_id"
     t.string "tags", default: [], null: false, array: true
     t.index ["category_id"], name: "index_divisions_on_category_id"
+    t.index ["created_at"], name: "index_divisions_on_created_at"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
   end
