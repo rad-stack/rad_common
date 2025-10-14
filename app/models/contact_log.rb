@@ -49,6 +49,7 @@ class ContactLog < ApplicationRecord
 
   def card_style
     items = contact_log_recipients.pluck(:success).uniq
+
     return 'bg-warning bg-opacity-25' if items.size == 2
     return 'bg-danger bg-opacity-25' if items.blank? || (items.size == 1 && !items.first)
     return if items.size == 1 && items.first
@@ -59,7 +60,7 @@ class ContactLog < ApplicationRecord
   def table_row_style
     return if card_style.blank?
 
-    card_style.gsub('bg-warning', 'table-warning').gsub('bg-danger', 'table-danger')
+    card_style.gsub('bg-warning bg-opacity-25', 'table-warning').gsub('bg-danger bg-opacity-25', 'table-danger')
   end
 
   def from_user_is_to_user?

@@ -182,6 +182,10 @@ module RadCommon
         copy_file '../../../../../spec/dummy/lib/templates/factory_bot/factory.rb.tt',
                   'lib/templates/factory_bot/factory.rb.tt'
 
+        # search template
+        copy_file '../../../../../spec/dummy/lib/templates/services/search.rb.tt',
+                  'lib/templates/services/search.rb.tt'
+
         unless RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
 require 'factory_bot_rails'
@@ -779,6 +783,7 @@ gem 'propshaft'
           apply_migration '20250918153732_add_large_language_model_chats.rb'
           apply_migration '20250914154915_fix_developer_notifications.rb'
           apply_migration '20250926165217_rename_llm_chats_to_assistant_sessions.rb'
+          apply_migration '20250418211716_add_created_at_index_to_system_usages.rb'
         end
 
         def installed_app_name
