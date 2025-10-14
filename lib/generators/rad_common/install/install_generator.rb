@@ -780,6 +780,7 @@ gem 'propshaft'
           apply_migration '20250512115245_two_factor_auth_updates.rb'
           apply_migration '20250622203947_user_js_timezone.rb'
           apply_migration '20250914154915_fix_developer_notifications.rb'
+          apply_migration '20250418211716_add_created_at_index_to_system_usages.rb'
         end
 
         def installed_app_name
