@@ -1,0 +1,29 @@
+.card
+  = render 'layouts/card_header'
+  .card-body
+    .row
+      .col-12
+        .table-responsive
+          %table.table.table-striped.table-bordered
+            %thead
+              %tr
+                %th Name
+                %th Description
+                %th Model
+                %th Status
+                %th Actions
+            %tbody
+              - @custom_reports.each do |custom_report|
+                %tr
+                  %td= custom_report.name
+                  %td= custom_report.description
+                  %td= custom_report.report_model
+                  %td= format_boolean(custom_report.active?)
+                  %td.d-grid.gap-2
+                    = link_to icon('play', 'Run'), custom_report_path(custom_report), class: 'btn btn-sm btn-primary'
+                    = link_to icon('pencil', 'Edit'), edit_custom_report_path(custom_report), class: 'btn btn-sm btn-secondary'
+                    = link_to icon('trash', 'Delete'),
+                              custom_report_path(custom_report),
+                              method: :delete,
+                              data: { confirm: 'Are you sure?' },
+                              class: 'btn btn-sm btn-danger'

@@ -1,0 +1,88 @@
+= simple_form_for custom_report,
+                  url: custom_report.persisted? ? custom_report_path(custom_report) : custom_reports_path,
+                  local: true,
+                  html: { data: { controller: 'report-builder', action: 'submit->report-builder#submitForm', report_builder_filter_types_map_value: filter_types_map.to_json } } do |f|
+  = rad_form_errors f
+
+  .row
+    .col-md-6
+      = f.input :report_model,
+                label: 'Base Model',
+                collection: available_models,
+                selected: custom_report.report_model,
+                include_blank: 'Select a model to report on',
+                required: true,
+                input_html: { class: 'selectpicker ays-ignore',
+                              data: { report_builder_target: 'modelSelect',
+                                      action: 'change->report-builder#modelChanged' } }
+  - if params[:report_model].present?
+    .row
+      .col-md-8
+        = f.input :name,
+                  required: true,
+                  placeholder: 'e.g., Active Users Report',
+                  input_html: { class: 'form-control' }
+
+      .col-md-4
+        = f.input :active,
+                  as: :boolean,
+                  wrapper_html: { class: 'form-check form-switch mt-2' },
+                  input_html: { class: 'form-check-input', role: 'switch' },
+                  label_html: { class: 'form-check-label' }
+
+    .row
+      .col-12
+        = f.input :description,
+                  as: :text,
+                  input_html: { class: 'form-control', rows: 2 },
+                  placeholder: 'Describe what this report shows...'
+
+    %hr
+
+    %h5.mb-3
+      %i.fa.fa-columns.me-2
+      Report Columns
+
+    .mb-4{ data: { report_builder_target: 'columnsSection' } }
+      - if custom_report.report_model.present?
+        = render 'columns_section', custom_report: custom_report
+      - else
+        .alert.alert-info
+          %i.fa.fa-info-circle.me-2
+          Please select a model first to see available columns
+
+    %hr.mt-4
+
+    %h5.mb-3
+      %i.fa.fa-filter.me-2
+      Filters
+
+    = turbo_frame_tag 'report_filters_section' do
+      - if custom_report.report_model.present?
+        = render 'filters_section', custom_report: custom_report
+      - else
+        .alert.alert-info
+          %i.fa.fa-info-circle.me-2
+          Select a model first to add filters
+
+    %hr.mt-4
+
+    .row
+      .col-12
+        %h5.mb-3
+          %i.fa.fa-link.me-2
+          Related Tables (Joins)
+        %p.text-muted.small Add related tables to access their columns in your report
+
+    .mb-4
+      - if custom_report.report_model.present?
+        = render 'joins_section', custom_report: custom_report
+      - else
+        .alert.alert-info
+          %i.fa.fa-info-circle.me-2
+          Select a model first to see available related tables
+
+    .form-actions
+      = f.button :submit, 'Save', class: 'btn btn-success'
+
+    %div{ data: { report_builder_target: 'hiddenColumnsConfig' } }

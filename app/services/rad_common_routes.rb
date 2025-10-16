@@ -50,6 +50,14 @@ module RadCommonRoutes
         resources :user_security_roles, only: :show
         resources :json_web_tokens, only: :new
 
+        resources :custom_reports do
+          collection do
+            get :update_joins
+            post :update_filters
+            delete :update_filters
+          end
+        end
+
         resources :impersonations, only: [] do
           collection do
             post :start

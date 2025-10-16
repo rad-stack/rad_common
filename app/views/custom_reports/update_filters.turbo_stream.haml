@@ -1,0 +1,11 @@
+- if request.post?
+  = turbo_stream.append 'filter-cards-container' do
+    = render 'filter_card',
+             filter: @filter,
+             filter_index: @filter_index,
+             all_columns: @all_columns,
+             report_model: @report_model,
+             report_id: @report_id,
+             joins: @joins
+- elsif request.delete?
+  = turbo_stream.remove "filter_card_#{params[:filter_index]}"

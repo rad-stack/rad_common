@@ -1,0 +1,28 @@
+.card
+  = render 'layouts/card_header',
+           title: @custom_report.name,
+           additional_actions: export_buttons('CustomReport', override_path: 'custom_report_path', additional_params: { id: @custom_report.id })
+  .card-body
+    - if @report.filters.any?
+      = render 'layouts/filter', search: @report, path: custom_report_path(@custom_report)
+
+    = paginate @results, theme: 'bootstrap-5'
+
+    %table.table.table-striped.table-bordered
+      %tr
+        - @report.selected_columns.each do |col_name|
+          - col_def = @report.column_definitions.find { |c| c[:name] == col_name }
+          %th= col_def[:label]
+
+      - @results.each do |record|
+        %tr
+          - @report.selected_columns.each do |col_name|
+            - value = format_report_value(@report, record, col_name)
+            - col_def = @report.column_definitions.find { |c| c[:name] == col_name }
+            %td
+              - if col_def && col_def[:format] == :rich_text && value.is_a?(ActionText::RichText)
+                .read-more= value
+              - else
+                = value
+
+    = paginate @results, theme: 'bootstrap-5'
