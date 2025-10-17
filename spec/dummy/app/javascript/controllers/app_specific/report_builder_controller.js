@@ -37,14 +37,26 @@ export default class extends Controller {
     newRow.dataset.columnName = columnName;
     newRow.dataset.columnTable = columnTable;
     newRow.dataset.columnType = columnType;
+    newRow.dataset.columnFormat = this.getDefaultFormat(columnType);
     newRow.dataset.action =
       'dragstart->report-builder#handleDragStart dragover->report-builder#handleDragOver drop->report-builder#handleDrop dragend->report-builder#handleDragEnd';
     newRow.style.cursor = 'move';
 
+    const formatSelector = this.isNumericType(columnType)
+      ? `<br><select class="form-select form-select-sm mt-1" style="font-size: 0.75rem; width: auto;" data-action="change->report-builder#updateColumnFormat">
+           <option value="number">Number</option>
+           <option value="currency">Currency</option>
+           <option value="percentage">Percentage</option>
+         </select>`
+      : '';
+
     newRow.innerHTML = `
       <td><i class="fa fa-grip-vertical text-muted me-2"></i></td>
       <td class="text-truncate" style="width: 60%;">${humanName}</td>
-      <td><span class="badge bg-light text-dark border" style="font-size: 0.7rem;">${columnType}</span></td>
+      <td>
+        <span class="badge bg-light text-dark border" style="font-size: 0.7rem;">${columnType}</span>
+        ${formatSelector}
+      </td>
       <td class="text-end">
         <button class="btn btn-sm btn-link text-danger p-0" type="button" data-action="click->report-builder#removeColumnFromSelected" style="text-decoration: none;">
           <i class="fa fa-times"></i>
@@ -143,6 +155,12 @@ export default class extends Controller {
     }
   }
 
+  updateColumnFormat(event) {
+    const select = event.target;
+    const row = select.closest('tr');
+    row.dataset.columnFormat = select.value;
+  }
+
   submitForm(_event) {
     this.hiddenColumnsConfigTarget.innerHTML = '';
 
@@ -153,6 +171,7 @@ export default class extends Controller {
       const colName = row.dataset.columnName;
       const table = row.dataset.columnTable;
       const type = row.dataset.columnType;
+      const format = row.dataset.columnFormat || this.getDefaultFormat(type);
 
       this.createHiddenInput(`custom_report[columns][${index}][name]`, colName);
       this.createHiddenInput(
@@ -169,7 +188,7 @@ export default class extends Controller {
 
       this.createHiddenInput(
         `custom_report[columns][${index}][format]`,
-        this.mapTypeToFormat(type)
+        format
       );
     });
   }
@@ -187,12 +206,16 @@ export default class extends Controller {
     return colName.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
   }
 
-  mapTypeToFormat(type) {
+  isNumericType(type) {
+    return ['integer', 'bigint', 'decimal', 'float'].includes(type);
+  }
+
+  getDefaultFormat(type) {
     const typeMapping = {
-      integer: 'integer',
-      bigint: 'integer',
-      decimal: 'decimal',
-      float: 'decimal',
+      integer: 'number',
+      bigint: 'number',
+      decimal: 'number',
+      float: 'number',
       date: 'date',
       datetime: 'datetime',
       timestamp: 'datetime',

@@ -14,7 +14,7 @@ module RadReports
       when :datetime
         format_datetime(value)
       when :currency
-        format_currency(value)
+        ApplicationController.helpers.number_to_currency(value)
       when :number
         value.is_a?(Numeric) ? value.to_s(:delimited) : value
       when :percentage
