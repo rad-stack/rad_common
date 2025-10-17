@@ -9,16 +9,16 @@ class CustomReportExporter < Exporter
   private
 
     def headers
-      report.selected_columns.map do |col_name|
-        column_def = report.column_definitions.find { |c| c[:name] == col_name }
-        column_def ? column_def[:label] : col_name.to_s.titleize
+      report.selected_columns.map do |select_clause|
+        column_def = report.column_definitions.find { |c| c[:select] == select_clause }
+        column_def ? column_def[:label] : select_clause.to_s.split('.').last.titleize
       end
     end
 
     def write_attributes
-      report.selected_columns.map do |col_name|
-        column_def = report.column_definitions.find { |c| c[:name] == col_name }
-        RadReports::ValueFormatter.format_record_value(current_record, col_name, column_def)
+      report.selected_columns.map do |select_clause|
+        column_def = report.column_definitions.find { |c| c[:select] == select_clause }
+        RadReports::ValueFormatter.format_record_value(current_record, select_clause, column_def)
       end
     end
 

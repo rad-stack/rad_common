@@ -29,6 +29,7 @@ export default class extends Controller {
     const columnName = row.dataset.columnName;
     const columnTable = row.dataset.columnTable;
     const columnType = row.dataset.columnType;
+    const columnAssociation = row.dataset.columnAssociation;
     const humanName = this.generateLabel(columnName);
 
     const newRow = document.createElement('tr');
@@ -37,6 +38,7 @@ export default class extends Controller {
     newRow.dataset.columnName = columnName;
     newRow.dataset.columnTable = columnTable;
     newRow.dataset.columnType = columnType;
+    newRow.dataset.columnAssociation = columnAssociation || '';
     newRow.dataset.columnFormat = this.getDefaultFormat(columnType);
     newRow.dataset.action =
       'dragstart->report-builder#handleDragStart dragover->report-builder#handleDragOver drop->report-builder#handleDrop dragend->report-builder#handleDragEnd';
@@ -170,6 +172,7 @@ export default class extends Controller {
     selectedRows.forEach((row, index) => {
       const colName = row.dataset.columnName;
       const table = row.dataset.columnTable;
+      const association = row.dataset.columnAssociation;
       const type = row.dataset.columnType;
       const format = row.dataset.columnFormat || this.getDefaultFormat(type);
 
@@ -180,9 +183,10 @@ export default class extends Controller {
       );
 
       if (type !== 'rich_text') {
+        const selectPrefix = association && association !== '' ? association : table;
         this.createHiddenInput(
           `custom_report[columns][${index}][select]`,
-          `${table}.${colName}`
+          `${selectPrefix}.${colName}`
         );
       }
 

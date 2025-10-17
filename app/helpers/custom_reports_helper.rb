@@ -1,7 +1,7 @@
 module CustomReportsHelper
-  def format_report_value(report, record, column_name)
-    column_def = report.column_definitions.find { |c| c[:name] == column_name }
-    RadReports::ValueFormatter.format_record_value(record, column_name, column_def)
+  def format_report_value(report, record, select_clause)
+    column_def = report.column_definitions.find { |c| c[:select] == select_clause }
+    RadReports::ValueFormatter.format_record_value(record, select_clause, column_def)
   end
 
   def available_models

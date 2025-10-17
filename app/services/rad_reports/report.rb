@@ -1,6 +1,6 @@
 module RadReports
   class Report < RadSearch::Search
-    attr_reader :available_columns, :selected_columns, :report_name, :custom_report, :model_name
+    attr_reader :available_columns, :selected_columns, :report_name, :custom_report, :model_name, :association_to_table_map
 
     def initialize(custom_report:, current_user:, params:)
       @custom_report = custom_report
@@ -10,6 +10,7 @@ module RadReports
       @model_class = @model_name.constantize
       raise "Invalid model: #{@model_name}" unless @model_class < ApplicationRecord
 
+      @association_to_table_map = build_association_to_table_map(custom_report.joins)
       @available_columns = build_column_definitions(custom_report.columns)
       @column_selector = ColumnSelector.new(report: self)
 
@@ -46,6 +47,17 @@ module RadReports
 
     private
 
+      def build_association_to_table_map(joins)
+        map = {}
+        joins.each do |join_name|
+          association = @model_class.reflect_on_association(join_name.to_sym)
+          next unless association
+
+          map[join_name] = association.table_name
+        end
+        map
+      end
+
       def build_query(joins)
         query = @model_class.all
         joins.each do |join_name|
@@ -79,11 +91,7 @@ module RadReports
 
       def infer_format_from_column(column_name)
         return nil unless @model_class
-
-        # Check if it's a rich text field first
-        if is_rich_text_field?(column_name)
-          return :rich_text
-        end
+        return :rich_text if rich_text_field?(column_name)
 
         db_column = @model_class.columns_hash[column_name.to_s]
         return nil unless db_column
@@ -102,7 +110,7 @@ module RadReports
         end
       end
 
-      def is_rich_text_field?(column_name)
+      def rich_text_field?(column_name)
         @model_class.reflect_on_all_associations.any? do |assoc|
           assoc.klass.name == 'ActionText::RichText' &&
             assoc.name.to_s == "rich_text_#{column_name}"
@@ -112,11 +120,11 @@ module RadReports
       end
 
       def get_selected_rich_text_associations
-        @selected_columns.filter_map do |col_name|
-          column_def = @available_columns.find { |c| c[:name] == col_name }
+        @selected_columns.filter_map do |select_clause|
+          column_def = @available_columns.find { |c| c[:select] == select_clause }
           next unless column_def&.dig(:format) == :rich_text
 
-          "rich_text_#{col_name}".to_sym
+          :"rich_text_#{column_def[:name]}"
         end
       end
 
@@ -133,6 +141,15 @@ module RadReports
             options = filter['options']
             options = JSON.parse(options) if options.is_a?(String)
             filter_def[:options] = options if options.present?
+          end
+
+          if filter['label'].present?
+            if filter['type'] == 'RadSearch::DateFilter'
+              filter_def[:start_input_label] = "#{filter['label']} Start"
+              filter_def[:end_input_label] = "#{filter['label']} End"
+            else
+              filter_def[:input_label] = filter['label']
+            end
           end
 
           filter_def

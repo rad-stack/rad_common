@@ -10,15 +10,15 @@
 
     %table.table.table-striped.table-bordered
       %tr
-        - @report.selected_columns.each do |col_name|
-          - col_def = @report.column_definitions.find { |c| c[:name] == col_name }
+        - @report.selected_columns.each do |select_clause|
+          - col_def = @report.column_definitions.find { |c| c[:select] == select_clause }
           %th= col_def[:label]
 
       - @results.each do |record|
         %tr
-          - @report.selected_columns.each do |col_name|
-            - value = format_report_value(@report, record, col_name)
-            - col_def = @report.column_definitions.find { |c| c[:name] == col_name }
+          - @report.selected_columns.each do |select_clause|
+            - value = format_report_value(@report, record, select_clause)
+            - col_def = @report.column_definitions.find { |c| c[:select] == select_clause }
             %td
               - if col_def && col_def[:format] == :rich_text && value.is_a?(ActionText::RichText)
                 .read-more= value

@@ -1,37 +1,47 @@
 = turbo_frame_tag 'report_columns_section' do
-  - config = custom_report.configuration || {}
-  - joins = config['joins'] || []
-  - all_columns = model_columns(custom_report.report_model, joins)
-  - columns_by_table = model_columns_by_table(custom_report.report_model, joins)
-  - selected_column_keys = (config['columns'] || []).map { |c| "#{c['select'] || "#{all_columns.first&.dig(:table)}.#{c['name']}"}" }
+  :ruby
+    config = custom_report.configuration || {}
+    joins = custom_report.joins || []
+    columns = custom_report.columns || []
+    all_columns = model_columns(custom_report.report_model, joins)
+    columns_by_table = model_columns_by_table(custom_report.report_model, joins)
+    # Build keys using select clause if available, otherwise use table.column format
+    selected_column_keys = columns.map { |c| c['select'] }
 
   .row
     .col-md-6
       %h6.mb-2
         Available Columns
       .card
-        .card-body{ style: 'max-height: 400px; overflow-y: auto;' }
+        .card-body
           .accordion{ id: 'availableColumnsAccordion' }
             - columns_by_table.each do |table_info, cols|
               - table_id = "table-#{table_info[:table].gsub('_', '-')}"
               - is_base_table = table_info[:association].nil?
               .accordion-item
                 %h2.accordion-header{ id: "heading-#{table_id}" }
-                  %button.accordion-button{ type: 'button', class: is_base_table ? '' : 'collapsed', data: { bs_toggle: 'collapse', bs_target: "#collapse-#{table_id}" }, aria: { expanded: is_base_table.to_s, controls: "collapse-#{table_id}" } }
+                  %button.accordion-button{ type: 'button',
+                                            class: is_base_table ? '' : 'collapsed',
+                                            data: { bs_toggle: 'collapse', bs_target: "#collapse-#{table_id}" },
+                                            aria: { expanded: is_base_table.to_s, controls: "collapse-#{table_id}" } }
                     = table_info[:label]
-                    - if !is_base_table && table_info[:class_label] != table_info[:label]
-                      %small.text-muted.ms-1= "(#{table_info[:class_label]})"
-                    %span.badge.bg-light.text-dark.border.ms-2= cols.count
-                    - if is_base_table
-                      %span.badge.bg-primary.ms-2 Base
-                .accordion-collapse.collapse{id: "collapse-#{table_id}", class: is_base_table ? 'show' : '', aria: { labelledby: "heading-#{table_id}" }, data: { bs_parent: '#availableColumnsAccordion' }}
+                .accordion-collapse.collapse{ id: "collapse-#{table_id}",
+                                              class: is_base_table ? 'show' : '',
+                                              aria: { labelledby: "heading-#{table_id}" },
+                                              data: { bs_parent: '#availableColumnsAccordion' } }
                   .accordion-body.p-0
                     %table.table.table-sm.table-hover.mb-0
                       %tbody
                         - cols.each do |col|
-                          - column_key = "#{col[:table]}.#{col[:name]}"
+                          - select_prefix = col[:association].present? ? col[:association] : col[:table]
+                          - column_key = "#{select_prefix}.#{col[:name]}"
                           - next if selected_column_keys.include?(column_key)
-                          %tr{data: { action: 'click->report-builder#addColumnToSelected', column_name: col[:name], column_table: col[:table], column_type: col[:type], column_association: col[:association] } }
+
+                          %tr{ data: { action: 'click->report-builder#addColumnToSelected',
+                                       column_name: col[:name],
+                                       column_table: col[:table],
+                                       column_type: col[:type],
+                                       column_association: col[:association] } }
                             %td= col[:name].humanize
                             %td
                               %span.badge.bg-light.text-dark.border= col[:type]
@@ -43,26 +53,36 @@
         Selected Columns
         - selected_columns_config = config['columns'] || []
       .card
-        .card-body{ style: 'max-height: 400px; overflow-y: auto;' }
+        .card-body
           %table.table.table-sm.table-hover.mb-0
-            %tbody{data: { report_builder_target: 'selectedColumnsList' }}
+            %tbody{ data: { report_builder_target: 'selectedColumnsList' } }
               - selected_columns_config.each do |col_config|
-                - table_name = col_config['select']&.split('.')&.first
-                - col_name = col_config['name']
-                - col = all_columns.find { |c| c[:name] == col_name && c[:table] == table_name }
-                - if col
-                  %tr.selected-column-row{draggable: 'true', data: { column_name: col[:name], column_table: col[:table], column_type: col[:type], column_association: col[:association], action: 'dragstart->report-builder#handleDragStart dragover->report-builder#handleDragOver drop->report-builder#handleDrop dragend->report-builder#handleDragEnd' }, style: 'cursor: move;'}
-                    %td
-                      %i.fa.fa-grip-vertical.text-muted.me-2
-                    %td
-                      = col[:name].humanize
-                      - if col[:association].present?
-                        - if col[:association_label] && col[:association_label] != col[:table_label]
-                          %small.text-muted (#{col[:association_label]})
-                        - else
-                          %small.text-muted (#{col[:table_label]})
-                    %td
-                      %span.badge.bg-light.text-dark.border= col[:type]
-                    %td.text-end
-                      %button.btn.btn-sm.btn-link.text-danger.p-0{type: 'button', data: { action: 'click->report-builder#removeColumnFromSelected' }, style: 'text-decoration: none;'}
-                        %i.fa.fa-times
+                :ruby
+                  select_prefix = col_config['select']&.split('.')&.first
+                  col_name = col_config['name']
+                  # Match by association first, then fall back to table
+                  col = all_columns.find { |c| c[:name] == col_name && (c[:association] == select_prefix || c[:table] == select_prefix) }
+                  next if col.blank?
+
+                  actions = 'dragstart->report-builder#handleDragStart dragover->report-builder#handleDragOver ' \
+                            'drop->report-builder#handleDrop dragend->report-builder#handleDragEnd'
+                %tr.selected-column-row{ draggable: 'true', data: { column_name: col[:name],
+                                                                    column_table: col[:table],
+                                                                    column_type: col[:type],
+                                                                    column_association: col[:association],
+                                                                    action: actions } }
+                  %td
+                    %i.fa.fa-grip-vertical.text-muted.me-2
+                  %td
+                    = col[:name].humanize
+                    - if col[:association].present?
+                      - if col[:association_label] && col[:association_label] != col[:table_label]
+                        %small.text-muted (#{col[:association_label]})
+                      - else
+                        %small.text-muted (#{col[:table_label]})
+                  %td
+                    %span.badge.bg-light.text-dark.border= col[:type]
+                  %td.text-end
+                    - delete_action = { action: 'click->report-builder#removeColumnFromSelected' }
+                    %button.btn.btn-sm.btn-link.text-danger.p-0{ type: 'button', data: delete_action }
+                      %i.fa.fa-times
