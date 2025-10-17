@@ -17,7 +17,7 @@ class CustomReportsController < ApplicationController
       params: params
     )
 
-    authorize @report
+    authorize :custom_report, :show?
 
     @results = @report.results.page(params[:page]).per(@report.page_size_param)
 

@@ -15,7 +15,7 @@
                 input_html: { class: 'selectpicker ays-ignore',
                               data: { report_builder_target: 'modelSelect',
                                       action: 'change->report-builder#modelChanged' } }
-  - if params[:report_model].present?
+  - if params[:report_model].present? || custom_report.report_model.present?
     .row
       .col-md-8
         = f.input :name,
