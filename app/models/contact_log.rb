@@ -4,7 +4,7 @@ class ContactLog < ApplicationRecord
 
   has_many :contact_log_recipients, dependent: :destroy
 
-  enum :direction, { outgoing: 0, incoming: 1 }
+  enum :contact_direction, { outgoing: 0, incoming: 1 }
   enum :service_type, { sms: 0, email: 1, voice: 2, fax: 3 }
 
   scope :sorted, -> { order(created_at: :desc, id: :desc) }
@@ -27,8 +27,8 @@ class ContactLog < ApplicationRecord
   validates :fax_message_id, :record_type, :record_id, presence: true, if: -> { fax? && sent? }
   validates :content, presence: true, if: -> { sent? && !fax? }
   validates :content, absence: true, if: :fax?
-  validates :direction, presence: true, if: -> { sms? || fax? }
-  validates :direction, :sms_media_url, :sms_message_id, absence: true, if: :email?
+  validates :contact_direction, presence: true, if: -> { sms? || fax? }
+  validates :contact_direction, :sms_media_url, :sms_message_id, absence: true, if: :email?
   validates :fax_message_id, absence: true, unless: -> { fax? }
   validate :validate_incoming, if: :incoming?
   validate :validate_attachments_exists, if: :fax?
@@ -91,7 +91,7 @@ class ContactLog < ApplicationRecord
 
   def self.create_fax_log!(to_number:, attachments:, associated_record:, from_user_id:, to_user: nil)
     log = ContactLog.new service_type: :fax,
-                         direction: :outgoing,
+                         contact_direction: :outgoing,
                          from_number: SinchFaxClient.from_number,
                          from_user_id: from_user_id,
                          sent: false,

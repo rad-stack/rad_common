@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :contact_log do
     service_type { 'sms' }
-    direction { 'outgoing' }
+    contact_direction { 'outgoing' }
     from_number { Faker::PhoneNumber.cell_phone }
     from_user factory: :user
     content { Faker::TvShows::GameOfThrones.quote }
@@ -28,7 +28,7 @@ FactoryBot.define do
 
     trait :email do
       service_type { :email }
-      direction { nil }
+      contact_direction { nil }
       sms_media_url { nil }
       from_number { nil }
       from_email { Faker::Internet.email }

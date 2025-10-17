@@ -25,9 +25,9 @@ class FaxSender
   end
 
   def update_log!(response)
-    direction = DIRECTION[response['direction'].to_sym]
+    contact_direction = DIRECTION[response['direction'].to_sym]
     status = response['status'].downcase.to_sym
-    contact_log.update!(fax_message_id: response['id'], sent: true, direction: direction)
+    contact_log.update!(fax_message_id: response['id'], sent: true, contact_direction: contact_direction)
     contact_log.contact_log_recipients.each do |contact_log_recipient|
       contact_log_recipient.update!(fax_status: status)
     end

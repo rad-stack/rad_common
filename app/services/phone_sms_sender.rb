@@ -74,7 +74,7 @@ class PhoneSMSSender
     end
 
     def log_event(sent, message_sid)
-      @log = ContactLog.create! direction: :outgoing,
+      @log = ContactLog.create! contact_direction: :outgoing,
                                 from_number: RadTwilio.twilio_to_human_format(from_number),
                                 from_user_id: contact_log_from_user_id,
                                 content: message,

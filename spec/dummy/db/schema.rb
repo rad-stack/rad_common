@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_12_174238) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_17_110121) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -165,7 +165,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_12_174238) do
     t.datetime "updated_at", null: false
     t.boolean "sms_opt_out_message_sent", default: false, null: false
     t.string "sms_message_id"
-    t.integer "direction"
+    t.integer "contact_direction"
     t.string "from_email"
     t.integer "service_type", default: 0, null: false
     t.string "record_type"
