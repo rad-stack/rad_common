@@ -2,7 +2,7 @@
 = turbo_frame_tag 'report_joins_section' do
   - config = custom_report.configuration || {}
   - joins = config['joins'] || []
-  - associations_list = available_associations_with_details(custom_report.report_model)
+  - associations_list = available_associations_with_details(custom_report.report_model, joins)
   - report_model = custom_report.report_model
   - report_id = custom_report.persisted? ? custom_report.id : nil
 
@@ -34,8 +34,7 @@
                 %i.fa.fa-times
               %input{type: 'hidden', name: 'custom_report[joins][]', value: join}
 
-  - associations_with_details = available_associations_with_details(custom_report.report_model)
-  - available_joins = associations_with_details.reject { |assoc| joins.include?(assoc[:name]) }
+  - available_joins = associations_list.reject { |assoc| joins.include?(assoc[:name]) }
   - if available_joins.any?
     .dropdown
       %button.btn.btn-sm.btn-outline-primary.dropdown-toggle{type: 'button', data: { bs_toggle: 'dropdown' }}

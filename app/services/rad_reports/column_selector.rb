@@ -58,10 +58,11 @@ module RadReports
 
     def convert_to_sql_select(select_clause)
       parts = select_clause.to_s.split('.')
-      return select_clause if parts.length != 2
+      return select_clause if parts.length < 2
 
-      prefix, column = parts
-      table_name = report.association_to_table_map[prefix] || prefix
+      column = parts.last
+      association_path = parts[0..-2].join('.')
+      table_name = report.association_to_table_map[association_path] || association_path
 
       "#{table_name}.#{column}"
     end

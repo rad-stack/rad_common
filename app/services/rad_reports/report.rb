@@ -49,19 +49,33 @@ module RadReports
 
       def build_association_to_table_map(joins)
         map = {}
-        joins.each do |join_name|
-          association = @model_class.reflect_on_association(join_name.to_sym)
-          next unless association
+        joins.each do |join_path|
+          parts = join_path.split('.')
+          current_class = @model_class
 
-          map[join_name] = association.table_name
+          parts.each_with_index do |part, index|
+            association = current_class.reflect_on_association(part.to_sym)
+            next unless association
+
+            path_so_far = parts[0..index].join('.')
+            map[path_so_far] = association.table_name
+
+            current_class = association.klass
+          end
         end
         map
       end
 
       def build_query(joins)
         query = @model_class.all
-        joins.each do |join_name|
-          query = query.joins(join_name.to_sym)
+        joins.each do |join_path|
+          if join_path.include?('.')
+            parts = join_path.split('.')
+            nested_hash = parts.reverse.reduce { |acc, part| { part.to_sym => acc } }
+            query = query.joins(nested_hash)
+          else
+            query = query.joins(join_path.to_sym)
+          end
         end
         query
       end

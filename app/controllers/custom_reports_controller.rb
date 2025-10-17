@@ -85,7 +85,13 @@ class CustomReportsController < ApplicationController
 
     joins = params[:joins] || []
     joins = (joins + [params[:add_join]]).uniq if params[:add_join].present?
-    joins -= [params[:remove_join]] if params[:remove_join].present?
+
+    if params[:remove_join].present?
+      removed_join = params[:remove_join]
+      joins = joins.reject { |j| j == removed_join || j.start_with?("#{removed_join}.") }
+    end
+
+    joins = expand_nested_joins(joins)
 
     config = @custom_report.configuration || {}
     config['joins'] = joins.reject(&:blank?)
@@ -172,5 +178,16 @@ class CustomReportsController < ApplicationController
       else
         []
       end
+    end
+
+    def expand_nested_joins(joins)
+      expanded = []
+      joins.each do |join_path|
+        parts = join_path.split('.')
+        parts.each_with_index do |_part, index|
+          expanded << parts[0..index].join('.')
+        end
+      end
+      expanded.uniq
     end
 end

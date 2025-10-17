@@ -56,34 +56,42 @@ module CustomReportsHelper
     all_columns.concat(rich_text_columns)
 
     # Add columns from joined associations
-    joins.each do |join_name|
-      association = klass.reflect_on_association(join_name.to_sym)
-      next unless association
+    joins.each do |join_path|
+      # Navigate through nested path (e.g., "task.project.client")
+      parts = join_path.split('.')
+      current_class = klass
 
-      associated_class = association.klass
-      # Use the association name (e.g., "Owner") as the primary label
-      association_label = join_name.to_s.titleize
-      class_label = associated_class.model_name.human
+      parts.each do |part|
+        association = current_class.reflect_on_association(part.to_sym)
+        break unless association
+        current_class = association.klass
+      end
 
-      associated_columns = associated_class.columns.map do |col|
+      next unless current_class
+
+      # Use the full join path as the association identifier
+      association_label = join_path.split('.').map(&:titleize).join(' → ')
+      class_label = current_class.model_name.human
+
+      associated_columns = current_class.columns.map do |col|
         {
           name: col.name,
           type: col.type,
-          table: associated_class.table_name,
+          table: current_class.table_name,
           table_label: class_label,
-          association: join_name,
+          association: join_path,
           association_label: association_label
         }
       end
       all_columns.concat(associated_columns)
 
-      rich_text_columns = get_rich_text_columns(associated_class).map do |attr_name|
+      rich_text_columns = get_rich_text_columns(current_class).map do |attr_name|
         {
           name: attr_name,
           type: :rich_text,
-          table: associated_class.table_name,
+          table: current_class.table_name,
           table_label: class_label,
-          association: join_name,
+          association: join_path,
           association_label: association_label
         }
       end
@@ -207,11 +215,13 @@ module CustomReportsHelper
     []
   end
 
-  def available_associations_with_details(model_name)
+  def available_associations_with_details(model_name, joins = [], join_prefix = nil)
     return [] if model_name.blank?
 
     klass = model_name.constantize
+    result = []
 
+    # Get direct associations from the base model
     klass.reflect_on_all_associations.filter_map do |assoc|
       next if assoc.polymorphic?
       next if assoc.options[:through].present?
@@ -222,18 +232,66 @@ module CustomReportsHelper
         next if associated_class.name.in?(['ActionText::RichText', 'Audited::Audit'])
         next if assoc.name.to_s.include?('duplicate')
 
-        {
-          name: assoc.name.to_s,
-          label: assoc.name.to_s.titleize,
+        join_path = join_prefix ? "#{join_prefix}.#{assoc.name}" : assoc.name.to_s
+
+        result << {
+          name: join_path,
+          label: join_prefix ? "#{join_prefix.titleize} → #{assoc.name.to_s.titleize}" : assoc.name.to_s.titleize,
           type: assoc.macro.to_s,
           class_name: associated_class.name,
           table_name: associated_class.table_name,
-          foreign_key: assoc.foreign_key
+          foreign_key: assoc.foreign_key,
+          depth: join_prefix ? join_prefix.split('.').length + 1 : 1
         }
       rescue NameError
         nil
       end
     end
+
+    # For each existing join, get its associations too (one level deep for now)
+    joins.each do |join_path|
+      # Navigate through the join path to get the associated class
+      path_parts = join_path.split('.')
+      current_class = klass
+
+      path_parts.each do |part|
+        assoc = current_class.reflect_on_association(part.to_sym)
+        break unless assoc
+        current_class = assoc.klass
+      end
+
+      # Get associations from this joined model
+      current_class.reflect_on_all_associations.each do |assoc|
+        next if assoc.polymorphic?
+        next if assoc.options[:through].present?
+
+        begin
+          associated_class = assoc.klass
+
+          next if associated_class.name.in?(['ActionText::RichText', 'Audited::Audit'])
+          next if assoc.name.to_s.include?('duplicate')
+
+          nested_join_path = "#{join_path}.#{assoc.name}"
+
+          # Don't include if already in joins
+          next if joins.include?(nested_join_path)
+
+          result << {
+            name: nested_join_path,
+            label: "#{join_path.titleize} → #{assoc.name.to_s.titleize}",
+            type: assoc.macro.to_s,
+            class_name: associated_class.name,
+            table_name: associated_class.table_name,
+            foreign_key: assoc.foreign_key,
+            depth: path_parts.length + 1
+          }
+        rescue NameError
+          nil
+        end
+      end
+    end
+
+    result.compact
   rescue NameError
     []
   end
