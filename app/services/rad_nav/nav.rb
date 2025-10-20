@@ -30,20 +30,20 @@ module RadNav
         @nav_items ||= top_nav_items
       end
 
-      def top_nav_index_item(model_name, path: nil, label: nil)
-        TopNavIndexItem.new(view_context, model_name, path: path, label: label)
+      def top_nav_index_item(model_name, path: nil, label: nil, icon_name: nil)
+        TopNavIndexItem.new(view_context, model_name, path: path, label: label, icon_name: icon_name)
       end
 
-      def top_nav_item(label, path, badge: nil)
-        TopNavItem.new(view_context, label, path, badge: badge)
+      def top_nav_item(label, path, badge: nil, icon_name: nil)
+        TopNavItem.new(view_context, label, path, badge: badge, icon_name: icon_name)
       end
 
       def dropdown_menu_index_item(model_name, path: nil, label: nil, badge: nil)
         DropdownMenuIndexItem.new(view_context, model_name, path: path, label: label, badge: badge)
       end
 
-      def dropdown_menu(label, items, sort: false, permission: true)
-        DropdownMenu.new(view_context, label, items, sort: sort, permission: permission)
+      def dropdown_menu(label, items, sort: false, permission: true, icon_name: nil)
+        DropdownMenu.new(view_context, label, items, sort: sort, permission: permission, icon_name: icon_name)
       end
 
       def dropdown_menu_item(label, path, badge: nil, link_options: {}, permission: true)

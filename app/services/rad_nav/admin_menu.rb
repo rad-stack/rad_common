@@ -13,7 +13,7 @@ module RadNav
     def content
       return unless admin?
 
-      DropdownMenu.new(view_context, 'Admin', admin_menu_items).content
+      DropdownMenu.new(view_context, 'Admin', admin_menu_items, icon_name: 'gear').content
     end
 
     private

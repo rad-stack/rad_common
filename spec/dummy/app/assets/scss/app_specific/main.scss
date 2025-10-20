@@ -1,5 +1,18 @@
+// Prevent flash of expanded sidebar on page load
+html.sidebar-will-collapse {
+  .sidebar {
+    width: 60px;
+    transition: none;
+  }
+
+  .container-fluid.content {
+    margin-left: 60px;
+    transition: none;
+  }
+}
+
 body {
-  padding-top: 90px;
+  padding-top: 70px;
   background-color: #f8f9fa;
 }
 
@@ -7,13 +20,37 @@ body {
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #bbbcbc;
   transition: all 0.3s ease;
+  height: 70px;
 
-  .navbar-brand img {
-    transition: transform 0.2s ease;
+  .container-fluid {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
 
-    &:hover {
-      transform: scale(1.05);
+  .navbar-brand {
+    margin-right: 2rem;
+
+    img {
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
     }
+  }
+
+  .navbar-collapse {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+  }
+
+  .navbar-search {
+    flex: 1;
+    max-width: 500px;
+    margin-right: auto;
   }
 
   .nav-link {
@@ -26,8 +63,245 @@ body {
   }
 }
 
+.sidebar {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  height: calc(100vh - 70px);
+  width: 250px;
+  background-color: white;
+  border-right: 1px solid #bbbcbc;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  transition: width 0.3s ease;
+  z-index: 1040;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &.collapsed {
+    width: 60px;
+  }
+
+  .sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid #bbbcbc;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+
+    .sidebar-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      border-radius: 0.25rem;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        color: #0d6efd;
+      }
+
+      i, svg {
+        transition: transform 0.3s ease;
+      }
+    }
+  }
+
+  .sidebar-content {
+    padding: 1rem 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+
+    .nav {
+      .nav-item {
+        position: relative;
+
+        // Common link styles for both regular and dropdown items
+        .nav-link,
+        .dropdown-toggle {
+          padding: 0.875rem 1.5rem;
+          color: #333;
+          font-weight: 500;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          border-left: 3px solid transparent;
+          white-space: nowrap;
+          text-decoration: none;
+          cursor: pointer;
+
+          i, svg {
+            min-width: 20px;
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+            color: #6c757d;
+            transition: color 0.2s ease;
+          }
+
+          .nav-text {
+            transition: opacity 0.2s ease;
+          }
+
+          &:hover {
+            background-color: rgba(13, 110, 253, 0.05);
+            border-left-color: #0d6efd;
+            color: #0d6efd;
+
+            i, svg {
+              color: #0d6efd;
+            }
+          }
+
+          &.active {
+            background-color: rgba(13, 110, 253, 0.1);
+            border-left-color: #0d6efd;
+            color: #0d6efd;
+
+            i, svg {
+              color: #0d6efd;
+            }
+          }
+        }
+
+        &:not(:last-child) {
+          margin-bottom: 0.25rem;
+        }
+
+        &.dropdown {
+          .dropdown-toggle {
+            &::after {
+              margin-left: auto;
+            }
+          }
+
+          .dropdown-menu {
+            position: static !important;
+            transform: none !important;
+            border: none;
+            box-shadow: none;
+            background-color: #f8f9fa;
+            padding: 0;
+            margin: 0;
+
+            .dropdown-item {
+              padding: 0.5rem 1.5rem 0.5rem 2.5rem;
+              font-size: 0.9rem;
+              color: #666;
+
+              &:hover {
+                background-color: rgba(13, 110, 253, 0.05);
+                color: #0d6efd;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Collapsed state - show icons only
+  &.collapsed {
+    .sidebar-content {
+      .nav {
+        .nav-item {
+          &:not(:last-child) {
+            margin-bottom: 0.25rem;
+          }
+
+          // Common collapsed styles for both regular and dropdown items
+          .nav-link,
+          .dropdown-toggle {
+            padding: 0.875rem 0;
+            justify-content: center;
+            position: relative;
+
+            i, svg {
+              margin-right: 0;
+              font-size: 1.2rem;
+              min-width: auto;
+            }
+
+            .nav-text,
+            .badge {
+              display: none;
+            }
+
+            &[data-has-badge="true"] {
+              position: relative;
+
+              &::after {
+                content: '';
+                position: absolute;
+                top: 0.5rem;
+                right: 0.75rem;
+                width: 8px;
+                height: 8px;
+                background-color: #dc3545;
+                border-radius: 50%;
+                border: 2px solid white;
+              }
+            }
+          }
+
+          &.dropdown {
+            position: relative;
+
+            .dropdown-toggle {
+              &::after {
+                display: none;
+              }
+            }
+
+            // Make dropdown menu appear on hover when collapsed (controlled by JS)
+            .dropdown-menu {
+              position: fixed !important;
+              left: 58px;
+              top: auto;
+              transform: none !important;
+              border: 1px solid #bbbcbc;
+              box-shadow: var(--bs-box-shadow);
+              background-color: white;
+              padding: 0.5rem 0;
+              margin: 0;
+              margin-left: 2px;
+              display: none;
+              min-width: 200px;
+              z-index: 1050;
+
+              .dropdown-item {
+                padding: 0.5rem 1.5rem;
+                font-size: 0.9rem;
+                color: #666;
+
+                &:hover {
+                  background-color: rgba(13, 110, 253, 0.05);
+                  color: #0d6efd;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 .container-fluid.content {
   margin-top: 20px;
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+
+  &.sidebar-collapsed {
+    margin-left: 60px;
+  }
 
   .card {
     border: 1px solid #bbbcbc;
@@ -37,5 +311,28 @@ body {
 }
 
 .dropdown-menu.show {
-  box-shadow: var(--bs-box-shadow) !important
+  box-shadow: var(--bs-box-shadow) !important;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .sidebar {
+    &.collapsed {
+      width: 60px;
+    }
+  }
+
+  .container-fluid.content {
+    margin-left: 60px !important;
+
+    &.sidebar-collapsed {
+      margin-left: 60px !important;
+    }
+  }
+
+  .navbar {
+    .navbar-search {
+      display: none;
+    }
+  }
 }

@@ -2,11 +2,11 @@ class Nav < RadNav::Nav
   private
 
     def top_nav_items
-      [dropdown_menu('Clients', client_items),
+      [dropdown_menu('Clients', client_items, icon_name: 'briefcase'),
        attorneys_menu,
-       top_nav_item('Contact', view_context.new_company_contact_path, badge: nav_badge(:danger, 9)),
+       top_nav_item('Contact', view_context.new_company_contact_path, badge: nav_badge(:danger, 9), icon_name: 'envelope'),
        top_nav_users,
-       dropdown_menu('Divisions', division_items),
+       dropdown_menu('Divisions', division_items, icon_name: 'building'),
        admin_menu(false)]
     end
 
@@ -18,7 +18,7 @@ class Nav < RadNav::Nav
 
     def attorneys_menu
       if policy(Attorney.new).new?
-        dropdown_menu('Attorneys', attorney_items)
+        dropdown_menu('Attorneys', attorney_items, icon_name: 'scale-balanced')
       else
         top_nav_index_item('Attorney')
       end

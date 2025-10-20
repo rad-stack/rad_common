@@ -5,20 +5,25 @@
     = link_to root_path, { class: 'navbar-brand' } do
       = image_tag company_logo(Company.main)
     - unless rad_nav.disable_nav?
-      %button.navbar-toggler{ type: 'button', 'data-bs-toggle': 'collapse',
-                              'data-bs-target': '#navbar-supported-content' }
-        %span.navbar-toggler-icon
-      .navbar-collapse.collapse#navbar-supported-content
+      .navbar-collapse
         - if user_signed_in?
-          %ul.nav.navbar-nav.navbar-left
-            - if RadConfig.start_route! == '/onboardings'
-              = render 'layouts/onboarding_navigation'
-            - rad_nav.content.each do |item|
-              = item
-            %li.global-search-nav
-              = render 'layouts/global_search'
+          .navbar-search
+            = render 'layouts/global_search'
         - elsif @marketing_site
           %ul.nav.navbar-nav.navbar-left
             - rad_nav.marketing_content.each do |item|
               = item
         = render 'layouts/navigation_right'
+
+- unless rad_nav.disable_nav?
+  - if user_signed_in?
+    .sidebar#sidebar
+      .sidebar-header
+        %button.sidebar-toggle{ type: 'button', 'data-sidebar-toggle': true }
+          = icon('bars')
+      .sidebar-content
+        %ul.nav.flex-column
+          - if RadConfig.start_route! == '/onboardings'
+            = render 'layouts/onboarding_navigation'
+          - rad_nav.content.each do |item|
+            = item
