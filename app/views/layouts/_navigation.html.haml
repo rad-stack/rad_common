@@ -1,6 +1,6 @@
 - rad_nav = Nav.new(self)
 
-.navbar.navbar-expand-lg.navbar-light.bg-light#navbar
+.navbar.navbar-expand-lg.navbar-light.bg-white.shadow-sm.fixed-top#navbar
   %div{ class: @marketing_site ? 'container' : 'container-fluid' }
     = link_to root_path, { class: 'navbar-brand' } do
       = image_tag company_logo(Company.main)

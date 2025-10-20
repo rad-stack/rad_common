@@ -1,0 +1,41 @@
+body {
+  padding-top: 90px;
+  background-color: #f8f9fa;
+}
+
+.navbar {
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #bbbcbc;
+  transition: all 0.3s ease;
+
+  .navbar-brand img {
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .nav-link {
+    font-weight: 500;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #0d6efd;
+    }
+  }
+}
+
+.container-fluid.content {
+  margin-top: 20px;
+
+  .card {
+    border: 1px solid #bbbcbc;
+    background-color: white;
+    box-shadow: var(--bs-box-shadow-sm) !important;
+  }
+}
+
+.dropdown-menu.show {
+  box-shadow: var(--bs-box-shadow) !important
+}
