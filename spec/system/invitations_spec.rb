@@ -35,16 +35,17 @@ RSpec.describe 'Invitations' do
 
   context 'when invited by is external and invitee is internal' do
     let(:signed_in_user) { create :user, :external }
+    let(:internal_role) { create :security_role, allow_invite: true, external: false }
 
     before do
-      admin_role
+      internal_role
       signed_in_user.security_roles.first.update! manage_user: true
     end
 
     it "doesn't allow the invite" do
       visit new_user_invitation_path
 
-      select admin_role.name, from: 'Initial Security Role'
+      select internal_role.name, from: 'Initial Security Role'
       fill_in 'Email', with: invite_email
       fill_in 'First Name', with: first_name
       fill_in 'Last Name', with: last_name
