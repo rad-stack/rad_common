@@ -322,7 +322,7 @@ module RadUser
       return if initial_security_role_id.blank? || invited_by_id.blank?
       return unless initial_security_role.internal? && invited_by.external?
 
-      errors.add :invited_by, 'cannot invite an internal user'
+      errors.add :initial_security_role, 'cannot be internal'
     end
 
     def validate_internal
