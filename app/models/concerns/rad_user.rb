@@ -73,6 +73,7 @@ module RadUser
 
     validate :validate_email_address
     validate :validate_initial_security_role, on: :create, if: :active?
+    validate :validate_external_invites_internal, on: :create
     validate :validate_internal, on: :update
     validate :validate_twilio_verify
     validate :validate_mobile_phone
@@ -315,6 +316,13 @@ module RadUser
       return if initial_security_role_id.present? || security_role_ids.present?
 
       errors.add :initial_security_role_id, 'is required'
+    end
+
+    def validate_external_invites_internal
+      return if initial_security_role_id.blank? || invited_by_id.blank?
+      return unless initial_security_role.internal? && invited_by.external?
+
+      errors.add :invited_by, 'cannot invite an internal user'
     end
 
     def validate_internal

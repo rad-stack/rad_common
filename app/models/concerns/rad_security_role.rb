@@ -26,6 +26,10 @@ module RadSecurityRole
     audited
   end
 
+  def internal?
+    !external?
+  end
+
   module ClassMethods
     def resolve_roles(role_ids)
       if role_ids
