@@ -79,6 +79,8 @@ class SystemUsageSearch < RadSearch::Search
         else
           raise "invalid option: #{item.class}"
         end
+
+        check_index klass
         next unless Pundit.policy!(current_user, klass).index?
 
         item
@@ -134,5 +136,11 @@ class SystemUsageSearch < RadSearch::Search
 
     def today
       Time.current
+    end
+
+    def check_index(klass)
+      return if ActiveRecord::Base.connection.index_exists?(klass.table_name, 'created_at')
+
+      raise "missing index on #{klass.table_name}.created_at"
     end
 end
