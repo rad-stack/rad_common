@@ -1503,9 +1503,9 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-"rad_common_js@https://github.com/rad-stack/rad_common_js#3903d038d74aa25766e6d25962a22126f7d45d25":
+"rad_common_js@https://github.com/rad-stack/rad_common_js#rad-11625-invite-form-updates":
   version "2.1.8"
-  resolved "https://github.com/rad-stack/rad_common_js#3903d038d74aa25766e6d25962a22126f7d45d25"
+  resolved "https://github.com/rad-stack/rad_common_js#d333a01cb5d71b0b0dc4cfb3c8f345d31067ce7b"
   dependencies:
     "@fullcalendar/bootstrap5" "^6.1.11"
     "@hotwired/stimulus" "^3.2.2"
