@@ -10,6 +10,12 @@ module AssistantSessionsHelper
                'data-bs-toggle' => 'offcanvas')
   end
 
+  def logs_for_session(assistant_session)
+    return [] if assistant_session.log.nil?
+
+    assistant_session.log
+  end
+
   def assistant_session_logs(assistant_session)
     return [] if assistant_session.log.blank?
 

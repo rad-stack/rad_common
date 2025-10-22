@@ -8,7 +8,7 @@
         %th Date
         %th Role
         %th Content
-      - @assistant_session.log.each do |log|
+      - logs_for_session(@assistant_session).each do |log|
         - log.symbolize_keys!
         %tr
           %td= log[:chat_date]
