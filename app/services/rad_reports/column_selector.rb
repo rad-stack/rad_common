@@ -20,7 +20,12 @@ module RadReports
         column_def&.dig(:is_rich_text)
       end
 
-      return query if has_rich_text
+      has_attachment = selected_columns.any? do |select_clause|
+        column_def = report.available_columns.find { |c| c[:select] == select_clause }
+        column_def&.dig(:is_attachment)
+      end
+
+      return query if has_rich_text || has_attachment
 
       select_clauses = selected_columns.filter_map { |select_clause|
         column_def = report.available_columns.find { |c| c[:select] == select_clause }

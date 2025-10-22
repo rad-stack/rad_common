@@ -10,7 +10,7 @@
             grouped_options[group_label] ||= []
             table_col = "#{col[:table]}.#{col[:name]}"
             option_label = "#{col[:name].humanize} - #{col[:type]}"
-            grouped_options[group_label] << [option_label, table_col, { data: { column_type: col[:type] } }]
+            grouped_options[group_label] << [option_label, table_col, { data: { column_type: col[:type], is_foreign_key: col[:is_foreign_key], is_enum: col[:is_enum] } }]
         - options_html = options_for_select([['Select a column...', '']])
         - options_html += grouped_options_for_select(grouped_options, filter['column'])
         = select_tag 'custom_report[filters][][column]',
@@ -28,8 +28,14 @@
         :ruby
           selected_col = all_columns.find { |c| "#{c[:table]}.#{c[:name]}" == filter['column'] }
           col_type = selected_col ? selected_col[:type] : nil
-          type_options = if col_type
-            available_filter_types_for_column(col_type)
+          is_enum = selected_col ? selected_col[:is_enum] : false
+          is_foreign_key = selected_col ? selected_col[:is_foreign_key] : false
+
+          type_options = if is_enum
+            [['Enum', 'RadSearch::EnumFilter']]
+          elsif col_type
+            filter_types = available_filter_types_for_column(col_type)
+            is_foreign_key ? filter_types : filter_types.reject { |f| f[1] == 'RadSearch::SearchFilter' }
           elsif filter['type'].present?
             available_filter_types
           else
@@ -39,6 +45,9 @@
                      options_for_select(type_options, filter['type']),
                      class: 'selectpicker',
                      required: true
+        = hidden_field_tag 'custom_report[filters][][data_type]',
+                           filter['data_type'] || col_type,
+                           data: { filter_data_type: true }
 
       .col.my-auto.pt-4.text-end
         %label.form-label.small.invisible Delete

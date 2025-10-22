@@ -38,7 +38,9 @@ module CustomReportsHelper
         table: klass.table_name,
         table_label: klass.model_name.human,
         association: nil,
-        association_label: nil
+        association_label: nil,
+        is_foreign_key: foreign_key_column?(klass, col.name),
+        is_enum: enum_column?(klass, col.name)
       }
     end
     all_columns.concat(base_columns)
@@ -54,6 +56,18 @@ module CustomReportsHelper
       }
     end
     all_columns.concat(rich_text_columns)
+
+    attachment_columns = get_attachment_columns(klass).map do |attr_name|
+      {
+        name: attr_name,
+        type: :attachment,
+        table: klass.table_name,
+        table_label: klass.model_name.human,
+        association: nil,
+        association_label: nil
+      }
+    end
+    all_columns.concat(attachment_columns)
 
     # Add columns from joined associations
     joins.each do |join_path|
@@ -80,7 +94,9 @@ module CustomReportsHelper
           table: current_class.table_name,
           table_label: class_label,
           association: join_path,
-          association_label: association_label
+          association_label: association_label,
+          is_foreign_key: foreign_key_column?(current_class, col.name),
+          is_enum: enum_column?(current_class, col.name)
         }
       end
       all_columns.concat(associated_columns)
@@ -96,6 +112,18 @@ module CustomReportsHelper
         }
       end
       all_columns.concat(rich_text_columns)
+
+      attachment_columns = get_attachment_columns(current_class).map do |attr_name|
+        {
+          name: attr_name,
+          type: :attachment,
+          table: current_class.table_name,
+          table_label: class_label,
+          association: join_path,
+          association_label: association_label
+        }
+      end
+      all_columns.concat(attachment_columns)
     end
 
     all_columns
@@ -121,9 +149,9 @@ module CustomReportsHelper
       ['Exact Match', 'RadSearch::EqualsFilter'],
       ['Date Range', 'RadSearch::DateFilter'],
       ['Boolean', 'RadSearch::BooleanFilter'],
+      ['Dropdown', 'RadSearch::SearchFilter'],
       ['Dropdown (Array)', 'RadSearch::ArrayFilter'],
-      ['Enum', 'RadSearch::EnumFilter'],
-      ['Search', 'RadSearch::SearchFilter']
+      ['Enum', 'RadSearch::EnumFilter']
     ]
   end
 
@@ -134,18 +162,20 @@ module CustomReportsHelper
       date: ['Date Range', 'RadSearch::DateFilter'],
       boolean: ['Boolean', 'RadSearch::BooleanFilter'],
       array: ['Dropdown (Array)', 'RadSearch::ArrayFilter'],
-      search: ['Search', 'RadSearch::SearchFilter']
+      dropdown: ['Dropdown', 'RadSearch::SearchFilter']
     }
 
     case column_type.to_s
     when 'date', 'datetime', 'timestamp'
       [all_filters[:date], all_filters[:equals]]
     when 'boolean'
-      [all_filters[:boolean], all_filters[:equals]]
+      [all_filters[:boolean]]
     when 'integer', 'bigint', 'decimal', 'float'
-      [all_filters[:equals], all_filters[:array]]
+      [all_filters[:equals], all_filters[:dropdown]]
     else
-      [all_filters[:like], all_filters[:equals], all_filters[:search], all_filters[:array]]
+      filters = [all_filters[:like], all_filters[:equals], all_filters[:dropdown]]
+      filters << all_filters[:array] if column_type.to_s == 'array'
+      filters
     end
   end
 
@@ -161,7 +191,8 @@ module CustomReportsHelper
       'float' => available_filter_types_for_column('float'),
       'string' => available_filter_types_for_column('string'),
       'text' => available_filter_types_for_column('text'),
-      'rich_text' => available_filter_types_for_column('text')
+      'rich_text' => available_filter_types_for_column('text'),
+      'attachment' => available_filter_types_for_column('text')
     }
   end
 
@@ -176,7 +207,8 @@ module CustomReportsHelper
       ['Boolean', 'boolean'],
       ['Email', 'email'],
       ['Phone', 'phone'],
-      ['Rich Text', 'rich_text']
+      ['Rich Text', 'rich_text'],
+      ['Attachment', 'attachment']
     ]
   end
 
@@ -199,6 +231,7 @@ module CustomReportsHelper
         association_type = assoc.macro.to_s.humanize
 
         next if associated_class.name == 'ActionText::RichText'
+        next if associated_class.name == 'ActiveStorage::Attachment'
         next if associated_class.name == 'Audited::Audit'
         next if assoc.name.to_s.include?('duplicate')
 
@@ -229,7 +262,7 @@ module CustomReportsHelper
       begin
         associated_class = assoc.klass
 
-        next if associated_class.name.in?(['ActionText::RichText', 'Audited::Audit'])
+        next if associated_class.name.in?(['ActionText::RichText', 'ActiveStorage::Attachment', 'Audited::Audit'])
         next if assoc.name.to_s.include?('duplicate')
 
         join_path = join_prefix ? "#{join_prefix}.#{assoc.name}" : assoc.name.to_s
@@ -268,7 +301,7 @@ module CustomReportsHelper
         begin
           associated_class = assoc.klass
 
-          next if associated_class.name.in?(['ActionText::RichText', 'Audited::Audit'])
+          next if associated_class.name.in?(['ActionText::RichText', 'ActiveStorage::Attachment', 'Audited::Audit'])
           next if assoc.name.to_s.include?('duplicate')
 
           nested_join_path = "#{join_path}.#{assoc.name}"
@@ -308,5 +341,28 @@ module CustomReportsHelper
       []
     end
 
+    def get_attachment_columns(klass)
+      klass.reflect_on_all_associations.filter_map do |assoc|
+        next unless assoc.klass.name == 'ActiveStorage::Attachment'
 
+        # has_one_attached :avatar creates 'avatar_attachment'
+        # has_many_attached :files creates 'files_attachments'
+        attr_name = assoc.name.to_s.sub(/_attachments?\z/, '')
+        attr_name if attr_name != assoc.name.to_s
+      end
+    rescue StandardError
+      []
+    end
+
+    def foreign_key_column?(model_class, column_name)
+      return false unless column_name.end_with?('_id')
+
+      model_class.reflect_on_all_associations.any? do |assoc|
+        assoc.foreign_key.to_s == column_name
+      end
+    end
+
+    def enum_column?(model_class, column_name)
+      model_class.defined_enums.key?(column_name)
+    end
 end

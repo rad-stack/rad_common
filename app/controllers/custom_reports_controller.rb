@@ -136,7 +136,7 @@ class CustomReportsController < ApplicationController
         :report_model,
         :active,
         columns: %i[name label select formula],
-        filters: %i[column label type options],
+        filters: %i[column label type options data_type],
         sort_columns: %i[label column],
         joins: []
       )

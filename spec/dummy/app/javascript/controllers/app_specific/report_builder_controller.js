@@ -143,30 +143,55 @@ export default class extends Controller {
     const select = event.target;
     const selectedOption = select.options[select.selectedIndex];
     const columnType = selectedOption.dataset.columnType;
+    const isForeignKey = selectedOption.dataset.isForeignKey === 'true';
+    const isEnum = selectedOption.dataset.isEnum === 'true';
     const card = select.closest('.filter-card');
 
     const labelInput = card.querySelector('input[name="custom_report[filters][][label]"]');
-    if (labelInput && !labelInput.value && select.value) {
+    if (labelInput && select.value) {
       const columnName = select.value.split('.').pop();
       labelInput.value = this.generateLabel(columnName);
     }
 
+    const dataTypeInput = card.querySelector('input[data-filter-data-type]');
+    if (dataTypeInput && columnType) {
+      dataTypeInput.value = columnType;
+    }
+
     const typeSelect = card.querySelector('select[name="custom_report[filters][][type]"]');
     if (typeSelect && columnType) {
-      const filterTypes = this.filterTypesMapValue[columnType] || this.filterTypesMapValue['string'];
+      let filterTypes = this.filterTypesMapValue[columnType] || this.filterTypesMapValue['string'];
+
+      if (isEnum) {
+        filterTypes = [['Enum', 'RadSearch::EnumFilter']];
+      } else if (!isForeignKey) {
+        filterTypes = filterTypes.filter(filter => filter[1] !== 'RadSearch::SearchFilter');
+      }
 
       if (typeSelect.tomselect) {
         const tomselect = typeSelect.tomselect;
+        tomselect.clear();
         tomselect.clearOptions();
         filterTypes.forEach((filter) => {
           tomselect.addOption({ value: filter[1], text: filter[0] });
         });
         tomselect.refreshOptions(false);
+
+        if (filterTypes.length === 1) {
+          tomselect.setValue(filterTypes[0][1]);
+        }
       } else {
+        const placeholderOption = '<option value="">Choose filter type...</option>';
         const optionsHtml = filterTypes
           .map((filter) => `<option value="${filter[1]}">${filter[0]}</option>`)
           .join('');
-        typeSelect.innerHTML = optionsHtml;
+        typeSelect.innerHTML = placeholderOption + optionsHtml;
+
+        if (filterTypes.length === 1) {
+          typeSelect.value = filterTypes[0][1];
+        } else {
+          typeSelect.value = '';
+        }
       }
     }
   }

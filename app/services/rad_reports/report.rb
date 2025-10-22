@@ -34,6 +34,9 @@ module RadReports
       rich_text_associations = get_selected_rich_text_associations
       base_results = base_results.includes(rich_text_associations) if rich_text_associations.any?
 
+      attachment_associations = get_selected_attachment_associations
+      base_results = base_results.includes(attachment_associations) if attachment_associations.any?
+
       @column_selector.apply_column_selection(base_results)
     end
 
@@ -83,12 +86,14 @@ module RadReports
       def build_column_definitions(columns)
         columns.map do |col|
           is_rich_text = rich_text_field?(col['name'])
+          is_attachment = attachment_field?(col['name'])
 
           {
             name: col['name'],
             label: col['label'],
-            select: is_rich_text ? nil : col['select'],
+            select: (is_rich_text || is_attachment) ? nil : col['select'],
             is_rich_text: is_rich_text,
+            is_attachment: is_attachment,
             formula: col['formula']
           }
         end
@@ -105,6 +110,17 @@ module RadReports
         false
       end
 
+      def attachment_field?(column_name)
+        return false unless @model_class
+
+        @model_class.reflect_on_all_associations.any? do |assoc|
+          assoc.klass.name == 'ActiveStorage::Attachment' &&
+            (assoc.name.to_s == "#{column_name}_attachment" || assoc.name.to_s == "#{column_name}_attachments")
+        end
+      rescue StandardError
+        false
+      end
+
       def get_selected_rich_text_associations
         @selected_columns.filter_map do |select_clause|
           column_def = @available_columns.find { |c| c[:select] == select_clause }
@@ -114,21 +130,39 @@ module RadReports
         end
       end
 
+      def get_selected_attachment_associations
+        @selected_columns.filter_map do |select_clause|
+          column_def = @available_columns.find { |c| c[:select] == select_clause }
+          next unless column_def&.dig(:is_attachment)
+
+          # Determine if it's has_one_attached (singular) or has_many_attached (plural)
+          attachment_name = column_def[:name]
+          if @model_class.reflect_on_association(:"#{attachment_name}_attachment")
+            :"#{attachment_name}_attachment"
+          elsif @model_class.reflect_on_association(:"#{attachment_name}_attachments")
+            :"#{attachment_name}_attachments"
+          end
+        end.compact
+      end
+
       def build_filter_definitions(filters)
         return [] if filters.blank?
 
         filters.map do |filter|
-          next if filter['type'].blank? || filter['type'].start_with?('[')
+          next if filter['type'].present? && filter['type'].start_with?('[')
 
           filter_def = {
-            column: filter['column'],
-            type: filter['type'].constantize
+            column: filter['column']
           }
+
+          filter_def[:type] = filter['type'].constantize if filter['type'].present?
 
           if filter['options'].present?
             options = filter['options']
             options = JSON.parse(options) if options.is_a?(String)
             filter_def[:options] = options if options.present?
+          elsif filter['type'] == 'RadSearch::SearchFilter' || filter['type'].blank?
+            filter_def[:options] = generate_filter_options(filter)
           end
 
           if filter['label'].present?
@@ -140,8 +174,76 @@ module RadReports
             end
           end
 
+          if filter['type'] == 'RadSearch::EqualsFilter' && filter['data_type'].present?
+            filter_def[:data_type] = map_column_type_to_data_type(filter['data_type'])
+          end
+
+          if filter['type'] == 'RadSearch::EnumFilter'
+            column_path = filter['column']
+            table_name, column_name = parse_column_path(column_path)
+            model_class = find_model_for_table(table_name)
+            if model_class
+              filter_def[:klass] = model_class
+              filter_def[:column] = column_name.to_sym
+            end
+          end
+
           filter_def
         end.compact
+      end
+
+      def map_column_type_to_data_type(column_type)
+        case column_type.to_s
+        when 'integer', 'bigint', 'decimal', 'float'
+          :integer
+        when 'text'
+          :text
+        else
+          :string
+        end
+      end
+
+      def generate_filter_options(filter)
+        column_path = filter['column']
+        table_name, column_name = parse_column_path(column_path)
+
+        model_class = find_model_for_table(table_name)
+        return [] unless model_class
+
+        association = find_association_for_fk(model_class, column_name)
+        return [] unless association
+
+        association.klass.all.to_a
+      rescue StandardError => e
+        Rails.logger.error("Error generating filter options for #{filter['column']}: #{e.message}")
+        []
+      end
+
+      def parse_column_path(column_path)
+        parts = column_path.split('.')
+
+        if parts.length == 2
+          association_path = parts[0]
+          column_name = parts[1]
+
+          table_name = @association_to_table_map[association_path] || parts[0]
+
+          [table_name, column_name]
+        else
+          [@model_class.table_name, column_path]
+        end
+      end
+
+      def find_model_for_table(table_name)
+        return @model_class if @model_class.table_name == table_name
+
+        ApplicationRecord.descendants.find { |model| model.table_name == table_name }
+      end
+
+      def find_association_for_fk(model_class, column_name)
+        model_class.reflect_on_all_associations.find do |assoc|
+          assoc.foreign_key.to_s == column_name
+        end
       end
 
       def build_sort_definitions(sort_columns)

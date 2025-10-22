@@ -1,6 +1,10 @@
 module RadReports
   class ValueFormatter
     def self.format_record_value(record, select_clause, column_def = nil)
+      if column_def && column_def[:is_attachment]
+        return format_attachment_value(record, column_def[:name])
+      end
+
       value = extract_value(record, select_clause, column_def)
 
       # Apply formula transformations if present
@@ -20,6 +24,10 @@ module RadReports
         return record[col] || record[col.to_s] if record.respond_to?(:[]) && (record[col] || record[col.to_s])
       end
 
+      nil
+    end
+
+    def self.format_attachment_value(_record, _attachment_name)
       nil
     end
   end

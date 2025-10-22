@@ -119,11 +119,20 @@ export default class extends Controller {
     this.renderTransforms();
 
     // Reset the dropdown and preview
+    this.resetTransformSelection();
+
+    this.modal.show();
+  }
+
+  resetTransformSelection() {
     this.transformSelectTarget.value = '';
+    this.transformPreviewTarget.innerHTML = '';
     this.pendingTransform = null;
     this.addButtonTarget.style.display = 'none';
 
-    this.modal.show();
+    if (this.transformSelectTarget.tomselect) {
+      this.transformSelectTarget.tomselect.clear();
+    }
   }
 
   parseFormula(formula) {
@@ -159,13 +168,7 @@ export default class extends Controller {
     this.transforms.push({ ...this.pendingTransform });
     this.renderTransforms();
 
-    this.transformSelectTarget.value = '';
-    this.transformPreviewTarget.innerHTML = '';
-    this.pendingTransform = null;
-    this.addButtonTarget.style.display = 'none';
-    if (this.transformSelectTarget.tomselect) {
-      this.transformSelectTarget.tomselect.clear();
-    }
+    this.resetTransformSelection();
   }
 
   getDefaultParams(type) {
@@ -300,6 +303,10 @@ export default class extends Controller {
   }
 
   saveFormula() {
+    if (this.pendingTransform) {
+      this.transforms.push({ ...this.pendingTransform });
+    }
+
     if (this.currentRow) {
       const formula = JSON.stringify(this.transforms);
       this.currentRow.dataset.columnFormula = formula;

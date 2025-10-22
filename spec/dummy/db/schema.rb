@@ -189,8 +189,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_110121) do
     t.jsonb "configuration", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["report_model"], name: "index_custom_reports_on_report_model"
     t.index ["name"], name: "index_custom_reports_on_name", unique: true
+    t.index ["report_model"], name: "index_custom_reports_on_report_model"
   end
 
   create_table "divisions", force: :cascade do |t|
@@ -451,7 +451,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_110121) do
   add_foreign_key "contact_log_recipients", "contact_logs"
   add_foreign_key "contact_log_recipients", "users", column: "to_user_id"
   add_foreign_key "contact_logs", "users", column: "from_user_id"
-  add_foreign_key "custom_reports", "users"
   add_foreign_key "divisions", "categories"
   add_foreign_key "divisions", "users", column: "owner_id"
   add_foreign_key "notification_security_roles", "notification_types"

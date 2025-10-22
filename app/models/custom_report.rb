@@ -19,12 +19,13 @@ class CustomReport < ApplicationRecord
   private
 
     def set_configuration_defaults
-      self.user_id ||= 1
       self.configuration ||= {}
       self.columns ||= []
       self.filters ||= []
+      self.filters.reject! { |f| f['column'].blank? }
       self.sort_columns ||= []
       self.joins ||= []
+      self.joins.compact_blank!
     end
 
     def columns_presence
