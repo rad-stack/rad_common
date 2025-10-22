@@ -205,6 +205,10 @@ module RadHelper
     SecurityRole.allow_invite.sorted
   end
 
+  def invite_role_options
+    SecurityRole.allow_invite.sorted.map { |role| [role.to_s, role.id, { data: { external: role.external? } }] }
+  end
+
   def verify_invite
     raise RadIntermittentException if RadConfig.disable_invite?
   end
