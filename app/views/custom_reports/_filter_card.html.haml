@@ -1,0 +1,51 @@
+.card.mb-2.filter-card{ id: "filter_card_#{filter_index}" }
+  .card-body
+    .row.g-2
+      .col-md-5
+        = label_tag 'custom_report[filters][][column]', 'Column', class: 'form-label small'
+        - grouped_options = {}
+        - all_columns.each do |col|
+          :ruby
+            group_label = col[:association_label].presence || col[:table_label]
+            grouped_options[group_label] ||= []
+            table_col = "#{col[:table]}.#{col[:name]}"
+            option_label = "#{col[:name].humanize} - #{col[:type]}"
+            grouped_options[group_label] << [option_label, table_col, { data: { column_type: col[:type] } }]
+        - options_html = options_for_select([['Select a column...', '']])
+        - options_html += grouped_options_for_select(grouped_options, filter['column'])
+        = select_tag 'custom_report[filters][][column]',
+                     options_html,
+                     class: 'selectpicker',
+                     required: true,
+                     data: { action: 'change->report-builder#filterColumnChanged' }
+
+      .col-md-3
+        = label_tag 'custom_report[filters][][label]', 'Label', class: 'form-label small'
+        = text_field_tag 'custom_report[filters][][label]', filter['label'], class: 'form-control', required: true
+
+      .col-md-3
+        = label_tag 'custom_report[filters][][type]', 'Filter Type', class: 'form-label small'
+        :ruby
+          selected_col = all_columns.find { |c| "#{c[:table]}.#{c[:name]}" == filter['column'] }
+          col_type = selected_col ? selected_col[:type] : nil
+          type_options = if col_type
+            available_filter_types_for_column(col_type)
+          elsif filter['type'].present?
+            available_filter_types
+          else
+            [['Select column first...', '']]
+          end
+        = select_tag 'custom_report[filters][][type]',
+                     options_for_select(type_options, filter['type']),
+                     class: 'selectpicker',
+                     required: true
+
+      .col.my-auto.pt-4.text-end
+        %label.form-label.small.invisible Delete
+        :ruby
+          url_params = { id: report_id, joins: joins, report_model: report_model,
+                         filter_index: filter_index, format: :turbo_stream }.compact
+        = link_to update_filters_custom_reports_path(url_params),
+                  class: 'btn btn-sm btn-danger',
+                  data: { turbo_prefetch: false, turbo_method: :delete } do
+          %i.fa.fa-times

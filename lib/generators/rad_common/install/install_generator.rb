@@ -784,6 +784,7 @@ gem 'propshaft'
           apply_migration '20251007153435_move_fax_error_message.rb'
           apply_migration '20250418211716_add_created_at_index_to_system_usages.rb'
           apply_migration '20251017110121_rename_direction_to_contact_direction.rb'
+          apply_migration '20251016155902_create_custom_reports.rb'
         end
 
         def installed_app_name

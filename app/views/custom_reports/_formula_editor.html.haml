@@ -1,0 +1,55 @@
+.modal.fade{ tabindex: '-1',
+             aria: { labelledby: 'formula-editor-modal-label', hidden: 'true' },
+             data: { formula_editor_target: 'modal' } }
+  .modal-dialog.modal-lg
+    .modal-content
+      .modal-header
+        %h5.modal-title#formula-editor-modal-label
+          Transform Editor
+          %small.text-muted.ms-2{ data: { formula_editor_target: 'columnName' } }
+        %button.btn-close{ type: 'button', data: { bs_dismiss: 'modal' }, aria: { label: 'Close' } }
+      .modal-body
+        .mb-3
+          .mb-3{ data: { formula_editor_target: 'transformsList' } }
+        .card.mb-3
+          .card-body
+            %label.form-label.mb-2 Add Transformation
+            %select.form-select.mb-3.selectpicker{ data: { action: 'change->formula-editor#previewTransform',
+                                                           formula_editor_target: 'transformSelect' } }
+              %option{ value: '' } Choose a transformation...
+              %optgroup{ label: 'Text' }
+                %option{ value: 'UPPER' } Uppercase
+                %option{ value: 'LOWER' } Lowercase
+                %option{ value: 'TITLECASE' } Title Case
+                %option{ value: 'CAPITALIZE' } Capitalize
+                %option{ value: 'TRUNCATE' } Truncate
+              %optgroup{ label: 'String' }
+                %option{ value: 'CONCAT' } Concatenate
+                %option{ value: 'REPLACE' } Replace Text
+                %option{ value: 'SUBSTRING' } Substring
+              %optgroup{ label: 'Math' }
+                %option{ value: 'ROUND' } Round
+                %option{ value: 'ABS' } Absolute Value
+                %option{ value: 'ADD' } Add
+                %option{ value: 'SUBTRACT' } Subtract
+                %option{ value: 'MULTIPLY' } Multiply
+                %option{ value: 'DIVIDE' } Divide
+                %option{ value: 'PERCENT' } Add Percent Sign
+              %optgroup{ label: 'Date' }
+                %option{ value: 'AGE' } Calculate Age
+                %option{ value: 'DAYS_AGO' } Days Ago
+                %option{ value: 'FORMAT_DATE' } Format Date
+              %optgroup{ label: 'Logic' }
+                %option{ value: 'BLANK' } Replace if Blank
+                %option{ value: 'YES_NO' } Yes/No
+
+            %div{ data: { formula_editor_target: 'transformPreview' } }
+
+            .mt-2{ style: 'display: none;', data: { formula_editor_target: 'addButton' } }
+              %button.btn.btn-primary.btn-sm.w-100{ type: 'button',
+                                                    data: { action: 'click->formula-editor#addTransform' } }
+                %i.fa.fa-plus.me-1
+                Add to List
+      .modal-footer
+        %button.btn.btn-secondary{ type: 'button', data: { bs_dismiss: 'modal' } } Cancel
+        %button.btn.btn-primary{ type: 'button', data: { action: 'click->formula-editor#saveFormula' } } Apply Formula

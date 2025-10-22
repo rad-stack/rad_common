@@ -1,0 +1,106 @@
+= turbo_frame_tag 'report_columns_section' do
+  :ruby
+    config = custom_report.configuration || {}
+    joins = custom_report.joins || []
+    columns = custom_report.columns || []
+    all_columns = model_columns(custom_report.report_model, joins)
+    columns_by_table = model_columns_by_table(custom_report.report_model, joins)
+    # Build keys using select clause if available, otherwise use table.column format
+    selected_column_keys = columns.map { |c| c['select'] }
+
+  .row
+    .col-md-6
+      %h6.mb-2
+        Available Columns
+      .card
+        .card-body
+          .accordion{ id: 'availableColumnsAccordion' }
+            - columns_by_table.each do |table_info, cols|
+              - table_id = "table-#{table_info[:table].gsub('_', '-')}"
+              - is_base_table = table_info[:association].nil?
+              .accordion-item
+                %h2.accordion-header{ id: "heading-#{table_id}" }
+                  %button.accordion-button{ type: 'button',
+                                            class: is_base_table ? '' : 'collapsed',
+                                            data: { bs_toggle: 'collapse', bs_target: "#collapse-#{table_id}" },
+                                            aria: { expanded: is_base_table.to_s, controls: "collapse-#{table_id}" } }
+                    = table_info[:label]
+                .accordion-collapse.collapse{ id: "collapse-#{table_id}",
+                                              class: is_base_table ? 'show' : '',
+                                              aria: { labelledby: "heading-#{table_id}" },
+                                              data: { bs_parent: '#availableColumnsAccordion' } }
+                  .accordion-body.p-0
+                    %table.table.table-sm.table-hover.mb-0
+                      %tbody
+                        - cols.each do |col|
+                          - select_prefix = col[:association].present? ? col[:association] : col[:table]
+                          - column_key = "#{select_prefix}.#{col[:name]}"
+                          - next if selected_column_keys.include?(column_key)
+
+                          %tr{ data: { action: 'click->report-builder#addColumnToSelected',
+                                       column_name: col[:name],
+                                       column_table: col[:table],
+                                       column_type: col[:type],
+                                       column_association: col[:association],
+                                       column_table_label: col[:table_label],
+                                       column_association_label: col[:association_label] } }
+                            %td= col[:name].humanize
+                            %td
+                              %span.badge.bg-light.text-dark.border= col[:type]
+                            %td.text-end
+                              %i.fa.fa-plus.text-primary.p-1
+
+    .col-md-6
+      %h6.mb-2
+        Selected Columns
+        - selected_columns_config = config['columns'] || []
+      .card
+        .card-body
+          %table.table.table-sm.table-hover.mb-0
+            %tbody{ data: { report_builder_target: 'selectedColumnsList' } }
+              - selected_columns_config.each do |col_config|
+                :ruby
+                  select_prefix = col_config['select']&.split('.')&.first
+                  col_name = col_config['name']
+                  # Match by association first, then fall back to table
+                  col = all_columns.find { |c| c[:name] == col_name && (c[:association] == select_prefix || c[:table] == select_prefix) }
+                  next if col.blank?
+
+                  actions = 'dragstart->report-builder#handleDragStart dragover->report-builder#handleDragOver ' \
+                            'drop->report-builder#handleDrop dragend->report-builder#handleDragEnd'
+                  formula_json = col_config['formula'].present? ? col_config['formula'].to_json : ''
+                %tr.selected-column-row{ draggable: 'true', data: { column_name: col[:name],
+                                                                    column_table: col[:table],
+                                                                    column_type: col[:type],
+                                                                    column_association: col[:association],
+                                                                    column_formula: formula_json,
+                                                                    action: actions } }
+                  %td
+                    %i.fa.fa-grip-vertical.text-muted.me-2{ style: 'cursor: grab;' }
+                  %td
+                    .d-flex.align-items-center.gap-2
+                      %input.form-control.form-control-sm{ type: 'text',
+                                                           value: col_config['label'] || col[:name].humanize,
+                                                           placeholder: col[:name].humanize,
+                                                           data: { action: 'change->report-builder#updateColumnLabel' } }
+                  %td
+                    %small.text-muted.text-nowrap
+                      - if col[:association].present?
+                        - if col[:association_label] && col[:association_label] != col[:table_label]
+                          #{col[:association_label]}.#{col[:name]}
+                        - else
+                          #{col[:table_label]}.#{col[:name]}
+                      - else
+                        #{col[:table_label]}.#{col[:name]}
+                  %td
+                    .d-flex.align-items-center.justify-content-between
+                      %span.badge.bg-light.text-dark.border= col[:type]
+                      %button.btn.btn-sm.btn-outline-secondary.btn-sm{ type: 'button',
+                                                                       data: { action: 'click->formula-editor#open' },
+                                                                       title: col_config['formula'].present? ? 'Edit Formula' : 'Add Formula',
+                                                                       class: col_config['formula'].present? ? 'btn-success' : ''  }
+                        %i.fa.fa-calculator
+                  %td.text-end
+                    - delete_action = { action: 'click->report-builder#removeColumnFromSelected' }
+                    %button.btn.btn-sm.btn-link.text-danger.p-0{ type: 'button', data: delete_action }
+                      %i.fa.fa-times
