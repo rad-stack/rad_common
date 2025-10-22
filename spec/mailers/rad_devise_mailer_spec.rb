@@ -8,12 +8,14 @@ describe RadDeviseMailer do
   before { ActionMailer::Base.deliveries = [] }
 
   describe 'invitation_instructions' do
-    subject { email.body.encoded }
+    before { user.invite! }
 
-    context 'when internal' do
-      before { user.invite! }
+    it 'has the subject' do
+      expect(email.subject).to eq "Invitation to Join #{RadConfig.app_name!}"
+    end
 
-      it { is_expected.to include 'Someone has invited you to Demo Foo' }
+    it 'has the body' do
+      expect(email.body.encoded).to include 'Someone has invited you to Demo Foo'
     end
   end
 
