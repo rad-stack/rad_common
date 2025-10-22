@@ -10,6 +10,8 @@ class AssistantSession < ApplicationRecord
 
   attr_accessor :current_message
 
+  scope :sorted, -> { order(created_at: :desc) }
+
   delegate :assistant_name, :context_object?, :format_message, to: :chat_instance
 
   def self.basic_chat(user, scope = nil)
