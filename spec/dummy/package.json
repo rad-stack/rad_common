@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
-    "rad_common_js": "https://github.com/rad-stack/rad_common_js#rad-11625-invite-form-updates"
+    "rad_common_js": "https://github.com/rad-stack/rad_common_js#6bee7de1ac858d219107e2f68b4bac28090ea8a1"
   },
   "devDependencies": {
     "esbuild": "^0.25.8",
