@@ -59,6 +59,8 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def invitation_instructions(record, token, opts = {})
+    opts[:subject] = "Invitation to Join #{RadConfig.app_name!}"
+
     @contact_log_record = record
     @contact_log_from_user = record.invited_by
     @token = token
