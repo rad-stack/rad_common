@@ -38,25 +38,13 @@
                                   class: is_base_table ? 'show active' : '',
                                   role: 'tabpanel' }
                     %table.table.table-sm.table-hover.mb-0
-                      %tbody
+                      %tbody{ id: "available-columns-#{table_id}" }
                         - cols.each do |col|
                           - select_prefix = col[:association].present? ? col[:association] : col[:table]
                           - column_key = "#{select_prefix}.#{col[:name]}"
                           - next if selected_column_keys.include?(column_key)
 
-                          %tr.report-column-row.align-middle{ data: { action: 'click->report-builder#addColumnToSelected',
-                                                                      column_name: col[:name],
-                                                                      column_table: col[:table],
-                                                                      column_type: col[:type],
-                                                                      column_association: col[:association],
-                                                                      column_table_label: col[:table_label],
-                                                                      column_association_label: col[:association_label] } }
-                            %td.py-3.ps-2
-                              %span.fw-medium= col[:name].humanize
-                            %td.py-3
-                              %span.badge.bg-light.text-dark.border-0.px-2= col[:type]
-                            %td.text-end.py-3.pe-2
-                              %i.fa.fa-plus-circle.text-primary
+                          = render 'available_column_row', column: col, table_id: table_id
 
     .col-md-6
       %h6.mb-2
@@ -65,7 +53,7 @@
       .card.shadow-sm
         .card-body.p-3
           %table.table.table-hover.mb-0
-            %tbody{ data: { report_builder_target: 'selectedColumnsList' } }
+            %tbody#selectedColumnsList{ data: { report_builder_target: 'selectedColumnsList' } }
               - selected_columns_config.each do |col_config|
                 :ruby
                   select_prefix = col_config['select']&.split('.')&.first
@@ -74,15 +62,24 @@
                   col = all_columns.find { |c| c[:name] == col_name && (c[:association] == select_prefix || c[:table] == select_prefix) }
                   next if col.blank?
 
+                  # Determine table_id for this column
+                  table_id = "table-#{col[:table].gsub('_', '-')}"
+
                   actions = 'dragstart->report-builder#handleDragStart dragover->report-builder#handleDragOver ' \
                             'drop->report-builder#handleDrop dragend->report-builder#handleDragEnd'
                   formula_json = col_config['formula'].present? ? col_config['formula'].to_json : ''
-                %tr.selected-column-row.align-middle{ draggable: 'true', data: { column_name: col[:name],
-                                                                                  column_table: col[:table],
-                                                                                  column_type: col[:type],
-                                                                                  column_association: col[:association],
-                                                                                  column_formula: formula_json,
-                                                                                  action: actions } }
+
+                  col_id = column_id(col, prefix: 'selected-column')
+                  col_path = column_path(col)
+                  url_params = column_url_params(col, table_id, col_id)
+                %tr.selected-column-row.align-middle{ id: col_id,
+                                                      draggable: 'true',
+                                                      data: { column_name: col[:name],
+                                                              column_table: col[:table],
+                                                              column_type: col[:type],
+                                                              column_association: col[:association],
+                                                              column_formula: formula_json,
+                                                              action: actions } }
                   %td.py-3.ps-2{ style: 'cursor: grab; width: 1%;' }
                     %i.fa.fa-grip-vertical.text-muted.fs-5
                   %td.py-3{ style: 'min-width: 200px;' }
@@ -91,14 +88,7 @@
                                                                       placeholder: col[:name].humanize,
                                                                       data: { action: 'change->report-builder#updateColumnLabel' } }
                   %td.py-3
-                    %small.text-muted.text-nowrap.fw-light
-                      - if col[:association].present?
-                        - if col[:association_label] && col[:association_label] != col[:table_label]
-                          #{col[:association_label]}.#{col[:name]}
-                        - else
-                          #{col[:table_label]}.#{col[:name]}
-                      - else
-                        #{col[:table_label]}.#{col[:name]}
+                    %small.text-muted.text-nowrap.fw-light= col_path
                   %td.py-3
                     .d-flex.align-items-center.gap-2
                       %span.badge.bg-light.text-dark.border-0.px-2= col[:type]
@@ -107,7 +97,9 @@
                                                          title: col_config['formula'].present? ? 'Edit Formula' : 'Add Formula',
                                                          class: col_config['formula'].present? ? 'btn-success' : 'btn-outline-secondary' }
                         %i.fa.fa-calculator
-                  %td.text-end
-                    - delete_action = { action: 'click->report-builder#removeColumnFromSelected' }
-                    %button.btn.btn-sm.btn-outline-danger.rounded-circle{ type: 'button', data: delete_action }
+                  %td.text-end.py-3.pe-2
+                    = link_to update_columns_custom_reports_path(url_params),
+                              class: 'btn btn-sm btn-outline-danger rounded-circle',
+                              title: 'Remove column',
+                              data: { turbo_prefetch: false, turbo_method: :delete } do
                       %i.fa.fa-times

@@ -55,6 +55,8 @@ module RadCommonRoutes
             get :update_joins
             post :update_filters
             delete :update_filters
+            post :update_columns
+            delete :update_columns
           end
         end
 

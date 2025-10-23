@@ -7,6 +7,10 @@ class CustomReportPolicy < ApplicationPolicy
     update?
   end
 
+  def update_columns?
+    update?
+  end
+
   class Scope < Scope
     def resolve
       scope.all

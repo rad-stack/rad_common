@@ -3,7 +3,7 @@ class CustomReportsController < ApplicationController
   include Exportable
 
   before_action :set_custom_report, only: %i[show edit update destroy]
-  before_action :build_temp_report, only: %i[update_joins update_filters]
+  before_action :build_temp_report, only: %i[update_joins update_filters update_columns]
 
   def index
     authorize CustomReport
@@ -110,6 +110,25 @@ class CustomReportsController < ApplicationController
       @report_model = @custom_report.report_model
       @report_id = @custom_report.persisted? ? @custom_report.id : nil
     end
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def update_columns
+    authorize @custom_report
+
+    @column_data = {
+      name: params[:column_name],
+      table: params[:column_table],
+      type: params[:column_type],
+      association: params[:column_association],
+      table_label: params[:column_table_label],
+      association_label: params[:column_association_label]
+    }
+    @table_id = params[:table_id]
+    @column_id = params[:column_id]
 
     respond_to do |format|
       format.turbo_stream

@@ -1,0 +1,8 @@
+- if request.delete?
+  = turbo_stream.remove @column_id
+  = turbo_stream.append "available-columns-#{@table_id}" do
+    = render 'available_column_row', column: @column_data, table_id: @table_id
+- else
+  = turbo_stream.remove @column_id
+  = turbo_stream.append 'selectedColumnsList' do
+    = render 'selected_column_row', column: @column_data, table_id: @table_id
