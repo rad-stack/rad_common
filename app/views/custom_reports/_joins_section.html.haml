@@ -10,7 +10,7 @@
   .mb-3.shadow-sm
     - joins.each do |join|
       - assoc_info = associations_list.find { |a| a[:name] == join }
-      .card.mb-2.selected-join-card{ data: { join_name: join } }
+      .card.mb-2.bg-light{ data: { join_name: join } }
         .card-body.py-2
           .row.g-2.align-items-center
             .col

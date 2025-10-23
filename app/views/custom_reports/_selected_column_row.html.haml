@@ -1,8 +1,9 @@
-- column_id = column_id(column, prefix: 'selected-column')
-- url_params = column_url_params(column, table_id, column_id)
-- actions = 'dragstart->report-builder#handleDragStart dragover->report-builder#handleDragOver drop->report-builder#handleDrop dragend->report-builder#handleDragEnd'
-- formula = defined?(formula) ? formula : nil
-- formula_json = formula.present? ? formula.to_json : ''
+:ruby
+  column_id = column_id(column, prefix: 'selected-column')
+  url_params = column_url_params(column, table_id, column_id)
+  actions = 'dragstart->report-builder#handleDragStart dragover->report-builder' \
+            '#handleDragOver drop->report-builder#handleDrop dragend->report-builder#handleDragEnd'
+  formula_json = formula.present? ? formula.to_json : ''
 
 %tr.selected-column-row.align-middle{ id: column_id,
                                       draggable: 'true',
@@ -12,9 +13,9 @@
                                               column_association: column[:association],
                                               column_formula: formula_json,
                                               action: actions } }
-  %td.py-3.ps-2{ style: 'cursor: grab; width: 1%;' }
+  %td.py-3.ps-2.cursor-grab
     %i.fa.fa-grip-vertical.text-muted.fs-5
-  %td.py-3{ style: 'min-width: 200px;' }
+  %td.py-3
     %input.form-control.border-0.bg-light.fw-medium{ type: 'text',
                                                      value: column[:custom_label] || column[:name].humanize,
                                                      placeholder: column[:name].humanize,
