@@ -100,12 +100,16 @@ class CustomReportsController < ApplicationController
   def update_filters
     authorize @custom_report
 
-    @filter_index = params[:filter_count].to_i
-    @filter = { 'column' => '', 'label' => '', 'type' => '' }
-    @joins = params[:joins] || []
-    @all_columns = model_columns(@custom_report.report_model, @joins)
-    @report_model = @custom_report.report_model
-    @report_id = @custom_report.persisted? ? @custom_report.id : nil
+    if request.delete?
+      @filter_id = params[:filter_id]
+    else
+      @filter = { 'column' => '', 'label' => '', 'type' => '' }
+      @filter_id = "filter_#{Time.now.to_i}_#{rand(1000)}"
+      @joins = params[:joins] || []
+      @all_columns = model_columns(@custom_report.report_model, @joins)
+      @report_model = @custom_report.report_model
+      @report_id = @custom_report.persisted? ? @custom_report.id : nil
+    end
 
     respond_to do |format|
       format.turbo_stream

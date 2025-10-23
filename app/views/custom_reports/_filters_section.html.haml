@@ -10,7 +10,7 @@
   - filters.each_with_index do |filter, filter_index|
     = render 'filter_card',
              filter: filter,
-             filter_index: filter_index,
+             filter_id: "filter_saved_#{filter_index}",
              all_columns: all_columns,
              report_model: report_model,
              report_id: report_id,
@@ -19,10 +19,9 @@
 .row
   .col-12
     :ruby
-      url_params = { id: report_id, joins: joins, filter_count: filters.length,
-                     report_model: report_model, format: :turbo_stream }.compact
+      url_params = { id: report_id, joins: joins, report_model: report_model, format: :turbo_stream }.compact
     = link_to update_filters_custom_reports_path(url_params),
-              class: 'btn btn-sm btn-primary',
+              class: 'btn btn-outline-primary',
               data: { turbo_prefetch: false, turbo_method: :post } do
-      %i.fa.fa-plus.me-1
+      %i.fa.fa-plus-circle.me-2
       Add Filter

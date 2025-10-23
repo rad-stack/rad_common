@@ -45,7 +45,7 @@ export default class extends Controller {
     }
 
     const newRow = document.createElement('tr');
-    newRow.className = 'selected-column-row';
+    newRow.className = 'selected-column-row align-middle';
     newRow.draggable = true;
     newRow.dataset.columnName = columnName;
     newRow.dataset.columnTable = columnTable;
@@ -55,26 +55,23 @@ export default class extends Controller {
     newRow.dataset.columnFormula = '';
     newRow.dataset.action =
       'dragstart->report-builder#handleDragStart dragover->report-builder#handleDragOver drop->report-builder#handleDrop dragend->report-builder#handleDragEnd';
-    newRow.style.cursor = 'grab';
 
     newRow.innerHTML = `
-      <td><i class="fa fa-grip-vertical text-muted me-2"></i></td>
-      <td>
-        <div class="d-flex align-items-center gap-2">
-          <input type="text" class="form-control form-control-sm" value="${humanName}" placeholder="${humanName}" data-action="change->report-builder#updateColumnLabel">
-        </div>
+      <td class="py-3 ps-2" style="cursor: grab; width: 1%;"><i class="fa fa-grip-vertical text-muted fs-5"></i></td>
+      <td class="py-3" style="min-width: 200px;">
+        <input type="text" class="form-control border-0 bg-light fw-medium" value="${humanName}" placeholder="${humanName}" data-action="change->report-builder#updateColumnLabel">
       </td>
-      <td><small class="text-muted text-nowrap">${columnPath}</small></td>
-      <td>
-        <div class="d-flex align-items-center justify-content-between gap-1">
-          <span class="badge bg-light text-dark border">${columnType}</span>
-          <button type="button" class="btn btn-sm btn-outline-secondary" data-action="click->formula-editor#open" title="Add Transformations">
+      <td class="py-3"><small class="text-muted text-nowrap fw-light">${columnPath}</small></td>
+      <td class="py-3">
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-light text-dark border-0 px-2">${columnType}</span>
+          <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle" data-action="click->formula-editor#open" title="Add Formula">
             <i class="fa fa-calculator"></i>
           </button>
         </div>
       </td>
-      <td class="text-end">
-        <button class="btn btn-sm btn-link text-danger p-0" type="button" data-action="click->report-builder#removeColumnFromSelected" style="text-decoration: none;">
+      <td class="text-end py-3 pe-2" style="width: 1%;">
+        <button class="btn btn-sm btn-outline-danger rounded-circle" type="button" data-action="click->report-builder#removeColumnFromSelected">
           <i class="fa fa-times"></i>
         </button>
       </td>

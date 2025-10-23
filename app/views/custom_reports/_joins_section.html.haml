@@ -7,7 +7,7 @@
     report_model = custom_report.report_model
     report_id = custom_report.persisted? ? custom_report.id : nil
 
-  .mb-3
+  .mb-3.shadow-sm
     - joins.each do |join|
       - assoc_info = associations_list.find { |a| a[:name] == join }
       .card.mb-2.selected-join-card{ data: { join_name: join } }

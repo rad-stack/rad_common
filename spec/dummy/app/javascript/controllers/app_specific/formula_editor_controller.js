@@ -197,13 +197,13 @@ export default class extends Controller {
     const paramsHtml = this.renderParams(transform, index);
 
     return `
-      <div class="card mb-2" data-index="${index}">
+      <div class="card shadow-sm mb-2" data-index="${index}">
         <div class="card-body py-2 px-3">
           <div class="d-flex align-items-start gap-2">
             <div class="flex-grow-1">
               <div class="d-flex justify-content-between align-items-center mb-1">
                 <strong>${index + 1}. ${label}</strong>
-                <button type="button" class="btn btn-sm btn-link text-danger p-0" data-action="click->formula-editor#removeTransform" data-index="${index}">
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-circle" data-action="click->formula-editor#removeTransform" data-index="${index}">
                   <i class="fa fa-times"></i>
                 </button>
               </div>
