@@ -30,7 +30,7 @@
                     %i.fa.fa-table.me-2.text-muted
                     = table_info[:label]
             .col-8
-              .tab-content.report-builder-columns-panel.p-3
+              .tab-content.report-builder-tables-list.p-3
                 - columns_by_table.each do |table_info, cols|
                   - table_id = "table-#{table_info[:table].gsub('_', '-')}"
                   - is_base_table = table_info[:association].nil?
@@ -52,54 +52,55 @@
         - selected_columns_config = config['columns'] || []
       .card.shadow-sm
         .card-body.p-3
-          %table.table.table-hover.mb-0
-            %tbody#selectedColumnsList{ data: { report_builder_target: 'selectedColumnsList' } }
-              - selected_columns_config.each do |col_config|
-                :ruby
-                  select_prefix = col_config['select']&.split('.')&.first
-                  col_name = col_config['name']
-                  # Match by association first, then fall back to table
-                  col = all_columns.find { |c| c[:name] == col_name && (c[:association] == select_prefix || c[:table] == select_prefix) }
-                  next if col.blank?
+          .report-builder-tables-list
+            %table.table.table-hover.mb-0
+              %tbody#selectedColumnsList{ data: { report_builder_target: 'selectedColumnsList' } }
+                - selected_columns_config.each do |col_config|
+                  :ruby
+                    select_prefix = col_config['select']&.split('.')&.first
+                    col_name = col_config['name']
+                    # Match by association first, then fall back to table
+                    col = all_columns.find { |c| c[:name] == col_name && (c[:association] == select_prefix || c[:table] == select_prefix) }
+                    next if col.blank?
 
-                  # Determine table_id for this column
-                  table_id = "table-#{col[:table].gsub('_', '-')}"
+                    # Determine table_id for this column
+                    table_id = "table-#{col[:table].gsub('_', '-')}"
 
-                  actions = 'dragstart->report-builder#handleDragStart dragover->report-builder#handleDragOver ' \
-                            'drop->report-builder#handleDrop dragend->report-builder#handleDragEnd'
-                  formula_json = col_config['formula'].present? ? col_config['formula'].to_json : ''
+                    actions = 'dragstart->report-builder#handleDragStart dragover->report-builder#handleDragOver ' \
+                              'drop->report-builder#handleDrop dragend->report-builder#handleDragEnd'
+                    formula_json = col_config['formula'].present? ? col_config['formula'].to_json : ''
 
-                  col_id = column_id(col, prefix: 'selected-column')
-                  col_path = column_path(col)
-                  url_params = column_url_params(col, table_id, col_id)
-                %tr.selected-column-row.align-middle{ id: col_id,
-                                                      draggable: 'true',
-                                                      data: { column_name: col[:name],
-                                                              column_table: col[:table],
-                                                              column_type: col[:type],
-                                                              column_association: col[:association],
-                                                              column_formula: formula_json,
-                                                              action: actions } }
-                  %td.py-3.ps-2{ style: 'cursor: grab; width: 1%;' }
-                    %i.fa.fa-grip-vertical.text-muted.fs-5
-                  %td.py-3{ style: 'min-width: 200px;' }
-                    %input.form-control.border-0.bg-light.fw-medium{ type: 'text',
-                                                                      value: col_config['label'] || col[:name].humanize,
-                                                                      placeholder: col[:name].humanize,
-                                                                      data: { action: 'change->report-builder#updateColumnLabel' } }
-                  %td.py-3
-                    %small.text-muted.text-nowrap.fw-light= col_path
-                  %td.py-3
-                    .d-flex.align-items-center.gap-2
-                      %span.badge.bg-light.text-dark.border-0.px-2= col[:type]
-                      %button.btn.btn-sm.rounded-circle{ type: 'button',
-                                                         data: { action: 'click->formula-editor#open' },
-                                                         title: col_config['formula'].present? ? 'Edit Formula' : 'Add Formula',
-                                                         class: col_config['formula'].present? ? 'btn-success' : 'btn-outline-secondary' }
-                        %i.fa.fa-calculator
-                  %td.text-end.py-3.pe-2
-                    = link_to update_columns_custom_reports_path(url_params),
-                              class: 'btn btn-sm btn-outline-danger rounded-circle',
-                              title: 'Remove column',
-                              data: { turbo_prefetch: false, turbo_method: :delete } do
-                      %i.fa.fa-times
+                    col_id = column_id(col, prefix: 'selected-column')
+                    col_path = column_path(col)
+                    url_params = column_url_params(col, table_id, col_id)
+                  %tr.selected-column-row.align-middle{ id: col_id,
+                                                        draggable: 'true',
+                                                        data: { column_name: col[:name],
+                                                                column_table: col[:table],
+                                                                column_type: col[:type],
+                                                                column_association: col[:association],
+                                                                column_formula: formula_json,
+                                                                action: actions } }
+                    %td.py-3.ps-2{ style: 'cursor: grab; width: 1%;' }
+                      %i.fa.fa-grip-vertical.text-muted.fs-5
+                    %td.py-3{ style: 'min-width: 200px;' }
+                      %input.form-control.border-0.bg-light.fw-medium{ type: 'text',
+                                                                       value: col_config['label'] || col[:name].humanize,
+                                                                       placeholder: col[:name].humanize,
+                                                                       data: { action: 'change->report-builder#updateColumnLabel' } }
+                    %td.py-3
+                      %small.text-muted.text-nowrap.fw-light= col_path
+                    %td.py-3
+                      .d-flex.align-items-center.gap-2
+                        %span.badge.bg-light.text-dark.border-0.px-2= col[:type]
+                        %button.btn.btn-sm.rounded-circle{ type: 'button',
+                                                           data: { action: 'click->formula-editor#open' },
+                                                           title: col_config['formula'].present? ? 'Edit Formula' : 'Add Formula',
+                                                           class: col_config['formula'].present? ? 'btn-success' : 'btn-outline-secondary' }
+                          %i.fa.fa-calculator
+                    %td.text-end.py-3.pe-2
+                      = link_to update_columns_custom_reports_path(url_params),
+                                class: 'btn btn-sm btn-outline-danger rounded-circle',
+                                title: 'Remove column',
+                                data: { turbo_prefetch: false, turbo_method: :delete } do
+                        %i.fa.fa-times

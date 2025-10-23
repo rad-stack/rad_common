@@ -5,4 +5,4 @@
 - else
   = turbo_stream.remove @column_id
   = turbo_stream.append 'selectedColumnsList' do
-    = render 'selected_column_row', column: @column_data, table_id: @table_id
+    = render 'selected_column_row', column: @column_data, table_id: @table_id, formula: @formula

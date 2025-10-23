@@ -129,6 +129,7 @@ class CustomReportsController < ApplicationController
     }
     @table_id = params[:table_id]
     @column_id = params[:column_id]
+    @formula = default_formula_for_column(@column_data[:type])
 
     respond_to do |format|
       format.turbo_stream
@@ -193,5 +194,9 @@ class CustomReportsController < ApplicationController
         end
       end
       expanded.uniq
+    end
+
+    def default_formula_for_column(column_type)
+      RadReports::FormulaRegistry.default_for_column_type(column_type)
     end
 end

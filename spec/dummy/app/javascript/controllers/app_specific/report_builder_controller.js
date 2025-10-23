@@ -1,15 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static targets = [
-    'modelSelect',
-    'hiddenColumnsConfig',
-    'selectedColumnsList'
-  ];
-
-  static values = {
-    filterTypesMap: Object
-  };
+  static targets = ['modelSelect', 'hiddenColumnsConfig', 'selectedColumnsList'];
+  static values = { filterTypesMap: Object };
 
   connect() {
     this.draggedElement = null;

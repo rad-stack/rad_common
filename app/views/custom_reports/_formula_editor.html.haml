@@ -17,31 +17,10 @@
             %select.form-select.mb-3.selectpicker{ data: { action: 'change->formula-editor#previewTransform',
                                                            formula_editor_target: 'transformSelect' } }
               %option{ value: '' } Choose a transformation...
-              %optgroup{ label: 'Text' }
-                %option{ value: 'UPPER' } Uppercase
-                %option{ value: 'LOWER' } Lowercase
-                %option{ value: 'TITLECASE' } Title Case
-                %option{ value: 'CAPITALIZE' } Capitalize
-                %option{ value: 'TRUNCATE' } Truncate
-              %optgroup{ label: 'String' }
-                %option{ value: 'CONCAT' } Concatenate
-                %option{ value: 'REPLACE' } Replace Text
-                %option{ value: 'SUBSTRING' } Substring
-              %optgroup{ label: 'Math' }
-                %option{ value: 'ROUND' } Round
-                %option{ value: 'ABS' } Absolute Value
-                %option{ value: 'ADD' } Add
-                %option{ value: 'SUBTRACT' } Subtract
-                %option{ value: 'MULTIPLY' } Multiply
-                %option{ value: 'DIVIDE' } Divide
-                %option{ value: 'PERCENT' } Add Percent Sign
-              %optgroup{ label: 'Date' }
-                %option{ value: 'AGE' } Calculate Age
-                %option{ value: 'DAYS_AGO' } Days Ago
-                %option{ value: 'FORMAT_DATE' } Format Date
-              %optgroup{ label: 'Logic' }
-                %option{ value: 'BLANK' } Replace if Blank
-                %option{ value: 'YES_NO' } Yes/No
+              - RadReports::FormulaRegistry.grouped_options.each do |category, formulas|
+                %optgroup{ label: category }
+                  - formulas.each do |label, type|
+                    %option{ value: type }= label
 
             %div{ data: { formula_editor_target: 'transformPreview' } }
 

@@ -3,98 +3,7 @@ import bootstrap from 'bootstrap';
 
 export default class extends Controller {
   static targets = ['transformsList', 'transformPreview', 'transformSelect', 'addButton', 'columnName', 'modal'];
-
-  static paramConfigs = {
-    'UPPER': { label: 'Uppercase', params: [] },
-    'LOWER': { label: 'Lowercase', params: [] },
-    'TITLECASE': { label: 'Title Case', params: [] },
-    'CAPITALIZE': { label: 'Capitalize', params: [] },
-    'TRUNCATE': {
-      label: 'Truncate',
-      params: [
-        { name: 'length', label: 'Length', type: 'number', default: 50, col_class: 'col-6' },
-        { name: 'suffix', label: 'Suffix', type: 'text', default: '...', col_class: 'col-6' }
-      ]
-    },
-    'CONCAT': {
-      label: 'Concatenate',
-      params: [
-        { name: 'text', label: 'Text to append', type: 'text', default: '', placeholder: 'e.g., \' - Suffix\'' }
-      ]
-    },
-    'REPLACE': {
-      label: 'Replace Text',
-      params: [
-        { name: 'old', label: 'Find', type: 'text', default: '', col_class: 'col-6' },
-        { name: 'new', label: 'Replace with', type: 'text', default: '', col_class: 'col-6' }
-      ]
-    },
-    'SUBSTRING': {
-      label: 'Substring',
-      params: [
-        { name: 'start', label: 'Start Position', type: 'number', default: 0, col_class: 'col-6' },
-        { name: 'length', label: 'Length', type: 'number', default: 10, col_class: 'col-6' }
-      ]
-    },
-    'ROUND': {
-      label: 'Round',
-      params: [
-        { name: 'precision', label: 'Decimal Places', type: 'number', default: 2 }
-      ]
-    },
-    'ABS': { label: 'Absolute Value', params: [] },
-    'MULTIPLY': {
-      label: 'Multiply',
-      params: [
-        { name: 'factor', label: 'Multiply by', type: 'number', default: 1.0, step: 'any' }
-      ]
-    },
-    'DIVIDE': {
-      label: 'Divide',
-      params: [
-        { name: 'divisor', label: 'Divide by', type: 'number', default: 1.0, step: 'any' }
-      ]
-    },
-    'ADD': {
-      label: 'Add',
-      params: [
-        { name: 'amount', label: 'Add Amount', type: 'number', default: 0, step: 'any' }
-      ]
-    },
-    'SUBTRACT': {
-      label: 'Subtract',
-      params: [
-        { name: 'amount', label: 'Subtract Amount', type: 'number', default: 0, step: 'any' }
-      ]
-    },
-    'PERCENT': { label: 'Add Percent Sign', params: [] },
-    'AGE': { label: 'Calculate Age', params: [] },
-    'DAYS_AGO': { label: 'Days Ago', params: [] },
-    'FORMAT_DATE': {
-      label: 'Format Date',
-      params: [
-        {
-          name: 'format',
-          label: 'Format',
-          type: 'select',
-          default: '%m/%d/%Y',
-          options: [
-            ['MM/DD/YYYY', '%m/%d/%Y'],
-            ['YYYY-MM-DD', '%Y-%m-%d'],
-            ['Month DD, YYYY', '%B %d, %Y'],
-            ['MM/DD/YY', '%m/%d/%y']
-          ]
-        }
-      ]
-    },
-    'BLANK': {
-      label: 'Replace if Blank',
-      params: [
-        { name: 'fallback', label: 'Fallback Value', type: 'text', default: 'N/A' }
-      ]
-    },
-    'YES_NO': { label: 'Yes/No', params: [] }
-  };
+  static values = { config: Object };
 
   connect() {
     this.currentRow = null;
@@ -172,7 +81,7 @@ export default class extends Controller {
   }
 
   getDefaultParams(type) {
-    const config = this.constructor.paramConfigs[type];
+    const config = this.configValue[type];
 
     if (!config || !config.params || config.params.length === 0) {
       return {};
@@ -216,7 +125,7 @@ export default class extends Controller {
   }
 
   getTransformLabel(type) {
-    const config = this.constructor.paramConfigs[type];
+    const config = this.configValue[type];
     return config?.label || type;
   }
 
@@ -234,7 +143,7 @@ export default class extends Controller {
     const indexAttr = index !== null ? ` data-index="${index}"` : '';
     const actionStr = `change->formula-editor#${action}`;
 
-    const config = this.constructor.paramConfigs[type];
+    const config = this.configValue[type];
     if (!config || !config.params || config.params.length === 0) {
       return '';
     }

@@ -3,7 +3,8 @@
                   local: true,
                   html: { data: { controller: 'report-builder formula-editor',
                                   action: 'submit->report-builder#submitForm',
-                                  report_builder_filter_types_map_value: filter_types_map.to_json } } do |f|
+                                  report_builder_filter_types_map_value: filter_types_map.to_json,
+                                  formula_editor_config_value: RadReports::FormulaRegistry.to_json_config } } do |f|
   = rad_form_errors f
 
   .row

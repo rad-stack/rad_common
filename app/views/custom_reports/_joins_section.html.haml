@@ -32,7 +32,7 @@
               - url_params = { report_model: report_model, joins: joins, remove_join: join, format: :turbo_stream }
               - url_params[:id] = report_id if report_id
               = link_to update_joins_custom_reports_path(url_params),
-                        class: 'btn btn-sm btn-danger',
+                        class: 'btn btn-sm btn-outline-danger rounded-circle',
                         data: { turbo_prefetch: false } do
                 %i.fa.fa-times
               %input{ type: 'hidden', name: 'custom_report[joins][]', value: join }
