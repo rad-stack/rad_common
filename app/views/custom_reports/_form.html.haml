@@ -13,6 +13,7 @@
                 collection: available_models,
                 selected: custom_report.report_model,
                 include_blank: 'Select a model to report on',
+                disabled: @custom_report.persisted?,
                 required: true,
                 input_html: { class: 'selectpicker ays-ignore',
                               data: { report_builder_target: 'modelSelect',
