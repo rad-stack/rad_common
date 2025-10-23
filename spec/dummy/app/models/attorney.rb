@@ -1,6 +1,7 @@
 class Attorney < ApplicationRecord
   include Contactable
   include DuplicateFixable
+  include Embeddable
 
   has_rich_text :notes
 
@@ -24,4 +25,14 @@ class Attorney < ApplicationRecord
     the_name = "#{the_name} #{middle_name}" if middle_name.present?
     the_name
   end
+
+  private
+
+    def embedding_metadata
+      { attorney_id: id }
+    end
+
+    def generate_embedding_content
+      [first_name, last_name].compact.join("\n")
+    end
 end
