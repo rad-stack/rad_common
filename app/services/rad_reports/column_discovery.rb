@@ -114,9 +114,11 @@ module RadReports
       end
 
       def build_column_definition(col, klass, association_info)
+        column_type = col.respond_to?(:array) && col.array ? 'array' : col.type
+
         {
           name: col.name,
-          type: col.type,
+          type: column_type,
           table: association_info[:table] || klass.table_name,
           table_label: association_info[:table_label] || klass.model_name.human,
           association: association_info[:association],

@@ -218,6 +218,21 @@ module RadReports
         params: [],
         param_extractor: ->(_params, value) { [value] },
         executor: ->(args) { args[0] ? 'Yes' : 'No' }
+      },
+      'ARRAY_JOIN' => {
+        label: 'Join Array',
+        category: 'String',
+        params: [
+          { name: 'separator', label: 'Separator', type: 'text', default: ', ' }
+        ],
+        param_extractor: ->(params, value) { [value, params['separator'] || ', '] },
+        executor: lambda { |args|
+          arr = args[0]
+          separator = args[1]
+          return '' unless arr.is_a?(Array)
+
+          arr.join(separator)
+        }
       }
     }.freeze
 
@@ -225,7 +240,8 @@ module RadReports
       'boolean' => [{ 'type' => 'YES_NO' }],
       'date' => [{ 'type' => 'FORMAT_DATE', 'params' => { 'format' => '%m/%d/%Y' } }],
       'datetime' => [{ 'type' => 'FORMAT_DATE', 'params' => { 'format' => '%m/%d/%Y' } }],
-      'timestamp' => [{ 'type' => 'FORMAT_DATE', 'params' => { 'format' => '%m/%d/%Y' } }]
+      'timestamp' => [{ 'type' => 'FORMAT_DATE', 'params' => { 'format' => '%m/%d/%Y' } }],
+      'array' => [{ 'type' => 'ARRAY_JOIN', 'params' => { 'separator' => ', ' } }]
     }.freeze
 
     class << self
