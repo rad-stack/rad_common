@@ -16,7 +16,7 @@
     %i.fa.fa-grip-vertical.text-muted.fs-5
   %td.py-3{ style: 'min-width: 200px;' }
     %input.form-control.border-0.bg-light.fw-medium{ type: 'text',
-                                                     value: column[:name].humanize,
+                                                     value: column[:custom_label] || column[:name].humanize,
                                                      placeholder: column[:name].humanize,
                                                      data: { action: 'change->report-builder#updateColumnLabel' } }
   %td.py-3
