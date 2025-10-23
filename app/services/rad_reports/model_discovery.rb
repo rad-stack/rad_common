@@ -12,6 +12,7 @@ module RadReports
       NotificationType
       OldPassword
       SavedSearchFilter
+      SecurityRole
       SystemMessage
       UserSecurityRole
     ].freeze

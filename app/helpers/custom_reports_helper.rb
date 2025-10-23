@@ -38,7 +38,7 @@ module CustomReportsHelper
 
     case column_type.to_s
     when 'date', 'datetime', 'timestamp'
-      [all_filters[:date], all_filters[:equals]]
+      [all_filters[:date]]
     when 'boolean'
       [all_filters[:boolean]]
     when 'integer', 'bigint', 'decimal', 'float'
