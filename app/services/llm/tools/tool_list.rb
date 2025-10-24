@@ -1,7 +1,7 @@
 module LLM
   module Tools
     class ToolList
-      def self.tool_list
+      def self.tools
         []
       end
 
