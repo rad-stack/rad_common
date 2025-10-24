@@ -408,6 +408,12 @@ Seeder.new.seed!
             next unless File.exist?(credentials_path)
 
             key_path = Rails.root.join("config/credentials/#{environment}.key")
+
+            unless File.exist?(key_path)
+              puts "key file not found: #{key_path}, skipping."
+              next
+            end
+
             decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
             current_credentials = YAML.safe_load(decrypted_content) || {}
             next if current_credentials.key?('developer_domain')
@@ -424,6 +430,12 @@ Seeder.new.seed!
             next unless File.exist?(credentials_path)
 
             key_path = Rails.root.join("config/credentials/#{environment}.key")
+
+            unless File.exist?(key_path)
+              puts "key file not found: #{key_path}, skipping."
+              next
+            end
+
             decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
             current_credentials = YAML.safe_load(decrypted_content) || {}
             next if current_credentials.key?('developer_domain')
@@ -438,6 +450,12 @@ Seeder.new.seed!
             next unless File.exist?(credentials_path)
 
             key_path = Rails.root.join("config/credentials/#{environment}.key")
+
+            unless File.exist?(key_path)
+              puts "key file not found: #{key_path}, skipping."
+              next
+            end
+
             decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
             current_credentials = YAML.safe_load(decrypted_content) || {}
             next if current_credentials['developer_domain'] == 'example.com'
