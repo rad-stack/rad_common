@@ -1,0 +1,72 @@
+- filter_id ||= "filter_#{Time.now.to_i}_#{rand(1000)}"
+%div{ id: filter_id }
+  %hr
+  .mb-3.filter-card
+    .p-2
+      .row.g-3.align-items-end
+        .col-md-5
+          = label_tag 'custom_report[filters][][column]', 'Column', class: 'form-label small fw-medium text-muted mb-2'
+          - grouped_options = {}
+          - all_columns.each do |col|
+            :ruby
+              group_label = col[:association_label].presence || col[:table_label]
+              grouped_options[group_label] ||= []
+              # Use association name for joins, table name for base model
+              column_path = col[:association] ? "#{col[:association]}.#{col[:name]}" : "#{col[:table]}.#{col[:name]}"
+              option_label = "#{col[:name].humanize} - #{col[:type]}"
+              grouped_options[group_label] << [
+                option_label,
+                column_path,
+                { data: { column_type: col[:type], is_foreign_key: col[:is_foreign_key], is_enum: col[:is_enum] } }
+              ]
+          - options_html = options_for_select([['Select a column...', '']])
+          - options_html += grouped_options_for_select(grouped_options, filter['column'])
+          = select_tag 'custom_report[filters][][column]',
+                       options_html,
+                       class: 'selectpicker',
+                       required: true,
+                       data: { action: 'change->report-builder#filterColumnChanged' }
+
+        .col-md-3
+          = label_tag 'custom_report[filters][][label]', 'Label', class: 'form-label small fw-medium text-muted mb-2'
+          = text_field_tag 'custom_report[filters][][label]',
+                           filter['label'],
+                           class: 'form-control border-0 bg-light',
+                           required: true
+
+        .col-md-3
+          = label_tag 'custom_report[filters][][type]',
+                      'Filter Type',
+                      class: 'form-label small fw-medium text-muted mb-2'
+          :ruby
+            selected_col = all_columns.find do |c|
+              column_path = c[:association] ? "#{c[:association]}.#{c[:name]}" : "#{c[:table]}.#{c[:name]}"
+              column_path == filter['column']
+            end
+            col_type = selected_col ? selected_col[:type] : nil
+            is_enum = selected_col ? selected_col[:is_enum] : false
+            is_foreign_key = selected_col ? selected_col[:is_foreign_key] : false
+
+            type_options = if is_enum
+              [['Enum', 'RadSearch::EnumFilter']]
+            elsif col_type
+              filter_types = available_filter_types_for_column(col_type)
+              is_foreign_key ? filter_types : filter_types.reject { |f| f[1] == 'RadSearch::SearchFilter' }
+            elsif filter['type'].present?
+              available_filter_types
+            else
+              [['Select column first...', '']]
+            end
+          = select_tag 'custom_report[filters][][type]',
+                       options_for_select(type_options, filter['type']),
+                       class: 'selectpicker',
+                       required: true
+
+        .col-auto.mt-0.mb-1
+          :ruby
+            url_params = { filter_id: filter_id, format: :turbo_stream }.compact
+          = link_to update_filters_custom_reports_path(url_params),
+                    class: 'btn btn-sm btn-outline-danger rounded-circle',
+                    title: 'Remove filter',
+                    data: { turbo_prefetch: false, turbo_method: :delete } do
+            %i.fa.fa-times

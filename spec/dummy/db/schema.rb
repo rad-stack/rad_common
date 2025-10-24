@@ -199,6 +199,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_27_181305) do
     t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
   end
 
+  create_table "custom_reports", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "report_model", null: false
+    t.jsonb "configuration", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_custom_reports_on_name", unique: true
+    t.index ["report_model"], name: "index_custom_reports_on_report_model"
+  end
+
   create_table "divisions", force: :cascade do |t|
     t.string "name", null: false
     t.string "code", null: false

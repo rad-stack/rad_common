@@ -37,9 +37,9 @@ module AssistantSessionsHelper
     text = remove_context_data(text)
     text = disable_turbo_links(text)
     allowed_tags = Rails::Html::SafeListSanitizer.allowed_tags
-    allowed_tags += %w[a]
+    allowed_tags += %w[a div i]
     allowed_attributes = Rails::Html::SafeListSanitizer.allowed_attributes
-    allowed_attributes += %w[href data-turbo]
+    allowed_attributes += %w[href data-turbo class]
 
     sanitize(text, tags: allowed_tags, attributes: allowed_attributes)
   end
