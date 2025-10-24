@@ -52,6 +52,10 @@ module RadReports
 
       def build_association_to_table_map(joins)
         map = {}
+
+        # Check if we're using nested joins (Rails default) or simple joins (Arel with aliases)
+        has_nested_joins = joins.any? { |j| j.include?('.') }
+
         joins.each do |join_path|
           parts = join_path.split('.')
           current_class = @model_class
@@ -62,7 +66,13 @@ module RadReports
 
             path_so_far = parts[0..index].join('.')
 
-            map[path_so_far] = "#{path_so_far}_#{association.table_name}"
+            if has_nested_joins
+              # For Rails' default nested joins, use actual table names (no custom aliases)
+              map[path_so_far] = association.table_name
+            else
+              # For Arel simple joins, use custom aliases to handle duplicates
+              map[path_so_far] = "#{path_so_far}_#{association.table_name}"
+            end
 
             current_class = association.klass
           end
@@ -73,37 +83,64 @@ module RadReports
       def build_query(joins)
         return @model_class.all if joins.blank?
 
+        # Check if any join is nested (contains a dot)
+        # For nested joins, use Rails' default join behavior for ALL joins
+        # This avoids mixing Arel aliasing with Rails' nested join handling
+        has_nested_joins = joins.any? { |j| j.include?('.') }
+
+        if has_nested_joins
+          # Build nested hash for Rails' join method
+          # Example: ["project", "project.client"] becomes { project: [:client] }
+          join_hash = {}
+
+          joins.each do |join_path|
+            parts = join_path.split('.')
+            current_level = join_hash
+
+            parts.each_with_index do |part, index|
+              part_sym = part.to_sym
+
+              if index == parts.length - 1
+                # Last part - add as array if not exists
+                current_level[part_sym] ||= [] unless current_level[part_sym].is_a?(Hash)
+              else
+                # Intermediate part - ensure it's a hash
+                current_level[part_sym] ||= {}
+                current_level[part_sym] = {} unless current_level[part_sym].is_a?(Hash)
+                current_level = current_level[part_sym]
+              end
+            end
+          end
+
+          return @model_class.joins(join_hash)
+        end
+
+        # Simple joins only - use Arel with explicit aliases
         base_table = @model_class.arel_table
         join_sources = []
 
         joins.each do |join_path|
-          if join_path.include?('.')
-            parts = join_path.split('.')
-            nested_hash = parts.reverse.reduce { |acc, part| { part.to_sym => acc } }
-            return @model_class.joins(nested_hash)
-          else
-            # Simple association - create explicit alias to handle duplicate table joins
-            reflection = @model_class.reflect_on_association(join_path.to_sym)
-            next unless reflection
+          # Simple association - create explicit alias to handle duplicate table joins
+          reflection = @model_class.reflect_on_association(join_path.to_sym)
+          next unless reflection
 
-            join_model = reflection.klass
-            join_alias = "#{join_path}_#{join_model.table_name}"
-            join_table = join_model.arel_table.alias(join_alias)
+          join_model = reflection.klass
+          join_alias = "#{join_path}_#{join_model.table_name}"
+          join_table = join_model.arel_table.alias(join_alias)
 
-            # Build join condition based on association type
-            # belongs_to: foreign_key is on base table (e.g., divisions.created_by_id = users.id)
-            # has_many/has_one: foreign_key is on joined table (e.g., divisions.owner_id = users.id)
-            join_condition = if reflection.belongs_to?
-                               join_table[reflection.join_primary_key].eq(base_table[reflection.foreign_key])
-                             else
-                               join_table[reflection.foreign_key].eq(base_table[reflection.active_record_primary_key])
-                             end
+          # Build join condition based on association type
+          # belongs_to: foreign_key is on base table (e.g., divisions.created_by_id = users.id)
+          # has_many/has_one: foreign_key is on joined table (e.g., divisions.owner_id = users.id)
+          join_condition = if reflection.belongs_to?
+                             join_table[reflection.join_primary_key].eq(base_table[reflection.foreign_key])
+                           else
+                             join_table[reflection.foreign_key].eq(base_table[reflection.active_record_primary_key])
+                           end
 
-            join_sources << base_table
-              .join(join_table)  # INNER JOIN (default)
-              .on(join_condition)
-              .join_sources
-          end
+          join_sources << base_table
+            .join(join_table)  # INNER JOIN (default)
+            .on(join_condition)
+            .join_sources
         end
 
         @model_class.joins(join_sources.flatten)
@@ -265,11 +302,12 @@ module RadReports
       def parse_column_path(column_path)
         parts = column_path.split('.')
 
-        if parts.length == 2
-          association_path = parts[0]
-          column_name = parts[1]
+        if parts.length >= 2
+          # Handle nested joins: "project.client.name" → association: "project.client", column: "name"
+          column_name = parts.last
+          association_path = parts[0..-2].join('.')
 
-          table_name = @association_to_table_map[association_path] || parts[0]
+          table_name = @association_to_table_map[association_path] || association_path
 
           [table_name, column_name]
         else

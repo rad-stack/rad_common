@@ -83,7 +83,10 @@ class CustomReport < ApplicationRecord
         next if column_name.blank? && select_clause.blank?
 
         if select_clause.present?
-          table_or_association, col_name = select_clause.split('.', 2)
+          # Split from the right to handle nested joins (e.g., "project.client.name")
+          parts = select_clause.split('.')
+          col_name = parts.last
+          table_or_association = parts[0..-2].join('.')
 
           matching_column = valid_columns.find do |vc|
             vc[:name] == col_name &&
@@ -109,7 +112,10 @@ class CustomReport < ApplicationRecord
         column_path = filter_config['column']
         next if column_path.blank?
 
-        table_or_association, col_name = column_path.split('.', 2)
+        # Split from the right to handle nested joins (e.g., "project.client.name")
+        parts = column_path.split('.')
+        col_name = parts.last
+        table_or_association = parts[0..-2].join('.')
 
         matching_column = valid_columns.find do |vc|
           vc[:name] == col_name &&

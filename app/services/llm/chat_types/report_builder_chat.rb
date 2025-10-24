@@ -44,13 +44,16 @@ module LLM
 
             1. Use `list_available_models` to see what models are available
             2. Ask the user which model they want to report on
-            3. Use `list_model_associations` to see what relationships can be joined
+            3. Use `list_model_associations` to see what direct relationships can be joined
             4. Ask the user if they want to include any related tables (joins)
-            5. Use `list_model_columns` (passing the model_name and any joins) to see available columns
-            6. Ask the user which columns they want to include
-            7. If the user wants filters, use `list_available_filters` to see valid filter types
-            8. If the user wants custom formatting, use `list_available_formulas` to see available transformations
-            9. When you have all the information, use `generate_report_configuration` to create the report
+            5. **For nested joins:** Call `list_model_associations` again with `current_joins` to discover nested associations
+               - Example: After user wants "project", call with current_joins: ["project"] to see "project.client"
+               - You can traverse multiple levels: ["project"] → ["project", "project.client"] → etc.
+            6. Use `list_model_columns` (passing the model_name and any joins) to see available columns
+            7. Ask the user which columns they want to include
+            8. If the user wants filters, use `list_available_filters` to see valid filter types
+            9. If the user wants custom formatting, use `list_available_formulas` to see available transformations
+            10. When you have all the information, use `generate_report_configuration` to create the report
 
             ## CRITICAL: Column Select Paths
 
@@ -76,6 +79,25 @@ module LLM
 
             Be conversational and helpful. Ask clarifying questions. Suggest useful columns and filters based on the user's requirements, but ONLY suggest things that are actually supported (check with the tools first).
 
+            ## Working with Nested Joins
+
+            When a user needs data from multiple related tables (e.g., Task → Project → Client), use an iterative approach:
+
+            1. Start with direct associations: Call `list_model_associations` for "Task"
+            2. User wants project data, so you plan to add join: "project"
+            3. **Before finalizing**, call `list_model_associations` again with current_joins: ["project"]
+            4. This reveals nested options like "project.client"
+            5. User wants client data too, so add join: "project.client"
+            6. Now call `list_model_columns` with joins: ["project", "project.client"]
+            7. This gives you columns from Task, Project, AND Client
+
+            Example conversation flow:
+            - User: "Show me tasks with their project and client names"
+            - You: Call list_model_associations("Task") → sees "project"
+            - You: Call list_model_associations("Task", current_joins: ["project"]) → sees "project.client"
+            - You: Call list_model_columns("Task", joins: ["project", "project.client"])
+            - You: Generate report with columns from all three models
+
             ## Creating the Report
 
             When you have enough information, call `generate_report_configuration` with:
@@ -86,39 +108,39 @@ module LLM
             - columns: Array of column configurations with name, label, and SELECT (EXACT value from list_model_columns)
             - filters: (Optional) Array of filter configurations
 
-            Example Complete Report Configuration:
+            Example Complete Report Configuration (with nested join):
             {
-              "name": "Division Report",
-              "description": "Shows all divisions with their names and creation dates",
-              "model_name": "Division",
-              "joins": ["company"],
+              "name": "Task Report with Project and Client",
+              "description": "Shows tasks with their project and client information",
+              "model_name": "Task",
+              "joins": ["project", "project.client"],
               "columns": [
                 {
                   "name": "name",
-                  "label": "Division Name",
-                  "select": "divisions.name"
-                },
-                {
-                  "name": "created_at",
-                  "label": "Created",
-                  "select": "divisions.created_at"
+                  "label": "Task Name",
+                  "select": "tasks.name"
                 },
                 {
                   "name": "name",
-                  "label": "Company Name",
-                  "select": "company.name"
+                  "label": "Project Name",
+                  "select": "project.name"
+                },
+                {
+                  "name": "name",
+                  "label": "Client Name",
+                  "select": "project.client.name"
                 }
               ],
               "filters": [
                 {
-                  "column": "divisions.name",
-                  "label": "Division Name",
+                  "column": "tasks.name",
+                  "label": "Task Name",
                   "type": "RadSearch::LikeFilter",
                   "data_type": "string"
                 },
                 {
-                  "column": "company.name",
-                  "label": "Company Name",
+                  "column": "project.client.name",
+                  "label": "Client Name",
                   "type": "RadSearch::LikeFilter",
                   "data_type": "string"
                 }
