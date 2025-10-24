@@ -25,11 +25,15 @@ Rails.application.config.after_initialize do
 
       begin
         chat_class = "LLM::ChatTypes::#{class_name}".constantize
-        RadAssistant.register(chat_class)
+        RadAssistant.register_chat_type(chat_class)
       rescue NameError => e
         Rails.logger.warn("Could not register chat type: #{class_name} - #{e.message}")
       end
     end
+  end
+
+  RadConfig.rad_assistant_system_tools!.each do |tool|
+    RadAssistant.register_system_tool(tool.constantize)
   end
 
   # Applications can register their own custom chat types in their own initializer:

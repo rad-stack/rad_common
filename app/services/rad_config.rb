@@ -336,6 +336,10 @@ class RadConfig
       array_config_item! :additional_company_params
     end
 
+    def rad_assistant_system_tools!
+      array_config_item! :rad_assistant_system_tools
+    end
+
     def additional_user_params!
       array_config_item! :additional_user_params
     end
