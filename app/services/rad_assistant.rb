@@ -3,7 +3,7 @@ class RadAssistant
   @system_tools = []
 
   class << self
-    attr_reader :chat_types
+    attr_reader :chat_types, :system_tools
 
     def register_chat_type(chat_type)
       @chat_types << chat_type unless @chat_types.include?(chat_type)
