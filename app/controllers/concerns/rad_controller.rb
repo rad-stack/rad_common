@@ -5,6 +5,7 @@ module RadController
   included do
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     before_action :set_sentry_user_context
+    before_action :set_assistant_session_context
     before_action :check_ip_address_timezone, if: :user_signed_in?
     around_action :user_timezone
     around_action :switch_locale, if: :switch_languages?
@@ -46,6 +47,11 @@ module RadController
       return unless current_user
 
       Sentry.set_user(id: true_user.id, email: true_user.email, name: sentry_user_name)
+    end
+
+    def set_assistant_session_context
+      @chat_class = 'basic'
+      @chat_scope = nil
     end
 
     def sentry_user_name
