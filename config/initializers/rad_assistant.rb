@@ -2,11 +2,20 @@
 
 # Register chat types after all initializers have run to ensure inflections are loaded
 Rails.application.config.after_initialize do
-  # Automatically register all chat types from app/services/llm/chat_types
-  chat_types_path = Rails.root.join('app', 'services', 'llm', 'chat_types')
+  # Collect paths to check for chat types
+  paths_to_check = []
 
-  if Dir.exist?(chat_types_path)
-    Dir.glob(chat_types_path.join('*.rb')).each do |file|
+  # Add gem's chat types path
+  gem_path = Gem.loaded_specs['rad_common']&.full_gem_path
+  paths_to_check << File.join(gem_path, 'app/services/llm/chat_types') if gem_path
+
+  # Add host application's chat types path
+  paths_to_check << Rails.root.join('app/services/llm/chat_types').to_s
+
+  paths_to_check.each do |chat_types_path|
+    next unless Dir.exist?(chat_types_path)
+
+    Dir.glob(File.join(chat_types_path, '*.rb')).each do |file|
       filename = File.basename(file, '.rb')
 
       # Skip base_chat as it's the parent class
