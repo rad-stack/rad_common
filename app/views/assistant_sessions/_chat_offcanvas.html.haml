@@ -1,4 +1,4 @@
-- if policy(AssistantSession).new?
+- if current_user && policy(AssistantSession).new?
   .offcanvas.offcanvas-end.w-50#basic-question-modal{ 'aria-hidden' => 'true',
                                                       'aria-labelledby' => 'basic-question-modal-label',
                                                       :tabindex => '-1' }
