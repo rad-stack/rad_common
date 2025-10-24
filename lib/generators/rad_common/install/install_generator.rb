@@ -808,6 +808,7 @@ gem 'propshaft'
           apply_migration '20251024225222_fix_chat_types.rb'
           apply_migration '20251027181305_rename_chat_type_to_chat_class.rb'
           apply_migration '20251103191522_remove_embedding_metadata.rb'
+          apply_migration '20251016155902_create_custom_reports.rb'
         end
 
         def installed_app_name

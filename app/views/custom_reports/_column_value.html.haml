@@ -1,0 +1,11 @@
+- value =  RadReports::ValueFormatter.format_record_value(record, column_def)
+
+- if column_def[:is_rich_text] && value.is_a?(ActionText::RichText)
+  .read-more= value
+- elsif column_def[:is_attachment]
+  = render_one_attachment record: record,
+                          attachment_name: column_def[:name],
+                          new_tab: true,
+                          no_delete_button: true
+- else
+  = value

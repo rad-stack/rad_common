@@ -1,0 +1,5 @@
+= turbo_stream.replace 'report_joins_section' do
+  = render 'joins_section', custom_report: @custom_report
+
+= turbo_stream.replace 'report_columns_section' do
+  = render 'columns_section', custom_report: @custom_report
