@@ -24,6 +24,7 @@
             = yield
     - else
       = render 'layouts/navigation'
+      = render 'assistant_sessions/chat_offcanvas', chat_class: 'basic', chat_scope: nil
       = render 'layouts/toast'
       .container-fluid.content
         .row
