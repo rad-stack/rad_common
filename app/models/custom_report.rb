@@ -113,7 +113,8 @@ class CustomReport < ApplicationRecord
 
         matching_column = valid_columns.find do |vc|
           vc[:name] == col_name &&
-            (vc[:association] == table_or_association || vc[:table] == table_or_association)
+            (vc[:association] == table_or_association ||
+             (vc[:association].nil? && vc[:table] == table_or_association))
         end
 
         unless matching_column

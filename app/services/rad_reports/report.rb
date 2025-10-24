@@ -61,7 +61,8 @@ module RadReports
             next unless association
 
             path_so_far = parts[0..index].join('.')
-            map[path_so_far] = association.table_name
+
+            map[path_so_far] = "#{path_so_far}_#{association.table_name}"
 
             current_class = association.klass
           end
@@ -70,17 +71,42 @@ module RadReports
       end
 
       def build_query(joins)
-        query = @model_class.all
+        return @model_class.all if joins.blank?
+
+        base_table = @model_class.arel_table
+        join_sources = []
+
         joins.each do |join_path|
           if join_path.include?('.')
             parts = join_path.split('.')
             nested_hash = parts.reverse.reduce { |acc, part| { part.to_sym => acc } }
-            query = query.joins(nested_hash)
+            return @model_class.joins(nested_hash)
           else
-            query = query.joins(join_path.to_sym)
+            # Simple association - create explicit alias to handle duplicate table joins
+            reflection = @model_class.reflect_on_association(join_path.to_sym)
+            next unless reflection
+
+            join_model = reflection.klass
+            join_alias = "#{join_path}_#{join_model.table_name}"
+            join_table = join_model.arel_table.alias(join_alias)
+
+            # Build join condition based on association type
+            # belongs_to: foreign_key is on base table (e.g., divisions.created_by_id = users.id)
+            # has_many/has_one: foreign_key is on joined table (e.g., divisions.owner_id = users.id)
+            join_condition = if reflection.belongs_to?
+                               join_table[reflection.join_primary_key].eq(base_table[reflection.foreign_key])
+                             else
+                               join_table[reflection.foreign_key].eq(base_table[reflection.active_record_primary_key])
+                             end
+
+            join_sources << base_table
+              .join(join_table)  # INNER JOIN (default)
+              .on(join_condition)
+              .join_sources
           end
         end
-        query
+
+        @model_class.joins(join_sources.flatten)
       end
 
       def build_column_definitions(columns)
@@ -228,6 +254,9 @@ module RadReports
 
         column = parts.last
         association_path = parts[0..-2].join('.')
+
+        # Convert association path to aliased table name
+        # e.g., "owner" becomes "owner_users"
         table_name = @association_to_table_map[association_path] || association_path
 
         "#{table_name}.#{column}"

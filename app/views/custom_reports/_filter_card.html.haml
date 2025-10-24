@@ -11,9 +11,10 @@
             :ruby
               group_label = col[:association_label].presence || col[:table_label]
               grouped_options[group_label] ||= []
-              table_col = "#{col[:table]}.#{col[:name]}"
+              # Use association name for joins, table name for base model
+              column_path = col[:association] ? "#{col[:association]}.#{col[:name]}" : "#{col[:table]}.#{col[:name]}"
               option_label = "#{col[:name].humanize} - #{col[:type]}"
-              grouped_options[group_label] << [option_label, table_col, { data: { column_type: col[:type], is_foreign_key: col[:is_foreign_key], is_enum: col[:is_enum] } }]
+              grouped_options[group_label] << [option_label, column_path, { data: { column_type: col[:type], is_foreign_key: col[:is_foreign_key], is_enum: col[:is_enum] } }]
           - options_html = options_for_select([['Select a column...', '']])
           - options_html += grouped_options_for_select(grouped_options, filter['column'])
           = select_tag 'custom_report[filters][][column]',
@@ -29,7 +30,10 @@
         .col-md-3
           = label_tag 'custom_report[filters][][type]', 'Filter Type', class: 'form-label small fw-medium text-muted mb-2'
           :ruby
-            selected_col = all_columns.find { |c| "#{c[:table]}.#{c[:name]}" == filter['column'] }
+            selected_col = all_columns.find do |c|
+              column_path = c[:association] ? "#{c[:association]}.#{c[:name]}" : "#{c[:table]}.#{c[:name]}"
+              column_path == filter['column']
+            end
             col_type = selected_col ? selected_col[:type] : nil
             is_enum = selected_col ? selected_col[:is_enum] : false
             is_foreign_key = selected_col ? selected_col[:is_foreign_key] : false
