@@ -1,0 +1,27 @@
+:ruby
+  config = custom_report.configuration || {}
+  filters = config['filters'] || []
+  joins = config['joins'] || []
+  all_columns = model_columns(custom_report.report_model, joins)
+  report_model = custom_report.report_model
+  report_id = custom_report.persisted? ? custom_report.id : nil
+
+.mb-3#filter-cards-container
+  - filters.each_with_index do |filter, filter_index|
+    = render 'filter_card',
+             filter: filter,
+             filter_id: "filter_saved_#{filter_index}",
+             all_columns: all_columns,
+             report_model: report_model,
+             report_id: report_id,
+             joins: joins
+
+.row
+  .col-12
+    :ruby
+      url_params = { id: report_id, joins: joins, report_model: report_model, format: :turbo_stream }.compact
+    = link_to update_filters_custom_reports_path(url_params),
+              class: 'btn btn-outline-primary',
+              data: { turbo_prefetch: false, turbo_method: :post } do
+      %i.fa.fa-plus-circle.me-2
+      Add Filter

@@ -31,6 +31,8 @@ module RadSearch
     end
 
     def sort_clause(record_class)
+      return if @sort_column.blank?
+
       @sort_column.split(',').map { |item|
         "#{item.strip} #{@sort_direction}#{nulls_last(item, record_class)}"
       }.join(', ')
