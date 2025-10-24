@@ -6,7 +6,7 @@ module LLM
       end
 
       def self.chat_list
-        { basic: LLM::ChatTypes::SystemChat }
+        { basic: LLM::ChatTypes::SystemChat, report_builder: LLM::ChatTypes::ReportBuilderChat }
       end
 
       def self.default_chat_type

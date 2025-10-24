@@ -1,0 +1,36 @@
+.card
+  :ruby
+    ai_builder_btn = button_tag(class: 'btn btn-primary btn-sm',
+                                'data-bs-target' => '#basic-question-modal',
+                                'data-bs-toggle' => 'offcanvas') do
+      content_tag(:i, '', class: 'fa fa-magic me-1') + ' AI Report Builder'
+    end
+
+  = render 'layouts/card_header', external_actions: [ai_builder_btn]
+  .card-body
+    = paginate @custom_reports, theme: 'bootstrap-5'
+
+    %table.table.table-striped.table-bordered
+      %tr
+        %th Name
+        %th Description
+        %th Model
+        %th.actions Actions
+
+      - @custom_reports.each do |record|
+        %tr{ class: table_row_style(record) }
+          %td= record.name
+          %td= record.description
+          %td= record.report_model
+          %td.d-grid.gap-2
+            = link_to icon('play', 'Run'), custom_report_path(record), class: 'btn btn-sm btn-primary'
+            - if policy(record).update?
+              = link_to icon(:pencil, 'Edit'), edit_custom_report_path(record), class: 'btn btn-sm btn-secondary'
+            - if policy(record).destroy?
+              = link_to icon(:times, 'Delete'),
+                        record,
+                        method: :delete,
+                        data: { confirm: 'Are you sure?' },
+                        class: 'btn btn-danger btn-sm'
+
+    = paginate @custom_reports, theme: 'bootstrap-5'
