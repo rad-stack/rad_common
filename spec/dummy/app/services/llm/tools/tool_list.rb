@@ -2,23 +2,13 @@ module LLM
   module Tools
     class ToolList
       def self.tools
-        [
-          AttorneyDataTool,
-          ListAvailableModels,
-          ListModelColumns,
-          ListModelAssociations,
-          ListAvailableFilters,
-          ListAvailableFormulas,
-          GenerateReportConfiguration
-        ]
+        # Include engine tools plus app-specific tools
+        super + [AttorneyDataTool]
       end
 
       def self.chat_list
-        { basic: LLM::ChatTypes::AttorneyChat, report_builder: LLM::ChatTypes::ReportBuilderChat }
-      end
-
-      def self.default_chat_type
-        'basic'
+        # Include engine chat types plus app-specific chats
+        super.merge({ attorney: LLM::ChatTypes::AttorneyChat })
       end
     end
   end
