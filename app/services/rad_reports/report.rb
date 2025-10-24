@@ -151,8 +151,11 @@ module RadReports
         filters.map do |filter|
           next if filter['type'].present? && filter['type'].start_with?('[')
 
+          # Convert association names to table names for SQL
+          column_path = convert_filter_column_path(filter['column'])
+
           filter_def = {
-            column: filter['column']
+            column: column_path
           }
 
           filter_def[:type] = filter['type'].constantize if filter['type'].present?
@@ -217,6 +220,17 @@ module RadReports
       rescue StandardError => e
         Rails.logger.error("Error generating filter options for #{filter['column']}: #{e.message}")
         []
+      end
+
+      def convert_filter_column_path(column_path)
+        parts = column_path.to_s.split('.')
+        return column_path if parts.length < 2
+
+        column = parts.last
+        association_path = parts[0..-2].join('.')
+        table_name = @association_to_table_map[association_path] || association_path
+
+        "#{table_name}.#{column}"
       end
 
       def parse_column_path(column_path)

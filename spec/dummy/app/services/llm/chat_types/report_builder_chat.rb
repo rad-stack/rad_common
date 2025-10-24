@@ -115,9 +115,21 @@ module LLM
                   "label": "Division Name",
                   "type": "RadSearch::LikeFilter",
                   "data_type": "string"
+                },
+                {
+                  "column": "company.name",
+                  "label": "Company Name",
+                  "type": "RadSearch::LikeFilter",
+                  "data_type": "string"
                 }
               ]
             }
+
+            **CRITICAL: Filter Columns**
+            - Filter "column" values MUST use the EXACT SAME format as column "select" values
+            - Use the "select" path from list_model_columns output for BOTH columns AND filters
+            - Example: If a column uses "company.name", the filter must also use "company.name"
+            - The system handles association-to-table conversion automatically
 
             The tool will attempt to create a CustomReport object. You'll receive one of these responses:
 

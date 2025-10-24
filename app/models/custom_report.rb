@@ -15,6 +15,7 @@ class CustomReport < ApplicationRecord
   validate :validate_report_model
   validate :validate_joins_configuration
   validate :validate_columns_configuration
+  validate :validate_filters_configuration
 
   audited
   strip_attributes
@@ -94,6 +95,30 @@ class CustomReport < ApplicationRecord
           unless valid_columns.any? { |vc| vc[:name] == column_name && vc[:association].nil? }
             errors.add(:columns, "contains invalid column '#{column_name}'")
           end
+        end
+      end
+    end
+
+    def validate_filters_configuration
+      return if report_model.blank? || filters.blank?
+
+      column_discovery = RadReports::ColumnDiscovery.new(report_model, joins || [])
+      valid_columns = column_discovery.all_columns
+
+      filters.each do |filter_config|
+        column_path = filter_config['column']
+        next if column_path.blank?
+
+        table_or_association, col_name = column_path.split('.', 2)
+
+        matching_column = valid_columns.find do |vc|
+          vc[:name] == col_name &&
+            (vc[:association] == table_or_association || vc[:table] == table_or_association)
+        end
+
+        unless matching_column
+          errors.add(:filters, "contains invalid column reference '#{column_path}'. " \
+                               "Available columns can be found using the model and joins you've specified.")
         end
       end
     end
