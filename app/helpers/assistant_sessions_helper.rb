@@ -30,7 +30,7 @@ module AssistantSessionsHelper
     template = "assistant_sessions/chat_message_#{direction}"
     message = assistant_session.format_message(log[:content])
     { direction: direction, user_name: user_name, template: template, message: message,
-      chat_date: log[:chat_date], user: User.first }
+      chat_date: log[:chat_date], user: current_user }
   end
 
   def assistant_session_text_sanitize(text)
