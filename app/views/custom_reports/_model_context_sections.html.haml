@@ -1,0 +1,35 @@
+= turbo_frame_tag 'report_model_context' do
+  .row
+    .col-12
+      %h5.mb-3
+        %i.fa.fa-link.me-2
+        Related Tables (Joins)
+
+  .mb-4
+    = render 'joins_section', custom_report: custom_report
+
+  %hr.mt-4
+
+  %h5.mb-3
+    %i.fa.fa-columns.me-2
+    Report Columns
+
+  .mb-4{ data: { report_builder_target: 'columnsSection' } }
+    = render 'columns_section', custom_report: custom_report
+
+  %hr.mt-4
+
+  %h5.mt
+    %i.fa.fa-filter.me-2
+    Filters
+
+  = turbo_frame_tag 'report_filters_section' do
+    - if custom_report.report_model.present?
+      = render 'filters_section', custom_report: custom_report
+    - else
+      .alert.alert-info
+        %i.fa.fa-info-circle.me-2
+        Select a model first to add filters
+
+  .form-actions.mt-3
+    %button.btn.btn-success{ type: 'submit', name: 'commit' } Save

@@ -1,0 +1,57 @@
+
+= turbo_frame_tag 'report_joins_section' do
+  :ruby
+    joins = custom_report.joins
+    report_model = custom_report.report_model
+    associations_list = available_associations_with_details(report_model, joins)
+    base_turbo_params = { report_model: report_model, joins: joins, format: :turbo_stream, id: custom_report.id }
+
+  .mb-3{ data: { testid: 'report-joins-list' } }
+    - joins.each do |join|
+      - assoc_info = associations_list.find { |a| a[:name] == join }
+      - next if assoc_info.blank?
+
+      .card.mb-2.bg-light.shadow-sm{ data: { join_name: join } }
+        .card-body.py-2
+          .row.g-2.align-items-center
+            .col
+              .d-flex.align-items-center
+                .me-3
+                  %strong= assoc_info[:label]
+                  %br
+                  %small.text-muted
+                    #{assoc_info[:type].humanize} → #{assoc_info[:class_name]}
+                %span.badge.bg-light.text-dark.border= assoc_info[:table_name]
+            .col-auto
+              = link_to update_joins_custom_reports_path(base_turbo_params.merge(remove_join: join)),
+                        class: 'btn btn-sm btn-outline-danger rounded-circle',
+                        data: { turbo_prefetch: false, testid: 'remove-join-button' } do
+                %i.fa.fa-times
+              %input{ type: 'hidden', name: 'custom_report[joins][]', value: join }
+
+  - available_joins = associations_list.reject { |assoc| joins.include?(assoc[:name]) }
+  - if available_joins.any?
+    .dropdown
+      %button.btn.btn-sm.btn-outline-primary.dropdown-toggle{ type: 'button', data: { bs_toggle: 'dropdown' } }
+        %i.fa.fa-plus.me-1
+        Add Related Table
+      %ul.dropdown-menu
+        %li
+          %h6.dropdown-header Available Relationships
+        - available_joins.each do |assoc|
+          %li
+            = link_to update_joins_custom_reports_path(base_turbo_params.merge(add_join: assoc[:name])),
+                      class: 'dropdown-item',
+                      data: { turbo_prefetch: false } do
+              .d-flex.justify-content-between.align-items-start
+                .me-2
+                  %strong= assoc[:label]
+                  %br
+                  %small.text-muted
+                    #{assoc[:type].humanize} → #{assoc[:class_name]}
+                %span.badge.bg-light.text-dark.border.text-end
+                  = assoc[:table_name]
+  - else
+    %button.btn.btn-sm.btn-outline-secondary{ type: 'button', disabled: true }
+      %i.fa.fa-info-circle.me-1
+      = joins.any? ? 'All available tables added' : 'No related tables available'

@@ -1,0 +1,10 @@
+= turbo_stream.remove @column_id
+
+- if request.delete?
+  = turbo_stream.append "available-columns-#{@table_id}" do
+    = render 'available_column_row', column: @column_data, table_id: @table_id
+- else
+  = turbo_stream.append 'selected-columns-list' do
+    = render 'selected_column_row', column: @column_data, table_id: @table_id, formula: @formula
+
+= turbo_stream.action :scroll_bottom, 'selected-columns-container'
