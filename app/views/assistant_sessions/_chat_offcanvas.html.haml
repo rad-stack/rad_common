@@ -6,4 +6,5 @@
       %h1.offcanvas-title.fs-5#basic-question-modal-label Ask Question?
       %button.btn-close{ 'aria-label' => 'Close', 'data-bs-dismiss' => 'offcanvas', :type => 'button' }
     .offcanvas-body.bg-secondary.bg-opacity-25.p-0.d-flex.flex-column
-      = render 'assistant_sessions/chat_form', assistant_session: AssistantSession.basic_chat(current_user, chat_scope, chat_type: chat_class)
+      = render 'assistant_sessions/chat_form',
+               assistant_session: AssistantSession.create_or_find_chat(current_user, chat_class, chat_scope)
