@@ -1,5 +1,12 @@
 .card
-  = render 'layouts/card_header'
+  :ruby
+    ai_builder_btn = button_tag(class: 'btn btn-success btn-sm',
+                                'data-bs-target' => '#basic-question-modal',
+                                'data-bs-toggle' => 'offcanvas') do
+      content_tag(:i, '', class: 'fa fa-magic me-1') + ' AI Report Builder'
+    end
+
+  = render 'layouts/card_header', external_actions: [ai_builder_btn]
   .card-body
     = paginate @custom_reports, theme: 'bootstrap-5'
 
@@ -27,3 +34,7 @@
                         class: 'btn btn-danger btn-sm'
 
     = paginate @custom_reports, theme: 'bootstrap-5'
+
+= render 'assistant_sessions/chat_offcanvas',
+         assistant_session: AssistantSession.report_builder_chat(current_user),
+         title: 'AI Report Builder'

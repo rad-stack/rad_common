@@ -39,9 +39,11 @@ module RadReports
 
     def extract_config_array(params, parse_formula: false)
       return [] unless params
-      return params.map(&:to_h) if params.is_a?(Array) && !parse_formula
 
-      params.values.map do |param|
+      # Convert to array of values if it's a hash (from Rails form params)
+      items = params.is_a?(Array) ? params : params.values
+
+      items.map do |param|
         if parse_formula && param[:formula].present? && param[:formula].is_a?(String)
           begin
             parsed_formula = JSON.parse(param[:formula])

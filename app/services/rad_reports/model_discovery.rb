@@ -5,6 +5,7 @@ module RadReports
       ContactLogRecipient
       CustomReport
       Duplicate
+      Embedding
       LoginActivity
       Notification
       NotificationSecurityRole

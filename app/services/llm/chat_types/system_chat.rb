@@ -1,6 +1,6 @@
 module LLM
   module ChatTypes
-    class SystemChat < BaseChat
+    class SystemChat < LLM::ChatTypes::BaseChat
       include RadHelper
 
       SYSTEM_PROMPT = <<~EXAMPLES.freeze

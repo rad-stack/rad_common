@@ -20,6 +20,10 @@ class AssistantSession < ApplicationRecord
                                         chat_scope: scope
   end
 
+  def self.report_builder_chat(user)
+    AssistantSession.find_or_create_by!(user: user, chat_type: 'report_builder')
+  end
+
   def chat_type_class
     LLM::Tools::ToolList.chat_list[chat_type.to_sym] || raise('Invalid chat type')
   end
