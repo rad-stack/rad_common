@@ -34,6 +34,7 @@ module RadNav
          system_messages,
          DropdownMenuItem.new(view_context, 'System Usage', view_context.system_usages_path),
          DropdownMenuIndexItem.new(view_context, 'ContactLog'),
+         DropdownMenuIndexItem.new(view_context, 'CustomReport'),
          users,
          validate_database].compact.sort_by(&:label)
       end
