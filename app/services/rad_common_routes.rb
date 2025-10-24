@@ -37,7 +37,7 @@ module RadCommonRoutes
           end
         end
 
-        resources :llm_chats, only: %i[show update index] do
+        resources :assistant_sessions, only: %i[show update index] do
           member do
             patch :chat_response
             get :check_response
@@ -89,6 +89,7 @@ module RadCommonRoutes
       resources :notification_settings, only: %i[index create]
       resources :user_profiles, only: %i[show edit update] if RadConfig.user_profiles?
       resources :twilio_statuses, only: :create
+      resources :sinch_statuses, only: :create
       resources :twilio_replies, only: :create
       resources :sendgrid_statuses, only: :create
       resources :company_contacts, only: %i[new create]

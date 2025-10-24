@@ -15,6 +15,7 @@ class ContactLogRecipient < ApplicationRecord
                       failed: 8 }, prefix: true
 
   enum :email_status, { delivered: 0, dropped: 1, bounce: 2, spamreport: 3 }, prefix: true
+  enum :fax_status, { queued: 0, in_progress: 1, completed: 2, failure: 3 }, prefix: true
 
   scope :sms, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }) }
   scope :failed, -> { joins(:contact_log).where(success: false) }
@@ -27,7 +28,7 @@ class ContactLogRecipient < ApplicationRecord
 
   scope :sms_assumed_failed, lambda {
     joins(:contact_log)
-      .where(sms_status: :sent, contact_logs: { sms_log_type: :outgoing, service_type: :sms, sent: true })
+      .where(sms_status: :sent, contact_logs: { contact_direction: :outgoing, service_type: :sms, sent: true })
       .where(created_at: ..3.hours.ago)
       .order(:id)
   }
@@ -36,8 +37,8 @@ class ContactLogRecipient < ApplicationRecord
     scope service_type, -> { joins(:contact_log).where(contact_logs: { service_type: service_type }) }
   end
 
-  ContactLog.sms_log_types.each_key do |sms_log_type|
-    scope sms_log_type, -> { joins(:contact_log).where(contact_logs: { sms_log_type: sms_log_type }) }
+  ContactLog.contact_directions.each_key do |contact_direction|
+    scope contact_direction, -> { joins(:contact_log).where(contact_logs: { contact_direction: contact_direction }) }
   end
 
   validates_with PhoneNumberValidator, fields: [{ field: :phone_number }], skip_twilio: true
@@ -45,7 +46,17 @@ class ContactLogRecipient < ApplicationRecord
 
   validates :sms_status, presence: true, if: -> { contact_log&.sms? && contact_log.outgoing? }
   validates :email_status, presence: true, if: -> { contact_log&.email? }
-  validates :sms_status, absence: true, if: -> { contact_log&.email? || contact_log&.voice? || contact_log&.incoming? }
+  validates :fax_status, presence: true, if: -> { contact_log&.fax? }
+  validates :fax_error_message, presence: true, if: -> { contact_log&.fax? && fax_status_failure? }
+
+  validates :fax_status, :fax_error_message,
+            absence: true,
+            if: -> { contact_log&.email? || contact_log&.voice? || contact_log&.sms? }
+
+  validates :sms_status,
+            absence: true,
+            if: -> { contact_log&.email? || contact_log&.voice? || contact_log&.fax? || contact_log&.incoming? }
+
   validates :email_status, :sendgrid_reason, absence: true, if: -> { contact_log&.sms? }
 
   validate :validate_service_type
@@ -93,6 +104,8 @@ class ContactLogRecipient < ApplicationRecord
         self.success = sms_status_delivered?
       elsif contact_log.email?
         self.success = email_status_delivered?
+      elsif contact_log.fax?
+        self.success = fax_status_completed?
       end
     end
 
@@ -108,7 +121,7 @@ class ContactLogRecipient < ApplicationRecord
 
       if email.present?
         self.to_user = User.find_by(email: email)
-      elsif phone_number.present?
+      elsif phone_number.present? && !contact_log.fax?
         users = User.where(mobile_phone: phone_number)
         self.to_user = users.first if users.size == 1
       end
@@ -124,7 +137,7 @@ class ContactLogRecipient < ApplicationRecord
     def validate_service_type
       return if contact_log.blank?
 
-      if contact_log.sms? || contact_log.voice?
+      if contact_log.sms? || contact_log.voice? || contact_log.fax?
         errors.add(:email, 'must be blank') if email.present?
         errors.add(:phone_number, 'must be present') if phone_number.blank?
       else
@@ -165,7 +178,7 @@ class ContactLogRecipient < ApplicationRecord
 
     def recent_sms_logs_to_user
       to_user.contact_logs_to.joins(:contact_log)
-             .where(contact_logs: { service_type: :sms, sms_log_type: :outgoing })
+             .where(contact_logs: { service_type: :sms, contact_direction: :outgoing })
              .where(created_at: 30.days.ago..)
              .sorted
     end

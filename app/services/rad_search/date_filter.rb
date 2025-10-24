@@ -2,7 +2,7 @@ module RadSearch
   ##
   # This is used to generate a date filter input, which filters a date column between a start date and end date range.
   class DateFilter
-    attr_reader :column, :errors, :default_start_value, :default_end_value, :group_label, :col_class
+    attr_reader :column, :errors, :default_start_value, :default_end_value, :group_label, :col_class, :allow_nil
 
     ##
     # @param [Symbol] column the database column that is being filtered
@@ -21,7 +21,8 @@ module RadSearch
     #   { column: :created_at, type: RadSearch::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
     def initialize(column:, start_input_label: nil, end_input_label: nil, custom: false,
                    start_required: true, end_required: true,
-                   default_start_value: nil, default_end_value: nil, group_label: nil, scope: nil, col_class: nil)
+                   default_start_value: nil, default_end_value: nil, group_label: nil, scope: nil,
+                   col_class: nil, allow_nil: false)
       @column = column
       @start_required = start_required
       @end_required = end_required
@@ -32,6 +33,7 @@ module RadSearch
       @default_end_value = default_end_value
       @custom = custom
       @col_class = col_class
+      @allow_nil = allow_nil
       @errors = []
       @scope = scope
     end
@@ -97,9 +99,23 @@ module RadSearch
           results = results.send(@scope, start_at, end_at)
         end
       else
-        results = results.where("#{query_column(results)} >= ?", start_at) if start_at.present?
-        results = results.where("#{query_column(results)} <= ?", end_at) if end_at.present?
+        if start_at.present?
+          results = if allow_nil
+                      results.where("#{query_column(results)} >= ? OR #{query_column(results)} IS NULL", start_at)
+                    else
+                      results.where("#{query_column(results)} >= ?", start_at)
+                    end
+        end
+
+        if end_at.present?
+          results = if allow_nil
+                      results.where("#{query_column(results)} <= ? OR #{query_column(results)} IS NULL", end_at)
+                    else
+                      results.where("#{query_column(results)} <= ?", end_at)
+                    end
+        end
       end
+
       results
     end
 

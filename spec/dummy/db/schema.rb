@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_17_110121) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -52,6 +52,22 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "assistant_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.jsonb "log"
+    t.string "contextable_type"
+    t.bigint "contextable_id"
+    t.string "chat_scope_type"
+    t.bigint "chat_scope_id"
+    t.integer "status", default: 1, null: false
+    t.string "chat_type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_scope_type", "chat_scope_id"], name: "index_assistant_sessions_on_chat_scope"
+    t.index ["contextable_type", "contextable_id"], name: "index_assistant_sessions_on_contextable"
+    t.index ["user_id"], name: "index_assistant_sessions_on_user_id"
   end
 
   create_table "attorneys", force: :cascade do |t|
@@ -148,7 +164,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
     t.string "sendgrid_reason"
     t.boolean "notify_on_fail", default: true, null: false
     t.boolean "sms_false_positive", default: false, null: false
+    t.integer "fax_status"
+    t.string "fax_error_message"
     t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
+    t.index ["created_at"], name: "index_contact_log_recipients_on_created_at"
     t.index ["email"], name: "index_contact_log_recipients_on_email"
     t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"
     t.index ["to_user_id"], name: "index_contact_log_recipients_on_to_user_id"
@@ -163,12 +182,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
     t.datetime "updated_at", null: false
     t.boolean "sms_opt_out_message_sent", default: false, null: false
     t.string "sms_message_id"
-    t.integer "sms_log_type"
+    t.integer "contact_direction"
     t.string "from_email"
     t.integer "service_type", default: 0, null: false
     t.string "record_type"
     t.bigint "record_id"
     t.string "content"
+    t.string "fax_message_id"
     t.index ["created_at"], name: "index_contact_logs_on_created_at"
     t.index ["from_number"], name: "index_contact_logs_on_from_number"
     t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
@@ -195,6 +215,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
     t.bigint "category_id"
     t.string "tags", default: [], null: false, array: true
     t.index ["category_id"], name: "index_divisions_on_category_id"
+    t.index ["created_at"], name: "index_divisions_on_created_at"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
   end
@@ -222,22 +243,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
     t.index ["embeddable_type", "embeddable_id"], name: "index_embeddings_on_embeddable_type_and_embeddable_id", unique: true
     t.index ["embedding"], name: "index_embeddings_on_embedding", opclass: :vector_cosine_ops, using: :hnsw
     t.index ["metadata"], name: "index_embeddings_on_metadata", using: :gin
-  end
-
-  create_table "llm_chats", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.jsonb "log"
-    t.string "contextable_type"
-    t.bigint "contextable_id"
-    t.string "chat_scope_type"
-    t.bigint "chat_scope_id"
-    t.integer "status", default: 1, null: false
-    t.string "chat_type", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["chat_scope_type", "chat_scope_id"], name: "index_llm_chats_on_chat_scope"
-    t.index ["contextable_type", "contextable_id"], name: "index_llm_chats_on_contextable"
-    t.index ["user_id"], name: "index_llm_chats_on_user_id"
   end
 
   create_table "login_activities", force: :cascade do |t|
@@ -305,6 +310,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
     t.bigint "record_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_notifications_on_created_at"
     t.index ["notification_type_id"], name: "index_notifications_on_notification_type_id"
     t.index ["record_type", "record_id"], name: "index_notifications_on_record_type_and_record_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
@@ -443,6 +449,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
     t.string "ignored_timezone"
     t.string "detected_timezone_js"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"
     t.index ["first_name"], name: "index_users_on_first_name"
@@ -458,13 +465,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_160535) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "assistant_sessions", "users"
   add_foreign_key "audits", "users"
   add_foreign_key "contact_log_recipients", "contact_logs"
   add_foreign_key "contact_log_recipients", "users", column: "to_user_id"
   add_foreign_key "contact_logs", "users", column: "from_user_id"
   add_foreign_key "divisions", "categories"
   add_foreign_key "divisions", "users", column: "owner_id"
-  add_foreign_key "llm_chats", "users"
   add_foreign_key "notification_security_roles", "notification_types"
   add_foreign_key "notification_security_roles", "security_roles"
   add_foreign_key "notification_settings", "notification_types"

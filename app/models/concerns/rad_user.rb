@@ -377,7 +377,7 @@ module RadUser
 
       return false if records.size < 10
 
-      records.failed.size >= 8
+      records.count { |item| !item.success? } >= 8
     end
 
     def notify_user_approved

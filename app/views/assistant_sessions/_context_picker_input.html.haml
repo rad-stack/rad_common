@@ -1,4 +1,4 @@
-- chat_instance = llm_chat.chat_instance
+- chat_instance = assistant_session.chat_instance
 = f.input :contextable_id,
           collection: chat_instance.input_collection(self),
           as: chat_instance.grouped_select? ? :grouped_select : nil,

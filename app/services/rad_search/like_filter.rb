@@ -9,7 +9,7 @@ module RadSearch
     # @param [String] column the database column that is being filtered
     def initialize(column:, input_label: nil, col_class: nil, name: nil, input_transform: nil)
       @column = column
-      @input_label = input_label
+      @input_label = input_label.presence || column.to_s.titleize
       @col_class = col_class
       @name = name.presence || column
       @input_transform = input_transform

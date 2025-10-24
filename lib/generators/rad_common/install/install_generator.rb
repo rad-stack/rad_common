@@ -33,7 +33,7 @@ module RadCommon
         add_rad_config_setting 'show_sign_in_marketing', 'false'
         remove_rad_factories
         remove_legacy_rails_config_setting
-        update_credentials
+        # update_credentials
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
@@ -181,6 +181,10 @@ module RadCommon
         # factory bot
         copy_file '../../../../../spec/dummy/lib/templates/factory_bot/factory.rb.tt',
                   'lib/templates/factory_bot/factory.rb.tt'
+
+        # search template
+        copy_file '../../../../../spec/dummy/lib/templates/services/search.rb.tt',
+                  'lib/templates/services/search.rb.tt'
 
         unless RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
@@ -404,6 +408,12 @@ Seeder.new.seed!
             next unless File.exist?(credentials_path)
 
             key_path = Rails.root.join("config/credentials/#{environment}.key")
+
+            unless File.exist?(key_path)
+              puts "key file not found: #{key_path}, skipping."
+              next
+            end
+
             decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
             current_credentials = YAML.safe_load(decrypted_content) || {}
             next if current_credentials.key?('developer_domain')
@@ -420,6 +430,12 @@ Seeder.new.seed!
             next unless File.exist?(credentials_path)
 
             key_path = Rails.root.join("config/credentials/#{environment}.key")
+
+            unless File.exist?(key_path)
+              puts "key file not found: #{key_path}, skipping."
+              next
+            end
+
             decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
             current_credentials = YAML.safe_load(decrypted_content) || {}
             next if current_credentials.key?('developer_domain')
@@ -434,6 +450,12 @@ Seeder.new.seed!
             next unless File.exist?(credentials_path)
 
             key_path = Rails.root.join("config/credentials/#{environment}.key")
+
+            unless File.exist?(key_path)
+              puts "key file not found: #{key_path}, skipping."
+              next
+            end
+
             decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
             current_credentials = YAML.safe_load(decrypted_content) || {}
             next if current_credentials['developer_domain'] == 'example.com'
@@ -778,6 +800,11 @@ gem 'propshaft'
           apply_migration '20250918160535_create_vector_embeddings.rb'
           apply_migration '20250918153732_add_large_language_model_chats.rb'
           apply_migration '20250914154915_fix_developer_notifications.rb'
+          apply_migration '20250926165217_rename_llm_chats_to_assistant_sessions.rb'
+          apply_migration '20251003162830_add_fax_contact_log_fields.rb'
+          apply_migration '20251007153435_move_fax_error_message.rb'
+          apply_migration '20250418211716_add_created_at_index_to_system_usages.rb'
+          apply_migration '20251017110121_rename_direction_to_contact_direction.rb'
         end
 
         def installed_app_name

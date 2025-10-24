@@ -1,4 +1,4 @@
-class LLMChat < ApplicationRecord
+class AssistantSession < ApplicationRecord
   audited
   strip_attributes
 
@@ -10,10 +10,14 @@ class LLMChat < ApplicationRecord
 
   attr_accessor :current_message
 
+  scope :sorted, -> { order(created_at: :desc) }
+
   delegate :assistant_name, :context_object?, :format_message, to: :chat_instance
 
   def self.basic_chat(user, scope = nil)
-    LLMChat.find_or_create_by!(user: user, chat_type: LLM::Tools::ToolList.default_chat_type, chat_scope: scope)
+    AssistantSession.find_or_create_by! user: user,
+                                        chat_type: LLM::Tools::ToolList.default_chat_type,
+                                        chat_scope: scope
   end
 
   def chat_type_class

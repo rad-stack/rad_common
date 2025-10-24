@@ -1,4 +1,4 @@
-class LLMChatPolicy < ApplicationPolicy
+class AssistantSessionPolicy < ApplicationPolicy
   def chat_response?
     update?
   end

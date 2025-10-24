@@ -20,10 +20,14 @@
           %th Email Type
           %th Email Status
           %th SendGrid Reason
-        - if @contact_log.sms?
+        - if @contact_log.sms? || @contact_log.voice? || @contact_log.fax?
           %th Phone #
+        - if @contact_log.sms?
           %th SMS False Positive
           %th SMS Status
+        - if @contact_log.fax?
+          %th Fax Status
+          %th Fax Error Message
         %th Success?
       - @contact_log_recipients.each do |record|
         %tr{ class: table_row_style(record) }
@@ -43,12 +47,16 @@
             %td
               - if record.sendgrid_reason.present?
                 = link_to record.sendgrid_reason, record
-          - if @contact_log.sms?
+          - if @contact_log.sms? || @contact_log.voice? || @contact_log.fax?
             %td
               - if record.phone_number.present?
                 = link_to record.phone_number, record
+          - if @contact_log.sms?
             %td= link_to format_boolean(record.sms_false_positive), record
             %td
               - if record.sms_status.present?
                 = link_to enum_to_translated_option(record, :sms_status), record
+          - if @contact_log.fax?
+            %td= enum_to_translated_option record, :fax_status
+            %td=  record.fax_error_message
           %td= link_to format_boolean(record.success), record

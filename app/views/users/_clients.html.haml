@@ -4,7 +4,7 @@
   .card
     = render 'layouts/card_header',
              action_name: 'custom',
-             title: "#{AppInfo.new.client_model_label}s (#{@user_clients.count})",
+             title: "#{AppInfo.new.client_model_label.pluralize} (#{@user_clients.count})",
              icon: 'fa-address-book',
              additional_actions: user_client_actions(@user)
 

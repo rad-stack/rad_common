@@ -14,7 +14,7 @@ class ContactLogSearch < RadSearch::Search
     def filters_def
       [date_filter,
        { column: :service_type, type: RadSearch::EnumFilter, klass: ContactLog },
-       { input_label: 'Log Type', column: :sms_log_type, type: RadSearch::EnumFilter, klass: ContactLog },
+       { input_label: 'Direction', column: :contact_direction, type: RadSearch::EnumFilter, klass: ContactLog },
        user_filter('From User', 'contact_logs.from_user_id'),
        { input_label: 'From Number',
          column: 'contact_logs.from_number',
@@ -41,7 +41,7 @@ class ContactLogSearch < RadSearch::Search
     def sort_columns_def
       [{ label: 'When', column: 'contact_logs.created_at', direction: 'desc', default: true },
        { label: 'Service Type', column: 'contact_logs.service_type' },
-       { label: 'Log Type', column: 'contact_logs.sms_log_type' },
+       { label: 'Direction', column: 'contact_logs.contact_direction' },
        { label: 'From' },
        { label: 'To' },
        { label: 'Record' },

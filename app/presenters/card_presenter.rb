@@ -317,17 +317,25 @@ class CardPresenter
 
     def user_contact_log_actions
       [{ label: 'Contact Logs to User',
-         link: @view_context.contact_logs_path(search: { 'contact_log_recipients.to_user_id': instance.id }) },
+         link: @view_context.contact_logs_path(search: { 'contact_log_recipients.to_user_id': instance.id,
+                                                         created_at_start: Date.current,
+                                                         created_at_end: Date.current }) },
        { label: 'Contact Logs from User',
-         link: @view_context.contact_logs_path(search: { 'contact_logs.from_user_id': instance.id }) },
+         link: @view_context.contact_logs_path(search: { 'contact_logs.from_user_id': instance.id,
+                                                         created_at_start: Date.current,
+                                                         created_at_end: Date.current }) },
        { label: 'Contact Logs w/ User as Subject', link: contact_log_record_action },
        { label: 'All Associated Contact Logs',
-         link: @view_context.contact_logs_path(search: { associated_with_user: instance.id }) }]
+         link: @view_context.contact_logs_path(search: { associated_with_user: instance.id,
+                                                         created_at_start: Date.current,
+                                                         created_at_end: Date.current }) }]
     end
 
     def contact_log_record_action
       @view_context.contact_logs_path(search: { 'contact_logs.record_type': instance.class.name,
-                                                record_id_equals: instance.id })
+                                                record_id_equals: instance.id,
+                                                created_at_start: Date.current,
+                                                created_at_end: Date.current })
     end
 
     def contact_logs?

@@ -5,8 +5,8 @@ module LLM
 
       ASSISTANT_NAME = 'Assistant'.freeze
 
-      def initialize(llm_chat)
-        @llm_chat = llm_chat
+      def initialize(assistant_session)
+        @assistant_session = assistant_session
         @common_question = false
       end
 
@@ -37,8 +37,8 @@ module LLM
       def basic_question(question)
         question = build_context(question)
 
-        if @llm_chat.log.present?
-          previous_messages = @llm_chat.log
+        if @assistant_session.log.present?
+          previous_messages = @assistant_session.log
           return base_prompt.chat(content: question, previous_messages: previous_messages)
         end
 
@@ -49,7 +49,7 @@ module LLM
         return question unless common_question_class(question)
 
         question_class = common_question_class(question)
-        question_instance = question_class.new(context: @llm_chat)
+        question_instance = question_class.new(context: @assistant_session)
         context_data = question_instance.context_data
         @common_question = context_data.present?
         "#{question} CONTEXT_DATA_FOLLOWS: \n #{question_instance.class.question} \n #{context_data}"
@@ -69,7 +69,7 @@ module LLM
 
       def base_prompt
         @base_prompt = LLM::PromptBuilder.new(system_prompt: system_prompt,
-                                              context: @llm_chat,
+                                              context: @assistant_session,
                                               tools: base_tools)
       end
 

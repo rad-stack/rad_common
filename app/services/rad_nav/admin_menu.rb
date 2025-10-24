@@ -3,7 +3,6 @@ module RadNav
     attr_accessor :view_context, :additional_items, :include_users
 
     delegate :current_user, :render, :tag, to: :view_context
-    delegate :developer?, to: :current_user
 
     def initialize(view_context, include_users, additional_items: [])
       @view_context = view_context
@@ -92,6 +91,10 @@ module RadNav
 
       def admin?
         @admin ||= current_user.admin?
+      end
+
+      def developer?
+        @developer ||= current_user.developer? || Rails.env.development?
       end
   end
 end

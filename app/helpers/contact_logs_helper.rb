@@ -1,7 +1,7 @@
 module ContactLogsHelper
   def contact_log_show_data(contact_log)
     items = [:service_type,
-             :sms_log_type,
+             :contact_direction,
              :from_number,
              :from_email,
              { label: 'From User', value: secured_link(contact_log.from_user) },
@@ -11,6 +11,7 @@ module ContactLogsHelper
              :sent]
 
     items += %i[sms_opt_out_message_sent] if contact_log.sms?
+    items += [:fax_message_id]
     items += [{ label: 'SMS Message ID', value: twilio_log_link(contact_log) }, :sms_media_url]
 
     # TODO: this was added for IJS but need to finish the feature for general use - Task 8671
