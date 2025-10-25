@@ -1,0 +1,29 @@
+.card
+  = render 'layouts/card_header', no_new_button: true, no_delete_button: true, no_edit_button: true
+
+  .card-body
+    .card-body.bg-secondary
+    %table.table.table-striped.table-bordered
+      %tr
+        %th Date
+        %th Role
+        %th Content
+      - logs_for_session(@assistant_session).each do |log|
+        - log.symbolize_keys!
+        %tr
+          %td= log[:chat_date]
+          %td= log[:role]
+          %td
+            - if log[:tool_calls].present?
+              %strong Tool Calls
+              %table.table
+                %tr
+                  %th Type
+                  %th Name
+                  %th Arguments
+                - log[:tool_calls].each do |tool_call|
+                  %tr
+                    %td= tool_call[:type]
+                    %td= tool_call.dig('function', 'name')
+                    %td= tool_call.dig('function', 'arguments')
+            = log[:content]

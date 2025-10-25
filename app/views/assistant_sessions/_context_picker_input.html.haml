@@ -1,0 +1,9 @@
+- chat_instance = assistant_session.chat_instance
+= f.input :contextable_id,
+          collection: chat_instance.input_collection(self),
+          as: chat_instance.grouped_select? ? :grouped_select : nil,
+          group_method: chat_instance.grouped_select? ? :last : nil,
+          include_blank: "Select a #{chat_instance.context_type}",
+          label: false,
+          input_html: { class: 'selectpicker' }
+= f.input :contextable_type, as: :hidden, input_html: { value: chat_instance.context_type }

@@ -82,6 +82,14 @@ class RadConfig
       secret_config_item! :smarty_auth_token
     end
 
+    def open_ai_api_key!
+      secret_config_item! :open_ai_api_key
+    end
+
+    def open_ai_api_key
+      secret_config_item :open_ai_api_key
+    end
+
     def hash_key!
       secret_config_item! :hash_key
     end
@@ -326,6 +334,10 @@ class RadConfig
 
     def additional_company_params!
       array_config_item! :additional_company_params
+    end
+
+    def rad_assistant_system_tools!
+      array_config_item! :rad_assistant_system_tools
     end
 
     def additional_user_params!

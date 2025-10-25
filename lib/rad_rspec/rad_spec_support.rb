@@ -2,6 +2,7 @@ class RadSpecSupport
   def self.before_all
     rspec = yield
     rspec.allow(RadConfig).to rspec.receive(:twilio_enabled?).and_return false
+    rspec.allow(EmbeddingService).to rspec.receive(:enabled?).and_return false
 
     rspec.allow(Company).to rspec.receive(:main).and_return(Company.main || rspec.create(:company))
 
