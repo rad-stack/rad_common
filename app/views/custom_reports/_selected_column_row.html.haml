@@ -1,0 +1,38 @@
+:ruby
+  column_id = column_id(column, prefix: 'selected-column')
+  url_params = column_url_params(column, table_id, column_id)
+  actions = 'dragstart->report-builder#handleDragStart dragover->report-builder' \
+            '#handleDragOver drop->report-builder#handleDrop dragend->report-builder#handleDragEnd'
+  formula_json = formula.present? ? formula.to_json : ''
+
+%tr.selected-column-row.align-middle{ id: column_id,
+                                      draggable: 'true',
+                                      data: { column_name: column[:name],
+                                              column_table: column[:table],
+                                              column_type: column[:type],
+                                              column_association: column[:association],
+                                              column_formula: formula_json,
+                                              action: actions } }
+  %td.py-3.ps-2.cursor-grab
+    %i.fa.fa-grip-vertical.text-muted.fs-5
+  %td.py-3
+    %input.form-control.border-0.bg-light.fw-medium{ type: 'text',
+                                                     value: column[:custom_label] || column[:name].humanize,
+                                                     placeholder: column[:name].humanize,
+                                                     data: { action: 'change->report-builder#updateColumnLabel' } }
+  %td.py-3
+    %small.text-muted.text-nowrap.fw-light= column_path(column)
+  %td.py-3
+    .d-flex.align-items-center.gap-2
+      %span.badge.bg-light.text-dark.border-0.px-2= column[:type]
+      %button.btn.btn-sm.rounded-circle{ type: 'button',
+                                         data: { action: 'click->formula-editor#open' },
+                                         title: formula.present? ? 'Edit Formula' : 'Add Formula',
+                                         class: formula.present? ? 'btn-success' : 'btn-outline-secondary' }
+        %i.fa.fa-calculator
+  %td.text-end.py-3.pe-2
+    = link_to update_columns_custom_reports_path(url_params),
+              class: 'btn btn-sm btn-outline-danger rounded-circle',
+              title: 'Remove column',
+              data: { turbo_prefetch: false, turbo_method: :delete } do
+      %i.fa.fa-times
