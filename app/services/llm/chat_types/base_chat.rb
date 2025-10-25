@@ -74,7 +74,7 @@ module LLM
       end
 
       def available_tools
-        @available_tools ||= default_tools.index_by { |class_object| tool_name(class_object) }
+        @available_tools ||= default_tools.index_by { |class_object| LLM::Tools::Builder.tool_name(class_object) }
       end
 
       private
