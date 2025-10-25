@@ -86,7 +86,11 @@ module LLM
         def base_tools
           return [] if @common_question
 
-          default_tools
+          default_tool_definitions
+        end
+
+        def default_tool_definitions
+          default_tools.map { |tool| tool.new.tool_definition }
         end
 
         def default_tools

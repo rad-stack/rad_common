@@ -36,7 +36,7 @@ module LLM
       private
 
         def default_tools
-          [LLM::Tools::AttorneyDataTool.new.tool_definition]
+          [LLM::Tools::AttorneyDataTool.new]
         end
     end
   end
