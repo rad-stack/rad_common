@@ -15,7 +15,7 @@ module LLM
       end
 
       def self.respond_to_tool_call(tool_call, response, context)
-        context.chat_instance.available_tools[response.tool_name(tool_call)]
+        tool_class = context.chat_instance.available_tools[response.tool_name(tool_call)]
         tool_instance = tool_class.new(params: response.tool_data(tool_call), context: context)
         result = tool_instance.call
         LLM::PromptBuilder.build_message(role: :tool, content: result,
