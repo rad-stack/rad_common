@@ -73,6 +73,10 @@ module LLM
                                               tools: base_tools)
       end
 
+      def available_tools
+        @available_tools ||= default_tools.index_by { |class_object| tool_name(class_object) }
+      end
+
       private
 
         def openai_client
