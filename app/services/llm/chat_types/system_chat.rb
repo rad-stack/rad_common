@@ -18,7 +18,7 @@ module LLM
       private
 
         def default_tools
-          @default_tools ||= LLM::Tools::ToolList.tools.map { |tool| tool.new.tool_definition }
+          RadAssistant.system_tools.map { |tool| tool.new.tool_definition }
         end
     end
   end

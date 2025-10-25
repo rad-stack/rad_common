@@ -49,7 +49,7 @@ module RadController
       Sentry.set_user(id: true_user.id, email: true_user.email, name: sentry_user_name)
     end
 
-    def set_assistant_session_context(chat_class: 'basic', chat_scope: nil)
+    def set_assistant_session_context(chat_class: 'LLM::ChatTypes::SystemChat', chat_scope: nil)
       @chat_class = chat_class
       @chat_scope = chat_scope
     end

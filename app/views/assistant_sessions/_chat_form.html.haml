@@ -2,7 +2,7 @@
   .chat-container.mt-3
     %ul.chat-box.chatContainerScroll{ id: dom_id(assistant_session, 'chat') }
       = render 'assistant_sessions/chat_messages', assistant_session: assistant_session
-      - if assistant_session.processing? && assistant_session.current_message.present?
+      - if assistant_session.status_processing? && assistant_session.current_message.present?
         = render 'assistant_sessions/chat_message_left',
                  assistant_session_log_data(assistant_session, assistant_session.log.last)
 

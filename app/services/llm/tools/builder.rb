@@ -23,7 +23,7 @@ module LLM
       end
 
       def self.tools
-        @tools ||= ToolList.tools.index_by { |class_object| tool_name(class_object) }
+        @tools ||= RadAssistant.system_tools.index_by { |class_object| tool_name(class_object) }
       end
 
       def self.tool_name(class_object)

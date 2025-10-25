@@ -6,7 +6,7 @@ class AssistantSession < ApplicationRecord
   belongs_to :contextable, polymorphic: true, optional: true
   belongs_to :chat_scope, polymorphic: true, optional: true
 
-  enum status: { processing: 0, completed: 1, failed: 2 }
+  enum status: { processing: 0, completed: 1, failed: 2 }, _prefix: true
 
   attr_accessor :current_message
 
@@ -14,14 +14,17 @@ class AssistantSession < ApplicationRecord
 
   delegate :assistant_name, :context_object?, :format_message, to: :chat_instance
 
-  def self.basic_chat(user, scope = nil, chat_type:)
+  validate :validate_chat_class
+
+  def self.create_or_find_chat(user, chat_class, scope = nil)
+    # TODO: maybe rename column chat_type to chat_class?
     AssistantSession.find_or_create_by! user: user,
-                                        chat_type: chat_type,
+                                        chat_type: chat_class,
                                         chat_scope: scope
   end
 
   def chat_type_class
-    LLM::Tools::ToolList.chat_list[chat_type.to_sym] || raise('Invalid chat type')
+    RadAssistant.retrieve_chat_class(chat_type) || raise('Invalid chat type')
   end
 
   def chat_instance
@@ -35,4 +38,10 @@ class AssistantSession < ApplicationRecord
   def to_s
     "#{chat_type.humanize.titleize} for #{user}"
   end
+
+  private
+
+    def validate_chat_class
+      errors.add(:chat_type, "Invalid chat type #{chat_type}") if RadAssistant.retrieve_chat_class(chat_type).nil?
+    end
 end

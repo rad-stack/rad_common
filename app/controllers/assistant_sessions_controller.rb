@@ -29,7 +29,7 @@ class AssistantSessionsController < ApplicationController
   def check_response
     respond_to do |format|
       format.html do
-        if @assistant_session.completed? || @assistant_session.failed?
+        if @assistant_session.status_completed? || @assistant_session.status_failed?
           logs = @assistant_session.log || []
           latest_assistant_message = logs.reverse.find { |msg| msg['role'] == 'assistant' }
           @bot_response = latest_assistant_message

@@ -1,7 +1,6 @@
 .card
   = render 'layouts/card_header', no_new_button: true, external_actions: [ask_basic_question_btn]
   .card-body
-    = render 'assistant_sessions/chat_offcanvas', chat_class: 'basic', chat_scope: nil
     = paginate @assistant_sessions, theme: 'bootstrap-5'
     %table.table.table-striped.table-bordered
       %tr
