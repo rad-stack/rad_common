@@ -11,28 +11,29 @@ module Rspec
         super + [
           Rails.root.join('lib/templates/rspec/system').to_s,
           Rails.root.join('lib/templates/factory_bot').to_s,
-          Rails.root.join('lib/templates/pundit').to_s
+          Rails.root.join('lib/templates/pundit').to_s,
+          Rails.root.join('lib/templates/services').to_s
         ]
       end
 
       def create_request_spec
-        template 'request_spec.rb.tt',
-                 File.join('spec/requests', class_path, "#{file_name.pluralize}_spec.rb")
+        template 'request_spec.rb.tt', File.join('spec/requests', class_path, "#{file_name.pluralize}_spec.rb")
       end
 
       def create_system_spec
-        template 'system_spec.rb.tt',
-                 File.join('spec/system', class_path, "#{file_name.pluralize}_spec.rb")
+        template 'system_spec.rb.tt', File.join('spec/system', class_path, "#{file_name.pluralize}_spec.rb")
       end
 
       def create_factory
-        template 'factory.rb.tt',
-                 File.join('spec/factories', class_path, "#{file_name.pluralize}.rb")
+        template 'factory.rb.tt', File.join('spec/factories', class_path, "#{file_name.pluralize}.rb")
       end
 
       def create_policy
-        template 'policy.rb.tt',
-                 File.join('app/policies', class_path, "#{file_name}_policy.rb")
+        template 'policy.rb.tt', File.join('app/policies', class_path, "#{file_name}_policy.rb")
+      end
+
+      def create_search
+        template 'search.rb.tt', File.join('app/services', class_path, "#{file_name}_search.rb")
       end
 
       private

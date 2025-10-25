@@ -16,6 +16,7 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
 
   before do
     ActionMailer::Base.deliveries = []
+    admin
     notification_type.notify!
   end
 

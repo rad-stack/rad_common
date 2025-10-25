@@ -205,6 +205,10 @@ module RadHelper
     SecurityRole.allow_invite.sorted
   end
 
+  def invite_role_options
+    SecurityRole.allow_invite.sorted.map { |role| [role.to_s, role.id, { data: { external: role.external? } }] }
+  end
+
   def verify_invite
     raise RadIntermittentException if RadConfig.disable_invite?
   end
@@ -283,6 +287,26 @@ module RadHelper
     end
 
     raise 'Invalid attachment, must be 100 MB or less' if blob.byte_size > 100.megabytes
+  end
+
+  def portal_subdomain?
+    # TODO: temp hack for IJS project
+    return false unless RadConfig.portal?
+
+    request.subdomain == 'patient' || request.subdomain.starts_with?('patient-staging')
+  end
+
+  def application_page_title
+    # TODO: temp hack for IJS project
+    return RadConfig.app_name! unless RadConfig.portal?
+
+    if request.subdomain.starts_with? 'patient'
+      RadConfig.config_item!(:portal_app_name)
+    elsif request.subdomain.starts_with? 'prescriber'
+      RadConfig.config_item!(:portal_app_name).gsub('Patient', 'Prescriber')
+    else
+      RadConfig.app_name!
+    end
   end
 
   class << self
