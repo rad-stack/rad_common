@@ -7,7 +7,6 @@ class RadAssistant
 
     def register_chat_type(chat_type)
       @chat_types << chat_type unless @chat_types.include?(chat_type)
-      chat_type.default_tools.each { |tool| register_system_tool(tool) }
     end
 
     def register_system_tool(system_tool)
