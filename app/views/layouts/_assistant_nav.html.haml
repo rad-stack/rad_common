@@ -1,0 +1,4 @@
+- if current_user && policy(AssistantSession).new?
+  %li.nav-item
+    = link_to '#', class: 'nav-link', 'data-bs-target' => '#basic-question-modal', 'data-bs-toggle' => 'offcanvas' do
+      = content_tag(:i, '', class: 'fa fa-comment fa-beat text-primary')
