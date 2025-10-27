@@ -806,6 +806,7 @@ gem 'propshaft'
           apply_migration '20250418211716_add_created_at_index_to_system_usages.rb'
           apply_migration '20251017110121_rename_direction_to_contact_direction.rb'
           apply_migration '20251024225222_fix_chat_types.rb'
+          apply_migration '20251027181305_rename_chat_type_to_chat_class.rb'
         end
 
         def installed_app_name
