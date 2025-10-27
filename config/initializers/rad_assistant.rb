@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Register chat types after all initializers have run to ensure inflections are loaded
-Rails.application.config.after_initialize do
+Rails.application.config.to_prepare do
   # Collect paths to check for chat types
   paths_to_check = []
 
