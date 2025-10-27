@@ -24,7 +24,7 @@ class AssistantSession < ApplicationRecord
   end
 
   def chat_type_class
-    RadAssistant.retrieve_chat_class(chat_type) || raise('Invalid chat type')
+    RadAssistant.retrieve_chat_class(chat_type) || raise("Invalid chat type: #{chat_type}")
   end
 
   def chat_instance
