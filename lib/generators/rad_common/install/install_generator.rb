@@ -604,6 +604,7 @@ gem 'rubocop-capybara'
           inject_into_file 'Gemfile', after: "gem 'better_errors'\n" do <<-'RUBY'
   gem 'tty-prompt'
         RUBY
+          end
           inject_into_file 'Gemfile', after: "gem 'parallel_tests'\n" do <<-'RUBY'
   gem 'rspec-retry'
         RUBY
