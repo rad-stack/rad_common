@@ -14,6 +14,8 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'rspec/retry'
+
 RSpec.configure do |config|
   config.exclude_pattern = 'spec/dummy/lib/**/*_spec.rb'
   # rspec-expectations config goes here. You can use an alternate
@@ -29,6 +31,8 @@ RSpec.configure do |config|
     #   # => "be bigger than 2"
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
+
+  config.verbose_retry = true
 
   # rspec-mocks config goes here. You can use an alternate test double
   # library (such as bogus or mocha) by changing the `mock_with` option here.
