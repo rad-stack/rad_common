@@ -604,6 +604,9 @@ gem 'rubocop-capybara'
           inject_into_file 'Gemfile', after: "gem 'better_errors'\n" do <<-'RUBY'
   gem 'tty-prompt'
         RUBY
+          inject_into_file 'Gemfile', after: "gem 'parallel_tests'\n" do <<-'RUBY'
+  gem 'rspec-retry'
+        RUBY
           end
 
           unless RadConfig.legacy_assets?
