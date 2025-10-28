@@ -2,7 +2,7 @@ module RadSearch
   ##
   # This is a common search pattern to be used within the UI to help filter, display, and sorts results to be displayed within the UI
   class Search
-    attr_reader :params, :current_user
+    attr_reader :params, :current_user, :auto_hide
 
     ##
     # @param [ActiveRecord_Relation] query The base query to start the search off with
@@ -40,10 +40,6 @@ module RadSearch
 
     def valid?
       @filtering.validate_params
-    end
-
-    def filter_collapse_class
-      @auto_hide ? '' : 'show'
     end
 
     def invalid?
