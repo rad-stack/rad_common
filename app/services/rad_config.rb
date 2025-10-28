@@ -406,6 +406,10 @@ class RadConfig
       boolean_config_item! :allow_crawling
     end
 
+    def rad_system_chat_enabled?
+      boolean_config_item! :rad_system_chat_enabled
+    end
+
     def always_crawl?
       boolean_config_item! :always_crawl
     end
