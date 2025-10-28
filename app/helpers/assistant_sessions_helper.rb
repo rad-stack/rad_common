@@ -14,7 +14,7 @@ module AssistantSessionsHelper
     assistant_enabled = RadConfig.open_ai_api_key.present? && current_user && policy(AssistantSession).new?
     return true if assistant_enabled && RadConfig.rad_system_chat_enabled?
 
-    @chat_type.present? && @chat_type != 'LLM::ChatTypes::SystemChat'
+    @chat_class.present? && @chat_class != 'LLM::ChatTypes::SystemChat'
   end
 
   def logs_for_session(assistant_session)
