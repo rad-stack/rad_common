@@ -17,14 +17,13 @@ class AssistantSession < ApplicationRecord
   validate :validate_chat_class
 
   def self.create_or_find_chat(user, chat_class, scope = nil)
-    # TODO: maybe rename column chat_type to chat_class?
     AssistantSession.find_or_create_by! user: user,
-                                        chat_type: chat_class,
+                                        chat_class: chat_class,
                                         chat_scope: scope
   end
 
   def chat_type_class
-    RadAssistant.retrieve_chat_class(chat_type) || raise("Invalid chat type: #{chat_type}")
+    RadAssistant.retrieve_chat_class(chat_class) || raise("Invalid chat type: #{chat_class}")
   end
 
   def chat_instance
@@ -36,12 +35,12 @@ class AssistantSession < ApplicationRecord
   end
 
   def to_s
-    "#{chat_type.humanize.titleize} for #{user}"
+    "#{chat_class.humanize.titleize} for #{user}"
   end
 
   private
 
     def validate_chat_class
-      errors.add(:chat_type, "Invalid chat type #{chat_type}") if RadAssistant.retrieve_chat_class(chat_type).nil?
+      errors.add(:chat_class, "Invalid chat type #{chat_class}") if RadAssistant.retrieve_chat_class(chat_class).nil?
     end
 end
