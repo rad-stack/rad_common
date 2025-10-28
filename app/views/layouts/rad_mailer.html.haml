@@ -72,7 +72,5 @@
               .footer-item= company_name
               - if company_full_address.present?
                 .footer-item= company_full_address
-              - if company_phone_number.present?
-                .footer-item= link_to company_phone_number, "tel:#{company_phone_number}"
               .footer-item= link_to website, website
               .footer-item= link_to @footer_email || admin_email, "mailto:#{@footer_email || admin_email}"

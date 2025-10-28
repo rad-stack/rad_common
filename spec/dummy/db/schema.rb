@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_24_225222) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_27_181305) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -62,7 +62,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_24_225222) do
     t.string "chat_scope_type"
     t.bigint "chat_scope_id"
     t.integer "status", default: 1, null: false
-    t.string "chat_type", null: false
+    t.string "chat_class", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["chat_scope_type", "chat_scope_id"], name: "index_assistant_sessions_on_chat_scope"

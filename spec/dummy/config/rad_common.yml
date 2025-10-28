@@ -35,6 +35,7 @@ default: &default
   timezone_detection: true
   portal: false
 
+  rad_system_chat_enabled: true
   rad_assistant_system_tools:
     - LLM::Tools::AttorneyDataTool
   system_usage_models:
