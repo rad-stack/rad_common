@@ -1,4 +1,4 @@
-- if RadConfig.open_ai_api_key.present? && current_user && policy(AssistantSession).new?
+- if show_assistant_nav?
   %li.nav-item
     = link_to '#', class: 'nav-link', 'data-bs-target' => '#basic-question-modal', 'data-bs-toggle' => 'offcanvas' do
       = content_tag(:i, '', class: 'fa fa-comment fa-beat text-primary')

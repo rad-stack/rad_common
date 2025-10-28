@@ -10,6 +10,11 @@ module AssistantSessionsHelper
                'data-bs-toggle' => 'offcanvas')
   end
 
+  def show_assistant_nav?
+    RadConfig.open_ai_api_key.present? && current_user &&
+      policy(AssistantSession).new? && RadConfig.rad_system_chat_enabled?
+  end
+
   def logs_for_session(assistant_session)
     return [] if assistant_session.log.nil?
 
