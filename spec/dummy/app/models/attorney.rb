@@ -35,4 +35,8 @@ class Attorney < ApplicationRecord
     def generate_embedding_content
       [first_name, last_name].compact.join("\n")
     end
+
+    def embedding_changed?
+      saved_change_to_first_name? || saved_change_to_last_name?
+    end
 end
