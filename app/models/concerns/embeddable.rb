@@ -8,7 +8,11 @@ module Embeddable
   end
 
   def update_embedding!
-    content = generate_embedding_content
+    content = if summarizer.present?
+                summarizer.summarize
+              else
+                generate_embedding_content
+              end
 
     embedding_vector = EmbeddingService.generate(content)
     return unless embedding_vector
@@ -19,5 +23,9 @@ module Embeddable
 
   def perform_embedding!
     EmbeddingJob.perform_later(self)
+  end
+
+  def summarizer
+    nil
   end
 end
