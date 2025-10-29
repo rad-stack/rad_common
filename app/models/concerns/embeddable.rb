@@ -4,7 +4,7 @@ module Embeddable
   included do
     has_one :embedding, as: :embeddable, dependent: :destroy
     scope :needs_embedding, -> { where.missing(:embedding).order(created_at: :desc) }
-    after_create_commit :update_embedding!, if: -> { EmbeddingService.enabled? && !seeding }
+    after_create_commit :perform_embedding!, if: -> { EmbeddingService.enabled? && !seeding }
   end
 
   def update_embedding!
@@ -15,5 +15,9 @@ module Embeddable
 
     embedding_record = embedding || build_embedding
     embedding_record.update! embedding: embedding_vector, metadata: embedding_metadata.compact_blank
+  end
+
+  def perform_embedding!
+    EmbeddingJob.perform_later(self)
   end
 end
