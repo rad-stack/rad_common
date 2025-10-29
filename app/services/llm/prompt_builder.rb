@@ -12,14 +12,16 @@ module LLM
       @context = context
     end
 
-    def chat(content: nil, previous_messages: [])
+    def chat(content: nil, previous_messages: [], response_format: nil)
       messages = []
       messages << build_system_prompt if previous_messages.empty?
       messages += previous_messages
       messages << PromptBuilder.build_user_message(content) if content
+      parameters = { model: @model, messages: messages, tools: @tools }
+      parameters[:response_format] = response_format if response_format
 
       r = RadRetry.perform_request do
-        openai_client.chat(parameters: { model: @model, messages: messages, tools: @tools })
+        openai_client.chat(parameters: parameters)
       rescue Faraday::BadRequestError => e
         raise e.response[:body]['error']['message']
       end
