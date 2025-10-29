@@ -5,8 +5,8 @@ module LLM
     SYSTEM_ROLE = 'system'.freeze
     ASSISTANT_ROLE = 'assistant'.freeze
     USER_ROLE = 'user'.freeze
-    def initialize(model: 'gpt-4.1-mini', system_prompt: nil, tools: [], context: {})
-      @model = model
+
+    def initialize(system_prompt: nil, tools: [], context: {})
       @system_prompt = system_prompt
       @tools = tools
       @context = context
@@ -17,7 +17,7 @@ module LLM
       messages << build_system_prompt if previous_messages.empty?
       messages += previous_messages
       messages << PromptBuilder.build_user_message(content) if content
-      parameters = { model: @model, messages: messages, tools: @tools }
+      parameters = { model: RadCommon::OPEN_AI_CHAT_MODEL, messages: messages, tools: @tools }
       parameters[:response_format] = response_format if response_format
 
       r = RadRetry.perform_request do
