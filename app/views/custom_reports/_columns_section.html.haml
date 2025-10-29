@@ -7,6 +7,9 @@
     columns_by_table = model_columns_by_table(custom_report.report_model, joins)
     # Build keys using select clause if available, otherwise use table.column format
     selected_column_keys = columns.map { |c| c['select'] }
+    calculated_column_url = new_calculated_column_path(report_model: custom_report.report_model,
+                                                       joins: joins,
+                                                       custom_report_id: custom_report.persisted? ? custom_report.id : nil)
 
   .row
     .col-md-6
@@ -55,9 +58,20 @@
                           = render 'available_column_row', column: col, table_id: table_id
 
     .col-md-6
-      %h6.mb-2
-        Selected Columns
-        - selected_columns_config = config['columns'] || []
+      .d-flex.justify-content-between.align-items-center.mb-2
+        %h6.mb-0
+          Selected Columns
+        %button.btn.btn-sm.btn-outline-primary{ type: 'button',
+          data: {
+            action: 'click->report-builder#loadCalculatedColumnForm',
+            calculated_column_url: calculated_column_url,
+            bs_toggle: 'modal',
+            bs_target: '#calculated-column-modal'
+          },
+          title: 'Add calculated column' }
+          %i.fa.fa-calculator.me-1
+          Add Calculated
+      - selected_columns_config = config['columns'] || []
       .card.shadow-sm
         .card-body.p-3
           .report-builder-tables-list#selected-columns-container
@@ -68,6 +82,7 @@
                   %th.py-2 Label
                   %th.py-2 Column
                   %th.py-2 Type
+                  %th.text-center.py-2 Formula
                   %th.text-center.py-2 Sortable
                   %th.py-2
               %tbody#selected-columns-list{ data: { controller: 'sortable',
@@ -75,16 +90,34 @@
                                                     report_builder_target: 'selected-columns-list' } }
                 - selected_columns_config.each do |col_config|
                   :ruby
-                    select_prefix = col_config['select']&.split('.')&.first
                     col_name = col_config['name']
-                    col = all_columns.find do |c|
-                      c[:name] == col_name && (c[:association] == select_prefix || c[:table] == select_prefix)
+
+                    if col_config['is_calculated']
+                      col = {
+                        name: col_name,
+                        type: 'calculated',
+                        table: 'calculated',
+                        association: nil,
+                        custom_label: col_config['label'],
+                        sortable: false,
+                        is_calculated: true
+                      }
+                      table_id = 'calculated'
+                      formula = col_config['formula']
+                    else
+                      select_prefix = col_config['select']&.split('.')&.first
+                      col = all_columns.find do |c|
+                        c[:name] == col_name && (c[:association] == select_prefix || c[:table] == select_prefix)
+                      end
+                      next if col.blank?
+
+                      table_id_base = col[:association] || col[:table]
+                      table_id = "table-#{table_id_base.gsub('.', '-').gsub('_', '-')}"
+                      col_with_label = col.merge(custom_label: col_config['label'], sortable: col_config['sortable'])
+                      formula = col_config['formula']
+                      col = col_with_label
                     end
-                    next if col.blank?
 
-                    table_id_base = col[:association] || col[:table]
-                    table_id = "table-#{table_id_base.gsub('.', '-').gsub('_', '-')}"
-                    col_with_label = col.merge(custom_label: col_config['label'], sortable: col_config['sortable'])
-                    formula = col_config['formula']
+                  = render 'selected_column_row', column: col, table_id: table_id, formula: formula
 
-                  = render 'selected_column_row', column: col_with_label, table_id: table_id, formula: formula
+  = render 'calculated_column_modal'

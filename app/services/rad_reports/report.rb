@@ -2,8 +2,6 @@ module RadReports
   class Report < RadSearch::Search
     attr_reader :available_columns, :custom_report, :join_builder
 
-    delegate :report_name, to: :custom_report
-
     def initialize(custom_report:, current_user:, params:)
       @custom_report = custom_report
       @model_class = custom_report.report_model.constantize
@@ -32,21 +30,27 @@ module RadReports
       @available_columns
     end
 
+    def report_name
+      custom_report.name
+    end
+
     private
 
       def build_column_definitions(columns)
         columns.map do |col|
           is_rich_text = rich_text_field?(col['name'])
           is_attachment = attachment_field?(col['name'])
+          is_calculated = col['is_calculated'] || col['select'].to_s.start_with?('calculated.') || false
 
           {
             name: col['name'],
             label: col['label'],
-            select: is_rich_text || is_attachment ? col['name'] : col['select'],
+            select: is_rich_text || is_attachment || is_calculated ? col['name'] : col['select'],
             is_rich_text: is_rich_text,
             is_attachment: is_attachment,
+            is_calculated: is_calculated,
             formula: col['formula'],
-            sortable: col['sortable']
+            sortable: col['sortable'] && !is_calculated # Calculated columns shouldn't be sortable at DB level
           }
         end
       end

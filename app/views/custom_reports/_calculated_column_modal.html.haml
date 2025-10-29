@@ -1,0 +1,6 @@
+.modal.fade#calculated-column-modal{ tabindex: '-1', aria: { hidden: 'true' } }
+  .modal-dialog.modal-lg
+    = turbo_frame_tag 'calculated-column-form-frame', data: { report_builder_target: 'calculated-column-frame' } do
+      .modal-content
+        .modal-body.py-5.text-center
+          %span.spinner-border.text-primary{ role: 'status', aria: { hidden: 'true' } }

@@ -61,6 +61,26 @@ module RadReports
       end
     end
 
+    def column_exists?(column_reference)
+      return false if column_reference.blank?
+
+      # Split from the right to handle nested joins (e.g., "project.client.name")
+      parts = column_reference.split('.')
+      col_name = parts.last
+      table_or_association = parts[0..-2].join('.')
+
+      valid_columns = all_columns
+
+      matching_column = valid_columns.find do |vc|
+        vc[:name] == col_name &&
+          (vc[:association] == table_or_association ||
+           vc[:table] == table_or_association ||
+           (vc[:association].nil? && table_or_association.blank?))
+      end
+
+      matching_column.present?
+    end
+
     private
 
       def build_columns_for_model(klass, association_info = {})

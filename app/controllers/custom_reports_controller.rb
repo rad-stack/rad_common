@@ -2,7 +2,7 @@ class CustomReportsController < ApplicationController
   include CustomReportsHelper
 
   before_action :set_custom_report, only: %i[show edit update destroy export]
-  before_action :build_temp_report, only: %i[update_joins update_filters update_columns]
+  before_action :build_temp_report, only: %i[update_joins update_columns]
 
   def index
     authorize CustomReport
@@ -78,25 +78,6 @@ class CustomReportsController < ApplicationController
     config = @custom_report.configuration || {}
     config['joins'] = RadReports::ConfigurationBuilder.sanitize_joins(joins)
     @custom_report.configuration = config
-
-    respond_to do |format|
-      format.turbo_stream
-    end
-  end
-
-  def update_filters
-    authorize @custom_report
-
-    if request.delete?
-      @filter_id = params[:filter_id]
-    else
-      @filter = { 'column' => '', 'label' => '', 'type' => '' }
-      @filter_id = "filter_#{Time.now.to_i}_#{rand(1000)}"
-      @joins = params[:joins] || []
-      @all_columns = model_columns(@custom_report.report_model, @joins)
-      @report_model = @custom_report.report_model
-      @report_id = @custom_report.persisted? ? @custom_report.id : nil
-    end
 
     respond_to do |format|
       format.turbo_stream
@@ -183,7 +164,7 @@ class CustomReportsController < ApplicationController
         :description,
         :report_model,
         :active,
-        columns: %i[name label select formula sortable],
+        columns: %i[name label select formula sortable is_calculated],
         filters: %i[column label type],
         joins: []
       )

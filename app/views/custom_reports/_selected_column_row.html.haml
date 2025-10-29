@@ -1,20 +1,19 @@
 :ruby
-  column_id = column_id(column, prefix: 'selected-column')
-  url_params = column_url_params(column, table_id, column_id)
-  actions = 'dragstart->sortable#handleDragStart dragover->sortable' \
-            '#handleDragOver drop->sortable#handleDrop dragend->sortable#handleDragEnd'
-  formula_json = formula.present? ? formula.to_json : ''
+  is_calculated = column[:is_calculated]
+  column_id = is_calculated ? "calculated-column-#{column[:name]}" : column_id(column, prefix: 'selected-column')
   is_attachment_or_rich_text = %w[attachment rich_text].include?(column[:type].to_s)
 
 %tr.selected-column-row.align-middle.sortable-item{ id: column_id,
                                                     draggable: 'true',
+                                                    class: is_calculated ? 'calculated-column' : '',
                                                     data: { report_builder_target: 'selectedColumnRow',
                                                             column_name: column[:name],
                                                             column_table: column[:table],
                                                             column_type: column[:type],
                                                             column_association: column[:association],
-                                                            column_formula: formula_json,
-                                                            action: actions } }
+                                                            column_formula: formula&.to_json || '',
+                                                            is_calculated: is_calculated,
+                                                            action: draggable_actions } }
   %td.py-3.ps-2.cursor-grab
     %i.fa.fa-grip-vertical.text-muted.fs-5
   %td.py-3
@@ -26,15 +25,19 @@
     %small.text-muted.text-nowrap.fw-light= column_path(column)
   %td.py-3
     .d-flex.align-items-center.gap-2
-      %span.badge.bg-light.text-dark.border-0.px-2= column[:type]
-      - unless is_attachment_or_rich_text
-        %button.btn.btn-sm.rounded-circle{ type: 'button',
-                                           data: { action: 'click->formula-editor#open' },
-                                           title: formula.present? ? 'Edit Formula' : 'Add Formula',
-                                           class: formula.present? ? 'btn-success' : 'btn-outline-secondary' }
-          %i.fa.fa-calculator
+      - if is_calculated
+        %span.badge.bg-primary.text-white.border-0.px-2 calculated
+      - else
+        %span.badge.bg-light.text-dark.border-0.px-2= column[:type]
+  %td.py-3.text-center
+    - unless is_attachment_or_rich_text
+      %button.btn.btn-sm.rounded-circle{ type: 'button',
+                                         data: { action: 'click->formula-editor#open' },
+                                         title: formula.present? ? 'Edit Formula' : 'Add Formula',
+                                         class: formula.present? ? 'btn-success' : 'btn-outline-secondary' }
+        %i.fa.fa-calculator
   %td.text-center.py-3
-    - if is_attachment_or_rich_text
+    - if is_attachment_or_rich_text || is_calculated
       %span.text-muted.small N/A
     - else
       .form-check.form-switch.d-inline-block
@@ -44,8 +47,14 @@
                                  data: { action: 'change->report-builder#updateColumnSortable' },
                                  title: 'Allow sorting by this column' }
   %td.text-end.py-3.pe-2
-    = link_to update_columns_custom_reports_path(url_params),
-              class: 'btn btn-sm btn-outline-danger rounded-circle',
-              title: 'Remove column',
-              data: { turbo_prefetch: false, turbo_method: :delete, testid: 'remove-column-button' } do
-      %i.fa.fa-times
+    - if is_calculated
+      %button.btn.btn-sm.btn-outline-danger.rounded-circle{ type: 'button',
+                                                            data: { action: 'click->report-builder#removeColumn' },
+                                                            title: 'Remove calculated column' }
+        %i.fa.fa-times
+    - else
+      = link_to update_columns_custom_reports_path(column_url_params(column, table_id, column_id)),
+                class: 'btn btn-sm btn-outline-danger rounded-circle',
+                title: 'Remove column',
+                data: { turbo_prefetch: false, turbo_method: :delete, testid: 'remove-column-button' } do
+        %i.fa.fa-times

@@ -56,11 +56,12 @@ module RadReports
         param_hash
       end
 
-      def normalize_sortable_if_needed(param_hash, normalize_sortable)
-        return param_hash unless normalize_sortable && param_hash.key?('sortable')
+      def normalize_sortable_if_needed(params, normalize_sortable)
+        return params unless normalize_sortable && params.key?('sortable')
 
-        param_hash['sortable'] = normalize_boolean(param_hash['sortable'])
-        param_hash
+        params['sortable'] = normalize_boolean(params['sortable'])
+        params['is_calculated'] = normalize_boolean(params['is_calculated']) if params.key?('is_calculated')
+        params
       end
 
       def normalize_boolean(value)

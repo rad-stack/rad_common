@@ -37,11 +37,15 @@ module LLM
                 },
                 select: {
                   type: 'string',
-                  description: 'The full select path (e.g., "users.name" or "division.name")'
+                  description: 'The full select path (e.g., "users.name" or "division.name"). NOT required for calculated columns.'
                 },
                 sortable: {
                   type: 'boolean',
-                  description: 'Whether this column can be sorted by users (default: false)'
+                  description: 'Whether this column can be sorted by users (default: false). Must be false for calculated columns.'
+                },
+                is_calculated: {
+                  type: 'boolean',
+                  description: 'Set to true for calculated columns that combine multiple database columns. These columns do not have a "select" field.'
                 },
                 formula: {
                   type: 'array',
@@ -92,6 +96,7 @@ module LLM
       def description
         'Creates a new custom report with the specified configuration. ' \
           'This should be called after gathering all necessary information about the report requirements. ' \
+          'Supports both regular columns (with "select" field) and calculated columns (with "is_calculated": true). ' \
           'Returns success with report URL or validation errors.'
       end
 
@@ -146,7 +151,8 @@ module LLM
         end
 
         def apply_default_formula(column, model_name, joins)
-          return if column['formula'].present? || column['select'].blank? || model_name.blank?
+          # Skip default formulas for calculated columns or columns that already have formulas
+          return if column['formula'].present? || column['is_calculated'] || column['select'].blank? || model_name.blank?
 
           discovery = RadReports::ColumnDiscovery.new(model_name, joins)
           found_col = discovery.all_columns.find { |c| c[:name] == column['name'] }

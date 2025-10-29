@@ -74,30 +74,34 @@ class CustomReport < ApplicationRecord
       return if report_model.blank? || columns.blank?
 
       column_discovery = RadReports::ColumnDiscovery.new(report_model, joins || [])
-      valid_columns = column_discovery.all_columns
 
       columns.each do |column_config|
         column_name = column_config['name']
         select_clause = column_config['select']
+        is_calculated = column_config['is_calculated']
 
-        next if column_name.blank? && select_clause.blank?
+        next if !is_calculated && column_name.blank? && select_clause.blank?
+
+        if is_calculated
+          calculated_column = CalculatedColumn.from_column_config(
+            column_config,
+            report_model: report_model,
+            joins: joins || []
+          )
+
+          unless calculated_column.valid?
+            identifier = calculated_column.label.presence || calculated_column.name.presence || 'calculated column'
+            calculated_column.errors.full_messages.each do |message|
+              errors.add(:columns, "calculated column '#{identifier}': #{message}")
+            end
+          end
+          next
+        end
 
         if select_clause.present?
-          # Split from the right to handle nested joins (e.g., "project.client.name")
-          parts = select_clause.split('.')
-          col_name = parts.last
-          table_or_association = parts[0..-2].join('.')
-
-          matching_column = valid_columns.find do |vc|
-            vc[:name] == col_name &&
-              (vc[:association] == table_or_association || vc[:table] == table_or_association)
-          end
-
-          errors.add(:columns, "contains invalid column reference '#{select_clause}'") unless matching_column
+          errors.add(:columns, "contains invalid column reference '#{select_clause}'") unless column_discovery.column_exists?(select_clause)
         elsif column_name.present?
-          unless valid_columns.any? { |vc| vc[:name] == column_name && vc[:association].nil? }
-            errors.add(:columns, "contains invalid column '#{column_name}'")
-          end
+          errors.add(:columns, "contains invalid column '#{column_name}'") unless column_discovery.column_exists?(column_name)
         end
       end
     end
@@ -105,31 +109,18 @@ class CustomReport < ApplicationRecord
     def validate_filters_configuration
       return if report_model.blank? || filters.blank?
 
-      column_discovery = RadReports::ColumnDiscovery.new(report_model, joins || [])
-      valid_columns = column_discovery.all_columns
-
       filters.each do |filter_config|
-        column_path = filter_config['column']
-        next if column_path.blank?
+        filter_obj = CustomReportFilter.from_filter_config(
+          filter_config,
+          report_model: report_model,
+          joins: joins || []
+        )
 
-        # Split from the right to handle nested joins (e.g., "project.client.name")
-        parts = column_path.split('.')
-        col_name = parts.last
-        table_or_association = parts[0..-2].join('.')
+        next if filter_obj.valid?
 
-        matching_column = valid_columns.find do |vc|
-          vc[:name] == col_name &&
-            (vc[:association] == table_or_association ||
-             (vc[:association].nil? && vc[:table] == table_or_association))
-        end
-
-        if RadReports::FilterRegistry.find(filter_config['type']).nil?
-          errors.add(:filters, "invalid filter type for column '#{column_path}'")
-        end
-
-        unless matching_column
-          errors.add(:filters, "contains invalid column reference '#{column_path}'. " \
-                               "Available columns can be found using the model and joins you've specified.")
+        identifier = filter_obj.label.presence || filter_obj.column
+        filter_obj.errors.full_messages.each do |message|
+          errors.add(:filters, "filter '#{identifier}': #{message}")
         end
       end
     end
