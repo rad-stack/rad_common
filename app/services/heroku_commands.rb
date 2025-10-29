@@ -223,12 +223,15 @@ class HerokuCommands
           write_log 'Generating restore list excluding audits table'
           write_log `pg_restore -l #{file_name} | grep -v 'TABLE DATA public audits' > #{restore_list_file}`
         when 'minimal'
-          write_log 'Generating minimal restore list (excluding audits, contact logs, and recipients)'
+          write_log 'Generating minimal restore list (excluding audits, contact_logs, contact_log_recipients ' \
+                    'and embeddings)'
+
           command = [
             "pg_restore -l #{file_name}",
             "| grep -v 'TABLE DATA public audits'",
             "| grep -v 'TABLE DATA public contact_logs'",
-            "| grep -v 'TABLE DATA public recipients'",
+            "| grep -v 'TABLE DATA public contact_log_recipients'",
+            "| grep -v 'TABLE DATA public embeddings'",
             "> #{restore_list_file}"
           ].join(' ')
           `#{command}`
