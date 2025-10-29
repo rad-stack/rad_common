@@ -8,7 +8,7 @@ module Embeddable
   end
 
   def update_embedding!
-    content = if summarizer
+    content = if summarizer.present?
                 summarizer.summarize
               else
                 generate_embedding_content
