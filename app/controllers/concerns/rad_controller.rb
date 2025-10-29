@@ -20,12 +20,21 @@ module RadController
       render file: Rails.root.join('public/403.html'), formats: [:html], status: :forbidden, layout: false
     end
 
+    helper_method :show_assistant_nav?
+
     impersonates :user
   end
 
   def set_assistant_session_context(chat_class: 'LLM::ChatTypes::SystemChat', chat_scope: nil)
     @chat_class = chat_class
     @chat_scope = chat_scope
+  end
+
+  def show_assistant_nav?
+    assistant_enabled = RadConfig.open_ai_api_key.present? && current_user && policy(AssistantSession).new?
+    return true if assistant_enabled && RadConfig.rad_system_chat_enabled?
+
+    @chat_class.present? && @chat_class != 'LLM::ChatTypes::SystemChat'
   end
 
   protected
