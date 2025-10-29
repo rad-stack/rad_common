@@ -2,26 +2,21 @@
   config = custom_report.configuration || {}
   filters = config['filters'] || []
   joins = config['joins'] || []
-  all_columns = model_columns(custom_report.report_model, joins)
   report_model = custom_report.report_model
   report_id = custom_report.persisted? ? custom_report.id : nil
+  filter_url_params = { custom_report_id: report_id, report_model: report_model, joins: joins }.compact
+  filter_modal_url = new_custom_report_filter_path(filter_url_params)
 
-.mb-3#filter-cards-container
-  - filters.each_with_index do |filter, filter_index|
-    = render 'filter_card',
-             filter: filter,
-             filter_id: "filter_saved_#{filter_index}",
-             all_columns: all_columns,
-             report_model: report_model,
-             report_id: report_id,
-             joins: joins
+.d-flex.flex-row-reverse.mb-2
+  %button.btn.btn-sm.btn-outline-primary{ type: 'button',
+                                          data: { bs_toggle: 'modal',
+                                                  bs_target: '#custom-report-filter-modal',
+                                                  action: 'click->report-builder#loadCustomReportFilterForm',
+                                                  custom_report_filter_url: filter_modal_url } }
+    = icon('plus', 'Add Filter')
 
-.row
-  .col-12
-    :ruby
-      url_params = { id: report_id, joins: joins, report_model: report_model, format: :turbo_stream }.compact
-    = link_to update_filters_custom_reports_path(url_params),
-              class: 'btn btn-outline-primary',
-              data: { turbo_prefetch: false, turbo_method: :post } do
-      %i.fa.fa-plus-circle.me-2
-      Add Filter
+#filters-list{ data: { controller: 'sortable', sortable_dragging_class: 'is-dragging' } }
+  - filters.each do |filter|
+    = render 'custom_report_filters/filter_row', filter: filter.symbolize_keys
+
+= render 'custom_report_filters/modal'

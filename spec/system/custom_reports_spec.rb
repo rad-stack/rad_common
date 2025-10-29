@@ -5,6 +5,12 @@ RSpec.describe 'CustomReports' do
 
   before { login_as user, scope: :user }
 
+  around(:each, :flakey_js) do |example|
+    Capybara.using_session(SecureRandom.hex(4)) do
+      example.run
+    end
+  end
+
   describe 'new', :js do
     it 'renders view based on base model selection' do
       visit new_custom_report_path
@@ -77,6 +83,40 @@ RSpec.describe 'CustomReports' do
         within '#columns-table-owner' do
           expect(page).to have_css('#available-column-owner-email')
         end
+      end
+    end
+
+    context 'when adding calculated columns', :flakey_js, :ignore_browser_errors do
+      before { create :division, name: 'east', code: '123' }
+
+      it 'shows calculated column modal and adds calculated column' do
+        visit new_custom_report_path
+        tom_select 'Division', from: 'custom_report_report_model'
+
+        fill_in 'custom_report_name', with: 'Division Report'
+
+        find('[data-bs-target="#calculated-column-modal"]').click
+
+        within '#calculated-column-modal' do
+          click_on 'Add Column'
+          expect(page).to have_content('Label can\'t be blank')
+          select 'Concatenate', from: 'calculated_column_formula_type'
+          tom_select 'Division.code', from: 'calculated-column-concat_columns-columns'
+          wait_for_ajax
+          tom_select 'Division.name', from: 'calculated-column-concat_columns-columns'
+          fill_in 'calculated_column_label', with: 'Name and Code'
+          click_on 'Add Column'
+        end
+
+        within '#selected-columns-list' do
+          expect(page).to have_content('calculated.name_and_code')
+        end
+
+        click_on 'Save'
+
+        expect(page).to have_content('Division Report')
+        expect(page).to have_content('Name and Code')
+        expect(page).to have_content('123 east')
       end
     end
 
@@ -192,13 +232,19 @@ RSpec.describe 'CustomReports' do
           end
         end
 
-        expect(page).to have_no_css('.filter-card')
+        expect(page).to have_no_css('.filter-row')
 
         click_on 'Add Filter'
 
-        expect(page).to have_css('.filter-card')
-        tom_select 'Name - string', from: 'custom_report_filters__column'
-        click_on 'Save'
+        expect(page).to have_css('#custom-report-filter-modal', visible: :visible)
+
+        within '#custom-report-filter-modal' do
+          tom_select 'Name - string', from: 'custom_report_filter_column'
+          fill_in 'custom_report_filter_label', with: 'Division Name'
+          click_on 'Add Filter'
+        end
+
+        expect(page).to have_css('[data-report-builder-target="filterRow"]', count: 1)
       end
     end
   end
@@ -280,7 +326,7 @@ RSpec.describe 'CustomReports' do
     context 'when adding formulas to columns' do
       before { create :division, name: 'east' }
 
-      it 'shows formula editor and saves formula' do
+      it 'shows formula editor and saves formula', :flakey_js do
         visit edit_custom_report_path(custom_report)
 
         within '#columns-table-divisions' do
@@ -306,8 +352,39 @@ RSpec.describe 'CustomReports' do
       end
     end
 
+    context 'when adding calculated columns', :flakey_js, :ignore_browser_errors do
+      before { create :division, name: 'east', code: '123' }
+
+      it 'shows calculated column modal and adds calculated column' do
+        visit edit_custom_report_path(custom_report)
+
+        find('[data-bs-target="#calculated-column-modal"]').click
+
+        within '#calculated-column-modal' do
+          click_on 'Add Column'
+          expect(page).to have_content('Label can\'t be blank')
+          select 'Concatenate', from: 'calculated_column_formula_type'
+          tom_select 'Division.code', from: 'calculated-column-concat_columns-columns'
+          wait_for_ajax
+          tom_select 'Division.name', from: 'calculated-column-concat_columns-columns'
+          fill_in 'calculated_column_label', with: 'Name and Code'
+          click_on 'Add Column'
+        end
+
+        within '#selected-columns-list' do
+          expect(page).to have_content('calculated.name_and_code')
+        end
+
+        click_on 'Save'
+
+        expect(page).to have_content('Division Report')
+        expect(page).to have_content('Name and Code')
+        expect(page).to have_content('123 east')
+      end
+    end
+
     context 'when adding and removing joins' do
-      it 'updates joins section and available tables' do
+      it 'updates joins section and available tables', :flakey_js do
         visit edit_custom_report_path(custom_report)
 
         within '[data-testid="available-tables-list"]' do

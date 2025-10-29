@@ -1,0 +1,101 @@
+class CalculatedColumnsController < ApplicationController
+  include CustomReportsHelper
+
+  before_action :set_custom_report
+  before_action :set_context_data
+
+  def new
+    authorize CalculatedColumn
+
+    @calculated_column = CalculatedColumn.new(
+      report_model: @custom_report.report_model,
+      joins: @joins
+    )
+
+    respond_to do |format|
+      format.html do
+        render partial: 'calculated_columns/form',
+               locals: { calculated_column: @calculated_column,
+                         columns_by_table: @columns_by_table,
+                         calculated_formula_options: @calculated_formula_options }
+      end
+    end
+  end
+
+  def create
+    authorize CalculatedColumn
+
+    @calculated_column = CalculatedColumn.new(
+      calculated_column_params.merge(
+        report_model: @custom_report.report_model,
+        joins: @joins
+      )
+    )
+
+    respond_to do |format|
+      if @calculated_column.valid?
+        column_config = @calculated_column.to_column_config
+        calculated_column_row = build_calculated_column_row(column_config)
+
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.append('selected-columns-list',
+                                partial: 'custom_reports/selected_column_row',
+                                locals: { column: calculated_column_row,
+                                          table_id: 'calculated',
+                                          formula: column_config['formula'] }),
+            turbo_stream.action(:hide_modal, 'calculated-column-modal')
+          ]
+        end
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            'calculated-column-form-frame',
+            partial: 'calculated_columns/form',
+            locals: { calculated_column: @calculated_column,
+                      columns_by_table: @columns_by_table,
+                      calculated_formula_options: @calculated_formula_options }
+          ), status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  private
+
+    def set_custom_report
+      if params[:custom_report_id].present?
+        @custom_report = CustomReport.find(params[:custom_report_id])
+      else
+        @custom_report = CustomReport.new
+        @custom_report.report_model = params[:report_model] if params[:report_model].present?
+      end
+      authorize @custom_report
+    end
+
+    def set_context_data
+      @joins = Array(params[:joins]).reject(&:blank?)
+      @columns_by_table = if @custom_report.report_model.present?
+                            model_columns_by_table(@custom_report.report_model, @joins)
+                          else
+                            []
+                          end
+      @calculated_formula_options = RadReports::FormulaRegistry.calculated_grouped_options
+    end
+
+    def calculated_column_params
+      params.require(:calculated_column).permit(:name, :label, :formula_type, formula_params: {})
+    end
+
+    def build_calculated_column_row(column_config)
+      {
+        name: column_config['name'],
+        type: 'calculated',
+        table: 'calculated',
+        association: nil,
+        custom_label: column_config['label'],
+        sortable: false,
+        is_calculated: true
+      }
+    end
+end

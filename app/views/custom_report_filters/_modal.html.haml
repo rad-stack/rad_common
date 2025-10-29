@@ -1,0 +1,6 @@
+.modal.fade#custom-report-filter-modal{ tabindex: '-1', aria: { hidden: 'true' } }
+  .modal-dialog.modal-lg
+    = turbo_frame_tag 'custom-report-filter-form-frame' do
+      .modal-content
+        .modal-body.py-5.text-center
+          %span.spinner-border.text-primary{ role: 'status', aria: { hidden: 'true' } }

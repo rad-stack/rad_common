@@ -3,6 +3,12 @@ module RadReports
     def self.format_record_value(record, column_def)
       return if column_def[:is_attachment]
 
+      if column_def[:is_calculated]
+        return if column_def[:formula].blank?
+
+        return FormulaProcessor.call(column_def[:formula], nil, record)
+      end
+
       value = extract_value(record, column_def)
       return FormulaProcessor.call(column_def[:formula], value, record) if column_def[:formula].present?
 

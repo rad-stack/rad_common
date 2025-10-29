@@ -61,12 +61,13 @@ module RadCommonRoutes
           collection do
             get :model_context
             get :update_joins
-            post :update_filters
-            delete :update_filters
             post :update_columns
             delete :update_columns
           end
         end
+
+        resources :calculated_columns, only: %i[new create]
+        resources :custom_report_filters, only: %i[new create]
 
         resources :impersonations, only: [] do
           collection do

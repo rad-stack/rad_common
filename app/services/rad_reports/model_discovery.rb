@@ -1,6 +1,7 @@
 module RadReports
   class ModelDiscovery
     DEFAULT_EXCLUDED_MODELS = %w[
+      AssistantSession
       ContactLog
       ContactLogRecipient
       CustomReport

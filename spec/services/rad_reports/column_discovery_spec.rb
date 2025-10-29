@@ -345,4 +345,83 @@ RSpec.describe RadReports::ColumnDiscovery, type: :service do
       end
     end
   end
+
+  describe '#column_exists?' do
+    let(:model_name) { 'Division' }
+    let(:joins) { ['owner'] }
+    subject(:column_exists) { discovery.column_exists?(column_reference) }
+
+    context 'with blank column reference' do
+      let(:column_reference) { nil }
+
+      it 'returns false' do
+        expect(column_exists).to be false
+      end
+    end
+
+    context 'with empty column reference' do
+      let(:column_reference) { '' }
+
+      it 'returns false' do
+        expect(column_exists).to be false
+      end
+    end
+
+    context 'with valid base model column' do
+      let(:column_reference) { 'name' }
+
+      it 'returns true' do
+        expect(column_exists).to be true
+      end
+    end
+
+    context 'with valid joined column' do
+      let(:column_reference) { 'owner.email' }
+
+      it 'returns true' do
+        expect(column_exists).to be true
+      end
+    end
+
+    context 'with invalid column name' do
+      let(:column_reference) { 'nonexistent_column' }
+
+      it 'returns false' do
+        expect(column_exists).to be false
+      end
+    end
+
+    context 'with invalid association' do
+      let(:column_reference) { 'nonexistent_association.name' }
+
+      it 'returns false' do
+        expect(column_exists).to be false
+      end
+    end
+
+    context 'with valid column but wrong association' do
+      let(:column_reference) { 'owner.nonexistent_column' }
+
+      it 'returns false' do
+        expect(column_exists).to be false
+      end
+    end
+
+    context 'with nested joins' do
+      let(:joins) { ['owner.user_status'] }
+      let(:column_reference) { 'owner.user_status.name' }
+
+      it 'returns true for nested association columns' do
+        expect(column_exists).to be true
+      end
+    end
+
+    context 'with table name instead of association' do
+      let(:column_reference) { 'users.email' }
+
+      it 'returns true when referencing by table name' do
+        expect(column_exists).to be true
+      end
+    end
+  end
 end

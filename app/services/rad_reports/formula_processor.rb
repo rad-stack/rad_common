@@ -10,14 +10,14 @@ module RadReports
       value
     end
 
-    def self.apply_transforms(transforms, value, _record)
+    def self.apply_transforms(transforms, value, record)
       result = value
 
       transforms.each do |transform|
         type = transform['type']
         params = transform['params'] || {}
 
-        result = FormulaRegistry.execute(type, params, result)
+        result = FormulaRegistry.execute(type, params, result, record)
       end
 
       result
