@@ -1,0 +1,92 @@
+= turbo_frame_tag 'calculated-column-form-frame' do
+  - column_groups = columns_by_table.map { |table_info, cols| [(table_info[:label] || table_info[:table].to_s.humanize), cols.map { |col| [column_path(col), column_key(col)] }] }
+  - calculated_formulas = RadReports::FormulaRegistry.calculated_formulas
+  - columns_unavailable = column_groups.blank?
+
+  .modal-content
+    = simple_form_for calculated_column,
+                      url: calculated_columns_path(custom_report_id: params[:custom_report_id] || params[:id], report_model: params[:report_model] || calculated_column.report_model, joins: params[:joins] || calculated_column.joins),
+                      data: { controller: 'calculated-column-form' } do |f|
+      .modal-header
+        %h5.modal-title
+          %i.fa.fa-calculator.me-2
+          Create Calculated Column
+        %button.btn-close{ type: 'button', data: { bs_dismiss: 'modal' }, aria: { label: 'Close' } }
+      .modal-body
+        - if columns_unavailable
+          .alert.alert-warning
+            %strong No columns available.
+            %span.ms-1 Select a report model to enable calculated columns.
+        = rad_form_errors f
+        .row.g-3
+          .col-12
+            = f.input :label,
+                      label: 'Display Label',
+                      placeholder: 'Full Name',
+                      hint: 'This will be shown as the column header in reports',
+                      input_html: { class: 'form-control' }
+        .mb-3
+          = f.label :formula_type, 'Formula Type', class: 'form-label'
+          = f.select :formula_type,
+                     grouped_options_for_select(calculated_formula_options, calculated_column.formula_type),
+                     { include_blank: 'Choose a formula type' },
+                     class: 'form-select',
+                     data: { action: 'change->calculated-column-form#formulaChanged',
+                             calculated_column_form_target: 'formulaSelect' },
+                     disabled: columns_unavailable
+        - calculated_formulas.each do |type, config|
+          - params_definitions = config[:params] || []
+          - params_classes = []
+          - params_classes << 'd-none' if calculated_column.formula_type.blank? || calculated_column.formula_type != type
+          %div{ data: { calculated_column_form_target: 'params', formula_type: type }, class: params_classes.join(' ') }
+            - if params_definitions.blank?
+              %p.text-muted.small.mb-0 No additional parameters required.
+            - else
+              .row.g-3
+                - params_definitions.each do |param|
+                  :ruby
+                    column_class = param[:col_class] || 'col-12'
+                    field_base = "calculated_column[formula_params][#{param[:name]}]"
+                    multiple = param[:type] == 'column_selector' && param[:name].to_s == 'columns'
+                    field_name = multiple ? "#{field_base}[]" : field_base
+                    input_id = "calculated-column-#{type.parameterize}-#{param[:name]}"
+                    value = calculated_column.param_value(param)
+                  %div{ class: "#{column_class} mb-3" }
+                    = label_tag input_id, param[:label], class: 'form-label'
+                    - case param[:type]
+                    - when 'column_selector'
+                      - options_html = column_groups.present? ? grouped_options_for_select(column_groups, value) : ''.html_safe
+                      - unless multiple
+                        - options_html = content_tag(:option, 'Select a column', value: '') + options_html
+                      - select_html_options = { class: 'form-select', id: input_id, disabled: columns_unavailable, data: { calculated_column_form_target: 'columnSelector' } }
+                      - select_html_options[:multiple] = true if multiple
+                      = select_tag field_name, options_html, select_html_options
+                      - if multiple
+                        %small.form-text.text-muted Drag items to reorder
+                    - when 'number'
+                      = number_field_tag field_name,
+                                         value,
+                                         class: 'form-control',
+                                         id: input_id,
+                                         placeholder: param[:placeholder],
+                                         step: param[:step] || 'any',
+                                         disabled: columns_unavailable
+                    - when 'select'
+                      = select_tag field_name,
+                                   options_for_select(param[:options], value),
+                                   class: 'form-select',
+                                   id: input_id,
+                                   disabled: columns_unavailable
+                    - else
+                      = text_field_tag field_name,
+                                       value,
+                                       class: 'form-control',
+                                       id: input_id,
+                                       placeholder: param[:placeholder],
+                                       disabled: columns_unavailable
+      .modal-footer.justify-content-between
+        .d-flex.gap-2
+          %button.btn.btn-secondary{ type: 'button', data: { bs_dismiss: 'modal' } } Cancel
+          %button.btn.btn-primary{ type: 'submit', disabled: columns_unavailable }
+            %i.fa.fa-plus.me-1
+            Add Column

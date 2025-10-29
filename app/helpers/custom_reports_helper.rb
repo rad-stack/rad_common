@@ -43,6 +43,9 @@ module CustomReportsHelper
   end
 
   def column_path(column)
+    # Special handling for calculated columns
+    return "calculated.#{column[:name]}" if column[:is_calculated] || column[:type] == 'calculated'
+
     if column[:association].present? && column[:association_label] && column[:association_label] != column[:table_label]
       "#{column[:association_label]}.#{column[:name]}"
     elsif column[:table_label]
@@ -72,5 +75,37 @@ module CustomReportsHelper
                'data-bs-toggle' => 'offcanvas') do
       sanitize("#{content_tag(:i, '', class: 'fa fa-magic me-1')} AI Report Builder")
     end
+  end
+
+  def grouped_column_options_for_filter(columns)
+    grouped_options = {}
+
+    columns.each do |col|
+      group_label = col[:association_label].presence || col[:table_label]
+      grouped_options[group_label] ||= []
+
+      column_path = col[:association] ? "#{col[:association]}.#{col[:name]}" : "#{col[:table]}.#{col[:name]}"
+      option_label = "#{col[:name].humanize} - #{col[:type]}"
+
+      grouped_options[group_label] << [
+        option_label,
+        column_path,
+        {
+          'data-column-type' => col[:type],
+          'data-is-foreign-key' => col[:is_foreign_key],
+          'data-is-enum' => col[:is_enum]
+        }
+      ]
+    end
+
+    grouped_options
+  end
+
+  def custom_report_filter_url_params(params)
+    {
+      custom_report_id: params[:custom_report_id],
+      report_model: params[:report_model],
+      joins: params[:joins]
+    }.compact
   end
 end

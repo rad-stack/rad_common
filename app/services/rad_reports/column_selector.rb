@@ -14,7 +14,7 @@ module RadReports
       return query if column_definitions.empty?
 
       select_clauses = column_definitions.filter_map do |column_def|
-        next if column_def.blank? || column_def[:is_rich_text] || column_def[:is_attachment]
+        next if column_def[:is_rich_text] || column_def[:is_attachment] || column_def[:is_calculated]
 
         sql_select = convert_to_sql_select(column_def[:select])
         unique_alias = column_def[:select].to_s.gsub('.', '_')
@@ -23,11 +23,29 @@ module RadReports
 
       base_pk_clause = "#{query.table_name}.#{query.klass.primary_key}" # Required for attachments, rich text, etc.
 
-      select_clauses.unshift(base_pk_clause)
-      query.select(select_clauses.uniq)
+      all_selects = [base_pk_clause, *select_clauses, *calculated_support_selects]
+      query.select(all_selects.compact.uniq)
     end
 
     private
+
+      def calculated_support_selects
+        column_definitions.flat_map do |column_def|
+          next [] unless column_def[:is_calculated]
+
+          Array(column_def[:formula]).flat_map do |transform|
+            Array(transform.dig('params', 'columns')).filter_map do |column_path|
+              next if column_path.blank?
+
+              sql_select = convert_to_sql_select(column_path)
+              next if sql_select.blank?
+
+              alias_name = column_path.to_s.gsub('.', '_')
+              "#{sql_select} AS #{alias_name}"
+            end
+          end
+        end
+      end
 
       def convert_to_sql_select(select_clause)
         parts = select_clause.to_s.split('.')
