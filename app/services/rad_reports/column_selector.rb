@@ -14,48 +14,57 @@ module RadReports
       return query if column_definitions.empty?
 
       select_clauses = column_definitions.filter_map do |column_def|
-        next if column_def[:is_rich_text] || column_def[:is_attachment] || column_def[:is_calculated]
+        next if column_def[:is_rich_text] || column_def[:is_attachment]
 
-        sql_select = convert_to_sql_select(column_def[:select])
-        unique_alias = column_def[:select].to_s.gsub('.', '_')
-        "#{sql_select} AS #{unique_alias}"
+        if column_def[:is_calculated]
+          build_calculated_select(column_def)
+        else
+          sql_select = convert_to_sql_select(column_def[:select])
+          unique_alias = column_def[:select].to_s.gsub('.', '_')
+          "#{sql_select} AS #{unique_alias}"
+        end
       end
 
       base_pk_clause = "#{query.table_name}.#{query.klass.primary_key}" # Required for attachments, rich text, etc.
 
-      all_selects = [base_pk_clause, *select_clauses, *calculated_support_selects]
+      all_selects = [base_pk_clause, *select_clauses]
       query.select(all_selects.compact.uniq)
+    end
+
+    def self.convert_to_sql_column(column_path, join_builder)
+      parts = column_path.to_s.split('.')
+      return column_path if parts.length < 2
+
+      column = parts.last
+      association_path = parts[0..-2].join('.')
+
+      base_table = join_builder.model_class.table_name
+      table_name = if association_path == base_table
+                     base_table
+                   else
+                     join_builder.association_to_table_map[association_path] || association_path
+                   end
+
+      "#{table_name}.#{column}"
     end
 
     private
 
-      def calculated_support_selects
-        column_definitions.flat_map do |column_def|
-          next [] unless column_def[:is_calculated]
+      def build_calculated_select(column_def)
+        formula_entry = Array(column_def[:formula]).first
+        return nil unless formula_entry
 
-          Array(column_def[:formula]).flat_map do |transform|
-            Array(transform.dig('params', 'columns')).filter_map do |column_path|
-              next if column_path.blank?
+        formula_def = RadReports::FormulaRegistry.find(formula_entry['type'])
+        return nil unless formula_def
 
-              sql_select = convert_to_sql_select(column_path)
-              next if sql_select.blank?
+        sql_expr = formula_def[:sql_generator].call(formula_entry['params'] || {}, join_builder)
+        alias_name = column_def[:name].to_s.gsub('.', '_')
 
-              alias_name = column_path.to_s.gsub('.', '_')
-              "#{sql_select} AS #{alias_name}"
-            end
-          end
-        end
+        "(#{sql_expr}) AS #{alias_name}"
       end
 
       def convert_to_sql_select(select_clause)
-        parts = select_clause.to_s.split('.')
-        return select_clause if parts.length < 2
-
-        column = parts.last
-        association_path = parts[0..-2].join('.')
-        table_name = join_builder.association_to_table_map[association_path] || association_path
-
-        "#{table_name}.#{column}"
+        self.class.convert_to_sql_column(select_clause, join_builder)
       end
   end
 end
