@@ -235,137 +235,125 @@ module RadReports
       }
     }.freeze
 
-    # Calculated column formulas: create entirely new columns by combining multiple columns
-    # These are applied after the query returns data, combining values from multiple columns
     CALCULATED_FORMULAS = {
       'CONCAT_COLUMNS' => {
         label: 'Concatenate Columns',
         category: 'Calculated',
         is_calculated: true,
+        allowed_column_types: :all, # Can concatenate any type (casts to TEXT)
         params: [
           { name: 'columns', label: 'Columns', type: 'column_selector', default: [] },
           { name: 'separator', label: 'Separator', type: 'text', default: ' ', col_class: 'col-6' },
           { name: 'empty_replacement', label: 'Empty Value', type: 'text', default: '', col_class: 'col-6', placeholder: 'Text for empty values' }
         ],
-        param_extractor: ->(params, _value, record) {
+        sql_generator: lambda { |params, join_builder|
           columns = params['columns'] || []
           separator = params['separator'] || ' '
           empty_replacement = params['empty_replacement'] || ''
-          [columns, separator, empty_replacement, record]
-        },
-        executor: lambda { |args|
-          columns, separator, empty_replacement, record = args
-          values = columns.map do |col_path|
-            val = CalculatedColumnProcessor.extract_column_value(record, col_path)
-            val.blank? ? empty_replacement : val.to_s
+
+          sql_columns = columns.map do |col_path|
+            sql_col = ColumnSelector.convert_to_sql_column(col_path, join_builder)
+            "COALESCE(NULLIF(CAST(#{sql_col} AS TEXT), ''), '#{empty_replacement.gsub("'", "''")}')"
           end
-          values.join(separator)
+
+          "CONCAT_WS('#{separator.gsub("'", "''")}', #{sql_columns.join(', ')})"
         }
       },
       'MULTIPLY_COLUMNS' => {
         label: 'Multiply Columns',
         category: 'Calculated',
         is_calculated: true,
+        allowed_column_types: %w[integer bigint decimal float numeric],
         params: [
           { name: 'columns', label: 'Columns to multiply', type: 'column_selector', default: [] },
           { name: 'default_value', label: 'Default for empty', type: 'number', default: 0, step: 'any' }
         ],
-        param_extractor: ->(params, _value, record) {
+        sql_generator: lambda { |params, join_builder|
           columns = params['columns'] || []
-          default_value = (params['default_value'] || 0).to_f
-          [columns, default_value, record]
-        },
-        executor: lambda { |args|
-          columns, default_value, record = args
-          result = 1.0
-          columns.each do |col_path|
-            val = CalculatedColumnProcessor.extract_column_value(record, col_path)
-            numeric_val = val.blank? ? default_value : val.to_f
-            result *= numeric_val
+          default_value = params['default_value'] || 0
+
+          sql_columns = columns.map do |col_path|
+            sql_col = ColumnSelector.convert_to_sql_column(col_path, join_builder)
+            "COALESCE(#{sql_col}, #{default_value})"
           end
-          result
+
+          sql_columns.join(' * ')
         }
       },
       'ADD_COLUMNS' => {
         label: 'Add Columns',
         category: 'Calculated',
         is_calculated: true,
+        allowed_column_types: %w[integer bigint decimal float numeric],
         params: [
           { name: 'columns', label: 'Columns to add', type: 'column_selector', default: [] },
           { name: 'default_value', label: 'Default for empty', type: 'number', default: 0, step: 'any' }
         ],
-        param_extractor: ->(params, _value, record) {
+        sql_generator: lambda { |params, join_builder|
           columns = params['columns'] || []
-          default_value = (params['default_value'] || 0).to_f
-          [columns, default_value, record]
-        },
-        executor: lambda { |args|
-          columns, default_value, record = args
-          result = 0.0
-          columns.each do |col_path|
-            val = CalculatedColumnProcessor.extract_column_value(record, col_path)
-            numeric_val = val.blank? ? default_value : val.to_f
-            result += numeric_val
+          default_value = params['default_value'] || 0
+
+          sql_columns = columns.map do |col_path|
+            sql_col = ColumnSelector.convert_to_sql_column(col_path, join_builder)
+            "COALESCE(#{sql_col}, #{default_value})"
           end
-          result
+
+          sql_columns.join(' + ')
         }
       },
       'SUBTRACT_COLUMNS' => {
         label: 'Subtract Columns (First - Others)',
         category: 'Calculated',
         is_calculated: true,
+        allowed_column_types: %w[integer bigint decimal float numeric],
         params: [
           { name: 'columns', label: 'Columns (First - Rest)', type: 'column_selector', default: [] },
           { name: 'default_value', label: 'Default for empty', type: 'number', default: 0, step: 'any' }
         ],
-        param_extractor: ->(params, _value, record) {
+        sql_generator: lambda { |params, join_builder|
           columns = params['columns'] || []
-          default_value = (params['default_value'] || 0).to_f
-          [columns, default_value, record]
-        },
-        executor: lambda { |args|
-          columns, default_value, record = args
-          return 0.0 if columns.empty?
+          default_value = params['default_value'] || 0
 
-          first_val = CalculatedColumnProcessor.extract_column_value(record, columns.first)
-          result = first_val.blank? ? default_value : first_val.to_f
+          return '0' if columns.empty?
 
-          columns[1..].each do |col_path|
-            val = CalculatedColumnProcessor.extract_column_value(record, col_path)
-            numeric_val = val.blank? ? default_value : val.to_f
-            result -= numeric_val
+          sql_columns = columns.map do |col_path|
+            sql_col = ColumnSelector.convert_to_sql_column(col_path, join_builder)
+            "COALESCE(#{sql_col}, #{default_value})"
           end
-          result
+
+          if sql_columns.length == 1
+            sql_columns.first
+          else
+            "#{sql_columns.first} - (#{sql_columns[1..].join(' + ')})"
+          end
         }
       },
       'DIVIDE_COLUMNS' => {
         label: 'Divide Columns (First / Second)',
         category: 'Calculated',
         is_calculated: true,
+        allowed_column_types: %w[integer bigint decimal float numeric],
         params: [
           { name: 'columns', label: 'Columns (Dividend / Divisor)', type: 'column_selector', default: [] },
           { name: 'default_value', label: 'Default for empty', type: 'number', default: 0, step: 'any' },
           { name: 'zero_result', label: 'Result when divisor is zero', type: 'number', default: 0, step: 'any' }
         ],
-        param_extractor: ->(params, _value, record) {
+        sql_generator: lambda { |params, join_builder|
           columns = params['columns'] || []
-          default_value = (params['default_value'] || 0).to_f
-          zero_result = (params['zero_result'] || 0).to_f
-          [columns, default_value, zero_result, record]
-        },
-        executor: lambda { |args|
-          columns, default_value, zero_result, record = args
-          return zero_result if columns.length < 2
+          default_value = params['default_value'] || 0
+          zero_result = params['zero_result'] || 0
 
-          dividend_val = CalculatedColumnProcessor.extract_column_value(record, columns[0])
-          divisor_val = CalculatedColumnProcessor.extract_column_value(record, columns[1])
+          return zero_result.to_s if columns.length < 2
 
-          dividend = dividend_val.blank? ? default_value : dividend_val.to_f
-          divisor = divisor_val.blank? ? default_value : divisor_val.to_f
+          dividend_sql = ColumnSelector.convert_to_sql_column(columns[0], join_builder)
+          divisor_sql = ColumnSelector.convert_to_sql_column(columns[1], join_builder)
 
-          return zero_result if divisor.zero?
-
-          dividend / divisor
+          <<~SQL.squish
+            CASE
+              WHEN COALESCE(#{divisor_sql}, #{default_value}) = 0 THEN #{zero_result}
+              ELSE COALESCE(#{dividend_sql}, #{default_value}) / NULLIF(COALESCE(#{divisor_sql}, #{default_value}), 0)
+            END
+          SQL
         },
         validator: lambda { |params, errors|
           columns = params['columns']

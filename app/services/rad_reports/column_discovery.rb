@@ -81,6 +81,21 @@ module RadReports
       matching_column.present?
     end
 
+    def find_column_by_path(column_reference)
+      return nil if column_reference.blank?
+
+      parts = column_reference.split('.')
+      col_name = parts.last
+      table_or_association = parts[0..-2].join('.')
+
+      all_columns.find do |vc|
+        vc[:name] == col_name &&
+          (vc[:association] == table_or_association ||
+           vc[:table] == table_or_association ||
+           (vc[:association].nil? && table_or_association.blank?))
+      end
+    end
+
     private
 
       def build_columns_for_model(klass, association_info = {})

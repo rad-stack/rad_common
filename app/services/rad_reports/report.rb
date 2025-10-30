@@ -50,7 +50,7 @@ module RadReports
             is_attachment: is_attachment,
             is_calculated: is_calculated,
             formula: col['formula'],
-            sortable: col['sortable'] && !is_calculated # Calculated columns shouldn't be sortable at DB level
+            sortable: col['sortable']
           }
         end
       end

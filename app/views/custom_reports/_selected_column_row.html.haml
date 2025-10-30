@@ -31,13 +31,15 @@
         %span.badge.bg-light.text-dark.border-0.px-2= column[:type]
   %td.py-3.text-center
     - unless is_attachment_or_rich_text
+      - transform_count = is_calculated && formula ? (formula.is_a?(Array) ? formula.length - 1 : 0) : (formula ? formula.length : 0)
+      - has_transforms = transform_count > 0
       %button.btn.btn-sm.rounded-circle{ type: 'button',
                                          data: { action: 'click->formula-editor#open' },
-                                         title: formula.present? ? 'Edit Formula' : 'Add Formula',
-                                         class: formula.present? ? 'btn-success' : 'btn-outline-secondary' }
+                                         title: has_transforms ? 'Edit Transform' : 'Add Transform',
+                                         class: has_transforms ? 'btn-success' : 'btn-outline-secondary' }
         %i.fa.fa-calculator
   %td.text-center.py-3
-    - if is_attachment_or_rich_text || is_calculated
+    - if is_attachment_or_rich_text
       %span.text-muted.small N/A
     - else
       .form-check.form-switch.d-inline-block
