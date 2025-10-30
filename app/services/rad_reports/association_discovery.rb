@@ -20,8 +20,9 @@ module RadReports
       klass = model_name.constantize
       base_associations = associations_for_class(klass)
       nested_associations = build_nested_associations(klass)
+      existing_join_definitions = build_existing_join_definitions(klass)
 
-      (base_associations + nested_associations).compact
+      (base_associations + nested_associations + existing_join_definitions).uniq { |a| a[:name] }.compact
     rescue NameError
       []
     end
@@ -190,6 +191,31 @@ module RadReports
         end
 
         models
+      end
+
+      def build_existing_join_definitions(base_klass)
+        existing_joins.filter_map do |join_path|
+          target_class = navigate_join_path(base_klass, join_path)
+          next unless target_class
+
+          parts = join_path.split('.')
+          if parts.length == 1
+            assoc = base_klass.reflect_on_association(parts.first.to_sym)
+            next unless assoc
+
+            build_association_definition(assoc, base_klass, nil)
+          else
+            parent_path = parts[0..-2].join('.')
+            parent_class = navigate_join_path(base_klass, parent_path)
+            next unless parent_class
+
+            last_part = parts.last
+            assoc = parent_class.reflect_on_association(last_part.to_sym)
+            next unless assoc
+
+            build_association_definition(assoc, parent_class, parent_path)
+          end
+        end
       end
 
       def excluded_associations
