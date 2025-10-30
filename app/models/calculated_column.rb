@@ -130,8 +130,32 @@ class CalculatedColumn
         errors.add(:base, "#{param[:label]} must be provided") if value.blank?
       end
 
+      validate_column_types if definition[:allowed_column_types].present?
+
       return if definition[:validator].blank?
 
       definition[:validator].call(normalized_params, errors)
+    end
+
+    def validate_column_types
+      definition = formula_definition
+      return unless definition
+      return if report_model.blank? || normalized_params['columns'].blank?
+
+      allowed_types = definition[:allowed_column_types]
+      return if allowed_types == :all
+
+      discovery = RadReports::ColumnDiscovery.new(report_model, joins)
+      selected_columns = Array(normalized_params['columns'])
+
+      selected_columns.each do |column_path|
+        column_info = discovery.find_column_by_path(column_path)
+        next unless column_info
+
+        column_type = column_info[:type].to_s
+        next if allowed_types.include?(column_type)
+
+        errors.add(:base, "Column '#{column_path}' has type '#{column_type}' which is not valid for this formula. Allowed types: #{allowed_types.join(', ')}")
+      end
     end
 end

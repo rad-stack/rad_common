@@ -10,22 +10,32 @@ module RadReports
       columns.map do |col|
         {
           label: col['label'] || col['name'].humanize,
-          column: col['sortable'] ? convert_sort_column_path(col['select']) : nil
+          column: col['sortable'] ? build_sort_column(col) : nil
         }
       end
     end
 
-    def convert_sort_column_path(column_path)
-      return if column_path.blank?
+    private
 
-      parts = column_path.to_s.split('.')
-      return column_path if parts.length < 2
+      def build_sort_column(col)
+        if col['is_calculated']
+          col['name'].to_s.gsub('.', '_')
+        else
+          convert_sort_column_path(col['select'])
+        end
+      end
 
-      column_name = parts.last
-      association_path = parts[0..-2].join('.')
-      table_name = join_builder.table_name_for_association(association_path)
+      def convert_sort_column_path(column_path)
+        return if column_path.blank?
 
-      "#{table_name}.#{column_name}"
-    end
+        parts = column_path.to_s.split('.')
+        return column_path if parts.length < 2
+
+        column_name = parts.last
+        association_path = parts[0..-2].join('.')
+        table_name = join_builder.table_name_for_association(association_path)
+
+        "#{table_name}.#{column_name}"
+      end
   end
 end
