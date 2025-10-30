@@ -1,7 +1,7 @@
 = link_to icon(:filter, 'Toggle Filters'),
-          '#filters',
+          '#search-filter-collapse',
           data: { 'bs-toggle': 'collapse' },
-          class: 'btn btn-primary btn-sm mb-2'
+          class: "btn #{search.search_params? ? 'btn-warning' : 'btn-primary'} btn-sm mb-2"
 
 - if (search.search_params? && search.invalid?) || search.saved_filter_errors.present?
   - flash.now[:error] = search.error_messages
@@ -20,5 +20,6 @@
       .modal-body
         = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: true
 
-.d-none.d-md-block{ data: { controller: 'search' } }
+.d-none.d-md-block{ data: { controller: 'search filter-toggle',
+                            filter_toggle_default_collapsed_value: search.auto_hide.to_s } }
   = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: false
