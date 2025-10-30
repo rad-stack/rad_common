@@ -64,6 +64,11 @@ module RadCommonRoutes
             post :update_columns
             delete :update_columns
           end
+
+          member do
+            get :edit_configuration
+            patch :update_configuration
+          end
         end
 
         resources :calculated_columns, only: %i[new create]
