@@ -45,29 +45,38 @@ class CustomReport < ApplicationRecord
     def validate_joins_configuration
       return if report_model.blank? || joins.blank?
 
-      available_associations = RadReports::AssociationDiscovery.new(report_model, []).available_associations
-      available_join_paths = available_associations.pluck(:name)
-
-      valid_paths = []
+      validated_joins = []
 
       joins.each do |join_path|
-        parts = join_path.split('.')
-        base_join = parts.first
-
-        unless available_join_paths.include?(base_join) || valid_paths.include?(base_join)
+        if validate_join_path_incrementally(join_path, validated_joins)
+          validated_joins << join_path
+        else
           errors.add(:joins, "contains invalid association '#{join_path}'")
-          next
+        end
+      end
+    end
+
+    def validate_join_path_incrementally(join_path, existing_validated_joins)
+      parts = join_path.split('.')
+
+      (1..parts.length).each do |depth|
+        current_path = parts[0, depth].join('.')
+        next if existing_validated_joins.include?(current_path)
+
+        context_joins = existing_validated_joins.dup
+
+        (1...depth).each do |i|
+          intermediate_path = parts[0, i].join('.')
+          context_joins << intermediate_path unless context_joins.include?(intermediate_path)
         end
 
-        valid_paths << join_path
-        next unless parts.length > 1
+        discovery = RadReports::AssociationDiscovery.new(report_model, context_joins.uniq)
+        available_paths = discovery.available_associations.map { |a| a[:name] }
 
-        nested_available = RadReports::AssociationDiscovery.new(report_model, valid_paths[0..-2])
-                                                           .available_associations
-        nested_paths = nested_available.map { |a| a[:name] }
-
-        errors.add(:joins, "contains invalid nested association '#{join_path}'") unless nested_paths.include?(join_path)
+        return false unless available_paths.include?(current_path)
       end
+
+      true
     end
 
     def validate_columns_configuration
