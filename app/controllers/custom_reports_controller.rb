@@ -1,7 +1,7 @@
 class CustomReportsController < ApplicationController
   include CustomReportsHelper
 
-  before_action :set_custom_report, only: %i[show edit update destroy export]
+  before_action :set_custom_report, only: %i[show edit update destroy export edit_configuration update_configuration]
   before_action :build_temp_report, only: %i[update_joins update_columns]
 
   def index
@@ -46,6 +46,19 @@ class CustomReportsController < ApplicationController
     authorize @custom_report
 
     if @custom_report.update(custom_report_params)
+      redirect_to custom_report_path(@custom_report), notice: 'Custom report updated successfully.'
+    else
+      render :edit
+    end
+  end
+
+  def edit_configuration
+    authorize @custom_report
+  end
+
+  def update_configuration
+    authorize @custom_report
+    if @custom_report.update(custom_report_config_params)
       redirect_to custom_report_path(@custom_report), notice: 'Custom report updated successfully.'
     else
       render :edit
@@ -156,6 +169,11 @@ class CustomReportsController < ApplicationController
       end
 
       authorize @custom_report
+    end
+
+    def custom_report_config_params
+      permitted = params.require(:custom_report).permit(:configuration)
+      permitted[:configuration] = JSON.parse(permitted[:configuration])
     end
 
     def custom_report_params

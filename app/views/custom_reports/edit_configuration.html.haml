@@ -1,0 +1,8 @@
+.card
+  = render 'layouts/card_header', icon: 'edit', title: 'Editing Configuration'
+  .card-body
+    = simple_form_for @custom_report, url: update_configuration_custom_report_path(@custom_report) do |f|
+      = rad_form_errors f
+
+      = f.input :configuration, as: :text, input_html: { value: JSON.pretty_generate(@custom_report.configuration || {}) }
+      = f.submit 'Update', class: 'btn btn-primary'

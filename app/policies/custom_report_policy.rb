@@ -3,6 +3,14 @@ class CustomReportPolicy < ApplicationPolicy
     update?
   end
 
+  def edit_configuration?
+    update?
+  end
+
+  def update_configuration?
+    update?
+  end
+
   def update_filters?
     update?
   end

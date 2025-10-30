@@ -77,6 +77,10 @@ module CustomReportsHelper
     end
   end
 
+  def edit_configuration_button(report)
+    link_to icon(:code, 'Edit Config'), edit_configuration_custom_report_path(report), class: 'btn btn-primary btn-sm'
+  end
+
   def grouped_column_options_for_filter(columns)
     grouped_options = {}
 
