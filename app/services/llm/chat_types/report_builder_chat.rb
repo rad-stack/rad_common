@@ -12,10 +12,11 @@ module LLM
       end
 
       def format_message(text)
-        if text.downcase.include?('success')
-          button_html = %(<div class="mt-3"><a href="/custom_reports/#{CustomReport.last&.id}" class="btn btn-primary btn-sm" data-turbo="false"><i class="fa fa-play me-1"></i>Run Report</a></div>)
+        if text.include?('REPORT_ID')
+          report_id = text[/REPORT_ID:(\d+)/, 1]
+          button_html = %(<div class="mt-3"><a href="/custom_reports/#{report_id}" class="btn btn-primary btn-sm" data-turbo="false"><i class="fa fa-play me-1"></i>Run Report</a></div>)
 
-          "#{text}\n\n#{button_html}"
+          text.gsub("REPORT_ID:#{report_id}", button_html)
         else
           text
         end
@@ -212,8 +213,8 @@ module LLM
             The tool will attempt to create a CustomReport object. You'll receive one of these responses:
 
             **SUCCESS Response:**
-            "SUCCESS! Custom report '{name}' has been created successfully."
-            → This ends the process. Let the user know you can create another.
+            "SUCCESS! Custom report '{name}' has been created successfully. With Report ID {report_id}"
+            → This ends the process. Let the user know you can create another. Make sure to extract the report_id out and always include it your response formatted exactly like this REPORT_ID:{report_id} this is used later in the ui
 
             **VALIDATION_ERROR Response:**
             "VALIDATION_ERROR: The report could not be created due to the following errors: {errors}. Please fix these issues and try again."
