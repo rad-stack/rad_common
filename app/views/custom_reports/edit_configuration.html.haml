@@ -1,9 +1,11 @@
 .card
   = render 'layouts/card_header', icon: 'edit', title: 'Editing Configuration'
   .card-body{ data: { controller: 'config-editor' } }
-    = simple_form_for @custom_report, url: update_configuration_custom_report_path(@custom_report) do |f|
+    = simple_form_for @custom_report, url: update_configuration_custom_report_path(@custom_report),
+                                      data: { config_editor_target: 'reportForm' } do |f|
       = rad_form_errors f
 
       = f.input :configuration, as: :text,
-                input_html: { value: JSON.pretty_generate(@custom_report.configuration || {}) }
+                input_html: { value: JSON.pretty_generate(@custom_report.configuration || {}),
+                              data: { config_editor_target: 'configurationInput' } }
       = f.submit 'Update', class: 'btn btn-primary'
