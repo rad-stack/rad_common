@@ -1,6 +1,6 @@
 .card
   = render 'layouts/card_header', icon: 'edit', title: 'Editing Configuration'
-  .card-body
+  .card-body{ data: { controller: 'config-editor' } }
     = simple_form_for @custom_report, url: update_configuration_custom_report_path(@custom_report) do |f|
       = rad_form_errors f
 
