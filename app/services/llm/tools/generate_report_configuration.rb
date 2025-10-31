@@ -142,7 +142,8 @@ module LLM
 
           if report.save
             report_url = Rails.application.routes.url_helpers.custom_report_path(report)
-            "SUCCESS! Custom report '#{name}' has been created successfully. View it at: #{report_url}"
+            "SUCCESS! Custom report '#{name}' has been created successfully. View it at: #{report_url} " \
+              "With Report ID #{report.id}"
           else
             errors = report.errors.full_messages.join(', ')
             "VALIDATION_ERROR: The report could not be created due to the following errors: #{errors}. " \
