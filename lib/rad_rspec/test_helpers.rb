@@ -4,8 +4,13 @@ module TestHelpers
   end
 
   def tom_select(value, attrs)
-    tom_search(value, attrs)
-    find('.ts-dropdown .option', text: value).click
+    values = value.is_a?(Array) ? value : [value]
+
+    values.each_with_index do |current_value, index|
+      tom_search(value, attrs)
+      find('.ts-dropdown .option', text: current_value).click
+      click_tom_select(attrs) if index < (values.length - 1)
+    end
   end
 
   def tom_search(value, attrs)

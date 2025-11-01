@@ -187,7 +187,7 @@ RSpec.describe RadReports::FormulaRegistry, type: :service do
       end
 
       it 'percent' do
-        expect(described_class.execute('PERCENT', {}, 12)).to eq('12.0%')
+        expect(described_class.execute('PERCENT', {}, 12)).to eq('12.00%')
       end
     end
 

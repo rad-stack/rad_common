@@ -148,24 +148,24 @@ RSpec.describe RadReports::SortBuilder, type: :service do
     let(:sort_builder) { described_class.new(join_builder) }
 
     it 'returns nil for blank column path' do
-      expect(sort_builder.convert_sort_column_path('')).to be_nil
-      expect(sort_builder.convert_sort_column_path(nil)).to be_nil
+      expect(sort_builder.send(:convert_sort_column_path, '')).to be_nil
+      expect(sort_builder.send(:convert_sort_column_path, nil)).to be_nil
     end
 
     it 'returns path unchanged for simple column' do
-      expect(sort_builder.convert_sort_column_path('name')).to eq 'name'
+      expect(sort_builder.send(:convert_sort_column_path, 'name')).to eq 'name'
     end
 
     it 'returns path unchanged for simple table.column' do
-      expect(sort_builder.convert_sort_column_path('divisions.name')).to eq 'divisions.name'
+      expect(sort_builder.send(:convert_sort_column_path, 'divisions.name')).to eq 'divisions.name'
     end
 
     it 'converts association path to table path' do
-      expect(sort_builder.convert_sort_column_path('owner.email')).to eq 'owner_users.email'
+      expect(sort_builder.send(:convert_sort_column_path, 'owner.email')).to eq 'owner_users.email'
     end
 
     it 'converts nested association path to table path' do
-      expect(sort_builder.convert_sort_column_path('owner.user_status.name'))
+      expect(sort_builder.send(:convert_sort_column_path, 'owner.user_status.name'))
         .to eq 'owner_user_status_user_statuses.name'
     end
   end

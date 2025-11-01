@@ -8,11 +8,11 @@ RSpec.describe RadReports::ConfigurationBuilder, type: :service do
       let(:params) do
         {
           columns: [
-            { id: 'name', label: 'Name', formula: '[{"type":"UPPER"}]' },
-            { id: 'notes', label: 'Notes' }
+            { 'id' => 'name', label: 'Name', 'formula' => '[{"type":"UPPER"}]' },
+            { 'id' => 'notes', label: 'Notes' }
           ],
           filters: {
-            '0' => { id: 'status', type: 'RadSearch::EqualsFilter' }
+            '0' => { 'id' => 'status', 'type' => 'RadSearch::EqualsFilter' }
           },
           joins: ['users', '', nil, 'addresses']
         }
@@ -23,11 +23,11 @@ RSpec.describe RadReports::ConfigurationBuilder, type: :service do
 
         columns = configuration['columns']
         expect(columns).to be_an(Array)
-        expect(columns.first[:id]).to eq('name')
+        expect(columns.first['id']).to eq('name')
         expect(columns.first['formula']).to eq([{ 'type' => 'UPPER' }])
-        expect(columns.last[:id]).to eq('notes')
+        expect(columns.last['id']).to eq('notes')
 
-        expect(configuration['filters']).to eq([{ id: 'status', type: 'RadSearch::EqualsFilter' }])
+        expect(configuration['filters']).to eq([{ 'id' => 'status', 'type' => 'RadSearch::EqualsFilter' }])
         expect(configuration['joins']).to eq(%w[users addresses])
       end
     end
