@@ -153,7 +153,9 @@ module LLM
 
         def apply_default_formula(column, model_name, joins)
           # Skip default formulas for calculated columns or columns that already have formulas
-          return if column['formula'].present? || column['is_calculated'] || column['select'].blank? || model_name.blank?
+          if column['formula'].present? || column['is_calculated'] || column['select'].blank? || model_name.blank?
+            return
+          end
 
           discovery = RadReports::ColumnDiscovery.new(model_name, joins)
           found_col = discovery.all_columns.find { |c| c[:name] == column['name'] }

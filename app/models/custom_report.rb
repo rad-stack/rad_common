@@ -108,9 +108,15 @@ class CustomReport < ApplicationRecord
         end
 
         if select_clause.present?
-          errors.add(:columns, "contains invalid column reference '#{select_clause}'") unless column_discovery.column_exists?(select_clause)
+          unless column_discovery.column_exists?(select_clause)
+            errors.add(:columns,
+                       "contains invalid column reference '#{select_clause}'")
+          end
         elsif column_name.present?
-          errors.add(:columns, "contains invalid column '#{column_name}'") unless column_discovery.column_exists?(column_name)
+          unless column_discovery.column_exists?(column_name)
+            errors.add(:columns,
+                       "contains invalid column '#{column_name}'")
+          end
         end
       end
     end

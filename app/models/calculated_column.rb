@@ -155,7 +155,8 @@ class CalculatedColumn
         column_type = column_info[:type].to_s
         next if allowed_types.include?(column_type)
 
-        errors.add(:base, "Column '#{column_path}' has type '#{column_type}' which is not valid for this formula. Allowed types: #{allowed_types.join(', ')}")
+        errors.add(:base,
+                   "Column '#{column_path}' has type '#{column_type}' which is not valid for this formula. Allowed types: #{allowed_types.join(', ')}")
       end
     end
 end
