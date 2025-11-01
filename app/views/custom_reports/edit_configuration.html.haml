@@ -6,6 +6,6 @@
       = rad_form_errors f
 
       = f.input :configuration, as: :text,
-                input_html: { value: JSON.pretty_generate(@custom_report.configuration || {}),
-                              data: { config_editor_target: 'configurationInput' } }
+                                input_html: { value: JSON.pretty_generate(@custom_report.configuration || {}),
+                                              data: { config_editor_target: 'configurationInput' } }
       = f.submit 'Update', class: 'btn btn-primary'

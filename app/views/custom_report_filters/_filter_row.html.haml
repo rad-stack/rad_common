@@ -1,7 +1,7 @@
 - filter_id = "filter-#{Time.now.to_i}-#{rand(1000)}"
 
 .card.mb-3.filter-row.sortable-item{ id: filter_id, draggable: 'true',
-                                    data: { report_builder_target: 'filterRow', action: draggable_actions } }
+                                     data: { report_builder_target: 'filterRow', action: draggable_actions } }
   .card-body.py-3
     .row.align-items-center.g-3
       .col-md-1

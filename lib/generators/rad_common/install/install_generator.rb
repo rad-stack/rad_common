@@ -38,8 +38,8 @@ module RadCommon
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
         gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
-        gsub_file 'Gemfile', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
-        gsub_file 'Gemfile.lock', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
+        gsub_file 'Gemfile', %r{https://github.com/jayywolff/twilio-verify-devise.git}, 'https://github.com/rad-stack/twilio-verify-devise.git'
+        gsub_file 'Gemfile.lock', %r{https://github.com/jayywolff/twilio-verify-devise.git}, 'https://github.com/rad-stack/twilio-verify-devise.git'
 
         # misc
         merge_package_json unless RadConfig.legacy_assets?
@@ -54,9 +54,7 @@ module RadCommon
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
 
-        unless RadConfig.shared_database?
-          copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
-        end
+        copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html' unless RadConfig.shared_database?
 
         migrate_webpacker_to_esbuild unless RadConfig.legacy_assets?
 
@@ -68,7 +66,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
         copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
-                 'public/406-unsupported-browser.html'
+                  'public/406-unsupported-browser.html'
 
         unless RadConfig.legacy_assets?
           copy_file '../../../../../spec/dummy/app/javascript/application.js',
@@ -76,10 +74,10 @@ module RadCommon
 
           unless File.exist? 'app/javascript/controllers/app_specific/index.js'
             copy_file '../../../../../spec/dummy/app/javascript/controllers/app_specific/index.js',
-                     'app/javascript/controllers/app_specific/index.js'
+                      'app/javascript/controllers/app_specific/index.js'
           end
           copy_file '../../../../../spec/dummy/app/javascript/controllers/index.js',
-                   'app/javascript/controllers/index.js'
+                    'app/javascript/controllers/index.js'
           copy_file '../../../../../spec/dummy/app/javascript/controllers/application.js',
                     'app/javascript/controllers/application.js'
         end
@@ -187,22 +185,23 @@ module RadCommon
                   'lib/templates/services/search.rb.tt'
 
         unless RadConfig.shared_database?
-          create_file 'db/seeds.rb' do <<-'RUBY'
-require 'factory_bot_rails'
-require 'rad_rspec/rad_factories'
+          create_file 'db/seeds.rb' do
+            <<~RUBY
+              require 'factory_bot_rails'
+              require 'rad_rspec/rad_factories'
 
-RadFactories.load!
-Seeder.new.seed!
-        RUBY
+              RadFactories.load!
+              Seeder.new.seed!
+            RUBY
           end
         end
 
-        inject_into_file 'config/routes.rb', after: 'Rails.application.routes.draw do' do <<-'RUBY'
-
+        inject_into_file 'config/routes.rb', after: 'Rails.application.routes.draw do' do
+          <<-RUBY
   mount RadCommon::Engine => '/rad_common'
   extend RadCommonRoutes
 
-        RUBY
+          RUBY
         end
 
         add_project_gems
@@ -229,9 +228,7 @@ Seeder.new.seed!
           migrate_custom_dependencies_file # Temp: Migrate old custom_dependencies.json to new format
 
           dummy_file_path = '../../../../../spec/dummy/package.json'
-          unless File.exist?('custom-dependencies.json')
-            return copy_file dummy_file_path, 'package.json'
-          end
+          return copy_file dummy_file_path, 'package.json' unless File.exist?('custom-dependencies.json')
 
           base_package_source = File.expand_path(find_in_source_paths(dummy_file_path))
           base_package = JSON.parse(File.read(base_package_source))
@@ -251,10 +248,12 @@ Seeder.new.seed!
           return unless File.exist?('custom-dependencies.json')
 
           contents = JSON.parse(File.read('custom-dependencies.json'))
-          if contents.is_a?(Hash) && (%w[dependencies devDependencies resolutions scripts] & contents.keys).none?
-            new_contents = { 'dependencies' => contents }
-            File.write('custom-dependencies.json', JSON.pretty_generate(new_contents) + "\n")
+          unless contents.is_a?(Hash) && (%w[dependencies devDependencies resolutions scripts] & contents.keys).none?
+            return
           end
+
+          new_contents = { 'dependencies' => contents }
+          File.write('custom-dependencies.json', JSON.pretty_generate(new_contents) + "\n")
         end
 
         def copy_custom_github_actions
@@ -351,7 +350,8 @@ Seeder.new.seed!
           gsub_file 'Gemfile', /\n\s*gem 'webdrivers'.*\n/, "\n"
           return if File.readlines('Gemfile').grep(/gem 'selenium-webdriver'/).any?
 
-          gsub_file 'Gemfile', /\n\s*gem 'simplecov', require: false\n/, "\n  gem 'selenium-webdriver'\n  gem 'simplecov', require: false\n"
+          gsub_file 'Gemfile', /\n\s*gem 'simplecov', require: false\n/,
+                    "\n  gem 'selenium-webdriver'\n  gem 'simplecov', require: false\n"
         end
 
         def remove_rad_factories
@@ -362,9 +362,9 @@ Seeder.new.seed!
             remove_file factory_file
           end
 
-          if Dir.exist?('spec/factories/rad_common') && Dir.empty?('spec/factories/rad_common')
-            Dir.rmdir('spec/factories/rad_common')
-          end
+          return unless Dir.exist?('spec/factories/rad_common') && Dir.empty?('spec/factories/rad_common')
+
+          Dir.rmdir('spec/factories/rad_common')
         end
 
         def check_boolean_fields
@@ -381,9 +381,9 @@ Seeder.new.seed!
           standard_config_end = /\n(  system_usage_models:)/
           new_config = "  #{setting_name}: #{default_value}\n\n"
 
-          unless rad_config_setting_exists?(setting_name)
-            gsub_file RAD_CONFIG_FILE, standard_config_end, "#{new_config}\\1"
-          end
+          return if rad_config_setting_exists?(setting_name)
+
+          gsub_file RAD_CONFIG_FILE, standard_config_end, "#{new_config}\\1"
         end
 
         def rad_config_setting_exists?(setting_name)
@@ -526,13 +526,13 @@ Seeder.new.seed!
                       "#{installed_app_name}_development"
           end
 
-          unless RadConfig.legacy_assets?
-            gsub_file '.github/workflows/rspec_tests.yml', /^\s*working-directory: spec\/dummy\s*\n/, ''
-            gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
-            gsub_file '.github/workflows/rspec_tests.yml',
-                     "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
-                     'bin/rc_parallel_rspec'
-          end
+          return if RadConfig.legacy_assets?
+
+          gsub_file '.github/workflows/rspec_tests.yml', %r{^\s*working-directory: spec/dummy\s*\n}, ''
+          gsub_file '.github/workflows/rspec_tests.yml', 'spec/dummy/', ''
+          gsub_file '.github/workflows/rspec_tests.yml',
+                    "bundle exec parallel_rspec spec --exclude-pattern 'templates/rspec/*.*'",
+                    'bin/rc_parallel_rspec'
         end
 
         def migrate_webpacker_to_esbuild
@@ -580,13 +580,13 @@ Seeder.new.seed!
             create_file 'app/assets/scss/app_specific/main.scss'
           end
 
-          if Dir.exist?('app/javascript/css')
-            Dir['app/javascript/css/*'].each do |file|
-              copy_file Rails.root.join(file), "app/assets/scss/#{File.basename(file)}"
-            end
+          return unless Dir.exist?('app/javascript/css')
 
-            remove_dir 'app/javascript/css'
+          Dir['app/javascript/css/*'].each do |file|
+            copy_file Rails.root.join(file), "app/assets/scss/#{File.basename(file)}"
           end
+
+          remove_dir 'app/javascript/css'
         end
 
         def migrate_to_tom_select
@@ -597,20 +597,23 @@ Seeder.new.seed!
         end
 
         def add_project_gems
-          inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do <<-'RUBY'
-gem 'rubocop-capybara'
-          RUBY
+          inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do
+            <<~RUBY
+              gem 'rubocop-capybara'
+            RUBY
           end
-          inject_into_file 'Gemfile', after: "gem 'better_errors'\n" do <<-'RUBY'
+          inject_into_file 'Gemfile', after: "gem 'better_errors'\n" do
+            <<-RUBY
   gem 'tty-prompt'
-        RUBY
+            RUBY
           end
 
-          unless RadConfig.legacy_assets?
-            inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do <<-'RUBY'
-gem 'propshaft'
+          return if RadConfig.legacy_assets?
+
+          inject_into_file 'Gemfile', after: "gem 'bootsnap', require: false\n" do
+            <<~RUBY
+              gem 'propshaft'
             RUBY
-            end
           end
         end
 
@@ -635,7 +638,7 @@ gem 'propshaft'
 
           # data: { toggle: 'str', target:
           gsub_from_file_content(search_pattern: /data: \{ toggle: '([^']*)',(\s*)target:/,
-                               replacement_string: "data: { 'bs-toggle': '\\1',\\2'bs-target':")
+                                 replacement_string: "data: { 'bs-toggle': '\\1',\\2'bs-target':")
           # data: { placement: 'str', toggle:
           gsub_from_file_content(search_pattern: /data: \{ placement: '([^']*)',(\s*)toggle:/,
                                  replacement_string: "data: { 'bs-placement': '\\1',\\2'bs-toggle':")
@@ -685,10 +688,8 @@ gem 'propshaft'
 
             begin
               content = File.read(path)
-              if content.match?(search_pattern)
-                matching_files << path
-              end
-            rescue => e
+              matching_files << path if content.match?(search_pattern)
+            rescue StandardError => e
               puts "Error reading #{path}: #{e.message}"
             end
           end

@@ -244,7 +244,8 @@ module RadReports
         params: [
           { name: 'columns', label: 'Columns', type: 'column_selector', default: [] },
           { name: 'separator', label: 'Separator', type: 'text', default: ' ', col_class: 'col-6' },
-          { name: 'empty_replacement', label: 'Empty Value', type: 'text', default: '', col_class: 'col-6', placeholder: 'Text for empty values' }
+          { name: 'empty_replacement', label: 'Empty Value', type: 'text', default: '', col_class: 'col-6',
+            placeholder: 'Text for empty values' }
         ],
         sql_generator: lambda { |params, join_builder|
           columns = params['columns'] || []

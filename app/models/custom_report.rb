@@ -82,36 +82,57 @@ class CustomReport < ApplicationRecord
     def validate_columns_configuration
       return if report_model.blank? || columns.blank?
 
-      column_discovery = RadReports::ColumnDiscovery.new(report_model, joins || [])
-
       columns.each do |column_config|
-        column_name = column_config['name']
-        select_clause = column_config['select']
-        is_calculated = column_config['is_calculated']
+        validate_column_config(column_config)
+      end
+    end
 
-        next if !is_calculated && column_name.blank? && select_clause.blank?
+    def validate_column_config(column_config)
+      column_discovery = RadReports::ColumnDiscovery.new(report_model, joins || [])
+      column_name = column_config['name']
+      select_clause = column_config['select']
+      is_calculated = column_config['is_calculated']
 
-        if is_calculated
-          calculated_column = CalculatedColumn.from_column_config(
-            column_config,
-            report_model: report_model,
-            joins: joins || []
-          )
+      return if !is_calculated && column_name.blank? && select_clause.blank?
 
-          unless calculated_column.valid?
-            identifier = calculated_column.label.presence || calculated_column.name.presence || 'calculated column'
-            calculated_column.errors.full_messages.each do |message|
-              errors.add(:columns, "calculated column '#{identifier}': #{message}")
-            end
-          end
-          next
-        end
+      if is_calculated
+        validate_calculated(column_config)
+        return
+      end
 
-        if select_clause.present?
-          errors.add(:columns, "contains invalid column reference '#{select_clause}'") unless column_discovery.column_exists?(select_clause)
-        elsif column_name.present?
-          errors.add(:columns, "contains invalid column '#{column_name}'") unless column_discovery.column_exists?(column_name)
-        end
+      if select_clause.present?
+        validate_select_cause(column_discovery, select_clause)
+      elsif column_name.present?
+        validate_column_name(column_discovery, column_name)
+      end
+    end
+
+    def validate_column_name(column_discovery, column_name)
+      return if column_discovery.column_exists?(column_name)
+
+      errors.add(:columns,
+                 "contains invalid column '#{column_name}'")
+    end
+
+    def validate_select_cause(column_discovery, select_clause)
+      return if select_clause.blank? || column_discovery.column_exists?(select_clause)
+
+      errors.add(:columns,
+                 "contains invalid column reference '#{select_clause}'")
+    end
+
+    def validate_calculated(column_config)
+      calculated_column = CalculatedColumn.from_column_config(
+        column_config,
+        report_model: report_model,
+        joins: joins || []
+      )
+
+      return if calculated_column.valid?
+
+      identifier = calculated_column.label.presence || calculated_column.name.presence || 'calculated column'
+      calculated_column.errors.full_messages.each do |message|
+        errors.add(:columns, "calculated column '#{identifier}': #{message}")
       end
     end
 

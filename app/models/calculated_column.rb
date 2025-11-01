@@ -123,18 +123,22 @@ class CalculatedColumn
 
       errors.add(:formula_type, 'must be a calculated formula') unless calculated_formula?
 
-      definition[:params]&.each do |param|
-        value = normalized_params[param[:name].to_s]
-        next unless %w[column_selector number].include?(param[:type])
-
-        errors.add(:base, "#{param[:label]} must be provided") if value.blank?
-      end
+      validate_formula_definition_params(definition)
 
       validate_column_types if definition[:allowed_column_types].present?
 
       return if definition[:validator].blank?
 
       definition[:validator].call(normalized_params, errors)
+    end
+
+    def validate_formula_definition_params(definition)
+      definition[:params]&.each do |param|
+        value = normalized_params[param[:name].to_s]
+        next unless %w[column_selector number].include?(param[:type])
+
+        errors.add(:base, "#{param[:label]} must be provided") if value.blank?
+      end
     end
 
     def validate_column_types
@@ -155,7 +159,9 @@ class CalculatedColumn
         column_type = column_info[:type].to_s
         next if allowed_types.include?(column_type)
 
-        errors.add(:base, "Column '#{column_path}' has type '#{column_type}' which is not valid for this formula. Allowed types: #{allowed_types.join(', ')}")
+        errors.add(:base,
+                   "Column '#{column_path}' has type '#{column_type}' which is not valid for this formula. " \
+                   "Allowed types: #{allowed_types.join(', ')}")
       end
     end
 end

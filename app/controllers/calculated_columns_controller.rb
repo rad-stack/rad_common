@@ -34,18 +34,8 @@ class CalculatedColumnsController < ApplicationController
 
     respond_to do |format|
       if @calculated_column.valid?
-        column_config = @calculated_column.to_column_config
-        calculated_column_row = build_calculated_column_row(column_config)
-
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.append('selected-columns-list',
-                                partial: 'custom_reports/selected_column_row',
-                                locals: { column: calculated_column_row,
-                                          table_id: 'calculated',
-                                          formula: column_config['formula'] }),
-            turbo_stream.action(:hide_modal, 'calculated-column-modal')
-          ]
+          render turbo_stream: create_success
         end
       else
         format.turbo_stream do
@@ -62,6 +52,17 @@ class CalculatedColumnsController < ApplicationController
   end
 
   private
+
+    def create_success
+      column_config = @calculated_column.to_column_config
+      calculated_column_row = build_calculated_column_row(column_config)
+      [turbo_stream.append('selected-columns-list',
+                           partial: 'custom_reports/selected_column_row',
+                           locals: { column: calculated_column_row,
+                                     table_id: 'calculated',
+                                     formula: column_config['formula'] }),
+       turbo_stream.action(:hide_modal, 'calculated-column-modal')]
+    end
 
     def set_custom_report
       if params[:custom_report_id].present?

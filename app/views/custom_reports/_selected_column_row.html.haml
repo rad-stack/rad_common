@@ -31,8 +31,7 @@
         %span.badge.bg-light.text-dark.border-0.px-2= column[:type]
   %td.py-3.text-center
     - unless is_attachment_or_rich_text
-      - transform_count = is_calculated && formula ? (formula.is_a?(Array) ? formula.length - 1 : 0) : (formula ? formula.length : 0)
-      - has_transforms = transform_count > 0
+      - has_transforms = column_has_transforms?(formula, is_calculated)
       %button.btn.btn-sm.rounded-circle{ type: 'button',
                                          data: { action: 'click->formula-editor#open' },
                                          title: has_transforms ? 'Edit Transform' : 'Add Transform',

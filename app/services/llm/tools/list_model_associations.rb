@@ -30,7 +30,8 @@ module LLM
             },
             current_joins: {
               type: 'array',
-              description: 'Optional array of currently selected join paths. Pass this to discover nested associations. Example: ["project"] reveals "project.client", "project.company", etc.',
+              description: 'Optional array of currently selected join paths. Pass this to discover nested ' \
+                           'associations. Example: ["project"] reveals "project.client", "project.company", etc.',
               items: { type: 'string' }
             }
           }

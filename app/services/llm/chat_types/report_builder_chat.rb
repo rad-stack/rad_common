@@ -14,7 +14,10 @@ module LLM
       def format_message(text)
         if text.include?('REPORT_ID')
           report_id = text[/REPORT_ID:(\d+)/, 1]
-          button_html = %(<div class="mt-3"><a href="/custom_reports/#{report_id}" class="btn btn-primary btn-sm" data-turbo="false"><i class="fa fa-play me-1"></i>Run Report</a></div>)
+          button_html = %(<div class="mt-3">
+                            <a href="/custom_reports/#{report_id}" class="btn btn-primary btn-sm" data-turbo="false">
+                            <i class="fa fa-play me-1"></i>Run Report</a>
+                          </div>)
 
           text.gsub("REPORT_ID:#{report_id}", button_html)
         else

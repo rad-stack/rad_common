@@ -1,11 +1,14 @@
 = turbo_frame_tag 'calculated-column-form-frame' do
-  - column_groups = columns_by_table.map { |table_info, cols| [(table_info[:label] || table_info[:table].to_s.humanize), cols.map { |col| [column_path(col), column_key(col)] }] }
-  - calculated_formulas = RadReports::FormulaRegistry.calculated_formulas
-  - columns_unavailable = column_groups.blank?
-
+  :ruby
+    column_groups = calculated_column_groups(columns_by_table)
+    calculated_formulas = RadReports::FormulaRegistry.calculated_formulas
+    columns_unavailable = column_groups.blank?
   .modal-content
+    - report_model = calculated_column.report_model
     = simple_form_for calculated_column,
-                      url: calculated_columns_path(custom_report_id: params[:custom_report_id] || params[:id], report_model: params[:report_model] || calculated_column.report_model, joins: params[:joins] || calculated_column.joins),
+                      url: calculated_columns_path(custom_report_id: params[:custom_report_id] || params[:id],
+                                                   report_model: report_model,
+                                                   joins: params[:joins] || calculated_column.joins),
                       data: { controller: 'calculated-column-form' } do |f|
       .modal-header
         %h5.modal-title
@@ -35,10 +38,10 @@
                              calculated_column_form_target: 'formulaSelect' },
                      disabled: columns_unavailable
         - calculated_formulas.each do |type, config|
-          - params_definitions = config[:params] || []
-          - params_classes = []
-          - params_classes << 'd-none' if calculated_column.formula_type.blank? || calculated_column.formula_type != type
-          %div{ data: { calculated_column_form_target: 'params', formula_type: type }, class: params_classes.join(' ') }
+          :ruby
+            params_definitions = config[:params] || []
+            column_class = calculated_column_class(calculated_column)
+          %div{ data: { calculated_column_form_target: 'params', formula_type: type }, class: column_class }
             - if params_definitions.blank?
               %p.text-muted.small.mb-0 No additional parameters required.
             - else
@@ -55,10 +58,12 @@
                     = label_tag input_id, param[:label], class: 'form-label'
                     - case param[:type]
                     - when 'column_selector'
-                      - options_html = column_groups.present? ? grouped_options_for_select(column_groups, value) : ''.html_safe
+                      :ruby
+                        options_html = column_groups.present? ? grouped_options_for_select(column_groups, value) : ''
                       - unless multiple
-                        - options_html = content_tag(:option, 'Select a column', value: '') + options_html
-                      - select_html_options = { class: 'form-select', id: input_id, disabled: columns_unavailable, data: { calculated_column_form_target: 'columnSelector' } }
+                        - options_html = safe_join([content_tag(:option, 'Select a column', value: ''), options_html])
+                      - select_html_options = { class: 'form-select', id: input_id, disabled: columns_unavailable,
+                                                data: { calculated_column_form_target: 'columnSelector' } }
                       - select_html_options[:multiple] = true if multiple
                       = select_tag field_name, options_html, select_html_options
                       - if multiple
