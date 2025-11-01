@@ -101,9 +101,7 @@ RSpec.describe 'CustomReports' do
           click_on 'Add Column'
           expect(page).to have_content('Label can\'t be blank')
           select 'Concatenate', from: 'calculated_column_formula_type'
-          tom_select 'Division.code', from: 'calculated-column-concat_columns-columns'
-          wait_for_ajax
-          tom_select 'Division.name', from: 'calculated-column-concat_columns-columns'
+          tom_select %w[Division.code Division.name], from: 'calculated-column-concat_columns-columns'
           fill_in 'calculated_column_label', with: 'Name and Code'
           click_on 'Add Column'
         end
@@ -364,9 +362,7 @@ RSpec.describe 'CustomReports' do
           click_on 'Add Column'
           expect(page).to have_content('Label can\'t be blank')
           select 'Concatenate', from: 'calculated_column_formula_type'
-          tom_select 'Division.code', from: 'calculated-column-concat_columns-columns'
-          wait_for_ajax
-          tom_select 'Division.name', from: 'calculated-column-concat_columns-columns'
+          tom_select %w[Division.code Division.name], from: 'calculated-column-concat_columns-columns'
           fill_in 'calculated_column_label', with: 'Name and Code'
           click_on 'Add Column'
         end
