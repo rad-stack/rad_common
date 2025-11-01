@@ -51,6 +51,7 @@ module RadReports
         begin
           param_hash['formula'] = JSON.parse(param_hash['formula'])
         rescue JSON::ParserError
+          param_hash
         end
 
         param_hash

@@ -37,15 +37,18 @@ module LLM
                 },
                 select: {
                   type: 'string',
-                  description: 'The full select path (e.g., "users.name" or "division.name"). NOT required for calculated columns.'
+                  description: 'The full select path (e.g., "users.name" or "division.name"). ' \
+                               'NOT required for calculated columns.'
                 },
                 sortable: {
                   type: 'boolean',
-                  description: 'Whether this column can be sorted by users (default: false). Must be false for calculated columns.'
+                  description: 'Whether this column can be sorted by users (default: false). ' \
+                               'Must be false for calculated columns.'
                 },
                 is_calculated: {
                   type: 'boolean',
-                  description: 'Set to true for calculated columns that combine multiple database columns. These columns do not have a "select" field.'
+                  description: 'Set to true for calculated columns that combine multiple database columns. ' \
+                               'These columns do not have a "select" field.'
                 },
                 formula: {
                   type: 'array',
@@ -153,7 +156,9 @@ module LLM
 
         def apply_default_formula(column, model_name, joins)
           # Skip default formulas for calculated columns or columns that already have formulas
-          return if column['formula'].present? || column['is_calculated'] || column['select'].blank? || model_name.blank?
+          if column['formula'].present? || column['is_calculated'] || column['select'].blank? || model_name.blank?
+            return
+          end
 
           discovery = RadReports::ColumnDiscovery.new(model_name, joins)
           found_col = discovery.all_columns.find { |c| c[:name] == column['name'] }

@@ -78,7 +78,8 @@ RSpec.describe CustomReportFilter do
         filter.valid?
         expect(filter.errors[:column]).to include(
           "contains invalid column reference 'invalid_association.name'. " \
-          "Available columns can be found using the model and joins you've specified.")
+          "Available columns can be found using the model and joins you've specified."
+        )
       end
     end
 

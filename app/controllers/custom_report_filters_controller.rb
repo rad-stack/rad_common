@@ -34,16 +34,8 @@ class CustomReportFiltersController < ApplicationController
 
     respond_to do |format|
       if @custom_report_filter.valid?
-        filter_config = @custom_report_filter.to_filter_config
-        filter_row = build_filter_row(filter_config)
-
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.append('filters-list',
-                                partial: 'custom_report_filters/filter_row',
-                                locals: { filter: filter_row }),
-            turbo_stream.action(:hide_modal, 'custom-report-filter-modal')
-          ]
+          render turbo_stream: create_success
         end
       else
         format.turbo_stream do
@@ -60,6 +52,18 @@ class CustomReportFiltersController < ApplicationController
   end
 
   private
+
+    def create_success
+      filter_config = @custom_report_filter.to_filter_config
+      filter_row = build_filter_row(filter_config)
+
+      [
+        turbo_stream.append('filters-list',
+                            partial: 'custom_report_filters/filter_row',
+                            locals: { filter: filter_row }),
+        turbo_stream.action(:hide_modal, 'custom-report-filter-modal')
+      ]
+    end
 
     def set_custom_report
       if params[:custom_report_id].present?

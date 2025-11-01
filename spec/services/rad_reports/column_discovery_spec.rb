@@ -347,9 +347,10 @@ RSpec.describe RadReports::ColumnDiscovery, type: :service do
   end
 
   describe '#column_exists?' do
+    subject(:column_exists) { discovery.column_exists?(column_reference) }
+
     let(:model_name) { 'Division' }
     let(:joins) { ['owner'] }
-    subject(:column_exists) { discovery.column_exists?(column_reference) }
 
     context 'with blank column reference' do
       let(:column_reference) { nil }

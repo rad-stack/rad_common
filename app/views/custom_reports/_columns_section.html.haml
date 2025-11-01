@@ -7,9 +7,9 @@
     columns_by_table = model_columns_by_table(custom_report.report_model, joins)
     # Build keys using select clause if available, otherwise use table.column format
     selected_column_keys = columns.map { |c| c['select'] }
-    calculated_column_url = new_calculated_column_path(report_model: custom_report.report_model,
-                                                       joins: joins,
-                                                       custom_report_id: custom_report.persisted? ? custom_report.id : nil)
+    calc_column_url = new_calculated_column_path(report_model: custom_report.report_model,
+                                                 joins: joins,
+                                                 custom_report_id: custom_report.persisted? ? custom_report.id : nil)
 
   .row
     .col-md-6
@@ -21,25 +21,29 @@
             .col-4.border-end.bg-light
               .list-group.list-group-flush.report-builder-tables-list{ role: 'tablist',
                                                                        data: { testid: 'available-tables-list' } }
-                - columns_by_table.each_with_index do |(table_info, cols), index|
-                  - table_id_base = table_info[:association] || table_info[:table]
-                  - table_id = "table-#{table_id_base.gsub('.', '-').gsub('_', '-')}"
-                  - is_base_table = table_info[:association].nil?
-                  %button.list-group-item.list-group-item-action.py-3.px-3.text-start.border-0.fw-medium{ type: 'button',
-                                                                                                          class: is_base_table ? 'active' : '',
-                                                                                                          role: 'tab',
-                                                                                                          data: { bs_toggle: 'tab',
-                                                                                                                  bs_target: "#columns-#{table_id}" },
-                                                                                                          aria: { controls: "columns-#{table_id}",
-                                                                                                                  selected: is_base_table.to_s } }
-                    %i.fa.fa-table.me-2.text-muted
+                - columns_by_table.each_with_index do |(table_info, _cols), _index|
+                  :ruby
+                    table_id_base = table_info[:association] || table_info[:table]
+                    table_id = "table-#{table_id_base.gsub('.', '-').gsub('_', '-')}"
+                    is_base_table = table_info[:association].nil?
+                  - button_classes = 'list-group-item list-group-item-action py-3 px-3 text-start border-0 fw-medium'
+                  - button_classes += ' active' if is_base_table
+                  %button{ type: 'button',
+                           class: button_classes,
+                           role: 'tab',
+                           data: { bs_toggle: 'tab',
+                                   bs_target: "#columns-#{table_id}" },
+                           aria: { controls: "columns-#{table_id}",
+                                   selected: is_base_table.to_s } }
+                    %i.a.fa-table.me-2.text-muted
                     = table_info[:label]
             .col-8
               .tab-content.report-builder-tables-list.p-3
                 - columns_by_table.each do |table_info, cols|
-                  - table_id_base = table_info[:association] || table_info[:table]
-                  - table_id = "table-#{table_id_base.gsub('.', '-').gsub('_', '-')}"
-                  - is_base_table = table_info[:association].nil?
+                  :ruby
+                    table_id_base = table_info[:association] || table_info[:table]
+                    table_id = "table-#{table_id_base.gsub('.', '-').gsub('_', '-')}"
+                    is_base_table = table_info[:association].nil?
                   .tab-pane.fade{ id: "columns-#{table_id}",
                                   class: is_base_table ? 'show active' : '',
                                   role: 'tabpanel' }
@@ -50,25 +54,20 @@
                           %th.py-2 Type
                           %th.py-2
                       %tbody{ id: "available-columns-#{table_id}" }
-                        - cols.each do |col|
-                          - select_prefix = col[:association].present? ? col[:association] : col[:table]
-                          - column_key = "#{select_prefix}.#{col[:name]}"
-                          - next if selected_column_keys.include?(column_key)
-
-                          = render 'available_column_row', column: col, table_id: table_id
+                        = render_columns(cols, selected_column_keys, table_id)
 
     .col-md-6
       .d-flex.justify-content-between.align-items-center.mb-2
         %h6.mb-0
           Selected Columns
         %button.btn.btn-sm.btn-outline-primary{ type: 'button',
-          data: {
-            action: 'click->report-builder#loadCalculatedColumnForm',
-            calculated_column_url: calculated_column_url,
-            bs_toggle: 'modal',
-            bs_target: '#calculated-column-modal'
-          },
-          title: 'Add calculated column' }
+                                                data: {
+                                                  action: 'click->report-builder#loadCalculatedColumnForm',
+                                                  calculated_column_url: calc_column_url,
+                                                  bs_toggle: 'modal',
+                                                  bs_target: '#calculated-column-modal'
+                                                },
+                                                title: 'Add calculated column' }
           %i.fa.fa-calculator.me-1
           Add Calculated
       - selected_columns_config = config['columns'] || []

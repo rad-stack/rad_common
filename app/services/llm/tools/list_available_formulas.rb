@@ -61,7 +61,9 @@ module LLM
                          else
                            '(no parameters required)'
                          end
-            "  - #{type}: #{label} [CALCULATED COLUMN]\n    #{param_info}\n    Usage: Creates new column by combining multiple database columns"
+            results = "  - #{type}: #{label} [CALCULATED COLUMN]\n    #{param_info}\n   " \
+                      'Usage: Creates new column by combining multiple database columns'
+            results
           }.join("\n\n")
         end
 
@@ -70,9 +72,7 @@ module LLM
             parts = ["      * #{param[:name]} (#{param[:type]})"]
             parts << "default: #{param[:default]}" if param[:default]
             parts << param[:label] if param[:label]
-            if param[:type] == 'column_selector'
-              parts << 'IMPORTANT: Use exact "select" paths from list_model_columns'
-            end
+            parts << 'IMPORTANT: Use exact "select" paths from list_model_columns' if param[:type] == 'column_selector'
             parts.join(' - ')
           }.join("\n")
         end

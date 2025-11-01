@@ -165,7 +165,8 @@ RSpec.describe RadReports::SortBuilder, type: :service do
     end
 
     it 'converts nested association path to table path' do
-      expect(sort_builder.convert_sort_column_path('owner.user_status.name')).to eq 'owner_user_status_user_statuses.name'
+      expect(sort_builder.convert_sort_column_path('owner.user_status.name'))
+        .to eq 'owner_user_status_user_statuses.name'
     end
   end
 end

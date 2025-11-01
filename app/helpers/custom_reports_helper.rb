@@ -38,6 +38,38 @@ module CustomReportsHelper
     "#{column_select_prefix(column)}.#{column[:name]}"
   end
 
+  def calculated_column_groups(columns_by_table)
+    columns_by_table.map do |table_info, cols|
+      [table_info[:label] || table_info[:table].to_s.humanize, cols.map { |col| [column_path(col), column_key(col)] }]
+    end
+  end
+
+  def calculated_column_class(calculated_column)
+    calculated_column.formula_type.blank? || calculated_column.formula_type != type ? 'd-none' : nil
+  end
+
+  def render_columns(cols, selected_column_keys, table_id)
+    rows = []
+    cols.each do |col|
+      select_prefix = col[:association].presence || col[:table]
+      column_key = "#{select_prefix}.#{col[:name]}"
+
+      next if selected_column_keys.include?(column_key)
+
+      rows << render('available_column_row', column: col, table_id: table_id)
+    end
+    safe_join(rows)
+  end
+
+  def column_has_transforms?(formula, is_calculated)
+    transform_count = if is_calculated && formula
+                        formula.is_a?(Array) ? formula.length - 1 : 0
+                      else
+                        (formula ? formula.length : 0)
+                      end
+    transform_count.positive?
+  end
+
   def column_id(column, prefix: 'column')
     "#{prefix}-#{column_key(column).gsub('.', '-')}"
   end
