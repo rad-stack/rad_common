@@ -183,7 +183,7 @@ class CustomReportsController < ApplicationController
         :report_model,
         :active,
         columns: %i[name label select formula sortable is_calculated],
-        filters: %i[column label type],
+        filters: %i[column label type default_value],
         joins: []
       )
 

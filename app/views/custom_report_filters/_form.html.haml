@@ -35,6 +35,12 @@
                     input_html: { data: { custom_report_filter_form_target: 'typeSelect' } },
                     include_blank: 'Select a column...'
 
+        .mb-3
+          = f.input :default_value,
+                    label: 'Default Value',
+                    as: :string,
+                    input_html: { data: { custom_report_filter_form_target: 'defaultValueInput' } }
+
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { bs_dismiss: 'modal' } } Cancel
         = f.submit 'Add Filter', class: 'btn btn-primary'
