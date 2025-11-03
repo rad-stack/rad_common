@@ -94,7 +94,7 @@ module SchemaValidations
         opts = { in: [true, false], message: :blank }
         opts.merge! custom_options
         validate_logged :validates_inclusion_of, name, opts
-      elsif !column.default.nil? && column.default.blank?
+      elsif blank_default?(column, datatype)
         opts = { attributes: [name] }
         opts.merge! custom_options
         validate_logged :validates_with, NotNilValidator, opts
@@ -106,6 +106,13 @@ module SchemaValidations
         opts = column_options(name)
         validate_logged :validates_presence_of, name, opts
       end
+    end
+
+    def blank_default?(column, datatype)
+      return false if column.default.nil?
+      return true if datatype == :jsonb && column.default == '{}'
+
+      column.default.blank?
     end
 
     def load_index_validations
