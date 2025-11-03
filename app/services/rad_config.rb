@@ -82,6 +82,14 @@ class RadConfig
       secret_config_item! :smarty_auth_token
     end
 
+    def open_ai_api_key!
+      secret_config_item! :open_ai_api_key
+    end
+
+    def open_ai_api_key
+      secret_config_item :open_ai_api_key
+    end
+
     def hash_key!
       secret_config_item! :hash_key
     end
@@ -328,6 +336,10 @@ class RadConfig
       array_config_item! :additional_company_params
     end
 
+    def rad_assistant_system_tools!
+      array_config_item! :rad_assistant_system_tools
+    end
+
     def additional_user_params!
       array_config_item! :additional_user_params
     end
@@ -392,6 +404,10 @@ class RadConfig
 
     def allow_crawling?
       boolean_config_item! :allow_crawling
+    end
+
+    def rad_system_chat_enabled?
+      boolean_config_item! :rad_system_chat_enabled
     end
 
     def always_crawl?

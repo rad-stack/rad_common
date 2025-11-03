@@ -14,7 +14,7 @@ def run_interactive_clone(backup_option)
   profile = prompt.select('Which restore profile would you like to use?') do |menu|
     menu.choice 'Full (include all tables)', 'full'
     menu.choice 'Exclude audits only', 'exclude_audits'
-    menu.choice 'Minimal (excludes audits, contact logs, and recipients)', 'minimal'
+    menu.choice 'Minimal (excludes audits, contact_logs, contact_log_recipients and embeddings)', 'minimal'
   end
 
   if restore_source == :remote
