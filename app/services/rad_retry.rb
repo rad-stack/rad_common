@@ -8,7 +8,8 @@ class RadRetry
                       Errno::ENOENT, Errno::ECONNRESET, Net::ReadTimeout, Errno::ECONNREFUSED, JSON::ParserError,
                       ActiveStorage::FileNotFoundError, RadSendGridError, EOFError, Twilio::REST::TwilioError,
                       Faraday::ConnectionFailed, Faraday::TimeoutError, Faraday::SSLError, Faraday::ServerError,
-                      Faraday::RackBuilder::StackLocked, Faraday::TooManyRequestsError, RadRetryError].freeze
+                      Faraday::RackBuilder::StackLocked, Faraday::TooManyRequestsError, Faraday::BadRequestError,
+                      RadRetryError].freeze
 
   class << self
     def perform_request(no_delay: false, retry_count: 5, additional_errors: [], raise_original: false, &block)
