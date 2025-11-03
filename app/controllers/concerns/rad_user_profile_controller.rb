@@ -19,7 +19,13 @@ module RadUserProfileController
       return redirect_to Onboarding.new(@user).onboarded_path, notice: 'Onboarding completed' if just_onboarded?
 
       flash[:notice] = 'Your profile was successfully updated.'
-      redirect_back(fallback_location: user_profile_path(@user))
+
+      if URI(request.referer).path == user_profile_path(@user) ||
+         URI(request.referer).path == edit_user_profile_path(@user)
+        redirect_to user_profile_path(@user)
+      else
+        redirect_back(fallback_location: user_profile_path(@user))
+      end
     else
       render :edit
     end
