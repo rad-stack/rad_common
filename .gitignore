@@ -13,6 +13,7 @@ spec/dummy/storage
 .env
 .env.test
 /coverage/
+CLAUDE.md
 
 spec/dummy/public/packs
 spec/dummy/public/packs-test
