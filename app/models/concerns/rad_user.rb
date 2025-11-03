@@ -16,6 +16,7 @@ module RadUser
     has_many :user_clients, dependent: :destroy
     has_many :clients, through: :user_clients, source: :client
     has_many :saved_search_filters, dependent: :destroy
+    has_many :search_preferences, dependent: :destroy
 
     has_many :contact_logs_from, class_name: 'ContactLog',
                                  foreign_key: 'from_user_id',

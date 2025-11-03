@@ -2,7 +2,9 @@ module RadSearch
   ##
   # This is a common search pattern to be used within the UI to help filter, display, and sorts results to be displayed within the UI
   class Search
-    attr_reader :params, :current_user, :auto_hide
+    attr_reader :params, :current_user, :auto_hide, :defaulting, :search_preference
+
+    delegate :toggle_behavior, to: :search_preference
 
     ##
     # @param [ActiveRecord_Relation] query The base query to start the search off with
@@ -24,7 +26,16 @@ module RadSearch
       @params = params
       @search_name = search_name
       @filtering = Filtering.new(filters: filters, search: self)
-      @defaulting = FilterDefaulting.new(current_user: current_user, search: self, enabled: sticky_filters)
+
+      @search_preference = SearchPreference.find_or_initialize_by(
+        user: current_user,
+        search_class: search_name || self.class.to_s
+      )
+      @search_preference.set_defaults(sticky_filters: sticky_filters)
+
+      @defaulting = FilterDefaulting.new(current_user: current_user,
+                                         search: self,
+                                         enabled: @search_preference.sticky_filters)
       @defaulting.apply_defaults
       @sorting = Sorting.new(sort_columns: sort_columns, search: self)
     end

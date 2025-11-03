@@ -1,5 +1,7 @@
 module RadSearch
   class FilterDefaulting
+    attr_reader :enabled
+
     def initialize(current_user:, search:, enabled:)
       @search = search
       @current_user = current_user
@@ -11,13 +13,13 @@ module RadSearch
 
       if clear_filters?
         clear_filter_defaults
-      elsif !@search.search_params?
+      elsif !user_has_searched?
         load_filter_defaults
       end
     end
 
     def update_defaults
-      return unless @enabled || @search.search_params?
+      return unless @enabled && @search.search_params?
 
       update_user_filter_defaults
     end
@@ -32,37 +34,47 @@ module RadSearch
         @search.params.has_key? :clear_filters
       end
 
-      def clear_filter_defaults
-        current_filter_defaults = @current_user.filter_defaults
-        return unless current_filter_defaults
+      def user_has_searched?
+        return false unless @search.search_params?
 
-        current_filter_defaults[search_name] = {}
-        @current_user.update_column(:filter_defaults, current_filter_defaults)
+        @search.filters.any? do |filter|
+          next if filter.respond_to?(:skip_default?) && filter.skip_default?
+
+          value = @search.search_params[filter.searchable_name]
+          if value.is_a?(Array)
+            value.reject(&:blank?).present?
+          else
+            value.present?
+          end
+        end
+      end
+
+      def clear_filter_defaults
+        preference = SearchPreference.find_by(user: @current_user, search_class: search_name)
+        return unless preference
+
+        preference.update(search_filters: {})
       end
 
       def load_filter_defaults
-        return if @current_user.filter_defaults.blank? || @current_user.filter_defaults[search_name].blank?
+        preference = SearchPreference.find_by(user: @current_user, search_class: search_name)
+        return unless preference
 
-        defaults = @current_user.filter_defaults[search_name].slice(*@search.searchable_columns_strings)
+        defaults = preference.search_filters.slice(*@search.searchable_columns_strings)
         return if defaults.blank?
 
-        @search.params[:search] = @current_user.filter_defaults[search_name].slice(*@search.searchable_columns_strings)
-      end
-
-      def search_filter_defaults
-        @current_user.filter_defaults[search_name]
+        symbolized_defaults = defaults.deep_symbolize_keys
+        @search.params[:search] = ActionController::Parameters.new(symbolized_defaults)
       end
 
       def update_user_filter_defaults
-        filter_defaults = @current_user.filter_defaults
-        filter_defaults = {} if filter_defaults.blank?
-        filter_defaults[search_name] = {} if filter_defaults[search_name].blank?
+        preference = SearchPreference.find_or_initialize_by(user: @current_user, search_class: search_name)
 
         @search.search_params.each do |filter_name, value|
-          filter_defaults[search_name][filter_name.to_s] = value unless @search.skip_default?(filter_name)
+          preference.search_filters[filter_name.to_s] = value unless @search.skip_default?(filter_name)
         end
 
-        @current_user.update_column(:filter_defaults, filter_defaults)
+        preference.save
       end
   end
 end

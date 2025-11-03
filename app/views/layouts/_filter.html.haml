@@ -1,7 +1,10 @@
-= link_to icon(:filter, 'Toggle Filters'),
-          '#search-filter-collapse',
-          data: { 'bs-toggle': 'collapse' },
-          class: "btn #{search.search_params? ? 'btn-warning' : 'btn-primary'} btn-sm mb-2"
+.d-none.d-md-block
+  .d-flex.align-items-center.gap-2.mb-2
+    = link_to icon(:filter, 'Toggle Filters'),
+              '#search-filter-collapse',
+              data: { 'bs-toggle': 'collapse' },
+              class: "btn #{search.search_params? ? 'btn-warning' : 'btn-primary'} btn-sm"
+    = render 'search_preferences/modal', search_preference: search.search_preference
 
 - if (search.search_params? && search.invalid?) || search.saved_filter_errors.present?
   - flash.now[:error] = search.error_messages
@@ -21,5 +24,5 @@
         = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: true
 
 .d-none.d-md-block{ data: { controller: 'search filter-toggle',
-                            filter_toggle_default_collapsed_value: search.auto_hide.to_s } }
+                            filter_toggle_behavior_value: search.toggle_behavior } }
   = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: false

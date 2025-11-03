@@ -205,14 +205,21 @@ RSpec.describe RadSearch::Search, type: :service do
     let!(:user_pending) { create :user, user_status: UserStatus.default_pending_status }
     let(:filters) { [{ column: :user_status_id, options: UserStatus.by_id }] }
     let(:params) { ActionController::Parameters.new }
+    let(:preferences) do
+      create :search_preference, user: user,
+                                 search_class: 'divisions_search',
+                                 search_filters: { user_status_id: UserStatus.default_active_status.id },
+                                 sticky_filters: sticky_filters
+    end
 
     before do
-      default_values = { divisions_search: { user_status_id: UserStatus.default_active_status.id } }
-      user.update!(filter_defaults: default_values)
+      preferences
     end
 
     context 'when no params are passed' do
       context 'with sticky filters' do
+        let(:sticky_filters) { true }
+
         it 'filters from stored user default values' do
           expect(search).to include user_active
           expect(search).not_to include user_pending
@@ -233,8 +240,8 @@ RSpec.describe RadSearch::Search, type: :service do
       let(:params) { ActionController::Parameters.new(clear_filters: true) }
 
       it 'resets stored user default values' do
-        expect { search }.to change { user.filter_defaults['divisions_search']['user_status_id'] }
-          .from(UserStatus.default_active_status.id).to(nil)
+        expect { search }.to change { preferences.reload.search_filters }
+          .from({ 'user_status_id' => UserStatus.default_active_status.id }).to({})
         expect(search).to include user_active
         expect(search).to include user_pending
       end
