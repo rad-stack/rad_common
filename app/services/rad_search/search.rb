@@ -33,6 +33,10 @@ module RadSearch
       @search_name || self.class.to_s
     end
 
+    def toggle_behavior
+      @current_user.filter_toggle_behavior(search_name) || RadConfig.filter_toggle_default_behavior!
+    end
+
     def results
       maybe_save_filters
       retrieve_results

@@ -34,6 +34,7 @@ default: &default
   last_first_user: false
   timezone_detection: true
   portal: false
+  filter_toggle_default_behavior: sticky
 
   system_usage_models:
     -

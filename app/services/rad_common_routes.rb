@@ -98,6 +98,8 @@ module RadCommonRoutes
 
       get 'attachments/:id(.:format)/:filename(.:format)', to: 'attachments#download'
 
+      put 'filter_preferences/update', to: 'filter_preferences#update'
+
       get 'global_search', to: 'search#global_search'
       get 'global_search_result', to: 'search#global_search_result'
       get 'company', to: 'companies#show'

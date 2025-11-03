@@ -1,0 +1,3 @@
+= turbo_stream.replace 'filter_preference_dropdown' do
+  = render 'filter_preferences/dropdown', search_name: @search_name, current_behavior: @behavior
+= tag.turbo_stream action: 'toggle_collapse', target: 'search-filter-collapse', state: @collapse_state

@@ -7,6 +7,8 @@ module RadUser
   included do
     belongs_to :user_status
 
+    store_accessor :filter_defaults, :_settings
+
     has_many :notification_settings, dependent: :destroy
     has_many :system_messages, dependent: :destroy
     has_many :notifications, dependent: :destroy
@@ -251,6 +253,17 @@ module RadUser
 
   def developer?
     email.end_with? "@#{RadConfig.developer_domain!}"
+  end
+
+  def filter_toggle_behavior(search_name)
+    _settings&.dig(search_name, 'toggle_behavior')
+  end
+
+  def set_filter_toggle_behavior(search_name, behavior)
+    self._settings ||= {}
+    self._settings[search_name] ||= {}
+    self._settings[search_name]['toggle_behavior'] = behavior
+    save
   end
 
   class_methods do
