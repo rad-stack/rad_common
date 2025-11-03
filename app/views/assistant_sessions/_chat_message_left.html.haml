@@ -1,0 +1,12 @@
+%li.chat-left.mb-3.d-flex.mms.w-100
+  .chat-avatar.me-3
+    - if user&.avatar&.attached?
+      = image_tag(user.avatar.variant(resize_to_limit: [50, 50]), class: 'shadow')
+    - else
+      %i.fa.fa-user.shadow
+    .chat-name.mt-1
+      = user_name
+      %br
+      %strong= chat_date
+  .chat-text.shadow
+    %pre= assistant_session_text_sanitize(message)
