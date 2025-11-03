@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_17_110121) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_03_183322) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -69,7 +69,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_110121) do
     t.datetime "updated_at", null: false
     t.boolean "active", default: true, null: false
     t.string "mobile_phone"
-    t.jsonb "address_metadata"
+    t.jsonb "address_metadata", default: {}, null: false
     t.index ["first_name", "last_name", "mobile_phone"], name: "index_attorneys_on_first_name_and_last_name_and_mobile_phone", unique: true
   end
 
@@ -87,7 +87,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_110121) do
     t.string "remote_address"
     t.string "request_uuid"
     t.datetime "created_at", precision: nil, null: false
-    t.jsonb "audited_changes"
+    t.jsonb "audited_changes", default: {}, null: false
     t.index ["associated_id", "associated_type"], name: "associated_index"
     t.index ["auditable_id", "auditable_type", "version"], name: "auditable_index"
     t.index ["created_at"], name: "index_audits_on_created_at"
@@ -130,7 +130,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_110121) do
     t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
     t.integer "address_requests_made", default: 0, null: false
-    t.jsonb "address_metadata"
+    t.jsonb "address_metadata", default: {}, null: false
   end
 
   create_table "contact_log_recipients", force: :cascade do |t|
@@ -412,7 +412,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_110121) do
     t.datetime "password_changed_at", precision: nil
     t.datetime "last_activity_at", precision: nil
     t.datetime "expired_at", precision: nil
-    t.jsonb "filter_defaults"
+    t.jsonb "filter_defaults", default: {}, null: false
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
     t.string "language", default: "en", null: false
