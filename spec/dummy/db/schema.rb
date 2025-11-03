@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_27_181305) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_03_191522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -237,12 +237,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_27_181305) do
     t.string "embeddable_type", null: false
     t.bigint "embeddable_id", null: false
     t.vector "embedding", limit: 1536, null: false
-    t.jsonb "metadata", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["embeddable_type", "embeddable_id"], name: "index_embeddings_on_embeddable_type_and_embeddable_id", unique: true
     t.index ["embedding"], name: "index_embeddings_on_embedding", opclass: :vector_cosine_ops, using: :hnsw
-    t.index ["metadata"], name: "index_embeddings_on_metadata", using: :gin
   end
 
   create_table "login_activities", force: :cascade do |t|

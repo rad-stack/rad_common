@@ -28,10 +28,6 @@ class Attorney < ApplicationRecord
 
   private
 
-    def embedding_metadata
-      { attorney_id: id }
-    end
-
     def generate_embedding_content
       [first_name, last_name].compact.join("\n")
     end
