@@ -32,7 +32,8 @@
           = f.input :type,
                     label: 'Filter Type',
                     collection: [],
-                    input_html: { data: { custom_report_filter_form_target: 'typeSelect' } },
+                    input_html: { data: { action: 'change->custom-report-filter-form#filterTypeChanged',
+                                          custom_report_filter_form_target: 'typeSelect' } },
                     include_blank: 'Select a column...'
 
         .mb-3
