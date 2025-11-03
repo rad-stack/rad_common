@@ -184,7 +184,8 @@ RSpec.describe CustomReportFilter do
     end
 
     it 'returns hash with column, type, and label' do
-      expect(filter.to_filter_config).to eq({ 'column' => 'name', 'type' => 'like', 'label' => 'Name Filter' })
+      expect(filter.to_filter_config).to eq({ 'column' => 'name', 'type' => 'like', 'default_value' => nil,
+                                              'label' => 'Name Filter' })
     end
   end
 end
