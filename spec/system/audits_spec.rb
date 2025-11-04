@@ -8,41 +8,43 @@ describe 'Audits' do
 
   before { login_as admin, scope: :user }
 
-  it 'associates rich text audits' do
-    attorney.update! notes: 'Testing 1234999'
-    visit "attorneys/#{attorney.id}"
-    click_link_or_button 'Audit History'
-    expect(page).to have_content 'Testing 1234999'
-  end
-
-  it 'shows audits for objects without show pages' do
-    open_status = create :status, name: 'Open'
-
-    Audited.audit_class.as_user(admin) do
-      open_status.update!(name: 'Foo')
+  describe 'index' do
+    it 'associates rich text audits' do
+      attorney.update! notes: 'Testing 1234999'
+      visit "attorneys/#{attorney.id}"
+      click_link_or_button 'Audit History'
+      expect(page).to have_content 'Testing 1234999'
     end
 
-    visit "/audits/?#{{ search: { user_id: admin.id } }.to_query}"
-    expect(page).to have_content 'Status - Foo'
-  end
+    it 'shows audits for objects without show pages' do
+      open_status = create :status, name: 'Open'
 
-  it 'shows enum value in human readable form' do
-    contact_log_recipient.update! sms_status: :queued
+      Audited.audit_class.as_user(admin) do
+        open_status.update!(name: 'Foo')
+      end
 
-    visit "/contact_log_recipients/#{contact_log_recipient.id}"
-    click_link_or_button 'Audit History'
+      visit "/audits/?#{{ search: { user_id: admin.id } }.to_query}"
+      expect(page).to have_content 'Status - Foo'
+    end
 
-    expect(page).to have_content 'Audits for'
-    expect(page).to have_content '(2)'
-    expect(page).to have_content 'Queued'
-  end
+    it 'shows enum value in human readable form' do
+      contact_log_recipient.update! sms_status: :queued
 
-  it 'audits notification types' do
-    visit "/notification_types/#{notification_type.id}/edit"
+      visit "/contact_log_recipients/#{contact_log_recipient.id}"
+      click_link_or_button 'Audit History'
 
-    click_link_or_button 'Audit History'
-    expect(page).to have_content 'Audits for'
-    expect(page).to have_content '(1)'
+      expect(page).to have_content 'Audits for'
+      expect(page).to have_content '(2)'
+      expect(page).to have_content 'Queued'
+    end
+
+    it 'audits notification types' do
+      visit "/notification_types/#{notification_type.id}/edit"
+
+      click_link_or_button 'Audit History'
+      expect(page).to have_content 'Audits for'
+      expect(page).to have_content '(1)'
+    end
   end
 
   describe 'show_routes' do
