@@ -31,6 +31,9 @@
       .col-lg-3
         = f.input :phone_number
     .row
+      .col-lg-12
+        = f.input :notes, as: :rich_text_area
+    .row
       .col-lg-3
         = f.input :active
 
