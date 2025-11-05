@@ -61,7 +61,7 @@ class CustomReportsController < ApplicationController
     if @custom_report.update(custom_report_config_params)
       redirect_to custom_report_path(@custom_report), notice: 'Custom report updated successfully.'
     else
-      render :edit
+      render :edit_configuration
     end
   end
 
