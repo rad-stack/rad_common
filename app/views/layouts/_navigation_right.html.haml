@@ -25,7 +25,7 @@
             = link_to notifications_path, class: 'dropdown-item' do
               = icon 'bell', 'Notifications'
               - if unread_count.positive?
-                %span.bg-danger.bg-opacity-75= unread_count
+                %span.badge.bg-danger.bg-opacity-75= unread_count
         - if policy(NotificationSetting).index?
           %li
             = link_to icon('gear', 'Notification Settings'),
