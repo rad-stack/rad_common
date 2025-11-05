@@ -194,6 +194,16 @@ module RadUser
     end
   end
 
+  def user_invited_subject
+    "Invitation to Join #{RadConfig.app_name!}"
+  end
+
+  def user_invited_message
+    "Someone has invited you to #{RadConfig.app_name!}, you can accept it through the link " \
+      "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
+      'created until you access the link and set your password.'
+  end
+
   def notify_new_user_signed_up
     Notifications::NewUserSignedUpNotification.main(self).notify!
   end
