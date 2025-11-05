@@ -1,0 +1,17 @@
+- id = dom_id(@assistant_session, 'chat')
+= turbo_stream.action(:update_input, 'assistant_session_current_message', '')
+
+- if @reset_chat
+  = turbo_stream.update id do
+    = render 'assistant_sessions/initial_chat_message', assistant_session: @assistant_session
+  = turbo_stream.action :scroll_bottom, 'scroll-container'
+- else
+  = turbo_stream.append id, partial: 'assistant_sessions/chat_message_left',
+                            locals: assistant_session_log_data(@assistant_session, @last_log)
+
+  = turbo_stream.append id do
+    - url = check_response_assistant_session_path(@assistant_session, response_id: @response_id)
+    = turbo_frame_tag "chat-response-#{@response_id}",
+                      data: { controller: 'chat-polling', chat_polling_url_value: url } do
+      = render 'assistant_sessions/loading_message', assistant_session: @assistant_session
+      = turbo_stream.action :scroll_bottom, 'scroll-container'

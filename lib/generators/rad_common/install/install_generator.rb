@@ -798,11 +798,17 @@ gem 'propshaft'
           apply_migration '20250425120906_fix_some_renamed_audit_models.rb'
           apply_migration '20250512115245_two_factor_auth_updates.rb'
           apply_migration '20250622203947_user_js_timezone.rb'
+          apply_migration '20250918160535_create_vector_embeddings.rb'
+          apply_migration '20250918153732_add_large_language_model_chats.rb'
           apply_migration '20250914154915_fix_developer_notifications.rb'
+          apply_migration '20250926165217_rename_llm_chats_to_assistant_sessions.rb'
           apply_migration '20251003162830_add_fax_contact_log_fields.rb'
           apply_migration '20251007153435_move_fax_error_message.rb'
           apply_migration '20250418211716_add_created_at_index_to_system_usages.rb'
           apply_migration '20251017110121_rename_direction_to_contact_direction.rb'
+          apply_migration '20251024225222_fix_chat_types.rb'
+          apply_migration '20251027181305_rename_chat_type_to_chat_class.rb'
+          apply_migration '20251103191522_remove_embedding_metadata.rb'
         end
 
         def installed_app_name

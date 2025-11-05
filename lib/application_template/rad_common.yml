@@ -31,6 +31,7 @@ default: &default
   portal: false
   filter_toggle_default_behavior: sticky
 
+  rad_assistant_system_tools: []
   system_usage_models:
     - User
 
