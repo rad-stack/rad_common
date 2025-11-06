@@ -1,5 +1,5 @@
 - show_class = search.toggle_behavior == 'always_closed' ? '' : 'show'
-.collapse{ id: ('search-filter-collapse' unless mobile), class: show_class, data: { filter_toggle_target: 'collapse' } }
+.collapse{ id: ('search-filter-collapse' unless mobile), class: show_class, data: { collapse_state_target: 'collapse' } }
   = simple_form_for :search, url: path, method: :get, html: { data: { 'search-target': 'form' } } do |f|
     -# TODO: Set up permanent page size selection solution
     - if params[:page_size].present?

@@ -213,7 +213,9 @@ RSpec.describe 'Search' do
         expect(page.find('[href="#search-filter-collapse"]')[:class]).to include 'collapsed'
         expect {
           Timeout.timeout(1) do
-            loop until page.evaluate_script("localStorage.getItem('filter-toggle-collapsed-divisions')") == 'true'
+            loop until page.evaluate_script(
+              "localStorage.getItem('filter-collapse-divisions_search')"
+            ) == 'hidden'
           end
         }.not_to raise_error
 
