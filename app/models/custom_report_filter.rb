@@ -5,6 +5,7 @@ class CustomReportFilter
   attribute :column, :string
   attribute :type, :string
   attribute :label, :string
+  attribute :default_value, :string
 
   attr_accessor :report_model, :joins
 
@@ -29,6 +30,7 @@ class CustomReportFilter
       column: filter_config['column'],
       type: filter_config['type'],
       label: filter_config['label'],
+      default_value: filter_config['default_value'],
       report_model: report_model,
       joins: joins
     )
@@ -38,7 +40,8 @@ class CustomReportFilter
     {
       'column' => column,
       'type' => type,
-      'label' => label
+      'label' => label,
+      'default_value' => default_value
     }
   end
 
