@@ -3,11 +3,12 @@
                                                                             'data-bs-toggle' => 'dropdown',
                                                                             type: 'button' }
 .dropdown-menu.dropdown-menu-end{ 'aria-labelledby' => 'saved-search-filters-dropdown' }
-  = f.button :button,
-             id: 'save_and_apply_filters',
-             class: 'dropdown-item btn btn-primary',
-             data: { action: 'click->search#saveAndApplyFilters' } do
-    = icon :save, 'Save and Apply Filters'
+  %button{ type: 'button',
+           id: 'save_and_apply_filters',
+           class: 'dropdown-item btn btn-primary',
+           data: { bs_toggle: 'modal', bs_target: '#saved-search-filters-modal' } }
+    = icon :save, 'Save Currently Applied Filters'
+
   - if search.saved_filters.any?
     .dropdown-divider
     %h6.dropdown-header.ps-3 Saved Filters
@@ -29,3 +30,4 @@
                     class: 'text-dark',
                     data: { confirm: 'Are you sure? This will delete the saved filter.' },
                     id: "delete_saved_filter_#{saved_filter.id}"
+= render 'saved_search_filters/modal', search: search, f: f, path: path
