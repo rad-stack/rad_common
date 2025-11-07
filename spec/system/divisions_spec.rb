@@ -75,7 +75,7 @@ RSpec.describe 'Divisions' do
       end
 
       it 'allows searching' do
-        click_tom_select(from: 'division_owner_id')
+        click_tom_select(from: 'division_owner_id', skip_dropdown_check: true)
         first('.dropdown-input').fill_in(with: other_user.first_name)
         expect(find('[data-selectable]', text: other_user.to_s)).to be_present
       end
