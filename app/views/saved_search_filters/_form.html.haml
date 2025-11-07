@@ -1,0 +1,8 @@
+= turbo_frame_tag 'saved_search_filters_form' do
+  = simple_form_for :search do |f|
+    = rad_form_errors f
+
+    = f.input :name, label: 'Enter a filter name'
+
+    .d-grid
+      = f.button :submit, 'Save', class: 'btn-primary'
