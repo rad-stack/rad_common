@@ -24,6 +24,6 @@ class SearchPreference < ApplicationRecord
     return if persisted?
 
     self.toggle_behavior ||= RadConfig.filter_toggle_default_behavior!
-    self.sticky_filters = sticky_filters
+    self.sticky_filters = sticky_filters.nil? ? false : sticky_filters
   end
 end

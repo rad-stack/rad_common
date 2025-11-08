@@ -13,8 +13,9 @@ module RadSearch
     # @param [User] current_user the current user running the query
     # @param [Hash] params the url params from the current url
     # @param [String optional] search_name an identifying named used for storing user defaults. Only required when user defaults enabled and not using a custom search class
-    # @param [Boolean optional] turns on sticky filters (aka FilterDefaulting) so that user filter selections are remembered
-    def initialize(query:, filters:, current_user:, params:, sort_columns: nil, search_name: nil, sticky_filters: false,
+    # @param [Boolean optional] sticky filters (aka FilterDefaulting) to remember user selections.
+    #   nil: use existing preference, false: disable regardless of preference, true: enable by default
+    def initialize(query:, filters:, current_user:, params:, sort_columns: nil, search_name: nil, sticky_filters: nil,
                    auto_hide: false)
       if sticky_filters && search_name.nil? && self.class.to_s == 'RadSearch::Search'
         raise 'search_name is required when not using a custom search class'
@@ -32,10 +33,9 @@ module RadSearch
         search_class: search_name || self.class.to_s
       )
       @search_preference.set_defaults(sticky_filters: sticky_filters)
-
       @defaulting = FilterDefaulting.new(current_user: current_user,
                                          search: self,
-                                         enabled: @search_preference.sticky_filters)
+                                         enabled: effective_sticky_filters(sticky_filters, @search_preference))
       @defaulting.apply_defaults
       @sorting = Sorting.new(sort_columns: sort_columns, search: self)
     end
@@ -197,6 +197,16 @@ module RadSearch
           params[:search][:applied_filter] = filter.id
         else
           saved_filter_errors << "Filter \"#{filter}\" could not be saved: #{filter.errors.full_messages.to_sentence}"
+        end
+      end
+
+      def effective_sticky_filters(search_option, search_preference)
+        if search_option == false
+          false
+        elsif search_preference.persisted?
+          search_preference.sticky_filters
+        else
+          search_option
         end
       end
 
