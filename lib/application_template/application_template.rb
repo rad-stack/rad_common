@@ -221,6 +221,7 @@ gem_group :test do
   gem 'capybara'
   gem 'capybara-selenium'
   gem 'parallel_tests'
+  gem 'rspec-retry'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
   gem 'timecop'
