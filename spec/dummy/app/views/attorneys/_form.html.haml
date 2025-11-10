@@ -32,7 +32,7 @@
         = f.input :phone_number
     .row
       .col-lg-3
-        = f.input :active
+        = f.input :active, as: :radio_buttons
 
   .form-actions
     = render 'layouts/duplicate_check', record: @attorney
