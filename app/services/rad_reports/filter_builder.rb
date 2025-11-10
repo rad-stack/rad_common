@@ -15,6 +15,7 @@ module RadReports
                        type: RadReports::FilterRegistry.filter_class(filter['type']) }
         apply_filter_labels(filter_def, filter)
         apply_filter_options(filter_def, filter)
+        apply_filter_defaults(filter_def, filter)
         apply_equals_filter_data_type(filter_def, filter)
         apply_enum_filter_config(filter_def, filter)
 
@@ -39,6 +40,12 @@ module RadReports
         return unless filter['type'] == 'RadSearch::SearchFilter'
 
         filter_def[:options] = generate_filter_options(filter)
+      end
+
+      def apply_filter_defaults(filter_def, filter)
+        return unless filter['type'] == 'RadSearch::SearchFilter'
+
+        filter_def[:default_value] = filter['default_value'] if filter['default_value'].present?
       end
 
       def apply_equals_filter_data_type(filter_def, filter)
