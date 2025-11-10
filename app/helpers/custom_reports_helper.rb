@@ -101,14 +101,6 @@ module CustomReportsHelper
     }.compact
   end
 
-  def ai_report_builder_button
-    button_tag(class: 'btn btn-primary btn-sm',
-               'data-bs-target' => '#basic-question-modal',
-               'data-bs-toggle' => 'offcanvas') do
-      sanitize("#{content_tag(:i, '', class: 'fa fa-magic me-1')} AI Report Builder")
-    end
-  end
-
   def edit_configuration_button(report)
     link_to icon(:code, 'Edit Config'), edit_configuration_custom_report_path(report), class: 'btn btn-primary btn-sm'
   end
