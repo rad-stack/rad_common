@@ -153,11 +153,9 @@ RSpec.describe RadReports::AssociationDiscovery, type: :service do
       let(:model_name) { 'User' }
       let(:existing_joins) { [] }
 
-      it 'includes has_many associations' do
+      it 'excludes has_many associations' do
         divisions_assoc = associations.find { |a| a[:name] == 'divisions' }
-        expect(divisions_assoc).not_to be_nil
-        expect(divisions_assoc[:type]).to eq 'has_many'
-        expect(divisions_assoc[:class_name]).to eq 'Division'
+        expect(divisions_assoc).to be_nil
       end
     end
 
@@ -291,11 +289,9 @@ RSpec.describe RadReports::AssociationDiscovery, type: :service do
       let(:model_name) { 'User' }
       let(:existing_joins) { [] }
 
-      it 'includes has_many associations' do
+      it 'excludes has_many associations' do
         divisions_assoc = model_assocs.find { |label, _name| label.include?('Divisions') }
-        expect(divisions_assoc).not_to be_nil
-        expect(divisions_assoc[0]).to include('Has many')
-        expect(divisions_assoc[1]).to eq 'divisions'
+        expect(divisions_assoc).to be_nil
       end
 
       it 'includes has_one associations if present' do

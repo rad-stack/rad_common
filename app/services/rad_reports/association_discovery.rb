@@ -148,6 +148,7 @@ module RadReports
           excluded_association_class?(assoc) ||
           duplicate_association?(assoc) ||
           config_excluded_association?(assoc) ||
+          has_many_association?(assoc) ||
           !model_available?(assoc)
       rescue NameError
         true
@@ -167,6 +168,11 @@ module RadReports
 
       def config_excluded_association?(assoc)
         excluded_associations.include?(assoc.name.to_s)
+      end
+
+      # Currently disabled to prevent potential performance issues with has_many associations
+      def has_many_association?(assoc)
+        assoc.macro == :has_many
       end
 
       def model_available?(assoc)
