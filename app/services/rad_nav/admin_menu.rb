@@ -19,7 +19,7 @@ module RadNav
     private
 
       def admin_menu_items
-        additional_items + [divider] + standard_items
+        additional_items + [divider] + standard_items.compact.sort_by(&:label)
       end
 
       def standard_items
@@ -34,8 +34,9 @@ module RadNav
          system_messages,
          DropdownMenuItem.new(view_context, 'System Usage', view_context.system_usages_path),
          DropdownMenuIndexItem.new(view_context, 'ContactLog'),
+         DropdownMenuIndexItem.new(view_context, 'CustomReport'),
          users,
-         validate_database].compact.sort_by(&:label)
+         validate_database]
       end
 
       def divider

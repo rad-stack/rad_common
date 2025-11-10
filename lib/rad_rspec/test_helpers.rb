@@ -4,14 +4,23 @@ module TestHelpers
   end
 
   def tom_select(value, attrs)
-    retries ||= 0
-    tom_search(value, attrs)
-    find('.ts-dropdown .option', text: value).click
-  rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::ElementNotInteractableError
-    retries += 1
-    raise if retries > 2
+    values = value.is_a?(Array) ? value : [value]
 
-    retry
+    values.each_with_index do |current_value, index|
+      retries = 0
+
+      begin
+        tom_search(current_value, attrs)
+        find('.ts-dropdown .option', text: current_value).click
+      rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::ElementNotInteractableError
+        retries += 1
+        raise if retries > 2
+
+        retry
+      end
+
+      click_tom_select(attrs) if index < (values.length - 1)
+    end
   end
 
   def tom_search(value, attrs)

@@ -309,6 +309,11 @@ module RadHelper
     end
   end
 
+  def draggable_actions
+    'dragstart->sortable#handleDragStart dragover->sortable' \
+      '#handleDragOver drop->sortable#handleDrop dragend->sortable#handleDragEnd'
+  end
+
   class << self
     def show_routes
       @show_routes ||= AppInfo.new.show_routes

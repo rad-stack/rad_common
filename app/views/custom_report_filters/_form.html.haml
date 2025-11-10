@@ -1,0 +1,40 @@
+= turbo_frame_tag 'custom-report-filter-form-frame' do
+  .modal-content{ data: { controller: 'custom-report-filter-form',
+                          custom_report_filter_form_filter_types_map_value: filter_types_map.to_json } }
+    = simple_form_for custom_report_filter,
+                      url: custom_report_filters_path(custom_report_filter_url_params(params)) do |f|
+      .modal-header
+        %h5.modal-title Add Filter
+        %button.btn-close{ type: 'button', data: { bs_dismiss: 'modal' }, aria: { label: 'Close' } }
+
+      .modal-body
+        = rad_form_errors f
+
+        .mb-3
+          = f.input :column,
+                    as: :grouped_select,
+                    collection: grouped_column_options_for_filter(all_columns),
+                    group_method: :last,
+                    group_label_method: :first,
+                    option_key_method: :value,
+                    option_value_method: :label,
+                    input_html: { class: 'selectpicker', required: true,
+                                  data: { action: 'change->custom-report-filter-form#columnChanged',
+                                          custom_report_filter_form_target: 'columnSelect' } }
+
+        .mb-3
+          = f.input :label,
+                    label: 'Label',
+                    input_html: { class: 'form-control',
+                                  data: { custom_report_filter_form_target: 'labelInput' } }
+
+        .mb-3
+          = f.input :type,
+                    label: 'Filter Type',
+                    collection: [],
+                    input_html: { data: { custom_report_filter_form_target: 'typeSelect' } },
+                    include_blank: 'Select a column...'
+
+      .modal-footer
+        %button.btn.btn-secondary{ type: 'button', data: { bs_dismiss: 'modal' } } Cancel
+        = f.submit 'Add Filter', class: 'btn btn-primary'
