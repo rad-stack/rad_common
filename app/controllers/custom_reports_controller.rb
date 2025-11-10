@@ -7,7 +7,6 @@ class CustomReportsController < ApplicationController
   def index
     authorize CustomReport
     @custom_reports = policy_scope(CustomReport.by_name).page(params[:page])
-    set_assistant_session_context(chat_class: 'LLM::ChatTypes::ReportBuilderChat')
   end
 
   def show
