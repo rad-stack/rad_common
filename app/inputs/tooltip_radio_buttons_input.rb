@@ -22,7 +22,7 @@ class TooltipRadioButtonsInput < SimpleForm::Inputs::CollectionRadioButtonsInput
   end
 
   def tooltip_value(value)
-    tooltips[value]
+    tooltips[value.to_sym]
   end
 
   def tooltip(button)
