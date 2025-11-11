@@ -195,41 +195,115 @@ RSpec.describe RadSearch::Search, type: :service do
                           filters: filters,
                           current_user: user,
                           search_name: 'divisions_search',
-                          sticky_filters: sticky_filters,
+                          sticky_filters: search_sticky_filters,
                           params: params).results
     end
 
-    let(:sticky_filters) { true }
+    let(:search_sticky_filters) { nil }
+    let(:preference_sticky_filters) { nil }
     let(:query) { User }
     let!(:user_active) { create :user, user_status: UserStatus.default_active_status }
     let!(:user_pending) { create :user, user_status: UserStatus.default_pending_status }
     let(:filters) { [{ column: :user_status_id, options: UserStatus.by_id }] }
     let(:params) { ActionController::Parameters.new }
-    let(:preferences) do
-      create :search_preference, user: user,
-                                 search_class: 'divisions_search',
-                                 search_filters: { user_status_id: UserStatus.default_active_status.id },
-                                 sticky_filters: sticky_filters
-    end
 
     before do
-      preferences
+      if preference_sticky_filters.present?
+        create :search_preference,
+               user: user,
+               search_class: 'divisions_search',
+               search_filters: { user_status_id: UserStatus.default_active_status.id },
+               sticky_filters: preference_sticky_filters
+      end
     end
 
-    context 'when no params are passed' do
-      context 'with sticky filters' do
-        let(:sticky_filters) { true }
+    context 'when search_sticky_filters is true' do
+      let(:search_sticky_filters) { true }
 
-        it 'filters from stored user default values' do
+      context 'with preference_sticky_filters true' do
+        let(:preference_sticky_filters) { true }
+
+        it 'uses preference value (true) and applies filters' do
           expect(search).to include user_active
           expect(search).not_to include user_pending
         end
       end
 
-      context 'without sticky filters' do
-        let(:sticky_filters) { false }
+      context 'with preference_sticky_filters false' do
+        let(:preference_sticky_filters) { false }
 
-        it 'filters from stored user default values' do
+        it 'uses preference value (false) and does not apply filters' do
+          expect(search).to include user_active
+          expect(search).to include user_pending
+        end
+      end
+
+      context 'with no preference (preference_sticky_filters nil)' do
+        let(:preference_sticky_filters) { nil }
+
+        it 'uses search param value (true) and applies filters from first search' do
+          expect(search).to include user_active
+          expect(search).to include user_pending
+        end
+      end
+    end
+
+    context 'when search_sticky_filters is false' do
+      let(:search_sticky_filters) { false }
+
+      context 'with preference_sticky_filters true' do
+        let(:preference_sticky_filters) { true }
+
+        it 'search param overrides preference and does not apply filters' do
+          expect(search).to include user_active
+          expect(search).to include user_pending
+        end
+      end
+
+      context 'with preference_sticky_filters false' do
+        let(:preference_sticky_filters) { false }
+
+        it 'uses false and does not apply filters' do
+          expect(search).to include user_active
+          expect(search).to include user_pending
+        end
+      end
+
+      context 'with no preference (preference_sticky_filters nil)' do
+        let(:preference_sticky_filters) { nil }
+
+        it 'uses search param value (false) and does not apply filters' do
+          expect(search).to include user_active
+          expect(search).to include user_pending
+        end
+      end
+    end
+
+    context 'when search_sticky_filters is nil' do
+      let(:search_sticky_filters) { nil }
+
+      context 'with preference_sticky_filters true' do
+        let(:preference_sticky_filters) { true }
+
+        it 'uses preference value (true) and applies filters' do
+          expect(search).to include user_active
+          expect(search).not_to include user_pending
+        end
+      end
+
+      context 'with preference_sticky_filters false' do
+        let(:preference_sticky_filters) { false }
+
+        it 'uses preference value (false) and does not apply filters' do
+          expect(search).to include user_active
+          expect(search).to include user_pending
+        end
+      end
+
+      context 'with no preference (preference_sticky_filters nil)' do
+        let(:preference_sticky_filters) { nil }
+
+        it 'defaults to false and does not apply filters' do
           expect(search).to include user_active
           expect(search).to include user_pending
         end
@@ -237,10 +311,13 @@ RSpec.describe RadSearch::Search, type: :service do
     end
 
     context 'when clear_filters params are passed in' do
+      let(:search_sticky_filters) { true }
+      let(:preference_sticky_filters) { true }
       let(:params) { ActionController::Parameters.new(clear_filters: true) }
 
       it 'resets stored user default values' do
-        expect { search }.to change { preferences.reload.search_filters }
+        preference = SearchPreference.find_by(user: user, search_class: 'divisions_search')
+        expect { search }.to change { preference.reload.search_filters }
           .from({ 'user_status_id' => UserStatus.default_active_status.id }).to({})
         expect(search).to include user_active
         expect(search).to include user_pending
