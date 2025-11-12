@@ -394,6 +394,7 @@ SimpleForm.setup do |config|
     datetime:      :vertical_multi_select,
     file:          :vertical_file,
     radio_buttons: :vertical_collection,
+    tooltip_radio_buttons: :vertical_collection,
     range:         :vertical_range,
     time:          :vertical_multi_select,
     select:        :vertical_select,

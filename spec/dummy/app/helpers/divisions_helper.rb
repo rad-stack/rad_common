@@ -15,4 +15,9 @@ module DivisionsHelper
      :tags,
      created_by_show_item(division)]
   end
+
+  def division_status_tooltips
+    { status_pending: 'Division is pending approval', status_active: 'Division is active and is ready to change',
+      status_inactive: 'Division is inactive and cannot be used' }
+  end
 end
