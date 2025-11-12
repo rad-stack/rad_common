@@ -1,8 +1,15 @@
+-# locals: (search_name: nil, search_filters: nil)
 = turbo_frame_tag 'saved_search_filters_form' do
-  = simple_form_for :search do |f|
+  = simple_form_for @saved_search_filter || SavedSearchFilter.new do |f|
     = rad_form_errors f
 
-    = f.input :name, label: 'Enter a filter name'
+    // Hidden input for current search.search_filters , label: 'Enter a filter name'
+    = f.input :search_class, input_html: { value: @saved_search_filter&.search_class || search_name }, as: :hidden
+    = f.input :search_filters,
+              input_html: { value: (@saved_search_filter&.search_filters || search_filters)&.to_json },
+              as: :hidden
+
+    = f.input :name
 
     .d-grid
       = f.button :submit, 'Save', class: 'btn-primary'
