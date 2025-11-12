@@ -23,3 +23,4 @@
 .d-none.d-md-block{ data: { controller: 'search filter-toggle',
                             filter_toggle_default_collapsed_value: search.auto_hide.to_s } }
   = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: false
+= render 'saved_search_filters/modal', search_name: search.search_name, search_filters: search.search_params
