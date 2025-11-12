@@ -95,6 +95,10 @@ RSpec.describe 'Divisions' do
       it 'displays the translated label' do
         expect(page).to have_content 'API Key'
       end
+
+      it 'displays the titleized label' do
+        expect(page).to have_content 'Hourly Rate'
+      end
     end
   end
 
