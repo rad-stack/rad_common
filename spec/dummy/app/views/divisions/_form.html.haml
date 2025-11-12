@@ -4,9 +4,12 @@
   .form-inputs
     = f.input :name
     = f.input :code
-    = f.input :division_status, collection: options_for_enum(Division, :division_status),
-                                tooltips: division_status_tooltips,
-                                as: :tooltip_radio_buttons
+
+    = f.input :division_status,
+              collection: options_for_enum(Division, :division_status),
+              tooltips: division_status_tooltips,
+              as: :tooltip_radio_buttons
+
     = f.input :notify
     = f.input :hourly_rate
     = f.input :timezone, as: :time_zone, priority: timezone_us_filter
