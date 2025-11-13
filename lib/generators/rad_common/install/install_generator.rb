@@ -31,6 +31,7 @@ module RadCommon
         add_rad_config_setting 'portal', 'false'
         add_rad_config_setting 'validate_user_domains', 'true'
         add_rad_config_setting 'show_sign_in_marketing', 'false'
+        add_rad_config_setting 'filter_toggle_default_behavior', 'sticky'
         remove_rad_factories
         remove_legacy_rails_config_setting
         update_credentials

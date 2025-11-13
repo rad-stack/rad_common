@@ -1,0 +1,15 @@
+= turbo_frame_tag 'filter_preference_dropdown' do
+  .dropdown
+    %button.btn.btn-sm.btn-secondary.dropdown-toggle{ type: 'button',
+                                                      data: { bs_toggle: 'dropdown' },
+                                                      aria: { expanded: 'false' },
+                                                      title: 'Filter Toggle Preference' }
+      = icon :cog
+    %ul.dropdown-menu
+      - RadSearch::FilterDefaulting::TOGGLE_BEHAVIORS.each do |behavior|
+        %li
+          = button_to filter_preferences_update_path(search_name: search_name, behavior: behavior[:value]),
+                      method: :put,
+                      class: "dropdown-item #{'active' if current_behavior == behavior[:value]}",
+                      form: { data: { turbo_stream: true } } do
+            = icon behavior[:icon], behavior[:label]

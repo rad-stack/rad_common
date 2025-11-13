@@ -1,5 +1,11 @@
 module RadSearch
   class FilterDefaulting
+    TOGGLE_BEHAVIORS = [
+      { value: 'sticky', icon: 'check', label: 'Remember State' },
+      { value: 'always_open', icon: 'eye', label: 'Always Open' },
+      { value: 'always_closed', icon: 'eye-slash', label: 'Always Closed' }
+    ].freeze
+
     def initialize(current_user:, search:, enabled:)
       @search = search
       @current_user = current_user
@@ -17,7 +23,7 @@ module RadSearch
     end
 
     def update_defaults
-      return unless @enabled || @search.search_params?
+      return unless @enabled && @search.search_params?
 
       update_user_filter_defaults
     end
@@ -43,10 +49,11 @@ module RadSearch
       def load_filter_defaults
         return if @current_user.filter_defaults.blank? || @current_user.filter_defaults[search_name].blank?
 
-        defaults = @current_user.filter_defaults[search_name].slice(*@search.searchable_columns_strings)
+        filter_values = @current_user.filter_defaults[search_name].except('_settings')
+        defaults = filter_values.slice(*@search.searchable_columns_strings)
         return if defaults.blank?
 
-        @search.params[:search] = @current_user.filter_defaults[search_name].slice(*@search.searchable_columns_strings)
+        @search.params[:search] = defaults
       end
 
       def search_filter_defaults

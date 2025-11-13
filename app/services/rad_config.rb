@@ -284,6 +284,10 @@ class RadConfig
       boolean_config_item! :saved_search_filters_enabled
     end
 
+    def filter_toggle_default_behavior!
+      config_item! :filter_toggle_default_behavior
+    end
+
     def legal_docs?
       boolean_config_item! :legal_docs
     end
