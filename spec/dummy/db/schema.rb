@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_03_191522) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_12_131151) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -214,6 +214,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_191522) do
     t.string "invoice_email"
     t.bigint "category_id"
     t.string "tags", default: [], null: false, array: true
+    t.string "api_key"
     t.index ["category_id"], name: "index_divisions_on_category_id"
     t.index ["created_at"], name: "index_divisions_on_created_at"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"

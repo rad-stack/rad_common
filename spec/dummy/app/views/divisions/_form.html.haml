@@ -12,6 +12,7 @@
 
     = f.input :notify
     = f.input :hourly_rate
+    = f.input :api_key
     = f.input :timezone, as: :time_zone, priority: timezone_us_filter
     - unless @division.new_record?
       = f.input :logo

@@ -91,6 +91,14 @@ RSpec.describe 'Divisions' do
         end
         expect(find_field('division_owner_id', visible: false).value).to eq(division.owner.id.to_s)
       end
+
+      it 'displays the translated label' do
+        expect(page).to have_content 'API Key'
+      end
+
+      it 'displays the titleized label' do
+        expect(page).to have_content 'Hourly Rate'
+      end
     end
   end
 

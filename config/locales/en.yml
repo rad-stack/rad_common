@@ -13,6 +13,7 @@ en:
           cc: 'CC'
           bcc: 'BCC'
       system_message:
+        from_reply_to: 'From / Reply To'
         send_tos:
           preview: 'Me (preview)'
         message_types:

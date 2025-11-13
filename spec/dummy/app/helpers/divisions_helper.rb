@@ -5,6 +5,7 @@ module DivisionsHelper
      :notify,
      :timezone,
      :hourly_rate,
+     :api_key,
      :additional_info,
      :division_status,
      { label: 'Logo', value: render_one_attachment(record: division, attachment_name: 'logo', new_tab: true) },
