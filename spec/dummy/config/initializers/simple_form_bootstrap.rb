@@ -95,10 +95,10 @@ SimpleForm.setup do |config|
   end
 
   # vertical input for radio buttons and check boxes
-  config.wrappers :vertical_collection, item_wrapper_class: 'form-check me-3', item_label_class: 'form-check-label', tag: 'fieldset', class: 'mb-3' do |b|
+  config.wrappers :vertical_collection, item_wrapper_class: 'form-check', item_label_class: 'form-check-label', tag: 'div', class: 'mb-3' do |b|
     b.use :html5
     b.optional :readonly
-    b.wrapper :legend_tag, tag: 'legend', class: 'col-form-label pt-0' do |ba|
+    b.wrapper :label, class: 'form-check-label' do |ba|
       ba.use :label_text
     end
     b.use :input, class: 'form-check-input', error_class: 'is-invalid', valid_class: ''
@@ -394,6 +394,7 @@ SimpleForm.setup do |config|
     datetime:      :vertical_multi_select,
     file:          :vertical_file,
     radio_buttons: :vertical_collection,
+    tooltip_radio_buttons: :vertical_collection,
     range:         :vertical_range,
     time:          :vertical_multi_select,
     select:        :vertical_select,
