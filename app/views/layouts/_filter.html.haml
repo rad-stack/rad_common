@@ -3,6 +3,8 @@
           data: { 'bs-toggle': 'collapse' },
           class: "btn #{search.search_params? ? 'btn-warning' : 'btn-primary'} btn-sm mb-2"
 
+- if RadConfig.saved_search_filters_enabled?
+  = render 'layouts/saved_filters_dropdown', search: search, path: path
 - if (search.search_params? && search.invalid?) || search.saved_filter_errors.present?
   - flash.now[:error] = search.error_messages
 
@@ -23,3 +25,4 @@
 .d-none.d-md-block{ data: { controller: 'search filter-toggle',
                             filter_toggle_default_collapsed_value: search.auto_hide.to_s } }
   = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: false
+= render 'saved_search_filters/modal', search_name: search.search_name, search_filters: search.search_params
