@@ -1,32 +1,31 @@
-%button.btn.btn-success.dropdown-toggle.ms-1#saved-search-filters-dropdown{ 'aria-expanded' => 'false',
-                                                                            'aria-haspopup' => 'true',
-                                                                            'data-bs-toggle' => 'dropdown',
-                                                                            type: 'button' }
-.dropdown-menu.dropdown-menu-end{ 'aria-labelledby' => 'saved-search-filters-dropdown' }
-  %button{ type: 'button',
-           id: 'save_and_apply_filters',
-           class: 'dropdown-item btn btn-primary',
-           data: { bs_toggle: 'modal', bs_target: '#saved-search-filters-modal' } }
-    = icon :save, 'Save Currently Applied Filters'
+:ruby
+  dropdown_btn_class = "btn #{search.search_params? ? 'btn-warning' : 'btn-primary'} btn-sm dropdown-toggle ms-1 mb-2"
+  save_btn_class = search.search_params? ? '' : 'disabled'
+  current_saved_filter_name = search.applied_saved_filter
+%button#saved-search-filters-dropdown{ 'aria-expanded' => 'false',
+                                       'aria-haspopup' => 'true',
+                                       'data-bs-toggle' => 'dropdown',
+                                       type: 'button',
+                                       class: dropdown_btn_class }
+  = icon 'bookmark', current_saved_filter_name.to_s
 
-  - if search.saved_filters.any?
-    .dropdown-divider
-    %h6.dropdown-header.ps-3 Saved Filters
-    - search.saved_filters.each do |saved_filter|
-      - search_params = { search: saved_filter.search_filters.merge(applied_filter: saved_filter.id) }
-      - search_path = "#{path}?#{search_params.to_query}"
-      .dropdown-item.d-flex.justify-content-between.align-items-center
-        - is_active = search.applied_saved_filter&.id == saved_filter.id
-        = link_to saved_filter,
-                  search_path,
-                  id: "saved_filter_#{saved_filter.id}",
-                  class: is_active ? 'text-success' : 'text-dark'
-        - if is_active
-          %span.text-success= icon :check
-        - else
-          = link_to icon(:times),
-                    saved_filter,
-                    method: :delete,
-                    class: 'text-dark',
-                    data: { confirm: 'Are you sure? This will delete the saved filter.' },
-                    id: "delete_saved_filter_#{saved_filter.id}"
+.dropdown-menu.dropdown-menu-end{ 'aria-labelledby' => 'saved-search-filters-dropdown' }
+  .d-flex.justify-content-between.align-items-center
+    %button{ type: 'button',
+             id: 'save_and_apply_filters',
+             class: "dropdown-item btn btn-primary #{save_btn_class}",
+             data: { bs_toggle: 'modal', bs_target: '#saved-search-filters-modal' } }
+      = icon 'bookmark', 'Save Currently Applied Filters'
+    - unless search.search_params?
+      = icon_tooltip('span', 'Must apply a filter to save.', html_class: 'me-2', placement: 'auto')
+
+  .dropdown-divider
+  %h6.dropdown-header.ps-3 Saved Filters
+  = turbo_frame_tag 'saved_search_filter_items' do
+    - if search.saved_filters.any?
+      - search.saved_filters.each do |saved_filter|
+        = render 'saved_search_filters/saved_filter', saved_filter: saved_filter,
+                                                      is_active: search.applied_saved_filter&.id == saved_filter.id,
+                                                      path: path
+    - else
+      // no filters
