@@ -3,7 +3,6 @@
   = simple_form_for @saved_search_filter || SavedSearchFilter.new do |f|
     = rad_form_errors f
 
-    // Hidden input for current search.search_filters , label: 'Enter a filter name'
     = f.input :search_class, input_html: { value: @saved_search_filter&.search_class || search_name }, as: :hidden
     = f.input :search_filters,
               input_html: { value: (@saved_search_filter&.search_filters || search_filters)&.to_json },

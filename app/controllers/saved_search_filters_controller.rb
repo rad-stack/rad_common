@@ -17,12 +17,10 @@ class SavedSearchFiltersController < ApplicationController
 
   def destroy
     if @saved_search_filter.destroy
-      flash[:notice] = 'Saved Filter was successfully deleted.'
+      respond_to { |format| format.turbo_stream { render 'delete' } }
     else
       flash[:error] = @saved_search_filter.errors.full_messages.join(', ')
     end
-
-    redirect_back(fallback_location: root_path)
   end
 
   private
