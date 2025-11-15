@@ -31,6 +31,7 @@ module RadCommon
         add_rad_config_setting 'portal', 'false'
         add_rad_config_setting 'validate_user_domains', 'true'
         add_rad_config_setting 'show_sign_in_marketing', 'false'
+        add_rad_config_setting 'filter_toggle_default_behavior', 'always_open'
         remove_rad_factories
         remove_legacy_rails_config_setting
         update_credentials
@@ -808,6 +809,7 @@ gem 'propshaft'
           apply_migration '20251024225222_fix_chat_types.rb'
           apply_migration '20251027181305_rename_chat_type_to_chat_class.rb'
           apply_migration '20251103191522_remove_embedding_metadata.rb'
+          apply_migration '20251103194914_create_search_preferences.rb'
         end
 
         def installed_app_name
