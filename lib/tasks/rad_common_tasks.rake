@@ -46,7 +46,7 @@ namespace :rad_common do
   end
 
   task ten_minutes: :environment do |task|
-    session = RakeSession.new(task, 5.minutes, 1)
+    session = RakeSession.new(task, 8.minutes, 1)
 
     Timeout.timeout(session.time_limit) do
       ContactLogRecipient.sms_assumed_failed.each do |record|
