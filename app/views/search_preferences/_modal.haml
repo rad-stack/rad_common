@@ -10,4 +10,5 @@
         %h5.modal-title Filter Settings
         %button.btn-close{ type: 'button', data: { bs_dismiss: 'modal' } }
       .modal-body
-        = render 'search_preferences/form', search_preference: search_preference
+        = render 'search_preferences/form', search_preference: search_preference,
+                                            allow_sticky_filters: allow_sticky_filters

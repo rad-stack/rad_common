@@ -2,7 +2,7 @@ module RadSearch
   ##
   # This is a common search pattern to be used within the UI to help filter, display, and sorts results to be displayed within the UI
   class Search
-    attr_reader :params, :current_user, :auto_hide, :defaulting, :search_preference
+    attr_reader :params, :current_user, :auto_hide, :defaulting, :default_sticky_filters, :search_preference
 
     delegate :toggle_behavior, to: :search_preference
 
@@ -15,9 +15,9 @@ module RadSearch
     # @param [String optional] search_name an identifying named used for storing user defaults. Only required when user defaults enabled and not using a custom search class
     # @param [Boolean optional] sticky filters (aka FilterDefaulting) to remember user selections.
     #   nil: use existing preference, false: disable regardless of preference, true: enable by default
-    def initialize(query:, filters:, current_user:, params:, sort_columns: nil, search_name: nil, sticky_filters: nil,
-                   auto_hide: false)
-      if sticky_filters && search_name.nil? && self.class.to_s == 'RadSearch::Search'
+    def initialize(query:, filters:, current_user:, params:, sort_columns: nil, search_name: nil,
+                   default_sticky_filters: false, auto_hide: false)
+      if default_sticky_filters && search_name.nil? && self.class.to_s == 'RadSearch::Search'
         raise 'search_name is required when not using a custom search class'
       end
 
@@ -27,16 +27,16 @@ module RadSearch
       @params = params
       @search_name = search_name
       @filtering = Filtering.new(filters: filters, search: self)
+      @default_sticky_filters = default_sticky_filters
 
       @search_preference = SearchPreference.find_or_initialize_by(
         user: current_user,
         search_class: search_name || self.class.to_s
       )
-      @search_preference.set_defaults(sticky_filters: sticky_filters)
+      @search_preference.set_defaults(sticky_filters: default_sticky_filters)
       @defaulting = FilterDefaulting.new(current_user: current_user,
                                          search: self,
-                                         enabled: effective_sticky_filters(sticky_filters, @search_preference))
-      @defaulting.apply_defaults
+                                         enabled: search_preference.sticky_filters)
       @sorting = Sorting.new(sort_columns: sort_columns, search: self)
     end
 
@@ -45,6 +45,7 @@ module RadSearch
     end
 
     def results
+      @defaulting.apply_defaults if allow_sticky_filters?
       maybe_save_filters
       retrieve_results
     end
@@ -154,6 +155,10 @@ module RadSearch
       @saved_filter_errors ||= []
     end
 
+    def allow_sticky_filters?
+      default_sticky_filters
+    end
+
     private
 
       def retrieve_results
@@ -197,16 +202,6 @@ module RadSearch
           params[:search][:applied_filter] = filter.id
         else
           saved_filter_errors << "Filter \"#{filter}\" could not be saved: #{filter.errors.full_messages.to_sentence}"
-        end
-      end
-
-      def effective_sticky_filters(search_option, search_preference)
-        if search_option == false
-          false
-        elsif search_preference.persisted?
-          search_preference.sticky_filters
-        else
-          search_option
         end
       end
 

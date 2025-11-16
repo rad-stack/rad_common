@@ -1,4 +1,5 @@
 = turbo_stream.replace 'search_preference_form' do
-  = render 'search_preferences/form', search_preference: @search_preference
+  = render 'search_preferences/form', search_preference: @search_preference,
+                                      allow_sticky_filters: params[:allow_sticky_filters] == 'true'
 = tag.turbo_stream action: 'toggle_collapse', target: 'search-filter-collapse', state: @collapse_state
 = turbo_stream.action :hide_modal, 'filter-settings-modal'

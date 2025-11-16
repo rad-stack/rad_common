@@ -4,7 +4,8 @@
               '#search-filter-collapse',
               data: { 'bs-toggle': 'collapse' },
               class: "btn #{search.search_params? ? 'btn-warning' : 'btn-primary'} btn-sm"
-    = render 'search_preferences/modal', search_preference: search.search_preference
+    = render 'search_preferences/modal', search_preference: search.search_preference,
+                                         allow_sticky_filters: search.allow_sticky_filters?
 
 - if (search.search_params? && search.invalid?) || search.saved_filter_errors.present?
   - flash.now[:error] = search.error_messages
