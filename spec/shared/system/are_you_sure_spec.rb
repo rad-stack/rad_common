@@ -31,7 +31,7 @@ RSpec.describe 'AreYouSure', type: :system do
       tom_search 'test', from: 'search'
       find('body').click
 
-      expect(page).not_to have_css('.simple_form.dirty')
+      expect(page).to have_no_css('.simple_form.dirty')
     end
   end
 
@@ -40,7 +40,7 @@ RSpec.describe 'AreYouSure', type: :system do
       visit '/login_activities?search%5Bcreated_at_start%5D=2020-11-11&search%5Bcreated_at_end%5D=2020-11-11'
       find('body').click
 
-      expect(page).not_to have_css('.simple_form.dirty')
+      expect(page).to have_no_css('.simple_form.dirty')
     end
   end
 end
