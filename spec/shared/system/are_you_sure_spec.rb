@@ -5,6 +5,17 @@ RSpec.describe 'AreYouSure', type: :system do
 
   before { login_as user, scope: :user }
 
+  describe 'normal form fields' do
+    it 'warns', :js do
+      visit '/company/edit'
+      fill_in 'company_name', with: 'test'
+      find('body').click
+      visit current_path
+
+      expect(confirm_present?).to be true
+    end
+  end
+
   describe 'global super search field' do
     it 'does not warn', :js, :legacy_asset_specs do
       visit '/'
