@@ -335,6 +335,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_12_131151) do
     t.index ["user_id"], name: "index_saved_search_filters_on_user_id"
   end
 
+  create_table "search_preferences", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "search_class", null: false
+    t.integer "toggle_behavior"
+    t.boolean "sticky_filters", default: false, null: false
+    t.jsonb "search_filters", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "search_class"], name: "unique_search_preferences", unique: true
+    t.index ["user_id"], name: "index_search_preferences_on_user_id"
+  end
+
   create_table "security_roles", force: :cascade do |t|
     t.string "name", null: false
     t.boolean "admin", default: false, null: false
@@ -478,6 +490,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_12_131151) do
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
   add_foreign_key "saved_search_filters", "users"
+  add_foreign_key "search_preferences", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
   add_foreign_key "user_clients", "clients"
