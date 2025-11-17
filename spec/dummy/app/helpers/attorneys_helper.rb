@@ -4,7 +4,7 @@ module AttorneysHelper
       address_show_data(attorney) +
       %i[mobile_phone phone_number email] +
       [created_by_show_item(attorney)] +
-      %i[notes active]
+      [:active]
   end
 
   def attorney_actions(attorney)
