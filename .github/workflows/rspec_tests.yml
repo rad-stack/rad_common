@@ -125,4 +125,4 @@ jobs:
         if: failure()
         with:
           name: failed-screenshots-${{ matrix.TEST_ENV_NUMBER }}
-          path: tmp/capybara/**/*
+          path: spec/dummy/tmp/capybara/**/*
