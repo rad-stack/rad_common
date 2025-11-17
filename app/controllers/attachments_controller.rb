@@ -16,7 +16,7 @@ class AttachmentsController < ApplicationController
     attachment = ActiveStorage::Attachment.find_by(id: attachment_id)
 
     if attachment.present?
-      serve_active_storage_file(attachment, attachment.name)
+      serve_active_storage_file(attachment, attachment.name, cached: params[:cached] == 'true')
     else
       render json: 'Attachment not found'
     end
@@ -26,7 +26,7 @@ class AttachmentsController < ApplicationController
     skip_authorization
 
     if @variant.present?
-      serve_active_storage_file(@variant, params[:variant])
+      serve_active_storage_file(@variant, params[:variant], cached: params[:cached] == 'true')
     else
       render json: 'Attachment not found'
     end
