@@ -57,6 +57,7 @@ Audited.ignored_attributes += ['address_changes']
 
 Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
+  ActionText::RichText.audited associated_with: :record
 end
 
 if RadConfig.blocked_ip_addresses?

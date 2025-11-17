@@ -3,11 +3,19 @@ require 'rails_helper'
 describe 'Audits' do
   let(:admin) { create :admin }
   let(:contact_log_recipient) { create :contact_log_recipient }
+  let(:attorney) { create :attorney }
   let(:notification_type) { Notifications::InvalidDataWasFoundNotification.main }
 
   before { login_as admin, scope: :user }
 
   describe 'index' do
+    it 'associates rich text audits' do
+      attorney.update! notes: 'Testing 1234999'
+      visit "attorneys/#{attorney.id}"
+      click_link_or_button 'Audit History'
+      expect(page).to have_content 'Testing 1234999'
+    end
+
     it 'shows audits for objects without show pages' do
       open_status = create :status, name: 'Open'
 
