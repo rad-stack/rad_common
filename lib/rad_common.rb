@@ -42,4 +42,7 @@ module RadCommon
 
   VALID_CONTENT_TYPE_MESSAGE = 'has an invalid content type of %<content_type>s, must be %<authorized_types>s'.freeze
   VALID_CONTENT_TYPE_MESSAGE_SHORT = 'has an invalid content type of %<content_type>s'.freeze
+
+  OPEN_AI_CHAT_MODEL = 'gpt-4.1-mini'.freeze
+  OPEN_AI_EMBEDDING_MODEL = 'text-embedding-3-small'.freeze
 end

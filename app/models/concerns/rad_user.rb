@@ -16,6 +16,7 @@ module RadUser
     has_many :user_clients, dependent: :destroy
     has_many :clients, through: :user_clients, source: :client
     has_many :saved_search_filters, dependent: :destroy
+    has_many :search_preferences, dependent: :destroy
 
     has_many :contact_logs_from, class_name: 'ContactLog',
                                  foreign_key: 'from_user_id',
@@ -193,6 +194,16 @@ module RadUser
     end
   end
 
+  def user_invited_subject
+    "Invitation to Join #{RadConfig.app_name!}"
+  end
+
+  def user_invited_message
+    "Someone has invited you to #{RadConfig.app_name!}, you can accept it through the link " \
+      "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
+      'created until you access the link and set your password.'
+  end
+
   def notify_new_user_signed_up
     Notifications::NewUserSignedUpNotification.main(self).notify!
   end
@@ -256,12 +267,6 @@ module RadUser
   class_methods do
     def user_approved_message
       "Your account was approved and you can begin using #{RadConfig.app_name!}."
-    end
-
-    def user_invited_message
-      "Someone has invited you to #{RadConfig.app_name!}, you can accept it through the link " \
-        "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
-        'created until you access the link and set your password.'
     end
   end
 

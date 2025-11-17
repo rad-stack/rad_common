@@ -1,0 +1,19 @@
+.card
+  = render 'layouts/card_header', no_new_button: true, external_actions: [ask_basic_question_btn]
+  .card-body
+    = paginate @assistant_sessions, theme: 'bootstrap-5'
+    %table.table.table-striped.table-bordered
+      %tr
+        %th Created
+        %th User
+        %th Scope
+        %th Context
+
+      - @assistant_sessions.each do |record|
+        %tr{ class: table_row_style(record) }
+          %td= link_to format_date(record.created_at), assistant_session_path(record)
+          %td= secured_link record.user
+          %td= secured_link record.chat_scope
+          %td= secured_link record.contextable
+
+    = paginate @assistant_sessions, theme: 'bootstrap-5'
