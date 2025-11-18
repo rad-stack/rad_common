@@ -143,7 +143,7 @@ module Contactable
                                    address_2: address_2,
                                    city: city,
                                    state: state,
-                                   zipcode: zipcode }).call
+                                   zipcode: zipcode }, upcase?).call
 
       return unless result
 
@@ -154,6 +154,10 @@ module Contactable
         self.address_metadata['valid'] = false
         self.address_metadata['problems'] = result.address_problems if result.address_problems.present?
       end
+    end
+
+    def upcase?
+      false
     end
 
     def apply_changes(result)
