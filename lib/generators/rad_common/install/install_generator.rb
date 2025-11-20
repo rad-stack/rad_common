@@ -83,6 +83,9 @@ module RadCommon
                    'app/javascript/controllers/index.js'
           copy_file '../../../../../spec/dummy/app/javascript/controllers/application.js',
                     'app/javascript/controllers/application.js'
+
+          directory '../../../../../spec/dummy/rad_common_js/src', 'app/javascript/rad_common'
+          directory '../../../../../spec/dummy/app/assets/scss/rad_common', 'app/assets/scss/rad_common'
         end
 
         directory '../../../../../.bundle', '.bundle'
