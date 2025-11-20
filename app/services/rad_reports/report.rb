@@ -15,7 +15,7 @@ module RadReports
             sort_columns: sort_builder.call(custom_report.columns),
             current_user: current_user,
             params: params,
-            sticky_filters: false)
+            default_sticky_filters: false)
     end
 
     def results
