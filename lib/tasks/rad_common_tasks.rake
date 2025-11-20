@@ -115,7 +115,7 @@ namespace :rad_common do
   end
 
   task build_js_css: :environment do
-    system('yarn build:js') || abort('JavaScript build failed')
-    system('yarn build:css') || abort('CSS build failed')
+    system('yarn build')
   end
+  Rake::Task['assets:precompile'].enhance(['rad_common:build_js_css']) if Rake::Task.task_defined?('assets:precompile')
 end

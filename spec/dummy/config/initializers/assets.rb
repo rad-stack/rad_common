@@ -3,7 +3,6 @@ Rails.application.config.assets.excluded_paths << Rails.root.join('app/assets/sc
 Rails.application.config.assets.paths << Rails.root.join('node_modules/@fortawesome/fontawesome-free/webfonts')
 
 if Rake::Task.task_defined?('assets:precompile')
-  Rake::Task['assets:precompile'].enhance(['rad_common:build_js_css'])
   Rake::Task['assets:precompile'].enhance do
     assembly = Rails.application.assets
     output_path = assembly.config.output_path
