@@ -11,7 +11,7 @@ export class SentryTest {
   static setup() {
     const sentryTest = document.querySelector('[href="/sentry_tests/new"]');
     if (sentryTest) {
-      sentryTest.addEventListener('click', function (e) {
+      sentryTest.addEventListener('click', function () {
         setTimeout(() => {
           throw new Error('Sentry Test Error (JS)');
         });
