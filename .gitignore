@@ -22,6 +22,9 @@ spec/dummy/yarn-error.log
 spec/dummy/yarn-debug.log*
 spec/dummy/.yarn-integrity
 
+# Mono-repo: rad_common_js (JavaScript only, SCSS is in app/assets/scss/rad_common)
+spec/dummy/rad_common_js/node_modules
+
 spec/dummy/config/credentials/test.key
 spec/dummy/config/credentials/development.key
 

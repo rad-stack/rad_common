@@ -1,0 +1,8 @@
+rubocop:
+  enabled: false
+haml:
+  enabled: false
+eslint:
+  enabled: true
+stylelint:
+  enabled: true
