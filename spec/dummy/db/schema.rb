@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_12_131151) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_20_171951) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -452,7 +452,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_12_131151) do
     t.datetime "password_changed_at", precision: nil
     t.datetime "last_activity_at", precision: nil
     t.datetime "expired_at", precision: nil
-    t.jsonb "filter_defaults"
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
     t.string "language", default: "en", null: false
