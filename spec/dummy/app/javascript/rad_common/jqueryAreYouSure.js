@@ -54,7 +54,7 @@ import $ from 'jquery';
         break;
       case 'select':
         val = '';
-        $field.find('option').each(function(o) {
+        $field.find('option').each(function() {
           var $option = $(this);
           if ($option.is(':selected')) {
             val += $option.val();
@@ -221,7 +221,7 @@ import $ from 'jquery';
       });
     }
 
-    return this.each(function(elem) {
+    return this.each(function() {
       if (!$(this).is('form')) {
         return;
       }
