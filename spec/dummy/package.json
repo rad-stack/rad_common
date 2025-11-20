@@ -21,12 +21,12 @@
     "postcss": "^8.5.1",
     "readmore-js": "^2.2.1",
     "tom-select": "^2.4.1",
-    "trix": "^2.1.15"
+    "trix": "^2.1.15",
+    "esbuild": "^0.25.8",
+    "sass": "^1.83.4"
   },
   "devDependencies": {
-    "esbuild": "^0.25.8",
     "eslint": "^9.31.0",
-    "sass": "^1.83.4",
     "stylelint": "^16.14.1"
   },
   "scripts": {
