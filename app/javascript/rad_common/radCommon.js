@@ -4,7 +4,7 @@ require('@popperjs/core');
 require('readmore-js');
 require('./richtext');
 
-const bootstrap = require('bootstrap');
+import * as bootstrap from 'bootstrap';
 
 import { RadCommonDynamicUpdater } from './radCommonDynamicUpdater';
 import { RadCommonGeneral } from './radCommonGeneral';

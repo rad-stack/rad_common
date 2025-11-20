@@ -113,4 +113,9 @@ namespace :rad_common do
       session.finished
     end
   end
+
+  task build_js_css: :environment do
+    system('yarn build:js') || abort('JavaScript build failed')
+    system('yarn build:css') || abort('CSS build failed')
+  end
 end

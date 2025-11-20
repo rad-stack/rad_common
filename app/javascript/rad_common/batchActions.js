@@ -1,4 +1,4 @@
-import bootstrap from 'bootstrap';
+import * as bootstrap from 'bootstrap';
 
 export class BatchActions {
   static setup() {

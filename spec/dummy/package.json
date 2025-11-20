@@ -30,6 +30,7 @@
     "stylelint": "^16.14.1"
   },
   "scripts": {
+    "heroku-postbuild": "echo 'Skipping Node.js build phase - assets will be built during Rails asset precompilation'",
     "build": "yarn build:js && yarn build:css",
     "build:dev": "yarn build:js --watch && yarn build:css --watch",
     "build:js": "node esbuild.config.js",
