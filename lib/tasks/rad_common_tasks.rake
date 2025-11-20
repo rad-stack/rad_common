@@ -46,7 +46,7 @@ namespace :rad_common do
   end
 
   task ten_minutes: :environment do |task|
-    session = RakeSession.new(task, 5.minutes, 1)
+    session = RakeSession.new(task, 8.minutes, 1)
 
     Timeout.timeout(session.time_limit) do
       ContactLogRecipient.sms_assumed_failed.each do |record|
@@ -111,6 +111,24 @@ namespace :rad_common do
       end
 
       session.finished
+    end
+  end
+
+  task migrate_filter_preferences: :environment do
+    User.where.not(filter_defaults: [nil, {}]).find_each do |user|
+      filter_defaults = user.filter_defaults
+      next if filter_defaults.blank?
+
+      filter_defaults.each_key do |search_name|
+        next unless RadConfig.temp_sticky_filters_list!.include?(search_name)
+
+        filter_values = filter_defaults[search_name] || {}
+
+        pref = SearchPreference.find_or_initialize_by(user: user, search_class: search_name)
+        pref.set_defaults(sticky_filters: true)
+        pref.search_filters = filter_values
+        pref.save!(validate: false)
+      end
     end
   end
 end

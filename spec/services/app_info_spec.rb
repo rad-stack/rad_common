@@ -9,8 +9,8 @@ RSpec.describe AppInfo, type: :service do
     let(:result) do
       %w[assistant_sessions attorneys categories clients companies contact_log_recipients contact_logs
          custom_reports divisions duplicates embeddings notification_security_roles notification_settings
-         notification_types notifications saved_search_filters security_roles statuses system_messages
-         user_clients user_security_roles user_statuses users]
+         notification_types notifications saved_search_filters search_preferences security_roles statuses
+         system_messages user_clients user_security_roles user_statuses users]
     end
 
     it { is_expected.to eq result }
@@ -20,9 +20,9 @@ RSpec.describe AppInfo, type: :service do
     subject { service.application_models }
 
     let(:result) do
-      %w[AssistantSession Attorney Category Client Company ContactLog ContactLogRecipient
-         CustomReport Division Duplicate Embedding Notification NotificationSecurityRole NotificationSetting
-         NotificationType SavedSearchFilter SecurityRole Status SystemMessage
+      %w[AssistantSession Attorney Category Client Company ContactLog ContactLogRecipient CustomReport
+         Division Duplicate Embedding Notification NotificationSecurityRole NotificationSetting
+         NotificationType SavedSearchFilter SearchPreference SecurityRole Status SystemMessage
          User UserClient UserSecurityRole UserStatus]
     end
 
@@ -35,7 +35,7 @@ RSpec.describe AppInfo, type: :service do
     let(:result) do
       %w[ActionText::RichText ActiveStorage::Attachment AssistantSession Attorney Category Client Company ContactLog
          ContactLogRecipient CustomReport Division NotificationSecurityRole NotificationSetting NotificationType
-         SavedSearchFilter SecurityRole Status User UserClient UserSecurityRole]
+         SavedSearchFilter SearchPreference SecurityRole Status User UserClient UserSecurityRole]
     end
 
     it { is_expected.to eq result }

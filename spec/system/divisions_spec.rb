@@ -56,6 +56,11 @@ RSpec.describe 'Divisions' do
         end
       end
     end
+
+    it 'shows tooltips on radio buttons' do
+      visit new_division_path
+      expect(page.body).to include('Division is pending approval')
+    end
   end
 
   describe 'edit' do

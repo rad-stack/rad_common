@@ -111,6 +111,7 @@ module RadCommonRoutes
       resources :sendgrid_statuses, only: :create
       resources :company_contacts, only: %i[new create]
       resources :user_clients, only: %i[create destroy]
+      resources :search_preferences, only: %i[create update]
 
       delete 'attachments/:id(.:format)', to: 'attachments#destroy', as: :attachment
 

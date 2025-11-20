@@ -43,17 +43,6 @@ module TestHelpers
     find_by_id("#{attrs[:from]}-ts-control").click
   end
 
-  def confirm_present?
-    confirm_accepted = false
-
-    begin
-      page.accept_confirm { confirm_accepted = true }
-      confirm_accepted
-    rescue StandardError
-      false
-    end
-  end
-
   def fill_time(id, time)
     formatted = time.strftime('%m/%e/%Y %I:%M %p')
     fill_in id, with: formatted

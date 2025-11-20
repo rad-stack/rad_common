@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_03_191522) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_03_194914) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'fuzzystrmatch'
   enable_extension 'plpgsql'
@@ -350,22 +350,34 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_191522) do
     t.index ['user_id'], name: 'index_saved_search_filters_on_user_id'
   end
 
-  create_table 'security_roles', force: :cascade do |t|
-    t.string 'name', null: false
-    t.boolean 'admin', default: false, null: false
-    t.datetime 'created_at', precision: nil, null: false
-    t.datetime 'updated_at', precision: nil, null: false
-    t.boolean 'create_division', default: false, null: false
-    t.boolean 'external', default: false, null: false
-    t.boolean 'manage_user', default: false, null: false
-    t.boolean 'allow_sign_up', default: false, null: false
-    t.boolean 'allow_invite', default: false, null: false
-    t.boolean 'read_division', default: false, null: false
-    t.boolean 'update_division', default: false, null: false
-    t.boolean 'delete_division', default: false, null: false
-    t.boolean 'read_attorney', default: false, null: false
-    t.boolean 'two_factor_auth', default: true, null: false
-    t.index ['name'], name: 'index_security_roles_on_name', unique: true
+  create_table "search_preferences", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "search_class", null: false
+    t.integer "toggle_behavior"
+    t.boolean "sticky_filters", default: false, null: false
+    t.jsonb "search_filters", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "search_class"], name: "unique_search_preferences", unique: true
+    t.index ["user_id"], name: "index_search_preferences_on_user_id"
+  end
+
+  create_table "security_roles", force: :cascade do |t|
+    t.string "name", null: false
+    t.boolean "admin", default: false, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.boolean "create_division", default: false, null: false
+    t.boolean "external", default: false, null: false
+    t.boolean "manage_user", default: false, null: false
+    t.boolean "allow_sign_up", default: false, null: false
+    t.boolean "allow_invite", default: false, null: false
+    t.boolean "read_division", default: false, null: false
+    t.boolean "update_division", default: false, null: false
+    t.boolean "delete_division", default: false, null: false
+    t.boolean "read_attorney", default: false, null: false
+    t.boolean "two_factor_auth", default: true, null: false
+    t.index ["name"], name: "index_security_roles_on_name", unique: true
   end
 
   create_table 'statuses', force: :cascade do |t|
@@ -478,28 +490,29 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_191522) do
     t.index ['user_status_id'], name: 'index_users_on_user_status_id'
   end
 
-  add_foreign_key 'active_storage_attachments', 'active_storage_blobs', column: 'blob_id'
-  add_foreign_key 'active_storage_variant_records', 'active_storage_blobs', column: 'blob_id'
-  add_foreign_key 'assistant_sessions', 'users'
-  add_foreign_key 'audits', 'users'
-  add_foreign_key 'contact_log_recipients', 'contact_logs'
-  add_foreign_key 'contact_log_recipients', 'users', column: 'to_user_id'
-  add_foreign_key 'contact_logs', 'users', column: 'from_user_id'
-  add_foreign_key 'divisions', 'categories'
-  add_foreign_key 'divisions', 'users', column: 'owner_id'
-  add_foreign_key 'notification_security_roles', 'notification_types'
-  add_foreign_key 'notification_security_roles', 'security_roles'
-  add_foreign_key 'notification_settings', 'notification_types'
-  add_foreign_key 'notification_settings', 'users'
-  add_foreign_key 'notifications', 'notification_types'
-  add_foreign_key 'notifications', 'users'
-  add_foreign_key 'saved_search_filters', 'users'
-  add_foreign_key 'system_messages', 'security_roles'
-  add_foreign_key 'system_messages', 'users'
-  add_foreign_key 'user_clients', 'clients'
-  add_foreign_key 'user_clients', 'users'
-  add_foreign_key 'user_security_roles', 'security_roles'
-  add_foreign_key 'user_security_roles', 'users'
-  add_foreign_key 'users', 'user_statuses'
-  add_foreign_key 'users', 'users', column: 'invited_by_id'
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "assistant_sessions", "users"
+  add_foreign_key "audits", "users"
+  add_foreign_key "contact_log_recipients", "contact_logs"
+  add_foreign_key "contact_log_recipients", "users", column: "to_user_id"
+  add_foreign_key "contact_logs", "users", column: "from_user_id"
+  add_foreign_key "divisions", "categories"
+  add_foreign_key "divisions", "users", column: "owner_id"
+  add_foreign_key "notification_security_roles", "notification_types"
+  add_foreign_key "notification_security_roles", "security_roles"
+  add_foreign_key "notification_settings", "notification_types"
+  add_foreign_key "notification_settings", "users"
+  add_foreign_key "notifications", "notification_types"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "saved_search_filters", "users"
+  add_foreign_key "search_preferences", "users"
+  add_foreign_key "system_messages", "security_roles"
+  add_foreign_key "system_messages", "users"
+  add_foreign_key "user_clients", "clients"
+  add_foreign_key "user_clients", "users"
+  add_foreign_key "user_security_roles", "security_roles"
+  add_foreign_key "user_security_roles", "users"
+  add_foreign_key "users", "user_statuses"
+  add_foreign_key "users", "users", column: "invited_by_id"
 end
