@@ -5,14 +5,33 @@ RSpec.describe 'AreYouSure', type: :system do
 
   before { login_as user, scope: :user }
 
+  describe 'normal form fields' do
+    it 'warns', :js do
+      visit '/company/edit'
+      fill_in 'company_name', with: 'test'
+      find('body').click
+
+      expect(page).to have_css('.simple_form.dirty')
+    end
+  end
+
+  describe 'rich text fields' do
+    it 'warns', :js do
+      visit '/system_messages/new'
+      find('trix-editor').set('test')
+      find('body').click
+
+      expect(page).to have_css('.simple_form.dirty')
+    end
+  end
+
   describe 'global super search field' do
     it 'does not warn', :js, :legacy_asset_specs do
       visit '/'
       tom_search 'test', from: 'search'
       find('body').click
-      visit current_path
 
-      expect(confirm_present?).to be false
+      expect(page).to have_no_css('.simple_form.dirty')
     end
   end
 
@@ -20,9 +39,8 @@ RSpec.describe 'AreYouSure', type: :system do
     it 'does not warn', :js do
       visit '/login_activities?search%5Bcreated_at_start%5D=2020-11-11&search%5Bcreated_at_end%5D=2020-11-11'
       find('body').click
-      visit '/'
 
-      expect(confirm_present?).to be false
+      expect(page).to have_no_css('.simple_form.dirty')
     end
   end
 end
