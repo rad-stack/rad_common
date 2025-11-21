@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_03_194914) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_20_171951) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'fuzzystrmatch'
   enable_extension 'plpgsql'
@@ -429,65 +429,64 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_194914) do
     t.index ['name'], name: 'index_user_statuses_on_name', unique: true
   end
 
-  create_table 'users', force: :cascade do |t|
-    t.string 'email', default: '', null: false
-    t.string 'encrypted_password', default: '', null: false
-    t.string 'reset_password_token'
-    t.datetime 'reset_password_sent_at', precision: nil
-    t.datetime 'remember_created_at', precision: nil
-    t.integer 'sign_in_count', default: 0, null: false
-    t.datetime 'current_sign_in_at', precision: nil
-    t.datetime 'last_sign_in_at', precision: nil
-    t.string 'current_sign_in_ip'
-    t.string 'last_sign_in_ip'
-    t.datetime 'created_at', precision: nil, null: false
-    t.datetime 'updated_at', precision: nil, null: false
-    t.string 'confirmation_token'
-    t.datetime 'confirmed_at', precision: nil
-    t.datetime 'confirmation_sent_at', precision: nil
-    t.string 'unconfirmed_email'
-    t.string 'first_name', null: false
-    t.string 'last_name', null: false
-    t.string 'mobile_phone'
-    t.string 'timezone', null: false
-    t.string 'global_search_default'
-    t.bigint 'user_status_id', null: false
-    t.datetime 'last_sign_in_with_twilio_verify', precision: nil
-    t.boolean 'twilio_verify_enabled', default: true, null: false
-    t.string 'invitation_token'
-    t.datetime 'invitation_created_at', precision: nil
-    t.datetime 'invitation_sent_at', precision: nil
-    t.datetime 'invitation_accepted_at', precision: nil
-    t.integer 'invitation_limit'
-    t.bigint 'invited_by_id'
-    t.integer 'invitations_count', default: 0
-    t.boolean 'external', default: false, null: false
-    t.integer 'failed_attempts', default: 0, null: false
-    t.string 'unlock_token'
-    t.datetime 'locked_at', precision: nil
-    t.datetime 'password_changed_at', precision: nil
-    t.datetime 'last_activity_at', precision: nil
-    t.datetime 'expired_at', precision: nil
-    t.jsonb 'filter_defaults'
-    t.boolean 'profile_entered', default: false, null: false
-    t.date 'birth_date'
-    t.string 'language', default: 'en', null: false
-    t.string 'detected_timezone'
-    t.string 'ignored_timezone'
-    t.string 'detected_timezone_js'
-    t.index ['confirmation_token'], name: 'index_users_on_confirmation_token', unique: true
-    t.index ['created_at'], name: 'index_users_on_created_at'
-    t.index ['email'], name: 'index_users_on_email', unique: true
-    t.index ['expired_at'], name: 'index_users_on_expired_at'
-    t.index ['first_name'], name: 'index_users_on_first_name'
-    t.index ['invitation_token'], name: 'index_users_on_invitation_token', unique: true
-    t.index ['invitations_count'], name: 'index_users_on_invitations_count'
-    t.index ['invited_by_id'], name: 'index_users_on_invited_by_id'
-    t.index ['last_activity_at'], name: 'index_users_on_last_activity_at'
-    t.index ['last_name'], name: 'index_users_on_last_name'
-    t.index ['password_changed_at'], name: 'index_users_on_password_changed_at'
-    t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true
-    t.index ['user_status_id'], name: 'index_users_on_user_status_id'
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "confirmation_token"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
+    t.string "unconfirmed_email"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "mobile_phone"
+    t.string "timezone", null: false
+    t.string "global_search_default"
+    t.bigint "user_status_id", null: false
+    t.datetime "last_sign_in_with_twilio_verify", precision: nil
+    t.boolean "twilio_verify_enabled", default: true, null: false
+    t.string "invitation_token"
+    t.datetime "invitation_created_at", precision: nil
+    t.datetime "invitation_sent_at", precision: nil
+    t.datetime "invitation_accepted_at", precision: nil
+    t.integer "invitation_limit"
+    t.bigint "invited_by_id"
+    t.integer "invitations_count", default: 0
+    t.boolean "external", default: false, null: false
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at", precision: nil
+    t.datetime "password_changed_at", precision: nil
+    t.datetime "last_activity_at", precision: nil
+    t.datetime "expired_at", precision: nil
+    t.boolean "profile_entered", default: false, null: false
+    t.date "birth_date"
+    t.string "language", default: "en", null: false
+    t.string "detected_timezone"
+    t.string "ignored_timezone"
+    t.string "detected_timezone_js"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["created_at"], name: "index_users_on_created_at"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["expired_at"], name: "index_users_on_expired_at"
+    t.index ["first_name"], name: "index_users_on_first_name"
+    t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
+    t.index ["invitations_count"], name: "index_users_on_invitations_count"
+    t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
+    t.index ["last_activity_at"], name: "index_users_on_last_activity_at"
+    t.index ["last_name"], name: "index_users_on_last_name"
+    t.index ["password_changed_at"], name: "index_users_on_password_changed_at"
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["user_status_id"], name: "index_users_on_user_status_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

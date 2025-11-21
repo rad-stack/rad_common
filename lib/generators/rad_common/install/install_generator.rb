@@ -33,12 +33,11 @@ module RadCommon
         add_rad_config_setting 'show_sign_in_marketing', 'false'
         add_rad_config_setting 'filter_toggle_default_behavior', 'always_open'
         remove_rad_factories
-        remove_legacy_rails_config_setting
+        remove_old_rad_config_settings
         update_credentials
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
-        search_and_replace 'sticky_filters:', 'default_sticky_filters:'
         gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
         gsub_file 'Gemfile', %r{https://github.com/jayywolff/twilio-verify-devise.git}, 'https://github.com/rad-stack/twilio-verify-devise.git'
         gsub_file 'Gemfile.lock', %r{https://github.com/jayywolff/twilio-verify-devise.git}, 'https://github.com/rad-stack/twilio-verify-devise.git'
@@ -392,11 +391,15 @@ module RadCommon
           File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
         end
 
-        def remove_legacy_rails_config_setting
-          return unless rad_config_setting_exists?('legacy_rails_config')
+        def remove_old_rad_config_settings
+          remove_rad_config_setting 'legacy_rails_config'
+          remove_rad_config_setting 'temp_sticky_filters_list'
+        end
 
-          say_status :remove, 'legacy_rails_config from rad_common.yml'
-          gsub_file RAD_CONFIG_FILE, /^\s*legacy_rails_config:\s*.*\n/, ''
+        def remove_rad_config_setting(key)
+          return unless rad_config_setting_exists?(key)
+
+          raise "remove the old setting named #{key} from rad_commony.yml, I'm too lazy to code it right now"
         end
 
         def update_credentials
@@ -813,6 +816,7 @@ module RadCommon
           apply_migration '20251103191522_remove_embedding_metadata.rb'
           apply_migration '20251016155902_create_custom_reports.rb'
           apply_migration '20251103194914_create_search_preferences.rb'
+          apply_migration '20251120171951_remove_legacy_filter_settings.rb'
         end
 
         def installed_app_name

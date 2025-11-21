@@ -114,21 +114,8 @@ namespace :rad_common do
     end
   end
 
-  task migrate_filter_preferences: :environment do
-    User.where.not(filter_defaults: [nil, {}]).find_each do |user|
-      filter_defaults = user.filter_defaults
-      next if filter_defaults.blank?
-
-      filter_defaults.each_key do |search_name|
-        next unless RadConfig.temp_sticky_filters_list!.include?(search_name)
-
-        filter_values = filter_defaults[search_name] || {}
-
-        pref = SearchPreference.find_or_initialize_by(user: user, search_class: search_name)
-        pref.set_defaults(sticky_filters: true)
-        pref.search_filters = filter_values
-        pref.save!(validate: false)
-      end
-    end
+  task build_js_css: :environment do
+    system('yarn build')
   end
+  Rake::Task['assets:precompile'].enhance(['rad_common:build_js_css']) if Rake::Task.task_defined?('assets:precompile')
 end
