@@ -1,0 +1,35 @@
+// Helps with flicker on page load
+.selectpicker:not(.ts-wrapper), .selectpicker-search:not(.ts-wrapper) {
+  visibility: hidden;
+  height: 10px !important;
+  overflow: hidden;
+}
+
+// Keeps height consistent with single/multi select
+.ts-wrapper.multi.has-items .ts-control {
+  padding-top: 3px !important;
+  padding-bottom: 0 !important;
+}
+
+// Prevent wrapping of long text in select options
+.ts-control .item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Tweak dropdown height
+.ts-dropdown-content{
+  max-height: 300px !important;
+}
+
+// Show full text in multi select
+.ts-wrapper.multi .ts-control .item {
+  white-space: wrap;
+  overflow: visible;
+}
+
+.ts-wrapper.multi .ts-control>div.active {
+  background: #efefef !important;
+  color: #343a40 !important;
+}
