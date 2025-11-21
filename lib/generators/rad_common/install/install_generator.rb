@@ -31,8 +31,9 @@ module RadCommon
         add_rad_config_setting 'portal', 'false'
         add_rad_config_setting 'validate_user_domains', 'true'
         add_rad_config_setting 'show_sign_in_marketing', 'false'
+        add_rad_config_setting 'filter_toggle_default_behavior', 'always_open'
         remove_rad_factories
-        remove_legacy_rails_config_setting
+        remove_old_rad_config_settings
         update_credentials
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
@@ -390,11 +391,15 @@ Seeder.new.seed!
           File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
         end
 
-        def remove_legacy_rails_config_setting
-          return unless rad_config_setting_exists?('legacy_rails_config')
+        def remove_old_rad_config_settings
+          remove_rad_config_setting 'legacy_rails_config'
+          remove_rad_config_setting 'temp_sticky_filters_list'
+        end
 
-          say_status :remove, 'legacy_rails_config from rad_common.yml'
-          gsub_file RAD_CONFIG_FILE, /^\s*legacy_rails_config:\s*.*\n/, ''
+        def remove_rad_config_setting(key)
+          return unless rad_config_setting_exists?(key)
+
+          raise "remove the old setting named #{key} from rad_commony.yml, I'm too lazy to code it right now"
         end
 
         def update_credentials
@@ -808,6 +813,8 @@ gem 'propshaft'
           apply_migration '20251024225222_fix_chat_types.rb'
           apply_migration '20251027181305_rename_chat_type_to_chat_class.rb'
           apply_migration '20251103191522_remove_embedding_metadata.rb'
+          apply_migration '20251103194914_create_search_preferences.rb'
+          apply_migration '20251120171951_remove_legacy_filter_settings.rb'
         end
 
         def installed_app_name

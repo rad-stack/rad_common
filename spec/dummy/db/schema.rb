@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_03_191522) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_20_171951) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -214,6 +214,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_191522) do
     t.string "invoice_email"
     t.bigint "category_id"
     t.string "tags", default: [], null: false, array: true
+    t.string "api_key"
     t.index ["category_id"], name: "index_divisions_on_category_id"
     t.index ["created_at"], name: "index_divisions_on_created_at"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
@@ -334,6 +335,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_191522) do
     t.index ["user_id"], name: "index_saved_search_filters_on_user_id"
   end
 
+  create_table "search_preferences", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "search_class", null: false
+    t.integer "toggle_behavior"
+    t.boolean "sticky_filters", default: false, null: false
+    t.jsonb "search_filters", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "search_class"], name: "unique_search_preferences", unique: true
+    t.index ["user_id"], name: "index_search_preferences_on_user_id"
+  end
+
   create_table "security_roles", force: :cascade do |t|
     t.string "name", null: false
     t.boolean "admin", default: false, null: false
@@ -439,7 +452,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_191522) do
     t.datetime "password_changed_at", precision: nil
     t.datetime "last_activity_at", precision: nil
     t.datetime "expired_at", precision: nil
-    t.jsonb "filter_defaults"
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
     t.string "language", default: "en", null: false
@@ -477,6 +489,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_191522) do
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
   add_foreign_key "saved_search_filters", "users"
+  add_foreign_key "search_preferences", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
   add_foreign_key "user_clients", "clients"
