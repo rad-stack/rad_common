@@ -77,7 +77,8 @@ export default class extends Controller {
       // Get custom label from the input field, or use the data attribute, or generate it
       const labelInput = row.querySelector('input[type="text"]');
       const customLabel = labelInput ? labelInput.value : (row.dataset.columnLabel || this.generateLabel(colName));
-      const formula = row.dataset.columnFormula || '';
+
+      const formula = this.buildFormulaForRow(row, isCalculated);
 
       const sortableCheckbox = row.querySelector('input[type="checkbox"]');
       const isSortable = sortableCheckbox ? sortableCheckbox.checked : false;
@@ -116,6 +117,32 @@ export default class extends Controller {
     });
   }
 
+  buildFormulaForRow(row, isCalculated) {
+    const transforms = row.dataset.columnFormula || '';
+
+    if (isCalculated) {
+      const calculation = row.dataset.columnCalculation || '';
+      const calcObj = calculation ? this.parseJson(calculation) : null;
+      const transformsArr = transforms ? this.parseJson(transforms) : [];
+
+      if (calcObj) {
+        const combined = [calcObj, ...(Array.isArray(transformsArr) ? transformsArr : [])];
+        return JSON.stringify(combined);
+      }
+    }
+
+    return transforms;
+  }
+
+  parseJson(str) {
+    if (!str) return null;
+    try {
+      return JSON.parse(str);
+    } catch {
+      return null;
+    }
+  }
+
 
   createHiddenInput(name, value) {
     const input = document.createElement('input');
@@ -133,6 +160,27 @@ export default class extends Controller {
 
     const refreshedUrl = new URL(url, window.location.origin);
     refreshedUrl.searchParams.set('_', Date.now().toString());
+
+    const frameId = this.hasCalculatedColumnFrameTarget
+      ? this.calculatedColumnFrameTarget.id
+      : 'calculated-column-form-frame';
+
+    Turbo.visit(refreshedUrl.toString(), { frame: frameId });
+  }
+
+  editCalculatedColumn(event) {
+    const url = event.currentTarget.dataset.calculatedColumnUrl;
+    if (!url) {
+      return;
+    }
+
+    const refreshedUrl = new URL(url, window.location.origin);
+    refreshedUrl.searchParams.set('_', Date.now().toString());
+
+    const row = event.currentTarget.closest('tr');
+    if (row) {
+      refreshedUrl.searchParams.set('row_id', row.id);
+    }
 
     const frameId = this.hasCalculatedColumnFrameTarget
       ? this.calculatedColumnFrameTarget.id
