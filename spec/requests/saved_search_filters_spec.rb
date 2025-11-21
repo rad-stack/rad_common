@@ -3,12 +3,12 @@ require 'rails_helper'
 RSpec.describe 'Saved Search Filters' do
   let(:user) { create :admin }
   let(:saved_search_filter) { create :saved_search_filter, user: user }
+  let(:filters) { { name_like_match_type: 'Division' } }
   let(:valid_attributes) do
     { search_class: 'UserSearch',
       name: 'Test Filter',
       search_filters: filters.to_json }
   end
-  let(:filters) { { name_like_match_type: 'Division' } }
 
   before { login_as user, scope: :user }
 

@@ -11,6 +11,6 @@
   - else
     = link_to icon(:times),
               saved_filter,
-              class: 'text-dark',
+              class: 'text-danger',
               data: { turbo_method: :delete, turbo_confirm: 'Are you sure? This will delete the saved filter.' },
               id: "delete_saved_filter_#{saved_filter.id}"
