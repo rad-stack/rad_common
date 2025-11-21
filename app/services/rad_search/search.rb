@@ -142,7 +142,7 @@ module RadSearch
     end
 
     def saved_filters
-      @saved_filters ||= Pundit.policy_scope(current_user, SavedSearchFilter).where(search_class: self.class.name)
+      @saved_filters ||= Pundit.policy_scope(current_user, SavedSearchFilter).where(search_class: search_name)
     end
 
     def applied_saved_filter
