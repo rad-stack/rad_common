@@ -70,7 +70,7 @@ Rails.application.configure do
   config.action_mailer.default charset: 'utf-8'
   config.action_mailer.smtp_settings = { address: 'localhost', port: 1025, domain: 'example.com' }
 
-  config.active_job.queue_adapter = :inline
+  config.active_job.queue_adapter = :sidekiq
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = false
