@@ -1,6 +1,9 @@
 require('trix');
 require('@rails/actiontext');
 
+import * as ActiveStorage from '@rails/activestorage';
+ActiveStorage.start();
+
 import 'rad_common/jquery';
 import 'rad_common/jqueryAreYouSure';
 
