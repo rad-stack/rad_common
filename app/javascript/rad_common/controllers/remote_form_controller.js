@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { Toast } from '../toast';
+import { Toast } from 'rad_common/toast';
 
 export default class extends Controller {
   static values = { successMessage: String, errorMessage: String };

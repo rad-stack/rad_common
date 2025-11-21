@@ -1,0 +1,12 @@
+.sortable-item {
+  cursor: grab;
+  transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+
+  &.is-dragging {
+    opacity: 0.6;
+    transform: scale(1.05);
+    cursor: grabbing;
+    box-shadow: 0 5px 10px var(--bs-dark);
+    z-index: 1000;
+  }
+}
