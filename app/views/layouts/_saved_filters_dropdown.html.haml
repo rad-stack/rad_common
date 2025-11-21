@@ -1,5 +1,5 @@
 :ruby
-  dropdown_btn_class = "btn #{search.search_params? ? 'btn-warning' : 'btn-primary'} btn-sm dropdown-toggle ms-1 mb-2"
+  dropdown_btn_class = "btn #{search.search_params? ? 'btn-warning' : 'btn-primary'} btn-sm dropdown-toggle"
   save_btn_class = search.search_params? ? '' : 'disabled'
   current_saved_filter_name = search.applied_saved_filter
 %button#saved-search-filters-dropdown{ 'aria-expanded' => 'false',
