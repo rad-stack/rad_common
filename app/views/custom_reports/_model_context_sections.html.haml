@@ -1,35 +1,47 @@
-= turbo_frame_tag 'report_model_context' do
-  .row
-    .col-12
-      %h5.mb-3
-        %i.fa.fa-link.me-2
-        Related Tables (Joins)
+:ruby
+  tabs = [
+    { id: 'joins', title: 'Joins' },
+    { id: 'columns', title: 'Columns' },
+    { id: 'filters', title: 'Filters' },
+  ]
+  tab_presenter = TabPresenter.new(tabs: tabs, view_context: self)
+= tab_presenter.render_tabs
 
-  .mb-4
-    = render 'joins_section', custom_report: custom_report
+.tab-content
+  = tab_presenter.render_tab_content('joins') do
+    = turbo_frame_tag 'report_model_context' do
+      .row
+        .col-12
+          %h5.mb-3
+            %i.fa.fa-link.me-2
+            Related Tables (Joins)
 
-  %hr.mt-4
+      .mb-4
+        = render 'joins_section', custom_report: custom_report
+      %hr.mt-4
 
-  %h5.mb-3
-    %i.fa.fa-columns.me-2
-    Report Columns
+  = tab_presenter.render_tab_content('columns') do
+    %h5.mb-3
+      %i.fa.fa-columns.me-2
+      Report Columns
 
-  .mb-4{ data: { report_builder_target: 'columnsSection' } }
-    = render 'columns_section', custom_report: custom_report
+    .mb-4{ data: { report_builder_target: 'columnsSection' } }
+      = render 'columns_section', custom_report: custom_report
 
-  %hr.mt-4
+    %hr.mt-4
 
-  %h5.mt
-    %i.fa.fa-filter.me-2
-    Filters
+  = tab_presenter.render_tab_content('filters') do
+    %h5.mt
+      %i.fa.fa-filter.me-2
+      Filters
 
-  = turbo_frame_tag 'report_filters_section' do
-    - if custom_report.report_model.present?
-      = render 'filters_section', custom_report: custom_report
-    - else
-      .alert.alert-info
-        %i.fa.fa-info-circle.me-2
-        Select a model first to add filters
+    = turbo_frame_tag 'report_filters_section' do
+      - if custom_report.report_model.present?
+        = render 'filters_section', custom_report: custom_report
+      - else
+        .alert.alert-info
+          %i.fa.fa-info-circle.me-2
+          Select a model first to add filters
 
-  .form-actions.mt-3
-    %button.btn.btn-success{ type: 'submit', name: 'commit' } Save
+    .form-actions.mt-3
+      %button.btn.btn-success{ type: 'submit', name: 'commit' } Save
