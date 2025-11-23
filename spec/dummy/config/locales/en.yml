@@ -3,6 +3,7 @@ en:
     attributes:
       division:
         additional_info: Additional Data
+        api_key: API Key
         division_statuses:
           status_active: Active
           status_pending: Pending
