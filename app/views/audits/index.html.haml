@@ -16,11 +16,7 @@
           %td
             %p= format_datetime(audit.created_at, include_seconds: true)
             %p #{distance_of_time_in_words_to_now(audit.created_at)} ago
-          %td
-            - if audit.action == 'destroy'
-              #{audit.auditable_type} (#{audit.auditable_id})
-            - else
-              = audit_model_link(audit, safe_auditable(audit))
+          %td= audit_model_link audit
           %td= audit.auditable_id
           %td= secured_link audit.user
           %td= display_audited_action audit
