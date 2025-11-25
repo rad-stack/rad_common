@@ -165,13 +165,15 @@ module RadSearch
       end
 
       def start_at_value(params)
-        return @default_start_value.to_date if params.blank? && @default_start_value
+        search_empty = (params.blank? || !params.has_key?(start_input))
+        return @default_start_value.to_date if search_empty && @default_start_value
 
         Date.parse(params[start_input]) if params[start_input].present?
       end
 
       def end_at_value(params)
-        return @default_end_value.to_date if params.blank? && @default_end_value
+        search_empty = (params.blank? || !params.has_key?(end_input))
+        return @default_end_value.to_date if search_empty && @default_end_value
 
         Date.parse(params[end_input]) if params[end_input].present?
       end
