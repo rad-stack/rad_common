@@ -21,6 +21,8 @@ export default class extends Controller {
 
 
   connect() {
-    this.onSecurityRoleChanged();
+    if(this.hasSecurityRoleTarget) {
+      this.onSecurityRoleChanged();
+    }
   }
 }
