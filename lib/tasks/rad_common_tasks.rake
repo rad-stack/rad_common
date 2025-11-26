@@ -113,4 +113,9 @@ namespace :rad_common do
       session.finished
     end
   end
+
+  task build_js_css: :environment do
+    system('yarn build')
+  end
+  Rake::Task['assets:precompile'].enhance(['rad_common:build_js_css']) if Rake::Task.task_defined?('assets:precompile')
 end

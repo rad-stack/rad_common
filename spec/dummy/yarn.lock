@@ -1503,27 +1503,6 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-"rad_common_js@https://github.com/rad-stack/rad_common_js#557c6ed48e4c7866c293f4ac0db13bb3b302d811":
-  version "2.1.8"
-  resolved "https://github.com/rad-stack/rad_common_js#557c6ed48e4c7866c293f4ac0db13bb3b302d811"
-  dependencies:
-    "@fullcalendar/bootstrap5" "^6.1.11"
-    "@hotwired/stimulus" "^3.2.2"
-    "@hotwired/turbo-rails" "^8.0.12"
-    "@popperjs/core" "^2.11.8"
-    "@rails/actiontext" "^7.2.2"
-    "@rails/ujs" "^6.0.5"
-    "@sentry/browser" "^8.38.0"
-    bootstrap "^5.3.7"
-    fullcalendar "^6.1.11"
-    jquery "^3.3.1"
-    jquery-ujs "^1.2.3"
-    moment "^2.29.4"
-    postcss "^8.5.1"
-    readmore-js "^2.2.1"
-    tom-select "^2.4.1"
-    trix "^2.1.15"
-
 readdirp@^4.0.1:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/readdirp/-/readdirp-4.0.2.tgz#388fccb8b75665da3abffe2d8f8ed59fe74c230a"
