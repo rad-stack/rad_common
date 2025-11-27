@@ -379,6 +379,42 @@ RSpec.describe 'CustomReports' do
       end
     end
 
+    context 'when editing calculated columns', :flakey_js, :ignore_browser_errors do
+      let(:custom_report_with_calc) do
+        CustomReport.create!(
+          name: 'Division Report',
+          report_model: 'Division',
+          configuration: {
+            columns: [
+              { name: 'name_and_code', label: 'Name and Code', is_calculated: true,
+                formula: [{ type: 'CONCAT_COLUMNS', params: { columns: %w[divisions.code divisions.name],
+                                                              separator: ' ' } }] }
+            ],
+            joins: [],
+            filters: []
+          }
+        )
+      end
+
+      before { create :division, name: 'east', code: '123' }
+
+      it 'opens edit modal with existing calculated column data' do
+        visit edit_custom_report_path(custom_report_with_calc)
+
+        within '#selected-columns-list' do
+          expect(page).to have_content('calculated.name_and_code')
+          click_button 'calculated'
+        end
+
+        within '#calculated-column-modal' do
+          expect(page).to have_content('Edit Calculated Column')
+          expect(page).to have_field('calculated_column_label', with: 'Name and Code')
+          expect(page).to have_select('calculated_column_formula_type', selected: 'Concatenate Columns')
+          expect(page).to have_button('Update Column')
+        end
+      end
+    end
+
     context 'when adding and removing joins' do
       it 'updates joins section and available tables', :flakey_js do
         visit edit_custom_report_path(custom_report)
