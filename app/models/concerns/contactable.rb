@@ -64,17 +64,6 @@ module Contactable
     address_metadata['changes'].values.join(', ')
   end
 
-  def get_address(mode)
-    return unless address?
-
-    add_1 = address_1
-    components = [add_1]
-    components.push(address_2) if address_2.present? && mode > 1
-    components += [city, state, zipcode]
-
-    components.join(', ')
-  end
-
   private
 
     def run_smarty?
