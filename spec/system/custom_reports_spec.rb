@@ -415,6 +415,46 @@ RSpec.describe 'CustomReports' do
       end
     end
 
+    context 'when editing reports with nested joins' do
+      let(:custom_report_with_nested_joins) do
+        CustomReport.create!(
+          name: 'Division with Nested Joins',
+          report_model: 'Division',
+          configuration: {
+            columns: [
+              { name: 'name', select: 'divisions.name', label: 'Division Name', sortable: false },
+              { name: 'email', select: 'owner.email', label: 'Owner Email', sortable: false },
+              { name: 'name', select: 'owner.user_status.name', label: 'User Status', sortable: false }
+            ],
+            joins: %w[owner owner.user_status],
+            filters: []
+          }
+        )
+      end
+
+      it 'displays columns from nested joins in selected columns list' do
+        visit edit_custom_report_path(custom_report_with_nested_joins)
+
+        within '#selected-columns-list' do
+          expect(page).to have_content('Division.name')
+          expect(page).to have_content('Owner.email')
+          expect(page).to have_content('Owner → User Status.name')
+
+          expect(page).to have_css('tr.selected-column-row', count: 3)
+
+          division_name_input = find('tr#selected-column-divisions-name input[type="text"]')
+          expect(division_name_input.value).to eq('Division Name')
+
+          owner_email_input = find('tr#selected-column-owner-email input[type="text"]')
+          expect(owner_email_input.value).to eq('Owner Email')
+
+          nested_join_row = find('tr', text: 'Owner → User Status.name')
+          user_status_input = nested_join_row.find('input[type="text"]')
+          expect(user_status_input.value).to eq('User Status')
+        end
+      end
+    end
+
     context 'when adding and removing joins' do
       it 'updates joins section and available tables', :flakey_js do
         visit edit_custom_report_path(custom_report)
