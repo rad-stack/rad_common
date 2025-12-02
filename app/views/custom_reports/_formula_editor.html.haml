@@ -5,7 +5,8 @@
     .modal-content
       .modal-header
         %h5.modal-title#formula-editor-modal-label
-          Transform Editor
+          %i.fa.fa-calculator.me-2
+          Transforms
           %small.text-muted.ms-2{ data: { formula_editor_target: 'columnName' } }
         %button.btn-close{ type: 'button', data: { bs_dismiss: 'modal' }, aria: { label: 'Close' } }
       .modal-body
@@ -13,11 +14,11 @@
           .mb-3{ data: { formula_editor_target: 'transformsList' } }
         .card.mb-3.shadow-sm
           .card-body
-            %label.form-label.mb-2 Add Transformation
+            %label.form-label.mb-2 Add Transform
             %select.form-select.mb-3.selectpicker{ data: { action: 'change->formula-editor#previewTransform',
                                                            formula_editor_target: 'transformSelect' },
                                                    id: 'transform-select' }
-              %option{ value: '' } Choose a transformation...
+              %option{ value: '' } Choose a transform...
               - RadReports::FormulaRegistry.grouped_options.each do |category, formulas|
                 %optgroup{ label: category }
                   - formulas.each do |label, type|
@@ -32,4 +33,4 @@
                 Add to List
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { bs_dismiss: 'modal' } } Cancel
-        %button.btn.btn-primary{ type: 'button', data: { action: 'click->formula-editor#saveFormula' } } Apply Formula
+        %button.btn.btn-primary{ type: 'button', data: { action: 'click->formula-editor#saveFormula' } } Apply Transforms

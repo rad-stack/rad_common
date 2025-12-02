@@ -44,7 +44,7 @@ module CustomReportsHelper
     end
   end
 
-  def calculated_column_class(calculated_column)
+  def calculated_column_class(calculated_column, type)
     calculated_column.formula_type.blank? || calculated_column.formula_type != type ? 'd-none' : nil
   end
 
