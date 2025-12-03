@@ -15,6 +15,8 @@
     "@sentry/browser": "^8.38.0",
     "bootstrap": "^5.3.7",
     "esbuild": "^0.25.8",
+    "chart.js": "^4.4.7",
+    "chartkick": "^5.0.1",
     "fullcalendar": "^6.1.11",
     "jquery": "^3.3.1",
     "jquery-ujs": "^1.2.3",
