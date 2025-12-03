@@ -52,6 +52,7 @@ module RadCommon
         copy_file '../../../../../spec/dummy/.nvmrc', '.nvmrc'
         copy_file '../../../../../spec/dummy/.active_record_doctor.rb', '.active_record_doctor.rb'
         copy_file '../gitignore.txt', '.gitignore'
+        copy_file '../../../../../spec/spec_helper.rb', 'spec/spec_helper.rb'
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
 
@@ -608,6 +609,10 @@ gem 'rubocop-capybara'
           end
           inject_into_file 'Gemfile', after: "gem 'better_errors'\n" do <<-'RUBY'
   gem 'tty-prompt'
+        RUBY
+          end
+          inject_into_file 'Gemfile', after: "gem 'parallel_tests'\n" do <<-'RUBY'
+  gem 'rspec-retry'
         RUBY
           end
 
