@@ -6,7 +6,7 @@ module RadHelper
 
     style = secured_link_style(record)
 
-    if Pundit.policy!(current_user, record).show?
+    if user_signed_in? && Pundit.policy!(current_user, record).show?
       if new_tab
         link_to record.to_s, record, format: format, class: style, target: '_blank', rel: 'noopener'
       else
