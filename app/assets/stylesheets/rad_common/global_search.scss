@@ -1,0 +1,20 @@
+.global-search-select {
+  width: 175px;
+  max-height: 500px;
+}
+
+.global-search-select .ts-control {
+  border-radius: 0;
+}
+
+.global-search-select .ts-dropdown {
+  width: 40vh;
+}
+
+.global-search-select .item {
+  display: none;
+}
+
+.global-search-select .option {
+  border-bottom: 1px solid #e0e0e0;
+}
