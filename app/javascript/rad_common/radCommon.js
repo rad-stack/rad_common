@@ -15,6 +15,9 @@ import { Duplicates } from './duplicates';
 import { RadTomSelect } from './radTomSelect';
 import { SentryTest } from './sentry';
 import { ActionTextFileValidations } from './actionTextFileValidations';
+import Chartkick from 'chartkick';
+import * as Chart from 'chart.js';
+Chartkick.use(Chart);
 
 import './radTurbo';
 

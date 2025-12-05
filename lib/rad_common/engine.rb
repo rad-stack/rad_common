@@ -8,6 +8,7 @@ module RadCommon
     require 'active_storage_validations'
     require 'audited'
     require 'authtrail'
+    require 'chartkick'
     require 'csv'
     require 'devise'
     require 'devise-twilio-verify'
