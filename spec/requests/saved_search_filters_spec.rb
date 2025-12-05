@@ -22,6 +22,15 @@ RSpec.describe 'Saved Search Filters' do
   end
 
   describe 'DELETE destroy' do
+    context 'when saved filter user is not the current user' do
+      before { saved_search_filter.update!(user: create(:user)) }
+
+      it 'responds with forbidden' do
+        delete "/saved_search_filters/#{saved_search_filter.id}", as: :turbo_stream
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
     it 'destroys an existing saved search filter' do
       delete saved_search_filter_path(saved_search_filter), as: :turbo_stream
       expect(response).to have_http_status(:ok)

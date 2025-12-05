@@ -4,3 +4,7 @@
   = render 'saved_search_filters/saved_filter', saved_filter: @saved_search_filter,
                                                 is_active: true,
                                                 path: request.referer
+= turbo_stream.replace 'current_saved_filter_mobile_false' do
+  = icon 'bookmark', @saved_search_filter.name
+= turbo_stream.replace 'current_saved_filter_mobile_true' do
+  = icon 'bookmark', @saved_search_filter.name
