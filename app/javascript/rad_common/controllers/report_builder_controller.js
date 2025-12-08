@@ -212,4 +212,60 @@ export default class extends Controller {
   generateLabel(colName) {
     return colName.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
   }
+
+  async selectAllColumns(event) {
+    event.preventDefault();
+    const selectAllButton = event.currentTarget;
+
+    const availableColumnsCard = document.querySelector('.col-md-6:first-child .card');
+    const selectedColumnsCard = document.querySelector('.col-md-6:last-child .card');
+
+    const originalHTML = selectAllButton.innerHTML;
+    selectAllButton.disabled = true;
+    selectAllButton.innerHTML = '<i class="fa fa-spinner fa-spin me-1"></i>Adding...';
+
+    this.addLoadingOverlay(availableColumnsCard);
+    this.addLoadingOverlay(selectedColumnsCard);
+
+    let addButton = this.getFirstAvailableColumnButton();
+    while (addButton) {
+      addButton.click();
+      await new Promise(resolve => setTimeout(resolve, 50));
+      addButton = this.getFirstAvailableColumnButton();
+    }
+
+    this.removeLoadingOverlay(availableColumnsCard);
+    this.removeLoadingOverlay(selectedColumnsCard);
+
+    selectAllButton.innerHTML = originalHTML;
+    selectAllButton.disabled = false;
+  }
+
+  getFirstAvailableColumnButton() {
+    const activeTabPane = document.querySelector('.tab-pane.show.active');
+    if (!activeTabPane) {
+      return null;
+    }
+    return activeTabPane.querySelector('a[data-testid="add-column-button"]');
+  }
+
+  addLoadingOverlay(element) {
+    if (!element) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'select-all-loading-overlay position-absolute top-0 start-0 end-0 bottom-0 bg-white bg-opacity-75 d-flex align-items-center justify-content-center';
+    overlay.style.zIndex = '10';
+    overlay.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>';
+    element.classList.add('position-relative');
+    element.appendChild(overlay);
+  }
+
+  removeLoadingOverlay(element) {
+    if (!element) return;
+
+    const overlay = element.querySelector('.select-all-loading-overlay');
+    if (overlay) {
+      overlay.remove();
+    }
+  }
 }
