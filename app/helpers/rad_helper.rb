@@ -37,8 +37,16 @@ module RadHelper
     "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}&d=mm"
   end
 
-  def show_actions?(klass)
-    Pundit.policy!(current_user, klass.new).update? || Pundit.policy!(current_user, klass.new).destroy?
+  def show_actions?(item)
+    unless item.respond_to?(:each)
+      return Pundit.policy!(current_user, item.new).update? || Pundit.policy!(current_user, item.new).destroy?
+    end
+
+    item.each do |record|
+      return true if Pundit.policy!(current_user, record).update? || Pundit.policy!(current_user, record).destroy?
+    end
+
+    false
   end
 
   def address_show_data(record)
