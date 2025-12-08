@@ -131,6 +131,8 @@ class RadConfig
     end
 
     def twilio_enabled?
+      return false if ENV['SKIP_SECRET_CONFIG_CHECK'].present?
+
       if secret_config_item(:twilio_account_sid).blank? &&
          secret_config_item(:twilio_auth_token).blank? &&
          secret_config_item(:twilio_phone_number).blank?
@@ -181,6 +183,8 @@ class RadConfig
     end
 
     def seeded_users!
+      return [] if ENV['SKIP_SECRET_CONFIG_CHECK'].present?
+
       raise 'missing seeded_users config' if Rails.application.credentials.seeded_users.blank?
 
       Rails.application.credentials.seeded_users
@@ -447,6 +451,8 @@ class RadConfig
     end
 
     def secret_config_item!(item)
+      return nil if ENV['SKIP_SECRET_CONFIG_CHECK'].present?
+
       value = secret_config_item(item)
       raise "required secret config item #{item} is missing" if value.blank?
 
@@ -486,6 +492,8 @@ class RadConfig
     end
 
     def check_validity!
+      return if ENV['SKIP_SECRET_CONFIG_CHECK'].present?
+
       check_aws!
       check_two_factor!
       check_smarty!
