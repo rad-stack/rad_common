@@ -3,8 +3,14 @@
 = turbo_frame_tag 'report_columns_section' do
   .row
     .col-md-6
-      %h6.mb-2
-        Available Columns
+      .d-flex.justify-content-between.align-items-center.mb-2
+        %h6.mb-0
+          Available Columns
+        %button.btn.btn-sm.btn-outline-primary{ type: 'button',
+                                                data: { action: 'click->report-builder#selectAllColumns' },
+                                                title: 'Add all columns from active table' }
+          %i.fa.fa-check-double.me-1
+          Select All
       .card.shadow-sm
         .card-body.p-0
           .row.g-0
@@ -26,17 +32,23 @@
               .tab-content.report-builder-tables-list.p-3
                 - presenter.columns_by_table.each do |table_info, cols|
                   - table_id = presenter.table_id_for(table_info)
+                  - available_cols = cols.reject { |col| presenter.selected_column_keys.include?(column_key(col)) }
                   .tab-pane.fade{ id: "columns-#{table_id}",
                                   class: presenter.table_tab_classes(table_info),
                                   role: 'tabpanel' }
-                    %table.table.table-sm.table-hover.mb-0
-                      %thead
-                        %tr
-                          %th.py-2.ps-2 Column Name
-                          %th.py-2 Type
-                          %th.py-2
-                      %tbody{ id: "available-columns-#{table_id}" }
-                        = render_columns(cols, presenter.selected_column_keys, table_id)
+                    - if available_cols.any?
+                      %table.table.table-sm.table-hover.mb-0
+                        %thead
+                          %tr
+                            %th.py-2.ps-2 Column Name
+                            %th.py-2 Type
+                            %th.py-2
+                        %tbody{ id: "available-columns-#{table_id}" }
+                          = render_columns(cols, presenter.selected_column_keys, table_id)
+                    - else
+                      .text-center.text-muted.py-5
+                        %i.fa.fa-check-circle.fa-2x.mb-2
+                        %p.mb-0 All columns from this table have been selected
 
     .col-md-6
       .d-flex.justify-content-between.align-items-center.mb-2
