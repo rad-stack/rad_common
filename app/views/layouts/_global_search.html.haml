@@ -26,7 +26,8 @@
                          'data-placeholder': initial_scope[:description],
                          'data-global-search-target': 'input',
                          'data-global-search-scope': initial_scope[:name],
-                         class: 'global-search-select mb-0'
+                         class: 'global-search-select mb-0',
+                         id: "search#{mobile ? '_mobile' : ''}"
         %span.input-group-text
           = icon_tooltip 'span', 'Super search takes longer than scoped search.', 'fa-globe', placement: 'bottom'
 

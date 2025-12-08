@@ -8,7 +8,7 @@
 - else
   .row.align-items-center
     .col.mb-2
-      = f.label filter.input_label, required: false
+      %label= filter.input_label
     - if filter.allow_not
       .col-auto
         = f.input "#{filter.searchable_name}_not",
