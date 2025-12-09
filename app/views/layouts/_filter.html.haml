@@ -4,6 +4,8 @@
               '#search-filter-collapse',
               data: { 'bs-toggle': 'collapse' },
               class: "btn #{search.search_params? ? 'btn-warning' : 'btn-primary'} btn-sm"
+    - if RadConfig.saved_search_filters_enabled?
+      = render 'layouts/saved_filters_dropdown', search: search, path: path, mobile: false
     = render 'search_preferences/modal', search_preference: search.search_preference,
                                          allow_sticky_filters: search.allow_sticky_filters?
 
@@ -11,10 +13,13 @@
   - flash.now[:error] = search.error_messages
 
 .d-block.d-md-none.text-end.mb-2.sticky-top.bg-white.py-2.border-bottom.border-secondary
-  %button.btn.w-100{ class: search.search_params? ? 'btn-warning' : 'btn-primary',
-                     type: 'button',
-                     data: { bs_toggle: 'modal', bs_target: '#mobile-filters-modal' } }
-    = icon 'filter', 'Filters'
+  .d-flex
+    %button.btn.flex-grow-1.me-2{ class: search.search_params? ? 'btn-warning' : 'btn-primary',
+                                  type: 'button',
+                                  data: { bs_toggle: 'modal', bs_target: '#mobile-filters-modal' } }
+      = icon 'filter', 'Filters'
+    - if RadConfig.saved_search_filters_enabled?
+      = render 'layouts/saved_filters_dropdown', search: search, path: path, mobile: true
 .modal.fade#mobile-filters-modal{ tabindex: '-1', role: 'dialog' }
   .modal-dialog{ role: 'document' }
     .modal-content
@@ -28,3 +33,4 @@
                             collapse_state_enabled_value: search.search_preference.remember_state?,
                             collapse_state_storage_key_value: "filter-collapse-#{search.search_name}" } }
   = render 'layouts/filter_form', search: search, path: path, paged_results: try(:paged_results), mobile: false
+= render 'saved_search_filters/modal', search_name: search.search_name, search_filters: search.search_params
