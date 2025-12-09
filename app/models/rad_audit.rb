@@ -15,7 +15,13 @@ class RadAudit < Audited::Audit
          .pluck(:associated_type)
   }
 
+  scope :sorted, -> { order(created_at: :desc) }
+
   def self.missing_audited_models
     (RadAudit.missing_auditable_models + RadAudit.missing_associated_models).uniq.sort
+  end
+
+  def self.for_record(record)
+    RadAudit.where(auditable: record).or(RadAudit.where(associated: record))
   end
 end
