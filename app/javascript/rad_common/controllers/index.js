@@ -11,6 +11,12 @@ import LlmChatFormController from './llm_chat_form_controller';
 import InvitationFormController from './invitation_forms_controller';
 import CollapseStateController from './collapse_state_controller';
 import ClipboardController from './clipboard_controller';
+import FormulaEditorController from './formula_editor_controller';
+import ReportBuilderController from './report_builder_controller';
+import SortableController from './sortable_controller';
+import CalculatedColumnFormController from './calculated_column_form_controller';
+import CustomReportFilterFormController from './custom_report_filter_form_controller';
+import ConfigEditorController from './config_editor_controller';
 
 export const radControllers = [
   { id: 'global-search', controller: GlobalSearchController },
@@ -25,5 +31,11 @@ export const radControllers = [
   { id: 'llm-chat-form', controller: LlmChatFormController },
   { id: 'invitation-form', controller: InvitationFormController },
   { id: 'collapse-state', controller: CollapseStateController },
-  { id: 'clipboard', controller: ClipboardController }
+  { id: 'clipboard', controller: ClipboardController },
+  { id: 'formula-editor', controller: FormulaEditorController },
+  { id: 'report-builder', controller: ReportBuilderController },
+  { id: 'sortable', controller: SortableController },
+  { id: 'calculated-column-form', controller: CalculatedColumnFormController },
+  { id: 'custom-report-filter-form', controller: CustomReportFilterFormController },
+  { id: 'config-editor', controller: ConfigEditorController }
 ];

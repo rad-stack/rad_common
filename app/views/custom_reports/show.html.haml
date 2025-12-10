@@ -1,0 +1,19 @@
+.card
+  = render 'layouts/card_header',
+           title: "#{@custom_report.name} (#{@results.total_count})",
+           additional_actions: export_buttons('CustomReport',
+                                              override_path: 'custom_report_path',
+                                              additional_params: { id: @custom_report.id })
+  .card-body
+    - if @report.filters.any?
+      = render 'layouts/filter', search: @report, path: custom_report_path(@custom_report)
+
+    = paginate @results, theme: 'bootstrap-5'
+    %table.table.table-striped.table-bordered
+      %tr
+        = render 'layouts/sort_headers', search: @report
+      - @results.each do |record|
+        %tr
+          - @report.column_definitions.each do |column_def|
+            %td= render 'custom_reports/column_value', record: record, column_def: column_def, report: @report
+    = paginate @results, theme: 'bootstrap-5'
