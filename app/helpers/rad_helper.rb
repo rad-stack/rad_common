@@ -6,7 +6,7 @@ module RadHelper
 
     style = secured_link_style(record)
 
-    if Pundit.policy!(current_user, record).show?
+    if show_route_exists?(record) && Pundit.policy!(current_user, record).show?
       if new_tab
         link_to record.to_s, record, format: format, class: style, target: '_blank', rel: 'noopener'
       else
@@ -37,8 +37,16 @@ module RadHelper
     "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}&d=mm"
   end
 
-  def show_actions?(klass)
-    Pundit.policy!(current_user, klass.new).update? || Pundit.policy!(current_user, klass.new).destroy?
+  def show_actions?(item)
+    unless item.respond_to?(:each)
+      return Pundit.policy!(current_user, item.new).update? || Pundit.policy!(current_user, item.new).destroy?
+    end
+
+    item.each do |record|
+      return true if Pundit.policy!(current_user, record).update? || Pundit.policy!(current_user, record).destroy?
+    end
+
+    false
   end
 
   def address_show_data(record)
