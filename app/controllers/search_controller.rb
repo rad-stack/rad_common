@@ -35,7 +35,7 @@ class SearchController < ApplicationController
       end
 
       if the_object
-        if current_user.external? && RadConfig.portal?
+        if RadConfig.portal? && current_user.portal_user?
           redirect_to [:portal, the_object]
         else
           redirect_to the_object

@@ -1,0 +1,27 @@
+body.wicked-report-pdf {
+  .card {
+    border: 2px solid #a9a9a9;;
+    page-break-inside: avoid;
+  }
+
+  .card-header {
+    font-weight: bold;
+    padding-bottom: 0;
+  }
+
+  .logo-thumbnail {
+    height: auto;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 125px;
+  }
+
+  .fa {
+    display: none;
+  }
+
+  hr {
+    background-color: #a9a9a9;
+  }
+}

@@ -12,20 +12,13 @@ module RadCommonRoutes
       devise_for :users, path: 'auth', controllers: devise_controllers, path_names: devise_paths
 
       authenticate :user, ->(u) { u.internal? } do
-        resources :users do
+        resources :users, only: :destroy do
           get :export, on: :collection
 
           member do
-            put :resend_invitation
             put :confirm
             put :reactivate
-            put :test_email
-            put :test_sms
-            put :update_timezone
-            put :ignore_timezone
           end
-
-          resources :user_clients, only: :new
         end
 
         resources :security_roles do
@@ -44,6 +37,13 @@ module RadCommonRoutes
           end
         end
 
+        resources :assistant_sessions, only: %i[show update index] do
+          member do
+            patch :chat_response
+            get :check_response
+          end
+        end
+
         resources :audits, only: :index
         resources :login_activities, only: :index
         resources :system_messages, only: %i[new create show]
@@ -55,7 +55,6 @@ module RadCommonRoutes
         resources :contact_log_recipients, only: :show
         resources :saved_search_filters, only: :destroy
         resources :user_security_roles, only: :show
-        resources :user_clients, only: %i[create destroy]
         resources :json_web_tokens, only: :new
 
         resources :impersonations, only: [] do
@@ -70,31 +69,42 @@ module RadCommonRoutes
         put 'set_js_timezone', to: 'users#set_js_timezone'
       end
 
-      authenticate :user, ->(u) { u.external? } do
-        resources :users, only: %i[index show]
-      end
-
       authenticate :user, ->(u) { u.admin? } do
         mount Sidekiq::Web => '/sidekiq'
+      end
+
+      resources :users, except: :destroy do
+        member do
+          put :resend_invitation
+          put :test_email
+          put :test_sms
+          put :update_timezone
+          put :ignore_timezone
+        end
+
+        resources :user_clients, only: :new
       end
 
       resources :notifications, only: :index
       resources :notification_settings, only: %i[index create]
       resources :user_profiles, only: %i[show edit update] if RadConfig.user_profiles?
       resources :twilio_statuses, only: :create
+      resources :sinch_statuses, only: :create
       resources :twilio_replies, only: :create
       resources :sendgrid_statuses, only: :create
       resources :company_contacts, only: %i[new create]
+      resources :user_clients, only: %i[create destroy]
+      resources :search_preferences, only: %i[create update]
 
-      delete 'attachments/:id(.:format)', to: 'rad_common/attachments#destroy', as: :attachment
+      delete 'attachments/:id(.:format)', to: 'attachments#destroy', as: :attachment
 
-      get 'attachments/:class_name/:id(.:format)/:variant(.:format)', to: 'rad_common/attachments#download_variant'
-      get 'attachments/:id(.:format)', to: 'rad_common/attachments#download'
+      get 'attachments/:class_name/:id(.:format)/:variant(.:format)', to: 'attachments#download_variant'
+      get 'attachments/:id(.:format)', to: 'attachments#download'
 
       get 'attachments/:class_name/:id(.:format)/:variant(.:format)/:filename(.:format)',
-          to: 'rad_common/attachments#download_variant'
+          to: 'attachments#download_variant'
 
-      get 'attachments/:id(.:format)/:filename(.:format)', to: 'rad_common/attachments#download'
+      get 'attachments/:id(.:format)/:filename(.:format)', to: 'attachments#download'
 
       get 'global_search', to: 'search#global_search'
       get 'global_search_result', to: 'search#global_search_result'

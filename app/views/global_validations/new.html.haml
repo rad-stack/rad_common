@@ -10,7 +10,7 @@
               class: 'btn btn-danger btn-lg'
 
     .btn-group
-      %a.btn.dropdown-toggle.btn-lg.btn-warning{ 'data-toggle': 'dropdown', href: '#' }
+      %a.btn.dropdown-toggle.btn-lg.btn-warning{ 'data-bs-toggle': 'dropdown', href: '#' }
         = icon(:check, 'Validate Single Item')
       %ul.dropdown-menu
         - GlobalValidation.available_models.each do |item|

@@ -1,4 +1,4 @@
-class NotificationSearch < RadCommon::Search
+class NotificationSearch < RadSearch::Search
   def initialize(params, current_user)
     @current_user = current_user
 
@@ -25,11 +25,11 @@ class NotificationSearch < RadCommon::Search
       items + [{ start_input_label: 'Start Date',
                  end_input_label: 'End Date',
                  column: :created_at,
-                 type: RadCommon::DateFilter },
+                 type: RadSearch::DateFilter },
                { column: 'notification_type_id', options: notification_type_options },
-               { column: 'content', type: RadCommon::LikeFilter },
+               { column: 'content', type: RadSearch::LikeFilter },
                { input_label: 'Record Type', column: 'record_type', options: record_type_options },
-               { input_label: 'Record ID', column: 'record_id', type: RadCommon::EqualsFilter, data_type: :integer }]
+               { input_label: 'Record ID', column: 'record_id', type: RadSearch::EqualsFilter, data_type: :integer }]
     end
 
     def sort_columns_def

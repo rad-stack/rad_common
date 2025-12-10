@@ -16,6 +16,7 @@ module RadUser
     has_many :user_clients, dependent: :destroy
     has_many :clients, through: :user_clients, source: :client
     has_many :saved_search_filters, dependent: :destroy
+    has_many :search_preferences, dependent: :destroy
 
     has_many :contact_logs_from, class_name: 'ContactLog',
                                  foreign_key: 'from_user_id',
@@ -35,6 +36,7 @@ module RadUser
 
     scope :active, -> { joins(:user_status).where(user_statuses: { active: true }) }
     scope :admins, -> { active.by_permission 'admin' }
+    scope :developers, -> { admins.where('email ILIKE ?', "%@#{RadConfig.developer_domain!}") }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
     scope :by_id, -> { order(:id) }
     scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
@@ -72,6 +74,7 @@ module RadUser
 
     validate :validate_email_address
     validate :validate_initial_security_role, on: :create, if: :active?
+    validate :validate_external_invites_internal, on: :create
     validate :validate_internal, on: :update
     validate :validate_twilio_verify
     validate :validate_mobile_phone
@@ -192,6 +195,16 @@ module RadUser
     end
   end
 
+  def user_invited_subject
+    "Invitation to Join #{RadConfig.app_name!}"
+  end
+
+  def user_invited_message
+    "Someone has invited you to #{RadConfig.app_name!}, you can accept it through the link " \
+      "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
+      'created until you access the link and set your password.'
+  end
+
   def notify_new_user_signed_up
     Notifications::NewUserSignedUpNotification.main(self).notify!
   end
@@ -249,7 +262,7 @@ module RadUser
   end
 
   def developer?
-    email.end_with? RadConfig.developer_domain!
+    email.end_with? "@#{RadConfig.developer_domain!}"
   end
 
   class_methods do
@@ -316,6 +329,13 @@ module RadUser
       errors.add :initial_security_role_id, 'is required'
     end
 
+    def validate_external_invites_internal
+      return if initial_security_role_id.blank? || invited_by_id.blank?
+      return unless initial_security_role.internal? && invited_by.external?
+
+      errors.add :initial_security_role, 'cannot be internal'
+    end
+
     def validate_internal
       return if external? || user_clients.none?
 
@@ -376,7 +396,7 @@ module RadUser
 
       return false if records.size < 10
 
-      records.failed.size >= 8
+      records.count { |item| !item.success? } >= 8
     end
 
     def notify_user_approved

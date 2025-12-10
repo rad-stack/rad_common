@@ -34,7 +34,11 @@ default: &default
   last_first_user: false
   timezone_detection: true
   portal: false
+  filter_toggle_default_behavior: remember_state
 
+  rad_system_chat_enabled: true
+  rad_assistant_system_tools:
+    - LLM::Tools::AttorneyDataTool
   system_usage_models:
     -
       - Division

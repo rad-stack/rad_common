@@ -1,5 +1,5 @@
 module Notifications
-  class InvalidDataWasFoundNotification < ::NotificationType
+  class InvalidDataWasFoundNotification < DeveloperNotification
     def mailer_class
       'NotificationMailer'
     end

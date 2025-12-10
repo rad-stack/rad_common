@@ -1,4 +1,4 @@
-class RadAuditSearch < RadCommon::Search
+class RadAuditSearch < RadSearch::Search
   def initialize(params, current_user)
     @current_user = current_user
     @params = params
@@ -24,7 +24,7 @@ class RadAuditSearch < RadCommon::Search
 
     def query_def
       if single_record?
-        RadAudit.where(auditable: single_record).or(RadAudit.where(associated: single_record))
+        RadAudit.for_record single_record
       else
         RadAudit
       end
@@ -35,20 +35,20 @@ class RadAuditSearch < RadCommon::Search
     end
 
     def filters_def
-      items = [{ name: 'single_record', type: RadCommon::HiddenFilter },
+      items = [{ name: 'single_record', type: RadSearch::HiddenFilter },
                { start_input_label: 'Start Date',
                  end_input_label: 'End Date',
                  column: :created_at,
                  default_start_value: default_date,
                  default_end_value: default_date,
-                 type: RadCommon::DateFilter }]
+                 type: RadSearch::DateFilter }]
 
       unless single_record?
         items += [{ input_label: 'Record Type',
                     column: :auditable_type,
-                    options: RadCommon::AppInfo.new.audited_models },
+                    options: AppInfo.new.audited_models },
                   { column: :auditable_id,
-                    type: RadCommon::EqualsFilter,
+                    type: RadSearch::EqualsFilter,
                     data_type: :integer,
                     input_label: 'Record ID' }]
       end
@@ -60,8 +60,8 @@ class RadAuditSearch < RadCommon::Search
                  column: :action,
                  options: %w[create update destroy],
                  col_class: 'col-lg-2' },
-               { column: :remote_address, type: RadCommon::LikeFilter },
-               { column: 'audited_changes::TEXT', type: RadCommon::LikeFilter, name: :audited_changes }]
+               { column: :remote_address, type: RadSearch::LikeFilter },
+               { column: 'audited_changes::TEXT', type: RadSearch::LikeFilter, name: :audited_changes }]
     end
 
     def sort_columns_def

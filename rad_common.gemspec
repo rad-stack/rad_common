@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'audited'
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
-  s.add_dependency 'bootstrap4-kaminari-views'
+  s.add_dependency 'bootstrap5-kaminari-views'
   s.add_dependency 'cssbundling-rails', '~> 1.4'
   s.add_dependency 'csv'
   s.add_dependency 'devise'
@@ -36,12 +36,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'jwt'
   s.add_dependency 'kaminari'
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
-
+  s.add_dependency 'neighbor'
   s.add_dependency 'nokogiri'
-
-  # this needs to match the ruby version to avoid warnings, see Task 40504
-  s.add_dependency 'parser', '~> 3.3.1.0'
-
+  s.add_dependency 'parser', '~> 3.3.1.0' # this needs to match the ruby version to avoid warnings, see Task 40504
   s.add_dependency 'pg'
   s.add_dependency 'prawn'
   s.add_dependency 'prawn-table'
@@ -53,6 +50,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rack-attack'
   s.add_dependency 'rails', '~> 7.2.2'
   s.add_dependency 'redis'
+  s.add_dependency 'ruby-openai'
   s.add_dependency 'sendgrid-ruby'
   s.add_dependency 'sentry-rails'
   s.add_dependency 'sentry-ruby'

@@ -10,6 +10,13 @@ module RadCompany
 
     validates_with EmailAddressValidator, fields: %i[email]
     validates_with PhoneNumberValidator
+
+    validates :app_logo,
+              content_type: { in: RadCommon::VALID_IMAGE_TYPES, message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
+
+    validates :fav_icon,
+              content_type: { in: RadCommon::VALID_FAVICON_TYPES, message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
+
     validate :validate_only_one, on: :create
     validate :validate_domains
 

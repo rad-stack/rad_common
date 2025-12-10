@@ -56,6 +56,11 @@ RSpec.describe 'Divisions' do
         end
       end
     end
+
+    it 'shows tooltips on radio buttons' do
+      visit new_division_path
+      expect(page.body).to include('Division is pending approval')
+    end
   end
 
   describe 'edit' do
@@ -70,12 +75,12 @@ RSpec.describe 'Divisions' do
 
       before do
         other_user
-        stub_const('RadCommon::SearchableDropdownHelper::MAX_DROPDOWN_SIZE', 1)
+        stub_const('SearchableDropdownHelper::MAX_DROPDOWN_SIZE', 1)
         visit edit_division_path(division)
       end
 
       it 'allows searching' do
-        click_tom_select(from: 'division_owner_id')
+        click_tom_select(from: 'division_owner_id', skip_dropdown_check: true)
         first('.dropdown-input').fill_in(with: other_user.first_name)
         expect(find('[data-selectable]', text: other_user.to_s)).to be_present
       end
@@ -85,6 +90,14 @@ RSpec.describe 'Divisions' do
           expect(find('[data-ts-item]').text).to eq(division.owner.to_s)
         end
         expect(find_field('division_owner_id', visible: false).value).to eq(division.owner.id.to_s)
+      end
+
+      it 'displays the translated label' do
+        expect(page).to have_content 'API Key'
+      end
+
+      it 'displays the titleized label' do
+        expect(page).to have_content 'Hourly Rate'
       end
     end
   end
@@ -135,7 +148,7 @@ RSpec.describe 'Divisions' do
         click_link "saved_filter_#{last_filter.id}"
         expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
         click_button 'saved-search-filters-dropdown'
-        expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('active')
+        expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('text-success')
       end
 
       it 'allows deleting saved filters' do
