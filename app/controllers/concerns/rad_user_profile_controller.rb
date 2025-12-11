@@ -2,12 +2,8 @@ module RadUserProfileController
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_user, only: %i[show edit update]
+    before_action :set_user, only: %i[edit update]
     before_action :set_onboarded_initial, only: :update
-  end
-
-  def show
-    @onboarding = Onboarding.new(current_user)
   end
 
   def edit; end
