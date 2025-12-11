@@ -62,7 +62,7 @@ module RadUsersHelper
   end
 
   def my_profile_nav?
-    UserProfilePolicy.new(current_user, current_user).show?
+    UserProfilePolicy.new(current_user, current_user).edit?
   end
 
   def show_nav_avatar
