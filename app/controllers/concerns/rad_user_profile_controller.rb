@@ -14,8 +14,7 @@ module RadUserProfileController
     if @user.update(permitted_params)
       return redirect_to Onboarding.new(@user).onboarded_path, notice: 'Onboarding completed' if just_onboarded?
 
-      flash[:notice] = 'Your profile was successfully updated.'
-
+      flash[:success] = 'Your profile was successfully updated.'
       redirect_to edit_user_profile_path(@user)
     else
       render :edit
