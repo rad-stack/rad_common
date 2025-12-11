@@ -98,7 +98,7 @@ export default class extends Controller {
         prev: ' fa fa-chevron-left',
         next: ' fa fa-chevron-right'
       },
-      windowResize: function(view) {
+      windowResize: function(_view) {
         if (controller.isMobileView()) {
           this.changeView('listWeek');
         }
@@ -150,13 +150,13 @@ export default class extends Controller {
         left: 'prev,next',
         center: 'title',
         right: 'today'
-      }
+      };
     } else {
       return {
         left: 'prev,next today',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
-      }
+      };
     }
   }
 
