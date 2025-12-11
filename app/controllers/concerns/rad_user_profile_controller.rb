@@ -16,12 +16,7 @@ module RadUserProfileController
 
       flash[:notice] = 'Your profile was successfully updated.'
 
-      if URI(request.referer).path == user_profile_path(@user) ||
-         URI(request.referer).path == edit_user_profile_path(@user)
-        redirect_to user_profile_path(@user)
-      else
-        redirect_back(fallback_location: user_profile_path(@user))
-      end
+      redirect_to edit_user_profile_path(@user)
     else
       render :edit
     end
@@ -40,10 +35,6 @@ module RadUserProfileController
     def set_user
       @user = User.find(params[:id])
       authorize @user, policy_class: UserProfilePolicy
-    end
-
-    def update_redirect
-      redirect_to user_profile_path(@user), notice: 'Your profile was successfully updated.'
     end
 
     def base_params

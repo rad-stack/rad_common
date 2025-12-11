@@ -104,7 +104,7 @@ module RadUsersHelper
   def user_profile_action(user)
     return unless UserProfilePolicy.new(current_user, user).show?
 
-    link_to icon(:user, 'Profile'), "/user_profiles/#{user.id}", class: 'btn btn-secondary btn-sm'
+    link_to icon(:user, 'Profile'), edit_user_profile_path(user), class: 'btn btn-secondary btn-sm'
   end
 
   def profile_show_title(user)
