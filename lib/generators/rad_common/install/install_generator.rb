@@ -32,6 +32,7 @@ module RadCommon
         add_rad_config_setting 'validate_user_domains', 'true'
         add_rad_config_setting 'show_sign_in_marketing', 'false'
         add_rad_config_setting 'filter_toggle_default_behavior', 'always_open'
+        add_rad_config_setting 'action_cable_enabled', 'false'
         remove_rad_factories
         remove_old_rad_config_settings
         update_credentials
@@ -96,6 +97,10 @@ module RadCommon
         # config
         unless RadConfig.storage_config_override?
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        end
+
+        if RadConfig.action_cable_enabled?
+          copy_file '../../../../../spec/dummy/config/cable.yml', 'config/cable.yml'
         end
 
         copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
