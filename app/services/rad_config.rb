@@ -414,6 +414,10 @@ class RadConfig
       boolean_config_item! :rad_system_chat_enabled
     end
 
+    def action_cable_enabled?
+      boolean_config_item! :action_cable_enabled
+    end
+
     def always_crawl?
       boolean_config_item! :always_crawl
     end
