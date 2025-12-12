@@ -73,7 +73,7 @@ module RadCommonRoutes
         mount Sidekiq::Web => '/sidekiq'
       end
 
-      mount ActionCable.server => '/cable' if RadConfig.action_cable_enabled?
+      mount ::ActionCable.server => '/cable' if RadConfig.action_cable_enabled?
 
       resources :users, except: :destroy do
         member do
