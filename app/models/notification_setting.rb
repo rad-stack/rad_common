@@ -3,6 +3,7 @@ class NotificationSetting < ApplicationRecord
   belongs_to :user
 
   scope :enabled, -> { where(enabled: true) }
+  scope :by_user, -> { joins(:user).merge(User.sorted) }
 
   validate :validate_notify_methods
   validate :validate_sms_possible_app
