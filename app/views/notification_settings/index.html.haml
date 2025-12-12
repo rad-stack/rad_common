@@ -4,4 +4,4 @@
            title: "Notification Settings for #{current_user}",
            icon: 'fa-gear'
 
-  = render 'notification_settings/index', settings: NotificationSetting.settings_for_user(current_user)
+  = render 'notification_settings/index', settings: NotificationSetting.settings_for_user(current_user), show_user: false
