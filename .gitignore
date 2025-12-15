@@ -30,3 +30,5 @@ spec/dummy/app/assets/builds/*
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+Procfile.dev.tmp
