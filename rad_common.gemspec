@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = 'A library of common functions for a standard business web app'
   s.license = 'MIT'
   s.metadata['rubygems_mfa_required'] = 'true'
-  s.required_ruby_version = '>= 3.4.7'
+  s.required_ruby_version = '>= 3.3.1' # for now this needs to be the previous release else the installer fails
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   s.bindir = 'bin'
