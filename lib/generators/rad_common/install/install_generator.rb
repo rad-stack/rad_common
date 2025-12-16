@@ -1,3 +1,5 @@
+require_relative '../../../rad_common/config_updater'
+
 module RadCommon
   module Generators
     class InstallGenerator < Rails::Generators::Base
@@ -384,16 +386,11 @@ Seeder.new.seed!
         end
 
         def add_rad_config_setting(setting_name, default_value)
-          standard_config_end = /\n(  system_usage_models:)/
-          new_config = "  #{setting_name}: #{default_value}\n\n"
-
-          unless rad_config_setting_exists?(setting_name)
-            gsub_file RAD_CONFIG_FILE, standard_config_end, "#{new_config}\\1"
-          end
+          RadCommon::ConfigUpdater.add_rad_config_setting(setting_name, default_value)
         end
 
         def rad_config_setting_exists?(setting_name)
-          File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
+          RadCommon::ConfigUpdater.rad_config_setting_exists?(setting_name)
         end
 
         def remove_old_rad_config_settings
@@ -825,8 +822,6 @@ gem 'propshaft'
         def installed_app_name
           ::Rails.application.class.module_parent.to_s.underscore
         end
-
-        RAD_CONFIG_FILE = 'config/rad_common.yml'.freeze
     end
   end
 end
