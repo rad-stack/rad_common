@@ -4,7 +4,10 @@
 .card-body
   %table.table.table-bordered
     %tr
-      %th Notification
+      - unless show_user
+        %th Notification
+      - if show_user
+        %th User
       %th
         Enabled
         %p Email/SMS/Feed
@@ -15,11 +18,14 @@
         collapse_id = "notification-options-#{setting_id_string}"
         updatable = can_create && policy(record).create?
       %tr{ class: table_row_style(record) }
-        %td
-          - if can_type
-            = link_to record.notification_type, edit_notification_type_path(record.notification_type)
-          - else
-            = record.notification_type
+        - unless show_user
+          %td
+            - if can_type
+              = link_to record.notification_type, edit_notification_type_path(record.notification_type)
+            - else
+              = record.notification_type
+        - if show_user
+          %td= secured_link record.user
         %td.w-50
           = simple_form_for record,
                             url: notification_settings_path,
