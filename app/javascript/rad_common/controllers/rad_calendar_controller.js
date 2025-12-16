@@ -8,9 +8,10 @@ import interactionPlugin from '@fullcalendar/interaction';
 
 export default class extends Controller {
   static targets = ['calendar', 'loaded', 'loading', 'datepicker'];
-  static values = { 
+  static values = {
     eventUrl: String,
-    initialView: { type: String, default: 'dayGridMonth' }
+    initialView: { type: String, default: 'dayGridMonth' },
+    openInNewTab: { type: Boolean, default: false }
   };
 
   connect() {
@@ -30,11 +31,11 @@ export default class extends Controller {
   datepickerChanged(event) {
     const selectedDate = event.target.value;
     this.userSelectedDate = selectedDate;
-    
+
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
     }
-    
+
     this.debounceTimer = setTimeout(() => {
       if (selectedDate && this.calendar) {
         this.calendar.gotoDate(selectedDate);
@@ -116,6 +117,12 @@ export default class extends Controller {
         }
         if (info.event.extendedProps.description) {
           $(info.el).tooltip({ title: info.event.extendedProps.description, container: 'body' });
+        }
+      },
+      eventClick: (info) => {
+        if (this.openInNewTabValue && info.event.url) {
+          info.jsEvent.preventDefault();
+          window.open(info.event.url, '_blank', 'noopener,noreferrer');
         }
       },
       loading: (isLoading) => this.updateLoadingStatus(isLoading),
