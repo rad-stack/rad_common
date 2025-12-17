@@ -124,11 +124,7 @@ RSpec.configure do |config|
                                   headless: true
   end
 
-  chrome_driver = if ENV['CUPRITE']
-                    ENV['show_browser'] ? :cuprite : :headless_cuprite
-                  else
-                    ENV['show_browser'] ? :chrome : :headless_chrome
-                  end
+  chrome_driver = ENV['show_browser'] ? :cuprite : :headless_cuprite
   Capybara.javascript_driver = chrome_driver
 
   config.before(:suite) do

@@ -16,7 +16,7 @@ RSpec.describe 'AreYouSure', type: :system do
   end
 
   describe 'rich text fields' do
-    it 'warns', :js, driver: :cuprite do
+    it 'warns', :js do
       visit '/system_messages/new'
       find('trix-editor').set('test')
       page.send_keys(:tab)
@@ -26,7 +26,7 @@ RSpec.describe 'AreYouSure', type: :system do
   end
 
   describe 'global super search field' do
-    it 'does not warn', :js, :legacy_asset_specs, driver: :cuprite do
+    it 'does not warn', :js, :legacy_asset_specs do
       visit '/'
       tom_search 'test', from: 'search'
       find('body').click
