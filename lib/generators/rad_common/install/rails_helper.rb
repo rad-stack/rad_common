@@ -21,6 +21,7 @@ require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 require 'capybara/rails'
+require 'capybara/cuprite'
 require 'selenium/webdriver'
 require 'pundit/rspec'
 require 'factory_bot_rails'
