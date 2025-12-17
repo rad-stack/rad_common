@@ -59,15 +59,15 @@ Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
 end
 
-if RadConfig.blocked_ip_addresses?
-  Rack::Attack.enabled = true
-
-  Rack::Attack.blocklist 'block suspicious requests' do |request|
-    RadConfig.blocked_ip_addresses!.include?(request.ip)
-  end
-else
+# if RadConfig.blocked_ip_addresses?
+#   Rack::Attack.enabled = true
+#
+#   Rack::Attack.blocklist 'block suspicious requests' do |request|
+#     RadConfig.blocked_ip_addresses!.include?(request.ip)
+#   end
+# else
   Rack::Attack.enabled = false
-end
+# end
 
 Rails.application.config.after_initialize do
   unless RadConfig.legacy_assets?
