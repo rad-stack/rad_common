@@ -108,8 +108,9 @@ RSpec.configure do |config|
   end
 
   config.after(:each, :js) do
-    page.find('body').click # Gesture to fix beforeunload error
-  rescue Selenium::WebDriver::Error::ElementNotInteractableError, Selenium::WebDriver::Error::UnexpectedAlertOpenError
+    page.find('body') # Gesture to fix beforeunload error
+  rescue Selenium::WebDriver::Error::ElementNotInteractableError, Selenium::WebDriver::Error::UnexpectedAlertOpenError,
+         Capybara::Cuprite::MouseEventFailed
     # Ignore
   end
 
