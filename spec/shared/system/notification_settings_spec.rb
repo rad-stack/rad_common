@@ -25,7 +25,6 @@ RSpec.describe 'NotificationSettings', type: :system do
 
       it 'displays error message when updating without button', :js, :legacy_asset_specs do
         visit '/notification_settings'
-        page.uncheck('notification_setting[email]')
         alert = accept_alert do
           page.uncheck('notification_setting[email]')
         end
