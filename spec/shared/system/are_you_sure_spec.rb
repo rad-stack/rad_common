@@ -19,7 +19,7 @@ RSpec.describe 'AreYouSure', type: :system do
     it 'warns', :js do
       visit '/system_messages/new'
       find('trix-editor').set('test')
-      page.send_keys(:tab)
+      find('body').click
 
       expect(page).to have_css('.simple_form.dirty')
     end

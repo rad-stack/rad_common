@@ -85,29 +85,6 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  Capybara.register_driver :headless_chrome do |app|
-    options = Selenium::WebDriver::Chrome::Options.new
-    options.add_argument('--headless=new')
-    options.add_argument('--window-size=1400,900')
-    options.add_argument('--disable-popup-blocking')
-    options.add_argument('--disable-gpu')
-
-    Capybara::Selenium::Driver.new app,
-                                   browser: :chrome,
-                                   options: options
-  end
-
-  Capybara.register_driver :chrome do |app|
-    options = Selenium::WebDriver::Chrome::Options.new
-    options.add_argument('--window-size=1400,900')
-    options.add_argument('--disable-popup-blocking')
-    options.add_argument('--disable-gpu')
-
-    Capybara::Selenium::Driver.new app,
-                                   browser: :chrome,
-                                   options: options
-  end
-
   Capybara.register_driver :cuprite do |app|
     Capybara::Cuprite::Driver.new app,
                                   window_size: [1400, 900],
@@ -143,12 +120,6 @@ RSpec.configure do |config|
   end
 
   SpecSupport.hooks(config, chrome_driver)
-
-  config.before(:each, type: :system) do |example|
-    if example.metadata[:driver] && example.metadata[:js]
-      driven_by example.metadata[:driver]
-    end
-  end
 
   include Warden::Test::Helpers
   config.include Capybara::DSL
