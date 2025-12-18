@@ -5,6 +5,10 @@ def system!(*args)
   system(*args) || abort("\n== Command #{args} failed ==")
 end
 
+puts 'Running Pre-Update Steps'
+gem_path = `bundle show rad_common`.strip
+system! "ruby #{gem_path}/bin/pre_rc_update.rb"
+
 regenerate_lockfile = ARGV.include?('--regenerate-lockfile')
 yarn_upgrade = ARGV.include?('--yarn-upgrade')
 
