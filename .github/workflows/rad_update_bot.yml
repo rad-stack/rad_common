@@ -128,6 +128,11 @@ jobs:
             bundle install
           fi
 
+      - name: Run Pre-Update Steps
+        run: |
+          gem_path=$(bundle show rad_common)
+          ruby ${gem_path}/bin/pre_rc_update.rb
+
       - name: RC Update
         run: |
           if [ "${{ github.event.inputs.yarn_upgrade }}" == "true" ]; then
