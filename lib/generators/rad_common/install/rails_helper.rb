@@ -22,7 +22,6 @@ require 'rspec/rails'
 
 require 'capybara/rails'
 require 'capybara/cuprite'
-require 'selenium/webdriver'
 require 'pundit/rspec'
 require 'factory_bot_rails'
 require 'rad_rspec/rad_factories'
@@ -109,8 +108,7 @@ RSpec.configure do |config|
 
   config.after(:each, :js) do
     page.find('body') # Gesture to fix beforeunload error
-  rescue Selenium::WebDriver::Error::ElementNotInteractableError, Selenium::WebDriver::Error::UnexpectedAlertOpenError,
-         Capybara::Cuprite::MouseEventFailed
+  rescue Capybara::Cuprite::MouseEventFailed
     # Ignore
   end
 

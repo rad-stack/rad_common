@@ -24,7 +24,6 @@ require 'rspec/rails'
 
 require 'capybara/rails'
 require 'capybara/cuprite'
-require 'selenium/webdriver'
 require 'pundit/rspec'
 require 'factory_bot_rails'
 
