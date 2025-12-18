@@ -18,7 +18,9 @@ module TestHelpers
     click_tom_select(attrs.merge(skip_dropdown_check: true))
     return if attrs[:search].blank?
 
-    find('.ts-dropdown input').fill_in(with: attrs[:search])
+    input = find('.ts-dropdown input')
+    input.send_keys(:backspace) until input.value.empty?
+    input.send_keys(attrs[:search])
     wait_for_ajax
   end
 
