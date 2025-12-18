@@ -360,7 +360,7 @@ Seeder.new.seed!
           gsub_file 'Gemfile', /\n\s*gem 'selenium-webdriver'.*\n/, "\n"
           return if File.readlines('Gemfile').grep(/gem 'cuprite'/).any?
 
-          gsub_file 'Gemfile', /\n\s*gem 'capybara', require: false\n/, "\n  gem 'capybara'\n  gem 'cuprite'\n"
+          gsub_file 'Gemfile', /\n\s*gem 'capybara'\n/, "\n  gem 'capybara'\n  gem 'cuprite'\n"
         end
 
         def remove_rad_factories
