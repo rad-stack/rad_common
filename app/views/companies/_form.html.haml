@@ -14,7 +14,7 @@
   .row
     .col-lg-6= f.input :timezone, as: :time_zone, priority: timezone_us_filter
     - if RadConfig.validate_user_domains?
-      .col-lg-6
+      .col-lg-2
         = f.input :valid_user_domains, as: :array,
                                        input_html: { type: :string },
                                        placeholder: 'Enter a domain, for example: abc.com',
