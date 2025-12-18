@@ -1,7 +1,8 @@
 .row
   .col-lg-9
     .alert.alert-danger
-      This is an exhaustive effort that could cause performance problems on the database. Are you sure you want to proceed?
+      This is an exhaustive effort that could cause performance problems on the database.
+      Are you sure you want to proceed?
     .card
       = render 'layouts/card_header', action_name: 'custom', title: 'Validate Database', icon: 'fa-check'
       .card-body
@@ -33,4 +34,3 @@
             = f.input :validity_checked_at, as: :date, html5: true
           .form-actions
             = f.button :submit, 'Save', class: 'btn btn-primary'
-
