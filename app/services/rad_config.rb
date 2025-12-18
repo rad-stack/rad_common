@@ -415,7 +415,7 @@ class RadConfig
     end
 
     def action_cable_enabled?
-      boolean_config_item! :action_cable_enabled
+      config_item(:action_cable_enabled).to_s.downcase == 'true'
     end
 
     def always_crawl?
