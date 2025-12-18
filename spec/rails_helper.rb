@@ -23,6 +23,7 @@ require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 require 'capybara/rails'
+require 'capybara/cuprite'
 require 'selenium/webdriver'
 require 'pundit/rspec'
 require 'factory_bot_rails'
@@ -107,7 +108,27 @@ RSpec.configure do |config|
                                    options: options
   end
 
-  chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
+  Capybara.register_driver :cuprite do |app|
+    Capybara::Cuprite::Driver.new app,
+                                  window_size: [1400, 900],
+                                  browser_options: { 'no-sandbox': nil },
+                                  inspector: true,
+                                  headless: false
+  end
+
+  Capybara.register_driver :headless_cuprite do |app|
+    Capybara::Cuprite::Driver.new app,
+                                  window_size: [1400, 900],
+                                  browser_options: { 'no-sandbox': nil },
+                                  inspector: true,
+                                  headless: true
+  end
+
+  chrome_driver = if ENV['CUPRITE']
+                    ENV['show_browser'] ? :cuprite : :headless_cuprite
+                  else
+                    ENV['show_browser'] ? :chrome : :headless_chrome
+                  end
   Capybara.javascript_driver = chrome_driver
 
   config.before(:suite) do
@@ -126,6 +147,12 @@ RSpec.configure do |config|
   end
 
   SpecSupport.hooks(config, chrome_driver)
+
+  config.before(:each, type: :system) do |example|
+    if example.metadata[:driver] && example.metadata[:js]
+      driven_by example.metadata[:driver]
+    end
+  end
 
   include Warden::Test::Helpers
   config.include Capybara::DSL
