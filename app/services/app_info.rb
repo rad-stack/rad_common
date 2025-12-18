@@ -64,7 +64,8 @@ class AppInfo
         model = item.safe_constantize # this will return nil on namespaced models, see Task 10500
         next if model.nil?
 
-        route.defaults[:controller] == model.model_name.route_key
+        route.defaults[:controller] == model.model_name.route_key ||
+          route.defaults[:controller] == model.model_name.singular_route_key
       end
     }.compact.uniq.sort
   end
