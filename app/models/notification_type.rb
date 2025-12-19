@@ -88,6 +88,14 @@ class NotificationType < ApplicationRecord
     "#{description}: #{subject_url}"
   end
 
+  def toast_header
+    'New Notification'
+  end
+
+  def toast_content
+    description
+  end
+
   def subject_url
     return if subject_record.blank? || !ApplicationController.helpers.show_route_exists?(subject_record)
 
@@ -218,6 +226,7 @@ class NotificationType < ApplicationRecord
                              content: feed_content,
                              record: subject_record,
                              unread: opted_ids.include?(user_id)
+        notify_stream(user_id)
       end
     end
 
@@ -263,5 +272,15 @@ class NotificationType < ApplicationRecord
       else
         setting.send(notification_method)
       end
+    end
+
+    def notify_stream(user_id)
+      return unless RadConfig.action_cable_enabled?
+
+      Turbo::StreamsChannel.broadcast_render_to(
+        "notifications_#{user_id}",
+        partial: 'layouts/toast_stream',
+        locals: { header: toast_header, message: toast_content, user_id: user_id, subject_url: subject_url }
+      )
     end
 end
