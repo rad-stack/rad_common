@@ -234,7 +234,8 @@ RSpec.describe User, type: :model do
   describe 'password expirable', :password_expirable_specs do
     it 'has a password that expires after the configured days' do
       expect(user.need_change_password?).to be(false)
-      Timecop.travel((RadConfig.config_item!(:expire_password_after_days) + 1).days.from_now) { expect(user.need_change_password?).to be(true) }
+      expire_days = (RadConfig.config_item!(:expire_password_after_days) + 1)
+      Timecop.travel(expire_days.days.from_now) { expect(user.need_change_password?).to be(true) }
     end
   end
 
