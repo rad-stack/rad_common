@@ -62,7 +62,7 @@ module RadUsersHelper
   end
 
   def my_profile_nav?
-    UserProfilePolicy.new(current_user, current_user).show?
+    UserProfilePolicy.new(current_user, current_user).edit?
   end
 
   def show_nav_avatar
@@ -104,7 +104,7 @@ module RadUsersHelper
   def user_profile_action(user)
     return unless UserProfilePolicy.new(current_user, user).show?
 
-    link_to icon(:user, 'Profile'), "/user_profiles/#{user.id}", class: 'btn btn-secondary btn-sm'
+    link_to icon(:user, 'Profile'), edit_user_profile_path(user), class: 'btn btn-secondary btn-sm'
   end
 
   def profile_show_title(user)
@@ -120,8 +120,8 @@ module RadUsersHelper
   end
 
   def profile_edit_title(user)
-    return safe_join(['Editing Profile for ', link_to(user, user_profile_path(user))]) unless user == current_user
-    return safe_join(['Editing ', link_to('My Profile', user_profile_path(user))]) if Onboarding.new(user).onboarded?
+    return safe_join(['Editing Profile for ', link_to(user, user_path(user))]) unless user == current_user
+    return 'Editing My Profile' if Onboarding.new(user).onboarded?
 
     'Please Enter Your Profile'
   end
