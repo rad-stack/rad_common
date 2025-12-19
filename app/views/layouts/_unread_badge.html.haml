@@ -1,0 +1,10 @@
+%li.nav-item{ 'data-toggle' => 'tooltip',
+              'data-placement' => 'bottom',
+              'title' => 'Notifications',
+              id: 'nav-unread-badge' }
+  = link_to notifications_path, class: 'nav-link' do
+    - icon_class = "#{unread_count.positive? ? 'text-danger' : ''} #{local_assigns[:shake] ? 'fa-bounce' : ''}"
+    - html_style = local_assigns[:shake] ? '--fa-animation-iteration-count: 1;' : ''
+    = icon('bell', '', class: icon_class.strip, html_style: html_style)
+    - if unread_count.positive?
+      %span.badge.bg-danger.bg-opacity-75= unread_count

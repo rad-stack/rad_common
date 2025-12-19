@@ -23,9 +23,12 @@
             .hidden-print#flash-messages= bootstrap_flash
             = yield
     - else
+      - if RadConfig.action_cable_enabled? && user_signed_in?
+        = turbo_stream_from "notifications_#{current_user.id}"
       = render 'layouts/navigation'
       = render 'assistant_sessions/chat_offcanvas', chat_class: @chat_class, chat_scope: @chat_scope
-      = render 'layouts/toast'
+      .toast-container.position-fixed.bottom-0.end-0.p-3#toast-stream-container
+        = render 'layouts/toast'
       .container-fluid.content
         .row
           .col-lg-12
