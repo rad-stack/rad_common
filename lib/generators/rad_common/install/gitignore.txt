@@ -19,6 +19,7 @@ latest.dump
 # we should probably figure out a better way to handle this in case we need to use this folder in future
 /vendor/
 CLAUDE.md
+.claude
 
 /public/packs
 /public/packs-test
