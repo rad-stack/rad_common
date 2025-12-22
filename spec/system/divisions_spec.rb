@@ -177,6 +177,30 @@ RSpec.describe 'Divisions' do
         expect(SavedSearchFilter.count).to eq(0)
       end
     end
+
+    context 'when using quick view offcanvas', :js do
+      it 'displays division details in offcanvas' do
+        division
+        visit divisions_path
+
+        expect(page).to have_content(division.name)
+
+        click_link 'Quick View', match: :first
+
+        expect(page).to have_css('.offcanvas.show', visible: :visible)
+        expect(page).to have_css('.offcanvas-title', text: "Quick View: #{division.name}")
+
+        within '.offcanvas-body' do
+          expect(page).to have_content(division.name)
+          expect(page).to have_content(division.code)
+          expect(page).to have_content(division.owner.to_s)
+          expect(page).to have_link('View Full Details', href: division_path(division))
+        end
+
+        find('.offcanvas .btn-close').click
+        expect(page).to have_no_css('.offcanvas.show', visible: :visible)
+      end
+    end
   end
 
   describe 'show' do

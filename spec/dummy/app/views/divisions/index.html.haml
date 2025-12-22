@@ -27,6 +27,13 @@
           %td= render_one_attachment record: record, attachment_name: 'logo', new_tab: true
           - if show_actions
             %td.d-grid.gap-2
+              - if policy(record).show?
+                = lazy_container_link(icon(:eye, 'Quick View'),
+                                      quick_view_division_path(record),
+                                      type: 'offcanvas',
+                                      container_id: 'division-quick-view',
+                                      title: "Quick View: #{record.name}",
+                                      class: 'btn btn-sm btn-info')
               - if policy(record).update?
                 = link_to icon(:pencil, 'Edit'),
                           edit_division_path(record),
@@ -40,3 +47,9 @@
                           class: 'btn btn-danger btn-sm'
 
     = paginate @divisions, theme: 'bootstrap-5'
+
+= lazy_container(type: 'offcanvas',
+                 id: 'division-quick-view',
+                 title: 'Division Quick View',
+                 position: 'end',
+                 width_class: 'w-50')

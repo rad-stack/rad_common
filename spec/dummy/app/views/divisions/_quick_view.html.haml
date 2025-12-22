@@ -1,0 +1,19 @@
+= turbo_frame_tag 'division-quick-view_content' do
+  .p-2
+    .row.mb-3.card.shadow.p-3
+      .col-md-6
+        %strong Name:
+        = division.name
+      .col-md-6
+        %strong Code:
+        = division.code
+
+    .row.mb-3.card.shadow.p-3
+      .col-md-6
+        %strong Status:
+        = division.division_status&.humanize
+      .col-md-6
+        %strong Owner:
+        = secured_link(division.owner)
+
+    = link_to 'View Full Details', division_path(division), class: 'btn btn-primary btn-sm w-100', target: '_top'
