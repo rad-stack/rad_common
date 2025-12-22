@@ -8,8 +8,7 @@ module LazyContainerHelper
                id: id,
                title: title,
                subtitle: subtitle,
-               size: size,
-               frame_id: "#{id}_content"
+               size: size
              }
     when 'offcanvas'
       position = options[:position] || 'end'
@@ -20,22 +19,30 @@ module LazyContainerHelper
                title: title,
                subtitle: subtitle,
                position: position,
-               width_class: width_class,
-               frame_id: "#{id}_content"
+               width_class: width_class
              }
     else
       raise ArgumentError, "Invalid type: #{type}. Must be 'modal' or 'offcanvas'"
     end
   end
 
-  def lazy_container_link(text, url, type:, container_id:, title: nil, subtitle: nil, **options)
+  def lazy_container_link(text, url, type:, title: nil, subtitle: nil, size: nil, width: nil, **options)
+    container_id ||= type.to_s == 'modal' ? 'global-lazy-modal' : 'global-lazy-offcanvas'
+
     options[:data] ||= {}
     options[:data][:bs_toggle] = type.to_s
     options[:data][:bs_target] = "##{container_id}"
     options[:data][:lazy_url] = url
     options[:data][:lazy_title] = title if title.present?
     options[:data][:lazy_subtitle] = subtitle if subtitle.present?
+    options[:data][:lazy_size] = size if size.present?
+    options[:data][:lazy_width] = width if width.present?
 
     link_to text, '#', **options
+  end
+
+  def render_global_lazy_containers
+    safe_join([lazy_container(type: 'modal', id: 'global-lazy-modal', title: 'Details'),
+               lazy_container(type: 'offcanvas', id: 'global-lazy-offcanvas', title: 'Details', position: 'end')])
   end
 end

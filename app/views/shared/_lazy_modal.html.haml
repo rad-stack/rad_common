@@ -1,9 +1,9 @@
 .modal.fade{ id: id,
              tabindex: '-1',
              data: { controller: 'lazy-container',
-                     lazy_container_frame_value: frame_id,
+                     lazy_container_frame_value: 'global-lazy-content',
                      lazy_container_type_value: 'modal' } }
-  .modal-dialog{ class: "modal-#{size}" }
+  .modal-dialog{ class: "modal-#{size}", data: { lazy_container_target: 'dialog' } }
     .modal-content
       .modal-header.bg-light
         .d-flex.flex-column.flex-grow-1
@@ -11,5 +11,4 @@
           - if local_assigns[:subtitle].present?
             %small.text-muted{ data: { lazy_container_target: 'subtitle' } }= subtitle
         %button.btn-close{ type: 'button', data: { bs_dismiss: 'modal' }, aria: { label: 'Close' } }
-      .modal-body
-        = turbo_frame_tag frame_id
+      .modal-body{ data: { lazy_container_target: 'body' } }

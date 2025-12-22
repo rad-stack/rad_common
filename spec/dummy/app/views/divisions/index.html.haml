@@ -31,8 +31,8 @@
                 = lazy_container_link(icon(:eye, 'Quick View'),
                                       quick_view_division_path(record),
                                       type: 'offcanvas',
-                                      container_id: 'division-quick-view',
                                       title: "Quick View: #{record.name}",
+                                      width: 'w-50',
                                       class: 'btn btn-sm btn-info')
               - if policy(record).update?
                 = link_to icon(:pencil, 'Edit'),
@@ -47,9 +47,3 @@
                           class: 'btn btn-danger btn-sm'
 
     = paginate @divisions, theme: 'bootstrap-5'
-
-= lazy_container(type: 'offcanvas',
-                 id: 'division-quick-view',
-                 title: 'Division Quick View',
-                 position: 'end',
-                 width_class: 'w-50')
