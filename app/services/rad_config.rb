@@ -176,6 +176,10 @@ class RadConfig
       config_item!(:twilio_verify_remember_device_days).days
     end
 
+    def expire_password_after!
+      config_item!(:expire_password_after_days).days
+    end
+
     def seeded_users!
       raise 'missing seeded_users config' if Rails.application.credentials.seeded_users.blank?
 
