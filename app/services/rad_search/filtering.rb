@@ -6,7 +6,7 @@ module RadSearch
       @search = search
       @current_user = search.current_user
       @filters = build_search_filters(filters)
-      @filter_hash = Hash[@filters.collect { |f| [f.searchable_name, f] }]
+      @filter_hash = build_filter_hash
     end
 
     def apply_filtering(results)
@@ -61,6 +61,17 @@ module RadSearch
 
       def joins
         filters.select { |f| f.respond_to? :joins }.map(&:joins).compact
+      end
+
+      def build_filter_hash
+        hash = {}
+        @filters.each do |filter|
+          searchable_names = Array(filter.searchable_name)
+          searchable_names.each do |name|
+            hash[name] = filter
+          end
+        end
+        hash
       end
   end
 end
