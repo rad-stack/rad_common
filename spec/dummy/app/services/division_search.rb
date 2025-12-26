@@ -33,7 +33,7 @@ class DivisionSearch < RadSearch::Search
      { column: :created_at, type: RadSearch::DateFilter,
        start_input_label: 'Division Created At Start',
        end_input_label: 'Division Created At End',
-       default_start_value: Date.current, default_end_value: Date.current },
+       default_range: RadSearch::DateRanges.this_month },
      { column: :notify, type: RadSearch::BooleanFilter },
      { name: 'show_header', type: RadSearch::HiddenFilter },
      { input_label: 'Tags',

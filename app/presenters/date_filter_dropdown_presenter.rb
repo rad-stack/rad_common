@@ -1,8 +1,9 @@
 class DateFilterDropdownPresenter
-  attr_reader :view
+  attr_reader :view, :active_range
 
-  def initialize(view_context)
+  def initialize(view_context, active_range: nil)
     @view = view_context
+    @active_range = active_range
   end
 
   def render
@@ -27,22 +28,35 @@ class DateFilterDropdownPresenter
 
     def current_ranges
       view.tag.div(class: 'dropdown-header font-weight-bold') { 'Current' } +
-        range_tag('today') + range_tag('this_week') + range_tag('this_month') + range_tag('this_year')
+        ranges_for_group(:current)
     end
 
     def previous_ranges
       view.tag.div(class: 'dropdown-divider') +
         view.tag.div(class: 'dropdown-header font-weight-bold') { 'Previous' } +
-        range_tag('yesterday') + range_tag('last_week') + range_tag('last_month') + range_tag('last_year')
+        ranges_for_group(:previous)
     end
 
-    def range_tag(range)
-      view.tag.a range.titleize,
-                 href: '#',
-                 'data-range' => range,
-                 class: 'dropdown-item',
-                 'data-action' => 'search-date-filter#setRange',
-                 'data-turbo' => 'false'
+    def ranges_for_group(group)
+      view.safe_join(
+        RadSearch::DateRanges.ranges_for_group(group).map do |range_key, config|
+          range_tag(range_key, config[:label])
+        end
+      )
+    end
+
+    def range_tag(range_key, label)
+      is_active = active_range == range_key
+
+      view.tag.div(class: 'dropdown-item d-flex justify-content-between align-items-center') do
+        view.tag.a(label,
+                   href: '#',
+                   'data-range' => range_key,
+                   class: is_active ? 'text-success' : 'text-dark',
+                   'data-action' => 'search-date-filter#setRange',
+                   'data-turbo' => 'false') +
+          (is_active ? view.tag.span(view.icon(:check), class: 'text-success') : ''.html_safe)
+      end
     end
 
     def clear_option

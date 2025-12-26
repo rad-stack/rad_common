@@ -2,7 +2,8 @@ module RadSearch
   ##
   # This is used to generate a date filter input, which filters a date column between a start date and end date range.
   class DateFilter
-    attr_reader :column, :errors, :default_start_value, :default_end_value, :group_label, :col_class, :allow_nil
+    attr_reader :column, :errors, :default_start_value, :default_end_value, :default_range, :group_label, :col_class,
+                :allow_nil
 
     ##
     # @param [Symbol] column the database column that is being filtered
@@ -14,21 +15,26 @@ module RadSearch
     #   in a custom fashion and we skip applying the filter.
     # @param [Date optional] default_start_value default start at value for the date filter
     # @param [Date optional] default_end_value default end at value for the date filter
+    # @param [String optional] default_range default range identifier (e.g., RadSearch::DateRanges.this_month)
+    #   When set, takes precedence over default_start_value and default_end_value
     # @param [Symbol] scope the name of an active record scope to be used for the filter on the corresponding model
     # @param [String optional] group_label The label displayed when we want to show dates grouped together
     #
     # @example
     #   { column: :created_at, type: RadSearch::DateFilter, start_input_label: 'The Start', end_input_label: 'The End' }
+    # @example with default range
+    #   { column: :created_at, type: RadSearch::DateFilter, default_range: RadSearch::DateRanges.this_month }
     def initialize(column:, start_input_label: nil, end_input_label: nil, custom: false,
                    start_required: true, end_required: true,
-                   default_start_value: nil, default_end_value: nil, group_label: nil, scope: nil,
-                   col_class: nil, allow_nil: false)
+                   default_start_value: nil, default_end_value: nil, default_range: nil,
+                   group_label: nil, scope: nil, col_class: nil, allow_nil: false)
       @column = column
       @start_required = start_required
       @end_required = end_required
       @start_input_label = start_input_label
       @end_input_label = end_input_label
       @group_label = group_label
+      @default_range = default_range
       @default_start_value = default_start_value
       @default_end_value = default_end_value
       @custom = custom
@@ -43,7 +49,7 @@ module RadSearch
     end
 
     def searchable_name
-      [start_input, end_input]
+      [start_input, end_input, range_input]
     end
 
     def start_input
@@ -52,6 +58,10 @@ module RadSearch
 
     def end_input
       "#{column}_end"
+    end
+
+    def range_input
+      "#{column}_range"
     end
 
     def end_label_class
@@ -165,13 +175,33 @@ module RadSearch
       end
 
       def start_at_value(params)
+        if params.blank? && @default_range.present?
+          start_date, _end_date = RadSearch::DateRanges.calculate_range(@default_range)
+          return start_date
+        end
+
         return @default_start_value.to_date if params.blank? && @default_start_value
+
+        if params[range_input].present? && RadSearch::DateRanges.valid_range?(params[range_input])
+          start_date, _end_date = RadSearch::DateRanges.calculate_range(params[range_input])
+          return start_date
+        end
 
         Date.parse(params[start_input]) if params[start_input].present?
       end
 
       def end_at_value(params)
+        if params.blank? && @default_range.present?
+          _start_date, end_date = RadSearch::DateRanges.calculate_range(@default_range)
+          return end_date
+        end
+
         return @default_end_value.to_date if params.blank? && @default_end_value
+
+        if params[range_input].present? && RadSearch::DateRanges.valid_range?(params[range_input])
+          _start_date, end_date = RadSearch::DateRanges.calculate_range(params[range_input])
+          return end_date
+        end
 
         Date.parse(params[end_input]) if params[end_input].present?
       end
