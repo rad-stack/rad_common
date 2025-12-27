@@ -27,6 +27,13 @@
           %td= render_one_attachment record: record, attachment_name: 'logo', new_tab: true
           - if show_actions
             %td.d-grid.gap-2
+              - if policy(record).show?
+                = lazy_container_link(icon(:eye, 'Quick View'),
+                                      quick_view_division_path(record),
+                                      type: 'offcanvas',
+                                      title: "Quick View: #{record.name}",
+                                      width: 'w-50',
+                                      class: 'btn btn-sm btn-info')
               - if policy(record).update?
                 = link_to icon(:pencil, 'Edit'),
                           edit_division_path(record),
