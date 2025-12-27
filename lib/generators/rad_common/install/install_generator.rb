@@ -27,7 +27,7 @@ module RadCommon
         install_database_yml
         install_github_workflow
         update_seeder_method
-        replace_webdrivers_gem_with_selenium
+        replace_selenium_gem_with_cuprite
         add_rad_config_setting 'last_first_user', 'false'
         add_rad_config_setting 'timezone_detection', 'true'
         add_rad_config_setting 'portal', 'false'
@@ -355,11 +355,12 @@ Seeder.new.seed!
           copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
         end
 
-        def replace_webdrivers_gem_with_selenium
-          gsub_file 'Gemfile', /\n\s*gem 'webdrivers'.*\n/, "\n"
-          return if File.readlines('Gemfile').grep(/gem 'selenium-webdriver'/).any?
+        def replace_selenium_gem_with_cuprite
+          gsub_file 'Gemfile', /\n\s*gem 'capybara-selenium'.*\n/, "\n"
+          gsub_file 'Gemfile', /\n\s*gem 'selenium-webdriver'.*\n/, "\n"
+          return if File.readlines('Gemfile').grep(/gem 'cuprite'/).any?
 
-          gsub_file 'Gemfile', /\n\s*gem 'simplecov', require: false\n/, "\n  gem 'selenium-webdriver'\n  gem 'simplecov', require: false\n"
+          gsub_file 'Gemfile', /\n\s*gem 'capybara'\n/, "\n  gem 'capybara'\n  gem 'cuprite'\n"
         end
 
         def remove_rad_factories
