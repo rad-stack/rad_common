@@ -30,6 +30,7 @@
               - if policy(record).show?
                 = lazy_container_link(icon(:eye, 'Quick View'),
                                       quick_view_division_path(record),
+                                      subtitle: 'Division Details',
                                       type: 'offcanvas',
                                       title: "Quick View: #{record.name}",
                                       width: 'w-50',

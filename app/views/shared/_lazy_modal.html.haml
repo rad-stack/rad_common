@@ -8,7 +8,6 @@
       .modal-header.bg-light
         .d-flex.flex-column.flex-grow-1
           %h5.modal-title.fw-bold{ data: { lazy_container_target: 'title' } }= title
-          - if local_assigns[:subtitle].present?
-            %small.text-muted{ data: { lazy_container_target: 'subtitle' } }= subtitle
+          %small.text-muted{ data: { lazy_container_target: 'subtitle' } }= subtitle
         %button.btn-close{ type: 'button', data: { bs_dismiss: 'modal' }, aria: { label: 'Close' } }
       .modal-body{ data: { lazy_container_target: 'body' } }

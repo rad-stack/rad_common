@@ -8,7 +8,6 @@
   .offcanvas-header.border-bottom.bg-light
     .d-flex.flex-column
       %h5.offcanvas-title.fw-bold{ id: "#{id}-label", data: { lazy_container_target: 'title' } }= title
-      - if local_assigns[:subtitle].present?
-        %small.text-muted{ data: { lazy_container_target: 'subtitle' } }= subtitle
+      %small.text-muted{ data: { lazy_container_target: 'subtitle' } }= subtitle
     %button.btn-close{ type: 'button', data: { bs_dismiss: 'offcanvas' }, aria: { label: 'Close' } }
   .offcanvas-body.overflow-auto{ data: { lazy_container_target: 'body' } }
