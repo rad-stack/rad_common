@@ -19,18 +19,19 @@ This is a **Rails Engine**, not a standalone Rails application. The main code is
 ### Core Patterns
 
 1. **Concerns-Based Architecture**: The gem provides functionality through mixins:
-   - `RadController` - Main controller concern (Pundit authorization, Devise integration, impersonation, timezone handling)
-   - `RadUser` - User model concern (associations, authentication via Devise)
-   - `RadClient`, `RadCompany`, `RadSecurityRole` - Business domain concerns
+    - `RadController` - Main controller concern (Pundit authorization, Devise integration, impersonation, timezone handling)
+    - `RadUser` - User model concern (associations, authentication via Devise)
+    - `RadDeviseHigh`, `RadDeviseMedium`, `RadDeviseLow` - Tiered Devise configurations (high includes 2FA, lockable, expirable; medium/low have fewer security features)
+    - `RadClient`, `RadCompany`, `RadSecurityRole` - Business domain concerns
 
 2. **Configuration via RadConfig**: Centralized configuration service (`app/services/rad_config.rb`) that reads from Rails credentials. All configuration should go through RadConfig methods.
 
 3. **Policy-Based Authorization**: Uses Pundit for authorization. All controllers enforce `verify_authorized` and `verify_policy_scoped`.
 
 4. **Service Objects**: Business logic lives in service objects under `app/services/`:
-   - Navigation services in `app/services/rad_nav/`
-   - Search functionality in `app/services/rad_search/`
-   - External integrations (Twilio, Smarty Streets, etc.)
+    - Navigation services in `app/services/rad_nav/`
+    - Search functionality in `app/services/rad_search/`
+    - External integrations (Twilio, Smarty Streets, etc.)
 
 5. **Background Jobs**: Sidekiq for async processing. Mailers use the `mailers` queue.
 
@@ -49,6 +50,7 @@ bundle exec rspec                    # Run full test suite
 bundle exec rspec spec/path/to/file  # Run single test file
 rc_rspec                            # Run tests including shared specs
 rc_parallel_rspec                   # Run tests in parallel
+show_browser=true bundle exec rspec spec/system/  # Run system tests with visible browser
 ```
 
 ### Dummy Application
@@ -111,6 +113,8 @@ This copies configuration files, initializers, and runs necessary migrations.
 - Capybara with headless Chrome for system tests
 - VCR for HTTP request mocking
 - Custom helpers in `lib/rad_rspec/test_helpers.rb`
+- Use `js: true` metadata for system tests requiring JavaScript
+- Use `ignore_browser_errors: true` metadata to suppress browser console error checks
 
 ### Running Single Tests
 Use standard RSpec syntax:
@@ -180,9 +184,9 @@ bundle exec rspec spec/models/user_spec.rb:45  # Run test at line 45
 
 ### File Type Validation
 - Valid file types defined as constants in `lib/rad_common.rb`:
-  - `VALID_IMAGE_TYPES`
-  - `VALID_ATTACHMENT_TYPES`
-  - `VALID_AUDIO_TYPES`, `VALID_VIDEO_TYPES`, etc.
+    - `VALID_IMAGE_TYPES`
+    - `VALID_ATTACHMENT_TYPES`
+    - `VALID_AUDIO_TYPES`, `VALID_VIDEO_TYPES`, etc.
 
 ## Heroku Database Utilities
 
@@ -206,13 +210,15 @@ rails local:dump[filename.dump]
 
 The gem installs several executables (defined in gemspec):
 - `rc_update` - Update RadCommon in client projects
-- `rc_rspec` - Run tests including shared specs
+- `rc_rspec` - Run tests including shared specs (runs both local specs and shared specs from engine)
+- `rc_rspec_shared` - Run only shared specs
 - `rc_parallel_rspec` - Run tests in parallel
 - `reset_db` - Reset database
 - `migrate_reset` - Reset and migrate
 - `local_backup`, `clone_local` - Database utilities
 - `creds` - Credentials helper
 - `kill_ruby` - Kill Ruby processes
+- `reset_staging` - Reset staging environment
 
 ## Local Development Linking
 
