@@ -9,7 +9,7 @@ module Users
           session[:otp_user_id] = user.id
           redirect_to users_two_factor_auth_path
         else
-          # set_flash_message!(:notice, :signed_in)
+          flash[:success] = 'Signed in successfully.'
           sign_in(:user, user)
           respond_with user, location: after_sign_in_path_for(user)
         end

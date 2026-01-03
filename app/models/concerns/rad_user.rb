@@ -357,7 +357,6 @@ module RadUser
     end
 
     def validate_mobile_phone
-      return
       return if mobile_phone.present? || user_status.blank? || !user_status.validate_email_phone?
 
       if RadConfig.require_mobile_phone?
