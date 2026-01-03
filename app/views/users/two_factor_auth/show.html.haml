@@ -5,14 +5,32 @@
            icon: 'fa-shield-alt',
            card_style: 'bg-white'
   .card-body
-    %p.mb-3 Enter the 6-digit code from your authenticator app.
+    -# TODO: Uncomment to enable Authenticator App option
+    -# .btn-group.mb-3.d-flex{ role: 'group' }
+    -#   = link_to users_two_factor_auth_switch_method_path(method: 'sms'),
+    -#             class: "btn flex-fill #{@otp_method == 'sms' ? 'btn-primary' : 'btn-outline-primary'}",
+    -#             data: { turbo_method: :post } do
+    -#     %i.fa.fa-sms.me-1
+    -#     SMS
+    -#   = link_to users_two_factor_auth_switch_method_path(method: 'totp'),
+    -#             class: "btn flex-fill #{@otp_method == 'totp' ? 'btn-primary' : 'btn-outline-primary'}",
+    -#             data: { turbo_method: :post } do
+    -#     %i.fa.fa-mobile-alt.me-1
+    -#     Authenticator App
+
+    %p.mb-3
+      We sent a verification code to
+      %strong= @masked_phone
+
     = form_tag users_two_factor_auth_verify_path, method: :post do
       .form-inputs
         .mb-3
-          = label_tag :otp_attempt, 'Authentication Code', class: 'form-label'
-          = text_field_tag :otp_attempt, nil, class: 'form-control', autocomplete: 'one-time-code', autofocus: true, required: true, placeholder: '000000'
-        .form-check.mb-3
-          = check_box_tag :remember_device, '1', true, class: 'form-check-input'
-          = label_tag :remember_device, "Remember this device for #{pluralize(@remember_device_days, 'day')}", class: 'form-check-label'
-      .form-actions
+          = label_tag :otp_attempt, 'Verification Code', class: 'form-label'
+          = text_field_tag :otp_attempt, nil, class: 'form-control', autocomplete: 'one-time-code', autofocus: true, required: true, placeholder: '000000', maxlength: 6, inputmode: 'numeric', pattern: '[0-9]*'
+        -# TODO: Implement remember device functionality
+        -# .form-check.mb-3
+        -#   = check_box_tag :remember_device, '1', true, class: 'form-check-input'
+        -#   = label_tag :remember_device, "Remember this device for #{pluralize(@remember_device_days, 'day')}", class: 'form-check-label'
+      .form-actions.d-flex.justify-content-between.align-items-center
         = submit_tag 'Verify & Sign In', class: 'btn btn-primary'
+        = link_to 'Resend Code', users_two_factor_auth_resend_path, method: :post, class: 'btn btn-link'

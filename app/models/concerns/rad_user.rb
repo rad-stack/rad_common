@@ -32,6 +32,10 @@ module RadUser
 
     enum :language, { English: 'en', Spanish: 'es' }
 
+    OTP_DELIVERY_METHODS = %w[sms totp].freeze
+
+    validates :otp_delivery_method, inclusion: { in: OTP_DELIVERY_METHODS }, allow_nil: true
+
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
     scope :active, -> { joins(:user_status).where(user_statuses: { active: true }) }
