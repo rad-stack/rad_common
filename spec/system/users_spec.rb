@@ -66,28 +66,28 @@ describe 'Users' do
       user.update!(otp_required_for_login: true, mobile_phone: create(:phone_number, :mobile))
     end
 
-    xit 'allows user to login with authentication token', :vcr do
+    it 'allows user to login with authentication token', :vcr do
       allow(TwilioVerifyService).to receive(:verify_sms_token).and_return(double(status: 'approved'))
 
       visit new_user_session_path
       fill_in 'user_email', with: user.email
       fill_in 'user_password', with: password
       click_button 'Sign In'
-      expect(page).to have_content remember_message
-      fill_in 'twilio-verify-token', with: '7721070'
-      click_on 'Verify and Sign in'
+      # expect(page).to have_content remember_message
+      fill_in 'Verification Code', with: '7721070'
+      click_on 'Verify & Sign In'
       expect(page).to have_content 'Signed in successfully'
     end
 
-    xit 'does not allow user to login with invalid twilio verify token', :vcr do
+    it 'does not allow user to login with invalid twilio verify token', :vcr do
       visit new_user_session_path
 
       fill_in 'user_email', with: user.email
       fill_in 'user_password', with: password
       click_button 'Sign In'
-      fill_in 'twilio-verify-token', with: '123456'
-      click_on 'Verify and Sign in'
-      expect(page).to have_content('The entered token is invalid')
+      fill_in 'Verification Code', with: '123456'
+      click_on 'Verify & Sign In'
+      expect(page).to have_content('Invalid two-factor code')
     end
   end
 

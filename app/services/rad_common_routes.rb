@@ -2,7 +2,7 @@ module RadCommonRoutes
   def self.extended(router)
     router.instance_exec do
       devise_controllers = { confirmations: 'users/confirmations',
-                             devise_twilio_verify: 'users/devise_twilio_verify',
+                             sessions: 'users/sessions',
                              invitations: 'users/invitations' }
 
       devise_paths = { verify_twilio_verify: '/verify-token',
@@ -10,6 +10,14 @@ module RadCommonRoutes
                        verify_twilio_verify_installation: '/verify-installation' }
 
       devise_for :users, path: 'auth', controllers: devise_controllers, path_names: devise_paths
+
+      scope 'auth', module: 'users', as: 'users' do
+        get 'two_factor_auth', to: 'two_factor_auth#show'
+        post 'two_factor_auth/verify', to: 'two_factor_auth#verify'
+        post 'two_factor_auth/resend', to: 'two_factor_auth#resend'
+        # TODO: Uncomment to enable Authenticator App option
+        # post 'two_factor_auth/switch_method', to: 'two_factor_auth#switch_method'
+      end
 
       authenticate :user, ->(u) { u.internal? } do
         resources :users, only: :destroy do
