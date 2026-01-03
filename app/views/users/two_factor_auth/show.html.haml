@@ -1,0 +1,18 @@
+= render 'users/devise_layout' do
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Two-Factor Authentication',
+           icon: 'fa-shield-alt',
+           card_style: 'bg-white'
+  .card-body
+    %p.mb-3 Enter the 6-digit code from your authenticator app.
+    = form_tag users_two_factor_auth_verify_path, method: :post do
+      .form-inputs
+        .mb-3
+          = label_tag :otp_attempt, 'Authentication Code', class: 'form-label'
+          = text_field_tag :otp_attempt, nil, class: 'form-control', autocomplete: 'one-time-code', autofocus: true, required: true, placeholder: '000000'
+        .form-check.mb-3
+          = check_box_tag :remember_device, '1', true, class: 'form-check-input'
+          = label_tag :remember_device, "Remember this device for #{pluralize(@remember_device_days, 'day')}", class: 'form-check-label'
+      .form-actions
+        = submit_tag 'Verify & Sign In', class: 'btn btn-primary'

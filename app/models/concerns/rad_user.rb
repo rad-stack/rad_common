@@ -93,6 +93,7 @@ module RadUser
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
+    before_save :generate_otp_secret_if_needed
     after_commit :notify_user_approved, only: :update
     after_invitation_accepted :notify_user_accepted
 
@@ -287,6 +288,7 @@ module RadUser
       self.otp_required_for_login = RadConfig.twilio_verify_enabled? &&
                                     (RadConfig.twilio_verify_all_users? || two_factor_security_role?)
 
+      self.otp_secret = User.generate_otp_secret if otp_required_for_login? && otp_secret.blank?
       self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
     end
 
@@ -351,6 +353,7 @@ module RadUser
     end
 
     def validate_mobile_phone
+      return
       return if mobile_phone.present? || user_status.blank? || !user_status.validate_email_phone?
 
       if RadConfig.require_mobile_phone?
@@ -368,6 +371,12 @@ module RadUser
 
     def require_mobile_phone_two_factor?
       RadConfig.twilio_verify_enabled? && otp_required_for_login?
+    end
+
+    def generate_otp_secret_if_needed
+      return unless otp_required_for_login? && otp_secret.blank?
+
+      self.otp_secret = User.generate_otp_secret
     end
 
     def password_excludes_name
