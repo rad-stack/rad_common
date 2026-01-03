@@ -44,10 +44,9 @@ module Users
 
       def check_otp_user
         @user = User.find_by(id: session[:otp_user_id])
+        return if @user.present?
 
-        if @user.blank?
-          redirect_to new_user_session_path, alert: 'Please sign in first'
-        end
+        redirect_to new_user_session_path, alert: 'Please sign in first'
       end
 
       # TODO: Uncomment to enable Authenticator App option
@@ -72,7 +71,7 @@ module Users
       # end
 
       def send_sms_code
-        return false unless @user.mobile_phone.present?
+        return false if @user.mobile_phone.blank?
 
         # TODO: Re-enable RadTwilio.send_verify_sms once RadRateLimiter is fixed
         response = TwilioVerifyService.send_sms_token(@user.mobile_phone)
