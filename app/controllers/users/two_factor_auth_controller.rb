@@ -15,6 +15,7 @@ module Users
       if verify_sms_code
         sign_in(@user)
         session.delete(:otp_user_id)
+        flash[:success] = 'Signed in successfully' # TODO: should this be success or notice and toast or alert?
         redirect_to after_sign_in_path_for(@user)
       else
         flash.now[:alert] = 'Invalid two-factor code'
