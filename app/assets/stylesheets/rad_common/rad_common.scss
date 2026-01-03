@@ -1,0 +1,264 @@
+trix-editor {
+  min-height: 15em !important;
+  margin-bottom: 10px;
+
+  /* we have to do this because bootstrap tries to calc the height which messes up trix styles */
+  height: auto !important;
+}
+
+.navbar .navbar-nav > li.navbar-brand > a {
+  padding-top: 0;
+  margin-top: 0;
+  margin-left: 8px;
+}
+.navbar .navbar-brand.by-line {
+  padding-top: 22px;
+  margin: 6px 15px 0 0;
+}
+.navbar .navbar-brand {
+  height: auto;
+  padding: 0;
+  justify-content: flex-start;
+}
+.navbar .navbar-brand img {
+  height: 77px;
+  padding: 6px 15px;
+}
+
+.user-icon {
+  width: 40px;
+  margin-left: 4px;
+  vertical-align: text-top;
+}
+.home-page .welcome-header-text {
+  display: inline-block;
+  font-size: 30px;
+  margin-left: 30px;
+}
+.home-page .welcome-text {
+  display: inline-block;
+  font-size: 15px;
+  margin-left: 30px;
+}
+
+.title-header {
+
+  display: flex;
+  align-items: center;
+
+  .title-text {
+    display: inline-block;
+    font-size: 24px;
+    margin-right: 20px;
+  }
+
+  .action-buttons {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 3px;
+  }
+
+  .external-actions {
+    margin-left: auto;
+  }
+
+  .back-button {
+    margin-left: 3px;
+  }
+}
+
+.global-search-dropdown {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.global-search-nav {
+  width: 290px;
+  margin-left: 5px;
+}
+
+.security-role-checkboxes{
+  margin-top: 0 !important;
+  vertical-align: text-top;
+  display: inline-block;
+}
+
+.search-options {
+  cursor: pointer;
+}
+
+.selected-search {
+  font-weight: bold;
+}
+
+.content .global-search-group {
+  display: none;
+}
+
+.ui-autocomplete {
+  z-index: 99999 !important;
+}
+
+.search-column-value {
+  float: right;
+  color: #7A7A7A;
+}
+
+.search-scope-model-name {
+  color: #7A7A7A;
+  font-size: 10px;
+}
+
+.ui-widget table.ui-state-focus {
+  margin: 0;
+  border: none;
+}
+
+.ui-widget table.ui-menu-item {
+  width: 100%;
+}
+
+.ui-widget table.ui-menu-item td.search-label {
+  padding-right: 25px;
+}
+
+.ui-widget table.ui-menu-item td.search-column-value {
+  padding-right: 3px;
+  text-align: right;
+  float: none;
+}
+
+.button-row {
+  margin-bottom: 18px;
+}
+
+i.fa.tooltip-pad { padding-left: 5px; }
+td.fa.security-group-td { border-style: none; }
+
+.read-more-btn {
+  width: auto !important;
+  display: inline-block !important;
+}
+
+.more-btn.bottom-btn {
+  display: none !important;
+}
+
+.close-btn.top-btn div:after {
+  content: "\f063";
+  font-family: FontAwesome;
+  display: inline-block;
+  font-size: 12px;
+  margin-left: 2px;
+}
+
+.close-btn.bottom-btn div:after {
+  content: "\f062";
+  font-family: FontAwesome;
+  display: inline-block;
+  font-size: 12px;
+  margin-left: 2px;
+}
+
+.green-check {
+  color: green;
+  text-align: center;
+}
+
+td.green-check {
+    width: 100%;
+}
+
+.red-x {
+  font-size: 125%;
+  color: red;
+  text-align: center;
+}
+
+td.red-x {
+  width: 100%;
+}
+
+#attachment_layout  {
+  max-width: 100px;
+  border: 0;
+  background-color: transparent;
+}
+
+.attachment-wrapper{
+  white-space: nowrap;
+  margin-bottom: 4px;
+
+  .attachment-button-box {
+    min-width: 200px;
+    .attachment-link {
+      min-width: 100px;
+    }
+  }
+}
+
+.form-inline#notification-settings {
+  fieldset {
+    margin-right : 12px;
+  }
+}
+
+.grouped-dates {
+  background: #f8f9fa;
+  border: solid 1px #ccc;
+  border-radius: 4px;
+  padding: 3px;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+/* Mobile styles*/
+@media (max-width: 992px) {
+  .content .global-search-group {
+    display: table;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .nav > li.global-search-nav {
+    display: none;
+  }
+  .navbar .navbar-nav > li > a {
+    margin-bottom: 0;
+  }
+}
+
+/* custom bootstrap styles */
+
+/* default placeholder for secondary btn is too light */
+form.simple_form.search button.btn-secondary.bs-placeholder {
+  color: #999 !important;
+}
+
+/* border color needs to be darker for this type of dropdown */
+.selectpicker + .btn-light {
+  border-color: #ced4da !important;
+}
+
+/* positioning of duplicate toast, can be used for other bottom toasts */
+.bottom-toast {
+  position: fixed;
+  z-index: 1051;
+  right: 0;
+  bottom: 0;
+}
+
+.top-right-toast .toast-body {
+  min-width: 175px;
+}
+
+.toast-success {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+.toast-error {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}

@@ -24,7 +24,7 @@ class RadAuditSearch < RadSearch::Search
 
     def query_def
       if single_record?
-        RadAudit.where(auditable: single_record).or(RadAudit.where(associated: single_record))
+        RadAudit.for_record single_record
       else
         RadAudit
       end

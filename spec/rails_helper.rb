@@ -121,13 +121,7 @@ RSpec.configure do |config|
   end
 
   config.before do
-    # TODO: workaround for this issue:
-    # https://github.com/rails/rails/issues/37270
-    (ActiveJob::Base.descendants << ActiveJob::Base).each(&:disable_test_adapter)
-    # TODO: end of workaround
-
     Timecop.safe_mode = true
-
     SpecSupport.before_all { self }
   end
 

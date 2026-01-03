@@ -5,7 +5,11 @@ class Seeder < RadSeeder
     if Division.count.zero?
       display_log 'seeding divisions'
 
-      30.times { FactoryBot.create :division, owner: users.internal.sample }
+      30.times do
+        FactoryBot.create :division,
+                          owner: users.internal.sample,
+                          created_at: Faker::Date.between(from: 60.days.ago, to: Time.zone.today)
+      end
     end
 
     seed_attorneys

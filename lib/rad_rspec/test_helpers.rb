@@ -4,12 +4,18 @@ module TestHelpers
   end
 
   def tom_select(value, attrs)
+    retries ||= 0
     tom_search(value, attrs)
     find('.ts-dropdown .option', text: value).click
+  rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::ElementNotInteractableError
+    retries += 1
+    raise if retries > 2
+
+    retry
   end
 
   def tom_search(value, attrs)
-    click_tom_select(attrs)
+    click_tom_select(attrs.merge(skip_dropdown_check: true))
     return if attrs[:search].blank?
 
     find('.ts-dropdown input').fill_in(with: attrs[:search])
@@ -18,17 +24,14 @@ module TestHelpers
 
   def click_tom_select(attrs)
     find_by_id("#{attrs[:from]}-ts-control").click
-  end
+    return if attrs[:skip_dropdown_check]
 
-  def confirm_present?
-    confirm_accepted = false
-
-    begin
-      page.accept_confirm { confirm_accepted = true }
-      confirm_accepted
-    rescue StandardError
-      false
+    within ".#{attrs[:from]}" do
+      find('.dropdown-active', wait: 1)
     end
+  rescue Capybara::ElementNotFound
+    # If dropdown content is not found, try clicking again
+    find_by_id("#{attrs[:from]}-ts-control").click
   end
 
   def fill_time(id, time)

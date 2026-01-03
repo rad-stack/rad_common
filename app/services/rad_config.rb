@@ -82,6 +82,14 @@ class RadConfig
       secret_config_item! :smarty_auth_token
     end
 
+    def open_ai_api_key!
+      secret_config_item! :open_ai_api_key
+    end
+
+    def open_ai_api_key
+      secret_config_item :open_ai_api_key
+    end
+
     def hash_key!
       secret_config_item! :hash_key
     end
@@ -166,6 +174,10 @@ class RadConfig
 
     def twilio_verify_remember_device!
       config_item!(:twilio_verify_remember_device_days).days
+    end
+
+    def expire_password_after!
+      config_item!(:expire_password_after_days).days
     end
 
     def seeded_users!
@@ -276,6 +288,10 @@ class RadConfig
       boolean_config_item! :saved_search_filters_enabled
     end
 
+    def filter_toggle_default_behavior!
+      config_item! :filter_toggle_default_behavior
+    end
+
     def legal_docs?
       boolean_config_item! :legal_docs
     end
@@ -326,6 +342,10 @@ class RadConfig
 
     def additional_company_params!
       array_config_item! :additional_company_params
+    end
+
+    def rad_assistant_system_tools!
+      array_config_item! :rad_assistant_system_tools
     end
 
     def additional_user_params!
@@ -392,6 +412,14 @@ class RadConfig
 
     def allow_crawling?
       boolean_config_item! :allow_crawling
+    end
+
+    def rad_system_chat_enabled?
+      boolean_config_item! :rad_system_chat_enabled
+    end
+
+    def action_cable_enabled?
+      config_item(:action_cable_enabled).to_s.downcase == 'true'
     end
 
     def always_crawl?

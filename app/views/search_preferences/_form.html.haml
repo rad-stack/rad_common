@@ -1,0 +1,24 @@
+-# locals: (search_preference:, allow_sticky_filters: false)
+= turbo_frame_tag 'search_preference_form' do
+  = simple_form_for search_preference do |f|
+    = rad_form_errors f
+
+    = hidden_field_tag 'allow_sticky_filters', allow_sticky_filters
+
+    - unless search_preference.persisted?
+      = f.input :search_class, as: :hidden
+
+    = f.input :toggle_behavior,
+              collection: options_for_enum(SearchPreference, :toggle_behavior),
+              label: 'Toggle Filters Behavior',
+              include_blank: false,
+              tooltip: 'Choose how the filters panel behaves when you visit this page.'
+    - if allow_sticky_filters
+      = f.input :sticky_filters,
+                as: :boolean,
+                wrapper: :vertical_boolean,
+                label: 'Remember Filter Values',
+                wrapper_html: { class: 'form-switch ps-4' },
+                tooltip: 'Remember filter values you select and apply them the next time you visit this page.'
+    .d-grid
+      = f.button :submit, 'Save', class: 'btn-primary'

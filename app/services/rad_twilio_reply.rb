@@ -18,7 +18,7 @@ class RadTwilioReply
   private
 
     def log_event
-      log = ContactLog.create! sms_log_type: :incoming,
+      log = ContactLog.create! contact_direction: :incoming,
                                from_number: from_number,
                                from_user_id: from_user_id,
                                content: message,
