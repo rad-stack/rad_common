@@ -40,7 +40,6 @@ module RadController
   protected
 
     def configure_devise_permitted_parameters
-      devise_parameter_sanitizer.permit(:sign_in, keys: [:otp_attempt])
       devise_parameter_sanitizer.permit(:sign_up, keys: devise_sign_up_params)
       devise_parameter_sanitizer.permit(:account_update, keys: devise_account_params)
       devise_parameter_sanitizer.permit(:invite, keys: devise_invite_params)
