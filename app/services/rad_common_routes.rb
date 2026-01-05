@@ -15,6 +15,8 @@ module RadCommonRoutes
         get 'two_factor_auth', to: 'two_factor_auth#show'
         post 'two_factor_auth/verify', to: 'two_factor_auth#verify'
         post 'two_factor_auth/resend', to: 'two_factor_auth#resend'
+        # TODO: Uncomment to enable Authenticator App option
+        # post 'two_factor_auth/switch_method', to: 'two_factor_auth#switch_method'
       end
 
       authenticate :user, ->(u) { u.internal? } do
