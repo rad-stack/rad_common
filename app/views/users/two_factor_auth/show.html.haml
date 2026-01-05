@@ -13,7 +13,18 @@
       .form-inputs
         .mb-3
           = label_tag :otp_attempt, 'Verification Code', class: 'form-label'
-          = text_field_tag :otp_attempt, nil, class: 'form-control', autocomplete: 'one-time-code', autofocus: true, required: true, placeholder: '000000', maxlength: 6, inputmode: 'numeric', pattern: '[0-9]*'
+
+          = text_field_tag :otp_attempt,
+                           nil,
+                           class: 'form-control',
+                           autocomplete: 'one-time-code',
+                           autofocus: true,
+                           required: true,
+                           placeholder: '000000',
+                           maxlength: 6,
+                           inputmode: 'numeric',
+                           pattern: '[0-9]*'
+
         -# TODO: Implement remember device functionality
         -# .form-check.mb-3
         -#   = check_box_tag :remember_device, '1', true, class: 'form-check-input'
