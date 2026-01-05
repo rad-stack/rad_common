@@ -1,8 +1,6 @@
 module RadUser
   extend ActiveSupport::Concern
 
-  OTP_DELIVERY_METHODS = %w[sms totp].freeze
-
   USER_AUDIT_COLUMNS_DISABLED = %i[password password_confirmation encrypted_password reset_password_token
                                    confirmation_token unlock_token remember_created_at].freeze
 
@@ -33,8 +31,6 @@ module RadUser
     has_one_attached :avatar
 
     enum :language, { English: 'en', Spanish: 'es' }
-
-    validates :otp_delivery_method, inclusion: { in: OTP_DELIVERY_METHODS }, allow_nil: true
 
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
