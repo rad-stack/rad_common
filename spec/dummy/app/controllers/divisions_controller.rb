@@ -62,17 +62,22 @@ class DivisionsController < ApplicationController
       format.html
       format.json do
         events = @divisions.map do |division|
-          start_time = rand(1.month.ago.beginning_of_day..1.month.from_now.end_of_day).change(hour: rand(7..18))
           {
             title: division.to_s,
             description: division.additional_info,
-            start: start_time,
-            end: start_time + 1.hour
+            start: division.created_at,
+            end: division.created_at + 1.hour
           }
         end
         render json: events
       end
     end
+  end
+
+  def quick_view
+    @division = Division.find(params[:id])
+    authorize @division, :show?
+    render partial: 'divisions/quick_view', locals: { division: @division }
   end
 
   private

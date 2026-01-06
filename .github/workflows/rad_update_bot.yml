@@ -58,6 +58,48 @@ jobs:
         run: git status
       - name: Running custom steps
         uses: ./.github/actions/custom-action
+      - name: Detect Ruby from rad_common and sync Gemfile/.ruby-version
+        shell: python
+        run: |
+          import re
+          from pathlib import Path
+          from urllib.request import urlopen, Request
+
+          rc_branch = "${{ github.event.inputs.rc_branch }}".strip()
+
+          def repo_ruby_version():
+            return Path(".ruby-version").read_text().strip()
+
+          rc_ruby_version = repo_ruby_version()
+
+          if rc_branch:
+            url = f"https://raw.githubusercontent.com/rad-stack/rad_common/{rc_branch}/.ruby-version"
+            try:
+              req = Request(url, headers={"User-Agent": "RadUpdateBot/1.0"})
+              with urlopen(req, timeout=15) as resp:
+                fetched = resp.read().decode("utf-8").strip()
+              if fetched:
+                rc_ruby_version = fetched
+            except Exception as e:
+              print(f"Warning: failed to fetch {url} ({e!r}); falling back to repo .ruby-version")
+
+          print(f"Detected Ruby version: {rc_ruby_version}")
+
+          Path(".ruby-version").write_text(rc_ruby_version + "\n")
+
+          gemfile = Path("Gemfile")
+          if gemfile.exists():
+            content = gemfile.read_text()
+            pat = re.compile(r'^(ruby\s+["\']?)(\d+\.\d+\.\d+)(["\']?)(\s*)$', re.M)
+
+            def repl(m):
+              if m.group(2).startswith("3."):
+                return f"{m.group(1)}{rc_ruby_version}{m.group(3)}{m.group(4)}"
+              return m.group(0)
+
+            updated = pat.sub(repl, content)
+            if updated != content:
+              gemfile.write_text(updated)
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:

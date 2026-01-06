@@ -30,8 +30,12 @@ default: &default
   timezone_detection: true
   portal: false
   filter_toggle_default_behavior: remember_state
+  rad_system_chat_enabled: false
+  action_cable_enabled: false
+  expire_password_after_days: 90
 
   rad_assistant_system_tools: []
+
   system_usage_models:
     - User
 

@@ -73,6 +73,8 @@ module RadCommonRoutes
         mount Sidekiq::Web => '/sidekiq'
       end
 
+      mount ::ActionCable.server => '/cable' if RadConfig.action_cable_enabled?
+
       resources :users, except: :destroy do
         member do
           put :resend_invitation
@@ -87,7 +89,7 @@ module RadCommonRoutes
 
       resources :notifications, only: :index
       resources :notification_settings, only: %i[index create]
-      resources :user_profiles, only: %i[show edit update] if RadConfig.user_profiles?
+      resources :user_profiles, only: %i[edit update] if RadConfig.user_profiles?
       resources :twilio_statuses, only: :create
       resources :sinch_statuses, only: :create
       resources :twilio_replies, only: :create
