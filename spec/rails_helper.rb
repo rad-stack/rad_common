@@ -23,7 +23,7 @@ require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 require 'capybara/rails'
-require 'selenium/webdriver'
+require 'capybara/cuprite'
 require 'pundit/rspec'
 require 'factory_bot_rails'
 
@@ -84,30 +84,23 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  Capybara.register_driver :headless_chrome do |app|
-    options = Selenium::WebDriver::Chrome::Options.new
-    options.add_argument('--headless=new')
-    options.add_argument('--window-size=1400,900')
-    options.add_argument('--disable-popup-blocking')
-    options.add_argument('--disable-gpu')
-
-    Capybara::Selenium::Driver.new app,
-                                   browser: :chrome,
-                                   options: options
+  Capybara.register_driver :cuprite do |app|
+    Capybara::Cuprite::Driver.new app,
+                                  window_size: [1400, 900],
+                                  browser_options: { 'no-sandbox': nil },
+                                  inspector: true,
+                                  headless: false
   end
 
-  Capybara.register_driver :chrome do |app|
-    options = Selenium::WebDriver::Chrome::Options.new
-    options.add_argument('--window-size=1400,900')
-    options.add_argument('--disable-popup-blocking')
-    options.add_argument('--disable-gpu')
-
-    Capybara::Selenium::Driver.new app,
-                                   browser: :chrome,
-                                   options: options
+  Capybara.register_driver :headless_cuprite do |app|
+    Capybara::Cuprite::Driver.new app,
+                                  window_size: [1400, 900],
+                                  browser_options: { 'no-sandbox': nil },
+                                  inspector: true,
+                                  headless: true
   end
 
-  chrome_driver = ENV['show_browser'] ? :chrome : :headless_chrome
+  chrome_driver = ENV['show_browser'] ? :cuprite : :headless_cuprite
   Capybara.javascript_driver = chrome_driver
 
   config.before(:suite) do

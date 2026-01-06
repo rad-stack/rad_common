@@ -25,12 +25,15 @@ RSpec.describe 'NotificationSettings', type: :system do
 
       it 'displays error message when updating without button', :js, :legacy_asset_specs do
         visit '/notification_settings'
-        page.uncheck('notification_setting[email]')
-        expect(accept_alert).to eq 'The setting could not be saved: Enabled requires one of email/sms/feed be turned on'
-        page_errors = page.driver.browser.logs.get(:browser).map(&:message)
+        alert = accept_alert do
+          page.uncheck('notification_setting[email]')
+        end
+        expect(alert).to eq 'The setting could not be saved: Enabled requires one of email/sms/feed be turned on'
+        network_errors = page.driver.network_traffic.select { |r| r.response.status >= 400 }
 
-        expect(page_errors.first).to include 'Failed to load resource: the server responded with a status of 422 ' \
-                                             '(Unprocessable Content)'
+        expect(network_errors.last.response.status).to eq(422)
+        expect(network_errors.last.response.body).to include 'The setting could not be saved: Enabled requires one ' \
+                                                             'of email/sms/feed be turned on'
       end
     end
 

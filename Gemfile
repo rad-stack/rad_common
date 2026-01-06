@@ -17,10 +17,9 @@ gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-dev
                             branch: 'authy-to-twilio-verify'
 
 group :test do
-  gem 'capybara-selenium'
+  gem 'cuprite'
   gem 'parallel_tests'
   gem 'pdf-reader'
-  gem 'selenium-webdriver'
   gem 'simplecov', require: false
   gem 'timecop'
 end
