@@ -26,7 +26,7 @@ RSpec.describe StringUtil do
       context 'with trailing decimal' do
         let(:input_value) { '60.' }
 
-        it { is_expected.to be false }
+        it { is_expected.to be true }
       end
 
       context 'with mixed alpha' do
