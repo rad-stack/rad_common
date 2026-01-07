@@ -6,7 +6,7 @@ module DeviseTwilioVerify
           I18n.t('request_sms', scope: 'devise')
         end
         opts = {
-          id: "twilio-verify-request-sms-link",
+          id: 'twilio-verify-request-sms-link',
           method: :post,
           remote: true
         }.merge(opts)

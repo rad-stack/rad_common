@@ -13,4 +13,3 @@ module DeviseTwilioVerify
     end
   end
 end
-

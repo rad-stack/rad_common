@@ -4,14 +4,14 @@ module DeviseTwilioVerify
       extend ActiveSupport::Concern
 
       included do
-        before_action :check_request_and_redirect_to_verify_token, if: :is_signing_in?
+        before_action :check_request_and_redirect_to_verify_token, if: :signing_in?
       end
 
       private
 
         def remember_device(id)
           cookies.signed[:remember_device] = {
-            value: {expires: Time.now.to_i, id: id}.to_json,
+            value: { expires: Time.now.to_i, id: id }.to_json,
             secure: !(Rails.env.test? || Rails.env.development?),
             httponly: !(Rails.env.test? || Rails.env.development?),
             expires: resource_class.twilio_verify_remember_device.from_now
@@ -30,23 +30,23 @@ module DeviseTwilioVerify
           # require token for old cookies which just have expiration time and no id
           return true if cookie.to_s =~ %r{\A\d+\z}
 
-          cookie = JSON.parse(cookie) rescue ""
+          cookie = JSON.parse(cookie) rescue ''
           return cookie.blank? || (Time.now.to_i - cookie['expires'].to_i) > \
                  resource_class.twilio_verify_remember_device.to_i || cookie['id'] != id
         end
 
-        def is_devise_sessions_controller?
+        def devise_sessions_controller?
           self.class == Devise::SessionsController || self.class.ancestors.include?(Devise::SessionsController)
         end
 
-        def is_signing_in?
+        def signing_in?
           if devise_controller? &&
-            is_devise_sessions_controller? &&
-            self.action_name == "create"
+             devise_sessions_controller? &&
+             self.action_name == 'create'
             return true
           end
 
-          return false
+          false
         end
 
         def check_request_and_redirect_to_verify_token
@@ -56,7 +56,7 @@ module DeviseTwilioVerify
             # login with 2fa
             id = warden.session(resource_name)[:id]
 
-            remember_me = (params.fetch(resource_name, {})[:remember_me].to_s == "1")
+            remember_me = (params.fetch(resource_name, {})[:remember_me].to_s == '1')
             return_to = session["#{resource_name}_return_to"]
             sign_out
 

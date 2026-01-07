@@ -11,6 +11,7 @@ module Devise
       # Raises an error if the Devise::Models::Lockable module is not configured.
       def lockable?
         raise 'Devise lockable extension required' unless respond_to? :lock_access!
+
         Devise.lock_strategy == :failed_attempts
       end
 
