@@ -31,8 +31,9 @@ module DeviseTwilioVerify
           return true if cookie.to_s =~ %r{\A\d+\z}
 
           cookie = JSON.parse(cookie) rescue ''
-          return cookie.blank? || (Time.now.to_i - cookie['expires'].to_i) > \
-                 resource_class.twilio_verify_remember_device.to_i || cookie['id'] != id
+
+          cookie.blank? || (Time.now.to_i - cookie['expires'].to_i) > \
+            resource_class.twilio_verify_remember_device.to_i || cookie['id'] != id
         end
 
         def devise_sessions_controller?
@@ -42,7 +43,7 @@ module DeviseTwilioVerify
         def signing_in?
           if devise_controller? &&
              devise_sessions_controller? &&
-             self.action_name == 'create'
+             action_name == 'create'
             return true
           end
 
@@ -67,7 +68,7 @@ module DeviseTwilioVerify
             session["#{resource_name}_return_to"] = return_to if return_to
 
             redirect_to verify_twilio_verify_path_for(resource_name)
-            return
+            nil
           end
         end
 
