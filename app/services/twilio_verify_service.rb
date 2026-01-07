@@ -60,7 +60,5 @@ class TwilioVerifyService
     twilio_client.verify.v2.services(twilio_verify_service_sid)
   end
 
-  def e164_format(phone_number)
-    self.class.e164_format(phone_number)
-  end
+  delegate :e164_format, to: :class
 end

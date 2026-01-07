@@ -9,7 +9,7 @@ module DeviseTwilioVerify
 
     # extend mapping with after_initialize because it's not reloaded
     config.after_initialize do
-      Devise::Mapping.send :prepend, DeviseTwilioVerify::Mapping
+      Devise::Mapping.prepend DeviseTwilioVerify::Mapping
     end
   end
 end

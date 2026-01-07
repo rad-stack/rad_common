@@ -70,12 +70,12 @@ module Devise
         @resource = send("current_#{resource_name}")
         return unless @resource.nil?
 
-        @resource = resource_class.find_by_id(session["#{resource_name}_id"])
+        @resource = resource_class.find_by(id: session["#{resource_name}_id"])
       end
 
       def find_resource_and_require_password_checked
         find_resource
-        return unless @resource.nil? || session[:"#{resource_name}_password_checked"].to_s != "true"
+        return unless @resource.nil? || session[:"#{resource_name}_password_checked"].to_s != 'true'
 
         redirect_to invalid_resource_path
       end
