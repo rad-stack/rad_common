@@ -13,7 +13,7 @@
       .form-inputs
         .row
           .col-lg-4
-            - if invite_roles.size > 1 || invite_roles.size.zero?
+            - if invite_roles.size > 1
               = f.input :initial_security_role_id,
                         label: 'Initial Security Role',
                         collection: invite_role_options,
