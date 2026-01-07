@@ -74,6 +74,12 @@ class DivisionsController < ApplicationController
     end
   end
 
+  def quick_view
+    @division = Division.find(params[:id])
+    authorize @division, :show?
+    render partial: 'divisions/quick_view', locals: { division: @division }
+  end
+
   private
 
     def set_division
