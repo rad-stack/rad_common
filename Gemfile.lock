@@ -23,7 +23,6 @@ PATH
       matrix
       neighbor
       nokogiri
-      parser (~> 3.3.1.0)
       pg
       prawn
       prawn-table
