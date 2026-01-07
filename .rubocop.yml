@@ -116,18 +116,6 @@ Naming/AccessorMethodName:
   Exclude:
     - 'app/mailers/rad_mailer.rb'
 
-Naming/MethodName:
-  Exclude:
-    - 'app/controllers/devise/devise_twilio_verify_controller.rb'
-
-Style/ClassVars:
-  Exclude:
-    - 'lib/devise-twilio-verify.rb'
-
-Naming/FileName:
-  Exclude:
-    - 'lib/devise-twilio-verify.rb'
-
 Lint/AssignmentInCondition:
   AllowSafeAssignment: false
   Exclude:
