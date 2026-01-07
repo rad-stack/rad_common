@@ -28,5 +28,6 @@ require 'devise-twilio-verify/models/twilio_verify_authenticatable'
 require 'devise-twilio-verify/models/twilio_verify_lockable'
 require 'devise-twilio-verify/version'
 
-Devise.add_module :twilio_verify_authenticatable, :model => 'devise-twilio-verify/models/twilio_verify_authenticatable', :controller => :devise_twilio_verify, :route => :twilio_verify
-Devise.add_module :twilio_verify_lockable,        :model => 'devise-twilio-verify/models/twilio_verify_lockable'
+Devise.add_module :twilio_verify_authenticatable, model: 'devise-twilio-verify/models/twilio_verify_authenticatable',
+                  controller: :devise_twilio_verify, route: :twilio_verify
+Devise.add_module :twilio_verify_lockable, model: 'devise-twilio-verify/models/twilio_verify_lockable'

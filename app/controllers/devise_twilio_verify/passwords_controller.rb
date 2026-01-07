@@ -21,7 +21,8 @@ module DeviseTwilioVerify
     def sign_in(resource_or_scope, *args)
       resource = args.last || resource_or_scope
 
-      if resource.respond_to?(:with_twilio_verify_authentication?) && resource.with_twilio_verify_authentication?(request)
+      if resource.respond_to?(:with_twilio_verify_authentication?) &&
+         resource.with_twilio_verify_authentication?(request)
         # Do nothing. Because we need verify the 2FA
         true
       else
