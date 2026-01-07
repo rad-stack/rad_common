@@ -37,6 +37,13 @@ module RadCommonRoutes
           end
         end
 
+        resources :assistant_sessions, only: %i[show update index] do
+          member do
+            patch :chat_response
+            get :check_response
+          end
+        end
+
         resources :audits, only: :index
         resources :login_activities, only: :index
         resources :system_messages, only: %i[new create show]
@@ -46,7 +53,7 @@ module RadCommonRoutes
         resources :sentry_tests, only: :new
         resources :contact_logs, only: %i[index show]
         resources :contact_log_recipients, only: :show
-        resources :saved_search_filters, only: :destroy
+        resources :saved_search_filters, only: %i[create destroy]
         resources :user_security_roles, only: :show
         resources :json_web_tokens, only: :new
 
@@ -65,6 +72,8 @@ module RadCommonRoutes
       authenticate :user, ->(u) { u.admin? } do
         mount Sidekiq::Web => '/sidekiq'
       end
+
+      mount ::ActionCable.server => '/cable' if RadConfig.action_cable_enabled?
 
       resources :users, except: :destroy do
         member do
@@ -85,12 +94,14 @@ module RadCommonRoutes
 
       resources :notifications, only: :index
       resources :notification_settings, only: %i[index create]
-      resources :user_profiles, only: %i[show edit update] if RadConfig.user_profiles?
+      resources :user_profiles, only: %i[edit update] if RadConfig.user_profiles?
       resources :twilio_statuses, only: :create
+      resources :sinch_statuses, only: :create
       resources :twilio_replies, only: :create
       resources :sendgrid_statuses, only: :create
       resources :company_contacts, only: %i[new create]
       resources :user_clients, only: %i[create destroy]
+      resources :search_preferences, only: %i[create update]
 
       delete 'attachments/:id(.:format)', to: 'attachments#destroy', as: :attachment
 

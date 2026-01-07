@@ -1,0 +1,3 @@
+.filter-active .ts-wrapper.form-control:not(.disabled) .ts-control, .filter-active .ts-wrapper.form-control:not(.disabled).single.input-active .ts-control, .filter-active .ts-wrapper.form-select:not(.disabled) .ts-control, .filter-active .ts-wrapper.form-select:not(.disabled).single.input-active .ts-control {
+  background-color: $warning !important;
+}

@@ -6,7 +6,7 @@ module RadHelper
 
     style = secured_link_style(record)
 
-    if Pundit.policy!(current_user, record).show?
+    if user_signed_in? && show_route_exists?(record) && Pundit.policy!(current_user, record).show?
       if new_tab
         link_to record.to_s, record, format: format, class: style, target: '_blank', rel: 'noopener'
       else
@@ -37,8 +37,16 @@ module RadHelper
     "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}&d=mm"
   end
 
-  def show_actions?(klass)
-    Pundit.policy!(current_user, klass.new).update? || Pundit.policy!(current_user, klass.new).destroy?
+  def show_actions?(item)
+    unless item.respond_to?(:each)
+      return Pundit.policy!(current_user, item.new).update? || Pundit.policy!(current_user, item.new).destroy?
+    end
+
+    item.each do |record|
+      return true if Pundit.policy!(current_user, record).update? || Pundit.policy!(current_user, record).destroy?
+    end
+
+    false
   end
 
   def address_show_data(record)
@@ -205,6 +213,10 @@ module RadHelper
     SecurityRole.allow_invite.sorted
   end
 
+  def invite_role_options
+    SecurityRole.allow_invite.sorted.map { |role| [role.to_s, role.id, { data: { external: role.external? } }] }
+  end
+
   def verify_invite
     raise RadIntermittentException if RadConfig.disable_invite?
   end
@@ -283,6 +295,26 @@ module RadHelper
     end
 
     raise 'Invalid attachment, must be 100 MB or less' if blob.byte_size > 100.megabytes
+  end
+
+  def portal_subdomain?
+    # TODO: temp hack for IJS project
+    return false unless RadConfig.portal?
+
+    request.subdomain == 'patient' || request.subdomain.starts_with?('patient-staging')
+  end
+
+  def application_page_title
+    # TODO: temp hack for IJS project
+    return RadConfig.app_name! unless RadConfig.portal?
+
+    if request.subdomain.starts_with? 'patient'
+      RadConfig.config_item!(:portal_app_name)
+    elsif request.subdomain.starts_with? 'prescriber'
+      RadConfig.config_item!(:portal_app_name).gsub('Patient', 'Prescriber')
+    else
+      RadConfig.app_name!
+    end
   end
 
   class << self

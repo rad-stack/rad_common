@@ -46,7 +46,7 @@ namespace :rad_common do
   end
 
   task ten_minutes: :environment do |task|
-    session = RakeSession.new(task, 5.minutes, 1)
+    session = RakeSession.new(task, 8.minutes, 1)
 
     Timeout.timeout(session.time_limit) do
       ContactLogRecipient.sms_assumed_failed.each do |record|
@@ -89,4 +89,33 @@ namespace :rad_common do
   task update_s3_cors_settings: :environment do
     S3CorsSettingsUpdater.new.update!
   end
+
+  task embed_existing_data: :environment do |task|
+    session = RakeSession.new(task, 5.hours, 10)
+
+    Timeout.timeout(session.time_limit) do
+      AppInfo.new.embeddable_models.each do |model_name|
+        session.reset_status
+
+        records = model_name.constantize.needs_embedding
+        count = records.size
+
+        records.each do |record|
+          session.check_status "Embeddings for #{model_name}", count
+          break if session.timing_out?
+
+          record.update_embedding!
+        end
+
+        break if session.timing_out?
+      end
+
+      session.finished
+    end
+  end
+
+  task build_js_css: :environment do
+    system('yarn build')
+  end
+  Rake::Task['assets:precompile'].enhance(['rad_common:build_js_css']) if Rake::Task.task_defined?('assets:precompile')
 end

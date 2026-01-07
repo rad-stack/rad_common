@@ -1,3 +1,5 @@
+require_relative '../../../rad_common/config_updater'
+
 module RadCommon
   module Generators
     class InstallGenerator < Rails::Generators::Base
@@ -31,8 +33,10 @@ module RadCommon
         add_rad_config_setting 'portal', 'false'
         add_rad_config_setting 'validate_user_domains', 'true'
         add_rad_config_setting 'show_sign_in_marketing', 'false'
+        add_rad_config_setting 'filter_toggle_default_behavior', 'always_open'
+        add_rad_config_setting 'action_cable_enabled', 'false'
         remove_rad_factories
-        remove_legacy_rails_config_setting
+        remove_old_rad_config_settings
         update_credentials
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
@@ -95,6 +99,10 @@ module RadCommon
         # config
         unless RadConfig.storage_config_override?
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        end
+
+        if RadConfig.action_cable_enabled?
+          copy_file '../../../../../spec/dummy/config/cable.yml', 'config/cable.yml'
         end
 
         copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
@@ -181,6 +189,10 @@ module RadCommon
         # factory bot
         copy_file '../../../../../spec/dummy/lib/templates/factory_bot/factory.rb.tt',
                   'lib/templates/factory_bot/factory.rb.tt'
+
+        # search template
+        copy_file '../../../../../spec/dummy/lib/templates/services/search.rb.tt',
+                  'lib/templates/services/search.rb.tt'
 
         unless RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
@@ -374,23 +386,22 @@ Seeder.new.seed!
         end
 
         def add_rad_config_setting(setting_name, default_value)
-          standard_config_end = /\n(  system_usage_models:)/
-          new_config = "  #{setting_name}: #{default_value}\n\n"
-
-          unless rad_config_setting_exists?(setting_name)
-            gsub_file RAD_CONFIG_FILE, standard_config_end, "#{new_config}\\1"
-          end
+          RadCommon::ConfigUpdater.add_rad_config_setting(setting_name, default_value)
         end
 
         def rad_config_setting_exists?(setting_name)
-          File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
+          RadCommon::ConfigUpdater.rad_config_setting_exists?(setting_name)
         end
 
-        def remove_legacy_rails_config_setting
-          return unless rad_config_setting_exists?('legacy_rails_config')
+        def remove_old_rad_config_settings
+          remove_rad_config_setting 'legacy_rails_config'
+          remove_rad_config_setting 'temp_sticky_filters_list'
+        end
 
-          say_status :remove, 'legacy_rails_config from rad_common.yml'
-          gsub_file RAD_CONFIG_FILE, /^\s*legacy_rails_config:\s*.*\n/, ''
+        def remove_rad_config_setting(key)
+          return unless rad_config_setting_exists?(key)
+
+          raise "remove the old setting named #{key} from rad_commony.yml, I'm too lazy to code it right now"
         end
 
         def update_credentials
@@ -404,6 +415,12 @@ Seeder.new.seed!
             next unless File.exist?(credentials_path)
 
             key_path = Rails.root.join("config/credentials/#{environment}.key")
+
+            unless File.exist?(key_path)
+              puts "key file not found: #{key_path}, skipping."
+              next
+            end
+
             decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
             current_credentials = YAML.safe_load(decrypted_content) || {}
             next if current_credentials.key?('developer_domain')
@@ -420,6 +437,12 @@ Seeder.new.seed!
             next unless File.exist?(credentials_path)
 
             key_path = Rails.root.join("config/credentials/#{environment}.key")
+
+            unless File.exist?(key_path)
+              puts "key file not found: #{key_path}, skipping."
+              next
+            end
+
             decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
             current_credentials = YAML.safe_load(decrypted_content) || {}
             next if current_credentials.key?('developer_domain')
@@ -434,6 +457,12 @@ Seeder.new.seed!
             next unless File.exist?(credentials_path)
 
             key_path = Rails.root.join("config/credentials/#{environment}.key")
+
+            unless File.exist?(key_path)
+              puts "key file not found: #{key_path}, skipping."
+              next
+            end
+
             decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
             current_credentials = YAML.safe_load(decrypted_content) || {}
             next if current_credentials['developer_domain'] == 'example.com'
@@ -775,14 +804,24 @@ gem 'propshaft'
           apply_migration '20250425120906_fix_some_renamed_audit_models.rb'
           apply_migration '20250512115245_two_factor_auth_updates.rb'
           apply_migration '20250622203947_user_js_timezone.rb'
+          apply_migration '20250918160535_create_vector_embeddings.rb'
+          apply_migration '20250918153732_add_large_language_model_chats.rb'
           apply_migration '20250914154915_fix_developer_notifications.rb'
+          apply_migration '20250926165217_rename_llm_chats_to_assistant_sessions.rb'
+          apply_migration '20251003162830_add_fax_contact_log_fields.rb'
+          apply_migration '20251007153435_move_fax_error_message.rb'
+          apply_migration '20250418211716_add_created_at_index_to_system_usages.rb'
+          apply_migration '20251017110121_rename_direction_to_contact_direction.rb'
+          apply_migration '20251024225222_fix_chat_types.rb'
+          apply_migration '20251027181305_rename_chat_type_to_chat_class.rb'
+          apply_migration '20251103191522_remove_embedding_metadata.rb'
+          apply_migration '20251103194914_create_search_preferences.rb'
+          apply_migration '20251120171951_remove_legacy_filter_settings.rb'
         end
 
         def installed_app_name
           ::Rails.application.class.module_parent.to_s.underscore
         end
-
-        RAD_CONFIG_FILE = 'config/rad_common.yml'.freeze
     end
   end
 end

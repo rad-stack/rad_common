@@ -17,13 +17,4 @@ RSpec.describe 'UserProfiles' do
       expect(page).to have_content("Birth date can't be blank")
     end
   end
-
-  describe 'show' do
-    let(:user) { create :user_with_profile }
-
-    it 'shows the user_profile' do
-      visit user_profile_path(user)
-      expect(page).to have_content('My Profile')
-    end
-  end
 end

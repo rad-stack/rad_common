@@ -298,7 +298,7 @@ RSpec.describe 'Users', type: :system do
       current_password = password
       new_password = 'Passwords2!!!!!'
 
-      user.update(password_changed_at: 98.days.ago)
+      user.update(password_changed_at: (RadConfig.config_item!(:expire_password_after_days) + 8).days.ago)
       user.reload
 
       visit new_user_session_path

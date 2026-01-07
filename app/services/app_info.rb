@@ -19,6 +19,13 @@ class AppInfo
     } + %w[ActiveStorage::Attachment ActionText::RichText]).sort
   end
 
+  def embeddable_models
+    (application_models.select do |model|
+      model_class = model.safe_constantize
+      model_class.respond_to?(:new) && model_class.new.respond_to?(:update_embedding!)
+    end).sort
+  end
+
   def associated_audited_models
     audited_models + %w[ActiveStorage::Blob ActiveStorage::VariantRecord ActionMailbox::InboundEmail]
   end
@@ -57,7 +64,8 @@ class AppInfo
         model = item.safe_constantize # this will return nil on namespaced models, see Task 10500
         next if model.nil?
 
-        route.defaults[:controller] == model.model_name.route_key
+        route.defaults[:controller] == model.model_name.route_key ||
+          route.defaults[:controller] == model.model_name.singular_route_key
       end
     }.compact.uniq.sort
   end
