@@ -194,7 +194,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
 
         expect(page).to have_content 'Send invitation'
         expect(page).to have_select('Initial Security Role', with_options: [external_role.name])
-        expect(page).not_to have_select('Initial Security Role', with_options: [internal_role.name])
+        expect(page).to have_no_select('Initial Security Role', with_options: [internal_role.name])
       end
     end
   end
