@@ -210,11 +210,13 @@ module RadHelper
   end
 
   def invite_roles
-    SecurityRole.allow_invite.sorted
+    items = SecurityRole.allow_invite
+    items = items.external if current_user.external?
+    items.sorted
   end
 
   def invite_role_options
-    SecurityRole.allow_invite.sorted.map { |role| [role.to_s, role.id, { data: { external: role.external? } }] }
+    invite_roles.map { |role| [role.to_s, role.id, { data: { external: role.external? } }] }
   end
 
   def verify_invite

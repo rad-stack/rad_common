@@ -182,6 +182,23 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
     end
   end
 
+  describe 'external user', :external_user_specs do
+    let(:external_admin_role) { create :security_role, :external, allow_invite: true, manage_user: true }
+    let(:external_user) { create :user, :external, security_roles: [external_admin_role] }
+
+    before { login_as external_user, scope: :user }
+
+    describe 'new' do
+      it 'only shows external roles in the select list' do
+        visit new_user_invitation_path
+
+        expect(page).to have_content 'Send invitation'
+        expect(page).to have_select('Initial Security Role', with_options: [external_role.name])
+        expect(page).not_to have_select('Initial Security Role', with_options: [internal_role.name])
+      end
+    end
+  end
+
   describe 'accept' do
     let!(:invitee) do
       User.invite!(email: "#{Faker::Internet.user_name}@#{email_domain}",
