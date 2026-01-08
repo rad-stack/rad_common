@@ -16,17 +16,17 @@ RSpec.describe 'AreYouSure', type: :system do
   end
 
   describe 'rich text fields' do
-    it 'warns', :js do
+    it 'warns', :js, driver: :cuprite do
       visit '/system_messages/new'
       find('trix-editor').set('test')
-      find('body').click
+      page.send_keys(:tab)
 
       expect(page).to have_css('.simple_form.dirty')
     end
   end
 
   describe 'global super search field' do
-    it 'does not warn', :js, :legacy_asset_specs do
+    it 'does not warn', :js, :legacy_asset_specs, driver: :cuprite do
       visit '/'
       tom_search 'test', from: 'search'
       find('body').click

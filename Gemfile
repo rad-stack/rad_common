@@ -18,6 +18,7 @@ gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-dev
 
 group :test do
   gem 'capybara-selenium'
+  gem 'cuprite'
   gem 'parallel_tests'
   gem 'pdf-reader'
   gem 'selenium-webdriver'
