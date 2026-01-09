@@ -33,6 +33,13 @@ module Users
       end
     end
 
+    # TODO: Uncomment to enable Authenticator App option
+    # def switch_method
+    #   skip_authorization
+    #   session[:otp_method] = params[:method] if %w[sms totp].include?(params[:method])
+    #   redirect_to users_two_factor_auth_path
+    # end
+
     private
 
       def check_otp_user
@@ -41,6 +48,27 @@ module Users
 
         redirect_to new_user_session_path, alert: 'Please sign in first'
       end
+
+      # TODO: Uncomment to enable Authenticator App option
+      # def set_otp_method
+      #   @otp_method = session[:otp_method] || @user.otp_delivery_method || 'sms'
+      # end
+      #
+      # def using_sms?
+      #   @otp_method == 'sms'
+      # end
+      #
+      # def using_totp?
+      #   @otp_method == 'totp'
+      # end
+      #
+      # def verify_otp_code
+      #   if using_sms?
+      #     verify_sms_code
+      #   else
+      #     @user.validate_and_consume_otp!(params[:otp_attempt])
+      #   end
+      # end
 
       def send_sms_code
         return false if @user.mobile_phone.blank?

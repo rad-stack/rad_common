@@ -5,6 +5,19 @@
            icon: 'fa-shield-alt',
            card_style: 'bg-white'
   .card-body
+    -# TODO: Uncomment to enable Authenticator App option
+    -# .btn-group.mb-3.d-flex{ role: 'group' }
+    -#   = link_to users_two_factor_auth_switch_method_path(method: 'sms'),
+    -#             class: "btn flex-fill #{@otp_method == 'sms' ? 'btn-primary' : 'btn-outline-primary'}",
+    -#             data: { turbo_method: :post } do
+    -#     %i.fa.fa-sms.me-1
+    -#     SMS
+    -#   = link_to users_two_factor_auth_switch_method_path(method: 'totp'),
+    -#             class: "btn flex-fill #{@otp_method == 'totp' ? 'btn-primary' : 'btn-outline-primary'}",
+    -#             data: { turbo_method: :post } do
+    -#     %i.fa.fa-mobile-alt.me-1
+    -#     Authenticator App
+
     %p.mb-3
       We sent a verification code to
       %strong= @masked_phone
