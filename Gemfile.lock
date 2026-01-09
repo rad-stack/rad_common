@@ -1,12 +1,3 @@
-GIT
-  remote: https://github.com/rad-stack/twilio-verify-devise.git
-  revision: 100fe38b039916b679a2259fba39216be141cba4
-  branch: authy-to-twilio-verify
-  specs:
-    devise-twilio-verify (1.0.0)
-      devise (>= 4.0.0)
-      twilio-ruby (~> 5.74)
-
 PATH
   remote: .
   specs:
@@ -276,7 +267,7 @@ GEM
       reline (>= 0.4.2)
     jmespath (1.6.2)
     json (2.18.0)
-    jwt (2.10.2)
+    jwt (3.1.2)
       base64
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
@@ -559,9 +550,9 @@ GEM
     turbo-rails (2.0.20)
       actionpack (>= 7.1.0)
       railties (>= 7.1.0)
-    twilio-ruby (5.77.0)
+    twilio-ruby (7.9.1)
       faraday (>= 0.9, < 3.0)
-      jwt (>= 1.5, < 3.0)
+      jwt (>= 1.5, < 4.0)
       nokogiri (>= 1.6, < 2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -599,7 +590,6 @@ DEPENDENCIES
   bootsnap
   capybara
   capybara-selenium
-  devise-twilio-verify!
   haml_lint (= 0.55.0)
   parallel_tests
   pdf-reader
@@ -622,4 +612,4 @@ DEPENDENCIES
   wkhtmltopdf-binary
 
 BUNDLED WITH
-   2.6.2
+   2.7.1
