@@ -25,6 +25,7 @@ describe 'Users' do
 
       it "doesn't allow changing email" do
         expect(find_field('user_email', disabled: true).value).to eq(user.email)
+        expect(find(:label, for: 'user_user_status_id').text).to eq('* User Status')
       end
     end
 
