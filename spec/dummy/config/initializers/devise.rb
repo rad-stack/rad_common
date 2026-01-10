@@ -5,7 +5,7 @@
 Devise.setup do |config|
   # ==> Devise Twilio Verify Extension
   # How long should the user's device be remembered for.
-  config.twilio_verify_remember_device = RadConfig.two_factor_remember_device!
+  config.twilio_verify_remember_device = RadConfig.twilio_verify_remember_device!
 
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing

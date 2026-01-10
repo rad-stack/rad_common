@@ -172,7 +172,7 @@ class RadConfig
       boolean_config_item! :two_factor_auth_all_users
     end
 
-    def two_factor_remember_device!
+    def twilio_verify_remember_device!
       config_item!(:two_factor_remember_device_days).days
     end
 
