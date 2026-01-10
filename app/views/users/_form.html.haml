@@ -16,7 +16,7 @@
     .row
       - if RadConfig.external_users?
         .col-lg-3= f.input :external
-      - if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
+      - if RadConfig.two_factor_auth_enabled? && !RadConfig.two_factor_auth_all_users?
         .col-lg-3= f.input :otp_required_for_login
     .row
       -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
