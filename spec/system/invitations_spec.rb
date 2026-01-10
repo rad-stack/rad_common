@@ -29,7 +29,7 @@ RSpec.describe 'Invitations' do
 
       expect(page).to have_content "We invited '#{name_display}'"
       expect(User.last.security_roles.first).to eq admin_role
-      expect(User.last.twilio_verify_enabled?).to be true
+      expect(User.last.otp_required_for_login?).to be true
     end
   end
 

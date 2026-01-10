@@ -450,7 +450,7 @@ RSpec.describe 'Users', type: :system do
 
       allow(TwilioVerifyService).to receive(:send_sms_token).and_return(double(status: 'pending'))
 
-      user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
+      user.update!(otp_required_for_login: true, mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'allows user to login with authentication token' do
