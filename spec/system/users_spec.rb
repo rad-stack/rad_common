@@ -54,9 +54,9 @@ describe 'Users' do
   end
 
   describe 'two factor authentication' do
-    let(:remember_message) do
-      "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
-    end
+    # let(:remember_message) do
+    #   "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
+    # end
 
     before do
       allow(Rails.application.credentials)

@@ -5,11 +5,7 @@ module RadCommonRoutes
                              sessions: 'users/sessions',
                              invitations: 'users/invitations' }
 
-      devise_paths = { verify_twilio_verify: '/verify-token',
-                       enable_twilio_verify: '/enable-two-factor',
-                       verify_twilio_verify_installation: '/verify-installation' }
-
-      devise_for :users, path: 'auth', controllers: devise_controllers, path_names: devise_paths
+      devise_for :users, path: 'auth', controllers: devise_controllers
 
       scope 'auth', module: 'users', as: 'users' do
         get 'two_factor_auth', to: 'two_factor_auth#show'
