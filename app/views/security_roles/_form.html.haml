@@ -10,7 +10,7 @@
         .col-lg-2= f.input :allow_invite
       - unless RadConfig.disable_sign_up?
         .col-lg-2= f.input :allow_sign_up
-      - if RadConfig.twilio_verify_enabled?
+      - if RadConfig.two_factor_auth_enabled?
         .col-lg-2= f.input :two_factor_auth
 
     .row

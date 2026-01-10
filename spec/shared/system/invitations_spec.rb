@@ -37,7 +37,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
         let(:invite_email) { valid_email }
 
         before do
-          allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false)
+          allow(RadConfig).to receive(:two_factor_auth_all_users?).and_return(false)
           invite_role
         end
 

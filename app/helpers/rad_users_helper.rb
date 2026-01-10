@@ -8,7 +8,7 @@ module RadUsersHelper
              :detected_timezone_js,
              :ignored_timezone]
 
-    items.push(:otp_required_for_login) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
+    items.push(:otp_required_for_login) if RadConfig.two_factor_auth_enabled? && !RadConfig.two_factor_auth_all_users?
 
     items += [:sign_in_count,
               :invitation_accepted_at,
@@ -227,7 +227,7 @@ module RadUsersHelper
   end
 
   def require_mobile_phone?
-    RadConfig.require_mobile_phone? || (RadConfig.twilio_verify_enabled? && RadConfig.twilio_verify_all_users?)
+    RadConfig.require_mobile_phone? || (RadConfig.two_factor_auth_enabled? && RadConfig.two_factor_auth_all_users?)
   end
 
   def clients_to_add_to_user(user)
