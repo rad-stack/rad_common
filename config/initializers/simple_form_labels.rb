@@ -21,3 +21,20 @@ module SimpleForm
     end
   end
 end
+
+# Open issue on this here: https://github.com/heartcombo/simple_form/issues/1848
+module SimpleForm
+  module Helpers
+    module Required
+      private
+
+        def required_by_validators?
+          if reflection.is_a?(ActiveRecord::Reflection::BelongsToReflection) && !reflection.options[:optional]
+            return true
+          end
+
+          (attribute_validators + reflection_validators).any? { |v| v.kind == :presence && valid_validator?(v) }
+        end
+    end
+  end
+end
