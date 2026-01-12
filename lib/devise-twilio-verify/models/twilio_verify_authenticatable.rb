@@ -5,7 +5,7 @@ module Devise
       extend ActiveSupport::Concern
 
       def with_twilio_verify_authentication?(request)
-        self.twilio_verify_enabled?
+        self.otp_required_for_login?
       end
 
       module ClassMethods
