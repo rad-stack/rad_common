@@ -816,6 +816,7 @@ gem 'propshaft'
           apply_migration '20251103194914_create_search_preferences.rb'
           apply_migration '20251120171951_remove_legacy_filter_settings.rb'
           apply_migration '20250930134000_add_devise_two_factor_to_users.rb'
+          apply_migration '20260110093403_rename_twilio_verify_enabled.rb'
         end
 
         def installed_app_name

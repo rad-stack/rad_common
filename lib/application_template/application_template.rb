@@ -59,7 +59,7 @@ def add_git_source_and_ruby_version
     <<~CONTENT
       git_source(:github) { |repo| "https://github.com/\#{repo}.git" }
 
-      ruby '3.3.1'
+      ruby '3.4.7'
 
     CONTENT
   end

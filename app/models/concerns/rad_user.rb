@@ -76,7 +76,7 @@ module RadUser
     validate :validate_initial_security_role, on: :create, if: :active?
     validate :validate_external_invites_internal, on: :create
     validate :validate_internal, on: :update
-    validate :validate_two_factor_auth
+    validate :validate_two_factor
     validate :validate_mobile_phone
     validate :password_excludes_name
     validate :validate_last_activity
@@ -344,7 +344,7 @@ module RadUser
       errors.add :external, 'not allowed when clients are assigned to this user'
     end
 
-    def validate_two_factor_auth
+    def validate_two_factor
       return unless RadConfig.two_factor_auth_enabled?
       return if otp_required_for_login? || user_status.blank? || !user_status.validate_email_phone?
       return unless RadConfig.two_factor_auth_all_users? || two_factor_security_role?
