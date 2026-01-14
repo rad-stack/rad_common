@@ -16,7 +16,7 @@ PATH
       factory_bot_rails
       faker
       geocoder
-      haml (~> 7.1)
+      haml (= 7.1)
       haml-rails
       hashids
       image_processing
@@ -238,7 +238,7 @@ GEM
       csv (>= 3.0.0)
     globalid (1.3.0)
       activesupport (>= 6.1)
-    haml (7.2.0)
+    haml (7.1.0)
       temple (>= 0.8.2)
       thor
       tilt
