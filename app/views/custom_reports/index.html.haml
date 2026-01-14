@@ -1,6 +1,6 @@
 .card
   :ruby
-  = render 'layouts/card_header'
+  = render 'layouts/card_header', external_actions: [ai_report_builder_button]
   .card-body
     = paginate @custom_reports, theme: 'bootstrap-5'
 
