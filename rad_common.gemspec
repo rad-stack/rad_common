@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'factory_bot_rails'
   s.add_dependency 'faker'
   s.add_dependency 'geocoder'
+  s.add_dependency 'haml', '~> 7.1' # remove this entire line when Task 12805 is resolved
   s.add_dependency 'haml-rails'
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
