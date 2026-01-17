@@ -7,6 +7,7 @@ PATH
       authtrail
       aws-sdk-s3
       bootstrap5-kaminari-views
+      connection_pool (< 3)
       cssbundling-rails (~> 1.4)
       csv
       devise
@@ -16,6 +17,7 @@ PATH
       factory_bot_rails
       faker
       geocoder
+      haml (= 7.1)
       haml-rails
       hashids
       image_processing
@@ -33,7 +35,7 @@ PATH
       puma
       pundit
       rack-attack
-      rails (~> 7.2.2)
+      rails (~> 7.2.3)
       redis
       ruby-openai
       selenium-webdriver (~> 4.18.1)
@@ -145,7 +147,7 @@ GEM
       railties (>= 7.1)
       warden
     aws-eventstream (1.4.0)
-    aws-partitions (1.1201.0)
+    aws-partitions (1.1203.0)
     aws-sdk-core (3.241.3)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
@@ -167,7 +169,7 @@ GEM
     bcrypt (3.1.21)
     benchmark (0.5.0)
     bigdecimal (3.3.1)
-    bootsnap (1.20.1)
+    bootsnap (1.21.0)
       msgpack (~> 1.2)
     bootstrap5-kaminari-views (0.0.1)
       kaminari (>= 0.13)
@@ -188,7 +190,7 @@ GEM
     cgi (0.5.1)
     coderay (1.1.3)
     concurrent-ruby (1.3.6)
-    connection_pool (3.0.2)
+    connection_pool (2.5.5)
     crack (1.0.1)
       bigdecimal
       rexml
@@ -251,7 +253,7 @@ GEM
       activesupport (>= 5.1)
       haml (>= 4.0.6)
       railties (>= 5.1)
-    haml_lint (0.55.0)
+    haml_lint (0.68.0)
       haml (>= 5.0)
       parallel (~> 1.10)
       rainbow
@@ -331,7 +333,7 @@ GEM
     parallel (1.27.0)
     parallel_tests (5.5.0)
       parallel
-    parser (3.3.10.0)
+    parser (3.3.10.1)
       ast (~> 2.4.1)
       racc
     pastel (0.8.0)
@@ -363,7 +365,7 @@ GEM
     pretender (0.6.0)
       actionpack (>= 7.1)
     prettyprint (0.2.0)
-    prism (1.7.0)
+    prism (1.8.0)
     propshaft (1.3.1)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
@@ -424,7 +426,7 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.3.1)
-    rdoc (7.0.3)
+    rdoc (7.1.0)
       erb
       psych (>= 4.0.0)
       tsort
@@ -515,12 +517,12 @@ GEM
     sentry-ruby (6.2.0)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sidekiq (7.3.9)
+    sidekiq (7.3.10)
       base64
-      connection_pool (>= 2.3.0)
+      connection_pool (>= 2.3.0, < 3)
       logger
-      rack (>= 2.2.4)
-      redis-client (>= 0.22.2)
+      rack (>= 2.2.4, < 3.3)
+      redis-client (>= 0.23.0, < 1)
     simple_form (5.4.1)
       actionpack (>= 7.0)
       activemodel (>= 7.0)
@@ -538,7 +540,7 @@ GEM
     temple (0.10.4)
     text (1.3.1)
     thor (1.5.0)
-    tilt (2.6.1)
+    tilt (2.7.0)
     timecop (0.9.10)
     timeout (0.6.0)
     tsort (0.2.0)
@@ -597,7 +599,7 @@ DEPENDENCIES
   bootsnap
   capybara
   capybara-selenium
-  haml_lint (= 0.55.0)
+  haml_lint
   parallel_tests
   pdf-reader
   propshaft

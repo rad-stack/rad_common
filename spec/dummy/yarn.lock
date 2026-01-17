@@ -494,7 +494,7 @@
   resolved "https://registry.yarnpkg.com/@rails/actioncable/-/actioncable-8.1.200.tgz#acecf74ab4846144eefdbc16618786df0cebedf9"
   integrity sha512-on0DSb7AFUkq1ocxivDNQhhGW/RQpY91zvRVyyaEWP4gOOZWy33P/UyxjQk74IENWNrTqs8+zOGHwTjiiFruRw==
 
-"@rails/actiontext@^7.2.2":
+"@rails/actiontext@^7.2.3":
   version "7.2.300"
   resolved "https://registry.yarnpkg.com/@rails/actiontext/-/actiontext-7.2.300.tgz#bd6f5efd337b0065ae1bc167ec9370d5e93d50db"
   integrity sha512-37r6+lvmnzlyLxFDBCzKEaLbvrv86YA4dEc4y32cFEMEwXn7vsJfKSvoiayBBquxt+VUT5tp2AmlfdK5QAVfQA==
