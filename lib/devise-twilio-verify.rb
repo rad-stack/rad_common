@@ -23,7 +23,6 @@ module DeviseTwilioVerify
 end
 
 require 'devise-twilio-verify/routes'
-require 'devise-twilio-verify/rails'
 require 'devise-twilio-verify/models/twilio_verify_authenticatable'
 require 'devise-twilio-verify/models/twilio_verify_lockable'
 
