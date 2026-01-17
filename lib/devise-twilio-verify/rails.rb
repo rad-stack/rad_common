@@ -1,5 +1,8 @@
 module DeviseTwilioVerify
   class Engine < ::Rails::Engine
+    paths['lib/tasks'] = []
+    paths['config/initializers'] = []
+
     ActiveSupport.on_load(:action_controller) do
       include DeviseTwilioVerify::Controllers::Helpers
     end
