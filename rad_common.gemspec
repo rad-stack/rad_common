@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise'
   s.add_dependency 'devise_invitable'
   s.add_dependency 'devise-security'
+  s.add_dependency 'devise-two-factor'
   s.add_dependency 'factory_bot_rails'
   s.add_dependency 'faker'
   s.add_dependency 'geocoder'

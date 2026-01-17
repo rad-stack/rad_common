@@ -438,9 +438,9 @@ RSpec.describe 'Users', type: :system do
   end
 
   describe 'two factor authentication', :two_factor_specs do
-    let(:remember_message) do
-      "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
-    end
+    # let(:remember_message) do
+    #   "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
+    # end
 
     before do
       allow(Rails.application.credentials)
@@ -460,9 +460,9 @@ RSpec.describe 'Users', type: :system do
       fill_in 'user_email', with: user.email
       fill_in 'user_password', with: password
       click_button 'Sign In'
-      expect(page).to have_content remember_message
-      fill_in 'twilio-verify-token', with: '7721070'
-      click_button 'Verify and Sign in'
+      # expect(page).to have_content remember_message
+      fill_in 'Verification Code', with: '7721070'
+      click_button 'Verify & Sign In'
       expect(page).to have_content 'Signed in successfully'
     end
 
@@ -474,9 +474,9 @@ RSpec.describe 'Users', type: :system do
       fill_in 'user_email', with: user.email
       fill_in 'user_password', with: password
       click_button 'Sign In'
-      fill_in 'twilio-verify-token', with: '123456'
-      click_button 'Verify and Sign in'
-      expect(page).to have_content('The entered token is invalid')
+      fill_in 'Verification Code', with: '123456'
+      click_button 'Verify & Sign In'
+      expect(page).to have_content('Invalid two-factor code')
     end
   end
 end

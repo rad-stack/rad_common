@@ -436,7 +436,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_10_093403) do
     t.string "timezone", null: false
     t.string "global_search_default"
     t.bigint "user_status_id", null: false
-    t.datetime "last_sign_in_with_twilio_verify", precision: nil
     t.boolean "otp_required_for_login", default: true, null: false
     t.string "invitation_token"
     t.datetime "invitation_created_at", precision: nil
@@ -458,6 +457,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_10_093403) do
     t.string "detected_timezone"
     t.string "ignored_timezone"
     t.string "detected_timezone_js"
+    t.string "otp_secret"
+    t.integer "consumed_timestep"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true

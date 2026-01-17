@@ -12,6 +12,7 @@ PATH
       csv
       devise
       devise-security
+      devise-two-factor
       devise_invitable
       factory_bot_rails
       faker
@@ -208,6 +209,11 @@ GEM
       warden (~> 1.2.3)
     devise-security (0.18.0)
       devise (>= 4.3.0)
+    devise-two-factor (6.3.0)
+      activesupport (>= 7.0, < 8.2)
+      devise (>= 4.0, < 5.0)
+      railties (>= 7.0, < 8.2)
+      rotp (~> 6.0)
     devise_invitable (2.0.11)
       actionmailer (>= 5.0)
       devise (>= 4.6)
@@ -435,6 +441,7 @@ GEM
       actionpack (>= 7.0)
       railties (>= 7.0)
     rexml (3.4.4)
+    rotp (6.3.0)
     rspec-core (3.13.6)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)
