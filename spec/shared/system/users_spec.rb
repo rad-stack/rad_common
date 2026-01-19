@@ -179,7 +179,7 @@ RSpec.describe 'Users', type: :system do
       end
 
       it 'requires mobile phone when twilio verify enabled', :shared_database_specs do
-        allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
+        allow(RadConfig).to receive_messages(two_factor_auth_all_users?: false, require_mobile_phone?: false)
 
         visit edit_user_path(user)
         fill_in 'Mobile Phone', with: ''
@@ -262,7 +262,7 @@ RSpec.describe 'Users', type: :system do
   end
 
   describe 'sign in' do
-    before { allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false }
+    before { allow(RadConfig).to receive(:two_factor_auth_enabled?).and_return false }
 
     it 'can not sign in without active user status' do
       user.update!(user_status: RadConfig.pending_users? ? pending_status : inactive_status)
@@ -334,7 +334,7 @@ RSpec.describe 'Users', type: :system do
   end
 
   describe 'timeout', :devise_timeoutable_specs do
-    before { allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false }
+    before { allow(RadConfig).to receive(:two_factor_auth_enabled?).and_return false }
 
     context 'with internal user' do
       it 'sign in times out after the configured hours' do
@@ -437,7 +437,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'two factor authentication', :twilio_verify_specs do
+  describe 'two factor authentication', :two_factor_specs do
     let(:remember_message) do
       "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
     end
@@ -450,7 +450,7 @@ RSpec.describe 'Users', type: :system do
 
       allow(TwilioVerifyService).to receive(:send_sms_token).and_return(double(status: 'pending'))
 
-      user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
+      user.update!(otp_required_for_login: true, mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'allows user to login with authentication token' do

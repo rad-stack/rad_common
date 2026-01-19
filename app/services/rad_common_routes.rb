@@ -5,11 +5,7 @@ module RadCommonRoutes
                              devise_twilio_verify: 'users/devise_twilio_verify',
                              invitations: 'users/invitations' }
 
-      devise_paths = { verify_twilio_verify: '/verify-token',
-                       enable_twilio_verify: '/enable-two-factor',
-                       verify_twilio_verify_installation: '/verify-installation' }
-
-      devise_for :users, path: 'auth', controllers: devise_controllers, path_names: devise_paths
+      devise_for :users, path: 'auth', controllers: devise_controllers
 
       authenticate :user, ->(u) { u.internal? } do
         resources :users, only: :destroy do
