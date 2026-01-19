@@ -65,7 +65,7 @@ class RadUserPolicy < ApplicationPolicy
   end
 
   def permitted_attributes
-    base_attributes + twilio_verify_attributes + RadConfig.additional_user_params!
+    base_attributes + two_factor_attributes + RadConfig.additional_user_params!
   end
 
   private
@@ -79,8 +79,8 @@ class RadUserPolicy < ApplicationPolicy
       items
     end
 
-    def twilio_verify_attributes
-      return [:twilio_verify_enabled] if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
+    def two_factor_attributes
+      return [:otp_required_for_login] if RadConfig.two_factor_auth_enabled? && !RadConfig.two_factor_auth_all_users?
 
       []
     end

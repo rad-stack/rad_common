@@ -41,7 +41,7 @@ module RadCommon
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.3.1', '3.4.7', 'Gemfile'
-        gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
+        gsub_file 'Gemfile', /gem 'haml_lint', '0\.55\.0', require: false/, "gem 'haml_lint', require: false"
         gsub_file 'Gemfile', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
         gsub_file 'Gemfile.lock', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
 
@@ -817,6 +817,7 @@ gem 'propshaft'
           apply_migration '20251103191522_remove_embedding_metadata.rb'
           apply_migration '20251103194914_create_search_preferences.rb'
           apply_migration '20251120171951_remove_legacy_filter_settings.rb'
+          apply_migration '20260110093403_rename_twilio_verify_enabled.rb'
         end
 
         def installed_app_name
