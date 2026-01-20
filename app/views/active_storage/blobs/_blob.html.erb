@@ -1,4 +1,4 @@
-<% check_blob_validity(blob) %>
+<% check_blob_validity(blob) if respond_to?(:check_blob_validity) %>
 
 <figure class="attachment attachment--<%= blob.representable? ? "preview" : "file" %> attachment--<%= blob.filename.extension %>">
   <% if blob.representable? %>
