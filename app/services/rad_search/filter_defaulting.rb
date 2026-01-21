@@ -40,11 +40,14 @@ module RadSearch
         @search.filters.any? do |filter|
           next if filter.respond_to?(:skip_default?) && filter.skip_default?
 
-          value = @search.search_params[filter.searchable_name]
-          if value.is_a?(Array)
-            value.reject(&:blank?).present?
-          else
-            value.present?
+          searchable_names = Array(filter.searchable_name)
+          searchable_names.any? do |name|
+            value = @search.search_params[name]
+            if value.is_a?(Array)
+              value.reject(&:blank?).present?
+            else
+              value.present?
+            end
           end
         end
       end

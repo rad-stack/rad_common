@@ -5,7 +5,7 @@ module SearchHelper
     end
   end
 
-  def date_filter_dropdown_label
-    DateFilterDropdownPresenter.new(self).render
+  def date_filter_dropdown_label(active_range: nil)
+    DateFilterDropdownPresenter.new(self, active_range: active_range).render
   end
 end

@@ -1,21 +1,34 @@
 %div{ class: filter.group_label ? 'mb-3 grouped-dates' : '' }
   - if filter.group_label
     %label= filter.group_label
-  .d-flex.jusify-space-between{ 'data-controller': 'search-date-filter' }
+  :ruby
+    active_range = search.search_params[filter.range_input].presence || filter.default_range
+    if active_range.present? && RadSearch::DateRanges.valid_range?(active_range)
+      start_date, end_date = RadSearch::DateRanges.calculate_range(active_range)
+      default_start = start_date.strftime('%Y-%m-%d')
+      default_end = end_date.strftime('%Y-%m-%d')
+    else
+      default_start = search.search_params[filter.start_input] || filter.default_start_value.to_s
+      default_end = search.search_params[filter.end_input] || filter.default_end_value.to_s
+    end
+  .d-flex.justify-space-between{ 'data-controller': 'search-date-filter',
+                                 'data-search-date-filter-ranges-value': RadSearch::DateRanges.as_json }
+    = f.input filter.range_input,
+              as: :hidden,
+              input_html: { value: search.search_params[filter.range_input].presence || filter.default_range,
+                            'data-search-date-filter-target' => 'rangeInput' }
     .flex-grow-1
-      - default_value = search.search_params[filter.start_input] || filter.default_start_value.to_s
-      - input_data = { default: default_value, 'search-date-filter-target' => 'startInput' }
+      - input_data = { default: default_start, 'search-date-filter-target' => 'startInput' }
       = f.input filter.start_input,
                 as: :date,
                 html5: true,
                 label: filter.start_input_label,
                 required: false,
                 label_html: { class: filter.start_label_class },
-                input_html: { value: default_value, data: input_data, class: 'ays-ignore' }
-    .my-auto.pt-2.px-1= date_filter_dropdown_label
+                input_html: { value: default_start, data: input_data, class: 'ays-ignore' }
+    .my-auto.pt-2.px-1= date_filter_dropdown_label(active_range: active_range)
     .flex-grow-1
-      - default_value = search.search_params[filter.end_input] || filter.default_end_value.to_s
-      - input_data = { default: default_value, 'search-date-filter-target' => 'endInput' }
+      - input_data = { default: default_end, 'search-date-filter-target' => 'endInput' }
 
       = f.input filter.end_input,
                 as: :date,
@@ -23,4 +36,4 @@
                 label: filter.end_input_label,
                 required: false,
                 label_html: { class: filter.end_label_class },
-                input_html: { value: default_value, data: input_data, class: 'ays-ignore' }
+                input_html: { value: default_end, data: input_data, class: 'ays-ignore' }
