@@ -53,9 +53,9 @@ class DuplicatesProcessor
     def similar_name_matches
       return [] unless model_klass.use_first_last_name? && first_last_name_present?
 
-      query = model_klass.where('levenshtein(upper(first_name), ?) <= 1 AND levenshtein(upper(last_name), ?) <= 1',
-                                record.first_name.upcase,
-                                record.last_name.upcase)
+      query = model_klass.where('levenshtein(upper(left(first_name, 255)), ?) <= 1 AND levenshtein(upper(left(last_name, 255)), ?) <= 1',
+                                record.first_name.upcase.truncate(255, omission: ''),
+                                record.last_name.upcase.truncate(255, omission: ''))
 
       query = query.where.not(id: record.id) if record.id.present?
       query.pluck(:id)
@@ -64,6 +64,7 @@ class DuplicatesProcessor
     def birth_date_matches
       return [] unless model_klass.use_birth_date? && model_klass.use_first_last_name? && first_last_name_present?
 
+      # TODO: fix
       query_string = 'birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR ' \
                      'levenshtein(upper(last_name), ?) <= 1)'
 
@@ -100,6 +101,7 @@ class DuplicatesProcessor
     end
 
     def levenshtein_query(item, item_value)
+      # TODO: fix
       model_klass.where("levenshtein(upper(#{item[:name]}), ?) <= 1", item_value)
     end
 
