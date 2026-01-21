@@ -53,7 +53,7 @@ export default class extends Controller {
   getUrlParams() {
     const urlParams = new URLSearchParams(window.location.search);
     return {
-      view: urlParams.get('view') || this.initialViewValue,
+      view: this.isMobileView() ? 'listWeek' : urlParams.get('view') || this.initialViewValue,
       date: urlParams.get('date') || new Date().toISOString().split('T')[0]
     };
   }
@@ -74,7 +74,12 @@ export default class extends Controller {
     }
   }
 
+  isMobileView() {
+    return window.innerWidth < 600;
+  }
+
   config() {
+    let controller = this;
     const { view, date } = this.getUrlParams();
 
     return {
@@ -94,11 +99,12 @@ export default class extends Controller {
         prev: ' fa fa-chevron-left',
         next: ' fa fa-chevron-right'
       },
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      windowResize: function(_view) {
+        if (controller.isMobileView()) {
+          this.changeView('listWeek');
+        }
       },
+      headerToolbar: this.buildHeaderToolbar(),
       eventDidMount: function(info) {
         if(info.event.textColor) {
           info.el.style.color = info.event.textColor;
@@ -142,6 +148,22 @@ export default class extends Controller {
       this.showLoading();
     } else {
       this.showLoaded();
+    }
+  }
+
+  buildHeaderToolbar() {
+    if(this.isMobileView()) {
+      return {
+        left: 'prev,next',
+        center: 'title',
+        right: 'today'
+      };
+    } else {
+      return {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      };
     }
   }
 
