@@ -49,9 +49,82 @@ module PaceApi
       objects.first
     end
 
-    def find_objects(type, xpath, raise_error: false, cached: false)
+    def find_sort_and_limit_objects(type, xpath, page_size:, page_number:, sort:, raise_error: false, cached: false)
       raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
       raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
+
+      query_params = { type: type, xpath: xpath, limit: page_size }
+      page_multiplier = page_number - 1
+      query_params[:offset] = (page_multiplier * page_size).to_i
+      cache_key = "pace_api_find_objects_#{type}_#{xpath}"
+
+      url = "/rpc/rest/services/FindObjects/findSortAndLimit?#{query_params.to_query}"
+      log_request(action: "FindObject: type: #{type} xpath: #{xpath}",
+                  query_params: query_params, body: {}, method: 'POST', url: url)
+      cache_expires_in_hours = RadConfig.config_item(:pace_cache_expires_in_hours) || 1
+
+      response = if cached
+                   Rails.cache.fetch(cache_key, expires_in: cache_expires_in_hours.hours) do
+                     api_client.post(url) do |req|
+                       req.body = sort.to_json
+                     end
+                   end
+                 else
+                   api_client.post(url) do |req|
+                     req.body = sort.to_json
+                   end
+                 end
+      parsed_response = parse_response(response)
+
+      return parsed_response if parsed_response.present?
+
+      raise PaceApi::MissingObjectError.new("Missing #{type} in Pace for #{xpath}", type) if raise_error
+    end
+
+    def load_value_objects(type, fields:, id:, sorts:, xpath:, children: [], offset: 0, limit: 0, cached: false)
+      raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
+      raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
+
+      cache_key = "pace_api_load_value_objects_#{type}_#{xpath}"
+
+      body = { objectName: type, fields: fields, offset: offset, limit: limit, xpathSorts: sorts, children: children,
+               xpathFilter: xpath, primaryKey: id }
+
+      url = '/rpc/rest/services/FindObjects/loadValueObjects'
+      log_request(action: "FindObject load_value_objects: type: #{type} xpath: #{xpath}",
+                  query_params: {}, body: body, method: 'POST', url: url)
+      cache_expires_in_hours = RadConfig.config_item(:pace_cache_expires_in_hours) || 1
+
+      response = if cached
+                   Rails.cache.fetch(cache_key, expires_in: cache_expires_in_hours.hours) do
+                     api_client.post(url) do |req|
+                       req.body = body.to_json
+                     end
+                   end
+                 else
+                   api_client.post(url) do |req|
+                     req.body = body.to_json
+                   end
+                 end
+      parsed_response = parse_response(response)
+
+      return parsed_response if parsed_response.present?
+
+      raise PaceApi::MissingObjectError.new("Missing #{type} in Pace for #{xpath}", type) if raise_error
+    end
+
+    def find_objects(type, xpath, raise_error: false, cached: false, page_size: nil, page_number: nil, sort: nil)
+      raise ArgumentError, "Missing the required parameter 'type' when calling FindObjectsApi.find" if type.nil?
+      raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
+
+      if [page_size, page_number, sort].any?(&:present?) && [page_size, page_number, sort].any?(&:blank?)
+        raise ArgumentError, 'must defined page_size, page_number, and sort all at same time'
+      end
+
+      if page_size && page_number
+        return find_sort_and_limit_objects(type, xpath, raise_error: raise_error, cached: cached,
+                                                        page_size: page_size, page_number: page_number, sort: sort)
+      end
 
       query_params = { type: type, xpath: xpath }
       cache_key = "pace_api_find_objects_#{type}_#{xpath}"
@@ -142,6 +215,25 @@ module PaceApi
       url = "/rpc/rest/services/InvokeAction/#{action}"
 
       log_request(action: "Invoking action: #{action}",
+                  query_params: query_params, body: body, method: 'POST', url: url)
+      RadRetry.perform_request(additional_errors: additional_errors) do
+        response = api_client.post(url, query_params) do |req|
+          req.params = query_params if query_params.present?
+          req.body = body.to_json if body
+        end
+
+        parse_response(response, model)
+      end
+    end
+
+    def invoke_process(process:, model: nil, primary_key_attr: nil, primary_key_value: nil, body: nil,
+                       retry_pace_errors: false)
+      query_params = {}
+      query_params[primary_key_attr] = primary_key_value if primary_key_attr.present?
+      additional_errors = retry_pace_errors ? [PaceApi::PaceResponseError] : []
+      url = "/rpc/rest/services/InvokeProcess/#{process}"
+
+      log_request(action: "Invoking process: #{process}",
                   query_params: query_params, body: body, method: 'POST', url: url)
       RadRetry.perform_request(additional_errors: additional_errors) do
         response = api_client.post(url, query_params) do |req|
