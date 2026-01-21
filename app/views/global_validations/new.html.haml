@@ -1,22 +1,36 @@
-.alert.alert-danger
-  This is an exhaustive effort that could cause performance problems on the database. Are you sure you want to proceed?
-.card
-  = render 'layouts/card_header', action_name: 'custom', title: 'Validate Database', icon: 'fa-check'
-  .card-body
-    = link_to icon(:check, 'Validate Full Database'),
-              global_validations_path,
-              method: :post,
-              data: { confirm: 'Are you sure?' },
-              class: 'btn btn-danger btn-lg'
+.row
+  .col-lg-9
+    .alert.alert-danger
+      This is an exhaustive effort that could cause performance problems on the database.
+      Are you sure you want to proceed?
+    .card
+      = render 'layouts/card_header', action_name: 'custom', title: 'Validate Database', icon: 'fa-check'
+      .card-body
+        = link_to icon(:check, 'Validate Full Database'),
+                  global_validations_path,
+                  method: :post,
+                  data: { confirm: 'Are you sure?' },
+                  class: 'btn btn-danger btn-lg'
 
-    .btn-group
-      %a.btn.dropdown-toggle.btn-lg.btn-warning{ 'data-bs-toggle': 'dropdown', href: '#' }
-        = icon(:check, 'Validate Single Item')
-      %ul.dropdown-menu
-        - GlobalValidation.available_models.each do |item|
-          %li
-            = link_to item,
-                      global_validations_path(single_model: item),
-                      method: :post,
-                      data: { confirm: 'Are you sure?' },
-                      class: 'dropdown-item'
+        .btn-group
+          %a.btn.dropdown-toggle.btn-lg.btn-warning{ 'data-bs-toggle': 'dropdown', href: '#' }
+            = icon(:check, 'Validate Single Item')
+          %ul.dropdown-menu
+            - GlobalValidation.available_models.each do |item|
+              %li
+                = link_to item,
+                          global_validations_path(single_model: item),
+                          method: :post,
+                          data: { confirm: 'Are you sure?' },
+                          class: 'dropdown-item'
+  .col-lg-3
+    .card
+      = render 'layouts/card_header', action_name: 'custom', title: 'Update', icon: 'fa-edit'
+      .card-body
+        = simple_form_for(@company, url: company_update_path, method: :put) do |f|
+          = rad_form_errors f
+
+          .form-inputs
+            = f.input :validity_checked_at, as: :date, html5: true
+          .form-actions
+            = f.button :submit, 'Save', class: 'btn btn-primary'
