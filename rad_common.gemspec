@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'faker'
   s.add_dependency 'geocoder'
   s.add_dependency 'haml', '7.1' # remove this entire line when Task 12805 is resolved
-  s.add_dependency 'haml-rails'
+  s.add_dependency 'haml-rails', '~> 2.1.0'
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
@@ -49,7 +49,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
   s.add_dependency 'rack-attack'
-  s.add_dependency 'rails', '~> 7.2.2'
+  s.add_dependency 'rails', '7.2.2.1'
   s.add_dependency 'redis'
   s.add_dependency 'ruby-openai'
   s.add_dependency 'sendgrid-ruby'
