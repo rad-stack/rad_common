@@ -17,7 +17,7 @@ PATH
       faker
       geocoder
       haml (= 7.1)
-      haml-rails (~> 2.1.0)
+      haml-rails (= 2.1.0)
       hashids
       image_processing
       jwt
