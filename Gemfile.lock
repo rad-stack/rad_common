@@ -7,6 +7,7 @@ PATH
       authtrail
       aws-sdk-s3
       bootstrap5-kaminari-views
+      connection_pool (< 3)
       cssbundling-rails (~> 1.4)
       csv
       devise
@@ -15,6 +16,7 @@ PATH
       factory_bot_rails
       faker
       geocoder
+      haml (= 7.1)
       haml-rails
       hashids
       image_processing
@@ -233,7 +235,7 @@ GEM
       csv (>= 3.0.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    haml (6.3.0)
+    haml (7.1.0)
       temple (>= 0.8.2)
       thor
       tilt
@@ -581,7 +583,7 @@ DEPENDENCIES
   bootsnap
   capybara
   capybara-selenium
-  haml_lint (= 0.55.0)
+  haml_lint
   parallel_tests
   pdf-reader
   propshaft

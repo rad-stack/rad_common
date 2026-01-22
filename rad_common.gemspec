@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap5-kaminari-views'
+  s.add_dependency 'connection_pool', '< 3' # Remove when upgraded to Rails 8.1.2+
   s.add_dependency 'cssbundling-rails', '~> 1.4'
   s.add_dependency 'csv'
   s.add_dependency 'devise'
@@ -30,6 +31,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'factory_bot_rails'
   s.add_dependency 'faker'
   s.add_dependency 'geocoder'
+  s.add_dependency 'haml', '7.1' # remove this entire line when Task 12805 is resolved
   s.add_dependency 'haml-rails'
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
@@ -68,7 +70,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'active_record_doctor'
   s.add_development_dependency 'capybara'
-  s.add_development_dependency 'haml_lint', '0.55.0'
+  s.add_development_dependency 'haml_lint'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'rubocop'
   s.add_development_dependency 'rubocop-capybara'
