@@ -49,7 +49,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
   s.add_dependency 'rack-attack'
-  s.add_dependency 'rails', '7.2.2.1'
+  s.add_dependency 'rails', '~> 7.2.3'
   s.add_dependency 'redis'
   s.add_dependency 'ruby-openai'
   s.add_dependency 'sendgrid-ruby'
