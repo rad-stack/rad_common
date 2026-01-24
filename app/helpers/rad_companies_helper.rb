@@ -6,9 +6,7 @@ module RadCompaniesHelper
               { label: 'Website',
                 value: (link_to company.website, company.website, target: :_blank, rel: :noopener) },
               { label: 'Email', value: (mail_to company.email) },
-              :timezone,
-              :validity_checked_at,
-              :address_requests_made]
+              :timezone]
 
     if company.app_logo.attached?
       items.push(label: 'Logo',
