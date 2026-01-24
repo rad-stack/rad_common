@@ -9,7 +9,7 @@ PATH
       bootstrap5-kaminari-views
       cssbundling-rails (~> 1.4)
       csv
-      devise (= 5.0.0.rc)
+      devise (~> 5.0.0)
       devise-security
       devise_invitable
       factory_bot_rails
@@ -198,7 +198,7 @@ GEM
       railties (>= 6.0.0)
     csv (3.3.5)
     date (3.5.1)
-    devise (5.0.0.rc)
+    devise (5.0.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 7.0)

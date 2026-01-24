@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'bootstrap5-kaminari-views'
   s.add_dependency 'cssbundling-rails', '~> 1.4'
   s.add_dependency 'csv'
-  s.add_dependency 'devise', '5.0.0.rc'
+  s.add_dependency 'devise', '~> 5.0.0'
   s.add_dependency 'devise_invitable'
   s.add_dependency 'devise-security'
   s.add_dependency 'factory_bot_rails'
