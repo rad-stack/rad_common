@@ -10,7 +10,7 @@ PATH
       connection_pool (< 3)
       cssbundling-rails (~> 1.4)
       csv
-      devise
+      devise (~> 5.0.0)
       devise-security
       devise_invitable
       factory_bot_rails
