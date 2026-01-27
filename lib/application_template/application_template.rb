@@ -199,6 +199,7 @@ run 'touch Gemfile'
 add_source 'https://rubygems.org'
 
 gem 'bootsnap', require: false
+gem 'openssl'
 gem 'propshaft'
 gem 'rad_common', git: 'https://github.com/rad-stack/rad_common.git', branch: @rad_common_branch
 
