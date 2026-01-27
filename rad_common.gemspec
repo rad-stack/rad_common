@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'connection_pool', '< 3' # Remove when upgraded to Rails 8.1.2+
   s.add_dependency 'cssbundling-rails', '~> 1.4'
   s.add_dependency 'csv'
-  s.add_dependency 'devise'
+  s.add_dependency 'devise', '~> 5.0.0'
   s.add_dependency 'devise_invitable'
   s.add_dependency 'devise-security'
   s.add_dependency 'factory_bot_rails'
