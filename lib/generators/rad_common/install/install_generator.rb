@@ -604,6 +604,8 @@ Seeder.new.seed!
         end
 
         def add_project_gems
+          # TODO: add openssl gem
+
           inject_into_file 'Gemfile', after: "gem 'rubocop', require: false\n" do <<-'RUBY'
 gem 'rubocop-capybara'
           RUBY
