@@ -38,6 +38,7 @@ module RadCommon
                                message/rfc822
                                text/csv
                                text/html
+                               text/markdown
                                text/plain] + VALID_IMAGE_TYPES + VALID_VIDEO_TYPES + VALID_AUDIO_TYPES).freeze
 
   VALID_CONTENT_TYPE_MESSAGE = 'has an invalid content type of %<content_type>s, must be %<authorized_types>s'.freeze
