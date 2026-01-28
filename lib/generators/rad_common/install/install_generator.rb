@@ -93,7 +93,8 @@ module RadCommon
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
         copy_file '../../../../../.sniff.yml', '.sniff.yml'
-        copy_file '../../../../../.eslintrc', '.eslintrc'
+        copy_file '../../../../../eslint.config.mjs', 'eslint.config.mjs'
+        remove_file '.eslintrc'
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
 
         # config
