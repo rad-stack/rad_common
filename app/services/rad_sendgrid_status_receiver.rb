@@ -42,10 +42,6 @@ class RadSendgridStatusReceiver
     @content[:reason]
   end
 
-  def record_id
-    @content[:record_id]
-  end
-
   def host_name
     @content[:host_name]
   end
