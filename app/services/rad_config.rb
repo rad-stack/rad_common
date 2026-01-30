@@ -418,6 +418,10 @@ class RadConfig
       boolean_config_item! :rad_system_chat_enabled
     end
 
+    def simulate_sms?
+      boolean_config_item! :simulate_sms
+    end
+
     def action_cable_enabled?
       config_item(:action_cable_enabled).to_s.downcase == 'true'
     end

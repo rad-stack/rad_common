@@ -21,13 +21,12 @@ class PhoneSMSSender
   def send!
     if SMSLogStore.enabled?
       SMSLogStore.log(
-        from_number: RadTwilio.twilio_to_human_format(from_number),
+        from_number: RadConfig.app_name!,
         to_number: to_mobile_phone,
         to_user: to_user,
         body: message,
         media_url: media_url
       )
-      log_event true, "dev_#{SecureRandom.hex(16)}"
       return true
     end
 

@@ -3,7 +3,7 @@ class SMSLogStore
 
   class << self
     def enabled?
-      Rails.env.development?
+      Rails.env.development? && RadConfig.simulate_sms?
     end
 
     def log(from_number:, to_number:, to_user: nil, body:, media_url: nil)
