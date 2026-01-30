@@ -43,9 +43,9 @@ module RadReports
       end
 
       def apply_filter_defaults(filter_def, filter)
-        return unless filter['type'] == 'RadSearch::SearchFilter'
+        return if filter['default_value'].blank?
 
-        filter_def[:default_value] = filter['default_value'] if filter['default_value'].present?
+        filter_def[:default_value] = filter['default_value']
       end
 
       def apply_equals_filter_data_type(filter_def, filter)

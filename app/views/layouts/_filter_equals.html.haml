@@ -1,4 +1,4 @@
 = f.input filter.equals_input,
           label: filter.input_label,
-          input_html: { value: search.search_params[filter.equals_input], class: 'ays-ignore' },
+          input_html: { value: (search.search_params[filter.equals_input] || filter.default_value), class: 'ays-ignore' },
           as: filter.data_type, required: false

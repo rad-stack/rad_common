@@ -3,16 +3,17 @@ module RadSearch
   # This is used to generate an input used for a SQL like filter
   class LikeFilter
     MATCH_TYPES = %w[contains exact starts_with ends_with does_not_contain does_not_start_with does_not_end_with].freeze
-    attr_reader :column, :input_label, :col_class, :name, :input_transform
+    attr_reader :column, :input_label, :col_class, :name, :input_transform, :default_value
 
     ##
     # @param [String] column the database column that is being filtered
-    def initialize(column:, input_label: nil, col_class: nil, name: nil, input_transform: nil)
+    def initialize(column:, input_label: nil, col_class: nil, name: nil, input_transform: nil, default_value: nil)
       @column = column
       @input_label = input_label.presence || column.to_s.titleize
       @col_class = col_class
       @name = name.presence || column
       @input_transform = input_transform
+      @default_value = default_value
     end
 
     def filter_view
@@ -76,6 +77,9 @@ module RadSearch
     private
 
       def like_value(params)
+        search_empty = params.blank? || !params.has_key?(input_name)
+        return @default_value.to_s if search_empty && @default_value
+
         params[input_name]
       end
   end
