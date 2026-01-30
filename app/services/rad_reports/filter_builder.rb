@@ -36,6 +36,24 @@ module RadReports
         end
       end
 
+      def parsed_default_value(default_value)
+        return default_value if default_value.blank?
+
+        parse_default_value_array(default_value) || default_value
+      end
+
+      def parse_default_value_array(value)
+        return unless value.include?(',')
+
+        parts = value.split(',').map(&:strip)
+
+        if parts.all? { |part| part.match?(/\A'.*'\z/) }
+          parts.map { |part| part.delete("'") }
+        elsif parts.all? { |part| part.match?(/\A-?\d+\z/) }
+          parts.map(&:to_i)
+        end
+      end
+
       def apply_filter_options(filter_def, filter)
         return unless filter['type'] == 'RadSearch::SearchFilter'
 
@@ -45,7 +63,7 @@ module RadReports
       def apply_filter_defaults(filter_def, filter)
         return if filter['default_value'].blank?
 
-        filter_def[:default_value] = filter['default_value']
+        filter_def[:default_value] = parsed_default_value(filter['default_value'])
       end
 
       def apply_equals_filter_data_type(filter_def, filter)
