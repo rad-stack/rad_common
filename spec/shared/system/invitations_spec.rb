@@ -37,7 +37,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
         let(:invite_email) { valid_email }
 
         before do
-          allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false)
+          allow(RadConfig).to receive(:two_factor_auth_all_users?).and_return(false)
           invite_role
         end
 
@@ -54,7 +54,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
           expect(page).to have_content "We invited '#{name_display}'"
           expect(User.last.security_roles.first).to eq invite_role
           expect(User.last.active?).to be true
-          expect(User.last.twilio_verify_enabled?).to be false
+          expect(User.last.otp_required_for_login?).to be false
         end
       end
 
@@ -88,7 +88,7 @@ RSpec.describe 'Invitations', :invite_specs, type: :system do
 
           it 'invites' do
             expect(User.last.internal?).to be true
-            expect(User.last.twilio_verify_enabled?).to be true
+            expect(User.last.otp_required_for_login?).to be true
           end
         end
 

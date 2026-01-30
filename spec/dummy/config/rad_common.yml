@@ -19,8 +19,8 @@ default: &default
   show_help_menu: true
   saved_search_filters_enabled: true
   legal_docs: true
-  twilio_verify_all_users: true
-  twilio_verify_remember_device_days: 7
+  two_factor_auth_all_users: true
+  two_factor_remember_device_days: 7
   storage_config_override: false
   database_config_override: false
   require_mobile_phone: false
@@ -35,8 +35,10 @@ default: &default
   timezone_detection: true
   portal: false
   filter_toggle_default_behavior: remember_state
-
   rad_system_chat_enabled: true
+  action_cable_enabled: true
+  expire_password_after_days: 90
+
   rad_assistant_system_tools:
     - LLM::Tools::AttorneyDataTool
   custom_reports:
@@ -139,12 +141,12 @@ development:
   <<: *default
 
   host_name: localhost:3000
-  twilio_verify_enabled: false
+  two_factor_auth_enabled: false
 
 test:
   <<: *default
 
   host_name: localhost:3000
-  twilio_verify_enabled: true
+  two_factor_auth_enabled: true
   pace_api:
     host: 'radstackmis.myprintdesk.net'

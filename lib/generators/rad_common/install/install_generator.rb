@@ -1,3 +1,5 @@
+require_relative '../../../rad_common/config_updater'
+
 module RadCommon
   module Generators
     class InstallGenerator < Rails::Generators::Base
@@ -32,15 +34,16 @@ module RadCommon
         add_rad_config_setting 'validate_user_domains', 'true'
         add_rad_config_setting 'show_sign_in_marketing', 'false'
         add_rad_config_setting 'filter_toggle_default_behavior', 'always_open'
+        add_rad_config_setting 'action_cable_enabled', 'false'
         remove_rad_factories
         remove_old_rad_config_settings
         update_credentials
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
-        search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
-        gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
-        gsub_file 'Gemfile', %r{https://github.com/jayywolff/twilio-verify-devise.git}, 'https://github.com/rad-stack/twilio-verify-devise.git'
-        gsub_file 'Gemfile.lock', %r{https://github.com/jayywolff/twilio-verify-devise.git}, 'https://github.com/rad-stack/twilio-verify-devise.git'
+        search_and_replace_file '3.3.1', '3.4.7', 'Gemfile'
+        gsub_file 'Gemfile', /gem 'haml_lint', '0\.55\.0', require: false/, "gem 'haml_lint', require: false"
+        gsub_file 'Gemfile', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
+        gsub_file 'Gemfile.lock', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
 
         # misc
         merge_package_json unless RadConfig.legacy_assets?
@@ -94,6 +97,10 @@ module RadCommon
         # config
         unless RadConfig.storage_config_override?
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        end
+
+        if RadConfig.action_cable_enabled?
+          copy_file '../../../../../spec/dummy/config/cable.yml', 'config/cable.yml'
         end
 
         copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
@@ -379,16 +386,11 @@ module RadCommon
         end
 
         def add_rad_config_setting(setting_name, default_value)
-          standard_config_end = /\n(  system_usage_models:)/
-          new_config = "  #{setting_name}: #{default_value}\n\n"
-
-          return if rad_config_setting_exists?(setting_name)
-
-          gsub_file RAD_CONFIG_FILE, standard_config_end, "#{new_config}\\1"
+          RadCommon::ConfigUpdater.add_rad_config_setting(setting_name, default_value)
         end
 
         def rad_config_setting_exists?(setting_name)
-          File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
+          RadCommon::ConfigUpdater.rad_config_setting_exists?(setting_name)
         end
 
         def remove_old_rad_config_settings
@@ -817,13 +819,12 @@ module RadCommon
           apply_migration '20251016155902_create_custom_reports.rb'
           apply_migration '20251103194914_create_search_preferences.rb'
           apply_migration '20251120171951_remove_legacy_filter_settings.rb'
+          apply_migration '20260110093403_rename_twilio_verify_enabled.rb'
         end
 
         def installed_app_name
           ::Rails.application.class.module_parent.to_s.underscore
         end
-
-        RAD_CONFIG_FILE = 'config/rad_common.yml'.freeze
     end
   end
 end
