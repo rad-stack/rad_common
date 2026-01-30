@@ -41,11 +41,29 @@ class CustomReportFilter
       'column' => column,
       'type' => type,
       'label' => label,
-      'default_value' => default_value
+      'default_value' => parsed_default_value
     }
   end
 
+  def parsed_default_value
+    return default_value if default_value.blank?
+
+    parse_default_value_array(default_value) || default_value
+  end
+
   private
+
+    def parse_default_value_array(value)
+      return unless value.include?(',')
+
+      parts = value.split(',').map(&:strip)
+
+      if parts.all? { |part| part.match?(/\A'.*'\z/) }
+        parts.map { |part| part.delete("'") }
+      elsif parts.all? { |part| part.match?(/\A-?\d+\z/) }
+        parts.map(&:to_i)
+      end
+    end
 
     def validate_column_exists
       return if column.blank? || report_model.blank?
