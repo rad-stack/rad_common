@@ -89,7 +89,7 @@ export default class extends Controller {
             }));
             callback(results);
           })
-          .catch(() => {
+          .catch((e) => {
             callback();
           });
       },

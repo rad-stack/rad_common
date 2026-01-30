@@ -41,7 +41,14 @@ default: &default
 
   rad_assistant_system_tools:
     - LLM::Tools::AttorneyDataTool
-
+  custom_reports:
+    excluded_models:
+      - Category
+    excluded_columns: []
+    excluded_associations:
+    model_column_exclusions:
+      Division:
+        - invoice_email
   system_usage_models:
     -
       - Division

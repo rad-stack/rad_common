@@ -21,7 +21,7 @@ describe GlobalValidation, type: :service do
     subject { global_validity.send(:models_to_check).map(&:to_s) }
 
     let(:models) do
-      %w[AssistantSession Attorney Category Client Company ContactLog ContactLogRecipient
+      %w[AssistantSession Attorney Category Client Company ContactLog ContactLogRecipient  CustomReport
          Division Duplicate Embedding Notification NotificationSecurityRole NotificationSetting
          NotificationType SavedSearchFilter SearchPreference SecurityRole Status SystemMessage User
          UserClient UserSecurityRole UserStatus]
