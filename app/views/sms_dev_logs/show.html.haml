@@ -1,0 +1,22 @@
+.card
+  = render 'layouts/card_header', action_name: 'custom', title: "SMS Thread - #{@user_name}", icon: 'fa-sms'
+  .card-body
+    .mb-3
+      = link_to 'Back to All Threads', sms_dev_logs_path, class: 'btn btn-outline-secondary btn-sm'
+
+    - if @messages.empty?
+      %p.text-center.text-muted No messages found for this user.
+    - else
+      .list-group
+        - @messages.each do |message|
+          .list-group-item
+            .d-flex.justify-content-between.align-items-start
+              %strong= message.from_number
+              %small.text-muted= message.sent_at.strftime('%b %d, %Y %I:%M:%S %p')
+            %p.mb-1.mt-1= message.body
+            - if message.media_url.present?
+              %p.mb-0
+                %small.text-muted
+                  %i.fa.fa-paperclip
+                  Media:
+                  = message.media_url

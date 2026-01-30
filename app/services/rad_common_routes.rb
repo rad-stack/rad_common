@@ -104,6 +104,12 @@ module RadCommonRoutes
 
       get 'attachments/:id(.:format)/:filename(.:format)', to: 'attachments#download'
 
+      if Rails.env.development?
+        resources :sms_dev_logs, only: %i[index show] do
+          delete :clear, on: :collection
+        end
+      end
+
       get 'global_search', to: 'search#global_search'
       get 'global_search_result', to: 'search#global_search_result'
       get 'company', to: 'companies#show'
