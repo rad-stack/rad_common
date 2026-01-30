@@ -131,6 +131,8 @@ class RadConfig
     end
 
     def twilio_enabled?
+      return true if simulate_sms?
+
       if secret_config_item(:twilio_account_sid).blank? &&
          secret_config_item(:twilio_auth_token).blank? &&
          secret_config_item(:twilio_phone_number).blank?
