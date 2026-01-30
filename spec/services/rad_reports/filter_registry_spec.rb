@@ -9,7 +9,8 @@ RSpec.describe RadReports::FilterRegistry, type: :service do
       expect(all_filters.keys).to include(
         'RadSearch::LikeFilter',
         'RadSearch::DateFilter',
-        'RadSearch::BooleanFilter'
+        'RadSearch::BooleanFilter',
+        'RadSearch::SearchFilterMultiple'
       )
     end
   end
