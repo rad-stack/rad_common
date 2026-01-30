@@ -1,13 +1,13 @@
-class SmsDevLogPolicy < ApplicationPolicy
+class SMSDevLogPolicy < ApplicationPolicy
   def index?
-    SmsLogStore.enabled?
+    SMSLogStore.enabled?
   end
 
   def show?
-    SmsLogStore.enabled?
+    SMSLogStore.enabled?
   end
 
   def clear?
-    SmsLogStore.enabled?
+    SMSLogStore.enabled?
   end
 end

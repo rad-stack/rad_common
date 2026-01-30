@@ -1,4 +1,4 @@
-class SmsLogStore
+class SMSLogStore
   Message = Struct.new(:from_number, :to_number, :to_user_id, :to_user_name, :body, :media_url, :sent_at, keyword_init: true)
 
   class << self

@@ -19,8 +19,8 @@ class PhoneSMSSender
   end
 
   def send!
-    if SmsLogStore.enabled?
-      SmsLogStore.log(
+    if SMSLogStore.enabled?
+      SMSLogStore.log(
         from_number: RadTwilio.twilio_to_human_format(from_number),
         to_number: to_mobile_phone,
         to_user: to_user,
