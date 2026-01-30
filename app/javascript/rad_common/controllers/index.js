@@ -38,6 +38,6 @@ export const radControllers = [
   { id: 'sortable', controller: SortableController },
   { id: 'calculated-column-form', controller: CalculatedColumnFormController },
   { id: 'custom-report-filter-form', controller: CustomReportFilterFormController },
-  { id: 'config-editor', controller: ConfigEditorController }
+  { id: 'config-editor', controller: ConfigEditorController },
   { id: 'lazy-container', controller: LazyContainerController }
 ];
