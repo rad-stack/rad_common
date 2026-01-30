@@ -2,14 +2,14 @@ module RadSearch
   ##
   # This is used to generate an input used for a SQL like filter
   class EqualsFilter
-    attr_reader :column, :data_type, :col_class
+    attr_reader :column, :data_type, :col_class, :default_value
 
     ##
     # @param [String] column the database column that is being filtered
     # @param [Symbol] data_type controls what the input type is based on data type of column
     # @param [Symbol] scope the name of an active record scope to be used for the filter on the corresponding model
     # @param [String optional] input_label by default the input label for the field is determined by the column name
-    def initialize(column:, data_type:, scope: nil, input_label: nil, col_class: nil)
+    def initialize(column:, data_type:, scope: nil, input_label: nil, col_class: nil, default_value: nil)
       raise 'data_type must be either :integer or :string' if supported_data_types.exclude?(data_type)
 
       @column = column
@@ -17,6 +17,7 @@ module RadSearch
       @scope = scope
       @input_label = input_label
       @col_class = col_class
+      @default_value = default_value
     end
 
     def filter_view
@@ -56,6 +57,9 @@ module RadSearch
     private
 
       def equals_value(params)
+        search_empty = params.blank? || !params.has_key?(equals_input)
+        return @default_value.to_s if search_empty && @default_value
+
         params[equals_input]
       end
 
