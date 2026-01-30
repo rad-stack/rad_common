@@ -46,7 +46,7 @@ namespace :rad_common do
   end
 
   task ten_minutes: :environment do |task|
-    session = RakeSession.new(task, 5.minutes, 1)
+    session = RakeSession.new(task, 8.minutes, 1)
 
     Timeout.timeout(session.time_limit) do
       ContactLogRecipient.sms_assumed_failed.each do |record|
@@ -113,4 +113,9 @@ namespace :rad_common do
       session.finished
     end
   end
+
+  task build_js_css: :environment do
+    system('yarn build')
+  end
+  Rake::Task['assets:precompile'].enhance(['rad_common:build_js_css']) if Rake::Task.task_defined?('assets:precompile')
 end

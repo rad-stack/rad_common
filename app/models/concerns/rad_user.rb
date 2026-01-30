@@ -16,6 +16,7 @@ module RadUser
     has_many :user_clients, dependent: :destroy
     has_many :clients, through: :user_clients, source: :client
     has_many :saved_search_filters, dependent: :destroy
+    has_many :search_preferences, dependent: :destroy
 
     has_many :contact_logs_from, class_name: 'ContactLog',
                                  foreign_key: 'from_user_id',
@@ -73,8 +74,9 @@ module RadUser
 
     validate :validate_email_address
     validate :validate_initial_security_role, on: :create, if: :active?
+    validate :validate_external_invites_internal, on: :create
     validate :validate_internal, on: :update
-    validate :validate_twilio_verify
+    validate :validate_two_factor
     validate :validate_mobile_phone
     validate :password_excludes_name
     validate :validate_last_activity
@@ -122,6 +124,9 @@ module RadUser
   end
 
   def stale?
+    return false if updated_at > 1.week.ago
+    return false if current_sign_in_at.present? && current_sign_in_at > 1.week.ago
+
     (updated_at < 4.months.ago) ||
       (current_sign_in_at.present? && current_sign_in_at < 6.months.ago) ||
       many_recent_failed_emails?
@@ -193,6 +198,16 @@ module RadUser
     end
   end
 
+  def user_invited_subject
+    "Invitation to Join #{RadConfig.app_name!}"
+  end
+
+  def user_invited_message
+    "Someone has invited you to #{RadConfig.app_name!}, you can accept it through the link " \
+      "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
+      'created until you access the link and set your password.'
+  end
+
   def notify_new_user_signed_up
     Notifications::NewUserSignedUpNotification.main(self).notify!
   end
@@ -257,12 +272,6 @@ module RadUser
     def user_approved_message
       "Your account was approved and you can begin using #{RadConfig.app_name!}."
     end
-
-    def user_invited_message
-      "Someone has invited you to #{RadConfig.app_name!}, you can accept it through the link " \
-        "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
-        'created until you access the link and set your password.'
-    end
   end
 
   private
@@ -278,8 +287,8 @@ module RadUser
       self.user_status = default_user_status if new_record? && !user_status
       return unless new_record?
 
-      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? &&
-                                   (RadConfig.twilio_verify_all_users? || two_factor_security_role?)
+      self.otp_required_for_login = RadConfig.two_factor_auth_enabled? &&
+                                    (RadConfig.two_factor_auth_all_users? || two_factor_security_role?)
 
       self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
     end
@@ -323,18 +332,25 @@ module RadUser
       errors.add :initial_security_role_id, 'is required'
     end
 
+    def validate_external_invites_internal
+      return if initial_security_role_id.blank? || invited_by_id.blank?
+      return unless initial_security_role.internal? && invited_by.external?
+
+      errors.add :initial_security_role, 'cannot be internal'
+    end
+
     def validate_internal
       return if external? || user_clients.none?
 
       errors.add :external, 'not allowed when clients are assigned to this user'
     end
 
-    def validate_twilio_verify
-      return unless RadConfig.twilio_verify_enabled?
-      return if twilio_verify_enabled? || user_status.blank? || !user_status.validate_email_phone?
-      return unless RadConfig.twilio_verify_all_users? || two_factor_security_role?
+    def validate_two_factor
+      return unless RadConfig.two_factor_auth_enabled?
+      return if otp_required_for_login? || user_status.blank? || !user_status.validate_email_phone?
+      return unless RadConfig.two_factor_auth_all_users? || two_factor_security_role?
 
-      errors.add(:twilio_verify_enabled, 'is required')
+      errors.add(:otp_required_for_login, 'is required')
     end
 
     def validate_mobile_phone
@@ -354,7 +370,7 @@ module RadUser
     end
 
     def require_mobile_phone_two_factor?
-      RadConfig.twilio_verify_enabled? && twilio_verify_enabled?
+      RadConfig.two_factor_auth_enabled? && otp_required_for_login?
     end
 
     def password_excludes_name

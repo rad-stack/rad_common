@@ -90,6 +90,7 @@ class RadTwilio
 
     def mobile_carrier?(response)
       return false if response.phone_number.starts_with?('+1246') # Barbados
+      return false if response.phone_number.starts_with?('+1829') # Dominican Republic
       return true if response.carrier['type'] == 'mobile'
       return true if response.carrier['type'] == 'voip' && response.carrier['name'] == 'Google (Grand Central) - SVR'
 

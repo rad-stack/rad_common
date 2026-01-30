@@ -15,9 +15,25 @@ class CalculatedColumnsController < ApplicationController
     respond_to do |format|
       format.html do
         render partial: 'calculated_columns/form',
-               locals: { calculated_column: @calculated_column,
-                         columns_by_table: @columns_by_table,
-                         calculated_formula_options: @calculated_formula_options }
+               locals: { presenter: build_presenter(editing: false) }
+      end
+    end
+  end
+
+  def edit
+    authorize CalculatedColumn
+
+    column_config = find_column_config_by_name(params[:id])
+    @calculated_column = CalculatedColumn.from_column_config(
+      column_config,
+      report_model: @custom_report.report_model,
+      joins: @joins
+    )
+
+    respond_to do |format|
+      format.html do
+        render partial: 'calculated_columns/form',
+               locals: { presenter: build_presenter(editing: true, row_id: params[:row_id]) }
       end
     end
   end
@@ -42,9 +58,34 @@ class CalculatedColumnsController < ApplicationController
           render turbo_stream: turbo_stream.replace(
             'calculated-column-form-frame',
             partial: 'calculated_columns/form',
-            locals: { calculated_column: @calculated_column,
-                      columns_by_table: @columns_by_table,
-                      calculated_formula_options: @calculated_formula_options }
+            locals: { presenter: build_presenter(editing: false) }
+          ), status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  def update
+    authorize CalculatedColumn
+
+    @calculated_column = CalculatedColumn.new(
+      calculated_column_params.merge(
+        report_model: @custom_report.report_model,
+        joins: @joins
+      )
+    )
+
+    respond_to do |format|
+      if @calculated_column.valid?
+        format.turbo_stream do
+          render turbo_stream: update_success
+        end
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            'calculated-column-form-frame',
+            partial: 'calculated_columns/form',
+            locals: { presenter: build_presenter(editing: true, row_id: params[:row_id]) }
           ), status: :unprocessable_entity
         end
       end
@@ -64,6 +105,25 @@ class CalculatedColumnsController < ApplicationController
        turbo_stream.action(:hide_modal, 'calculated-column-modal')]
     end
 
+    def update_success
+      column_config = @calculated_column.to_column_config
+      calculated_column_row = build_calculated_column_row(column_config)
+      row_id = params[:row_id]
+
+      [turbo_stream.replace(row_id,
+                            partial: 'custom_reports/selected_column_row',
+                            locals: { column: calculated_column_row,
+                                      table_id: 'calculated',
+                                      formula: column_config['formula'] }),
+       turbo_stream.action(:hide_modal, 'calculated-column-modal')]
+    end
+
+    def find_column_config_by_name(name)
+      return {} unless @custom_report.persisted?
+
+      (@custom_report.columns || []).find { |col| col['name'] == name } || {}
+    end
+
     def set_custom_report
       if params[:custom_report_id].present?
         @custom_report = CustomReport.find(params[:custom_report_id])
@@ -81,7 +141,16 @@ class CalculatedColumnsController < ApplicationController
                           else
                             []
                           end
-      @calculated_formula_options = RadReports::FormulaRegistry.calculated_grouped_options
+    end
+
+    def build_presenter(editing:, row_id: nil)
+      CalculatedColumnFormPresenter.new(
+        view_context,
+        calculated_column: @calculated_column,
+        columns_by_table: @columns_by_table,
+        editing: editing,
+        row_id: row_id
+      )
     end
 
     def calculated_column_params

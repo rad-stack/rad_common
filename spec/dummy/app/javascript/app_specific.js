@@ -1,7 +1,7 @@
 
 import { Turbo } from '@hotwired/turbo-rails';
 import * as bootstrap from 'bootstrap';
-import { RadTomSelect } from 'rad_common_js/src/radTomSelect';
+import { RadTomSelect } from 'rad_common/radTomSelect';
 
 Turbo.StreamActions.hide_modal = function () {
   this.targetElements.forEach((target) => {

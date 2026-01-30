@@ -164,16 +164,20 @@ class RadConfig
       secret_config_item! :twilio_verify_service_sid
     end
 
-    def twilio_verify_enabled?
-      boolean_config_item! :twilio_verify_enabled
+    def two_factor_auth_enabled?
+      boolean_config_item! :two_factor_auth_enabled
     end
 
-    def twilio_verify_all_users?
-      boolean_config_item! :twilio_verify_all_users
+    def two_factor_auth_all_users?
+      boolean_config_item! :two_factor_auth_all_users
     end
 
     def twilio_verify_remember_device!
-      config_item!(:twilio_verify_remember_device_days).days
+      config_item!(:two_factor_remember_device_days).days
+    end
+
+    def expire_password_after!
+      config_item!(:expire_password_after_days).days
     end
 
     def seeded_users!
@@ -282,6 +286,10 @@ class RadConfig
 
     def saved_search_filters_enabled?
       boolean_config_item! :saved_search_filters_enabled
+    end
+
+    def filter_toggle_default_behavior!
+      config_item! :filter_toggle_default_behavior
     end
 
     def legal_docs?
@@ -410,6 +418,10 @@ class RadConfig
       boolean_config_item! :rad_system_chat_enabled
     end
 
+    def action_cable_enabled?
+      config_item(:action_cable_enabled).to_s.downcase == 'true'
+    end
+
     def always_crawl?
       boolean_config_item! :always_crawl
     end
@@ -479,7 +491,7 @@ class RadConfig
 
     def check_validity!
       check_aws!
-      check_twilio_verify!
+      check_two_factor!
       check_smarty!
       check_marketing!
       check_external!
@@ -501,8 +513,8 @@ class RadConfig
         raise 'Missing AWS S3 credentials'
       end
 
-      def check_twilio_verify!
-        return unless twilio_verify_enabled? && !twilio_enabled?
+      def check_two_factor!
+        return unless two_factor_auth_enabled? && !twilio_enabled?
 
         raise 'Twilio must be enabled to provide mobile phone # validation when two factor authentication is enabled'
       end

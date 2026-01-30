@@ -92,19 +92,22 @@ class CustomReport < ApplicationRecord
       column_name = column_config['name']
       select_clause = column_config['select']
       is_calculated = column_config['is_calculated']
+      sortable = column_config['sortable']
 
       return if !is_calculated && column_name.blank? && select_clause.blank?
 
+      validate_boolean(is_calculated) unless is_calculated.nil?
       if is_calculated
         validate_calculated(column_config)
         return
       end
 
       if select_clause.present?
-        validate_select_cause(column_discovery, select_clause)
+        validate_select_cause(column_discovery, select_clause, is_calculated)
       elsif column_name.present?
         validate_column_name(column_discovery, column_name)
       end
+      validate_boolean(sortable) if sortable.present?
     end
 
     def validate_column_name(column_discovery, column_name)
@@ -114,11 +117,18 @@ class CustomReport < ApplicationRecord
                  "contains invalid column '#{column_name}'")
     end
 
-    def validate_select_cause(column_discovery, select_clause)
-      return if select_clause.blank? || column_discovery.column_exists?(select_clause)
+    def validate_select_cause(column_discovery, select_clause, is_calculated)
+      return if select_clause.blank? && is_calculated
+      return if column_discovery.column_exists?(select_clause)
 
       errors.add(:columns,
                  "contains invalid column reference '#{select_clause}'")
+    end
+
+    def validate_boolean(value)
+      return if [true, false].include?(value)
+
+      errors.add(:columns, "contain invalid boolean value '#{value}', must not be a string")
     end
 
     def validate_calculated(column_config)

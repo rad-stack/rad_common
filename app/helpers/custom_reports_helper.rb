@@ -44,7 +44,7 @@ module CustomReportsHelper
     end
   end
 
-  def calculated_column_class(calculated_column)
+  def calculated_column_class(calculated_column, type)
     calculated_column.formula_type.blank? || calculated_column.formula_type != type ? 'd-none' : nil
   end
 
@@ -99,14 +99,6 @@ module CustomReportsHelper
       column_id: column_id,
       format: :turbo_stream
     }.compact
-  end
-
-  def ai_report_builder_button
-    button_tag(class: 'btn btn-primary btn-sm',
-               'data-bs-target' => '#basic-question-modal',
-               'data-bs-toggle' => 'offcanvas') do
-      sanitize("#{content_tag(:i, '', class: 'fa fa-magic me-1')} AI Report Builder")
-    end
   end
 
   def edit_configuration_button(report)

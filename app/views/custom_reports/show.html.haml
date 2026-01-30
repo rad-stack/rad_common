@@ -1,6 +1,6 @@
 .card
   = render 'layouts/card_header',
-           title: @custom_report.name,
+           title: "#{@custom_report.name} (#{@results.total_count})",
            additional_actions: export_buttons('CustomReport',
                                               override_path: 'custom_report_path',
                                               additional_params: { id: @custom_report.id })

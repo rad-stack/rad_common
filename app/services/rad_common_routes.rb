@@ -5,11 +5,7 @@ module RadCommonRoutes
                              devise_twilio_verify: 'users/devise_twilio_verify',
                              invitations: 'users/invitations' }
 
-      devise_paths = { verify_twilio_verify: '/verify-token',
-                       enable_twilio_verify: '/enable-two-factor',
-                       verify_twilio_verify_installation: '/verify-installation' }
-
-      devise_for :users, path: 'auth', controllers: devise_controllers, path_names: devise_paths
+      devise_for :users, path: 'auth', controllers: devise_controllers
 
       authenticate :user, ->(u) { u.internal? } do
         resources :users, only: :destroy do
@@ -53,7 +49,7 @@ module RadCommonRoutes
         resources :sentry_tests, only: :new
         resources :contact_logs, only: %i[index show]
         resources :contact_log_recipients, only: :show
-        resources :saved_search_filters, only: :destroy
+        resources :saved_search_filters, only: %i[create destroy]
         resources :user_security_roles, only: :show
         resources :json_web_tokens, only: :new
 
@@ -71,7 +67,7 @@ module RadCommonRoutes
           end
         end
 
-        resources :calculated_columns, only: %i[new create]
+        resources :calculated_columns, only: %i[new create edit update]
         resources :custom_report_filters, only: %i[new create]
 
         resources :impersonations, only: [] do
@@ -90,6 +86,8 @@ module RadCommonRoutes
         mount Sidekiq::Web => '/sidekiq'
       end
 
+      mount ::ActionCable.server => '/cable' if RadConfig.action_cable_enabled?
+
       resources :users, except: :destroy do
         member do
           put :resend_invitation
@@ -104,13 +102,14 @@ module RadCommonRoutes
 
       resources :notifications, only: :index
       resources :notification_settings, only: %i[index create]
-      resources :user_profiles, only: %i[show edit update] if RadConfig.user_profiles?
+      resources :user_profiles, only: %i[edit update] if RadConfig.user_profiles?
       resources :twilio_statuses, only: :create
       resources :sinch_statuses, only: :create
       resources :twilio_replies, only: :create
       resources :sendgrid_statuses, only: :create
       resources :company_contacts, only: %i[new create]
       resources :user_clients, only: %i[create destroy]
+      resources :search_preferences, only: %i[create update]
 
       delete 'attachments/:id(.:format)', to: 'attachments#destroy', as: :attachment
 

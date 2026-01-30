@@ -7,7 +7,6 @@ class CustomReportsController < ApplicationController
   def index
     authorize CustomReport
     @custom_reports = policy_scope(CustomReport.by_name).page(params[:page])
-    set_assistant_session_context(chat_class: 'LLM::ChatTypes::ReportBuilderChat')
   end
 
   def show
@@ -61,7 +60,7 @@ class CustomReportsController < ApplicationController
     if @custom_report.update(custom_report_config_params)
       redirect_to custom_report_path(@custom_report), notice: 'Custom report updated successfully.'
     else
-      render :edit
+      render :edit_configuration
     end
   end
 

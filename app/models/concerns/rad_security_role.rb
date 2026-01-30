@@ -26,6 +26,10 @@ module RadSecurityRole
     audited
   end
 
+  def internal?
+    !external?
+  end
+
   module ClassMethods
     def resolve_roles(role_ids)
       if role_ids
@@ -73,11 +77,11 @@ module RadSecurityRole
     end
 
     def validate_two_factor
-      if RadConfig.twilio_verify_enabled?
+      if RadConfig.two_factor_auth_enabled?
         return if two_factor_auth?
 
         errors.add(:two_factor_auth, 'is required for admin role') if admin?
-        return unless RadConfig.twilio_verify_all_users?
+        return unless RadConfig.two_factor_auth_all_users?
 
         errors.add :two_factor_auth, 'must be enabled'
       else
@@ -88,7 +92,7 @@ module RadSecurityRole
     end
 
     def check_defaults
-      return if RadConfig.twilio_verify_enabled?
+      return if RadConfig.two_factor_auth_enabled?
 
       self.two_factor_auth = false
     end

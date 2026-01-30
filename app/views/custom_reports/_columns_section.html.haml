@@ -1,16 +1,6 @@
-= turbo_frame_tag 'report_columns_section' do
-  :ruby
-    config = custom_report.configuration || {}
-    joins = custom_report.joins || []
-    columns = custom_report.columns || []
-    all_columns = model_columns(custom_report.report_model, joins)
-    columns_by_table = model_columns_by_table(custom_report.report_model, joins)
-    # Build keys using select clause if available, otherwise use table.column format
-    selected_column_keys = columns.map { |c| c['select'] }
-    calc_column_url = new_calculated_column_path(report_model: custom_report.report_model,
-                                                 joins: joins,
-                                                 custom_report_id: custom_report.persisted? ? custom_report.id : nil)
+- presenter = ColumnsSectionPresenter.new(self, custom_report)
 
+= turbo_frame_tag 'report_columns_section' do
   .row
     .col-md-6
       %h6.mb-2
@@ -21,31 +11,23 @@
             .col-4.border-end.bg-light
               .list-group.list-group-flush.report-builder-tables-list{ role: 'tablist',
                                                                        data: { testid: 'available-tables-list' } }
-                - columns_by_table.each_with_index do |(table_info, _cols), _index|
-                  :ruby
-                    table_id_base = table_info[:association] || table_info[:table]
-                    table_id = "table-#{table_id_base.gsub('.', '-').gsub('_', '-')}"
-                    is_base_table = table_info[:association].nil?
-                  - button_classes = 'list-group-item list-group-item-action py-3 px-3 text-start border-0 fw-medium'
-                  - button_classes += ' active' if is_base_table
+                - presenter.columns_by_table.each do |table_info, _cols|
+                  - table_id = presenter.table_id_for(table_info)
                   %button{ type: 'button',
-                           class: button_classes,
+                           class: presenter.table_button_classes(table_info),
                            role: 'tab',
                            data: { bs_toggle: 'tab',
                                    bs_target: "#columns-#{table_id}" },
                            aria: { controls: "columns-#{table_id}",
-                                   selected: is_base_table.to_s } }
+                                   selected: presenter.base_table?(table_info).to_s } }
                     %i.a.fa-table.me-2.text-muted
                     = table_info[:label]
             .col-8
               .tab-content.report-builder-tables-list.p-3
-                - columns_by_table.each do |table_info, cols|
-                  :ruby
-                    table_id_base = table_info[:association] || table_info[:table]
-                    table_id = "table-#{table_id_base.gsub('.', '-').gsub('_', '-')}"
-                    is_base_table = table_info[:association].nil?
+                - presenter.columns_by_table.each do |table_info, cols|
+                  - table_id = presenter.table_id_for(table_info)
                   .tab-pane.fade{ id: "columns-#{table_id}",
-                                  class: is_base_table ? 'show active' : '',
+                                  class: presenter.table_tab_classes(table_info),
                                   role: 'tabpanel' }
                     %table.table.table-sm.table-hover.mb-0
                       %thead
@@ -54,7 +36,7 @@
                           %th.py-2 Type
                           %th.py-2
                       %tbody{ id: "available-columns-#{table_id}" }
-                        = render_columns(cols, selected_column_keys, table_id)
+                        = render_columns(cols, presenter.selected_column_keys, table_id)
 
     .col-md-6
       .d-flex.justify-content-between.align-items-center.mb-2
@@ -63,14 +45,13 @@
         %button.btn.btn-sm.btn-outline-primary{ type: 'button',
                                                 data: {
                                                   action: 'click->report-builder#loadCalculatedColumnForm',
-                                                  calculated_column_url: calc_column_url,
+                                                  calculated_column_url: presenter.calculated_column_url,
                                                   bs_toggle: 'modal',
                                                   bs_target: '#calculated-column-modal'
                                                 },
                                                 title: 'Add calculated column' }
           %i.fa.fa-calculator.me-1
           Add Calculated
-      - selected_columns_config = config['columns'] || []
       .card.shadow-sm
         .card-body.p-3
           .report-builder-tables-list#selected-columns-container
@@ -81,42 +62,16 @@
                   %th.py-2 Label
                   %th.py-2 Column
                   %th.py-2 Type
-                  %th.text-center.py-2 Formula
+                  %th.text-center.py-2 Transforms
                   %th.text-center.py-2 Sortable
                   %th.py-2
               %tbody#selected-columns-list{ data: { controller: 'sortable',
                                                     sortable_dragging_class: 'is-dragging',
                                                     report_builder_target: 'selected-columns-list' } }
-                - selected_columns_config.each do |col_config|
-                  :ruby
-                    col_name = col_config['name']
+                - presenter.selected_columns_config.each do |col_config|
+                  - result = presenter.build_selected_column(col_config)
+                  - next if result.nil?
 
-                    if col_config['is_calculated']
-                      col = {
-                        name: col_name,
-                        type: 'calculated',
-                        table: 'calculated',
-                        association: nil,
-                        custom_label: col_config['label'],
-                        sortable: false,
-                        is_calculated: true
-                      }
-                      table_id = 'calculated'
-                      formula = col_config['formula']
-                    else
-                      select_prefix = col_config['select']&.split('.')&.first
-                      col = all_columns.find do |c|
-                        c[:name] == col_name && (c[:association] == select_prefix || c[:table] == select_prefix)
-                      end
-                      next if col.blank?
-
-                      table_id_base = col[:association] || col[:table]
-                      table_id = "table-#{table_id_base.gsub('.', '-').gsub('_', '-')}"
-                      col_with_label = col.merge(custom_label: col_config['label'], sortable: col_config['sortable'])
-                      formula = col_config['formula']
-                      col = col_with_label
-                    end
-
-                  = render 'selected_column_row', column: col, table_id: table_id, formula: formula
+                  = render 'selected_column_row', column: result[:column], table_id: result[:table_id], formula: result[:formula]
 
   = render 'calculated_column_modal'
