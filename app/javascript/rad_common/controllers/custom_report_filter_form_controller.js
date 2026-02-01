@@ -33,7 +33,7 @@ export default class extends Controller {
     if (isEnum) {
       filterTypes = [['Enum', 'RadSearch::EnumFilter']];
     } else if (!isForeignKey) {
-      filterTypes = filterTypes.filter(filter => filter[1] !== 'RadSearch::SearchFilter');
+      filterTypes = filterTypes.filter(filter => filter[1] !== 'RadSearch::SearchFilter' && filter[1] !== 'RadSearch::SearchFilterMultiple');
     }
 
     this.resetTypeSelect(filterTypes);

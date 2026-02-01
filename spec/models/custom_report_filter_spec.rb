@@ -134,6 +134,18 @@ RSpec.describe CustomReportFilter do
       end
     end
 
+    context 'with SearchFilterMultiple type' do
+      let(:filter) do
+        described_class.new(column: 'name', type: 'RadSearch::SearchFilterMultiple', label: 'Name Filter',
+                            report_model: 'Division', joins: [])
+      end
+
+      it 'does not add errors' do
+        filter.valid?
+        expect(filter.errors[:type]).to be_empty
+      end
+    end
+
     context 'with invalid filter type' do
       let(:filter) do
         described_class.new(column: 'name', type: 'invalid_type', label: 'Name Filter', report_model: 'Division',

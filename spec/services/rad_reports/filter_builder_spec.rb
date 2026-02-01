@@ -196,6 +196,29 @@ RSpec.describe RadReports::FilterBuilder, type: :service do
       end
     end
 
+    context 'with SearchFilterMultiple type' do
+      let(:model_class) { Division }
+      let(:joins) { nil }
+      let!(:user_1) { create :user }
+      let!(:user_2) { create :user }
+      let(:filters) do
+        [{ 'column' => 'owner_id', 'type' => 'RadSearch::SearchFilterMultiple' }]
+      end
+
+      it 'sets multiple to true' do
+        expect(filter_definitions.first[:multiple]).to be true
+      end
+
+      it 'resolves to SearchFilter class' do
+        expect(filter_definitions.first[:type]).to eq RadSearch::SearchFilter
+      end
+
+      it 'generates options from association' do
+        expect(filter_definitions.first[:options]).to be_an(Array)
+        expect(filter_definitions.first[:options]).to include(user_1, user_2)
+      end
+    end
+
     context 'with filter on non-existent foreign key' do
       let(:model_class) { Division }
       let(:joins) { nil }
