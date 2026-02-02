@@ -18,6 +18,11 @@ def copy_image_file(filename)
       "app/assets/images/#{filename}"
 end
 
+def copy_apple_touch
+  get "https://github.com/rad-stack/rad_common/raw/refs/heads/#{@rad_common_branch}/spec/dummy/public/apple-touch-icon.png",
+      'public/apple-touch-icon.png'
+end
+
 def fix_routes
   remove_file 'config/routes.rb'
 
@@ -329,6 +334,7 @@ after_bundle do
 
   copy_image_file 'app_logo.png'
   copy_image_file 'favicon.ico'
+  copy_apple_touch
 
   remove_file 'app/models/user.rb'
   remove_file 'spec/models/user_spec.rb'
@@ -383,7 +389,6 @@ after_bundle do
   remove_file 'config/credentials.yml.enc'
   remove_file 'config/master.key'
   remove_dir 'lib/assets'
-  remove_file 'public/apple-touch-icon.png'
   remove_file 'public/icon.png'
   remove_file 'public/icon.svg'
   remove_file '.gitattributes'
