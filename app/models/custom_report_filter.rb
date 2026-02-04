@@ -5,6 +5,8 @@ class CustomReportFilter
   attribute :column, :string
   attribute :type, :string
   attribute :label, :string
+  attribute :default_value, :string
+  attribute :multiple, :boolean, default: false
 
   attr_accessor :report_model, :joins
 
@@ -29,6 +31,8 @@ class CustomReportFilter
       column: filter_config['column'],
       type: filter_config['type'],
       label: filter_config['label'],
+      default_value: filter_config['default_value'],
+      multiple: filter_config['multiple'],
       report_model: report_model,
       joins: joins
     )
@@ -38,11 +42,31 @@ class CustomReportFilter
     {
       'column' => column,
       'type' => type,
-      'label' => label
+      'label' => label,
+      'default_value' => parsed_default_value,
+      'multiple' => multiple
     }
   end
 
+  def parsed_default_value
+    return default_value if default_value.blank?
+
+    parse_default_value_array(default_value) || default_value
+  end
+
   private
+
+    def parse_default_value_array(value)
+      return unless value.include?(',')
+
+      parts = value.split(',').map(&:strip)
+
+      if parts.all? { |part| part.match?(/\A'.*'\z/) }
+        parts.map { |part| part.delete("'") }
+      elsif parts.all? { |part| part.match?(/\A-?\d+\z/) }
+        parts.map(&:to_i)
+      end
+    end
 
     def validate_column_exists
       return if column.blank? || report_model.blank?

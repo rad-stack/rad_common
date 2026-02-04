@@ -2,5 +2,5 @@
 
 = f.input filter.searchable_name,
           label: false,
-          input_html: { value: search.search_params[filter.input_name], class: 'ays-ignore' },
+          input_html: { value: search.search_params[filter.input_name] || filter.default_value, class: 'ays-ignore' },
           required: false

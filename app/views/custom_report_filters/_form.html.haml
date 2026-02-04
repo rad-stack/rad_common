@@ -32,8 +32,21 @@
           = f.input :type,
                     label: 'Filter Type',
                     collection: [],
-                    input_html: { data: { custom_report_filter_form_target: 'typeSelect' } },
+                    input_html: { data: { action: 'change->custom-report-filter-form#filterTypeChanged',
+                                          custom_report_filter_form_target: 'typeSelect' } },
                     include_blank: 'Select a column...'
+
+        .mb-3
+          = f.input :default_value,
+                    label: 'Default Value',
+                    as: :string,
+                    input_html: { data: { custom_report_filter_form_target: 'defaultValueInput' } }
+
+        .mb-3.d-none{ data: { custom_report_filter_form_target: 'multipleWrapper' } }
+          = f.input :multiple,
+                    as: :boolean,
+                    label: 'Allow Multiple Selection',
+                    wrapper: :vertical_boolean
 
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { bs_dismiss: 'modal' } } Cancel

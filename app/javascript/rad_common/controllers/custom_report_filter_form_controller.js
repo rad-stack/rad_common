@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static targets = ['columnSelect', 'typeSelect', 'labelInput'];
+  static targets = ['columnSelect', 'typeSelect', 'labelInput', 'multipleWrapper'];
   static values = { filterTypesMap: Object };
 
   connect() {
@@ -43,6 +43,20 @@ export default class extends Controller {
     this.typeSelectTarget.options.length = 0;
     filterTypes.forEach(([label, value]) => this.typeSelectTarget.add(new Option(label, value)));
     this.typeSelectTarget.selectedIndex = 0;
+    this.updateMultipleVisibility();
+  }
+
+  filterTypeChanged() {
+    this.updateMultipleVisibility();
+  }
+
+  updateMultipleVisibility() {
+    if (!this.hasMultipleWrapperTarget) return;
+
+    const selectedType = this.typeSelectTarget.value;
+    const isDropdown = selectedType === 'RadSearch::SearchFilter';
+
+    this.multipleWrapperTarget.classList.toggle('d-none', !isDropdown);
   }
 
   generateLabel(columnName) {

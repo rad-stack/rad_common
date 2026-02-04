@@ -29,20 +29,48 @@ module RadReports
       end
 
       def build_filters
-        extract_config_array(@params[:filters])
+        extract_config_array(@params[:filters], normalize_multiple: true)
       end
 
-      def extract_config_array(params, parse_formula: false, normalize_sortable: false)
+      def extract_config_array(params, parse_formula: false, normalize_sortable: false, normalize_multiple: false)
         return [] unless params
 
         items = params.is_a?(Array) ? params : params.values
-        items.map { |param| process_config_item(param, parse_formula, normalize_sortable) }
+        items.map { |param| process_config_item(param, parse_formula, normalize_sortable, normalize_multiple) }
       end
 
-      def process_config_item(param, parse_formula, normalize_sortable)
+      def process_config_item(param, parse_formula, normalize_sortable, normalize_multiple)
         param_hash = param.to_h
         param_hash = parse_formula_if_needed(param_hash, parse_formula)
-        normalize_sortable_if_needed(param_hash, normalize_sortable)
+        param_hash = parse_default_value_array(param_hash)
+        param_hash = normalize_sortable_if_needed(param_hash, normalize_sortable)
+        normalize_multiple_if_needed(param_hash, normalize_multiple)
+      end
+
+      def parse_default_value_array(param_hash)
+        default_value = param_hash['default_value']
+        return param_hash unless default_value.is_a?(String) && default_value.match?(/\A\s*\[.*\]\s*\z/m)
+
+        param_hash['default_value'] = parse_array_string(default_value)
+        param_hash
+      end
+
+      def parse_array_string(str)
+        # Try JSON first (handles [1, 2, 3] and ["one", "two"])
+        JSON.parse(str)
+      rescue JSON::ParserError
+        # Handle Ruby-style single quotes: ['one', 'two', 'three']
+        inner = str.strip[1..-2] # Remove brackets
+        inner.split(',').map do |item|
+          item = item.strip
+          # Remove surrounding quotes (single or double)
+          if (item.start_with?("'") && item.end_with?("'")) ||
+             (item.start_with?('"') && item.end_with?('"'))
+            item[1..-2]
+          else
+            item
+          end
+        end
       end
 
       def parse_formula_if_needed(param_hash, parse_formula)
@@ -62,6 +90,13 @@ module RadReports
 
         params['sortable'] = normalize_boolean(params['sortable'])
         params['is_calculated'] = normalize_boolean(params['is_calculated']) if params.key?('is_calculated')
+        params
+      end
+
+      def normalize_multiple_if_needed(params, normalize_multiple)
+        return params unless normalize_multiple && params.key?('multiple')
+
+        params['multiple'] = normalize_boolean(params['multiple'])
         params
       end
 

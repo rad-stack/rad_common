@@ -15,6 +15,7 @@ module RadReports
                        type: RadReports::FilterRegistry.filter_class(filter['type']) }
         apply_filter_labels(filter_def, filter)
         apply_filter_options(filter_def, filter)
+        apply_filter_defaults(filter_def, filter)
         apply_equals_filter_data_type(filter_def, filter)
         apply_enum_filter_config(filter_def, filter)
 
@@ -35,10 +36,35 @@ module RadReports
         end
       end
 
+      def parsed_default_value(default_value)
+        return default_value if default_value.blank?
+
+        parse_default_value_array(default_value) || default_value
+      end
+
+      def parse_default_value_array(value)
+        return unless value.include?(',')
+
+        parts = value.split(',').map(&:strip)
+
+        if parts.all? { |part| part.match?(/\A'.*'\z/) }
+          parts.map { |part| part.delete("'") }
+        elsif parts.all? { |part| part.match?(/\A-?\d+\z/) }
+          parts.map(&:to_i)
+        end
+      end
+
       def apply_filter_options(filter_def, filter)
         return unless filter['type'] == 'RadSearch::SearchFilter'
 
         filter_def[:options] = generate_filter_options(filter)
+        filter_def[:multiple] = filter['multiple'] if filter['multiple']
+      end
+
+      def apply_filter_defaults(filter_def, filter)
+        return if filter['default_value'].blank?
+
+        filter_def[:default_value] = parsed_default_value(filter['default_value'])
       end
 
       def apply_equals_filter_data_type(filter_def, filter)

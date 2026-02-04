@@ -262,7 +262,7 @@ module RadSearch
 
       def filter_value(search_params)
         search_empty = (search_params.blank? || !search_params.has_key?(searchable_name))
-        return @default_value.to_s if search_empty && @default_value
+        return @default_value.is_a?(Array) ? @default_value : @default_value.to_s if search_empty && @default_value
 
         search_params[searchable_name]
       end
