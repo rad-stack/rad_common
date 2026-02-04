@@ -55,6 +55,34 @@ RSpec.describe RadReports::ConfigurationBuilder, type: :service do
         expect(column).not_to have_key('formula')
       end
     end
+
+    context 'with filter multiple option as string' do
+      let(:params) do
+        {
+          filters: [
+            { 'column' => 'owner_id', 'type' => 'RadSearch::SearchFilter', 'multiple' => 'true' }
+          ]
+        }
+      end
+
+      it 'normalizes multiple to boolean true' do
+        expect(configuration['filters'].first['multiple']).to be true
+      end
+    end
+
+    context 'with filter multiple option as false string' do
+      let(:params) do
+        {
+          filters: [
+            { 'column' => 'owner_id', 'type' => 'RadSearch::SearchFilter', 'multiple' => 'false' }
+          ]
+        }
+      end
+
+      it 'normalizes multiple to boolean false' do
+        expect(configuration['filters'].first['multiple']).to be false
+      end
+    end
   end
 
   describe '.sanitize_joins' do
