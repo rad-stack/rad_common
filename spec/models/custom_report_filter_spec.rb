@@ -176,6 +176,21 @@ RSpec.describe CustomReportFilter do
       expect(filter.report_model).to eq 'Division'
       expect(filter.joins).to eq ['owner']
     end
+
+    context 'with multiple option' do
+      let(:filter_config) do
+        {
+          'column' => 'owner_id',
+          'type' => 'RadSearch::SearchFilter',
+          'label' => 'Owner',
+          'multiple' => true
+        }
+      end
+
+      it 'creates filter with multiple attribute' do
+        expect(filter.multiple).to be true
+      end
+    end
   end
 
   describe '#to_filter_config' do
@@ -185,7 +200,18 @@ RSpec.describe CustomReportFilter do
 
     it 'returns hash with column, type, and label' do
       expect(filter.to_filter_config).to eq({ 'column' => 'name', 'type' => 'like', 'default_value' => nil,
-                                              'label' => 'Name Filter' })
+                                              'label' => 'Name Filter', 'multiple' => false })
+    end
+
+    context 'with multiple set to true' do
+      let(:filter) do
+        described_class.new(column: 'owner_id', type: 'RadSearch::SearchFilter', label: 'Owner',
+                            multiple: true, report_model: 'Division', joins: [])
+      end
+
+      it 'includes multiple in the config' do
+        expect(filter.to_filter_config['multiple']).to be true
+      end
     end
   end
 
