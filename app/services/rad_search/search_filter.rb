@@ -262,9 +262,18 @@ module RadSearch
 
       def filter_value(search_params)
         search_empty = (search_params.blank? || !search_params.has_key?(searchable_name))
-        return @default_value.to_s if search_empty && @default_value
+        return normalize_default_value(@default_value) if search_empty && @default_value
 
         search_params[searchable_name]
+      end
+
+      # Normalizes default_value to match HTTP params behavior (strings).
+      # HTTP params are always strings, so default_value needs to be converted
+      # for consistent behavior in scope_value? checks and apply_filter.
+      def normalize_default_value(value)
+        return value.map(&:to_s) if value.is_a?(Array)
+
+        value.to_s
       end
 
       def scope_values?
