@@ -58,6 +58,7 @@ module RadReports
         return unless filter['type'] == 'RadSearch::SearchFilter'
 
         filter_def[:options] = generate_filter_options(filter)
+        filter_def[:multiple] = filter['multiple'] if filter['multiple']
       end
 
       def apply_filter_defaults(filter_def, filter)

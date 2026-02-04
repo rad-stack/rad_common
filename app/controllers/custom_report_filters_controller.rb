@@ -86,7 +86,7 @@ class CustomReportFiltersController < ApplicationController
     end
 
     def custom_report_filter_params
-      params.require(:custom_report_filter).permit(:column, :type, :label, :default_value)
+      params.require(:custom_report_filter).permit(:column, :type, :label, :default_value, :multiple)
     end
 
     def build_filter_row(filter_config)
@@ -94,7 +94,8 @@ class CustomReportFiltersController < ApplicationController
         column: filter_config['column'],
         type: filter_config['type'],
         label: filter_config['label'],
-        default_value: filter_config['default_value']
+        default_value: filter_config['default_value'],
+        multiple: filter_config['multiple']
       }
     end
 end

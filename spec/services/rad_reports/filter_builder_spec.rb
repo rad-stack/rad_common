@@ -81,6 +81,30 @@ RSpec.describe RadReports::FilterBuilder, type: :service do
       end
     end
 
+    context 'with SearchFilter and multiple option' do
+      let(:model_class) { Division }
+      let(:joins) { nil }
+      let(:filters) do
+        [{ 'column' => 'owner_id', 'type' => 'RadSearch::SearchFilter', 'multiple' => true }]
+      end
+
+      it 'includes multiple in filter definition' do
+        expect(filter_definitions.first[:multiple]).to be true
+      end
+    end
+
+    context 'with SearchFilter without multiple option' do
+      let(:model_class) { Division }
+      let(:joins) { nil }
+      let(:filters) do
+        [{ 'column' => 'owner_id', 'type' => 'RadSearch::SearchFilter' }]
+      end
+
+      it 'does not include multiple in filter definition' do
+        expect(filter_definitions.first[:multiple]).to be_nil
+      end
+    end
+
     context 'with label for regular filter' do
       let(:model_class) { Division }
       let(:joins) { nil }
