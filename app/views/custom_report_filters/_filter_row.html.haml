@@ -1,7 +1,10 @@
-- filter_id = "filter-#{Time.now.to_i}-#{rand(1000)}"
+- filter_id = local_assigns[:filter_id] || "filter-#{Time.now.to_i}-#{rand(1000)}"
 
 .card.mb-3.filter-row.sortable-item{ id: filter_id, draggable: 'true',
-                                     data: { report_builder_target: 'filterRow', action: draggable_actions } }
+                                     data: { report_builder_target: 'filterRow', action: draggable_actions,
+                                             filter_column: filter[:column], filter_label: filter[:label],
+                                             filter_type: filter[:type], filter_default_value: filter[:default_value],
+                                             filter_multiple: filter[:multiple] } }
   .card-body.py-3
     .row.align-items-center.g-3
       .col-md-1
@@ -16,12 +19,18 @@
           %small.text-muted.d-block.mb-1 Label
           %span.fw-medium= filter[:label]
 
-      .col-md-4
+      .col-md-3
         %div
           %small.text-muted.d-block.mb-1 Filter Type
           %span.badge.bg-light.text-dark.border= filter[:type]&.split('::')&.last || 'Unknown'
 
-      .col-md-1.text-end
+      .col-md-2.text-end
+        %button.btn.btn-sm.btn-outline-primary.rounded-circle.me-1{ type: 'button',
+                                                                    data: { bs_toggle: 'modal',
+                                                                            bs_target: '#custom-report-filter-modal',
+                                                                            action: 'click->report-builder#editFilter' },
+                                                                    title: 'Edit filter' }
+          %i.fa.fa-pencil
         %button.btn.btn-sm.btn-outline-danger.rounded-circle{ type: 'button',
                                                               data: { action: 'click->report-builder#removeFilter' },
                                                               title: 'Remove filter' }

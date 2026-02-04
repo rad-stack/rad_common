@@ -15,7 +15,8 @@
                                                   custom_report_filter_url: filter_modal_url } }
     = icon('plus', 'Add Filter')
 
-#filters-list{ data: { controller: 'sortable', sortable_dragging_class: 'is-dragging' } }
+#filters-list{ data: { controller: 'sortable', sortable_dragging_class: 'is-dragging',
+                       custom_report_id: report_id, report_model: report_model, joins: joins.to_json } }
   - filters.each do |filter|
     = render 'custom_report_filters/filter_row', filter: filter.symbolize_keys
 

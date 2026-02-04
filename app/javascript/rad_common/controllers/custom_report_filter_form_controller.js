@@ -2,12 +2,47 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
   static targets = ['columnSelect', 'typeSelect', 'labelInput', 'multipleWrapper'];
-  static values = { filterTypesMap: Object };
+  static values = { filterTypesMap: Object, editing: Boolean, initialFilterType: String };
 
   connect() {
     if (this.hasColumnSelectTarget) {
-      this.columnChanged({ target: this.columnSelectTarget });
+      this.initializeForm();
     }
+  }
+
+  initializeForm() {
+    const select = this.columnSelectTarget;
+    const selectedOption = select.options[select.selectedIndex];
+
+    if (!selectedOption || !selectedOption.value) {
+      this.resetTypeSelect([]);
+      return;
+    }
+
+    const columnType = selectedOption.dataset.columnType;
+    const isForeignKey = selectedOption.dataset.isForeignKey === 'true';
+    const isEnum = selectedOption.dataset.isEnum === 'true';
+
+    let filterTypes = this.filterTypesMapValue[columnType] || this.filterTypesMapValue['string'] || [];
+
+    if (isEnum) {
+      filterTypes = [['Enum', 'RadSearch::EnumFilter']];
+    } else if (!isForeignKey) {
+      filterTypes = filterTypes.filter(filter => filter[1] !== 'RadSearch::SearchFilter');
+    }
+
+    // Populate type select options
+    this.typeSelectTarget.options.length = 0;
+    filterTypes.forEach(([label, value]) => this.typeSelectTarget.add(new Option(label, value)));
+
+    // If editing, select the initial filter type; otherwise select first option
+    if (this.editingValue && this.initialFilterTypeValue) {
+      this.typeSelectTarget.value = this.initialFilterTypeValue;
+    } else {
+      this.typeSelectTarget.selectedIndex = 0;
+    }
+
+    this.updateMultipleVisibility();
   }
 
   columnChanged(event) {
@@ -23,6 +58,7 @@ export default class extends Controller {
     const isForeignKey = selectedOption.dataset.isForeignKey === 'true';
     const isEnum = selectedOption.dataset.isEnum === 'true';
 
+    // Auto-generate label when column changes (user can still edit it)
     if (this.hasLabelInputTarget && select.value) {
       const columnName = select.value.split('.').pop();
       this.labelInputTarget.value = this.generateLabel(columnName);

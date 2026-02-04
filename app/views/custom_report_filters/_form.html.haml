@@ -1,10 +1,22 @@
+:ruby
+  form_url = if editing
+               custom_report_filter_path('filter', custom_report_filter_url_params(params).merge(row_id: row_id))
+             else
+               custom_report_filters_path(custom_report_filter_url_params(params))
+             end
+  form_method = editing ? :patch : :post
+  modal_title = editing ? 'Edit Filter' : 'Add Filter'
+  submit_label = editing ? 'Update Filter' : 'Add Filter'
+  initial_filter_type = custom_report_filter.type
+
 = turbo_frame_tag 'custom-report-filter-form-frame' do
   .modal-content{ data: { controller: 'custom-report-filter-form',
-                          custom_report_filter_form_filter_types_map_value: filter_types_map.to_json } }
-    = simple_form_for custom_report_filter,
-                      url: custom_report_filters_path(custom_report_filter_url_params(params)) do |f|
+                          custom_report_filter_form_filter_types_map_value: filter_types_map.to_json,
+                          custom_report_filter_form_editing_value: editing,
+                          custom_report_filter_form_initial_filter_type_value: initial_filter_type } }
+    = simple_form_for custom_report_filter, url: form_url, method: form_method do |f|
       .modal-header
-        %h5.modal-title Add Filter
+        %h5.modal-title= modal_title
         %button.btn-close{ type: 'button', data: { bs_dismiss: 'modal' }, aria: { label: 'Close' } }
 
       .modal-body
@@ -50,4 +62,4 @@
 
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { bs_dismiss: 'modal' } } Cancel
-        = f.submit 'Add Filter', class: 'btn btn-primary'
+        = f.submit submit_label, class: 'btn btn-primary'

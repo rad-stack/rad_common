@@ -201,6 +201,54 @@ export default class extends Controller {
     Turbo.visit(refreshedUrl.toString(), { frame: 'custom-report-filter-form-frame' });
   }
 
+  editFilter(event) {
+    const filterRow = event.currentTarget.closest('.filter-row');
+    if (!filterRow) {
+      return;
+    }
+
+    const filtersList = document.getElementById('filters-list');
+    if (!filtersList) {
+      return;
+    }
+
+    // Build the edit URL with filter data and context
+    const editUrl = new URL('/custom_report_filters/filter/edit', window.location.origin);
+
+    // Add context params from filters list
+    const customReportId = filtersList.dataset.customReportId;
+    const reportModel = filtersList.dataset.reportModel;
+    const joinsData = filtersList.dataset.joins;
+
+    if (customReportId) {
+      editUrl.searchParams.set('custom_report_id', customReportId);
+    }
+    if (reportModel) {
+      editUrl.searchParams.set('report_model', reportModel);
+    }
+    if (joinsData) {
+      try {
+        const joins = JSON.parse(joinsData);
+        joins.forEach((join) => editUrl.searchParams.append('joins[]', join));
+      } catch {
+        // Ignore parse errors
+      }
+    }
+
+    // Add filter data from the row
+    editUrl.searchParams.set('row_id', filterRow.id);
+    editUrl.searchParams.set('column', filterRow.dataset.filterColumn || '');
+    editUrl.searchParams.set('label', filterRow.dataset.filterLabel || '');
+    editUrl.searchParams.set('filter_type', filterRow.dataset.filterType || '');
+    editUrl.searchParams.set('default_value', filterRow.dataset.filterDefaultValue || '');
+    editUrl.searchParams.set('multiple', filterRow.dataset.filterMultiple || 'false');
+
+    // Add cache-busting param
+    editUrl.searchParams.set('_', Date.now().toString());
+
+    Turbo.visit(editUrl.toString(), { frame: 'custom-report-filter-form-frame' });
+  }
+
   removeColumn(event) {
     event.currentTarget.closest('tr')?.remove();
   }

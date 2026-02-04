@@ -17,7 +17,34 @@ class CustomReportFiltersController < ApplicationController
         render partial: 'custom_report_filters/form',
                locals: { custom_report_filter: @custom_report_filter,
                          all_columns: @all_columns,
-                         filter_types_map: @filter_types_map }
+                         filter_types_map: @filter_types_map,
+                         editing: false,
+                         row_id: nil }
+      end
+    end
+  end
+
+  def edit
+    authorize CustomReportFilter
+
+    @custom_report_filter = CustomReportFilter.new(
+      column: params[:column],
+      type: params[:filter_type],
+      label: params[:label],
+      default_value: params[:default_value],
+      multiple: params[:multiple] == 'true',
+      report_model: @custom_report.report_model,
+      joins: @joins
+    )
+
+    respond_to do |format|
+      format.html do
+        render partial: 'custom_report_filters/form',
+               locals: { custom_report_filter: @custom_report_filter,
+                         all_columns: @all_columns,
+                         filter_types_map: @filter_types_map,
+                         editing: true,
+                         row_id: params[:row_id] }
       end
     end
   end
@@ -44,7 +71,40 @@ class CustomReportFiltersController < ApplicationController
             partial: 'custom_report_filters/form',
             locals: { custom_report_filter: @custom_report_filter,
                       all_columns: @all_columns,
-                      filter_types_map: @filter_types_map }
+                      filter_types_map: @filter_types_map,
+                      editing: false,
+                      row_id: nil }
+          ), status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  def update
+    authorize CustomReportFilter
+
+    @custom_report_filter = CustomReportFilter.new(
+      custom_report_filter_params.merge(
+        report_model: @custom_report.report_model,
+        joins: @joins
+      )
+    )
+
+    respond_to do |format|
+      if @custom_report_filter.valid?
+        format.turbo_stream do
+          render turbo_stream: update_success
+        end
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            'custom-report-filter-form-frame',
+            partial: 'custom_report_filters/form',
+            locals: { custom_report_filter: @custom_report_filter,
+                      all_columns: @all_columns,
+                      filter_types_map: @filter_types_map,
+                      editing: true,
+                      row_id: params[:row_id] }
           ), status: :unprocessable_entity
         end
       end
@@ -61,6 +121,19 @@ class CustomReportFiltersController < ApplicationController
         turbo_stream.append('filters-list',
                             partial: 'custom_report_filters/filter_row',
                             locals: { filter: filter_row }),
+        turbo_stream.action(:hide_modal, 'custom-report-filter-modal')
+      ]
+    end
+
+    def update_success
+      filter_config = @custom_report_filter.to_filter_config
+      filter_row = build_filter_row(filter_config)
+      row_id = params[:row_id]
+
+      [
+        turbo_stream.replace(row_id,
+                             partial: 'custom_report_filters/filter_row',
+                             locals: { filter: filter_row, filter_id: row_id }),
         turbo_stream.action(:hide_modal, 'custom-report-filter-modal')
       ]
     end

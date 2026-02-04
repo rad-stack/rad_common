@@ -6,4 +6,12 @@ class CustomReportFilterPolicy < ApplicationPolicy
   def create?
     new?
   end
+
+  def edit?
+    new?
+  end
+
+  def update?
+    new?
+  end
 end

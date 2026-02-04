@@ -68,7 +68,7 @@ module RadCommonRoutes
         end
 
         resources :calculated_columns, only: %i[new create edit update]
-        resources :custom_report_filters, only: %i[new create]
+        resources :custom_report_filters, only: %i[new create edit update]
 
         resources :impersonations, only: [] do
           collection do
