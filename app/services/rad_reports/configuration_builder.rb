@@ -29,21 +29,22 @@ module RadReports
       end
 
       def build_filters
-        extract_config_array(@params[:filters])
+        extract_config_array(@params[:filters], normalize_multiple: true)
       end
 
-      def extract_config_array(params, parse_formula: false, normalize_sortable: false)
+      def extract_config_array(params, parse_formula: false, normalize_sortable: false, normalize_multiple: false)
         return [] unless params
 
         items = params.is_a?(Array) ? params : params.values
-        items.map { |param| process_config_item(param, parse_formula, normalize_sortable) }
+        items.map { |param| process_config_item(param, parse_formula, normalize_sortable, normalize_multiple) }
       end
 
-      def process_config_item(param, parse_formula, normalize_sortable)
+      def process_config_item(param, parse_formula, normalize_sortable, normalize_multiple)
         param_hash = param.to_h
         param_hash = parse_formula_if_needed(param_hash, parse_formula)
         param_hash = parse_default_value_array(param_hash)
-        normalize_sortable_if_needed(param_hash, normalize_sortable)
+        param_hash = normalize_sortable_if_needed(param_hash, normalize_sortable)
+        normalize_multiple_if_needed(param_hash, normalize_multiple)
       end
 
       def parse_default_value_array(param_hash)
@@ -89,6 +90,13 @@ module RadReports
 
         params['sortable'] = normalize_boolean(params['sortable'])
         params['is_calculated'] = normalize_boolean(params['is_calculated']) if params.key?('is_calculated')
+        params
+      end
+
+      def normalize_multiple_if_needed(params, normalize_multiple)
+        return params unless normalize_multiple && params.key?('multiple')
+
+        params['multiple'] = normalize_boolean(params['multiple'])
         params
       end
 
