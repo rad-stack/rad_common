@@ -222,7 +222,7 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_sms!
-      return unless sms_enabled? && sms_content && RadConfig.twilio_enabled?
+      return unless sms_enabled? && sms_content && (RadConfig.twilio_enabled? || SMSLogStore.enabled?)
 
       id_list = notify_user_ids_opted(:sms)
 

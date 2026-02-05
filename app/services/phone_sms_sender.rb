@@ -19,6 +19,17 @@ class PhoneSMSSender
   end
 
   def send!
+    if SMSLogStore.enabled?
+      SMSLogStore.log(
+        from_number: RadConfig.app_name!,
+        to_number: to_mobile_phone,
+        to_user: to_user,
+        body: message,
+        media_url: media_url
+      )
+      return true
+    end
+
     response = RadRetry.perform_request(raise_original: true) do
       if mms?
         twilio.send_mms to: to_number, message: message, media_url: media_url
