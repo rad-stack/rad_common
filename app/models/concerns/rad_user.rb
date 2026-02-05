@@ -124,6 +124,9 @@ module RadUser
   end
 
   def stale?
+    return false if updated_at > 1.week.ago
+    return false if current_sign_in_at.present? && current_sign_in_at > 1.week.ago
+
     (updated_at < 4.months.ago) ||
       (current_sign_in_at.present? && current_sign_in_at < 6.months.ago) ||
       many_recent_failed_emails?
