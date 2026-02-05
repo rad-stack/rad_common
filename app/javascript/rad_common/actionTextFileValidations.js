@@ -28,6 +28,7 @@ export class ActionTextFileValidations {
     'message/rfc822',
     'text/csv',
     'text/html',
+    'text/markdown',
     'text/plain',
     'image/png',
     'image/jpeg',
