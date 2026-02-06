@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'faker'
   s.add_dependency 'geocoder'
   s.add_dependency 'haml', '7.1' # remove this entire line when Task 12805 is resolved
-  s.add_dependency 'haml-rails', '2.1.0' # scaffold breaks beyond this - Task 12874
+  s.add_dependency 'haml-rails', '~> 3.0'
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
