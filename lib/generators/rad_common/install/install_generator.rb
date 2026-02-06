@@ -42,8 +42,7 @@ module RadCommon
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.3.1', '3.4.7', 'Gemfile'
         gsub_file 'Gemfile', /gem 'haml_lint', '0\.55\.0', require: false/, "gem 'haml_lint', require: false"
-        gsub_file 'Gemfile', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
-        gsub_file 'Gemfile.lock', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
+        gsub_file 'Gemfile', /gem 'devise-twilio-verify',\n\s*git: '.*twilio-verify-devise.*',\n\s*branch: '.*'\n/, ''
 
         # misc
         merge_package_json unless RadConfig.legacy_assets?
@@ -93,7 +92,8 @@ module RadCommon
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
         copy_file '../../../../../.sniff.yml', '.sniff.yml'
-        copy_file '../../../../../.eslintrc', '.eslintrc'
+        copy_file '../../../../../eslint.config.mjs', 'eslint.config.mjs'
+        remove_file '.eslintrc'
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
 
         # config

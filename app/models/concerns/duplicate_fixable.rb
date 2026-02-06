@@ -201,6 +201,8 @@ module DuplicateFixable
   end
 
   def create_or_update_metadata!(attributes, bypass_notifications: false)
+    association(:duplicate).reset
+
     if duplicate.blank?
       record = Duplicate.create! attributes.merge(processed_at: Time.current, duplicatable: self)
       record.maybe_notify! unless bypass_notifications
