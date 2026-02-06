@@ -20,9 +20,6 @@ module Haml
 
           template template_filename, File.join('app/views', controller_file_path, filename)
         end
-
-        # Skip generating the partial template (_model_name.html.haml)
-        # Our index template uses direct iteration instead of `render @collection`
       end
 
       private
