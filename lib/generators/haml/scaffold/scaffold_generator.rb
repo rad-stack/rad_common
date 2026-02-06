@@ -5,7 +5,7 @@ require 'rails/generators/erb/scaffold/scaffold_generator'
 module Haml
   module Generators
     class ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
-      source_root File.expand_path('../templates', __FILE__)
+      source_root File.expand_path('templates', __dir__)
 
       argument :attributes, type: :array, default: [], banner: 'field:type field:type'
 
@@ -27,23 +27,23 @@ module Haml
 
       private
 
-      def available_views
-        %w[index edit show new _form]
-      end
+        def available_views
+          %w[index edit show new _form]
+        end
 
-      def handler
-        :haml
-      end
+        def handler
+          :haml
+        end
 
-      def find_template_for_rails_version(view)
-        find_in_source_paths "#{rails_version}/#{view}.html.haml"
-      rescue Thor::Error
-        "#{view}.html.haml"
-      end
+        def find_template_for_rails_version(view)
+          find_in_source_paths "#{rails_version}/#{view}.html.haml"
+        rescue Thor::Error
+          "#{view}.html.haml"
+        end
 
-      def rails_version
-        @rails_version ||= "#{::Rails::VERSION::MAJOR}_#{::Rails::VERSION::MINOR}"
-      end
+        def rails_version
+          @rails_version ||= "#{::Rails::VERSION::MAJOR}_#{::Rails::VERSION::MINOR}"
+        end
     end
   end
 end
