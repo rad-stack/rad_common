@@ -2,12 +2,8 @@ module RadUserProfileController
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_user, only: %i[show edit update]
+    before_action :set_user, only: %i[edit update]
     before_action :set_onboarded_initial, only: :update
-  end
-
-  def show
-    @onboarding = Onboarding.new(current_user)
   end
 
   def edit; end
@@ -18,7 +14,8 @@ module RadUserProfileController
     if @user.update(permitted_params)
       return redirect_to Onboarding.new(@user).onboarded_path, notice: 'Onboarding completed' if just_onboarded?
 
-      redirect_to user_profile_path(@user), notice: 'Your profile was successfully updated.'
+      flash[:success] = 'Your profile was successfully updated.'
+      redirect_to edit_user_profile_path(@user)
     else
       render :edit
     end
@@ -37,10 +34,6 @@ module RadUserProfileController
     def set_user
       @user = User.find(params[:id])
       authorize @user, policy_class: UserProfilePolicy
-    end
-
-    def update_redirect
-      redirect_to user_profile_path(@user), notice: 'Your profile was successfully updated.'
     end
 
     def base_params

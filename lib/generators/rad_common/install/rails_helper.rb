@@ -120,19 +120,13 @@ RSpec.configure do |config|
   end
 
   config.before do
-    # TODO: workaround for this issue:
-    # https://github.com/rails/rails/issues/37270
-    (ActiveJob::Base.descendants << ActiveJob::Base).each(&:disable_test_adapter)
-    # TODO: end of workaround
-
     Timecop.safe_mode = true
-
     SpecSupport.before_all { self }
   end
 
   SpecSupport.hooks(config, chrome_driver)
 
-  config.filter_run_excluding(twilio_verify_specs: true) unless RadConfig.twilio_verify_enabled?
+  config.filter_run_excluding(two_factor_specs: true) unless RadConfig.two_factor_auth_enabled?
   config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
   config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
   config.filter_run_excluding(sign_up_specs: true) if RadConfig.disable_sign_up?
@@ -147,6 +141,7 @@ RSpec.configure do |config|
   config.filter_run_excluding(legacy_asset_specs: true) if RadConfig.legacy_assets?
   config.filter_run_excluding(shared_database_specs: true) if RadConfig.shared_database?
   config.filter_run_excluding(timezone_detection_specs: true) unless RadConfig.timezone_detection?
+  config.filter_run_excluding(valid_user_domain_specs: true) unless RadConfig.validate_user_domains?
 
   include Warden::Test::Helpers
   config.include Capybara::DSL

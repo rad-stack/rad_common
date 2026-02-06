@@ -20,7 +20,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:latest
+        image: pgvector/pgvector:pg17
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -47,7 +47,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20.16.0'
+          node-version: '24.12.0'
           cache: 'yarn'
 
       - name: Yarn install

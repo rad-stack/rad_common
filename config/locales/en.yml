@@ -13,6 +13,7 @@ en:
           cc: 'CC'
           bcc: 'BCC'
       system_message:
+        from_reply_to: 'From / Reply To'
         send_tos:
           preview: 'Me (preview)'
         message_types:
@@ -20,7 +21,7 @@ en:
           sms: 'SMS'
       user:
         external: 'External User?'
-        twilio_verify_enabled: 'Two Factor Auth'
+        otp_required_for_login: 'Two Factor Auth'
       security_role:
         external: 'External User?'
   faker:

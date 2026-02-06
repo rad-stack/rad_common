@@ -15,7 +15,7 @@
                    href: links ? tab[:value] : "#nav-#{name.parameterize}",
                    'aria-controls' => links ? nil : "nav-#{name.parameterize}",
                    'aria-selected' => links ? nil : (active_tab == name).to_s,
-                   'data-toggle' => links ? nil : 'tab',
+                   'data-bs-toggle' => links ? nil : 'tab',
                    role: 'tab' }
         = tab[:icon].present? ? icon(tab[:icon], tab[:name]) : tab[:name]
 - unless links

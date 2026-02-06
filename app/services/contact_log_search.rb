@@ -1,4 +1,4 @@
-class ContactLogSearch < RadCommon::Search
+class ContactLogSearch < RadSearch::Search
   def initialize(params, current_user)
     @current_user = current_user
 
@@ -13,35 +13,35 @@ class ContactLogSearch < RadCommon::Search
 
     def filters_def
       [date_filter,
-       { column: :service_type, type: RadCommon::EnumFilter, klass: ContactLog },
-       { input_label: 'Log Type', column: :sms_log_type, type: RadCommon::EnumFilter, klass: ContactLog },
+       { column: :service_type, type: RadSearch::EnumFilter, klass: ContactLog },
+       { input_label: 'Direction', column: :contact_direction, type: RadSearch::EnumFilter, klass: ContactLog },
        user_filter('From User', 'contact_logs.from_user_id'),
        { input_label: 'From Number',
          column: 'contact_logs.from_number',
-         type: RadCommon::PhoneNumberFilter,
+         type: RadSearch::PhoneNumberFilter,
          name: :from_number },
-       { input_label: 'From Email', column: 'contact_logs.from_email', type: RadCommon::LikeFilter, name: :from_email },
+       { input_label: 'From Email', column: 'contact_logs.from_email', type: RadSearch::LikeFilter, name: :from_email },
        user_filter('To User', 'contact_log_recipients.to_user_id'),
        { input_label: 'To Number',
          column: 'contact_log_recipients.phone_number',
-         type: RadCommon::PhoneNumberFilter,
+         type: RadSearch::PhoneNumberFilter,
          name: :to_number },
        { input_label: 'To Email',
          column: 'contact_log_recipients.email',
-         type: RadCommon::LikeFilter,
+         type: RadSearch::LikeFilter,
          name: :to_email },
        { input_label: 'Record Type', column: 'contact_logs.record_type', options: record_type_options },
-       { input_label: 'Record ID', column: :record_id, type: RadCommon::EqualsFilter, data_type: :integer },
+       { input_label: 'Record ID', column: :record_id, type: RadSearch::EqualsFilter, data_type: :integer },
        user_filter('Associated User', 'associated_with_user', :associated_with_user),
-       { input_label: 'Content', column: 'content', type: RadCommon::LikeFilter },
-       { input_label: 'SMS Message ID', column: 'sms_message_id', type: RadCommon::LikeFilter },
-       { column: 'contact_log_recipients.success', input_label: 'Success?', type: RadCommon::BooleanFilter }]
+       { input_label: 'Content', column: 'content', type: RadSearch::LikeFilter },
+       { input_label: 'SMS Message ID', column: 'sms_message_id', type: RadSearch::LikeFilter },
+       { column: 'contact_log_recipients.success', input_label: 'Success?', type: RadSearch::BooleanFilter }]
     end
 
     def sort_columns_def
       [{ label: 'When', column: 'contact_logs.created_at', direction: 'desc', default: true },
        { label: 'Service Type', column: 'contact_logs.service_type' },
-       { label: 'Log Type', column: 'contact_logs.sms_log_type' },
+       { label: 'Direction', column: 'contact_logs.contact_direction' },
        { label: 'From' },
        { label: 'To' },
        { label: 'Record' },
@@ -60,7 +60,7 @@ class ContactLogSearch < RadCommon::Search
         column: :created_at,
         default_start_value: Date.current,
         default_end_value: Date.current,
-        type: RadCommon::DateFilter }
+        type: RadSearch::DateFilter }
     end
 
     def user_filter(label, column, scope = nil)

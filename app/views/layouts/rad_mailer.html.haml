@@ -47,7 +47,7 @@
           .email-col-12
             %br
             - if has_avatar
-              = image_tag(@sender.avatar.variant(resize: '25x25'), alt: @sender.to_s, title: @sender.to_s)
+              = image_tag(@sender.avatar.variant(resize_to_limit: [25, 25]), alt: @sender.to_s, title: @sender.to_s)
             = @message
 
         - if @include_yield
@@ -72,7 +72,5 @@
               .footer-item= company_name
               - if company_full_address.present?
                 .footer-item= company_full_address
-              - if company_phone_number.present?
-                .footer-item= link_to company_phone_number, "tel:#{company_phone_number}"
               .footer-item= link_to website, website
               .footer-item= link_to @footer_email || admin_email, "mailto:#{@footer_email || admin_email}"

@@ -51,7 +51,7 @@ class GlobalSearch
     end
 
     def check_policy_klass(item)
-      if current_user.external? && RadConfig.portal?
+      if RadConfig.portal? && current_user.portal_user? && current_user.portal_user?
         [:portal, item[:model].constantize.new]
       else
         item[:model].constantize.new

@@ -1,0 +1,90 @@
+default: &default
+  app_name: New Rails App
+  use_avatar: false
+  disable_sign_up: true
+  disable_invite: false
+  manually_create_users: false
+  pending_users: false
+  secure_sentry: false
+  external_users: false
+  app_logo_includes_name: true
+  impersonate: true
+  start_route: users
+  user_clients: false
+  user_profiles: false
+  show_help_menu: false
+  canadian_addresses: false
+  saved_search_filters_enabled: false
+  switch_languages: false
+  storage_config_override: false
+  require_mobile_phone: true
+  timeout_hours: 6
+  allow_marketing_site: false
+  force_marketing_site: false
+  allow_crawling: false
+  always_crawl: false
+  crawlable_subdomains: []
+  procfile_override: false
+  database_config_override: false
+  last_first_user: false
+  timezone_detection: true
+  portal: false
+  filter_toggle_default_behavior: remember_state
+  rad_system_chat_enabled: false
+  action_cable_enabled: false
+  expire_password_after_days: 90
+
+  rad_assistant_system_tools: []
+
+  system_usage_models:
+    - User
+
+  duplicates: []
+  restricted_audit_attributes: []
+  additional_user_params: []
+  additional_company_params: []
+  global_validity_days: 3
+  global_validity_timeout_hours: 3
+  global_validity_exclude: []
+  global_validity_include: []
+  global_validity_supress: []
+
+  global_search_scopes:
+    - name: user_name
+      model: User
+      description: Search user by name
+      columns:
+        - email
+      methods:
+        - user_status
+      query_where: last_name || ', ' || first_name ilike :search
+      query_order: last_name ASC, first_name ASC, created_at DESC
+    - name: user_email
+      model: User
+      description: Search user by email
+      columns:
+        - email
+      query_where: email ilike :search
+
+development:
+  <<: *default
+
+  host_name: localhost:3000
+  two_factor_auth_enabled: false
+  two_factor_remember_device_days: 7
+
+test:
+  <<: *default
+
+  host_name: localhost:3000
+  two_factor_auth_enabled: true
+  two_factor_remember_device_days: 7
+  two_factor_auth_all_users: true
+
+production:
+  <<: *default
+
+  host_name: new-rails-app.example.com
+  two_factor_auth_enabled: true
+  two_factor_remember_device_days: 7
+  two_factor_auth_all_users: false

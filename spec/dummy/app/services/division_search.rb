@@ -1,4 +1,4 @@
-class DivisionSearch < RadCommon::Search
+class DivisionSearch < RadSearch::Search
   def initialize(params, current_user)
     @current_user = current_user
 
@@ -6,7 +6,7 @@ class DivisionSearch < RadCommon::Search
           filters: filters_def,
           current_user: current_user,
           search_name: 'divisions_search',
-          sticky_filters: true,
+          default_sticky_filters: true,
           params: params)
   end
 
@@ -17,7 +17,7 @@ class DivisionSearch < RadCommon::Search
        options: [['Active', User.active.sorted],
                  ['Inactive', User.inactive.sorted]],
        grouped: true },
-     { input_label: 'Status', column: :division_status, type: RadCommon::EnumFilter, klass: Division,
+     { input_label: 'Status', column: :division_status, type: RadSearch::EnumFilter, klass: Division,
        multiple: true, required: true, default_value: Division.division_statuses[:status_active] },
      {
        input_label: 'Category',
@@ -29,19 +29,18 @@ class DivisionSearch < RadCommon::Search
        allow_not: true
      },
      created_by_filter,
-     { column: :name, type: RadCommon::LikeFilter },
-     { column: :created_at, type: RadCommon::DateFilter,
+     { column: :name, type: RadSearch::LikeFilter },
+     { column: :created_at, type: RadSearch::DateFilter,
        start_input_label: 'Division Created At Start',
        end_input_label: 'Division Created At End',
        default_start_value: Date.current, default_end_value: Date.current },
-     { column: :notify, type: RadCommon::BooleanFilter },
-     { name: 'show_header', type: RadCommon::HiddenFilter },
+     { column: :notify, type: RadSearch::BooleanFilter },
+     { name: 'show_header', type: RadSearch::HiddenFilter },
      { input_label: 'Tags',
        column: :tags,
        options: Division::TAG_OPTIONS,
-       type: RadCommon::ArrayFilter,
-       multiple: true,
-       match_type: :any }]
+       type: RadSearch::ArrayFilter,
+       multiple: true }]
   end
 
   def show_header?

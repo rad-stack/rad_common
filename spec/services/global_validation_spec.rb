@@ -21,9 +21,9 @@ describe GlobalValidation, type: :service do
     subject { global_validity.send(:models_to_check).map(&:to_s) }
 
     let(:models) do
-      %w[Attorney Category Client Company ContactLog ContactLogRecipient
-         Division Duplicate Notification NotificationSecurityRole NotificationSetting
-         NotificationType SavedSearchFilter SecurityRole Status SystemMessage User
+      %w[AssistantSession Attorney Category Client Company ContactLog ContactLogRecipient
+         Division Duplicate Embedding Notification NotificationSecurityRole NotificationSetting
+         NotificationType SavedSearchFilter SearchPreference SecurityRole Status SystemMessage User
          UserClient UserSecurityRole UserStatus]
     end
 
@@ -50,15 +50,15 @@ describe GlobalValidation, type: :service do
       admin_security_role.save!(validate: false)
     end
 
-    context 'without admin' do
+    context 'without developer' do
       subject(:result) { global_validity.run }
 
-      before { admin.update!(security_roles: [create(:security_role)]) }
+      before { User.admins.destroy_all }
 
       it 'raises an exception' do
         expect {
           result
-        }.to raise_error(RuntimeError, 'no users to notify: Notifications::InvalidDataWasFoundNotification')
+        }.to raise_error(RuntimeError, 'no users to notify')
       end
     end
 

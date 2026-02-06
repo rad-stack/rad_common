@@ -25,7 +25,7 @@ module RadNav
     private
 
       def menu_header
-        tag.a(class: 'nav-link dropdown-toggle', 'data-toggle': 'dropdown', href: '#') do
+        tag.a(class: 'nav-link dropdown-toggle', 'data-bs-toggle': 'dropdown', href: '#') do
           badge.present? ? safe_join([label, ' ', badge.content].compact) : label
         end
       end

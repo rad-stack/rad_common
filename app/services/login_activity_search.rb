@@ -1,4 +1,4 @@
-class LoginActivitySearch < RadCommon::Search
+class LoginActivitySearch < RadSearch::Search
   def initialize(params, current_user)
     @current_user = current_user
 
@@ -15,19 +15,19 @@ class LoginActivitySearch < RadCommon::Search
       [{ start_input_label: 'Start Date',
          end_input_label: 'End Date',
          column: :created_at,
-         type: RadCommon::DateFilter },
+         type: RadSearch::DateFilter },
        { column: 'identity',
-         type: RadCommon::LikeFilter },
-       { column: 'success', input_label: 'Success?', type: RadCommon::BooleanFilter },
+         type: RadSearch::LikeFilter },
+       { column: 'success', input_label: 'Success?', type: RadSearch::BooleanFilter },
        { input_label: 'Failure Reason',
          column: :failure_reason,
          options: failure_reasons,
          blank_value_label: 'All' },
-       { column: :ip, type: RadCommon::LikeFilter },
+       { column: :ip, type: RadSearch::LikeFilter },
        { column: :user_agent,
-         type: RadCommon::LikeFilter },
+         type: RadSearch::LikeFilter },
        { column: :referrer,
-         type: RadCommon::LikeFilter }]
+         type: RadSearch::LikeFilter }]
     end
 
     def sort_columns_def

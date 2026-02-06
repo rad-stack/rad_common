@@ -145,6 +145,12 @@ class UsersController < ApplicationController
     redirect_to @user
   end
 
+  def set_js_timezone
+    skip_authorization
+    UserTimezone.new(current_user).set_js_timezone!(params[:timezone]) unless impersonating?
+    render json: nil, status: :ok
+  end
+
   def update_timezone
     UserTimezone.new(@user).update!
     redirect_back fallback_location: @user, notice: 'User was successfully updated.'
@@ -170,6 +176,6 @@ class UsersController < ApplicationController
     end
 
     def duplicates_enabled?
-      RadCommon::AppInfo.new.duplicates_enabled?('User')
+      AppInfo.new.duplicates_enabled?('User')
     end
 end
