@@ -50,7 +50,9 @@ class HerokuCommands
       remove_user_avatars
       remove_encrypted_secrets
       SecurityRole.update_all two_factor_auth: false
-      User.update_all twilio_verify_enabled: false
+      User.update_all otp_required_for_login: false
+      Company.main.app_logo.purge if Company.main.app_logo.attached?
+      Company.main.fav_icon.purge if Company.main.fav_icon.attached?
 
       duration = Time.now.utc - start_time
       write_log "Restore complete in #{duration.round(2)} seconds"
@@ -215,18 +217,20 @@ class HerokuCommands
       def generate_restore_list(file_name, profile, restore_list_file)
         case profile.to_s
         when 'full'
-          write_log 'Generating full restore list (include all tables)'
+          write_log 'Generating full restore (include all tables)'
           write_log `pg_restore -l #{file_name} > #{restore_list_file}`
         when 'exclude_audits'
-          write_log 'Generating restore list excluding audits table'
+          write_log 'Generating restore excluding audits table'
           write_log `pg_restore -l #{file_name} | grep -v 'TABLE DATA public audits' > #{restore_list_file}`
         when 'minimal'
-          write_log 'Generating minimal restore list (excluding audits, contact logs, and recipients)'
+          write_log 'Generating minimal restore (excludes audits, contact_logs, contact_log_recipients and embeddings)'
+
           command = [
             "pg_restore -l #{file_name}",
             "| grep -v 'TABLE DATA public audits'",
             "| grep -v 'TABLE DATA public contact_logs'",
-            "| grep -v 'TABLE DATA public recipients'",
+            "| grep -v 'TABLE DATA public contact_log_recipients'",
+            "| grep -v 'TABLE DATA public embeddings'",
             "> #{restore_list_file}"
           ].join(' ')
           `#{command}`
@@ -238,7 +242,7 @@ class HerokuCommands
       def reset_sensitive_local_data
         write_log 'Changing passwords'
         new_password = User.new.send(:password_digest, 'password')
-        User.update_all(encrypted_password: new_password)
+        User.update_all(encrypted_password: new_password, password_changed_at: DateTime.current)
 
         write_log 'Changing Active Storage service to local'
         ActiveStorage::Blob.update_all service_name: 'local'

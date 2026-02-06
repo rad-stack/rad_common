@@ -11,7 +11,12 @@ class NotificationType < ApplicationRecord
   validates_with EmailAddressValidator, fields: [:bcc_recipient]
   validate :validate_auth
 
+  audited
   strip_attributes
+
+  def self.policy_class
+    NotificationTypePolicy
+  end
 
   def to_s
     description
@@ -84,7 +89,7 @@ class NotificationType < ApplicationRecord
   end
 
   def subject_url
-    return if subject_record.blank? || !ApplicationController.helpers.show_route_exists_for?(subject_record)
+    return if subject_record.blank? || !ApplicationController.helpers.show_route_exists?(subject_record)
 
     Rails.application.routes.url_helpers.url_for(subject_record)
   end

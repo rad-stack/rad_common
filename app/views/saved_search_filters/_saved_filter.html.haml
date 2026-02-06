@@ -1,0 +1,16 @@
+- search_params = { search: saved_filter.search_filters.merge(applied_filter: saved_filter.id) }
+- search_path = "#{path}?#{search_params.to_query}"
+.dropdown-item.d-flex.justify-content-between.align-items-center{ id: "saved_filter_item_#{saved_filter.id}" }
+  = link_to saved_filter,
+            search_path,
+            id: "saved_filter_#{saved_filter.id}",
+            class: is_active ? 'text-success' : 'text-dark',
+            data: { turbo: false }
+  - if is_active
+    %span.text-success= icon :check
+  - else
+    = link_to icon(:times),
+              saved_filter,
+              class: 'text-danger',
+              data: { turbo_method: :delete, turbo_confirm: 'Are you sure? This will delete the saved filter.' },
+              id: "delete_saved_filter_#{saved_filter.id}"

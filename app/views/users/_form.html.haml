@@ -16,8 +16,8 @@
     .row
       - if RadConfig.external_users?
         .col-lg-3= f.input :external
-      - if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
-        .col-lg-3= f.input :twilio_verify_enabled
+      - if RadConfig.two_factor_auth_enabled? && !RadConfig.two_factor_auth_all_users?
+        .col-lg-3= f.input :otp_required_for_login
     .row
       -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
       .col-lg-6= f.input :password, autocomplete: 'off', input_html: { autocomplete: 'new-password' }
@@ -31,15 +31,15 @@
       .row.internal
         .col-lg-12
           = f.input :security_roles, as: :check_boxes,
-                                     item_wrapper_class: 'col-lg-3 security-role-checkboxes',
+                                     item_wrapper_class: 'col-lg-3 security-role-checkboxes form-check',
                                      collection: security_role_collection(:internal),
                                      checked: @user.security_roles.ids
 
-    - if RadConfig.external_users? && security_role_collection(:external).any?
+    - if RadConfig.external_users? && policy(@user).update_security_roles? && security_role_collection(:external).any?
       .row.external
         .col-lg-12
           = f.input :security_roles, as: :check_boxes,
-                                     item_wrapper_class: 'col-lg-3 security-role-checkboxes',
+                                     item_wrapper_class: 'col-lg-3 security-role-checkboxes form-check',
                                      collection: security_role_collection(:external),
                                      checked: @user.security_roles.ids
     = render 'users/form_custom', f: f

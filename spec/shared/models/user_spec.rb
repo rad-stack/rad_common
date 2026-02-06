@@ -134,9 +134,8 @@ RSpec.describe User, type: :model do
   describe 'validate email address' do
     before { Company.main.update! valid_user_domains: %w[example.com rubygems.org] }
 
-    it 'rejects unauthorized email addresses' do
+    it 'rejects unauthorized email addresses', :valid_user_domain_specs do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo. user@foo.com user@foo.com]
-
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
         expect(user).not_to be_valid
@@ -180,9 +179,8 @@ RSpec.describe User, type: :model do
 
     before { Company.main.update! valid_user_domains: %w[example.com rubygems.org] }
 
-    it 'rejects unauthorized email addresses' do
+    it 'rejects unauthorized email addresses', :valid_user_domain_specs do
       addresses = %w[user@example.com user@rubygems.org]
-
       addresses.each do |address|
         user = described_class.new(attributes.merge(email: address))
         expect(user).not_to be_valid
@@ -234,9 +232,10 @@ RSpec.describe User, type: :model do
   end
 
   describe 'password expirable', :password_expirable_specs do
-    it 'has a password that expires after 90 days' do
+    it 'has a password that expires after the configured days' do
       expect(user.need_change_password?).to be(false)
-      Timecop.travel(91.days.from_now) { expect(user.need_change_password?).to be(true) }
+      expire_days = (RadConfig.config_item!(:expire_password_after_days) + 1)
+      Timecop.travel(expire_days.days.from_now) { expect(user.need_change_password?).to be(true) }
     end
   end
 

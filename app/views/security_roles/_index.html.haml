@@ -8,7 +8,7 @@
       %th Allow Invite
     - unless RadConfig.disable_sign_up?
       %th Allow Sign Up
-    - if RadConfig.twilio_verify_enabled?
+    - if RadConfig.two_factor_auth_enabled?
       %th Two Factor Auth
     - if show_actions
       %th.actions Actions
@@ -25,18 +25,18 @@
         %td= format_boolean record.allow_invite
       - unless RadConfig.disable_sign_up?
         %td= format_boolean record.allow_sign_up
-      - if RadConfig.twilio_verify_enabled?
+      - if RadConfig.two_factor_auth_enabled?
         %td= format_boolean record.two_factor_auth?
       - if show_actions
-        %td
+        %td.d-grid.gap-2
           - if policy(record).update?
             = link_to icon(:pencil, 'Edit'),
                       edit_security_role_path(record),
-                      class: 'btn btn-sm btn-secondary btn-block'
+                      class: 'btn btn-sm btn-secondary'
 
           - if policy(record).destroy?
             = link_to icon(:times, 'Delete'),
                       record,
                       method: :delete,
                       data: { confirm: 'Are you sure?' },
-                      class: 'btn btn-danger btn-sm btn-block'
+                      class: 'btn btn-danger btn-sm'

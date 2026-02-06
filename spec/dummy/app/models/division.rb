@@ -36,9 +36,28 @@ class Division < ApplicationRecord
   audited
 
   after_commit :notify_owner
+  after_create_commit lambda {
+    return if seeding
+
+    broadcast_prepend_to 'divisions_calendar',
+                         target: 'recent-divisions',
+                         partial: 'divisions/division',
+                         locals: { division: self }
+    broadcast_update_to 'divisions_calendar',
+                        target: 'divisions_calendar_frame',
+                        partial: 'divisions/calendar_frame'
+  }
+  after_destroy_commit lambda {
+    return if seeding
+
+    broadcast_remove_to 'divisions_calendar', target: ApplicationController.helpers.dom_id(self)
+    broadcast_update_to 'divisions_calendar',
+                        target: 'divisions_calendar_frame',
+                        partial: 'divisions/calendar_frame'
+  }
 
   def logo_variant
-    logo.variant(resize: '290x218>')
+    logo.variant(resize_to_limit: [290, 218])
   end
 
   private

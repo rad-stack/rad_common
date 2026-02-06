@@ -1,9 +1,11 @@
+require_relative '../../../rad_common/config_updater'
+
 module RadCommon
   module Generators
     class InstallGenerator < Rails::Generators::Base
       include Rails::Generators::Migration
       source_root File.expand_path('templates', __dir__)
-      desc 'Used to install the rad_common depencency files and create migrations.'
+      desc 'Used to install the rad_common dependency files and create migrations.'
 
       def create_initializer_file
         remove_file 'app/views/layouts/_navigation.html.haml' unless RadConfig.shared_database?
@@ -11,12 +13,14 @@ module RadCommon
         remove_file 'app/models/application_record.rb'
         remove_file '.hound.yml'
         remove_file '.github/pull_request_template.md'
+        remove_file 'app/controllers/application_controller.rb'
 
         unless RadConfig.legacy_assets?
           remove_dir 'public/packs'
           remove_dir 'public/packs-test'
         end
 
+        fix_namespacing
         add_crawling_config
         install_procfile
         standardize_date_methods
@@ -25,14 +29,19 @@ module RadCommon
         update_seeder_method
         replace_webdrivers_gem_with_selenium
         add_rad_config_setting 'last_first_user', 'false'
-        add_rad_config_setting 'timezone_detection', 'false'
+        add_rad_config_setting 'timezone_detection', 'true'
         add_rad_config_setting 'portal', 'false'
+        add_rad_config_setting 'validate_user_domains', 'true'
+        add_rad_config_setting 'show_sign_in_marketing', 'false'
+        add_rad_config_setting 'filter_toggle_default_behavior', 'always_open'
+        add_rad_config_setting 'action_cable_enabled', 'false'
         remove_rad_factories
-        remove_legacy_rails_config_setting
+        remove_old_rad_config_settings
+        update_credentials
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
-        search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
-        gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
+        search_and_replace_file '3.3.1', '3.4.7', 'Gemfile'
+        gsub_file 'Gemfile', /gem 'haml_lint', '0\.55\.0', require: false/, "gem 'haml_lint', require: false"
         gsub_file 'Gemfile', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
         gsub_file 'Gemfile.lock', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
 
@@ -56,6 +65,9 @@ module RadCommon
         migrate_webpacker_to_esbuild unless RadConfig.legacy_assets?
 
         migrate_to_tom_select
+
+        # enable this as needed
+        # migrate_to_bootstrap5
 
         copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
         copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
@@ -87,6 +99,10 @@ module RadCommon
         # config
         unless RadConfig.storage_config_override?
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        end
+
+        if RadConfig.action_cable_enabled?
+          copy_file '../../../../../spec/dummy/config/cable.yml', 'config/cable.yml'
         end
 
         copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
@@ -165,6 +181,18 @@ module RadCommon
         copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb.tt',
                   'lib/templates/rspec/system/system_spec.rb.tt'
         remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
+
+        # pundit template
+        copy_file '../../../../../spec/dummy/lib/templates/pundit/policy.rb.tt',
+                  'lib/templates/pundit/policy.rb.tt'
+
+        # factory bot
+        copy_file '../../../../../spec/dummy/lib/templates/factory_bot/factory.rb.tt',
+                  'lib/templates/factory_bot/factory.rb.tt'
+
+        # search template
+        copy_file '../../../../../spec/dummy/lib/templates/services/search.rb.tt',
+                  'lib/templates/services/search.rb.tt'
 
         unless RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
@@ -291,6 +319,25 @@ Seeder.new.seed!
           end
         end
 
+        def fix_namespacing
+          search_and_replace 'RadCommon::AppInfo', 'AppInfo'
+          search_and_replace 'RadCommon::ApplicationHelper', 'RadHelper'
+
+          search_and_replace 'RadCommon::ArrayFilter', 'RadSearch::ArrayFilter'
+          search_and_replace 'RadCommon::BooleanFilter', 'RadSearch::BooleanFilter'
+          search_and_replace 'RadCommon::DateFilter', 'RadSearch::DateFilter'
+          search_and_replace 'RadCommon::EnumFilter', 'RadSearch::EnumFilter'
+          search_and_replace 'RadCommon::EqualsFilter', 'RadSearch::EqualsFilter'
+          search_and_replace 'RadCommon::FilterDefaulting', 'RadSearch::FilterDefaulting'
+          search_and_replace 'RadCommon::Filtering', 'RadSearch::Filtering'
+          search_and_replace 'RadCommon::HiddenFilter', 'RadSearch::HiddenFilter'
+          search_and_replace 'RadCommon::LikeFilter', 'RadSearch::LikeFilter'
+          search_and_replace 'RadCommon::PhoneNumberFilter', 'RadSearch::PhoneNumberFilter'
+          search_and_replace 'RadCommon::Search', 'RadSearch::Search'
+          search_and_replace 'RadCommon::SearchFilter', 'RadSearch::SearchFilter'
+          search_and_replace 'RadCommon::Sorting', 'RadSearch::Sorting'
+        end
+
         def add_crawling_config
           remove_file 'public/robots.txt'
 
@@ -339,23 +386,90 @@ Seeder.new.seed!
         end
 
         def add_rad_config_setting(setting_name, default_value)
-          standard_config_end = /\n(  system_usage_models:)/
-          new_config = "  #{setting_name}: #{default_value}\n\n"
-
-          unless rad_config_setting_exists?(setting_name)
-            gsub_file RAD_CONFIG_FILE, standard_config_end, "#{new_config}\\1"
-          end
+          RadCommon::ConfigUpdater.add_rad_config_setting(setting_name, default_value)
         end
 
         def rad_config_setting_exists?(setting_name)
-          File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
+          RadCommon::ConfigUpdater.rad_config_setting_exists?(setting_name)
         end
 
-        def remove_legacy_rails_config_setting
-          return unless rad_config_setting_exists?('legacy_rails_config')
+        def remove_old_rad_config_settings
+          remove_rad_config_setting 'legacy_rails_config'
+          remove_rad_config_setting 'temp_sticky_filters_list'
+        end
 
-          say_status :remove, 'legacy_rails_config from rad_common.yml'
-          gsub_file RAD_CONFIG_FILE, /^\s*legacy_rails_config:\s*.*\n/, ''
+        def remove_rad_config_setting(key)
+          return unless rad_config_setting_exists?(key)
+
+          raise "remove the old setting named #{key} from rad_commony.yml, I'm too lazy to code it right now"
+        end
+
+        def update_credentials
+          # TODO: this entire method could use some refactor next time we need to udpate credentials
+          return if ENV['CI']
+
+          need_credentials_update = false
+
+          %w[development test staging production].each do |environment|
+            credentials_path = Rails.root.join("config/credentials/#{environment}.yml.enc")
+            next unless File.exist?(credentials_path)
+
+            key_path = Rails.root.join("config/credentials/#{environment}.key")
+
+            unless File.exist?(key_path)
+              puts "key file not found: #{key_path}, skipping."
+              next
+            end
+
+            decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
+            current_credentials = YAML.safe_load(decrypted_content) || {}
+            next if current_credentials.key?('developer_domain')
+
+            need_credentials_update = true
+          end
+
+          return unless need_credentials_update
+
+          new_value = ask 'Enter the developer domain.'
+
+          %w[development test staging production].each do |environment|
+            credentials_path = Rails.root.join("config/credentials/#{environment}.yml.enc")
+            next unless File.exist?(credentials_path)
+
+            key_path = Rails.root.join("config/credentials/#{environment}.key")
+
+            unless File.exist?(key_path)
+              puts "key file not found: #{key_path}, skipping."
+              next
+            end
+
+            decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
+            current_credentials = YAML.safe_load(decrypted_content) || {}
+            next if current_credentials.key?('developer_domain')
+
+            new_line = "\n\ndeveloper_domain: #{new_value}"
+            updated_content = decrypted_content.chomp + new_line + "\n"
+            Rails.application.encrypted(credentials_path, key_path: key_path).write(updated_content)
+          end
+
+          %w[development test].each do |environment|
+            credentials_path = Rails.root.join("config/credentials/#{environment}.yml.enc")
+            next unless File.exist?(credentials_path)
+
+            key_path = Rails.root.join("config/credentials/#{environment}.key")
+
+            unless File.exist?(key_path)
+              puts "key file not found: #{key_path}, skipping."
+              next
+            end
+
+            decrypted_content = Rails.application.encrypted(credentials_path, key_path: key_path).read
+            current_credentials = YAML.safe_load(decrypted_content) || {}
+            next if current_credentials['developer_domain'] == 'example.com'
+
+            updated_content = decrypted_content.gsub("developer_domain: #{new_value}", 'developer_domain: example.com')
+            Rails.application.encrypted(credentials_path, key_path: key_path).write(updated_content)
+          end
         end
 
         def update_seeder_method
@@ -464,8 +578,6 @@ Seeder.new.seed!
           search_and_replace 'javascript_pack_tag', 'javascript_include_tag'
           search_and_replace 'stylesheet_pack_tag', 'stylesheet_link_tag'
           search_and_replace 'favicon_pack_tag', 'favicon_link_tag'
-          search_and_replace 'app/javascript/images', 'app/assets/images'
-          search_and_replace "'app', 'javascript', 'images'", "'app', 'assets', 'images'"
 
           copy_file '../../../../../spec/dummy/app/assets/scss/application.scss',
                     'app/assets/scss/application.scss'
@@ -506,6 +618,90 @@ gem 'rubocop-capybara'
 gem 'propshaft'
             RUBY
             end
+          end
+        end
+
+        def migrate_to_bootstrap5
+          search_and_replace 'ml-', 'ms-'
+          search_and_replace 'mr-', 'me-'
+          search_and_replace 'pl-', 'ps-'
+          search_and_replace 'pr-', 'pe-'
+
+          search_and_replace 'float-left', 'float-start'
+          search_and_replace 'text-left', 'text-start'
+          search_and_replace 'text-sm-left', 'text-sm-start'
+          search_and_replace 'text-md-left', 'text-md-start'
+          search_and_replace 'text-lg-left', 'text-lg-start'
+
+          search_and_replace 'float-right', 'float-end'
+          search_and_replace 'text-right', 'text-end'
+          search_and_replace 'text-sm-right', 'text-sm-end'
+          search_and_replace 'text-md-right', 'text-md-end'
+          search_and_replace 'text-lg-right', 'text-lg-end'
+          search_and_replace 'data-toggle', 'data-bs-toggle'
+
+          # data: { toggle: 'str', target:
+          gsub_from_file_content(search_pattern: /data: \{ toggle: '([^']*)',(\s*)target:/,
+                               replacement_string: "data: { 'bs-toggle': '\\1',\\2'bs-target':")
+          # data: { placement: 'str', toggle:
+          gsub_from_file_content(search_pattern: /data: \{ placement: '([^']*)',(\s*)toggle:/,
+                                 replacement_string: "data: { 'bs-placement': '\\1',\\2'bs-toggle':")
+          # data: { toggle: 'str', placement: }
+          gsub_from_file_content(search_pattern: /data: \{ toggle: '([^']*)',(\s*)placement:/,
+                                 replacement_string: "data: { 'bs-toggle': '\\1',\\2'bs-placement':")
+          # data: { toggle:
+          gsub_from_file_content(search_pattern: /data: \{ toggle:/,
+                                 replacement_string: "data: { 'bs-toggle':")
+          # data: { target:
+          gsub_from_file_content(search_pattern: /data: \{ target:/,
+                                 replacement_string: "data: { 'bs-target':")
+
+          search_and_replace 'data-placement', 'data-bs-placement'
+          search_and_replace 'data-dismiss', 'data-bs-dismiss'
+          search_and_replace 'data-target', 'data-bs-target'
+
+          search_and_replace 'form-group', 'mb-3'
+          search_and_replace 'form-inline', 'd-flex align-items-center'
+          search_and_replace 'badge-pill', 'rounded-pill'
+          search_and_replace 'badge-primary', 'bg-primary'
+          search_and_replace 'badge-warning', 'bg-warning'
+          search_and_replace 'badge-danger', 'bg-danger'
+          search_and_replace 'badge-info', 'bg-info'
+          search_and_replace 'badge-success', 'bg-success'
+          search_and_replace 'badge-secondary', 'bg-secondary'
+
+          search_and_replace 'dropdown-menu-right', 'dropdown-menu-end'
+          search_and_replace 'dropdown-menu-left', 'dropdown-menu-start'
+          search_and_replace 'input-group-prepend', 'input-group-text'
+          search_and_replace 'input-group-append', 'input-group-text'
+
+          search_and_replace 'twitter-bootstrap-4', 'bootstrap-5'
+          search_and_replace 'badge alert-', 'badge bg-opacity-75 bg-'
+          search_and_replace 'badge.alert-', 'badge.bg-opacity-75.bg-'
+        end
+
+        def gsub_from_file_content(search_pattern:, replacement_string:)
+          project_root = Dir.pwd
+          matching_files = []
+
+          Find.find(project_root) do |path|
+            next if File.directory?(path)
+            next unless path.include?('/app/')
+            next if path.include?('/assets/')
+            next if path.downcase.include?('.ds_store')
+
+            begin
+              content = File.read(path)
+              if content.match?(search_pattern)
+                matching_files << path
+              end
+            rescue => e
+              puts "Error reading #{path}: #{e.message}"
+            end
+          end
+
+          matching_files.each do |file_path|
+            gsub_file(file_path, search_pattern, replacement_string)
           end
         end
 
@@ -607,13 +803,26 @@ gem 'propshaft'
           apply_migration '20250402083306_add_sms_message_id_index.rb'
           apply_migration '20250425120906_fix_some_renamed_audit_models.rb'
           apply_migration '20250512115245_two_factor_auth_updates.rb'
+          apply_migration '20250622203947_user_js_timezone.rb'
+          apply_migration '20250918160535_create_vector_embeddings.rb'
+          apply_migration '20250918153732_add_large_language_model_chats.rb'
+          apply_migration '20250914154915_fix_developer_notifications.rb'
+          apply_migration '20250926165217_rename_llm_chats_to_assistant_sessions.rb'
+          apply_migration '20251003162830_add_fax_contact_log_fields.rb'
+          apply_migration '20251007153435_move_fax_error_message.rb'
+          apply_migration '20250418211716_add_created_at_index_to_system_usages.rb'
+          apply_migration '20251017110121_rename_direction_to_contact_direction.rb'
+          apply_migration '20251024225222_fix_chat_types.rb'
+          apply_migration '20251027181305_rename_chat_type_to_chat_class.rb'
+          apply_migration '20251103191522_remove_embedding_metadata.rb'
+          apply_migration '20251103194914_create_search_preferences.rb'
+          apply_migration '20251120171951_remove_legacy_filter_settings.rb'
+          apply_migration '20260110093403_rename_twilio_verify_enabled.rb'
         end
 
         def installed_app_name
           ::Rails.application.class.module_parent.to_s.underscore
         end
-
-        RAD_CONFIG_FILE = 'config/rad_common.yml'.freeze
     end
   end
 end

@@ -8,8 +8,9 @@ class <%= controller_class_name %>Controller < ApplicationController
 
   def index
     authorize <%= class_name %>
-    # TODO: change 'all' to a scope for ordering the records
-    @<%= plural_table_name %> = policy_scope(<%= orm_class.all(class_name) %>).page(params[:page])
+
+    @<%= singular_table_name %>_search = <%= class_name %>Search.new(params, current_user)
+    @<%= plural_table_name %> = policy_scope(@<%= singular_table_name %>_search.results).page(params[:page])
   end
 
   def show; end
@@ -41,7 +42,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   end
 
   def destroy
-    destroyed = @<%= orm_instance.destroy %>
+    destroyed = @<%= singular_table_name %>.destroy
 
     if destroyed
       flash[:notice] = <%= "'#{human_name} was successfully deleted.'" %>

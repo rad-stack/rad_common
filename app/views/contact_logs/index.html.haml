@@ -2,6 +2,6 @@
   = render 'layouts/card_header'
   .card-body
     = render 'layouts/filter', search: @contact_log_search, path: contact_logs_path
-    = paginate @contact_logs, theme: 'twitter-bootstrap-4'
+    = paginate @contact_logs, theme: 'bootstrap-5'
     = render 'contact_logs/index', contact_logs: @contact_logs, sort_columns: true
-    = paginate @contact_logs, theme: 'twitter-bootstrap-4'
+    = paginate @contact_logs, theme: 'bootstrap-5'

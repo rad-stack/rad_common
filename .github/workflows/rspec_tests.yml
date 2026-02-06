@@ -17,7 +17,7 @@ env:
 
 jobs:
   setup-matrix:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       total_groups: ${{ steps.set-matrix.outputs.total_groups }}
@@ -35,7 +35,7 @@ jobs:
           echo "total_groups=$total_groups" >> $GITHUB_OUTPUT
 
   tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     needs: setup-matrix
     strategy:
       fail-fast: false
@@ -71,6 +71,11 @@ jobs:
       - name: Running custom steps
         uses: ./.github/actions/custom-action
 
+      - name: Install ImageMagick
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick   
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -80,7 +85,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20.16.0'
+          node-version: '24.12.0'
           cache: 'yarn'
 
       - name: Yarn install
