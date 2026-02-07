@@ -47,6 +47,7 @@ module RadCommonRoutes
         resources :notification_types, only: %i[index edit update]
         resources :global_validations, only: %i[new create]
         resources :sentry_tests, only: :new
+        resources :api_logs, only: %i[index show]
         resources :contact_logs, only: %i[index show]
         resources :contact_log_recipients, only: :show
         resources :saved_search_filters, only: %i[create destroy]

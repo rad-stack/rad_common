@@ -23,7 +23,8 @@ module RadNav
       end
 
       def standard_items
-        [DropdownMenuItem.new(view_context, 'Audit Search', view_context.audits_path),
+        [DropdownMenuIndexItem.new(view_context, 'ApiLog', label: 'API Logs'),
+         DropdownMenuItem.new(view_context, 'Audit Search', view_context.audits_path),
          sidekiq,
          DropdownMenuItem.new(view_context, 'Company Info', view_context.company_edit_path),
          generate_jwt,

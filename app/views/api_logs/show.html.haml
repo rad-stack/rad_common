@@ -1,0 +1,30 @@
+.card
+  = render 'layouts/card_header', title: 'API Log', card_style: @api_log.success? ? nil : 'bg-danger bg-opacity-25'
+  .card-body
+    = render 'layouts/show_data_columns',
+             data: api_log_show_data(@api_log),
+             resource: @api_log
+
+- if @api_log.request_headers.present?
+  .card
+    = render 'layouts/card_header', action_name: 'custom', title: 'Request Headers', icon: 'fa-arrow-up'
+    .card-body
+      %pre= JSON.pretty_generate(@api_log.request_headers)
+
+- if @api_log.request_body.present?
+  .card
+    = render 'layouts/card_header', action_name: 'custom', title: 'Request Body', icon: 'fa-arrow-up'
+    .card-body
+      %pre= @api_log.request_body.is_a?(Hash) ? JSON.pretty_generate(@api_log.request_body) : @api_log.request_body
+
+- if @api_log.response_headers.present?
+  .card
+    = render 'layouts/card_header', action_name: 'custom', title: 'Response Headers', icon: 'fa-arrow-down'
+    .card-body
+      %pre= JSON.pretty_generate(@api_log.response_headers)
+
+- if @api_log.response_body.present?
+  .card
+    = render 'layouts/card_header', action_name: 'custom', title: 'Response Body', icon: 'fa-arrow-down'
+    .card-body
+      %pre= @api_log.response_body.is_a?(Hash) ? JSON.pretty_generate(@api_log.response_body) : @api_log.response_body

@@ -1,0 +1,25 @@
+.card
+  = render 'layouts/card_header', title: "API Logs (#{@api_logs.total_count})"
+  .card-body
+    = render 'layouts/filter', search: @api_log_search, path: api_logs_path
+    = paginate @api_logs, theme: 'bootstrap-5'
+
+    %table.table.table-bordered
+      %tr
+        = render 'layouts/sort_headers', search: @api_log_search
+
+      - @api_logs.each do |record|
+        %tr{ class: record.table_row_style }
+          %td
+            - if policy(record).show?
+              = link_to format_datetime(record.created_at), record
+            - else
+              = format_datetime record.created_at
+          %td= record.service_name
+          %td= record.http_method
+          %td= truncate(record.url, length: 80)
+          %td= record.response_status
+          %td= record.duration_ms.present? ? "#{record.duration_ms} ms" : nil
+          %td= format_boolean record.success
+
+    = paginate @api_logs, theme: 'bootstrap-5'
