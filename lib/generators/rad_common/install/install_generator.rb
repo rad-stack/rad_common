@@ -147,7 +147,25 @@ module RadCommon
 
         # templates
         remove_dir 'lib/templates/'
-        directory '../../../../../spec/dummy/lib/templates/', 'lib/templates/'
+
+        # haml templates (plain files, safe to copy as directory)
+        directory '../../../../../spec/dummy/lib/templates/haml/scaffold/', 'lib/templates/haml/scaffold/'
+
+        # .tt templates (must use copy_file to avoid ERB evaluation)
+        copy_file '../../../../../spec/dummy/lib/templates/active_record/model/model.rb.tt',
+                  'lib/templates/active_record/model/model.rb.tt'
+        copy_file '../../../../../spec/dummy/lib/templates/rails/scaffold_controller/controller.rb.tt',
+                  'lib/templates/rails/scaffold_controller/controller.rb.tt'
+        copy_file '../../../../../spec/dummy/lib/templates/rspec/scaffold/request_spec.rb.tt',
+                  'lib/templates/rspec/scaffold/request_spec.rb.tt'
+        copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb.tt',
+                  'lib/templates/rspec/system/system_spec.rb.tt'
+        copy_file '../../../../../spec/dummy/lib/templates/pundit/policy.rb.tt',
+                  'lib/templates/pundit/policy.rb.tt'
+        copy_file '../../../../../spec/dummy/lib/templates/factory_bot/factory.rb.tt',
+                  'lib/templates/factory_bot/factory.rb.tt'
+        copy_file '../../../../../spec/dummy/lib/templates/services/search.rb.tt',
+                  'lib/templates/services/search.rb.tt'
 
         unless RadConfig.shared_database?
           create_file 'db/seeds.rb' do <<-'RUBY'
