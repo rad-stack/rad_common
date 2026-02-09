@@ -7,7 +7,11 @@ describe SendgridStatusReceiver, type: :service do
   let(:user) { create :user, security_roles: [user_role] }
   let(:event_type) { 'bounce' }
   let(:contact_log) { create :contact_log, :email, record: create(:attorney), from_user: user }
-  let!(:contact_log_recipient) { create :contact_log_recipient, :email, contact_log: contact_log, email: user.email, to_user: user }
+
+  let!(:contact_log_recipient) do
+    create :contact_log_recipient, :email, contact_log: contact_log, email: user.email, to_user: user
+  end
+
   let(:last_email) { deliveries.last }
   let(:host_name) { RadConfig.host_name! }
 
