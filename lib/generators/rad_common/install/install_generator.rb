@@ -153,20 +153,7 @@ module RadCommon
         remove_file 'lib/templates/active_record/model/model.rb' # Removed old non-TT file
 
         # haml templates
-        copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/_form.html.haml',
-                  'lib/templates/haml/scaffold/_form.html.haml'
-
-        copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/edit.html.haml',
-                  'lib/templates/haml/scaffold/edit.html.haml'
-
-        copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/index.html.haml',
-                  'lib/templates/haml/scaffold/index.html.haml'
-
-        copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/new.html.haml',
-                  'lib/templates/haml/scaffold/new.html.haml'
-
-        copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/show.html.haml',
-                  'lib/templates/haml/scaffold/show.html.haml'
+        directory '../../../../../spec/dummy/lib/templates/haml/scaffold/', 'lib/templates/haml/scaffold/'
 
         # rails templates
         copy_file '../../../../../spec/dummy/lib/templates/rails/scaffold_controller/controller.rb.tt',
