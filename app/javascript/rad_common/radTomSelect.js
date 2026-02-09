@@ -1,6 +1,26 @@
 import TomSelect from 'tom-select';
 
 export class RadTomSelect {
+  static _parseValue(value) {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    if (value !== '' && !isNaN(Number(value))) return Number(value);
+    return value;
+  }
+
+  static _parseDataOverrides(el) {
+    const overrides = {};
+
+    for (const [key, value] of Object.entries(el.dataset)) {
+      if (key.startsWith('ts') && key.length > 2) {
+        const optionName = key.charAt(2).toLowerCase() + key.slice(3);
+        overrides[optionName] = RadTomSelect._parseValue(value);
+      }
+    }
+
+    return overrides;
+  }
+
   static setup(id) {
     const selector = id ? `#${id} select.selectpicker, #${id} input.selectpicker` : 'select.selectpicker,input.selectpicker';
     document.querySelectorAll(selector).forEach((el) => {
@@ -13,6 +33,8 @@ export class RadTomSelect {
       }
 
       const initialPlaceholder = el.dataset.placeholder || 'Start typing to search';
+      const dataOverrides = RadTomSelect._parseDataOverrides(el);
+
       new TomSelect(el, {
         create: el.dataset.tsCreate === 'true',
         placeholder: initialPlaceholder,
@@ -46,7 +68,8 @@ export class RadTomSelect {
             const className = isInactive ? 'text-danger' : '';
             return `<div class="${className}">${escape(item.text)}</div>`;
           }
-        }
+        },
+        ...dataOverrides
       });
     });
 
@@ -56,6 +79,8 @@ export class RadTomSelect {
       if (el.multiple) {
         plugins.push('remove_button');
       }
+
+      const dataOverrides = RadTomSelect._parseDataOverrides(el);
 
       new TomSelect(el, {
         placeholder: 'Start typing to search',
@@ -127,7 +152,8 @@ export class RadTomSelect {
           item: function(item, escape) {
             return `<div>${escape(item.label || '')}</div>`;
           }
-        }
+        },
+        ...dataOverrides
       });
     });
   }
