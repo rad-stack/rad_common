@@ -1,0 +1,13 @@
+- column_id = column_id(column, prefix: 'available-column')
+- url_params = column_url_params(column, table_id, column_id)
+
+%tr.report-column-row.align-middle{ id: column_id }
+  %td.py-3.ps-2
+    %span.fw-medium= column[:name].humanize
+  %td.py-3
+    %span.badge.bg-light.text-dark.border-0.px-2= column[:type]
+  %td.text-end.pe-2
+    = link_to update_columns_custom_reports_path(url_params),
+              data: { turbo_prefetch: false, turbo_method: :post, testid: 'add-column-button' } do
+      .btn.btn-outline-primary.btn-sm.rounded-circle
+        %i.fa.fa-plus

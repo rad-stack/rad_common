@@ -438,6 +438,10 @@ class RadConfig
       boolean_config_item! :timezone_detection
     end
 
+    def custom_reports_config
+      config_item(:custom_reports) || {}
+    end
+
     def blocked_ip_addresses?
       secret_config_item(:blocked_ip_addresses).present?
     end

@@ -1,0 +1,4 @@
+.card
+  = render 'layouts/card_header', additional_actions: [edit_configuration_button(@custom_report)]
+  .card-body
+    = render 'form', custom_report: @custom_report

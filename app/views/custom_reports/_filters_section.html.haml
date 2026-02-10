@@ -1,0 +1,22 @@
+:ruby
+  config = custom_report.configuration || {}
+  filters = config['filters'] || []
+  joins = config['joins'] || []
+  report_model = custom_report.report_model
+  report_id = custom_report.persisted? ? custom_report.id : nil
+  filter_url_params = { custom_report_id: report_id, report_model: report_model, joins: joins }.compact
+  filter_modal_url = new_custom_report_filter_path(filter_url_params)
+
+.d-flex.flex-row-reverse.mb-2
+  %button.btn.btn-sm.btn-outline-primary{ type: 'button',
+                                          data: { bs_toggle: 'modal',
+                                                  bs_target: '#custom-report-filter-modal',
+                                                  action: 'click->report-builder#loadCustomReportFilterForm',
+                                                  custom_report_filter_url: filter_modal_url } }
+    = icon('plus', 'Add Filter')
+
+#filters-list{ data: { controller: 'sortable', sortable_dragging_class: 'is-dragging' } }
+  - filters.each do |filter|
+    = render 'custom_report_filters/filter_row', filter: filter.symbolize_keys
+
+= render 'custom_report_filters/modal'

@@ -8,7 +8,7 @@ RSpec.describe AppInfo, type: :service do
 
     let(:result) do
       %w[assistant_sessions attorneys categories clients companies contact_log_recipients contact_logs
-         divisions duplicates embeddings notification_security_roles notification_settings
+         custom_reports divisions duplicates embeddings notification_security_roles notification_settings
          notification_types notifications saved_search_filters search_preferences security_roles statuses
          system_messages user_clients user_security_roles user_statuses users]
     end
@@ -20,7 +20,7 @@ RSpec.describe AppInfo, type: :service do
     subject { service.application_models }
 
     let(:result) do
-      %w[AssistantSession Attorney Category Client Company ContactLog ContactLogRecipient
+      %w[AssistantSession Attorney Category Client Company ContactLog ContactLogRecipient CustomReport
          Division Duplicate Embedding Notification NotificationSecurityRole NotificationSetting
          NotificationType SavedSearchFilter SearchPreference SecurityRole Status SystemMessage
          User UserClient UserSecurityRole UserStatus]
@@ -34,7 +34,7 @@ RSpec.describe AppInfo, type: :service do
 
     let(:result) do
       %w[ActionText::RichText ActiveStorage::Attachment AssistantSession Attorney Category Client Company ContactLog
-         ContactLogRecipient Division NotificationSecurityRole NotificationSetting NotificationType SavedSearchFilter
+         ContactLogRecipient CustomReport Division NotificationSecurityRole NotificationSetting NotificationType SavedSearchFilter
          SearchPreference SecurityRole Status SystemMessage User UserClient UserSecurityRole]
     end
 

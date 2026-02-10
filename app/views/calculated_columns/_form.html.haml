@@ -1,0 +1,77 @@
+= turbo_frame_tag 'calculated-column-form-frame' do
+  .modal-content
+    = simple_form_for presenter.calculated_column,
+                      url: presenter.form_url,
+                      method: presenter.form_method,
+                      data: { controller: 'calculated-column-form' } do |f|
+      .modal-header
+        %h5.modal-title
+          %i.fa.fa-calculator.me-2
+          = presenter.modal_title
+        %button.btn-close{ type: 'button', data: { bs_dismiss: 'modal' }, aria: { label: 'Close' } }
+      .modal-body
+        - if presenter.columns_unavailable?
+          .alert.alert-warning
+            %strong No columns available.
+            %span.ms-1 Select a report model to enable calculated columns.
+        = rad_form_errors f
+        .row.g-3
+          .col-12
+            = f.input :label,
+                      label: 'Display Label',
+                      placeholder: 'Full Name',
+                      hint: 'This will be shown as the column header in reports',
+                      input_html: { class: 'form-control' }
+        .mb-3
+          = f.label :formula_type, 'Formula Type', class: 'form-label'
+          = f.select :formula_type,
+                     grouped_options_for_select(presenter.formula_options, presenter.calculated_column.formula_type),
+                     { include_blank: 'Choose a formula type' },
+                     class: 'form-select',
+                     data: { action: 'change->calculated-column-form#formulaChanged',
+                             calculated_column_form_target: 'formulaSelect' },
+                     disabled: presenter.columns_unavailable?
+        - presenter.calculated_formulas.each do |type, config|
+          %div{ data: { calculated_column_form_target: 'params', formula_type: type },
+                class: presenter.formula_params_class(type) }
+            - params_definitions = config[:params] || []
+            - if params_definitions.blank?
+              %p.text-muted.small.mb-0 No additional parameters required.
+            - else
+              .row.g-3
+                - params_definitions.each do |param|
+                  - field = presenter.build_param_field(param, type)
+                  %div{ class: "#{field.column_class} mb-3" }
+                    = label_tag field.input_id, field.label, class: 'form-label'
+                    - case field.field_type
+                    - when 'column_selector'
+                      = select_tag field.field_name, field.column_selector_options_html, field.column_selector_html_options
+                      - if field.multiple?
+                        %small.form-text.text-muted Drag items to reorder
+                    - when 'number'
+                      = number_field_tag field.field_name,
+                                         field.value,
+                                         class: 'form-control',
+                                         id: field.input_id,
+                                         placeholder: field.placeholder,
+                                         step: field.step,
+                                         disabled: presenter.columns_unavailable?
+                    - when 'select'
+                      = select_tag field.field_name,
+                                   options_for_select(field.select_options, field.value),
+                                   class: 'form-select',
+                                   id: field.input_id,
+                                   disabled: presenter.columns_unavailable?
+                    - else
+                      = text_field_tag field.field_name,
+                                       field.value,
+                                       class: 'form-control',
+                                       id: field.input_id,
+                                       placeholder: field.placeholder,
+                                       disabled: presenter.columns_unavailable?
+      .modal-footer.justify-content-between
+        .d-flex.gap-2
+          %button.btn.btn-secondary{ type: 'button', data: { bs_dismiss: 'modal' } } Cancel
+          %button.btn.btn-primary{ type: 'submit', disabled: presenter.columns_unavailable? }
+            %i.fa{ class: presenter.submit_button_icon + ' me-1' }
+            = presenter.submit_button_text
