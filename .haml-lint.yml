@@ -58,6 +58,7 @@ linters:
     enabled: true
     ignored_cops:
       - 'Style/IfUnlessModifier'
+      - 'Layout/SpaceInsideParens'
 
   RubyComments:
     enabled: true
