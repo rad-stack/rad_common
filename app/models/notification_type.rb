@@ -94,6 +94,25 @@ class NotificationType < ApplicationRecord
     Rails.application.routes.url_helpers.url_for(subject_record)
   end
 
+  def add_defaults(setting)
+    if email_enabled?
+      setting.email = true
+      return
+    end
+
+    if sms_enabled?
+      setting.sms = true
+      return
+    end
+
+    if feed_enabled?
+      setting.feed = true
+      return
+    end
+
+    raise 'notification type has no methods'
+  end
+
   def auth_mode
     :security_roles
   end
