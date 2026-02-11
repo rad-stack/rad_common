@@ -10,9 +10,13 @@ class NotificationTypesController < ApplicationController
   def edit; end
 
   def update
-    @notification_type.active = params[type_param_name][:active]
-    @notification_type.bcc_recipient = params[type_param_name][:bcc_recipient]
-    @notification_type.security_roles = resolve_roles(params[type_param_name][:security_roles])
+    type_params = params[type_param_name]
+    @notification_type.active = type_params[:active]
+    @notification_type.bcc_recipient = type_params[:bcc_recipient]
+    @notification_type.default_email = type_params[:default_email] if type_params.key?(:default_email)
+    @notification_type.default_feed = type_params[:default_feed] if type_params.key?(:default_feed)
+    @notification_type.default_sms = type_params[:default_sms] if type_params.key?(:default_sms)
+    @notification_type.security_roles = resolve_roles(type_params[:security_roles])
 
     if @notification_type.save
       redirect_to notification_types_path, notice: 'Notification Type updated.'

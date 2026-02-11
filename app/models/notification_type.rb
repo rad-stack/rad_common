@@ -11,6 +11,8 @@ class NotificationType < ApplicationRecord
   validates_with EmailAddressValidator, fields: [:bcc_recipient]
   validate :validate_auth
 
+  before_validation :add_defaults, on: :create
+
   audited
   strip_attributes
 
@@ -94,19 +96,21 @@ class NotificationType < ApplicationRecord
     Rails.application.routes.url_helpers.url_for(subject_record)
   end
 
-  def add_defaults(setting)
+  def add_defaults
+    return if default_email? || default_feed? || default_sms?
+
     if email_enabled?
-      setting.email = true
+      self.default_email = true
       return
     end
 
     if sms_enabled?
-      setting.sms = true
+      self.default_sms = true
       return
     end
 
     if feed_enabled?
-      setting.feed = true
+      self.default_feed = true
       return
     end
 
