@@ -33,22 +33,9 @@ class NotificationSetting < ApplicationRecord
   def check_defaults
     return if notification_type.blank? || email? || sms? || feed?
 
-    if notification_type.email_enabled?
-      self.email = true
-      return
-    end
-
-    if notification_type.sms_enabled?
-      self.sms = true
-      return
-    end
-
-    if notification_type.feed_enabled?
-      self.feed = true
-      return
-    end
-
-    raise 'notification type has no methods'
+    self.email = notification_type.default_email?
+    self.feed = notification_type.default_feed?
+    self.sms = notification_type.default_sms?
   end
 
   private

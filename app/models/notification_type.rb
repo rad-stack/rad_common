@@ -11,6 +11,8 @@ class NotificationType < ApplicationRecord
   validates_with EmailAddressValidator, fields: [:bcc_recipient]
   validate :validate_auth
 
+  before_validation :add_defaults, on: :create
+
   audited
   strip_attributes
 
@@ -92,6 +94,27 @@ class NotificationType < ApplicationRecord
     return if subject_record.blank? || !ApplicationController.helpers.show_route_exists?(subject_record)
 
     Rails.application.routes.url_helpers.url_for(subject_record)
+  end
+
+  def add_defaults
+    return if default_email? || default_feed? || default_sms?
+
+    if email_enabled?
+      self.default_email = true
+      return
+    end
+
+    if sms_enabled?
+      self.default_sms = true
+      return
+    end
+
+    if feed_enabled?
+      self.default_feed = true
+      return
+    end
+
+    raise 'notification type has no methods'
   end
 
   def auth_mode
