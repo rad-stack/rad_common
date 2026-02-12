@@ -80,3 +80,32 @@ Rails.application.config.after_initialize do
 end
 
 AuthTrail.geocode = false
+
+if RadConfig.coverband_enabled? && ENV.fetch('REDIS_URL', '').present?
+  Coverband.configure do |config|
+    config.store = Coverband::Adapters::RedisStore.new(
+      Redis.new(url: ENV.fetch('REDIS_URL'),
+                db: ENV.fetch('REDIS_DB').to_i + 100,
+                ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE })
+    )
+
+    config.ignore = %w[
+      config/boot.rb
+      config/puma.rb
+      bin/*
+      db/*
+      test/*
+      spec/*
+      config/application.rb
+      config/environments/*
+      vendor/*
+      public/*
+      node_modules/*
+    ]
+
+    config.verbose = false
+    config.track_views = true
+    config.background_reporting_enabled = true
+    config.background_reporting_sleep_seconds = 60
+  end
+end

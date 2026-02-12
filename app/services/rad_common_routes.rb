@@ -67,6 +67,7 @@ module RadCommonRoutes
 
       authenticate :user, ->(u) { u.admin? } do
         mount Sidekiq::Web => '/sidekiq'
+        mount Coverband::Reporters::Web.new, at: '/coverband' if RadConfig.coverband_enabled?
       end
 
       mount ::ActionCable.server => '/cable' if RadConfig.action_cable_enabled?

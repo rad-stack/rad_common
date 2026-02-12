@@ -35,6 +35,7 @@ module RadCommon
         add_rad_config_setting 'show_sign_in_marketing', 'false'
         add_rad_config_setting 'filter_toggle_default_behavior', 'always_open'
         add_rad_config_setting 'action_cable_enabled', 'false'
+        add_rad_config_setting 'coverband_enabled', 'false'
         remove_rad_factories
         remove_old_rad_config_settings
         update_credentials
