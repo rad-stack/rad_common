@@ -14,8 +14,8 @@ RSpec.describe 'Invitations' do
     login_as signed_in_user, scope: :user
   end
 
-  context 'when twilio_verify_all_users is disabled' do
-    before { allow(RadConfig).to receive(:twilio_verify_all_users?).and_return(false) }
+  context 'when two_factor_auth_all_users is disabled' do
+    before { allow(RadConfig).to receive(:two_factor_auth_all_users?).and_return(false) }
 
     it 'invites an admin and enabled two factor auth' do
       visit new_user_invitation_path
@@ -29,7 +29,7 @@ RSpec.describe 'Invitations' do
 
       expect(page).to have_content "We invited '#{name_display}'"
       expect(User.last.security_roles.first).to eq admin_role
-      expect(User.last.twilio_verify_enabled?).to be true
+      expect(User.last.otp_required_for_login?).to be true
     end
   end
 

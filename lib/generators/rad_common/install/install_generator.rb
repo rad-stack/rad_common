@@ -1,3 +1,5 @@
+require_relative '../../../rad_common/config_updater'
+
 module RadCommon
   module Generators
     class InstallGenerator < Rails::Generators::Base
@@ -32,15 +34,15 @@ module RadCommon
         add_rad_config_setting 'validate_user_domains', 'true'
         add_rad_config_setting 'show_sign_in_marketing', 'false'
         add_rad_config_setting 'filter_toggle_default_behavior', 'always_open'
+        add_rad_config_setting 'action_cable_enabled', 'false'
         remove_rad_factories
         remove_old_rad_config_settings
         update_credentials
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
-        search_and_replace_file '3.2.2', '3.3.1', 'Gemfile'
-        gsub_file 'Gemfile', /gem 'haml_lint', require: false/, "gem 'haml_lint', '0.55.0', require: false"
-        gsub_file 'Gemfile', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
-        gsub_file 'Gemfile.lock', /https:\/\/github.com\/jayywolff\/twilio-verify-devise.git/, 'https://github.com/rad-stack/twilio-verify-devise.git'
+        search_and_replace_file '3.3.1', '3.4.7', 'Gemfile'
+        gsub_file 'Gemfile', /gem 'haml_lint', '0\.55\.0', require: false/, "gem 'haml_lint', require: false"
+        gsub_file 'Gemfile', /gem 'devise-twilio-verify',\n\s*git: '.*twilio-verify-devise.*',\n\s*branch: '.*'\n/, ''
 
         # misc
         merge_package_json unless RadConfig.legacy_assets?
@@ -90,12 +92,17 @@ module RadCommon
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
         copy_file '../../../../../.sniff.yml', '.sniff.yml'
-        copy_file '../../../../../.eslintrc', '.eslintrc'
+        copy_file '../../../../../eslint.config.mjs', 'eslint.config.mjs'
+        remove_file '.eslintrc'
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
 
         # config
         unless RadConfig.storage_config_override?
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
+        end
+
+        if RadConfig.action_cable_enabled?
+          copy_file '../../../../../spec/dummy/config/cable.yml', 'config/cable.yml'
         end
 
         copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
@@ -139,51 +146,24 @@ module RadCommon
         copy_file '../../../../../spec/fixtures/test_photo.png', 'spec/fixtures/test_photo.png'
 
         # templates
+        remove_dir 'lib/templates/'
 
-        # active_record templates
+        # haml templates (plain files, safe to copy as directory)
+        directory '../../../../../spec/dummy/lib/templates/haml/scaffold/', 'lib/templates/haml/scaffold/'
+
+        # .tt templates (must use copy_file to avoid ERB evaluation)
         copy_file '../../../../../spec/dummy/lib/templates/active_record/model/model.rb.tt',
                   'lib/templates/active_record/model/model.rb.tt'
-        remove_file 'lib/templates/active_record/model/model.rb' # Removed old non-TT file
-
-        # haml templates
-        copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/_form.html.haml',
-                  'lib/templates/haml/scaffold/_form.html.haml'
-
-        copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/edit.html.haml',
-                  'lib/templates/haml/scaffold/edit.html.haml'
-
-        copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/index.html.haml',
-                  'lib/templates/haml/scaffold/index.html.haml'
-
-        copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/new.html.haml',
-                  'lib/templates/haml/scaffold/new.html.haml'
-
-        copy_file '../../../../../spec/dummy/lib/templates/haml/scaffold/show.html.haml',
-                  'lib/templates/haml/scaffold/show.html.haml'
-
-        # rails templates
         copy_file '../../../../../spec/dummy/lib/templates/rails/scaffold_controller/controller.rb.tt',
                   'lib/templates/rails/scaffold_controller/controller.rb.tt'
-        remove_file 'lib/templates/rails/scaffold_controller/controller.rb' # Removed old non-TT file
-
-        # rspec templates
         copy_file '../../../../../spec/dummy/lib/templates/rspec/scaffold/request_spec.rb.tt',
                   'lib/templates/rspec/scaffold/request_spec.rb.tt'
-        remove_file 'lib/templates/rspec/scaffold/request_spec.rb' # Removed old non-TT file
-
         copy_file '../../../../../spec/dummy/lib/templates/rspec/system/system_spec.rb.tt',
                   'lib/templates/rspec/system/system_spec.rb.tt'
-        remove_file 'lib/templates/rspec/system/system_spec.rb' # Removed old non-TT file
-
-        # pundit template
         copy_file '../../../../../spec/dummy/lib/templates/pundit/policy.rb.tt',
                   'lib/templates/pundit/policy.rb.tt'
-
-        # factory bot
         copy_file '../../../../../spec/dummy/lib/templates/factory_bot/factory.rb.tt',
                   'lib/templates/factory_bot/factory.rb.tt'
-
-        # search template
         copy_file '../../../../../spec/dummy/lib/templates/services/search.rb.tt',
                   'lib/templates/services/search.rb.tt'
 
@@ -379,16 +359,11 @@ Seeder.new.seed!
         end
 
         def add_rad_config_setting(setting_name, default_value)
-          standard_config_end = /\n(  system_usage_models:)/
-          new_config = "  #{setting_name}: #{default_value}\n\n"
-
-          unless rad_config_setting_exists?(setting_name)
-            gsub_file RAD_CONFIG_FILE, standard_config_end, "#{new_config}\\1"
-          end
+          RadCommon::ConfigUpdater.add_rad_config_setting(setting_name, default_value)
         end
 
         def rad_config_setting_exists?(setting_name)
-          File.readlines(RAD_CONFIG_FILE).grep(/#{setting_name}:/).any?
+          RadCommon::ConfigUpdater.rad_config_setting_exists?(setting_name)
         end
 
         def remove_old_rad_config_settings
@@ -815,13 +790,12 @@ gem 'propshaft'
           apply_migration '20251103191522_remove_embedding_metadata.rb'
           apply_migration '20251103194914_create_search_preferences.rb'
           apply_migration '20251120171951_remove_legacy_filter_settings.rb'
+          apply_migration '20260110093403_rename_twilio_verify_enabled.rb'
         end
 
         def installed_app_name
           ::Rails.application.class.module_parent.to_s.underscore
         end
-
-        RAD_CONFIG_FILE = 'config/rad_common.yml'.freeze
     end
   end
 end

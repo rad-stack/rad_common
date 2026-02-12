@@ -11,6 +11,7 @@ import LlmChatFormController from './llm_chat_form_controller';
 import InvitationFormController from './invitation_forms_controller';
 import CollapseStateController from './collapse_state_controller';
 import ClipboardController from './clipboard_controller';
+import LazyContainerController from './lazy_container_controller';
 
 export const radControllers = [
   { id: 'global-search', controller: GlobalSearchController },
@@ -25,5 +26,6 @@ export const radControllers = [
   { id: 'llm-chat-form', controller: LlmChatFormController },
   { id: 'invitation-form', controller: InvitationFormController },
   { id: 'collapse-state', controller: CollapseStateController },
-  { id: 'clipboard', controller: ClipboardController }
+  { id: 'clipboard', controller: ClipboardController },
+  { id: 'lazy-container', controller: LazyContainerController }
 ];

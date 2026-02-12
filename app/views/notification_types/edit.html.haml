@@ -1,6 +1,8 @@
+- settings = policy_scope(@notification_type.notification_settings).enabled.by_user
+- show_notifications = settings.count.positive?
+
 .card
   = render 'layouts/card_header', no_delete_button: true, no_show_link: true
-
   .card-body
     = simple_form_for @notification_type, url: notification_type_path(@notification_type), method: :put do |f|
       = rad_form_errors f
@@ -24,3 +26,8 @@
 
       .form-actions
         = f.button :submit, 'Save', class: 'btn btn-primary'
+
+- if show_notifications
+  .card
+    = render 'layouts/card_header', action_name: 'custom', title: 'Notification Settings', icon: 'fa-list'
+    = render 'notification_settings/index', settings: settings, show_user: true

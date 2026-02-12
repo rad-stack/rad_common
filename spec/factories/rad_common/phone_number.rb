@@ -14,7 +14,7 @@ FactoryBot.define do
 
     trait :mobile do
       phone_number do
-        if RadConfig.twilio_enabled? || RadConfig.twilio_verify_enabled?
+        if RadConfig.twilio_enabled? || RadConfig.two_factor_auth_enabled?
           RadConfig.test_mobile_phone!
         else
           Faker::PhoneNumber.cell_phone

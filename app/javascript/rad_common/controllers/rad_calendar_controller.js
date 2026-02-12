@@ -8,9 +8,10 @@ import interactionPlugin from '@fullcalendar/interaction';
 
 export default class extends Controller {
   static targets = ['calendar', 'loaded', 'loading', 'datepicker'];
-  static values = { 
+  static values = {
     eventUrl: String,
-    initialView: { type: String, default: 'dayGridMonth' }
+    initialView: { type: String, default: 'dayGridMonth' },
+    openInNewTab: { type: Boolean, default: false }
   };
 
   connect() {
@@ -30,11 +31,11 @@ export default class extends Controller {
   datepickerChanged(event) {
     const selectedDate = event.target.value;
     this.userSelectedDate = selectedDate;
-    
+
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
     }
-    
+
     this.debounceTimer = setTimeout(() => {
       if (selectedDate && this.calendar) {
         this.calendar.gotoDate(selectedDate);
@@ -52,7 +53,7 @@ export default class extends Controller {
   getUrlParams() {
     const urlParams = new URLSearchParams(window.location.search);
     return {
-      view: urlParams.get('view') || this.initialViewValue,
+      view: this.isMobileView() ? 'listWeek' : urlParams.get('view') || this.initialViewValue,
       date: urlParams.get('date') || new Date().toISOString().split('T')[0]
     };
   }
@@ -73,7 +74,12 @@ export default class extends Controller {
     }
   }
 
+  isMobileView() {
+    return window.innerWidth < 600;
+  }
+
   config() {
+    let controller = this;
     const { view, date } = this.getUrlParams();
 
     return {
@@ -93,11 +99,12 @@ export default class extends Controller {
         prev: ' fa fa-chevron-left',
         next: ' fa fa-chevron-right'
       },
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      windowResize: function(_view) {
+        if (controller.isMobileView()) {
+          this.changeView('listWeek');
+        }
       },
+      headerToolbar: this.buildHeaderToolbar(),
       eventDidMount: function(info) {
         if(info.event.textColor) {
           info.el.style.color = info.event.textColor;
@@ -110,6 +117,12 @@ export default class extends Controller {
         }
         if (info.event.extendedProps.description) {
           $(info.el).tooltip({ title: info.event.extendedProps.description, container: 'body' });
+        }
+      },
+      eventClick: (info) => {
+        if (this.openInNewTabValue && info.event.url) {
+          info.jsEvent.preventDefault();
+          window.open(info.event.url, '_blank', 'noopener,noreferrer');
         }
       },
       loading: (isLoading) => this.updateLoadingStatus(isLoading),
@@ -135,6 +148,22 @@ export default class extends Controller {
       this.showLoading();
     } else {
       this.showLoaded();
+    }
+  }
+
+  buildHeaderToolbar() {
+    if(this.isMobileView()) {
+      return {
+        left: 'prev,next',
+        center: 'title',
+        right: 'today'
+      };
+    } else {
+      return {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      };
     }
   }
 

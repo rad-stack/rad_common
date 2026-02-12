@@ -48,7 +48,7 @@ RSpec.describe 'Search Preferences', type: :request do
                params: { search_preference: invalid_attributes },
                headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
         }.not_to change(SearchPreference, :count)
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         json_response = JSON.parse(response.body)
         expect(json_response['error']).to be_present
       end
@@ -83,7 +83,7 @@ RSpec.describe 'Search Preferences', type: :request do
 
         search_preference.reload
         expect(search_preference.search_class).to eq(original_search_class)
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         json_response = JSON.parse(response.body)
         expect(json_response['error']).to be_present
       end
