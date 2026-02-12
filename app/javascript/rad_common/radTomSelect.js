@@ -8,13 +8,18 @@ export class RadTomSelect {
     return value;
   }
 
+  static ALLOWED_TS_OVERRIDES = ['lockOptgroupOrder'];
+
   static _parseDataOverrides(el) {
     const overrides = {};
 
     for (const [key, value] of Object.entries(el.dataset)) {
       if (key.startsWith('ts') && key.length > 2) {
         const optionName = key.charAt(2).toLowerCase() + key.slice(3);
-        overrides[optionName] = RadTomSelect._parseValue(value);
+
+        if (RadTomSelect.ALLOWED_TS_OVERRIDES.includes(optionName)) {
+          overrides[optionName] = RadTomSelect._parseValue(value);
+        }
       }
     }
 
