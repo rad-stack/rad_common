@@ -2,8 +2,8 @@ module Embeddable
   extend ActiveSupport::Concern
 
   included do
-    has_one :embedding, as: :embeddable, dependent: :destroy
-    scope :needs_embedding, -> { where.missing(:embedding).order(created_at: :desc) }
+    has_many :embeddings, as: :embeddable, dependent: :destroy
+    scope :needs_embedding, -> { where.missing(:embeddings).order(created_at: :desc) }
 
     after_commit :perform_embedding!,
                  on: %i[create update],
@@ -17,12 +17,19 @@ module Embeddable
                 generate_embedding_content
               end
 
-    embedding_vector = EmbeddingService.generate(content)
-    return unless embedding_vector
+    chunks = EmbeddingService.chunk_text(content)
 
-    association(:embedding).reload
-    embedding_record = embedding || build_embedding
-    embedding_record.update! embedding: embedding_vector
+    association(:embeddings).reload
+
+    chunks.each_with_index do |chunk, index|
+      embedding_vector = EmbeddingService.generate(chunk)
+      next unless embedding_vector
+
+      embedding_record = embeddings.find_or_initialize_by(chunk_index: index)
+      embedding_record.update!(embedding: embedding_vector)
+    end
+
+    embeddings.where('chunk_index >= ?', chunks.size).destroy_all
   end
 
   def summarizer

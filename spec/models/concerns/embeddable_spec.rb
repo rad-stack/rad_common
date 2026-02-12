@@ -6,14 +6,16 @@ RSpec.describe Embeddable do
   before { allow(EmbeddingService).to receive(:enabled?).and_return true }
 
   it 'embeds vector data', :vcr do
-    expect(attorney.embedding).not_to be_nil
+    expect(attorney.embeddings).not_to be_empty
   end
 
   it 'updates embeddings after change', :vcr do
-    expect { attorney.update!(first_name: 'New Name') }.to(change { attorney.embedding.reload.embedding })
+    expect { attorney.update!(first_name: 'New Name') }
+      .to(change { attorney.embeddings.reload.first.embedding })
   end
 
   it 'does not update embeddings after unrelated change', :vcr do
-    expect { attorney.update!(zipcode: '32216') }.not_to(change { attorney.embedding.reload.embedding })
+    expect { attorney.update!(zipcode: '32216') }
+      .not_to(change { attorney.embeddings.reload.first.embedding })
   end
 end
