@@ -1,0 +1,29 @@
+.card
+  = render 'layouts/card_header', action_name: 'custom', title: 'SMS Development Log', icon: 'fa-sms'
+  .card-body
+    .d-flex.justify-content-between.mb-3
+      %p.text-muted
+        Messages are stored in memory and will be cleared when the server restarts.
+      = link_to 'Clear All', clear_sms_dev_logs_path, method: :delete, class: 'btn btn-outline-danger btn-sm',
+        data: { confirm: 'Clear all SMS logs?' }
+
+    - if @users_with_messages.empty?
+      %p.text-center.text-muted No SMS messages have been sent yet.
+    - else
+      %table.table.table-bordered.table-hover
+        %thead
+          %tr
+            %th Recipient
+            %th Phone Number
+            %th Messages
+            %th Last Message
+            %th Last Sent
+        %tbody
+          - @users_with_messages.each do |entry|
+            %tr
+              %td
+                = link_to entry[:user_name], sms_dev_log_path(entry[:user_id])
+              %td= entry[:to_number]
+              %td= entry[:message_count]
+              %td= entry[:last_message_preview]
+              %td= entry[:last_message_at].strftime('%b %d, %Y %I:%M %p')
