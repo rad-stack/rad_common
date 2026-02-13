@@ -11,7 +11,6 @@
 @import './radAi.scss';
 @import './tables.scss';
 @import './lazy_modal.scss';
-@use './bootstrap_overrides';
-@use 'morris.js/morris';
+@import 'morris.js/morris.css';
 
 @import "trix/dist/trix";
