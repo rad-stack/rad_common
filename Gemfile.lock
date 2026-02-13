@@ -7,8 +7,8 @@ PATH
       authtrail
       aws-sdk-s3
       bootstrap5-kaminari-views
-      connection_pool (< 3)
       chartkick
+      connection_pool (< 3)
       cssbundling-rails (~> 1.4)
       csv
       devise (~> 5.0.0)
