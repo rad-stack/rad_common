@@ -38,7 +38,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'jwt'
   s.add_dependency 'kaminari'
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
-  s.add_dependency 'morris.js-rails'
   s.add_dependency 'neighbor'
   s.add_dependency 'nokogiri'
   s.add_dependency 'pg'
@@ -51,7 +50,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'pundit'
   s.add_dependency 'rack-attack'
   s.add_dependency 'rails', '~> 7.2.3'
-  s.add_dependency 'raphael-rails'
   s.add_dependency 'redis'
   s.add_dependency 'ruby-openai'
   s.add_dependency 'sendgrid-ruby'
