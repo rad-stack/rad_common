@@ -14,16 +14,19 @@
           %td= log[:chat_date]
           %td= log[:role]
           %td
-            - if log[:tool_calls].present?
-              %strong Tool Calls
-              %table.table
-                %tr
-                  %th Type
-                  %th Name
-                  %th Arguments
-                - log[:tool_calls].each do |tool_call|
+            - if @raw
+              %pre= JSON.pretty_generate(log)
+            - else
+              - if log[:tool_calls].present?
+                %strong Tool Calls
+                %table.table
                   %tr
-                    %td= tool_call[:type]
-                    %td= tool_call.dig('function', 'name')
-                    %td= tool_call.dig('function', 'arguments')
-            = log[:content]
+                    %th Type
+                    %th Name
+                    %th Arguments
+                  - log[:tool_calls].each do |tool_call|
+                    %tr
+                      %td= tool_call[:type]
+                      %td= tool_call.dig('function', 'name')
+                      %td= tool_call.dig('function', 'arguments')
+              = log[:content]

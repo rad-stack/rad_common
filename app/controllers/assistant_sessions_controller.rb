@@ -6,7 +6,9 @@ class AssistantSessionsController < ApplicationController
     @assistant_sessions = policy_scope(AssistantSession.sorted).page(params[:page]).order(created_at: :desc)
   end
 
-  def show; end
+  def show
+    @raw = params[:raw] == 'true'
+  end
 
   def update
     @reset_chat = false

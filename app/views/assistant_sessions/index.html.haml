@@ -8,6 +8,7 @@
         %th User
         %th Scope
         %th Context
+        %th Raw
 
       - @assistant_sessions.each do |record|
         %tr{ class: table_row_style(record) }
@@ -15,5 +16,6 @@
           %td= secured_link record.user
           %td= secured_link record.chat_scope
           %td= secured_link record.contextable
+          %td= link_to 'Raw', assistant_session_path(record, raw: true)
 
     = paginate @assistant_sessions, theme: 'bootstrap-5'
