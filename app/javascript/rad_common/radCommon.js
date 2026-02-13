@@ -3,6 +3,7 @@ require('@rails/ujs').start();
 require('@popperjs/core');
 require('readmore-js');
 require('./richtext');
+require('morris.js/morris.min');
 
 const bootstrap = require('bootstrap');
 
@@ -16,6 +17,7 @@ import { RadTomSelect } from './radTomSelect';
 import { SentryTest } from './sentry';
 import { ActionTextFileValidations } from './actionTextFileValidations';
 
+import './raphael';
 import './radTurbo';
 
 export class RadCommon {
