@@ -20,6 +20,7 @@ module RadCommon
     require 'active_storage_validations'
     require 'audited'
     require 'authtrail'
+    require 'coverband' if Rails.env.production?
     require 'csv'
     require 'devise'
     require 'devise-twilio-verify'

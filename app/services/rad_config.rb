@@ -284,6 +284,10 @@ class RadConfig
       boolean_config_item! :canadian_addresses
     end
 
+    def coverband_enabled?
+      boolean_config_item! :coverband_enabled
+    end
+
     def saved_search_filters_enabled?
       boolean_config_item! :saved_search_filters_enabled
     end
