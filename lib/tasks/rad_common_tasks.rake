@@ -1,6 +1,6 @@
 namespace :rad_common do
   task :daily, [:override_model] => :environment do |task, args|
-    session = RakeSession.new(task, 24.hours, 1)
+    session = RakeSession.new(task, 23.hours, 1)
 
     Timeout.timeout(session.time_limit) do
       session.reset_status
@@ -25,6 +25,8 @@ namespace :rad_common do
         global_validity = GlobalValidation.new
         global_validity.override_model = args[:override_model]
         global_validity.run
+
+        ExistingDataEmbedder.new.run(session)
       end
 
       session.finished
@@ -88,30 +90,6 @@ namespace :rad_common do
 
   task update_s3_cors_settings: :environment do
     S3CorsSettingsUpdater.new.update!
-  end
-
-  task embed_existing_data: :environment do |task|
-    session = RakeSession.new(task, 5.hours, 10)
-
-    Timeout.timeout(session.time_limit) do
-      AppInfo.new.embeddable_models.each do |model_name|
-        session.reset_status
-
-        records = model_name.constantize.needs_embedding
-        count = records.size
-
-        records.each do |record|
-          session.check_status "Embeddings for #{model_name}", count
-          break if session.timing_out?
-
-          record.update_embedding!
-        end
-
-        break if session.timing_out?
-      end
-
-      session.finished
-    end
   end
 
   task build_js_css: :environment do
