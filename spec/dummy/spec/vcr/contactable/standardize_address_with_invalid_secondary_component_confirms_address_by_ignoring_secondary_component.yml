@@ -25,9 +25,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       X-Request-Id:
-      - '01997726-c5d8-7f47-978e-265b8ae89304'
+      - '019c5ba5-44ad-79d7-ad36-66e49197d228'
       Date:
-      - Tue, 23 Sep 2025 15:17:33 GMT
+      - Sat, 14 Feb 2026 10:14:43 GMT
       Transfer-Encoding:
       - chunked
       Vary:
@@ -35,8 +35,8 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '[{"input_index":0,"candidate_index":0,"delivery_line_1":"1921 E 24th
-        St Apt 1","last_line":"Oakland CA 94606-4138","delivery_point_barcode":"946064138216","smarty_key":"890771184","components":{"primary_number":"1921","street_predirection":"E","street_name":"24th","street_suffix":"St","secondary_number":"1","secondary_designator":"Apt","city_name":"Oakland","default_city_name":"Oakland","state_abbreviation":"CA","zipcode":"94606","plus4_code":"4138","delivery_point":"21","delivery_point_check_digit":"6"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"06001","county_name":"Alameda","carrier_route":"C027","congressional_district":"12","rdi":"Residential","elot_sequence":"0116","elot_sort":"A","latitude":37.79321,"longitude":-122.23336,"precision":"Zip9","time_zone":"Pacific","utc_offset":-8,"dst":true},"analysis":{"dpv_match_code":"S","dpv_footnotes":"AABBCC","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","footnotes":"N#S#","enhanced_match":"postal-match,unknown-secondary,ignored-input"}}]
+        St # 1","last_line":"Oakland CA 94606-4138","delivery_point_barcode":"946064138216","smarty_key":"890771184","components":{"primary_number":"1921","street_predirection":"E","street_name":"24th","street_suffix":"St","secondary_number":"1","secondary_designator":"#","city_name":"Oakland","default_city_name":"Oakland","state_abbreviation":"CA","zipcode":"94606","plus4_code":"4138","delivery_point":"21","delivery_point_check_digit":"6"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"06001","county_name":"Alameda","carrier_route":"C027","congressional_district":"12","rdi":"Residential","elot_sequence":"0116","elot_sort":"A","latitude":37.79321,"longitude":-122.23336,"precision":"Zip9","time_zone":"Pacific","utc_offset":-8,"dst":true},"analysis":{"dpv_match_code":"S","dpv_footnotes":"AABBCC","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y","footnotes":"N#S#","enhanced_match":"postal-match,unknown-secondary,ignored-input"}}]
 
         '
-  recorded_at: Tue, 23 Sep 2025 15:17:33 GMT
-recorded_with: VCR 6.3.1
+  recorded_at: Sat, 14 Feb 2026 10:14:31 GMT
+recorded_with: VCR 6.4.0

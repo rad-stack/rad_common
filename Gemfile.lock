@@ -25,6 +25,7 @@ PATH
       matrix
       neighbor
       nokogiri
+      openssl
       pg
       prawn
       prawn-table
@@ -323,6 +324,7 @@ GEM
     nokogiri (1.19.0)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    openssl (4.0.0)
     orm_adapter (0.5.0)
     parallel (1.27.0)
     parallel_tests (5.5.0)
