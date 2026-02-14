@@ -19,7 +19,7 @@ class SearchPreferencesController < ApplicationController
 
     def save_and_respond
       unless @search_preference.save
-        render json: { error: @search_preference.errors.full_messages.join(', ') }, status: :unprocessable_entity
+        render json: { error: @search_preference.errors.full_messages.join(', ') }, status: :unprocessable_content
         return
       end
 

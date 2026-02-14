@@ -106,6 +106,15 @@ describe RadMailer do
       it 'sets to user if email matches' do
         expect(ContactLogRecipient.last.to_user).to eq user
       end
+
+      context 'when user is inactive' do
+        let(:inactive_user) { create :user, :inactive }
+        let(:recipient) { inactive_user.email }
+
+        it 'does not set to_user' do
+          expect(ContactLogRecipient.last.to_user).to be_nil
+        end
+      end
     end
   end
 

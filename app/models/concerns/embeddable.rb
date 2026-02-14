@@ -20,6 +20,7 @@ module Embeddable
     embedding_vector = EmbeddingService.generate(content)
     return unless embedding_vector
 
+    association(:embedding).reload
     embedding_record = embedding || build_embedding
     embedding_record.update! embedding: embedding_vector
   end

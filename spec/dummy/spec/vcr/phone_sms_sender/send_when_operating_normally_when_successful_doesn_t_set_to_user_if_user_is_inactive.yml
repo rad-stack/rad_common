@@ -1,0 +1,73 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.twilio.com/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages.json
+    body:
+      encoding: UTF-8
+      string: Body=test+message+-+To+no+longer+receive+text+messages%2C+text+STOP&From=15005550006&StatusCallback=http%3A%2F%2Fexample.com%2Ftwilio_statuses&To=%2B16187222169
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - twilio-ruby/7.9.1 (darwin24 arm64) Ruby/3.4.7
+      Accept-Charset:
+      - utf-8
+      Accept:
+      - application/json
+      Authorization:
+      - "<AUTH_TOKEN>"
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Content-Length:
+      - '824'
+      Connection:
+      - keep-alive
+      Date:
+      - Mon, 02 Feb 2026 18:40:23 GMT
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQ208d55076484067c18fe8850bc721487
+      Twilio-Request-Duration:
+      - '0.078'
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - api.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 a0711968aec57034cd959c79ad7983b2.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA50-P1
+      X-Amz-Cf-Id:
+      - H8JatFKkVF_dqHbIPYdcUXYZFvh9USSfwdiW6ZiNWqWw8Axzb-0SwQ==
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
+      Vary:
+      - Origin
+    body:
+      encoding: UTF-8
+      string: '{"account_sid": "ACaae98776bde4ed53d0fb1dfcc262558e", "api_version":
+        "2010-04-01", "body": "test message - To no longer receive text messages,
+        text STOP", "date_created": "Mon, 02 Feb 2026 18:40:23 +0000", "date_sent":
+        null, "date_updated": "Mon, 02 Feb 2026 18:40:23 +0000", "direction": "outbound-api",
+        "error_code": null, "error_message": null, "from": "+15005550006", "messaging_service_sid":
+        null, "num_media": "0", "num_segments": "1", "price": null, "price_unit":
+        "USD", "sid": "SM208d55076484067c18fe8850bc721487", "status": "queued", "subresource_uris":
+        {"media": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SM208d55076484067c18fe8850bc721487/Media.json"},
+        "to": "+16187222169", "uri": "/2010-04-01/Accounts/ACaae98776bde4ed53d0fb1dfcc262558e/Messages/SM208d55076484067c18fe8850bc721487.json"}'
+  recorded_at: Mon, 02 Feb 2026 18:40:23 GMT
+recorded_with: VCR 6.4.0
