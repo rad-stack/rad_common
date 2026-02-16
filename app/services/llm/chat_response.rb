@@ -5,7 +5,8 @@ module LLM
     end
 
     def result
-      @response['output_text']
+      # TODO: is there a better way to do this?
+      @response.dig('output', 0, 'content', 0, 'text')
     end
 
     def tool_call?
