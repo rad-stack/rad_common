@@ -10,13 +10,8 @@ class NotificationTypesController < ApplicationController
   def edit; end
 
   def update
-    type_params = params[type_param_name]
-    @notification_type.active = type_params[:active]
-    @notification_type.bcc_recipient = type_params[:bcc_recipient]
-    @notification_type.default_email = type_params[:default_email] if type_params.key?(:default_email)
-    @notification_type.default_feed = type_params[:default_feed] if type_params.key?(:default_feed)
-    @notification_type.default_sms = type_params[:default_sms] if type_params.key?(:default_sms)
-    @notification_type.security_roles = resolve_roles(type_params[:security_roles])
+    @notification_type.assign_attributes(permitted_params)
+    @notification_type.security_roles = resolve_roles(params[type_param_name][:security_roles])
 
     if @notification_type.save
       redirect_to notification_types_path, notice: 'Notification Type updated.'
@@ -30,6 +25,10 @@ class NotificationTypesController < ApplicationController
     def set_notification_type
       @notification_type = NotificationType.find(params[:id])
       authorize @notification_type
+    end
+
+    def permitted_params
+      params.require(type_param_name).permit(:active, :bcc_recipient, :default_email, :default_feed, :default_sms)
     end
 
     def resolve_roles(role_ids)
