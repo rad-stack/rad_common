@@ -2,6 +2,7 @@ module LLM
   class PromptBuilder
     include RadHelper
 
+    DEVELOPER_ROLE = 'developer'.freeze
     ASSISTANT_ROLE = 'assistant'.freeze
     USER_ROLE = 'user'.freeze
 
@@ -17,8 +18,8 @@ module LLM
       log_items << PromptBuilder.build_user_message(content) if content
 
       input_items = sanitize_for_api(log_items)
-      parameters = { model: @modelL, input: input_items }
-      parameters[:instructions] = @system_prompt if @system_prompt.present?
+      parameters = { model: @model, input: input_items }
+      apply_system_prompt(parameters, response_format)
       parameters[:tools] = @tools if @tools.present?
       parameters[:text] = { format: response_format } if response_format
 
@@ -55,6 +56,16 @@ module LLM
     end
 
     private
+
+      def apply_system_prompt(parameters, response_format)
+        return if @system_prompt.blank?
+
+        if response_format.present?
+          parameters[:input].unshift({ role: DEVELOPER_ROLE, content: @system_prompt })
+        else
+          parameters[:instructions] = @system_prompt
+        end
+      end
 
       def sanitize_for_api(items)
         items.filter_map do |item|
