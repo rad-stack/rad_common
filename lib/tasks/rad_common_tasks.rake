@@ -5,23 +5,29 @@ namespace :rad_common do
     Timeout.timeout(session.time_limit) do
       session.reset_status
 
+      puts 'clearing view cache'
       Rails.cache.delete_matched('views/*')
 
       unless RadConfig.shared_database?
+        puts 'resetting duplicate sort values'
         Duplicate.where.not(sort: 500).update_all sort: 500
 
+        puts 'notifying high duplicates'
         AppInfo.new.duplicate_models.each do |model_name|
           model_name.constantize.notify_high_duplicates
         end
 
+        puts 'checking twilio error threshold'
         TwilioErrorThresholdChecker.new.check_threshold
 
+        puts 'checking for missing audited models'
         missing_audited_models = RadAudit.missing_audited_models
 
         if missing_audited_models.any?
           Notifications::MissingAuditModelsNotification.main(missing_audited_models).notify!
         end
 
+        puts 'running global validity'
         global_validity = GlobalValidation.new
         global_validity.override_model = args[:override_model]
         global_validity.run
