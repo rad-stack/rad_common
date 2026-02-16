@@ -5,7 +5,7 @@ module LLM
     end
 
     def result
-      @response.dig('choices', 0, 'message', 'content')
+      @response['output_text']
     end
 
     def tool_call?
@@ -13,23 +13,19 @@ module LLM
     end
 
     def tool_name(tool_call)
-      tool_data(tool_call)['name']
+      tool_call['name']
     end
 
     def tool_call_id(tool_call)
-      tool_call['id']
-    end
-
-    def tool_data(tool_call)
-      tool_call['function']
+      tool_call['call_id']
     end
 
     def tool_calls
-      @tool_calls ||= @response.dig('choices', 0, 'message', 'tool_calls')
+      @tool_calls ||= output_items.select { |item| item['type'] == 'function_call' }
     end
 
-    def message
-      @message ||= @response.dig('choices', 0, 'message')
+    def output_items
+      @output_items ||= @response['output'] || []
     end
   end
 end

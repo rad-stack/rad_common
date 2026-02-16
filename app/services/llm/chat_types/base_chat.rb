@@ -79,10 +79,6 @@ module LLM
 
       private
 
-        def openai_client
-          @openai_client ||= OpenAI::Client.new(access_token: RadConfig.open_ai_api_key!)
-        end
-
         def system_prompt
           raise NotImplementedError
         end

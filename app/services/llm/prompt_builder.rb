@@ -2,7 +2,6 @@ module LLM
   class PromptBuilder
     include RadHelper
 
-    SYSTEM_ROLE = 'system'.freeze
     ASSISTANT_ROLE = 'assistant'.freeze
     USER_ROLE = 'user'.freeze
 
@@ -13,44 +12,33 @@ module LLM
     end
 
     def chat(content: nil, previous_messages: [], response_format: nil)
-      messages = []
-      messages << build_system_prompt if previous_messages.empty?
-      messages += previous_messages
-      messages << PromptBuilder.build_user_message(content) if content
-      parameters = { model: RadCommon::OPEN_AI_CHAT_MODEL, messages: messages, tools: @tools }
-      parameters[:response_format] = response_format if response_format
+      log_items = previous_messages.dup
+      log_items << PromptBuilder.build_user_message(content) if content
+
+      input_items = sanitize_for_api(log_items)
+      parameters = { model: RadCommon::OPEN_AI_CHAT_MODEL, input: input_items }
+      parameters[:instructions] = @system_prompt if @system_prompt.present?
+      parameters[:tools] = @tools if @tools.present?
+      parameters[:text] = { format: response_format } if response_format
 
       r = RadRetry.perform_request do
-        openai_client.chat(parameters: parameters)
+        openai_client.responses.create(parameters: parameters)
       rescue Faraday::BadRequestError => e
         raise e.response[:body]['error']['message']
       end
 
       response = ChatResponse.new(r)
       if response.tool_call?
-        return chat(previous_messages: LLM::Tools::Builder.respond_to_tool_calls(response, @context, messages))
+        tool_items = LLM::Tools::Builder.respond_to_tool_calls(response, @context)
+        return chat(previous_messages: log_items + tool_items)
       end
 
-      assistant_message = r.dig('choices', 0, 'message')
-      assistant_message[:chat_date] = PromptBuilder.formatted_current_date_time
-      [response.result, messages + [assistant_message]]
+      log_items << PromptBuilder.build_assistant_message(response.result)
+      [response.result, log_items]
     end
 
-    def build_system_prompt
-      PromptBuilder.build_message(role: SYSTEM_ROLE, content: @system_prompt)
-    end
-
-    def build_messages(content)
-      messages = []
-      messages << PromptBuilder.build_message(role: SYSTEM_ROLE, content: @system_prompt) if @system_prompt.present?
-      messages << PromptBuilder.build_message(role: USER_ROLE, content: content)
-      messages
-    end
-
-    def self.build_message(role:, content:, tool_call_id: nil)
-      data = { role: role, content: content, chat_date: formatted_current_date_time }
-      data[:tool_call_id] = tool_call_id if tool_call_id.present?
-      data
+    def self.build_message(role:, content:)
+      { role: role, content: content, chat_date: formatted_current_date_time }
     end
 
     def self.build_user_message(content)
@@ -66,6 +54,17 @@ module LLM
     end
 
     private
+
+      def sanitize_for_api(items)
+        items.filter_map do |item|
+          next unless item.is_a?(Hash)
+
+          item = item.stringify_keys
+          next if item['role'] == 'system'
+
+          item.except('chat_date')
+        end
+      end
 
       def openai_client
         @openai_client ||= OpenAI::Client.new(access_token: RadConfig.open_ai_api_key!)
