@@ -5,10 +5,11 @@ module LLM
     ASSISTANT_ROLE = 'assistant'.freeze
     USER_ROLE = 'user'.freeze
 
-    def initialize(system_prompt: nil, tools: [], context: {})
+    def initialize(system_prompt: nil, tools: [], context: {}, model: RadCommon::OPEN_AI_CHAT_MODEL)
       @system_prompt = system_prompt
       @tools = tools
       @context = context
+      @model = model
     end
 
     def chat(content: nil, previous_messages: [], response_format: nil)
@@ -16,7 +17,7 @@ module LLM
       log_items << PromptBuilder.build_user_message(content) if content
 
       input_items = sanitize_for_api(log_items)
-      parameters = { model: RadCommon::OPEN_AI_CHAT_MODEL, input: input_items }
+      parameters = { model: @modelL, input: input_items }
       parameters[:instructions] = @system_prompt if @system_prompt.present?
       parameters[:tools] = @tools if @tools.present?
       parameters[:text] = { format: response_format } if response_format
