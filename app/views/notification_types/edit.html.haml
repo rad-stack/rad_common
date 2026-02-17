@@ -15,8 +15,7 @@
             = f.input :bcc_recipient,
                       tooltip: 'Send a copy of any email notifications to this email address (not available for SMS)'
 
-        %div{ data: { controller: 'notification-type-defaults',
-                      'notification-type-defaults-settings-count-value': @notification_type.notification_settings.count } }
+        %div{ data: { controller: 'notification-type-defaults' } }
           .row
             - if @notification_type.email_enabled?
               .col-lg-3= f.input :default_email,
