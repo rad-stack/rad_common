@@ -25,7 +25,7 @@ export default class extends Controller {
 
   confirmApplyToAll(event) {
     if (event.target.checked) {
-      if (!window.confirm(`Are you sure you want to update ALL user's settings?`)) {
+      if (!window.confirm("Are you sure you want to update ALL user's settings?")) {
         event.target.checked = false;
       }
     }
