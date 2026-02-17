@@ -293,14 +293,10 @@ class NotificationType < ApplicationRecord
     def enabled_for_method?(user_id, notification_method)
       setting = notification_settings.find_by(user_id: user_id)
 
-      if notification_method == :email
-        return true if setting.blank?
-
-        setting.enabled? && setting.email?
-      elsif setting.blank? || !setting.enabled
-        false
+      if setting.blank?
+        send("default_#{notification_method}")
       else
-        setting.send(notification_method)
+        setting.enabled? && setting.send(notification_method)
       end
     end
 end
