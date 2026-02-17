@@ -20,6 +20,8 @@ class Attorney < ApplicationRecord
   strip_attributes
   audited
 
+  after_commit :notify_attorney_changed
+
   def to_s
     the_name = "#{last_name}, #{first_name}"
     the_name = "#{the_name} #{middle_name}" if middle_name.present?
@@ -34,5 +36,9 @@ class Attorney < ApplicationRecord
 
     def embedding_changed?
       saved_change_to_first_name? || saved_change_to_last_name?
+    end
+
+    def notify_attorney_changed
+      Notifications::AttorneyChangedNotification.main(self).notify!
     end
 end
