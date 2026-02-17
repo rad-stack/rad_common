@@ -206,7 +206,7 @@ class NotificationType < ApplicationRecord
   private
 
     def apply_defaults_to_settings
-      notification_settings.update_all(email: default_email, feed: default_feed, sms: default_sms)
+      notification_settings.update!(email: default_email, feed: default_feed, sms: default_sms)
     end
 
     def validate_defaults

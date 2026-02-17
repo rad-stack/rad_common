@@ -2,7 +2,6 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
   static targets = ['defaultCheckbox', 'applyToAll', 'applyToAllWrapper'];
-  static values = { settingsCount: Number };
 
   connect() {
     this.originalValues = {};
@@ -26,8 +25,7 @@ export default class extends Controller {
 
   confirmApplyToAll(event) {
     if (event.target.checked) {
-      const count = this.settingsCountValue;
-      if (!window.confirm(`Are you sure you want to update ${count} user's settings?`)) {
+      if (!window.confirm(`Are you sure you want to update ALL user's settings?`)) {
         event.target.checked = false;
       }
     }
