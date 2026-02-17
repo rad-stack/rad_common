@@ -28,7 +28,8 @@ class NotificationTypesController < ApplicationController
     end
 
     def permitted_params
-      params.require(type_param_name).permit(:active, :bcc_recipient, :default_email, :default_feed, :default_sms)
+      params.require(type_param_name).permit(:active, :bcc_recipient, :default_email, :default_feed, :default_sms,
+                                            :apply_to_all_settings)
     end
 
     def resolve_roles(role_ids)
