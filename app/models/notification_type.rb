@@ -10,6 +10,7 @@ class NotificationType < ApplicationRecord
 
   validates_with EmailAddressValidator, fields: [:bcc_recipient]
   validate :validate_auth
+  validate :validate_defaults
 
   before_validation :add_defaults, on: :create
   after_save :apply_defaults_to_settings, if: :apply_to_all_settings?
@@ -206,6 +207,12 @@ class NotificationType < ApplicationRecord
 
     def apply_defaults_to_settings
       notification_settings.update_all(email: default_email, feed: default_feed, sms: default_sms)
+    end
+
+    def validate_defaults
+      return if default_email? || default_feed? || default_sms?
+
+      errors.add(:base, 'at least one default notification method must be selected')
     end
 
     def validate_auth
