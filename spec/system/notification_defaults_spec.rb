@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Notification Defaults', type: :system do
+RSpec.describe 'Notification Defaults' do
   let!(:security_role) { create :security_role, :admin }
   let!(:notification_type) { Notifications::AttorneyChangedNotification.main }
 
