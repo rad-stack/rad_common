@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Notifications::AttorneyChangedNotification do
-  let!(:user) { create :admin }
+  before { create :admin }
 
   describe 'add_defaults' do
     it 'sets default_email and default_sms when notification type is auto-created' do
