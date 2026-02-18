@@ -10,8 +10,7 @@ class NotificationTypesController < ApplicationController
   def edit; end
 
   def update
-    @notification_type.active = params[type_param_name][:active]
-    @notification_type.bcc_recipient = params[type_param_name][:bcc_recipient]
+    @notification_type.assign_attributes(permitted_params)
     @notification_type.security_roles = resolve_roles(params[type_param_name][:security_roles])
 
     if @notification_type.save
@@ -26,6 +25,11 @@ class NotificationTypesController < ApplicationController
     def set_notification_type
       @notification_type = NotificationType.find(params[:id])
       authorize @notification_type
+    end
+
+    def permitted_params
+      params.require(type_param_name).permit(:active, :bcc_recipient, :default_email, :default_feed, :default_sms,
+                                             :apply_to_all_settings)
     end
 
     def resolve_roles(role_ids)
