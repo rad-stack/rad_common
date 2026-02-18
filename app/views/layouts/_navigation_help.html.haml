@@ -1,8 +1,11 @@
 - if RadConfig.show_help_menu?
   - if RadConfig.legal_docs?
-    %li.nav-item.dropdown
+    %li.nav-item.dropdown{ class: RadConfig.sidebar_nav? ? 'help-dropdown' : '' }
       %a.nav-link.dropdown-toggle{ 'data-bs-toggle': 'dropdown', href: '#' }
-        Help
+        - if RadConfig.sidebar_nav?
+          = icon('circle-question', 'Help')
+        - else
+          Help
       %ul.dropdown-menu.dropdown-menu-end
         %li= link_to 'Contact', new_company_contact_path, target: :_blank, rel: :noopener, class: 'dropdown-item'
         %li= link_to 'Terms & Conditions', terms_path, target: :_blank, rel: :noopener, class: 'dropdown-item'

@@ -328,6 +328,10 @@ class RadConfig
       boolean_config_item! :portal
     end
 
+    def sidebar_nav?
+      config_item(:sidebar_nav).nil? ? false : boolean_config_item!(:sidebar_nav)
+    end
+
     def secure_sentry?
       boolean_config_item! :secure_sentry
     end

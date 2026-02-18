@@ -18,6 +18,7 @@ import { ActionTextFileValidations } from './actionTextFileValidations';
 import 'chartkick/chart.js';
 
 import './radTurbo';
+import './sidebar';
 
 export class RadCommon {
   static setup() {

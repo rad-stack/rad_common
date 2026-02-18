@@ -1,14 +1,15 @@
 module RadNav
   class DropdownMenu
-    attr_accessor :view_context, :label, :items, :permission
+    attr_accessor :view_context, :label, :items, :permission, :icon_name
 
-    delegate :tag, :safe_join, to: :view_context
+    delegate :tag, :safe_join, :icon, to: :view_context
 
-    def initialize(view_context, label, items, sort: false, permission: true)
+    def initialize(view_context, label, items, sort: false, permission: true, icon_name: nil)
       @view_context = view_context
       @label = label
       @items = sort ? items.compact.sort_by(&:label) : items.compact
       @permission = permission
+      @icon_name = icon_name
     end
 
     def content
@@ -17,17 +18,54 @@ module RadNav
       check_items
       return if content_items.empty?
 
-      tag.li(class: 'nav-item dropdown px-2') do
-        safe_join [menu_header, menu_content]
-      end
+      RadConfig.sidebar_nav? ? sidebar_content : topnav_content
     end
 
     private
 
-      def menu_header
+      def sidebar_content
+        tag.li(class: 'nav-item dropdown my-2') do
+          safe_join [sidebar_menu_header, menu_content]
+        end
+      end
+
+      def topnav_content
+        tag.li(class: 'nav-item dropdown px-2') do
+          safe_join [topnav_menu_header, menu_content]
+        end
+      end
+
+      def sidebar_menu_header
+        data_attrs = { bs_toggle: 'dropdown' }
+        data_attrs[:has_badge] = 'true' if badge.present?
+
+        tag.a(
+          class: 'nav-link dropdown-toggle',
+          href: '#',
+          data: data_attrs
+        ) do
+          safe_join([
+            icon(icon_name || default_icon),
+            tag.span(label, class: "nav-text #{badge&.content.present? ? 'me-1' : ''}"),
+            badge&.content
+          ].compact, ' ')
+        end
+      end
+
+      def topnav_menu_header
         tag.a(class: 'nav-link dropdown-toggle', 'data-bs-toggle': 'dropdown', href: '#') do
           badge.present? ? safe_join([label, ' ', badge.content].compact) : label
         end
+      end
+
+      def tooltip_text
+        return label if badge.blank?
+
+        "#{label} (#{badge_count} notifications)"
+      end
+
+      def default_icon
+        'folder'
       end
 
       def badge

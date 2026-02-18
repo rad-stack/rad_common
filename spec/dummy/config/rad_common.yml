@@ -36,6 +36,7 @@ default: &default
   last_first_user: false
   timezone_detection: true
   portal: false
+  sidebar_nav: true
   filter_toggle_default_behavior: remember_state
   rad_system_chat_enabled: true
   action_cable_enabled: true

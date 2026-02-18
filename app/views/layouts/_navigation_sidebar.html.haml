@@ -1,0 +1,77 @@
+- rad_nav = Nav.new(self)
+
+.navbar.navbar-expand-lg.navbar-light.bg-white.shadow-sm.fixed-top#navbar
+  %div{ class: @marketing_site ? 'container' : 'container-fluid' }
+    = link_to root_path, { class: 'navbar-brand' } do
+      = image_tag company_logo(Company.main)
+    - unless rad_nav.disable_nav?
+      - if user_signed_in?
+        %button.sidebar-toggle{ type: 'button', 'data-sidebar-toggle': true }
+          = icon('bars')
+      .navbar-collapse
+        - if user_signed_in?
+          .navbar-search
+            = render 'layouts/global_search'
+        - elsif @marketing_site
+          %ul.nav.navbar-nav.navbar-left
+            - rad_nav.marketing_content.each do |item|
+              = item
+        = render 'layouts/navigation_right'
+
+- unless rad_nav.disable_nav?
+  - if user_signed_in?
+    - sidebar_collapsed = session[:sidebar_collapsed].nil? ? true : session[:sidebar_collapsed]
+    .sidebar{ id: 'sidebar', class: sidebar_collapsed ? 'collapsed' : '' }
+      .sidebar-mobile-header
+        .mobile-search
+          = render 'layouts/global_search'
+        %ul.nav.mobile-nav-items
+          = render 'layouts/message_indicator'
+          - unread_count = current_user.notifications.unread.count
+          %li.nav-item.dropdown.user-dropdown
+            %a.nav-link.dropdown-toggle{ 'data-bs-toggle': 'dropdown', href: '#', class: impersonate_style }
+              %span.user-name-text
+                - if impersonating?
+                  Signed In as #{current_user}
+                - else
+                  = current_user
+              - if unread_count.positive?
+                %span.badge.bg-danger.bg-opacity-75= unread_count
+              = show_nav_avatar
+            %ul.dropdown-menu.dropdown-menu-end
+              %li
+                = link_to icon('address-card', t('navigation.my_account')),
+                          edit_user_registration_path,
+                          class: 'dropdown-item'
+              - if my_profile_nav?
+                %li= link_to icon('user', 'My Profile'), "/user_profiles/#{current_user.id}", class: 'dropdown-item'
+              - if policy(Notification).index?
+                %li
+                  = link_to notifications_path, class: 'dropdown-item' do
+                    = icon 'bell', 'Notifications'
+                    - if unread_count.positive?
+                      %span.badge.bg-danger.bg-opacity-75= unread_count
+              - if policy(NotificationSetting).index?
+                %li
+                  = link_to icon('gear', 'Notification Settings'),
+                            notification_settings_path,
+                            class: 'dropdown-item'
+              - if impersonating?
+                %li
+                  = link_to icon('user-slash', "Sign Out from #{current_user}"),
+                            stop_impersonations_path,
+                            method: 'delete',
+                            class: "dropdown-item #{impersonate_style}"
+              %hr.my-2
+              %li
+                = link_to icon('arrow-right-from-bracket', 'Sign Out'),
+                          destroy_user_session_path,
+                          method: 'delete',
+                          class: 'dropdown-item'
+          = render 'layouts/navigation_help'
+      .sidebar-content
+        %ul.nav.flex-column
+          - if RadConfig.start_route! == '/onboardings'
+            = render 'layouts/onboarding_navigation'
+          - rad_nav.content.each do |item|
+            = item
