@@ -7,7 +7,7 @@ class ChatResponseJob < ApplicationJob
     begin
       _, messages = service.basic_question(message)
       assistant_session.update!(log: messages, status: 'completed', current_message: nil)
-    rescue Faraday::BadRequestError => e
+    rescue RadOpenAIError => e
       capture_and_log_error(assistant_session, e)
     rescue StandardError => e
       raise e if Rails.env.development?

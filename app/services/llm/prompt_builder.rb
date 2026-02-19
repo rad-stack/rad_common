@@ -22,8 +22,10 @@ module LLM
 
       r = RadRetry.perform_request do
         openai_client.chat(parameters: parameters)
-      rescue Faraday::BadRequestError => e
-        raise e.response[:body]['error']['message']
+      rescue Faraday::ClientError => e
+        raise if e.is_a?(Faraday::TooManyRequestsError)
+
+        raise RadOpenAIError, e
       end
 
       response = ChatResponse.new(r)

@@ -10,6 +10,10 @@ class EmbeddingService
 
     response = RadRetry.perform_request do
       client.embeddings(parameters: { model: RadCommon::OPEN_AI_EMBEDDING_MODEL, input: text })
+    rescue Faraday::ClientError => e
+      raise if e.is_a?(Faraday::TooManyRequestsError)
+
+      raise RadOpenAIError, e
     end
 
     response.dig('data', 0, 'embedding')
