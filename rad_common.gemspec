@@ -40,6 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
   s.add_dependency 'neighbor'
   s.add_dependency 'nokogiri'
+  s.add_dependency 'openssl' # required for smarty # task 12943
   s.add_dependency 'pg'
   s.add_dependency 'prawn'
   s.add_dependency 'prawn-table'
