@@ -51,7 +51,17 @@ class ContactLogSearch < RadSearch::Search
     end
 
     def record_type_options
-      ContactLog.group(:record_type).select(:record_type).order(:record_type).pluck(:record_type)
+      sql = <<~SQL.squish
+        WITH RECURSIVE record_types AS (
+          (SELECT record_type FROM contact_logs WHERE record_type IS NOT NULL ORDER BY record_type LIMIT 1)
+          UNION ALL
+          SELECT (SELECT record_type FROM contact_logs WHERE record_type > rt.record_type ORDER BY record_type LIMIT 1)
+          FROM record_types rt
+          WHERE rt.record_type IS NOT NULL
+        )
+        SELECT record_type FROM record_types WHERE record_type IS NOT NULL ORDER BY record_type
+      SQL
+      ActiveRecord::Base.connection.select_values(sql)
     end
 
     def date_filter
