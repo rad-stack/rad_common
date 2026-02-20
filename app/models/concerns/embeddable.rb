@@ -3,7 +3,7 @@ module Embeddable
 
   included do
     has_one :embedding, as: :embeddable, dependent: :destroy
-    scope :needs_embedding, -> { where.missing(:embedding).order(created_at: :desc) }
+    scope :needs_embedding, -> { where.missing(:embedding) }
 
     after_commit :perform_embedding!,
                  on: %i[create update],
