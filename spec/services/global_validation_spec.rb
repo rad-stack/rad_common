@@ -81,25 +81,10 @@ describe GlobalValidation, type: :service do
       end
     end
 
-    describe 'with specific queries' do
-      context 'when table was ignored, but specific query hits it' do
-        let(:specific_query) { -> { SecurityRole.where(id: admin_security_role.id) } }
-
-        before do
-          allow(RadConfig).to receive_messages(global_validity_exclude!: ['SecurityRole'],
-                                               global_validity_include!: [specific_query])
-        end
-
-        it 'sends an email to current user when data is invalid' do
-          global_validity.run
-
-          expect(last_email.subject).to eq("Invalid data in #{RadConfig.app_name!}")
-          expect(last_email.to).to eq([admin.email])
-          expect(email_body_text).to include('requires all permissions to be true')
-          expect(email_body_html).to include('requires all permissions to be true')
-          expect(email_body_html).to include('There is 1 invalid record')
-          expect(email_body_html).to include(url)
-        end
+    describe 'with global_validity_scope' do
+      it 'uses the scope when model defines it' do
+        expect(ContactLogRecipient).to receive(:global_validity_scope).and_call_original
+        global_validity.check_global_validity
       end
     end
   end
