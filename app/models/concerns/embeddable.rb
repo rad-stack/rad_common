@@ -23,6 +23,9 @@ module Embeddable
     association(:embedding).reload
     embedding_record = embedding || build_embedding
     embedding_record.update! embedding: embedding_vector
+  rescue ActiveRecord::RecordNotUnique
+    association(:embedding).reload
+    embedding.update! embedding: embedding_vector
   end
 
   def summarizer
