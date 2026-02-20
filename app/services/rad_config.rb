@@ -382,10 +382,6 @@ class RadConfig
       config_item! :global_validity_timeout_hours
     end
 
-    def global_validity_include!
-      array_config_item! :global_validity_include
-    end
-
     def global_validity_exclude!
       array_config_item! :global_validity_exclude
     end
