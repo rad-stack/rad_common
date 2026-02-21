@@ -1,5 +1,7 @@
 class ExistingDataEmbedder
   def run(session)
+    return unless EmbeddingService.enabled?
+
     AppInfo.new.embeddable_models.each do |model_name|
       session.reset_status
 

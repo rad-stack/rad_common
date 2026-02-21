@@ -11,6 +11,8 @@ module Embeddable
   end
 
   def update_embedding!
+    return unless EmbeddingService.enabled?
+
     content = if summarizer.present?
                 summarizer.summarize
               else
