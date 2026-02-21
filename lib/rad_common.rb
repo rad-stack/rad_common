@@ -46,4 +46,5 @@ module RadCommon
 
   OPEN_AI_CHAT_MODEL = 'gpt-4.1-mini'.freeze
   OPEN_AI_EMBEDDING_MODEL = 'text-embedding-3-small'.freeze
+  OPEN_AI_TTS_MODEL = 'gpt-4o-mini-tts'.freeze
 end

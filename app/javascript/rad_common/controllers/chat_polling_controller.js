@@ -40,11 +40,19 @@ export default class extends Controller {
       if (data.status === 'processing') {
         setTimeout(() => this.poll(), 1000);
       } else {
+        this.element.addEventListener('turbo:frame-load', () => this.playResponseAudio(), { once: true });
         this.element.src = this.urlValue;
         this.submitBtn.disabled = false;
       }
     } catch {
       this.submitBtn.disabled = false;
+    }
+  }
+
+  playResponseAudio() {
+    const audio = this.element.querySelector('audio.chat-response-audio');
+    if (audio) {
+      audio.play().catch(() => {});
     }
   }
 }

@@ -26,6 +26,10 @@ module LLM
         text
       end
 
+      def chat_audio?
+        false
+      end
+
       def grouped_select?
         true
       end

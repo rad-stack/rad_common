@@ -30,7 +30,17 @@ module AssistantSessionsHelper
     template = "assistant_sessions/chat_message_#{direction}"
     message = assistant_session.format_message(log[:content])
     { direction: direction, user_name: user_name, template: template, message: message,
-      chat_date: log[:chat_date], user: current_user }
+      chat_date: log[:chat_date], user: current_user, audio_key: log[:audio_key],
+      assistant_session: assistant_session }
+  end
+
+  def audio_url_for_message(assistant_session, audio_key)
+    return nil if audio_key.blank?
+
+    attachment = assistant_session.response_audios.find { |a| a.filename.to_s == audio_key }
+    return nil unless attachment
+
+    Rails.application.routes.url_helpers.rails_blob_path(attachment, disposition: :inline)
   end
 
   def assistant_session_text_sanitize(text)

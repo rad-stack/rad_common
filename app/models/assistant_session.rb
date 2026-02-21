@@ -6,6 +6,8 @@ class AssistantSession < ApplicationRecord
   belongs_to :contextable, polymorphic: true, optional: true
   belongs_to :chat_scope, polymorphic: true, optional: true
 
+  has_many_attached :response_audios
+
   enum :status, { processing: 0, completed: 1, failed: 2 }, prefix: true
 
   attr_accessor :current_message
