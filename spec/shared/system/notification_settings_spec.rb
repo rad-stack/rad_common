@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'NotificationSettings', type: :system do
   let!(:security_role) { create :security_role, :admin }
-  let!(:notification_type) { Notifications::NewUserSignedUpNotification.main }
+  let!(:notification_type) { Notifications::HighDuplicatesNotification.main }
 
   before { login_as user, scope: :user }
 

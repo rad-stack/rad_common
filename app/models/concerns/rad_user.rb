@@ -209,7 +209,19 @@ module RadUser
   end
 
   def notify_new_user_signed_up
-    Notifications::NewUserSignedUpNotification.main(self).notify!
+    Notifications::NewUserSignedUpNotification.main(user: self, recipient_ids: User.active.admins.pluck(:id)).notify!
+  end
+
+  def new_user_signed_up_subject
+    return "#{self} Signed Up on #{RadConfig.app_name!}" if active?
+
+    "#{self} Signed Up on #{RadConfig.app_name!} - Awaiting Approval"
+  end
+
+  def new_user_signed_up_sms
+    return "#{self} signed up" if active?
+
+    "#{self} signed up and is awaiting approval"
   end
 
   def send_devise_notification(notification, *args)
