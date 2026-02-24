@@ -21,6 +21,7 @@ module RadCommon
     require 'audited'
     require 'authtrail'
     require 'coverband' if Rails.env.production?
+    require 'chartkick'
     require 'csv'
     require 'devise'
     require 'devise-twilio-verify'

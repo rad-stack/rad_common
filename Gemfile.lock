@@ -7,6 +7,7 @@ PATH
       authtrail
       aws-sdk-s3
       bootstrap5-kaminari-views
+      chartkick
       connection_pool (< 3)
       coverband
       cssbundling-rails (~> 1.4)
@@ -189,6 +190,7 @@ GEM
       capybara
       selenium-webdriver
     cgi (0.5.1)
+    chartkick (5.2.1)
     coderay (1.1.3)
     concurrent-ruby (1.3.6)
     connection_pool (2.5.5)
