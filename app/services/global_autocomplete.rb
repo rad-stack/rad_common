@@ -68,8 +68,15 @@ class GlobalAutocomplete
           label: record.send(search_label),
           value: record.to_s,
           active: !record.respond_to?(:active?) || record.active?,
+          can_show: can_show?(record),
           scope_description: scope[:description] }
       end
+    end
+
+    def can_show?(record)
+      return true unless mode == :global_search
+
+      Pundit.policy!(user, check_policy_klass(record)).show?
     end
 
     def get_columns_values(columns, methods, record)

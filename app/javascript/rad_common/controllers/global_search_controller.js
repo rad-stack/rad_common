@@ -100,6 +100,18 @@ export default class extends Controller {
           const subtext = item.subtext
             ? `<small class="text-muted">${escape(item.subtext)}</small>`
             : '';
+
+          if (item.can_show === false) {
+            return `
+            <div>
+              <div class="text-muted" style="cursor: default;">
+                <div><i class="fa fa-lock me-1"></i>${label}</div>
+                ${subtext ? subtext : ''}
+              </div>
+            </div>
+          `;
+          }
+
           const url = escape(item.globalSearchUrl || '#');
 
           return `
@@ -120,7 +132,7 @@ export default class extends Controller {
 
       onChange: function(value) {
         const selected = this.options[value];
-        if (selected && selected.globalSearchUrl) {
+        if (selected && selected.globalSearchUrl && selected.can_show !== false) {
           window.location.href = selected.globalSearchUrl;
         }
       }
