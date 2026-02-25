@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_10_093403) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_11_190217) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -297,6 +297,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_10_093403) do
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "active", default: true, null: false
     t.string "bcc_recipient"
+    t.boolean "default_email", default: false, null: false
+    t.boolean "default_feed", default: false, null: false
+    t.boolean "default_sms", default: false, null: false
     t.index ["type"], name: "index_notification_types_on_type", unique: true
   end
 

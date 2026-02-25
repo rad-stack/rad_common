@@ -15,6 +15,26 @@
             = f.input :bcc_recipient,
                       tooltip: 'Send a copy of any email notifications to this email address (not available for SMS)'
 
+        %div{ data: { controller: 'notification-type-defaults' } }
+          .row
+            - if @notification_type.email_enabled?
+              .col-lg-3= f.input :default_email,
+                                  input_html: { data: { 'notification-type-defaults-target': 'defaultCheckbox',
+                                                        action: 'notification-type-defaults#defaultChanged' } }
+            - if @notification_type.feed_enabled?
+              .col-lg-3= f.input :default_feed,
+                                  input_html: { data: { 'notification-type-defaults-target': 'defaultCheckbox',
+                                                        action: 'notification-type-defaults#defaultChanged' } }
+            - if @notification_type.sms_enabled?
+              .col-lg-3= f.input :default_sms,
+                                  input_html: { data: { 'notification-type-defaults-target': 'defaultCheckbox',
+                                                        action: 'notification-type-defaults#defaultChanged' } }
+          .row.d-none{ data: { 'notification-type-defaults-target': 'applyToAllWrapper' } }
+            .col-lg-3
+              = f.input :apply_to_all_settings, as: :boolean, label: 'Apply to all existing settings',
+                        input_html: { data: { 'notification-type-defaults-target': 'applyToAll',
+                                              action: 'notification-type-defaults#confirmApplyToAll' } }
+
         - unless @notification_type.absolute_users?
           .row
             .col-lg-12

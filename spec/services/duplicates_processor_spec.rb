@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe DuplicatesProcessor do
   subject { described_class.new(attorney_1).matches }
 
+  before { create :admin }
+
   let(:first_name) { 'John' }
   let(:last_name) { 'Smith' }
   let(:company_name) { 'ABC' }

@@ -4,7 +4,10 @@ RSpec.describe 'Attorneys' do
   let(:user) { create :admin }
   let(:attorney) { create :attorney }
 
-  before { login_as user, scope: :user }
+  before do
+    create :admin
+    login_as user, scope: :user
+  end
 
   describe 'new' do
     it 'renders the new template' do
