@@ -65,7 +65,7 @@ class AttachmentRenderer
       target = new_tab ? '_blank' : nil
 
       attachment_label = label_override.presence || context.image_tag(attachment,
-                                                                      class: 'img-fluid rounded',
+                                                                      class: 'img-fluid rounded border',
                                                                       id: 'attachment_layout')
 
       context.safe_join([context.link_to(attachment_label, link, target: target, class: 'text-wrap'),
