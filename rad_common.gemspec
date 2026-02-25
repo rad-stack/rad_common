@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap5-kaminari-views'
+  s.add_dependency 'chartkick'
   s.add_dependency 'connection_pool', '< 3' # Remove when upgraded to Rails 8.1.2+
   s.add_dependency 'cssbundling-rails', '~> 1.4'
   s.add_dependency 'csv'
@@ -40,6 +41,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
   s.add_dependency 'neighbor'
   s.add_dependency 'nokogiri'
+  s.add_dependency 'openssl' # required for smarty # task 12943
   s.add_dependency 'pg'
   s.add_dependency 'prawn'
   s.add_dependency 'prawn-table'
