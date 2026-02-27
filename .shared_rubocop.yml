@@ -250,6 +250,10 @@ RSpec/VerifiedDoubles:
 RSpec/IndexedLet:
   Enabled: false
 
+RSpec/Output:
+  Exclude:
+    - 'spec/rails_helper.rb'
+
 Rails/HttpPositionalArguments:
   Exclude:
     # this just doesn't seem right for things like 'on: :member'

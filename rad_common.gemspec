@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'authtrail'
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap5-kaminari-views'
+  s.add_dependency 'chartkick'
   s.add_dependency 'cssbundling-rails', '~> 1.4'
   s.add_dependency 'csv'
   s.add_dependency 'devise', '~> 5.0.0'
@@ -31,7 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'faker'
   s.add_dependency 'geocoder'
   s.add_dependency 'haml', '7.1' # remove this entire line when Task 12805 is resolved
-  s.add_dependency 'haml-rails', '2.1.0' # scaffold breaks beyond this - Task 12874
+  s.add_dependency 'haml-rails', '~> 3.0'
   s.add_dependency 'hashids'
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
@@ -39,6 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
   s.add_dependency 'neighbor'
   s.add_dependency 'nokogiri'
+  s.add_dependency 'openssl' # required for smarty # task 12943
   s.add_dependency 'pg'
   s.add_dependency 'prawn'
   s.add_dependency 'prawn-table'

@@ -232,7 +232,7 @@ RSpec.describe Contactable do
       it 'confirms address by ignoring secondary component' do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('1921 E 24th St')
-        expect(company.address_2).to eq('Apt 1')
+        expect(company.address_2).to eq('# 1')
 
         # if we need to re-record and find another example address, you can search through a client's database
         # looking for this message in address_problems
