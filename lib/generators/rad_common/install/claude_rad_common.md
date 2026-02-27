@@ -2,6 +2,10 @@
 
 This application uses the RadCommon Rails engine, which provides common functionality for standard business web applications including authentication, authorization, auditing, notifications, and many other features.
 
+## Tech Stack
+
+Rails 7.2, Ruby 3.4.7, PostgreSQL 17 (pgvector), Node 24.12.0.
+
 ## Core Patterns
 
 1. **Concerns-Based Architecture**: RadCommon provides functionality through mixins:
@@ -12,14 +16,14 @@ This application uses the RadCommon Rails engine, which provides common function
 
 2. **Configuration via RadConfig**: Centralized configuration service (`rad_config.rb`) that reads from Rails credentials. All configuration should go through RadConfig methods. Host applications override via `config/rad_common.yml`.
 
-3. **Policy-Based Authorization**: Uses Pundit for authorization. All controllers enforce `verify_authorized` and `verify_policy_scoped`.
+3. **Policy-Based Authorization**: Uses Pundit for authorization. All controllers enforce `verify_authorized` and `verify_policy_scoped`. Permission checks use `user.permission?(:action_name)` pattern.
 
-4. **Service Objects**: Business logic lives in service objects under `app/services/`:
-    - Navigation services in `app/services/rad_nav/`
-    - Search functionality in `app/services/rad_search/`
+4. **Service Objects**: Services are POROs in `app/services/`, organized by domain:
+    - Navigation via `RadNav` classes in `app/services/rad_nav/`
+    - Search via `RadSearch::Search` base class in `app/services/rad_search/`
     - External integrations (Twilio, Smarty Streets, etc.)
 
-5. **Background Jobs**: Sidekiq for async processing. Mailers use the `mailers` queue.
+5. **Background Jobs**: Sidekiq for async processing. Queues: default, mailers, non_concurrent, active_storage_analysis/purge.
 
 ## Development Commands
 
@@ -38,6 +42,7 @@ show_browser=true bundle exec rspec spec/system/  # Run system tests with visibl
 bundle exec rubocop              # Run linter
 bundle exec rubocop -a           # Auto-fix linting issues
 bundle exec haml-lint            # Lint HAML views
+yarn eslint .                    # JS lint
 ```
 
 ### Updating RadCommon
@@ -118,11 +123,6 @@ rails generate rspec:system model_name  # Generate system tests manually
 - Controllers require Pundit authorization
 - Index actions must use `policy_scope`
 - Use `redirect_to_path(record)` to respect redirect params
-
-### Service Object Conventions
-- Services are POROs in `app/services/`
-- Navigation built via `RadNav` classes
-- Search uses `RadSearch::Search` base class
 
 ### Configuration
 - Never hardcode configuration - use `RadConfig` methods
