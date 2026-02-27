@@ -23,7 +23,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'bootstrap5-kaminari-views'
   s.add_dependency 'chartkick'
-  s.add_dependency 'connection_pool', '< 3' # Remove when upgraded to Rails 8.1.2+
   s.add_dependency 'cssbundling-rails', '~> 1.4'
   s.add_dependency 'csv'
   s.add_dependency 'devise', '~> 5.0.0'
@@ -51,7 +50,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
   s.add_dependency 'rack-attack'
-  s.add_dependency 'rails', '~> 7.2.3'
+  s.add_dependency 'rails', '~> 8.1.2'
   s.add_dependency 'redis'
   s.add_dependency 'ruby-openai'
   s.add_dependency 'sendgrid-ruby'

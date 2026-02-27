@@ -351,7 +351,7 @@ Seeder.new.seed!
         def check_boolean_fields
           ActiveRecord::Base.connection.tables.each do |table|
             ActiveRecord::Base.connection.columns(table).each do |column|
-              next unless column.type == :boolean && (column.null || column.default.blank?)
+              next unless column.type == :boolean && (column.null || column.default.nil?)
 
               raise "column #{table}.#{column.name}: null: #{column.null}, default: #{column.default}"
             end
