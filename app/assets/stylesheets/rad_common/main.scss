@@ -12,4 +12,6 @@
 @import './tables.scss';
 @import './lazy_modal.scss';
 
-@import "trix/dist/trix";
+@import "@37signals/lexxy/dist/stylesheets/lexxy-variables";
+@import "@37signals/lexxy/dist/stylesheets/lexxy-content";
+@import "@37signals/lexxy/dist/stylesheets/lexxy-editor";

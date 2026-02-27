@@ -18,7 +18,7 @@ RSpec.describe 'AreYouSure', type: :system do
   describe 'rich text fields' do
     it 'warns', :js do
       visit '/system_messages/new'
-      find('trix-editor').set('test')
+      find('lexxy-editor').set('test')
       find('body').click
 
       expect(page).to have_css('.simple_form.dirty')

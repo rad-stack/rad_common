@@ -9,7 +9,7 @@ RSpec.describe Attorney do
       expect { attorney.update!(notes: 'Rich text content') }.to change(Audited::Audit, :count).by(2)
       expect(rich_text_audit.auditable.record).to eq(attorney)
       expect(rich_text_audit.audited_changes['body']).to include('Rich text content')
-      expect(rich_text_audit.audited_changes['body']).to include('<div class="trix-content">')
+      expect(rich_text_audit.audited_changes['body']).to include('<div class="lexxy-content">')
     end
   end
 end

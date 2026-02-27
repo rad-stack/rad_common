@@ -53,7 +53,7 @@ export class ActionTextFileValidations {
   ];
 
   static setup() {
-    document.addEventListener('trix-file-accept', async function (event) {
+    document.addEventListener('lexxy:file-accept', async function (event) {
       const errors= [];
 
       if (!ActionTextFileValidations.VALID_ATTACHMENT_TYPES.includes(event.file.type)) {
