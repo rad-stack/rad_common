@@ -1,0 +1,7 @@
+- new_unread_count = User.find(user_id).notifications.unread.count
+= turbo_stream.append 'toast-stream-container',
+                      partial: 'layouts/toast',
+                      locals: { flash: { notice: message, toast_header: header, subject_url: subject_url } }
+= turbo_stream.replace 'nav-unread-badge',
+                       partial: 'layouts/unread_badge',
+                       locals: { unread_count: new_unread_count, shake: true }

@@ -195,8 +195,11 @@ module RadHelper
     end
 
     text_class = text.present? ? 'me-2' : nil
+    tag_options = { class: "#{style} fa-#{icon} #{text_class} #{options[:class]}".strip }
+    tag_options[:style] = options[:html_style] if options[:html_style].present?
+
     capture do
-      concat tag.i('', class: "#{style} fa-#{icon} #{text_class} #{options[:class]}".strip)
+      concat tag.i('', **tag_options)
       concat text
     end
   end
@@ -286,6 +289,8 @@ module RadHelper
   def rad_toast_data(template_locals)
     { 'toast-success-message-value': template_locals[:toast_success] || template_locals[:notice],
       'toast-error-message-value': template_locals[:toast_error],
+      'toast-header-value': template_locals[:toast_header],
+      'toast-url-value': template_locals[:subject_url],
       controller: 'toast' }
   end
 

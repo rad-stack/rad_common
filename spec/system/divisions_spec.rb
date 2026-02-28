@@ -246,7 +246,7 @@ RSpec.describe 'Divisions' do
           first('dd .fa-times').click
         end
 
-        expect(page).to have_css("#toast-nav[data-toast-success-message-value='Attachment successfully deleted']")
+        expect(page).to have_css(".toast[data-toast-success-message-value='Attachment successfully deleted']")
       end
     end
   end
