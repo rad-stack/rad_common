@@ -15,18 +15,14 @@ import $ from 'jquery';
         'fieldSelector': ':input:not(input[type=submit]):not(input[type=button])'
       }, options);
 
-    var getTrixValue = function($trixEditor) {
-      if ($trixEditor.hasClass('ays-ignore') ||
-        $trixEditor.hasClass('aysIgnore') ||
-        $trixEditor.attr('data-ays-ignore')) {
+    var getLexxyValue = function($lexxyEditor) {
+      if ($lexxyEditor.hasClass('ays-ignore') ||
+        $lexxyEditor.hasClass('aysIgnore') ||
+        $lexxyEditor.attr('data-ays-ignore')) {
         return null;
       }
 
-      var editor = $trixEditor[0].editor;
-      if (editor) {
-        return editor.getDocument().toString();
-      }
-      return '';
+      return $lexxyEditor[0].value || '';
     };
 
     var getValue = function($field) {
@@ -72,8 +68,8 @@ import $ from 'jquery';
       $field.data('ays-orig', getValue($field));
     };
 
-    var storeOrigTrixValue = function($trixEditor) {
-      $trixEditor.data('ays-orig', getTrixValue($trixEditor));
+    var storeOrigLexxyValue = function($lexxyEditor) {
+      $lexxyEditor.data('ays-orig', getLexxyValue($lexxyEditor));
     };
 
     var checkForm = function(evt) {
@@ -86,12 +82,12 @@ import $ from 'jquery';
         return (getValue($field) != origValue);
       };
 
-      var isTrixEditorDirty = function($trixEditor) {
-        var origValue = $trixEditor.data('ays-orig');
+      var isLexxyEditorDirty = function($lexxyEditor) {
+        var origValue = $lexxyEditor.data('ays-orig');
         if (undefined === origValue) {
           return false;
         }
-        return (getTrixValue($trixEditor) != origValue);
+        return (getLexxyValue($lexxyEditor) != origValue);
       };
 
       var $form = ($(this).is('form'))
@@ -99,8 +95,8 @@ import $ from 'jquery';
         : $(this).parents('form');
 
       // Test on the target first as it's the most likely to be dirty
-      if ($(evt.target).is('trix-editor')) {
-        if (isTrixEditorDirty($(evt.target))) {
+      if ($(evt.target).is('lexxy-editor')) {
+        if (isLexxyEditorDirty($(evt.target))) {
           setDirtyStatus($form, true);
           return;
         }
@@ -130,12 +126,12 @@ import $ from 'jquery';
         }
       });
 
-      // Also check Trix editors
+      // Also check Lexxy editors
       if (!isDirty) {
-        var $trixEditors = $form.find('trix-editor');
-        $trixEditors.each(function() {
-          var $trixEditor = $(this);
-          if (isTrixEditorDirty($trixEditor)) {
+        var $lexxyEditors = $form.find('lexxy-editor');
+        $lexxyEditors.each(function() {
+          var $lexxyEditor = $(this);
+          if (isLexxyEditorDirty($lexxyEditor)) {
             isDirty = true;
             return false; // break
           }
@@ -152,10 +148,10 @@ import $ from 'jquery';
       $(fields).bind(settings.fieldEvents, checkForm);
       $form.data('ays-orig-field-count', $(fields).length);
 
-      var $trixEditors = $form.find('trix-editor');
-      $trixEditors.each(function() { storeOrigTrixValue($(this)); });
-      $trixEditors.unbind('trix-change', checkForm);
-      $trixEditors.bind('trix-change', checkForm);
+      var $lexxyEditors = $form.find('lexxy-editor');
+      $lexxyEditors.each(function() { storeOrigLexxyValue($(this)); });
+      $lexxyEditors.unbind('lexxy:change', checkForm);
+      $lexxyEditors.bind('lexxy:change', checkForm);
 
       setDirtyStatus($form, false);
     };
@@ -185,12 +181,12 @@ import $ from 'jquery';
         }
       });
 
-      var $trixEditors = $form.find('trix-editor');
-      $trixEditors.each(function() {
-        var $trixEditor = $(this);
-        if (!$trixEditor.data('ays-orig')) {
-          storeOrigTrixValue($trixEditor);
-          $trixEditor.bind('trix-change', checkForm);
+      var $lexxyEditors = $form.find('lexxy-editor');
+      $lexxyEditors.each(function() {
+        var $lexxyEditor = $(this);
+        if (!$lexxyEditor.data('ays-orig')) {
+          storeOrigLexxyValue($lexxyEditor);
+          $lexxyEditor.bind('lexxy:change', checkForm);
         }
       });
 
