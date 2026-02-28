@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'image_processing'
   s.add_dependency 'jwt'
   s.add_dependency 'kaminari'
+  s.add_dependency 'lexxy', '~> 0.1.26.beta'
   s.add_dependency 'matrix' # remove once this is released: https://github.com/prawnpdf/prawn/issues/1235
   s.add_dependency 'neighbor'
   s.add_dependency 'nokogiri'

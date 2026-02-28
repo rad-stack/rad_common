@@ -33,6 +33,7 @@ module RadCommon
     require 'hashids'
     require 'jwt'
     require 'kaminari'
+    require 'lexxy'
     require 'bootstrap5-kaminari-views'
     require 'neighbor'
     require 'nokogiri'

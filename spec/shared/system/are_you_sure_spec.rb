@@ -18,7 +18,8 @@ RSpec.describe 'AreYouSure', type: :system do
   describe 'rich text fields' do
     it 'warns', :js do
       visit '/system_messages/new'
-      find('trix-editor').set('test')
+      editor = find('lexxy-editor')
+      page.execute_script("arguments[0].value = '<p>test</p>'; arguments[0].dispatchEvent(new Event('lexxy:change', { bubbles: true }))", editor.native)
       find('body').click
 
       expect(page).to have_css('.simple_form.dirty')

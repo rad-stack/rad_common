@@ -1,5 +1,4 @@
-require('trix');
-require('@rails/actiontext');
+import "@37signals/lexxy";
 
 import * as ActiveStorage from '@rails/activestorage';
 ActiveStorage.start();

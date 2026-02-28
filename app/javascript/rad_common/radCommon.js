@@ -2,8 +2,6 @@ require('jquery');
 require('@rails/ujs').start();
 require('@popperjs/core');
 require('readmore-js');
-require('./richtext');
-
 const bootstrap = require('bootstrap');
 
 import { RadCommonDynamicUpdater } from './radCommonDynamicUpdater';
