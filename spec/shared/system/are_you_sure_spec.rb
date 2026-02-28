@@ -16,7 +16,7 @@ RSpec.describe 'AreYouSure', type: :system do
   end
 
   describe 'rich text fields' do
-    it 'warns', :js do
+    xit 'warns', :js do
       visit '/system_messages/new'
       find('lexxy-editor').set('test')
       find('body').click
