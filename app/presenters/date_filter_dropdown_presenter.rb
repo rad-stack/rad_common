@@ -6,7 +6,7 @@ class DateFilterDropdownPresenter
   end
 
   def render
-    view.tag.label(class: 'mb-0') do
+    view.tag.div(class: 'mb-0') do
       view.tag.a(**icon_attrs) + view.tag.div(**dropdown_menu_attrs) do
         current_ranges + previous_ranges + clear_option
       end
