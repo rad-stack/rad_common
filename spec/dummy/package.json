@@ -36,6 +36,6 @@
     "build": "yarn build:js && yarn build:css",
     "build:dev": "yarn build:js --watch && yarn build:css --watch",
     "build:js": "node esbuild.config.js",
-    "build:css": "sass ./app/assets/scss/application.scss:./app/assets/builds/application.css ./app/assets/scss/rad_mailer.scss:./app/assets/builds/rad_mailer.css --no-source-map --load-path=node_modules --load-path=$(bundle show rad_common)/app/assets/stylesheets --style=compressed --quiet-deps && node -e \"const fs=require('fs');['application','rad_mailer'].forEach(f=>{const p='./app/assets/builds/'+f+'.css';fs.writeFileSync(p,fs.readFileSync(p,'utf8').replace(/@import[^;]*lexxy[^;]*;/g,''))})\""
+    "build:css": "sass ./app/assets/scss/application.scss:./app/assets/builds/application.css ./app/assets/scss/rad_mailer.scss:./app/assets/builds/rad_mailer.css --no-source-map --load-path=node_modules --load-path=$(bundle show rad_common)/app/assets/stylesheets --style=compressed --quiet-deps"
   }
 }
