@@ -16,6 +16,7 @@ module RadReports
         apply_filter_labels(filter_def, filter)
         apply_filter_options(filter_def, filter)
         apply_filter_defaults(filter_def, filter)
+        apply_multiple_select(filter_def, filter)
         apply_equals_filter_data_type(filter_def, filter)
         apply_enum_filter_config(filter_def, filter)
 
@@ -55,10 +56,16 @@ module RadReports
       end
 
       def apply_filter_options(filter_def, filter)
-        return unless filter['type'] == 'RadSearch::SearchFilter'
+        return unless search_filter_type?(filter['type'])
 
         filter_def[:options] = generate_filter_options(filter)
         filter_def[:multiple] = filter['multiple'] if filter['multiple']
+      end
+
+      def apply_multiple_select(filter_def, filter)
+        return unless filter['type'] == 'RadSearch::SearchFilterMultiple'
+
+        filter_def[:multiple] = true
       end
 
       def apply_filter_defaults(filter_def, filter)
@@ -155,6 +162,10 @@ module RadReports
         model_class.reflect_on_all_associations.find do |assoc|
           assoc.foreign_key.to_s == column_name
         end
+      end
+
+      def search_filter_type?(type)
+        %w[RadSearch::SearchFilter RadSearch::SearchFilterMultiple].include?(type)
       end
   end
 end

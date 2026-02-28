@@ -31,6 +31,12 @@ module RadReports
         compatible_types: %w[string text rich_text attachment integer bigint decimal float],
         filter_class: RadSearch::SearchFilter
       },
+      'RadSearch::SearchFilterMultiple' => {
+        label: 'Dropdown Multiple',
+        description: 'Multi-select dropdown selection',
+        compatible_types: %w[string text rich_text attachment integer bigint decimal float],
+        filter_class: RadSearch::SearchFilter
+      },
       'RadSearch::ArrayFilter' => {
         label: 'Dropdown (Array)',
         description: 'Multi-select from array values',
