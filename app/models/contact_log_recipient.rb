@@ -41,6 +41,8 @@ class ContactLogRecipient < ApplicationRecord
     scope contact_direction, -> { joins(:contact_log).where(contact_logs: { contact_direction: contact_direction }) }
   end
 
+  scope :global_validity_scope, -> { includes(:contact_log) }
+
   validates_with PhoneNumberValidator, fields: [{ field: :phone_number }], skip_twilio: true
   validates_with EmailAddressValidator, fields: [:email], skip_sendgrid: true
 
