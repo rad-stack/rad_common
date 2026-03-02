@@ -17,7 +17,7 @@ module Embeddable
                 generate_embedding_content
               end
 
-    embedding_vector = EmbeddingService.generate(content)
+    embedding_vector = EmbeddingService.generate(content, record: self)
     return unless embedding_vector
 
     association(:embedding).reload
