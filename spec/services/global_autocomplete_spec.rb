@@ -135,6 +135,44 @@ RSpec.describe GlobalAutocomplete, type: :service do
         expect(auto_complete.send(:autocomplete_result, scope)).to eq([])
       end
     end
+
+    context 'when checking can_show' do
+      context 'when in global_search mode' do
+        let(:auto_complete) { described_class.new(params, search_scopes, user, :global_search) }
+        let(:result) { auto_complete.send(:autocomplete_result, scope) }
+
+        before { allow_any_instance_of(UserPolicy).to receive(:global_search?).and_return(true) }
+
+        context 'when user has show permission' do
+          before { allow_any_instance_of(UserPolicy).to receive(:show?).and_return(true) }
+
+          it 'returns can_show as true' do
+            expect(result.first[:can_show]).to be true
+          end
+        end
+
+        context 'when user lacks show permission' do
+          before { allow_any_instance_of(UserPolicy).to receive(:show?).and_return(false) }
+
+          it 'returns can_show as false' do
+            expect(result.first[:can_show]).to be false
+          end
+        end
+      end
+
+      context 'when in searchable_association mode' do
+        let(:result) { auto_complete.send(:autocomplete_result, scope) }
+
+        before do
+          allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true)
+          allow_any_instance_of(UserPolicy).to receive(:show?).and_return(false)
+        end
+
+        it 'returns can_show as true regardless of show permission' do
+          expect(result.first[:can_show]).to be true
+        end
+      end
+    end
   end
 
   describe '#global_super_search_result' do
