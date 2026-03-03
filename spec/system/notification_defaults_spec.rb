@@ -6,6 +6,7 @@ RSpec.describe 'Notification Defaults' do
 
   before do
     allow(RadConfig).to receive(:twilio_enabled?).and_return(true)
+    allow_any_instance_of(RadTwilio).to receive(:validate_phone_number).and_return(nil)
     login_as user, scope: :user
   end
 
@@ -61,9 +62,9 @@ RSpec.describe 'Notification Defaults' do
   end
 
   describe 'new defaults only apply going forward' do
-    let(:admin) { create :admin, security_roles: [security_role] }
+    let(:admin) { create :admin }
     let(:user) { admin }
-    let!(:original_user) { create :admin, security_roles: [security_role] }
+    let!(:original_user) { create :admin }
 
     before do
       NotificationSetting.create!(notification_type: notification_type, user: original_user,
@@ -72,7 +73,7 @@ RSpec.describe 'Notification Defaults' do
 
     it 'new user gets new defaults but original user keeps old settings', :js do
       visit "/notification_types/#{notification_type.id}/edit"
-      uncheck 'Default sms'
+      uncheck 'Default SMS'
       click_button 'Save'
 
       original_setting = NotificationSetting.find_by(notification_type: notification_type, user: original_user)
