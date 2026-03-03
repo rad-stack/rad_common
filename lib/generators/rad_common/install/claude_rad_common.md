@@ -157,6 +157,14 @@ rails local:dump[filename.dump]              # Dump local database
 - `kill_ruby` - Kill Ruby processes
 - `reset_staging` - Reset staging environment
 
+## Branch Naming Convention
+
+When creating branches, use this format: `rad-{task_id}-{topic-name}`
+
+- `rad` is the project prefix
+- `{task_id}` is the numeric task ID from our project management system
+- `{topic-name}` is a kebab-case description of the work
+
 ## Important Notes
 
 - This is a **multi-client** system (users can belong to multiple clients via `user_clients`)
