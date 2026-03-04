@@ -1,11 +1,16 @@
 import { Controller } from '@hotwired/stimulus';
-import { Turbo } from '@hotwired/turbo-rails';
+import { LazyContainer } from '../lazyContainer';
 
 export default class extends Controller {
   static targets = ['title', 'subtitle', 'body', 'dialog'];
   static values = { frame: String, type: String };
 
   connect() {
+    this.lazyContainer = new LazyContainer(this.element, {
+      type: this.typeValue,
+      frameId: this.frameValue
+    });
+
     if (this.typeValue === 'modal') {
       this.element.addEventListener('show.bs.modal', this.applySizing.bind(this));
       this.element.addEventListener('shown.bs.modal', this.loadContent.bind(this));
@@ -21,21 +26,10 @@ export default class extends Controller {
     const trigger = event.relatedTarget;
     if (!trigger) return;
 
-    if (this.typeValue === 'modal') {
-      const size = trigger.dataset.lazySize;
-      if (size && this.hasDialogTarget) {
-        this.dialogTarget.classList.remove('modal-sm', 'modal-md', 'modal-lg', 'modal-xl');
-        if (size !== 'md') {
-          this.dialogTarget.classList.add(`modal-${size}`);
-        }
-      }
-    } else if (this.typeValue === 'offcanvas') {
-      const width = trigger.dataset.lazyWidth;
-      if (width) {
-        this.element.classList.remove('w-25', 'w-50', 'w-75', 'w-100');
-        this.element.classList.add(width);
-      }
-    }
+    this.lazyContainer.applySizing({
+      size: trigger.dataset.lazySize,
+      width: trigger.dataset.lazyWidth
+    });
   }
 
   loadContent(event) {
@@ -45,44 +39,14 @@ export default class extends Controller {
     const url = trigger.dataset.lazyUrl;
     if (!url) return;
 
-    this.bodyTarget.innerHTML = `<turbo-frame id="${this.frameValue}"></turbo-frame>`;
-
-    const title = trigger.dataset.lazyTitle;
-    if (title && this.hasTitleTarget) {
-      this.titleTarget.textContent = title;
-    }
-
-    const subtitle = trigger.dataset.lazySubtitle;
-    if (subtitle && this.hasSubtitleTarget) {
-      this.subtitleTarget.textContent = subtitle;
-      this.subtitleTarget.style.display = '';
-    } else if (this.hasSubtitleTarget) {
-      this.subtitleTarget.style.display = 'none';
-    }
-
-    const frame = document.getElementById(this.frameValue);
-    if (frame) {
-      frame.innerHTML = this.spinnerHTML();
-    }
-
-    Turbo.visit(url, { frame: this.frameValue });
+    this.lazyContainer.loadContent({
+      url,
+      title: trigger.dataset.lazyTitle,
+      subtitle: trigger.dataset.lazySubtitle
+    });
   }
 
   clearContent() {
-    const frame = document.getElementById(this.frameValue);
-    if (frame) {
-      frame.innerHTML = this.spinnerHTML();
-    }
-    this.bodyTarget.innerHTML = '';
-  }
-
-  spinnerHTML() {
-    return `
-      <div class="d-flex justify-content-center align-items-center h-100">
-        <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    `;
+    this.lazyContainer.clearContent();
   }
 }
