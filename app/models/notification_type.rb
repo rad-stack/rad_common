@@ -103,8 +103,6 @@ class NotificationType < ApplicationRecord
   end
 
   def add_defaults
-    return if default_email? || default_feed? || default_sms?
-
     if email_enabled?
       self.default_email = true
       return
