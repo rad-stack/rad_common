@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'active_storage_validations', '1.0.4' # see Task 43068
   s.add_dependency 'audited'
   s.add_dependency 'authtrail'
+  s.add_dependency 'google-cloud-storage'
   s.add_dependency 'bootstrap5-kaminari-views'
   s.add_dependency 'chartkick'
   s.add_dependency 'connection_pool', '< 3' # Remove when upgraded to Rails 8.1.2+

@@ -88,10 +88,6 @@ namespace :rad_common do
     end
   end
 
-  task update_s3_cors_settings: :environment do
-    S3CorsSettingsUpdater.new.update!
-  end
-
   task build_js_css: :environment do
     system('yarn build')
   end
