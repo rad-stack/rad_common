@@ -20,7 +20,7 @@ class Attorney < ApplicationRecord
   strip_attributes
   audited
 
-  after_commit :notify_attorney_changed
+  after_commit :notify_attorney_changed, only: :update, if: :name_changed?
 
   def to_s
     the_name = "#{last_name}, #{first_name}"
@@ -29,6 +29,10 @@ class Attorney < ApplicationRecord
   end
 
   private
+
+    def name_changed?
+      saved_change_to_first_name? || saved_change_to_last_name? || saved_change_to_middle_name?
+    end
 
     def generate_embedding_content
       [first_name, last_name].compact.join("\n")

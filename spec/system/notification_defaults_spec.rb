@@ -36,8 +36,11 @@ RSpec.describe 'Notification Defaults' do
     context 'when apply to all is checked', :js do
       it 'updates all existing notification settings' do
         visit "/notification_types/#{notification_type.id}/edit"
-        uncheck 'Default sms'
-        check 'Apply to all existing settings'
+        uncheck 'Default SMS'
+        prompt = "Are you sure you want to update ALL user's settings?"
+        page.accept_alert prompt do
+          check 'Apply to all existing settings'
+        end
         click_button 'Save'
 
         setting = NotificationSetting.find_by(notification_type: notification_type, user: other_user)
@@ -50,7 +53,7 @@ RSpec.describe 'Notification Defaults' do
     context 'when apply to all is not checked', :js do
       it 'does not update existing notification settings' do
         visit "/notification_types/#{notification_type.id}/edit"
-        uncheck 'Default sms'
+        uncheck 'Default SMS'
         click_button 'Save'
 
         setting = NotificationSetting.find_by(notification_type: notification_type, user: other_user)
