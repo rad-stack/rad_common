@@ -38,7 +38,7 @@
                               id: 'apply_to_all_settings',
                               class: 'form-check-input',
                               data: { 'notification-type-defaults-target': 'applyToAll',
-                                       action: 'notification-type-defaults#confirmApplyToAll' }
+                                      action: 'notification-type-defaults#confirmApplyToAll' }
               = label_tag 'apply_to_all_settings', 'Apply to all existing settings', class: 'form-check-label'
 
         - unless @notification_type.absolute_users?
