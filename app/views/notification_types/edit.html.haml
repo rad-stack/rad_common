@@ -35,11 +35,11 @@
           .row.d-none{ data: { 'notification-type-defaults-target': 'applyToAllWrapper' } }
             .col-lg-3
               = check_box_tag 'apply_to_all_settings',
-                               '1', false,
-                               id: 'apply_to_all_settings',
-                               class: 'form-check-input',
-                               data: { 'notification-type-defaults-target': 'applyToAll',
-                                        action: 'notification-type-defaults#confirmApplyToAll' }
+                              '1', false,
+                              id: 'apply_to_all_settings',
+                              class: 'form-check-input',
+                              data: { 'notification-type-defaults-target': 'applyToAll',
+                                       action: 'notification-type-defaults#confirmApplyToAll' }
               = label_tag 'apply_to_all_settings', 'Apply to all existing settings', class: 'form-check-label'
 
         - unless @notification_type.absolute_users?
