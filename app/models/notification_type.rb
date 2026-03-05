@@ -4,7 +4,7 @@ class NotificationType < ApplicationRecord
   has_many :notification_settings, dependent: :destroy
   has_many :notifications, dependent: :destroy
 
-  attr_accessor :payload, :apply_to_all_settings
+  attr_accessor :payload
 
   scope :sorted, -> { order(:type) }
 
@@ -13,7 +13,6 @@ class NotificationType < ApplicationRecord
   validate :validate_defaults
 
   before_validation :add_defaults, on: :create
-  after_save :apply_defaults_to_settings, if: :apply_to_all_settings?
 
   audited
   strip_attributes
@@ -96,10 +95,6 @@ class NotificationType < ApplicationRecord
     return if subject_record.blank? || !ApplicationController.helpers.show_route_exists?(subject_record)
 
     Rails.application.routes.url_helpers.url_for(subject_record)
-  end
-
-  def apply_to_all_settings?
-    ActiveModel::Type::Boolean.new.cast(apply_to_all_settings)
   end
 
   def add_defaults
@@ -202,10 +197,6 @@ class NotificationType < ApplicationRecord
   end
 
   private
-
-    def apply_defaults_to_settings
-      notification_settings.update!(email: default_email, feed: default_feed, sms: default_sms)
-    end
 
     def validate_defaults
       return if default_email? || default_feed? || default_sms?
