@@ -10,8 +10,8 @@ class NotificationTypesController < ApplicationController
   def edit; end
 
   def update
-    apply_to_all = ActiveModel::Type::Boolean.new.cast(permitted_params[:apply_to_all_settings])
-    @notification_type.assign_attributes(permitted_params.except(:apply_to_all_settings))
+    apply_to_all = ActiveModel::Type::Boolean.new.cast(params[:apply_to_all_settings])
+    @notification_type.assign_attributes(permitted_params)
     @notification_type.security_roles = resolve_roles(params[type_param_name][:security_roles])
 
     if @notification_type.save
@@ -30,8 +30,7 @@ class NotificationTypesController < ApplicationController
     end
 
     def permitted_params
-      params.require(type_param_name).permit(:active, :bcc_recipient, :default_email, :default_feed, :default_sms,
-                                             :apply_to_all_settings)
+      params.require(type_param_name).permit(:active, :bcc_recipient, :default_email, :default_feed, :default_sms)
     end
 
     def resolve_roles(role_ids)
