@@ -1,0 +1,26 @@
+- if user_signed_in? && policy(DirectMessage).index?
+  - conversations = policy_scope(DirectMessage).sorted.limit(10)
+  %li.nav-item.dropdown
+    %a.nav-link.dropdown-toggle{ href: '#', 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false' }
+      = icon('envelope')
+    %ul.dropdown-menu.dropdown-menu-end
+      - if conversations.any?
+        - conversations.each do |dm|
+          %li
+            = lazy_container_link icon('comment', dm.other_user(current_user).to_s),
+                                  chat_direct_message_path(dm),
+                                  type: 'offcanvas',
+                                  title: "Chat with #{dm.other_user(current_user)}",
+                                  width: 'w-50',
+                                  class: 'dropdown-item'
+      - else
+        %li
+          %span.dropdown-item.text-muted No conversations yet
+      %li
+        %hr.dropdown-divider
+      %li
+        = link_to direct_messages_path, class: 'dropdown-item' do
+          = icon('list', 'All Messages')
+      %li
+        = link_to new_direct_message_path, class: 'dropdown-item' do
+          = icon('plus', 'New Conversation')

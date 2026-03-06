@@ -1,0 +1,18 @@
+= turbo_frame_tag 'global-lazy-content' do
+  .d-flex.flex-column{ style: 'height: calc(100vh - 120px)' }
+    .bg-secondary.bg-opacity-25.p-0.d-flex.flex-column.flex-grow-1
+      - logs = direct_message_log_list(@direct_message)
+      - chat_messages_content = capture do
+        = render 'chat/messages', logs: logs
+
+      = render layout: 'chat/panel', locals: { chat_list_id: "direct-message-#{@direct_message.id}-chat",
+                                                chat_messages_content: chat_messages_content } do
+        = simple_form_for @direct_message, html: { data: { controller: 'chat-form' } } do |f|
+          .d-flex.flex-row
+            .input-group
+              %input.form-control{ name: 'direct_message[current_message]',
+                                   placeholder: 'Type a message...',
+                                   type: 'text',
+                                   id: 'direct_message_current_message' }
+              = f.button :button, type: :submit, class: 'btn btn-secondary', id: 'chat-submit-btn' do
+                = icon('paper-plane')

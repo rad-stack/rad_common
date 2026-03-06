@@ -1,5 +1,5 @@
 class DirectMessagesController < ApplicationController
-  before_action :set_direct_message, only: %i[show update]
+  before_action :set_direct_message, only: %i[show update chat]
 
   def index
     authorize DirectMessage
@@ -7,6 +7,8 @@ class DirectMessagesController < ApplicationController
   end
 
   def show; end
+
+  def chat; end
 
   def new
     @direct_message = DirectMessage.new
