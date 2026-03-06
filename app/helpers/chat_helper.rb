@@ -9,9 +9,9 @@ module ChatHelper
 
   def chat_log_data(log, current_user_id:, current_user_name:, responder_name:, current_user_record: nil)
     log.symbolize_keys!
-    direction = log[:user_id].to_s == current_user_id.to_s ? 'left' : 'right'
-    user_name = direction == 'left' ? current_user_name : responder_name
-    user = direction == 'left' ? current_user_record : nil
+    direction = log[:user_id].to_s == current_user_id.to_s ? 'right' : 'left'
+    user_name = direction == 'right' ? current_user_name : responder_name
+    user = direction == 'right' ? current_user_record : nil
 
     { direction: direction, user_name: user_name, template: "chat/message_#{direction}",
       message: log[:content], chat_date: log[:chat_date], user: user }
