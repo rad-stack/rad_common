@@ -1,126 +1,149 @@
-/* Modern Chat Styles */
+/* Slack-style Chat Styles */
 
 .chat-scroll-panel {
   height: calc(100vh - 300px);
   overflow-y: auto;
   overflow-x: hidden;
-  background: #efeae2;
+  background: #ffffff;
 }
 
 .chat-container {
-  padding: 0.75rem;
+  padding: 0 1rem;
 }
 
 .chat-container li {
   list-style: none;
 }
 
-.chat-container li img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-}
+/* Message row */
+.chat-message {
+  display: flex;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.1s ease;
+  margin-bottom: 2px;
 
-.chat-container li.d-flex {
-  align-items: flex-end;
+  &:hover {
+    background: #f8f8f8;
+  }
 }
 
 /* Avatar */
 .chat-avatar {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
   flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.chat-avatar img {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
 }
 
 .chat-avatar .fa {
-  text-align: center;
-  border: none;
-  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  background-color: #c7d2dc;
-  color: #fff;
-  height: 36px;
   width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background-color: #e8e8e8;
+  color: #616061;
   font-size: 16px;
+  border: none;
+  padding: 0;
 }
 
-.chat-avatar .chat-name {
-  white-space: nowrap;
+/* Message body (name + timestamp + text) */
+.chat-body {
+  min-width: 0;
+  flex: 1;
 }
 
-.chat-container li .chat-name {
-  font-size: 0.65rem;
-  color: #8696a0;
-  text-align: center;
-  margin-top: 4px;
-  line-height: 1.2;
+.chat-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  line-height: 1.4;
 }
 
-/* Message bubbles */
-.chat-container li .chat-text {
-  padding: 0.5rem 0.85rem;
-  font-weight: 400;
+.chat-sender {
+  font-weight: 800;
   font-size: 0.9rem;
-  line-height: 1.5;
-  position: relative;
-  display: inline-block;
-  max-width: 70%;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  color: #1d1c1d;
 }
 
-/* Left (received) messages */
-.chat-left .chat-text {
-  background: #ffffff;
-  color: #1a1a1a;
-  border-radius: 2px 16px 16px 16px;
-}
-
-.chat-left .chat-text:before {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 0;
-  bottom: 0;
-  left: -8px;
-  border: 8px solid;
-  border-color: transparent #ffffff #ffffff transparent;
-  border-bottom-left-radius: 4px;
-}
-
-/* Right (sent) messages */
-.chat-right .chat-text {
-  background: #d9fdd3;
-  color: #1a1a1a;
-  border-radius: 16px 2px 16px 16px;
-}
-
-.chat-right .chat-text:before {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 0;
-  bottom: 0;
-  right: -8px;
-  border: 8px solid;
-  border-color: transparent transparent #d9fdd3 #d9fdd3;
-  border-bottom-right-radius: 4px;
+.chat-timestamp {
+  font-size: 0.7rem;
+  color: #616061;
+  font-weight: 400;
 }
 
 .chat-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #1d1c1d;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+
   pre {
     white-space: pre-wrap;
     margin: 0;
     font-family: inherit;
     font-size: inherit;
   }
+}
+
+/* Left-aligned messages (received) */
+.chat-left .chat-message {
+  flex-direction: row;
+}
+
+.chat-left .chat-avatar {
+  margin-right: 0.5rem;
+}
+
+/* Right-aligned messages (sent) */
+.chat-right .chat-message {
+  flex-direction: row-reverse;
+}
+
+.chat-right .chat-avatar {
+  margin-left: 0.5rem;
+}
+
+.chat-right .chat-header {
+  flex-direction: row-reverse;
+}
+
+.chat-right .chat-text {
+  text-align: right;
+}
+
+/* Loading indicator */
+.chat-loading-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.chat-loading-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #616061;
+  animation: chat-dot-pulse 1.4s infinite ease-in-out both;
+}
+
+.chat-loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+.chat-loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+.chat-loading-dots span:nth-child(3) { animation-delay: 0s; }
+
+@keyframes chat-dot-pulse {
+  0%, 80%, 100% { transform: scale(0.5); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
 }
 
 /* Dropdown overrides */

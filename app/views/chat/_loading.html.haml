@@ -1,10 +1,13 @@
-%li.chat-left.mb-3.d-flex.mms.w-100#loading-message
-  .chat-avatar.me-2
-    %i.fa.fa-user-tie
-    .chat-name.mt-1
-      = responder_name
-      %br
-      %strong= format_time(DateTime.current)
-  .chat-text
-    .spinner-border.spinner-border-sm.me-2{ role: 'status' }
-    Thinking...
+%li.chat-left.w-100#loading-message
+  .chat-message
+    .chat-avatar
+      %i.fa.fa-user-tie
+    .chat-body
+      .chat-header
+        %span.chat-sender= responder_name
+        %span.chat-timestamp= format_time(DateTime.current)
+      .chat-text
+        .chat-loading-dots
+          %span
+          %span
+          %span

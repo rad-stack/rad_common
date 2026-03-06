@@ -1,12 +1,13 @@
-%li.chat-left.mb-3.d-flex.mms.w-100
-  .chat-avatar.me-2
-    - if user&.avatar&.attached?
-      = image_tag(user.avatar.variant(resize_to_limit: [50, 50]))
-    - else
-      %i.fa.fa-user
-    .chat-name.mt-1
-      = user_name
-      %br
-      %strong= chat_date
-  .chat-text
-    %pre= chat_text_sanitize(message)
+%li.chat-left.w-100
+  .chat-message
+    .chat-avatar
+      - if user&.avatar&.attached?
+        = image_tag(user.avatar.variant(resize_to_limit: [50, 50]))
+      - else
+        %i.fa.fa-user
+    .chat-body
+      .chat-header
+        %span.chat-sender= user_name
+        %span.chat-timestamp= chat_date
+      .chat-text
+        %pre= chat_text_sanitize(message)
