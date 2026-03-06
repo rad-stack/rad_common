@@ -10,21 +10,41 @@ export default class extends Controller {
   }
 
   onInput() {
-    if (this.inputTarget.value.trim() === '') return;
+    if (this.inputTarget.value.trim() === '') {
+      this.stopTyping();
+      return;
+    }
+
     if (this.typing) return;
 
     this.typing = true;
-    this.sendTyping();
+    this.sendRequest();
 
     this.timeout = setTimeout(() => {
       this.typing = false;
     }, 3000);
   }
 
-  sendTyping() {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  onBlur() {
+    this.stopTyping();
+  }
 
-    fetch(this.urlValue, {
+  stopTyping() {
+    if (!this.typing) return;
+
+    this.typing = false;
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+      this.timeout = null;
+    }
+    this.sendRequest(true);
+  }
+
+  sendRequest(stop = false) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+    const url = stop ? `${this.urlValue}?stop=true` : this.urlValue;
+
+    fetch(url, {
       method: 'POST',
       headers: {
         'X-CSRF-Token': csrfToken,

@@ -24,7 +24,11 @@ class DirectMessagesController < ApplicationController
   end
 
   def typing
-    broadcast_typing_indicator
+    if params[:stop]
+      remove_typing_indicator
+    else
+      broadcast_typing_indicator
+    end
     head :ok
   end
 
@@ -65,6 +69,12 @@ class DirectMessagesController < ApplicationController
       )
 
       Turbo::StreamsChannel.broadcast_action_to(stream_name, action: :scroll_bottom, target: 'scroll-container')
+    end
+
+    def remove_typing_indicator
+      other_user = @direct_message.other_user(current_user)
+      stream_name = "direct_message_#{@direct_message.id}_user_#{other_user.id}"
+      Turbo::StreamsChannel.broadcast_remove_to(stream_name, target: "typing-indicator-#{@direct_message.id}")
     end
 
     def broadcast_message_to_other_user

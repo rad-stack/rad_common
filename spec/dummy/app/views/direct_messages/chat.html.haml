@@ -17,6 +17,6 @@
                                    placeholder: 'Type a message...',
                                    type: 'text',
                                    id: 'direct_message_current_message',
-                                   data: { 'dm-typing-target': 'input', action: 'input->dm-typing#onInput' } }
+                                   data: { 'dm-typing-target': 'input', action: 'input->dm-typing#onInput blur->dm-typing#onBlur' } }
               = f.button :button, type: :submit, class: 'btn btn-secondary', id: 'chat-submit-btn' do
                 = icon('paper-plane')
