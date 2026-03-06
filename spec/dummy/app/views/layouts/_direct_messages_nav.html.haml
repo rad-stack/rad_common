@@ -1,5 +1,7 @@
 - if user_signed_in? && policy(DirectMessage).index?
   - conversations = policy_scope(DirectMessage).sorted.limit(10)
+  - conversations.each do |dm|
+    = turbo_stream_from "direct_message_#{dm.id}_user_#{current_user.id}"
   %li.nav-item.dropdown
     %a.nav-link.dropdown-toggle{ href: '#', 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false' }
       = icon('envelope')
