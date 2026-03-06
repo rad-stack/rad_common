@@ -1,5 +1,7 @@
 require('trix');
 require('@rails/actiontext');
+import * as ActionCable from '@rails/actioncable';
+ActionCable.createConsumer();
 
 import * as ActiveStorage from '@rails/activestorage';
 ActiveStorage.start();
