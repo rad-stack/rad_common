@@ -121,6 +121,18 @@
   text-align: right;
 }
 
+/* Continuation messages (grouped, no header) */
+.chat-continuation .chat-message {
+  padding-top: 0;
+  padding-bottom: 0.25rem;
+}
+
+.chat-avatar-spacer {
+  width: 36px;
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}
+
 /* Loading indicator */
 .chat-loading-dots {
   display: inline-flex;

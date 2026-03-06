@@ -1,2 +1,12 @@
+- previous_user = nil
+- previous_time = nil
 - logs.each do |log|
-  = render log[:template], log
+  - current_time = begin; Time.zone.parse(log[:chat_date]); rescue; nil; end
+  - same_user = log[:user_name] == previous_user
+  - within_window = same_user && current_time && previous_time && (current_time - previous_time).abs < 600
+  - if within_window
+    = render 'chat/message_continuation', message: log[:message]
+  - else
+    = render log[:template], log
+  - previous_user = log[:user_name]
+  - previous_time = current_time

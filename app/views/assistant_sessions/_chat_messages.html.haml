@@ -1,7 +1,17 @@
 - logs = assistant_session_logs(assistant_session)
 - if logs.present?
+  - previous_user = nil
+  - previous_time = nil
   - logs.each do |log|
     - log_data = assistant_session_log_data(assistant_session, log)
-    = render log_data[:template], log_data
+    - current_time = begin; Time.zone.parse(log_data[:chat_date]); rescue; nil; end
+    - same_user = log_data[:user_name] == previous_user
+    - within_window = same_user && current_time && previous_time && (current_time - previous_time).abs < 600
+    - if within_window
+      = render 'chat/message_continuation', message: log_data[:message]
+    - else
+      = render log_data[:template], log_data
+    - previous_user = log_data[:user_name]
+    - previous_time = current_time
 - else
   = render 'assistant_sessions/initial_chat_message', assistant_session: assistant_session

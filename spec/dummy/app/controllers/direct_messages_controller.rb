@@ -51,9 +51,9 @@ class DirectMessagesController < ApplicationController
       chat_list_id = "direct-message-#{@direct_message.id}-chat"
       last_log = @direct_message.log.last.symbolize_keys
 
-      log_data = { direction: 'right',
+      log_data = { direction: 'left',
                    user_name: current_user.to_s,
-                   template: 'chat/message_right',
+                   template: 'chat/message_left',
                    message: last_log[:content],
                    chat_date: last_log[:chat_date],
                    user: nil }
