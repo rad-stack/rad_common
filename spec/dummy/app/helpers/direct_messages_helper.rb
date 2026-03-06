@@ -7,7 +7,7 @@ module DirectMessagesHelper
 
   def direct_message_log_entry(log)
     is_current_user = log[:user_id].to_s == current_user.id.to_s
-    direction = is_current_user ? 'left' : 'right'
+    direction = is_current_user ? 'right' : 'left'
     user_name = is_current_user ? current_user.to_s : User.find(log[:user_id]).to_s
 
     { direction: direction, user_name: user_name, template: "chat/message_#{direction}",

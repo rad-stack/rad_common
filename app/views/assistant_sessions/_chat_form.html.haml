@@ -1,7 +1,7 @@
 - chat_messages_content = capture do
   = render 'assistant_sessions/chat_messages', assistant_session: assistant_session
   - if assistant_session.status_processing? && assistant_session.current_message.present?
-    = render 'assistant_sessions/chat_message_left',
+    = render 'assistant_sessions/chat_message_right',
              assistant_session_log_data(assistant_session, assistant_session.log.last)
 
     :ruby
