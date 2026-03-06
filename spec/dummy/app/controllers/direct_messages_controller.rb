@@ -1,5 +1,5 @@
 class DirectMessagesController < ApplicationController
-  before_action :set_direct_message, only: %i[show update chat]
+  before_action :set_direct_message, only: %i[show update chat typing]
 
   def index
     authorize DirectMessage
@@ -21,6 +21,11 @@ class DirectMessagesController < ApplicationController
     authorize @direct_message
 
     redirect_to @direct_message
+  end
+
+  def typing
+    broadcast_typing_indicator
+    head :ok
   end
 
   def update
@@ -45,11 +50,31 @@ class DirectMessagesController < ApplicationController
 
   private
 
+    def broadcast_typing_indicator
+      other_user = @direct_message.other_user(current_user)
+      stream_name = "direct_message_#{@direct_message.id}_user_#{other_user.id}"
+      typing_id = "typing-indicator-#{@direct_message.id}"
+
+      Turbo::StreamsChannel.broadcast_remove_to(stream_name, target: typing_id)
+
+      Turbo::StreamsChannel.broadcast_append_to(
+        stream_name,
+        target: "direct-message-#{@direct_message.id}-chat",
+        partial: 'direct_messages/typing_indicator',
+        locals: { typing_id: typing_id, user_name: current_user.to_s }
+      )
+
+      Turbo::StreamsChannel.broadcast_action_to(stream_name, action: :scroll_bottom, target: 'scroll-container')
+    end
+
     def broadcast_message_to_other_user
       other_user = @direct_message.other_user(current_user)
       stream_name = "direct_message_#{@direct_message.id}_user_#{other_user.id}"
       chat_list_id = "direct-message-#{@direct_message.id}-chat"
+      typing_id = "typing-indicator-#{@direct_message.id}"
       last_log = @direct_message.log.last.symbolize_keys
+
+      Turbo::StreamsChannel.broadcast_remove_to(stream_name, target: typing_id)
 
       log_data = { direction: 'right',
                    user_name: current_user.to_s,
@@ -65,11 +90,7 @@ class DirectMessagesController < ApplicationController
         locals: log_data
       )
 
-      Turbo::StreamsChannel.broadcast_action_to(
-        stream_name,
-        action: :scroll_bottom,
-        target: 'scroll-container'
-      )
+      Turbo::StreamsChannel.broadcast_action_to(stream_name, action: :scroll_bottom, target: 'scroll-container')
     end
 
     def set_direct_message

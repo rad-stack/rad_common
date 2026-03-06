@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :clients
   resources :direct_messages do
     get :chat, on: :member
+    post :typing, on: :member
   end
   resources :divisions do
     get :calendar, on: :collection

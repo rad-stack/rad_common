@@ -15,6 +15,10 @@ class DirectMessagePolicy < ApplicationPolicy
     show?
   end
 
+  def typing?
+    show?
+  end
+
   class Scope < Scope
     def resolve
       scope.where(from_user: user).or(scope.where(to_user: user))
