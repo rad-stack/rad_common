@@ -1,0 +1,3 @@
+.chat-reaction-picker.d-none{ data: { 'chat-reaction-target': 'picker' } }
+  - %w[👍 ❤️ 😂 😮 😢 🔥 🎉 👏].each do |emoji|
+    %button.chat-reaction-picker-btn{ type: 'button', data: { emoji: emoji, action: 'chat-reaction#react' } }= emoji

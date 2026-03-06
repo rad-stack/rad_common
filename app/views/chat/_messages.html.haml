@@ -1,12 +1,14 @@
+- react_url = defined?(react_url) ? react_url : nil
 - previous_user = nil
 - previous_time = nil
-- logs.each do |log|
+- logs.each_with_index do |log, index|
   - current_time = begin; Time.zone.parse(log[:chat_date]); rescue; nil; end
   - same_user = log[:user_name] == previous_user
   - within_window = same_user && current_time && previous_time && (current_time - previous_time).abs < 600
+  - msg_locals = { message_index: index, react_url: react_url, reactions: log[:reactions] || {} }
   - if within_window
-    = render 'chat/message_continuation', message: log[:message]
+    = render 'chat/message_continuation', { message: log[:message] }.merge(msg_locals)
   - else
-    = render log[:template], log
+    = render log[:template], log.merge(msg_locals)
   - previous_user = log[:user_name]
   - previous_time = current_time

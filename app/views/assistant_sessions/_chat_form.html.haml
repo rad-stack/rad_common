@@ -19,7 +19,7 @@
   = turbo_frame_tag 'chat-form' do
     = simple_form_for assistant_session,
                       url: assistant_session_path(assistant_session),
-                      html: { data: { controller: 'llm-chat-form', 'llm-chat-form-target': 'form' } } do |f|
+                      html: { data: { controller: 'llm-chat-form emoji-picker', 'llm-chat-form-target': 'form' } } do |f|
       .card
         - if assistant_session.context_object?
           .card-header
@@ -31,13 +31,16 @@
           .row
             .col-12
               .d-flex.flex-row
-                .input-group
+                .input-group.position-relative
                   = render 'assistant_sessions/common_questions_dropdown', assistant_session: assistant_session, f: f
                   %input.form-control.ays-ignore{ name: 'assistant_session[current_message]',
                                                   placeholder: 'Ask a question...',
                                                   type: 'text',
                                                   id: 'assistant_session_current_message',
-                                                  data: { 'llm-chat-form-target': 'currentMessage' } }
+                                                  data: { 'llm-chat-form-target': 'currentMessage',
+                                                          'emoji-picker-target': 'input' } }
+                  %button.btn.btn-outline-secondary{ type: 'button', data: { action: 'emoji-picker#toggle' } }
+                    %i.fa.fa-face-smile
                   = f.button :button, type: :submit, class: 'btn btn-secondary', id: 'chat-submit-btn' do
                     = icon('paper-plane')
                   = f.button :button, type: :button, class: 'btn btn-secondary dropdown-toggle no-caret',
@@ -47,3 +50,4 @@
                     %li
                       = f.button :button, name: 'reset_chat', value: 'reset' do
                         = icon('comment-slash', 'Clear Chat?')
+                  = render 'chat/emoji_picker'

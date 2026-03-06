@@ -1,0 +1,12 @@
+- reactions = defined?(reactions) ? reactions : {}
+- if reactions.present?
+  .chat-reactions{ id: "chat-reactions-#{message_index}", data: { 'chat-reaction-target': 'reactions' } }
+    - reactions.each do |emoji, user_ids|
+      - next if user_ids.blank?
+      %button.chat-reaction-badge{ type: 'button',
+                                    class: ('chat-reaction-active' if user_ids.include?(current_user.id)),
+                                    data: { emoji: emoji, action: 'chat-reaction#react' } }
+        %span.chat-reaction-emoji= emoji
+        %span.chat-reaction-count= user_ids.size
+- else
+  .chat-reactions{ id: "chat-reactions-#{message_index}", data: { 'chat-reaction-target': 'reactions' } }

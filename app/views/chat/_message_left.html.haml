@@ -1,4 +1,9 @@
-%li.chat-left.w-100
+- react_url = defined?(react_url) ? react_url : nil
+- message_index = defined?(message_index) ? message_index : nil
+- reactions = defined?(reactions) ? reactions : {}
+%li.chat-left.w-100{ data: react_url ? { controller: 'chat-reaction',
+                                          'chat-reaction-url-value': react_url,
+                                          'chat-reaction-message-index-value': message_index } : {} }
   .chat-message
     .chat-avatar
       - if user&.avatar&.attached?
@@ -11,3 +16,9 @@
         %span.chat-timestamp= chat_date
       .chat-text
         %pre= chat_text_sanitize(message)
+      - if react_url
+        = render 'chat/reactions', reactions: reactions, message_index: message_index
+        .chat-react-btn-wrapper
+          %button.chat-react-btn{ type: 'button', data: { action: 'chat-reaction#togglePicker' } }
+            %i.fa.fa-face-smile-beam
+          = render 'chat/reaction_picker'

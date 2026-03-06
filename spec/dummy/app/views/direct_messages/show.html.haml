@@ -8,16 +8,20 @@
   .card-body.bg-secondary.bg-opacity-25.p-0.d-flex.flex-column{ style: 'min-height: 500px' }
     - logs = direct_message_log_list(@direct_message)
     - chat_messages_content = capture do
-      = render 'chat/messages', logs: logs
+      = render 'chat/messages', logs: logs, react_url: react_direct_message_path(@direct_message)
 
     = render layout: 'chat/panel', locals: { chat_list_id: "direct-message-#{@direct_message.id}-chat",
                                               chat_messages_content: chat_messages_content } do
-      = simple_form_for @direct_message, html: { data: { controller: 'chat-form' } } do |f|
+      = simple_form_for @direct_message, html: { data: { controller: 'chat-form emoji-picker' } } do |f|
         .d-flex.flex-row
-          .input-group
+          .input-group.position-relative
             %input.form-control{ name: 'direct_message[current_message]',
                                  placeholder: 'Type a message...',
                                  type: 'text',
-                                 id: 'direct_message_current_message' }
+                                 id: 'direct_message_current_message',
+                                 data: { 'emoji-picker-target': 'input' } }
+            %button.btn.btn-outline-secondary{ type: 'button', data: { action: 'emoji-picker#toggle' } }
+              %i.fa.fa-face-smile
             = f.button :button, type: :submit, class: 'btn btn-secondary', id: 'chat-submit-btn' do
               = icon('paper-plane')
+            = render 'chat/emoji_picker'

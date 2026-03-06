@@ -1,5 +1,5 @@
 class DirectMessagesController < ApplicationController
-  before_action :set_direct_message, only: %i[show update chat]
+  before_action :set_direct_message, only: %i[show update chat react]
 
   def index
     authorize DirectMessage
@@ -21,6 +21,39 @@ class DirectMessagesController < ApplicationController
     authorize @direct_message
 
     redirect_to @direct_message
+  end
+
+  def react
+    reaction_params = JSON.parse(request.body.read)
+    message_index = reaction_params['message_index'].to_i
+    emoji = reaction_params['emoji']
+
+    log_entry = @direct_message.log[message_index]
+    if log_entry.present?
+      log_entry['reactions'] ||= {}
+      log_entry['reactions'][emoji] ||= []
+
+      if log_entry['reactions'][emoji].include?(current_user.id)
+        log_entry['reactions'][emoji].delete(current_user.id)
+        log_entry['reactions'].delete(emoji) if log_entry['reactions'][emoji].empty?
+      else
+        log_entry['reactions'][emoji] << current_user.id
+      end
+
+      log_entry['reactions'].delete_if { |_, ids| ids.empty? }
+      @direct_message.save!
+      broadcast_reaction_update(message_index)
+    end
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          "chat-reactions-#{message_index}",
+          partial: 'chat/reactions',
+          locals: { reactions: reaction_data(message_index), message_index: message_index }
+        )
+      end
+    end
   end
 
   def update
@@ -70,6 +103,23 @@ class DirectMessagesController < ApplicationController
         action: :scroll_bottom,
         target: 'scroll-container'
       )
+    end
+
+    def broadcast_reaction_update(message_index)
+      other_user = @direct_message.other_user(current_user)
+      stream_name = "direct_message_#{@direct_message.id}_user_#{other_user.id}"
+
+      Turbo::StreamsChannel.broadcast_replace_to(
+        stream_name,
+        target: "chat-reactions-#{message_index}",
+        partial: 'chat/reactions',
+        locals: { reactions: reaction_data(message_index), message_index: message_index }
+      )
+    end
+
+    def reaction_data(message_index)
+      log_entry = @direct_message.log[message_index]
+      (log_entry&.dig('reactions') || {}).transform_values { |ids| ids.map(&:to_i) }
     end
 
     def set_direct_message

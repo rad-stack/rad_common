@@ -1,0 +1,22 @@
+.emoji-picker-panel.d-none{ data: { 'emoji-picker-target': 'panel' } }
+  .emoji-picker-categories
+    .emoji-picker-category
+      .emoji-picker-category-name Smileys
+      .emoji-picker-grid
+        - %w[😀 😂 🙂 😊 🥰 😍 🤔 😢 😡 🤯 😱 🤗 😎 🥳 😴 🤮 🤡 😅 🫡 🤷].each do |emoji|
+          %button.emoji-picker-btn{ type: 'button', data: { emoji: emoji, action: 'emoji-picker#select' } }= emoji
+    .emoji-picker-category
+      .emoji-picker-category-name Gestures
+      .emoji-picker-grid
+        - %w[👍 👎 👏 🙌 🤝 ✌️ 🤞 💪 🙏 👋 🫶 🤙].each do |emoji|
+          %button.emoji-picker-btn{ type: 'button', data: { emoji: emoji, action: 'emoji-picker#select' } }= emoji
+    .emoji-picker-category
+      .emoji-picker-category-name Hearts
+      .emoji-picker-grid
+        - %w[❤️ 🧡 💛 💚 💙 💜 🖤 💔 💕 💯].each do |emoji|
+          %button.emoji-picker-btn{ type: 'button', data: { emoji: emoji, action: 'emoji-picker#select' } }= emoji
+    .emoji-picker-category
+      .emoji-picker-category-name Objects
+      .emoji-picker-grid
+        - %w[🔥 ⭐ ✅ ❌ ⚡ 💡 🎉 🎯 🚀 👀 💬 📌].each do |emoji|
+          %button.emoji-picker-btn{ type: 'button', data: { emoji: emoji, action: 'emoji-picker#select' } }= emoji
