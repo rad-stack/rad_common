@@ -4,10 +4,7 @@ module AssistantSessionsHelper
   def ask_basic_question_btn
     return unless policy(AssistantSession).new?
 
-    button_tag(icon(:comment, 'Ask Assistant?'),
-               class: 'btn btn-primary btn-sm',
-               'data-bs-target' => '#basic-question-modal',
-               'data-bs-toggle' => 'offcanvas')
+    chat_open_btn('basic-question-modal', label: 'Ask Assistant?')
   end
 
   def logs_for_session(assistant_session)
@@ -23,6 +20,10 @@ module AssistantSessionsHelper
     raw_data.select { |message| VISIBLE_ROLES.include?(message['role']) && message['content'].present? }
   end
 
+  def assistant_session_log_list(assistant_session)
+    assistant_session_logs(assistant_session).map { |log| assistant_session_log_data(assistant_session, log) }
+  end
+
   def assistant_session_log_data(assistant_session, log)
     log.symbolize_keys!
     direction = log[:role] == 'user' ? 'left' : 'right'
@@ -33,24 +34,13 @@ module AssistantSessionsHelper
       chat_date: log[:chat_date], user: current_user }
   end
 
-  def assistant_session_text_sanitize(text)
-    text = remove_context_data(text)
-    text = disable_turbo_links(text)
-    allowed_tags = Rails::Html::SafeListSanitizer.allowed_tags
-    allowed_tags += %w[a]
-    allowed_attributes = Rails::Html::SafeListSanitizer.allowed_attributes
-    allowed_attributes += %w[href data-turbo]
-
-    sanitize(text, tags: allowed_tags, attributes: allowed_attributes)
+  def assistant_session_format_message(message)
+    remove_context_data(message)
   end
 
-  def disable_turbo_links(text)
-    doc = Nokogiri::HTML::DocumentFragment.parse(text)
-    doc.css('a').each { |a| a.set_attribute('data-turbo', 'false') }
-    doc.to_html.to_s
-  end
+  private
 
-  def remove_context_data(text)
-    text.gsub(/CONTEXT_DATA_FOLLOWS.*\z/m, '')
-  end
+    def remove_context_data(text)
+      text.gsub(/CONTEXT_DATA_FOLLOWS.*\z/m, '')
+    end
 end

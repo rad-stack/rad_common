@@ -1,22 +1,21 @@
-.flex-grow-1.chat-scroll-panel#scroll-container
-  .chat-container.mt-3
-    %ul.chat-box.chatContainerScroll{ id: dom_id(assistant_session, 'chat') }
-      = render 'assistant_sessions/chat_messages', assistant_session: assistant_session
-      - if assistant_session.status_processing? && assistant_session.current_message.present?
-        = render 'assistant_sessions/chat_message_left',
-                 assistant_session_log_data(assistant_session, assistant_session.log.last)
+- chat_messages_content = capture do
+  = render 'assistant_sessions/chat_messages', assistant_session: assistant_session
+  - if assistant_session.status_processing? && assistant_session.current_message.present?
+    = render 'assistant_sessions/chat_message_left',
+             assistant_session_log_data(assistant_session, assistant_session.log.last)
 
-        :ruby
-          response_id = "#{assistant_session.id}-#{Time.current.to_i}"
+    :ruby
+      response_id = "#{assistant_session.id}-#{Time.current.to_i}"
 
-          data_args = { controller: 'chat-polling',
-                        chat_polling_url_value: check_response_assistant_session_path(assistant_session,
-                                                                                      response_id: response_id) }
+      data_args = { controller: 'chat-polling',
+                    chat_polling_url_value: check_response_assistant_session_path(assistant_session,
+                                                                                  response_id: response_id) }
 
-        = turbo_frame_tag "chat-response-#{response_id}", data: data_args do
-          = render 'assistant_sessions/loading_message', assistant_session: assistant_session
+    = turbo_frame_tag "chat-response-#{response_id}", data: data_args do
+      = render 'assistant_sessions/loading_message', assistant_session: assistant_session
 
-.border-top.pt-3.pb-4.px-4.bg-white
+= render layout: 'chat/panel', locals: { chat_list_id: dom_id(assistant_session, 'chat'),
+                                          chat_messages_content: chat_messages_content } do
   = turbo_frame_tag 'chat-form' do
     = simple_form_for assistant_session,
                       url: assistant_session_path(assistant_session),

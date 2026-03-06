@@ -1,0 +1,7 @@
+.flex-grow-1.chat-scroll-panel#scroll-container
+  .chat-container.mt-3
+    %ul.chat-box.chatContainerScroll{ id: chat_list_id }
+      = chat_messages_content
+
+.border-top.pt-3.pb-4.px-4.bg-white
+  = yield

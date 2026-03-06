@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   resources :attorneys
   resources :clients
+  resources :direct_messages
   resources :divisions do
     get :calendar, on: :collection
     get :quick_view, on: :member

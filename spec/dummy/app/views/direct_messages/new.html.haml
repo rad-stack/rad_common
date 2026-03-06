@@ -1,0 +1,8 @@
+.card
+  = render 'layouts/card_header', no_delete_button: true
+  .card-body
+    = simple_form_for @direct_message do |f|
+      = f.input :to_user_id, collection: User.active.where.not(id: current_user.id),
+                              label: 'Send Message To',
+                              include_blank: 'Select a user...'
+      = f.submit 'Start Conversation', class: 'btn btn-primary'
