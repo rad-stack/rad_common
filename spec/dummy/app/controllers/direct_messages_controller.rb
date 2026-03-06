@@ -35,6 +35,7 @@ class DirectMessagesController < ApplicationController
                              content: permitted_params[:current_message],
                              chat_date: I18n.l(Time.current, format: :long) }
     @direct_message.save!
+    broadcast_message_to_other_user
 
     respond_to do |format|
       format.turbo_stream
@@ -43,6 +44,33 @@ class DirectMessagesController < ApplicationController
   end
 
   private
+
+    def broadcast_message_to_other_user
+      other_user = @direct_message.other_user(current_user)
+      stream_name = "direct_message_#{@direct_message.id}_user_#{other_user.id}"
+      chat_list_id = "direct-message-#{@direct_message.id}-chat"
+      last_log = @direct_message.log.last.symbolize_keys
+
+      log_data = { direction: 'right',
+                   user_name: current_user.to_s,
+                   template: 'chat/message_right',
+                   message: last_log[:content],
+                   chat_date: last_log[:chat_date],
+                   user: nil }
+
+      Turbo::StreamsChannel.broadcast_append_to(
+        stream_name,
+        target: chat_list_id,
+        partial: log_data[:template],
+        locals: log_data
+      )
+
+      Turbo::StreamsChannel.broadcast_action_to(
+        stream_name,
+        action: :scroll_bottom,
+        target: 'scroll-container'
+      )
+    end
 
     def set_direct_message
       @direct_message = DirectMessage.find(params[:id])
