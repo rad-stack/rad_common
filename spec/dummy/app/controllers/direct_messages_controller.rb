@@ -56,7 +56,7 @@ class DirectMessagesController < ApplicationController
                    template: 'chat/message_left',
                    message: last_log[:content],
                    chat_date: last_log[:chat_date],
-                   user: nil }
+                   user: current_user }
 
       Turbo::StreamsChannel.broadcast_append_to(
         stream_name,
