@@ -1,6 +1,10 @@
 class DirectMessagePolicy < ApplicationPolicy
   def show?
-    record.from_user == user || record.to_user == user
+    true
+  end
+
+  def index?
+    true
   end
 
   def update?
