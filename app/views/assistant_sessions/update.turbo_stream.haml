@@ -1,18 +1,18 @@
 - if @reset_chat
   - welcome = ChatMessage.new(direction: 'right', user_name: @assistant_session.assistant_name,
                               message: 'Hello, what can I help you with?', chat_date: format_datetime(DateTime.now))
-  = turbo_stream.action(:update_input, 'assistant_session_current_message', '')
-  = turbo_stream.update dom_id(@assistant_session, 'chat') do
+  = turbo_stream.action(:update_input, @assistant_session.input_id, '')
+  = turbo_stream.update @assistant_session.chat_list_id do
     = render welcome.template, **welcome.locals
   = turbo_stream.action :scroll_bottom, 'scroll-container'
 - else
-  - chat_msg = assistant_session_log_data(@assistant_session, @last_log)
-  = render 'chat/update', input_id: 'assistant_session_current_message',
-           chat_list_id: dom_id(@assistant_session, 'chat'), chat_msg: chat_msg
+  = render 'chat/update', input_id: @assistant_session.input_id,
+           chat_list_id: @assistant_session.chat_list_id, chat_msg: @chat_msg
 
-  = turbo_stream.append dom_id(@assistant_session, 'chat') do
-    - url = check_response_assistant_session_path(@assistant_session, response_id: @response_id)
-    = turbo_frame_tag "chat-response-#{@response_id}",
-                      data: { controller: 'chat-polling', chat_polling_url_value: url } do
-      = render 'assistant_sessions/loading_message', assistant_session: @assistant_session
-      = turbo_stream.action :scroll_bottom, 'scroll-container'
+  - if @response_id
+    = turbo_stream.append @assistant_session.chat_list_id do
+      - url = check_response_assistant_session_path(@assistant_session, response_id: @response_id)
+      = turbo_frame_tag "chat-response-#{@response_id}",
+                        data: { controller: 'chat-polling', chat_polling_url_value: url } do
+        = render 'assistant_sessions/loading_message', assistant_session: @assistant_session
+        = turbo_stream.action :scroll_bottom, 'scroll-container'

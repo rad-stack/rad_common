@@ -1,4 +1,6 @@
 class AssistantSessionsController < ApplicationController
+  include ChatUpdatable
+
   before_action :set_assistant_session, only: %i[update check_response show]
 
   def index
@@ -13,16 +15,13 @@ class AssistantSessionsController < ApplicationController
 
     if params['reset_chat'].present?
       reset_chat
-    elsif permitted_params[:current_message].blank?
-      missing_message
+      respond_to { |format| format.turbo_stream }
     elsif @assistant_session.context_object? && permitted_params[:contextable_id].blank?
       missing_user
+      respond_to { |format| format.turbo_stream }
     else
-      handle_update
-    end
-
-    respond_to do |format|
-      format.turbo_stream
+      @assistant_session.assign_attributes(permitted_params.except(:current_message))
+      chat_update(@assistant_session)
     end
   end
 
@@ -58,11 +57,13 @@ class AssistantSessionsController < ApplicationController
       @assistant_session.update!(status: 'processing', current_message: nil, log: [])
     end
 
-    def missing_message
+    def handle_blank_chat_message(_record)
       @last_log = LLM::PromptBuilder.build_assistant_message('Message is missing, please try again')
       @assistant_session.log ||= []
       @assistant_session.log << @last_log
       @assistant_session.save
+      @chat_msg = @assistant_session.chat_message_from_log(@last_log, current_user)
+      respond_to { |format| format.turbo_stream }
     end
 
     def missing_user
@@ -70,16 +71,10 @@ class AssistantSessionsController < ApplicationController
       @assistant_session.log ||= []
       @assistant_session.log << @last_log
       @assistant_session.save
+      @chat_msg = @assistant_session.chat_message_from_log(@last_log, current_user)
     end
 
-    def handle_update
-      @response_id = "#{@assistant_session.id}-#{Time.current.to_i}"
-      @assistant_session.assign_attributes(permitted_params)
-      @assistant_session.status = 'processing'
-      @assistant_session.log ||= []
-      @last_log = LLM::PromptBuilder.build_user_message(@assistant_session.current_message)
-      return unless @assistant_session.save
-
-      ChatResponseJob.perform_later(@assistant_session.id, @assistant_session.current_message)
+    def after_chat_message_created(record)
+      @response_id = "#{record.id}-#{Time.current.to_i}"
     end
 end

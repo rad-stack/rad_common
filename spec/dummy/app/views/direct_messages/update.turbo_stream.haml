@@ -1,3 +1,2 @@
-- chat_msg = direct_message_log_entry(@direct_message.log.last.symbolize_keys)
-= render 'chat/update', input_id: 'direct_message_current_message',
-         chat_list_id: "direct-message-#{@direct_message.id}-chat", chat_msg: chat_msg
+= render 'chat/update', input_id: @direct_message.input_id,
+         chat_list_id: @direct_message.chat_list_id, chat_msg: @chat_msg

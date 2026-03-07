@@ -1,10 +1,10 @@
 class DirectMessage < ApplicationRecord
+  include Chatable
+
   audited
 
   belongs_to :from_user, class_name: 'User'
   belongs_to :to_user, class_name: 'User'
-
-  attr_accessor :current_message
 
   scope :sorted, -> { order(updated_at: :desc) }
 
@@ -15,6 +15,29 @@ class DirectMessage < ApplicationRecord
     find_by(from_user: user_a, to_user: user_b) ||
       find_by(from_user: user_b, to_user: user_a) ||
       create!(from_user: user_a, to_user: user_b)
+  end
+
+  def chat_list_id
+    "direct-message-#{id}-chat"
+  end
+
+  def create_message(message:, user:)
+    self.log ||= []
+    log_entry = { role: 'user', user_id: user.id, content: message, chat_date: I18n.l(Time.current, format: :long) }
+    self.log << log_entry
+    save!
+    log_entry
+  end
+
+  def chat_message_from_log(log_entry, current_user)
+    log_entry = log_entry.symbolize_keys
+    is_current_user = log_entry[:user_id].to_s == current_user.id.to_s
+    direction = is_current_user ? 'left' : 'right'
+    user_name = is_current_user ? current_user.to_s : User.find(log_entry[:user_id]).to_s
+
+    ChatMessage.new(direction: direction, user_name: user_name,
+                    message: log_entry[:content], chat_date: log_entry[:chat_date],
+                    user: is_current_user ? current_user : nil)
   end
 
   def other_user(current_user)

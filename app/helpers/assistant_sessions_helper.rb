@@ -23,11 +23,11 @@ module AssistantSessionsHelper
     end
 
     ChatPanel.new(
-      chat_list_id: dom_id(assistant_session, 'chat'),
+      chat_list_id: assistant_session.chat_list_id,
       record: assistant_session,
       form_url: assistant_session_path(assistant_session),
-      input_name: 'assistant_session[current_message]',
-      input_id: 'assistant_session_current_message',
+      input_name: assistant_session.input_name,
+      input_id: assistant_session.input_id,
       input_classes: 'form-control ays-ignore',
       placeholder: 'Ask a question...',
       messages: messages,
@@ -43,16 +43,6 @@ module AssistantSessionsHelper
     )
   end
 
-  def assistant_session_log_data(assistant_session, log)
-    log.symbolize_keys!
-    direction = log[:role] == 'user' ? 'left' : 'right'
-    user_name = log[:role] == 'user' ? current_user.to_s : assistant_session.assistant_name
-    message = assistant_session.format_message(log[:content])
-
-    ChatMessage.new(direction: direction, user_name: user_name, message: message,
-                    chat_date: log[:chat_date], user: direction == 'left' ? current_user : nil)
-  end
-
   private
 
     def assistant_session_logs(assistant_session)
@@ -63,6 +53,6 @@ module AssistantSessionsHelper
     end
 
     def assistant_session_log_list(assistant_session)
-      assistant_session_logs(assistant_session).map { |log| assistant_session_log_data(assistant_session, log) }
+      assistant_session_logs(assistant_session).map { |log| assistant_session.chat_message_from_log(log, current_user) }
     end
 end

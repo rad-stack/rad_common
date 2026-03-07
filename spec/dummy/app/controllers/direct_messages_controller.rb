@@ -1,4 +1,6 @@
 class DirectMessagesController < ApplicationController
+  include ChatUpdatable
+
   before_action :set_direct_message, only: %i[update chat typing]
 
   def index
@@ -31,26 +33,18 @@ class DirectMessagesController < ApplicationController
   end
 
   def update
-    if permitted_params[:current_message].blank?
-      redirect_to chat_direct_message_path(@direct_message), alert: 'Message cannot be blank.'
-      return
-    end
-
-    @direct_message.log ||= []
-    @direct_message.log << { role: 'user',
-                             user_id: current_user.id,
-                             content: permitted_params[:current_message],
-                             chat_date: I18n.l(Time.current, format: :long) }
-    @direct_message.save!
-    broadcast_message_to_other_user
-
-    respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to chat_direct_message_path(@direct_message) }
-    end
+    chat_update(@direct_message)
   end
 
   private
+
+    def handle_blank_chat_message(_record)
+      redirect_to chat_direct_message_path(@direct_message), alert: 'Message cannot be blank.'
+    end
+
+    def after_chat_message_created(_record)
+      broadcast_message_to_other_user
+    end
 
     def broadcast_typing_indicator
       other_user = @direct_message.other_user(current_user)
@@ -61,7 +55,7 @@ class DirectMessagesController < ApplicationController
 
       Turbo::StreamsChannel.broadcast_append_to(
         stream_name,
-        target: "direct-message-#{@direct_message.id}-chat",
+        target: @direct_message.chat_list_id,
         partial: 'direct_messages/typing_indicator',
         locals: { typing_id: typing_id, user_name: current_user.to_s }
       )
@@ -78,20 +72,16 @@ class DirectMessagesController < ApplicationController
     def broadcast_message_to_other_user
       other_user = @direct_message.other_user(current_user)
       stream_name = "direct_message_#{@direct_message.id}_user_#{other_user.id}"
-      chat_list_id = "direct-message-#{@direct_message.id}-chat"
       typing_id = "typing-indicator-#{@direct_message.id}"
-      last_log = @direct_message.log.last.symbolize_keys
+      broadcast_msg = @direct_message.chat_message_from_log(@last_log, other_user)
 
       Turbo::StreamsChannel.broadcast_remove_to(stream_name, target: typing_id)
 
-      chat_msg = ChatMessage.new(direction: 'right', user_name: current_user.to_s,
-                                 message: last_log[:content], chat_date: last_log[:chat_date])
-
       Turbo::StreamsChannel.broadcast_append_to(
         stream_name,
-        target: chat_list_id,
-        partial: chat_msg.template,
-        locals: chat_msg.locals
+        target: @direct_message.chat_list_id,
+        partial: broadcast_msg.template,
+        locals: broadcast_msg.locals
       )
 
       Turbo::StreamsChannel.broadcast_action_to(stream_name, action: :scroll_bottom, target: 'scroll-container')

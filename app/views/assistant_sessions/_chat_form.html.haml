@@ -1,7 +1,7 @@
 - chat_panel = assistant_session_chat_panel(assistant_session)
 - if assistant_session.status_processing? && assistant_session.current_message.present?
   - chat_panel.additional_content = capture do
-    - chat_msg = assistant_session_log_data(assistant_session, assistant_session.log.last)
+    - chat_msg = assistant_session.chat_message_from_log(assistant_session.log.last, current_user)
     = render chat_msg.template, **chat_msg.locals
 
     :ruby
