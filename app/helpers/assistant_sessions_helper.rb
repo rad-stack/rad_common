@@ -22,7 +22,23 @@ module AssistantSessionsHelper
                                   chat_date: format_datetime(DateTime.now))]
     end
 
-    ChatPanel.new(chat_list_id: dom_id(assistant_session, 'chat'), messages: messages)
+    ChatPanel.new(
+      chat_list_id: dom_id(assistant_session, 'chat'),
+      record: assistant_session,
+      form_url: assistant_session_path(assistant_session),
+      input_name: 'assistant_session[current_message]',
+      input_id: 'assistant_session_current_message',
+      input_classes: 'form-control ays-ignore',
+      placeholder: 'Ask a question...',
+      messages: messages,
+      form_data: { controller: 'llm-chat-form', 'llm-chat-form-target': 'form' },
+      input_data: { 'llm-chat-form-target': 'currentMessage' },
+      turbo_frame: 'chat-form',
+      before_input_partial: 'assistant_sessions/common_questions_dropdown',
+      before_input_locals: { assistant_session: assistant_session },
+      after_submit_partial: 'assistant_sessions/reset_chat_button',
+      after_submit_locals: {}
+    )
   end
 
   def assistant_session_log_data(assistant_session, log)

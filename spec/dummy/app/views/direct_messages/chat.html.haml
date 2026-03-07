@@ -3,15 +3,4 @@
 = turbo_frame_tag 'global-lazy-content' do
   .d-flex.flex-column{ style: 'height: calc(100vh - 120px)' }
     .bg-secondary.bg-opacity-25.p-0.d-flex.flex-column.flex-grow-1
-      = render layout: 'chat/panel', locals: { chat_panel: direct_message_chat_panel(@direct_message) } do
-        = simple_form_for @direct_message, html: { data: { controller: 'chat-form dm-typing',
-                                                          'dm-typing-url-value': typing_direct_message_path(@direct_message) } } do |f|
-          .d-flex.flex-row
-            .input-group
-              %input.form-control{ name: 'direct_message[current_message]',
-                                   placeholder: 'Type a message...',
-                                   type: 'text',
-                                   id: 'direct_message_current_message',
-                                   data: { 'dm-typing-target': 'input', action: 'input->dm-typing#onInput blur->dm-typing#onBlur' } }
-              = f.button :button, type: :submit, class: 'btn btn-secondary', id: 'chat-submit-btn' do
-                = icon('paper-plane')
+      = render 'chat/panel', chat_panel: direct_message_chat_panel(@direct_message)

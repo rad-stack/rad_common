@@ -5,4 +5,26 @@
       = chat_panel.additional_content
 
 .border-top.pt-3.pb-4.px-4.bg-white
-  = yield
+  - form_content = capture do
+    = simple_form_for chat_panel.record, **chat_panel.form_options do |f|
+      = yield f if block_given?
+      .d-flex.flex-row
+        .input-group
+          - if chat_panel.before_input_partial
+            = render chat_panel.before_input_partial, f: f, **chat_panel.before_input_locals
+          %input{ name: chat_panel.input_name,
+                  placeholder: chat_panel.placeholder,
+                  type: 'text',
+                  id: chat_panel.input_id,
+                  class: chat_panel.input_classes,
+                  data: chat_panel.input_data }
+          = f.button :button, type: :submit, class: 'btn btn-secondary', id: 'chat-submit-btn' do
+            = icon('paper-plane')
+          - if chat_panel.after_submit_partial
+            = render chat_panel.after_submit_partial, f: f, **chat_panel.after_submit_locals
+
+  - if chat_panel.turbo_frame
+    = turbo_frame_tag chat_panel.turbo_frame do
+      = form_content
+  - else
+    = form_content

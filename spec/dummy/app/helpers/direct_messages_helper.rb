@@ -1,7 +1,17 @@
 module DirectMessagesHelper
   def direct_message_chat_panel(direct_message)
     messages = direct_message_log_list(direct_message)
-    ChatPanel.new(chat_list_id: "direct-message-#{direct_message.id}-chat", messages: messages)
+
+    ChatPanel.new(
+      chat_list_id: "direct-message-#{direct_message.id}-chat",
+      record: direct_message,
+      input_name: 'direct_message[current_message]',
+      input_id: 'direct_message_current_message',
+      messages: messages,
+      form_data: { controller: 'chat-form dm-typing',
+                   'dm-typing-url-value': typing_direct_message_path(direct_message) },
+      input_data: { 'dm-typing-target': 'input', action: 'input->dm-typing#onInput blur->dm-typing#onBlur' }
+    )
   end
 
   private
