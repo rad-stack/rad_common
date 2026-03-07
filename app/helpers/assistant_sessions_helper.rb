@@ -37,7 +37,9 @@ module AssistantSessionsHelper
       before_input_partial: 'assistant_sessions/common_questions_dropdown',
       before_input_locals: { assistant_session: assistant_session },
       after_submit_partial: 'assistant_sessions/reset_chat_button',
-      after_submit_locals: {}
+      after_submit_locals: {},
+      offcanvas_id: 'basic-question-modal',
+      offcanvas_title: 'Ask Question?'
     )
   end
 

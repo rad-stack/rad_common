@@ -1,9 +1,0 @@
-.offcanvas.offcanvas-end.w-50{ id: offcanvas_id,
-                                'aria-hidden' => 'true',
-                                'aria-labelledby' => "#{offcanvas_id}-label",
-                                :tabindex => '-1' }
-  .offcanvas-header
-    %h1.offcanvas-title.fs-5{ id: "#{offcanvas_id}-label" }= title
-    %button.btn-close{ 'aria-label' => 'Close', 'data-bs-dismiss' => 'offcanvas', :type => 'button' }
-  .offcanvas-body.bg-secondary.bg-opacity-25.p-0.d-flex.flex-column
-    = yield

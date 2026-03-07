@@ -1,4 +1,3 @@
 - if current_user && policy(AssistantSession).new? && RadConfig.open_ai_api_key.present?
-  = render layout: 'chat/offcanvas', locals: { offcanvas_id: 'basic-question-modal', title: 'Ask Question?' } do
-    = render 'assistant_sessions/chat_form',
-             assistant_session: AssistantSession.create_or_find_chat(current_user, chat_class, chat_scope)
+  = render 'assistant_sessions/chat_form',
+           assistant_session: AssistantSession.create_or_find_chat(current_user, chat_class, chat_scope)
