@@ -25,7 +25,9 @@
             = yield
     - else
       = render 'layouts/navigation'
-      = render 'assistant_sessions/chat_offcanvas', chat_class: @chat_class, chat_scope: @chat_scope
+      - if current_user && policy(AssistantSession).new? && RadConfig.open_ai_api_key.present?
+        = render 'assistant_sessions/chat_form',
+                 assistant_session: AssistantSession.create_or_find_chat(current_user, @chat_class, @chat_scope)
       = render 'layouts/toast'
       .container-fluid.content
         .row
