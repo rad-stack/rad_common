@@ -28,19 +28,9 @@ module AssistantSessionsHelper
     log.symbolize_keys!
     direction = log[:role] == 'user' ? 'left' : 'right'
     user_name = log[:role] == 'user' ? current_user.to_s : assistant_session.assistant_name
-    template = "assistant_sessions/chat_message_#{direction}"
     message = assistant_session.format_message(log[:content])
-    { direction: direction, user_name: user_name, template: template, message: message,
-      chat_date: log[:chat_date], user: current_user }
+
+    ChatMessage.new(direction: direction, user_name: user_name, message: message,
+                    chat_date: log[:chat_date], user: direction == 'left' ? current_user : nil)
   end
-
-  def assistant_session_format_message(message)
-    remove_context_data(message)
-  end
-
-  private
-
-    def remove_context_data(text)
-      text.gsub(/CONTEXT_DATA_FOLLOWS.*\z/m, '')
-    end
 end

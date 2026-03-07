@@ -6,9 +6,8 @@
       %h5.mb-0= "Chat with #{@direct_message.other_user(current_user)}"
       = link_to 'Back', direct_messages_path, class: 'btn btn-sm btn-secondary'
   .card-body.bg-secondary.bg-opacity-25.p-0.d-flex.flex-column{ style: 'min-height: 500px' }
-    - logs = direct_message_log_list(@direct_message)
     - chat_messages_content = capture do
-      = render 'chat/messages', logs: logs
+      = render 'chat/messages', messages: direct_message_log_list(@direct_message)
 
     = render layout: 'chat/panel', locals: { chat_list_id: "direct-message-#{@direct_message.id}-chat",
                                               chat_messages_content: chat_messages_content } do

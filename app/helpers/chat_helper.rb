@@ -13,8 +13,8 @@ module ChatHelper
     user_name = direction == 'left' ? current_user_name : responder_name
     user = direction == 'left' ? current_user_record : nil
 
-    { direction: direction, user_name: user_name, template: "chat/message_#{direction}",
-      message: log[:content], chat_date: log[:chat_date], user: user }
+    ChatMessage.new(direction: direction, user_name: user_name,
+                    message: log[:content], chat_date: log[:chat_date], user: user)
   end
 
   def chat_open_btn(target_id, label: 'Chat', icon_name: :comment, btn_class: 'btn btn-primary btn-sm')

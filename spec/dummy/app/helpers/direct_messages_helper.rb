@@ -10,7 +10,8 @@ module DirectMessagesHelper
     direction = is_current_user ? 'left' : 'right'
     user_name = is_current_user ? current_user.to_s : User.find(log[:user_id]).to_s
 
-    { direction: direction, user_name: user_name, template: "chat/message_#{direction}",
-      message: log[:content], chat_date: log[:chat_date], user: (is_current_user ? current_user : nil) }
+    ChatMessage.new(direction: direction, user_name: user_name,
+                    message: log[:content], chat_date: log[:chat_date],
+                    user: is_current_user ? current_user : nil)
   end
 end

@@ -86,18 +86,14 @@ class DirectMessagesController < ApplicationController
 
       Turbo::StreamsChannel.broadcast_remove_to(stream_name, target: typing_id)
 
-      log_data = { direction: 'right',
-                   user_name: current_user.to_s,
-                   template: 'chat/message_right',
-                   message: last_log[:content],
-                   chat_date: last_log[:chat_date],
-                   user: nil }
+      chat_msg = ChatMessage.new(direction: 'right', user_name: current_user.to_s,
+                                 message: last_log[:content], chat_date: last_log[:chat_date])
 
       Turbo::StreamsChannel.broadcast_append_to(
         stream_name,
         target: chat_list_id,
-        partial: log_data[:template],
-        locals: log_data
+        partial: chat_msg.template,
+        locals: chat_msg.locals
       )
 
       Turbo::StreamsChannel.broadcast_action_to(stream_name, action: :scroll_bottom, target: 'scroll-container')

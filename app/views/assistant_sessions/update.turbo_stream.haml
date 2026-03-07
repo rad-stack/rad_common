@@ -6,8 +6,8 @@
     = render 'assistant_sessions/initial_chat_message', assistant_session: @assistant_session
   = turbo_stream.action :scroll_bottom, 'scroll-container'
 - else
-  = turbo_stream.append id, partial: 'assistant_sessions/chat_message_left',
-                            locals: assistant_session_log_data(@assistant_session, @last_log)
+  - chat_msg = assistant_session_log_data(@assistant_session, @last_log)
+  = turbo_stream.append id, partial: chat_msg.template, locals: chat_msg.locals
 
   = turbo_stream.append id do
     - url = check_response_assistant_session_path(@assistant_session, response_id: @response_id)

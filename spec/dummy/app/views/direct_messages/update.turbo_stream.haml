@@ -1,6 +1,5 @@
 - id = "direct-message-#{@direct_message.id}-chat"
-- last_log = @direct_message.log.last.symbolize_keys
-- log_data = direct_message_log_entry(last_log)
+- chat_msg = direct_message_log_entry(@direct_message.log.last.symbolize_keys)
 = turbo_stream.action(:update_input, 'direct_message_current_message', '')
-= turbo_stream.append id, partial: log_data[:template], locals: log_data
+= turbo_stream.append id, partial: chat_msg.template, locals: chat_msg.locals
 = turbo_stream.action :scroll_bottom, 'scroll-container'

@@ -1,2 +1,2 @@
-- logs.each do |log|
-  = render log[:template], log
+- messages.each do |chat_message|
+  = render chat_message.template, **chat_message.locals
