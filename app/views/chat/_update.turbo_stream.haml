@@ -1,0 +1,3 @@
+= turbo_stream.action(:update_input, input_id, '')
+= turbo_stream.append chat_list_id, partial: chat_msg.template, locals: chat_msg.locals
+= turbo_stream.action :scroll_bottom, 'scroll-container'
