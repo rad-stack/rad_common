@@ -1,12 +1,10 @@
 class DirectMessagesController < ApplicationController
-  before_action :set_direct_message, only: %i[show update chat typing]
+  before_action :set_direct_message, only: %i[update chat typing]
 
   def index
     authorize DirectMessage
     @direct_messages = policy_scope(DirectMessage).sorted.page(params[:page])
   end
-
-  def show; end
 
   def chat; end
 
@@ -20,7 +18,7 @@ class DirectMessagesController < ApplicationController
     @direct_message = DirectMessage.find_or_create_conversation(current_user, to_user)
     authorize @direct_message
 
-    redirect_to @direct_message
+    redirect_to chat_direct_message_path(@direct_message)
   end
 
   def typing
@@ -34,7 +32,7 @@ class DirectMessagesController < ApplicationController
 
   def update
     if permitted_params[:current_message].blank?
-      redirect_to @direct_message, alert: 'Message cannot be blank.'
+      redirect_to chat_direct_message_path(@direct_message), alert: 'Message cannot be blank.'
       return
     end
 
@@ -48,7 +46,7 @@ class DirectMessagesController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to @direct_message }
+      format.html { redirect_to chat_direct_message_path(@direct_message) }
     end
   end
 

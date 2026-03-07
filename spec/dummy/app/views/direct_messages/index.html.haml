@@ -18,6 +18,6 @@
           %td= record.log&.size || 0
           %td= format_datetime(record.updated_at)
           %td
-            = link_to icon(:comment, 'Open Chat'), direct_message_path(record), class: 'btn btn-sm btn-primary'
+            = link_to icon(:comment, 'Open Chat'), chat_direct_message_path(record), class: 'btn btn-sm btn-primary'
 
     = paginate @direct_messages, theme: 'bootstrap-5'
