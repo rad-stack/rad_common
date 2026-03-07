@@ -3,11 +3,7 @@
 = turbo_frame_tag 'global-lazy-content' do
   .d-flex.flex-column{ style: 'height: calc(100vh - 120px)' }
     .bg-secondary.bg-opacity-25.p-0.d-flex.flex-column.flex-grow-1
-      - chat_messages_content = capture do
-        = render 'chat/messages', messages: direct_message_log_list(@direct_message)
-
-      = render layout: 'chat/panel', locals: { chat_list_id: "direct-message-#{@direct_message.id}-chat",
-                                                chat_messages_content: chat_messages_content } do
+      = render layout: 'chat/panel', locals: { chat_panel: direct_message_chat_panel(@direct_message) } do
         = simple_form_for @direct_message, html: { data: { controller: 'chat-form dm-typing',
                                                           'dm-typing-url-value': typing_direct_message_path(@direct_message) } } do |f|
           .d-flex.flex-row

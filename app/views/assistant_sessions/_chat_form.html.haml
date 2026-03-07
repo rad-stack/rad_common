@@ -1,6 +1,6 @@
-- chat_messages_content = capture do
-  = render 'assistant_sessions/chat_messages', assistant_session: assistant_session
-  - if assistant_session.status_processing? && assistant_session.current_message.present?
+- chat_panel = assistant_session_chat_panel(assistant_session)
+- if assistant_session.status_processing? && assistant_session.current_message.present?
+  - chat_panel.additional_content = capture do
     - chat_msg = assistant_session_log_data(assistant_session, assistant_session.log.last)
     = render chat_msg.template, **chat_msg.locals
 
@@ -14,8 +14,7 @@
     = turbo_frame_tag "chat-response-#{response_id}", data: data_args do
       = render 'assistant_sessions/loading_message', assistant_session: assistant_session
 
-= render layout: 'chat/panel', locals: { chat_list_id: dom_id(assistant_session, 'chat'),
-                                          chat_messages_content: chat_messages_content } do
+= render layout: 'chat/panel', locals: { chat_panel: chat_panel } do
   = turbo_frame_tag 'chat-form' do
     = simple_form_for assistant_session,
                       url: assistant_session_path(assistant_session),

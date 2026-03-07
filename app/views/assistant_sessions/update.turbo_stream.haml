@@ -2,8 +2,10 @@
 = turbo_stream.action(:update_input, 'assistant_session_current_message', '')
 
 - if @reset_chat
+  - welcome = ChatMessage.new(direction: 'right', user_name: @assistant_session.assistant_name,
+                              message: 'Hello, what can I help you with?', chat_date: format_datetime(DateTime.now))
   = turbo_stream.update id do
-    = render 'assistant_sessions/initial_chat_message', assistant_session: @assistant_session
+    = render welcome.template, **welcome.locals
   = turbo_stream.action :scroll_bottom, 'scroll-container'
 - else
   - chat_msg = assistant_session_log_data(@assistant_session, @last_log)
