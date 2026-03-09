@@ -10,8 +10,7 @@
                             locals: assistant_session_log_data(@assistant_session, @last_log)
 
   = turbo_stream.append id do
-    - url = check_response_assistant_session_path(@assistant_session, response_id: @response_id)
-    = turbo_frame_tag "chat-response-#{@response_id}",
-                      data: { controller: 'chat-polling', chat_polling_url_value: url } do
+    = turbo_stream_from @assistant_session
+    %li.chat-right.justify-content-end.mb-3.d-flex.w-100#loading-message
       = render 'assistant_sessions/loading_message', assistant_session: @assistant_session
-      = turbo_stream.action :scroll_bottom, 'scroll-container'
+  = turbo_stream.action :scroll_bottom, 'scroll-container'

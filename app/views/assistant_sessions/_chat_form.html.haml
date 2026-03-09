@@ -5,15 +5,8 @@
       - if assistant_session.status_processing? && assistant_session.current_message.present?
         = render 'assistant_sessions/chat_message_left',
                  assistant_session_log_data(assistant_session, assistant_session.log.last)
-
-        :ruby
-          response_id = "#{assistant_session.id}-#{Time.current.to_i}"
-
-          data_args = { controller: 'chat-polling',
-                        chat_polling_url_value: check_response_assistant_session_path(assistant_session,
-                                                                                      response_id: response_id) }
-
-        = turbo_frame_tag "chat-response-#{response_id}", data: data_args do
+        = turbo_stream_from assistant_session
+        %li.chat-right.justify-content-end.mb-3.d-flex.w-100#loading-message
           = render 'assistant_sessions/loading_message', assistant_session: assistant_session
 
 .border-top.pt-3.pb-4.px-4.bg-white
