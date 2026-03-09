@@ -1,0 +1,16 @@
+.card
+  = render 'layouts/card_header'
+  .card-body
+    %table.table
+      %thead
+        %tr
+          %th Conversation With
+          %th Last Activity
+          %th
+      %tbody
+        - @direct_messages.each do |dm|
+          %tr
+            %td= secured_link(dm.other_user(current_user))
+            %td= format_datetime(dm.updated_at)
+            %td= link_to 'Open', dm, class: 'btn btn-primary btn-sm'
+    = paginate @direct_messages
