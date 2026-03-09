@@ -4,7 +4,6 @@
 - if @reset_chat
   = turbo_stream.update id do
     = render 'assistant_sessions/initial_chat_message', assistant_session: @assistant_session
-  = turbo_stream.action :scroll_bottom, 'scroll-container'
 - else
   = turbo_stream.append id, partial: 'assistant_sessions/chat_message_left',
                             locals: assistant_session_log_data(@assistant_session, @last_log)
@@ -13,4 +12,4 @@
     = turbo_stream_from @assistant_session
     %li.chat-right.justify-content-end.mb-3.d-flex.w-100#loading-message
       = render 'assistant_sessions/loading_message', assistant_session: @assistant_session
-  = turbo_stream.action :scroll_bottom, 'scroll-container'
+= turbo_stream.action :scroll_bottom, 'scroll-container'
