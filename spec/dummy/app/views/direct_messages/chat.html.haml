@@ -1,0 +1,6 @@
+= turbo_stream_from "direct_message_#{@direct_message.id}_user_#{current_user.id}"
+
+= turbo_frame_tag 'global-lazy-content' do
+  .d-flex.flex-column{ style: 'height: calc(100vh - 120px)' }
+    .bg-secondary.bg-opacity-25.p-0.d-flex.flex-column.flex-grow-1
+      = render 'chat/panel', chat_panel: direct_message_chat_panel(@direct_message)

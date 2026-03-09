@@ -1,0 +1,7 @@
+= f.button :button, type: :button, class: 'btn btn-secondary dropdown-toggle no-caret',
+                    'data-bs-toggle': 'dropdown' do
+  = '...'
+%ul.dropdown-menu
+  %li
+    = f.button :button, name: 'reset_chat', value: 'reset' do
+      = icon('comment-slash', 'Clear Chat?')

@@ -5,7 +5,8 @@ export default class extends Controller {
 
   connect() {
     this.submitBtn = document.getElementById('chat-submit-btn');
-    
+    this.offcanvasElement = this.element.closest('.offcanvas');
+
     if (this.isOffcanvasVisible()) {
       this.submitBtn.disabled = true;
       this.poll();
@@ -15,13 +16,12 @@ export default class extends Controller {
   }
 
   isOffcanvasVisible() {
-    return document.getElementById('basic-question-modal')?.classList?.contains('show');
+    return this.offcanvasElement?.classList?.contains('show');
   }
 
   waitForOffcanvas() {
-    const offcanvas = document.getElementById('basic-question-modal');
-    if (offcanvas) {
-      offcanvas.addEventListener('shown.bs.offcanvas', () => {
+    if (this.offcanvasElement) {
+      this.offcanvasElement.addEventListener('shown.bs.offcanvas', () => {
         this.submitBtn.disabled = true;
         this.poll();
       }, { once: true });
@@ -36,7 +36,7 @@ export default class extends Controller {
     try {
       const response = await fetch(this.urlValue, { headers: { 'Accept': 'application/json' } });
       const data = await response.json();
-      
+
       if (data.status === 'processing') {
         setTimeout(() => this.poll(), 1000);
       } else {

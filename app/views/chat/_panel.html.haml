@@ -1,0 +1,14 @@
+- if chat_panel.offcanvas?
+  .offcanvas.offcanvas-end.w-50{ id: chat_panel.offcanvas_id,
+                                  'aria-hidden' => 'true',
+                                  'aria-labelledby' => "#{chat_panel.offcanvas_id}-label",
+                                  :tabindex => '-1' }
+    .offcanvas-header
+      %h1.offcanvas-title.fs-5{ id: "#{chat_panel.offcanvas_id}-label" }= chat_panel.offcanvas_title
+      %button.btn-close{ 'aria-label' => 'Close', 'data-bs-dismiss' => 'offcanvas', :type => 'button' }
+    .offcanvas-body.bg-secondary.bg-opacity-25.p-0.d-flex.flex-column
+      = render 'chat/panel_content', chat_panel: chat_panel do |f|
+        = yield f if block_given?
+- else
+  = render 'chat/panel_content', chat_panel: chat_panel do |f|
+    = yield f if block_given?

@@ -33,7 +33,7 @@ module RadCommonRoutes
           end
         end
 
-        resources :assistant_sessions, only: %i[show update index] do
+        resources :assistant_sessions, only: %i[show index] do
           member do
             patch :chat_response
             get :check_response
@@ -70,6 +70,8 @@ module RadCommonRoutes
       end
 
       mount ::ActionCable.server => '/cable' if RadConfig.action_cable_enabled?
+
+      patch 'chat_messages/:chatable_type/:id', to: 'chat_messages#update', as: :chat_message_update
 
       resources :users, except: :destroy do
         member do

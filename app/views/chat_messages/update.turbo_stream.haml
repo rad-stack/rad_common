@@ -1,0 +1,11 @@
+- if @reset_chat
+  = turbo_stream.action(:update_input, @record.input_id, '')
+  = turbo_stream.update @record.chat_list_id do
+    - welcome = @record.welcome_message
+    = render welcome.template, **welcome.locals
+  = turbo_stream.action :scroll_bottom, 'scroll-container'
+- else
+  = render 'chat/update', input_id: @record.input_id,
+           chat_list_id: @record.chat_list_id, chat_msg: @chat_msg
+  - if @record.after_update_partial
+    = render @record.after_update_partial, **@record.after_update_locals

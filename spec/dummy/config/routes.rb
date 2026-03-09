@@ -6,6 +6,10 @@ Rails.application.routes.draw do
 
   resources :attorneys
   resources :clients
+  resources :direct_messages, only: %i[index new create] do
+    get :chat, on: :member
+    post :typing, on: :member
+  end
   resources :divisions do
     get :calendar, on: :collection
     get :quick_view, on: :member
