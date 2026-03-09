@@ -5,6 +5,7 @@ module DirectMessagesHelper
     ChatPanel.new(
       chat_list_id: direct_message.chat_list_id,
       record: direct_message,
+      form_url: chat_message_update_path(chatable_type: direct_message.class.name, id: direct_message.id),
       input_name: direct_message.input_name,
       input_id: direct_message.input_id,
       messages: messages,

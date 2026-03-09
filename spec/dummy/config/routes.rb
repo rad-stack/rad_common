@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   resources :attorneys
   resources :clients
-  resources :direct_messages, except: :show do
+  resources :direct_messages, only: %i[index new create] do
     get :chat, on: :member
     post :typing, on: :member
   end

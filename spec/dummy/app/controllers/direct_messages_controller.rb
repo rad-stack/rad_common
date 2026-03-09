@@ -1,7 +1,5 @@
 class DirectMessagesController < ApplicationController
-  include ChatUpdatable
-
-  before_action :set_direct_message, only: %i[update chat typing]
+  before_action :set_direct_message, only: %i[chat typing]
 
   def index
     authorize DirectMessage
@@ -32,19 +30,7 @@ class DirectMessagesController < ApplicationController
     head :ok
   end
 
-  def update
-    chat_update(@direct_message)
-  end
-
   private
-
-    def handle_blank_chat_message(_record)
-      redirect_to chat_direct_message_path(@direct_message), alert: 'Message cannot be blank.'
-    end
-
-    def after_chat_message_created(_record)
-      broadcast_message_to_other_user
-    end
 
     def broadcast_typing_indicator
       other_user = @direct_message.other_user(current_user)
@@ -69,30 +55,12 @@ class DirectMessagesController < ApplicationController
       Turbo::StreamsChannel.broadcast_remove_to(stream_name, target: "typing-indicator-#{@direct_message.id}")
     end
 
-    def broadcast_message_to_other_user
-      other_user = @direct_message.other_user(current_user)
-      stream_name = "direct_message_#{@direct_message.id}_user_#{other_user.id}"
-      typing_id = "typing-indicator-#{@direct_message.id}"
-      broadcast_msg = @direct_message.chat_message_from_log(@last_log, other_user)
-
-      Turbo::StreamsChannel.broadcast_remove_to(stream_name, target: typing_id)
-
-      Turbo::StreamsChannel.broadcast_append_to(
-        stream_name,
-        target: @direct_message.chat_list_id,
-        partial: broadcast_msg.template,
-        locals: broadcast_msg.locals
-      )
-
-      Turbo::StreamsChannel.broadcast_action_to(stream_name, action: :scroll_bottom, target: 'scroll-container')
-    end
-
     def set_direct_message
       @direct_message = DirectMessage.find(params[:id])
       authorize @direct_message
     end
 
     def permitted_params
-      params.require(:direct_message).permit(:to_user_id, :current_message)
+      params.require(:direct_message).permit(:to_user_id)
     end
 end

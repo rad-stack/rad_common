@@ -57,6 +57,55 @@ class AssistantSession < ApplicationRecord
                     chat_date: log_entry[:chat_date], user: direction == 'left' ? current_user : nil)
   end
 
+  def chat_permitted_params
+    %i[current_message contextable_id contextable_type]
+  end
+
+  def prepare_for_chat_update(params, current_user)
+    if params['reset_chat'].present?
+      update!(status: 'processing', current_message: nil, log: [])
+      return { reset: true }
+    end
+
+    if context_object? && contextable_id.blank?
+      log_entry = LLM::PromptBuilder.build_assistant_message('User is missing, please try again')
+      self.log ||= []
+      self.log << log_entry
+      save
+      return { chat_msg: chat_message_from_log(log_entry, current_user) }
+    end
+
+    nil
+  end
+
+  def handle_blank_chat_message(current_user)
+    log_entry = LLM::PromptBuilder.build_assistant_message('Message is missing, please try again')
+    self.log ||= []
+    self.log << log_entry
+    save
+    chat_message_from_log(log_entry, current_user)
+  end
+
+  def after_chat_message_created(_current_user)
+    self.response_id = "#{id}-#{Time.current.to_i}"
+  end
+
+  def after_update_partial
+    'assistant_sessions/chat_polling_frame'
+  end
+
+  def after_update_locals
+    { assistant_session: self }
+  end
+
+  def welcome_message
+    ChatMessage.new(direction: 'right', user_name: assistant_name,
+                    message: 'Hello, what can I help you with?',
+                    chat_date: I18n.l(Time.current, format: :long))
+  end
+
+  attr_accessor :response_id
+
   def to_s
     "#{chat_class.humanize.titleize} for #{user}"
   end

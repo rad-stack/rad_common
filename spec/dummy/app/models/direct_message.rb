@@ -40,6 +40,10 @@ class DirectMessage < ApplicationRecord
                     user: is_current_user ? current_user : nil)
   end
 
+  def after_chat_message_created(current_user)
+    broadcast_message_to_other_user(current_user)
+  end
+
   def other_user(current_user)
     current_user == from_user ? to_user : from_user
   end
@@ -47,4 +51,24 @@ class DirectMessage < ApplicationRecord
   def to_s
     "Conversation between #{from_user} and #{to_user}"
   end
+
+  private
+
+    def broadcast_message_to_other_user(current_user)
+      other = other_user(current_user)
+      stream_name = "direct_message_#{id}_user_#{other.id}"
+      typing_id = "typing-indicator-#{id}"
+      broadcast_msg = chat_message_from_log(log.last, other)
+
+      Turbo::StreamsChannel.broadcast_remove_to(stream_name, target: typing_id)
+
+      Turbo::StreamsChannel.broadcast_append_to(
+        stream_name,
+        target: chat_list_id,
+        partial: broadcast_msg.template,
+        locals: broadcast_msg.locals
+      )
+
+      Turbo::StreamsChannel.broadcast_action_to(stream_name, action: :scroll_bottom, target: 'scroll-container')
+    end
 end

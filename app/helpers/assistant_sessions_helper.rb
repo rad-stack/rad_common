@@ -25,7 +25,7 @@ module AssistantSessionsHelper
     ChatPanel.new(
       chat_list_id: assistant_session.chat_list_id,
       record: assistant_session,
-      form_url: assistant_session_path(assistant_session),
+      form_url: chat_message_update_path(chatable_type: assistant_session.class.name, id: assistant_session.id),
       input_name: assistant_session.input_name,
       input_id: assistant_session.input_id,
       input_classes: 'form-control ays-ignore',
