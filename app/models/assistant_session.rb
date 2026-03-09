@@ -1,4 +1,6 @@
 class AssistantSession < ApplicationRecord
+  include Chattable
+
   audited
   strip_attributes
 
@@ -7,8 +9,6 @@ class AssistantSession < ApplicationRecord
   belongs_to :chat_scope, polymorphic: true, optional: true
 
   enum :status, { processing: 0, completed: 1, failed: 2 }, prefix: true
-
-  attr_accessor :current_message
 
   scope :sorted, -> { order(created_at: :desc) }
 
@@ -36,6 +36,50 @@ class AssistantSession < ApplicationRecord
 
   def to_s
     "#{chat_class.humanize.titleize} for #{user}"
+  end
+
+  # Chattable interface implementation
+
+  def handle_chat_message(message, _user)
+    if message.nil?
+      self.log ||= []
+      self.log << LLM::PromptBuilder.build_assistant_message('Message is missing, please try again')
+      save
+    else
+      self.status = 'processing'
+      self.log ||= []
+      return unless save!
+
+      ChatResponseJob.perform_later(id, message)
+    end
+  end
+
+  def chat_messages_log
+    log || []
+  end
+
+  def chat_responder_name
+    assistant_name
+  end
+
+  def chat_processing?
+    status_processing?
+  end
+
+  def reset_chat!
+    update!(status: 'processing', current_message: nil, log: [])
+  end
+
+  def format_chat_message(text)
+    format_message(text)
+  end
+
+  def chat_common_questions
+    common_questions
+  end
+
+  def chat_context_object?
+    context_object?
   end
 
   private

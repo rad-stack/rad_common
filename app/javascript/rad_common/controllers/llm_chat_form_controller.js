@@ -7,7 +7,7 @@ export default class extends Controller {
   ];
 
   connect() {
-    const offcanvas = document.getElementById('mallow-question-modal');
+    const offcanvas = document.getElementById('basic-question-modal');
     if (offcanvas) {
       offcanvas.addEventListener('shown.bs.offcanvas', () => {
         this.scrollChatContainer();

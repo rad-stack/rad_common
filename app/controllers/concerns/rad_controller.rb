@@ -20,7 +20,7 @@ module RadController
       render file: Rails.root.join('public/403.html'), formats: [:html], status: :forbidden, layout: false
     end
 
-    helper_method :show_assistant_nav?
+    helper_method :show_chat_nav?, :show_assistant_nav?
 
     impersonates :user
   end
@@ -28,13 +28,20 @@ module RadController
   def set_assistant_session_context(chat_class: 'LLM::ChatTypes::SystemChat', chat_scope: nil)
     @chat_class = chat_class
     @chat_scope = chat_scope
+    set_chattable_from_assistant_session
   end
 
-  def show_assistant_nav?
-    assistant_enabled = RadConfig.open_ai_api_key.present? && current_user && policy(AssistantSession).new?
-    return true if assistant_enabled && RadConfig.rad_system_chat_enabled?
+  def set_chattable(chattable)
+    @chattable = chattable
+  end
 
-    @chat_class.present? && @chat_class != 'LLM::ChatTypes::SystemChat'
+  def show_chat_nav?
+    @chattable.present?
+  end
+
+  # Kept for backward compatibility
+  def show_assistant_nav?
+    show_chat_nav?
   end
 
   protected
@@ -110,5 +117,17 @@ module RadController
       return params[:redirect_to] if params[:redirect_to].present?
 
       record
+    end
+
+    def set_chattable_from_assistant_session
+      return unless current_user
+
+      assistant_enabled = RadConfig.open_ai_api_key.present? && policy(AssistantSession).new?
+      show_system_chat = assistant_enabled && RadConfig.rad_system_chat_enabled?
+      show_custom_chat = @chat_class.present? && @chat_class != 'LLM::ChatTypes::SystemChat'
+
+      return unless show_system_chat || show_custom_chat
+
+      @chattable = AssistantSession.create_or_find_chat(current_user, @chat_class, @chat_scope)
     end
 end

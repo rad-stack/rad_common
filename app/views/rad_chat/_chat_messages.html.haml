@@ -1,0 +1,7 @@
+- logs = rad_chat_logs(chattable)
+- if logs.present?
+  - logs.each do |log|
+    - log_data = rad_chat_log_data(chattable, log)
+    = render log_data[:template], log_data
+- else
+  = render 'rad_chat/initial_chat_message', chattable: chattable

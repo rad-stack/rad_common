@@ -9,6 +9,7 @@ class AssistantSessionsController < ApplicationController
   def show; end
 
   def update
+    @chattable = @assistant_session
     @reset_chat = false
 
     if params['reset_chat'].present?
@@ -22,7 +23,7 @@ class AssistantSessionsController < ApplicationController
     end
 
     respond_to do |format|
-      format.turbo_stream
+      format.turbo_stream { render 'rad_chat/send_message' }
     end
   end
 
@@ -40,7 +41,7 @@ class AssistantSessionsController < ApplicationController
 
     def reset_chat
       @reset_chat = true
-      @assistant_session.update!(status: 'processing', current_message: nil, log: [])
+      @assistant_session.reset_chat!
     end
 
     def missing_message
