@@ -41,6 +41,12 @@ Turbo.StreamActions.hide_modal = function () {
   });
 };
 
+Turbo.StreamActions.enable_element = function () {
+  this.targetElements.forEach((target) => {
+    target.disabled = false;
+  });
+};
+
 Turbo.StreamActions.toggle_collapse = function() {
   const collapseId = this.getAttribute('target');
   const state = this.getAttribute('state');
