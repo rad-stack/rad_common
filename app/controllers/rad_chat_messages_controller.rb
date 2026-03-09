@@ -13,7 +13,7 @@ class RadChatMessagesController < ApplicationController
     end
 
     respond_to do |format|
-      format.turbo_stream
+      format.turbo_stream { render 'rad_chat/send_message' }
     end
   end
 
