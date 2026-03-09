@@ -8,11 +8,7 @@ class ChatResponseJob < ApplicationJob
       _, messages = service.basic_question(message)
       assistant_session.update!(log: messages, status: 'completed', current_message: nil)
       broadcast_response(assistant_session)
-    rescue Faraday::BadRequestError => e
-      capture_and_log_error(assistant_session, e)
     rescue StandardError => e
-      raise e if Rails.env.development?
-
       capture_and_log_error(assistant_session, e)
     end
   end
@@ -20,8 +16,6 @@ class ChatResponseJob < ApplicationJob
   private
 
     def capture_and_log_error(assistant_session, error)
-      raise error if Rails.env.development?
-
       Sentry.capture_exception(error)
       error_messages = assistant_session.log ||= []
       error_messages << { role: 'assistant', content: 'An unexpected error occurred' }
