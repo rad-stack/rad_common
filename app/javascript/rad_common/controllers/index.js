@@ -11,6 +11,7 @@ import InvitationFormController from './invitation_forms_controller';
 import CollapseStateController from './collapse_state_controller';
 import ClipboardController from './clipboard_controller';
 import LazyContainerController from './lazy_container_controller';
+
 export const radControllers = [
   { id: 'global-search', controller: GlobalSearchController },
   { id: 'rad-calendar', controller: rad_calendar_controller },
