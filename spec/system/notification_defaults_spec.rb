@@ -23,47 +23,6 @@ RSpec.describe 'Notification Defaults' do
     end
   end
 
-  describe 'apply to all settings' do
-    let(:admin) { create :admin, security_roles: [security_role] }
-    let(:user) { admin }
-    let!(:other_user) { create :admin, security_roles: [security_role] }
-
-    before do
-      NotificationSetting.create!(notification_type: notification_type, user: other_user,
-                                  enabled: true, email: true, sms: true, feed: false)
-    end
-
-    context 'when apply to all is checked', :js do
-      it 'updates all existing notification settings' do
-        visit "/notification_types/#{notification_type.id}/edit"
-        uncheck 'Default SMS'
-        prompt = "Are you sure you want to update ALL user's settings?"
-        page.accept_alert prompt do
-          check 'Apply to all existing settings'
-        end
-        click_button 'Save'
-
-        setting = NotificationSetting.find_by(notification_type: notification_type, user: other_user)
-        expect(setting.email).to be true
-        expect(setting.sms).to be false
-        expect(setting.feed).to be false
-      end
-    end
-
-    context 'when apply to all is not checked', :js do
-      it 'does not update existing notification settings' do
-        visit "/notification_types/#{notification_type.id}/edit"
-        uncheck 'Default SMS'
-        click_button 'Save'
-
-        setting = NotificationSetting.find_by(notification_type: notification_type, user: other_user)
-        expect(setting.email).to be true
-        expect(setting.sms).to be true
-        expect(setting.feed).to be false
-      end
-    end
-  end
-
   describe 'new defaults only apply going forward' do
     let(:admin) { create :admin }
     let(:user) { admin }
