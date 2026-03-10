@@ -3,10 +3,6 @@ class AssistantSessionPolicy < ApplicationPolicy
     update?
   end
 
-  def check_response?
-    update?
-  end
-
   def reset_chat?
     update?
   end
