@@ -10,12 +10,10 @@ class NotificationTypesController < ApplicationController
   def edit; end
 
   def update
-    apply_to_all = ActiveModel::Type::Boolean.new.cast(params[:apply_to_all_settings])
     @notification_type.assign_attributes(permitted_params)
     @notification_type.security_roles = resolve_roles(params[type_param_name][:security_roles])
 
     if @notification_type.save
-      apply_defaults_to_settings if apply_to_all
       redirect_to notification_types_path, notice: 'Notification Type updated.'
     else
       render :edit
@@ -40,12 +38,6 @@ class NotificationTypesController < ApplicationController
       else
         []
       end
-    end
-
-    def apply_defaults_to_settings
-      @notification_type.notification_settings.update!(email: @notification_type.default_email,
-                                                       feed: @notification_type.default_feed,
-                                                       sms: @notification_type.default_sms)
     end
 
     def type_param_name
