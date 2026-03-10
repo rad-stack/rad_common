@@ -11,7 +11,7 @@
       %th
         Enabled
         %p Email/SMS/Feed
-        - if show_user && can_create
+        - if can_create
           %p.mb-0
             %small
               %a.select-all-settings{ href: '#', data: { field: 'enabled' } } Enable All
