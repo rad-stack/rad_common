@@ -11,6 +11,28 @@
       %th
         Enabled
         %p Email/SMS/Feed
+        - if show_user && can_create
+          %p.mb-0
+            %small
+              %a.select-all-settings{ href: '#', data: { field: 'enabled' } } Enable All
+              |
+              %a.select-none-settings{ href: '#', data: { field: 'enabled' } } Disable All
+          %p.mb-0
+            %small
+              %a.select-all-settings{ href: '#', data: { field: 'email' } } All Email
+              |
+              %a.select-none-settings{ href: '#', data: { field: 'email' } } No Email
+          - if RadConfig.twilio_enabled?
+            %p.mb-0
+              %small
+                %a.select-all-settings{ href: '#', data: { field: 'sms' } } All SMS
+                |
+                %a.select-none-settings{ href: '#', data: { field: 'sms' } } No SMS
+          %p.mb-0
+            %small
+              %a.select-all-settings{ href: '#', data: { field: 'feed' } } All Feed
+              |
+              %a.select-none-settings{ href: '#', data: { field: 'feed' } } No Feed
 
     - settings.each do |record|
       :ruby
