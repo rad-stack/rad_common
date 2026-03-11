@@ -56,7 +56,7 @@
                                     disabled: !record.notification_type.sms_enabled? || !updatable
 
                   = f.input :feed,
-                            tooltip: 'Show a red badge on the top right navigation when a notification occurs.',
+                            tooltip: 'Show a red badge on the top right navigation when a notification occurs. Also enables browser push notifications if permitted.',
                             input_html: { class: 'ays-ignore',
                                           id: "notification_setting_feed_#{setting_id_string}" },
                             disabled: !record.notification_type.feed_enabled? || !updatable

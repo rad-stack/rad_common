@@ -103,6 +103,7 @@ module RadCommon
 
         if RadConfig.action_cable_enabled?
           copy_file '../../../../../spec/dummy/config/cable.yml', 'config/cable.yml'
+          copy_file 'service-worker.js', 'public/service-worker.js'
         end
 
         copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
@@ -791,6 +792,7 @@ gem 'propshaft'
           apply_migration '20251103194914_create_search_preferences.rb'
           apply_migration '20251120171951_remove_legacy_filter_settings.rb'
           apply_migration '20260110093403_rename_twilio_verify_enabled.rb'
+          apply_migration '20260306120002_create_push_subscriptions.rb'
         end
 
         def installed_app_name
