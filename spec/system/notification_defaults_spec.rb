@@ -16,10 +16,11 @@ RSpec.describe 'Notification Defaults' do
     it 'shows the correct default checkboxes for a new user' do
       visit '/notification_settings'
 
+      suffix = "attorney_changed_user_#{user.id}"
       expect(page).to have_content('Attorney Changed')
-      expect(page).to have_checked_field('notification_setting_email_attorney_changed')
-      expect(page).to have_checked_field('notification_setting_sms_attorney_changed')
-      expect(page).to have_field('notification_setting_feed_attorney_changed', disabled: true)
+      expect(page).to have_checked_field("notification_setting_email_#{suffix}")
+      expect(page).to have_checked_field("notification_setting_sms_#{suffix}")
+      expect(page).to have_field("notification_setting_feed_#{suffix}", disabled: true)
     end
   end
 
@@ -46,8 +47,9 @@ RSpec.describe 'Notification Defaults' do
       login_as new_user, scope: :user
       visit '/notification_settings'
 
-      expect(page).to have_checked_field('notification_setting_email_attorney_changed')
-      expect(page).to have_no_checked_field('notification_setting_sms_attorney_changed')
+      suffix = "attorney_changed_user_#{new_user.id}"
+      expect(page).to have_checked_field("notification_setting_email_#{suffix}")
+      expect(page).to have_no_checked_field("notification_setting_sms_#{suffix}")
     end
   end
 end
