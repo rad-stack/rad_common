@@ -14,7 +14,7 @@
 
     - settings.each do |record|
       :ruby
-        setting_id_string = record.notification_type.description.parameterize.underscore
+        setting_id_string = "#{record.notification_type.description.parameterize.underscore}_user_#{record.user_id}"
         collapse_id = "notification-options-#{setting_id_string}"
         updatable = can_create && policy(record).create?
       %tr{ class: table_row_style(record) }
