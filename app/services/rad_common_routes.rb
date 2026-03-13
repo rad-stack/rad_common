@@ -39,6 +39,8 @@ module RadCommonRoutes
           end
         end
 
+        patch 'rad_chat_message', to: 'rad_chat_messages#send_message', as: :rad_chat_message
+
         resources :audits, only: :index
         resources :login_activities, only: :index
         resources :system_messages, only: %i[new create show]

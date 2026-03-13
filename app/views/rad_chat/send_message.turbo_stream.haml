@@ -1,0 +1,15 @@
+- id = dom_id(@chattable, 'chat')
+= turbo_stream.action(:update_input, 'chat_current_message', '')
+
+- if @reset_chat
+  = turbo_stream.update id do
+    = render 'rad_chat/initial_chat_message', chattable: @chattable
+- else
+  = turbo_stream.append id, partial: 'rad_chat/chat_message_left',
+                            locals: rad_chat_log_data(@chattable, @last_log)
+
+  = turbo_stream.append id do
+    = turbo_stream_from @chattable
+    %li.chat-right.justify-content-end.mb-3.d-flex.w-100#loading-message
+      = render 'rad_chat/loading_message', chattable: @chattable
+= turbo_stream.action :scroll_bottom, 'scroll-container'
