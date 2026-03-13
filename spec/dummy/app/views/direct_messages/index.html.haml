@@ -11,7 +11,7 @@
             - @direct_messages.each do |dm|
               = link_to direct_message_path(dm),
                         class: "list-group-item list-group-item-action #{'active' if @selected_direct_message&.id == dm.id}",
-                        data: { turbo_frame: 'conversation' } do
+                        data: { turbo: true, turbo_frame: 'conversation' } do
                 .d-flex.justify-content-between.align-items-center
                   %strong= dm.other_user(current_user)
                   %small= format_datetime(dm.updated_at)
