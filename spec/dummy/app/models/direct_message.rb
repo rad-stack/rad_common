@@ -73,13 +73,17 @@ class DirectMessage < ApplicationRecord
 
     def broadcast_new_message(message, user)
       chat_date = ApplicationController.helpers.format_datetime(DateTime.current)
+      target = ActionView::RecordIdentifier.dom_id(self, 'chat')
+      receiving_user = other_user(user)
 
       Turbo::StreamsChannel.broadcast_append_to(
-        self,
-        target: ActionView::RecordIdentifier.dom_id(self, 'chat'),
-        partial: 'rad_chat/chat_message_left',
+        [self, receiving_user],
+        target: target,
+        partial: 'rad_chat/chat_message_right',
         locals: { message: message, user_name: user.to_s, chat_date: chat_date, user: user }
       )
-      Turbo::StreamsChannel.broadcast_action_to(self, action: :scroll_bottom, target: 'scroll-container')
+      Turbo::StreamsChannel.broadcast_action_to(
+        [self, receiving_user], action: :scroll_bottom, target: 'scroll-container'
+      )
     end
 end

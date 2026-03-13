@@ -8,7 +8,7 @@
       .chat-container.mt-3
         %ul.chat-box.chatContainerScroll{ id: dom_id(@direct_message, 'chat') }
           = render 'direct_messages/chat_messages', direct_message: @direct_message
-          = turbo_stream_from @direct_message
+          = turbo_stream_from @direct_message, current_user
 
     .border-top.pt-3.pb-4.px-4.bg-white
       = turbo_frame_tag 'chat-form' do
