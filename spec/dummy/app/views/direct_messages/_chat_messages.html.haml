@@ -1,0 +1,9 @@
+- logs = direct_message.chat_messages_log
+- if logs.present?
+  - logs.each do |log|
+    - log_data = direct_message_chat_log_data(direct_message, log, current_user)
+    = render log_data[:template], log_data
+- else
+  %li.chat-right.justify-content-end.mb-3.d-flex.w-100
+    .chat-text.shadow
+      %pre No messages yet. Start the conversation!

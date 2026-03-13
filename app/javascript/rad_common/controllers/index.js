@@ -11,6 +11,7 @@ import InvitationFormController from './invitation_forms_controller';
 import CollapseStateController from './collapse_state_controller';
 import ClipboardController from './clipboard_controller';
 import LazyContainerController from './lazy_container_controller';
+import ListSelectController from './list_select_controller';
 
 export const radControllers = [
   { id: 'global-search', controller: GlobalSearchController },
@@ -25,5 +26,6 @@ export const radControllers = [
   { id: 'invitation-form', controller: InvitationFormController },
   { id: 'collapse-state', controller: CollapseStateController },
   { id: 'clipboard', controller: ClipboardController },
-  { id: 'lazy-container', controller: LazyContainerController }
+  { id: 'lazy-container', controller: LazyContainerController },
+  { id: 'list-select', controller: ListSelectController }
 ];

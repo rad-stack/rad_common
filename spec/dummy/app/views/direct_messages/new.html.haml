@@ -1,0 +1,6 @@
+.card
+  = render 'layouts/card_header'
+  .card-body
+    = simple_form_for @direct_message do |f|
+      = f.association :recipient, collection: User.where.not(id: current_user.id).sorted, label: 'Start conversation with'
+      = f.button :submit, 'Start Conversation', class: 'btn btn-primary'

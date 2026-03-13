@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_10_093403) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_06_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -199,6 +199,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_10_093403) do
     t.index ["sms_opt_out_message_sent"], name: "index_contact_logs_on_sms_opt_out_message_sent"
   end
 
+  create_table "direct_messages", force: :cascade do |t|
+    t.bigint "from_user_id", null: false
+    t.bigint "to_user_id", null: false
+    t.jsonb "log", default: []
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from_user_id"], name: "index_direct_messages_on_from_user_id"
+    t.index ["to_user_id"], name: "index_direct_messages_on_to_user_id"
+  end
+
   create_table "divisions", force: :cascade do |t|
     t.string "name", null: false
     t.string "code", null: false
@@ -297,6 +307,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_10_093403) do
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "active", default: true, null: false
     t.string "bcc_recipient"
+    t.boolean "default_email", default: false, null: false
+    t.boolean "default_feed", default: false, null: false
+    t.boolean "default_sms", default: false, null: false
     t.index ["type"], name: "index_notification_types_on_type", unique: true
   end
 
@@ -480,6 +493,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_10_093403) do
   add_foreign_key "contact_log_recipients", "contact_logs"
   add_foreign_key "contact_log_recipients", "users", column: "to_user_id"
   add_foreign_key "contact_logs", "users", column: "from_user_id"
+  add_foreign_key "direct_messages", "users", column: "from_user_id"
+  add_foreign_key "direct_messages", "users", column: "to_user_id"
   add_foreign_key "divisions", "categories"
   add_foreign_key "divisions", "users", column: "owner_id"
   add_foreign_key "notification_security_roles", "notification_types"

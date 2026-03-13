@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     get :quick_view, on: :member
   end
 
+  resources :direct_messages, only: %i[index show new create]
   resources :client_reports, only: :index
 
   namespace :api, defaults: { format: :json } do
