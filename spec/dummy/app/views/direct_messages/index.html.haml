@@ -5,7 +5,7 @@
       = link_to icon('plus', 'New Conversation'), new_direct_message_path, class: 'btn btn-primary btn-sm'
   .card-body.p-0
     .row.g-0{ style: 'height: 75vh;' }
-      .col-4.border-end.d-flex.flex-column
+      .col-3.border-end.d-flex.flex-column
         .overflow-auto.flex-grow-1
           .list-group.list-group-flush
             - @direct_messages.each do |dm|
@@ -14,10 +14,10 @@
                         data: { turbo_frame: 'conversation' } do
                 .d-flex.justify-content-between.align-items-center
                   %strong= dm.other_user(current_user)
-                  %small.text-muted= format_datetime(dm.updated_at)
+                  %small= format_datetime(dm.updated_at)
             - if @direct_messages.empty?
               .p-3.text-center.text-muted No conversations yet.
-      .col-8.d-flex.flex-column
+      .col-9.d-flex.flex-column
         = turbo_frame_tag 'conversation', class: 'd-flex flex-column flex-grow-1' do
           - if @selected_direct_message
             = render 'direct_messages/conversation', direct_message: @selected_direct_message
