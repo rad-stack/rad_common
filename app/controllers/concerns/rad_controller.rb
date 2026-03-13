@@ -31,10 +31,6 @@ module RadController
     set_chattable_from_assistant_session
   end
 
-  def set_chattable(chattable)
-    @chattable = chattable
-  end
-
   def show_chat_nav?
     @chattable.present?
   end
