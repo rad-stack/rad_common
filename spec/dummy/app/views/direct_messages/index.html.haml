@@ -7,11 +7,12 @@
     .row.g-0{ style: 'height: 75vh;' }
       .col-3.border-end.d-flex.flex-column
         .overflow-auto.flex-grow-1
-          .list-group.list-group-flush
+          .list-group.list-group-flush{ data: { controller: 'list-select' } }
             - @direct_messages.each do |dm|
               = link_to direct_message_path(dm),
                         class: "list-group-item list-group-item-action #{'active' if @selected_direct_message&.id == dm.id}",
-                        data: { turbo: true, turbo_frame: 'conversation' } do
+                        data: { turbo: true, turbo_frame: 'conversation',
+                                list_select_target: 'item', action: 'list-select#select' } do
                 .d-flex.justify-content-between.align-items-center
                   %strong= dm.other_user(current_user)
                   %small= format_datetime(dm.updated_at)
