@@ -3,7 +3,12 @@ class DirectMessagesController < ApplicationController
 
   def index
     authorize DirectMessage
-    @direct_messages = policy_scope(DirectMessage.for_user(current_user)).sorted.page(params[:page])
+    @direct_messages = policy_scope(DirectMessage.for_user(current_user)).sorted
+    @selected_direct_message = if params[:selected].present?
+                                 @direct_messages.find_by(id: params[:selected])
+                               else
+                                 @direct_messages.first
+                               end
   end
 
   def show; end
@@ -18,7 +23,7 @@ class DirectMessagesController < ApplicationController
     @direct_message = DirectMessage.find_or_create_conversation(current_user, recipient)
     authorize @direct_message
 
-    redirect_to @direct_message
+    redirect_to direct_messages_path(selected: @direct_message.id)
   end
 
   private

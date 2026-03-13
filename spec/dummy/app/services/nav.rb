@@ -7,7 +7,6 @@ class Nav < RadNav::Nav
        top_nav_item('Contact', view_context.new_company_contact_path, badge: nav_badge(:danger, 9)),
        top_nav_users,
        dropdown_menu('Divisions', division_items),
-       top_nav_index_item('DirectMessage', label: 'Messages'),
        admin_menu(false)]
     end
 

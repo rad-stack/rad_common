@@ -1,0 +1,58 @@
+%ul.nav.navbar-nav.ms-auto
+  - if user_signed_in?
+    - unread_count = current_user.notifications.unread.count
+
+    = render 'layouts/message_indicator'
+
+    %li.nav-item.dropdown
+      %a.nav-link.dropdown-toggle{ 'data-bs-toggle': 'dropdown', href: '#', class: impersonate_style }
+        - if impersonating?
+          Signed In as #{current_user}
+        - else
+          = current_user
+        - if unread_count.positive?
+          %span.badge.bg-danger.bg-opacity-75= unread_count
+        = show_nav_avatar
+      %ul.dropdown-menu.dropdown-menu-end
+        %li
+          = link_to icon('address-card', t('navigation.my_account')),
+                    edit_user_registration_path,
+                    class: 'dropdown-item'
+        - if my_profile_nav?
+          %li= link_to icon('user', 'My Profile'), edit_user_profile_path(current_user), class: 'dropdown-item'
+        - if policy(DirectMessage).index?
+          %li
+            = link_to icon('envelope', 'Messages'),
+                      direct_messages_path,
+                      class: 'dropdown-item'
+        - if policy(Notification).index?
+          %li
+            = link_to notifications_path, class: 'dropdown-item' do
+              = icon 'bell', 'Notifications'
+              - if unread_count.positive?
+                %span.badge.bg-danger.bg-opacity-75= unread_count
+        - if policy(NotificationSetting).index?
+          %li
+            = link_to icon('gear', 'Notification Settings'),
+                      notification_settings_path,
+                      class: 'dropdown-item'
+
+        - if impersonating?
+          %li
+            = link_to icon('user-slash', "Sign Out from #{current_user}"),
+                      stop_impersonations_path,
+                      method: 'delete',
+                      class: "dropdown-item #{impersonate_style}"
+        %hr.my-2
+        %li
+          = link_to icon('arrow-right-from-bracket', 'Sign Out'),
+                    destroy_user_session_path,
+                    method: 'delete',
+                    class: 'dropdown-item'
+  - else
+    - if !@marketing_site || RadConfig.show_sign_in_marketing?
+      %li= link_to 'Sign In', new_user_session_url(host: RadConfig.host_name!), class: 'nav-link'
+    - unless RadConfig.disable_sign_up?
+      %li= link_to 'Sign Up', new_user_registration_url(host: RadConfig.host_name!), class: 'nav-link'
+
+  = render 'layouts/navigation_help'

@@ -1,0 +1,32 @@
+.d-flex.flex-column.flex-grow-1
+  .border-bottom.px-3.py-2.bg-light
+    %strong= direct_message.other_user(current_user)
+  .flex-grow-1.bg-secondary.bg-opacity-25.p-0.d-flex.flex-column{ style: 'min-height: 0;' }
+    .flex-grow-1.chat-scroll-panel.overflow-auto#scroll-container
+      .chat-container.mt-3
+        %ul.chat-box.chatContainerScroll{ id: dom_id(direct_message, 'chat') }
+          = render 'direct_messages/chat_messages', direct_message: direct_message
+          = turbo_stream_from direct_message, current_user
+
+    .border-top.pt-3.pb-4.px-4.bg-white
+      = turbo_frame_tag 'chat-form' do
+        = simple_form_for direct_message,
+                          url: rad_chat_message_path(chattable_type: direct_message.class.name, chattable_id: direct_message.id),
+                          method: :patch,
+                          html: { data: { controller: 'llm-chat-form', 'llm-chat-form-target': 'form' } } do |f|
+          .d-flex
+            .input-group
+              %input.form-control.ays-ignore{ name: 'current_message',
+                                              placeholder: 'Type a message...',
+                                              type: 'text',
+                                              id: 'chat_current_message',
+                                              data: { 'llm-chat-form-target': 'currentMessage' } }
+              = f.button :button, type: :submit, class: 'btn btn-secondary', id: 'chat-submit-btn' do
+                = icon('paper-plane')
+              = f.button :button, type: :button, class: 'btn btn-secondary dropdown-toggle no-caret',
+                                  'data-bs-toggle': 'dropdown' do
+                = '...'
+              %ul.dropdown-menu
+                %li
+                  = f.button :button, name: 'reset_chat', value: 'reset' do
+                    = icon('comment-slash', 'Clear Chat?')
