@@ -1,4 +1,6 @@
 class NotificationType < ApplicationRecord
+  include BrowserNotifiable
+
   has_many :notification_security_roles, dependent: :destroy
   has_many :security_roles, through: :notification_security_roles, dependent: :destroy
   has_many :notification_settings, dependent: :destroy
@@ -32,6 +34,10 @@ class NotificationType < ApplicationRecord
 
   def feed_enabled?
     true
+  end
+
+  def browser_enabled?
+    RadConfig.browser_notifications_enabled?
   end
 
   def mailer_class
@@ -221,12 +227,12 @@ class NotificationType < ApplicationRecord
       opted_ids = notify_user_ids_opted(:feed)
 
       all_ids.each do |user_id|
-        Notification.create! user_id: user_id,
-                             notification_type: self,
-                             content: feed_content,
-                             record: subject_record,
-                             unread: opted_ids.include?(user_id)
-        notify_stream(user_id)
+        notification = Notification.create! user_id: user_id,
+                                            notification_type: self,
+                                            content: feed_content,
+                                            record: subject_record,
+                                            unread: opted_ids.include?(user_id)
+        notify_browser!(user_id, notification)
       end
     end
 
@@ -272,15 +278,5 @@ class NotificationType < ApplicationRecord
       else
         setting.send(notification_method)
       end
-    end
-
-    def notify_stream(user_id)
-      return unless RadConfig.action_cable_enabled?
-
-      Turbo::StreamsChannel.broadcast_render_to(
-        "notifications_#{user_id}",
-        partial: 'layouts/toast_stream',
-        locals: { header: toast_header, message: toast_content, user_id: user_id, subject_url: subject_url }
-      )
     end
 end

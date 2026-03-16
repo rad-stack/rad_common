@@ -50,6 +50,7 @@ PATH
       text
       turbo-rails
       twilio-ruby
+      web-push (~> 3.0)
       wicked_pdf (= 2.6.3)
       wkhtmltopdf-heroku (= 2.12.6.1.pre.jammy)
 
@@ -570,6 +571,9 @@ GEM
     vcr (6.4.0)
     warden (1.2.9)
       rack (>= 2.0.9)
+    web-push (3.1.0)
+      jwt (~> 3.0)
+      openssl (>= 3.0)
     webmock (3.26.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)

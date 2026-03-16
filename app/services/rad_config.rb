@@ -422,6 +422,24 @@ class RadConfig
       config_item(:action_cable_enabled).to_s.downcase == 'true'
     end
 
+    def browser_notifications_enabled?
+      action_cable_enabled? &&
+        secret_config_item(:vapid_public_key).present? &&
+        secret_config_item(:vapid_private_key).present?
+    end
+
+    def vapid_public_key!
+      secret_config_item! :vapid_public_key
+    end
+
+    def vapid_private_key!
+      secret_config_item! :vapid_private_key
+    end
+
+    def vapid_subject!
+      secret_config_item(:vapid_subject).presence || "mailto:#{admin_email_address!}"
+    end
+
     def always_crawl?
       boolean_config_item! :always_crawl
     end

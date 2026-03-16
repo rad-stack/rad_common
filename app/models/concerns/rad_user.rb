@@ -8,6 +8,7 @@ module RadUser
     belongs_to :user_status
 
     has_many :notification_settings, dependent: :destroy
+    has_many :push_subscriptions, dependent: :destroy
     has_many :system_messages, dependent: :destroy
     has_many :notifications, dependent: :destroy
     has_many :user_security_roles, dependent: :destroy
