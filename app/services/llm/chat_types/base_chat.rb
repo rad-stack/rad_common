@@ -5,9 +5,10 @@ module LLM
 
       ASSISTANT_NAME = 'Assistant'.freeze
 
-      def initialize(assistant_session)
+      def initialize(assistant_session, model: RadCommon::OPEN_AI_CHAT_MODEL)
         @assistant_session = assistant_session
         @common_question = false
+        @model = model
       end
 
       def assistant_name
@@ -70,7 +71,8 @@ module LLM
       def base_prompt
         @base_prompt = LLM::PromptBuilder.new(system_prompt: system_prompt,
                                               context: @assistant_session,
-                                              tools: base_tools)
+                                              tools: base_tools,
+                                              model: @model)
       end
 
       def available_tools
@@ -78,10 +80,6 @@ module LLM
       end
 
       private
-
-        def openai_client
-          @openai_client ||= OpenAI::Client.new(access_token: RadConfig.open_ai_api_key!)
-        end
 
         def system_prompt
           raise NotImplementedError
