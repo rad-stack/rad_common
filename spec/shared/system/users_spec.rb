@@ -331,6 +331,21 @@ RSpec.describe 'Users', type: :system do
       click_button 'Sign In'
       expect(page).to have_content('Signed in successfully')
     end
+
+    it 'notifies admins when expired user attempts to sign in', :user_expirable_specs do
+      admin
+      user.update!(last_activity_at: 98.days.ago)
+      user.reload
+      ActionMailer::Base.deliveries = []
+
+      visit new_user_session_path
+      fill_in 'user_email', with: user.email
+      fill_in 'user_password', with: password
+      click_button 'Sign In'
+
+      mail_subjects = ActionMailer::Base.deliveries.map(&:subject)
+      expect(mail_subjects).to include 'Inactive User Alert'
+    end
   end
 
   describe 'timeout', :devise_timeoutable_specs do
