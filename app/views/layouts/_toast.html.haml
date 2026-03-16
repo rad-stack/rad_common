@@ -1,9 +1,15 @@
-.position-fixed.bottom-0.right-0.p-3.bottom-toast#toast-nav{ data: rad_toast_data(flash) }
-  .toast.shadow.hide{ 'aria-atomic': 'true', 'aria-live' => 'assertive', role: 'alert' }
-    .toast-header.px-3
-      %h5.me-auto.pt-2#toast-nav-title
-      %button.ms-2.mb-1.btn-close{ 'aria-label': 'Close', 'data-bs-dismiss': 'toast', type: 'button' }
-    .toast-body
-      .lead.p-2#toast-nav-message
-        - if flash[:notice].present?
-          = flash[:notice]
+.toast.shadow.hide{ 'aria-atomic': 'true', 'aria-live' => 'assertive', role: 'alert', data: rad_toast_data(flash) }
+  .toast-header.px-3
+    %h5.me-auto.pt-2#toast-nav-title
+    - if flash[:subject_url].present?
+      = link_to icon('external-link'),
+                flash[:subject_url],
+                target: '_blank',
+                rel: 'noopener',
+                class: 'text-muted d-none',
+                id: 'toast-nav-link'
+    %button.ms-2.mb-1.btn-close{ 'aria-label': 'Close', 'data-bs-dismiss': 'toast', type: 'button' }
+  .toast-body
+    .lead.p-2#toast-nav-message
+      - if flash[:notice].present?
+        = flash[:notice]
