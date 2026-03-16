@@ -324,20 +324,28 @@ class RadConfig
       boolean_config_item! :secure_sentry
     end
 
-    def s3_access_key_id!
-      secret_config_item! :s3_access_key_id
+    def gcs_project_id!
+      secret_config_item! :gcs_project_id
     end
 
-    def s3_secret_access_key!
-      secret_config_item! :s3_secret_access_key
+    def gcs_bucket!
+      secret_config_item! :gcs_bucket
     end
 
-    def s3_region!
-      secret_config_item! :s3_region
+    def gcs_private_key_id!
+      secret_config_item! :gcs_private_key_id
     end
 
-    def s3_bucket!
-      secret_config_item! :s3_bucket
+    def gcs_private_key!
+      secret_config_item! :gcs_private_key
+    end
+
+    def gcs_client_email!
+      secret_config_item! :gcs_client_email
+    end
+
+    def gcs_client_id!
+      secret_config_item! :gcs_client_id
     end
 
     def additional_company_params!
@@ -486,7 +494,7 @@ class RadConfig
     end
 
     def check_validity!
-      check_aws!
+      check_gcs!
       check_two_factor!
       check_smarty!
       check_marketing!
@@ -495,18 +503,17 @@ class RadConfig
 
     private
 
-      def check_aws!
-        if secret_config_item(:s3_region).present? &&
-           secret_config_item(:s3_access_key_id).present? &&
-           secret_config_item(:s3_secret_access_key).present? &&
-           secret_config_item(:s3_bucket).present?
+      def check_gcs!
+        if secret_config_item(:gcs_project_id).present? &&
+           secret_config_item(:gcs_bucket).present? &&
+           secret_config_item(:gcs_private_key_id).present? &&
+           secret_config_item(:gcs_private_key).present? &&
+           secret_config_item(:gcs_client_email).present? &&
+           secret_config_item(:gcs_client_id).present?
           return
         end
 
-        # this can be fixed in Rails 6.1 to not have to always have them present
-        # https://bigbinary.com/blog/rails-6-1-allows-per-environment-configuration-support-for-active-storage
-
-        raise 'Missing AWS S3 credentials'
+        raise 'Missing Google Cloud Storage credentials'
       end
 
       def check_two_factor!
