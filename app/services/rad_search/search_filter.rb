@@ -262,7 +262,7 @@ module RadSearch
 
       def filter_value(search_params)
         search_empty = (search_params.blank? || !search_params.has_key?(searchable_name))
-        return @default_value.to_s if search_empty && @default_value
+        return @default_value if search_empty && @default_value
 
         search_params[searchable_name]
       end
@@ -285,9 +285,12 @@ module RadSearch
         values = grouped_scope_values
         return false if values.blank?
 
-        return values.intersect?(value.map(&:to_sym).reject(&:blank?)) if value.is_a?(Array)
+        if value.is_a?(Array)
+          sym_values = value.map { |v| v.to_s.to_sym }.reject(&:blank?)
+          return values.intersect?(sym_values)
+        end
 
-        values.include?(value.to_sym)
+        values.include?(value.to_s.to_sym)
       end
 
       def scope_value_option?(option)
@@ -315,15 +318,13 @@ module RadSearch
       def scope_value?(scope_name)
         return false if scope_name.blank?
         return true if grouped_scope_value?(scope_name)
+        return false if @scope_values.blank?
 
-        if @scope_values.present? && scope_name.is_a?(String)
-          if @scope_values.is_a? Array
-            @scope_values.include?(scope_name.to_sym)
-          else
-            @scope_values.symbolize_keys.has_key?(scope_name.to_sym)
-          end
+        sym_value = scope_name.to_s.to_sym
+        if @scope_values.is_a? Array
+          @scope_values.include?(sym_value)
         else
-          false
+          @scope_values.symbolize_keys.has_key?(sym_value)
         end
       end
 
@@ -344,7 +345,8 @@ module RadSearch
       end
 
       def apply_mixed_group_scope_values(results, values)
-        scopes = grouped_scope_values.intersection(values.map(&:to_sym))
+        sym_values = values.map { |v| v.to_s.to_sym }
+        scopes = grouped_scope_values.intersection(sym_values)
         values = (values.compact - scopes.map(&:to_s)).reject(&:blank?)
         results = results.where("#{searchable_name} IN (?)", values) if values.present?
         scopes.each { |scope| results = results.send(scope) }
@@ -353,11 +355,13 @@ module RadSearch
       end
 
       def apply_scope_a_value(results, scope_name)
-        results.send(scope_name) if @scope_values.include?(scope_name.to_sym)
+        sym_value = scope_name.to_s.to_sym
+        results.send(scope_name) if @scope_values.include?(sym_value)
       end
 
       def apply_scope_h_value(results, scope_name)
-        scope = @scope_values.symbolize_keys[scope_name.to_sym]
+        sym_value = scope_name.to_s.to_sym
+        scope = @scope_values.symbolize_keys[sym_value]
         if scope.is_a? Symbol
           results.send(scope)
         else
