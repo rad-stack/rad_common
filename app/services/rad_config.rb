@@ -1,6 +1,68 @@
 require 'mail'
 
 class RadConfig
+  SCHEMA = {
+    app_name:                        { type: :string,  required: true },
+    host_name:                       { type: :string,  required: true },
+    start_route:                     { type: :string,  required: true },
+    client_table_name:               { type: :string,  required: false },
+    timeout_hours:                   { type: :integer, required: true },
+    expire_password_after_days:      { type: :integer, required: true },
+    two_factor_auth_enabled:         { type: :boolean, required: true },
+    two_factor_auth_all_users:       { type: :boolean, required: true },
+    two_factor_remember_device_days: { type: :integer, required: true },
+    impersonate:                     { type: :boolean, required: false },
+    use_avatar:                      { type: :boolean, required: true },
+    switch_languages:                { type: :boolean, required: true },
+    require_mobile_phone:            { type: :boolean, required: true },
+    validate_user_domains:           { type: :boolean, required: true },
+    validate_external_email_domain:  { type: :boolean, required: true },
+    disable_sign_up:                 { type: :boolean, required: true },
+    disable_invite:                  { type: :boolean, required: true },
+    manually_create_users:           { type: :boolean, required: true },
+    pending_users:                   { type: :boolean, required: true },
+    external_users:                  { type: :boolean, required: true },
+    user_clients:                    { type: :boolean, required: true },
+    user_profiles:                   { type: :boolean, required: true },
+    secure_sentry:                   { type: :boolean, required: true },
+    show_help_menu:                  { type: :boolean, required: true },
+    show_sign_in_marketing:          { type: :boolean, required: true },
+    app_logo_includes_name:          { type: :boolean, required: true },
+    portal:                          { type: :boolean, required: true },
+    legal_docs:                      { type: :boolean, required: true },
+    allow_crawling:                  { type: :boolean, required: true },
+    always_crawl:                    { type: :boolean, required: true },
+    allow_marketing_site:            { type: :boolean, required: true },
+    force_marketing_site:            { type: :boolean, required: true },
+    marketing_subdomain:             { type: :string,  required: false },
+    canadian_addresses:              { type: :boolean, required: true },
+    saved_search_filters_enabled:    { type: :boolean, required: true },
+    filter_toggle_default_behavior:  { type: :string,  required: true },
+    last_first_user:                 { type: :boolean, required: true },
+    timezone_detection:              { type: :boolean, required: true },
+    storage_config_override:         { type: :boolean, required: true },
+    database_config_override:        { type: :boolean, required: true },
+    procfile_override:               { type: :boolean, required: true },
+    rad_system_chat_enabled:         { type: :boolean, required: true },
+    action_cable_enabled:            { type: :boolean, required: false },
+    legacy_assets:                   { type: :any,     required: false },
+    shared_database:                 { type: :any,     required: false },
+    global_validity_days:            { type: :integer, required: true },
+    global_validity_timeout_hours:   { type: :integer, required: true },
+    global_validity_include:         { type: :array,   required: true },
+    global_validity_exclude:         { type: :array,   required: true },
+    global_validity_supress:         { type: :array,   required: true },
+    additional_user_params:          { type: :array,   required: true },
+    additional_user_profile_params:  { type: :array,   required: true },
+    additional_company_params:       { type: :array,   required: true },
+    restricted_audit_attributes:     { type: :array,   required: true },
+    duplicates:                      { type: :array,   required: true },
+    rad_assistant_system_tools:      { type: :array,   required: true },
+    system_usage_models:             { type: :array,   required: true },
+    global_search_scopes:            { type: :array,   required: true },
+    crawlable_subdomains:            { type: :array,   required: true },
+  }.freeze
+
   class << self
     def admin_email!
       secret_config_item! :admin_email
@@ -486,6 +548,7 @@ class RadConfig
     end
 
     def check_validity!
+      check_schema!
       check_aws!
       check_two_factor!
       check_smarty!
@@ -494,6 +557,33 @@ class RadConfig
     end
 
     private
+
+      def check_schema!
+        config = Rails.configuration.rad_common
+        errors = []
+
+        SCHEMA.each do |key, rules|
+          value = config[key]
+
+          if value.nil?
+            errors << "missing required config key: #{key}" if rules[:required]
+            next
+          end
+
+          case rules[:type]
+          when :boolean
+            errors << "#{key} must be true or false, got #{value.class}" unless value.in?([true, false])
+          when :string
+            errors << "#{key} must be a String, got #{value.class}" unless value.is_a?(String)
+          when :integer
+            errors << "#{key} must be an Integer, got #{value.class}" unless value.is_a?(Integer)
+          when :array
+            errors << "#{key} must be an Array, got #{value.class}" unless value.is_a?(Array)
+          end
+        end
+
+        raise "rad_common.yml schema errors:\n  #{errors.join("\n  ")}" if errors.any?
+      end
 
       def check_aws!
         if secret_config_item(:s3_region).present? &&

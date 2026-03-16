@@ -1,6 +1,10 @@
 default: &default
   app_name: New Rails App
   use_avatar: false
+  validate_user_domains: false
+  validate_external_email_domain: false
+  show_sign_in_marketing: false
+  legal_docs: false
   disable_sign_up: true
   disable_invite: false
   manually_create_users: false
@@ -32,6 +36,8 @@ default: &default
   filter_toggle_default_behavior: remember_state
   rad_system_chat_enabled: false
   action_cable_enabled: false
+  two_factor_auth_all_users: false
+  two_factor_remember_device_days: 7
   expire_password_after_days: 90
 
   rad_assistant_system_tools: []
@@ -42,6 +48,7 @@ default: &default
   duplicates: []
   restricted_audit_attributes: []
   additional_user_params: []
+  additional_user_profile_params: []
   additional_company_params: []
   global_validity_days: 3
   global_validity_timeout_hours: 3
@@ -71,14 +78,12 @@ development:
 
   host_name: localhost:3000
   two_factor_auth_enabled: false
-  two_factor_remember_device_days: 7
 
 test:
   <<: *default
 
   host_name: localhost:3000
   two_factor_auth_enabled: true
-  two_factor_remember_device_days: 7
   two_factor_auth_all_users: true
 
 production:
@@ -86,5 +91,3 @@ production:
 
   host_name: new-rails-app.example.com
   two_factor_auth_enabled: true
-  two_factor_remember_device_days: 7
-  two_factor_auth_all_users: false
