@@ -25,6 +25,16 @@ RSpec.describe 'Users', type: :request do
       end
     end
 
+    describe 'PUT set_js_timezone' do
+      let(:timezone) { 'America/New_York' }
+
+      it 'sets the detected_timezone_js' do
+        put '/set_js_timezone', params: { timezone: timezone }
+        expect(response).to have_http_status(:ok)
+        expect(user.reload.detected_timezone_js).to eq('Eastern Time (US & Canada)')
+      end
+    end
+
     describe 'PUT update_timezone' do
       let(:existing_timezone) { 'Eastern Time (US & Canada)' }
       let(:new_timezone) { 'Pacific Time (US & Canada)' }
