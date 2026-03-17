@@ -11,6 +11,14 @@ document.addEventListener('turbo:before-fetch-response', (event) => {
     Toast.error('Unauthorized', 'You are not authorized to perform this action.');
   }
 });
+document.addEventListener('turbo:frame-missing', (event) => {
+  const { response } = event.detail;
+
+  if (response.url.includes('/auth/sign_in')) {
+    event.preventDefault();
+    window.location = response.url;
+  }
+});
 
 Turbo.StreamActions.update_input = function () {
   this.targetElements.forEach((target) => {
