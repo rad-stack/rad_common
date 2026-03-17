@@ -13,7 +13,10 @@ class UserTimezone
   def set_js_timezone!(timezone)
     return if timezone == user.detected_timezone_js
 
-    user.update! detected_timezone_js: convert_timezone(timezone).name
+    converted = convert_timezone(timezone)
+    return if converted.blank?
+
+    user.update! detected_timezone_js: converted.name
   end
 
   def wrong_timezone?
