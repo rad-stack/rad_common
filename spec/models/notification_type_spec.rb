@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe NotificationType do
-  let(:user) { create :admin }
+  let(:user) { create :admin, mobile_phone: mobile_phone }
+  let(:mobile_phone) { create :phone_number, :mobile }
   let(:another_user) { create :user }
   let(:notification_type) { Notifications::DivisionUpdatedNotification.main(notification_payload) }
 
@@ -13,6 +14,80 @@ RSpec.describe NotificationType do
 
   let(:notification_payload) { division }
   let(:notification_method) { :email }
+
+  describe 'enabled_for_method? when notification settings not present' do
+    subject(:result) { notification_type.send(:enabled_for_method?, user.id, notification_method) }
+
+    before do
+      allow(RadConfig).to receive(:twilio_enabled?).and_return true
+      allow_any_instance_of(PhoneNumberValidator).to receive(:check_twilio?).and_return false
+      allow_any_instance_of(described_class).to receive(:default_notification_methods).and_return(default_methods)
+    end
+
+    context 'when default method is email' do
+      let(:default_methods) { [:email] }
+
+      context 'when notification method is email' do
+        let(:notification_method) { :email }
+
+        it { is_expected.to be true }
+      end
+
+      context 'when notification method is sms' do
+        let(:notification_method) { :sms }
+
+        it { is_expected.to be false }
+      end
+    end
+
+    context 'when default method is email + sms' do
+      let(:default_methods) { %i[email sms] }
+
+      context 'when notification method is email' do
+        let(:notification_method) { :email }
+
+        it { is_expected.to be true }
+      end
+
+      context 'when notification method is sms' do
+        let(:notification_method) { :sms }
+
+        context 'without Twilio enabled' do
+          before { allow(RadConfig).to receive(:twilio_enabled?).and_return false }
+
+          it { is_expected.to be false }
+        end
+
+        context 'when user has mobile phone' do
+          it { is_expected.to be true }
+        end
+
+        context "when user doesn't have mobile phone" do
+          let(:mobile_phone) { nil }
+
+          before { allow_any_instance_of(UserStatus).to receive(:validate_email_phone?).and_return false }
+
+          it { is_expected.to be false }
+        end
+      end
+
+      context 'when default method is sms' do
+        let(:default_methods) { [:sms] }
+
+        context 'when notification method is email' do
+          let(:notification_method) { :email }
+
+          it { expect { result }.to raise_error 'default_notification_methods must include :email' }
+        end
+
+        context 'when notification method is sms' do
+          let(:notification_method) { :sms }
+
+          it { expect { result }.to raise_error 'default_notification_methods must include :email' }
+        end
+      end
+    end
+  end
 
   describe 'contact_log' do
     let(:contact_log) { ContactLog.last }
