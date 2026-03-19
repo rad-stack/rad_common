@@ -68,8 +68,15 @@ class GlobalAutocomplete
           label: record.send(search_label),
           value: record.to_s,
           active: !record.respond_to?(:active?) || record.active?,
+          can_show: can_show?(record),
           scope_description: scope[:description] }
       end
+    end
+
+    def can_show?(record)
+      return true unless mode == :global_search
+
+      Pundit.policy!(user, check_policy_klass(record)).show?
     end
 
     def get_columns_values(columns, methods, record)
@@ -110,8 +117,17 @@ class GlobalAutocomplete
 
     def validate_global_search_scope
       return if params[:global_search_scope].blank?
+      return if selected_scope.present?
 
-      raise "Invalid global scope #{params[:global_search_scope]}" if selected_scope.blank?
+      if all_scopes_include?(params[:global_search_scope])
+        raise Pundit::NotAuthorizedError, "Not authorized for global scope #{params[:global_search_scope]}"
+      end
+
+      raise "Invalid global scope #{params[:global_search_scope]}"
+    end
+
+    def all_scopes_include?(scope_name)
+      RadConfig.global_search_scopes!.any? { |item| item[:name] == scope_name }
     end
 
     def selected_scope
