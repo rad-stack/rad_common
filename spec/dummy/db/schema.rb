@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_10_093403) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
+  enable_extension "vector"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -53,9 +54,25 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "assistant_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.jsonb "log"
+    t.string "contextable_type"
+    t.bigint "contextable_id"
+    t.string "chat_scope_type"
+    t.bigint "chat_scope_id"
+    t.integer "status", default: 1, null: false
+    t.string "chat_class", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_scope_type", "chat_scope_id"], name: "index_assistant_sessions_on_chat_scope"
+    t.index ["contextable_type", "contextable_id"], name: "index_assistant_sessions_on_contextable"
+    t.index ["user_id"], name: "index_assistant_sessions_on_user_id"
+  end
+
   create_table "attorneys", force: :cascade do |t|
-    t.string "first_name", null: false
-    t.string "last_name", null: false
+    t.string "first_name"
+    t.string "last_name"
     t.string "middle_name"
     t.string "company_name", null: false
     t.string "phone_number"
@@ -70,6 +87,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
     t.boolean "active", default: true, null: false
     t.string "mobile_phone"
     t.jsonb "address_metadata"
+    t.index ["first_name", "last_name", "mobile_phone"], name: "index_attorneys_on_first_name_and_last_name_and_mobile_phone", unique: true
   end
 
   create_table "audits", force: :cascade do |t|
@@ -108,6 +126,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email", null: false
+    t.string "business_type"
+    t.index ["name", "business_type"], name: "index_clients_on_name_and_business_type", unique: true, nulls_not_distinct: true
     t.index ["name"], name: "index_clients_on_name"
   end
 
@@ -144,7 +164,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
     t.string "sendgrid_reason"
     t.boolean "notify_on_fail", default: true, null: false
     t.boolean "sms_false_positive", default: false, null: false
+    t.integer "fax_status"
+    t.string "fax_error_message"
     t.index ["contact_log_id"], name: "index_contact_log_recipients_on_contact_log_id"
+    t.index ["created_at"], name: "index_contact_log_recipients_on_created_at"
     t.index ["email"], name: "index_contact_log_recipients_on_email"
     t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"
     t.index ["to_user_id"], name: "index_contact_log_recipients_on_to_user_id"
@@ -159,12 +182,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
     t.datetime "updated_at", null: false
     t.boolean "sms_opt_out_message_sent", default: false, null: false
     t.string "sms_message_id"
-    t.integer "sms_log_type"
+    t.integer "contact_direction"
     t.string "from_email"
     t.integer "service_type", default: 0, null: false
     t.string "record_type"
     t.bigint "record_id"
     t.string "content"
+    t.string "fax_message_id"
     t.index ["created_at"], name: "index_contact_logs_on_created_at"
     t.index ["from_number"], name: "index_contact_logs_on_from_number"
     t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"
@@ -190,7 +214,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
     t.string "invoice_email"
     t.bigint "category_id"
     t.string "tags", default: [], null: false, array: true
+    t.string "api_key"
     t.index ["category_id"], name: "index_divisions_on_category_id"
+    t.index ["created_at"], name: "index_divisions_on_created_at"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
     t.index ["owner_id"], name: "index_divisions_on_owner_id"
   end
@@ -206,6 +232,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
     t.datetime "updated_at", null: false
     t.datetime "processed_at", precision: nil, null: false
     t.index ["duplicatable_type", "duplicatable_id"], name: "index_duplicates_on_duplicatable_type_and_duplicatable_id", unique: true
+  end
+
+  create_table "embeddings", force: :cascade do |t|
+    t.string "embeddable_type", null: false
+    t.bigint "embeddable_id", null: false
+    t.vector "embedding", limit: 1536, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["embeddable_type", "embeddable_id"], name: "index_embeddings_on_embeddable_type_and_embeddable_id", unique: true
+    t.index ["embedding"], name: "index_embeddings_on_embedding", opclass: :vector_cosine_ops, using: :hnsw
   end
 
   create_table "login_activities", force: :cascade do |t|
@@ -273,6 +309,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
     t.bigint "record_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_notifications_on_created_at"
     t.index ["notification_type_id"], name: "index_notifications_on_notification_type_id"
     t.index ["record_type", "record_id"], name: "index_notifications_on_record_type_and_record_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
@@ -296,6 +333,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
     t.datetime "updated_at", null: false
     t.index ["user_id", "name", "search_class"], name: "unique_saved_search_filters", unique: true
     t.index ["user_id"], name: "index_saved_search_filters_on_user_id"
+  end
+
+  create_table "search_preferences", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "search_class", null: false
+    t.integer "toggle_behavior"
+    t.boolean "sticky_filters", default: false, null: false
+    t.jsonb "search_filters", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "search_class"], name: "unique_search_preferences", unique: true
+    t.index ["user_id"], name: "index_search_preferences_on_user_id"
   end
 
   create_table "security_roles", force: :cascade do |t|
@@ -388,7 +437,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
     t.string "global_search_default"
     t.bigint "user_status_id", null: false
     t.datetime "last_sign_in_with_twilio_verify", precision: nil
-    t.boolean "twilio_verify_enabled", default: true, null: false
+    t.boolean "otp_required_for_login", default: true, null: false
     t.string "invitation_token"
     t.datetime "invitation_created_at", precision: nil
     t.datetime "invitation_sent_at", precision: nil
@@ -403,13 +452,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
     t.datetime "password_changed_at", precision: nil
     t.datetime "last_activity_at", precision: nil
     t.datetime "expired_at", precision: nil
-    t.jsonb "filter_defaults"
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
     t.string "language", default: "en", null: false
     t.string "detected_timezone"
     t.string "ignored_timezone"
+    t.string "detected_timezone_js"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at"
     t.index ["first_name"], name: "index_users_on_first_name"
@@ -425,6 +475,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "assistant_sessions", "users"
   add_foreign_key "audits", "users"
   add_foreign_key "contact_log_recipients", "contact_logs"
   add_foreign_key "contact_log_recipients", "users", column: "to_user_id"
@@ -438,6 +489,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_115245) do
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
   add_foreign_key "saved_search_filters", "users"
+  add_foreign_key "search_preferences", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
   add_foreign_key "user_clients", "clients"

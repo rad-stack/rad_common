@@ -23,7 +23,7 @@
           %td= record.bcc_recipient
           %td= record.notifications.size
           %td= format_boolean record.active?
-          %td
+          %td.d-grid.gap-2
             = link_to icon(:pencil, 'Edit'),
                       edit_notification_type_path(record),
-                      class: 'btn btn-sm btn-secondary btn-block'
+                      class: 'btn btn-sm btn-secondary'

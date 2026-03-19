@@ -1,0 +1,10 @@
+- if assistant_session.common_questions.present?
+  = f.button :button,
+             type: :button,
+             class: 'btn btn-secondary dropdown-toggle',
+             'data-bs-toggle': 'dropdown' do
+    = icon('person-circle-question', 'Common Questions')
+  %ul.dropdown-menu
+    - assistant_session.common_questions.each do |question|
+      %li
+        %buton.dropdown-item{ data: { action: 'click->llm-chat-form#updateCurrentMessage' } }= question

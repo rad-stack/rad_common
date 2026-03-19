@@ -1,6 +1,6 @@
 .card
   = render 'layouts/card_header',
-           title: "Adding #{RadCommon::AppInfo.new.client_model_label} to #{@user}",
+           title: "Adding #{AppInfo.new.client_model_label} to #{@user}",
            no_new_button: true,
            no_index_button: true
 
@@ -13,7 +13,7 @@
             = f.input :client_id,
                       collection: clients_to_add_to_user(@user),
                       input_html: { class: 'selectpicker', 'data-live-search' => true },
-                      label: RadCommon::AppInfo.new.client_model_label
+                      label: AppInfo.new.client_model_label
 
             = f.input :user_id, as: :hidden
       .form-actions

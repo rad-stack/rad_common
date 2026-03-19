@@ -103,7 +103,7 @@ module DuplicateFixable
 
     def notify_high_duplicates
       all_records = all.size
-      return unless all_records.positive?
+      return unless all_records > 20
 
       duplicate_records = high_duplicates.count
       percentage = (duplicate_records / (all_records * 1.0))
@@ -201,6 +201,8 @@ module DuplicateFixable
   end
 
   def create_or_update_metadata!(attributes, bypass_notifications: false)
+    association(:duplicate).reset
+
     if duplicate.blank?
       record = Duplicate.create! attributes.merge(processed_at: Time.current, duplicatable: self)
       record.maybe_notify! unless bypass_notifications
@@ -227,7 +229,7 @@ module DuplicateFixable
   end
 
   def duplicate_model_config
-    RadCommon::AppInfo.new.duplicate_model_config(self.class.name)
+    AppInfo.new.duplicate_model_config(self.class.name)
   end
 
   def merge_duplicates(duplicate_keys, user)

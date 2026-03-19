@@ -15,7 +15,7 @@ class UserClientsController < ApplicationController
     authorize @user_client
 
     if @user_client.save
-      redirect_to @user_client.user, notice: "#{RadCommon::AppInfo.new.client_model_label} was successfully added."
+      redirect_to @user_client.user, notice: "#{AppInfo.new.client_model_label} was successfully added."
     else
       render :new
     end
@@ -25,7 +25,7 @@ class UserClientsController < ApplicationController
     user = @user_client.user
 
     if @user_client.destroy
-      flash[:notice] = "#{RadCommon::AppInfo.new.client_model_label} was successfully deleted."
+      flash[:notice] = "#{AppInfo.new.client_model_label} was successfully deleted."
     else
       flash[:error] = @user_client.errors.full_messages.join(', ')
     end

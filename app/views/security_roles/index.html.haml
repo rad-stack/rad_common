@@ -1,6 +1,6 @@
 .card
   = render 'layouts/card_header'
   .card-body
-    = paginate @security_roles, theme: 'twitter-bootstrap-4'
+    = paginate @security_roles, theme: 'bootstrap-5'
     = render 'security_roles/index', security_roles: @security_roles, show_actions: show_actions?(SecurityRole)
-    = paginate @security_roles, theme: 'twitter-bootstrap-4'
+    = paginate @security_roles, theme: 'bootstrap-5'

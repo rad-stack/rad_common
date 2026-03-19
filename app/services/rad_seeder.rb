@@ -1,10 +1,6 @@
 class RadSeeder
   DEV_NOTIFICATION_TYPES = %w[Notifications::DuplicateFoundAdminNotification
-                              Notifications::GlobalValidityRanLongNotification
-                              Notifications::HighDuplicatesNotification
-                              Notifications::InvalidDataWasFoundNotification
-                              Notifications::TwilioErrorThresholdExceededNotification
-                              Notifications::MissingAuditModelsNotification].freeze
+                              Notifications::HighDuplicatesNotification].freeze
 
   attr_accessor :users
 
@@ -17,7 +13,7 @@ class RadSeeder
     seed_company
     seed_users
     @users = User.all
-    seed_contact_logs
+    seed_contact_logs if development?
 
     mute_staging_notifications if staging?
 
@@ -160,9 +156,7 @@ class RadSeeder
     end
 
     def seeded_user_mobile_phone(seeded_user)
-      if (Rails.env.development? || Rails.env.test?) && seeded_user[:mobile_phone].blank?
-        return FactoryBot.create(:phone_number, :mobile)
-      end
+      return FactoryBot.create(:phone_number, :mobile) if (development? || test?) && seeded_user[:mobile_phone].blank?
 
       seeded_user[:mobile_phone]
     end
@@ -245,5 +239,13 @@ class RadSeeder
 
     def staging?
       Rails.env.staging?
+    end
+
+    def development?
+      Rails.env.development?
+    end
+
+    def test?
+      Rails.env.test?
     end
 end

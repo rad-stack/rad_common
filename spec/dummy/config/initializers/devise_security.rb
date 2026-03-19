@@ -5,7 +5,7 @@ Devise.setup do |config|
   # Configure security extension for devise
 
   # Should the password expire (e.g 3.months)
-  config.expire_password_after = 90.days
+  config.expire_password_after = RadConfig.expire_password_after!
 
   # Need 1 char of A-Z, a-z and 0-9
   config.password_complexity = Rails.env.development? ? {} : { digit: 1, lower: 1, symbol: 1, upper: 1 }

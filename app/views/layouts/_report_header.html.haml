@@ -21,8 +21,8 @@
       = simple_form_for :report, url: main_path, method: :get do |f|
         .form-inputs
           - if @report.date_filters?
-            .row{ 'data-controller': 'search-date-filter' }
-              .col-lg-2
+            .d-flex.justify-space-between.col-lg-5.flex-wrap{ 'data-controller': 'search-date-filter' }
+              .flex-grow-1
                 = f.input :start_date,
                           as: :date,
                           html5: true,
@@ -31,7 +31,7 @@
                           input_html: { value: @report.start_date,
                                         data: { 'search-date-filter-target' => 'startInput' } }
               .my-auto.pt-2.px-1= date_filter_dropdown_label
-              .col-lg-2
+              .flex-grow-1
                 = f.input :end_date, as: :date, html5: true, required: true,
                                      input_html: { value: @report.end_date,
                                                    data: { 'search-date-filter-target' => 'endInput' } }

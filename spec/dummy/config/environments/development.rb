@@ -19,7 +19,13 @@ Rails.application.configure do
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join("tmp/caching-dev.txt").exist?
+  if ENV['REDIS_ENABLED'] == 'true'
+    config.action_controller.perform_caching = true
+    config.action_controller.enable_fragment_cache_logging = true
+
+    config.cache_store = :redis_cache_store, { url: 'redis://localhost:6379/1' }
+    config.public_file_server.headers = { "Cache-Control" => "public, max-age=#{2.days.to_i}" }
+  elsif Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
@@ -70,8 +76,10 @@ Rails.application.configure do
   config.action_mailer.default charset: 'utf-8'
   config.action_mailer.smtp_settings = { address: 'localhost', port: 1025, domain: 'example.com' }
 
-  config.active_job.queue_adapter = :inline
+  config.active_job.queue_adapter = ENV['REDIS_ENABLED'] == 'true' ? :sidekiq : :inline
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = false
+
+  config.hosts << 'portal.lvh.me:3000'
 end

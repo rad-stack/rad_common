@@ -23,6 +23,10 @@ class DivisionPolicy < ApplicationPolicy
     destroy?
   end
 
+  def calendar?
+    show?
+  end
+
   class Scope < Scope
     def resolve
       if user.admin?

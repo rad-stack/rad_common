@@ -5,9 +5,22 @@ module RadCommon
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
 
+    ActiveSupport.on_load(:action_controller) do
+      include DeviseTwilioVerify::Controllers::Helpers
+    end
+
+    ActiveSupport.on_load(:action_view) do
+      include DeviseTwilioVerify::Views::Helpers
+    end
+
+    config.after_initialize do
+      Devise::Mapping.prepend DeviseTwilioVerify::Mapping
+    end
+
     require 'active_storage_validations'
     require 'audited'
     require 'authtrail'
+    require 'chartkick'
     require 'csv'
     require 'devise'
     require 'devise-twilio-verify'
@@ -20,7 +33,8 @@ module RadCommon
     require 'hashids'
     require 'jwt'
     require 'kaminari'
-    require 'bootstrap4-kaminari-views'
+    require 'bootstrap5-kaminari-views'
+    require 'neighbor'
     require 'nokogiri'
     require 'pg'
     require 'prawn'
@@ -28,6 +42,8 @@ module RadCommon
     require 'premailer/rails'
     require 'pretender'
     require 'pundit'
+    require 'rack/attack'
+    require 'openai'
     require 'sendgrid-ruby'
     require 'sentry-rails'
     require 'sentry-ruby'

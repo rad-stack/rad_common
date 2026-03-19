@@ -1,5 +1,5 @@
 module Notifications
-  class TwilioErrorThresholdExceededNotification < ::NotificationType
+  class TwilioErrorThresholdExceededNotification < DeveloperNotification
     def mailer_message
       "Twilio Error Threshold has been exceeded. #{formatted_percent} of messages have failed to deliver. " \
         'Check contact logs for more details'
