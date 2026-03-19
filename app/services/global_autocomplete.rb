@@ -117,8 +117,17 @@ class GlobalAutocomplete
 
     def validate_global_search_scope
       return if params[:global_search_scope].blank?
+      return if selected_scope.present?
 
-      raise "Invalid global scope #{params[:global_search_scope]}" if selected_scope.blank?
+      if all_scopes_include?(params[:global_search_scope])
+        raise Pundit::NotAuthorizedError, "Not authorized for global scope #{params[:global_search_scope]}"
+      end
+
+      raise "Invalid global scope #{params[:global_search_scope]}"
+    end
+
+    def all_scopes_include?(scope_name)
+      RadConfig.global_search_scopes!.any? { |item| item[:name] == scope_name }
     end
 
     def selected_scope
