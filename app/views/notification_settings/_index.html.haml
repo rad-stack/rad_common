@@ -10,7 +10,10 @@
         %th User
       %th
         Enabled
-        %p= "Email/#{'SMS/' if RadConfig.twilio_enabled?}Feed"
+        - if RadConfig.twilio_enabled?
+          %p Email/SMS/Feed
+        - else
+          %p Email/Feed
         - if can_create
           .d-inline-flex.flex-column.mt-2.gap-1
             .d-flex.gap-1
