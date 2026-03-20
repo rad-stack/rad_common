@@ -15,28 +15,31 @@
         - else
           %p Email/Feed
         - if can_create
-          .d-inline-flex.flex-column.mt-2.gap-1
-            .d-flex.gap-1
-              %button.btn.btn-sm.btn-success.select-all-settings.flex-fill{ data: { field: 'enabled' } }
-                Enable All
-              %button.btn.btn-sm.btn-danger.select-none-settings.flex-fill{ data: { field: 'enabled' } }
-                Disable All
-            .d-flex.gap-1
-              %button.btn.btn-sm.btn-primary.select-all-settings.flex-fill{ data: { field: 'email' } }
-                All Email
-              %button.btn.btn-sm.btn-secondary.select-none-settings.flex-fill{ data: { field: 'email' } }
-                No Email
-            - if RadConfig.twilio_enabled?
+          %a.small{ href: '#', data: { 'bs-toggle': 'collapse', 'bs-target': '#bulk-settings' } }
+            Bulk Update
+          .collapse.mt-1#bulk-settings
+            .d-inline-flex.flex-column.gap-1
               .d-flex.gap-1
-                %button.btn.btn-sm.btn-primary.select-all-settings.flex-fill{ data: { field: 'sms' } }
-                  All SMS
-                %button.btn.btn-sm.btn-secondary.select-none-settings.flex-fill{ data: { field: 'sms' } }
-                  No SMS
-            .d-flex.gap-1
-              %button.btn.btn-sm.btn-primary.select-all-settings.flex-fill{ data: { field: 'feed' } }
-                All Feed
-              %button.btn.btn-sm.btn-secondary.select-none-settings.flex-fill{ data: { field: 'feed' } }
-                No Feed
+                %button.btn.btn-sm.btn-success.select-all-settings.flex-fill{ data: { field: 'enabled' } }
+                  Enable All
+                %button.btn.btn-sm.btn-danger.select-none-settings.flex-fill{ data: { field: 'enabled' } }
+                  Disable All
+              .d-flex.gap-1
+                %button.btn.btn-sm.btn-primary.select-all-settings.flex-fill{ data: { field: 'email' } }
+                  All Email
+                %button.btn.btn-sm.btn-secondary.select-none-settings.flex-fill{ data: { field: 'email' } }
+                  No Email
+              - if RadConfig.twilio_enabled?
+                .d-flex.gap-1
+                  %button.btn.btn-sm.btn-primary.select-all-settings.flex-fill{ data: { field: 'sms' } }
+                    All SMS
+                  %button.btn.btn-sm.btn-secondary.select-none-settings.flex-fill{ data: { field: 'sms' } }
+                    No SMS
+              .d-flex.gap-1
+                %button.btn.btn-sm.btn-primary.select-all-settings.flex-fill{ data: { field: 'feed' } }
+                  All Feed
+                %button.btn.btn-sm.btn-secondary.select-none-settings.flex-fill{ data: { field: 'feed' } }
+                  No Feed
 
     - settings.each do |record|
       :ruby

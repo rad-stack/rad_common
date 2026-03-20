@@ -14,6 +14,7 @@ export class RadCommonDynamicUpdater {
 
       $('.select-all-settings, .select-none-settings').click(function(e) {
         e.preventDefault();
+        if (!confirm('Are you sure?')) return;
         var field = $(this).data('field');
         var checked = $(this).hasClass('select-all-settings');
 
