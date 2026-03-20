@@ -10,29 +10,22 @@
         %th User
       %th
         Enabled
-        %p Email/SMS/Feed
+        %p= "Email/#{'SMS/' if RadConfig.twilio_enabled?}Feed"
         - if can_create
-          %p.mb-0
-            %small
-              %a.select-all-settings{ href: '#', data: { field: 'enabled' } } Enable All
-              |
-              %a.select-none-settings{ href: '#', data: { field: 'enabled' } } Disable All
-          %p.mb-0
-            %small
-              %a.select-all-settings{ href: '#', data: { field: 'email' } } All Email
-              |
-              %a.select-none-settings{ href: '#', data: { field: 'email' } } No Email
-          - if RadConfig.twilio_enabled?
-            %p.mb-0
-              %small
-                %a.select-all-settings{ href: '#', data: { field: 'sms' } } All SMS
-                |
-                %a.select-none-settings{ href: '#', data: { field: 'sms' } } No SMS
-          %p.mb-0
-            %small
-              %a.select-all-settings{ href: '#', data: { field: 'feed' } } All Feed
-              |
-              %a.select-none-settings{ href: '#', data: { field: 'feed' } } No Feed
+          .mt-2
+            .mt-1
+              %button.btn.btn-sm.btn-success.select-all-settings{ type: 'button', data: { field: 'enabled' }, style: 'width: 5.5rem' } Enable All
+              %button.btn.btn-sm.btn-danger.select-none-settings{ type: 'button', data: { field: 'enabled' }, style: 'width: 5.5rem' } Disable All
+            .mt-1
+              %button.btn.btn-sm.btn-primary.select-all-settings{ type: 'button', data: { field: 'email' }, style: 'width: 5.5rem' } All Email
+              %button.btn.btn-sm.btn-secondary.select-none-settings{ type: 'button', data: { field: 'email' }, style: 'width: 5.5rem' } No Email
+            - if RadConfig.twilio_enabled?
+              .mt-1
+                %button.btn.btn-sm.btn-primary.select-all-settings{ type: 'button', data: { field: 'sms' }, style: 'width: 5.5rem' } All SMS
+                %button.btn.btn-sm.btn-secondary.select-none-settings{ type: 'button', data: { field: 'sms' }, style: 'width: 5.5rem' } No SMS
+            .mt-1
+              %button.btn.btn-sm.btn-primary.select-all-settings{ type: 'button', data: { field: 'feed' }, style: 'width: 5.5rem' } All Feed
+              %button.btn.btn-sm.btn-secondary.select-none-settings{ type: 'button', data: { field: 'feed' }, style: 'width: 5.5rem' } No Feed
 
     - settings.each do |record|
       :ruby
