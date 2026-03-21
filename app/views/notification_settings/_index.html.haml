@@ -3,7 +3,7 @@
 
 .card-body
   %table.table.table-bordered
-    %tr
+    %tr.table-secondary
       - unless show_user
         %th Notification
       - if show_user
@@ -19,21 +19,21 @@
             %fieldset.mb-3
               .form-check.me-3
                 %input.form-check-input.bulk-setting-checkbox{ type: 'checkbox', data: { field: 'enabled' } }
-                %label.form-check-label Enabled
+                %label.form-check-label All Enabled
             .d-flex.gap-1.align-items-center.px-3.py-2.bg-light.border.rounded.shadow-sm
               %fieldset.mb-3
                 .form-check.me-3
                   %input.form-check-input.bulk-setting-checkbox{ type: 'checkbox', data: { field: 'email' } }
-                  %label.form-check-label Email
+                  %label.form-check-label All Email
               - if RadConfig.twilio_enabled?
                 %fieldset.mb-3
                   .form-check.me-3
                     %input.form-check-input.bulk-setting-checkbox{ type: 'checkbox', data: { field: 'sms' } }
-                    %label.form-check-label SMS
+                    %label.form-check-label All SMS
               %fieldset.mb-3
                 .form-check.me-3
                   %input.form-check-input.bulk-setting-checkbox{ type: 'checkbox', data: { field: 'feed' } }
-                  %label.form-check-label Feed
+                  %label.form-check-label All Feed
 
     - settings.each do |record|
       :ruby

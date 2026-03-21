@@ -24,12 +24,26 @@ export class RadCommonDynamicUpdater {
                 }
               }
             }
+            updateBulkCheckboxStates();
           })
           .fail(function(data) {
             alert(data.responseJSON.error);
             form[0].reset();
           });
       });
+
+      function updateBulkCheckboxStates() {
+        $('.bulk-setting-checkbox').each(function() {
+          var field = $(this).data('field');
+          var checkboxes = $('form.dynamic-updater input[type="checkbox"][id*="_' + field + '_"]').not(':disabled');
+          if (checkboxes.length === 0) return;
+          var checkedCount = checkboxes.filter(':checked').length;
+          this.checked = checkedCount > 0;
+          this.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
+        });
+      }
+
+      updateBulkCheckboxStates();
 
       $('.bulk-setting-checkbox').change(function() {
         if (!confirm('Are you sure?')) {
