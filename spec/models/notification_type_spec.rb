@@ -2,10 +2,39 @@ require 'rails_helper'
 
 RSpec.describe NotificationType do
   let(:user) { create :admin }
+  let(:another_user) { create :user }
   let(:notification_type) { Notifications::DivisionUpdatedNotification.main(notification_payload) }
-  let(:division) { create :division, owner: user }
+
+  let(:division) do
+    Audited.audit_class.as_user(another_user) do
+      create :division, owner: user
+    end
+  end
+
   let(:notification_payload) { division }
   let(:notification_method) { :email }
+
+  describe 'contact_log' do
+    let(:contact_log) { ContactLog.last }
+
+    context "when notification has it's own mailer" do
+      before { Notifications::UserWasApprovedNotification.main([another_user, user]).notify! }
+
+      it 'sets contact_log record and contact_log from_user' do
+        expect(contact_log.record).to eq another_user
+        expect(contact_log.from_user).to eq user
+      end
+    end
+
+    context 'when notification uses simpler mailer' do
+      before { Notifications::DuplicateFoundUserNotification.main(division).notify! }
+
+      it 'sets contact_log record and contact_log from_user' do
+        expect(contact_log.record).to eq division
+        expect(contact_log.from_user).to eq another_user
+      end
+    end
+  end
 
   describe 'bcc recipient' do
     subject { last_email.bcc }
@@ -45,7 +74,7 @@ RSpec.describe NotificationType do
     context 'with inactive user' do
       before { user.update! user_status: UserStatus.default_inactive_status }
 
-      it { expect { result }.to raise_error 'absolute users must be active' }
+      it { expect { result }.to raise_error "absolute users must be active: [#{user.id}]" }
     end
 
     context 'when email is turned off' do

@@ -15,15 +15,17 @@ module RadNav
     def content
       return if count.zero?
 
-      tag.span(class: "badge alert-#{alert_style}") do
+      tag.span(class: "badge bg-#{alert_style} bg-opacity-75") do
         count.to_s
       end
     end
 
     def self.highest_alert_style(badges)
-      styles = badges.map(&:alert_style).uniq
+      styles = badges.map(&:alert_style).uniq.sort
       return styles.first if styles.count == 1
-      return :warning if styles.sort == %i[info warning]
+      return :warning if styles == %i[info warning]
+      return :danger if styles == %i[danger info warning]
+      return :danger if styles == %i[danger info]
 
       # just need to handle any additional combinations that occur, choose the higher alert level
       raise "conflicting badge styles: #{styles}"

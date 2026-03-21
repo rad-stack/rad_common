@@ -18,6 +18,7 @@ gem 'platform-api'
 gem 'devise-twilio-verify', git: 'https://github.com/jayywolff/twilio-verify-devise.git',
                             branch: 'authy-to-twilio-verify'
 
+
 group :test do
   gem 'capybara-selenium'
   gem 'parallel_tests'
@@ -29,5 +30,6 @@ end
 
 group :development, :test do
   gem 'bootsnap', require: false
+  gem 'propshaft'
   gem 'pry'
 end

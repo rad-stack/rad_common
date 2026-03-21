@@ -4,8 +4,6 @@ module RadUser
   USER_AUDIT_COLUMNS_DISABLED = %i[password password_confirmation encrypted_password reset_password_token
                                    confirmation_token unlock_token remember_created_at].freeze
 
-  RAD_DOMAIN = 'radstack.com'.freeze
-
   included do
     belongs_to :user_status
 
@@ -18,6 +16,7 @@ module RadUser
     has_many :user_clients, dependent: :destroy
     has_many :clients, through: :user_clients, source: :client
     has_many :saved_search_filters, dependent: :destroy
+    has_many :search_preferences, dependent: :destroy
 
     has_many :contact_logs_from, class_name: 'ContactLog',
                                  foreign_key: 'from_user_id',
@@ -31,12 +30,13 @@ module RadUser
 
     has_one_attached :avatar
 
-    enum language: { English: 'en', Spanish: 'es' }
+    enum :language, { English: 'en', Spanish: 'es' }
 
     attr_accessor :approved_by, :do_not_notify_approved, :initial_security_role_id
 
     scope :active, -> { joins(:user_status).where(user_statuses: { active: true }) }
     scope :admins, -> { active.by_permission 'admin' }
+    scope :developers, -> { admins.where('email ILIKE ?', "%@#{RadConfig.developer_domain!}") }
     scope :pending, -> { where(user_status_id: UserStatus.default_pending_status.id) }
     scope :by_id, -> { order(:id) }
     scope :with_mobile_phone, -> { where.not(mobile_phone: ['', nil]) }
@@ -44,6 +44,7 @@ module RadUser
     scope :recent_first, -> { order('users.created_at DESC') }
     scope :recent_last, -> { order('users.created_at') }
     scope :except_user, ->(user) { where.not(id: user.id) }
+    scope :with_notifications, -> { where('users.id IN (SELECT DISTINCT user_id FROM notifications)') }
 
     scope :sorted, lambda {
       if RadConfig.last_first_user?
@@ -62,20 +63,25 @@ module RadUser
             "WHERE security_roles.#{permission} = TRUE)")
     }
 
+    scope :for_security_role, lambda { |security_role_id|
+      joins(:security_roles).where(security_roles: { id: security_role_id }).distinct
+    }
+
     scope :inactive, -> { joins(:user_status).where(user_statuses: { active: false }) }
     scope :not_inactive, -> { where.not(user_status_id: UserStatus.default_inactive_status.id) }
     scope :internal, -> { where(external: false) }
     scope :external, -> { where(external: true) }
 
     validate :validate_email_address
+    validate :validate_initial_security_role, on: :create, if: :active?
+    validate :validate_external_invites_internal, on: :create
     validate :validate_internal, on: :update
-    validate :validate_twilio_verify
+    validate :validate_two_factor
     validate :validate_mobile_phone
     validate :password_excludes_name
     validate :validate_last_activity
 
-    # this should be changed to "if: :active?" at some point, see Task 2024
-    validates :security_roles, presence: true, if: :active_for_authentication?
+    validates :security_roles, presence: true, if: :active?
 
     validates :avatar, content_type: { in: RadCommon::VALID_IMAGE_TYPES,
                                        message: RadCommon::VALID_CONTENT_TYPE_MESSAGE }
@@ -118,7 +124,12 @@ module RadUser
   end
 
   def stale?
-    updated_at < 4.months.ago
+    return false if updated_at > 1.week.ago
+    return false if current_sign_in_at.present? && current_sign_in_at > 1.week.ago
+
+    (updated_at < 4.months.ago) ||
+      (current_sign_in_at.present? && current_sign_in_at < 6.months.ago) ||
+      many_recent_failed_emails?
   end
 
   def not_inactive?
@@ -187,6 +198,16 @@ module RadUser
     end
   end
 
+  def user_invited_subject
+    "Invitation to Join #{RadConfig.app_name!}"
+  end
+
+  def user_invited_message
+    "Someone has invited you to #{RadConfig.app_name!}, you can accept it through the link " \
+      "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
+      'created until you access the link and set your password.'
+  end
+
   def notify_new_user_signed_up
     Notifications::NewUserSignedUpNotification.main(self).notify!
   end
@@ -220,11 +241,12 @@ module RadUser
     RadMailer.simple_message(self,
                              'Test Email',
                              'This is a test.',
-                             from_user: from_user).deliver_later
+                             contact_log_from_user: from_user,
+                             contact_log_record: self).deliver_later
   end
 
   def test_sms!(from_user)
-    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false
+    UserSMSSenderJob.perform_later 'Test SMS', from_user.id, id, nil, false, contact_log_record: self
   end
 
   def reactivate
@@ -242,8 +264,14 @@ module RadUser
     external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
   end
 
-  def rad_developer?
-    email.end_with? RAD_DOMAIN
+  def developer?
+    email.end_with? "@#{RadConfig.developer_domain!}"
+  end
+
+  class_methods do
+    def user_approved_message
+      "Your account was approved and you can begin using #{RadConfig.app_name!}."
+    end
   end
 
   private
@@ -259,8 +287,16 @@ module RadUser
       self.user_status = default_user_status if new_record? && !user_status
       return unless new_record?
 
-      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? && (RadConfig.twilio_verify_all_users? || admin?)
+      self.otp_required_for_login = RadConfig.two_factor_auth_enabled? &&
+                                    (RadConfig.two_factor_auth_all_users? || two_factor_security_role?)
+
       self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
+    end
+
+    def two_factor_security_role?
+      return initial_security_role.two_factor_auth? if initial_security_role_id.present?
+
+      security_roles.any?(&:two_factor_auth?)
     end
 
     def default_user_status
@@ -279,6 +315,7 @@ module RadUser
     end
 
     def validate_email_address
+      return unless RadConfig.validate_user_domains?
       return if email.blank? || user_status_id.nil? || !user_status.validate_email_phone? || Company.main.blank?
 
       domains = Company.main.valid_user_domains
@@ -289,18 +326,31 @@ module RadUser
       errors.add(:email, 'is not authorized for this application, please contact the system administrator')
     end
 
+    def validate_initial_security_role
+      return if initial_security_role_id.present? || security_role_ids.present?
+
+      errors.add :initial_security_role_id, 'is required'
+    end
+
+    def validate_external_invites_internal
+      return if initial_security_role_id.blank? || invited_by_id.blank?
+      return unless initial_security_role.internal? && invited_by.external?
+
+      errors.add :initial_security_role, 'cannot be internal'
+    end
+
     def validate_internal
       return if external? || user_clients.none?
 
       errors.add :external, 'not allowed when clients are assigned to this user'
     end
 
-    def validate_twilio_verify
-      return unless RadConfig.twilio_verify_enabled?
-      return if twilio_verify_enabled? || user_status.blank? || !user_status.validate_email_phone?
-      return unless RadConfig.twilio_verify_all_users? || admin?
+    def validate_two_factor
+      return unless RadConfig.two_factor_auth_enabled?
+      return if otp_required_for_login? || user_status.blank? || !user_status.validate_email_phone?
+      return unless RadConfig.two_factor_auth_all_users? || two_factor_security_role?
 
-      errors.add(:twilio_verify_enabled, 'is required')
+      errors.add(:otp_required_for_login, 'is required')
     end
 
     def validate_mobile_phone
@@ -320,7 +370,7 @@ module RadUser
     end
 
     def require_mobile_phone_two_factor?
-      RadConfig.twilio_verify_enabled? && twilio_verify_enabled?
+      RadConfig.two_factor_auth_enabled? && otp_required_for_login?
     end
 
     def password_excludes_name
@@ -341,6 +391,17 @@ module RadUser
       self.timezone = Company.main.timezone if new_record? && timezone.blank?
     end
 
+    def many_recent_failed_emails?
+      records = contact_logs_to.joins(:contact_log)
+                               .where(contact_logs: { service_type: :email })
+                               .order(created_at: :desc)
+                               .limit(10)
+
+      return false if records.size < 10
+
+      records.count { |item| !item.success? } >= 8
+    end
+
     def notify_user_approved
       return unless RadConfig.pending_users?
       return if invited_to_sign_up?
@@ -353,7 +414,17 @@ module RadUser
     end
 
     def notify_user_approved_user
-      RadMailer.your_account_approved(self).deliver_later
+      raise 'missing approved_by' if approved_by.blank?
+
+      RadMailer.your_account_approved(self, approved_by).deliver_later
+      return unless RadConfig.twilio_enabled? && mobile_phone.present?
+
+      UserSMSSenderJob.perform_later(User.user_approved_message,
+                                     approved_by.id,
+                                     id,
+                                     nil,
+                                     false,
+                                     contact_log_record: self)
     end
 
     def notify_user_approved_admins

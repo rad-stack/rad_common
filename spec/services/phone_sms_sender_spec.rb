@@ -6,7 +6,7 @@ RSpec.describe PhoneSMSSender, type: :service do
   let(:mobile_phone) { to_user.mobile_phone }
   let(:message) { 'test message' }
   let(:client) { create :client }
-  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, record: client) }
+  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, contact_log_record: client) }
 
   before { allow(RadRetry).to receive(:exponential_pause) }
 
@@ -29,6 +29,13 @@ RSpec.describe PhoneSMSSender, type: :service do
 
         it "doesn't set to user if more than one user has the phone number" do
           create :user, mobile_phone: mobile_phone
+
+          expect { result }.to change(ContactLogRecipient, :count).by(1)
+          expect(ContactLogRecipient.last.to_user).to be_nil
+        end
+
+        it "doesn't set to user if user is inactive" do
+          to_user.update! user_status: create(:user_status, :inactive)
 
           expect { result }.to change(ContactLogRecipient, :count).by(1)
           expect(ContactLogRecipient.last.to_user).to be_nil

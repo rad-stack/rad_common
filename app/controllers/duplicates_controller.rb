@@ -94,8 +94,7 @@ class DuplicatesController < ApplicationController
       end
     end
 
-    flash[:notice] = "#{model} was successfully updated."
-    redirect_to index_path
+    redirect_to index_path, notice: "#{model} was successfully updated."
   end
 
   def reset
@@ -164,8 +163,8 @@ class DuplicatesController < ApplicationController
     end
 
     def email_options
-      { email_action: { message: 'Click here to view the details.',
-                        button_text: 'View',
-                        button_url: url_for(@record) } }
+      { email_action: { message: 'Click here to view the details.', button_text: 'View', button_url: url_for(@record) },
+        contact_log_from_user: current_user,
+        contact_log_record: @record }
     end
 end

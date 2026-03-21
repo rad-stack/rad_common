@@ -5,6 +5,8 @@ describe RadMailer do
   let(:another_user) { create :user }
   let(:comma_user) { create :user, first_name: 'Foo,' }
   let(:comma_email) { comma_user.email }
+  let(:symbol_user) { create :user, first_name: 'Foo <3' }
+  let(:symbol_email) { symbol_user.email }
   let(:email) { user.email }
   let(:last_email) { ActionMailer::Base.deliveries.last }
   let(:attachment) { { record: division, method: :logo } }
@@ -16,7 +18,11 @@ describe RadMailer do
     let(:division) { create :division, :with_logo }
 
     before do
-      described_class.simple_message(recipient, 'foo', 'bar', attachment: attachment, record: division).deliver_now
+      described_class.simple_message(recipient,
+                                     'foo',
+                                     'bar',
+                                     attachment: attachment,
+                                     contact_log_record: division).deliver_now
     end
 
     describe 'subject' do
@@ -33,15 +39,21 @@ describe RadMailer do
       end
 
       context 'when to a user' do
+        let(:recipient) { user }
+
+        it { is_expected.to eq [email] }
+      end
+
+      context 'when user has comma in name' do
         let(:recipient) { comma_user }
 
         it { is_expected.to eq [comma_email] }
       end
 
-      context 'when user has comma in name' do
-        let(:recipient) { user }
+      context 'when user has symbol in name' do
+        let(:recipient) { symbol_user }
 
-        it { is_expected.to eq [email] }
+        it { is_expected.to eq [symbol_email] }
       end
 
       context 'when to multiple users' do
@@ -93,6 +105,15 @@ describe RadMailer do
 
       it 'sets to user if email matches' do
         expect(ContactLogRecipient.last.to_user).to eq user
+      end
+
+      context 'when user is inactive' do
+        let(:inactive_user) { create :user, :inactive }
+        let(:recipient) { inactive_user.email }
+
+        it 'does not set to_user' do
+          expect(ContactLogRecipient.last.to_user).to be_nil
+        end
       end
     end
   end

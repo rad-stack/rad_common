@@ -3,11 +3,12 @@
 .navbar.navbar-expand-lg.navbar-light.bg-light#navbar
   %div{ class: @marketing_site ? 'container' : 'container-fluid' }
     = link_to root_path, { class: 'navbar-brand' } do
-      = image_pack_tag RadConfig.app_logo_filename!
+      = image_tag company_logo(Company.main)
     - unless rad_nav.disable_nav?
-      %button.navbar-toggler{ type: 'button', data: { toggle: 'collapse', target: '#navbar-supported-content' } }
+      %button.navbar-toggler{ type: 'button', 'data-bs-toggle': 'collapse',
+                              'data-bs-target': '#navbar-supported-content' }
         %span.navbar-toggler-icon
-      .navbar-collapse.collapse.navbar-responsive-collapse#navbar-supported-content
+      .navbar-collapse.collapse#navbar-supported-content
         - if user_signed_in?
           %ul.nav.navbar-nav.navbar-left
             - if RadConfig.start_route! == '/onboardings'
@@ -16,4 +17,8 @@
               = item
             %li.global-search-nav
               = render 'layouts/global_search'
+        - elsif @marketing_site
+          %ul.nav.navbar-nav.navbar-left
+            - rad_nav.marketing_content.each do |item|
+              = item
         = render 'layouts/navigation_right'

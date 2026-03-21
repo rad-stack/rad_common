@@ -3,7 +3,7 @@ class AttorneysController < ApplicationController
 
   def index
     authorize Attorney
-    @attorneys = policy_scope(Attorney).sorted.page(params[:page])
+    @attorneys = policy_scope(Attorney).sorted.page(params[:page]).per(10)
   end
 
   def show
@@ -43,7 +43,7 @@ class AttorneysController < ApplicationController
     destroyed = @attorney.destroy
 
     if destroyed
-      flash[:success] = 'Attorney was successfully deleted.'
+      flash[:notice] = 'Attorney was successfully deleted.'
     else
       flash[:error] = @attorney.errors.full_messages.join(', ')
     end

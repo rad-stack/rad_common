@@ -234,7 +234,7 @@ class DuplicatesProcessor
 
     def calc_email_weight(record, duplicate_record, weight)
       if email_compare?(record, duplicate_record)
-        weight
+        weight * personal_contact_multiplier
       elsif levenshtein_email_compare?(record, duplicate_record)
         weight / 2
       else
@@ -254,7 +254,7 @@ class DuplicatesProcessor
 
     def calc_mobile_phone_weight(record, duplicate_record, weight)
       if mobile_phone_compare?(record, duplicate_record)
-        weight
+        weight * personal_contact_multiplier
       elsif levenshtein_mobile_phone_compare?(record, duplicate_record)
         weight / 2
       else
@@ -352,6 +352,10 @@ class DuplicatesProcessor
 
     def duplicate_last_name_weight
       record.duplicate_model_config[:last_name_weight].presence || 10
+    end
+
+    def personal_contact_multiplier
+      record.duplicate_model_config[:personal_contact_multiplier].presence || 1
     end
 
     def model_klass

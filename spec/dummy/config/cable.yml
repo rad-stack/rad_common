@@ -1,0 +1,18 @@
+test:
+  adapter: test
+
+development:
+  adapter: redis
+  url: redis://localhost:6379/1
+
+staging:
+  adapter: redis
+  url: <%= ENV.fetch("REDIS_URL") {} %>
+  ssl_params:
+    verify_mode: <%= OpenSSL::SSL::VERIFY_NONE %>
+
+production:
+  adapter: redis
+  url: <%= ENV.fetch("REDIS_URL") {} %>
+  ssl_params:
+    verify_mode: <%= OpenSSL::SSL::VERIFY_NONE %>

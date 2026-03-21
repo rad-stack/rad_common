@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe GlobalAutocomplete, type: :service do
-  include RadCommon::ApplicationHelper
+  include RadHelper
 
   let!(:user) { create :user }
   let!(:search_user) { create :user, first_name: 'Alex', last_name: 'Smith' }
@@ -9,7 +9,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
   let!(:division) { create :division }
   let(:search_scopes) { RadConfig.global_search_scopes! }
   let(:params) { ActionController::Parameters.new }
-  let(:auto_complete) { described_class.new(params, search_scopes, user) }
+  let(:auto_complete) { described_class.new(params, search_scopes, user, :searchable_association) }
 
   describe '#global_autocomplete_result' do
     context 'when searching users' do
@@ -21,7 +21,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       end
 
       context 'when search scopes empty' do
-        let(:auto_complete) { described_class.new(params, [], user) }
+        let(:auto_complete) { described_class.new(params, [], user, :searchable_association) }
 
         it 'returns empty array' do
           expect(auto_complete.global_autocomplete_result).to eq([])
@@ -135,6 +135,44 @@ RSpec.describe GlobalAutocomplete, type: :service do
         expect(auto_complete.send(:autocomplete_result, scope)).to eq([])
       end
     end
+
+    context 'when checking can_show' do
+      context 'when in global_search mode' do
+        let(:auto_complete) { described_class.new(params, search_scopes, user, :global_search) }
+        let(:result) { auto_complete.send(:autocomplete_result, scope) }
+
+        before { allow_any_instance_of(UserPolicy).to receive(:global_search?).and_return(true) }
+
+        context 'when user has show permission' do
+          before { allow_any_instance_of(UserPolicy).to receive(:show?).and_return(true) }
+
+          it 'returns can_show as true' do
+            expect(result.first[:can_show]).to be true
+          end
+        end
+
+        context 'when user lacks show permission' do
+          before { allow_any_instance_of(UserPolicy).to receive(:show?).and_return(false) }
+
+          it 'returns can_show as false' do
+            expect(result.first[:can_show]).to be false
+          end
+        end
+      end
+
+      context 'when in searchable_association mode' do
+        let(:result) { auto_complete.send(:autocomplete_result, scope) }
+
+        before do
+          allow_any_instance_of(UserPolicy).to receive(:index?).and_return(true)
+          allow_any_instance_of(UserPolicy).to receive(:show?).and_return(false)
+        end
+
+        it 'returns can_show as true regardless of show permission' do
+          expect(result.first[:can_show]).to be true
+        end
+      end
+    end
   end
 
   describe '#global_super_search_result' do
@@ -167,7 +205,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
       it 'excludes scopes with super_search_exclude marked true' do
         scopes = search_scopes.dup
         scopes[2][:super_search_exclude] = true
-        auto_complete = described_class.new(params, scopes, user)
+        auto_complete = described_class.new(params, scopes, user, :searchable_association)
         result = auto_complete.global_super_search_result
         expect(result.count).to eq(1)
       end
@@ -245,7 +283,7 @@ RSpec.describe GlobalAutocomplete, type: :service do
     end
 
     context 'when search scopes empty' do
-      let(:auto_complete) { described_class.new(params, [], user) }
+      let(:auto_complete) { described_class.new(params, [], user, :searchable_association) }
 
       it 'returns nil' do
         expect(auto_complete.send(:selected_scope)).to be_nil

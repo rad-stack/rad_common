@@ -1,5 +1,5 @@
 class BaseReport
-  include RadCommon::ApplicationHelper
+  include RadHelper
 
   attr_accessor :current_user, :view_context, :params, :start_date, :end_date, :report_errors
 
@@ -8,6 +8,8 @@ class BaseReport
     @view_context = view_context
     @params = params
     @report_errors = []
+
+    return unless date_filters?
 
     if params[:report].blank?
       @start_date = start_date_default
@@ -22,6 +24,10 @@ class BaseReport
     end
 
     apply_base_errors
+  end
+
+  def date_filters?
+    true
   end
 
   def valid?
@@ -65,10 +71,14 @@ class BaseReport
     # Override default start and end dates in sub classes as needed
 
     def start_date_default
+      return unless date_filters?
+
       beginning_of_last_week
     end
 
     def end_date_default
+      return unless date_filters?
+
       end_of_last_week
     end
 

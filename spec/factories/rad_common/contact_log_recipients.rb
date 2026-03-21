@@ -18,5 +18,7 @@ FactoryBot.define do
       email_status { :delivered }
       sms_status { nil }
     end
+
+    trait :sms
   end
 end

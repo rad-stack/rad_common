@@ -10,6 +10,10 @@ class RadConfig
       Mail::Address.new(admin_email!).address
     end
 
+    def developer_domain!
+      secret_config_item! :developer_domain
+    end
+
     def from_email!
       secret_config_item! :from_email
     end
@@ -76,6 +80,14 @@ class RadConfig
 
     def smarty_auth_token!
       secret_config_item! :smarty_auth_token
+    end
+
+    def open_ai_api_key!
+      secret_config_item! :open_ai_api_key
+    end
+
+    def open_ai_api_key
+      secret_config_item :open_ai_api_key
     end
 
     def hash_key!
@@ -152,16 +164,20 @@ class RadConfig
       secret_config_item! :twilio_verify_service_sid
     end
 
-    def twilio_verify_enabled?
-      boolean_config_item! :twilio_verify_enabled
+    def two_factor_auth_enabled?
+      boolean_config_item! :two_factor_auth_enabled
     end
 
-    def twilio_verify_all_users?
-      boolean_config_item! :twilio_verify_all_users
+    def two_factor_auth_all_users?
+      boolean_config_item! :two_factor_auth_all_users
     end
 
     def twilio_verify_remember_device!
-      config_item!(:twilio_verify_remember_device_days).days
+      config_item!(:two_factor_remember_device_days).days
+    end
+
+    def expire_password_after!
+      config_item!(:expire_password_after_days).days
     end
 
     def seeded_users!
@@ -192,6 +208,10 @@ class RadConfig
       boolean_config_item! :impersonate
     end
 
+    def show_sign_in_marketing?
+      boolean_config_item! :show_sign_in_marketing
+    end
+
     def avatar?
       boolean_config_item! :use_avatar
     end
@@ -202,6 +222,10 @@ class RadConfig
 
     def require_mobile_phone?
       boolean_config_item! :require_mobile_phone
+    end
+
+    def validate_user_domains?
+      boolean_config_item! :validate_user_domains
     end
 
     def storage_config_override?
@@ -252,6 +276,10 @@ class RadConfig
       boolean_config_item! :allow_marketing_site
     end
 
+    def marketing_subdomain
+      config_item(:marketing_subdomain).presence || 'www'
+    end
+
     def canadian_addresses?
       boolean_config_item! :canadian_addresses
     end
@@ -260,20 +288,20 @@ class RadConfig
       boolean_config_item! :saved_search_filters_enabled
     end
 
+    def filter_toggle_default_behavior!
+      config_item! :filter_toggle_default_behavior
+    end
+
     def legal_docs?
       boolean_config_item! :legal_docs
     end
 
-    def react_app?
-      config_item(:react_app).presence || false
+    def legacy_assets?
+      config_item(:legacy_assets).presence || false
     end
 
-    def favicon_filename!
-      override_variable(:favicon_filename) || 'favicon.ico'
-    end
-
-    def app_logo_filename!
-      override_variable(:app_logo_filename) || 'app_logo.png'
+    def shared_database?
+      config_item(:shared_database).presence || false
     end
 
     def app_logo_includes_name?
@@ -286,6 +314,10 @@ class RadConfig
 
     def user_profiles?
       boolean_config_item! :user_profiles
+    end
+
+    def portal?
+      boolean_config_item! :portal
     end
 
     def secure_sentry?
@@ -312,6 +344,10 @@ class RadConfig
       array_config_item! :additional_company_params
     end
 
+    def rad_assistant_system_tools!
+      array_config_item! :rad_assistant_system_tools
+    end
+
     def additional_user_params!
       array_config_item! :additional_user_params
     end
@@ -334,7 +370,8 @@ class RadConfig
     def system_usage_models!
       array_config_item!(:system_usage_models) +
         [['ContactLogRecipient', 'successful', 'Successful Contacts'],
-         ['ContactLogRecipient', 'failed', 'Failed Contacts']]
+         ['ContactLogRecipient', 'failed', 'Failed Contacts'],
+         'Notification']
     end
 
     def global_validity_days!
@@ -377,6 +414,14 @@ class RadConfig
       boolean_config_item! :allow_crawling
     end
 
+    def rad_system_chat_enabled?
+      boolean_config_item! :rad_system_chat_enabled
+    end
+
+    def action_cable_enabled?
+      config_item(:action_cable_enabled).to_s.downcase == 'true'
+    end
+
     def always_crawl?
       boolean_config_item! :always_crawl
     end
@@ -389,8 +434,16 @@ class RadConfig
       boolean_config_item! :last_first_user
     end
 
-    def legacy_rails_config?
-      boolean_config_item! :legacy_rails_config
+    def timezone_detection?
+      boolean_config_item! :timezone_detection
+    end
+
+    def blocked_ip_addresses?
+      secret_config_item(:blocked_ip_addresses).present?
+    end
+
+    def blocked_ip_addresses!
+      secret_config_item!(:blocked_ip_addresses).split(',')
     end
 
     def secret_config_item!(item)
@@ -434,9 +487,10 @@ class RadConfig
 
     def check_validity!
       check_aws!
-      check_twilio_verify!
+      check_two_factor!
       check_smarty!
       check_marketing!
+      check_external!
     end
 
     private
@@ -455,8 +509,8 @@ class RadConfig
         raise 'Missing AWS S3 credentials'
       end
 
-      def check_twilio_verify!
-        return unless twilio_verify_enabled? && !twilio_enabled?
+      def check_two_factor!
+        return unless two_factor_auth_enabled? && !twilio_enabled?
 
         raise 'Twilio must be enabled to provide mobile phone # validation when two factor authentication is enabled'
       end
@@ -472,6 +526,12 @@ class RadConfig
         return unless force_marketing_site? && !allow_marketing_site?
 
         raise 'force_marketing_site not allowed'
+      end
+
+      def check_external!
+        return unless user_clients? && !external_users?
+
+        raise 'user_clients requires external_users'
       end
 
       def override_variable(item)

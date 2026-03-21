@@ -2,9 +2,8 @@ class NotificationSetting < ApplicationRecord
   belongs_to :notification_type
   belongs_to :user
 
-  alias_attribute :active?, :enabled?
-
   scope :enabled, -> { where(enabled: true) }
+  scope :by_user, -> { joins(:user).merge(User.sorted) }
 
   validate :validate_notify_methods
   validate :validate_sms_possible_app
@@ -16,10 +15,12 @@ class NotificationSetting < ApplicationRecord
     "#{user} - #{notification_type}"
   end
 
-  def self.settings_for_user(user)
-    return [] if user.external?
+  def active?
+    enabled?
+  end
 
-    types = Pundit.policy_scope!(user, NotificationType).by_type
+  def self.settings_for_user(user)
+    types = Pundit.policy_scope!(user, NotificationType).sorted
     types.map { |notification_type| NotificationSetting.init_for_user(notification_type, user) }
   end
 

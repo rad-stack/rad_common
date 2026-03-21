@@ -56,7 +56,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = [Rails.root.join('spec/fixtures').to_s]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -120,19 +120,13 @@ RSpec.configure do |config|
   end
 
   config.before do
-    # TODO: workaround for this issue:
-    # https://github.com/rails/rails/issues/37270
-    (ActiveJob::Base.descendants << ActiveJob::Base).each(&:disable_test_adapter)
-    # TODO: end of workaround
-
     Timecop.safe_mode = true
-
     SpecSupport.before_all { self }
   end
 
   SpecSupport.hooks(config, chrome_driver)
 
-  config.filter_run_excluding(twilio_verify_specs: true) unless RadConfig.twilio_verify_enabled?
+  config.filter_run_excluding(two_factor_specs: true) unless RadConfig.two_factor_auth_enabled?
   config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
   config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
   config.filter_run_excluding(sign_up_specs: true) if RadConfig.disable_sign_up?
@@ -144,8 +138,13 @@ RSpec.configure do |config|
   config.filter_run_excluding(user_confirmable_specs: true) unless RadConfig.user_confirmable?
   config.filter_run_excluding(user_expirable_specs: true) unless RadConfig.user_expirable?
   config.filter_run_excluding(password_expirable_specs: true) unless RadConfig.password_expirable?
-  config.filter_run_excluding(non_react_specs: true) if RadConfig.react_app?
+  config.filter_run_excluding(legacy_asset_specs: true) if RadConfig.legacy_assets?
+  config.filter_run_excluding(shared_database_specs: true) if RadConfig.shared_database?
+  config.filter_run_excluding(timezone_detection_specs: true) unless RadConfig.timezone_detection?
+  config.filter_run_excluding(valid_user_domain_specs: true) unless RadConfig.validate_user_domains?
 
   include Warden::Test::Helpers
   config.include Capybara::DSL
+
+  Sidekiq.logger.level = Logger::WARN
 end

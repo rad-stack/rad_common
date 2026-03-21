@@ -17,7 +17,7 @@ class DatabaseUseChecker
     end
 
     def tables
-      RadCommon::AppInfo.new.application_tables - RadCommon::AppInfo.new.rad_common_tables
+      AppInfo.new.application_tables - AppInfo.new.rad_common_tables
     end
 
     def zero_or_one_records?(table_name)

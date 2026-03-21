@@ -15,8 +15,17 @@ class DivisionPolicy < ApplicationPolicy
     user.permission?(:delete_division)
   end
 
-  alias index? show?
-  alias audit? destroy?
+  def index?
+    show?
+  end
+
+  def audit?
+    destroy?
+  end
+
+  def calendar?
+    show?
+  end
 
   class Scope < Scope
     def resolve

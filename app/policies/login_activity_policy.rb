@@ -3,7 +3,15 @@ class LoginActivityPolicy < ApplicationPolicy
     false
   end
 
-  alias show? create?
-  alias destroy? create?
-  alias update? create?
+  def show?
+    create?
+  end
+
+  def destroy?
+    create?
+  end
+
+  def update?
+    create?
+  end
 end

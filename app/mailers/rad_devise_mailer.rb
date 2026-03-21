@@ -1,7 +1,7 @@
 class RadDeviseMailer < Devise::Mailer
   include RadContactMailer
   include Devise::Controllers::UrlHelpers
-  helper RadCommon::ApplicationHelper
+  helper RadHelper
 
   layout 'rad_mailer'
 
@@ -10,8 +10,8 @@ class RadDeviseMailer < Devise::Mailer
   default reply_to: RadConfig.admin_email!
 
   def confirmation_instructions(record, token, opts = {})
-    @rad_record = record
-    @rad_from_user = record
+    @contact_log_record = record
+    @contact_log_from_user = record
     @token = token
     initialize_from_record(record)
 
@@ -26,8 +26,8 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def reset_password_instructions(record, token, opts = {})
-    @rad_record = record
-    @rad_from_user = record
+    @contact_log_record = record
+    @contact_log_from_user = record
     @token = token
     initialize_from_record(record)
 
@@ -43,8 +43,8 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def unlock_instructions(record, token, opts = {})
-    @rad_record = record
-    @rad_from_user = record
+    @contact_log_record = record
+    @contact_log_from_user = record
     @token = token
     initialize_from_record(record)
 
@@ -59,15 +59,14 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def invitation_instructions(record, token, opts = {})
-    @rad_record = record
-    @rad_from_user = record.invited_by
+    @contact_log_record = record
+    @contact_log_from_user = record.invited_by
     @token = token
     initialize_from_record(record)
 
+    opts[:subject] = @resource.user_invited_subject
     @recipient = @resource
-    @message = "Someone has invited you to #{RadConfig.app_name!}, you can accept it through the link " \
-               "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
-               'created until you access the link and set your password.'
+    @message = @resource.user_invited_message
 
     @email_action = { message: 'Click the link to accept the invitation.',
                       button_text: 'Accept',
@@ -77,11 +76,14 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def email_changed(record, opts = {})
-    @rad_record = record
+    @contact_log_record = record
+    @contact_log_from_user = record
+    @rad_notify_on_fail = false
+
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "The email address for your #{RadConfig.app_name!} account was recently changed. If you made " \
+    @message = "The email address for your #{app_name} account was recently changed. If you made " \
                "this change, please disregard this message. If you didn't make this change, please let us know " \
                'immediately.'
 
@@ -89,11 +91,12 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def password_change(record, opts = {})
-    @rad_record = record
+    @contact_log_record = record
+    @contact_log_from_user = record
     initialize_from_record(record)
 
     @recipient = @resource
-    @message = "The password for your #{RadConfig.app_name!} account was recently changed. If you made this " \
+    @message = "The password for your #{app_name} account was recently changed. If you made this " \
                "change, you don't need to do anything more. If you didn't make this change, please let us know, " \
                'and reset your password immediately.'
 
@@ -101,7 +104,11 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def default_url_options
-    { host: RadConfig.host_name! }
+    if RadConfig.portal? && @resource.portal_user?
+      { host: @resource.portal_host_name }
+    else
+      { host: RadConfig.host_name! }
+    end
   end
 
   private
@@ -109,5 +116,9 @@ class RadDeviseMailer < Devise::Mailer
     def set_defaults
       @include_yield = false
       rad_headers
+    end
+
+    def app_name
+      RadConfig.portal? && @resource.portal_user? ? @resource.portal_app_name : RadConfig.app_name!
     end
 end

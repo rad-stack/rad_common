@@ -138,7 +138,7 @@ class CardPresenter
       return
     end
 
-    'alert-danger'
+    'bg-danger bg-opacity-25'
   end
 
   def output_title
@@ -185,7 +185,7 @@ class CardPresenter
     actions += external_actions
 
     if (action_name == 'edit' || action_name == 'update' || action_name == 'show') &&
-       !no_new_button && current_user && Pundit.policy!(current_user, klass.new).new?
+       !no_new_button && current_user && class_policy.new?
 
       actions.push(@view_context.link_to(@view_context.icon('plus-square', "Add Another #{object_label}"),
                                          new_url,
@@ -199,9 +199,7 @@ class CardPresenter
                                          class: 'btn btn-secondary btn-sm'))
     end
 
-    if action_name == 'index' && !no_new_button && current_user &&
-       Pundit.policy!(current_user, klass.new).new?
-
+    if action_name == 'index' && !no_new_button && current_user && class_policy.new?
       actions.push(@view_context.link_to(@view_context.icon('plus-square', "New #{object_label}"),
                                          new_url,
                                          class: 'btn btn-success btn-sm',
@@ -230,8 +228,8 @@ class CardPresenter
         !no_edit_button &&
         instance&.persisted? &&
         current_user &&
-        Pundit.policy!(current_user, klass.new).update? &&
-        Pundit.policy!(current_user, instance).update?
+        class_policy.update? &&
+        instance_policy.update?
     end
 
     def edit_action
@@ -240,9 +238,10 @@ class CardPresenter
 
     def include_duplicate_action?
       action_name == 'show' &&
-        RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
+        AppInfo.new.duplicates_enabled?(klass.name) &&
         instance.duplicate.present? &&
-        instance.duplicate.score.present?
+        instance.duplicate.score.present? &&
+        instance_policy.resolve_duplicates?
     end
 
     def duplicate_action
@@ -253,8 +252,8 @@ class CardPresenter
 
     def include_duplicates_action?
       action_name == 'index' &&
-        RadCommon::AppInfo.new.duplicates_enabled?(klass.name) &&
-        Pundit.policy!(current_user, klass.new).resolve_duplicates? &&
+        AppInfo.new.duplicates_enabled?(klass.name) &&
+        class_policy.resolve_duplicates? &&
         klass.high_duplicates.size.positive?
     end
 
@@ -269,8 +268,8 @@ class CardPresenter
         !no_delete_button &&
         instance&.persisted? &&
         current_user &&
-        Pundit.policy!(current_user, klass.new).destroy? &&
-        Pundit.policy!(current_user, instance).destroy?
+        class_policy.destroy? &&
+        instance_policy.destroy?
     end
 
     def include_tools_button?
@@ -282,7 +281,7 @@ class CardPresenter
     end
 
     def tool_actions
-      @tool_actions ||= [show_history_action] + contact_log_actions + [reset_duplicates_action].compact
+      @tool_actions ||= ([show_history_action] + contact_log_actions + [reset_duplicates_action]).compact
     end
 
     def show_history_action
@@ -292,10 +291,16 @@ class CardPresenter
                     instance.class.name != 'ActiveStorage::Attachment' &&
                     instance.respond_to?(:audits) &&
                     instance.persisted? &&
-                    Pundit.policy!(current_user, instance).audit?
+                    instance_policy.audit?
 
       { label: 'Audit History',
-        link: "/rad_common/audits/?auditable_type=#{instance.class}&auditable_id=#{instance.id}" }
+        link: @view_context.audits_path(search: { single_record: "#{single_record_class_name}:#{instance.id}" }) }
+    end
+
+    def single_record_class_name
+      return instance.class.to_s unless instance.class.to_s.start_with?('Notifications::')
+
+      'NotificationType'
     end
 
     def contact_log_actions
@@ -312,17 +317,25 @@ class CardPresenter
 
     def user_contact_log_actions
       [{ label: 'Contact Logs to User',
-         link: @view_context.contact_logs_path(search: { 'contact_log_recipients.to_user_id': instance.id }) },
+         link: @view_context.contact_logs_path(search: { 'contact_log_recipients.to_user_id': instance.id,
+                                                         created_at_start: Date.current,
+                                                         created_at_end: Date.current }) },
        { label: 'Contact Logs from User',
-         link: @view_context.contact_logs_path(search: { 'contact_logs.from_user_id': instance.id }) },
+         link: @view_context.contact_logs_path(search: { 'contact_logs.from_user_id': instance.id,
+                                                         created_at_start: Date.current,
+                                                         created_at_end: Date.current }) },
        { label: 'Contact Logs w/ User as Subject', link: contact_log_record_action },
        { label: 'All Associated Contact Logs',
-         link: @view_context.contact_logs_path(search: { associated_with_user: instance.id }) }]
+         link: @view_context.contact_logs_path(search: { associated_with_user: instance.id,
+                                                         created_at_start: Date.current,
+                                                         created_at_end: Date.current }) }]
     end
 
     def contact_log_record_action
       @view_context.contact_logs_path(search: { 'contact_logs.record_type': instance.class.name,
-                                                record_id_equals: instance.id })
+                                                record_id_equals: instance.id,
+                                                created_at_start: Date.current,
+                                                created_at_end: Date.current })
     end
 
     def contact_logs?
@@ -339,8 +352,8 @@ class CardPresenter
                     instance.present? &&
                     instance.respond_to?(:persisted?) &&
                     instance.persisted? &&
-                    RadCommon::AppInfo.new.duplicates_enabled?(instance.class.name) &&
-                    Pundit.policy!(current_user, instance).reset_duplicates?
+                    AppInfo.new.duplicates_enabled?(instance.class.name) &&
+                    instance_policy.reset_duplicates?
 
       confirm_message = 'This will reset non-duplicates and regenerate possible matches for this record, proceed?'
 
@@ -361,7 +374,7 @@ class CardPresenter
     def show_index_button?
       return false if no_index_button
       return false unless %w[show edit update new create].include?(action_name)
-      return false unless current_user && Pundit.policy!(current_user, klass.new).index?
+      return false unless current_user && class_policy.index?
       return false if no_records?
 
       true
@@ -369,5 +382,29 @@ class CardPresenter
 
     def no_records?
       Pundit.policy_scope!(current_user, klass).count.zero?
+    end
+
+    def class_policy
+      @class_policy ||= Pundit.policy!(current_user, check_policy_klass)
+    end
+
+    def instance_policy
+      @instance_policy ||= Pundit.policy!(current_user, check_policy_instance)
+    end
+
+    def check_policy_klass
+      if RadConfig.portal? && current_user.portal_user?
+        [:portal, klass.new]
+      else
+        klass.new
+      end
+    end
+
+    def check_policy_instance
+      if RadConfig.portal? && current_user.portal_user?
+        [:portal, instance]
+      else
+        instance
+      end
     end
 end

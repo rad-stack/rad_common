@@ -3,6 +3,11 @@ class CategoryPolicy < ApplicationPolicy
     true
   end
 
-  alias show? index?
-  alias create? index?
+  def show?
+    index?
+  end
+
+  def create?
+    index?
+  end
 end

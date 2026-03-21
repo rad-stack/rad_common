@@ -3,28 +3,35 @@ module TestHelpers
     Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/test_photo.png'), 'image/png')
   end
 
-  def bootstrap_select(value, attrs)
-    click_bootstrap_select(attrs)
-    if attrs[:search].present?
-      wait_for_ajax
-      find('.bs-searchbox input').fill_in(with: attrs[:search])
-    end
-    find('ul.inner li a span', text: value).click
+  def tom_select(value, attrs)
+    retries ||= 0
+    tom_search(value, attrs)
+    find('.ts-dropdown .option', text: value).click
+  rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::ElementNotInteractableError
+    retries += 1
+    raise if retries > 2
+
+    retry
   end
 
-  def click_bootstrap_select(attrs)
-    find(".bootstrap-select .dropdown-toggle[data-id='#{attrs[:from]}']").click
+  def tom_search(value, attrs)
+    click_tom_select(attrs.merge(skip_dropdown_check: true))
+    return if attrs[:search].blank?
+
+    find('.ts-dropdown input').fill_in(with: attrs[:search])
+    wait_for_ajax
   end
 
-  def confirm_present?
-    confirm_accepted = false
+  def click_tom_select(attrs)
+    find_by_id("#{attrs[:from]}-ts-control").click
+    return if attrs[:skip_dropdown_check]
 
-    begin
-      page.accept_confirm { confirm_accepted = true }
-      confirm_accepted
-    rescue StandardError
-      false
+    within ".#{attrs[:from]}" do
+      find('.dropdown-active', wait: 1)
     end
+  rescue Capybara::ElementNotFound
+    # If dropdown content is not found, try clicking again
+    find_by_id("#{attrs[:from]}-ts-control").click
   end
 
   def fill_time(id, time)

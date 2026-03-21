@@ -2,7 +2,7 @@
   = render 'layouts/card_header', no_new_button: true,
                                   no_delete_button: true,
                                   no_index_button: true,
-                                  edit_url: '/rad_common/company/edit'
+                                  edit_url: company_edit_path
 
   .card-body
     = render 'layouts/show_data_columns', resource: @company, data: company_show_data(@company)

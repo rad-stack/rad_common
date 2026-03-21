@@ -36,7 +36,7 @@ class RadTwilio
 
     begin
       response = get_phone_number(phone_number, mobile)
-      return 'does not appear to be a valid mobile phone number' if mobile && response.carrier['type'] != 'mobile'
+      return 'does not appear to be a valid mobile phone number' if mobile && !mobile_carrier?(response)
 
       response.phone_number
     rescue Twilio::REST::RestError, NoMethodError => e
@@ -59,6 +59,12 @@ class RadTwilio
     "(#{phone_number[2, 3]}) #{phone_number[5, 3]}-#{phone_number[8, 4]}"
   end
 
+  def self.strip_phone_number(phone_number)
+    return if phone_number.nil?
+
+    phone_number.gsub(/[^0-9a-z\\s]/i, '')
+  end
+
   private
 
     def client
@@ -66,7 +72,7 @@ class RadTwilio
     end
 
     def get_phone_number(attribute, mobile)
-      converted_phone_number = attribute.gsub(/[^0-9a-z\\s]/i, '')
+      converted_phone_number = RadTwilio.strip_phone_number(attribute)
       mobile ? lookup_number(converted_phone_number, 'carrier') : lookup_number(converted_phone_number)
     end
 
@@ -80,6 +86,19 @@ class RadTwilio
           lookup_client.lookups.phone_numbers(number).fetch
         end
       end
+    end
+
+    def mobile_carrier?(response)
+      return false if response.phone_number.starts_with?('+1246') # Barbados
+      return false if response.phone_number.starts_with?('+1829') # Dominican Republic
+      return true if response.carrier['type'] == 'mobile'
+      return true if response.carrier['type'] == 'voip' && response.carrier['name'] == 'Google (Grand Central) - SVR'
+
+      if response.carrier['type'] == 'voip' && response.carrier['name'] == 'Bandwidth/RingCentral Messaging - Sinch'
+        return true
+      end
+
+      false
     end
 
     def status_callback_url

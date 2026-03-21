@@ -3,7 +3,7 @@ module Notifications
     def mailer_subject
       return "Possible Duplicate User (#{subject_record}) Signed Up" if user_signing_up?
 
-      "Possible Duplicate (#{subject_record}) Entered By #{created_by}"
+      "Possible Duplicate (#{subject_record}) Entered By #{created_by.presence || 'a System Process'}"
     end
 
     def mailer_message
@@ -12,8 +12,12 @@ module Notifications
                'user. Please review the record and ensure that it is indeed a new record.'
       end
 
-      "The system detected that #{created_by} entered a possible duplicate (#{subject_record}). " \
-        'Please review the record and ensure that it is indeed a new record.'
+      "The system detected that #{created_by.presence || 'a system process'} entered a possible " \
+        "duplicate (#{subject_record}). Please review the record and ensure that it is indeed a new record."
+    end
+
+    def mailer_contact_log_from_user
+      created_by
     end
 
     def subject_url
@@ -26,9 +30,7 @@ module Notifications
         user = subject_record.created_by
         user = subject_record if user.blank? && subject_record.is_a?(User)
         user = subject_record.modified_by if user.blank?
-        return user if user.present?
-
-        raise "no created by user found for #{subject_record.class} #{subject_record.id}"
+        user
       end
 
       def user_signing_up?

@@ -3,8 +3,13 @@ require 'rails_helper'
 describe 'SendgridStatuses' do
   let(:deliveries) { ActionMailer::Base.deliveries }
   let(:email) { Faker::Internet.email }
-  let(:contact_log) { create :contact_log, :email }
-  let!(:contact_log_recipient) { create :contact_log_recipient, :email, email: email, contact_log: contact_log }
+  let(:user_role) { create :security_role, read_attorney: true }
+  let(:user) { create :user, security_roles: [user_role] }
+  let(:contact_log) { create :contact_log, :email, record: create(:attorney), from_user: user }
+
+  let!(:contact_log_recipient) do
+    create :contact_log_recipient, :email, email: email, contact_log: contact_log, to_user: user
+  end
 
   before do
     create :admin
