@@ -18,19 +18,35 @@ def run_interactive_clone(backup_option)
   end
 
   if restore_source == :remote
-    run_remote_restore(profile, backup_option)
+    dump_method = 'backup'
+
+    if profile != 'full'
+      dump_method_choice = prompt.select('How would you like to download?') do |menu|
+        menu.choice 'Standard (Heroku backup capture + download full dump)', 'backup'
+        menu.choice 'Direct (pg_dump from Heroku DB, excludes large tables at dump time - faster)', 'direct'
+      end
+      dump_method = dump_method_choice
+    end
+
+    run_remote_restore(profile, backup_option, dump_method)
   else
     run_local_restore(profile)
   end
 end
 
-def run_remote_restore(profile, backup_option)
+def run_remote_restore(profile, backup_option, dump_method = 'backup')
   heroku_app_name = RadBin.get_heroku_app_name(:all)
-  backup_id = backup_option.is_a?(String) ? backup_option : RadBin.select_backup_id(heroku_app_name)
 
-  puts "Cloning from remote Heroku backup with profile '#{profile}'"
-  args = [heroku_app_name, profile, backup_id].compact
-  RadBin.system!("bundle exec rails \"heroku:clone_local[#{args.join(', ')}]\"")
+  if dump_method == 'direct'
+    puts "Direct dumping from Heroku database with profile '#{profile}'"
+    RadBin.system!("bundle exec rails \"heroku:clone_local[#{heroku_app_name},#{profile},,direct]\"")
+  else
+    backup_id = backup_option.is_a?(String) ? backup_option : RadBin.select_backup_id(heroku_app_name)
+
+    puts "Cloning from remote Heroku backup with profile '#{profile}'"
+    args = [heroku_app_name, profile, backup_id].compact
+    RadBin.system!("bundle exec rails \"heroku:clone_local[#{args.join(', ')}]\"")
+  end
 end
 
 def run_local_restore(profile)
