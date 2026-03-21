@@ -1,3 +1,5 @@
+import * as bootstrap from 'bootstrap';
+
 export class RadCommonDynamicUpdater {
   static setup() {
     $(document).ready( function() {
@@ -10,6 +12,17 @@ export class RadCommonDynamicUpdater {
           .done(function() {
             if (input.attr('id') && input.attr('id').match(/^notification_setting_enabled_/)) {
               input.closest('tr').toggleClass('table-danger', !input.prop('checked'));
+              var target = input.attr('data-bs-target');
+              if (target) {
+                var collapseEl = document.querySelector(target);
+                if (collapseEl) {
+                  var collapse = bootstrap.Collapse.getInstance(collapseEl);
+                  if (!collapse) {
+                    collapse = new bootstrap.Collapse(collapseEl, { toggle: false });
+                  }
+                  input.prop('checked') ? collapse.show() : collapse.hide();
+                }
+              }
             }
           })
           .fail(function(data) {
