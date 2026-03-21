@@ -3,6 +3,12 @@ require 'yaml'
 class HerokuCommands
   IGNORED_HEROKU_ERRORS = ['free Heroku Dynos will'].freeze
 
+  EXCLUDED_TABLES = {
+    'full' => [],
+    'exclude_audits' => %w[audits],
+    'minimal' => %w[audits contact_logs contact_log_recipients embeddings]
+  }.freeze
+
   class << self
     def backup(app_name)
       check_production!
@@ -64,32 +70,45 @@ class HerokuCommands
       write_log `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
     end
 
-    def clone(app_name, profile = 'full', backup_id = nil)
+    def clone(app_name, profile = 'full', backup_id = nil, method = 'backup')
+      if method.to_s == 'direct'
+        direct_dump(app_name, profile)
+      else
+        clone_via_backup(app_name, profile, backup_id)
+      end
+    end
+
+    def direct_dump(app_name, profile = 'minimal')
       check_production!
+
+      dump_file = 'latest_direct.dump'
 
       Bundler.with_unbundled_env do
         check_valid_app(app_name)
-        if backup_id.blank?
-          write_log 'Running backup on Heroku...'
-          `heroku pg:backups:capture #{app_option(app_name)}`
-        end
 
-        url_output = if backup_id.present?
-                       `heroku pg:backups:url #{backup_id} #{app_option(app_name)}`
-                     else
-                       `heroku pg:backups:url #{app_option(app_name)}`
-                     end
+        write_log 'Fetching database credentials from Heroku...'
+        db_url = `heroku config:get DATABASE_URL #{app_option(app_name)}`.strip
 
-        backup_url = "\"#{url_output.strip}\""
+        exclude_flags = generate_exclude_flags(profile)
+        write_log "Running pg_dump directly from Heroku database (profile: #{profile})..."
 
-        write_log 'Downloading dump file:'
-        write_log `curl -o #{clone_dump_file} #{backup_url}`
+        command = [
+          'pg_dump',
+          "'#{db_url}'",
+          '-Fc',
+          '--no-acl',
+          '--no-owner',
+          *exclude_flags,
+          "-f #{dump_file}"
+        ].join(' ')
+
+        write_log `#{command}`
       end
 
-      restore_from_backup(clone_dump_file, profile)
+      restore_from_backup(dump_file, 'full')
 
       write_log 'Deleting temporary dump file'
-      write_log `rm #{clone_dump_file}`
+      FileUtils.rm_f dump_file
     end
 
     def reset_staging(app_name)
@@ -129,6 +148,38 @@ class HerokuCommands
     end
 
     private
+
+      def clone_via_backup(app_name, profile, backup_id)
+        check_production!
+
+        Bundler.with_unbundled_env do
+          check_valid_app(app_name)
+          if backup_id.blank?
+            write_log 'Running backup on Heroku...'
+            `heroku pg:backups:capture #{app_option(app_name)}`
+          end
+
+          url_output = if backup_id.present?
+                         `heroku pg:backups:url #{backup_id} #{app_option(app_name)}`
+                       else
+                         `heroku pg:backups:url #{app_option(app_name)}`
+                       end
+
+          backup_url = "\"#{url_output.strip}\""
+
+          write_log 'Downloading dump file:'
+          write_log `curl -o #{clone_dump_file} #{backup_url}`
+        end
+
+        restore_from_backup(clone_dump_file, profile)
+
+        write_log 'Deleting temporary dump file'
+        write_log `rm #{clone_dump_file}`
+      end
+
+      def generate_exclude_flags(profile)
+        excluded_tables(profile).map { |table| "--exclude-table-data=#{table}" }
+      end
 
       def restore_command(file_name, restore_list_file)
         command = [
@@ -215,28 +266,25 @@ class HerokuCommands
       end
 
       def generate_restore_list(file_name, profile, restore_list_file)
-        case profile.to_s
-        when 'full'
+        tables = excluded_tables(profile)
+
+        if tables.empty?
           write_log 'Generating full restore (include all tables)'
           write_log `pg_restore -l #{file_name} > #{restore_list_file}`
-        when 'exclude_audits'
-          write_log 'Generating restore excluding audits table'
-          write_log `pg_restore -l #{file_name} | grep -v 'TABLE DATA public audits' > #{restore_list_file}`
-        when 'minimal'
-          write_log 'Generating minimal restore (excludes audits, contact_logs, contact_log_recipients and embeddings)'
-
-          command = [
-            "pg_restore -l #{file_name}",
-            "| grep -v 'TABLE DATA public audits'",
-            "| grep -v 'TABLE DATA public contact_logs'",
-            "| grep -v 'TABLE DATA public contact_log_recipients'",
-            "| grep -v 'TABLE DATA public embeddings'",
-            "> #{restore_list_file}"
-          ].join(' ')
-          `#{command}`
         else
-          raise "Unknown restore profile: #{profile}"
+          write_log "Generating restore excluding: #{tables.join(', ')}"
+
+          grep_filters = tables.map { |table| "| grep -v 'TABLE DATA public #{table}'" }
+          command = ["pg_restore -l #{file_name}", *grep_filters, "> #{restore_list_file}"].join(' ')
+          `#{command}`
         end
+      end
+
+      def excluded_tables(profile)
+        tables = EXCLUDED_TABLES[profile.to_s]
+        raise "Unknown restore profile: #{profile}" if tables.nil?
+
+        tables
       end
 
       def reset_sensitive_local_data
