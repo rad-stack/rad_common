@@ -15,31 +15,25 @@
         - else
           %p Email/Feed
         - if can_create
-          %a.small{ href: '#', data: { 'bs-toggle': 'collapse', 'bs-target': '#bulk-settings' } }
-            Bulk Update
-          .collapse.mt-1#bulk-settings
-            .d-inline-flex.flex-column.gap-1
-              .d-flex.gap-1
-                %button.btn.btn-sm.btn-success.select-all-settings.flex-fill{ data: { field: 'enabled' } }
-                  Enable All
-                %button.btn.btn-sm.btn-danger.select-none-settings.flex-fill{ data: { field: 'enabled' } }
-                  Disable All
-              .d-flex.gap-1
-                %button.btn.btn-sm.btn-primary.select-all-settings.flex-fill{ data: { field: 'email' } }
-                  All Email
-                %button.btn.btn-sm.btn-secondary.select-none-settings.flex-fill{ data: { field: 'email' } }
-                  No Email
+          .mt-1
+            %fieldset.mb-3
+              .form-check.me-3
+                %input.form-check-input.bulk-setting-checkbox{ type: 'checkbox', data: { field: 'enabled' } }
+                %label.form-check-label Enabled
+            .d-flex.gap-1.align-items-center.px-3.py-2.bg-light.border.rounded.shadow-sm
+              %fieldset.mb-3
+                .form-check.me-3
+                  %input.form-check-input.bulk-setting-checkbox{ type: 'checkbox', data: { field: 'email' } }
+                  %label.form-check-label Email
               - if RadConfig.twilio_enabled?
-                .d-flex.gap-1
-                  %button.btn.btn-sm.btn-primary.select-all-settings.flex-fill{ data: { field: 'sms' } }
-                    All SMS
-                  %button.btn.btn-sm.btn-secondary.select-none-settings.flex-fill{ data: { field: 'sms' } }
-                    No SMS
-              .d-flex.gap-1
-                %button.btn.btn-sm.btn-primary.select-all-settings.flex-fill{ data: { field: 'feed' } }
-                  All Feed
-                %button.btn.btn-sm.btn-secondary.select-none-settings.flex-fill{ data: { field: 'feed' } }
-                  No Feed
+                %fieldset.mb-3
+                  .form-check.me-3
+                    %input.form-check-input.bulk-setting-checkbox{ type: 'checkbox', data: { field: 'sms' } }
+                    %label.form-check-label SMS
+              %fieldset.mb-3
+                .form-check.me-3
+                  %input.form-check-input.bulk-setting-checkbox{ type: 'checkbox', data: { field: 'feed' } }
+                  %label.form-check-label Feed
 
     - settings.each do |record|
       :ruby
@@ -71,7 +65,7 @@
                                         'data-bs-toggle': 'collapse', 'data-bs-target': "##{collapse_id}" }
             .row
               .col-lg-12{ id: collapse_id, class: record.enabled ? 'collapse show' : 'collapse' }
-                .d-flex.gap-1.align-items-center.px-3.py-2.bg-light.border.rounded.shadow-sm#notification-settings
+                .d-flex.gap-1.align-items-center.px-3.py-2.bg-light.border.rounded.shadow-sm
                   = f.input :email, tooltip: 'Enable email notifications.',
                                     input_html: { class: 'ays-ignore',
                                                   id: "notification_setting_email_#{setting_id_string}" },

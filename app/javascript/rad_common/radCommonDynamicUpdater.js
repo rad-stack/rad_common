@@ -12,11 +12,13 @@ export class RadCommonDynamicUpdater {
           });
       });
 
-      $('.select-all-settings, .select-none-settings').click(function(e) {
-        e.preventDefault();
-        if (!confirm('Are you sure?')) return;
+      $('.bulk-setting-checkbox').change(function() {
+        if (!confirm('Are you sure?')) {
+          $(this).prop('checked', !$(this).prop('checked'));
+          return;
+        }
         var field = $(this).data('field');
-        var checked = $(this).hasClass('select-all-settings');
+        var checked = $(this).prop('checked');
 
         $('form.dynamic-updater').each(function() {
           var checkbox = $(this).find('input[type="checkbox"][id*="_' + field + '_"]');
