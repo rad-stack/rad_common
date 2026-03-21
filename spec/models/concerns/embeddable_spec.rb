@@ -3,7 +3,10 @@ require 'rails_helper'
 RSpec.describe Embeddable do
   let(:attorney) { create :attorney }
 
-  before { allow(EmbeddingService).to receive(:enabled?).and_return true }
+  before do
+    create :admin
+    allow(EmbeddingService).to receive(:enabled?).and_return true
+  end
 
   it 'embeds vector data', :vcr do
     expect(attorney.embedding).not_to be_nil

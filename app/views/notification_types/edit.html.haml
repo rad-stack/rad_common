@@ -15,6 +15,14 @@
             = f.input :bcc_recipient,
                       tooltip: 'Send a copy of any email notifications to this email address (not available for SMS)'
 
+        .row
+          - if @notification_type.email_enabled?
+            .col-lg-3= f.input :default_email
+          - if @notification_type.feed_enabled?
+            .col-lg-3= f.input :default_feed
+          - if @notification_type.sms_enabled?
+            .col-lg-3= f.input :default_sms
+
         - unless @notification_type.absolute_users?
           .row
             .col-lg-12
