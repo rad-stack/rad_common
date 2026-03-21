@@ -3,6 +3,7 @@ class NotificationSetting < ApplicationRecord
   belongs_to :user
 
   scope :enabled, -> { where(enabled: true) }
+  scope :by_user, -> { joins(:user).merge(User.sorted) }
 
   validate :validate_notify_methods
   validate :validate_sms_possible_app
@@ -19,8 +20,6 @@ class NotificationSetting < ApplicationRecord
   end
 
   def self.settings_for_user(user)
-    return [] if user.external?
-
     types = Pundit.policy_scope!(user, NotificationType).sorted
     types.map { |notification_type| NotificationSetting.init_for_user(notification_type, user) }
   end

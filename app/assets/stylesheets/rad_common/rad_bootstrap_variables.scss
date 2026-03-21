@@ -1,0 +1,15 @@
+// overrides the secondary button colors which we thought were too dark
+$secondary: #DCDCDC;
+
+// bootstrap 5 defaults to underlined links
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+// make the checkboxes more prominent
+$form-check-input-border: 2px solid #495057;
+
+$form-check-input-checked-bg-color: #0d6efd;
+$form-check-input-checked-border-color: #0d6efd;
+
+$form-check-input-focus-border: #86b7fe;
+$form-check-input-focus-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);

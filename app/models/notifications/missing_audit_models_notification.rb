@@ -1,5 +1,5 @@
 module Notifications
-  class MissingAuditModelsNotification < ::NotificationType
+  class MissingAuditModelsNotification < DeveloperNotification
     def mailer_message
       "The following models from audits are missing: #{payload.join(', ')}"
     end

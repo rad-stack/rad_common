@@ -18,4 +18,4 @@
     %div{ class: column_class }
       .card
         = render 'layouts/card_header', action_name: 'custom', title: 'Notification Settings', icon: 'fa-list'
-        = render 'notification_settings/index', settings: settings
+        = render 'notification_settings/index', settings: settings, show_user: false

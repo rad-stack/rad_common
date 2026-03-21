@@ -56,9 +56,10 @@ module RadBin
 
   def self.select_backup_id(heroku_app_name)
     sorted_backup_list = parse_backup_list(heroku_app_name)
+    completed_backups = sorted_backup_list.select { |b| b[:status] == 'Completed' }
 
-    backup_hash = sorted_backup_list.to_h { |b| ["#{b[:id]} created at (#{b[:created_at]})", b[:id]] }
-    choices = sorted_backup_list.map { |b| "#{b[:id]} created at (#{b[:created_at]})" }
+    backup_hash = completed_backups.to_h { |b| ["#{b[:id]} created at (#{b[:created_at]})", b[:id]] }
+    choices = ['Generate new backup'] + backup_hash.keys
     prompt = TTY::Prompt.new
     choice = prompt.select('Please select a backup id from the following options:', choices)
     backup_hash[choice]
@@ -72,7 +73,7 @@ module RadBin
 
     data_rows.map do |line|
       values = line.strip.split
-      { id: values[0], created_at: values[1] }
+      { id: values[0], created_at: values[1], status: values[4] }
     end
   end
 end

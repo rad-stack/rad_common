@@ -25,11 +25,23 @@ RSpec.describe 'Users', type: :request do
       end
     end
 
+    describe 'PUT set_js_timezone' do
+      let(:timezone) { 'America/New_York' }
+
+      it 'sets the detected_timezone_js' do
+        put '/set_js_timezone', params: { timezone: timezone }
+        expect(response).to have_http_status(:ok)
+        expect(user.reload.detected_timezone_js).to eq('Eastern Time (US & Canada)')
+      end
+    end
+
     describe 'PUT update_timezone' do
       let(:existing_timezone) { 'Eastern Time (US & Canada)' }
       let(:new_timezone) { 'Pacific Time (US & Canada)' }
 
-      before { user.update! timezone: existing_timezone, detected_timezone: new_timezone }
+      before do
+        user.update! timezone: existing_timezone, detected_timezone: new_timezone, detected_timezone_js: new_timezone
+      end
 
       it 'updates' do
         expect { put "/users/#{user.id}/update_timezone" }
@@ -42,7 +54,10 @@ RSpec.describe 'Users', type: :request do
       let(:detected_timezone) { 'Pacific Time (US & Canada)' }
 
       before do
-        user.update!(timezone: existing_timezone, detected_timezone: detected_timezone)
+        user.update! timezone: existing_timezone,
+                     detected_timezone: detected_timezone,
+                     detected_timezone_js: detected_timezone
+
         put ignore_timezone_user_path(user)
         user.reload
       end
@@ -62,7 +77,10 @@ RSpec.describe 'Users', type: :request do
       let(:detected_timezone) { 'Pacific Time (US & Canada)' }
 
       before do
-        user.update!(timezone: existing_timezone, detected_timezone: detected_timezone)
+        user.update! timezone: existing_timezone,
+                     detected_timezone: detected_timezone,
+                     detected_timezone_js: detected_timezone
+
         allow_any_instance_of(UserTimezone).to receive(:wrong_timezone?).and_return(true)
 
         get root_path
@@ -87,7 +105,8 @@ RSpec.describe 'Users', type: :request do
             last_name: Faker::Name.last_name,
             mobile_phone: create(:phone_number, :mobile),
             password: 'cOmpl3x_p@55w0rd',
-            email: 'example000@example.com' }
+            email: 'example000@example.com',
+            security_roles: [security_role.id] }
         end
 
         it 'creates the user and redirects' do

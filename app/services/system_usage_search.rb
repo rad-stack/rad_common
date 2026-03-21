@@ -1,4 +1,4 @@
-class SystemUsageSearch < RadCommon::Search
+class SystemUsageSearch < RadSearch::Search
   DATE_MODE_OPTIONS = %w[Yearly Monthly Weekly Daily].freeze
   DEFAULT_DATE_MODE = 'Weekly'.freeze
 
@@ -79,6 +79,8 @@ class SystemUsageSearch < RadCommon::Search
         else
           raise "invalid option: #{item.class}"
         end
+
+        check_index klass
         next unless Pundit.policy!(current_user, klass).index?
 
         item
@@ -134,5 +136,11 @@ class SystemUsageSearch < RadCommon::Search
 
     def today
       Time.current
+    end
+
+    def check_index(klass)
+      return if ActiveRecord::Base.connection.index_exists?(klass.table_name, 'created_at')
+
+      raise "missing index on #{klass.table_name}.created_at"
     end
 end

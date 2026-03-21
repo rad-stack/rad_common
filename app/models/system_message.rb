@@ -15,6 +15,9 @@ class SystemMessage < ApplicationRecord
   validates :email_message_body, presence: true, if: :email?
   validates :email_message_body, absence: true, if: :sms?
 
+  strip_attributes
+  audited
+
   before_validation :erase_other
 
   def to_s

@@ -1,9 +1,11 @@
-require:
+plugins:
   - rubocop-rails
   - rubocop-rspec
   - rubocop-capybara
   - rubocop-factory_bot
   - rubocop-rspec_rails
+
+require:
   - rubocop/cop/custom/prohibit_alias_in_policy
 
 Custom/ProhibitAliasInPolicy:
@@ -11,8 +13,8 @@ Custom/ProhibitAliasInPolicy:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.3.1
-  TargetRailsVersion: 6.0.3.4
+  TargetRubyVersion: 3.4.7
+  TargetRailsVersion: 7.2.3
   Exclude:
     - 'db/schema.rb'
     - 'db/migrate/*'
@@ -247,6 +249,10 @@ RSpec/VerifiedDoubles:
 
 RSpec/IndexedLet:
   Enabled: false
+
+RSpec/Output:
+  Exclude:
+    - 'spec/rails_helper.rb'
 
 Rails/HttpPositionalArguments:
   Exclude:

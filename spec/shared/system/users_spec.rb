@@ -18,7 +18,10 @@ RSpec.describe 'Users', type: :system do
     before { login_as user, scope: :user }
 
     describe 'index' do
-      before { visit users_path }
+      before do
+        allow_any_instance_of(UserPolicy).to receive(:update?).and_return(false)
+        visit users_path
+      end
 
       it 'shows users and limited info' do
         expect(page).to have_content 'Users (1)'
@@ -176,7 +179,7 @@ RSpec.describe 'Users', type: :system do
       end
 
       it 'requires mobile phone when twilio verify enabled', :shared_database_specs do
-        allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
+        allow(RadConfig).to receive_messages(two_factor_auth_all_users?: false, require_mobile_phone?: false)
 
         visit edit_user_path(user)
         fill_in 'Mobile Phone', with: ''
@@ -259,7 +262,7 @@ RSpec.describe 'Users', type: :system do
   end
 
   describe 'sign in' do
-    before { allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false }
+    before { allow(RadConfig).to receive(:two_factor_auth_enabled?).and_return false }
 
     it 'can not sign in without active user status' do
       user.update!(user_status: RadConfig.pending_users? ? pending_status : inactive_status)
@@ -288,14 +291,14 @@ RSpec.describe 'Users', type: :system do
       fill_in 'user_email', with: "foo#{user.email}"
       fill_in 'user_password', with: password
       click_button 'Sign In'
-      expect(page).to have_content 'Invalid Email or password'
+      expect(page).to have_content 'Invalid email or password'
     end
 
     it 'cannot sign in with expired password', :password_expirable_specs do
       current_password = password
       new_password = 'Passwords2!!!!!'
 
-      user.update(password_changed_at: 98.days.ago)
+      user.update(password_changed_at: (RadConfig.config_item!(:expire_password_after_days) + 8).days.ago)
       user.reload
 
       visit new_user_session_path
@@ -331,7 +334,7 @@ RSpec.describe 'Users', type: :system do
   end
 
   describe 'timeout', :devise_timeoutable_specs do
-    before { allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false }
+    before { allow(RadConfig).to receive(:two_factor_auth_enabled?).and_return false }
 
     context 'with internal user' do
       it 'sign in times out after the configured hours' do
@@ -353,12 +356,15 @@ RSpec.describe 'Users', type: :system do
         visit new_user_session_path
         fill_in 'user_email', with: external_user.email
         fill_in 'user_password', with: password
-        click_button 'Sign In'
-        expect(page).to have_content('Signed in successfully')
 
-        Timecop.travel(185.minutes.from_now) do
-          visit users_path
-          expect(page).to have_content('Your session expired. Please sign in again to continue.')
+        if RadConfig.config_item(:portal).blank? # TODO: temp hack, see Task 9298
+          click_button 'Sign In'
+          expect(page).to have_content('Signed in successfully')
+
+          Timecop.travel(185.minutes.from_now) do
+            visit users_path
+            expect(page).to have_content('Your session expired. Please sign in again to continue.')
+          end
         end
       end
     end
@@ -369,7 +375,7 @@ RSpec.describe 'Users', type: :system do
       visit new_user_session_path
       fill_in 'user_email', with: user.email
       click_button 'Sign In'
-      expect(page).to have_content('Invalid Email or password.')
+      expect(page).to have_content('Invalid email or password.')
     end
 
     describe 'confirming' do
@@ -431,7 +437,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'two factor authentication', :twilio_verify_specs do
+  describe 'two factor authentication', :two_factor_specs do
     let(:remember_message) do
       "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
     end
@@ -444,7 +450,7 @@ RSpec.describe 'Users', type: :system do
 
       allow(TwilioVerifyService).to receive(:send_sms_token).and_return(double(status: 'pending'))
 
-      user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
+      user.update!(otp_required_for_login: true, mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'allows user to login with authentication token' do

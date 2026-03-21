@@ -12,7 +12,7 @@ class SendgridStatusesController < ApplicationController
 
       head :ok
     else
-      render json: { message: 'These are not the droids you are looking for.' }, status: :unprocessable_entity
+      render json: { message: 'These are not the droids you are looking for.' }, status: :unprocessable_content
     end
   end
 

@@ -122,8 +122,26 @@ class DataColumnsPresenter
         @view_context.format_boolean(value)
       when 'Array'
         value.join(', ')
+      when 'String'
+        return value unless phone_number?(item, value)
+
+        phone_number_link value
       else
         value
       end
+    end
+
+    def phone_number?(item, value)
+      unless item.to_s.include?('phone_number') ||
+             item.to_s.include?('mobile_phone') ||
+             item.to_s.include?('fax_number')
+        return false
+      end
+
+      value.include?('(') && value.include?(')') && value.include?('-') && value.size == 14
+    end
+
+    def phone_number_link(value)
+      @view_context.link_to @view_context.icon(:phone, value), "tel:#{value}"
     end
 end
