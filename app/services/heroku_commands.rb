@@ -181,7 +181,6 @@ class HerokuCommands
         excluded_tables(profile).map { |table| "--exclude-table-data=#{table}" }
       end
 
-
       def restore_command(file_name, restore_list_file)
         command = [
           'pg_restore',
