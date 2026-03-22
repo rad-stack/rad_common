@@ -3,6 +3,12 @@ require 'yaml'
 class HerokuCommands
   IGNORED_HEROKU_ERRORS = ['free Heroku Dynos will'].freeze
 
+  EXCLUDED_TABLES = {
+    'full' => [],
+    'exclude_audits' => %w[audits],
+    'minimal' => %w[audits contact_logs contact_log_recipients embeddings]
+  }.freeze
+
   class << self
     def backup(app_name)
       check_production!
@@ -65,31 +71,7 @@ class HerokuCommands
     end
 
     def clone(app_name, profile = 'full', backup_id = nil)
-      check_production!
-
-      Bundler.with_unbundled_env do
-        check_valid_app(app_name)
-        if backup_id.blank?
-          write_log 'Running backup on Heroku...'
-          `heroku pg:backups:capture #{app_option(app_name)}`
-        end
-
-        url_output = if backup_id.present?
-                       `heroku pg:backups:url #{backup_id} #{app_option(app_name)}`
-                     else
-                       `heroku pg:backups:url #{app_option(app_name)}`
-                     end
-
-        backup_url = "\"#{url_output.strip}\""
-
-        write_log 'Downloading dump file:'
-        write_log `curl -o #{clone_dump_file} #{backup_url}`
-      end
-
-      restore_from_backup(clone_dump_file, profile)
-
-      write_log 'Deleting temporary dump file'
-      write_log `rm #{clone_dump_file}`
+      clone_via_backup(app_name, profile, backup_id)
     end
 
     def reset_staging(app_name)
@@ -129,6 +111,34 @@ class HerokuCommands
     end
 
     private
+
+      def clone_via_backup(app_name, profile, backup_id)
+        check_production!
+
+        Bundler.with_unbundled_env do
+          check_valid_app(app_name)
+          if backup_id.blank?
+            write_log 'Running backup on Heroku...'
+            `heroku pg:backups:capture #{app_option(app_name)}`
+          end
+
+          url_output = if backup_id.present?
+                         `heroku pg:backups:url #{backup_id} #{app_option(app_name)}`
+                       else
+                         `heroku pg:backups:url #{app_option(app_name)}`
+                       end
+
+          backup_url = "\"#{url_output.strip}\""
+
+          write_log 'Downloading dump file:'
+          write_log `curl -o #{clone_dump_file} #{backup_url}`
+        end
+
+        restore_from_backup(clone_dump_file, profile)
+
+        write_log 'Deleting temporary dump file'
+        write_log `rm #{clone_dump_file}`
+      end
 
       def restore_command(file_name, restore_list_file)
         command = [
@@ -215,28 +225,25 @@ class HerokuCommands
       end
 
       def generate_restore_list(file_name, profile, restore_list_file)
-        case profile.to_s
-        when 'full'
+        tables = excluded_tables(profile)
+
+        if tables.empty?
           write_log 'Generating full restore (include all tables)'
           write_log `pg_restore -l #{file_name} > #{restore_list_file}`
-        when 'exclude_audits'
-          write_log 'Generating restore excluding audits table'
-          write_log `pg_restore -l #{file_name} | grep -v 'TABLE DATA public audits' > #{restore_list_file}`
-        when 'minimal'
-          write_log 'Generating minimal restore (excludes audits, contact_logs, contact_log_recipients and embeddings)'
-
-          command = [
-            "pg_restore -l #{file_name}",
-            "| grep -v 'TABLE DATA public audits'",
-            "| grep -v 'TABLE DATA public contact_logs'",
-            "| grep -v 'TABLE DATA public contact_log_recipients'",
-            "| grep -v 'TABLE DATA public embeddings'",
-            "> #{restore_list_file}"
-          ].join(' ')
-          `#{command}`
         else
-          raise "Unknown restore profile: #{profile}"
+          write_log "Generating restore excluding: #{tables.join(', ')}"
+
+          grep_filters = tables.map { |table| "| grep -v 'TABLE DATA public #{table}'" }
+          command = ["pg_restore -l #{file_name}", *grep_filters, "> #{restore_list_file}"].join(' ')
+          `#{command}`
         end
+      end
+
+      def excluded_tables(profile)
+        tables = EXCLUDED_TABLES[profile.to_s]
+        raise "Unknown restore profile: #{profile}" if tables.nil?
+
+        tables
       end
 
       def reset_sensitive_local_data
