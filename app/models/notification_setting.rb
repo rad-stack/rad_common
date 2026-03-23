@@ -35,7 +35,7 @@ class NotificationSetting < ApplicationRecord
 
     self.email = notification_type.default_email?
     self.feed = notification_type.default_feed?
-    self.sms = notification_type.default_sms?
+    self.sms = notification_type.default_sms? && RadConfig.twilio_enabled?
   end
 
   private
