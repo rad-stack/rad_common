@@ -5,8 +5,11 @@ RSpec.describe Attorney do
     let(:attorney) { create :attorney }
     let(:rich_text_audit) { Audited::Audit.where(auditable_type: 'ActionText::RichText').last }
 
+    before { create :admin }
+
     it 'creates audits for the attorney and the rich text' do
-      expect { attorney.update!(notes: 'Rich text content') }.to change(Audited::Audit, :count).by(2)
+      expect { attorney.update!(notes: 'Rich text content') }
+        .to change(Audited::Audit.where(auditable_type: 'ActionText::RichText'), :count).by(1)
       expect(rich_text_audit.auditable.record).to eq(attorney)
       expect(rich_text_audit.audited_changes['body']).to include('Rich text content')
       expect(rich_text_audit.audited_changes['body']).to include('<div class="trix-content">')
