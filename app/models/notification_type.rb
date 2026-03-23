@@ -37,10 +37,6 @@ class NotificationType < ApplicationRecord
     true
   end
 
-  def default_notification_methods
-    [:email]
-  end
-
   def mailer_class
     'NotificationMailer'
   end
@@ -283,28 +279,7 @@ class NotificationType < ApplicationRecord
       opted_out
     end
 
-    # This branch's version: code-based defaults via default_notification_methods array
-    # with extra SMS guards (Twilio enabled, user has phone)
-    def enabled_for_method_branch(user_id, notification_method)
-      user = User.find(user_id)
-      setting = notification_settings.find_by(user: user)
-
-      if setting.blank?
-        raise 'default_notification_methods must include :email' unless default_notification_methods.include?(:email)
-
-        return false unless default_notification_methods.include?(notification_method)
-        return true unless notification_method == :sms
-
-        RadConfig.twilio_enabled? && user.mobile_phone.present?
-      elsif !setting.enabled
-        false
-      else
-        setting.send(notification_method)
-      end
-    end
-
-    # Main's version: DB-based defaults via default_email/default_sms/default_feed columns
-    def enabled_for_method_main(user_id, notification_method)
+    def enabled_for_method?(user_id, notification_method)
       setting = notification_settings.find_by(user_id: user_id)
 
       if setting.blank?
@@ -312,10 +287,5 @@ class NotificationType < ApplicationRecord
       else
         setting.enabled? && setting.send(notification_method)
       end
-    end
-
-    # TODO: pick one — currently using main's version
-    def enabled_for_method?(user_id, notification_method)
-      enabled_for_method_main(user_id, notification_method)
     end
 end
