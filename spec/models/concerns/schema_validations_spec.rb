@@ -146,6 +146,7 @@ describe 'SchemaValidations', type: :module do
     end
 
     before do
+      create :admin
       create :attorney, first_name: first_name, last_name: last_name, mobile_phone: mobile_phone
       create :attorney, first_name: other_first_name, last_name: other_last_name, mobile_phone: other_phone
     end

@@ -10,6 +10,9 @@ class NotificationType < ApplicationRecord
 
   validates_with EmailAddressValidator, fields: [:bcc_recipient]
   validate :validate_auth
+  validate :validate_defaults
+
+  before_validation :add_defaults, on: :create
 
   audited
   strip_attributes
@@ -98,6 +101,25 @@ class NotificationType < ApplicationRecord
     Rails.application.routes.url_helpers.url_for(subject_record)
   end
 
+  def add_defaults
+    if email_enabled?
+      self.default_email = true
+      return
+    end
+
+    if sms_enabled?
+      self.default_sms = true
+      return
+    end
+
+    if feed_enabled?
+      self.default_feed = true
+      return
+    end
+
+    raise 'notification type has no methods'
+  end
+
   def auth_mode
     :security_roles
   end
@@ -180,6 +202,12 @@ class NotificationType < ApplicationRecord
 
   private
 
+    def validate_defaults
+      return if default_email? || default_feed? || default_sms?
+
+      errors.add(:base, 'at least one default notification method must be selected')
+    end
+
     def validate_auth
       errors.add(:base, 'invalid with security roles') if absolute_users? && security_roles.present?
       errors.add(:base, 'invalid without security roles') if security_roles? && security_roles.blank?
@@ -255,7 +283,9 @@ class NotificationType < ApplicationRecord
       opted_out
     end
 
-    def enabled_for_method?(user_id, notification_method)
+    # This branch's version: code-based defaults via default_notification_methods array
+    # with extra SMS guards (Twilio enabled, user has phone)
+    def enabled_for_method_branch(user_id, notification_method)
       user = User.find(user_id)
       setting = notification_settings.find_by(user: user)
 
@@ -271,5 +301,21 @@ class NotificationType < ApplicationRecord
       else
         setting.send(notification_method)
       end
+    end
+
+    # Main's version: DB-based defaults via default_email/default_sms/default_feed columns
+    def enabled_for_method_main(user_id, notification_method)
+      setting = notification_settings.find_by(user_id: user_id)
+
+      if setting.blank?
+        send("default_#{notification_method}")
+      else
+        setting.enabled? && setting.send(notification_method)
+      end
+    end
+
+    # TODO: pick one — currently using main's version
+    def enabled_for_method?(user_id, notification_method)
+      enabled_for_method_main(user_id, notification_method)
     end
 end
