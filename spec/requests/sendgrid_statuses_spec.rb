@@ -7,12 +7,13 @@ describe 'SendgridStatuses' do
   let(:user) { create :user, security_roles: [user_role] }
   let(:contact_log) { create :contact_log, :email, record: create(:attorney), from_user: user }
 
-  let!(:contact_log_recipient) do
+  let(:contact_log_recipient) do
     create :contact_log_recipient, :email, email: email, contact_log: contact_log, to_user: user
   end
 
   before do
     create :admin
+    contact_log_recipient
     deliveries.clear
   end
 
