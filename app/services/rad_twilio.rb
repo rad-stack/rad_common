@@ -34,17 +34,19 @@ class RadTwilio
 
     # twilio phone number validations that check whether valid mobile # cost half a penny per request
 
-    begin
+    Rails.cache.fetch("twilio:#{phone_number}:#{mobile}", expires_in: 10.minutes) do
       response = get_phone_number(phone_number, mobile)
-      return 'does not appear to be a valid mobile phone number' if mobile && !mobile_carrier?(response)
 
-      response.phone_number
+      if mobile && !mobile_carrier?(response)
+        'does not appear to be a valid mobile phone number'
+      else
+        response.phone_number
+        nil
+      end
     rescue Twilio::REST::RestError, NoMethodError => e
       Rails.logger.info "twilio lookup error: #{e}"
-      return 'does not appear to be a valid phone number'
+      'does not appear to be a valid phone number'
     end
-
-    nil
   end
 
   def self.human_to_twilio_format(phone_number)
