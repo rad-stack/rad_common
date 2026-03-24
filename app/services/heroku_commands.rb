@@ -284,7 +284,7 @@ class HerokuCommands
         tables = EXCLUDED_TABLES[profile.to_s]
         raise "Unknown restore profile: #{profile}" if tables.nil?
 
-        tables
+        (tables + RadConfig.clone_local_exclude!).uniq
       end
 
       def reset_sensitive_local_data
