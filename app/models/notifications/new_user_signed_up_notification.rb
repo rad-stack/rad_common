@@ -4,11 +4,6 @@ module Notifications
       :absolute_users
     end
 
-    def add_defaults
-      self.default_email = true
-      self.default_sms = true
-    end
-
     def absolute_user_ids
       payload[:recipient_ids]
     end
