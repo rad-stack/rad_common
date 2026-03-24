@@ -1,6 +1,9 @@
 class Attorney < ApplicationRecord
   include Contactable
   include DuplicateFixable
+  include Embeddable
+
+  has_rich_text :notes
 
   scope :sorted, -> { order(:first_name, :last_name) }
 
@@ -17,9 +20,29 @@ class Attorney < ApplicationRecord
   strip_attributes
   audited
 
+  after_commit :notify_attorney_changed, only: :update, if: :name_changed?
+
   def to_s
     the_name = "#{last_name}, #{first_name}"
     the_name = "#{the_name} #{middle_name}" if middle_name.present?
     the_name
   end
+
+  private
+
+    def name_changed?
+      saved_change_to_first_name? || saved_change_to_last_name? || saved_change_to_middle_name?
+    end
+
+    def generate_embedding_content
+      [first_name, last_name].compact.join("\n")
+    end
+
+    def embedding_changed?
+      saved_change_to_first_name? || saved_change_to_last_name?
+    end
+
+    def notify_attorney_changed
+      Notifications::AttorneyChangedNotification.main(self).notify!
+    end
 end

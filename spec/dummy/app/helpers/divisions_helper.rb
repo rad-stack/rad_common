@@ -5,12 +5,19 @@ module DivisionsHelper
      :notify,
      :timezone,
      :hourly_rate,
+     :api_key,
      :additional_info,
      :division_status,
      { label: 'Logo', value: render_one_attachment(record: division, attachment_name: 'logo', new_tab: true) },
      { label: 'Icon', value: render_one_attachment(record: division, attachment_name: 'icon', new_tab: true) },
      { label: 'Owner', value: secured_link(division.owner) },
      :category,
+     :tags,
      created_by_show_item(division)]
+  end
+
+  def division_status_tooltips
+    { status_pending: 'Division is pending approval', status_active: 'Division is active and is ready to change',
+      status_inactive: 'Division is inactive and cannot be used' }
   end
 end

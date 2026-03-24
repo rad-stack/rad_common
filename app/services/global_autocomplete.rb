@@ -1,5 +1,5 @@
 class GlobalAutocomplete
-  include RadCommon::ApplicationHelper
+  include RadHelper
 
   attr_reader :params, :search_scopes, :user, :mode
   attr_accessor :current_scope
@@ -38,7 +38,7 @@ class GlobalAutocomplete
 
     self.current_scope = scope
     order = scope[:query_order] || 'created_at DESC'
-    query = Pundit.policy_scope!(user, klass)
+    query = Pundit.policy_scope!(user, check_policy_klass(klass))
     query = query.joins(joins) if joins
     query.order(order)
   end
@@ -68,8 +68,15 @@ class GlobalAutocomplete
           label: record.send(search_label),
           value: record.to_s,
           active: !record.respond_to?(:active?) || record.active?,
+          can_show: can_show?(record),
           scope_description: scope[:description] }
       end
+    end
+
+    def can_show?(record)
+      return true unless mode == :global_search
+
+      Pundit.policy!(user, check_policy_klass(record)).show?
     end
 
     def get_columns_values(columns, methods, record)
@@ -110,8 +117,17 @@ class GlobalAutocomplete
 
     def validate_global_search_scope
       return if params[:global_search_scope].blank?
+      return if selected_scope.present?
 
-      raise "Invalid global scope #{params[:global_search_scope]}" if selected_scope.blank?
+      if all_scopes_include?(params[:global_search_scope])
+        raise Pundit::NotAuthorizedError, "Not authorized for global scope #{params[:global_search_scope]}"
+      end
+
+      raise "Invalid global scope #{params[:global_search_scope]}"
+    end
+
+    def all_scopes_include?(scope_name)
+      RadConfig.global_search_scopes!.any? { |item| item[:name] == scope_name }
     end
 
     def selected_scope
@@ -171,11 +187,19 @@ class GlobalAutocomplete
 
     def policy_ok?
       if mode == :global_search
-        Pundit.policy!(user, klass.new).global_search?
+        Pundit.policy!(user, check_policy_klass(klass.new)).global_search?
       elsif mode == :searchable_association
-        Pundit.policy!(user, klass.new).searchable_association?
+        Pundit.policy!(user, check_policy_klass(klass.new)).searchable_association?
       else
         raise "invalid mode: #{mode}"
+      end
+    end
+
+    def check_policy_klass(context)
+      if RadConfig.portal? && user.portal_user?
+        [:portal, context]
+      else
+        context
       end
     end
 end

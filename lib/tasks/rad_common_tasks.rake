@@ -1,24 +1,32 @@
 namespace :rad_common do
   task :daily, [:override_model] => :environment do |task, args|
-    session = RakeSession.new(task, 24.hours, 1)
+    session = RakeSession.new(task, 23.hours, 1)
 
     Timeout.timeout(session.time_limit) do
       session.reset_status
 
       Rails.cache.delete_matched('views/*')
 
-      unless RadConfig.react_app?
-        Duplicate.where.not(sort: 500).update_all sort: 500 if Date.current.wday == 1
+      unless RadConfig.shared_database?
+        Duplicate.where.not(sort: 500).update_all sort: 500
 
-        RadCommon::AppInfo.new.duplicate_models.each do |model_name|
+        AppInfo.new.duplicate_models.each do |model_name|
           model_name.constantize.notify_high_duplicates
         end
 
-        RadCommon::TwilioErrorThresholdChecker.new.check_threshold
+        TwilioErrorThresholdChecker.new.check_threshold
+
+        missing_audited_models = RadAudit.missing_audited_models
+
+        if missing_audited_models.any?
+          Notifications::MissingAuditModelsNotification.main(missing_audited_models).notify!
+        end
 
         global_validity = GlobalValidation.new
         global_validity.override_model = args[:override_model]
         global_validity.run
+
+        ExistingDataEmbedder.new.run(session)
       end
 
       session.finished
@@ -29,7 +37,7 @@ namespace :rad_common do
     session = RakeSession.new(task, 58.minutes, 10)
 
     Timeout.timeout(session.time_limit) do
-      RadCommon::AppInfo.new.duplicate_models.each do |model_name|
+      AppInfo.new.duplicate_models.each do |model_name|
         session.reset_status
         model_name.constantize.process_duplicates(session)
         break if session.timing_out?
@@ -40,7 +48,7 @@ namespace :rad_common do
   end
 
   task ten_minutes: :environment do |task|
-    session = RakeSession.new(task, 5.minutes, 1)
+    session = RakeSession.new(task, 8.minutes, 1)
 
     Timeout.timeout(session.time_limit) do
       ContactLogRecipient.sms_assumed_failed.each do |record|
@@ -79,4 +87,13 @@ namespace :rad_common do
       puts item
     end
   end
+
+  task update_s3_cors_settings: :environment do
+    S3CorsSettingsUpdater.new.update!
+  end
+
+  task build_js_css: :environment do
+    system('yarn build')
+  end
+  Rake::Task['assets:precompile'].enhance(['rad_common:build_js_css']) if Rake::Task.task_defined?('assets:precompile')
 end

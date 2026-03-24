@@ -2,6 +2,7 @@ class RadSpecSupport
   def self.before_all
     rspec = yield
     rspec.allow(RadConfig).to rspec.receive(:twilio_enabled?).and_return false
+    rspec.allow(EmbeddingService).to rspec.receive(:enabled?).and_return false
 
     rspec.allow(Company).to rspec.receive(:main).and_return(Company.main || rspec.create(:company))
 
@@ -39,7 +40,7 @@ class RadSpecSupport
   end
 
   def self.hooks(config, driver)
-    unless RadConfig.react_app?
+    unless RadConfig.legacy_assets?
       config.after(:each, type: :system, js: true) do |example|
         unless example.metadata[:ignore_browser_errors]
           errors = page.driver.browser.logs.get(:browser)

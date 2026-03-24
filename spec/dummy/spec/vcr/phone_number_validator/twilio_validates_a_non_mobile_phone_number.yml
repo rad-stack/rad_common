@@ -8,7 +8,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - twilio-ruby/5.77.0 (darwin23 x86_64) Ruby/3.3.1
+      - twilio-ruby/5.77.0 (darwin24 arm64) Ruby/3.3.1
       Accept-Charset:
       - utf-8
       Accept:
@@ -23,41 +23,44 @@ http_interactions:
       message: OK
     headers:
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json;charset=utf-8
       Content-Length:
       - '212'
       Connection:
       - keep-alive
       Date:
-      - Fri, 21 Jun 2024 18:29:41 GMT
-      Twilio-Request-Id:
-      - RQ80dd5977acb1c2f2a3c3177868a83c0f
-      Twilio-Request-Duration:
-      - '0.016'
+      - Tue, 30 Sep 2025 12:46:20 GMT
+      Vary:
+      - Accept-Encoding
+      - Origin
       Twilio-Concurrent-Requests:
       - '1'
-      X-Shenanigans:
-      - none
-      X-Powered-By:
-      - AT-5000
+      Twilio-Request-Id:
+      - RQd730ded45d9cd20bac1eb70855eaf8a7
+      Twilio-Request-Duration:
+      - '0.029'
       X-Home-Region:
       - us1
       X-Api-Domain:
       - lookups.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 873ea86a53e828bcd9ffd511bda586c8.cloudfront.net (CloudFront)
+      - 1.1 da32b45f2cc22dc818960285c4e91b66.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
-      - MIA3-P8
+      - SEA900-P10
       X-Amz-Cf-Id:
-      - scbqXsvhC-tvm92_9kluSww9JeSdSOcXSgUZBjs1qfVJCTPIYOap2g==
-      Vary:
-      - Origin
+      - mFH_1SyEx7us6h7Zeg66ArEUTomDbsP-zmqlXfwpgsA-jUQvFV8GJA==
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
     body:
       encoding: UTF-8
-      string: '{"phone_number": "+1<TEST_PHONE_NUMBER_STRIPPED>", "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_PHONE_NUMBER_STRIPPED>",
-        "caller_name": null, "national_format": "<TEST_PHONE_NUMBER>", "country_code":
-        "US", "carrier": null, "add_ons": null}'
-  recorded_at: Fri, 21 Jun 2024 18:29:41 GMT
-recorded_with: VCR 6.2.0
+      string: '{"add_ons": null, "caller_name": null, "carrier": null, "country_code":
+        "US", "national_format": "<TEST_PHONE_NUMBER>", "phone_number": "+1<TEST_PHONE_NUMBER_STRIPPED>",
+        "url": "https://lookups.twilio.com/v1/PhoneNumbers/+1<TEST_PHONE_NUMBER_STRIPPED>"}'
+  recorded_at: Tue, 30 Sep 2025 12:46:20 GMT
+recorded_with: VCR 6.3.1

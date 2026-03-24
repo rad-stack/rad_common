@@ -6,11 +6,14 @@ en:
     attributes:
       company:
         valid_user_domains: 'Valid User Email Domains'
+      contact_log:
+        sms_message_id: 'SMS Message ID'
       contact_log_recipient:
         email_types:
           cc: 'CC'
           bcc: 'BCC'
       system_message:
+        from_reply_to: 'From / Reply To'
         send_tos:
           preview: 'Me (preview)'
         message_types:
@@ -18,7 +21,7 @@ en:
           sms: 'SMS'
       user:
         external: 'External User?'
-        twilio_verify_enabled: 'Two Factor Auth'
+        otp_required_for_login: 'Two Factor Auth'
       security_role:
         external: 'External User?'
   faker:

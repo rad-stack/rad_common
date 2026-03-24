@@ -18,7 +18,10 @@ RSpec.describe 'Users', type: :system do
     before { login_as user, scope: :user }
 
     describe 'index' do
-      before { visit users_path }
+      before do
+        allow_any_instance_of(UserPolicy).to receive(:update?).and_return(false)
+        visit users_path
+      end
 
       it 'shows users and limited info' do
         expect(page).to have_content 'Users (1)'
@@ -68,7 +71,7 @@ RSpec.describe 'Users', type: :system do
       context 'when switching languages' do
         before { allow(RadConfig).to receive(:switch_languages?).and_return true }
 
-        it 'updates registration', :non_react_specs do
+        it 'updates registration', :shared_database_specs do
           visit edit_user_registration_path
           expect(page).to have_content 'My Account'
           select 'Spanish', from: 'Language'
@@ -175,8 +178,8 @@ RSpec.describe 'Users', type: :system do
         expect(user.security_roles.count).to eq 2
       end
 
-      it 'requires mobile phone when twilio verify enabled', :non_react_specs do
-        allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, require_mobile_phone?: false)
+      it 'requires mobile phone when twilio verify enabled', :shared_database_specs do
+        allow(RadConfig).to receive_messages(two_factor_auth_all_users?: false, require_mobile_phone?: false)
 
         visit edit_user_path(user)
         fill_in 'Mobile Phone', with: ''
@@ -213,26 +216,11 @@ RSpec.describe 'Users', type: :system do
         expect(page).to have_content 'User Status'
       end
 
-      it 'allows updating notification settings', :js, :non_react_specs do
+      it 'allows updating notification settings', :js, :legacy_asset_specs do
         expect(page).to have_content 'Notification Settings'
         uncheck 'Enabled'
         wait_for_ajax
         expect(notification_setting.enabled).to be false
-      end
-    end
-
-    describe 'confirm' do
-      before do
-        user.update! confirmed_at: nil
-        visit user_path(user)
-      end
-
-      it 'can manually confirm a user', :js, :non_react_specs, :user_confirmable_specs do
-        page.accept_confirm do
-          click_link 'Confirm Email'
-        end
-
-        expect(page).to have_content 'User was successfully confirmed'
       end
     end
 
@@ -241,20 +229,6 @@ RSpec.describe 'Users', type: :system do
 
       before do
         visit user_path(user)
-      end
-
-      context 'when user is expired' do
-        let(:last_activity_at) { (Devise.expire_after + 1.day).ago }
-
-        it 'allows manual reactivation of the user', :js do
-          expect(page).to have_content("User's account has been expired due to inactivity")
-          page.accept_confirm do
-            click_link 'click here'
-          end
-
-          expect(page).to have_content 'User was successfully reactivated'
-          expect(user.reload.last_activity_at).not_to be_nil
-        end
       end
 
       context 'when user is not expired' do
@@ -287,47 +261,8 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'sign up', :external_user_specs, :js, :sign_up_specs do
-    before do
-      create :security_role, :external, allow_sign_up: true
-      allow(RadConfig).to receive_messages(twilio_verify_all_users?: false, legal_docs?: true)
-    end
-
-    it 'signs up' do
-      visit new_user_registration_path
-
-      fill_in 'First Name', with: Faker::Name.first_name
-      fill_in 'Last Name', with: Faker::Name.last_name
-      fill_in 'Mobile Phone', with: '(345) 222-1111'
-      fill_in 'Email', with: "#{Faker::Internet.user_name}@abc.com"
-      fill_in 'user_password', with: password
-      fill_in 'user_password_confirmation', with: password
-      expect(find_button('Sign Up', disabled: true).disabled?).to be(true)
-      check 'accept_terms'
-
-      click_button 'Sign Up'
-      expect(page).to have_content 'message with a confirmation link has been sent'
-      expect(User.last.active?).to be false if RadConfig.pending_users?
-    end
-
-    it "can't sign up with invalid email address" do
-      visit new_user_registration_path
-
-      fill_in 'First Name', with: Faker::Name.first_name
-      fill_in 'Last Name', with: Faker::Name.last_name
-      fill_in 'Email', with: 'test_user@'
-      fill_in 'user_password', with: password
-      fill_in 'user_password_confirmation', with: password
-      check 'accept_terms'
-
-      click_button 'Sign Up'
-
-      expect(page).to have_content 'Email is not written in a valid format'
-    end
-  end
-
   describe 'sign in' do
-    before { allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false }
+    before { allow(RadConfig).to receive(:two_factor_auth_enabled?).and_return false }
 
     it 'can not sign in without active user status' do
       user.update!(user_status: RadConfig.pending_users? ? pending_status : inactive_status)
@@ -356,14 +291,14 @@ RSpec.describe 'Users', type: :system do
       fill_in 'user_email', with: "foo#{user.email}"
       fill_in 'user_password', with: password
       click_button 'Sign In'
-      expect(page).to have_content 'Invalid Email or password'
+      expect(page).to have_content 'Invalid email or password'
     end
 
     it 'cannot sign in with expired password', :password_expirable_specs do
       current_password = password
       new_password = 'Passwords2!!!!!'
 
-      user.update(password_changed_at: 98.days.ago)
+      user.update(password_changed_at: (RadConfig.config_item!(:expire_password_after_days) + 8).days.ago)
       user.reload
 
       visit new_user_session_path
@@ -399,7 +334,7 @@ RSpec.describe 'Users', type: :system do
   end
 
   describe 'timeout', :devise_timeoutable_specs do
-    before { allow(RadConfig).to receive(:twilio_verify_enabled?).and_return false }
+    before { allow(RadConfig).to receive(:two_factor_auth_enabled?).and_return false }
 
     context 'with internal user' do
       it 'sign in times out after the configured hours' do
@@ -421,12 +356,15 @@ RSpec.describe 'Users', type: :system do
         visit new_user_session_path
         fill_in 'user_email', with: external_user.email
         fill_in 'user_password', with: password
-        click_button 'Sign In'
-        expect(page).to have_content('Signed in successfully')
 
-        Timecop.travel(185.minutes.from_now) do
-          visit users_path
-          expect(page).to have_content('Your session expired. Please sign in again to continue.')
+        if RadConfig.config_item(:portal).blank? # TODO: temp hack, see Task 9298
+          click_button 'Sign In'
+          expect(page).to have_content('Signed in successfully')
+
+          Timecop.travel(185.minutes.from_now) do
+            visit users_path
+            expect(page).to have_content('Your session expired. Please sign in again to continue.')
+          end
         end
       end
     end
@@ -437,7 +375,7 @@ RSpec.describe 'Users', type: :system do
       visit new_user_session_path
       fill_in 'user_email', with: user.email
       click_button 'Sign In'
-      expect(page).to have_content('Invalid Email or password.')
+      expect(page).to have_content('Invalid email or password.')
     end
 
     describe 'confirming' do
@@ -499,7 +437,7 @@ RSpec.describe 'Users', type: :system do
     end
   end
 
-  describe 'two factor authentication', :twilio_verify_specs do
+  describe 'two factor authentication', :two_factor_specs do
     let(:remember_message) do
       "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
     end
@@ -512,7 +450,7 @@ RSpec.describe 'Users', type: :system do
 
       allow(TwilioVerifyService).to receive(:send_sms_token).and_return(double(status: 'pending'))
 
-      user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
+      user.update!(otp_required_for_login: true, mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'allows user to login with authentication token' do

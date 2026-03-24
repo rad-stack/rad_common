@@ -9,7 +9,7 @@ class NotificationSettingsController < ApplicationController
 
     if notification_type.blank?
       skip_authorization
-      render json: { error: 'Invalid parameters' }, status: :unprocessable_entity
+      render json: { error: 'Invalid parameters' }, status: :unprocessable_content
       return
     end
 
@@ -26,7 +26,7 @@ class NotificationSettingsController < ApplicationController
     else
       render json: { error:
                          "The setting could not be saved: #{notification_setting.errors.full_messages.join(', ')}" },
-             status: :unprocessable_entity
+             status: :unprocessable_content
     end
   end
 

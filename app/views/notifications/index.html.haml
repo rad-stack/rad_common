@@ -1,16 +1,18 @@
 .card
   = render 'layouts/card_header',
-           title: "Notifications (#{current_user.notifications.unread.count} unread)",
+           title: "Notifications (#{@notifications.total_count}) (#{@notifications.unread.count} unread)",
            icon: 'fa-bell'
   .card-body
     = render 'layouts/filter', search: @notification_search, path: notifications_path
-    = paginate @notifications, theme: 'twitter-bootstrap-4'
+    = paginate @notifications, theme: 'bootstrap-5'
 
     %table.table.table-striped.table-bordered
       %tr
         = render 'layouts/sort_headers', search: @notification_search
       - @notifications.each do |record|
         %tr{ class: table_row_style(record, style_class: 'text-danger') }
+          - if current_user.admin?
+            %td= secured_link record.user
           %td
             %p= format_datetime(record.created_at)
             %p #{distance_of_time_in_words_to_now(record.created_at)} ago
@@ -20,6 +22,6 @@
             - if record.record.present?
               %p= secured_link record.record
 
-    = paginate @notifications, theme: 'twitter-bootstrap-4'
+    = paginate @notifications, theme: 'bootstrap-5'
 
 - current_user.read_notifications!

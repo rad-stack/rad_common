@@ -16,6 +16,7 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
 
   before do
     ActionMailer::Base.deliveries = []
+    admin
     notification_type.notify!
   end
 
@@ -39,6 +40,12 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
 
       context 'without to_user' do
         let(:to_user) { nil }
+
+        it { is_expected.to eq [from_user.id] }
+      end
+
+      context 'with internal from_user to external to_user' do
+        let(:to_user) { create :user, :external }
 
         it { is_expected.to eq [from_user.id] }
       end
@@ -81,6 +88,15 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
 
       it 'emails the admins' do
         expect(mail.to).to include admin.email
+      end
+    end
+
+    context 'with inactive from_user' do
+      let(:from_user) { create :admin, user_status: UserStatus.default_inactive_status }
+
+      it 'emails the admins instead' do
+        expect(mail.to).to include admin.email
+        expect(mail.to).not_to include from_user.email
       end
     end
 

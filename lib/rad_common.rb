@@ -1,13 +1,16 @@
 require 'rad_common/engine'
 
 module RadCommon
-  VALID_IMAGE_TYPES = %w[image/png image/jpeg image/jpg image/webp].freeze
+  VALID_IMAGE_TYPES = %w[image/png image/jpeg image/webp].freeze
 
   VALID_VIDEO_TYPES = %w[video/x-msvideo video/mp4 video/mpeg video/3gpp video/quicktime].freeze
 
   VALID_AUDIO_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/wave audio/x-wav audio/aiff audio/x-aifc audio/x-aiff
                          audio/mp4 audio/x-gsm audio/ulaw].freeze
 
+  VALID_FAVICON_TYPES = %w[image/vnd.microsoft.icon image/x-icon].freeze
+
+  # Make sure to update VALID_ATTACHMENT_TYPES in rad_common_js if you add or remove any file types
   VALID_ATTACHMENT_TYPES = (%w[application/msword
                                application/pdf
                                application/vnd.ms-excel
@@ -35,8 +38,15 @@ module RadCommon
                                message/rfc822
                                text/csv
                                text/html
+                               text/markdown
                                text/plain] + VALID_IMAGE_TYPES + VALID_VIDEO_TYPES + VALID_AUDIO_TYPES).freeze
 
   VALID_CONTENT_TYPE_MESSAGE = 'has an invalid content type of %<content_type>s, must be %<authorized_types>s'.freeze
   VALID_CONTENT_TYPE_MESSAGE_SHORT = 'has an invalid content type of %<content_type>s'.freeze
+
+  OPEN_AI_CHAT_MODEL = 'gpt-4.1-mini'.freeze
+  OPEN_AI_EMBEDDING_MODEL = 'text-embedding-3-small'.freeze
+  OPEN_AI_EMBEDDING_MAX_TOKENS = 8_191
+  OPEN_AI_EMBEDDING_CHARS_PER_TOKEN = 3
+  OPEN_AI_EMBEDDING_MAX_CHARS = OPEN_AI_EMBEDDING_MAX_TOKENS * OPEN_AI_EMBEDDING_CHARS_PER_TOKEN
 end

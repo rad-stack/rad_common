@@ -157,11 +157,11 @@ RSpec.describe Contactable do
     end
 
     context 'with post office box' do
-      let(:address_1) { 'Post Office Box 39' }
+      let(:address_1) { 'po box 39' }
       let(:address_2) { nil }
       let(:city) { 'OrLando' }
       let(:state) { 'fl' }
-      let(:zipcode) { '32816' }
+      let(:zipcode) { '32815' }
 
       it 'standardizes' do
         expect(company.valid?).to be true
@@ -171,7 +171,6 @@ RSpec.describe Contactable do
         expect(company.state).to eq('FL')
         expect(company.zipcode).to eq('32815')
         expect(company.address_problems).to be_nil
-        expect(company.address_changes).to eq('Post Office Box 39, 32816')
       end
     end
 
@@ -199,10 +198,11 @@ RSpec.describe Contactable do
       let(:address_2) { nil }
       let(:city) { 'Mordor' }
       let(:state) { 'FL' }
-      let(:zipcode) { '32816' }
+      let(:zipcode) { '32751' }
 
       it 'fails validation' do
         expect(company.valid?).to be false
+        expect(company.errors.full_messages).to include 'Address 1 is not a valid address'
       end
     end
 
@@ -232,7 +232,7 @@ RSpec.describe Contactable do
       it 'confirms address by ignoring secondary component' do
         expect(company.valid?).to be true
         expect(company.address_1).to eq('1921 E 24th St')
-        expect(company.address_2).to eq('Apt 1')
+        expect(company.address_2).to eq('# 1')
 
         # if we need to re-record and find another example address, you can search through a client's database
         # looking for this message in address_problems

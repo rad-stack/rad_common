@@ -1,4 +1,4 @@
-class SystemUsageSearch < RadCommon::Search
+class SystemUsageSearch < RadSearch::Search
   DATE_MODE_OPTIONS = %w[Yearly Monthly Weekly Daily].freeze
   DEFAULT_DATE_MODE = 'Weekly'.freeze
 
@@ -64,7 +64,12 @@ class SystemUsageSearch < RadCommon::Search
   end
 
   def usage_items
-    @usage_items ||=
+    @usage_items ||= prepare_usage_items.sort_by { |item| item.is_a?(String) ? item : item.first }
+  end
+
+  private
+
+    def prepare_usage_items
       RadConfig.system_usage_models!.map { |item|
         case item.class.to_s
         when 'String'
@@ -74,13 +79,13 @@ class SystemUsageSearch < RadCommon::Search
         else
           raise "invalid option: #{item.class}"
         end
+
+        check_index klass
         next unless Pundit.policy!(current_user, klass).index?
 
         item
       }.compact
-  end
-
-  private
+    end
 
     def filters_def
       [{ input_label: 'Date Mode',
@@ -131,5 +136,11 @@ class SystemUsageSearch < RadCommon::Search
 
     def today
       Time.current
+    end
+
+    def check_index(klass)
+      return if ActiveRecord::Base.connection.index_exists?(klass.table_name, 'created_at')
+
+      raise "missing index on #{klass.table_name}.created_at"
     end
 end

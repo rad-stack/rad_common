@@ -36,6 +36,7 @@ Metrics/BlockLength:
     - 'spec/rails_helper.rb'
     - 'lib/tasks/temp.rake'
     - 'lib/generators/rad_common/install/rails_helper.rb'
+    - 'lib/application_template/application_template.rb'
 
 Rails/Output:
   Exclude:
@@ -109,7 +110,13 @@ Metrics/ParameterLists:
   Exclude:
     - 'app/helpers/rad_common/attachments_helper.rb'
     - 'app/services/attachment_renderer.rb'
+    - 'app/services/rad_search/search.rb'
 
 Naming/AccessorMethodName:
   Exclude:
     - 'app/mailers/rad_mailer.rb'
+
+Lint/AssignmentInCondition:
+  AllowSafeAssignment: false
+  Exclude:
+    - 'config/initializers/simple_form_labels.rb'

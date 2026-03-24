@@ -21,6 +21,8 @@ class NotificationPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
+      return scope.all if user.admin?
+
       scope.where(user: user)
     end
   end

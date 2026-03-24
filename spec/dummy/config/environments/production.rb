@@ -101,4 +101,24 @@ Rails.application.configure do
 
   # Prepare the ingress controller used to receive mail
   config.action_mailbox.ingress = :sendgrid
+
+  Rails.application.configure do
+    production_id = ENV.fetch('RAD_PRODUCTION_ID', '0').to_i
+
+    credentials_file = if production_id.zero?
+                         'production.yml.enc'
+                       else
+                         "production_#{production_id}.yml.enc"
+                       end
+
+    config.credentials.content_path = Rails.root.join('config', 'credentials', credentials_file)
+
+    credentials_key = if production_id.zero?
+                        'production.key'
+                      else
+                        "production_#{production_id}.key"
+                      end
+
+    config.credentials.key_path = Rails.root.join('config', 'credentials', credentials_key)
+  end
 end

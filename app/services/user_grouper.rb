@@ -1,23 +1,43 @@
 class UserGrouper
-  attr_accessor :current_user, :always_include, :scopes, :with_ids
+  include SearchableDropdownHelper
+  attr_accessor :current_user, :always_include, :scopes, :with_ids, :include_unassigned
 
-  def initialize(current_user, always_include: nil, scopes: [], with_ids: false)
+  def initialize(current_user, always_include: nil, scopes: [], with_ids: false, include_unassigned: false)
     self.current_user = current_user
     self.always_include = always_include
     self.scopes = scopes
     self.with_ids = with_ids
+    self.include_unassigned = include_unassigned
   end
 
   def call
-    [me_item, internal_user_item, client_user_item, inactive_user_item].compact
+    [unassigned_item, me_item, internal_user_item, client_user_item, inactive_user_item].compact
+  end
+
+  def user_filter(label, column, scope = nil)
+    default_options = { input_label: label, column: column, include_blank: false, blank_value_label: 'All Users' }
+    default_options[:scope] = scope if scope
+    return searchable_options(default_options) if max_dropdown_size_exceeded?(base_users)
+
+    { options: call }.merge(default_options).merge({ grouped: true, include_blank: true })
   end
 
   private
+
+    def searchable_options(default_options)
+      { search_scope_name: 'user_name', show_search_subtext: true }.merge(default_options)
+    end
 
     def me_item
       return if me_users.none?
 
       ['Me', format_collection(me_users)]
+    end
+
+    def unassigned_item
+      return unless include_unassigned
+
+      ['Unassigned', format_collection([{ scope_value: :unassigned }])]
     end
 
     def internal_user_item

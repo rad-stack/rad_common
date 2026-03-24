@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe DuplicatesProcessor do
   subject { described_class.new(attorney_1).matches }
 
+  before { create :admin }
+
   let(:first_name) { 'John' }
   let(:last_name) { 'Smith' }
   let(:company_name) { 'ABC' }
@@ -62,6 +64,12 @@ RSpec.describe DuplicatesProcessor do
     end
 
     it { is_expected.to eq [{ id: attorney_2.id, score: 40 }] }
+
+    context 'with personal contact multiplier' do
+      before { allow_any_instance_of(described_class).to receive(:personal_contact_multiplier).and_return(2) }
+
+      it { is_expected.to eq [{ id: attorney_2.id, score: 53 }] }
+    end
   end
 
   context 'when matching only on additional items 2' do
