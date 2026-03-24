@@ -31,7 +31,9 @@ class RadSendgridStatusReceiver
   end
 
   def user
-    @user ||= User.find_by(email: email)
+    return if contact_log.blank?
+
+    @user ||= contact_log.contact_log_recipients.find_by(email: email)&.to_user
   end
 
   def event

@@ -4,7 +4,7 @@
   .card
     = render 'layouts/card_header',
              action_name: 'custom',
-             title: "#{RadCommon::AppInfo.new.client_model_label}s (#{@user_clients.count})",
+             title: "#{AppInfo.new.client_model_label.pluralize} (#{@user_clients.count})",
              icon: 'fa-address-book',
              additional_actions: user_client_actions(@user)
 
@@ -18,10 +18,10 @@
           %tr
             %td= secured_link record.client
             - if policy(record).destroy?
-              %td
+              %td.d-grid.gap-2
                 - if policy(record).destroy?
                   = link_to icon(:times, 'Remove from User'),
                             record,
                             method: :delete,
                             data: { confirm: 'Are you sure?' },
-                            class: 'btn btn-danger btn-sm btn-block'
+                            class: 'btn btn-danger btn-sm'

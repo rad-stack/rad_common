@@ -1,5 +1,6 @@
 class GlobalValidationsController < ApplicationController
   def new
+    @company = Company.main
     authorize GlobalValidation
   end
 

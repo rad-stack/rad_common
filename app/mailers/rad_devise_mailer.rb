@@ -1,7 +1,7 @@
 class RadDeviseMailer < Devise::Mailer
   include RadContactMailer
   include Devise::Controllers::UrlHelpers
-  helper RadCommon::ApplicationHelper
+  helper RadHelper
 
   layout 'rad_mailer'
 
@@ -64,10 +64,9 @@ class RadDeviseMailer < Devise::Mailer
     @token = token
     initialize_from_record(record)
 
+    opts[:subject] = @resource.user_invited_subject
     @recipient = @resource
-    @message = "Someone has invited you to #{app_name}, you can accept it through the link " \
-               "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
-               'created until you access the link and set your password.'
+    @message = @resource.user_invited_message
 
     @email_action = { message: 'Click the link to accept the invitation.',
                       button_text: 'Accept',
@@ -105,7 +104,7 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def default_url_options
-    if @resource.external? && RadConfig.portal?
+    if RadConfig.portal? && @resource.portal_user?
       { host: @resource.portal_host_name }
     else
       { host: RadConfig.host_name! }
@@ -120,6 +119,6 @@ class RadDeviseMailer < Devise::Mailer
     end
 
     def app_name
-      @resource.external? && RadConfig.portal? ? @resource.portal_app_name : RadConfig.app_name!
+      RadConfig.portal? && @resource.portal_user? ? @resource.portal_app_name : RadConfig.app_name!
     end
 end

@@ -1,12 +1,13 @@
 class SmartyAddress
-  attr_reader :address_args
+  attr_reader :address_args, :upcase
 
-  def initialize(address_args)
+  def initialize(address_args, upcase)
     @address_args = parse_address_args(address_args)
+    @upcase = upcase
   end
 
   def call
-    SmartyResult.new(api_result, zip4_provided?)
+    SmartyResult.new(api_result, zip4_provided?, upcase)
   end
 
   private

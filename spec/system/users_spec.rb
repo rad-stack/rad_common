@@ -25,6 +25,7 @@ describe 'Users' do
 
       it "doesn't allow changing email" do
         expect(find_field('user_email', disabled: true).value).to eq(user.email)
+        expect(find(:label, for: 'user_user_status_id').text).to eq('* User Status')
       end
     end
 
@@ -47,7 +48,8 @@ describe 'Users' do
         fill_in 'user_email', with: "foo_#{user.email}"
         click_link_or_button 'Save'
         expect(page).to have_content 'User was successfully updated.'
-        expect(first_email.subject).to include 'Confirmation instructions'
+        expect(deliveries.count).to eq(2)
+        expect(deliveries.map(&:subject)).to include('Email Changed', match(/Confirmation instructions/))
       end
     end
   end
@@ -63,7 +65,7 @@ describe 'Users' do
                              twilio_account_sid: Rails.application.credentials.twilio_alt_account_sid,
                              twilio_auth_token: Rails.application.credentials.twilio_alt_auth_token)
 
-      user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
+      user.update!(otp_required_for_login: true, mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'allows user to login with authentication token', :vcr do

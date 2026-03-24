@@ -24,7 +24,7 @@
         - else
           = format_datetime record.created_at
       %td= enum_to_translated_option record, :service_type
-      %td= enum_to_translated_option record, :sms_log_type
+      %td= enum_to_translated_option record, :contact_direction
       %td
         - if record.from_user.present?
           %p= secured_link record.from_user
@@ -43,7 +43,11 @@
       %td
         - if record.record.present?
           %p= record.record_type.titleize
-          %p= secured_link record.record
+          %p
+            - if show_route_exists?(record.record)
+              = secured_link record.record
+            - else
+              = record
       %td= record.content
       %td
         - if card_style.present?

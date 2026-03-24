@@ -6,7 +6,7 @@
     - if @division_search.show_header?
       %h3 Showing header
     = render 'layouts/filter', search: @division_search, path: divisions_path
-    = paginate @divisions, theme: 'twitter-bootstrap-4'
+    = paginate @divisions, theme: 'bootstrap-5'
 
     %table.table.table-striped.table-bordered
       %tr
@@ -26,17 +26,25 @@
           %td= safe_join(record.tags.map { |tag| content_tag(:span, tag, class: 'badge badge-info mr-1') })
           %td= render_one_attachment record: record, attachment_name: 'logo', new_tab: true
           - if show_actions
-            %td
+            %td.d-grid.gap-2
+              - if policy(record).show?
+                = lazy_container_link(icon(:eye, 'Quick View'),
+                                      quick_view_division_path(record),
+                                      subtitle: 'Division Details',
+                                      type: 'offcanvas',
+                                      title: "Quick View: #{record.name}",
+                                      width: 'w-50',
+                                      class: 'btn btn-sm btn-info')
               - if policy(record).update?
                 = link_to icon(:pencil, 'Edit'),
                           edit_division_path(record),
-                          class: 'btn btn-sm btn-secondary btn-block'
+                          class: 'btn btn-sm btn-secondary'
 
               - if policy(record).destroy?
                 = link_to icon(:times, 'Delete'),
                           record,
                           method: :delete,
                           data: { confirm: 'Are you sure?' },
-                          class: 'btn btn-danger btn-sm btn-block'
+                          class: 'btn btn-danger btn-sm'
 
-    = paginate @divisions, theme: 'twitter-bootstrap-4'
+    = paginate @divisions, theme: 'bootstrap-5'

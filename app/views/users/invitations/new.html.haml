@@ -7,7 +7,8 @@
            icon: 'fa-plus',
            card_style: 'bg-white'
   .card-body
-    = simple_form_for(resource, as: resource_name, url: invitation_path(resource_name), html: { method: :post }) do |f|
+    = simple_form_for(resource, as: resource_name, url: invitation_path(resource_name),
+                                html: { method: :post, data: { controller: 'invitation-form' } }) do |f|
       = rad_form_errors f
       .form-inputs
         .row
@@ -15,8 +16,10 @@
             - if invite_roles.size > 1
               = f.input :initial_security_role_id,
                         label: 'Initial Security Role',
-                        collection: invite_roles,
-                        include_blank: true
+                        collection: invite_role_options,
+                        include_blank: true,
+                        input_html: { data: { action: 'change->invitation-form#onSecurityRoleChanged',
+                                              'invitation-form-target': 'securityRole' } }
 
             - else
               = f.input :initial_security_role_id, as: :hidden, input_html: { value: invite_roles.first.id }
@@ -30,7 +33,7 @@
             - resource.class.invite_key_fields.each do |field|
               = f.input field, required: true
           - if RadConfig.validate_user_domains?
-            .col-lg-4
+            .col-lg-4{ data: { 'invitation-form-target': 'validDomainInfo' } }
               %span
                 * Valid Domains for Internal Users: #{Company.main.valid_user_domains.join(', ')}
               %p
@@ -38,5 +41,6 @@
                 = link_to 'Company Settings', company_edit_path
         .row
           .col-lg-4= f.input :mobile_phone, required: require_mobile_phone?
+        = render 'users/form_custom', f: f
       .form-actions
         = f.button :submit, t('devise.invitations.new.submit_button'), class: 'btn btn-primary'

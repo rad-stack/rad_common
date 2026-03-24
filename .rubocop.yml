@@ -110,7 +110,13 @@ Metrics/ParameterLists:
   Exclude:
     - 'app/helpers/rad_common/attachments_helper.rb'
     - 'app/services/attachment_renderer.rb'
+    - 'app/services/rad_search/search.rb'
 
 Naming/AccessorMethodName:
   Exclude:
     - 'app/mailers/rad_mailer.rb'
+
+Lint/AssignmentInCondition:
+  AllowSafeAssignment: false
+  Exclude:
+    - 'config/initializers/simple_form_labels.rb'

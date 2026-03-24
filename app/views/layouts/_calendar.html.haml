@@ -1,9 +1,11 @@
 - calendar_view_path = local_assigns[:calendar_path]
 - initial_view = local_assigns[:initial_view]
+- open_in_new_tab = local_assigns.fetch(:open_in_new_tab, false)
 
 .card{ 'data-controller' => 'rad-calendar',
        'data-rad-calendar-event-url-value' => calendar_view_path,
-       'data-rad-calendar-initial-view-value' => initial_view }
+       'data-rad-calendar-initial-view-value' => initial_view,
+       'data-rad-calendar-open-in-new-tab-value' => open_in_new_tab }
   .card-header
     .row
       .col-md-3.d-flex.align-items-center

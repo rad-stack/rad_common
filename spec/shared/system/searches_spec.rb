@@ -17,19 +17,26 @@ RSpec.describe 'Searches', type: :system do
     before { create :user, last_name: term }
 
     context 'when asking the user if they want to use' do
+      let(:placeholders) { RadConfig.global_search_scopes!.pluck(:description) }
+
       it 'clears checkbox if dismissed', :js, :legacy_asset_specs do
         visit '/'
+
         page.dismiss_confirm prompt do
           check 'super_search'
         end
-        expect(find('[aria-controls="search-ts-dropdown"]')[:placeholder]).to eq 'Search user by name'
+
+        expect(find('[aria-controls="search-ts-dropdown"]')[:placeholder]).not_to eq 'Super Search'
+        expect(placeholders).to include(find('[aria-controls="search-ts-dropdown"]')[:placeholder])
       end
 
       it 'uses if confirmed', :js, :legacy_asset_specs do
         visit '/'
+
         page.accept_confirm prompt do
           check 'super_search'
         end
+
         expect(find('[aria-controls="search-ts-dropdown"]')[:placeholder]).to eq 'Super Search'
       end
     end

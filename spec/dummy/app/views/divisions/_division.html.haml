@@ -1,0 +1,13 @@
+.list-group-item.list-group-item-action{ id: dom_id(division) }
+  .d-flex.w-100.justify-content-between
+    %h6.mb-1
+      = link_to division.name, division
+    %small.text-muted
+      = time_ago_in_words(division.created_at)
+      ago
+  - if division.additional_info.present?
+    %p.mb-1.text-muted
+      = truncate(division.additional_info, length: 100)
+  %small
+    Owner:
+    = division.owner.to_s

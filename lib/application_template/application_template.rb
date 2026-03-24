@@ -59,7 +59,7 @@ def add_git_source_and_ruby_version
     <<~CONTENT
       git_source(:github) { |repo| "https://github.com/\#{repo}.git" }
 
-      ruby '3.3.1'
+      ruby '3.4.7'
 
     CONTENT
   end
@@ -202,9 +202,6 @@ gem 'bootsnap', require: false
 gem 'propshaft'
 gem 'rad_common', git: 'https://github.com/rad-stack/rad_common.git', branch: @rad_common_branch
 
-gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-devise.git',
-                            branch: 'authy-to-twilio-verify'
-
 gem_group :development do
   gem 'active_record_doctor'
   gem 'better_errors'
@@ -317,7 +314,6 @@ after_bundle do
           [admin_menu(true)]
         end
     end
-
   RUBY
 
   fix_routes
@@ -329,7 +325,6 @@ after_bundle do
     require 'rad_rspec/rad_spec_support'
     class SpecSupport < RadSpecSupport
     end
-
   RUBY
 
   copy_image_file 'app_logo.png'

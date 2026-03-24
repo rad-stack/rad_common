@@ -8,7 +8,7 @@
 .row
   .col-lg-12
     - if users.respond_to?(:current_page)
-      = paginate users, param_name: page_param_name, theme: 'twitter-bootstrap-4'
+      = paginate users, param_name: page_param_name, theme: 'bootstrap-5'
 
     %table.table.table-bordered
       %tr
@@ -24,7 +24,7 @@
           %th Status
           %th Roles
           - if RadConfig.external_users?
-            %th #{RadCommon::AppInfo.new.client_model_label}s
+            %th #{AppInfo.new.client_model_label}s
         - if show_actions
           %th.text-center Actions
 
@@ -66,10 +66,10 @@
               - else
                 = format_boolean(user.external?)
           - if show_actions
-            %td
+            %td.d-grid.gap-2
               - if show_actions_record
                 - user_index_actions(user).each do |action|
                   = action
 
     - if users.respond_to?(:current_page)
-      = paginate users, param_name: page_param_name, theme: 'twitter-bootstrap-4'
+      = paginate users, param_name: page_param_name, theme: 'bootstrap-5'

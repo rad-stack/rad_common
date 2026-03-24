@@ -1,5 +1,5 @@
 class UserGrouper
-  include RadCommon::SearchableDropdownHelper
+  include SearchableDropdownHelper
   attr_accessor :current_user, :always_include, :scopes, :with_ids, :include_unassigned
 
   def initialize(current_user, always_include: nil, scopes: [], with_ids: false, include_unassigned: false)
