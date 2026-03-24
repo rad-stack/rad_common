@@ -41,6 +41,7 @@ default: &default
 
   duplicates: []
   restricted_audit_attributes: []
+  clone_local_exclude: []
   additional_user_params: []
   additional_company_params: []
   global_validity_days: 3

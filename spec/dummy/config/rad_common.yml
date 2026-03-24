@@ -66,6 +66,7 @@ default: &default
       model: Division
       attribute: hourly_rate
 
+  clone_local_exclude: []
   additional_user_params: []
   additional_user_profile_params: []
   additional_company_params: []
