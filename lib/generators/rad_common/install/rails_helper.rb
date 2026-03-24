@@ -95,9 +95,32 @@ RSpec.configure do |config|
                                    options: options
   end
 
+  Capybara.register_driver :headless_chrome_mobile do |app|
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless=new')
+    options.add_argument('--window-size=375,812')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-gpu')
+
+    Capybara::Selenium::Driver.new app,
+                                   browser: :chrome,
+                                   options: options
+  end
+
   Capybara.register_driver :chrome do |app|
     options = Selenium::WebDriver::Chrome::Options.new
     options.add_argument('--window-size=1400,900')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-gpu')
+
+    Capybara::Selenium::Driver.new app,
+                                   browser: :chrome,
+                                   options: options
+  end
+
+  Capybara.register_driver :chrome_mobile do |app|
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--window-size=375,812')
     options.add_argument('--disable-popup-blocking')
     options.add_argument('--disable-gpu')
 
