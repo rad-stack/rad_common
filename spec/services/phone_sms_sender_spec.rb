@@ -33,6 +33,13 @@ RSpec.describe PhoneSMSSender, type: :service do
           expect { result }.to change(ContactLogRecipient, :count).by(1)
           expect(ContactLogRecipient.last.to_user).to be_nil
         end
+
+        it "doesn't set to user if user is inactive" do
+          to_user.update! user_status: create(:user_status, :inactive)
+
+          expect { result }.to change(ContactLogRecipient, :count).by(1)
+          expect(ContactLogRecipient.last.to_user).to be_nil
+        end
       end
 
       context 'when failure' do

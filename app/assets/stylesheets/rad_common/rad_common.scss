@@ -225,6 +225,11 @@ td.red-x {
   .navbar .navbar-nav > li > a {
     margin-bottom: 0;
   }
+
+  /* fix calendar title in mobile view */
+  .fc-toolbar-title {
+    font-size: 16px !important;
+  }
 }
 
 /* custom bootstrap styles */

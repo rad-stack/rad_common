@@ -3,7 +3,7 @@ module Embeddable
 
   included do
     has_one :embedding, as: :embeddable, dependent: :destroy
-    scope :needs_embedding, -> { where.missing(:embedding).order(created_at: :desc) }
+    scope :needs_embedding, -> { where.missing(:embedding) }
 
     after_commit :perform_embedding!,
                  on: %i[create update],
@@ -11,17 +11,23 @@ module Embeddable
   end
 
   def update_embedding!
+    return unless EmbeddingService.enabled?
+
     content = if summarizer.present?
                 summarizer.summarize
               else
                 generate_embedding_content
               end
 
-    embedding_vector = EmbeddingService.generate(content)
+    embedding_vector = EmbeddingService.generate(content, record: self)
     return unless embedding_vector
 
+    association(:embedding).reload
     embedding_record = embedding || build_embedding
     embedding_record.update! embedding: embedding_vector
+  rescue ActiveRecord::RecordNotUnique
+    association(:embedding).reload
+    embedding.update! embedding: embedding_vector
   end
 
   def summarizer

@@ -35,7 +35,7 @@ RSpec.describe AppInfo, type: :service do
     let(:result) do
       %w[ActionText::RichText ActiveStorage::Attachment AssistantSession Attorney Category Client Company ContactLog
          ContactLogRecipient Division NotificationSecurityRole NotificationSetting NotificationType SavedSearchFilter
-         SearchPreference SecurityRole Status User UserClient UserSecurityRole]
+         SearchPreference SecurityRole Status SystemMessage User UserClient UserSecurityRole]
     end
 
     it { is_expected.to eq result }

@@ -26,6 +26,7 @@ describe 'Nav' do
   end
 
   before do
+    create :admin
     allow_any_instance_of(Duplicate).to receive :maybe_notify!
 
     attorney

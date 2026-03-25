@@ -48,15 +48,16 @@ describe 'Users' do
         fill_in 'user_email', with: "foo_#{user.email}"
         click_link_or_button 'Save'
         expect(page).to have_content 'User was successfully updated.'
-        expect(first_email.subject).to include 'Confirmation instructions'
+        expect(deliveries.count).to eq(2)
+        expect(deliveries.map(&:subject)).to include('Email Changed', match(/Confirmation instructions/))
       end
     end
   end
 
   describe 'two factor authentication' do
-    let(:remember_message) do
-      "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
-    end
+    # let(:remember_message) do
+    #   "Remember this device for #{distance_of_time_in_words(Devise.twilio_verify_remember_device)}"
+    # end
 
     before do
       allow(Rails.application.credentials)

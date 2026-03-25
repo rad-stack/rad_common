@@ -1,5 +1,5 @@
 class AssistantSessionsController < ApplicationController
-  before_action :set_assistant_session, only: %i[update check_response show]
+  before_action :set_assistant_session, only: %i[update show]
 
   def index
     authorize AssistantSession
@@ -23,21 +23,6 @@ class AssistantSessionsController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
-    end
-  end
-
-  def check_response
-    respond_to do |format|
-      format.html do
-        if @assistant_session.status_completed? || @assistant_session.status_failed?
-          logs = @assistant_session.log || []
-          latest_assistant_message = logs.reverse.find { |msg| msg['role'] == 'assistant' }
-          @bot_response = latest_assistant_message
-        end
-        render template: 'assistant_sessions/check_response'
-      end
-
-      format.json { render json: { status: @assistant_session.status } }
     end
   end
 

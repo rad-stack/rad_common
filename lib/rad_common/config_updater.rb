@@ -13,6 +13,15 @@ module RadCommon
       File.write(CONFIG_FILE, updated_content)
     end
 
+    def self.rename_rad_config_setting(old_name, new_name)
+      return unless rad_config_setting_exists?(old_name)
+      return if rad_config_setting_exists?(new_name)
+
+      content = File.read(CONFIG_FILE)
+      updated_content = content.gsub(/^(\s*)#{old_name}:/, "\\1#{new_name}:")
+      File.write(CONFIG_FILE, updated_content)
+    end
+
     def self.rad_config_setting_exists?(setting_name)
       File.readlines(CONFIG_FILE).grep(/#{setting_name}:/).any?
     end

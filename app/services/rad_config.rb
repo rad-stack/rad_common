@@ -164,16 +164,16 @@ class RadConfig
       secret_config_item! :twilio_verify_service_sid
     end
 
-    def twilio_verify_enabled?
-      boolean_config_item! :twilio_verify_enabled
+    def two_factor_auth_enabled?
+      boolean_config_item! :two_factor_auth_enabled
     end
 
-    def twilio_verify_all_users?
-      boolean_config_item! :twilio_verify_all_users
+    def two_factor_auth_all_users?
+      boolean_config_item! :two_factor_auth_all_users
     end
 
-    def twilio_verify_remember_device!
-      config_item!(:twilio_verify_remember_device_days).days
+    def two_factor_remember_device!
+      config_item!(:two_factor_remember_device_days).days
     end
 
     def expire_password_after!
@@ -487,7 +487,7 @@ class RadConfig
 
     def check_validity!
       check_aws!
-      check_twilio_verify!
+      check_two_factor!
       check_smarty!
       check_marketing!
       check_external!
@@ -509,8 +509,8 @@ class RadConfig
         raise 'Missing AWS S3 credentials'
       end
 
-      def check_twilio_verify!
-        return unless twilio_verify_enabled? && !twilio_enabled?
+      def check_two_factor!
+        return unless two_factor_auth_enabled? && !twilio_enabled?
 
         raise 'Twilio must be enabled to provide mobile phone # validation when two factor authentication is enabled'
       end
