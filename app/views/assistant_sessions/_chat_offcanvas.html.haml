@@ -1,7 +1,7 @@
 - if current_user && policy(AssistantSession).new? && RadConfig.open_ai_api_key.present?
-  .offcanvas.offcanvas-end.w-50#basic-question-modal{ 'aria-hidden' => 'true',
-                                                      'aria-labelledby' => 'basic-question-modal-label',
-                                                      :tabindex => '-1' }
+  .offcanvas.offcanvas-end.w-50.rounded-start-3#basic-question-modal{ 'aria-hidden' => 'true',
+                                                                      'aria-labelledby' => 'basic-question-modal-label',
+                                                                      :tabindex => '-1' }
     .offcanvas-header
       %h1.offcanvas-title.fs-5#basic-question-modal-label Ask Question?
       %button.btn-close{ 'aria-label' => 'Close', 'data-bs-dismiss' => 'offcanvas', :type => 'button' }
