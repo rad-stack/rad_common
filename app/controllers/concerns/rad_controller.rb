@@ -70,7 +70,7 @@ module RadController
     end
 
     def report_sentry_access_denied?
-      (Rails.env.production? || Rails.env.staging?) && !impersonating?
+      (Rails.env.production? || Rails.env.staging?) && !impersonating? && user_signed_in?
     end
 
     def impersonating?

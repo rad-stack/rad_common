@@ -83,6 +83,7 @@ module Notifications
 
       def maybe_add_from_user
         return [] if from_user.blank?
+        return [] unless from_user.active?
         return [] if contact_log.sms? && to_user.present? && to_user.internal?
 
         [from_user.id]

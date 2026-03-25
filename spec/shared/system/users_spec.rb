@@ -291,7 +291,7 @@ RSpec.describe 'Users', type: :system do
       fill_in 'user_email', with: "foo#{user.email}"
       fill_in 'user_password', with: password
       click_button 'Sign In'
-      expect(page).to have_content 'Invalid Email or password'
+      expect(page).to have_content 'Invalid email or password'
     end
 
     it 'cannot sign in with expired password', :password_expirable_specs do
@@ -375,7 +375,7 @@ RSpec.describe 'Users', type: :system do
       visit new_user_session_path
       fill_in 'user_email', with: user.email
       click_button 'Sign In'
-      expect(page).to have_content('Invalid Email or password.')
+      expect(page).to have_content('Invalid email or password.')
     end
 
     describe 'confirming' do
