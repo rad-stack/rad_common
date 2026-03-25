@@ -70,8 +70,45 @@ class HerokuCommands
       write_log `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
     end
 
-    def clone(app_name, profile = 'full', backup_id = nil)
-      clone_via_backup(app_name, profile, backup_id)
+    def clone(app_name, profile = 'full', backup_id = nil, method = 'backup')
+      if method.to_s == 'direct'
+        direct_dump(app_name, profile)
+      else
+        clone_via_backup(app_name, profile, backup_id)
+      end
+    end
+
+    def direct_dump(app_name, profile = 'minimal')
+      check_production!
+
+      dump_file = 'latest_direct.dump'
+
+      Bundler.with_unbundled_env do
+        check_valid_app(app_name)
+
+        write_log 'Fetching database credentials from Heroku...'
+        db_url = `heroku config:get DATABASE_URL #{app_option(app_name)}`.strip
+
+        exclude_flags = generate_exclude_flags(profile)
+        write_log "Running pg_dump directly from Heroku database (profile: #{profile})..."
+
+        command = [
+          'pg_dump',
+          "'#{db_url}'",
+          '-Fc',
+          '--no-acl',
+          '--no-owner',
+          *exclude_flags,
+          "-f #{dump_file}"
+        ].join(' ')
+
+        write_log `#{command}`
+      end
+
+      restore_from_backup(dump_file, 'full')
+
+      write_log 'Deleting temporary dump file'
+      FileUtils.rm_f dump_file
     end
 
     def reset_staging(app_name)
@@ -138,6 +175,10 @@ class HerokuCommands
 
         write_log 'Deleting temporary dump file'
         write_log `rm #{clone_dump_file}`
+      end
+
+      def generate_exclude_flags(profile)
+        excluded_tables(profile).map { |table| "--exclude-table-data=#{table}" }
       end
 
       def restore_command(file_name, restore_list_file)
@@ -243,7 +284,7 @@ class HerokuCommands
         tables = EXCLUDED_TABLES[profile.to_s]
         raise "Unknown restore profile: #{profile}" if tables.nil?
 
-        tables
+        (tables + RadConfig.clone_local_exclude!).uniq
       end
 
       def reset_sensitive_local_data
