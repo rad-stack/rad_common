@@ -1,5 +1,5 @@
 class AssistantSessionsController < ApplicationController
-  before_action :set_assistant_session, only: %i[update show]
+  before_action :set_assistant_session, only: %i[update show mentions]
 
   def index
     authorize AssistantSession
@@ -7,6 +7,19 @@ class AssistantSessionsController < ApplicationController
   end
 
   def show; end
+
+  def mentions
+    query = params[:q].to_s.strip
+    type = params[:type].to_s
+
+    results = if query.length >= 2
+                @assistant_session.chat_instance.search_mentionables(query, type, current_user)
+              else
+                []
+              end
+
+    render json: results
+  end
 
   def update
     @reset_chat = false

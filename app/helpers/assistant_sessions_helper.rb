@@ -34,12 +34,18 @@ module AssistantSessionsHelper
   end
 
   def assistant_session_text_sanitize(text)
+    # Handle case where content is an array (e.g., OpenAI content parts)
+    text = text.map { |part| part.is_a?(Hash) ? part['text'] : part }.join if text.is_a?(Array)
+    text = text.to_s
+
     text = remove_context_data(text)
+    text = remove_mention_context(text)
+    text = format_mentions(text)
     text = disable_turbo_links(text)
     allowed_tags = Rails::Html::SafeListSanitizer.allowed_tags
-    allowed_tags += %w[a]
+    allowed_tags += %w[a span]
     allowed_attributes = Rails::Html::SafeListSanitizer.allowed_attributes
-    allowed_attributes += %w[href data-turbo]
+    allowed_attributes += %w[href data-turbo data-type data-id]
 
     sanitize(text, tags: allowed_tags, attributes: allowed_attributes)
   end
@@ -52,5 +58,18 @@ module AssistantSessionsHelper
 
   def remove_context_data(text)
     text.gsub(/CONTEXT_DATA_FOLLOWS.*\z/m, '')
+  end
+
+  def format_mentions(text)
+    text.gsub(LLM::MentionParser::MENTION_PATTERN) do |_match|
+      type = ::Regexp.last_match(1)
+      id = ::Regexp.last_match(2)
+      label = ::Regexp.last_match(3)
+      content_tag(:span, "@#{label}", class: 'fw-bold', data: { type: type, id: id })
+    end
+  end
+
+  def remove_mention_context(text)
+    text.gsub(/\n\nMENTIONED_ENTITIES:.*\z/m, '')
   end
 end

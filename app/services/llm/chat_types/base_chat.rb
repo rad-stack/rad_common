@@ -35,6 +35,33 @@ module LLM
         'User'
       end
 
+      def mentionable_types
+        []
+      end
+
+      def mentions_enabled?
+        mentionable_types.any?
+      end
+
+      def search_mentionables(query, type, current_user)
+        return [] unless mentionable_types.include?(type)
+
+        klass = type.safe_constantize
+        return [] unless klass && klass.include?(LLMMentionable)
+
+        scope = klass.mentionable_search(query)
+        scope = apply_mention_policy(scope, klass, current_user)
+        scope.limit(10).map do |record|
+          {
+            id: record.id,
+            type: type,
+            label: record.to_s,
+            token: record.mention_token,
+            icon: klass.mentionable_icon
+          }
+        end
+      end
+
       def basic_question(question)
         question = build_context(question)
 
@@ -47,6 +74,7 @@ module LLM
       end
 
       def build_context(question)
+        question = build_mention_context(question)
         return question unless common_question_class(question)
 
         question_class = common_question_class(question)
@@ -54,6 +82,18 @@ module LLM
         context_data = question_instance.context_data
         @common_question = context_data.present?
         "#{question} CONTEXT_DATA_FOLLOWS: \n #{question_instance.class.question} \n #{context_data}"
+      end
+
+      def build_mention_context(question)
+        return question unless mentions_enabled?
+
+        parser = LLM::MentionParser.new(question)
+        return question unless parser.has_mentions?
+
+        mention_context = parser.build_context_string
+        return question if mention_context.blank?
+
+        "#{question}\n\nMENTIONED_ENTITIES:\n#{mention_context}"
       end
 
       def common_question_class(question)
@@ -80,6 +120,15 @@ module LLM
       end
 
       private
+
+        def apply_mention_policy(scope, klass, current_user)
+          policy_class = "#{klass.name}Policy".safe_constantize
+          return scope unless policy_class
+
+          Pundit.policy_scope!(current_user, scope)
+        rescue Pundit::NotDefinedError
+          scope
+        end
 
         def system_prompt
           raise NotImplementedError
