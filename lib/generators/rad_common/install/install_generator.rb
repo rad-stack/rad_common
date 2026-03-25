@@ -792,6 +792,7 @@ gem 'propshaft'
           apply_migration '20251120171951_remove_legacy_filter_settings.rb'
           apply_migration '20260110093403_rename_twilio_verify_enabled.rb'
           apply_migration '20260211190217_add_notification_type_defaults.rb'
+          apply_migration '20260324000000_remove_otp_required_for_login.rb'
         end
 
         def installed_app_name
