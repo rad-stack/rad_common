@@ -35,11 +35,15 @@ module LLM
         'User'
       end
 
+      def tool_data_expiration_minutes
+        nil
+      end
+
       def basic_question(question)
         question = build_context(question)
 
         if @assistant_session.log.present?
-          previous_messages = @assistant_session.log
+          previous_messages = filter_expired_messages(@assistant_session.log)
           return base_prompt.chat(content: question, previous_messages: previous_messages)
         end
 
@@ -83,6 +87,21 @@ module LLM
 
         def system_prompt
           raise NotImplementedError
+        end
+
+        def filter_expired_messages(messages)
+          return messages if tool_data_expiration_minutes.blank?
+
+          cutoff = Time.current - tool_data_expiration_minutes.minutes
+
+          messages.reject do |message|
+            message = message.stringify_keys
+            next false unless message['role'] == 'assistant'
+            next false if message['chat_date'].blank?
+
+            message_time = Time.zone.parse(message['chat_date'])
+            message_time < cutoff
+          end
         end
 
         def base_tools
