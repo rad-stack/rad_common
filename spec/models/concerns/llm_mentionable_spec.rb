@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe LLMMentionable do
-  let(:user) { create(:user) }
+  let(:user) { create :user }
 
   describe '#to_llm_context' do
     it 'returns context hash with required keys' do
@@ -39,9 +39,9 @@ RSpec.describe LLMMentionable do
   end
 
   describe '.mentionable_search' do
-    let!(:john) { create(:user, first_name: 'John', last_name: 'Smith') }
-    let!(:jane) { create(:user, first_name: 'Jane', last_name: 'Doe') }
-    let!(:bob) { create(:user, first_name: 'Bob', last_name: 'Williams') }
+    let!(:john) { create :user, first_name: 'John', last_name: 'Smith' }
+    let!(:jane) { create :user, first_name: 'Jane', last_name: 'Doe' }
+    let!(:bob) { create :user, first_name: 'Bob', last_name: 'Williams' }
 
     it 'finds users by first name' do
       results = User.mentionable_search('john')
@@ -73,6 +73,41 @@ RSpec.describe LLMMentionable do
       results = User.mentionable_search('xyz')
 
       expect(results).to be_empty
+    end
+
+    context 'with multi-word queries' do
+      it 'finds users by full name' do
+        results = User.mentionable_search('john smith')
+
+        expect(results).to include(john)
+        expect(results).not_to include(jane, bob)
+      end
+
+      it 'finds users by partial first and last name' do
+        results = User.mentionable_search('john s')
+
+        expect(results).to include(john)
+        expect(results).not_to include(jane, bob)
+      end
+
+      it 'finds users by first name and partial last name' do
+        results = User.mentionable_search('jane d')
+
+        expect(results).to include(jane)
+        expect(results).not_to include(john, bob)
+      end
+
+      it 'is case insensitive for multi-word queries' do
+        results = User.mentionable_search('JOHN SMITH')
+
+        expect(results).to include(john)
+      end
+
+      it 'returns empty when multi-word query does not match' do
+        results = User.mentionable_search('john doe')
+
+        expect(results).not_to include(john, jane)
+      end
     end
   end
 

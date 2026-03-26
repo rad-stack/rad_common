@@ -11,14 +11,17 @@
 
 .chat-input-area.border-top.pt-3.pb-4.px-4
   = turbo_frame_tag 'chat-form' do
-    - chat_instance = assistant_session.chat_instance
-    - mentions_enabled = chat_instance.mentions_enabled?
+    :ruby
+      chat_instance = assistant_session.chat_instance
+      mentions_enabled = chat_instance.mentions_enabled?
+      mentions_url = mentions_assistant_session_path(assistant_session) if mentions_enabled
+      mentionable_types = chat_instance.mentionable_types.to_json if mentions_enabled
     = simple_form_for assistant_session,
                       url: assistant_session_path(assistant_session),
                       html: { data: { controller: 'llm-chat-form',
                                       'llm-chat-form-target': 'form',
-                                      'llm-chat-form-mentions-url-value': (mentions_assistant_session_path(assistant_session) if mentions_enabled),
-                                      'llm-chat-form-mentionable-types-value': (chat_instance.mentionable_types.to_json if mentions_enabled) } } do |f|
+                                      'llm-chat-form-mentions-url-value': mentions_url,
+                                      'llm-chat-form-mentionable-types-value': mentionable_types } } do |f|
       .card
         - if assistant_session.context_object?
           .card-header
@@ -32,12 +35,21 @@
               .d-flex.flex-row
                 .input-group.shadow-md
                   = render 'assistant_sessions/common_questions_dropdown', assistant_session: assistant_session, f: f
-                  %input.form-control.ays-ignore{ name: 'assistant_session[current_message]',
-                                                  placeholder: mentions_enabled ? 'Ask a question... (use @ to mention)' : 'Ask a question...',
-                                                  type: 'text',
-                                                  id: 'assistant_session_current_message',
-                                                  autocomplete: 'off',
-                                                  data: { 'llm-chat-form-target': 'currentMessage' } }
+                  - if mentions_enabled
+                    .form-control.ays-ignore{ contenteditable: 'plaintext-only',
+                                              id: 'assistant_session_current_message',
+                                              data: { 'llm-chat-form-target': 'currentMessage',
+                                                      placeholder: 'Ask a question... (use @ to mention)' } }
+                    %input{ type: 'hidden',
+                            name: 'assistant_session[current_message]',
+                            data: { 'llm-chat-form-target': 'hiddenInput' } }
+                  - else
+                    %input.form-control.ays-ignore{ name: 'assistant_session[current_message]',
+                                                    placeholder: 'Ask a question...',
+                                                    type: 'text',
+                                                    id: 'assistant_session_current_message',
+                                                    autocomplete: 'off',
+                                                    data: { 'llm-chat-form-target': 'currentMessage' } }
                   = f.button :button, type: :submit, class: 'btn btn-secondary', id: 'chat-submit-btn' do
                     = icon('paper-plane')
                   = f.button :button, type: :button, class: 'btn btn-secondary dropdown-toggle no-caret',

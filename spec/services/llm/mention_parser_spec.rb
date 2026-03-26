@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe LLM::MentionParser do
-  let(:user) { create(:user) }
+  let(:user) { create :user }
 
   describe '#parse' do
     context 'with valid mentions' do
@@ -19,15 +19,15 @@ RSpec.describe LLM::MentionParser do
     end
 
     context 'with multiple mentions' do
-      let(:user2) { create(:user) }
-      let(:message) { "@[User:#{user.id}:#{user}] and @[User:#{user2.id}:#{user2}]" }
+      let(:other_user) { create :user }
+      let(:message) { "@[User:#{user.id}:#{user}] and @[User:#{other_user.id}:#{other_user}]" }
       let(:parser) { described_class.new(message) }
 
       it 'extracts all mentions' do
         mentions = parser.parse
 
         expect(mentions.length).to eq(2)
-        expect(mentions.map { |m| m[:id] }).to contain_exactly(user.id, user2.id)
+        expect(mentions.pluck(:id)).to contain_exactly(user.id, other_user.id)
       end
     end
 
@@ -50,15 +50,15 @@ RSpec.describe LLM::MentionParser do
     end
   end
 
-  describe '#has_mentions?' do
+  describe '#mentions?' do
     it 'returns true when mentions exist' do
       parser = described_class.new("@[User:#{user.id}:#{user}]")
-      expect(parser.has_mentions?).to be true
+      expect(parser.mentions?).to be true
     end
 
     it 'returns false when no mentions' do
       parser = described_class.new('No mentions here')
-      expect(parser.has_mentions?).to be false
+      expect(parser.mentions?).to be false
     end
   end
 

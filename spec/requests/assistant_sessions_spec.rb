@@ -1,16 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe 'AssistantSessions' do
-  let(:admin) { create(:admin) }
-  let(:assistant_session) { create(:assistant_session, user: admin) }
+  let(:admin) { create :admin }
+  let(:assistant_session) { create :assistant_session, user: admin }
 
   before do
     login_as admin, scope: :user
   end
 
   describe 'GET mentions' do
-    let!(:john) { create(:user, first_name: 'John', last_name: 'Smith') }
-    let!(:jane) { create(:user, first_name: 'Jane', last_name: 'Doe') }
+    let!(:john) { create :user, first_name: 'John', last_name: 'Smith' }
+    let!(:jane) { create :user, first_name: 'Jane', last_name: 'Doe' }
 
     context 'with valid query' do
       it 'returns matching users as JSON' do
@@ -28,13 +28,13 @@ RSpec.describe 'AssistantSessions' do
     end
 
     context 'with query matching multiple users' do
-      let!(:johnny) { create(:user, first_name: 'Johnny', last_name: 'Test') }
+      let!(:johnny) { create :user, first_name: 'Johnny', last_name: 'Test' }
 
       it 'returns all matching users' do
         get mentions_assistant_session_path(assistant_session), params: { q: 'john', type: 'User' }
 
         json = response.parsed_body
-        labels = json.map { |r| r['label'] }
+        labels = json.pluck('label')
 
         expect(labels).to include(john.to_s, johnny.to_s)
         expect(labels).not_to include(jane.to_s)
@@ -66,7 +66,7 @@ RSpec.describe 'AssistantSessions' do
     end
 
     context 'when user is not admin' do
-      let(:non_admin) { create(:user) }
+      let(:non_admin) { create :user }
 
       before do
         logout

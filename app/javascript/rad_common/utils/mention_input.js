@@ -15,7 +15,6 @@ export default class MentionInput {
       minChars: 2,
       debounceMs: 250,
       fetchResults: async () => [],
-      onSelect: () => {},
       renderItem: (item) => item.label,
       ...options
     };
@@ -23,13 +22,10 @@ export default class MentionInput {
     this.state = { active: false, startPos: null, query: '' };
     this.results = [];
     this.selectedIndex = 0;
-    this.mentions = new Map(); // displayText -> token
     this.debounceTimer = null;
 
     this.bindEvents();
   }
-
-  // --- Event Binding ---
 
   bindEvents() {
     this.input.addEventListener('input', this.handleInput.bind(this));
@@ -38,23 +34,33 @@ export default class MentionInput {
     this.dropdown.addEventListener('click', this.handleDropdownClick.bind(this));
   }
 
-  // --- Input Handling ---
+  getText() {
+    return this.input.textContent || '';
+  }
+
+  getCursor() {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return 0;
+
+    const range = selection.getRangeAt(0);
+    const preRange = range.cloneRange();
+    preRange.selectNodeContents(this.input);
+    preRange.setEnd(range.startContainer, range.startOffset);
+    return preRange.toString().length;
+  }
 
   handleInput() {
     clearTimeout(this.debounceTimer);
 
-    const { value, selectionStart: cursor } = this.input;
-    const textBefore = value.substring(0, cursor);
+    const text = this.getText();
+    const cursor = this.getCursor();
+    const textBefore = text.substring(0, cursor);
     const triggerPos = textBefore.lastIndexOf(this.options.trigger);
 
-    if (triggerPos === -1 || this.isCompletedMention(textBefore, triggerPos)) {
-      return this.close();
-    }
+    if (triggerPos === -1) return this.close();
 
     const query = textBefore.substring(triggerPos + 1);
-    if (query.includes(' ') || query.includes('[')) {
-      return this.close();
-    }
+    if (query.includes('[')) return this.close();
 
     this.state = { active: true, startPos: triggerPos, query };
 
@@ -63,64 +69,21 @@ export default class MentionInput {
     }
   }
 
-  isCompletedMention(text, triggerPos) {
-    const afterTrigger = text.substring(triggerPos + 1);
-    for (const displayText of this.mentions.keys()) {
-      const name = displayText.replace(/^@/, '');
-      if (afterTrigger.startsWith(name)) return true;
-    }
-    return false;
-  }
-
-  // --- Keyboard Navigation ---
-
   handleKeydown(event) {
-    if (event.key === 'Backspace' && this.handleBackspace()) {
-      event.preventDefault();
-      return;
-    }
-
     if (!this.state.active || this.results.length === 0) return;
 
     const action = KEY_ACTIONS.get(event.key);
     if (!action) return;
 
     event.preventDefault();
-
-    const actions = {
-      next: () => this.navigate(1),
-      prev: () => this.navigate(-1),
-      select: () => this.selectCurrent(),
-      close: () => this.close()
-    };
-
-    actions[action]?.();
+    event.stopImmediatePropagation();
+    ({ next: () => this.navigate(1), prev: () => this.navigate(-1), select: () => this.selectCurrent(), close: () => this.close() })[action]?.();
   }
 
   navigate(delta) {
     this.selectedIndex = Math.max(0, Math.min(this.selectedIndex + delta, this.results.length - 1));
     this.updateSelection();
   }
-
-  handleBackspace() {
-    const { value, selectionStart: cursor } = this.input;
-
-    for (const [displayText] of this.mentions.entries()) {
-      const patterns = [displayText + ' ', displayText];
-      for (const pattern of patterns) {
-        const pos = value.lastIndexOf(pattern, cursor - 1);
-        if (pos !== -1 && pos + pattern.length === cursor) {
-          this.input.value = value.substring(0, pos) + value.substring(cursor);
-          this.input.setSelectionRange(pos, pos);
-          this.mentions.delete(displayText);
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  // --- Search & Results ---
 
   async search(query) {
     try {
@@ -133,12 +96,8 @@ export default class MentionInput {
     }
   }
 
-  // --- Rendering ---
-
   render() {
-    if (this.results.length === 0) {
-      return this.close();
-    }
+    if (this.results.length === 0) return this.close();
 
     this.dropdown.innerHTML = this.results
       .map((item, i) => `
@@ -160,8 +119,7 @@ export default class MentionInput {
   positionDropdown() {
     const rect = this.input.getBoundingClientRect();
     const dropdownHeight = this.dropdown.offsetHeight;
-    const spaceAbove = rect.top;
-    const showAbove = spaceAbove > dropdownHeight + 10;
+    const showAbove = rect.top > dropdownHeight + 10;
 
     Object.assign(this.dropdown.style, {
       position: 'fixed',
@@ -170,8 +128,6 @@ export default class MentionInput {
       width: `${rect.width}px`
     });
   }
-
-  // --- Selection ---
 
   handleDropdownClick(event) {
     const item = event.target.closest('.mention-item');
@@ -182,27 +138,37 @@ export default class MentionInput {
   }
 
   selectCurrent() {
-    if (!this.results[this.selectedIndex]) return;
-
     const item = this.results[this.selectedIndex];
-    const displayText = `@${item.label}`;
-    const { value, selectionStart: cursor } = this.input;
+    if (!item) return;
 
-    this.mentions.set(displayText, item.token);
+    const text = this.getText();
+    const cursor = this.getCursor();
+    const before = text.substring(0, this.state.startPos);
+    const after = text.substring(cursor);
 
-    const before = value.substring(0, this.state.startPos);
-    const after = value.substring(cursor);
-    this.input.value = `${before}${displayText} ${after}`;
+    this.input.innerHTML = '';
+    if (before) this.input.appendChild(document.createTextNode(before));
 
-    const newPos = before.length + displayText.length + 1;
-    this.input.setSelectionRange(newPos, newPos);
+    const span = document.createElement('span');
+    span.className = 'mention';
+    span.contentEditable = 'false';
+    span.textContent = `@${item.label}`;
+    span.dataset.token = item.token;
+    this.input.appendChild(span);
+
+    this.input.appendChild(document.createTextNode(' ' + after));
+
+    // Set cursor after mention
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.setStart(this.input.lastChild, 1);
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
     this.input.focus();
-
-    this.options.onSelect(item);
     this.close();
   }
-
-  // --- Lifecycle ---
 
   close() {
     this.state = { active: false, startPos: null, query: '' };
@@ -211,14 +177,15 @@ export default class MentionInput {
     this.dropdown.classList.add('d-none');
   }
 
-  // Convert display mentions to tokens before submit
-  tokenize(text) {
-    let result = text;
-    const sorted = [...this.mentions.entries()].sort((a, b) => b[0].length - a[0].length);
-    for (const [display, token] of sorted) {
-      result = result.split(display).join(token);
+  getTokenizedText() {
+    let result = '';
+    for (const node of this.input.childNodes) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        result += node.textContent;
+      } else if (node.classList?.contains('mention')) {
+        result += node.dataset.token || node.textContent;
+      }
     }
-    this.mentions.clear();
     return result;
   }
 

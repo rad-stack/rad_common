@@ -10,116 +10,125 @@ RSpec.describe 'AssistantSessions', :js do
   end
 
   describe 'chat mentions' do
-    it 'shows mention dropdown when typing @' do
+    def type_in_contenteditable(element, text)
+      element.click
+      # Type all at once using JavaScript, placing cursor at end
+      page.execute_script(<<~JS, element, text)
+        var el = arguments[0];
+        var text = arguments[1];
+        el.textContent = text;
+
+        // Place cursor at the end of the text
+        var range = document.createRange();
+        var sel = window.getSelection();
+        range.selectNodeContents(el);
+        range.collapse(false); // false = collapse to end
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        el.dispatchEvent(new InputEvent('input', { bubbles: true }));
+      JS
+    end
+
+    def press_key(element, key)
+      page.execute_script(<<~JS, element, key)
+        var el = arguments[0];
+        var key = arguments[1];
+        var event = new KeyboardEvent('keydown', {
+          key: key,
+          code: key,
+          bubbles: true,
+          cancelable: true
+        });
+        el.dispatchEvent(event);
+      JS
+    end
+
+    def open_chat_modal
       visit assistant_sessions_path
       click_button 'Ask Assistant?'
+      find_by_id('assistant_session_current_message')
+    end
 
-      within '#basic-question-modal' do
-        input = find_by_id('assistant_session_current_message')
-        input.send_keys('@john')
+    def find_mention_item(expected_user)
+      # Find with long wait - combines waiting for dropdown and finding item
+      find('.mention-dropdown .mention-item', text: expected_user.to_s, wait: 10)
+    end
 
-        # Wait for debounce (250ms) + API request
-        expect(page).to have_css('.mention-dropdown:not(.d-none)', wait: 2)
-        expect(page).to have_content(john.to_s)
-      end
+    it 'shows mention dropdown when typing @' do
+      open_chat_modal
+      input = find_by_id('assistant_session_current_message')
+      type_in_contenteditable(input, '@john')
+
+      expect(page).to have_css('.mention-dropdown .mention-item', text: john.to_s, wait: 10)
     end
 
     it 'filters mentions based on query' do
-      visit assistant_sessions_path
-      click_button 'Ask Assistant?'
+      open_chat_modal
+      input = find_by_id('assistant_session_current_message')
+      type_in_contenteditable(input, '@jane')
 
-      within '#basic-question-modal' do
-        input = find_by_id('assistant_session_current_message')
-        input.send_keys('@jane')
-
-        expect(page).to have_css('.mention-dropdown:not(.d-none)', wait: 2)
-        expect(page).to have_content(jane.to_s)
-        expect(page).to have_no_content(john.to_s)
-      end
+      expect(page).to have_css('.mention-dropdown .mention-item', text: jane.to_s, wait: 10)
+      expect(page).to have_no_css('.mention-item', text: john.to_s)
     end
 
     it 'selects mention with click' do
-      visit assistant_sessions_path
-      click_button 'Ask Assistant?'
+      open_chat_modal
+      input = find_by_id('assistant_session_current_message')
+      type_in_contenteditable(input, '@john')
 
-      within '#basic-question-modal' do
-        input = find_by_id('assistant_session_current_message')
-        input.send_keys('@john')
+      mention_item = find_mention_item(john)
+      page.execute_script('arguments[0].click()', mention_item)
 
-        expect(page).to have_css('.mention-dropdown:not(.d-none)', wait: 2)
-        find('.mention-item', text: john.to_s).click
-
-        expect(input.value).to include("@#{john}")
-      end
+      expect(page).to have_css('.mention', text: "@#{john}", wait: 5)
     end
 
     it 'selects mention with Enter key' do
-      visit assistant_sessions_path
-      click_button 'Ask Assistant?'
+      open_chat_modal
+      input = find_by_id('assistant_session_current_message')
+      type_in_contenteditable(input, '@john')
 
-      within '#basic-question-modal' do
-        input = find_by_id('assistant_session_current_message')
-        input.send_keys('@john')
+      find_mention_item(john)
+      press_key(input, 'Enter')
 
-        expect(page).to have_css('.mention-dropdown:not(.d-none)', wait: 2)
-        input.send_keys(:enter)
-
-        expect(input.value).to include("@#{john}")
-      end
+      expect(page).to have_css('.mention', text: "@#{john}", wait: 5)
     end
 
     it 'navigates mentions with arrow keys' do
-      visit assistant_sessions_path
-      click_button 'Ask Assistant?'
+      open_chat_modal
+      input = find_by_id('assistant_session_current_message')
+      type_in_contenteditable(input, '@')
+      sleep 0.5
 
-      within '#basic-question-modal' do
-        input = find_by_id('assistant_session_current_message')
-        input.send_keys('@')
-        sleep 0.5
-
-        # Dropdown shouldn't show yet (minChars is 2)
-        expect(page).to have_css('.mention-dropdown.d-none', visible: :all)
-      end
+      # Dropdown shouldn't show yet (minChars is 2)
+      expect(page).to have_css('.mention-dropdown.d-none', visible: :all)
     end
 
     it 'closes dropdown with Escape key' do
-      visit assistant_sessions_path
-      click_button 'Ask Assistant?'
+      open_chat_modal
+      input = find_by_id('assistant_session_current_message')
+      type_in_contenteditable(input, '@john')
 
-      within '#basic-question-modal' do
-        input = find_by_id('assistant_session_current_message')
-        input.send_keys('@john')
+      find_mention_item(john)
+      press_key(input, 'Escape')
 
-        expect(page).to have_css('.mention-dropdown:not(.d-none)', wait: 2)
-
-        input.send_keys(:escape)
-
-        expect(page).to have_css('.mention-dropdown.d-none', visible: :all)
-      end
+      expect(page).to have_css('.mention-dropdown.d-none', visible: :all, wait: 5)
     end
 
     it 'hides dropdown when query is too short' do
-      visit assistant_sessions_path
-      click_button 'Ask Assistant?'
+      open_chat_modal
+      input = find_by_id('assistant_session_current_message')
+      type_in_contenteditable(input, '@j')
+      sleep 0.5
 
-      within '#basic-question-modal' do
-        input = find_by_id('assistant_session_current_message')
-        input.send_keys('@j')
-        sleep 0.5
-
-        # Query is only 1 char, minChars is 2, so dropdown should stay hidden
-        expect(page).to have_css('.mention-dropdown.d-none', visible: :all)
-      end
+      # Query is only 1 char, minChars is 2, so dropdown should stay hidden
+      expect(page).to have_css('.mention-dropdown.d-none', visible: :all)
     end
 
     it 'shows placeholder hint about mentions' do
-      visit assistant_sessions_path
-      click_button 'Ask Assistant?'
-
-      within '#basic-question-modal' do
-        input = find_by_id('assistant_session_current_message')
-        expect(input['placeholder']).to include('use @ to mention')
-      end
+      open_chat_modal
+      input = find_by_id('assistant_session_current_message')
+      expect(input['data-placeholder']).to include('use @ to mention')
     end
   end
 

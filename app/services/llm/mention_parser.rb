@@ -2,7 +2,7 @@ module LLM
   class MentionParser
     # Matches @[Type:ID:Label] format
     # Example: @[User:123:John Smith]
-    MENTION_PATTERN = /@\[(\w+):(\d+):([^\]]+)\]/.freeze
+    MENTION_PATTERN = /@\[(\w+):(\d+):([^\]]+)\]/
 
     attr_reader :message, :mentions
 
@@ -24,31 +24,28 @@ module LLM
       @mentions
     end
 
-    def has_mentions?
+    def mentions?
       parse if @mentions.empty? && message.present?
       @mentions.any?
     end
 
     def expand_mentions
-      return [] unless has_mentions?
+      return [] unless mentions?
 
-      @mentions.filter_map do |mention|
-        record = find_record(mention)
-        record&.to_llm_context
-      end
+      @mentions.filter_map { |mention| find_record(mention)&.to_llm_context }
     end
 
     def build_context_string
       contexts = expand_mentions
       return nil if contexts.empty?
 
-      contexts.map do |ctx|
+      contexts.map { |ctx|
         "#{ctx[:type]} (ID: #{ctx[:id]}): #{ctx[:data].to_json}"
-      end.join("\n")
+      }.join("\n")
     end
 
     def message_for_display
-      return message unless has_mentions?
+      return message unless mentions?
 
       result = message.dup
       @mentions.each do |mention|
@@ -61,7 +58,7 @@ module LLM
 
       def find_record(mention)
         klass = mention[:type].safe_constantize
-        return nil unless klass && klass.include?(LLMMentionable)
+        return nil unless klass&.include?(LLMMentionable)
 
         klass.find_by(id: mention[:id])
       rescue StandardError

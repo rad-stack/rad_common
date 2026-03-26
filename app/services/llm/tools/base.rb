@@ -40,6 +40,23 @@ module LLM
         end
       end
 
+      # LLMs often pass 0 or null when they mean "no filter", this handles that case.
+      def positive_id(param_name)
+        value = retrieve_argument(param_name).to_i
+        value.positive? ? value : nil
+      end
+
+      # Usage in parameters method:
+      #   properties: {
+      #     **self.class.id_parameter(:user),
+      #     **self.class.id_parameter(:room, description: 'Filter by room ID')
+      #   }
+      def self.id_parameter(name, description: nil)
+        param_name = "#{name}_id"
+        desc = description || "The #{name.to_s.humanize.downcase} ID (from mentioned entities if available)"
+        { param_name.to_sym => { type: 'integer', description: desc } }
+      end
+
       def parameters
         {}
       end

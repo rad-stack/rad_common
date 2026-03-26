@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import MentionInput from '../utils/mention_input';
 
 export default class extends Controller {
-  static targets = ['currentMessage', 'form', 'mentionDropdown'];
+  static targets = ['currentMessage', 'form', 'mentionDropdown', 'hiddenInput'];
 
   static values = {
     mentionsUrl: String,
@@ -43,20 +43,33 @@ export default class extends Controller {
       }
     );
 
-    this.formTarget?.addEventListener('submit', () => this.handleSubmit());
+    this.currentMessageTarget.addEventListener('keydown', (e) => this.handleKeydown(e));
+    this.formTarget?.addEventListener('submit', (e) => this.handleSubmit(e));
   }
 
   // --- Actions ---
 
+  handleKeydown(event) {
+    if (event.key !== 'Enter') return;
+
+    if (event.shiftKey) return;
+
+    if (!this.mentionDropdownTarget.classList.contains('d-none')) return;
+
+    event.preventDefault();
+    this.formTarget.requestSubmit();
+  }
+
   updateCurrentMessage(event) {
-    this.currentMessageTarget.value = event.target.innerText;
+    this.hiddenInputTarget.value = event.target.innerText;
     this.formTarget.requestSubmit();
   }
 
   handleSubmit() {
-    if (this.mentionInput && this.hasCurrentMessageTarget) {
-      this.currentMessageTarget.value = this.mentionInput.tokenize(this.currentMessageTarget.value);
-    }
+    if (!this.mentionInput || !this.hasHiddenInputTarget) return;
+
+    this.hiddenInputTarget.value = this.mentionInput.getTokenizedText();
+    this.currentMessageTarget.innerHTML = '';
   }
 
   // --- Helpers ---

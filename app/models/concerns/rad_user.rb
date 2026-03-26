@@ -9,7 +9,9 @@ module RadUser
 
     scope :mentionable_search, lambda { |query|
       q = "%#{query.downcase}%"
-      active.where('LOWER(first_name) LIKE :q OR LOWER(last_name) LIKE :q OR LOWER(email) LIKE :q', q: q)
+      cols = ['first_name', 'last_name', "CONCAT(first_name, ' ', last_name)", 'email']
+      conditions = cols.map { |col| "LOWER(#{col}) LIKE :q" }.join(' OR ')
+      active.where(conditions, q: q)
     }
 
     belongs_to :user_status

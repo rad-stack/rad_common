@@ -6,7 +6,9 @@ FactoryBot.define do
     log { [] }
 
     before(:create) do
-      RadAssistant.register_chat_type(LLM::ChatTypes::SystemChat) unless RadAssistant.chat_types.include?(LLM::ChatTypes::SystemChat)
+      if RadAssistant.chat_types.exclude?(LLM::ChatTypes::SystemChat)
+        RadAssistant.register_chat_type(LLM::ChatTypes::SystemChat)
+      end
     end
   end
 end

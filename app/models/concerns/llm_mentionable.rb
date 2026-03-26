@@ -1,10 +1,6 @@
 module LLMMentionable
   extend ActiveSupport::Concern
 
-  included do
-    scope :mentionable_search, ->(query) { where('LOWER(first_name) LIKE :q OR LOWER(last_name) LIKE :q', q: "%#{query.downcase}%") }
-  end
-
   def to_llm_context
     {
       type: self.class.name,
@@ -19,11 +15,11 @@ module LLMMentionable
   end
 
   def mention_token
-    "@[#{self.class.name}:#{id}:#{to_s}]"
+    "@[#{self.class.name}:#{id}:#{self}]"
   end
 
   def mention_display
-    "@#{to_s}"
+    "@#{self}"
   end
 
   class_methods do

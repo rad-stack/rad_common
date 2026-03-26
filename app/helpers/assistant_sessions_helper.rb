@@ -65,7 +65,7 @@ module AssistantSessionsHelper
       type = ::Regexp.last_match(1)
       id = ::Regexp.last_match(2)
       label = ::Regexp.last_match(3)
-      content_tag(:span, "@#{label}", class: 'fw-bold', data: { type: type, id: id })
+      content_tag(:span, "@#{label}", class: 'mention', data: { type: type, id: id })
     end
   end
 

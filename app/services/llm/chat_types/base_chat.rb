@@ -47,7 +47,7 @@ module LLM
         return [] unless mentionable_types.include?(type)
 
         klass = type.safe_constantize
-        return [] unless klass && klass.include?(LLMMentionable)
+        return [] unless klass&.include?(LLMMentionable)
 
         scope = klass.mentionable_search(query)
         scope = apply_mention_policy(scope, klass, current_user)
@@ -88,7 +88,7 @@ module LLM
         return question unless mentions_enabled?
 
         parser = LLM::MentionParser.new(question)
-        return question unless parser.has_mentions?
+        return question unless parser.mentions?
 
         mention_context = parser.build_context_string
         return question if mention_context.blank?
