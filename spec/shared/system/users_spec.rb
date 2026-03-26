@@ -178,21 +178,6 @@ RSpec.describe 'Users', type: :system do
         expect(user.security_roles.count).to eq 2
       end
 
-      it 'requires mobile phone when twilio verify enabled', :shared_database_specs do
-        allow(RadConfig).to receive_messages(two_factor_auth_all_users?: false, require_mobile_phone?: false)
-
-        visit edit_user_path(user)
-        fill_in 'Mobile Phone', with: ''
-        check 'Two Factor Auth'
-        click_button 'Save'
-
-        expect(page).to have_content 'Mobile phone is required'
-
-        fill_in 'Mobile Phone', with: user.mobile_phone
-        click_button 'Save'
-
-        expect(page).to have_content 'User was successfully updated'
-      end
     end
 
     describe 'show' do
@@ -450,7 +435,8 @@ RSpec.describe 'Users', type: :system do
 
       allow(TwilioVerifyService).to receive(:send_sms_token).and_return(double(status: 'pending'))
 
-      user.update!(otp_required_for_login: true, mobile_phone: create(:phone_number, :mobile))
+      user.security_roles.update_all(two_factor_auth: true)
+      user.update!(mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'allows user to login with authentication token' do

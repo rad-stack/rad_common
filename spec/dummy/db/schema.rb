@@ -440,7 +440,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_26_120000) do
     t.string "global_search_default"
     t.bigint "user_status_id", null: false
     t.datetime "last_sign_in_with_twilio_verify", precision: nil
-    t.boolean "otp_required_for_login", default: true, null: false
     t.string "invitation_token"
     t.datetime "invitation_created_at", precision: nil
     t.datetime "invitation_sent_at", precision: nil
