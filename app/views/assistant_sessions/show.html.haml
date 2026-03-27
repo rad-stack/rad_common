@@ -2,14 +2,6 @@
   = render 'layouts/card_header', no_new_button: true, no_delete_button: true, no_edit_button: true
 
   .card-body
-    .card.mb-3.border-warning.shadow
-      .card-header.py-2.bg-warning.bg-opacity-10
-        %small
-          %i.fa.fa-cog.me-1
-          System Prompt
-      .card-body.py-2
-        %pre.mb-0.small.text-pre-wrap.p-2.rounded= @assistant_session.system_prompt
-
     - all_logs = logs_for_session(@assistant_session)
     - qa_pairs = group_logs_into_qa_pairs(all_logs)
 
@@ -34,6 +26,21 @@
                     = render log_data[:template], log_data
 
       .col-md-7
+        .card.mb-3.border-warning.shadow
+          .card-header.py-2.bg-warning.bg-opacity-10.d-flex.justify-content-between.align-items-center
+            %small
+              %i.fa.fa-cog.me-1
+              System Prompt
+            %button.btn.btn-sm.btn-outline-warning{ type: 'button',
+                                                     'data-bs-toggle': 'collapse',
+                                                     'data-bs-target': '#system-prompt-body',
+                                                     'aria-expanded': 'false',
+                                                     'aria-controls': 'system-prompt-body' }
+              %i.fa.fa-chevron-down
+          .collapse#system-prompt-body
+            .card-body.py-2
+              %pre.mb-0.small.text-pre-wrap.p-2.rounded= @assistant_session.system_prompt
+
         .tab-content.session-debug-panel.shadow-md
           - qa_pairs.each_with_index do |pair, index|
             .tab-pane.fade.debug-panel.bg-light.rounded.p-3{ id: "debug-#{index}",
