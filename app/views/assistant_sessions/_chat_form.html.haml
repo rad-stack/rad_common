@@ -23,12 +23,6 @@
                                       'llm-chat-form-mentions-url-value': mentions_url,
                                       'llm-chat-form-mentionable-types-value': mentionable_types } } do |f|
       .card
-        - if assistant_session.context_object?
-          .card-header
-            .row
-              .col-2
-                %strong Questions For :
-              .col-10= render 'assistant_sessions/context_picker_input', f: f, assistant_session: assistant_session
         .card-body
           .row
             .col-12

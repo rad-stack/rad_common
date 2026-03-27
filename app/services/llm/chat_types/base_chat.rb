@@ -15,24 +15,8 @@ module LLM
         ASSISTANT_NAME
       end
 
-      def input_collection(view_context)
-        UserGrouper.new(view_context.current_user, scopes: [:active])
-      end
-
-      def context_object?
-        false
-      end
-
       def format_message(text)
         text
-      end
-
-      def grouped_select?
-        true
-      end
-
-      def context_type
-        'User'
       end
 
       def mentionable_types

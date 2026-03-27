@@ -12,7 +12,7 @@ class AssistantSession < ApplicationRecord
 
   scope :sorted, -> { order(created_at: :desc) }
 
-  delegate :assistant_name, :context_object?, :format_message, to: :chat_instance
+  delegate :assistant_name, :format_message, to: :chat_instance
 
   validate :validate_chat_class
 

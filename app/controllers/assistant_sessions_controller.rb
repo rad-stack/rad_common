@@ -28,8 +28,6 @@ class AssistantSessionsController < ApplicationController
       reset_chat
     elsif permitted_params[:current_message].blank?
       missing_message
-    elsif @assistant_session.context_object? && permitted_params[:contextable_id].blank?
-      missing_user
     else
       handle_update
     end
@@ -47,8 +45,7 @@ class AssistantSessionsController < ApplicationController
     end
 
     def permitted_params
-      params.require(:assistant_session).permit(:user_id, :log, :context_id, :context_type, :current_message,
-                                                :contextable_id, :contextable_type)
+      params.require(:assistant_session).permit(:user_id, :log, :context_id, :context_type, :current_message)
     end
 
     def reset_chat
@@ -58,13 +55,6 @@ class AssistantSessionsController < ApplicationController
 
     def missing_message
       @last_log = LLM::PromptBuilder.build_assistant_message('Message is missing, please try again')
-      @assistant_session.log ||= []
-      @assistant_session.log << @last_log
-      @assistant_session.save
-    end
-
-    def missing_user
-      @last_log = LLM::PromptBuilder.build_assistant_message('User is missing, please try again')
       @assistant_session.log ||= []
       @assistant_session.log << @last_log
       @assistant_session.save

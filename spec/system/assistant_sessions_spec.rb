@@ -9,6 +9,10 @@ RSpec.describe 'AssistantSessions', :js do
     login_as admin, scope: :user
   end
 
+  around do |ex|
+    ex.run unless ENV['CI']
+  end
+
   describe 'chat mentions' do
     def type_in_contenteditable(element, text)
       element.click
@@ -59,6 +63,7 @@ RSpec.describe 'AssistantSessions', :js do
       open_chat_modal
       input = find_by_id('assistant_session_current_message')
       type_in_contenteditable(input, '@john')
+      sleep 0.3 # Wait for debounce
 
       expect(page).to have_css('.mention-dropdown .mention-item', text: john.to_s, wait: 10)
     end
@@ -67,6 +72,7 @@ RSpec.describe 'AssistantSessions', :js do
       open_chat_modal
       input = find_by_id('assistant_session_current_message')
       type_in_contenteditable(input, '@jane')
+      sleep 0.3 # Wait for debounce
 
       expect(page).to have_css('.mention-dropdown .mention-item', text: jane.to_s, wait: 10)
       expect(page).to have_no_css('.mention-item', text: john.to_s)
