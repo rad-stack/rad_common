@@ -14,7 +14,8 @@
           = date_field_tag :date,
                            nil,
                            class: 'form-control',
-                           data: { rad_calendar_target: 'datepicker', action: 'change->rad-calendar#datepickerChanged' },
+                           data: { rad_calendar_target: 'datepicker',
+                                   action: 'change->rad-calendar#datepickerChanged' },
                            'data-form-type': 'other'
   .card-body
     %div{ 'data-rad-calendar-target' => 'loading' }
