@@ -75,10 +75,18 @@
 
                     - elsif tool_log[:type] == 'function_call_output'
                       .card.mb-2.border-secondary.shadow
-                        .card-header.py-1.bg-secondary.bg-opacity-10
+                        .card-header.py-1.bg-secondary.bg-opacity-10.d-flex.justify-content-between.align-items-center
                           %small
                             %i.fa.fa-arrow-left.me-1
                             Output
+                          - if tool_log[:expires_at].present?
+                            - expired = Time.zone.parse(tool_log[:expires_at].to_s) <= Time.current
+                            %small{ class: expired ? 'text-danger' : 'text-muted' }
+                              %i.fa.fa-clock.me-1
+                              - if expired
+                                Expired
+                              - else
+                                Expires #{time_ago_in_words(Time.zone.parse(tool_log[:expires_at].to_s))} from now
                         .card-body.py-2
                           %pre.mb-0.small.text-pre-wrap.p-2.rounded= format_json(tool_log[:output])
 

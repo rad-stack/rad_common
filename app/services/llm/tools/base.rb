@@ -68,6 +68,10 @@ module LLM
       def description
         raise NotImplementedError
       end
+
+      def data_expiration
+        nil
+      end
     end
   end
 end
