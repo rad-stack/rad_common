@@ -33,6 +33,16 @@
   white-space: nowrap;
 }
 
+.chat-text {
+  pre {
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 1.05rem;
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
 .chat-container li .chat-name {
   font-size: .75rem;
   color: #999999;
@@ -40,11 +50,11 @@
 }
 
 .chat-container li .chat-text {
-  padding: .4rem 1rem;
-  border-radius: 4px;
+  padding: .75rem 1rem;
+  border-radius: 12px;
   background: #ffffff;
-  font-weight: 300;
-  line-height: 150%;
+  font-weight: 400;
+  line-height: 1.5;
   position: relative;
 }
 
@@ -53,16 +63,29 @@
   position: absolute;
   width: 0;
   height: 0;
-  top: 10px;
-  left: -20px;
-  border: 10px solid;
+  top: 12px;
+  left: -12px;
+  border: 6px solid;
   border-color: transparent #ffffff transparent transparent;
 }
 
 .chat-container li.chat-right > .chat-text:before {
-  right: -20px;
-  border-color: transparent transparent transparent #ffffff;
+  right: -12px;
+  border-color: transparent transparent transparent #e7f1ff;
   left: inherit;
+}
+
+.chat-container li.chat-right .chat-text {
+  background: #e7f1ff;
+}
+
+.chat-container li.chat-right .chat-avatar .fa {
+  background-color: #e7f1ff;
+  border-color: #c9daf8;
+}
+
+.chat-container li.chat-left .chat-text {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .chat-scroll-panel {
@@ -93,4 +116,78 @@
   pre {
     white-space: pre-wrap;
   }
+}
+
+// Chat input area styling
+.chat-input-area {
+  .card {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+
+    .card-body {
+      padding: 0;
+    }
+  }
+
+  .input-group {
+    background: #fff;
+    border-radius: 50px;
+    border: 1px solid #dee2e6;
+
+    .form-control {
+      border: none;
+      padding: .625rem 1rem;
+      background: transparent;
+      font-size: 0.95rem;
+
+      &:focus {
+        box-shadow: none;
+      }
+
+      &::placeholder {
+        color: #adb5bd;
+      }
+    }
+
+    .btn {
+      border: none;
+      border-radius: 0;
+      padding: .625rem .875rem;
+
+      &.btn-secondary {
+        background-color: transparent;
+        color: #495057;
+
+        &:hover {
+          background-color: #f8f9fa;
+        }
+      }
+
+      &:not(:first-child) {
+        border-left: 1px solid #eee;
+      }
+
+      &:first-child {
+        border-radius: 50px 0 0 50px;
+      }
+
+      &:last-child {
+        border-radius: 0 50px 50px 0;
+      }
+    }
+
+    .dropdown-menu {
+      border-radius: 8px;
+      margin-top: 4px;
+    }
+
+    &:focus-within {
+      border-color: #86b7fe;
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+    }
+  }
+}
+.shadow-md {
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1) !important;
 }
