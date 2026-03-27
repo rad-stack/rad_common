@@ -147,8 +147,7 @@ RSpec.describe 'Divisions' do
             fill_in 'saved_search_filter_name', with: 'Division Test'
             click_button 'save_filter'
           end
-          sleep 0.5
-          find_by_id('close-saved-search-filters-modal').click
+          find_by_id('close-saved-search-filters-modal', wait: 5).click
           expect(page).to have_no_css('#saved-search-filters-modal.show', visible: :visible)
 
           click_button 'saved-search-filters-dropdown'
