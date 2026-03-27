@@ -15,6 +15,7 @@ module RadCommon
 
     config.after_initialize do
       Devise::Mapping.prepend DeviseTwilioVerify::Mapping
+      require 'rad_common/hooks/inactive_user_alert'
     end
 
     require 'active_storage_validations'

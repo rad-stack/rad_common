@@ -254,6 +254,36 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'inactive user alert notification', :user_expirable_specs do
+    let!(:admin) { create :admin }
+    let(:expired_user) { create :user, last_activity_at: 98.days.ago }
+
+    before { ActionMailer::Base.deliveries = [] }
+
+    describe 'send_reset_password_instructions' do
+      it 'notifies admins when expired user requests password reset' do
+        expired_user.send_reset_password_instructions
+        mail_subjects = ActionMailer::Base.deliveries.map(&:subject)
+
+        expect(mail_subjects).to include 'Inactive User Alert'
+      end
+
+      it 'still sends the password reset email to the user' do
+        expired_user.send_reset_password_instructions
+        mail_recipients = ActionMailer::Base.deliveries.flat_map(&:to)
+
+        expect(mail_recipients).to include expired_user.email
+      end
+
+      it 'does not notify when user is not expired' do
+        user.send_reset_password_instructions
+        mail_subjects = ActionMailer::Base.deliveries.map(&:subject)
+
+        expect(mail_subjects).not_to include 'Inactive User Alert'
+      end
+    end
+  end
+
   describe 'Email Changed', :shared_database_specs do
     subject { ActionMailer::Base.deliveries.map(&:subject).sort }
 
