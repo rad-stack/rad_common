@@ -8,8 +8,6 @@ module RadUsersHelper
              :detected_timezone_js,
              :ignored_timezone]
 
-    items.push(:otp_required_for_login) if RadConfig.two_factor_auth_enabled? && !RadConfig.two_factor_auth_all_users?
-
     items += [:sign_in_count,
               :invitation_accepted_at,
               :invited_by,
