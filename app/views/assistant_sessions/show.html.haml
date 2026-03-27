@@ -2,6 +2,14 @@
   = render 'layouts/card_header', no_new_button: true, no_delete_button: true, no_edit_button: true
 
   .card-body
+    .card.mb-3.border-warning.shadow
+      .card-header.py-2.bg-warning.bg-opacity-10
+        %small
+          %i.fa.fa-cog.me-1
+          System Prompt
+      .card-body.py-2
+        %pre.mb-0.small.text-pre-wrap.p-2.rounded= @assistant_session.system_prompt
+
     - all_logs = logs_for_session(@assistant_session)
     - qa_pairs = group_logs_into_qa_pairs(all_logs)
 

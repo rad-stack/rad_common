@@ -103,6 +103,10 @@ module LLM
         @available_tools ||= default_tools.index_by { |class_object| LLM::Tools::Builder.tool_name(class_object) }
       end
 
+      def system_prompt
+        raise NotImplementedError
+      end
+
       private
 
         def apply_mention_policy(scope, klass, current_user)
@@ -112,10 +116,6 @@ module LLM
           Pundit.policy_scope!(current_user, scope)
         rescue Pundit::NotDefinedError
           scope
-        end
-
-        def system_prompt
-          raise NotImplementedError
         end
 
         def base_tools
