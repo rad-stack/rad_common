@@ -147,7 +147,7 @@ bundle exec rspec spec/models/user_spec.rb:45  # Run test at line 45
 
 ### File Storage
 - **Active Storage** - File uploads
-- **AWS S3** - File storage backend
+- **Google Cloud Storage** - File storage backend
 - Custom validations via `active_storage_validations`
 
 ### External Services
