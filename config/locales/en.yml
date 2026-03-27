@@ -21,7 +21,6 @@ en:
           sms: 'SMS'
       user:
         external: 'External User?'
-        otp_required_for_login: 'Two Factor Auth'
       security_role:
         external: 'External User?'
   faker:

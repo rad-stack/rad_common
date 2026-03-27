@@ -25,7 +25,7 @@ module AssistantSessionsHelper
 
   def assistant_session_log_data(assistant_session, log)
     log.symbolize_keys!
-    direction = log[:role] == 'user' ? 'left' : 'right'
+    direction = log[:role] == 'user' ? 'right' : 'left'
     user_name = log[:role] == 'user' ? current_user.to_s : assistant_session.assistant_name
     template = "assistant_sessions/chat_message_#{direction}"
     message = assistant_session.format_message(log[:content])

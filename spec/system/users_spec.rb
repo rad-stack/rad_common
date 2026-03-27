@@ -65,7 +65,8 @@ describe 'Users' do
                              twilio_account_sid: Rails.application.credentials.twilio_alt_account_sid,
                              twilio_auth_token: Rails.application.credentials.twilio_alt_auth_token)
 
-      user.update!(otp_required_for_login: true, mobile_phone: create(:phone_number, :mobile))
+      user.security_roles.update_all(two_factor_auth: true)
+      user.update!(mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'allows user to login with authentication token', :vcr do
