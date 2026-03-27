@@ -17,6 +17,7 @@ default: &default
   user_profiles: true
   canadian_addresses: false
   show_help_menu: true
+  show_sign_in_marketing: false
   saved_search_filters_enabled: true
   legal_docs: true
   two_factor_auth_all_users: true
@@ -29,7 +30,7 @@ default: &default
   allow_marketing_site: false
   allow_crawling: false
   always_crawl: false
-  crawlable_domains: []
+  crawlable_subdomains: []
   procfile_override: false
   last_first_user: false
   timezone_detection: true
