@@ -33,6 +33,32 @@ module AssistantSessionsHelper
       chat_date: log[:chat_date], user: current_user }
   end
 
+  def show_page_log_data(assistant_session, log)
+    log.symbolize_keys!
+    direction = log[:role] == 'user' ? 'right' : 'left'
+    user_name = if log[:role] == 'user'
+                  assistant_session.user.to_s
+                else
+                  safe_assistant_name(assistant_session)
+                end
+    template = "assistant_sessions/chat_message_#{direction}"
+    message = safe_format_message(assistant_session, log[:content])
+    { direction: direction, user_name: user_name, template: template, message: message,
+      chat_date: log[:chat_date], user: assistant_session.user }
+  end
+
+  def safe_assistant_name(assistant_session)
+    assistant_session.assistant_name
+  rescue RuntimeError
+    'Assistant'
+  end
+
+  def safe_format_message(assistant_session, content)
+    assistant_session.format_message(content)
+  rescue RuntimeError
+    content
+  end
+
   def assistant_session_text_sanitize(text)
     # Handle case where content is an array (e.g., OpenAI content parts)
     text = text.map { |part| part.is_a?(Hash) ? part['text'] : part }.join if text.is_a?(Array)
@@ -71,5 +97,47 @@ module AssistantSessionsHelper
 
   def remove_mention_context(text)
     text.gsub(/\n\nMENTIONED_ENTITIES:.*\z/m, '')
+  end
+
+  # Groups logs into Q&A pairs: user question + tool calls + assistant answer
+  def group_logs_into_qa_pairs(all_logs)
+    pairs = []
+    current_pair = { question: nil, answer: nil, tool_calls: [] }
+
+    all_logs.each do |log|
+      log.symbolize_keys!
+      if log[:role] == 'user' && log[:content].present?
+        # Start a new Q&A pair
+        pairs << current_pair if current_pair[:question]
+        current_pair = { question: log, answer: nil, tool_calls: [] }
+      elsif log[:role] == 'assistant' && log[:content].present?
+        current_pair[:answer] = log
+      elsif log[:type].present?
+        # Tool call or output
+        current_pair[:tool_calls] << log
+      end
+    end
+
+    # Don't forget the last pair
+    pairs << current_pair if current_pair[:question]
+
+    pairs
+  end
+
+  def format_json(value)
+    return value if value.blank?
+
+    if value.is_a?(String)
+      begin
+        parsed = JSON.parse(value)
+        JSON.pretty_generate(parsed)
+      rescue JSON::ParserError
+        value
+      end
+    else
+      JSON.pretty_generate(value)
+    end
+  rescue StandardError
+    value.to_s
   end
 end

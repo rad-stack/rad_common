@@ -214,6 +214,34 @@
   color: #0d6efd;
 }
 
+.session-split-view {
+  min-height: calc(100vh - 200px);
+}
+
+.session-chat-panel,
+.session-debug-panel {
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+}
+
+.qa-wrapper {
+  &.active {
+    border-left: 3px solid #0d6efd;
+    background-color: rgba(var(--bs-primary-rgb), 0.5) !important;
+    color: inherit !important;
+  }
+
+  .chat-name,
+  .chat-text,
+  .chat-text pre {
+    color: inherit;
+  }
+}
+
+.text-pre-wrap {
+  white-space: pre-wrap;
+}
+
 .mention-dropdown {
   position: fixed;
   background: #fff;
