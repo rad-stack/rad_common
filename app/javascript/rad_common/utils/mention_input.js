@@ -52,21 +52,52 @@ export default class MentionInput {
   handleInput() {
     clearTimeout(this.debounceTimer);
 
-    const text = this.getText();
-    const cursor = this.getCursor();
-    const textBefore = text.substring(0, cursor);
-    const triggerPos = textBefore.lastIndexOf(this.options.trigger);
+    const triggerInfo = this.findTriggerInTextNodes();
+    if (!triggerInfo) return this.close();
 
-    if (triggerPos === -1) return this.close();
-
-    const query = textBefore.substring(triggerPos + 1);
+    const { position, query } = triggerInfo;
     if (query.includes('[')) return this.close();
 
-    this.state = { active: true, startPos: triggerPos, query };
+    this.state = { active: true, startPos: position, query };
 
     if (query.length >= this.options.minChars) {
       this.debounceTimer = setTimeout(() => this.search(query), this.options.debounceMs);
     }
+  }
+
+  // Find @ trigger only in text nodes, ignoring mention spans
+  findTriggerInTextNodes() {
+    const cursor = this.getCursor();
+    let position = 0;
+    let lastTriggerPos = -1;
+    let lastTriggerTextPos = -1;
+
+    for (const node of this.input.childNodes) {
+      const length = node.textContent?.length || 0;
+
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent || '';
+        // Find last @ in this text node that's before cursor
+        for (let i = text.length - 1; i >= 0; i--) {
+          const globalPos = position + i;
+          if (globalPos < cursor && text[i] === this.options.trigger) {
+            if (globalPos > lastTriggerPos) {
+              lastTriggerPos = globalPos;
+              lastTriggerTextPos = globalPos;
+            }
+            break;
+          }
+        }
+      }
+
+      position += length;
+    }
+
+    if (lastTriggerPos === -1) return null;
+
+    const text = this.getText();
+    const query = text.substring(lastTriggerTextPos + 1, cursor);
+    return { position: lastTriggerTextPos, query };
   }
 
   handleKeydown(event) {
@@ -171,6 +202,7 @@ export default class MentionInput {
   }
 
   close() {
+    clearTimeout(this.debounceTimer);
     this.state = { active: false, startPos: null, query: '' };
     this.results = [];
     this.selectedIndex = 0;
