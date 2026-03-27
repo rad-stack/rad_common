@@ -278,6 +278,8 @@ module RadUser
     RadConfig.two_factor_auth_all_users? || two_factor_security_role?
   end
 
+  alias otp_required_for_login otp_required_for_login?
+
   class_methods do
     def user_approved_message
       "Your account was approved and you can begin using #{RadConfig.app_name!}."
@@ -297,7 +299,7 @@ module RadUser
       self.user_status = default_user_status if new_record? && !user_status
       return unless new_record?
 
-      self.otp_secret = User.generate_otp_secret if otp_required_for_login? && otp_secret.blank?
+      generate_otp_secret_if_needed
       self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
     end
 
