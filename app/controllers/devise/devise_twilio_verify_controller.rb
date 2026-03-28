@@ -10,28 +10,15 @@ module Devise
     include Devise::Controllers::Helpers
 
     def GET_verify_twilio_verify
+      send_sms_if_needed
       render :verify_twilio_verify
     end
 
     # verify 2fa
     def POST_verify_twilio_verify
-      if @resource.mobile_phone.blank? || params[:token].blank?
-        return handle_invalid_token :verify_twilio_verify, :invalid_token
-      end
+      return handle_invalid_token(:verify_twilio_verify, :invalid_token) if params[:token].blank?
 
-      begin
-        verification_check = TwilioVerifyService.verify_sms_token(@resource.mobile_phone, params[:token])
-        verification_check = verification_check.status == 'approved'
-      rescue Twilio::REST::RestError
-        verification_check = false
-      end
-
-      # Hack to reproduce authy functionality of being able to verify 2FA via SMS or TOTP
-      # not ideal as there could be network delays, but there is currently no alternative
-      if !verification_check && @resource.twilio_totp_factor_sid.present?
-        verification_check = TwilioVerifyService.verify_totp_token(@resource, params[:token])
-        verification_check = verification_check.status == 'approved'
-      end
+      verification_check = verify_token
 
       if verification_check
         remember_device(@resource.id) if params[:remember_device].to_i == 1
@@ -59,6 +46,29 @@ module Devise
     end
 
     private
+
+      def send_sms_if_needed
+        return if @resource.twilio_totp_factor_sid.present?
+        return if @resource.mobile_phone.blank?
+
+        TwilioVerifyService.send_sms_token(@resource.mobile_phone)
+      end
+
+      def verify_token
+        # Try TOTP first if user has authenticator app set up
+        if @resource.twilio_totp_factor_sid.present?
+          result = TwilioVerifyService.verify_totp_token(@resource, params[:token])
+          return true if result.status == 'approved'
+        end
+
+        # Fall back to SMS verification
+        return false if @resource.mobile_phone.blank?
+
+        result = TwilioVerifyService.verify_sms_token(@resource.mobile_phone, params[:token])
+        result.status == 'approved'
+      rescue Twilio::REST::RestError
+        false
+      end
 
       def authenticate_scope!
         send(:"authenticate_#{resource_name}!", force: true)

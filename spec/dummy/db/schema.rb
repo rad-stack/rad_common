@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_24_000000) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_28_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -460,6 +460,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_24_000000) do
     t.string "detected_timezone"
     t.string "ignored_timezone"
     t.string "detected_timezone_js"
+    t.string "twilio_totp_factor_sid"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true

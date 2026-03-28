@@ -256,9 +256,6 @@ module RadUser
     User.languages[language]
   end
 
-  # TODO: this should be a db attribute when we enable the TOTP feature
-  def twilio_totp_factor_sid; end
-
   def timeout_in
     external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
   end
@@ -364,7 +361,7 @@ module RadUser
     end
 
     def require_mobile_phone_two_factor?
-      otp_required_for_login?
+      otp_required_for_login? && twilio_totp_factor_sid.blank?
     end
 
     def password_excludes_name

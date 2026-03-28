@@ -38,6 +38,15 @@ class TwilioVerifyService
        .update(auth_payload: token)
   end
 
+  def self.delete_totp_factor(user)
+    return unless user.twilio_totp_factor_sid.present?
+
+    new.twilio_verify_service_v2
+       .entities([Rails.env, user.id].join('-'))
+       .factors(user.twilio_totp_factor_sid)
+       .delete
+  end
+
   def self.e164_format(phone_number)
     "+1#{phone_number.gsub(/[^0-9a-z\\s]/i, '')}"
   end
