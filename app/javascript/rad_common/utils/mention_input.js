@@ -172,33 +172,68 @@ export default class MentionInput {
     const item = this.results[this.selectedIndex];
     if (!item) return;
 
-    const text = this.getText();
-    const cursor = this.getCursor();
-    const before = text.substring(0, this.state.startPos);
-    const after = text.substring(cursor);
+    // Find the range from trigger to cursor and replace it with the mention
+    const triggerRange = this.findRangeForTrigger();
+    if (!triggerRange) return;
 
-    this.input.innerHTML = '';
-    if (before) this.input.appendChild(document.createTextNode(before));
+    // Delete the @query text
+    triggerRange.deleteContents();
 
+    // Create mention span
     const span = document.createElement('span');
     span.className = 'mention';
     span.contentEditable = 'false';
     span.textContent = `@${item.label}`;
     span.dataset.token = item.token;
-    this.input.appendChild(span);
 
-    this.input.appendChild(document.createTextNode(' ' + after));
+    // Insert mention and a space after it
+    triggerRange.insertNode(span);
+    const space = document.createTextNode(' ');
+    span.after(space);
 
-    // Set cursor after mention
+    // Set cursor after the space
     const selection = window.getSelection();
     const range = document.createRange();
-    range.setStart(this.input.lastChild, 1);
+    range.setStart(space, 1);
     range.collapse(true);
     selection.removeAllRanges();
     selection.addRange(range);
 
     this.input.focus();
     this.close();
+  }
+
+  // Find the DOM range from trigger position to cursor
+  findRangeForTrigger() {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return null;
+
+    const cursorRange = selection.getRangeAt(0);
+    let position = 0;
+    let triggerNode = null;
+    let triggerOffset = 0;
+
+    // Find the node and offset where the trigger (@) is located
+    for (const node of this.input.childNodes) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent || '';
+        const triggerLocalPos = this.state.startPos - position;
+
+        if (triggerLocalPos >= 0 && triggerLocalPos < text.length) {
+          triggerNode = node;
+          triggerOffset = triggerLocalPos;
+          break;
+        }
+      }
+      position += node.textContent?.length || 0;
+    }
+
+    if (!triggerNode) return null;
+
+    const range = document.createRange();
+    range.setStart(triggerNode, triggerOffset);
+    range.setEnd(cursorRange.startContainer, cursorRange.startOffset);
+    return range;
   }
 
   close() {
