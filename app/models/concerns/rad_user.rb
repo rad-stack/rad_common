@@ -92,6 +92,7 @@ module RadUser
 
     before_validation :check_defaults
     before_validation :set_timezone, on: :create
+    before_save :generate_otp_secret_if_needed
     after_commit :notify_user_approved, only: :update
     after_invitation_accepted :notify_user_accepted
 
@@ -273,6 +274,8 @@ module RadUser
     RadConfig.two_factor_auth_all_users? || two_factor_security_role?
   end
 
+  alias otp_required_for_login otp_required_for_login?
+
   class_methods do
     def user_approved_message
       "Your account was approved and you can begin using #{RadConfig.app_name!}."
@@ -292,6 +295,7 @@ module RadUser
       self.user_status = default_user_status if new_record? && !user_status
       return unless new_record?
 
+      generate_otp_secret_if_needed
       self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
     end
 
@@ -365,6 +369,12 @@ module RadUser
 
     def require_mobile_phone_two_factor?
       otp_required_for_login?
+    end
+
+    def generate_otp_secret_if_needed
+      return unless otp_required_for_login? && otp_secret.blank?
+
+      self.otp_secret = User.generate_otp_secret
     end
 
     def password_excludes_name
