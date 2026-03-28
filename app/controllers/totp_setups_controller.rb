@@ -53,9 +53,9 @@ class TotpSetupsController < ApplicationController
 
   private
 
-  def require_two_factor_auth
-    return if current_user.otp_required_for_login?
+    def require_two_factor_auth
+      return if current_user.otp_required_for_login?
 
-    redirect_to root_path, alert: 'Two-factor authentication is not enabled for your account.'
-  end
+      redirect_to root_path, alert: 'Two-factor authentication is not enabled for your account.'
+    end
 end
