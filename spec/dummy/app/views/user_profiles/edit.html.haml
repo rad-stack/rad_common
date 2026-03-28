@@ -5,7 +5,7 @@
     .card-body
       .form-inputs
         .row
-          .col-lg-3= f.input :birth_date, as: :date, html5: true, required: true
-
+          .col-lg-3
+            = f.input :birth_date, as: :date, html5: true, required: true, input_html: { 'data-form-type': 'birthdate' }
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'
