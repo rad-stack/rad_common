@@ -32,7 +32,7 @@ module RadController
 
   def show_assistant_nav?
     assistant_enabled = current_user && policy(AssistantSession).new?
-    return true if assistant_enabled && RadConfig.rad_system_chat_enabled?
+    return false unless assistant_enabled && RadConfig.rad_system_chat_enabled?
 
     @chat_class.present? && @chat_class != 'LLM::ChatTypes::SystemChat'
   end
