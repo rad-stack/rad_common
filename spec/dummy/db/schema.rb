@@ -461,6 +461,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_24_000000) do
     t.string "detected_timezone_js"
     t.string "otp_secret"
     t.integer "consumed_timestep"
+    t.string "otp_delivery_method", default: "sms"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
