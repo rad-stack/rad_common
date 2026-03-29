@@ -97,6 +97,7 @@ describe 'Users' do
 
     context 'with email fallback' do
       before do
+        allow(RadConfig).to receive(:two_factor_auth_email_fallback?).and_return(true)
         user.update_column(:mobile_phone, nil)
         allow(TwilioVerifyService).to receive(:send_token).and_return(double(status: 'pending'))
       end
