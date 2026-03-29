@@ -16,13 +16,11 @@ class RadTwilio
   end
 
   def self.send_verify_token(to:, channel:)
-    response = RadRetry.perform_request(retry_count: 2, raise_original: true) do
+    RadRetry.perform_request(retry_count: 2, raise_original: true) do
       RadRateLimiter.new(limit: 500, period: 5.minutes, key: 'twilio_verify').run do
         TwilioVerifyService.send_token(to: to, channel: channel)
       end
     end
-
-    response.status == 'pending'
   end
 
   def from_number

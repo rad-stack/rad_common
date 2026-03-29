@@ -3,7 +3,8 @@ module Users
     def GET_verify_twilio_verify
       destination = two_factor_destination
 
-      if destination && RadTwilio.send_verify_token(to: destination[:to], channel: destination[:channel])
+      response = RadTwilio.send_verify_token(to: destination[:to], channel: destination[:channel]) if destination
+      if response&.status == 'pending'
         message = destination[:channel] == 'sms' ? 'texted' : 'emailed'
         flash.now[:notice] = "A verification code has been #{message} to you."
       else
