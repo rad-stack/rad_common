@@ -15,10 +15,10 @@ class RadTwilio
     client.calls.create from: from_number, to: to, url: URI::Parser.new.escape(url)
   end
 
-  def self.send_verify_sms(mobile_phone)
+  def self.send_verify_token(to:, channel:)
     response = RadRetry.perform_request(retry_count: 2, raise_original: true) do
       RadRateLimiter.new(limit: 500, period: 5.minutes, key: 'twilio_verify').run do
-        TwilioVerifyService.send_sms_token(mobile_phone)
+        TwilioVerifyService.send_token(to: to, channel: channel)
       end
     end
 

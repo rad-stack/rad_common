@@ -351,8 +351,8 @@ module RadUser
         errors.add(:mobile_phone, "can't be blank")
       elsif require_mobile_phone_sms?
         errors.add(:mobile_phone, 'is required when SMS notification settings are enabled')
-      elsif require_mobile_phone_two_factor?
-        errors.add(:mobile_phone, 'is required for two factor authentication')
+      # elsif require_mobile_phone_two_factor? # TODO: use a new config setting for this to allow email for MFA
+      #   errors.add(:mobile_phone, 'is required for two factor authentication')
       end
     end
 
@@ -360,9 +360,9 @@ module RadUser
       RadConfig.twilio_enabled? && persisted? && notification_settings.enabled.where(sms: true).count.positive?
     end
 
-    def require_mobile_phone_two_factor?
-      otp_required_for_login?
-    end
+    # def require_mobile_phone_two_factor? # TODO: see above
+    #   otp_required_for_login?
+    # end
 
     def password_excludes_name
       return if new_record? && invited_by_id.present?
