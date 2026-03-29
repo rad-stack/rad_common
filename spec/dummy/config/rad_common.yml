@@ -21,6 +21,7 @@ default: &default
   legal_docs: true
   two_factor_auth_all_users: true
   two_factor_remember_device_days: 7
+  two_factor_auth_email_fallback: true
   storage_config_override: false
   database_config_override: false
   require_mobile_phone: false

@@ -60,7 +60,7 @@ module Devise
 
         if @resource.mobile_phone.present?
           { to: @resource.mobile_phone, channel: 'sms' }
-        elsif @resource.email.present?
+        elsif RadConfig.two_factor_auth_email_fallback? && @resource.email.present?
           { to: @resource.email, channel: 'email' }
         end
       end
