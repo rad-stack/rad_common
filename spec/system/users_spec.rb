@@ -73,7 +73,7 @@ describe 'Users' do
     context 'with SMS' do
       before { user.update!(mobile_phone: create(:phone_number, :mobile)) }
 
-      it 'allows user to login with authentication token' do
+      it 'allows user to login with authentication token', :vcr do
         allow(TwilioVerifyService).to receive(:verify_token).and_return(double(status: 'approved'))
 
         visit new_user_session_path
@@ -86,9 +86,7 @@ describe 'Users' do
         expect(page).to have_content 'Signed in successfully'
       end
 
-      it 'does not allow user to login with invalid token' do
-        allow(TwilioVerifyService).to receive(:verify_token).and_return(double(status: 'pending'))
-
+      it 'does not allow user to login with invalid token', :vcr do
         visit new_user_session_path
         fill_in 'user_email', with: user.email
         fill_in 'user_password', with: password
@@ -102,7 +100,7 @@ describe 'Users' do
     context 'with email fallback' do
       before { user.update_column(:mobile_phone, nil) }
 
-      it 'allows user to login via email when no mobile phone' do
+      it 'allows user to login via email when no mobile phone', :vcr do
         allow(TwilioVerifyService).to receive(:verify_token).and_return(double(status: 'approved'))
 
         visit new_user_session_path
@@ -115,11 +113,8 @@ describe 'Users' do
         expect(page).to have_content 'Signed in successfully'
       end
 
-      it 'does not allow user to login with invalid email token' do
-        allow(TwilioVerifyService).to receive(:verify_token).and_return(double(status: 'pending'))
-
+      it 'does not allow user to login with invalid email token', :vcr do
         visit new_user_session_path
-
         fill_in 'user_email', with: user.email
         fill_in 'user_password', with: password
         click_button 'Sign In'

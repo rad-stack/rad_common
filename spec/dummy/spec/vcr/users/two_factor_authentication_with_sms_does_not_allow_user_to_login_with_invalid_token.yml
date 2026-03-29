@@ -1,0 +1,67 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/VerificationCheck
+    body:
+      encoding: UTF-8
+      string: Code=123456&To=%2B1<TEST_MOBILE_PHONE_STRIPPED>
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - twilio-ruby/7.9.1 (darwin24 arm64) Ruby/3.4.7
+      Accept-Charset:
+      - utf-8
+      Accept:
+      - application/json
+      Authorization:
+      - "<AUTH_TOKEN>"
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '107'
+      Connection:
+      - keep-alive
+      Date:
+      - Sun, 29 Mar 2026 09:13:54 GMT
+      X-Twilio-Error-Code:
+      - '20003'
+      Twilio-Request-Id:
+      - RQ16ddfd6a104b0717a724e235ca720e49
+      Twilio-Request-Duration:
+      - '0.024'
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - verify.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      Www-Authenticate:
+      - Basic realm="Twilio API"
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 9ef5db6f370d10d1eb67199cf30ee356.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P7
+      X-Amz-Cf-Id:
+      - CgkydxNSaObwiBiLqNk9OM4SXNZfBauKeqXhcx9lkvEZKs29t4P-Yg==
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
+      Vary:
+      - Origin
+    body:
+      encoding: UTF-8
+      string: '{"code":20003,"message":"Authenticate","more_info":"https://www.twilio.com/docs/errors/20003","status":401}'
+  recorded_at: Sun, 29 Mar 2026 09:13:54 GMT
+recorded_with: VCR 6.4.0
