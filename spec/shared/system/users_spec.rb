@@ -468,7 +468,10 @@ RSpec.describe 'Users', type: :system do
     end
 
     context 'with email fallback' do
-      before { user.update_column(:mobile_phone, nil) }
+      before do
+        allow(RadConfig).to receive(:two_factor_auth_email_fallback?).and_return(true)
+        user.update_column(:mobile_phone, nil)
+      end
 
       it 'allows user to login via email when no mobile phone' do
         allow(TwilioVerifyService).to receive(:verify_token).and_return(double(status: 'approved'))
