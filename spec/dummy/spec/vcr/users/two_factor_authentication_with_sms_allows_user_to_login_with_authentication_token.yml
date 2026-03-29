@@ -1,0 +1,72 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications
+    body:
+      encoding: UTF-8
+      string: Channel=sms&To=%2B1<TEST_MOBILE_PHONE_STRIPPED>
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - twilio-ruby/7.9.1 (darwin24 arm64) Ruby/3.4.7
+      Accept-Charset:
+      - utf-8
+      Accept:
+      - application/json
+      Authorization:
+      - "<AUTH_TOKEN>"
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Content-Length:
+      - '633'
+      Connection:
+      - keep-alive
+      Date:
+      - Sun, 29 Mar 2026 09:35:27 GMT
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQf10fdd600a0c16a76ee645b48e751193
+      Twilio-Request-Duration:
+      - '0.266'
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - verify.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 069c08bb1d6e1949553922c3e220de90.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P7
+      X-Amz-Cf-Id:
+      - uuI7eEAaJ5kzsWMiDd2Q2BAe5kVcHX-8uJzVDX1bFYo8pAlxXohSWw==
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
+      Vary:
+      - Origin
+    body:
+      encoding: UTF-8
+      string: '{"account_sid": "AC803cc481ffe11bab268fcfb8f247dd59", "amount": null,
+        "channel": "sms", "date_created": "2026-03-29T09:35:27Z", "date_updated":
+        "2026-03-29T09:35:27Z", "lookup": {"carrier": null}, "payee": null, "send_code_attempts":
+        [{"attempt_sid": "VLc49820295b5be1e83aa5fcb62356a305", "channel": "sms", "time":
+        "2026-03-29T09:35:27.031Z"}], "service_sid": "<TWILIO_ALT_VERIFY_SERVICE_SID>",
+        "sid": "VEc5fc14b2c2367ec03e5aac8bb90edfe7", "status": "pending", "to": "+1<TEST_MOBILE_PHONE_STRIPPED>",
+        "url": "https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications/VEc5fc14b2c2367ec03e5aac8bb90edfe7",
+        "valid": false}'
+  recorded_at: Sun, 29 Mar 2026 09:35:27 GMT
+recorded_with: VCR 6.4.0
