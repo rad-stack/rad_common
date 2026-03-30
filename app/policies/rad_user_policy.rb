@@ -80,8 +80,6 @@ class RadUserPolicy < ApplicationPolicy
     end
 
     def two_factor_attributes
-      return [:otp_required_for_login] if RadConfig.two_factor_auth_enabled? && !RadConfig.two_factor_auth_all_users?
-
       []
     end
 end

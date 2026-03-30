@@ -34,7 +34,7 @@ class ChatResponseJob < ApplicationJob
       Turbo::StreamsChannel.broadcast_replace_to(
         assistant_session,
         target: 'loading-message',
-        partial: 'assistant_sessions/chat_message_right',
+        partial: 'assistant_sessions/chat_message_left',
         locals: { message: message, user_name: assistant_session.assistant_name, chat_date: latest[:chat_date] }
       )
       Turbo::StreamsChannel.broadcast_action_to(assistant_session, action: :scroll_bottom, target: 'scroll-container')
