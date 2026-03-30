@@ -106,22 +106,26 @@ module AssistantSessionsHelper
 
     all_logs.each do |log|
       log.symbolize_keys!
-      if log[:role] == 'user' && log[:content].present?
-        # Start a new Q&A pair
-        pairs << current_pair if current_pair[:question]
-        current_pair = { question: log, answer: nil, tool_calls: [] }
-      elsif log[:role] == 'assistant' && log[:content].present?
-        current_pair[:answer] = log
-      elsif log[:type].present?
-        # Tool call or output
-        current_pair[:tool_calls] << log
-      end
+      pairs, current_pair = process_qa_log(log, pairs, current_pair)
     end
 
     # Don't forget the last pair
     pairs << current_pair if current_pair[:question]
 
     pairs
+  end
+
+  def process_qa_log(log, pairs, current_pair)
+    if log[:role] == 'user' && log[:content].present?
+      pairs << current_pair if current_pair[:question]
+      current_pair = { question: log, answer: nil, tool_calls: [] }
+    elsif log[:role] == 'assistant' && log[:content].present?
+      current_pair[:answer] = log
+    elsif log[:type].present?
+      current_pair[:tool_calls] << log
+    end
+
+    [pairs, current_pair]
   end
 
   def format_json(value)
