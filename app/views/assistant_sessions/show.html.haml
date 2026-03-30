@@ -12,7 +12,7 @@
             - qa_pairs.each_with_index do |pair, index|
               %a.list-group-item.list-group-item-action.qa-wrapper.shadow.rounded{ id: "qa-tab-#{index}",
                                                                                    href: "#debug-#{index}",
-                                                                                   class: ('active' if index == 0),
+                                                                                   class: ('active' if index.zero?),
                                                                                    role: 'tab',
                                                                                    'data-bs-toggle': 'list',
                                                                                    'aria-controls': "debug-#{index}" }
@@ -32,10 +32,10 @@
               %i.fa.fa-cog.me-1
               System Prompt
             %button.btn.btn-sm.btn-outline-warning{ type: 'button',
-                                                     'data-bs-toggle': 'collapse',
-                                                     'data-bs-target': '#system-prompt-body',
-                                                     'aria-expanded': 'false',
-                                                     'aria-controls': 'system-prompt-body' }
+                                                    'data-bs-toggle': 'collapse',
+                                                    'data-bs-target': '#system-prompt-body',
+                                                    'aria-expanded': 'false',
+                                                    'aria-controls': 'system-prompt-body' }
               %i.fa.fa-chevron-down
           .collapse#system-prompt-body
             .card-body.py-2

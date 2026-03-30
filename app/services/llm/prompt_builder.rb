@@ -87,7 +87,7 @@ module LLM
 
           item = item.stringify_keys
           expires_at = item['expires_at']
-          next unless expires_at.present?
+          next if expires_at.blank?
 
           ids.add(item['call_id']) if Time.zone.parse(expires_at.to_s) <= Time.current
         end
