@@ -8,18 +8,16 @@ module LLM
         @parameters = parameters
       end
 
-      def self.respond_to_tool_calls(response, context, messages)
-        tool_messages = response.tool_calls.map { |tool_call| respond_to_tool_call(tool_call, response, context) }
-        tool_message = response.message
-        messages + [tool_message] + tool_messages
+      def self.respond_to_tool_calls(response, context)
+        function_call_outputs = response.tool_calls.map { |tool_call| respond_to_tool_call(tool_call, context) }
+        response.output_items + function_call_outputs
       end
 
-      def self.respond_to_tool_call(tool_call, response, context)
-        tool_class = context.chat_instance.available_tools[response.tool_name(tool_call)]
-        tool_instance = tool_class.new(params: response.tool_data(tool_call), context: context)
+      def self.respond_to_tool_call(tool_call, context)
+        tool_class = context.chat_instance.available_tools[tool_call['name']]
+        tool_instance = tool_class.new(params: tool_call, context: context)
         result = tool_instance.call
-        LLM::PromptBuilder.build_message(role: :tool, content: result,
-                                         tool_call_id: response.tool_call_id(tool_call))
+        { type: 'function_call_output', call_id: tool_call['call_id'], output: result.to_s }
       end
 
       def self.tools
@@ -31,10 +29,13 @@ module LLM
       end
 
       def tool_definition
-        { type: 'function',
-          function: {
-            name: @name, description: @description, parameters: @parameters, required: @required_params
-          } }
+        definition = { type: 'function', name: @name, description: @description }
+        if @parameters.present?
+          params = @parameters.dup
+          params[:required] = @required_params if @required_params.present?
+          definition[:parameters] = params
+        end
+        definition
       end
     end
   end
