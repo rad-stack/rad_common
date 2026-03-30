@@ -44,7 +44,7 @@
         .tab-content.session-debug-panel.shadow-md
           - qa_pairs.each_with_index do |pair, index|
             .tab-pane.fade.debug-panel.bg-light.rounded.p-3{ id: "debug-#{index}",
-                                                             class: ('show active' if index == 0),
+                                                             class: ('show active' if index.zero?),
                                                              role: 'tabpanel',
                                                              'aria-labelledby': "qa-tab-#{index}" }
               - if pair[:question]
