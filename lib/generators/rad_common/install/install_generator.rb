@@ -369,12 +369,11 @@ Seeder.new.seed!
         def remove_old_rad_config_settings
           remove_rad_config_setting 'legacy_rails_config'
           remove_rad_config_setting 'temp_sticky_filters_list'
+          remove_rad_config_setting 'global_validity_include'
         end
 
         def remove_rad_config_setting(key)
-          return unless rad_config_setting_exists?(key)
-
-          raise "remove the old setting named #{key} from rad_commony.yml, I'm too lazy to code it right now"
+          RadCommon::ConfigUpdater.remove_rad_config_setting(key)
         end
 
         def update_credentials
