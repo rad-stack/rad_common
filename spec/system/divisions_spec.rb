@@ -134,39 +134,39 @@ RSpec.describe 'Divisions' do
       let(:filters) { { name_like_match_type: 'Division' } }
 
       it 'allows saving applied search filters', :js do
-        if ENV['CI']
-          visit divisions_path
-          first('#search_name_like').fill_in(with: 'Division Test')
-          tom_select user.to_s, from: 'search_owner_id'
-          first('button', text: 'Apply Filters').click
-          expect(SavedSearchFilter.count).to eq(0)
-          click_button 'saved-search-filters-dropdown'
-          click_button 'save_and_apply_filters'
-          expect(page).to have_css('#saved-search-filters-modal.show', visible: :visible)
-          within '#saved-search-filters-modal' do
-            fill_in 'saved_search_filter_name', with: 'Division Test'
-            click_button 'save_filter'
-          end
-          expect(page).to have_no_css('#saved-search-filters-modal.show', visible: :visible)
-
-          click_button 'saved-search-filters-dropdown'
-          expect(page).to have_css("#saved_filter_item_#{last_filter.id}", text: 'Division Test')
-          expect(SavedSearchFilter.count).to eq(1)
-
-          expect(applied_params.call['search[name_like]']).to eq(last_filter.name)
-          expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
-
-          click_link 'Clear Filters'
-          expect(applied_params.call['search[name_like]']).to be_nil
-          expect(applied_params.call['search[owner_id]']).to be_nil
-
-          click_button 'saved-search-filters-dropdown'
-          click_link "saved_filter_#{last_filter.id}"
-          expect(applied_params.call['search[name_like]']).to eq(last_filter.name)
-          expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
-          click_button 'saved-search-filters-dropdown'
-          expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('text-success')
+        visit divisions_path
+        first('#search_name_like').fill_in(with: 'Division Test')
+        tom_select user.to_s, from: 'search_owner_id'
+        first('button', text: 'Apply Filters').click
+        expect(SavedSearchFilter.count).to eq(0)
+        click_button 'saved-search-filters-dropdown'
+        click_button 'save_and_apply_filters'
+        expect(page).to have_css('#saved-search-filters-modal.show', visible: :visible)
+        within '#saved-search-filters-modal' do
+          fill_in 'saved_search_filter_name', with: 'Division Test'
+          click_button 'save_filter'
         end
+        sleep 0.5
+        find_by_id('close-saved-search-filters-modal').click
+        expect(page).to have_no_css('#saved-search-filters-modal.show', visible: :visible)
+
+        click_button 'saved-search-filters-dropdown'
+        expect(page).to have_css("#saved_filter_item_#{last_filter.id}", text: 'Division Test')
+        expect(SavedSearchFilter.count).to eq(1)
+
+        expect(applied_params.call['search[name_like]']).to eq(last_filter.name)
+        expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
+
+        click_link 'Clear Filters'
+        expect(applied_params.call['search[name_like]']).to be_nil
+        expect(applied_params.call['search[owner_id]']).to be_nil
+
+        click_button 'saved-search-filters-dropdown'
+        click_link "saved_filter_#{last_filter.id}"
+        expect(applied_params.call['search[name_like]']).to eq(last_filter.name)
+        expect(applied_params.call['search[owner_id]']).to eq(user.id.to_s)
+        click_button 'saved-search-filters-dropdown'
+        expect(find_by_id("saved_filter_#{last_filter.id}")['class']).to include('text-success')
       end
 
       it 'allows deleting saved filters' do
