@@ -485,7 +485,7 @@ RSpec.describe RadSearch::Search, type: :service do
 
       it 'filters selected cities' do
         expect(search.results.count).to eq 2
-        expect(search.results.pluck(:city)).to match_array ['City B', 'City C']
+        expect(search.results.pluck(:city)).to contain_exactly('City B', 'City C')
       end
     end
 
