@@ -15,12 +15,13 @@ module Devise
 
     # verify 2fa
     def POST_verify_twilio_verify
-      if @resource.mobile_phone.blank? || params[:token].blank?
-        return handle_invalid_token :verify_twilio_verify, :invalid_token
-      end
+      destination = two_factor_destination
+      return handle_invalid_token :verify_twilio_verify, :invalid_token if destination.nil? || params[:token].blank?
 
       begin
-        verification_check = TwilioVerifyService.verify_sms_token(@resource.mobile_phone, params[:token])
+        verification_check = TwilioVerifyService.verify_token(to: destination[:to],
+                                                              code: params[:token],
+                                                              channel: destination[:channel])
         verification_check = verification_check.status == 'approved'
       rescue Twilio::REST::RestError
         verification_check = false
@@ -37,21 +38,32 @@ module Devise
     end
 
     def request_sms
-      if @resource.blank? || @resource.mobile_phone.blank?
+      destination = two_factor_destination
+      if @resource.blank? || destination.nil?
         render json: { sent: false, message: "User couldn't be found." }
         return
       end
 
-      verification = TwilioVerifyService.send_sms_token(@resource.mobile_phone)
+      verification = TwilioVerifyService.send_token(to: destination[:to], channel: destination[:channel])
       success = verification.status == 'pending'
 
       render json: {
         sent: success,
-        message: success ? 'Token was sent.' : 'Token was not sent, please try again.'
+        message: success ? 'Code was sent.' : 'Code was not sent, please try again.'
       }
     end
 
     private
+
+      def two_factor_destination
+        return if @resource.blank?
+
+        if @resource.mobile_phone.present?
+          { to: @resource.mobile_phone, channel: 'sms' }
+        elsif RadConfig.two_factor_auth_email_fallback? && @resource.email.present?
+          { to: @resource.email, channel: 'email' }
+        end
+      end
 
       def authenticate_scope!
         send(:"authenticate_#{resource_name}!", force: true)

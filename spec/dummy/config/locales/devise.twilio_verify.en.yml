@@ -1,12 +1,12 @@
 en:
   devise:
     submit_token: 'Verify and Sign in'
-    submit_token_title: 'Enter your authentication token'
+    submit_token_title: 'Enter your verification code'
     twilio_verify_register_title: 'Two factor authentication'
     enable_twilio_verify: 'Enable'
     cellphone: 'Enter your cellphone'
     country: 'Enter your country'
-    request_sms: 'Resend Text'
+    request_sms: 'Resend Code'
     request_phone_call: 'Request phone call'
     remember_device: 'Remember Device'
 
