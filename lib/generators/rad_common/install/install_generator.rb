@@ -89,6 +89,9 @@ module RadCommon
 
         directory '../../../../../.bundle', '.bundle'
 
+        # claude code
+        copy_file '../claude_rad_common.md', '.claude/rules/rad_common.md'
+
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
         copy_file '../../../../../.sniff.yml', '.sniff.yml'
