@@ -76,7 +76,6 @@ module RadUser
     validate :validate_initial_security_role, on: :create, if: :active?
     validate :validate_external_invites_internal, on: :create
     validate :validate_internal, on: :update
-    validate :validate_two_factor
     validate :validate_mobile_phone
     validate :password_excludes_name
     validate :validate_last_activity
@@ -209,7 +208,19 @@ module RadUser
   end
 
   def notify_new_user_signed_up
-    Notifications::NewUserSignedUpNotification.main(self).notify!
+    Notifications::NewUserSignedUpNotification.main(user: self, recipient_ids: User.active.admins.pluck(:id)).notify!
+  end
+
+  def new_user_signed_up_subject
+    return "#{self} Signed Up on #{RadConfig.app_name!}" if active?
+
+    "#{self} Signed Up on #{RadConfig.app_name!} - Awaiting Approval"
+  end
+
+  def new_user_signed_up_sms
+    return "#{self} signed up" if active?
+
+    "#{self} signed up and is awaiting approval"
   end
 
   def send_devise_notification(notification, *args)
@@ -257,15 +268,18 @@ module RadUser
     User.languages[language]
   end
 
-  # TODO: this should be a db attribute when we enable the TOTP feature
-  def twilio_totp_factor_sid; end
-
   def timeout_in
     external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
   end
 
   def developer?
     email.end_with? "@#{RadConfig.developer_domain!}"
+  end
+
+  def otp_required_for_login?
+    return false unless RadConfig.two_factor_auth_enabled?
+
+    RadConfig.two_factor_auth_all_users? || two_factor_security_role?
   end
 
   class_methods do
@@ -286,9 +300,6 @@ module RadUser
 
       self.user_status = default_user_status if new_record? && !user_status
       return unless new_record?
-
-      self.otp_required_for_login = RadConfig.two_factor_auth_enabled? &&
-                                    (RadConfig.two_factor_auth_all_users? || two_factor_security_role?)
 
       self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
     end
@@ -345,14 +356,6 @@ module RadUser
       errors.add :external, 'not allowed when clients are assigned to this user'
     end
 
-    def validate_two_factor
-      return unless RadConfig.two_factor_auth_enabled?
-      return if otp_required_for_login? || user_status.blank? || !user_status.validate_email_phone?
-      return unless RadConfig.two_factor_auth_all_users? || two_factor_security_role?
-
-      errors.add(:otp_required_for_login, 'is required')
-    end
-
     def validate_mobile_phone
       return if mobile_phone.present? || user_status.blank? || !user_status.validate_email_phone?
 
@@ -370,7 +373,7 @@ module RadUser
     end
 
     def require_mobile_phone_two_factor?
-      RadConfig.two_factor_auth_enabled? && otp_required_for_login?
+      otp_required_for_login?
     end
 
     def password_excludes_name

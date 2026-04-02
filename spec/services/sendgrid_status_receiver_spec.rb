@@ -8,7 +8,7 @@ describe SendgridStatusReceiver, type: :service do
   let(:event_type) { 'bounce' }
   let(:contact_log) { create :contact_log, :email, record: create(:attorney), from_user: user }
 
-  let!(:contact_log_recipient) do
+  let(:contact_log_recipient) do
     create :contact_log_recipient, :email, contact_log: contact_log, email: user.email, to_user: user
   end
 
@@ -21,6 +21,7 @@ describe SendgridStatusReceiver, type: :service do
 
   before do
     create :admin
+    contact_log_recipient
     deliveries.clear
   end
 

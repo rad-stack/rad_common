@@ -14,16 +14,22 @@
           %td= log[:chat_date]
           %td= log[:role]
           %td
-            - if log[:tool_calls].present?
-              %strong Tool Calls
+            - if log[:type] == 'function_call'
               %table.table
                 %tr
                   %th Type
                   %th Name
                   %th Arguments
-                - log[:tool_calls].each do |tool_call|
-                  %tr
-                    %td= tool_call[:type]
-                    %td= tool_call.dig('function', 'name')
-                    %td= tool_call.dig('function', 'arguments')
+                %tr
+                  %td= log[:type]
+                  %td= log[:name]
+                  %td= log[:arguments]
+            - if log[:type] == 'function_call_output'
+              %table.table
+                %tr
+                  %th Type
+                  %th Output
+                %tr
+                  %td= log[:type]
+                  %td= log[:output]
             = log[:content]
