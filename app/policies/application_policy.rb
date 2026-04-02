@@ -78,7 +78,7 @@ class ApplicationPolicy
     attr_reader :user, :scope
 
     def initialize(user, scope)
-      raise if user.portal_user? && scope != NotificationType
+      raise if RadConfig.portal? && user.portal_user? && scope != NotificationType
 
       @user = user
       @scope = scope
