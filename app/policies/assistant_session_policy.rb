@@ -7,6 +7,10 @@ class AssistantSessionPolicy < ApplicationPolicy
     update?
   end
 
+  def mentions?
+    update?
+  end
+
   def create?
     RadConfig.open_ai_api_key.present? && user.permission?(:admin)
   end
