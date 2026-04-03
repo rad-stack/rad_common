@@ -16,7 +16,7 @@ RSpec.describe Notifications::AttorneyChangedNotification do
   end
 
   describe 'enabled_for_method?' do
-    let(:notification_type) { Notifications::AttorneyChangedNotification.main }
+    let(:notification_type) { described_class.main }
 
     context 'when user has no notification setting record' do
       let(:user) { create :admin }
