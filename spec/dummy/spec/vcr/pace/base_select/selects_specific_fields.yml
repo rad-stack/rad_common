@@ -1,0 +1,282 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/FindObjects/find?type=SalesPerson&xpath=@name%20=%20%27House%20Account%27
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 19:28:37 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '["1"]'
+  recorded_at: Tue, 05 Aug 2025 19:28:37 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/ReadObject/readSalesPerson?primaryKey=1
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 19:28:38 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"sourceOrganizationCompany":null,"tags":null,"ioID":null,"templateLine":0,"name":"House
+        Account","id":1,"active":true,"email":null,"password":"X","notes":null,"phoneNumber":null,"phoneExtension":null,"estimatePrefix":null,"commissionRate":0,"quotePrefix":null,"annualQuota":0}'
+  recorded_at: Tue, 05 Aug 2025 19:28:38 GMT
+- request:
+    method: post
+    uri: https://radstackmis.myprintdesk.net/rpc/rest/services/FindObjects/loadValueObjects
+    body:
+      encoding: UTF-8
+      string: '{"objectName":"Customer","fields":[{"xpath":"@id","name":"id"},{"xpath":"@custName","name":"custName"},{"xpath":"salesPerson/@name","name":"salesPersonName"}],"offset":0,"limit":1000,"xpathSorts":null,"children":[],"xpathFilter":"@salesPerson
+        = 1","primaryKey":null}'
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v2.13.4
+      Authorization:
+      - Basic UmFkU3RhY2s6Y09tcGwzeF9wQDU1dzByZA==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 05 Aug 2025 19:28:38 GMT
+      Server:
+      - Apache
+      Permissions-Policy:
+      - geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Strict-Transport-Security:
+      - max-age=31536000;
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - authorization,content-type
+      Access-Control-Allow-Methods:
+      - GET, POST, OPTIONS
+      Access-Control-Max-Age:
+      - '600'
+      Content-Type:
+      - application/json
+      Via:
+      - 1.1 10.33.168.44
+      Vary:
+      - Accept-Encoding,User-Agent
+      Content-Security-Policy:
+      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' ''unsafe-eval'';
+        img-src * data: blob: ''unsafe-inline''; script-src ''self'' ''unsafe-inline''
+        ''unsafe-eval''; frame-src ''self'' https://api.authorize.net/ https://api2.authorize.net/
+        https://secure.authorize.net/ https://accept.authorize.net/ https://test.authorize.net/
+        https://authorize.net https://validator.swagger.io/ ;'
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - no-referrer-when-downgrade
+      Content-Length:
+      - '17571'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"valueObjects":[{"fields":[{"name":"id","value":"00001001","type":"String","xpath":"@id"},{"name":"custName","value":null,"type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"00001001"},{"fields":[{"name":"id","value":"00001002","type":"String","xpath":"@id"},{"name":"custName","value":null,"type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"00001002"},{"fields":[{"name":"id","value":"99325","type":"String","xpath":"@id"},{"name":"custName","value":"test
+        99325","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"99325"},{"fields":[{"name":"id","value":"99535","type":"String","xpath":"@id"},{"name":"custName","value":"cust_1
+        99535","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"99535"},{"fields":[{"name":"id","value":"AAAOFY","type":"String","xpath":"@id"},{"name":"custName","value":"AAA
+        of Yourtown","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"AAAOFY"},{"fields":[{"name":"id","value":"A_B_C","type":"String","xpath":"@id"},{"name":"custName","value":"A_B_C","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"A_B_C"},{"fields":[{"name":"id","value":"ABC_D","type":"String","xpath":"@id"},{"name":"custName","value":"ABC_d","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"ABC_D"},{"fields":[{"name":"id","value":"ABCDEF","type":"String","xpath":"@id"},{"name":"custName","value":"abcdef","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"ABCDEF"},{"fields":[{"name":"id","value":"A_JOY","type":"String","xpath":"@id"},{"name":"custName","value":"a_joy","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"A_JOY"},{"fields":[{"name":"id","value":"ALLEN","type":"String","xpath":"@id"},{"name":"custName","value":"Prisma
+        DUPE","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"ALLEN"},{"fields":[{"name":"id","value":"ALLEN1","type":"String","xpath":"@id"},{"name":"custName","value":"Prisma
+        DUPE","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"ALLEN1"},{"fields":[{"name":"id","value":"AVA111","type":"String","xpath":"@id"},{"name":"custName","value":"ava111","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"AVA111"},{"fields":[{"name":"id","value":"AVATAR","type":"String","xpath":"@id"},{"name":"custName","value":"AVATAR_12345678901234567890123456789012345678901234567890123","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"AVATAR"},{"fields":[{"name":"id","value":"CARCLO","type":"String","xpath":"@id"},{"name":"custName","value":"Carla''s
+        Closet Systems","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"CARCLO"},{"fields":[{"name":"id","value":"CBA1","type":"String","xpath":"@id"},{"name":"custName","value":"CBA1","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"CBA1"},{"fields":[{"name":"id","value":"CBA12","type":"String","xpath":"@id"},{"name":"custName","value":"CBA1","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"CBA12"},{"fields":[{"name":"id","value":"CUST_123","type":"String","xpath":"@id"},{"name":"custName","value":null,"type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"CUST_123"},{"fields":[{"name":"id","value":"D_E_F","type":"String","xpath":"@id"},{"name":"custName","value":"D_E_F","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"D_E_F"},{"fields":[{"name":"id","value":"DISLEGCU","type":"String","xpath":"@id"},{"name":"custName","value":"dislegcu","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"DISLEGCU"},{"fields":[{"name":"id","value":"EPS1","type":"String","xpath":"@id"},{"name":"custName","value":"CALVIN
+        NELMS CHARTER SCHOOLS","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"EPS1"},{"fields":[{"name":"id","value":"EPS2","type":"String","xpath":"@id"},{"name":"custName","value":"ABERNATHY
+        ISD","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"EPS2"},{"fields":[{"name":"id","value":"EPS3","type":"String","xpath":"@id"},{"name":"custName","value":"JUDSON
+        ISD","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"EPS3"},{"fields":[{"name":"id","value":"EPS4","type":"String","xpath":"@id"},{"name":"custName","value":"SWEETWATER
+        ISD","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"EPS4"},{"fields":[{"name":"id","value":"EPS5","type":"String","xpath":"@id"},{"name":"custName","value":"Biscuit
+        Belly","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"EPS5"},{"fields":[{"name":"id","value":"EURO","type":"String","xpath":"@id"},{"name":"custName","value":"Euros","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"EURO"},{"fields":[{"name":"id","value":"EVA","type":"String","xpath":"@id"},{"name":"custName","value":"Eva","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"EVA"},{"fields":[{"name":"id","value":"EVA_1","type":"String","xpath":"@id"},{"name":"custName","value":"Eva","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"EVA_1"},{"fields":[{"name":"id","value":"EVA2","type":"String","xpath":"@id"},{"name":"custName","value":"Eva2","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"EVA2"},{"fields":[{"name":"id","value":"EVA5","type":"String","xpath":"@id"},{"name":"custName","value":"Eva5","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"EVA5"},{"fields":[{"name":"id","value":"EVALIN","type":"String","xpath":"@id"},{"name":"custName","value":"EVALIN","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"EVALIN"},{"fields":[{"name":"id","value":"FGS","type":"String","xpath":"@id"},{"name":"custName","value":"Flora
+        Garden Society","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"FGS"},{"fields":[{"name":"id","value":"FREWIN","type":"String","xpath":"@id"},{"name":"custName","value":"Frewin''s
+        Systems Paul1","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"FREWIN"},{"fields":[{"name":"id","value":"FREWIN1","type":"String","xpath":"@id"},{"name":"custName","value":"Frewin''s
+        Systems Paul Modify 35","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"FREWIN1"},{"fields":[{"name":"id","value":"FRFREFRF","type":"String","xpath":"@id"},{"name":"custName","value":null,"type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"FRFREFRF"},{"fields":[{"name":"id","value":"GLEN","type":"String","xpath":"@id"},{"name":"custName","value":"GLEN","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"GLEN"},{"fields":[{"name":"id","value":"GMO","type":"String","xpath":"@id"},{"name":"custName","value":"Green
+        Mountain Outfitters","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"GMO"},{"fields":[{"name":"id","value":"GOLSIL","type":"String","xpath":"@id"},{"name":"custName","value":"Gold
+        & Silver Pawn","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"GOLSIL"},{"fields":[{"name":"id","value":"GRELEA","type":"String","xpath":"@id"},{"name":"custName","value":"Green
+        Leaf Design","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"GRELEA"},{"fields":[{"name":"id","value":"HOLIDAY","type":"String","xpath":"@id"},{"name":"custName","value":"Holiday
+        Inn","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"HOLIDAY"},{"fields":[{"name":"id","value":"HOUSE","type":"String","xpath":"@id"},{"name":"custName","value":"Profitable
+        Printing Company","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"HOUSE"},{"fields":[{"name":"id","value":"INTTRA","type":"String","xpath":"@id"},{"name":"custName","value":"International
+        Trade Group","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"INTTRA"},{"fields":[{"name":"id","value":"MARHAR","type":"String","xpath":"@id"},{"name":"custName","value":"Martyn,
+        Hartsfield & Lloyd","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"MARHAR"},{"fields":[{"name":"id","value":"MC","type":"String","xpath":"@id"},{"name":"custName","value":"MC","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"MC"},{"fields":[{"name":"id","value":"NEESER","type":"String","xpath":"@id"},{"name":"custName","value":"Needlepoint
+        Services","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"NEESER"},{"fields":[{"name":"id","value":"PAN","type":"String","xpath":"@id"},{"name":"custName","value":"Pandora
+        Moon","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"PAN"},{"fields":[{"name":"id","value":"PANDO1","type":"String","xpath":"@id"},{"name":"custName","value":"Pandora
+        Moon1","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"PANDO1"},{"fields":[{"name":"id","value":"PANDORA","type":"String","xpath":"@id"},{"name":"custName","value":"Pandora
+        Moon","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"PANDORA"},{"fields":[{"name":"id","value":"RREG","type":"String","xpath":"@id"},{"name":"custName","value":null,"type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"RREG"},{"fields":[{"name":"id","value":"RT","type":"String","xpath":"@id"},{"name":"custName","value":"Rachel
+        Groups","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"RT"},{"fields":[{"name":"id","value":"SAMPUR","type":"String","xpath":"@id"},{"name":"custName","value":"Samantha''s
+        Purse Shop","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"SAMPUR"},{"fields":[{"name":"id","value":"SMARTCAN","type":"String","xpath":"@id"},{"name":"custName","value":"Smart
+        Canvas Co.","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"SMARTCAN"},{"fields":[{"name":"id","value":"VACAME","type":"String","xpath":"@id"},{"name":"custName","value":"Vacations
+        America","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"VACAME"},{"fields":[{"name":"id","value":"WETTTET","type":"String","xpath":"@id"},{"name":"custName","value":null,"type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"WETTTET"},{"fields":[{"name":"id","value":"ZISDAY","type":"String","xpath":"@id"},{"name":"custName","value":"Zisters
+        Day Spa","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"ZISDAY"},{"fields":[{"name":"id","value":"ZTEST1","type":"String","xpath":"@id"},{"name":"custName","value":"Pepsico
+        Ignitors SPP","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"ZTEST1"},{"fields":[{"name":"id","value":"ZTEST2","type":"String","xpath":"@id"},{"name":"custName","value":"Store
+        on ST","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"ZTEST2"},{"fields":[{"name":"id","value":"ZTEST3","type":"String","xpath":"@id"},{"name":"custName","value":"Wayspring","type":"String","xpath":"@custName"},{"name":"salesPersonName","value":"House
+        Account","type":"String","xpath":"salesPerson/@name"}],"children":[],"objectName":"Customer","primaryKey":"ZTEST3"}],"totalRecords":57,"objectName":"Customer"}'
+  recorded_at: Tue, 05 Aug 2025 19:28:38 GMT
+recorded_with: VCR 6.3.1
