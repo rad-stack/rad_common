@@ -46,7 +46,6 @@ default: &default
   global_validity_days: 3
   global_validity_timeout_hours: 3
   global_validity_exclude: []
-  global_validity_include: []
   global_validity_supress: []
 
   global_search_scopes:
