@@ -259,6 +259,10 @@ module RadUser
       return
     end
 
+    if needs_reactivate?
+      Notifications::InactiveUserAlertNotification.main(user: self, method_name: __method__).notify!
+    end
+
     super
   end
 
