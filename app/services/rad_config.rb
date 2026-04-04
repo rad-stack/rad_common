@@ -356,6 +356,10 @@ class RadConfig
       array_config_item! :additional_user_profile_params
     end
 
+    def additional_user_registration_params!
+      array_config_item! :additional_user_registration_params
+    end
+
     def restricted_audit_attributes!
       array_config_item! :restricted_audit_attributes
     end
