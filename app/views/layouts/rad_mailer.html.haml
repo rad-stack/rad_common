@@ -36,7 +36,7 @@
                 - elsif @recipient.is_a?(String)
                   Hello #{@recipient},
                 - elsif @recipient.respond_to?(:count)
-                  - if @recipient.count == 1 && @recipient.first.respond_to?(:greeting)
+                  - if @recipient.one? && @recipient.first.respond_to?(:greeting)
                     #{@recipient.first.greeting},
                   - else
                     Hello all,
