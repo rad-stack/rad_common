@@ -8,6 +8,7 @@ default: &default
   secure_sentry: false
   external_users: false
   app_logo_includes_name: true
+  mailer_phone_number: false
   impersonate: true
   start_route: users
   user_clients: false
