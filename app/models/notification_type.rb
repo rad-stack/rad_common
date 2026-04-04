@@ -283,6 +283,8 @@ class NotificationType < ApplicationRecord
       setting = notification_settings.find_by(user_id: user_id)
 
       if setting.blank?
+        return false if notification_method.to_s == 'sms' && User.find(user_id).mobile_phone.blank?
+
         send("default_#{notification_method}")
       else
         setting.enabled? && setting.send(notification_method)
