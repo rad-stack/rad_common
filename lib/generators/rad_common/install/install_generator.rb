@@ -367,12 +367,11 @@ Seeder.new.seed!
         def remove_old_rad_config_settings
           remove_rad_config_setting 'legacy_rails_config'
           remove_rad_config_setting 'temp_sticky_filters_list'
+          remove_rad_config_setting 'global_validity_include'
         end
 
         def remove_rad_config_setting(key)
-          return unless rad_config_setting_exists?(key)
-
-          raise "remove the old setting named #{key} from rad_commony.yml, I'm too lazy to code it right now"
+          RadCommon::ConfigUpdater.remove_rad_config_setting(key)
         end
 
         def update_credentials
@@ -791,6 +790,7 @@ gem 'propshaft'
           apply_migration '20250930134000_add_devise_two_factor_to_users.rb'
           apply_migration '20260110093403_rename_twilio_verify_enabled.rb'
           apply_migration '20260211190217_add_notification_type_defaults.rb'
+          apply_migration '20260326120000_fix_new_user_signed_up_notification.rb'
           apply_migration '20260324000000_remove_otp_required_for_login.rb'
         end
 

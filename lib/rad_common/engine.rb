@@ -5,6 +5,11 @@ module RadCommon
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
 
+    config.to_prepare do
+      SimpleForm::FormBuilder.mappings[:date] = DateInput
+    end
+
+
     require 'active_storage_validations'
     require 'audited'
     require 'authtrail'

@@ -44,6 +44,7 @@ module RadCommonRoutes
         resources :assistant_sessions, only: %i[show update index] do
           member do
             patch :chat_response
+            get :mentions
           end
         end
 

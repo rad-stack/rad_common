@@ -17,7 +17,9 @@ module LLM
         tool_class = context.chat_instance.available_tools[tool_call['name']]
         tool_instance = tool_class.new(params: tool_call, context: context)
         result = tool_instance.call
-        { type: 'function_call_output', call_id: tool_call['call_id'], output: result.to_s }
+        response = { type: 'function_call_output', call_id: tool_call['call_id'], output: result.to_s }
+        response[:expires_at] = Time.current + tool_instance.data_expiration if tool_instance.data_expiration
+        response
       end
 
       def self.tools
