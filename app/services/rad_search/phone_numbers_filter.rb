@@ -44,9 +44,9 @@ module RadSearch
         array = params[phone_numbers_input]
         return if array.blank?
 
-        array.gsub(/\-|\(|\)\ /, '').gsub(/\r|\n|\;/, ',').split(',').compact_blank.map do |phone_number|
+        array.gsub(/-|\(|\)\ /, '').gsub(/\r|\n|;/, ',').split(',').compact_blank.map { |phone_number|
           PhoneNumberFormatter.format(phone_number)
-        end.compact_blank
+        }.compact_blank
       end
   end
 end
