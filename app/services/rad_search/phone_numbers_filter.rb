@@ -34,7 +34,7 @@ module RadSearch
       results.where(column => value)
     end
 
-    def allow_not
+    def allow_not?
       false
     end
 
@@ -46,7 +46,7 @@ module RadSearch
 
         array.gsub(/\-|\(|\)\ /, '').gsub(/\r|\n|\;/, ',').split(',').compact_blank.map do |phone_number|
           PhoneNumberFormatter.format(phone_number)
-        }.compact_blank
+        end.compact_blank
       end
   end
 end
