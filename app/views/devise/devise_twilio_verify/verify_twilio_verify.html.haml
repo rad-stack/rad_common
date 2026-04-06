@@ -20,7 +20,6 @@
 
     = verify_twilio_verify_form do
       .d-flex.flex-column
-        = hidden_field_tag :"#{resource_name}_id", @resource.id
         = text_field_tag :token, '', autocomplete: 'one-time-code', id: 'twilio-verify-token',
                         inputmode: 'numeric', pattern: '[0-9]*', maxlength: 6,
                         autofocus: true, class: 'form-control', placeholder: 'Enter 6-digit code'

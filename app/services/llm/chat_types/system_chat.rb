@@ -15,6 +15,10 @@ module LLM
         SYSTEM_PROMPT
       end
 
+      def mentionable_types
+        %w[User]
+      end
+
       private
 
         def default_tools
