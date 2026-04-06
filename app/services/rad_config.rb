@@ -172,7 +172,7 @@ class RadConfig
       boolean_config_item! :two_factor_auth_all_users
     end
 
-    def twilio_verify_remember_device!
+    def two_factor_remember_device!
       config_item!(:two_factor_remember_device_days).days
     end
 
@@ -380,10 +380,6 @@ class RadConfig
 
     def global_validity_timeout_hours!
       config_item! :global_validity_timeout_hours
-    end
-
-    def global_validity_include!
-      array_config_item! :global_validity_include
     end
 
     def global_validity_exclude!

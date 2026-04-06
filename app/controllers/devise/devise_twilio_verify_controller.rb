@@ -26,13 +26,6 @@ module Devise
         verification_check = false
       end
 
-      # Hack to reproduce authy functionality of being able to verify 2FA via SMS or TOTP
-      # not ideal as there could be network delays, but there is currently no alternative
-      if !verification_check && @resource.twilio_totp_factor_sid.present?
-        verification_check = TwilioVerifyService.verify_totp_token(@resource, params[:token])
-        verification_check = verification_check.status == 'approved'
-      end
-
       if verification_check
         remember_device(@resource.id) if params[:remember_device].to_i == 1
         remember_user
