@@ -67,22 +67,4 @@ Gem::Specification.new do |s|
   s.add_dependency 'twilio-ruby'
   s.add_dependency 'wicked_pdf', '2.6.3'
   s.add_dependency 'wkhtmltopdf-heroku', '2.12.6.1.pre.jammy'
-
-  # Test Group
-  s.add_dependency 'selenium-webdriver', '~> 4.18.1'
-
-  s.add_development_dependency 'active_record_doctor'
-  s.add_development_dependency 'capybara'
-  s.add_development_dependency 'haml_lint'
-  s.add_development_dependency 'rspec-rails'
-  s.add_development_dependency 'rubocop'
-  s.add_development_dependency 'rubocop-capybara'
-  s.add_development_dependency 'rubocop-factory_bot'
-  s.add_development_dependency 'rubocop-rails'
-  s.add_development_dependency 'rubocop-rspec'
-  s.add_development_dependency 'rubocop-rspec_rails'
-  s.add_development_dependency 'vcr'
-  s.add_development_dependency 'webmock'
-  s.add_development_dependency 'wkhtmltopdf-binary'
-  s.add_development_dependency 'tty-prompt'
 end

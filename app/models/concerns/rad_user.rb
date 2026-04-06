@@ -5,6 +5,15 @@ module RadUser
                                    confirmation_token unlock_token remember_created_at].freeze
 
   included do
+    include LLMMentionable
+
+    scope :mentionable_search, lambda { |query|
+      q = "%#{query.downcase}%"
+      cols = ['first_name', 'last_name', "CONCAT(first_name, ' ', last_name)", 'email']
+      conditions = cols.map { |col| "LOWER(#{col}) LIKE :q" }.join(' OR ')
+      active.where(conditions, q: q)
+    }
+
     belongs_to :user_status
 
     has_many :notification_settings, dependent: :destroy
@@ -105,6 +114,20 @@ module RadUser
     else
       "#{first_name} #{last_name}"
     end
+  end
+
+  def llm_attributes
+    {
+      id: id,
+      name: to_s,
+      email: email,
+      first_name: first_name,
+      last_name: last_name,
+      mobile_phone: mobile_phone,
+      active: active?,
+      external: external?,
+      timezone: timezone
+    }.compact
   end
 
   def active?
@@ -209,7 +232,19 @@ module RadUser
   end
 
   def notify_new_user_signed_up
-    Notifications::NewUserSignedUpNotification.main(self).notify!
+    Notifications::NewUserSignedUpNotification.main(user: self, recipient_ids: User.active.admins.pluck(:id)).notify!
+  end
+
+  def new_user_signed_up_subject
+    return "#{self} Signed Up on #{RadConfig.app_name!}" if active?
+
+    "#{self} Signed Up on #{RadConfig.app_name!} - Awaiting Approval"
+  end
+
+  def new_user_signed_up_sms
+    return "#{self} signed up" if active?
+
+    "#{self} signed up and is awaiting approval"
   end
 
   def send_devise_notification(notification, *args)
@@ -256,9 +291,6 @@ module RadUser
   def locale
     User.languages[language]
   end
-
-  # TODO: this should be a db attribute when we enable the TOTP feature
-  def twilio_totp_factor_sid; end
 
   def timeout_in
     external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
