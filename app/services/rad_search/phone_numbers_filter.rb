@@ -46,7 +46,7 @@ module RadSearch
 
         array.gsub(/\-|\(|\)\ /, '').gsub(/\r|\n|\;/, ',').split(',').compact_blank.map do |phone_number|
           PhoneNumberFormatter.format(phone_number)
-        end.compact_blank
+        }.compact_blank
       end
   end
 end

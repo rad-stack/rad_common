@@ -23,7 +23,7 @@ module RadSearch
     def apply_filter(results, params)
       begin
         values = params[searchable_name].to_s.split(',').map(&:strip).compact_blank.uniq
-      rescue StandardError => e
+      rescue StandardError
         values = nil
       end
 
