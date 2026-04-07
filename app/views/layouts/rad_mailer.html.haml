@@ -37,7 +37,7 @@
                 - elsif @recipient.is_a?(String)
                   Hello #{@recipient},
                 - elsif @recipient.respond_to?(:count)
-                  - if @recipient.count == 1 && @recipient.first.respond_to?(:greeting)
+                  - if @recipient.one? && @recipient.first.respond_to?(:greeting)
                     #{@recipient.first.greeting},
                   - else
                     Hello all,
@@ -55,9 +55,9 @@
 
         - if @email_action
           = render 'layouts/email_action',
-                  message: @email_action[:message],
-                  button_text: @email_action[:button_text],
-                  button_url: @email_action[:button_url]
+                   message: @email_action[:message],
+                   button_text: @email_action[:button_text],
+                   button_url: @email_action[:button_url]
 
       .email-header
         .email-row
@@ -72,5 +72,7 @@
               .footer-item= company_name
               - if company_full_address.present?
                 .footer-item= company_full_address
+              - if RadConfig.mailer_phone_number? && company_phone_number.present?
+                .footer-item= link_to company_phone_number, "tel:#{company_phone_number}"
               .footer-item= link_to website, website
               .footer-item= link_to @footer_email || admin_email, "mailto:#{@footer_email || admin_email}"

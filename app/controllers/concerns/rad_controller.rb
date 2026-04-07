@@ -50,7 +50,7 @@ module RadController
     end
 
     def devise_account_params
-      %i[first_name last_name mobile_phone avatar timezone language]
+      %i[first_name last_name mobile_phone avatar timezone language] + RadConfig.additional_user_registration_params!
     end
 
     def devise_invite_params
