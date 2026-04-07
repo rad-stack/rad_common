@@ -5,6 +5,15 @@ module RadUser
                                    confirmation_token unlock_token remember_created_at].freeze
 
   included do
+    include LLMMentionable
+
+    scope :mentionable_search, lambda { |query|
+      q = "%#{query.downcase}%"
+      cols = ['first_name', 'last_name', "CONCAT(first_name, ' ', last_name)", 'email']
+      conditions = cols.map { |col| "LOWER(#{col}) LIKE :q" }.join(' OR ')
+      active.where(conditions, q: q)
+    }
+
     belongs_to :user_status
 
     has_many :notification_settings, dependent: :destroy
@@ -104,6 +113,20 @@ module RadUser
     else
       "#{first_name} #{last_name}"
     end
+  end
+
+  def llm_attributes
+    {
+      id: id,
+      name: to_s,
+      email: email,
+      first_name: first_name,
+      last_name: last_name,
+      mobile_phone: mobile_phone,
+      active: active?,
+      external: external?,
+      timezone: timezone
+    }.compact
   end
 
   def active?
