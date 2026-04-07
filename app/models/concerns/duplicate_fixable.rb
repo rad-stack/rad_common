@@ -44,6 +44,10 @@ module DuplicateFixable
       new.respond_to?(:birth_date)
     end
 
+    def birth_date_column?
+      column_names.include?('birth_date')
+    end
+
     def use_multiples?
       new.respond_to?(:multiples)
     end
