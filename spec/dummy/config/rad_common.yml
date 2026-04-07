@@ -11,6 +11,7 @@ default: &default
   external_users: true
   validate_external_email_domain: true
   app_logo_includes_name: true
+  mailer_phone_number: false
   impersonate: true
   start_route: onboardings
   user_clients: true
@@ -68,6 +69,7 @@ default: &default
 
   additional_user_params: []
   additional_user_profile_params: []
+  additional_user_registration_params: []
   additional_company_params: []
 
   global_validity_days: 3
