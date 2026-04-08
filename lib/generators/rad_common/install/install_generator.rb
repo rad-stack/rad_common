@@ -191,6 +191,8 @@ Seeder.new.seed!
 
         gsub_file 'Gemfile', "gem 'jsbundling-rails'\n", ''
 
+        install_session_store
+
         apply_migrations
 
         check_boolean_fields
@@ -469,6 +471,15 @@ Seeder.new.seed!
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
+        end
+
+        def install_session_store
+          if User.ancestors.include?(RadDeviseHigh)
+            remove_file 'config/initializers/session_store.rb'
+            return
+          end
+
+          copy_file '../session_store.rb', 'config/initializers/session_store.rb'
         end
 
         def install_database_yml
