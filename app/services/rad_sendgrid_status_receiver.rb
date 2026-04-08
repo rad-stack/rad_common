@@ -10,7 +10,7 @@ class RadSendgridStatusReceiver
 
   def process!
     if unsubscribe?
-      Sentry.capture_message("sendgrid unsubscribe for #{email}", extra: { content: @content.to_unsafe_h })
+      Sentry.capture_message("sendgrid unsubscribe for #{email}", extra: { content: @content.to_h })
       return
     end
 
