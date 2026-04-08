@@ -8,6 +8,11 @@ class PagesController < ApplicationController
       @marketing_site = true
       render 'pages/marketing'
     elsif user_signed_in?
+      if current_user.portal_user?
+        redirect_to '/portal'
+        return
+      end
+
       redirect_to RadConfig.start_route!
     else
       redirect_to new_user_session_path
