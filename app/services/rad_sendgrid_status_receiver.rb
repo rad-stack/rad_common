@@ -9,11 +9,6 @@ class RadSendgridStatusReceiver
   end
 
   def process!
-    if unsubscribe?
-      Sentry.capture_message("sendgrid unsubscribe for #{email}", extra: { content: @content.to_h })
-      return
-    end
-
     if host_name.blank?
       Rails.logger.info "sendgrid status for #{email}: missing host name, ignoring"
       return
@@ -26,6 +21,11 @@ class RadSendgridStatusReceiver
     end
 
     return if missing_contact_log?
+
+    if unsubscribe?
+      Sentry.capture_message("sendgrid unsubscribe for #{email}", level: :info, extra: { content: @content.to_h })
+      return
+    end
 
     process_status
     update_contact_log!
