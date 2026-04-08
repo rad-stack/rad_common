@@ -6,7 +6,7 @@ class PagesController < ApplicationController
 
     if marketing_site?
       @marketing_site = true
-      render 'pages/marketing'
+      render 'pages/marketing', formats: [:html]
     elsif user_signed_in?
       redirect_to RadConfig.start_route!
     else
