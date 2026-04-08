@@ -9,6 +9,11 @@ class RadSendgridStatusReceiver
   end
 
   def process!
+    if unsubscribe?
+      Sentry.capture_message("sendgrid unsubscribe for #{email}", extra: { content: @content.to_unsafe_h })
+      return
+    end
+
     if host_name.blank?
       Rails.logger.info "sendgrid status for #{email}: missing host name, ignoring"
       return
@@ -132,8 +137,12 @@ class RadSendgridStatusReceiver
       event == SPAM_REPORT
     end
 
+    def unsubscribe?
+      %w[unsubscribe group_unsubscribe].include?(event)
+    end
+
     def all_events
-      SUPPRESSION_EVENTS + %w[open click]
+      SUPPRESSION_EVENTS + %w[open click unsubscribe group_unsubscribe]
     end
 
     def forward?
