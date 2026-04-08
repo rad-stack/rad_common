@@ -62,7 +62,7 @@ VCR.configure do |c|
     c.filter_sensitive_data('<SENTRY_API_TOKEN>') { RadConfig.secret_config_item!(:sentry_api_token) }
   end
 
-  c.filter_sensitive_data('<S3_ACCESS_KEY_ID>') { RadConfig.s3_access_key_id! }
+  c.filter_sensitive_data('<GCS_PROJECT_ID>') { RadConfig.gcs_project_id! }
 
   if RadConfig.secret_config_item(:lob_key).present?
     c.filter_sensitive_data('<LOB_KEY>') { RadConfig.secret_config_item!(:lob_key) }

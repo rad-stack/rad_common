@@ -65,7 +65,7 @@ def add_git_source_and_ruby_version
   end
 end
 
-def s3_bucket_name
+def gcs_bucket_name
   app_name.gsub('_', '-')
 end
 
@@ -76,10 +76,13 @@ def development_credentials
     admin_email: System Admin <admin@example.com>
     from_email: System Admin <admin@example.com>
 
-    s3_region: n/a
-    s3_access_key_id: n/a
-    s3_secret_access_key: n/a
-    s3_bucket: n/a
+    gcs_project_id: n/a
+    gcs_bucket: n/a
+    gcs_private_key_id: n/a
+    gcs_private_key: n/a
+    gcs_client_email: n/a
+    gcs_client_id: n/a
+
 
     hash_key: foobar
     hash_alphabet: abcdefghijklmnopqrstuvwxyz
@@ -105,10 +108,13 @@ def test_credentials
     admin_email: System Admin <admin@example.com>
     from_email: System Admin <admin@example.com>
 
-    s3_region: n/a
-    s3_access_key_id: n/a
-    s3_secret_access_key: n/a
-    s3_bucket: n/a
+    gcs_project_id: n/a
+    gcs_bucket: n/a
+    gcs_private_key_id: n/a
+    gcs_private_key: n/a
+    gcs_client_email: n/a
+    gcs_client_id: n/a
+
 
     twilio_phone_number: #{rad_common_credential('twilio_phone_number')}
     twilio_account_sid: #{rad_common_credential('twilio_account_sid')}
@@ -142,10 +148,13 @@ def production_credentials
     smtp_username: apikey
     smtp_password: insert-value-here
 
-    s3_region: us-east-1
-    s3_access_key_id: n/a
-    s3_secret_access_key: n/a
-    s3_bucket: #{s3_bucket_name}
+    gcs_project_id: insert-value-here
+    gcs_bucket: #{gcs_bucket_name}
+    gcs_private_key_id: insert-value-here
+    gcs_private_key: insert-value-here
+    gcs_client_email: insert-value-here
+    gcs_client_id: insert-value-here
+
 
     twilio_phone_number: insert-value-here
     twilio_account_sid: insert-value-here
