@@ -1,0 +1,32 @@
+.card
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Set Up Authenticator App',
+           icon: 'fa-shield-halved',
+           no_new_button: true,
+           no_delete_button: true,
+           no_index_button: true
+
+  .card-body
+    %p.text-muted
+      Scan the QR code below with your authenticator app, then enter the 6-digit code to complete setup.
+
+    .row
+      .col-md-6
+        .text-center.mb-4
+          .qr-code-container.d-inline-block.p-3.bg-white.border.rounded
+            - qr = RQRCode::QRCode.new(@qr_code_uri)
+            = raw qr.as_svg(color: '000', shape_rendering: 'crispEdges', module_size: 4, standalone: true, use_path: true)
+
+      .col-md-6
+        = form_tag totp_setup_path, method: :post do
+          .mb-3
+            = label_tag :code, 'Verification Code', class: 'form-label'
+            = text_field_tag :code, '', class: 'form-control', autocomplete: 'one-time-code',
+                            inputmode: 'numeric', pattern: '[0-9]*', maxlength: 6,
+                            placeholder: 'Enter 6-digit code', autofocus: true, required: true
+            .form-text.text-muted
+              Enter the code currently displayed in your authenticator app.
+
+          = submit_tag 'Verify and Enable', class: 'btn btn-primary'
+          = link_to 'Cancel', totp_setup_path, class: 'btn btn-outline-secondary ms-2'

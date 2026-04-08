@@ -396,7 +396,7 @@ module RadUser
     end
 
     def require_mobile_phone_two_factor?
-      otp_required_for_login?
+      otp_required_for_login? && twilio_totp_factor_sid.blank?
     end
 
     def password_excludes_name

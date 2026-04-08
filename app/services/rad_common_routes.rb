@@ -85,6 +85,7 @@ module RadCommonRoutes
 
       resources :notifications, only: :index
       resources :notification_settings, only: %i[index create]
+      resource :totp_setup, only: %i[show new create destroy]
       resources :user_profiles, only: %i[edit update] if RadConfig.user_profiles?
       resources :twilio_statuses, only: :create
       resources :sinch_statuses, only: :create

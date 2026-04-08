@@ -1,0 +1,41 @@
+.card
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: 'Authenticator App',
+           icon: 'fa-shield-halved',
+           no_new_button: true,
+           no_delete_button: true,
+           no_index_button: true
+
+  .card-body
+    - if current_user.twilio_totp_factor_sid.present?
+      .alert.alert-success.d-flex.align-items-center
+        %i.fa.fa-check-circle.me-2
+        %span Authenticator app is enabled. You can use your authenticator app to sign in.
+
+      %hr.my-4
+
+      %h6 Disable Authenticator App
+      %p.text-muted
+        If you disable your authenticator app, you will receive SMS codes for two-factor authentication instead.
+
+      = link_to 'Disable Authenticator App', totp_setup_path,
+                method: :delete,
+                class: 'btn btn-outline-danger',
+                data: { confirm: 'Are you sure you want to disable your authenticator app?' }
+
+    - else
+      %p
+        Set up an authenticator app to generate verification codes for two-factor authentication.
+        This is more secure and convenient than SMS codes.
+
+      %h6.mt-4 Supported Apps
+      %ul.text-muted
+        %li Google Authenticator
+        %li Authy
+        %li 1Password
+        %li Microsoft Authenticator
+        %li Any TOTP-compatible app
+
+      %p.mt-4
+        = link_to 'Set Up Authenticator App', new_totp_setup_path, class: 'btn btn-primary'
