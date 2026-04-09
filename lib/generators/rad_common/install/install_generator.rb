@@ -37,6 +37,7 @@ module RadCommon
         add_rad_config_setting 'action_cable_enabled', 'false'
         add_rad_config_setting 'mailer_phone_number', 'false'
         add_rad_config_setting 'additional_user_registration_params', '[]'
+        add_rad_config_setting 'clone_local_exclude', '[]'
         remove_rad_factories
         remove_old_rad_config_settings
         update_credentials
