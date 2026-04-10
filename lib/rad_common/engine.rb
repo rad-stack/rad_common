@@ -5,6 +5,10 @@ module RadCommon
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
 
+    initializer 'rad_common.utf8_sanitizer' do |app|
+      app.middleware.insert_before Rack::Runtime, Rack::UTF8Sanitizer
+    end
+
     ActiveSupport.on_load(:action_controller) do
       include DeviseTwilioVerify::Controllers::Helpers
     end
@@ -47,6 +51,7 @@ module RadCommon
     require 'pretender'
     require 'pundit'
     require 'rack/attack'
+    require 'rack/utf8_sanitizer'
     require 'openai'
     require 'sendgrid-ruby'
     require 'sentry-rails'

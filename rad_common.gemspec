@@ -51,6 +51,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'puma'
   s.add_dependency 'pundit'
   s.add_dependency 'rack-attack'
+  s.add_dependency 'rack-utf8_sanitizer'
   s.add_dependency 'rails', '~> 7.2.3'
   s.add_dependency 'redis'
   s.add_dependency 'ruby-openai'
