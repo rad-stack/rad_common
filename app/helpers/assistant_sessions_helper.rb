@@ -121,11 +121,21 @@ module AssistantSessionsHelper
       current_pair = { question: log, answer: nil, tool_calls: [] }
     elsif log[:role] == 'assistant' && log[:content].present?
       current_pair[:answer] = log
+      current_pair[:usage] = log[:usage]&.transform_keys(&:to_sym)
     elsif log[:type].present?
       current_pair[:tool_calls] << log
     end
 
     [pairs, current_pair]
+  end
+
+  def total_token_usage(qa_pairs)
+    qa_pairs.each_with_object({ input: 0, output: 0 }) do |pair, totals|
+      next unless pair[:usage]
+
+      totals[:input] += pair[:usage][:input_tokens].to_i
+      totals[:output] += pair[:usage][:output_tokens].to_i
+    end
   end
 
   def format_json(value)

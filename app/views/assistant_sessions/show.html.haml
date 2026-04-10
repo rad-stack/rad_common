@@ -4,6 +4,21 @@
   .card-body
     - all_logs = logs_for_session(@assistant_session)
     - qa_pairs = group_logs_into_qa_pairs(all_logs)
+    - totals = total_token_usage(qa_pairs)
+    - if totals[:input].positive?
+      .d-flex.gap-3.px-3.py-2.small.text-muted
+        %span
+          %strong
+            = totals[:input] + totals[:output]
+          total tokens
+        %span
+          %strong
+            = totals[:input]
+          input tokens
+        %span
+          %strong
+            = totals[:output]
+          output tokens
 
     .row.session-split-view
       .col-md-5
@@ -52,7 +67,10 @@
                   .card-header.py-2.bg-primary.bg-opacity-10
                     %small
                       %i.fa.fa-user.me-1
-                      Question
+                      Question &nbsp;
+                      - if pair[:usage]
+                        %span.text-muted
+                          ( #{pair[:usage][:input_tokens]} Tokens ) &nbsp;
                       %span.text-muted.ms-2= pair[:question][:chat_date]
                   .card-body.py-2
                     %pre.mb-0.small.text-pre-wrap.p-2.rounded= pair[:question][:content]
@@ -95,7 +113,10 @@
                   .card-header.py-2.bg-success.bg-opacity-10
                     %small
                       %i.fa.fa-robot.me-1
-                      Answer
+                      Answer &nbsp;
+                      - if pair[:usage]
+                        %span.text-muted
+                          ( #{pair[:usage][:output_tokens]} Tokens ) &nbsp;
                       %span.text-muted.ms-2= pair[:answer][:chat_date]
                   .card-body.py-2
                     %pre.mb-0.small.text-pre-wrap.bg-light.p-2.rounded= pair[:answer][:content]

@@ -35,7 +35,7 @@ module LLM
         return chat(previous_messages: log_items + tool_items)
       end
 
-      log_items << PromptBuilder.build_assistant_message(response.result)
+      log_items << PromptBuilder.build_assistant_message(response.result, response)
       [response.result, log_items]
     end
 
@@ -47,8 +47,10 @@ module LLM
       build_message(role: USER_ROLE, content: content)
     end
 
-    def self.build_assistant_message(content)
-      build_message(role: ASSISTANT_ROLE, content: content)
+    def self.build_assistant_message(content, response = nil)
+      msg = build_message(role: ASSISTANT_ROLE, content: content)
+      msg[:usage] = { input_tokens: response.input_tokens, output_tokens: response.output_tokens } if response
+      msg
     end
 
     def self.formatted_current_date_time
@@ -77,7 +79,7 @@ module LLM
           next if item['role'] == 'system'
           next if expired_call_ids.include?(item['call_id'])
 
-          item.except('chat_date', 'expires_at')
+          item.except('chat_date', 'expires_at', 'usage')
         end
       end
 
