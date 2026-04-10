@@ -44,6 +44,10 @@ module DuplicateFixable
       new.respond_to?(:birth_date)
     end
 
+    def use_current_sign_in_at?
+      new.respond_to?(:current_sign_in_at)
+    end
+
     def birth_date_column?
       column_names.include?('birth_date')
     end

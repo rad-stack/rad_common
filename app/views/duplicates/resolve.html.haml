@@ -30,6 +30,8 @@
           %th Zipcode
         - @model.applicable_duplicate_items.each do |item|
           %th= item[:label]
+        - if @model.use_current_sign_in_at?
+          %th Signed In
         %th Entered
         - if show_actions
           %th Actions
@@ -54,6 +56,8 @@
           %td= @record.zipcode
         - @model.applicable_duplicate_items.each do |item|
           %td= show_duplicate_item item, @record
+        - if @model.use_current_sign_in_at?
+          %td= format_datetime(@record.current_sign_in_at)
         %td= format_date(@record.created_at)
         - if show_actions
           %td
@@ -115,6 +119,8 @@
             %th Zipcode
           - @model.applicable_duplicate_items.each do |item|
             %th= item[:label]
+          - if @model.use_current_sign_in_at?
+            %th Signed In
           %th Entered
           - if show_actions
             %th Actions
@@ -163,6 +169,8 @@
             - @model.applicable_duplicate_items.each do |item|
               %td{ class: duplicate_class(@record.send(item[:name]), record.send(item[:name])) }
                 = show_duplicate_item item, record
+            - if @model.use_current_sign_in_at?
+              %td= format_datetime(record.current_sign_in_at)
             %td
               = format_date(record.created_at)
             - if show_actions
