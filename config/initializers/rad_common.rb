@@ -20,6 +20,8 @@ RadConfig.check_validity!
 Rails.application.routes.default_url_options[:host] = RadConfig.host_name!
 
 if Rails.env.staging? || Rails.env.production?
+  Rails.application.config.hosts = [RadConfig.host_name!]
+
   Rails.application.config.action_mailer.delivery_method = :smtp
   Rails.application.config.action_mailer.perform_deliveries = true
   Rails.application.config.action_mailer.default charset: 'utf-8'
