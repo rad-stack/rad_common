@@ -28,5 +28,13 @@ module LLM
     def output_items
       @output_items ||= @response['output'] || []
     end
+
+    def input_tokens
+      @response['usage']['input_tokens']
+    end
+
+    def output_tokens
+      @response['usage']['output_tokens']
+    end
   end
 end
