@@ -138,8 +138,6 @@ module RadCommon
         gsub_file 'bin/setup', 'dummy', installed_app_name # TODO: Remove in Rails 8
 
         # locales
-        copy_file '../../../../../spec/dummy/config/locales/devise.twilio_verify.en.yml',
-                  'config/locales/devise.twilio_verify.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/devise_invitable.en.yml',
                   'config/locales/devise_invitable.en.yml'
         copy_file '../../../../../spec/dummy/config/locales/devise.en.yml', 'config/locales/devise.en.yml'
@@ -792,6 +790,7 @@ gem 'propshaft'
           apply_migration '20251103191522_remove_embedding_metadata.rb'
           apply_migration '20251103194914_create_search_preferences.rb'
           apply_migration '20251120171951_remove_legacy_filter_settings.rb'
+          apply_migration '20250930134000_add_devise_two_factor_to_users.rb'
           apply_migration '20260110093403_rename_twilio_verify_enabled.rb'
           apply_migration '20260211190217_add_notification_type_defaults.rb'
           apply_migration '20260326120000_fix_new_user_signed_up_notification.rb'
