@@ -49,9 +49,7 @@ module LLM
 
     def self.build_assistant_message(content, response = nil)
       msg = build_message(role: ASSISTANT_ROLE, content: content)
-      if response
-        msg[:usage] = { input_tokens: response.input_tokens, output_tokens: response.output_tokens }
-      end
+      msg[:usage] = { input_tokens: response.input_tokens, output_tokens: response.output_tokens } if response
       msg
     end
 

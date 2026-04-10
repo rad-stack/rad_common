@@ -5,7 +5,7 @@
     - all_logs = logs_for_session(@assistant_session)
     - qa_pairs = group_logs_into_qa_pairs(all_logs)
     - totals = total_token_usage(qa_pairs)
-    - if totals[:input] > 0
+    - if totals[:input].positive?
       .d-flex.gap-3.px-3.py-2.small.text-muted
         %span
           %strong

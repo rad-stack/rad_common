@@ -132,11 +132,12 @@ module AssistantSessionsHelper
   def total_token_usage(qa_pairs)
     qa_pairs.each_with_object({ input: 0, output: 0 }) do |pair, totals|
       next unless pair[:usage]
+
       totals[:input] += pair[:usage][:input_tokens].to_i
       totals[:output] += pair[:usage][:output_tokens].to_i
     end
   end
-  
+
   def format_json(value)
     return value if value.blank?
 
