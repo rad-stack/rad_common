@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe RadSearch::Search, type: :service do
   let(:user) { create :user }
 
+  before { create :admin }
+
   describe 'results' do
     subject(:search) do
       described_class.new(query: query,

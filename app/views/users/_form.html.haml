@@ -13,11 +13,9 @@
       - if RadConfig.switch_languages?
         .col-lg-3= f.input :language, collection: options_for_enum(User, :language)
       .col-lg-3= f.input :timezone, as: :time_zone, priority: timezone_us_filter
-    .row
-      - if RadConfig.external_users?
+    - if RadConfig.external_users?
+      .row
         .col-lg-3= f.input :external, disabled: !current_user.permission?(:manage_user)
-      - if RadConfig.two_factor_auth_enabled? && !RadConfig.two_factor_auth_all_users?
-        .col-lg-3= f.input :otp_required_for_login
     .row
       -# https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
       .col-lg-6= f.input :password, autocomplete: 'off', input_html: { autocomplete: 'new-password' }

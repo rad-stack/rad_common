@@ -3,11 +3,15 @@ class AssistantSessionPolicy < ApplicationPolicy
     update?
   end
 
-  def check_response?
+  def reset_chat?
     update?
   end
 
-  def reset_chat?
+  def mentions?
     update?
+  end
+
+  def create?
+    RadConfig.open_ai_api_key.present? && user.permission?(:admin)
   end
 end
