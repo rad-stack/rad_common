@@ -3,6 +3,20 @@ require 'optparse'
 require_relative 'rad_bin'
 require_relative '../app/services/heroku_commands'
 
+def additional_excluded_tables
+  config = YAML.load_file('config/rad_common.yml', aliases: true)
+  env = ENV['RAILS_ENV'] || 'development'
+  config.dig(env, 'clone_local_exclude') || []
+end
+
+def profile_description(base_tables, extra_tables, label)
+  all_tables = (base_tables + extra_tables).uniq
+
+  return "#{label} (include all tables)" if all_tables.empty?
+
+  "#{label} (excludes #{all_tables.join(', ')})"
+end
+
 def run_interactive_clone(backup_option)
   prompt = TTY::Prompt.new
 
@@ -11,26 +25,42 @@ def run_interactive_clone(backup_option)
     menu.choice 'From a local backup file (/heroku_backups)', :local
   end
 
+  extra = additional_excluded_tables
+
   profile = prompt.select('Which restore profile would you like to use?') do |menu|
-    menu.choice 'Full (include all tables)', 'full'
-    menu.choice 'Exclude audits only', 'exclude_audits'
-    menu.choice 'Minimal (excludes audits, contact_logs, contact_log_recipients and embeddings)', 'minimal'
+    menu.choice profile_description([], extra, 'Full'), 'full'
+    menu.choice profile_description(%w[audits], extra, 'Exclude audits'), 'exclude_audits'
+    menu.choice profile_description(%w[audits contact_logs contact_log_recipients embeddings], extra, 'Minimal'), 'minimal'
   end
 
   if restore_source == :remote
-    run_remote_restore(profile, backup_option)
+    dump_method = 'backup'
+
+    dump_method_choice = prompt.select('How would you like to download?') do |menu|
+      menu.choice 'Standard (Heroku backup capture + download full dump)', 'backup'
+      menu.choice 'pg:pull (pulls directly from Heroku DB, excludes tables at dump time - faster)', 'pg_pull'
+    end
+    dump_method = dump_method_choice
+
+    run_remote_restore(profile, backup_option, dump_method)
   else
     run_local_restore(profile)
   end
 end
 
-def run_remote_restore(profile, backup_option)
+def run_remote_restore(profile, backup_option, dump_method = 'backup')
   heroku_app_name = RadBin.get_heroku_app_name(:all)
-  backup_id = backup_option.is_a?(String) ? backup_option : RadBin.select_backup_id(heroku_app_name)
 
-  puts "Cloning from remote Heroku backup with profile '#{profile}'"
-  args = [heroku_app_name, profile, backup_id].compact
-  RadBin.system!("bundle exec rails \"heroku:clone_local[#{args.join(', ')}]\"")
+  if dump_method == 'pg_pull'
+    puts "Pulling from Heroku database with profile '#{profile}'"
+    RadBin.system!("bundle exec rails \"heroku:clone_local[#{heroku_app_name},#{profile},,pg_pull]\"")
+  else
+    backup_id = backup_option.is_a?(String) ? backup_option : RadBin.select_backup_id(heroku_app_name)
+
+    puts "Cloning from remote Heroku backup with profile '#{profile}'"
+    args = [heroku_app_name, profile, backup_id].compact
+    RadBin.system!("bundle exec rails \"heroku:clone_local[#{args.join(', ')}]\"")
+  end
 end
 
 def run_local_restore(profile)

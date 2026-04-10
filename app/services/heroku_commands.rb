@@ -69,8 +69,12 @@ class HerokuCommands
       write_log `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
     end
 
-    def clone(app_name, profile = 'full', backup_id = nil)
-      clone_via_backup(app_name, profile, backup_id)
+    def clone(app_name, profile = 'full', backup_id = nil, method = 'backup')
+      if method.to_s == 'pg_pull'
+        clone_via_pg_pull(app_name, profile)
+      else
+        clone_via_backup(app_name, profile, backup_id)
+      end
     end
 
     def reset_staging(app_name)
@@ -137,6 +141,48 @@ class HerokuCommands
 
         write_log 'Deleting temporary dump file'
         write_log `rm #{clone_dump_file}`
+      end
+
+      def clone_via_pg_pull(app_name, profile)
+        check_production!
+        start_time = Time.now.utc
+
+        pull_heroku_database(app_name, profile)
+
+        write_log 'Migrating database'
+        write_log `skip_on_db_migrate=1 rake db:migrate`
+
+        clean_local_data
+
+        duration = Time.now.utc - start_time
+        write_log "Restore complete in #{duration.round(2)} seconds"
+      end
+
+      def pull_heroku_database(app_name, profile)
+        Bundler.with_unbundled_env do
+          check_valid_app(app_name)
+
+          write_log "Dropping and recreating local database '#{dbname}'"
+          `dropdb --if-exists -h #{local_host} -U #{local_user} #{dbname}`
+
+          tables = excluded_tables(profile)
+          exclude_flag = tables.any? ? "--exclude-table-data '#{tables.join(';')}'" : ''
+
+          write_log "Pulling from Heroku database (profile: #{profile})..."
+          command = "heroku pg:pull DATABASE_URL #{dbname} #{app_option(app_name)} #{exclude_flag}".strip
+          write_log command
+          system(command) || raise('heroku pg:pull failed')
+        end
+      end
+
+      def clean_local_data
+        reset_sensitive_local_data
+        write_log 'Clearing certain production data'
+        remove_user_avatars
+        remove_encrypted_secrets
+        SecurityRole.update_all two_factor_auth: false
+        Company.main.app_logo.purge if Company.main.app_logo.attached?
+        Company.main.fav_icon.purge if Company.main.fav_icon.attached?
       end
 
       def restore_command(file_name, restore_list_file)
@@ -242,7 +288,7 @@ class HerokuCommands
         tables = EXCLUDED_TABLES[profile.to_s]
         raise "Unknown restore profile: #{profile}" if tables.nil?
 
-        tables
+        (tables + RadConfig.clone_local_exclude!).uniq
       end
 
       def reset_sensitive_local_data
