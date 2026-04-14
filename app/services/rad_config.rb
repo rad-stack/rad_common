@@ -308,6 +308,10 @@ class RadConfig
       boolean_config_item! :app_logo_includes_name
     end
 
+    def mailer_phone_number?
+      boolean_config_item! :mailer_phone_number
+    end
+
     def user_clients?
       boolean_config_item! :user_clients
     end
@@ -356,6 +360,10 @@ class RadConfig
       array_config_item! :additional_user_profile_params
     end
 
+    def additional_user_registration_params!
+      array_config_item! :additional_user_registration_params
+    end
+
     def restricted_audit_attributes!
       array_config_item! :restricted_audit_attributes
     end
@@ -388,6 +396,10 @@ class RadConfig
 
     def global_validity_supress!
       array_config_item! :global_validity_supress
+    end
+
+    def clone_local_exclude!
+      array_config_item! :clone_local_exclude
     end
 
     def duplicates!
