@@ -6,7 +6,7 @@ module RadCommon
     end
 
     initializer 'rad_common.utf8_sanitizer' do |app|
-      app.middleware.insert_before Rack::Runtime, Rack::UTF8Sanitizer, strategy: :exception
+      app.middleware.insert_before Rack::Runtime, Rack::UTF8Sanitizer
     end
 
     ActiveSupport.on_load(:action_controller) do
