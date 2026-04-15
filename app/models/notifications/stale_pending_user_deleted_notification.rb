@@ -1,9 +1,11 @@
 module Notifications
   class StalePendingUserDeletedNotification < ::NotificationType
     def mailer_message
-      "#{payload[:name]} was deleted because they were pending for more than #{RadUser::STALE_PENDING_DAYS} days. " \
-        "Email: #{payload[:email]}, Mobile Phone: #{payload[:mobile_phone] || 'N/A'}, " \
-        "Created: #{ApplicationController.helpers.format_date(payload[:created_at])}"
+      message = "#{payload[:name]} was deleted because they were pending for more than #{RadUser::STALE_PENDING_DAYS} days."
+      message += "\n\n\u2022 Email: #{payload[:email]}"
+      message += "\n\n\u2022 Mobile Phone: #{payload[:mobile_phone] || 'N/A'}"
+      message += "\n\n\u2022 Created: #{ApplicationController.helpers.format_date(payload[:created_at])}"
+      message
     end
 
     def subject_record
