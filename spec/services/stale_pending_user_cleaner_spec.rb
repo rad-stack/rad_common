@@ -41,7 +41,7 @@ describe StalePendingUserCleaner, type: :service do
     end
 
     context 'when there are no stale pending users' do
-      let!(:fresh_pending_user) { create :user, user_status: pending_status }
+      before { create :user, user_status: pending_status }
 
       it 'does not send a notification' do
         service.run

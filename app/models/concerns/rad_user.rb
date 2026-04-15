@@ -150,7 +150,9 @@ module RadUser
   def stale?
     raise 'not applicable to inactive users' if user_status == UserStatus.default_inactive_status
 
-    return created_at < STALE_PENDING_DAYS.days.ago if RadConfig.pending_users? && user_status == UserStatus.default_pending_status
+    if RadConfig.pending_users? && user_status == UserStatus.default_pending_status
+      return created_at < STALE_PENDING_DAYS.days.ago
+    end
 
     return false if updated_at > 1.week.ago
     return false if current_sign_in_at.present? && current_sign_in_at > 1.week.ago
