@@ -398,6 +398,10 @@ class RadConfig
       array_config_item! :global_validity_supress
     end
 
+    def clone_local_exclude!
+      array_config_item! :clone_local_exclude
+    end
+
     def duplicates!
       array_config_item! :duplicates
     end
