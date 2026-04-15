@@ -77,8 +77,7 @@ class RadSendgridStatusReceiver
     end
 
     def deactivate_user?
-      return false unless suppression? && user.present?
-      return false unless user.active?
+      return false unless suppression? && user.present? && user.active?
 
       spam_report? || user.stale? || user.needs_reactivate?
     end
