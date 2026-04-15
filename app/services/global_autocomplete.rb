@@ -170,15 +170,19 @@ class GlobalAutocomplete
     end
 
     def data_type(column)
-      klass.new.has_attribute?(column) ? column_def(column).type : :string
+      klass.new.has_attribute?(attribute_name(column)) ? column_def(column).type : :string
     end
 
     def array?(column)
-      klass.new.has_attribute?(column) ? column_def(column).array : false
+      klass.new.has_attribute?(attribute_name(column)) ? column_def(column).array : false
     end
 
     def column_def(column)
-      klass.new.column_for_attribute(column)
+      klass.new.column_for_attribute(attribute_name(column))
+    end
+
+    def attribute_name(column)
+      column.to_s.split('.').last
     end
 
     def scope_with_where?(scope)
