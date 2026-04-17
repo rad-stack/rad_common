@@ -14,6 +14,10 @@ class SystemUsageSearch < RadSearch::Search
     usage_data[item_index].sum { |item| item[:value] }
   end
 
+  def last_period_complete?
+    date_column_ranges.last[:end] <= Time.current
+  end
+
   def usage_data
     @usage_data ||=
       usage_items.map do |item|
