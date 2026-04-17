@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_26_120000) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_17_100215) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -327,6 +327,17 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_26_120000) do
     t.index ["password_archivable_type", "password_archivable_id"], name: "index_password_archivable"
   end
 
+  create_table "push_subscriptions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.text "endpoint", null: false
+    t.string "p256dh", null: false
+    t.string "auth", null: false
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "endpoint"], name: "index_push_subscriptions_on_user_id_and_endpoint", unique: true
+  end
+
   create_table "saved_search_filters", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "user_id", null: false
@@ -490,6 +501,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_26_120000) do
   add_foreign_key "notification_settings", "users"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
+  add_foreign_key "push_subscriptions", "users"
   add_foreign_key "saved_search_filters", "users"
   add_foreign_key "search_preferences", "users"
   add_foreign_key "system_messages", "security_roles"

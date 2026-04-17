@@ -85,6 +85,12 @@ module RadCommonRoutes
 
       resources :notifications, only: :index
       resources :notification_settings, only: %i[index create]
+      resources :push_subscriptions, only: :create do
+        collection do
+          get :vapid_public_key
+          delete :unsubscribe
+        end
+      end
       resources :user_profiles, only: %i[edit update] if RadConfig.user_profiles?
       resources :twilio_statuses, only: :create
       resources :sinch_statuses, only: :create
