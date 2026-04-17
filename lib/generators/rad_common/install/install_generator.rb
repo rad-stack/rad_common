@@ -476,11 +476,6 @@ Seeder.new.seed!
         end
 
         def install_session_store
-          if User.ancestors.include?(RadDeviseHigh)
-            remove_file 'config/initializers/session_store.rb'
-            return
-          end
-
           copy_file '../session_store.rb', 'config/initializers/session_store.rb'
         end
 
