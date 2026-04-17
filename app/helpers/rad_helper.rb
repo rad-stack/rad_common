@@ -298,14 +298,12 @@ module RadHelper
   end
 
   def portal_subdomain?
-    # TODO: temp hack for IJS project
     return false unless RadConfig.portal?
 
     request.subdomain == 'patient' || request.subdomain.starts_with?('patient-staging')
   end
 
   def application_page_title
-    # TODO: temp hack for IJS project
     return RadConfig.app_name! unless RadConfig.portal?
 
     if request.subdomain.starts_with? 'patient'
