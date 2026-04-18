@@ -15,6 +15,7 @@ import { Duplicates } from './duplicates';
 import { RadTomSelect } from './radTomSelect';
 import { SentryTest } from './sentry';
 import { ActionTextFileValidations } from './actionTextFileValidations';
+import { PushNotificationClient } from './pushNotificationClient';
 import 'chartkick/chart.js';
 
 import './radTurbo';
@@ -32,6 +33,7 @@ export class RadCommon {
       SentryTest.setup();
       RadTomSelect.setup();
       ActionTextFileValidations.setup();
+      PushNotificationClient.setup();
     });
 
     document.addEventListener('turbo:before-stream-render', (event) => {

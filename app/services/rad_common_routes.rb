@@ -119,6 +119,7 @@ module RadCommonRoutes
       root to: 'pages#home'
 
       get '/robots.:format', to: 'robots#robots'
+      get '/manifest.json', to: 'manifest#show'
     end
   end
 end
