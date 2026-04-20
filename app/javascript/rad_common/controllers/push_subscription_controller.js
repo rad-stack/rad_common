@@ -6,7 +6,6 @@ export default class extends Controller {
 
   async connect() {
     if (!this.isPushSupported()) {
-      console.log('[PushSubscription] Push notifications not supported');
       this.updateStatusDisplay('unsupported');
       return;
     }
@@ -21,8 +20,7 @@ export default class extends Controller {
 
   async registerServiceWorker() {
     try {
-      const registration = await navigator.serviceWorker.register('/service-worker.js');
-      console.log('[PushSubscription] Service worker registered:', registration.scope);
+      await navigator.serviceWorker.register('/service-worker.js');
     } catch (error) {
       console.error('[PushSubscription] Service worker registration failed:', error);
     }
@@ -130,7 +128,6 @@ export default class extends Controller {
         const endpoint = subscription.endpoint;
         await subscription.unsubscribe();
         await this.removeSubscriptionFromServer(endpoint);
-        console.log('[PushSubscription] Unsubscribed successfully');
         this.updateStatusDisplay('default');
       }
     } catch (error) {
