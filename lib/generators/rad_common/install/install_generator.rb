@@ -106,6 +106,7 @@ module RadCommon
 
         if RadConfig.action_cable_enabled?
           copy_file '../../../../../spec/dummy/config/cable.yml', 'config/cable.yml'
+          copy_file 'service-worker.js', 'public/service-worker.js'
         end
 
         copy_file '../../../../../spec/dummy/config/application.rb', 'config/application.rb'
@@ -796,6 +797,7 @@ gem 'propshaft'
           apply_migration '20260211190217_add_notification_type_defaults.rb'
           apply_migration '20260326120000_fix_new_user_signed_up_notification.rb'
           apply_migration '20260324000000_remove_otp_required_for_login.rb'
+          apply_migration '20260417100215_create_push_subscriptions.rb'
         end
 
         def installed_app_name

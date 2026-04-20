@@ -5,6 +5,10 @@
     %meta{ 'http-equiv': 'X-UA-Compatible', content: 'IE=Edge,chrome=1' }
     %meta{ name: 'viewport', content: 'width=device-width, initial-scale=1.0' }
     %link{ rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }
+    - if RadConfig.browser_notifications_enabled?
+      %link{ rel: 'manifest', href: '/manifest.json' }
+      %meta{ name: 'apple-mobile-web-app-capable', content: 'yes' }
+      = ios_splash_screen_tags
     %title= content_for?(:title) ? yield(:title) : application_page_title
     = csrf_meta_tags
     = favicon_link_tag company_fav_icon(Company.main), rel: 'shortcut icon'
