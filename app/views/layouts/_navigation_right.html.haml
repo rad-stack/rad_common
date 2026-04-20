@@ -46,8 +46,14 @@
                     class: 'dropdown-item'
   - else
     - if !@marketing_site || RadConfig.show_sign_in_marketing?
-      %li= link_to t('navigation.sign_in'), new_user_session_url(host: RadConfig.host_name!), class: 'nav-link'
-    - unless RadConfig.disable_sign_up?
+      - if RadConfig.portal?
+        %li= link_to t('navigation.sign_in'), new_user_session_path, class: 'nav-link'
+      - else
+        %li= link_to t('navigation.sign_in'), new_user_session_url(host: RadConfig.host_name!), class: 'nav-link'
+    - if RadConfig.portal?
+      - if portal_subdomain?
+        %li= link_to t('navigation.sign_up'), new_user_registration_path, class: 'nav-link'
+    - elsif !RadConfig.disable_sign_up?
       %li= link_to t('navigation.sign_up'), new_user_registration_url(host: RadConfig.host_name!), class: 'nav-link'
 
   = render 'layouts/navigation_help'
