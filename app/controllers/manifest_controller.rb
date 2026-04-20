@@ -12,8 +12,14 @@ class ManifestController < ApplicationController
       background_color: '#ffffff',
       theme_color: '#ffffff',
       icons: [
-        { src: '/manifest-icon-192.maskable.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
-        { src: '/manifest-icon-512.maskable.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+        { src: '/manifest-icon-192.maskable.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+        { src: '/manifest-icon-512.maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        { src: '/manifest-icon-192.maskable.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+        { src: '/manifest-icon-512.maskable.png', sizes: '512x512', type: 'image/png', purpose: 'any' }
+      ],
+      screenshots: [
+        { src: '/screenshot-wide.png', sizes: '1280x720', type: 'image/png', form_factor: 'wide', label: RadConfig.app_name! },
+        { src: '/screenshot-narrow.png', sizes: '720x1280', type: 'image/png', form_factor: 'narrow', label: RadConfig.app_name! }
       ]
     }
   end
