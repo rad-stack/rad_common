@@ -23,9 +23,25 @@ describe 'Users' do
     context 'when user is an admin' do
       let(:user) { create :admin }
 
+      before do
+        allow(RadConfig).to receive(:developer_domain!).and_return('not-example.com')
+        visit edit_user_path user
+      end
+
       it "doesn't allow changing email" do
         expect(find_field('user_email', disabled: true).value).to eq(user.email)
         expect(find(:label, for: 'user_user_status_id').text).to eq('* User Status')
+      end
+
+      context 'when current user is a developer' do
+        before do
+          allow(RadConfig).to receive(:developer_domain!).and_return('example.com')
+          visit edit_user_path user
+        end
+
+        it 'allows changing email' do
+          expect(find_field('user_email', disabled: false).value).to eq(user.email)
+        end
       end
     end
 

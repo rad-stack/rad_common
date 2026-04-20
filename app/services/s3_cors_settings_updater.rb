@@ -1,3 +1,5 @@
+require 'aws-sdk-s3'
+
 class S3CorsSettingsUpdater
   def update!
     s3_client.put_bucket_cors(
