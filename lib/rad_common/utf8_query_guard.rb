@@ -8,7 +8,7 @@ module RadCommon
 
     def call(env)
       query = env['QUERY_STRING']
-      return @app.call(env) if query.nil? || query.empty? || valid_utf8?(query)
+      return @app.call(env) if query.blank? || valid_utf8?(query)
       return [400, { 'content-type' => 'text/plain' }, ['Bad Request']] unless authenticated?(env)
 
       raise InvalidUtf8Query, "Invalid UTF-8 in query string: #{query.inspect}"
