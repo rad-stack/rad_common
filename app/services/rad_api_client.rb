@@ -30,7 +30,7 @@ class RadApiClient
 
     def connection(params: {})
       Faraday.new(url: @host, params: params, headers: default_headers) do |faraday|
-        faraday.request :authorization, :basic, api_username, api_password
+        faraday.request :authorization, :basic, api_username, api_password if basic_auth?
         faraday.request :json
         faraday.response :json, content_type: /\bjson$/
         faraday.adapter Faraday.default_adapter
