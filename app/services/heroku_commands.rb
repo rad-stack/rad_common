@@ -5,8 +5,8 @@ class HerokuCommands
 
   EXCLUDED_TABLES = {
     'full' => [],
-    'minimal' => %w[active_storage_attachments active_storage_blobs audits contact_logs contact_log_recipients
-                    embeddings login_activities]
+    'minimal' => %w[active_storage_attachments active_storage_blobs active_storage_variant_records audits
+                    contact_logs contact_log_recipients embeddings login_activities]
   }.freeze
 
   class << self
