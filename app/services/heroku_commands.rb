@@ -70,7 +70,7 @@ class HerokuCommands
       write_log `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
     end
 
-    def clone(app_name, profile = 'full', backup_id = nil, method = 'backup', custom_exclude = nil)
+    def clone(app_name, profile: 'full', backup_id: nil, method: 'backup', custom_exclude: nil)
       if method.to_s == 'pg_pull'
         clone_via_pg_pull(app_name, profile, custom_exclude)
       else

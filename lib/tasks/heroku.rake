@@ -9,10 +9,10 @@ namespace :heroku do
     # rails "heroku:clone_local[better-way-ars,minimal,,pg_pull]"
 
     HerokuCommands.clone(args[:heroku_app],
-                         args[:profile] || 'full',
-                         args[:backup_id],
-                         args[:method] || 'backup',
-                         args[:custom_exclude])
+                         profile: args[:profile] || 'full',
+                         backup_id: args[:backup_id],
+                         method: args[:method] || 'backup',
+                         custom_exclude: args[:custom_exclude])
   end
 
   task :copy_production_to_staging, %i[production_heroku_app staging_heroku_app] => :environment do |_t, args|
