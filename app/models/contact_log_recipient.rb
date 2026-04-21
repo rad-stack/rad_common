@@ -135,7 +135,7 @@ class ContactLogRecipient < ApplicationRecord
       return if contact_log.blank?
       return if destroyed_by_association&.active_record == ContactLog
 
-      contact_log.destroy if contact_log.contact_log_recipients.reload.empty?
+      contact_log.destroy! if contact_log.contact_log_recipients.reload.empty?
     end
 
     def validate_incoming_fields
