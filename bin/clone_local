@@ -33,6 +33,8 @@ def run_interactive_clone(backup_option)
     menu.choice profile_description(%w[audits contact_logs contact_log_recipients embeddings], extra, 'Minimal'), 'minimal'
   end
 
+  custom_exclude = customize_minimal_exclusions(profile, prompt)
+
   if restore_source == :remote
     dump_method = 'backup'
 
@@ -42,28 +44,42 @@ def run_interactive_clone(backup_option)
     end
     dump_method = dump_method_choice
 
-    run_remote_restore(profile, backup_option, dump_method)
+    run_remote_restore(profile, backup_option, dump_method, custom_exclude)
   else
-    run_local_restore(profile)
+    run_local_restore(profile, custom_exclude)
   end
 end
 
-def run_remote_restore(profile, backup_option, dump_method = 'backup')
+def customize_minimal_exclusions(profile, prompt)
+  return nil unless profile == 'minimal'
+  return nil unless prompt.yes?('Would you like to customize which tables to exclude?', default: false)
+
+  minimal_tables = HerokuCommands::EXCLUDED_TABLES['minimal']
+  selected = prompt.multi_select('Select tables to exclude (uncheck to keep the data):',
+                                 minimal_tables,
+                                 default: (1..minimal_tables.length).to_a,
+                                 per_page: minimal_tables.length)
+
+  selected.empty? ? 'none' : selected.join(';')
+end
+
+def run_remote_restore(profile, backup_option, dump_method = 'backup', custom_exclude = nil)
   heroku_app_name = RadBin.get_heroku_app_name(:all)
 
   if dump_method == 'pg_pull'
     puts "Pulling from Heroku database with profile '#{profile}'"
-    RadBin.system!("bundle exec rails \"heroku:clone_local[#{heroku_app_name},#{profile},,pg_pull]\"")
+    rake_args = "#{heroku_app_name},#{profile},,pg_pull,#{custom_exclude}"
   else
     backup_id = backup_option.is_a?(String) ? backup_option : RadBin.select_backup_id(heroku_app_name)
 
     puts "Cloning from remote Heroku backup with profile '#{profile}'"
-    args = [heroku_app_name, profile, backup_id].compact
-    RadBin.system!("bundle exec rails \"heroku:clone_local[#{args.join(', ')}]\"")
+    rake_args = "#{heroku_app_name},#{profile},#{backup_id},backup,#{custom_exclude}"
   end
+
+  RadBin.system!("bundle exec rails \"heroku:clone_local[#{rake_args}]\"")
 end
 
-def run_local_restore(profile)
+def run_local_restore(profile, custom_exclude = nil)
   prompt = TTY::Prompt.new
   backup_dir = "#{Dir.pwd}/heroku_backups"
   files = Dir.glob("#{backup_dir}/*.backup").reverse
@@ -78,7 +94,7 @@ def run_local_restore(profile)
   selected_file = files[display_names.index(choice)]
 
   puts "Restoring from local file: #{selected_file}"
-  RadBin.system!("bundle exec rails \"local:restore_from_backup[#{selected_file},#{profile}]\"")
+  RadBin.system!("bundle exec rails \"local:restore_from_backup[#{selected_file},#{profile},#{custom_exclude}]\"")
 end
 
 def run_default_clone
