@@ -30,15 +30,7 @@ class HerokuCommands
     def restore_from_backup(file_name, profile = 'full', custom_exclude = nil)
       start_time = Time.now.utc
 
-      write_log 'Dropping existing database schema'
-      command = [
-        'psql -c',
-        '"DROP SCHEMA public CASCADE; CREATE SCHEMA public"',
-        "-h #{local_host}",
-        "-U #{local_user}",
-        "-d #{dbname}"
-      ].join(' ')
-      write_log `#{command}`
+      drop_local_schema
 
       restore_list_file = 'restore_list.txt'
       generate_restore_list(file_name, profile, restore_list_file, custom_exclude)
@@ -52,13 +44,7 @@ class HerokuCommands
       write_log 'Migrating database'
       write_log `skip_on_db_migrate=1 rake db:migrate`
 
-      reset_sensitive_local_data
-      write_log 'Clearing certain production data'
-      remove_user_avatars
-      remove_encrypted_secrets
-      SecurityRole.update_all two_factor_auth: false
-      Company.main.app_logo.purge if Company.main.app_logo.attached?
-      Company.main.fav_icon.purge if Company.main.fav_icon.attached?
+      clean_local_data
 
       duration = Time.now.utc - start_time
       write_log "Restore complete in #{duration.round(2)} seconds"
@@ -184,6 +170,18 @@ class HerokuCommands
         SecurityRole.update_all two_factor_auth: false
         Company.main.app_logo.purge if Company.main.app_logo.attached?
         Company.main.fav_icon.purge if Company.main.fav_icon.attached?
+      end
+
+      def drop_local_schema
+        write_log 'Dropping existing database schema'
+        command = [
+          'psql -c',
+          '"DROP SCHEMA public CASCADE; CREATE SCHEMA public"',
+          "-h #{local_host}",
+          "-U #{local_user}",
+          "-d #{dbname}"
+        ].join(' ')
+        write_log `#{command}`
       end
 
       def restore_command(file_name, restore_list_file)
