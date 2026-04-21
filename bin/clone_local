@@ -26,11 +26,11 @@ def run_interactive_clone(backup_option)
   end
 
   extra = additional_excluded_tables
+  excluded = HerokuCommands::EXCLUDED_TABLES
 
   profile = prompt.select('Which restore profile would you like to use?') do |menu|
-    menu.choice profile_description([], extra, 'Full'), 'full'
-    menu.choice profile_description(%w[audits], extra, 'Exclude audits'), 'exclude_audits'
-    menu.choice profile_description(%w[audits contact_logs contact_log_recipients embeddings], extra, 'Minimal'), 'minimal'
+    menu.choice profile_description(excluded['full'], extra, 'Full'), 'full'
+    menu.choice profile_description(excluded['minimal'], extra, 'Minimal'), 'minimal'
   end
 
   custom_exclude = customize_minimal_exclusions(profile, prompt)
