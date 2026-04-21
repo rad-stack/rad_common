@@ -67,6 +67,7 @@ class ContactLogRecipient < ApplicationRecord
   before_validation :check_success
   before_validation :check_sms_false_positive
   after_validation :assign_to_user
+  after_destroy :destroy_orphaned_contact_log
   after_commit :notify!, only: :update, if: :notify_failure?
 
   audited
@@ -128,6 +129,13 @@ class ContactLogRecipient < ApplicationRecord
         users = User.where(mobile_phone: phone_number).select(&:active?)
         self.to_user = users.first if users.size == 1
       end
+    end
+
+    def destroy_orphaned_contact_log
+      return if contact_log.blank?
+      return if destroyed_by_association&.active_record == ContactLog
+
+      contact_log.destroy if contact_log.contact_log_recipients.reload.empty?
     end
 
     def validate_incoming_fields

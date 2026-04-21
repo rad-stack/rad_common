@@ -165,4 +165,39 @@ RSpec.describe ContactLogRecipient do
       end
     end
   end
+
+  describe 'destroying' do
+    let(:contact_log) { create :contact_log, :email, from_user: nil }
+
+    let!(:recipient) do
+      create :contact_log_recipient, :email, contact_log: contact_log, email: admin.email, to_user: admin
+    end
+
+    context 'when the last recipient is destroyed' do
+      it 'destroys the contact log' do
+        expect { recipient.destroy! }.to change(ContactLog, :count).by(-1)
+        expect(ContactLog.exists?(contact_log.id)).to be false
+      end
+    end
+
+    context 'when other recipients remain' do
+      let(:other_admin) { create :admin, security_roles: [admin_role] }
+
+      before do
+        create :contact_log_recipient, :email, contact_log: contact_log, email: other_admin.email, to_user: other_admin
+      end
+
+      it 'leaves the contact log in place' do
+        expect { recipient.destroy! }.not_to change(ContactLog, :count)
+        expect(ContactLog.exists?(contact_log.id)).to be true
+      end
+    end
+
+    context 'when the to_user is destroyed and cascades' do
+      it 'destroys the orphaned contact log' do
+        expect { admin.destroy! }.to change(ContactLog, :count).by(-1)
+        expect(ContactLog.exists?(contact_log.id)).to be false
+      end
+    end
+  end
 end
