@@ -11,8 +11,8 @@ module Notifications
       mailer_message
     end
 
-    def sms_content
-      "#{mailer_message}: #{subject_url}"
+    def sms_content(_user_id)
+      "#{mailer_message}: #{subject_url(_user_id)}"
     end
 
     def subject_record

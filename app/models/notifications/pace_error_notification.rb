@@ -22,7 +22,7 @@ module Notifications
       payload[:object_type]
     end
 
-    def subject_url
+    def subject_url(_user_id)
       '/'
     end
   end

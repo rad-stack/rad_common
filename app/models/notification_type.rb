@@ -37,6 +37,10 @@ class NotificationType < ApplicationRecord
     true
   end
 
+  def user_based_emails?
+    false
+  end
+
   def mailer_class
     'NotificationMailer'
   end
@@ -57,13 +61,13 @@ class NotificationType < ApplicationRecord
 
   def mailer_contact_log_from_user; end
 
-  def mailer_options
+  def mailer_options(user_id)
     items = {}
 
-    if subject_url.present?
+    if subject_url(user_id).present?
       items = items.merge({ email_action: { message: 'Click here to view the details.',
                                             button_text: 'View',
-                                            button_url: subject_url } })
+                                            button_url: subject_url(user_id) } })
     end
 
     if mailer_contact_log_from_user.present?
@@ -87,11 +91,11 @@ class NotificationType < ApplicationRecord
     description
   end
 
-  def sms_content
-    "#{description}: #{subject_url}"
+  def sms_content(_user_id)
+    "#{description}: #{subject_url(_user_id)}"
   end
 
-  def subject_url
+  def subject_url(_user_id)
     return if subject_record.blank? || !ApplicationController.helpers.show_route_exists?(subject_record)
 
     Rails.application.routes.url_helpers.url_for(subject_record)
@@ -215,12 +219,20 @@ class NotificationType < ApplicationRecord
       id_list = notify_user_ids_opted(:email)
       return if id_list.count.zero?
 
+      if user_based_emails?
+        notify_email_per_user!(id_list)
+      else
+        notify_email_batch!(id_list)
+      end
+    end
+
+    def notify_email_batch!(id_list)
       if mailer_class == 'NotificationMailer' && mailer_method == 'simple_message'
         NotificationMailer.simple_message(self,
                                           id_list,
                                           mailer_subject,
                                           mailer_message,
-                                          mailer_options).deliver_later
+                                          mailer_options(nil)).deliver_later
       else
         mailer = mailer_class.constantize
 
@@ -229,6 +241,26 @@ class NotificationType < ApplicationRecord
         end
 
         mailer.send(mailer_method, self, id_list, payload).deliver_later
+      end
+    end
+
+    def notify_email_per_user!(id_list)
+      id_list.each do |user_id|
+        if mailer_class == 'NotificationMailer' && mailer_method == 'simple_message'
+          NotificationMailer.simple_message(self,
+                                            [user_id],
+                                            mailer_subject,
+                                            mailer_message,
+                                            mailer_options(user_id)).deliver_later
+        else
+          mailer = mailer_class.constantize
+
+          unless mailer == NotificationMailer || mailer.superclass == NotificationMailer
+            raise 'all notification mailers must subclass NotificationMailer'
+          end
+
+          mailer.send(mailer_method, self, [user_id], payload).deliver_later
+        end
       end
     end
 
@@ -250,12 +282,14 @@ class NotificationType < ApplicationRecord
     end
 
     def notify_sms!
-      return unless sms_enabled? && sms_content && RadConfig.twilio_enabled?
+      return unless sms_enabled? && RadConfig.twilio_enabled?
 
       id_list = notify_user_ids_opted(:sms)
 
       id_list.each do |user_id|
-        UserSMSSenderJob.perform_later "Message from #{RadConfig.app_name!}: #{sms_content}",
+        next unless sms_content(user_id)
+
+        UserSMSSenderJob.perform_later "Message from #{RadConfig.app_name!}: #{sms_content(user_id)}",
                                        user_id,
                                        user_id,
                                        nil,

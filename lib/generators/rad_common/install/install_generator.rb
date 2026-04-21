@@ -42,6 +42,9 @@ module RadCommon
         remove_old_rad_config_settings
         update_credentials
 
+        search_and_replace 'def sms_content$', 'def sms_content(_user_id)'
+        search_and_replace 'def subject_url$', 'def subject_url(_user_id)'
+
         search_and_replace '= f.error_notification', '= rad_form_errors f'
         search_and_replace_file '3.3.1', '3.4.7', 'Gemfile'
         gsub_file 'Gemfile', /gem 'haml_lint', '0\.55\.0', require: false/, "gem 'haml_lint', require: false"

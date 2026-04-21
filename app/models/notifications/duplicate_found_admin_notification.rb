@@ -20,7 +20,7 @@ module Notifications
       created_by
     end
 
-    def subject_url
+    def subject_url(_user_id)
       Rails.application.routes.url_helpers.resolve_duplicates_url model: subject_record.class, id: subject_record.id
     end
 

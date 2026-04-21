@@ -20,8 +20,8 @@ module Notifications
       'new_user_signed_up'
     end
 
-    def sms_content
-      "#{user.new_user_signed_up_sms}: #{subject_url}"
+    def sms_content(_user_id)
+      "#{user.new_user_signed_up_sms}: #{subject_url(_user_id)}"
     end
 
     def feed_content
