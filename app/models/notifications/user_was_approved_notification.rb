@@ -16,8 +16,8 @@ module Notifications
       approvee
     end
 
-    def sms_content(_user_id)
-      "#{feed_content} #{subject_url(_user_id)}"
+    def sms_content(user_id)
+      "#{feed_content} #{subject_url(user_id)}"
     end
 
     def approvee

@@ -91,8 +91,8 @@ class NotificationType < ApplicationRecord
     description
   end
 
-  def sms_content(_user_id)
-    "#{description}: #{subject_url(_user_id)}"
+  def sms_content(user_id)
+    "#{description}: #{subject_url(user_id)}"
   end
 
   def subject_url(_user_id)
