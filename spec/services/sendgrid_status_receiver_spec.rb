@@ -83,6 +83,16 @@ describe SendgridStatusReceiver, type: :service do
       end
     end
 
+    context 'with inactive user' do
+      let(:user) { create :user, user_status: UserStatus.default_inactive_status }
+
+      it 'does not deactivate further' do
+        service.process!
+
+        expect(deliveries.map(&:subject)).not_to include 'User Deactivated'
+      end
+    end
+
     context 'with stale user' do
       before { user.update! created_at: 6.months.ago, updated_at: 6.months.ago }
 
