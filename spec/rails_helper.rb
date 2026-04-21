@@ -90,6 +90,7 @@ RSpec.configure do |config|
     options.add_argument('--window-size=1400,900')
     options.add_argument('--disable-popup-blocking')
     options.add_argument('--disable-gpu')
+    options.add_argument('--disable-dev-shm-usage')
 
     Capybara::Selenium::Driver.new app,
                                    browser: :chrome,
@@ -101,6 +102,7 @@ RSpec.configure do |config|
     options.add_argument('--window-size=1400,900')
     options.add_argument('--disable-popup-blocking')
     options.add_argument('--disable-gpu')
+    options.add_argument('--disable-dev-shm-usage')
 
     Capybara::Selenium::Driver.new app,
                                    browser: :chrome,
