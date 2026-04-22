@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_03_183322) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_26_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
+  enable_extension "vector"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -51,6 +52,22 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_183322) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "assistant_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.jsonb "log"
+    t.string "contextable_type"
+    t.bigint "contextable_id"
+    t.string "chat_scope_type"
+    t.bigint "chat_scope_id"
+    t.integer "status", default: 1, null: false
+    t.string "chat_class", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_scope_type", "chat_scope_id"], name: "index_assistant_sessions_on_chat_scope"
+    t.index ["contextable_type", "contextable_id"], name: "index_assistant_sessions_on_contextable"
+    t.index ["user_id"], name: "index_assistant_sessions_on_user_id"
   end
 
   create_table "attorneys", force: :cascade do |t|
@@ -197,6 +214,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_183322) do
     t.string "invoice_email"
     t.bigint "category_id"
     t.string "tags", default: [], null: false, array: true
+    t.string "api_key"
     t.index ["category_id"], name: "index_divisions_on_category_id"
     t.index ["created_at"], name: "index_divisions_on_created_at"
     t.index ["name"], name: "index_divisions_on_name", unique: true, where: "(division_status = 0)"
@@ -214,6 +232,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_183322) do
     t.datetime "updated_at", null: false
     t.datetime "processed_at", precision: nil, null: false
     t.index ["duplicatable_type", "duplicatable_id"], name: "index_duplicates_on_duplicatable_type_and_duplicatable_id", unique: true
+  end
+
+  create_table "embeddings", force: :cascade do |t|
+    t.string "embeddable_type", null: false
+    t.bigint "embeddable_id", null: false
+    t.vector "embedding", limit: 1536, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["embeddable_type", "embeddable_id"], name: "index_embeddings_on_embeddable_type_and_embeddable_id", unique: true
+    t.index ["embedding"], name: "index_embeddings_on_embedding", opclass: :vector_cosine_ops, using: :hnsw
   end
 
   create_table "login_activities", force: :cascade do |t|
@@ -269,6 +297,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_183322) do
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "active", default: true, null: false
     t.string "bcc_recipient"
+    t.boolean "default_email", default: false, null: false
+    t.boolean "default_feed", default: false, null: false
+    t.boolean "default_sms", default: false, null: false
     t.index ["type"], name: "index_notification_types_on_type", unique: true
   end
 
@@ -305,6 +336,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_183322) do
     t.datetime "updated_at", null: false
     t.index ["user_id", "name", "search_class"], name: "unique_saved_search_filters", unique: true
     t.index ["user_id"], name: "index_saved_search_filters_on_user_id"
+  end
+
+  create_table "search_preferences", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "search_class", null: false
+    t.integer "toggle_behavior"
+    t.boolean "sticky_filters", default: false, null: false
+    t.jsonb "search_filters", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "search_class"], name: "unique_search_preferences", unique: true
+    t.index ["user_id"], name: "index_search_preferences_on_user_id"
   end
 
   create_table "security_roles", force: :cascade do |t|
@@ -397,7 +440,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_183322) do
     t.string "global_search_default"
     t.bigint "user_status_id", null: false
     t.datetime "last_sign_in_with_twilio_verify", precision: nil
-    t.boolean "twilio_verify_enabled", default: true, null: false
     t.string "invitation_token"
     t.datetime "invitation_created_at", precision: nil
     t.datetime "invitation_sent_at", precision: nil
@@ -412,7 +454,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_183322) do
     t.datetime "password_changed_at", precision: nil
     t.datetime "last_activity_at", precision: nil
     t.datetime "expired_at", precision: nil
-    t.jsonb "filter_defaults", default: {}, null: false
     t.boolean "profile_entered", default: false, null: false
     t.date "birth_date"
     t.string "language", default: "en", null: false
@@ -436,6 +477,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_183322) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "assistant_sessions", "users"
   add_foreign_key "audits", "users"
   add_foreign_key "contact_log_recipients", "contact_logs"
   add_foreign_key "contact_log_recipients", "users", column: "to_user_id"
@@ -449,6 +491,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_03_183322) do
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "users"
   add_foreign_key "saved_search_filters", "users"
+  add_foreign_key "search_preferences", "users"
   add_foreign_key "system_messages", "security_roles"
   add_foreign_key "system_messages", "users"
   add_foreign_key "user_clients", "clients"

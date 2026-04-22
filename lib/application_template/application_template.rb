@@ -59,7 +59,7 @@ def add_git_source_and_ruby_version
     <<~CONTENT
       git_source(:github) { |repo| "https://github.com/\#{repo}.git" }
 
-      ruby '3.3.1'
+      ruby '3.4.7'
 
     CONTENT
   end
@@ -199,7 +199,6 @@ run 'touch Gemfile'
 add_source 'https://rubygems.org'
 
 gem 'bootsnap', require: false
-gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-devise.git', branch: 'authy-to-twilio-verify'
 gem 'propshaft'
 gem 'rad_common', git: 'https://github.com/rad-stack/rad_common.git', branch: @rad_common_branch
 

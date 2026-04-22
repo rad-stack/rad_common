@@ -5,6 +5,7 @@ module RadController
   included do
     before_action :configure_devise_permitted_parameters, if: :devise_controller?
     before_action :set_sentry_user_context
+    before_action :set_assistant_session_context
     before_action :check_ip_address_timezone, if: :user_signed_in?
     around_action :user_timezone
     around_action :switch_locale, if: :switch_languages?
@@ -19,7 +20,21 @@ module RadController
       render file: Rails.root.join('public/403.html'), formats: [:html], status: :forbidden, layout: false
     end
 
+    helper_method :show_assistant_nav?
+
     impersonates :user
+  end
+
+  def set_assistant_session_context(chat_class: 'LLM::ChatTypes::SystemChat', chat_scope: nil)
+    @chat_class = chat_class
+    @chat_scope = chat_scope
+  end
+
+  def show_assistant_nav?
+    assistant_enabled = current_user && policy(AssistantSession).new?
+    return false unless assistant_enabled && RadConfig.rad_system_chat_enabled?
+
+    @chat_class.present? && @chat_class != 'LLM::ChatTypes::SystemChat'
   end
 
   protected
@@ -35,7 +50,7 @@ module RadController
     end
 
     def devise_account_params
-      %i[first_name last_name mobile_phone avatar timezone language]
+      %i[first_name last_name mobile_phone avatar timezone language] + RadConfig.additional_user_registration_params!
     end
 
     def devise_invite_params
@@ -55,7 +70,7 @@ module RadController
     end
 
     def report_sentry_access_denied?
-      (Rails.env.production? || Rails.env.staging?) && !impersonating?
+      (Rails.env.production? || Rails.env.staging?) && !impersonating? && user_signed_in?
     end
 
     def impersonating?

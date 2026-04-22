@@ -1,7 +1,8 @@
 .card
-  = render 'layouts/card_header', action_name: 'custom',
-                                  title: audits_title(@audits, @audit_search),
-                                  icon: 'fa-list'
+  = render 'layouts/card_header',
+           action_name: 'custom',
+           title: audits_title(@audits, @audit_search),
+           icon: 'fa-list'
 
   .card-body
     = render 'layouts/filter', search: @audit_search, path: audits_path
@@ -15,14 +16,12 @@
           %td
             %p= format_datetime(audit.created_at, include_seconds: true)
             %p #{distance_of_time_in_words_to_now(audit.created_at)} ago
-          - if audit.action == 'destroy'
-            %td #{audit.auditable_type} (#{audit.auditable_id})
-          - else
-            %td= audit_model_link(audit, safe_auditable(audit))
+          %td= audit_model_link audit
           %td= audit.auditable_id
-          %td= secured_link(audit.user)
-          %td= display_audited_action(audit)
+          %td= secured_link audit.user
+          %td= display_audited_action audit
           %td= audit.remote_address
           %td= audit.id
-          %td= simple_format(display_audited_changes(audit))
+          %td= simple_format display_audited_changes(audit)
+
     = paginate @audits, theme: 'bootstrap-5'

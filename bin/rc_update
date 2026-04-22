@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'bundler'
 require 'fileutils'
 
 def system!(*args)
@@ -18,7 +19,13 @@ FileUtils.chdir directory do
   system! 'rm -rf coverage/'
 
   puts "== Updating the rad_common gem conservatively =="
-  system! 'bundle update rad_common --conservative'
+  Bundler.with_unbundled_env do
+    system! 'bundle update rad_common --conservative'
+  end
+
+  puts 'Running Pre-Update Steps'
+  gem_path = `bundle show rad_common`.strip
+  system! "ruby #{gem_path}/bin/pre_rc_update.rb"
 
   puts "== Updating Binstubs =="
   system! 'bundle binstubs rad_common --force'

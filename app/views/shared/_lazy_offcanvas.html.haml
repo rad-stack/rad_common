@@ -1,0 +1,13 @@
+.offcanvas{ id: id,
+            class: ["offcanvas-#{position}", width_class].compact.join(' '),
+            tabindex: '-1',
+            data: { controller: 'lazy-container',
+                    lazy_container_frame_value: 'global-lazy-content',
+                    lazy_container_type_value: 'offcanvas' },
+            aria: { labelledby: "#{id}-label" } }
+  .offcanvas-header.border-bottom.bg-light
+    .d-flex.flex-column
+      %h5.offcanvas-title.fw-bold{ id: "#{id}-label", data: { lazy_container_target: 'title' } }= title
+      %small.text-muted{ data: { lazy_container_target: 'subtitle' } }= subtitle
+    %button.btn-close{ type: 'button', data: { bs_dismiss: 'offcanvas' }, aria: { label: 'Close' } }
+  .offcanvas-body.overflow-auto{ data: { lazy_container_target: 'body' } }

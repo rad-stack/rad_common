@@ -1,3 +1,12 @@
-.card
+= turbo_stream_from 'divisions_calendar'
+
+= turbo_frame_tag 'divisions_calendar_frame' do
+  = render 'divisions/calendar_frame'
+
+.card.mt-3
+  .card-header
+    %h5.mb-0
+      Recent Divisions
   .card-body
-    = render 'layouts/calendar', calendar_path: calendar_divisions_path
+    .list-group#recent-divisions
+      = render @divisions.order(created_at: :desc).limit(5)

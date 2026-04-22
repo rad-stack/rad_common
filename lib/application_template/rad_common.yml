@@ -8,6 +8,7 @@ default: &default
   secure_sentry: false
   external_users: false
   app_logo_includes_name: true
+  mailer_phone_number: false
   impersonate: true
   start_route: users
   user_clients: false
@@ -29,18 +30,25 @@ default: &default
   last_first_user: false
   timezone_detection: true
   portal: false
+  filter_toggle_default_behavior: remember_state
+  rad_system_chat_enabled: false
+  action_cable_enabled: false
+  expire_password_after_days: 90
+
+  rad_assistant_system_tools: []
 
   system_usage_models:
     - User
 
   duplicates: []
   restricted_audit_attributes: []
+  clone_local_exclude: []
   additional_user_params: []
+  additional_user_registration_params: []
   additional_company_params: []
   global_validity_days: 3
   global_validity_timeout_hours: 3
   global_validity_exclude: []
-  global_validity_include: []
   global_validity_supress: []
 
   global_search_scopes:
@@ -64,21 +72,21 @@ development:
   <<: *default
 
   host_name: localhost:3000
-  twilio_verify_enabled: false
-  twilio_verify_remember_device_days: 7
+  two_factor_auth_enabled: false
+  two_factor_remember_device_days: 7
 
 test:
   <<: *default
 
   host_name: localhost:3000
-  twilio_verify_enabled: true
-  twilio_verify_remember_device_days: 7
-  twilio_verify_all_users: true
+  two_factor_auth_enabled: true
+  two_factor_remember_device_days: 7
+  two_factor_auth_all_users: true
 
 production:
   <<: *default
 
   host_name: new-rails-app.example.com
-  twilio_verify_enabled: true
-  twilio_verify_remember_device_days: 7
-  twilio_verify_all_users: false
+  two_factor_auth_enabled: true
+  two_factor_remember_device_days: 7
+  two_factor_auth_all_users: false

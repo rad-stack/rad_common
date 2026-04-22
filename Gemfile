@@ -13,20 +13,34 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-gem 'devise-twilio-verify', git: 'https://github.com/rad-stack/twilio-verify-devise.git',
-                            branch: 'authy-to-twilio-verify'
-
 group :test do
+  gem 'capybara'
   gem 'capybara-selenium'
   gem 'parallel_tests'
   gem 'pdf-reader'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '~> 4.18.1'
   gem 'simplecov', require: false
   gem 'timecop'
+  gem 'vcr'
+  gem 'webmock'
+end
+
+group :development do
+  gem 'active_record_doctor'
+  gem 'haml_lint'
+  gem 'rubocop'
+  gem 'rubocop-capybara'
+  gem 'rubocop-factory_bot'
+  gem 'rubocop-rails'
+  gem 'rubocop-rspec'
+  gem 'rubocop-rspec_rails'
+  gem 'tty-prompt'
 end
 
 group :development, :test do
   gem 'bootsnap', require: false
   gem 'propshaft'
   gem 'pry'
+  gem 'rspec-rails'
+  gem 'wkhtmltopdf-binary'
 end

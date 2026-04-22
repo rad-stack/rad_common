@@ -82,6 +82,14 @@ class RadConfig
       secret_config_item! :smarty_auth_token
     end
 
+    def open_ai_api_key!
+      secret_config_item! :open_ai_api_key
+    end
+
+    def open_ai_api_key
+      secret_config_item :open_ai_api_key
+    end
+
     def hash_key!
       secret_config_item! :hash_key
     end
@@ -156,16 +164,20 @@ class RadConfig
       secret_config_item! :twilio_verify_service_sid
     end
 
-    def twilio_verify_enabled?
-      boolean_config_item! :twilio_verify_enabled
+    def two_factor_auth_enabled?
+      boolean_config_item! :two_factor_auth_enabled
     end
 
-    def twilio_verify_all_users?
-      boolean_config_item! :twilio_verify_all_users
+    def two_factor_auth_all_users?
+      boolean_config_item! :two_factor_auth_all_users
     end
 
-    def twilio_verify_remember_device!
-      config_item!(:twilio_verify_remember_device_days).days
+    def two_factor_remember_device!
+      config_item!(:two_factor_remember_device_days).days
+    end
+
+    def expire_password_after!
+      config_item!(:expire_password_after_days).days
     end
 
     def seeded_users!
@@ -276,6 +288,10 @@ class RadConfig
       boolean_config_item! :saved_search_filters_enabled
     end
 
+    def filter_toggle_default_behavior!
+      config_item! :filter_toggle_default_behavior
+    end
+
     def legal_docs?
       boolean_config_item! :legal_docs
     end
@@ -290,6 +306,10 @@ class RadConfig
 
     def app_logo_includes_name?
       boolean_config_item! :app_logo_includes_name
+    end
+
+    def mailer_phone_number?
+      boolean_config_item! :mailer_phone_number
     end
 
     def user_clients?
@@ -328,12 +348,20 @@ class RadConfig
       array_config_item! :additional_company_params
     end
 
+    def rad_assistant_system_tools!
+      array_config_item! :rad_assistant_system_tools
+    end
+
     def additional_user_params!
       array_config_item! :additional_user_params
     end
 
     def additional_user_profile_params!
       array_config_item! :additional_user_profile_params
+    end
+
+    def additional_user_registration_params!
+      array_config_item! :additional_user_registration_params
     end
 
     def restricted_audit_attributes!
@@ -362,16 +390,16 @@ class RadConfig
       config_item! :global_validity_timeout_hours
     end
 
-    def global_validity_include!
-      array_config_item! :global_validity_include
-    end
-
     def global_validity_exclude!
       array_config_item! :global_validity_exclude
     end
 
     def global_validity_supress!
       array_config_item! :global_validity_supress
+    end
+
+    def clone_local_exclude!
+      array_config_item! :clone_local_exclude
     end
 
     def duplicates!
@@ -392,6 +420,14 @@ class RadConfig
 
     def allow_crawling?
       boolean_config_item! :allow_crawling
+    end
+
+    def rad_system_chat_enabled?
+      boolean_config_item! :rad_system_chat_enabled
+    end
+
+    def action_cable_enabled?
+      config_item(:action_cable_enabled).to_s.downcase == 'true'
     end
 
     def always_crawl?
@@ -459,7 +495,7 @@ class RadConfig
 
     def check_validity!
       check_aws!
-      check_twilio_verify!
+      check_two_factor!
       check_smarty!
       check_marketing!
       check_external!
@@ -481,8 +517,8 @@ class RadConfig
         raise 'Missing AWS S3 credentials'
       end
 
-      def check_twilio_verify!
-        return unless twilio_verify_enabled? && !twilio_enabled?
+      def check_two_factor!
+        return unless two_factor_auth_enabled? && !twilio_enabled?
 
         raise 'Twilio must be enabled to provide mobile phone # validation when two factor authentication is enabled'
       end

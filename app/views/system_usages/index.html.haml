@@ -11,14 +11,35 @@
         %tr
           %th Item
           %th Current Count
-          - @system_usage_search.date_column_ranges.each do |item|
-            %th= item[:label]
+          - @system_usage_search.date_column_ranges.each_with_index do |item, item_index|
+            - last_column = item_index == @system_usage_search.date_column_ranges.size - 1
+            - partial = last_column && !@system_usage_search.last_period_complete?
+            %th{ class: ('fst-italic text-muted' if partial) }
+              = item[:label]
+              - if partial
+                = icon_tooltip :span, 'Partial period — excluded from trend graph'
           %th Total
-
+          %th Trend
         - @system_usage_search.usage_items.each_with_index do |_item, item_index|
+          - data = []
           %tr
             %td= @system_usage_search.usage_data[item_index].first[:name]
             %td= @system_usage_search.usage_data[item_index].first[:current_count]
-            - @system_usage_search.date_column_ranges.each_with_index do |_header, header_index|
-              %td= @system_usage_search.usage_data[item_index][header_index][:value]
+            - @system_usage_search.date_column_ranges.each_with_index do |header, header_index|
+              - last_column = header_index == @system_usage_search.date_column_ranges.size - 1
+              - partial = last_column && !@system_usage_search.last_period_complete?
+              %td{ class: ('fst-italic text-muted' if partial) }
+                = @system_usage_search.usage_data[item_index][header_index][:value]
+              - unless partial
+                - data << [header[:label], @system_usage_search.usage_data[item_index][header_index][:value]]
             %td= @system_usage_search.total item_index
+            %td
+              .d-grid.gap-2
+                %button.btn.btn-sm.btn-success{
+                  type: 'button', data: { 'bs-toggle': 'collapse', 'bs-target': "#chart-#{item_index}" }
+                }
+                  %i.fa.fa-light.fa-chart-line
+                  View Trend
+            %tr.collapse{ id: "chart-#{item_index}" }
+              %td{ colspan: @system_usage_search.date_column_ranges.count + 4 }
+                = line_chart data, id: "line-chart-#{item_index}"

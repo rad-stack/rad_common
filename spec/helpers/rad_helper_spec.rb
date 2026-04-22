@@ -5,6 +5,8 @@ describe RadHelper do
   let(:date) { Time.current }
   let(:timestamp) { '2018-06-15 06:43 AM' }
 
+  before { create :admin }
+
   describe '#show_actions?' do
     let(:model_class) { Division }
 

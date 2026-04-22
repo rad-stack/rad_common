@@ -1,0 +1,29 @@
+module LLM
+  module ChatTypes
+    class SystemChat < BaseChat
+      include RadHelper
+
+      SYSTEM_PROMPT = <<~EXAMPLES.freeze
+        You are a helpful assistant.
+      EXAMPLES
+
+      def self.common_questions
+        []
+      end
+
+      def system_prompt
+        SYSTEM_PROMPT
+      end
+
+      def mentionable_types
+        %w[User]
+      end
+
+      private
+
+        def default_tools
+          RadAssistant.system_tools
+        end
+    end
+  end
+end

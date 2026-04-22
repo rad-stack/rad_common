@@ -6,6 +6,8 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'CRM'
   inflect.acronym 'CSV'
   inflect.acronym 'BCC'
+  inflect.acronym 'AI'
+  inflect.acronym 'LLM'
 end
 
 # see Task 25
@@ -55,6 +57,7 @@ Audited.ignored_attributes += ['address_changes']
 
 Rails.configuration.to_prepare do
   ActiveStorage::Attachment.audited associated_with: :record
+  ActionText::RichText.audited associated_with: :record
 end
 
 if RadConfig.blocked_ip_addresses?

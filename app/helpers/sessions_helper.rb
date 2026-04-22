@@ -17,6 +17,6 @@ module SessionsHelper
   end
 
   def remember_me_input_defaults
-    { checked: Rails.env.development? }
+    { checked: Rails.env.development? || User.ancestors.include?(RadDeviseLow) }
   end
 end

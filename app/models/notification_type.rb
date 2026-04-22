@@ -10,6 +10,9 @@ class NotificationType < ApplicationRecord
 
   validates_with EmailAddressValidator, fields: [:bcc_recipient]
   validate :validate_auth
+  validate :validate_defaults
+
+  before_validation :add_defaults, on: :create
 
   audited
   strip_attributes
@@ -94,6 +97,25 @@ class NotificationType < ApplicationRecord
     Rails.application.routes.url_helpers.url_for(subject_record)
   end
 
+  def add_defaults
+    if email_enabled?
+      self.default_email = true
+      return
+    end
+
+    if sms_enabled?
+      self.default_sms = true
+      return
+    end
+
+    if feed_enabled?
+      self.default_feed = true
+      return
+    end
+
+    raise 'notification type has no methods'
+  end
+
   def auth_mode
     :security_roles
   end
@@ -176,6 +198,12 @@ class NotificationType < ApplicationRecord
 
   private
 
+    def validate_defaults
+      return if default_email? || default_feed? || default_sms?
+
+      errors.add(:base, 'at least one default notification method must be selected')
+    end
+
     def validate_auth
       errors.add(:base, 'invalid with security roles') if absolute_users? && security_roles.present?
       errors.add(:base, 'invalid without security roles') if security_roles? && security_roles.blank?
@@ -254,14 +282,12 @@ class NotificationType < ApplicationRecord
     def enabled_for_method?(user_id, notification_method)
       setting = notification_settings.find_by(user_id: user_id)
 
-      if notification_method == :email
-        return true if setting.blank?
+      if setting.blank?
+        return false if notification_method.to_s == 'sms' && User.find(user_id).mobile_phone.blank?
 
-        setting.enabled? && setting.email?
-      elsif setting.blank? || !setting.enabled
-        false
+        send("default_#{notification_method}")
       else
-        setting.send(notification_method)
+        setting.enabled? && setting.send(notification_method)
       end
     end
 end

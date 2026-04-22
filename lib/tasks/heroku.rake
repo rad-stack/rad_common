@@ -3,11 +3,12 @@ namespace :heroku do
     HerokuCommands.backup args[:heroku_app]
   end
 
-  task :clone_local, %i[heroku_app profile backup_id] => :environment do |_t, args|
+  task :clone_local, %i[heroku_app profile backup_id method] => :environment do |_t, args|
     # to run this with multiple args, the brackets must be escaped like this:
-    # rails "heroku:clone_local[better-way-ars,exclude_audits,a1010]"
+    # rails "heroku:clone_local[better-way-ars,exclude_audits,a1010,backup]"
+    # rails "heroku:clone_local[better-way-ars,minimal,,pg_pull]"
 
-    HerokuCommands.clone(*args.to_a)
+    HerokuCommands.clone(args[:heroku_app], args[:profile] || 'full', args[:backup_id], args[:method] || 'backup')
   end
 
   task :copy_production_to_staging, %i[production_heroku_app staging_heroku_app] => :environment do |_t, args|

@@ -18,7 +18,7 @@ latest.dump
 # TODO: we are ignoring vendor because GHA populates this folder during rad_update_bot.yml
 # we should probably figure out a better way to handle this in case we need to use this folder in future
 /vendor/
-CLAUDE.md
+.claude
 
 /public/packs
 /public/packs-test
@@ -39,3 +39,5 @@ yarn-debug.log*
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+Procfile.dev.tmp

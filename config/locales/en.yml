@@ -2,6 +2,9 @@ en:
   communication_sms_opt_in: 'Your communication preferences have been changed, we will start sending you text message notifications.'
   navigation:
     my_account: My Account
+    sign_in: Sign In
+    sign_out: Sign Out
+    sign_up: Sign Up
   activerecord:
     attributes:
       company:
@@ -13,6 +16,7 @@ en:
           cc: 'CC'
           bcc: 'BCC'
       system_message:
+        from_reply_to: 'From / Reply To'
         send_tos:
           preview: 'Me (preview)'
         message_types:
@@ -20,7 +24,6 @@ en:
           sms: 'SMS'
       user:
         external: 'External User?'
-        twilio_verify_enabled: 'Two Factor Auth'
       security_role:
         external: 'External User?'
   faker:

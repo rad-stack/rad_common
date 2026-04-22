@@ -4,9 +4,15 @@
   .form-inputs
     = f.input :name
     = f.input :code
-    = f.input :division_status, collection: options_for_enum(Division, :division_status)
+
+    = f.input :division_status,
+              collection: options_for_enum(Division, :division_status),
+              tooltips: division_status_tooltips,
+              as: :tooltip_radio_buttons
+
     = f.input :notify
     = f.input :hourly_rate
+    = f.input :api_key
     = f.input :timezone, as: :time_zone, priority: timezone_us_filter
     - unless @division.new_record?
       = f.input :logo
@@ -15,6 +21,7 @@
 
     = f.association :owner, as: :searchable_association, search_scope: 'user_name'
     = f.association :category, as: :searchable_association, search_scope: 'category_name'
+    = f.input :date_established, as: :date, html5: true
 
   .form-actions
     = f.button :submit, 'Save', class: 'btn btn-primary'

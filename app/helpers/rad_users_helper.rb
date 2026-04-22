@@ -1,5 +1,11 @@
 module RadUsersHelper
   def user_show_data(user)
+    return super if defined?(super)
+
+    rad_user_show_data(user)
+  end
+
+  def rad_user_show_data(user)
     items = [:email,
              :mobile_phone,
              { label: 'User Status', value: user_status_item(user) },
@@ -7,8 +13,6 @@ module RadUsersHelper
              :detected_timezone,
              :detected_timezone_js,
              :ignored_timezone]
-
-    items.push(:twilio_verify_enabled) if RadConfig.twilio_verify_enabled? && !RadConfig.twilio_verify_all_users?
 
     items += [:sign_in_count,
               :invitation_accepted_at,
@@ -62,7 +66,7 @@ module RadUsersHelper
   end
 
   def my_profile_nav?
-    UserProfilePolicy.new(current_user, current_user).show?
+    UserProfilePolicy.new(current_user, current_user).edit?
   end
 
   def show_nav_avatar
@@ -102,9 +106,9 @@ module RadUsersHelper
   end
 
   def user_profile_action(user)
-    return unless UserProfilePolicy.new(current_user, user).show?
+    return unless UserProfilePolicy.new(current_user, user).edit?
 
-    link_to icon(:user, 'Profile'), "/user_profiles/#{user.id}", class: 'btn btn-secondary btn-sm'
+    link_to icon(:user, 'Profile'), edit_user_profile_path(user), class: 'btn btn-secondary btn-sm'
   end
 
   def profile_show_title(user)
@@ -120,8 +124,8 @@ module RadUsersHelper
   end
 
   def profile_edit_title(user)
-    return safe_join(['Editing Profile for ', link_to(user, user_profile_path(user))]) unless user == current_user
-    return safe_join(['Editing ', link_to('My Profile', user_profile_path(user))]) if Onboarding.new(user).onboarded?
+    return safe_join(['Editing Profile for ', link_to(user, user_path(user))]) unless user == current_user
+    return 'Editing My Profile' if Onboarding.new(user).onboarded?
 
     'Please Enter Your Profile'
   end
@@ -227,7 +231,7 @@ module RadUsersHelper
   end
 
   def require_mobile_phone?
-    RadConfig.require_mobile_phone? || (RadConfig.twilio_verify_enabled? && RadConfig.twilio_verify_all_users?)
+    RadConfig.require_mobile_phone? || (RadConfig.two_factor_auth_enabled? && RadConfig.two_factor_auth_all_users?)
   end
 
   def clients_to_add_to_user(user)

@@ -8,4 +8,19 @@ fi
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
 
-exec foreman start -f Procfile.dev --env /dev/null "$@"
+# If REDIS_ENABLED is true, create a temporary Procfile with Sidekiq
+if [ "$REDIS_ENABLED" = "true" ]; then
+  TEMP_PROCFILE="Procfile.dev.tmp"
+
+  # Clean up any existing temp file and ensure cleanup on exit
+  rm -f "$TEMP_PROCFILE"
+  trap "rm -f $TEMP_PROCFILE" EXIT INT TERM
+
+  cat Procfile.dev > "$TEMP_PROCFILE"
+  echo "sidekiq: bundle exec sidekiq" >> "$TEMP_PROCFILE"
+
+  echo "REDIS_ENABLED detected - starting Sidekiq server..."
+  foreman start -f "$TEMP_PROCFILE" --env /dev/null "$@"
+else
+  exec foreman start -f Procfile.dev --env /dev/null "$@"
+fi

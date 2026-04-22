@@ -23,8 +23,25 @@ describe 'Users' do
     context 'when user is an admin' do
       let(:user) { create :admin }
 
+      before do
+        allow(RadConfig).to receive(:developer_domain!).and_return('not-example.com')
+        visit edit_user_path user
+      end
+
       it "doesn't allow changing email" do
         expect(find_field('user_email', disabled: true).value).to eq(user.email)
+        expect(find(:label, for: 'user_user_status_id').text).to eq('* User Status')
+      end
+
+      context 'when current user is a developer' do
+        before do
+          allow(RadConfig).to receive(:developer_domain!).and_return('example.com')
+          visit edit_user_path user
+        end
+
+        it 'allows changing email' do
+          expect(find_field('user_email', disabled: false).value).to eq(user.email)
+        end
       end
     end
 
@@ -47,7 +64,8 @@ describe 'Users' do
         fill_in 'user_email', with: "foo_#{user.email}"
         click_link_or_button 'Save'
         expect(page).to have_content 'User was successfully updated.'
-        expect(first_email.subject).to include 'Confirmation instructions'
+        expect(deliveries.count).to eq(2)
+        expect(deliveries.map(&:subject)).to include('Email Changed', match(/Confirmation instructions/))
       end
     end
   end
@@ -63,7 +81,8 @@ describe 'Users' do
                              twilio_account_sid: Rails.application.credentials.twilio_alt_account_sid,
                              twilio_auth_token: Rails.application.credentials.twilio_alt_auth_token)
 
-      user.update!(twilio_verify_enabled: true, mobile_phone: create(:phone_number, :mobile))
+      user.security_roles.update_all(two_factor_auth: true)
+      user.update!(mobile_phone: create(:phone_number, :mobile))
     end
 
     it 'allows user to login with authentication token', :vcr do

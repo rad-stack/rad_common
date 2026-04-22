@@ -9,7 +9,7 @@
   .row.align-items-center
     .col.mb-2
       = f.label filter.input_label, required: false
-    - if filter.allow_not
+    - if filter.allow_not?
       .col-auto
         = f.input "#{filter.searchable_name}_not",
                   as: :boolean,

@@ -91,6 +91,15 @@ RSpec.describe Notifications::OutgoingContactFailedNotification do
       end
     end
 
+    context 'with inactive from_user' do
+      let(:from_user) { create :admin, user_status: UserStatus.default_inactive_status }
+
+      it 'emails the admins instead' do
+        expect(mail.to).to include admin.email
+        expect(mail.to).not_to include from_user.email
+      end
+    end
+
     describe 'record' do
       context 'when different from to_user' do
         let(:record) { create :user }

@@ -1,10 +1,21 @@
 module RadUser
   extend ActiveSupport::Concern
 
+  STALE_PENDING_DAYS = 60
+
   USER_AUDIT_COLUMNS_DISABLED = %i[password password_confirmation encrypted_password reset_password_token
                                    confirmation_token unlock_token remember_created_at].freeze
 
   included do
+    include LLMMentionable
+
+    scope :mentionable_search, lambda { |query|
+      q = "%#{query.downcase}%"
+      cols = ['first_name', 'last_name', "CONCAT(first_name, ' ', last_name)", 'email']
+      conditions = cols.map { |col| "LOWER(#{col}) LIKE :q" }.join(' OR ')
+      active.where(conditions, q: q)
+    }
+
     belongs_to :user_status
 
     has_many :notification_settings, dependent: :destroy
@@ -16,6 +27,7 @@ module RadUser
     has_many :user_clients, dependent: :destroy
     has_many :clients, through: :user_clients, source: :client
     has_many :saved_search_filters, dependent: :destroy
+    has_many :search_preferences, dependent: :destroy
 
     has_many :contact_logs_from, class_name: 'ContactLog',
                                  foreign_key: 'from_user_id',
@@ -73,8 +85,8 @@ module RadUser
 
     validate :validate_email_address
     validate :validate_initial_security_role, on: :create, if: :active?
+    validate :validate_external_invites_internal, on: :create
     validate :validate_internal, on: :update
-    validate :validate_twilio_verify
     validate :validate_mobile_phone
     validate :password_excludes_name
     validate :validate_last_activity
@@ -105,6 +117,20 @@ module RadUser
     end
   end
 
+  def llm_attributes
+    {
+      id: id,
+      name: to_s,
+      email: email,
+      first_name: first_name,
+      last_name: last_name,
+      mobile_phone: mobile_phone,
+      active: active?,
+      external: external?,
+      timezone: timezone
+    }.compact
+  end
+
   def active?
     user_status&.active?
   end
@@ -122,6 +148,15 @@ module RadUser
   end
 
   def stale?
+    raise 'not applicable to inactive users' if user_status == UserStatus.default_inactive_status
+
+    if RadConfig.pending_users? && user_status == UserStatus.default_pending_status
+      return created_at < STALE_PENDING_DAYS.days.ago
+    end
+
+    return false if updated_at > 1.week.ago
+    return false if current_sign_in_at.present? && current_sign_in_at > 1.week.ago
+
     (updated_at < 4.months.ago) ||
       (current_sign_in_at.present? && current_sign_in_at < 6.months.ago) ||
       many_recent_failed_emails?
@@ -193,8 +228,30 @@ module RadUser
     end
   end
 
+  def user_invited_subject
+    "Invitation to Join #{RadConfig.app_name!}"
+  end
+
+  def user_invited_message
+    "Someone has invited you to #{RadConfig.app_name!}, you can accept it through the link " \
+      "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
+      'created until you access the link and set your password.'
+  end
+
   def notify_new_user_signed_up
-    Notifications::NewUserSignedUpNotification.main(self).notify!
+    Notifications::NewUserSignedUpNotification.main(user: self, recipient_ids: User.active.admins.pluck(:id)).notify!
+  end
+
+  def new_user_signed_up_subject
+    return "#{self} Signed Up on #{RadConfig.app_name!}" if active?
+
+    "#{self} Signed Up on #{RadConfig.app_name!} - Awaiting Approval"
+  end
+
+  def new_user_signed_up_sms
+    return "#{self} signed up" if active?
+
+    "#{self} signed up and is awaiting approval"
   end
 
   def send_devise_notification(notification, *args)
@@ -242,9 +299,6 @@ module RadUser
     User.languages[language]
   end
 
-  # TODO: this should be a db attribute when we enable the TOTP feature
-  def twilio_totp_factor_sid; end
-
   def timeout_in
     external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
   end
@@ -253,15 +307,15 @@ module RadUser
     email.end_with? "@#{RadConfig.developer_domain!}"
   end
 
+  def otp_required_for_login?
+    return false unless RadConfig.two_factor_auth_enabled?
+
+    RadConfig.two_factor_auth_all_users? || two_factor_security_role?
+  end
+
   class_methods do
     def user_approved_message
       "Your account was approved and you can begin using #{RadConfig.app_name!}."
-    end
-
-    def user_invited_message
-      "Someone has invited you to #{RadConfig.app_name!}, you can accept it through the link " \
-        "below. If you don't want to accept the invitation, please ignore this email. Your account won't be " \
-        'created until you access the link and set your password.'
     end
   end
 
@@ -277,9 +331,6 @@ module RadUser
 
       self.user_status = default_user_status if new_record? && !user_status
       return unless new_record?
-
-      self.twilio_verify_enabled = RadConfig.twilio_verify_enabled? &&
-                                   (RadConfig.twilio_verify_all_users? || two_factor_security_role?)
 
       self.last_activity_at = Time.current if RadConfig.user_expirable? && last_activity_at.blank?
     end
@@ -323,18 +374,17 @@ module RadUser
       errors.add :initial_security_role_id, 'is required'
     end
 
+    def validate_external_invites_internal
+      return if initial_security_role_id.blank? || invited_by_id.blank?
+      return unless initial_security_role.internal? && invited_by.external?
+
+      errors.add :initial_security_role, 'cannot be internal'
+    end
+
     def validate_internal
       return if external? || user_clients.none?
 
       errors.add :external, 'not allowed when clients are assigned to this user'
-    end
-
-    def validate_twilio_verify
-      return unless RadConfig.twilio_verify_enabled?
-      return if twilio_verify_enabled? || user_status.blank? || !user_status.validate_email_phone?
-      return unless RadConfig.twilio_verify_all_users? || two_factor_security_role?
-
-      errors.add(:twilio_verify_enabled, 'is required')
     end
 
     def validate_mobile_phone
@@ -354,7 +404,7 @@ module RadUser
     end
 
     def require_mobile_phone_two_factor?
-      RadConfig.twilio_verify_enabled? && twilio_verify_enabled?
+      otp_required_for_login?
     end
 
     def password_excludes_name

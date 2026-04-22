@@ -1,0 +1,9 @@
+.modal.fade#saved-search-filters-modal{ tabindex: '-1' }
+  .modal-dialog
+    .modal-content
+      .modal-header
+        // add an icon
+        %h5.modal-title Save Filter
+        %button.btn-close#close-saved-search-filters-modal{ type: 'button', data: { bs_dismiss: 'modal' } }
+      .modal-body
+        = render 'saved_search_filters/form', search_name: search_name, search_filters: search_filters

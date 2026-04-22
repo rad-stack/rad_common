@@ -1,0 +1,55 @@
+require 'rails_helper'
+
+RSpec.describe 'Notification Defaults' do
+  let!(:security_role) { create :security_role, :admin }
+  let!(:notification_type) { Notifications::AttorneyChangedNotification.main }
+
+  before do
+    allow(RadConfig).to receive(:twilio_enabled?).and_return(true)
+    allow_any_instance_of(RadTwilio).to receive(:validate_phone_number).and_return(nil)
+    login_as user, scope: :user
+  end
+
+  describe 'notification settings page' do
+    let(:user) { create :admin, security_roles: [security_role] }
+
+    it 'shows the correct default checkboxes for a new user' do
+      visit '/notification_settings'
+
+      suffix = "attorney_changed_user_#{user.id}"
+      expect(page).to have_content('Attorney Changed')
+      expect(page).to have_checked_field("notification_setting_email_#{suffix}")
+      expect(page).to have_checked_field("notification_setting_sms_#{suffix}")
+      expect(page).to have_field("notification_setting_feed_#{suffix}", disabled: true)
+    end
+  end
+
+  describe 'new defaults only apply going forward' do
+    let(:admin) { create :admin }
+    let(:user) { admin }
+    let!(:original_user) { create :admin }
+
+    before do
+      NotificationSetting.create!(notification_type: notification_type, user: original_user,
+                                  enabled: true, email: true, sms: true, feed: false)
+    end
+
+    it 'new user gets new defaults but original user keeps old settings', :js do
+      visit "/notification_types/#{notification_type.id}/edit"
+      uncheck 'Default SMS'
+      click_button 'Save'
+
+      original_setting = NotificationSetting.find_by(notification_type: notification_type, user: original_user)
+      expect(original_setting.sms).to be true
+
+      new_user = create :admin, security_roles: [security_role]
+      logout
+      login_as new_user, scope: :user
+      visit '/notification_settings'
+
+      suffix = "attorney_changed_user_#{new_user.id}"
+      expect(page).to have_checked_field("notification_setting_email_#{suffix}")
+      expect(page).to have_no_checked_field("notification_setting_sms_#{suffix}")
+    end
+  end
+end
