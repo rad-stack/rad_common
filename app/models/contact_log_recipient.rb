@@ -41,6 +41,8 @@ class ContactLogRecipient < ApplicationRecord
     scope contact_direction, -> { joins(:contact_log).where(contact_logs: { contact_direction: contact_direction }) }
   end
 
+  scope :global_validity_scope, -> { includes(:contact_log) }
+
   validates_with PhoneNumberValidator, fields: [{ field: :phone_number }], skip_twilio: true
   validates_with EmailAddressValidator, fields: [:email], skip_sendgrid: true
 
@@ -120,9 +122,10 @@ class ContactLogRecipient < ApplicationRecord
       return if running_global_validity || to_user.present?
 
       if email.present?
-        self.to_user = User.find_by(email: email)
+        user = User.find_by(email: email)
+        self.to_user = user if user&.active?
       elsif phone_number.present? && !contact_log.fax?
-        users = User.where(mobile_phone: phone_number)
+        users = User.where(mobile_phone: phone_number).select(&:active?)
         self.to_user = users.first if users.size == 1
       end
     end

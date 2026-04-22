@@ -3,7 +3,7 @@ module SecurityRoleHelper
     items = [:external]
     items += [:allow_invite] unless RadConfig.disable_invite?
     items += [:allow_sign_up] unless RadConfig.disable_sign_up?
-    items += [:two_factor_auth] if RadConfig.twilio_verify_enabled?
+    items += [:two_factor_auth] if RadConfig.two_factor_auth_enabled?
     items
   end
 

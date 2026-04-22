@@ -12,14 +12,14 @@ class SendgridStatusesController < ApplicationController
 
       head :ok
     else
-      render json: { message: 'These are not the droids you are looking for.' }, status: :unprocessable_entity
+      render json: { message: 'These are not the droids you are looking for.' }, status: :unprocessable_content
     end
   end
 
   private
 
     def permitted_params(item)
-      item.permit(:email, :event, :reason, :record_id, :host_name, :contact_log_id, :timestamp, :useragent, :url)
+      item.permit(:email, :event, :reason, :host_name, :contact_log_id, :timestamp, :useragent, :url)
     end
 
     def content

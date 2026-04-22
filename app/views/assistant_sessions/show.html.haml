@@ -1,0 +1,108 @@
+.card
+  = render 'layouts/card_header', no_new_button: true, no_delete_button: true, no_edit_button: true
+
+  .card-body
+    - all_logs = logs_for_session(@assistant_session)
+    - qa_pairs = group_logs_into_qa_pairs(all_logs)
+
+    .row.session-split-view
+      .col-md-5
+        .chat-container.h-100
+          .list-group.list-group-flush.session-chat-panel{ id: 'qa-list', role: 'tablist' }
+            - qa_pairs.each_with_index do |pair, index|
+              %a.list-group-item.list-group-item-action.qa-wrapper.shadow.rounded{ id: "qa-tab-#{index}",
+                                                                                   href: "#debug-#{index}",
+                                                                                   class: ('active' if index.zero?),
+                                                                                   role: 'tab',
+                                                                                   'data-bs-toggle': 'list',
+                                                                                   'aria-controls': "debug-#{index}" }
+                %ul.chat-box.list-unstyled.mb-0
+                  - if pair[:question]
+                    - log_data = show_page_log_data(@assistant_session, pair[:question])
+                    = render log_data[:template], log_data
+
+                  - if pair[:answer]
+                    - log_data = show_page_log_data(@assistant_session, pair[:answer])
+                    = render log_data[:template], log_data
+
+      .col-md-7
+        .card.mb-3.border-warning.shadow
+          .card-header.py-2.bg-warning.bg-opacity-10.d-flex.justify-content-between.align-items-center
+            %small
+              %i.fa.fa-cog.me-1
+              System Prompt
+            %button.btn.btn-sm.btn-outline-warning{ type: 'button',
+                                                    'data-bs-toggle': 'collapse',
+                                                    'data-bs-target': '#system-prompt-body',
+                                                    'aria-expanded': 'false',
+                                                    'aria-controls': 'system-prompt-body' }
+              %i.fa.fa-chevron-down
+          .collapse#system-prompt-body
+            .card-body.py-2
+              %pre.mb-0.small.text-pre-wrap.p-2.rounded= @assistant_session.system_prompt
+
+        .tab-content.session-debug-panel.shadow-md
+          - qa_pairs.each_with_index do |pair, index|
+            .tab-pane.fade.debug-panel.bg-light.rounded.p-3{ id: "debug-#{index}",
+                                                             class: ('show active' if index.zero?),
+                                                             role: 'tabpanel',
+                                                             'aria-labelledby': "qa-tab-#{index}" }
+              - if pair[:question]
+                .card.mb-3.border-primary.shadow
+                  .card-header.py-2.bg-primary.bg-opacity-10
+                    %small
+                      %i.fa.fa-user.me-1
+                      Question
+                      %span.text-muted.ms-2= pair[:question][:chat_date]
+                  .card-body.py-2
+                    %pre.mb-0.small.text-pre-wrap.p-2.rounded= pair[:question][:content]
+
+              - if pair[:tool_calls].any?
+                .mb-3
+                  %small.d-block.mb-2.fw-bold
+                    %i.fa.fa-cogs.me-1
+                    Tool Activity (#{pair[:tool_calls].count})
+
+                  - pair[:tool_calls].each do |tool_log|
+                    - if tool_log[:type] == 'function_call'
+                      .card.mb-2.border-info.shadow
+                        .card-header.py-1.bg-info.bg-opacity-10
+                          %small
+                            %i.fa.fa-arrow-right.me-1
+                            %strong= tool_log[:name]
+                        .card-body.py-2
+                          %pre.mb-0.small.text-muted.text-pre-wrap.p-2.rounded= format_json(tool_log[:arguments])
+
+                    - elsif tool_log[:type] == 'function_call_output'
+                      .card.mb-2.border-secondary.shadow
+                        .card-header.py-1.bg-secondary.bg-opacity-10.d-flex.justify-content-between.align-items-center
+                          %small
+                            %i.fa.fa-arrow-left.me-1
+                            Output
+                          - if tool_log[:expires_at].present?
+                            - expired = Time.zone.parse(tool_log[:expires_at].to_s) <= Time.current
+                            %small{ class: expired ? 'text-danger' : 'text-muted' }
+                              %i.fa.fa-clock.me-1
+                              - if expired
+                                Expired
+                              - else
+                                Expires #{time_ago_in_words(Time.zone.parse(tool_log[:expires_at].to_s))} from now
+                        .card-body.py-2
+                          %pre.mb-0.small.text-pre-wrap.p-2.rounded= format_json(tool_log[:output])
+
+              - if pair[:answer]
+                .card.border-success.shadow
+                  .card-header.py-2.bg-success.bg-opacity-10
+                    %small
+                      %i.fa.fa-robot.me-1
+                      Answer
+                      %span.text-muted.ms-2= pair[:answer][:chat_date]
+                  .card-body.py-2
+                    %pre.mb-0.small.text-pre-wrap.bg-light.p-2.rounded= pair[:answer][:content]
+
+              - elsif pair[:tool_calls].empty?
+                .text-muted.small.fst-italic Awaiting response...
+
+          - if qa_pairs.empty?
+            .text-muted.small.fst-italic.p-3
+              No messages in this session.

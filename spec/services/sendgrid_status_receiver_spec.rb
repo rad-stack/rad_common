@@ -7,7 +7,11 @@ describe SendgridStatusReceiver, type: :service do
   let(:user) { create :user, security_roles: [user_role] }
   let(:event_type) { 'bounce' }
   let(:contact_log) { create :contact_log, :email, record: create(:attorney), from_user: user }
-  let!(:contact_log_recipient) { create :contact_log_recipient, :email, contact_log: contact_log, email: user.email }
+
+  let(:contact_log_recipient) do
+    create :contact_log_recipient, :email, contact_log: contact_log, email: user.email, to_user: user
+  end
+
   let(:last_email) { deliveries.last }
   let(:host_name) { RadConfig.host_name! }
 
@@ -17,6 +21,7 @@ describe SendgridStatusReceiver, type: :service do
 
   before do
     create :admin
+    contact_log_recipient
     deliveries.clear
   end
 
@@ -78,6 +83,16 @@ describe SendgridStatusReceiver, type: :service do
       end
     end
 
+    context 'with inactive user' do
+      let(:user) { create :user, user_status: UserStatus.default_inactive_status }
+
+      it 'does not deactivate further' do
+        service.process!
+
+        expect(deliveries.map(&:subject)).not_to include 'User Deactivated'
+      end
+    end
+
     context 'with stale user' do
       before { user.update! created_at: 6.months.ago, updated_at: 6.months.ago }
 
@@ -90,6 +105,21 @@ describe SendgridStatusReceiver, type: :service do
         expect(user.active?).to be false
         expect(deliveries.count).to eq 1
         expect(last_email.subject).to eq 'User Deactivated'
+      end
+
+      context 'when contact log recipient is not associated with user' do
+        let!(:contact_log_recipient) do
+          create :contact_log_recipient, :email, contact_log: contact_log, email: user.email, to_user: create(:user)
+        end
+
+        it 'does not deactivate' do
+          expect(user.active?).to be true
+
+          service.process!
+          user.reload
+
+          expect(user.active?).to be true
+        end
       end
     end
 

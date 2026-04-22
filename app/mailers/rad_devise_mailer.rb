@@ -59,15 +59,14 @@ class RadDeviseMailer < Devise::Mailer
   end
 
   def invitation_instructions(record, token, opts = {})
-    opts[:subject] = "Invitation to Join #{RadConfig.app_name!}"
-
     @contact_log_record = record
     @contact_log_from_user = record.invited_by
     @token = token
     initialize_from_record(record)
 
+    opts[:subject] = @resource.user_invited_subject
     @recipient = @resource
-    @message = User.user_invited_message
+    @message = @resource.user_invited_message
 
     @email_action = { message: 'Click the link to accept the invitation.',
                       button_text: 'Accept',

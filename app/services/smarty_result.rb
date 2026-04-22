@@ -1,9 +1,10 @@
 class SmartyResult
-  attr_reader :result
+  attr_reader :result, :upcase
 
-  def initialize(result, zip4_provided)
+  def initialize(result, zip4_provided, upcase)
     @result = result
     @zip4_provided = zip4_provided
+    @upcase = upcase
   end
 
   def components
@@ -11,26 +12,38 @@ class SmartyResult
   end
 
   def address_1
-    build_primary_lines(components).select(&:present?).join(' ').presence
+    item = build_primary_lines(components).select(&:present?).join(' ').presence
+    item = item&.upcase if upcase
+    item
   end
 
   def address_2
     secondary_line = [components['secondary_designator'], components['secondary_number']]
-    secondary_line.select(&:present?).join(' ').presence
+    item = secondary_line.select(&:present?).join(' ').presence
+    item = item&.upcase if upcase
+    item
   end
 
   def city
-    components['city_name'].presence
+    item = components['city_name'].presence
+    item = item&.upcase if upcase
+    item
   end
 
   def state
-    components['state_abbreviation'].presence
+    item = components['state_abbreviation'].presence
+    item = item&.upcase if upcase
+    item
   end
 
   def zipcode
-    return components['zipcode'].presence if components['plus4_code'].blank? || !zip4_provided?
+    item = components['zipcode'].presence
+    item = item&.upcase if upcase
+    return item if components['plus4_code'].blank? || !zip4_provided?
 
-    "#{components['zipcode']}-#{components['plus4_code']}".presence
+    item = "#{components['zipcode']}-#{components['plus4_code']}".presence
+    item = item&.upcase if upcase
+    item
   end
 
   def valid_address?

@@ -2,3 +2,6 @@ es:
   communication_sms_opt_in: 'Usted ha cambiado su metodo de comunicación, comenzarémos a enviar las notificaciones por mensajes de texto.'
   navigation:
     my_account: Mi Cuenta
+    sign_in: Inicia sesión
+    sign_out: Cerrar sesión
+    sign_up: Registro

@@ -1,4 +1,5 @@
-.collapse.show#search-filter-collapse{ data: { filter_toggle_target: 'collapse' } }
+- show_class = search.toggle_behavior == 'always_closed' ? '' : 'show'
+.collapse{ id: ('search-filter-collapse' unless mobile), class: show_class, data: { collapse_state_target: 'collapse' } }
   = simple_form_for :search, url: path, method: :get, html: { data: { 'search-target': 'form' } } do |f|
     -# TODO: Set up permanent page size selection solution
     - if params[:page_size].present?
@@ -15,20 +16,11 @@
       = f.button :button, class: "btn btn-success #{mobile ? 'mt-2' : ''}" do
         %i.fa.fa-filter
         Apply Filters
-      - if RadConfig.saved_search_filters_enabled? && !mobile
-        = render 'layouts/saved_filters_dropdown', search: search, f: f, path: path
       \
       = link_to "#{path}?clear_filters=true", class: "btn btn-danger #{mobile ? 'mt-2' : ''}" do
         %i.fa.fa-times
         Clear Filters
 
-    - if RadConfig.saved_search_filters_enabled? && !mobile
-      - if search.applied_saved_filter.present?
-        .text-muted.mt-1{ 'data-testid' => 'saved-search-applied-filter' }
-          Applied Filter: #{search.applied_saved_filter}
-      = f.hidden_field :saved_name, data: { 'search-target': 'savedNameInput' }
-    - else
-      %br
     %br
     - if paged_results.present?
       = render 'layouts/paging', paged_results: paged_results, f: f, search: search

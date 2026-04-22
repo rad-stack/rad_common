@@ -44,6 +44,14 @@ module DuplicateFixable
       new.respond_to?(:birth_date)
     end
 
+    def use_current_sign_in_at?
+      new.respond_to?(:current_sign_in_at)
+    end
+
+    def birth_date_column?
+      column_names.include?('birth_date')
+    end
+
     def use_multiples?
       new.respond_to?(:multiples)
     end
@@ -201,6 +209,8 @@ module DuplicateFixable
   end
 
   def create_or_update_metadata!(attributes, bypass_notifications: false)
+    association(:duplicate).reset
+
     if duplicate.blank?
       record = Duplicate.create! attributes.merge(processed_at: Time.current, duplicatable: self)
       record.maybe_notify! unless bypass_notifications

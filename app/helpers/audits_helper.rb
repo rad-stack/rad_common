@@ -29,7 +29,7 @@ module AuditsHelper
     return "Audits (#{audits.total_count})" unless audit_search.single_record?
 
     record = audit_search.single_record
-    safe_join(['Audits for ', audit_model_link(nil, record), " (#{audits.total_count})"])
+    safe_join(['Audits for ', secured_link(record), " (#{audits.total_count})"])
   end
 
   def safe_auditable(audit)
@@ -42,8 +42,9 @@ module AuditsHelper
     Module.const_defined?(audit.auditable_type)
   end
 
-  def audit_model_link(audit, record)
-    label = audit_link_label(audit, record)
+  def audit_model_link(audit)
+    record = safe_auditable(audit)
+    label = audit_link_label(audit)
 
     return label if audit.nil? && record.nil?
     return link_to(label, record) if record.present? && show_route_exists?(record) && policy(record).show?
@@ -53,7 +54,9 @@ module AuditsHelper
 
   private
 
-    def audit_link_label(audit, record)
+    def audit_link_label(audit)
+      record = safe_auditable(audit)
+
       if record.present? && record.is_a?(ActionText::RichText)
         "Rich Text for #{record.record.class} #{record.record_id}"
       elsif record.present? && record.respond_to?(:to_s)

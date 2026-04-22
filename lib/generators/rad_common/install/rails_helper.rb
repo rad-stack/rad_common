@@ -95,9 +95,32 @@ RSpec.configure do |config|
                                    options: options
   end
 
+  Capybara.register_driver :headless_chrome_mobile do |app|
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless=new')
+    options.add_argument('--window-size=375,812')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-gpu')
+
+    Capybara::Selenium::Driver.new app,
+                                   browser: :chrome,
+                                   options: options
+  end
+
   Capybara.register_driver :chrome do |app|
     options = Selenium::WebDriver::Chrome::Options.new
     options.add_argument('--window-size=1400,900')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-gpu')
+
+    Capybara::Selenium::Driver.new app,
+                                   browser: :chrome,
+                                   options: options
+  end
+
+  Capybara.register_driver :chrome_mobile do |app|
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--window-size=375,812')
     options.add_argument('--disable-popup-blocking')
     options.add_argument('--disable-gpu')
 
@@ -126,7 +149,7 @@ RSpec.configure do |config|
 
   SpecSupport.hooks(config, chrome_driver)
 
-  config.filter_run_excluding(twilio_verify_specs: true) unless RadConfig.twilio_verify_enabled?
+  config.filter_run_excluding(two_factor_specs: true) unless RadConfig.two_factor_auth_enabled?
   config.filter_run_excluding(impersonate_specs: true) unless RadConfig.impersonate?
   config.filter_run_excluding(invite_specs: true) if RadConfig.disable_invite?
   config.filter_run_excluding(sign_up_specs: true) if RadConfig.disable_sign_up?

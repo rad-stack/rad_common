@@ -1,0 +1,136 @@
+module LLM
+  module ChatTypes
+    class BaseChat
+      include RadHelper
+
+      ASSISTANT_NAME = 'Assistant'.freeze
+
+      def initialize(assistant_session, model: RadCommon::OPEN_AI_CHAT_MODEL)
+        @assistant_session = assistant_session
+        @common_question = false
+        @model = model
+      end
+
+      def assistant_name
+        ASSISTANT_NAME
+      end
+
+      def format_message(text)
+        text
+      end
+
+      def mentionable_types
+        []
+      end
+
+      def mentions_enabled?
+        mentionable_types.any?
+      end
+
+      def search_mentionables(query, type, current_user)
+        return [] unless mentionable_types.include?(type)
+
+        klass = type.safe_constantize
+        return [] unless klass&.include?(LLMMentionable)
+
+        scope = klass.mentionable_search(query)
+        scope = apply_mention_policy(scope, klass, current_user)
+        scope.limit(10).map do |record|
+          {
+            id: record.id,
+            type: type,
+            label: record.to_s,
+            token: record.mention_token,
+            icon: klass.mentionable_icon
+          }
+        end
+      end
+
+      def basic_question(question)
+        question = build_context(question)
+
+        if @assistant_session.log.present?
+          previous_messages = @assistant_session.log
+          return base_prompt.chat(content: question, previous_messages: previous_messages)
+        end
+
+        base_prompt.chat(content: question)
+      end
+
+      def build_context(question)
+        question = build_mention_context(question)
+        return question unless common_question_class(question)
+
+        question_class = common_question_class(question)
+        question_instance = question_class.new(context: @assistant_session)
+        context_data = question_instance.context_data
+        @common_question = context_data.present?
+        "#{question} CONTEXT_DATA_FOLLOWS: \n #{question_instance.class.question} \n #{context_data}"
+      end
+
+      def build_mention_context(question)
+        return question unless mentions_enabled?
+
+        parser = LLM::MentionParser.new(question)
+        return question unless parser.mentions?
+
+        mention_context = parser.build_context_string
+        return question if mention_context.blank?
+
+        "#{question}\n\nMENTIONED_ENTITIES:\n#{mention_context}"
+      end
+
+      def common_question_class(question)
+        @common_question_class ||= self.class.common_question_map[question]
+      end
+
+      def self.common_question_map
+        @common_question_map ||= common_questions.index_by(&:user_question)
+      end
+
+      def self.common_questions
+        raise NotImplementedError
+      end
+
+      def base_prompt
+        @base_prompt = LLM::PromptBuilder.new(system_prompt: system_prompt,
+                                              context: @assistant_session,
+                                              tools: base_tools,
+                                              model: @model)
+      end
+
+      def available_tools
+        @available_tools ||= default_tools.index_by { |class_object| LLM::Tools::Builder.tool_name(class_object) }
+      end
+
+      def system_prompt
+        raise NotImplementedError
+      end
+
+      private
+
+        def apply_mention_policy(scope, klass, current_user)
+          policy_class = "#{klass.name}Policy".safe_constantize
+          return scope unless policy_class
+
+          Pundit.policy_scope!(current_user, scope)
+        rescue Pundit::NotDefinedError
+          scope
+        end
+
+        def base_tools
+          return [] if @common_question
+
+          default_tool_definitions
+        end
+
+        def default_tool_definitions
+          default_tools.map { |tool| tool.new.tool_definition }
+        end
+
+        def default_tools
+          raise NotImplementedError
+        end
+    end
+  end
+end

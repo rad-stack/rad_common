@@ -31,7 +31,9 @@ class RadSendgridStatusReceiver
   end
 
   def user
-    @user ||= User.find_by(email: email)
+    return if contact_log.blank?
+
+    @user ||= contact_log.contact_log_recipients.find_by(email: email)&.to_user
   end
 
   def event
@@ -40,10 +42,6 @@ class RadSendgridStatusReceiver
 
   def reason
     @content[:reason]
-  end
-
-  def record_id
-    @content[:record_id]
   end
 
   def host_name
@@ -75,7 +73,9 @@ class RadSendgridStatusReceiver
     end
 
     def deactivate_user?
-      suppression? && user.present? && (spam_report? || user.stale? || user.needs_reactivate?)
+      return false unless suppression? && user.present? && user.active?
+
+      spam_report? || user.stale? || user.needs_reactivate?
     end
 
     def deactivate_user!

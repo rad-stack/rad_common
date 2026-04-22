@@ -6,7 +6,7 @@ class DivisionSearch < RadSearch::Search
           filters: filters_def,
           current_user: current_user,
           search_name: 'divisions_search',
-          sticky_filters: true,
+          default_sticky_filters: true,
           params: params)
   end
 
