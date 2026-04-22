@@ -56,7 +56,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_26_120000) do
 
   create_table "assistant_sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.jsonb "log"
+    t.jsonb "log", default: [], null: false
     t.string "contextable_type"
     t.bigint "contextable_id"
     t.string "chat_scope_type"

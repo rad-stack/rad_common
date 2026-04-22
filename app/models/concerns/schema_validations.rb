@@ -110,7 +110,7 @@ module SchemaValidations
 
     def blank_default?(column, datatype)
       return false if column.default.nil?
-      return true if datatype == :jsonb && column.default == '{}'
+      return true if datatype == :jsonb && column.default.in?(%w[{} []])
 
       column.default.blank?
     end
