@@ -796,6 +796,7 @@ gem 'propshaft'
           apply_migration '20260211190217_add_notification_type_defaults.rb'
           apply_migration '20260326120000_fix_new_user_signed_up_notification.rb'
           apply_migration '20260324000000_remove_otp_required_for_login.rb'
+          apply_migration '20260422120000_create_heroku_ext_schema.rb'
         end
 
         def installed_app_name
