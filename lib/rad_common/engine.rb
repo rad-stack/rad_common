@@ -13,8 +13,14 @@ module RadCommon
       include DeviseTwilioVerify::Views::Helpers
     end
 
+    config.action_mailbox.incinerate_after = 7.days
+
     config.after_initialize do
       Devise::Mapping.prepend DeviseTwilioVerify::Mapping
+    end
+
+    config.to_prepare do
+      SimpleForm::FormBuilder.mappings[:date] = DateInput
     end
 
     require 'active_storage_validations'

@@ -36,6 +36,9 @@ module RadCommon
         add_rad_config_setting 'filter_toggle_default_behavior', 'always_open'
         add_rad_config_setting 'action_cable_enabled', 'false'
         add_rad_config_setting 'two_factor_auth_email_fallback', 'false'
+        add_rad_config_setting 'mailer_phone_number', 'false'
+        add_rad_config_setting 'additional_user_registration_params', '[]'
+        add_rad_config_setting 'clone_local_exclude', '[]'
         remove_rad_factories
         remove_old_rad_config_settings
         update_credentials
@@ -193,7 +196,7 @@ Seeder.new.seed!
 
         apply_migrations
 
-        check_boolean_fields
+        check_schema_standards
       end
 
       def self.next_migration_number(path)
@@ -349,14 +352,27 @@ Seeder.new.seed!
           end
         end
 
-        def check_boolean_fields
+        def check_schema_standards
           ActiveRecord::Base.connection.tables.each do |table|
             ActiveRecord::Base.connection.columns(table).each do |column|
-              next unless column.type == :boolean && (column.null || column.default.blank?)
+              next unless invalid_boolean_schema?(column) || invalid_array_schema?(column)
 
-              raise "column #{table}.#{column.name}: null: #{column.null}, default: #{column.default}"
+              raise "column #{table}.#{column.name}: type: #{column.type}, null: #{column.null}, default: #{column.default}"
             end
           end
+        end
+
+        def invalid_boolean_schema?(column)
+          return false if column.array?
+          return false unless column.type == :boolean
+
+          column.null || column.default.blank?
+        end
+
+        def invalid_array_schema?(column)
+          return false unless column.array?
+
+          column.null || column.default.nil?
         end
 
         def add_rad_config_setting(setting_name, default_value)
@@ -370,12 +386,11 @@ Seeder.new.seed!
         def remove_old_rad_config_settings
           remove_rad_config_setting 'legacy_rails_config'
           remove_rad_config_setting 'temp_sticky_filters_list'
+          remove_rad_config_setting 'global_validity_include'
         end
 
         def remove_rad_config_setting(key)
-          return unless rad_config_setting_exists?(key)
-
-          raise "remove the old setting named #{key} from rad_commony.yml, I'm too lazy to code it right now"
+          RadCommon::ConfigUpdater.remove_rad_config_setting(key)
         end
 
         def update_credentials

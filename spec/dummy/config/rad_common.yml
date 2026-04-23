@@ -11,6 +11,7 @@ default: &default
   external_users: true
   validate_external_email_domain: true
   app_logo_includes_name: true
+  mailer_phone_number: false
   impersonate: true
   start_route: onboardings
   user_clients: true
@@ -67,14 +68,15 @@ default: &default
       model: Division
       attribute: hourly_rate
 
+  clone_local_exclude: []
   additional_user_params: []
   additional_user_profile_params: []
+  additional_user_registration_params: []
   additional_company_params: []
 
   global_validity_days: 3
   global_validity_timeout_hours: 3
   global_validity_exclude: []
-  global_validity_include: []
   global_validity_supress: []
 
   global_search_scopes:

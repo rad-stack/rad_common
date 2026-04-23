@@ -44,10 +44,6 @@ class RadSendgridStatusReceiver
     @content[:reason]
   end
 
-  def record_id
-    @content[:record_id]
-  end
-
   def host_name
     @content[:host_name]
   end
@@ -77,7 +73,9 @@ class RadSendgridStatusReceiver
     end
 
     def deactivate_user?
-      suppression? && user.present? && (spam_report? || user.stale? || user.needs_reactivate?)
+      return false unless suppression? && user.present? && user.active?
+
+      spam_report? || user.stale? || user.needs_reactivate?
     end
 
     def deactivate_user!

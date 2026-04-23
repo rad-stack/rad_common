@@ -5,7 +5,7 @@ module RadSearch
     include SearchableDropdownHelper
     attr_reader :options, :column, :joins, :scope_values, :multiple, :scope, :not_scope,
                 :default_value, :errors, :include_blank, :col_class,
-                :search_scope, :show_search_subtext, :allow_not, :autosubmit
+                :search_scope, :show_search_subtext, :autosubmit
 
     ##
     # @param [Symbol optional] column the database column that is being filtered
@@ -85,6 +85,10 @@ module RadSearch
     # @return [String] the name of the view to be used to render the filter input
     def filter_view
       'select'
+    end
+
+    def allow_not?
+      @allow_not
     end
 
     def searchable_scope?
@@ -201,7 +205,7 @@ module RadSearch
     end
 
     def not_value?(search_params)
-      allow_not && search_params && search_params["#{searchable_name}_not"] == '1'
+      allow_not? && search_params && search_params["#{searchable_name}_not"] == '1'
     end
 
     private

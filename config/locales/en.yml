@@ -2,6 +2,9 @@ en:
   communication_sms_opt_in: 'Your communication preferences have been changed, we will start sending you text message notifications.'
   navigation:
     my_account: My Account
+    sign_in: Sign In
+    sign_out: Sign Out
+    sign_up: Sign Up
   activerecord:
     attributes:
       company:

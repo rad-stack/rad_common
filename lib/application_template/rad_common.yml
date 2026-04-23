@@ -8,6 +8,7 @@ default: &default
   secure_sentry: false
   external_users: false
   app_logo_includes_name: true
+  mailer_phone_number: false
   impersonate: true
   start_route: users
   user_clients: false
@@ -41,12 +42,13 @@ default: &default
 
   duplicates: []
   restricted_audit_attributes: []
+  clone_local_exclude: []
   additional_user_params: []
+  additional_user_registration_params: []
   additional_company_params: []
   global_validity_days: 3
   global_validity_timeout_hours: 3
   global_validity_exclude: []
-  global_validity_include: []
   global_validity_supress: []
 
   global_search_scopes:
