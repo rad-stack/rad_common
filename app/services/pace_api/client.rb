@@ -2,10 +2,12 @@ module PaceApi
   class Client
     attr_reader :transaction_id
 
-    def initialize(ssl_verify: true, retries: true)
+    def initialize(ssl_verify: true, retries: true, timeout: 60, open_timeout: 10)
       @ssl_verify = ssl_verify
       @transaction_id = nil
       @retries = retries
+      @timeout = timeout
+      @open_timeout = open_timeout
     end
 
     def self.transaction
@@ -201,6 +203,8 @@ module PaceApi
           faraday.request :json
           faraday.response :json, content_type: /\bjson$/
           faraday.ssl.verify = @ssl_verify
+          faraday.options.timeout = @timeout
+          faraday.options.open_timeout = @open_timeout
           faraday.adapter Faraday.default_adapter
         end
       end
@@ -213,6 +217,8 @@ module PaceApi
         @raw_api_client ||= Faraday.new(url: base_api_url, proxy: proxy_url) do |faraday|
           faraday.request :authorization, :basic, pace_api_username, pace_api_password
           faraday.ssl.verify = @ssl_verify
+          faraday.options.timeout = @timeout
+          faraday.options.open_timeout = @open_timeout
           faraday.adapter Faraday.default_adapter
         end
       end
