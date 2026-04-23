@@ -23,5 +23,21 @@ RSpec.describe RadSearch::DateFilter, type: :service do
         expect(date_filter).to be false
       end
     end
+
+    context 'with table-prefixed datetime column' do
+      let(:column) { 'divisions.created_at' }
+
+      it 'detects datetime correctly' do
+        expect(date_filter).to be true
+      end
+    end
+
+    context 'with table-prefixed date column' do
+      let(:column) { 'divisions.date_established' }
+
+      it 'detects datetime correctly' do
+        expect(date_filter).to be false
+      end
+    end
   end
 end

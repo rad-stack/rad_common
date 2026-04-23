@@ -161,7 +161,8 @@ module RadSearch
       end
 
       def datetime_column?(results)
-        results.model.column_for_attribute(@column).type == :datetime
+        attribute = @column.to_s.split('.').last
+        results.model.column_for_attribute(attribute).type == :datetime
       end
 
       def start_at_value(params)
