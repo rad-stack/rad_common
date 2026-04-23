@@ -35,6 +35,7 @@ module RadCommon
         add_rad_config_setting 'show_sign_in_marketing', 'false'
         add_rad_config_setting 'filter_toggle_default_behavior', 'always_open'
         add_rad_config_setting 'action_cable_enabled', 'false'
+        add_rad_config_setting 'two_factor_auth_email_fallback', 'false'
         add_rad_config_setting 'mailer_phone_number', 'false'
         add_rad_config_setting 'additional_user_registration_params', '[]'
         add_rad_config_setting 'clone_local_exclude', '[]'

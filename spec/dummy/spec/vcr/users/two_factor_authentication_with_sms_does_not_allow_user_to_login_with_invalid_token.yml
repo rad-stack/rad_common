@@ -1,0 +1,139 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications
+    body:
+      encoding: UTF-8
+      string: Channel=sms&To=%2B1<TEST_MOBILE_PHONE_STRIPPED>
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - twilio-ruby/7.9.1 (darwin24 arm64) Ruby/3.4.7
+      Accept-Charset:
+      - utf-8
+      Accept:
+      - application/json
+      Authorization:
+      - "<AUTH_TOKEN>"
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Content-Length:
+      - '742'
+      Connection:
+      - keep-alive
+      Date:
+      - Sun, 29 Mar 2026 10:00:13 GMT
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQ466562dd7e3effa1d40b5a8a3aaa24b1
+      Twilio-Request-Duration:
+      - '0.175'
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - verify.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 4ab6332ad5f85c451b620ed19dfdcccc.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P7
+      X-Amz-Cf-Id:
+      - SfIqOFTTxbvMCCl8D5dtqbZ936v_IqzeIXxHjwbcrIr1vuDj6Akz7g==
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
+      Vary:
+      - Origin
+    body:
+      encoding: UTF-8
+      string: '{"account_sid": "AC803cc481ffe11bab268fcfb8f247dd59", "amount": null,
+        "channel": "sms", "date_created": "2026-03-29T10:00:12Z", "date_updated":
+        "2026-03-29T10:00:13Z", "lookup": {"carrier": null}, "payee": null, "send_code_attempts":
+        [{"attempt_sid": "VL7ee0ccfabc41c4446f1597a4c1846d50", "channel": "sms", "time":
+        "2026-03-29T10:00:12.670Z"}, {"attempt_sid": "VL32347e3fbd561a29d2af8bff3fa8b3a3",
+        "channel": "sms", "time": "2026-03-29T10:00:13.054Z"}], "service_sid": "<TWILIO_ALT_VERIFY_SERVICE_SID>",
+        "sid": "VE6676a597fe5470186391033952a14cba", "status": "pending", "to": "+1<TEST_MOBILE_PHONE_STRIPPED>",
+        "url": "https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/Verifications/VE6676a597fe5470186391033952a14cba",
+        "valid": false}'
+  recorded_at: Sun, 29 Mar 2026 10:00:13 GMT
+- request:
+    method: post
+    uri: https://verify.twilio.com/v2/Services/<TWILIO_ALT_VERIFY_SERVICE_SID>/VerificationCheck
+    body:
+      encoding: UTF-8
+      string: Code=123456&To=%2B1<TEST_MOBILE_PHONE_STRIPPED>
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - twilio-ruby/7.9.1 (darwin24 arm64) Ruby/3.4.7
+      Accept-Charset:
+      - utf-8
+      Accept:
+      - application/json
+      Authorization:
+      - "<AUTH_TOKEN>"
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Content-Length:
+      - '339'
+      Connection:
+      - keep-alive
+      Date:
+      - Sun, 29 Mar 2026 10:00:13 GMT
+      Twilio-Concurrent-Requests:
+      - '1'
+      Twilio-Request-Id:
+      - RQ283262c18b6bc29474f46de7fbb13db2
+      Twilio-Request-Duration:
+      - '0.060'
+      X-Home-Region:
+      - us1
+      X-Api-Domain:
+      - verify.twilio.com
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 d4b7883c7915f8b518d09e4d04990ecc.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - MIA3-P7
+      X-Amz-Cf-Id:
+      - PfHV-3zPY7W-uq0-LP_BKy9juZ9nhF8_1QANg1TWYbii4r282GiVqA==
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
+      Vary:
+      - Origin
+    body:
+      encoding: UTF-8
+      string: '{"account_sid": "AC803cc481ffe11bab268fcfb8f247dd59", "amount": null,
+        "channel": "sms", "date_created": "2026-03-29T10:00:12Z", "date_updated":
+        "2026-03-29T10:00:13Z", "payee": null, "service_sid": "<TWILIO_ALT_VERIFY_SERVICE_SID>",
+        "sid": "VE6676a597fe5470186391033952a14cba", "status": "pending", "to": "+1<TEST_MOBILE_PHONE_STRIPPED>",
+        "valid": false}'
+  recorded_at: Sun, 29 Mar 2026 10:00:13 GMT
+recorded_with: VCR 6.4.0
