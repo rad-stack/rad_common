@@ -54,6 +54,7 @@ module PaceApi
       raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
 
       query_params = { type: type, xpath: xpath }
+      query_params[:txnId] = @transaction_id if @transaction_id
       cache_key = "pace_api_find_objects_#{type}_#{xpath}"
 
       url = '/rpc/rest/services/FindObjects/find'
