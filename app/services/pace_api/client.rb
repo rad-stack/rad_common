@@ -89,6 +89,17 @@ module PaceApi
       end
     end
 
+    def delete_object(type, primary_key)
+      raise "missing primary key for #{type}" if primary_key.blank?
+
+      query_params = { primaryKey: primary_key }
+      query_params[:txnId] = @transaction_id if @transaction_id
+      url = "/rpc/rest/services/DeleteObject/delete#{type}?#{query_params.to_query}"
+      log_request(action: "DeleteObject: #{type}", query_params: query_params, body: {}, method: 'DELETE', url: url)
+      response = api_client.delete(url)
+      parse_response(response)
+    end
+
     def start_transaction(timeout_in_minutes: 5)
       raise 'Transaction already started' if @transaction_id
 
