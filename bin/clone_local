@@ -54,7 +54,7 @@ def customize_minimal_exclusions(profile, prompt)
   return nil unless profile == 'minimal'
   return nil unless prompt.yes?('Would you like to customize which tables to exclude?', default: false)
 
-  minimal_tables = HerokuCommands::EXCLUDED_TABLES['minimal']
+  minimal_tables = (HerokuCommands::EXCLUDED_TABLES['minimal'] + additional_excluded_tables).uniq
   selected = prompt.multi_select('Select tables to exclude (uncheck to keep the data):',
                                  minimal_tables,
                                  default: (1..minimal_tables.length).to_a,

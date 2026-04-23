@@ -283,16 +283,14 @@ class HerokuCommands
       end
 
       def excluded_tables(profile, custom_exclude = nil)
-        base = if custom_exclude_provided?(custom_exclude)
-                 parse_custom_exclude(custom_exclude)
-               else
-                 tables = EXCLUDED_TABLES[profile.to_s]
-                 raise "Unknown restore profile: #{profile}" if tables.nil?
+        if custom_exclude_provided?(custom_exclude)
+          parse_custom_exclude(custom_exclude)
+        else
+          tables = EXCLUDED_TABLES[profile.to_s]
+          raise "Unknown restore profile: #{profile}" if tables.nil?
 
-                 tables
-               end
-
-        (base + RadConfig.clone_local_exclude!).uniq
+          (tables + RadConfig.clone_local_exclude!).uniq
+        end
       end
 
       def custom_exclude_provided?(custom_exclude)
