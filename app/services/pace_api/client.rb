@@ -80,6 +80,7 @@ module PaceApi
       raise "missing primary key for #{type}" if primary_key.blank?
 
       query_params = { primaryKey: primary_key }
+      query_params[:txnId] = @transaction_id if @transaction_id
       url = "/rpc/rest/services/ReadObject/read#{type}"
       log_request(action: "ReadObject: #{type}", query_params: query_params, body: {}, method: 'POST', url: url)
       RadRetry.perform_request(additional_errors: [PaceApi::PaceResponseError]) do
