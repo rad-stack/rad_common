@@ -81,10 +81,10 @@ module PaceApi
 
       query_params = { primaryKey: primary_key }
       query_params[:txnId] = @transaction_id if @transaction_id
-      url = "/rpc/rest/services/ReadObject/read#{type}"
+      url = "/rpc/rest/services/ReadObject/read#{type}?#{query_params.to_query}"
       log_request(action: "ReadObject: #{type}", query_params: query_params, body: {}, method: 'POST', url: url)
       RadRetry.perform_request(additional_errors: [PaceApi::PaceResponseError]) do
-        response = api_client.post(url) { |req| req.params = query_params }
+        response = api_client.post(url)
         parse_response(response)
       end
     end
