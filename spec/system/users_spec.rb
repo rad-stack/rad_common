@@ -82,31 +82,66 @@ describe 'Users' do
                              twilio_auth_token: Rails.application.credentials.twilio_alt_auth_token)
 
       user.security_roles.update_all(two_factor_auth: true)
-      user.update!(mobile_phone: create(:phone_number, :mobile))
     end
 
-    it 'allows user to login with authentication token', :vcr do
-      allow(TwilioVerifyService).to receive(:verify_sms_token).and_return(double(status: 'approved'))
+    context 'with SMS' do
+      before { user.update!(mobile_phone: create(:phone_number, :mobile)) }
 
-      visit new_user_session_path
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      expect(page).to have_content remember_message
-      fill_in 'twilio-verify-token', with: '7721070'
-      click_on 'Verify and Sign in'
-      expect(page).to have_content 'Signed in successfully'
+      it 'allows user to login with authentication token', :vcr do
+        allow(TwilioVerifyService).to receive(:verify_token).and_return(double(status: 'approved'))
+
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content remember_message
+        fill_in 'twilio-verify-token', with: '7721070'
+        click_on 'Verify and Sign in'
+        expect(page).to have_content 'Signed in successfully'
+      end
+
+      it 'does not allow user to login with invalid token', :vcr do
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        fill_in 'twilio-verify-token', with: '123456'
+        click_on 'Verify and Sign in'
+        expect(page).to have_content('The entered token is invalid')
+      end
     end
 
-    it 'does not allow user to login with invalid twilio verify token', :vcr do
-      visit new_user_session_path
+    context 'with email fallback' do
+      before do
+        allow(RadConfig).to receive(:two_factor_auth_email_fallback?).and_return(true)
+        user.update_column(:mobile_phone, nil)
+        allow(TwilioVerifyService).to receive(:send_token).and_return(double(status: 'pending'))
+      end
 
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      fill_in 'twilio-verify-token', with: '123456'
-      click_on 'Verify and Sign in'
-      expect(page).to have_content('The entered token is invalid')
+      it 'allows user to login via email when no mobile phone' do
+        allow(TwilioVerifyService).to receive(:verify_token).and_return(double(status: 'approved'))
+
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content 'emailed'
+        fill_in 'twilio-verify-token', with: '7721070'
+        click_on 'Verify and Sign in'
+        expect(page).to have_content 'Signed in successfully'
+      end
+
+      it 'does not allow user to login with invalid email token' do
+        allow(TwilioVerifyService).to receive(:verify_token).and_return(double(status: 'pending'))
+
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        fill_in 'twilio-verify-token', with: '123456'
+        click_on 'Verify and Sign in'
+        expect(page).to have_content('The entered token is invalid')
+      end
     end
   end
 
