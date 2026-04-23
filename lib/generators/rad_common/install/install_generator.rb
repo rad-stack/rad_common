@@ -354,7 +354,8 @@ Seeder.new.seed!
         def check_schema_standards
           ActiveRecord::Base.connection.tables.each do |table|
             ActiveRecord::Base.connection.columns(table).each do |column|
-              next unless invalid_boolean_schema?(column) || invalid_array_schema?(column)
+              next unless invalid_boolean_schema?(column) || invalid_jsonb_schema?(column) ||
+                          invalid_array_schema?(column)
 
               raise "column #{table}.#{column.name}: type: #{column.type}, null: #{column.null}, default: #{column.default}"
             end
@@ -366,6 +367,12 @@ Seeder.new.seed!
           return false unless column.type == :boolean
 
           column.null || column.default.blank?
+        end
+
+        def invalid_jsonb_schema?(column)
+          return false unless column.type == :jsonb
+
+          column.null || column.default.nil?
         end
 
         def invalid_array_schema?(column)
@@ -800,6 +807,7 @@ gem 'propshaft'
           apply_migration '20251007153435_move_fax_error_message.rb'
           apply_migration '20250418211716_add_created_at_index_to_system_usages.rb'
           apply_migration '20251017110121_rename_direction_to_contact_direction.rb'
+          apply_migration '20251103183322_fix_jsonb_field_standards.rb'
           apply_migration '20251024225222_fix_chat_types.rb'
           apply_migration '20251027181305_rename_chat_type_to_chat_class.rb'
           apply_migration '20251103191522_remove_embedding_metadata.rb'

@@ -56,7 +56,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_26_120000) do
 
   create_table "assistant_sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.jsonb "log"
+    t.jsonb "log", default: [], null: false
     t.string "contextable_type"
     t.bigint "contextable_id"
     t.string "chat_scope_type"
@@ -86,7 +86,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_26_120000) do
     t.datetime "updated_at", null: false
     t.boolean "active", default: true, null: false
     t.string "mobile_phone"
-    t.jsonb "address_metadata"
+    t.jsonb "address_metadata", default: {}, null: false
     t.index ["first_name", "last_name", "mobile_phone"], name: "index_attorneys_on_first_name_and_last_name_and_mobile_phone", unique: true
   end
 
@@ -104,7 +104,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_26_120000) do
     t.string "remote_address"
     t.string "request_uuid"
     t.datetime "created_at", precision: nil, null: false
-    t.jsonb "audited_changes"
+    t.jsonb "audited_changes", default: {}, null: false
     t.index ["associated_id", "associated_type"], name: "associated_index"
     t.index ["auditable_id", "auditable_type", "version"], name: "auditable_index"
     t.index ["created_at"], name: "index_audits_on_created_at"
@@ -147,7 +147,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_26_120000) do
     t.text "valid_user_domains", default: [], null: false, array: true
     t.string "timezone", null: false
     t.integer "address_requests_made", default: 0, null: false
-    t.jsonb "address_metadata"
+    t.jsonb "address_metadata", default: {}, null: false
   end
 
   create_table "contact_log_recipients", force: :cascade do |t|
