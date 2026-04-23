@@ -2,9 +2,10 @@ module PaceApi
   class Client
     attr_reader :transaction_id
 
-    def initialize(ssl_verify: true)
+    def initialize(ssl_verify: true, retries: true)
       @ssl_verify = ssl_verify
       @transaction_id = nil
+      @retries = retries
     end
 
     def self.transaction
@@ -83,7 +84,7 @@ module PaceApi
       query_params[:txnId] = @transaction_id if @transaction_id
       url = "/rpc/rest/services/ReadObject/read#{type}?#{query_params.to_query}"
       log_request(action: "ReadObject: #{type}", query_params: query_params, body: {}, method: 'POST', url: url)
-      RadRetry.perform_request(additional_errors: [PaceApi::PaceResponseError]) do
+      RadRetry.perform_request(retry_count: retry_count, additional_errors: [PaceApi::PaceResponseError]) do
         response = api_client.post(url)
         parse_response(response)
       end
@@ -157,7 +158,7 @@ module PaceApi
 
       log_request(action: "Invoking action: #{action}",
                   query_params: query_params, body: body, method: 'POST', url: url)
-      RadRetry.perform_request(additional_errors: additional_errors) do
+      RadRetry.perform_request(retry_count: retry_count, additional_errors: additional_errors) do
         response = api_client.post(url, query_params) do |req|
           req.params = query_params if query_params.present?
           req.body = body.to_json if body
@@ -202,6 +203,10 @@ module PaceApi
           faraday.ssl.verify = @ssl_verify
           faraday.adapter Faraday.default_adapter
         end
+      end
+
+      def retry_count
+        @retries ? 5 : 0
       end
 
       def raw_api_client
