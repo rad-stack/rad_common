@@ -138,6 +138,7 @@ module PaceApi
                       retry_pace_errors: false)
       query_params = {}
       query_params[primary_key_attr] = primary_key_value if primary_key_attr.present?
+      query_params[:txnId] = @transaction_id if @transaction_id
       additional_errors = retry_pace_errors ? [PaceApi::PaceResponseError] : []
       url = "/rpc/rest/services/InvokeAction/#{action}"
 
