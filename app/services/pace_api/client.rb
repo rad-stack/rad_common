@@ -2,9 +2,12 @@ module PaceApi
   class Client
     attr_reader :transaction_id
 
-    def initialize(ssl_verify: true)
+    def initialize(ssl_verify: true, retries: true, timeout: 60, open_timeout: 10)
       @ssl_verify = ssl_verify
       @transaction_id = nil
+      @retries = retries
+      @timeout = timeout
+      @open_timeout = open_timeout
     end
 
     def self.transaction
@@ -54,6 +57,7 @@ module PaceApi
       raise ArgumentError, "Missing the required parameter 'xpath' when calling FindObjectsApi.find" if xpath.nil?
 
       query_params = { type: type, xpath: xpath }
+      query_params[:txnId] = @transaction_id if @transaction_id
       cache_key = "pace_api_find_objects_#{type}_#{xpath}"
 
       url = '/rpc/rest/services/FindObjects/find'
@@ -79,12 +83,24 @@ module PaceApi
       raise "missing primary key for #{type}" if primary_key.blank?
 
       query_params = { primaryKey: primary_key }
-      url = "/rpc/rest/services/ReadObject/read#{type}"
+      query_params[:txnId] = @transaction_id if @transaction_id
+      url = "/rpc/rest/services/ReadObject/read#{type}?#{query_params.to_query}"
       log_request(action: "ReadObject: #{type}", query_params: query_params, body: {}, method: 'POST', url: url)
-      RadRetry.perform_request(additional_errors: [PaceApi::PaceResponseError]) do
-        response = api_client.post(url) { |req| req.params = query_params }
+      RadRetry.perform_request(retry_count: retry_count, additional_errors: [PaceApi::PaceResponseError]) do
+        response = api_client.post(url)
         parse_response(response)
       end
+    end
+
+    def delete_object(type, primary_key)
+      raise "missing primary key for #{type}" if primary_key.blank?
+
+      query_params = { type: type, key: primary_key }
+      query_params[:txnId] = @transaction_id if @transaction_id
+      url = "/rpc/rest/services//DeleteObject/DeleteObject?#{query_params.to_query}"
+      log_request(action: "DeleteObject: #{type}", query_params: query_params, body: {}, method: 'DELETE', url: url)
+      response = api_client.delete(url)
+      parse_response(response)
     end
 
     def start_transaction(timeout_in_minutes: 5)
@@ -138,12 +154,13 @@ module PaceApi
                       retry_pace_errors: false)
       query_params = {}
       query_params[primary_key_attr] = primary_key_value if primary_key_attr.present?
+      query_params[:txnId] = @transaction_id if @transaction_id
       additional_errors = retry_pace_errors ? [PaceApi::PaceResponseError] : []
       url = "/rpc/rest/services/InvokeAction/#{action}"
 
       log_request(action: "Invoking action: #{action}",
                   query_params: query_params, body: body, method: 'POST', url: url)
-      RadRetry.perform_request(additional_errors: additional_errors) do
+      RadRetry.perform_request(retry_count: retry_count, additional_errors: additional_errors) do
         response = api_client.post(url, query_params) do |req|
           req.params = query_params if query_params.present?
           req.body = body.to_json if body
@@ -186,14 +203,22 @@ module PaceApi
           faraday.request :json
           faraday.response :json, content_type: /\bjson$/
           faraday.ssl.verify = @ssl_verify
+          faraday.options.timeout = @timeout
+          faraday.options.open_timeout = @open_timeout
           faraday.adapter Faraday.default_adapter
         end
+      end
+
+      def retry_count
+        @retries ? 5 : 0
       end
 
       def raw_api_client
         @raw_api_client ||= Faraday.new(url: base_api_url, proxy: proxy_url) do |faraday|
           faraday.request :authorization, :basic, pace_api_username, pace_api_password
           faraday.ssl.verify = @ssl_verify
+          faraday.options.timeout = @timeout
+          faraday.options.open_timeout = @open_timeout
           faraday.adapter Faraday.default_adapter
         end
       end
