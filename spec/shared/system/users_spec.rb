@@ -465,6 +465,23 @@ RSpec.describe 'Users', type: :system do
         click_button 'Verify and Sign in'
         expect(page).to have_content('The entered token is invalid')
       end
+
+      it 'shows a wait message when twilio max send attempts is reached' do
+        twilio_response = double('twilio_response',
+                                 status_code: 429,
+                                 body: { 'code' => 60_203,
+                                         'message' => 'Max send attempts reached',
+                                         'details' => nil,
+                                         'more_info' => nil })
+        allow(TwilioVerifyService).to receive(:send_token)
+          .and_raise(Twilio::REST::RestError.new('Unable to create record', twilio_response))
+
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content('Too many verification code requests')
+      end
     end
 
     context 'with email fallback' do
