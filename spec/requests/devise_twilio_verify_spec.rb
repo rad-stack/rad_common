@@ -22,13 +22,11 @@ RSpec.describe 'Devise Twilio Verify' do
           .and_raise(Twilio::REST::RestError.new('Unable to create record', twilio_response))
       end
 
-      it 'responds with a wait message instead of a 500' do
+      it 'renders the verify form with a wait message instead of a 500' do
         post user_request_sms_path
 
         expect(response).to have_http_status(:ok)
-        body = response.parsed_body
-        expect(body['sent']).to be false
-        expect(body['message']).to match(/wait a few minutes/i)
+        expect(response.body).to include('Too many verification code requests')
       end
     end
   end

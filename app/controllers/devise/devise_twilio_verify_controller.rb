@@ -39,23 +39,27 @@ module Devise
 
     def request_sms
       destination = two_factor_destination
-      if @resource.blank? || destination.nil?
-        render json: { sent: false, message: "User couldn't be found." }
-        return
+      return redirect_to invalid_resource_path if @resource.blank? || destination.nil?
+
+      response = nil
+      rate_limited = false
+
+      begin
+        response = RadTwilio.send_verify_token(to: destination[:to], channel: destination[:channel])
+      rescue RadTwilio::MaxSendAttemptsReachedError
+        rate_limited = true
       end
 
-      verification = RadTwilio.send_verify_token(to: destination[:to], channel: destination[:channel])
-      success = verification&.status == 'pending'
+      if response&.status == 'pending'
+        message = destination[:channel] == 'sms' ? 'texted' : 'emailed'
+        flash.now[:notice] = "A verification code has been #{message} to you."
+      elsif rate_limited
+        flash.now[:error] = 'Too many verification code requests. Please wait a few minutes before trying again.'
+      else
+        flash.now[:error] = 'The verification code failed to send. Please try again.'
+      end
 
-      render json: {
-        sent: success,
-        message: success ? 'Code was sent.' : 'Code was not sent, please try again.'
-      }
-    rescue RadTwilio::MaxSendAttemptsReachedError
-      render json: {
-        sent: false,
-        message: 'Too many verification code requests. Please wait a few minutes before trying again.'
-      }
+      render :verify_twilio_verify
     end
 
     private

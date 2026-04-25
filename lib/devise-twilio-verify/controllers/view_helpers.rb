@@ -5,11 +5,7 @@ module DeviseTwilioVerify
         title = opts.delete(:title) do
           I18n.t('request_sms', scope: 'devise')
         end
-        opts = {
-          id: 'twilio-verify-request-sms-link',
-          method: :post,
-          remote: true
-        }.merge(opts)
+        opts = { method: :post }.merge(opts)
 
         link_to(
           title,
