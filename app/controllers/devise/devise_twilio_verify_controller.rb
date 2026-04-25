@@ -44,12 +44,17 @@ module Devise
         return
       end
 
-      verification = TwilioVerifyService.send_token(to: destination[:to], channel: destination[:channel])
-      success = verification.status == 'pending'
+      verification = RadTwilio.send_verify_token(to: destination[:to], channel: destination[:channel])
+      success = verification&.status == 'pending'
 
       render json: {
         sent: success,
         message: success ? 'Code was sent.' : 'Code was not sent, please try again.'
+      }
+    rescue RadTwilio::MaxSendAttemptsReachedError
+      render json: {
+        sent: false,
+        message: 'Too many verification code requests. Please wait a few minutes before trying again.'
       }
     end
 
