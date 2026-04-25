@@ -4,8 +4,6 @@ class RadSendgridStatusReceiver
 
   def initialize(content)
     @content = content
-
-    check_events
   end
 
   def process!
@@ -22,6 +20,7 @@ class RadSendgridStatusReceiver
 
     return if missing_contact_log?
 
+    check_events
     process_status
     update_contact_log!
   end

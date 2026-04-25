@@ -160,6 +160,14 @@ describe SendgridStatusReceiver, type: :service do
     it 'ignores' do
       expect { service.process! }.not_to change(deliveries, :count)
     end
+
+    context 'with unknown event type' do
+      let(:event_type) { 'unsubscribe' }
+
+      it 'ignores without raising' do
+        expect { service.process! }.not_to raise_error
+      end
+    end
   end
 
   context 'with non-matching host name' do
