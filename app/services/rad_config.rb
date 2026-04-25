@@ -172,6 +172,10 @@ class RadConfig
       boolean_config_item! :two_factor_auth_all_users
     end
 
+    def two_factor_auth_email_fallback?
+      boolean_config_item! :two_factor_auth_email_fallback
+    end
+
     def two_factor_remember_device!
       config_item!(:two_factor_remember_device_days).days
     end
@@ -496,6 +500,7 @@ class RadConfig
     def check_validity!
       check_aws!
       check_two_factor!
+      check_two_factor_email_fallback!
       check_smarty!
       check_marketing!
       check_external!
@@ -521,6 +526,12 @@ class RadConfig
         return unless two_factor_auth_enabled? && !twilio_enabled?
 
         raise 'Twilio must be enabled to provide mobile phone # validation when two factor authentication is enabled'
+      end
+
+      def check_two_factor_email_fallback!
+        return unless two_factor_auth_email_fallback? && require_mobile_phone?
+
+        raise 'require_mobile_phone and two_factor_auth_email_fallback cannot both be enabled'
       end
 
       def check_smarty!
