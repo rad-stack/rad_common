@@ -404,7 +404,7 @@ module RadUser
     end
 
     def require_mobile_phone_two_factor?
-      otp_required_for_login?
+      otp_required_for_login? && !RadConfig.two_factor_auth_email_fallback?
     end
 
     def password_excludes_name
