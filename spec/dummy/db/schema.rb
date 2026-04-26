@@ -10,7 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_26_120000) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_26_170000) do
+  create_schema "heroku_ext"
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "plpgsql"
@@ -182,7 +184,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_26_120000) do
     t.datetime "updated_at", null: false
     t.boolean "sms_opt_out_message_sent", default: false, null: false
     t.string "sms_message_id"
-    t.integer "contact_direction"
+    t.integer "contact_direction", null: false
     t.string "from_email"
     t.integer "service_type", default: 0, null: false
     t.string "record_type"

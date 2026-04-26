@@ -28,7 +28,7 @@ FactoryBot.define do
 
     trait :email do
       service_type { :email }
-      contact_direction { nil }
+      contact_direction { :outgoing }
       sms_media_url { nil }
       from_number { nil }
       from_email { Faker::Internet.email }
