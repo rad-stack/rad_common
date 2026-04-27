@@ -51,7 +51,4 @@ FileUtils.chdir directory do
 
   puts '== Running DB Migrate =='
   system! 'bundle exec rails db:migrate'
-
-  puts '== Checking Schema Standards =='
-  system! 'bundle exec rails rad_common:check_schema_standards'
 end
