@@ -97,4 +97,33 @@ namespace :rad_common do
     system('yarn build')
   end
   Rake::Task['assets:precompile'].enhance(['rad_common:build_js_css']) if Rake::Task.task_defined?('assets:precompile')
+
+  task check_schema_standards: :environment do
+    ActiveRecord::Base.connection.tables.each do |table|
+      ActiveRecord::Base.connection.columns(table).each do |column|
+        next unless invalid_boolean_schema?(column) || invalid_jsonb_schema?(column) || invalid_array_schema?(column)
+
+        raise "column #{table}.#{column.name}: type: #{column.type}, null: #{column.null}, default: #{column.default}"
+      end
+    end
+  end
+
+  def invalid_boolean_schema?(column)
+    return false if column.array?
+    return false unless column.type == :boolean
+
+    column.null || column.default.blank?
+  end
+
+  def invalid_jsonb_schema?(column)
+    return false unless column.type == :jsonb
+
+    column.null || column.default.nil?
+  end
+
+  def invalid_array_schema?(column)
+    return false unless column.array?
+
+    column.null || column.default.nil?
+  end
 end

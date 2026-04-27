@@ -184,8 +184,6 @@ Seeder.new.seed!
         gsub_file 'Gemfile', "gem 'jsbundling-rails'\n", ''
 
         apply_migrations
-
-        check_schema_standards
       end
 
       def self.next_migration_number(path)
@@ -329,36 +327,6 @@ Seeder.new.seed!
           if Dir.exist?('spec/factories/rad_common') && Dir.empty?('spec/factories/rad_common')
             Dir.rmdir('spec/factories/rad_common')
           end
-        end
-
-        def check_schema_standards
-          ActiveRecord::Base.connection.tables.each do |table|
-            ActiveRecord::Base.connection.columns(table).each do |column|
-              next unless invalid_boolean_schema?(column) || invalid_jsonb_schema?(column) ||
-                          invalid_array_schema?(column)
-
-              raise "column #{table}.#{column.name}: type: #{column.type}, null: #{column.null}, default: #{column.default}"
-            end
-          end
-        end
-
-        def invalid_boolean_schema?(column)
-          return false if column.array?
-          return false unless column.type == :boolean
-
-          column.null || column.default.blank?
-        end
-
-        def invalid_jsonb_schema?(column)
-          return false unless column.type == :jsonb
-
-          column.null || column.default.nil?
-        end
-
-        def invalid_array_schema?(column)
-          return false unless column.array?
-
-          column.null || column.default.nil?
         end
 
         def remove_old_rad_config_settings
