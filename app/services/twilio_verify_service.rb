@@ -1,13 +1,14 @@
 class TwilioVerifyService
   attr_reader :twilio_client, :twilio_account_sid, :twilio_auth_token, :twilio_verify_service_sid
 
-  def self.send_sms_token(phone_number)
-    new.twilio_verify_service.verifications.create(to: RadTwilio.human_to_twilio_format(phone_number), channel: 'sms')
+  def self.send_token(to:, channel:)
+    formatted_to = channel == 'sms' ? RadTwilio.human_to_twilio_format(to) : to
+    new.twilio_verify_service.verifications.create(to: formatted_to, channel: channel)
   end
 
-  def self.verify_sms_token(phone_number, token)
-    formatted_phone = RadTwilio.human_to_twilio_format(phone_number)
-    new.twilio_verify_service.verification_checks.create(to: formatted_phone, code: token)
+  def self.verify_token(to:, code:, channel:)
+    formatted_to = channel == 'sms' ? RadTwilio.human_to_twilio_format(to) : to
+    new.twilio_verify_service.verification_checks.create(to: formatted_to, code: code)
   end
 
   def initialize
