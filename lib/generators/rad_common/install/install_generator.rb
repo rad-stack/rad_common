@@ -21,23 +21,13 @@ module RadCommon
         end
 
         fix_namespacing
-        add_crawling_config
+        remove_file 'public/robots.txt'
         install_procfile
         standardize_date_methods
         install_database_yml
         install_github_workflow
         update_seeder_method
         replace_webdrivers_gem_with_selenium
-        add_rad_config_setting 'last_first_user', 'false'
-        add_rad_config_setting 'timezone_detection', 'true'
-        add_rad_config_setting 'portal', 'false'
-        add_rad_config_setting 'validate_user_domains', 'true'
-        add_rad_config_setting 'show_sign_in_marketing', 'false'
-        add_rad_config_setting 'filter_toggle_default_behavior', 'always_open'
-        add_rad_config_setting 'action_cable_enabled', 'false'
-        add_rad_config_setting 'mailer_phone_number', 'false'
-        add_rad_config_setting 'additional_user_registration_params', '[]'
-        add_rad_config_setting 'clone_local_exclude', '[]'
         remove_rad_factories
         remove_old_rad_config_settings
         update_credentials
@@ -195,7 +185,7 @@ Seeder.new.seed!
 
         apply_migrations
 
-        check_boolean_fields
+        check_schema_standards
       end
 
       def self.next_migration_number(path)
@@ -314,18 +304,8 @@ Seeder.new.seed!
           search_and_replace 'RadCommon::Sorting', 'RadSearch::Sorting'
         end
 
-        def add_crawling_config
-          remove_file 'public/robots.txt'
-
-          add_rad_config_setting 'crawlable_subdomains', '[]'
-          add_rad_config_setting 'always_crawl', 'false'
-          add_rad_config_setting 'allow_crawling', 'false'
-        end
-
         def install_procfile
-          setting_exists = rad_config_setting_exists?('procfile_override')
-          add_rad_config_setting 'procfile_override', 'false'
-          return if setting_exists && RadConfig.procfile_override?
+          return if RadConfig.procfile_override?
 
           copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
           copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
@@ -351,22 +331,27 @@ Seeder.new.seed!
           end
         end
 
-        def check_boolean_fields
+        def check_schema_standards
           ActiveRecord::Base.connection.tables.each do |table|
             ActiveRecord::Base.connection.columns(table).each do |column|
-              next unless column.type == :boolean && (column.null || column.default.blank?)
+              next unless invalid_boolean_schema?(column) || invalid_array_schema?(column)
 
-              raise "column #{table}.#{column.name}: null: #{column.null}, default: #{column.default}"
+              raise "column #{table}.#{column.name}: type: #{column.type}, null: #{column.null}, default: #{column.default}"
             end
           end
         end
 
-        def add_rad_config_setting(setting_name, default_value)
-          RadCommon::ConfigUpdater.add_rad_config_setting(setting_name, default_value)
+        def invalid_boolean_schema?(column)
+          return false if column.array?
+          return false unless column.type == :boolean
+
+          column.null || column.default.blank?
         end
 
-        def rad_config_setting_exists?(setting_name)
-          RadCommon::ConfigUpdater.rad_config_setting_exists?(setting_name)
+        def invalid_array_schema?(column)
+          return false unless column.array?
+
+          column.null || column.default.nil?
         end
 
         def remove_old_rad_config_settings
@@ -474,9 +459,7 @@ Seeder.new.seed!
         end
 
         def install_database_yml
-          setting_exists = rad_config_setting_exists?('database_config_override')
-          add_rad_config_setting 'database_config_override', 'false'
-          return if setting_exists && RadConfig.database_config_override?
+          return if RadConfig.database_config_override?
 
           copy_file '../../../../../spec/dummy/config/database.yml', 'config/temp_database.yml'
           gsub_file 'config/temp_database.yml', 'rad_common_', "#{installed_app_name}_"
@@ -796,6 +779,7 @@ gem 'propshaft'
           apply_migration '20260211190217_add_notification_type_defaults.rb'
           apply_migration '20260326120000_fix_new_user_signed_up_notification.rb'
           apply_migration '20260324000000_remove_otp_required_for_login.rb'
+          apply_migration '20260422120000_create_heroku_ext_schema.rb'
         end
 
         def installed_app_name
