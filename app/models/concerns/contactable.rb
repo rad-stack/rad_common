@@ -16,7 +16,7 @@ module Contactable
     if address?
       standardize_address if run_smarty?
     else
-      self.address_metadata = nil
+      self.address_metadata = {}
     end
   end
 
