@@ -25,9 +25,10 @@ module RadController
     impersonates :user
   end
 
-  def set_assistant_session_context(chat_class: 'LLM::ChatTypes::SystemChat', chat_scope: nil)
+  def set_assistant_session_context(chat_class: 'LLM::ChatTypes::SystemChat', chat_scope: nil, chat_parameters: {})
     @chat_class = chat_class
     @chat_scope = chat_scope
+    @chat_parameters = chat_parameters
   end
 
   def show_assistant_nav?
