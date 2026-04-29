@@ -18,7 +18,7 @@ class AssistantSession < ApplicationRecord
 
   def self.create_or_find_chat(user, chat_class, scope = nil, chat_parameters: {})
     session = find_or_create_by!(user: user, chat_class: chat_class, chat_scope: scope)
-    session.update!(chat_parameters: chat_parameters) if chat_parameters.present?
+    session.update!(chat_parameters: chat_parameters)
     session
   end
 
