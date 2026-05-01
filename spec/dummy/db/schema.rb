@@ -67,7 +67,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_29_195508) do
     t.string "chat_class", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "chat_parameters", default: {}
+    t.jsonb "chat_parameters", default: {}, null: false
     t.index ["chat_scope_type", "chat_scope_id"], name: "index_assistant_sessions_on_chat_scope"
     t.index ["contextable_type", "contextable_id"], name: "index_assistant_sessions_on_contextable"
     t.index ["user_id"], name: "index_assistant_sessions_on_user_id"
