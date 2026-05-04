@@ -346,9 +346,9 @@ Seeder.new.seed!
 
         def copy_error_page(filename)
           if support_requests_enabled?
-            copy_file "../error_pages_with_support/#{filename}", "public/#{filename}"
+            copy_file "../error_pages_with_support/#{filename}", "public/#{filename}", force: true
           else
-            copy_file "../../../../../spec/dummy/public/#{filename}", "public/#{filename}"
+            copy_file "../../../../../spec/dummy/public/#{filename}", "public/#{filename}", force: true
           end
         end
 
