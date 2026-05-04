@@ -308,7 +308,26 @@ Seeder.new.seed!
           return if RadConfig.procfile_override?
 
           copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
-          copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
+          install_sidekiq_yml
+        end
+
+        def install_sidekiq_yml
+          source_relative_path = '../../../../../spec/dummy/config/sidekiq.yml'
+          custom_queues_path = 'config/sidekiq.custom.yml'
+
+          unless File.exist?(custom_queues_path)
+            copy_file source_relative_path, 'config/sidekiq.yml'
+            return
+          end
+
+          source_path = File.expand_path(find_in_source_paths(source_relative_path))
+          sidekiq_config = YAML.load_file(source_path, permitted_classes: [Symbol])
+          custom_queues = YAML.load_file(custom_queues_path) || []
+
+          sidekiq_config[:queues] = (sidekiq_config[:queues] || []) + custom_queues
+
+          File.write('config/sidekiq.yml', sidekiq_config.to_yaml)
+          say_status('updated', "config/sidekiq.yml with custom queues from #{custom_queues_path}")
         end
 
         def replace_webdrivers_gem_with_selenium
