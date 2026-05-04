@@ -2,9 +2,12 @@
 :concurrency: 10
 :queues:
   - default
+  - default_2
   - mailers
   - non_concurrent
+  - non_concurrent_2
   - active_storage_analysis
   - active_storage_purge
 :limits:
   non_concurrent: 1
+  non_concurrent_2: 1
