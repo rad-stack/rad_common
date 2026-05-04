@@ -327,7 +327,7 @@ Seeder.new.seed!
           sidekiq_config[:queues] = (sidekiq_config[:queues] || []) + (custom_config[:queues] || [])
           sidekiq_config[:limits] = (sidekiq_config[:limits] || {}).merge(custom_config[:limits] || {})
 
-          File.write('config/sidekiq.yml', sidekiq_config.to_yaml)
+          File.write('config/sidekiq.yml', sidekiq_config.to_yaml.gsub(/^- /, '  - '))
           say_status('updated', "config/sidekiq.yml with custom queues and limits from #{custom_path}")
         end
 
