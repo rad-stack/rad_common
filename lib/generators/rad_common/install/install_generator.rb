@@ -353,10 +353,8 @@ Seeder.new.seed!
         end
 
         def support_requests_enabled?
-          return false unless File.exist?(RadCommon::ConfigUpdater::CONFIG_FILE)
-
-          config = YAML.safe_load(File.read(RadCommon::ConfigUpdater::CONFIG_FILE), aliases: true) || {}
-          (config['default'] || {})['enable_support_requests'] == true
+          value = Rails.configuration.rad_common[:enable_support_requests]
+          value == true || value.to_s.downcase == 'true'
         end
 
         def update_credentials
