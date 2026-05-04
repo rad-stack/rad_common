@@ -345,7 +345,10 @@ Seeder.new.seed!
         end
 
         def copy_error_page(filename)
-          if support_requests_enabled?
+          enabled = support_requests_enabled?
+          puts "[rad_common install] copy_error_page(#{filename}) support_requests_enabled? => #{enabled.inspect}"
+
+          if enabled
             copy_file "../error_pages_with_support/#{filename}", "public/#{filename}", force: true
           else
             copy_file "../../../../../spec/dummy/public/#{filename}", "public/#{filename}", force: true
@@ -353,8 +356,31 @@ Seeder.new.seed!
         end
 
         def support_requests_enabled?
-          value = Rails.configuration.rad_common[:enable_support_requests]
-          value == true || value.to_s.downcase == 'true'
+          puts "[rad_common install] CWD: #{Dir.pwd}"
+          puts "[rad_common install] CONFIG_FILE exists? #{File.exist?(RadCommon::ConfigUpdater::CONFIG_FILE)} (#{RadCommon::ConfigUpdater::CONFIG_FILE})"
+
+          return false unless File.exist?(RadCommon::ConfigUpdater::CONFIG_FILE)
+
+          raw = File.read(RadCommon::ConfigUpdater::CONFIG_FILE)
+          puts "[rad_common install] grep enable_support_requests lines:"
+          raw.each_line.with_index(1) do |line, i|
+            puts "  L#{i}: #{line.chomp}" if line.include?('enable_support_requests')
+          end
+
+          config =
+            begin
+              YAML.safe_load(raw, aliases: true) || {}
+            rescue StandardError => e
+              puts "[rad_common install] YAML.safe_load FAILED: #{e.class}: #{e.message}"
+              {}
+            end
+
+          default_section = config['default'] || {}
+          value = default_section['enable_support_requests']
+          puts "[rad_common install] config['default']['enable_support_requests'] => #{value.inspect}"
+          puts "[rad_common install] Rails.configuration.rad_common[:enable_support_requests] => #{Rails.configuration.rad_common[:enable_support_requests].inspect}"
+
+          value == true
         end
 
         def update_credentials
