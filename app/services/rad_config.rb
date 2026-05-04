@@ -272,6 +272,10 @@ class RadConfig
       boolean_config_item! :show_help_menu
     end
 
+    def enable_support_requests?
+      boolean_config_item! :enable_support_requests
+    end
+
     def force_marketing_site?
       boolean_config_item! :force_marketing_site
     end

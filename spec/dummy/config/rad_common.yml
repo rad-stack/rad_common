@@ -18,6 +18,7 @@ default: &default
   user_profiles: true
   canadian_addresses: false
   show_help_menu: true
+  enable_support_requests: false
   saved_search_filters_enabled: true
   legal_docs: true
   two_factor_auth_all_users: true

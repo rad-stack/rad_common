@@ -30,6 +30,7 @@ module RadCommon
         replace_webdrivers_gem_with_selenium
         remove_rad_factories
         remove_old_rad_config_settings
+        add_new_rad_config_settings
         update_credentials
 
         search_and_replace '= f.error_notification', '= rad_form_errors f'
@@ -50,9 +51,7 @@ module RadCommon
         copy_file '../rails_helper.rb', 'spec/rails_helper.rb'
         copy_file '../../../../../spec/dummy/public/403.html', 'public/403.html'
 
-        unless RadConfig.shared_database?
-          copy_file '../../../../../spec/dummy/public/404.html', 'public/404.html'
-        end
+        copy_error_page '404.html' unless RadConfig.shared_database?
 
         migrate_webpacker_to_esbuild unless RadConfig.legacy_assets?
 
@@ -61,8 +60,8 @@ module RadCommon
         # enable this as needed
         # migrate_to_bootstrap5
 
-        copy_file '../../../../../spec/dummy/public/422.html', 'public/422.html'
-        copy_file '../../../../../spec/dummy/public/500.html', 'public/500.html'
+        copy_error_page '422.html'
+        copy_error_page '500.html'
         copy_file '../../../../../spec/dummy/public/406-unsupported-browser.html',
                  'public/406-unsupported-browser.html'
 
@@ -337,8 +336,27 @@ Seeder.new.seed!
           remove_rad_config_setting 'global_validity_include'
         end
 
+        def add_new_rad_config_settings
+          RadCommon::ConfigUpdater.add_rad_config_setting('enable_support_requests', false)
+        end
+
         def remove_rad_config_setting(key)
           RadCommon::ConfigUpdater.remove_rad_config_setting(key)
+        end
+
+        def copy_error_page(filename)
+          if support_requests_enabled?
+            copy_file "../error_pages_with_support/#{filename}", "public/#{filename}"
+          else
+            copy_file "../../../../../spec/dummy/public/#{filename}", "public/#{filename}"
+          end
+        end
+
+        def support_requests_enabled?
+          return false unless File.exist?(RadCommon::ConfigUpdater::CONFIG_FILE)
+
+          config = YAML.safe_load(File.read(RadCommon::ConfigUpdater::CONFIG_FILE), aliases: true) || {}
+          (config['default'] || {})['enable_support_requests'] == true
         end
 
         def update_credentials
