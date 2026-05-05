@@ -12,12 +12,14 @@ class NotificationMailer < RadMailer
     @contact_log_record = user
     user_is_active = user.active?
 
-    action_message = 'Review their user registration information'
-    action_message += user_is_active ? ' if desired.' : ' and approve them if desired.'
+    if User.where(id: recipients).internal.exists?
+      action_message = 'Review their user registration information'
+      action_message += user_is_active ? ' if desired.' : ' and approve them if desired.'
 
-    @email_action = { message: action_message,
-                      button_text: user_is_active ? 'Review' : 'Review & Approve',
-                      button_url: edit_user_url(user) }
+      @email_action = { message: action_message,
+                        button_text: user_is_active ? 'Review' : 'Review & Approve',
+                        button_url: edit_user_url(user) }
+    end
 
     @message = "#{user} has signed up on #{RadConfig.app_name!}"
     @message += user_is_active ? '.' : ' and is awaiting approval.'
