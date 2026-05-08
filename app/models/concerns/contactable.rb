@@ -42,13 +42,11 @@ module Contactable
     update_column :address_metadata, address_metadata.except('changes')
   end
 
-  def bypass_address_validation
-    bypass_address_validation? == true
+  def bypass_address_validation?
+    address_metadata.present? && address_metadata['bypass_address_validation'] == true
   end
 
-  def bypass_address_validation?
-    address_metadata.present? && address_metadata['bypass_address_validation']
-  end
+  alias_method :bypass_address_validation, :bypass_address_validation?
 
   def bypass_address_validation=(value)
     unless [true, false].include?(value)
