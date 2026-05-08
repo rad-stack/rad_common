@@ -46,7 +46,7 @@ module Contactable
     address_metadata.present? && address_metadata['bypass_address_validation'] == true
   end
 
-  alias_method :bypass_address_validation, :bypass_address_validation?
+  alias bypass_address_validation bypass_address_validation?
 
   def bypass_address_validation=(value)
     unless [true, false].include?(value)
