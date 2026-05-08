@@ -254,5 +254,4 @@ RSpec.describe Contactable do
       end
     end
   end
-
 end
