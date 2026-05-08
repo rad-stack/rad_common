@@ -49,12 +49,16 @@ module Contactable
   alias bypass_address_validation bypass_address_validation?
 
   def bypass_address_validation=(value)
-    unless [true, false].include?(value)
-      raise ArgumentError, "bypass_address_validation must be a boolean, got #{value.inspect}"
-    end
+    coerced = case value
+              when true, false then value
+              when 'true', '1' then true
+              when 'false', '0' then false
+              else
+                raise ArgumentError, "bypass_address_validation must be a boolean, got #{value.inspect}"
+              end
 
     self.address_metadata ||= {}
-    self.address_metadata['bypass_address_validation'] = value
+    self.address_metadata['bypass_address_validation'] = coerced
   end
 
   def address_problems
