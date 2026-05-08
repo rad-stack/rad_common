@@ -22,6 +22,7 @@ module RadCommon
 
         fix_namespacing
         remove_file 'public/robots.txt'
+        copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
         install_procfile
         standardize_date_methods
         install_database_yml
@@ -308,7 +309,6 @@ Seeder.new.seed!
           return if RadConfig.procfile_override?
 
           copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
-          copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
         end
 
         def replace_webdrivers_gem_with_selenium
