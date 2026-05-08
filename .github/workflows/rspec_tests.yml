@@ -76,10 +76,14 @@ jobs:
         timeout-minutes: 5
 
       - name: Install ImageMagick
-        timeout-minutes: 5
+        timeout-minutes: 1
         run: |
+          echo "Starting ImageMagick install at $(date)"
           sudo apt-get update
-          sudo apt-get install -y imagemagick   
+          echo "Simulating a hang for 90 seconds..."
+          sleep 90
+          sudo apt-get install -y imagemagick
+          echo "Finished at $(date)"
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
