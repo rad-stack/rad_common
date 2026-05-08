@@ -47,6 +47,10 @@ module Contactable
   end
 
   def bypass_address_validation=(value)
+    unless [true, false].include?(value)
+      raise ArgumentError, "bypass_address_validation must be a boolean, got #{value.inspect}"
+    end
+
     self.address_metadata ||= {}
     self.address_metadata['bypass_address_validation'] = value
   end

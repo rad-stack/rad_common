@@ -254,4 +254,30 @@ RSpec.describe Contactable do
       end
     end
   end
+
+  describe 'bypass_address_validation=' do
+    subject(:company) { Company.main }
+
+    it 'accepts true' do
+      company.bypass_address_validation = true
+      expect(company.bypass_address_validation?).to be true
+    end
+
+    it 'accepts false' do
+      company.bypass_address_validation = false
+      expect(company.bypass_address_validation?).to be false
+    end
+
+    it 'raises on string "false"' do
+      expect { company.bypass_address_validation = 'false' }.to raise_error(ArgumentError, /must be a boolean/)
+    end
+
+    it 'raises on string "true"' do
+      expect { company.bypass_address_validation = 'true' }.to raise_error(ArgumentError, /must be a boolean/)
+    end
+
+    it 'raises on nil' do
+      expect { company.bypass_address_validation = nil }.to raise_error(ArgumentError, /must be a boolean/)
+    end
+  end
 end
