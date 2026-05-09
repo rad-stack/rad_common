@@ -59,6 +59,7 @@ Rails.application.configure do
   # Use a different cache store in production.
   config.cache_store = :redis_cache_store, {
     url: "#{ENV.fetch('REDIS_URL')}/#{ENV.fetch('REDIS_DB', 0)}",
+    expires_in: 1.day,
     reconnect_attempts: 1,
     error_handler: lambda { |method:, returning:, exception:|
       Sentry.capture_exception exception, level: 'warning', tags: { method: method, returning: returning }
