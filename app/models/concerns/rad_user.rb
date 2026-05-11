@@ -36,7 +36,7 @@ module RadUser
 
     has_many :contact_logs_to, class_name: 'ContactLogRecipient',
                                foreign_key: 'to_user_id',
-                               dependent: :destroy,
+                               dependent: :nullify,
                                inverse_of: :to_user
 
     has_one_attached :avatar
