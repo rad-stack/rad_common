@@ -86,7 +86,7 @@ RSpec.describe 'Users', type: :system do
 
   describe 'admin' do
     let!(:notification_type) do
-      Notifications::NewUserSignedUpNotification.create! security_roles: [user.security_roles.first]
+      Notifications::HighDuplicatesNotification.create! security_roles: [user.security_roles.first]
     end
 
     let(:notification_setting) { NotificationSetting.find_by(user: user, notification_type: notification_type) }
@@ -433,36 +433,75 @@ RSpec.describe 'Users', type: :system do
                              twilio_account_sid: Rails.application.credentials.twilio_alt_account_sid,
                              twilio_auth_token: Rails.application.credentials.twilio_alt_auth_token)
 
-      allow(TwilioVerifyService).to receive(:send_sms_token).and_return(double(status: 'pending'))
+      allow(TwilioVerifyService).to receive(:send_token).and_return(double(status: 'pending'))
 
       user.security_roles.update_all(two_factor_auth: true)
-      user.update!(mobile_phone: create(:phone_number, :mobile))
     end
 
-    it 'allows user to login with authentication token' do
-      allow(TwilioVerifyService).to receive(:verify_sms_token).and_return(double(status: 'approved'))
+    context 'with SMS' do
+      before { user.update!(mobile_phone: create(:phone_number, :mobile)) }
 
-      visit new_user_session_path
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      expect(page).to have_content remember_message
-      fill_in 'twilio-verify-token', with: '7721070'
-      click_button 'Verify and Sign in'
-      expect(page).to have_content 'Signed in successfully'
+      it 'allows user to login with authentication token' do
+        allow(TwilioVerifyService).to receive(:verify_token).and_return(double(status: 'approved'))
+
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content remember_message
+        fill_in 'twilio-verify-token', with: '7721070'
+        click_button 'Verify and Sign in'
+        expect(page).to have_content 'Signed in successfully'
+      end
+
+      it 'does not allow user to login with invalid token' do
+        allow(TwilioVerifyService).to receive(:verify_token).and_return(double(status: 'pending'))
+
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        fill_in 'twilio-verify-token', with: '123456'
+        click_button 'Verify and Sign in'
+        expect(page).to have_content('The entered token is invalid')
+      end
+
+      it 'shows a wait message when twilio max send attempts is reached' do
+        twilio_response = double('twilio_response',
+                                 status_code: 429,
+                                 body: { 'code' => 60_203,
+                                         'message' => 'Max send attempts reached',
+                                         'details' => nil,
+                                         'more_info' => nil })
+        allow(TwilioVerifyService).to receive(:send_token)
+          .and_raise(Twilio::REST::RestError.new('Unable to create record', twilio_response))
+
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content('Too many verification code requests')
+      end
     end
 
-    it 'does not allow user to login with invalid twilio verify token' do
-      allow(TwilioVerifyService).to receive(:verify_sms_token).and_return(double(status: 'pending'))
+    context 'with email fallback' do
+      before do
+        allow(RadConfig).to receive(:two_factor_auth_email_fallback?).and_return(true)
+        user.update_column(:mobile_phone, nil)
+      end
 
-      visit new_user_session_path
+      it 'allows user to login via email when no mobile phone' do
+        allow(TwilioVerifyService).to receive(:verify_token).and_return(double(status: 'approved'))
 
-      fill_in 'user_email', with: user.email
-      fill_in 'user_password', with: password
-      click_button 'Sign In'
-      fill_in 'twilio-verify-token', with: '123456'
-      click_button 'Verify and Sign in'
-      expect(page).to have_content('The entered token is invalid')
+        visit new_user_session_path
+        fill_in 'user_email', with: user.email
+        fill_in 'user_password', with: password
+        click_button 'Sign In'
+        expect(page).to have_content 'emailed'
+        fill_in 'twilio-verify-token', with: '7721070'
+        click_button 'Verify and Sign in'
+        expect(page).to have_content 'Signed in successfully'
+      end
     end
   end
 end

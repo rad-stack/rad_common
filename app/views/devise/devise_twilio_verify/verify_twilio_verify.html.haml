@@ -2,12 +2,11 @@
   = render 'layouts/card_header',
            action_name: 'custom',
            title: 'Two Factor Authentication',
-           icon: 'fa-mobile-alt',
+           icon: 'fa-shield-alt',
            card_style: 'bg-white'
   .card-body
     = verify_twilio_verify_form do
-      .d-fle.flex-column
-        = hidden_field_tag :"#{resource_name}_id", @resource.id
+      .d-flex.flex-column
         = text_field_tag :token, '', autocomplete: 'one-time-code', id: 'twilio-verify-token',
                         autofocus: true, class: 'form-control', placeholder: t('submit_token_title', scope: 'devise')
         = twilio_verify_request_sms_link class: 'btn btn-link'

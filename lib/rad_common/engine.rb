@@ -5,6 +5,10 @@ module RadCommon
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
 
+    initializer 'rad_common.utf8_query_guard' do |app|
+      app.middleware.insert_after Warden::Manager, RadCommon::Utf8QueryGuard
+    end
+
     ActiveSupport.on_load(:action_controller) do
       include DeviseTwilioVerify::Controllers::Helpers
     end
@@ -13,8 +17,14 @@ module RadCommon
       include DeviseTwilioVerify::Views::Helpers
     end
 
+    config.action_mailbox.incinerate_after = 7.days
+
     config.after_initialize do
       Devise::Mapping.prepend DeviseTwilioVerify::Mapping
+    end
+
+    config.to_prepare do
+      SimpleForm::FormBuilder.mappings[:date] = DateInput
     end
 
     require 'active_storage_validations'
@@ -43,6 +53,7 @@ module RadCommon
     require 'pretender'
     require 'pundit'
     require 'rack/attack'
+    require 'rad_common/utf8_query_guard'
     require 'openai'
     require 'sendgrid-ruby'
     require 'sentry-rails'

@@ -18,7 +18,7 @@ class ChatResponseJob < ApplicationJob
     def capture_and_log_error(assistant_session, error)
       Sentry.capture_exception(error)
       error_messages = assistant_session.log ||= []
-      error_messages << { role: 'assistant', content: 'An unexpected error occurred' }
+      error_messages << { role: 'assistant', content: "An unexpected error occurred: #{error_messages} - #{error}" }
       assistant_session.update!(log: error_messages, status: :failed, current_message: nil)
       broadcast_response(assistant_session)
     end

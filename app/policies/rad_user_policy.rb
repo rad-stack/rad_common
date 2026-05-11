@@ -61,7 +61,7 @@ class RadUserPolicy < ApplicationPolicy
   end
 
   def allow_email_change?
-    record.new_record? || !record.admin?
+    record.new_record? || !record.admin? || user.developer?
   end
 
   def permitted_attributes

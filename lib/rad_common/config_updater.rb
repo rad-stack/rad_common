@@ -22,6 +22,14 @@ module RadCommon
       File.write(CONFIG_FILE, updated_content)
     end
 
+    def self.remove_rad_config_setting(setting_name)
+      return unless rad_config_setting_exists?(setting_name)
+
+      content = File.read(CONFIG_FILE)
+      updated_content = content.gsub(/^\s*#{setting_name}:.*\n/, '')
+      File.write(CONFIG_FILE, updated_content)
+    end
+
     def self.rad_config_setting_exists?(setting_name)
       File.readlines(CONFIG_FILE).grep(/#{setting_name}:/).any?
     end

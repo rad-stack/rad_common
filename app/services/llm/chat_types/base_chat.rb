@@ -15,24 +15,35 @@ module LLM
         ASSISTANT_NAME
       end
 
-      def input_collection(view_context)
-        UserGrouper.new(view_context.current_user, scopes: [:active])
-      end
-
-      def context_object?
-        false
-      end
-
       def format_message(text)
         text
       end
 
-      def grouped_select?
-        true
+      def mentionable_types
+        []
       end
 
-      def context_type
-        'User'
+      def mentions_enabled?
+        mentionable_types.any?
+      end
+
+      def search_mentionables(query, type, current_user)
+        return [] unless mentionable_types.include?(type)
+
+        klass = type.safe_constantize
+        return [] unless klass&.include?(LLMMentionable)
+
+        scope = klass.mentionable_search(query)
+        scope = apply_mention_policy(scope, klass, current_user)
+        scope.limit(10).map do |record|
+          {
+            id: record.id,
+            type: type,
+            label: record.to_s,
+            token: record.mention_token,
+            icon: klass.mentionable_icon
+          }
+        end
       end
 
       def basic_question(question)
@@ -47,6 +58,7 @@ module LLM
       end
 
       def build_context(question)
+        question = build_mention_context(question)
         return question unless common_question_class(question)
 
         question_class = common_question_class(question)
@@ -54,6 +66,18 @@ module LLM
         context_data = question_instance.context_data
         @common_question = context_data.present?
         "#{question} CONTEXT_DATA_FOLLOWS: \n #{question_instance.class.question} \n #{context_data}"
+      end
+
+      def build_mention_context(question)
+        return question unless mentions_enabled?
+
+        parser = LLM::MentionParser.new(question)
+        return question unless parser.mentions?
+
+        mention_context = parser.build_context_string
+        return question if mention_context.blank?
+
+        "#{question}\n\nMENTIONED_ENTITIES:\n#{mention_context}"
       end
 
       def common_question_class(question)
@@ -79,10 +103,19 @@ module LLM
         @available_tools ||= default_tools.index_by { |class_object| LLM::Tools::Builder.tool_name(class_object) }
       end
 
+      def system_prompt
+        raise NotImplementedError
+      end
+
       private
 
-        def system_prompt
-          raise NotImplementedError
+        def apply_mention_policy(scope, klass, current_user)
+          policy_class = "#{klass.name}Policy".safe_constantize
+          return scope unless policy_class
+
+          Pundit.policy_scope!(current_user, scope)
+        rescue Pundit::NotDefinedError
+          scope
         end
 
         def base_tools

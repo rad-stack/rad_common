@@ -1,5 +1,11 @@
 module RadUsersHelper
   def user_show_data(user)
+    return super if defined?(super)
+
+    rad_user_show_data(user)
+  end
+
+  def rad_user_show_data(user)
     items = [:email,
              :mobile_phone,
              { label: 'User Status', value: user_status_item(user) },

@@ -3,6 +3,12 @@ require 'yaml'
 class HerokuCommands
   IGNORED_HEROKU_ERRORS = ['free Heroku Dynos will'].freeze
 
+  EXCLUDED_TABLES = {
+    'full' => [],
+    'minimal' => %w[active_storage_attachments active_storage_blobs active_storage_variant_records audits
+                    contact_logs contact_log_recipients embeddings login_activities]
+  }.freeze
+
   class << self
     def backup(app_name)
       check_production!
@@ -20,21 +26,13 @@ class HerokuCommands
       end
     end
 
-    def restore_from_backup(file_name, profile = 'full')
+    def restore_from_backup(file_name, profile = 'full', custom_exclude = nil)
       start_time = Time.now.utc
 
-      write_log 'Dropping existing database schema'
-      command = [
-        'psql -c',
-        '"DROP SCHEMA public CASCADE; CREATE SCHEMA public"',
-        "-h #{local_host}",
-        "-U #{local_user}",
-        "-d #{dbname}"
-      ].join(' ')
-      write_log `#{command}`
+      drop_local_schema
 
       restore_list_file = 'restore_list.txt'
-      generate_restore_list(file_name, profile, restore_list_file)
+      generate_restore_list(file_name, profile, restore_list_file, custom_exclude)
 
       write_log 'Restoring dump file to local'
       write_log restore_command(file_name, restore_list_file)
@@ -45,13 +43,7 @@ class HerokuCommands
       write_log 'Migrating database'
       write_log `skip_on_db_migrate=1 rake db:migrate`
 
-      reset_sensitive_local_data
-      write_log 'Clearing certain production data'
-      remove_user_avatars
-      remove_encrypted_secrets
-      SecurityRole.update_all two_factor_auth: false
-      Company.main.app_logo.purge if Company.main.app_logo.attached?
-      Company.main.fav_icon.purge if Company.main.fav_icon.attached?
+      clean_local_data
 
       duration = Time.now.utc - start_time
       write_log "Restore complete in #{duration.round(2)} seconds"
@@ -63,32 +55,12 @@ class HerokuCommands
       write_log `pg_dump --verbose --clean -Fc -h #{local_host} -U #{local_user} -f #{dump_file_name} -d #{dbname}`
     end
 
-    def clone(app_name, profile = 'full', backup_id = nil)
-      check_production!
-
-      Bundler.with_unbundled_env do
-        check_valid_app(app_name)
-        if backup_id.blank?
-          write_log 'Running backup on Heroku...'
-          `heroku pg:backups:capture #{app_option(app_name)}`
-        end
-
-        url_output = if backup_id.present?
-                       `heroku pg:backups:url #{backup_id} #{app_option(app_name)}`
-                     else
-                       `heroku pg:backups:url #{app_option(app_name)}`
-                     end
-
-        backup_url = "\"#{url_output.strip}\""
-
-        write_log 'Downloading dump file:'
-        write_log `curl -o #{clone_dump_file} #{backup_url}`
+    def clone(app_name, profile: 'full', backup_id: nil, method: 'backup', custom_exclude: nil)
+      if method.to_s == 'pg_pull'
+        clone_via_pg_pull(app_name, profile, custom_exclude)
+      else
+        clone_via_backup(app_name, profile, backup_id, custom_exclude)
       end
-
-      restore_from_backup(clone_dump_file, profile)
-
-      write_log 'Deleting temporary dump file'
-      write_log `rm #{clone_dump_file}`
     end
 
     def reset_staging(app_name)
@@ -128,6 +100,88 @@ class HerokuCommands
     end
 
     private
+
+      def clone_via_backup(app_name, profile, backup_id, custom_exclude = nil)
+        check_production!
+
+        Bundler.with_unbundled_env do
+          check_valid_app(app_name)
+          if backup_id.blank?
+            write_log 'Running backup on Heroku...'
+            `heroku pg:backups:capture #{app_option(app_name)}`
+          end
+
+          url_output = if backup_id.present?
+                         `heroku pg:backups:url #{backup_id} #{app_option(app_name)}`
+                       else
+                         `heroku pg:backups:url #{app_option(app_name)}`
+                       end
+
+          backup_url = "\"#{url_output.strip}\""
+
+          write_log 'Downloading dump file:'
+          write_log `curl -o #{clone_dump_file} #{backup_url}`
+        end
+
+        restore_from_backup(clone_dump_file, profile, custom_exclude)
+
+        write_log 'Deleting temporary dump file'
+        write_log `rm #{clone_dump_file}`
+      end
+
+      def clone_via_pg_pull(app_name, profile, custom_exclude = nil)
+        check_production!
+        start_time = Time.now.utc
+
+        pull_heroku_database(app_name, profile, custom_exclude)
+
+        write_log 'Migrating database'
+        write_log `skip_on_db_migrate=1 rake db:migrate`
+
+        clean_local_data
+
+        duration = Time.now.utc - start_time
+        write_log "Restore complete in #{duration.round(2)} seconds"
+      end
+
+      def pull_heroku_database(app_name, profile, custom_exclude = nil)
+        Bundler.with_unbundled_env do
+          check_valid_app(app_name)
+
+          write_log "Dropping and recreating local database '#{dbname}'"
+          `dropdb --if-exists -h #{local_host} -U #{local_user} #{dbname}`
+
+          tables = excluded_tables(profile, custom_exclude)
+          exclude_flag = tables.any? ? "--exclude-table-data '#{tables.join(';')}'" : ''
+
+          write_log "Pulling from Heroku database (profile: #{profile})..."
+          command = "heroku pg:pull DATABASE_URL #{dbname} #{app_option(app_name)} #{exclude_flag}".strip
+          write_log command
+          system(command) || raise('heroku pg:pull failed')
+        end
+      end
+
+      def clean_local_data
+        reset_sensitive_local_data
+        write_log 'Clearing certain production data'
+        remove_user_avatars
+        remove_encrypted_secrets
+        SecurityRole.update_all two_factor_auth: false
+        Company.main.app_logo.purge if Company.main.app_logo.attached?
+        Company.main.fav_icon.purge if Company.main.fav_icon.attached?
+      end
+
+      def drop_local_schema
+        write_log 'Dropping existing database schema'
+        command = [
+          'psql -c',
+          '"DROP SCHEMA public CASCADE; CREATE SCHEMA public"',
+          "-h #{local_host}",
+          "-U #{local_user}",
+          "-d #{dbname}"
+        ].join(' ')
+        write_log `#{command}`
+      end
 
       def restore_command(file_name, restore_list_file)
         command = [
@@ -213,29 +267,40 @@ class HerokuCommands
         IGNORED_HEROKU_ERRORS.select { |ignored_error| error.include?(ignored_error) }.blank?
       end
 
-      def generate_restore_list(file_name, profile, restore_list_file)
-        case profile.to_s
-        when 'full'
+      def generate_restore_list(file_name, profile, restore_list_file, custom_exclude = nil)
+        tables = excluded_tables(profile, custom_exclude)
+
+        if tables.empty?
           write_log 'Generating full restore (include all tables)'
           write_log `pg_restore -l #{file_name} > #{restore_list_file}`
-        when 'exclude_audits'
-          write_log 'Generating restore excluding audits table'
-          write_log `pg_restore -l #{file_name} | grep -v 'TABLE DATA public audits' > #{restore_list_file}`
-        when 'minimal'
-          write_log 'Generating minimal restore (excludes audits, contact_logs, contact_log_recipients and embeddings)'
-
-          command = [
-            "pg_restore -l #{file_name}",
-            "| grep -v 'TABLE DATA public audits'",
-            "| grep -v 'TABLE DATA public contact_logs'",
-            "| grep -v 'TABLE DATA public contact_log_recipients'",
-            "| grep -v 'TABLE DATA public embeddings'",
-            "> #{restore_list_file}"
-          ].join(' ')
-          `#{command}`
         else
-          raise "Unknown restore profile: #{profile}"
+          write_log "Generating restore excluding: #{tables.join(', ')}"
+
+          grep_filters = tables.map { |table| "| grep -v 'TABLE DATA public #{table}'" }
+          command = ["pg_restore -l #{file_name}", *grep_filters, "> #{restore_list_file}"].join(' ')
+          `#{command}`
         end
+      end
+
+      def excluded_tables(profile, custom_exclude = nil)
+        if custom_exclude_provided?(custom_exclude)
+          parse_custom_exclude(custom_exclude)
+        else
+          tables = EXCLUDED_TABLES[profile.to_s]
+          raise "Unknown restore profile: #{profile}" if tables.nil?
+
+          (tables + RadConfig.clone_local_exclude!).uniq
+        end
+      end
+
+      def custom_exclude_provided?(custom_exclude)
+        !custom_exclude.to_s.strip.empty?
+      end
+
+      def parse_custom_exclude(custom_exclude)
+        return [] if custom_exclude.to_s.strip.casecmp('none').zero?
+
+        custom_exclude.to_s.split(';').map(&:strip).reject(&:empty?)
       end
 
       def reset_sensitive_local_data

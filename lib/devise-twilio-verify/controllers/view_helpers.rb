@@ -5,11 +5,7 @@ module DeviseTwilioVerify
         title = opts.delete(:title) do
           I18n.t('request_sms', scope: 'devise')
         end
-        opts = {
-          id: 'twilio-verify-request-sms-link',
-          method: :post,
-          remote: true
-        }.merge(opts)
+        opts = { method: :post }.merge(opts)
 
         link_to(
           title,
@@ -21,8 +17,7 @@ module DeviseTwilioVerify
       def verify_twilio_verify_form(opts = {}, &block)
         opts = default_opts.merge(id: 'devise_twilio_verify').merge(opts)
         form_tag([resource_name.to_sym, :verify_twilio_verify], opts) do
-          buffer = hidden_field_tag(:"#{resource_name}_id", @resource.id)
-          buffer << capture(&block)
+          capture(&block)
         end
       end
 

@@ -26,6 +26,7 @@ namespace :rad_common do
         global_validity.override_model = args[:override_model]
         global_validity.run
 
+        StalePendingUserCleaner.new.run
         ExistingDataEmbedder.new.run(session)
       end
 

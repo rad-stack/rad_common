@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Notification Settings', type: :request do
-  let(:notification_type) { Notifications::NewUserSignedUpNotification.main }
+  let(:notification_type) { Notifications::HighDuplicatesNotification.main }
 
   before do
     create :admin

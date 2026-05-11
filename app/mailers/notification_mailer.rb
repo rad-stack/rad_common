@@ -5,7 +5,9 @@ class NotificationMailer < RadMailer
     super(recipient, subject, message, options.merge(bcc: bcc_recipient(notification_type, options)))
   end
 
-  def new_user_signed_up(notification_type, recipients, user)
+  def new_user_signed_up(notification_type, recipients, payload)
+    user = payload[:user]
+
     @contact_log_from_user = user
     @contact_log_record = user
     user_is_active = user.active?
@@ -20,7 +22,7 @@ class NotificationMailer < RadMailer
     @message = "#{user} has signed up on #{RadConfig.app_name!}"
     @message += user_is_active ? '.' : ' and is awaiting approval.'
 
-    send_notification_mail notification_type, recipients, "New User on #{RadConfig.app_name!}"
+    send_notification_mail notification_type, recipients, user.new_user_signed_up_subject
   end
 
   def user_was_approved(notification_type, recipients, user_and_approver)

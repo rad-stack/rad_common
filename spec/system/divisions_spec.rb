@@ -134,8 +134,8 @@ RSpec.describe 'Divisions' do
       let(:filters) { { name_like_match_type: 'Division' } }
 
       it 'allows saving applied search filters', :js do
-        if ENV['CI']
-          visit divisions_path
+        unless ENV['CI']
+        visit divisions_path
           first('#search_name_like').fill_in(with: 'Division Test')
           tom_select user.to_s, from: 'search_owner_id'
           first('button', text: 'Apply Filters').click

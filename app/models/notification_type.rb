@@ -91,6 +91,10 @@ class NotificationType < ApplicationRecord
     "#{description}: #{subject_url}"
   end
 
+  def sms_media_url
+    nil
+  end
+
   def subject_url
     return if subject_record.blank? || !ApplicationController.helpers.show_route_exists?(subject_record)
 
@@ -258,7 +262,7 @@ class NotificationType < ApplicationRecord
         UserSMSSenderJob.perform_later "Message from #{RadConfig.app_name!}: #{sms_content}",
                                        user_id,
                                        user_id,
-                                       nil,
+                                       sms_media_url,
                                        false,
                                        contact_log_record: subject_record
       end
@@ -283,6 +287,8 @@ class NotificationType < ApplicationRecord
       setting = notification_settings.find_by(user_id: user_id)
 
       if setting.blank?
+        return false if notification_method.to_s == 'sms' && User.find(user_id).mobile_phone.blank?
+
         send("default_#{notification_method}")
       else
         setting.enabled? && setting.send(notification_method)

@@ -15,22 +15,16 @@ module Devise
 
     # verify 2fa
     def POST_verify_twilio_verify
-      if @resource.mobile_phone.blank? || params[:token].blank?
-        return handle_invalid_token :verify_twilio_verify, :invalid_token
-      end
+      destination = two_factor_destination
+      return handle_invalid_token :verify_twilio_verify, :invalid_token if destination.nil? || params[:token].blank?
 
       begin
-        verification_check = TwilioVerifyService.verify_sms_token(@resource.mobile_phone, params[:token])
+        verification_check = TwilioVerifyService.verify_token(to: destination[:to],
+                                                              code: params[:token],
+                                                              channel: destination[:channel])
         verification_check = verification_check.status == 'approved'
       rescue Twilio::REST::RestError
         verification_check = false
-      end
-
-      # Hack to reproduce authy functionality of being able to verify 2FA via SMS or TOTP
-      # not ideal as there could be network delays, but there is currently no alternative
-      if !verification_check && @resource.twilio_totp_factor_sid.present?
-        verification_check = TwilioVerifyService.verify_totp_token(@resource, params[:token])
-        verification_check = verification_check.status == 'approved'
       end
 
       if verification_check
@@ -44,21 +38,41 @@ module Devise
     end
 
     def request_sms
-      if @resource.blank? || @resource.mobile_phone.blank?
-        render json: { sent: false, message: "User couldn't be found." }
-        return
+      destination = two_factor_destination
+      return redirect_to invalid_resource_path if @resource.blank? || destination.nil?
+
+      response = nil
+      rate_limited = false
+
+      begin
+        response = RadTwilio.send_verify_token(to: destination[:to], channel: destination[:channel])
+      rescue RadTwilio::MaxSendAttemptsReachedError
+        rate_limited = true
       end
 
-      verification = TwilioVerifyService.send_sms_token(@resource.mobile_phone)
-      success = verification.status == 'pending'
+      if response&.status == 'pending'
+        message = destination[:channel] == 'sms' ? 'texted' : 'emailed'
+        flash.now[:notice] = "A verification code has been #{message} to you."
+      elsif rate_limited
+        flash.now[:error] = 'Too many verification code requests. Please wait a few minutes before trying again.'
+      else
+        flash.now[:error] = 'The verification code failed to send. Please try again.'
+      end
 
-      render json: {
-        sent: success,
-        message: success ? 'Token was sent.' : 'Token was not sent, please try again.'
-      }
+      render :verify_twilio_verify
     end
 
     private
+
+      def two_factor_destination
+        return if @resource.blank?
+
+        if @resource.mobile_phone.present?
+          { to: @resource.mobile_phone, channel: 'sms' }
+        elsif RadConfig.two_factor_auth_email_fallback? && @resource.email.present?
+          { to: @resource.email, channel: 'email' }
+        end
+      end
 
       def authenticate_scope!
         send(:"authenticate_#{resource_name}!", force: true)

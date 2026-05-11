@@ -68,13 +68,28 @@ module LLM
       end
 
       def sanitize_for_api(items)
+        expired_call_ids = expired_call_ids(items)
+
         items.filter_map do |item|
           next unless item.is_a?(Hash)
 
           item = item.stringify_keys
           next if item['role'] == 'system'
+          next if expired_call_ids.include?(item['call_id'])
 
-          item.except('chat_date')
+          item.except('chat_date', 'expires_at')
+        end
+      end
+
+      def expired_call_ids(items)
+        items.each_with_object(Set.new) do |item, ids|
+          next unless item.is_a?(Hash)
+
+          item = item.stringify_keys
+          expires_at = item['expires_at']
+          next if expires_at.blank?
+
+          ids.add(item['call_id']) if Time.zone.parse(expires_at.to_s) <= Time.current
         end
       end
 

@@ -33,19 +33,6 @@ class GlobalValidation
       total_error_count += error_count
     end
 
-    if @override_model.blank?
-      specific_queries = RadConfig.global_validity_include!
-
-      specific_queries.each do |query|
-        start_time = Time.current
-        query_errors, error_count = check_query_records(query)
-        error_messages.concat(query_errors) if query_errors.present?
-        end_time = Time.current
-        add_stats query.call.to_sql, start_time, end_time, error_count
-        total_error_count += error_count
-      end
-    end
-
     @run_stats.sort_by! { |item| item[:run_seconds] }
     @run_stats.reverse!
 
@@ -86,19 +73,9 @@ class GlobalValidation
       klass = model.safe_constantize
       raise "unknown model #{model}" if klass.nil?
 
-      klass.find_each do |record|
-        error_count += 1 if validate_record(record, problems)
-      end
+      scope = klass.respond_to?(:global_validity_scope) ? klass.global_validity_scope : klass.all
 
-      [problems, error_count]
-    end
-
-    def check_query_records(query)
-      problems = []
-      error_count = 0
-      records = query.call
-
-      records.find_each do |record|
+      scope.find_each do |record|
         error_count += 1 if validate_record(record, problems)
       end
 

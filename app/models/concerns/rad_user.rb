@@ -1,10 +1,21 @@
 module RadUser
   extend ActiveSupport::Concern
 
+  STALE_PENDING_DAYS = 60
+
   USER_AUDIT_COLUMNS_DISABLED = %i[password password_confirmation encrypted_password reset_password_token
                                    confirmation_token unlock_token remember_created_at].freeze
 
   included do
+    include LLMMentionable
+
+    scope :mentionable_search, lambda { |query|
+      q = "%#{query.downcase}%"
+      cols = ['first_name', 'last_name', "CONCAT(first_name, ' ', last_name)", 'email']
+      conditions = cols.map { |col| "LOWER(#{col}) LIKE :q" }.join(' OR ')
+      active.where(conditions, q: q)
+    }
+
     belongs_to :user_status
 
     has_many :notification_settings, dependent: :destroy
@@ -106,6 +117,20 @@ module RadUser
     end
   end
 
+  def llm_attributes
+    {
+      id: id,
+      name: to_s,
+      email: email,
+      first_name: first_name,
+      last_name: last_name,
+      mobile_phone: mobile_phone,
+      active: active?,
+      external: external?,
+      timezone: timezone
+    }.compact
+  end
+
   def active?
     user_status&.active?
   end
@@ -123,6 +148,12 @@ module RadUser
   end
 
   def stale?
+    raise 'not applicable to inactive users' if user_status == UserStatus.default_inactive_status
+
+    if RadConfig.pending_users? && user_status == UserStatus.default_pending_status
+      return created_at < STALE_PENDING_DAYS.days.ago
+    end
+
     return false if updated_at > 1.week.ago
     return false if current_sign_in_at.present? && current_sign_in_at > 1.week.ago
 
@@ -208,7 +239,19 @@ module RadUser
   end
 
   def notify_new_user_signed_up
-    Notifications::NewUserSignedUpNotification.main(self).notify!
+    Notifications::NewUserSignedUpNotification.main(user: self, recipient_ids: User.active.admins.pluck(:id)).notify!
+  end
+
+  def new_user_signed_up_subject
+    return "#{self} Signed Up on #{RadConfig.app_name!}" if active?
+
+    "#{self} Signed Up on #{RadConfig.app_name!} - Awaiting Approval"
+  end
+
+  def new_user_signed_up_sms
+    return "#{self} signed up" if active?
+
+    "#{self} signed up and is awaiting approval"
   end
 
   def send_devise_notification(notification, *args)
@@ -255,9 +298,6 @@ module RadUser
   def locale
     User.languages[language]
   end
-
-  # TODO: this should be a db attribute when we enable the TOTP feature
-  def twilio_totp_factor_sid; end
 
   def timeout_in
     external? ? Devise.timeout_in : RadConfig.timeout_hours!.hours
@@ -364,7 +404,7 @@ module RadUser
     end
 
     def require_mobile_phone_two_factor?
-      otp_required_for_login?
+      otp_required_for_login? && !RadConfig.two_factor_auth_email_fallback?
     end
 
     def password_excludes_name
