@@ -1,6 +1,8 @@
 module RadUser
   extend ActiveSupport::Concern
 
+  STALE_PENDING_DAYS = 60
+
   USER_AUDIT_COLUMNS_DISABLED = %i[password password_confirmation encrypted_password reset_password_token
                                    confirmation_token unlock_token remember_created_at].freeze
 
@@ -146,6 +148,12 @@ module RadUser
   end
 
   def stale?
+    raise 'not applicable to inactive users' if user_status == UserStatus.default_inactive_status
+
+    if RadConfig.pending_users? && user_status == UserStatus.default_pending_status
+      return created_at < STALE_PENDING_DAYS.days.ago
+    end
+
     return false if updated_at > 1.week.ago
     return false if current_sign_in_at.present? && current_sign_in_at > 1.week.ago
 
@@ -396,7 +404,7 @@ module RadUser
     end
 
     def require_mobile_phone_two_factor?
-      otp_required_for_login?
+      otp_required_for_login? && !RadConfig.two_factor_auth_email_fallback?
     end
 
     def password_excludes_name
