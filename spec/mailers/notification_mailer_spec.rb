@@ -13,6 +13,46 @@ describe NotificationMailer do
     ActionMailer::Base.deliveries.clear
   end
 
+  describe '#new_user_signed_up' do
+    let(:new_user) { create :pending }
+    let(:notification_type) { Notifications::NewUserSignedUpNotification.main }
+    let(:payload) { { user: new_user } }
+    let(:internal_user) { create :admin }
+    let(:external_user) { create :user, :external }
+
+    context 'with all internal recipients' do
+      before do
+        described_class.new_user_signed_up(notification_type, [internal_user.id], payload).deliver_now
+      end
+
+      it 'includes the edit user link' do
+        expect(last_email.to).to include internal_user.email
+        expect(last_email.body.encoded).to match(%r{/users/#{new_user.id}/edit})
+      end
+    end
+
+    context 'with all external recipients' do
+      before do
+        described_class.new_user_signed_up(notification_type, [external_user.id], payload).deliver_now
+      end
+
+      it 'omits the edit user link' do
+        expect(last_email.to).to include external_user.email
+        expect(last_email.body.encoded).not_to match(%r{/users/\d+/edit})
+      end
+    end
+
+    context 'with mixed internal and external recipients' do
+      it 'raises an error' do
+        expect {
+          described_class.new_user_signed_up(notification_type,
+                                             [internal_user.id, external_user.id],
+                                             payload).deliver_now
+        }.to raise_error(RuntimeError, /mixed internal and external recipients/)
+      end
+    end
+  end
+
   describe '#global_validity' do
     let(:payload) { { error_count: 0, error_messages: [] } }
 

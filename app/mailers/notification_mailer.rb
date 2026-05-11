@@ -17,7 +17,7 @@ class NotificationMailer < RadMailer
 
     if internal_count.positive?
       if internal_count != recipient_users.count
-        raise "new_user_signed_up notification has mixed internal and external recipients " \
+        raise 'new_user_signed_up notification has mixed internal and external recipients ' \
               "(recipient ids: #{recipients.inspect}); external users cannot access the admin edit user link"
       end
 
