@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+
+# Installs stub _heroku schema and event-trigger functions into the local
+# Postgres template1 so that `heroku pg:pull` succeeds against Heroku DBs
+# that have heroku_admin-owned event triggers referencing _heroku.* functions.
+#
+# pg:pull dumps with `-N _heroku`, which skips the schema but still emits the
+# event triggers that reference its functions. Without these stubs, pg_restore
+# exits non-zero and rad_common's pg_pull path raises 'heroku pg:pull failed'.
+#
+# template1 is the default template for createdb, so every new local DB will
+# inherit the stubs automatically.
+
+local_host = 'localhost'
+local_user = `whoami`.strip
+
+sql = <<~SQL
+  CREATE SCHEMA IF NOT EXISTS _heroku;
+
+  CREATE OR REPLACE FUNCTION _heroku.extension_before_drop() RETURNS event_trigger
+    LANGUAGE plpgsql AS $$ BEGIN END; $$;
+
+  CREATE OR REPLACE FUNCTION _heroku.extension_before_run() RETURNS event_trigger
+    LANGUAGE plpgsql AS $$ BEGIN END; $$;
+
+  CREATE OR REPLACE FUNCTION _heroku.create_ext() RETURNS event_trigger
+    LANGUAGE plpgsql AS $$ BEGIN END; $$;
+
+  CREATE OR REPLACE FUNCTION _heroku.drop_ext() RETURNS event_trigger
+    LANGUAGE plpgsql AS $$ BEGIN END; $$;
+
+  CREATE OR REPLACE FUNCTION _heroku.validate_extension() RETURNS event_trigger
+    LANGUAGE plpgsql AS $$ BEGIN END; $$;
+SQL
+
+puts "Installing _heroku stubs into template1 (host=#{local_host} user=#{local_user})"
+
+require 'open3'
+out, err, status = Open3.capture3('psql', '-h', local_host, '-U', local_user, '-d', 'template1', '-v', 'ON_ERROR_STOP=1', stdin_data: sql)
+puts out unless out.empty?
+warn err unless err.empty?
+abort 'install_heroku_stubs failed' unless status.success?
+
+puts 'Done.'
