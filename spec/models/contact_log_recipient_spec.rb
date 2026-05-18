@@ -165,4 +165,18 @@ RSpec.describe ContactLogRecipient do
       end
     end
   end
+
+  describe 'when the to_user is destroyed' do
+    let(:contact_log) { create :contact_log, :email, from_user: nil }
+
+    let!(:recipient) do
+      create :contact_log_recipient, :email, contact_log: contact_log, email: admin.email, to_user: admin
+    end
+
+    it 'nullifies to_user_id and preserves the recipient and contact log' do
+      expect { admin.destroy! }.not_to change(ContactLog, :count)
+      expect(ContactLog.exists?(contact_log.id)).to be true
+      expect(recipient.reload.to_user_id).to be_nil
+    end
+  end
 end
