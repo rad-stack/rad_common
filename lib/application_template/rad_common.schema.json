@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/rad-stack/rad_common/main/lib/application_template/rad_common.schema.json",
+  "title": "RadCommon configuration",
+  "description": "Shape and type schema for config/rad_common.yml. Cross-field rules live in RadConfig.check_validity! and are not enforced here.",
+  "type": "object",
+  "required": ["default", "development", "test", "production"],
+  "properties": {
+    "default": { "$ref": "#/$defs/envSection" },
+    "development": { "$ref": "#/$defs/envSection" },
+    "test": { "$ref": "#/$defs/envSection" },
+    "staging": { "$ref": "#/$defs/envSection" },
+    "production": { "$ref": "#/$defs/envSection" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "envSection": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "app_name": { "type": "string" },
+        "host_name": { "type": "string" },
+        "start_route": { "type": "string" },
+        "client_table_name": { "type": "string" },
+        "marketing_subdomain": { "type": "string" },
+        "filter_toggle_default_behavior": {
+          "type": "string",
+          "enum": ["remember_state", "always_open", "always_closed"]
+        },
+
+        "timeout_hours": { "type": "integer", "minimum": 1 },
+        "expire_password_after_days": { "type": "integer", "minimum": 1 },
+        "two_factor_remember_device_days": { "type": "number", "minimum": 0 },
+        "global_validity_days": { "type": "integer", "minimum": 0 },
+        "global_validity_timeout_hours": { "type": "integer", "minimum": 0 },
+
+        "use_avatar": { "type": "boolean" },
+        "disable_sign_up": { "type": "boolean" },
+        "disable_invite": { "type": "boolean" },
+        "manually_create_users": { "type": "boolean" },
+        "pending_users": { "type": "boolean" },
+        "secure_sentry": { "type": "boolean" },
+        "external_users": { "type": "boolean" },
+        "validate_external_email_domain": { "type": "boolean" },
+        "validate_user_domains": { "type": "boolean" },
+        "app_logo_includes_name": { "type": "boolean" },
+        "mailer_phone_number": { "type": "boolean" },
+        "impersonate": { "type": "boolean" },
+        "user_clients": { "type": "boolean" },
+        "user_profiles": { "type": "boolean" },
+        "show_help_menu": { "type": "boolean" },
+        "show_sign_in_marketing": { "type": "boolean" },
+        "canadian_addresses": { "type": "boolean" },
+        "saved_search_filters_enabled": { "type": "boolean" },
+        "switch_languages": { "type": "boolean" },
+        "storage_config_override": { "type": "boolean" },
+        "database_config_override": { "type": "boolean" },
+        "procfile_override": { "type": "boolean" },
+        "require_mobile_phone": { "type": "boolean" },
+        "allow_marketing_site": { "type": "boolean" },
+        "force_marketing_site": { "type": "boolean" },
+        "allow_crawling": { "type": "boolean" },
+        "always_crawl": { "type": "boolean" },
+        "last_first_user": { "type": "boolean" },
+        "timezone_detection": { "type": "boolean" },
+        "portal": { "type": "boolean" },
+        "rad_system_chat_enabled": { "type": "boolean" },
+        "legal_docs": { "type": "boolean" },
+        "legacy_assets": { "type": "boolean" },
+        "shared_database": { "type": "boolean" },
+        "two_factor_auth_enabled": { "type": "boolean" },
+        "two_factor_auth_all_users": { "type": "boolean" },
+        "two_factor_auth_email_fallback": { "type": "boolean" },
+        "action_cable_enabled": {
+          "description": "RadConfig coerces with .to_s.downcase == 'true' — boolean preferred, string accepted.",
+          "oneOf": [
+            { "type": "boolean" },
+            { "type": "string", "enum": ["true", "false"] }
+          ]
+        },
+
+        "crawlable_subdomains": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "clone_local_exclude": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "global_validity_exclude": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "global_validity_supress": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "rad_assistant_system_tools": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "additional_user_params": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/strongParam" }
+        },
+        "additional_user_registration_params": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/strongParam" }
+        },
+        "additional_user_profile_params": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/strongParam" }
+        },
+        "additional_company_params": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/strongParam" }
+        },
+
+        "system_usage_models": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/systemUsageEntry" }
+        },
+        "restricted_audit_attributes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/restrictedAuditAttribute" }
+        },
+        "global_search_scopes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/globalSearchScope" }
+        },
+        "duplicates": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/duplicate" }
+        }
+      }
+    },
+
+    "strongParam": {
+      "description": "Rails strong-params entry: either a scalar key, or { key: [] } / { key: {...} } for nested params.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "oneOf": [
+              { "type": "array" },
+              { "type": "object" }
+            ]
+          }
+        }
+      ]
+    },
+
+    "systemUsageEntry": {
+      "description": "Either a model class name, or [model, scope, label].",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "type": "string" }
+        }
+      ]
+    },
+
+    "restrictedAuditAttribute": {
+      "type": "object",
+      "required": ["model", "attribute"],
+      "additionalProperties": false,
+      "properties": {
+        "model": { "type": "string" },
+        "attribute": { "type": "string" }
+      }
+    },
+
+    "globalSearchScope": {
+      "type": "object",
+      "required": ["name", "model", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "model": { "type": "string" },
+        "description": { "type": "string" },
+        "columns": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "methods": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "joins": { "type": "string" },
+        "query_where": { "type": "string" },
+        "query_order": { "type": "string" },
+        "min_length": { "type": "integer", "minimum": 1 },
+        "data_type": { "type": "string" },
+        "search_label": { "type": "string" },
+        "hide_global_nav": { "type": "boolean" },
+        "super_search_exclude": { "type": "boolean" },
+        "authorized": { "type": "boolean" }
+      }
+    },
+
+    "duplicate": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "additional_items": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/duplicateAdditionalItem" }
+        },
+        "allow_merge_all": { "type": "boolean" },
+        "bypass_address": { "type": "boolean" },
+        "notify_threshold": { "type": "number" },
+        "score_upper_threshold": { "type": "number" },
+        "score_lower_threshold": { "type": "number" },
+        "first_name_weight": { "type": "number" },
+        "last_name_weight": { "type": "number" },
+        "name_weight": { "type": "number" },
+        "other_weight": { "type": "number" },
+        "personal_contact_multiplier": { "type": "number" }
+      }
+    },
+
+    "duplicateAdditionalItem": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "label": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["string", "association", "boolean", "integer", "levenshtein"]
+        },
+        "display_only": { "type": "boolean" },
+        "weight": { "type": "number" }
+      }
+    }
+  }
+}

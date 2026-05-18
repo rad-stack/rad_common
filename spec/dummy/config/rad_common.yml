@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=../../../lib/application_template/rad_common.schema.json
+
 default: &default
   app_name: Demo Foo
   use_avatar: true
@@ -146,3 +148,9 @@ test:
   two_factor_auth_enabled: true
   pace_api:
     host: 'radstackmis.myprintdesk.net'
+
+production:
+  <<: *default
+
+  host_name: rad-common.example.com
+  two_factor_auth_enabled: true

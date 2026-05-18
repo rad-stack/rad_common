@@ -91,6 +91,10 @@ module RadCommon
         copy_file '../../../../../.stylelintrc.json', '.stylelintrc.json'
 
         # config
+        copy_file '../../../../../lib/application_template/rad_common.schema.json',
+                  'config/rad_common.schema.json'
+        RadCommon::ConfigUpdater.add_schema_directive
+
         unless RadConfig.storage_config_override?
           copy_file '../../../../../spec/dummy/config/storage.yml', 'config/storage.yml'
         end
@@ -550,6 +554,13 @@ gem 'rubocop-capybara'
           inject_into_file 'Gemfile', after: "gem 'better_errors'\n" do <<-'RUBY'
   gem 'tty-prompt'
         RUBY
+          end
+
+          unless File.readlines('Gemfile').grep(/gem 'json_schemer'/).any?
+            inject_into_file 'Gemfile', after: "gem 'rspec-rails'\n" do <<-'RUBY'
+  gem 'json_schemer'
+            RUBY
+            end
           end
 
           unless RadConfig.legacy_assets?

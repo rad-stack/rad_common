@@ -228,6 +228,7 @@ gem_group :test do
 end
 
 gem_group :development, :test do
+  gem 'json_schemer'
   gem 'pry-rails'
   gem 'rspec-rails'
   gem 'wkhtmltopdf-binary'
@@ -235,6 +236,7 @@ end
 
 after_bundle do
   copy_github_file 'lib/application_template/rad_common.yml', 'config/rad_common.yml'
+  copy_github_file 'lib/application_template/rad_common.schema.json', 'config/rad_common.schema.json'
 
   copy_file "#{@rad_common_directory}/spec/dummy/config/credentials/test.key", 'config/credentials/test.key'
 
