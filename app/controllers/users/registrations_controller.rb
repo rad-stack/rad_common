@@ -2,7 +2,8 @@ module Users
   class RegistrationsController < DeviseInvitable::RegistrationsController
     def create
       if existing_open_invitation?
-        flash[:error] = 'There is an open invitation for this user, please accept the invitation or ask the admin to re-invite you.'
+        flash[:error] = 'There is an open invitation for this user, please accept the invitation or ' \
+                        'ask the admin to re-invite you.'
         redirect_to root_path
       else
         super
