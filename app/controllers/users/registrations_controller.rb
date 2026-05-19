@@ -2,12 +2,8 @@ module Users
   class RegistrationsController < DeviseInvitable::RegistrationsController
     def create
       if existing_open_invitation?
-        self.resource = resource_class.new(sign_up_params.except(:password, :password_confirmation))
-        resource.errors.add(:email, :has_open_invitation,
-                            message: 'has a pending invitation — please use your invitation email to set up your account')
-        clean_up_passwords resource
-        set_minimum_password_length if respond_to?(:set_minimum_password_length, true)
-        respond_with resource
+        flash[:error] = 'There is an open invitation for this user, please accept the invitation or ask the admin to re-invite you.'
+        redirect_to root_path
       else
         super
       end
