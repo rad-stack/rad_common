@@ -26,7 +26,7 @@ module LazyContainerHelper
     end
   end
 
-  def lazy_container_link(text, url, type:, title: nil, subtitle: nil, size: nil, width: nil, **options)
+  def lazy_container_link(text, url, type:, title: nil, subtitle: nil, size: nil, width: nil, link_target: nil, **options)
     container_id ||= type.to_s == 'modal' ? 'global-lazy-modal' : 'global-lazy-offcanvas'
 
     options[:data] ||= {}
@@ -37,6 +37,7 @@ module LazyContainerHelper
     options[:data][:lazy_subtitle] = subtitle if subtitle.present?
     options[:data][:lazy_size] = size if size.present?
     options[:data][:lazy_width] = width if width.present?
+    options[:data][:lazy_link_target] = link_target if link_target.present?
 
     link_to text, '#', **options
   end

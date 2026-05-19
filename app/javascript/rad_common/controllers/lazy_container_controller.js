@@ -39,6 +39,7 @@ export default class extends Controller {
     const url = trigger.dataset.lazyUrl;
     if (!url) return;
 
+    this.lazyContainer.linkTarget = trigger.dataset.lazyLinkTarget || null;
     this.lazyContainer.loadContent({
       url,
       title: trigger.dataset.lazyTitle,

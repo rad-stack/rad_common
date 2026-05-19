@@ -3,13 +3,14 @@ import { Turbo } from '@hotwired/turbo-rails';
 const bootstrap = require('bootstrap');
 
 export class LazyContainer {
-  static open({ url, type = 'modal', title = null, subtitle = null, size = null, width = null, containerId = null, frameId = null }) {
+  static open({ url, type = 'modal', title = null, subtitle = null, size = null, width = null, containerId = null, frameId = null, linkTarget = null }) {
     const resolvedContainerId = containerId || (type === 'modal' ? 'global-lazy-modal' : 'global-lazy-offcanvas');
     const element = document.getElementById(resolvedContainerId);
     if (!element) return null;
 
     const resolvedFrameId = frameId || element.dataset.lazyContainerFrameValue || 'global-lazy-content';
     const container = new LazyContainer(element, { type, frameId: resolvedFrameId });
+    container.linkTarget = linkTarget;
     container.open({ url, title, subtitle, size, width });
     return container;
   }
@@ -52,7 +53,8 @@ export class LazyContainer {
     const bodyTarget = this.element.querySelector('[data-lazy-container-target="body"]');
     if (!bodyTarget) return;
 
-    bodyTarget.innerHTML = `<turbo-frame id="${this.frameId}"></turbo-frame>`;
+    const targetAttr = this.linkTarget ? ` target="${this.linkTarget}"` : '';
+    bodyTarget.innerHTML = `<turbo-frame id="${this.frameId}"${targetAttr}></turbo-frame>`;
 
     if (title) {
       const titleTarget = this.element.querySelector('[data-lazy-container-target="title"]');
