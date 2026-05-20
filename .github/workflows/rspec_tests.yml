@@ -18,6 +18,7 @@ env:
 jobs:
   setup-matrix:
     runs-on: ubuntu-latest
+    timeout-minutes: 1
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       total_groups: ${{ steps.set-matrix.outputs.total_groups }}
@@ -36,6 +37,7 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 1
     needs: setup-matrix
     strategy:
       fail-fast: false
@@ -67,43 +69,52 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        timeout-minutes: 1
 
       - name: Running custom steps
         uses: ./.github/actions/custom-action
+        timeout-minutes: 1
 
       - name: Install ImageMagick
+        timeout-minutes: 2
         run: |
           sudo apt-get update
-          sudo apt-get install -y imagemagick   
+          sudo apt-get install -y imagemagick
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
+        timeout-minutes: 1
         with:
           ruby-version: ${{ steps.set-ruby-version.outputs.version }}
           bundler-cache: true
 
       - name: Set up Node
         uses: actions/setup-node@v4
+        timeout-minutes: 1
         with:
           node-version: '24.12.0'
           cache: 'yarn'
 
       - name: Yarn install
+        timeout-minutes: 1
         working-directory: spec/dummy
         run: yarn install
 
       - name: Prepare database
+        timeout-minutes: 1
         working-directory: spec/dummy
         run: |
           bundle exec rails db:test:prepare
 
       - name: Compile esbuild assets
+        timeout-minutes: 1
         working-directory: spec/dummy
         run: |
           yarn build
           bundle exec bin/rails assets:precompile
 
       - name: Load schema
+        timeout-minutes: 1
         working-directory: spec/dummy
         run: |
           if [ "${{ needs.setup-matrix.outputs.total_groups }}" == "1" ]; then
@@ -113,6 +124,7 @@ jobs:
           fi
 
       - name: Run RSpec tests
+        timeout-minutes: 40
         run: |
           if [ "${{ needs.setup-matrix.outputs.total_groups }}" == "1" ]; then
             script -q -e -c "bin/rc_rspec" /dev/null
@@ -123,6 +135,7 @@ jobs:
       - name: Upload screenshots on failure
         uses: actions/upload-artifact@v4
         if: failure()
+        timeout-minutes: 5
         with:
           name: failed-screenshots-${{ matrix.TEST_ENV_NUMBER }}
           path: tmp/capybara/**/*
