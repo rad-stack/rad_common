@@ -22,6 +22,7 @@ module RadCommon
 
         fix_namespacing
         remove_file 'public/robots.txt'
+        copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
         install_procfile
         standardize_date_methods
         install_database_yml
@@ -183,9 +184,9 @@ Seeder.new.seed!
 
         gsub_file 'Gemfile', "gem 'jsbundling-rails'\n", ''
 
-        apply_migrations
+        install_session_store
 
-        check_schema_standards
+        apply_migrations
       end
 
       def self.next_migration_number(path)
@@ -308,7 +309,6 @@ Seeder.new.seed!
           return if RadConfig.procfile_override?
 
           copy_file '../../../../../spec/dummy/Procfile', 'Procfile'
-          copy_file '../../../../../spec/dummy/config/sidekiq.yml', 'config/sidekiq.yml'
         end
 
         def replace_webdrivers_gem_with_selenium
@@ -329,29 +329,6 @@ Seeder.new.seed!
           if Dir.exist?('spec/factories/rad_common') && Dir.empty?('spec/factories/rad_common')
             Dir.rmdir('spec/factories/rad_common')
           end
-        end
-
-        def check_schema_standards
-          ActiveRecord::Base.connection.tables.each do |table|
-            ActiveRecord::Base.connection.columns(table).each do |column|
-              next unless invalid_boolean_schema?(column) || invalid_array_schema?(column)
-
-              raise "column #{table}.#{column.name}: type: #{column.type}, null: #{column.null}, default: #{column.default}"
-            end
-          end
-        end
-
-        def invalid_boolean_schema?(column)
-          return false if column.array?
-          return false unless column.type == :boolean
-
-          column.null || column.default.blank?
-        end
-
-        def invalid_array_schema?(column)
-          return false unless column.array?
-
-          column.null || column.default.nil?
         end
 
         def remove_old_rad_config_settings
@@ -456,6 +433,10 @@ Seeder.new.seed!
 
           search_and_replace 'before { login_as(admin, scope: :user) }',
                              'before { login_as admin, scope: :user }'
+        end
+
+        def install_session_store
+          copy_file '../session_store.rb', 'config/initializers/session_store.rb'
         end
 
         def install_database_yml
@@ -770,6 +751,7 @@ gem 'propshaft'
           apply_migration '20251007153435_move_fax_error_message.rb'
           apply_migration '20250418211716_add_created_at_index_to_system_usages.rb'
           apply_migration '20251017110121_rename_direction_to_contact_direction.rb'
+          apply_migration '20251103183322_fix_jsonb_field_standards.rb'
           apply_migration '20251024225222_fix_chat_types.rb'
           apply_migration '20251027181305_rename_chat_type_to_chat_class.rb'
           apply_migration '20251103191522_remove_embedding_metadata.rb'
@@ -781,6 +763,7 @@ gem 'propshaft'
           apply_migration '20260324000000_remove_otp_required_for_login.rb'
           apply_migration '20260422120000_create_heroku_ext_schema.rb'
           apply_migration '20260426170000_backfill_contact_log_contact_direction.rb'
+          apply_migration '20260510120000_enable_pg_stat_statements.rb'
         end
 
         def installed_app_name
