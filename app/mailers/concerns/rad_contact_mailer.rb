@@ -17,6 +17,7 @@ module RadContactMailer
                                content: mail.subject,
                                record: @contact_log_record,
                                from_user: @contact_log_from_user,
+                               category: @contact_log_category,
                                sent: true
 
       mail.to.each do |recipient|
