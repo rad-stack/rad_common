@@ -3,7 +3,8 @@ module RadCommonRoutes
     router.instance_exec do
       devise_controllers = { confirmations: 'users/confirmations',
                              devise_twilio_verify: 'users/devise_twilio_verify',
-                             invitations: 'users/invitations' }
+                             invitations: 'users/invitations',
+                             registrations: 'users/registrations' }
 
       devise_for :users, path: 'auth', controllers: devise_controllers
 
