@@ -1,6 +1,14 @@
 module RadCommon
   class ConfigUpdater
     CONFIG_FILE = 'config/rad_common.yml'.freeze
+    SCHEMA_DIRECTIVE = '# yaml-language-server: $schema=./rad_common.schema.json'.freeze
+
+    def self.add_schema_directive
+      content = File.read(CONFIG_FILE)
+      return if content.include?('yaml-language-server')
+
+      File.write(CONFIG_FILE, "#{SCHEMA_DIRECTIVE}\n\n#{content}")
+    end
 
     def self.add_rad_config_setting(setting_name, default_value)
       standard_config_end = /\n(  system_usage_models:)/

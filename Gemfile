@@ -39,6 +39,7 @@ end
 
 group :development, :test do
   gem 'bootsnap', require: false
+  gem 'json_schemer'
   gem 'propshaft'
   gem 'pry'
   gem 'rspec-rails'
