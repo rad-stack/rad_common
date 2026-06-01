@@ -9,7 +9,7 @@ module RadContactMailer
   private
 
     def start_contact_log
-      @rad_contact_log = ContactLog.create!(service_type: :email)
+      @rad_contact_log = ContactLog.create!(service_type: :email, contact_direction: :outgoing)
     end
 
     def finish_contact_log

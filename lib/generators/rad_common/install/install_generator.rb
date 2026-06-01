@@ -762,6 +762,7 @@ gem 'propshaft'
           apply_migration '20260326120000_fix_new_user_signed_up_notification.rb'
           apply_migration '20260324000000_remove_otp_required_for_login.rb'
           apply_migration '20260422120000_create_heroku_ext_schema.rb'
+          apply_migration '20260426170000_backfill_contact_log_contact_direction.rb'
           apply_migration '20260510120000_enable_pg_stat_statements.rb'
           apply_migration '20260512120000_add_category_to_contact_logs.rb'
         end
