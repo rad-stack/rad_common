@@ -6,7 +6,10 @@ RSpec.describe PhoneSMSSender, type: :service do
   let(:mobile_phone) { to_user.mobile_phone }
   let(:message) { 'test message' }
   let(:client) { create :client }
-  let(:sms_sender) { described_class.new(message, from_user.id, mobile_phone, nil, false, contact_log_record: client) }
+  let(:sms_sender) do
+    described_class.new(message, from_user.id, mobile_phone, nil, false,
+                        contact_log_record: client, category: 'statement')
+  end
 
   before { allow(RadRetry).to receive(:exponential_pause) }
 
@@ -20,6 +23,7 @@ RSpec.describe PhoneSMSSender, type: :service do
           expect(result).to be(true)
           expect(ContactLog.last.from_user).to eq from_user
           expect(ContactLog.last.record).to eq client
+          expect(ContactLog.last.category).to eq 'statement'
         end
 
         it 'sets to user if phone number matches' do
