@@ -2,11 +2,12 @@ class PhoneSMSSender
   OPT_OUT_MESSAGE = 'To no longer receive text messages, text STOP'.freeze
 
   attr_accessor :message, :contact_log_from_user_id, :to_mobile_phone, :to_user, :media_url, :twilio,
-                :opt_out_message_sent, :exception, :contact_log_record, :log
+                :opt_out_message_sent, :exception, :contact_log_record, :category, :log
 
   delegate :from_number, to: :twilio
 
-  def initialize(message, contact_log_from_user_id, to_mobile_phone, media_url, force_opt_out, contact_log_record: nil)
+  def initialize(message, contact_log_from_user_id, to_mobile_phone, media_url, force_opt_out,
+                 contact_log_record: nil, category: nil)
     raise "The message from user #{contact_log_from_user_id} failed: the message is blank." if message.blank?
     raise 'The message failed: the mobile phone number is blank.' if to_mobile_phone.blank?
 
@@ -16,6 +17,7 @@ class PhoneSMSSender
     self.twilio = RadTwilio.new
     self.message = augment_message(message, force_opt_out)
     self.contact_log_record = contact_log_record
+    self.category = category
   end
 
   def send!
@@ -82,7 +84,8 @@ class PhoneSMSSender
                                 sent: sent,
                                 sms_message_id: message_sid,
                                 sms_opt_out_message_sent: opt_out_message_sent,
-                                record: contact_log_record
+                                record: contact_log_record,
+                                category: category
 
       ContactLogRecipient.create! contact_log: log,
                                   phone_number: to_mobile_phone,
