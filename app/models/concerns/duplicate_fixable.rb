@@ -292,6 +292,8 @@ module DuplicateFixable
 
       duplicate_record.clean_up_duplicate(self)
 
+      ContactLog.where(record: duplicate_record).update_all(record_id: id)
+
       if is_a?(User)
         duplicate_record.contact_logs_from.update_all from_user_id: id
         duplicate_record.contact_logs_to.update_all to_user_id: id
