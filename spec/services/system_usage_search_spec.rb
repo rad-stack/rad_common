@@ -20,6 +20,20 @@ describe SystemUsageSearch, type: :service do
     it { is_expected.to eq result }
   end
 
+  describe 'last_period_complete?' do
+    subject { system_usage.last_period_complete? }
+
+    context 'when the current period is incomplete' do
+      it { Timecop.freeze(Time.current.beginning_of_week(:sunday) + 3.days) { is_expected.to be false } }
+    end
+
+    context 'when the current period is complete' do
+      let(:params) { { search: { date_mode: 'Daily', date_range_count: 4 } } }
+
+      it { Timecop.freeze(Time.current.end_of_day) { is_expected.to be true } }
+    end
+  end
+
   describe 'date_column_ranges' do
     subject(:date_ranges) { system_usage.date_column_ranges.map { |range| [range[:start], range[:end]] } }
 

@@ -15,14 +15,20 @@ class RadTwilio
     client.calls.create from: from_number, to: to, url: URI::Parser.new.escape(url)
   end
 
-  def self.send_verify_sms(mobile_phone)
-    response = RadRetry.perform_request(retry_count: 2, raise_original: true) do
+  class MaxSendAttemptsReachedError < StandardError; end
+
+  MAX_SEND_ATTEMPTS_REACHED_CODE = 60_203
+
+  def self.send_verify_token(to:, channel:)
+    RadRetry.perform_request(retry_count: 2, raise_original: true) do
       RadRateLimiter.new(limit: 500, period: 5.minutes, key: 'twilio_verify').run do
-        TwilioVerifyService.send_sms_token(mobile_phone)
+        TwilioVerifyService.send_token(to: to, channel: channel)
+      rescue Twilio::REST::RestError => e
+        raise unless e.code == MAX_SEND_ATTEMPTS_REACHED_CODE
+
+        raise MaxSendAttemptsReachedError
       end
     end
-
-    response.status == 'pending'
   end
 
   def from_number
@@ -93,6 +99,7 @@ class RadTwilio
     def mobile_carrier?(response)
       return false if response.phone_number.starts_with?('+1246') # Barbados
       return false if response.phone_number.starts_with?('+1829') # Dominican Republic
+      return false if response.phone_number.starts_with?('+1345') # Cayman Islands
       return true if response.carrier['type'] == 'mobile'
       return true if response.carrier['type'] == 'voip' && response.carrier['name'] == 'Google (Grand Central) - SVR'
 

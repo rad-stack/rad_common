@@ -28,8 +28,8 @@
     "trix": "^2.1.15"
   },
   "devDependencies": {
-    "eslint": "^9.39.1",
-    "stylelint": "^16.26.1"
+    "eslint": "^10.2.1",
+    "stylelint": "^17.9.0"
   },
   "scripts": {
     "heroku-postbuild": "echo 'Skipping Node.js build phase - assets will be built during Rails asset precompilation'",

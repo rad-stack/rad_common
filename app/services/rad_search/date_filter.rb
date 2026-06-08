@@ -142,7 +142,7 @@ module RadSearch
       true
     end
 
-    def allow_not
+    def allow_not?
       false
     end
 

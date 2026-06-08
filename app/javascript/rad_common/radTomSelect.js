@@ -1,6 +1,14 @@
 import TomSelect from 'tom-select';
 
 export class RadTomSelect {
+  static config = {
+    noBackspaceDelete: false
+  };
+
+  static _noBackspaceDelete() {
+    return RadTomSelect.config.noBackspaceDelete === true;
+  }
+
   static _parseValue(value) {
     if (value === 'true') return true;
     if (value === 'false') return false;
@@ -35,6 +43,9 @@ export class RadTomSelect {
       const plugins = ['dropdown_input'];
       if (el.multiple) {
         plugins.push('remove_button');
+      }
+      if (RadTomSelect._noBackspaceDelete()) {
+        plugins.push('no_backspace_delete');
       }
 
       const initialPlaceholder = el.dataset.placeholder || 'Start typing to search';
@@ -83,6 +94,9 @@ export class RadTomSelect {
       const plugins = ['dropdown_input'];
       if (el.multiple) {
         plugins.push('remove_button');
+      }
+      if (RadTomSelect._noBackspaceDelete()) {
+        plugins.push('no_backspace_delete');
       }
 
       const dataOverrides = RadTomSelect._parseDataOverrides(el);

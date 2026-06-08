@@ -12,12 +12,22 @@ class NotificationMailer < RadMailer
     @contact_log_record = user
     user_is_active = user.active?
 
-    action_message = 'Review their user registration information'
-    action_message += user_is_active ? ' if desired.' : ' and approve them if desired.'
+    recipient_users = User.where(id: recipients)
+    internal_count = recipient_users.internal.count
 
-    @email_action = { message: action_message,
-                      button_text: user_is_active ? 'Review' : 'Review & Approve',
-                      button_url: edit_user_url(user) }
+    if internal_count.positive?
+      if internal_count != recipient_users.count
+        raise 'new_user_signed_up notification has mixed internal and external recipients ' \
+              "(recipient ids: #{recipients.inspect}); external users cannot access the admin edit user link"
+      end
+
+      action_message = 'Review their user registration information'
+      action_message += user_is_active ? ' if desired.' : ' and approve them if desired.'
+
+      @email_action = { message: action_message,
+                        button_text: user_is_active ? 'Review' : 'Review & Approve',
+                        button_url: edit_user_url(user) }
+    end
 
     @message = "#{user} has signed up on #{RadConfig.app_name!}"
     @message += user_is_active ? '.' : ' and is awaiting approval.'

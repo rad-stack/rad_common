@@ -8,14 +8,13 @@ export default class extends Controller {
     let selectedOption = target.options[target.selectedIndex];
 
     let external = selectedOption.dataset.external == 'true';
-    if(external) {
-      this.validDomainInfoTarget.value;
-    }
+
+    if (!this.hasValidDomainInfoTarget) return;
 
     if (external) {
-      this.validDomainInfoTarget?.classList?.add('d-none');
+      this.validDomainInfoTarget.classList.add('d-none');
     } else {
-      this.validDomainInfoTarget?.classList?.remove('d-none');
+      this.validDomainInfoTarget.classList.remove('d-none');
     }
   }
 

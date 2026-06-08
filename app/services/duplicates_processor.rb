@@ -62,7 +62,7 @@ class DuplicatesProcessor
     end
 
     def birth_date_matches
-      return [] unless model_klass.use_birth_date? && model_klass.use_first_last_name? && first_last_name_present?
+      return [] unless model_klass.birth_date_column? && model_klass.use_first_last_name? && first_last_name_present?
 
       query_string = 'birth_date = ? AND (levenshtein(upper(first_name), ?) <= 1 OR ' \
                      'levenshtein(upper(last_name), ?) <= 1)'
@@ -173,7 +173,7 @@ class DuplicatesProcessor
                   { name: 'last_name', weight: duplicate_last_name_weight }]
       end
 
-      items.push(name: 'birth_date', weight: 30) if model_klass.use_birth_date?
+      items.push(name: 'birth_date', weight: 30) if model_klass.birth_date_column?
 
       applicable_duplicate_items.each do |item|
         next if item[:display_only]

@@ -118,6 +118,16 @@ describe RadMailer do
     end
   end
 
+  describe '#simple_message with a contact log category' do
+    before do
+      described_class.simple_message(user.email, 'foo', 'bar', contact_log_category: 'statement').deliver_now
+    end
+
+    it 'tags the contact log with the category' do
+      expect(ContactLog.last.category).to eq 'statement'
+    end
+  end
+
   describe '#email_report' do
     let(:csv) { CSV.generate { '' } }
     let(:report_name) { 'Sample Report' }
