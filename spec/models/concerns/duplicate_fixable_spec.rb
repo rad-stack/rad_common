@@ -56,6 +56,20 @@ describe DuplicateFixable do
     end
   end
 
+  describe '#merge_duplicates' do
+    let!(:contact_log) { create :contact_log, record: attorney_2 }
+
+    it 'moves contact logs from the duplicate onto the surviving record' do
+      attorney.merge_duplicates([attorney_2.id], admin)
+      expect(contact_log.reload.record).to eq attorney
+    end
+
+    it 'removes the duplicate record' do
+      attorney.merge_duplicates([attorney_2.id], admin)
+      expect(Attorney.exists?(attorney_2.id)).to be false
+    end
+  end
+
   describe 'reset_duplicates' do
     before do
       attorney.process_duplicates(bypass_notifications: bypass_notifications)

@@ -292,10 +292,11 @@ module DuplicateFixable
 
       duplicate_record.clean_up_duplicate(self)
 
+      ContactLog.where(record: duplicate_record).update_all(record_id: id)
+
       if is_a?(User)
         duplicate_record.contact_logs_from.update_all from_user_id: id
         duplicate_record.contact_logs_to.update_all to_user_id: id
-        ContactLog.where(record_type: 'User', record_id: duplicate_record.id).update_all record_id: id
         Audited::Audit.where(user_id: duplicate_record.id).update_all user_id: id
         User.where(invited_by_id: duplicate_record.id).update_all invited_by_id: id
       end
