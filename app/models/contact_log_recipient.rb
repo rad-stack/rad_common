@@ -18,8 +18,8 @@ class ContactLogRecipient < ApplicationRecord
   enum :fax_status, { queued: 0, in_progress: 1, completed: 2, failure: 3 }, prefix: true
 
   scope :sms, -> { joins(:contact_log).where(contact_logs: { service_type: :sms }) }
-  scope :failed, -> { joins(:contact_log).where(success: false) }
-  scope :successful, -> { joins(:contact_log).where(success: true) }
+  scope :failed, -> { where(success: false) }
+  scope :successful, -> { where(success: true) }
   scope :last_day, -> { joins(:contact_log).where('contact_logs.created_at > ?', 24.hours.ago) }
 
   scope :sorted, lambda {

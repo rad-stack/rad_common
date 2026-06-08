@@ -765,6 +765,7 @@ gem 'propshaft'
           apply_migration '20260426170000_backfill_contact_log_contact_direction.rb'
           apply_migration '20260510120000_enable_pg_stat_statements.rb'
           apply_migration '20260512120000_add_category_to_contact_logs.rb'
+          apply_migration '20260608120000_add_success_created_at_index_to_contact_log_recipients.rb'
         end
 
         def installed_app_name

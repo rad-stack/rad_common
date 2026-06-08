@@ -38,7 +38,7 @@ class SystemUsageSearch < RadSearch::Search
             raise "invalid option: #{item.class}"
           end
 
-          current_count = result.count if current_count.blank?
+          current_count = estimated_total(result) if current_count.blank?
 
           data.push(name: name,
                     current_count: current_count,
@@ -72,6 +72,27 @@ class SystemUsageSearch < RadSearch::Search
   end
 
   private
+
+    def estimated_total(relation)
+      return relation.count unless estimable?(relation)
+
+      pg_row_estimate(relation.klass) || relation.count
+    end
+
+    def estimable?(relation)
+      relation.where_clause.empty? &&
+        relation.joins_values.empty? &&
+        relation.left_outer_joins_values.empty? &&
+        relation.klass.connection.adapter_name.match?(/postg/i)
+    end
+
+    def pg_row_estimate(klass)
+      connection = klass.connection
+      estimate = connection.select_value(
+        "SELECT reltuples::bigint FROM pg_class WHERE oid = #{connection.quote(klass.table_name)}::regclass"
+      )
+      estimate.to_i if estimate.present? && estimate.to_i.positive?
+    end
 
     def prepare_usage_items
       RadConfig.system_usage_models!.map { |item|
