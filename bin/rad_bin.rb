@@ -1,8 +1,15 @@
 require 'English'
 require 'fileutils'
-require 'tty-prompt'
 
 module RadBin
+  # tty-prompt is required lazily (only when an interactive selection is actually needed) so that
+  # stdlib-only callers like `bin/swo` can reuse helpers such as parse_heroku_apps without pulling
+  # in the gem or being able to run standalone (`ruby bin/swo ...`).
+  def self.build_prompt
+    require 'tty-prompt'
+    TTY::Prompt.new
+  end
+
   def self.system!(*args)
     system(*args) || abort("\n== Command #{args.join(' ')} failed ==")
   end
@@ -50,8 +57,7 @@ module RadBin
   def self.select_heroku_app(heroku_app_names)
     return heroku_app_names.first if heroku_app_names.length == 1
 
-    prompt = TTY::Prompt.new
-    prompt.select('Please select a Heroku app from the following options:', heroku_app_names)
+    build_prompt.select('Please select a Heroku app from the following options:', heroku_app_names)
   end
 
   def self.select_backup_id(heroku_app_name)
@@ -60,8 +66,7 @@ module RadBin
 
     backup_hash = completed_backups.to_h { |b| ["#{b[:id]} created at (#{b[:created_at]})", b[:id]] }
     choices = ['Generate new backup'] + backup_hash.keys
-    prompt = TTY::Prompt.new
-    choice = prompt.select('Please select a backup id from the following options:', choices)
+    choice = build_prompt.select('Please select a backup id from the following options:', choices)
     backup_hash[choice]
   end
 
