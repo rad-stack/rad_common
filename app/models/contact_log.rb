@@ -27,8 +27,8 @@ class ContactLog < ApplicationRecord
   validates :fax_message_id, :record_type, :record_id, presence: true, if: -> { fax? && sent? }
   validates :content, presence: true, if: -> { sent? && !fax? }
   validates :content, absence: true, if: :fax?
-  validates :contact_direction, presence: true, if: -> { sms? || fax? }
-  validates :contact_direction, :sms_media_url, :sms_message_id, absence: true, if: :email?
+  validates :contact_direction, inclusion: { in: %w[outgoing] }, if: -> { email? || voice? }
+  validates :sms_media_url, :sms_message_id, absence: true, if: :email?
   validates :fax_message_id, absence: true, unless: -> { fax? }
   validate :validate_incoming, if: :incoming?
   validate :validate_attachments_exists, if: :fax?

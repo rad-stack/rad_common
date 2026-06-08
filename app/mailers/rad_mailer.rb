@@ -27,6 +27,7 @@ class RadMailer < ActionMailer::Base
 
     @contact_log_record = options[:contact_log_record]
     @contact_log_from_user = options[:contact_log_from_user]
+    @contact_log_category = options[:contact_log_category]
 
     recipient = User.find(recipient.first) if recipient.is_a?(Array) && recipient.count == 1
 
@@ -156,7 +157,8 @@ class RadMailer < ActionMailer::Base
 
     def validate_simple_message_options(options)
       validate_options options,
-                       %i[contact_log_record contact_log_from_user do_not_format email_action cc bcc attachment]
+                       %i[contact_log_record contact_log_from_user contact_log_category do_not_format email_action cc
+                          bcc attachment]
     end
 
     def validate_email_report_options(options)
