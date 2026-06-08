@@ -1,0 +1,21 @@
+.hotwire-native {
+  padding-top: calc(56px + env(safe-area-inset-top));
+
+  .fixed-top {
+    padding-top: env(safe-area-inset-top);
+    background-color: #f8f9fa;
+  }
+
+  .navbar-brand img {
+    max-height: 30px;
+    width: auto;
+  }
+
+  .global-search-nav {
+    display: none;
+  }
+
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
