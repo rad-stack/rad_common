@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_12_120000) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_08_120000) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -173,6 +173,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_12_120000) do
     t.index ["created_at"], name: "index_contact_log_recipients_on_created_at"
     t.index ["email"], name: "index_contact_log_recipients_on_email"
     t.index ["phone_number"], name: "index_contact_log_recipients_on_phone_number"
+    t.index ["success", "created_at"], name: "index_contact_log_recipients_on_success_and_created_at"
     t.index ["to_user_id"], name: "index_contact_log_recipients_on_to_user_id"
   end
 
