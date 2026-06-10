@@ -1,0 +1,20 @@
+<% app_db = File.basename((defined?(Rails) && Rails.respond_to?(:root) && Rails.root || Dir.pwd).to_s) %>
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: <%= app_db %>_development
+  username: postgres
+  password: postgres
+  host: localhost
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: <%= app_db %>_test<%= ENV['TEST_ENV_NUMBER'] %>
+  username: postgres
+  password: postgres
+  host: localhost
+
+production:
+  url:  <%= ENV["DATABASE_URL"] %>
+  pool: <%= ENV["DB_POOL"] || 10 %>

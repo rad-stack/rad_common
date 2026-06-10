@@ -442,10 +442,7 @@ Seeder.new.seed!
         def install_database_yml
           return if RadConfig.database_config_override?
 
-          copy_file '../../../../../spec/dummy/config/database.yml', 'config/temp_database.yml'
-          gsub_file 'config/temp_database.yml', 'rad_common_', "#{installed_app_name}_"
-          copy_file Rails.root.join('config/temp_database.yml'), 'config/database.yml'
-          remove_file Rails.root.join('config/temp_database.yml')
+          copy_file 'database.yml', 'config/database.yml'
         end
 
         def install_github_workflow
