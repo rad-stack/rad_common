@@ -5,6 +5,12 @@
              data: contact_log_show_data(@contact_log),
              resource: @contact_log
 
+- if @contact_log.email_body.present?
+  .card
+    = render 'layouts/card_header', action_name: 'custom', title: 'Email Body', icon: 'fa-envelope'
+    .card-body
+      = simple_format @contact_log.email_body
+
 .card
   = render 'layouts/card_header',
            action_name: 'custom',
