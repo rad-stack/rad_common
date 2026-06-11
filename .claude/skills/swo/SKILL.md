@@ -53,6 +53,14 @@ in the background. If `bundle exec swo` isn't found, the app likely needs `bundl
 - **Retention is ~9 days** — older `--since` windows return empty (the CLI warns).
 - **`volume` counts client-side by paging** (SWO has no aggregation API). Over very wide windows it
   warns that the total is a lower bound — narrow `--since` or add filter text for an exact count.
+- **For `volume`, use a distinctive filter** — a short or common term (e.g. `claim_reminder`) matches
+  far more than the literal string and pages through huge volume, so it's slow and reports only a
+  lower bound. Prefer the most specific phrase that still covers what you want (e.g.
+  `twilio_claim_reminder`, a full path, or a quoted phrase).
+- **Run a control query before asserting "no traffic."** A zero from `search`/`volume` can be a
+  false zero (wrong filter text, retention gap). Confirm the pipeline returns rows by querying a
+  string you know is live (e.g. `swo volume 'twilio'` → tens of thousands of hits) before concluding
+  an endpoint is truly unused.
 - **First use on a machine:** run `bundle exec swo auth`. If it reports no token, tell the user to
   put their SWO API token in `~/.config/swo/token` (`chmod 600`).
 
