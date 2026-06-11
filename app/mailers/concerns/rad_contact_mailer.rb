@@ -1,6 +1,8 @@
 module RadContactMailer
   extend ActiveSupport::Concern
 
+  EMAIL_BODY_LIMIT = 1_000
+
   included do
     before_action :start_contact_log
     after_action :finish_contact_log
@@ -15,6 +17,7 @@ module RadContactMailer
     def finish_contact_log
       @rad_contact_log.update! from_email: mail.from.first,
                                content: mail.subject,
+                               email_body: contact_log_email_body,
                                record: @contact_log_record,
                                from_user: @contact_log_from_user,
                                category: @contact_log_category,
@@ -35,6 +38,10 @@ module RadContactMailer
       mail.bcc.each do |recipient|
         add_rad_recipient recipient, :bcc
       end
+    end
+
+    def contact_log_email_body
+      @contact_log_email_body&.truncate(EMAIL_BODY_LIMIT)
     end
 
     def add_rad_recipient(recipient, type)
