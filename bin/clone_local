@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require 'optparse'
+require 'tty-prompt'
 require_relative 'rad_bin'
 require_relative '../app/services/heroku_commands'
 
@@ -36,13 +37,10 @@ def run_interactive_clone(backup_option)
   custom_exclude = customize_minimal_exclusions(profile, prompt)
 
   if restore_source == :remote
-    dump_method = 'backup'
-
-    dump_method_choice = prompt.select('How would you like to download?') do |menu|
+    dump_method = prompt.select('How would you like to download?') do |menu|
       menu.choice 'Standard (Heroku backup capture + download full dump)', 'backup'
       menu.choice 'pg:pull (pulls directly from Heroku DB, excludes tables at dump time - faster)', 'pg_pull'
     end
-    dump_method = dump_method_choice
 
     run_remote_restore(profile, backup_option, dump_method, custom_exclude)
   else

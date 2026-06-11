@@ -83,6 +83,9 @@ module RadCommon
 
         directory '../../../../../.bundle', '.bundle'
 
+        # claude skills
+        copy_file '../../../../../.claude/skills/swo/SKILL.md', '.claude/skills/swo/SKILL.md'
+
         # code style config
         copy_file '../../../../../.haml-lint.yml', '.haml-lint.yml'
         copy_file '../../../../../.sniff.yml', '.sniff.yml'

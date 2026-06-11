@@ -1,0 +1,319 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# swo — query SolarWinds Observability (SWO) production logs.
+# Token: read from ~/.config/swo/token (chmod 600). Never passed via argv.
+# Runs standalone (`ruby bin/swo ...`) or as a gem executable (`bundle exec swo ...`).
+
+require 'net/http'
+require 'json'
+require 'time'
+require 'cgi'
+
+# Reused for Heroku-app detection
+require_relative 'rad_bin'
+
+module Swo
+  TOKEN_FILE = File.join(Dir.home, '.config', 'swo', 'token')
+  DEFAULT_DC = 'na-01'
+  RETENTION_DAYS = 9
+  MAX_PAGE_SIZE = 1000
+
+  # SWO has no server-side aggregation endpoint (only GET /v1/logs returns lines), so `volume`
+  # counts client-side by paging. This caps how far it will page before reporting a lower bound.
+  VOLUME_MAX_PAGES = 500
+
+  module_function
+
+  def token
+    @token ||= File.read(TOKEN_FILE).strip if File.exist?(TOKEN_FILE)
+    return @token unless @token.to_s.empty?
+
+    abort <<~MSG
+      No SWO token found.
+      Set one with:  mkdir -p ~/.config/swo && pbpaste > ~/.config/swo/token && chmod 600 ~/.config/swo/token
+    MSG
+  end
+
+  def api_host
+    "api.#{DEFAULT_DC}.cloud.solarwinds.com"
+  end
+
+  def resolve_host(host)
+    return host unless host.nil?
+
+    heroku_host
+  end
+
+  def heroku_host
+    apps = RadBin.parse_heroku_apps
+    production = apps.reject { |a| a.include?('staging') }
+    candidates = production.empty? ? apps : production
+
+    case candidates.length
+    when 1 then candidates.first
+    when 0 then abort 'No Heroku app found in this project\'s git remotes. Pass --host NAME or --all.'
+    else
+      abort "Multiple Heroku apps for this project: #{candidates.join(', ')}.\n" \
+            'Pass --host NAME; --all queries every app.'
+    end
+  end
+
+  def get(path_or_url)
+    uri = path_or_url.start_with?('http') ? URI(path_or_url) : URI("https://#{api_host}#{path_or_url}")
+    req = Net::HTTP::Get.new(uri)
+    req['Authorization'] = "Bearer #{token}"
+    Net::HTTP.start(uri.host, uri.port, use_ssl: true, open_timeout: 10, read_timeout: 40) { |h| h.request(req) }
+  end
+
+  def build_filter(host:, program:, text:)
+    parts = []
+    parts << "host:#{host}" unless host.nil? || host == 'all'
+    parts << "program:#{program}" if program
+    parts << text unless text.to_s.empty?
+    parts.join(' ')
+  end
+
+  def fmt_filter(filter)
+    filter.empty? ? '(none)' : filter
+  end
+
+  def parse_since(str)
+    m = str.to_s.match(/\A(\d+)([mhd])\z/) or abort "Bad --since '#{str}'. Use e.g. 30m, 6h, 7d."
+    n = m[1].to_i
+    secs = { 'm' => 60, 'h' => 3600, 'd' => 86_400 }[m[2]]
+
+    if n * secs > RETENTION_DAYS * 86_400
+      warn "Note: SWO retains only ~#{RETENTION_DAYS} days; older windows return empty."
+    end
+
+    n * secs
+  end
+
+  def window(since)
+    now = Time.now.utc
+    [(now - parse_since(since)).iso8601, now.iso8601]
+  end
+
+  def first_page(filter:, start_time:, end_time:, page_size:)
+    params = {
+      startTime: start_time, endTime: end_time, direction: 'backward',
+      pageSize: page_size, filter: filter
+    }
+
+    "/v1/logs?#{params.map { |k, v| "#{k}=#{CGI.escape(v.to_s)}" }.join('&')}"
+  end
+
+  def each_page(path, max_pages:)
+    pages = 0
+
+    while path && pages < max_pages
+      res = get(path)
+      abort "SWO HTTP #{res.code}: #{res.body.to_s[0, 200]}" unless res.code.start_with?('2')
+
+      body = JSON.parse(res.body)
+      yield(body['logs'] || [])
+      nxt = body.dig('pageInfo', 'nextPage')
+      path = nxt.to_s.empty? ? nil : nxt
+      pages += 1
+    end
+
+    path # non-nil leftover token => stopped at max_pages with more pages still available
+  end
+
+  COLORS = { 'ERROR' => 31, 'CRIT' => 31, 'WARNING' => 33, 'WARN' => 33 }.freeze
+
+  def format_line(log)
+    sev = log['severity'].to_s
+    color = COLORS[sev.upcase]
+    stamp = log['time'].to_s.sub('T', ' ').sub('Z', '')
+    head = "#{stamp}  #{log['hostname']}  #{log['program']}"
+    head = "\e[#{color}m#{head}\e[0m" if color && $stdout.tty?
+    "#{head}\n  #{log['message']}"
+  end
+
+  FLAG_ALIASES = { '-p' => '--program', '-s' => '--since', '-n' => '--limit', '-b' => '--bucket' }.freeze
+
+  VALUE_FLAGS = { '--host' => :host, '--program' => :program, '--since' => :since,
+                  '--bucket' => :bucket, '--limit' => :limit }.freeze
+
+  def parse_opts(argv, defaults = {})
+    opts = { host: nil, program: nil, since: nil, limit: 200, bucket: 'day', json: false }.merge(defaults)
+    text = []
+
+    until argv.empty?
+      raw = argv.shift
+      arg = FLAG_ALIASES[raw] || raw
+      key = VALUE_FLAGS[arg]
+
+      if key
+        val = argv.shift
+        opts[key] = key == :limit ? val.to_i : val
+      elsif arg == '--all'
+        opts[:host] = 'all'
+      elsif arg == '--json'
+        opts[:json] = true
+      else
+        text << arg
+      end
+    end
+
+    opts[:text] = text.join(' ')
+    opts[:host] = resolve_host(opts[:host])
+    opts
+  end
+
+  def cmd_auth(_argv)
+    res = get('/v1/logs?pageSize=1')
+    ok = %w[200 206].include?(res.code)
+    puts "token present (length=#{token.length}), dc=#{DEFAULT_DC}"
+    puts "HTTP #{res.code} — #{ok ? 'OK (token works)' : 'REJECTED / unexpected'}"
+    exit(ok ? 0 : 1)
+  end
+
+  def cmd_search(argv)
+    o = parse_opts(argv, since: '1h')
+    start_time, end_time = window(o[:since])
+    filter = build_filter(host: o[:host], program: o[:program], text: o[:text])
+    warn "→ host=#{o[:host]} since=#{o[:since]} filter=#{fmt_filter(filter)}" unless o[:json]
+
+    page_size = [o[:limit], MAX_PAGE_SIZE].min
+    path = first_page(filter: filter, start_time: start_time, end_time: end_time, page_size: page_size)
+    shown = 0
+
+    catch(:done) do
+      each_page(path, max_pages: 100) do |logs|
+        logs.each do |log|
+          puts(o[:json] ? JSON.generate(log) : format_line(log))
+          shown += 1
+          throw :done if shown >= o[:limit]
+        end
+      end
+    end
+
+    warn "(#{shown} lines)" unless o[:json]
+  end
+
+  def cmd_volume(argv)
+    o = parse_opts(argv, since: '7d')
+    start_time, end_time = window(o[:since])
+    filter = build_filter(host: o[:host], program: o[:program], text: o[:text])
+    warn "→ host=#{o[:host]} since=#{o[:since]} bucket=#{o[:bucket]} filter=#{fmt_filter(filter)}"
+
+    counts, total, truncated = tally_volume(filter, start_time, end_time, o[:bucket])
+    render_volume(counts, total)
+    return unless truncated
+
+    warn "⚠ stopped at #{VOLUME_MAX_PAGES * MAX_PAGE_SIZE} lines — counts are a LOWER BOUND. " \
+         'Narrow --since or add filter text for an exact count.'
+  end
+
+  def tally_volume(filter, start_time, end_time, bucket)
+    width = bucket == 'hour' ? 13 : 10
+    counts = Hash.new(0)
+    total = 0
+    path = first_page(filter: filter, start_time: start_time, end_time: end_time, page_size: MAX_PAGE_SIZE)
+
+    leftover = each_page(path, max_pages: VOLUME_MAX_PAGES) do |logs|
+      logs.each do |log|
+        counts[log['time'].to_s[0, width]] += 1
+        total += 1
+      end
+    end
+
+    [counts, total, !leftover.nil?]
+  end
+
+  def render_volume(counts, total)
+    if counts.empty?
+      puts '(no matching logs)'
+      return
+    end
+
+    max = counts.values.max
+
+    counts.keys.sort.each do |bucket|
+      n = counts[bucket]
+      bar = '█' * [(n.to_f / max * 50).round, n.positive? ? 1 : 0].max
+      puts "#{bucket}  #{n.to_s.rjust(6)}  #{bar}"
+    end
+
+    puts "total: #{total}"
+  end
+
+  def cmd_tail(argv)
+    o = parse_opts(argv, since: '2m')
+    filter = build_filter(host: o[:host], program: o[:program], text: o[:text])
+    warn "→ tailing host=#{o[:host]} filter=#{fmt_filter(filter)}  (Ctrl-C to stop)"
+    seen = {}
+
+    loop do
+      tail_batch(filter).each do |log|
+        next if seen[log['id']]
+
+        seen[log['id']] = true
+        puts format_line(log)
+      end
+      seen.clear if seen.size > 5000
+      sleep 3
+    end
+  rescue Interrupt
+    warn "\nstopped."
+  end
+
+  def tail_batch(filter)
+    now = Time.now.utc
+    path = first_page(filter: filter, start_time: (now - 20).iso8601, end_time: now.iso8601, page_size: 200)
+    batch = []
+    each_page(path, max_pages: 3) { |logs| batch.concat(logs) }
+    batch.sort_by { |l| l['time'].to_s }
+  end
+
+  USAGE = <<~TXT.freeze
+    swo — query SolarWinds Observability production logs
+
+    Usage:
+      swo auth                                 check token health
+      swo search <text> [opts]                 print matching log lines (newest first)
+      swo volume <text> [opts]                 bar chart of match counts per day/hour
+      swo tail   <text> [opts]                 stream new matching lines
+
+    Options:
+      --host NAME        target app (default: current dir, e.g. injuryscripts). --host all = every app
+      --all              shorthand for --host all
+      -p, --program P    web | worker | router | web.1 ...
+      -s, --since DUR    30m | 6h | 7d  (search=1h, volume=7d, tail=2m)
+      -n, --limit N      max lines for search (default 200)
+      -b, --bucket B     day | hour  (volume; default day)
+          --json         raw JSON, one object per line
+
+    Notes:
+      • host:<name> is the correct app filter — hostname:<name> silently returns nothing.
+      • filter matches log TEXT (URL paths, "class=XJob"), not Ruby class names.
+      • quote phrases:  swo search '"Started GET"'
+      • only ~#{RETENTION_DAYS} days of logs are searchable.
+
+    Examples:
+      swo search 'AutoRefillJob' --since 24h
+      swo search '"completed payment"' -p worker
+      swo volume 'patient_contact_histories' --since 7d -b day
+      swo search 'error' --host mayoshift -p web
+  TXT
+
+  def run(argv)
+    cmd = argv.shift
+    case cmd
+    when 'auth'   then cmd_auth(argv)
+    when 'search' then cmd_search(argv)
+    when 'volume' then cmd_volume(argv)
+    when 'tail'   then cmd_tail(argv)
+    when nil, 'help', '-h', '--help' then puts USAGE
+    else
+      warn "Unknown command: #{cmd}\n\n"
+      puts USAGE
+      exit 1
+    end
+  end
+end
+
+Swo.run(ARGV)
