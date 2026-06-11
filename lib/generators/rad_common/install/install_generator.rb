@@ -445,10 +445,7 @@ Seeder.new.seed!
         def install_database_yml
           return if RadConfig.database_config_override?
 
-          copy_file '../../../../../spec/dummy/config/database.yml', 'config/temp_database.yml'
-          gsub_file 'config/temp_database.yml', 'rad_common_', "#{installed_app_name}_"
-          copy_file Rails.root.join('config/temp_database.yml'), 'config/database.yml'
-          remove_file Rails.root.join('config/temp_database.yml')
+          copy_file 'database.yml', 'config/database.yml'
         end
 
         def install_github_workflow
@@ -768,6 +765,7 @@ gem 'propshaft'
           apply_migration '20260426170000_backfill_contact_log_contact_direction.rb'
           apply_migration '20260510120000_enable_pg_stat_statements.rb'
           apply_migration '20260512120000_add_category_to_contact_logs.rb'
+          apply_migration '20260610120000_add_email_body_to_contact_logs.rb'
         end
 
         def installed_app_name

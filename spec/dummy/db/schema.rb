@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_12_120000) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_10_120000) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -193,6 +193,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_12_120000) do
     t.string "content"
     t.string "fax_message_id"
     t.string "category"
+    t.string "email_body", limit: 1000
     t.index ["created_at"], name: "index_contact_logs_on_created_at"
     t.index ["from_number"], name: "index_contact_logs_on_from_number"
     t.index ["from_user_id"], name: "index_contact_logs_on_from_user_id"

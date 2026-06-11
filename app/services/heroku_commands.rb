@@ -228,7 +228,7 @@ class HerokuCommands
       end
 
       def dbname
-        YAML.load_file('config/database.yml')['development']['database']
+        Rails.application.config.database_configuration['development']['database']
       end
 
       def check_production!
